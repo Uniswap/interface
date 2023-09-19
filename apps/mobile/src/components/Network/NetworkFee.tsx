@@ -22,20 +22,20 @@ export function NetworkFee({
 
   return (
     <Flex row alignItems="center" justifyContent="space-between">
-      <Text variant="subheadSmall">{t('Network fee')}</Text>
+      <Text variant="bodySmall">{t('Network fee')}</Text>
       <Flex row alignItems="center" gap="$spacing8">
         <InlineNetworkPill chainId={chainId} />
-        <Text variant="subheadSmall">•</Text>
+        <Text variant="bodySmall">•</Text>
         {gasFee.loading ? (
           <SpinningLoader size={iconSizes.icon20} />
         ) : (
           <Flex row alignItems="center" justifyContent="space-between">
             {gasFee.error ? (
-              <Text color="$neutral2" variant="subheadSmall">
+              <Text color="$neutral2" variant="bodySmall">
                 {t('N/A')}
               </Text>
             ) : (
-              <Text color="$neutral1" variant="subheadSmall">
+              <Text color="$neutral1" variant="bodySmall">
                 {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
               </Text>
             )}

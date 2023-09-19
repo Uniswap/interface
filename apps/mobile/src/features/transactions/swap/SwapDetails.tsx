@@ -1,12 +1,12 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Warning } from 'src/components/modals/WarningModal/types'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
-import { getRateToDisplay } from 'src/features/transactions/swap/utils'
+import { getRateToDisplay, getTokenFeePercentage } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { Flex, Icons, Text, useSporeColors } from 'ui/src'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
@@ -16,6 +16,7 @@ import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
 import { useShouldUseMEVBlocker } from 'wallet/src/features/transactions/swap/customRpc'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
 interface SwapDetailsProps {
   acceptedTrade: Trade<Currency, Currency, TradeType>
@@ -25,11 +26,12 @@ interface SwapDetailsProps {
   autoSlippageTolerance?: number
   newTradeRequiresAcceptance: boolean
   warning?: Warning
+  gasFee: GasFeeResult
   onAcceptTrade: () => void
   onShowWarning?: () => void
   onShowSlippageModal: () => void
   onShowSwapProtectionModal: () => void
-  gasFee: GasFeeResult
+  onShowFOTInfo: () => void
 }
 
 export function SwapDetails({
@@ -39,11 +41,12 @@ export function SwapDetails({
   autoSlippageTolerance,
   trade,
   warning,
+  gasFee,
   onAcceptTrade,
   onShowWarning,
   onShowSlippageModal,
   onShowSwapProtectionModal,
-  gasFee,
+  onShowFOTInfo,
 }: SwapDetailsProps): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
@@ -61,6 +64,27 @@ export function SwapDetails({
 
   const shouldUseMevBlocker = useShouldUseMEVBlocker(trade?.inputAmount.currency.chainId)
 
+  const feeOnTransferInfo = useMemo(
+    () => ({
+      inputTokenInfo: {
+        feePercentage: getTokenFeePercentage(
+          acceptedTrade.inputAmount.currency,
+          CurrencyField.INPUT
+        ),
+        tokenSymbol: acceptedTrade.inputAmount.currency.symbol ?? 'Token sell',
+      },
+      outputTokenInfo: {
+        feePercentage: getTokenFeePercentage(
+          acceptedTrade.outputAmount.currency,
+          CurrencyField.OUTPUT
+        ),
+        tokenSymbol: acceptedTrade.outputAmount.currency.symbol ?? 'Token buy',
+      },
+      onShowInfo: onShowFOTInfo,
+    }),
+    [acceptedTrade.inputAmount.currency, acceptedTrade.outputAmount.currency, onShowFOTInfo]
+  )
+
   return (
     <TransactionDetails
       banner={
@@ -76,7 +100,7 @@ export function SwapDetails({
             px="$spacing12"
             py="$spacing12">
             <Flex centered row gap="$none">
-              <Text color="$accent1" variant="subheadSmall">
+              <Text color="$accent1" variant="bodySmall">
                 {t('New rate')}
               </Text>
             </Flex>
@@ -87,7 +111,7 @@ export function SwapDetails({
                   color="$accent1"
                   numberOfLines={1}
                   textAlign="center"
-                  variant="subheadSmall">
+                  variant="bodySmall">
                   {rate}
                 </Text>
               </TouchableOpacity>
@@ -110,18 +134,19 @@ export function SwapDetails({
         ) : null
       }
       chainId={acceptedTrade.inputAmount.currency.chainId}
+      feeOnTransferInfo={feeOnTransferInfo}
       gasFee={gasFee}
       showExpandedChildren={!!customSlippageTolerance}
       showWarning={warning && !newTradeRequiresAcceptance}
       warning={warning}
       onShowWarning={onShowWarning}>
       <Flex row alignItems="center" justifyContent="space-between">
-        <Text variant="subheadSmall">{t('Rate')}</Text>
+        <Text variant="bodySmall">{t('Rate')}</Text>
         <Flex row shrink gap="$none" justifyContent="flex-end">
           <TouchableOpacity onPress={(): void => setShowInverseRate(!showInverseRate)}>
-            <Text adjustsFontSizeToFit numberOfLines={1} variant="subheadSmall">
+            <Text adjustsFontSizeToFit numberOfLines={1} variant="bodySmall">
               {acceptedRate}
-              <Text color="$neutral2" variant="subheadSmall">
+              <Text color="$neutral2" variant="bodySmall">
                 {usdcPrice && ` (${formatPrice(usdcPrice, NumberType.FiatTokenPrice)})`}
               </Text>
             </Text>
@@ -132,7 +157,7 @@ export function SwapDetails({
         <Flex row alignItems="center" justifyContent="space-between">
           <TouchableArea onPress={onShowSwapProtectionModal}>
             <Flex centered row gap="$spacing4">
-              <Text variant="subheadSmall">{t('Swap protection')}</Text>
+              <Text variant="bodySmall">{t('Swap protection')}</Text>
               <InfoCircle
                 color={colors.neutral1.val}
                 height={iconSizes.icon20}
@@ -146,7 +171,7 @@ export function SwapDetails({
               height={iconSizes.icon16}
               width={iconSizes.icon16}
             />
-            <Text color="$neutral1" variant="subheadSmall">
+            <Text color="$neutral1" variant="bodySmall">
               {t('On')}
             </Text>
           </Flex>
@@ -155,7 +180,7 @@ export function SwapDetails({
       <Flex row alignItems="center" justifyContent="space-between">
         <TouchableArea onPress={onShowSlippageModal}>
           <Flex centered row gap="$spacing4">
-            <Text variant="subheadSmall">{t('Max slippage')}</Text>
+            <Text variant="bodySmall">{t('Max slippage')}</Text>
             <InfoCircle
               color={colors.neutral1.val}
               height={iconSizes.icon20}
@@ -173,7 +198,7 @@ export function SwapDetails({
           ) : null}
           <Text
             color={showSlippageWarning ? '$DEP_accentWarning' : '$neutral1'}
-            variant="subheadSmall">
+            variant="bodySmall">
             {formatPercent(acceptedTrade.slippageTolerance)}
           </Text>
         </Flex>

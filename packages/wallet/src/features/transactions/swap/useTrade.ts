@@ -1,7 +1,7 @@
 import { NetworkStatus } from '@apollo/client'
 import { SerializedError } from '@reduxjs/toolkit'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
-import { MixedRouteSDK, Protocol, Trade as RouterSDKTrade } from '@uniswap/router-sdk'
+import { MixedRouteSDK, Trade as RouterSDKTrade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
@@ -9,16 +9,13 @@ import { useMemo } from 'react'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
-  AGGRESSIVE_AUTO_SLIPPAGE_TOLERANCE,
   MAX_AUTO_SLIPPAGE_TOLERANCE,
-  MAX_TRADE_SIZE_FOR_AGGRESSIVE_SLIPPAGE_USD,
   MIN_AUTO_SLIPPAGE_TOLERANCE,
 } from 'wallet/src/constants/transactions'
 import { isL2Chain } from 'wallet/src/features/chains/utils'
 import { useRouterQuote } from 'wallet/src/features/routing/hooks'
 import { QuoteResult } from 'wallet/src/features/routing/types'
 import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
-import { useShouldUseMEVBlocker } from 'wallet/src/features/transactions/swap/customRpc'
 import { transformQuoteToTrade } from 'wallet/src/features/transactions/swap/routeUtils'
 import { clearStaleTrades } from 'wallet/src/features/transactions/swap/utils'
 
@@ -192,11 +189,8 @@ function useCalculateAutoSlippage(trade: Maybe<Trade>): number {
   const chainId = trade?.quote?.route?.[0]?.[0]?.tokenIn.chainId
   const gasCostUSD = trade?.quote?.gasUseEstimateUSD
   const outputAmountUSD = useUSDCValue(trade?.outputAmount)?.toExact()
-  const shouldUseAggressiveSlippage = useShouldSetAggressiveAutoSlippage(trade)
 
   return useMemo<number>(() => {
-    if (shouldUseAggressiveSlippage) return AGGRESSIVE_AUTO_SLIPPAGE_TOLERANCE
-
     const onL2 = isL2Chain(chainId)
     if (onL2 || !gasCostUSD || !outputAmountUSD) return MIN_AUTO_SLIPPAGE_TOLERANCE
 
@@ -211,21 +205,5 @@ function useCalculateAutoSlippage(trade: Maybe<Trade>): number {
     }
 
     return Number(suggestedSlippageTolerance.toFixed(2))
-  }, [shouldUseAggressiveSlippage, chainId, gasCostUSD, outputAmountUSD])
-}
-
-// Checks if MEV blocker settings are enabled, and if trade qualifies for aggressive slippage
-export function useShouldSetAggressiveAutoSlippage(trade: Maybe<Trade>): boolean {
-  const outputAmountUSD = useUSDCValue(trade?.outputAmount)?.toExact()
-  const inputAmountUSD = useUSDCValue(trade?.inputAmount)?.toExact()
-  const isV2Trade = trade?.routes.every((route) => route.protocol === Protocol.V2) ?? false
-
-  const shouldUseMevBlocker = useShouldUseMEVBlocker(trade?.inputAmount.currency.chainId)
-
-  const tradeAmountUSD = inputAmountUSD ?? outputAmountUSD
-  const isTradeUnderDollarThreshold = tradeAmountUSD
-    ? Number(tradeAmountUSD) < MAX_TRADE_SIZE_FOR_AGGRESSIVE_SLIPPAGE_USD
-    : false
-
-  return shouldUseMevBlocker && isTradeUnderDollarThreshold && isV2Trade
+  }, [chainId, gasCostUSD, outputAmountUSD])
 }

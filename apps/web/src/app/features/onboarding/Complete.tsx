@@ -80,7 +80,7 @@ export function Complete(): JSX.Element {
                 backgroundColor={validToken(ONBOARDING_COLORS_SOFT.GREEN)}
                 color={validToken(ONBOARDING_COLORS.GREEN)}
                 title="Buy crypto"
-                url={uniswapUrls.moonpayHelpUrl}
+                url={uniswapUrls.helpArticleUrls.moonpayHelp}
               />
               <OnboardingCompleteCard
                 disabled

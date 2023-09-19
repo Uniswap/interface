@@ -11779,9 +11779,9 @@ __metadata:
     "@uniswap/ethers-rs-mobile": 0.0.1
     "@uniswap/permit2-sdk": 1.2.0
     "@uniswap/router-sdk": 1.6.0
-    "@uniswap/sdk-core": 4.0.6
+    "@uniswap/sdk-core": 4.0.7
     "@uniswap/universal-router-sdk": 1.5.7
-    "@uniswap/v2-sdk": 3.2.0
+    "@uniswap/v2-sdk": 3.2.1
     "@uniswap/v3-sdk": 3.10.0
     "@walletconnect/react-native-compat": 2.8.0
     "@walletconnect/utils": 2.8.0
@@ -11918,9 +11918,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/sdk-core@npm:4.0.6, @uniswap/sdk-core@npm:^4, @uniswap/sdk-core@npm:^4.0.0, @uniswap/sdk-core@npm:^4.0.2":
-  version: 4.0.6
-  resolution: "@uniswap/sdk-core@npm:4.0.6"
+"@uniswap/sdk-core@npm:4.0.7, @uniswap/sdk-core@npm:^4, @uniswap/sdk-core@npm:^4.0.0, @uniswap/sdk-core@npm:^4.0.7":
+  version: 4.0.7
+  resolution: "@uniswap/sdk-core@npm:4.0.7"
   dependencies:
     "@ethersproject/address": ^5.0.2
     big.js: ^5.2.2
@@ -11928,7 +11928,7 @@ __metadata:
     jsbi: ^3.1.4
     tiny-invariant: ^1.1.0
     toformat: ^2.0.0
-  checksum: 0dd876d117c2d359a09047fafb5e80e8312b4db2cb0078a968d0ebbdb0a294558e8a0ea13678b113a9c2026f7c394193eb56650a250fd0c52ec51680c8aed3bc
+  checksum: b89ce380206f14fef70fb233c34edb439e9602bc4c17c4801e3032ed6e4b932d71942f677535c996c55e724f9dd7fac42443e117f75bae9348300380e50d95a5
   languageName: node
   linkType: hard
 
@@ -11993,16 +11993,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/v2-sdk@npm:3.2.0, @uniswap/v2-sdk@npm:^3.2.0":
-  version: 3.2.0
-  resolution: "@uniswap/v2-sdk@npm:3.2.0"
+"@uniswap/v2-sdk@npm:3.2.1, @uniswap/v2-sdk@npm:^3.2.0":
+  version: 3.2.1
+  resolution: "@uniswap/v2-sdk@npm:3.2.1"
   dependencies:
     "@ethersproject/address": ^5.0.0
     "@ethersproject/solidity": ^5.0.0
-    "@uniswap/sdk-core": ^4.0.2
+    "@uniswap/sdk-core": ^4.0.7
     tiny-invariant: ^1.1.0
     tiny-warning: ^1.0.3
-  checksum: d4445af16bc203364074d2ded02231dd2ceff798b723ced760c19cfd171dafb71603efc42ac11c88cc9528de8e5439c1ac57d11671cf9eae6006fea158d02077
+  checksum: 519c01e840878d03b99f0220da3a686afa097287b1c10fc65aaabd0555bab0fbcb013ac6d991453f70161e2e804b0e0797fb853d635acf56eae133671fdcb515
   languageName: node
   linkType: hard
 
@@ -37487,7 +37487,7 @@ __metadata:
     "@testing-library/react-hooks": 7.0.2
     "@types/react": ^18.0.15
     "@uniswap/analytics-events": 2.15.0
-    "@uniswap/sdk-core": 4.0.6
+    "@uniswap/sdk-core": 4.0.7
     dayjs: 1.11.7
     eslint: 8.44.0
     eslint-config-custom: "workspace:^"
@@ -37829,9 +37829,9 @@ __metadata:
     "@types/react": ^18.0.15
     "@uniswap/permit2-sdk": 1.2.0
     "@uniswap/router-sdk": 1.6.0
-    "@uniswap/sdk-core": 4.0.6
+    "@uniswap/sdk-core": 4.0.7
     "@uniswap/universal-router-sdk": 1.5.7
-    "@uniswap/v2-sdk": 3.2.0
+    "@uniswap/v2-sdk": 3.2.1
     "@uniswap/v3-sdk": 3.10.0
     apollo-link-rest: 0.9.0
     dayjs: 1.11.7

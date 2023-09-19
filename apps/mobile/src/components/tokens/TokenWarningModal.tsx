@@ -14,7 +14,7 @@ import ExternalLinkIcon from 'ui/src/assets/icons/external-link.svg'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes, imageSizes, opacify } from 'ui/src/theme'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
-import { TOKEN_WARNING_HELP_PAGE_URL } from 'wallet/src/constants/urls'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
@@ -72,7 +72,7 @@ export default function TokenWarningModal({
   const closeButtonText = hideAcceptButton ? t('Close') : t('Back')
 
   const onPressLearnMore = async (): Promise<void> => {
-    await openUri(TOKEN_WARNING_HELP_PAGE_URL)
+    await openUri(uniswapUrls.helpArticleUrls.tokenWarning)
   }
 
   const showWarningIcon =

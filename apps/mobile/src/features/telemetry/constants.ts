@@ -102,6 +102,7 @@ export const enum ModalName {
   Experiments = 'experiments',
   Explore = 'explore-modal',
   FaceIDWarning = 'face-id-warning',
+  FOTInfo = 'fee-on-transfer',
   FiatOnRamp = 'fiat-on-ramp',
   ForceUpgradeModal = 'force-upgrade-modal',
   CloudBackupInfo = 'cloud-backup-info-modal',

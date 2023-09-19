@@ -6,14 +6,14 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { openUri } from 'src/utils/linking'
 import { Icons, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { SWAP_PROTECTION_HELP_URL } from 'wallet/src/constants/urls'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 
 export function SwapProtectionInfoModal({ onClose }: { onClose: () => void }): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
 
   const onPressLearnMoreSwapModal = async (): Promise<void> => {
-    await openUri(SWAP_PROTECTION_HELP_URL)
+    await openUri(uniswapUrls.helpArticleUrls.swapProtection)
   }
 
   return (

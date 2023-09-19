@@ -7,6 +7,7 @@ import { Warning } from 'src/components/modals/WarningModal/types'
 import { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
+import { FeeOnTransferInfo } from 'src/features/transactions/swap/FeeOnTransferInfo'
 import { Box, Flex, Separator, Text, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import AnglesMaximize from 'ui/src/assets/icons/angles-maximize.svg'
@@ -25,6 +26,7 @@ interface TransactionDetailsProps {
   showExpandedChildren?: boolean
   showWarning?: boolean
   warning?: Warning
+  feeOnTransferInfo?: FeeOnTransferInfo
   onShowWarning?: () => void
 }
 
@@ -36,6 +38,7 @@ export function TransactionDetails({
   gasFee,
   showWarning,
   warning,
+  feeOnTransferInfo,
   onShowWarning,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
   const colors = useSporeColors()
@@ -94,8 +97,9 @@ export function TransactionDetails({
             <Separator borderColor="$surface2" width={1} />
           </>
         )}
-        <Flex gap="$spacing12" px="$spacing12" py="$spacing12">
+        <Flex gap="$spacing12" pt={banner ? '$none' : '$spacing8'} px="$spacing12">
           {showChildren ? <Flex gap="$spacing12">{children}</Flex> : null}
+          {feeOnTransferInfo && <FeeOnTransferInfo {...feeOnTransferInfo} />}
           <NetworkFee chainId={chainId} gasFee={gasFee} />
         </Flex>
         <Separator borderColor="$surface2" width={1} />

@@ -11,7 +11,7 @@ import { Flex, Icons, Text, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { formatCurrencyAmount, formatPercent, NumberType } from 'utilities/src/format/format'
-import { SWAP_SLIPPAGE_HELP_PAGE_URL } from 'wallet/src/constants/urls'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
@@ -22,7 +22,7 @@ export type SlippageInfoModalProps = {
   onClose: () => void
 }
 
-export default function SlippageInfoModal({
+export function SlippageInfoModal({
   trade,
   isCustomSlippage,
   autoSlippageTolerance,
@@ -32,7 +32,7 @@ export default function SlippageInfoModal({
   const colors = useSporeColors()
 
   const onPressLearnMore = async (): Promise<void> => {
-    await openUri(SWAP_SLIPPAGE_HELP_PAGE_URL)
+    await openUri(uniswapUrls.helpArticleUrls.swapSlippage)
   }
 
   const { slippageTolerance, tradeType } = trade

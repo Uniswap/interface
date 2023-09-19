@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { providers } from 'ethers'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -11,9 +12,10 @@ import {
   useSwapCallback,
   useWrapCallback,
 } from 'src/features/transactions/swap/hooks'
-import SlippageInfoModal from 'src/features/transactions/swap/SlippageInfoModal'
+import { FeeOnTransferInfoModal } from 'src/features/transactions/swap/modals/FeeOnTransferInfoModal'
+import { SlippageInfoModal } from 'src/features/transactions/swap/modals/SlippageInfoModal'
+import { SwapProtectionInfoModal } from 'src/features/transactions/swap/modals/SwapProtectionModal'
 import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
-import { SwapProtectionInfoModal } from 'src/features/transactions/swap/SwapProtectionModal'
 import {
   getActionElementName,
   getActionName,
@@ -52,6 +54,7 @@ export function SwapReview({
   const account = useActiveAccountWithThrow()
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [showSlippageModal, setShowSlippageModal] = useState(false)
+  const [showFOTInfoModal, setShowFOTInfoModal] = useState(false)
   const [warningAcknowledged, setWarningAcknowledged] = useState(false)
   const [shouldSubmitTx, setShouldSubmitTx] = useState(false)
   const [showSwapProtectionModal, setShowSwapProtectionModal] = useState(false)
@@ -144,8 +147,17 @@ export function SwapReview({
   const onShowSwapProtectionModal = useCallback(() => {
     setShowSwapProtectionModal(true)
   }, [])
+
   const onCloseSwapProtectionModal = useCallback(() => {
     setShowSwapProtectionModal(false)
+  }, [])
+
+  const onShowFOTInfo = useCallback(() => {
+    setShowFOTInfoModal(true)
+  }, [])
+
+  const onCloseFOTInfo = useCallback(() => {
+    setShowFOTInfoModal(false)
   }, [])
 
   const actionButtonDisabled =
@@ -187,6 +199,7 @@ export function SwapReview({
         trade={trade}
         warning={swapWarning}
         onAcceptTrade={onAcceptTrade}
+        onShowFOTInfo={onShowFOTInfo}
         onShowSlippageModal={onShowSlippageModal}
         onShowSwapProtectionModal={onShowSwapProtectionModal}
         onShowWarning={onShowWarning}
@@ -242,6 +255,7 @@ export function SwapReview({
         />
       )}
       {showSwapProtectionModal && <SwapProtectionInfoModal onClose={onCloseSwapProtectionModal} />}
+      {showFOTInfoModal && <FeeOnTransferInfoModal onClose={onCloseFOTInfo} />}
       <Trace logImpression section={SectionName.SwapReview}>
         <TransactionReview
           actionButtonProps={actionButtonProps}

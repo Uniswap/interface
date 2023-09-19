@@ -72,28 +72,28 @@ export function TransactionReview({
   const { trigger: actionButtonTrigger } = useBiometricPrompt(actionButtonProps.onPress)
   const { requiredForTransactions } = useBiometricAppSettings()
 
-  const spacingGap = { xs: '$none', sm: '$spacing12' }
-  const innerGap = useResponsiveProp({ xs: '$none', sm: '$spacing16' })
+  const spacingGap = { xs: '$none', sm: '$spacing4' }
+  const innerGap = useResponsiveProp({ xs: '$none', sm: '$spacing12' })
 
   const fontFamily = useResponsiveProp({
     xs: fonts.headlineSmall.family,
-    sm: fonts.headlineLarge.family,
+    sm: fonts.headlineMedium.family,
   })
 
   const fontSize = useResponsiveProp({
     xs: fonts.headlineSmall.fontSize,
-    sm: fonts.headlineLarge.fontSize,
+    sm: fonts.headlineMedium.fontSize,
   })
 
   const lineHeight =
     useResponsiveProp({
       xs: fonts.headlineSmall.lineHeight,
-      sm: fonts.headlineLarge.lineHeight,
-    }) ?? fonts.headlineLarge.lineHeight
+      sm: fonts.headlineMedium.lineHeight - 16,
+    }) ?? fonts.headlineMedium.lineHeight
 
   const maxFontSizeMultiplier = useResponsiveProp({
     xs: fonts.headlineSmall.maxFontSizeMultiplier,
-    sm: fonts.headlineLarge.maxFontSizeMultiplier,
+    sm: fonts.headlineMedium.maxFontSizeMultiplier,
   })
 
   const equivalentValueTextVariant = useResponsiveProp({
@@ -120,9 +120,11 @@ export function TransactionReview({
         {currencyInInfo ? (
           <Flex centered gap={innerGap}>
             <Flex centered gap={amountAndEquivalentValueGap}>
-              <Text color="$neutral2" variant="bodyLarge">
-                {recipient ? t('Sending') : t('You pay')}
-              </Text>
+              {recipient && (
+                <Text color="$neutral2" variant="bodyLarge">
+                  {t('Sending')}
+                </Text>
+              )}
               <AmountInput
                 alignSelf="stretch"
                 backgroundColor="none"
@@ -142,7 +144,7 @@ export function TransactionReview({
                 textAlign="center"
                 value={formattedAmountIn}
               />
-              {inputCurrencyUSDValue && !isUSDInput ? (
+              {recipient && inputCurrencyUSDValue && !isUSDInput ? (
                 <Text color="$neutral2" variant={equivalentValueTextVariant}>
                   {formattedInputUsdValue}
                 </Text>
@@ -165,9 +167,6 @@ export function TransactionReview({
         {currencyOutInfo && formattedAmountOut ? (
           <Flex centered gap={innerGap} pb={bottomPadding}>
             <Flex centered gap={amountAndEquivalentValueGap}>
-              <Text color="$neutral2" variant="bodyLarge">
-                {t('You receive')}
-              </Text>
               <Flex gap="$none" height={lineHeight} justifyContent="center" overflow="hidden">
                 <AmountInput
                   alignSelf="stretch"

@@ -21,7 +21,7 @@ import { AnimatedFlex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { ModalName } from 'src/features/telemetry/constants'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
-import { SwapProtectionInfoModal } from 'src/features/transactions/swap/SwapProtectionModal'
+import { SwapProtectionInfoModal } from 'src/features/transactions/swap/modals/SwapProtectionModal'
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
 import { transactionStateActions } from 'src/features/transactions/transactionState/transactionState'
 import { openUri } from 'src/utils/linking'
@@ -35,7 +35,7 @@ import {
   MAX_AUTO_SLIPPAGE_TOLERANCE,
   MAX_CUSTOM_SLIPPAGE_TOLERANCE,
 } from 'wallet/src/constants/transactions'
-import { SWAP_SLIPPAGE_HELP_PAGE_URL } from 'wallet/src/constants/urls'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
@@ -57,7 +57,7 @@ export type SwapSettingsModalProps = {
   onClose?: () => void
 }
 
-export default function SwapSettingsModal({
+export function SwapSettingsModal({
   derivedSwapInfo,
   dispatch,
   onClose,
@@ -265,7 +265,7 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
   }))
 
   const onPressLearnMore = async (): Promise<void> => {
-    await openUri(SWAP_SLIPPAGE_HELP_PAGE_URL)
+    await openUri(uniswapUrls.helpArticleUrls.swapSlippage)
   }
 
   const onPressAutoSlippage = (): void => {

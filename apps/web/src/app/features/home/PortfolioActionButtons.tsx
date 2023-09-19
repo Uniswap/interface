@@ -90,7 +90,11 @@ export function PortfolioActionButtons(): JSX.Element {
     <YStack gap="$spacing8">
       <Flex flexDirection="row" gap="$spacing8">
         <ActionButton Icon={<Icons.CoinConvert />} label="Swap" url="https://app.uniswap.org" />
-        <ActionButton Icon={<Icons.Buy />} label="Buy" url={uniswapUrls.moonpayHelpUrl} />
+        <ActionButton
+          Icon={<Icons.Buy />}
+          label="Buy"
+          url={uniswapUrls.helpArticleUrls.moonpayHelp}
+        />
       </Flex>
       <Flex flexDirection="row" gap="$spacing8">
         <ActionButton Icon={<Icons.SendRoundedAirplane />} label="Send" onClick={onSendClick} />

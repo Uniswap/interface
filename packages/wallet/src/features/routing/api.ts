@@ -99,6 +99,7 @@ export function useQuoteQuery(
         {
           protocols,
           routingType: 'CLASSIC',
+          enableFeeOnTransferFeeFetching: true,
           // Quotes sometimes fail in the api when universal router is enabled, disable for USD quotes
           // https://linear.app/uniswap/issue/MOB-1068/update-pricing-request-for-usd-quotes
           enableUniversalRouter: request.loggingProperties.isUSDQuote

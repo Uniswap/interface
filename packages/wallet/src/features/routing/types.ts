@@ -21,6 +21,7 @@ export interface QuoteRequest {
       protocols: string[]
       routingType: 'CLASSIC'
       enableUniversalRouter: boolean
+      enableFeeOnTransferFeeFetching: boolean
       recipient?: string
       slippageTolerance?: number
       deadline?: number
@@ -68,7 +69,10 @@ export interface TradeQuoteResult {
   gasUseEstimate: string
 }
 
-export type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
+export type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals' | 'name'> & {
+  buyFeeBps?: string
+  sellFeeBps?: string
+}
 
 export enum PoolType {
   V2Pool = 'v2-pool',

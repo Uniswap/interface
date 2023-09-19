@@ -10,7 +10,7 @@ import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { openUri } from 'src/utils/linking'
 import { Text, useSporeColors } from 'ui/src'
-import { SUPPORTED_NETWORKS_PAGE_URL } from 'wallet/src/constants/urls'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 const QR_CODE_SIZE = 220
@@ -27,7 +27,7 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
   const { t } = useTranslation()
 
   const onPressLearnMore = async (): Promise<void> => {
-    await openUri(SUPPORTED_NETWORKS_PAGE_URL)
+    await openUri(uniswapUrls.helpArticleUrls.supportedNetworks)
   }
 
   if (!address) return null
