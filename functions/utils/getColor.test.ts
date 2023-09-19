@@ -1,5 +1,5 @@
+import { getColor } from '../../src/hooks/useColor'
 import { DEFAULT_COLOR } from '../constants'
-import getColor from './getColor'
 
 test('should return the average color of a black PNG image', async () => {
   const image = 'https://static.vecteezy.com/system/resources/previews/001/209/957/original/square-png.png'
