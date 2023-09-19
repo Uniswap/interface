@@ -85,7 +85,6 @@ interface ExpectedUserState {
     }
   }
   timestamp: number
-  URLWarningVisible: boolean
   hideBaseWalletBanner: boolean
   showSurveyPopup?: boolean
   disabledUniswapX?: boolean

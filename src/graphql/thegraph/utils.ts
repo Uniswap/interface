@@ -1,10 +1,12 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import ms from 'ms'
 
+// TODO(WEB-2878): See if splitQuery can be replaced with proper Apollo usage
 /**
- * Used to get large amounts of data when
- * @param query
- * @param localClient
+ * Used to get large amounts of data when larger than the Apollo limit
+ * Splits query into multiple queries and returns the combined data
+ * @param query - the query to be split
+ * @param localClient - Apollo client for a specific chain
  * @param vars - any variables that are passed in every query
  * @param values - the keys that are used as the values to map over if
  * @param skipCount - amount of entities to skip per query

@@ -37,7 +37,7 @@ import { ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText }
 import { currencyId } from 'utils/currencyId'
 import { WrongChainError } from 'utils/errors'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { formatPrice, NumberType } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
@@ -179,6 +179,8 @@ function CurrentPriceCard({
   currencyQuote?: Currency
   currencyBase?: Currency
 }) {
+  const { formatPrice } = useFormatter()
+
   if (!pool || !currencyQuote || !currencyBase) {
     return null
   }
@@ -190,7 +192,7 @@ function CurrentPriceCard({
           <Trans>Current price</Trans>
         </ExtentsText>
         <ThemedText.DeprecatedMediumHeader textAlign="center">
-          {formatPrice(inverted ? pool.token1Price : pool.token0Price, NumberType.TokenTx)}
+          {formatPrice({ price: inverted ? pool.token1Price : pool.token0Price, type: NumberType.TokenTx })}
         </ThemedText.DeprecatedMediumHeader>
         <ExtentsText>
           <Trans>

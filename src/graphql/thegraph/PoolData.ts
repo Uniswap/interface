@@ -1,61 +1,55 @@
-import { useQuery } from '@apollo/client/react'
 import { ChainId } from '@uniswap/sdk-core'
 import gql from 'graphql-tag'
 import { useMemo } from 'react'
 
-import { Pool, Token } from './__generated__/types-and-hooks'
+import { Pool, Token, usePoolDataQuery } from './__generated__/types-and-hooks'
 import { chainToApolloClient } from './apollo'
 import { useBlocksFromTimestamps } from './useBlocksFromTimestamps'
 import { get2DayChange, useDeltaTimestamps } from './utils'
 
-const POOLS_BULK = (pools: string[], block?: number) => {
-  let poolString = `[`
-  pools.map((address) => {
-    return (poolString += `"${address}",`)
-  })
-  poolString += ']'
-  const queryString =
-    `
-    query pools {
-      pools(where: {id_in: ${poolString}},` +
-    (block ? `block: {number: ${block}} ,` : ``) +
-    ` orderBy: totalValueLockedUSD, orderDirection: desc, subgraphError: allow) {
+gql`
+  query PoolData($poolId: [ID!], $block: Block_height = null) {
+    pools(
+      where: { id_in: $poolId }
+      block: $block
+      orderBy: totalValueLockedUSD
+      orderDirection: desc
+      subgraphError: allow
+    ) {
+      id
+      feeTier
+      liquidity
+      sqrtPrice
+      tick
+      token0 {
         id
-        feeTier
-        liquidity
-        sqrtPrice
-        tick
-        token0 {
-            id
-            symbol 
-            name
-            decimals
-            derivedETH
-        }
-        token1 {
-            id
-            symbol 
-            name
-            decimals
-            derivedETH
-        }
-        token0Price
-        token1Price
-        volumeUSD
-        volumeToken0
-        volumeToken1
-        txCount
-        totalValueLockedToken0
-        totalValueLockedToken1
-        totalValueLockedUSD
+        symbol
+        name
+        decimals
+        derivedETH
       }
-      bundles (where: {id: "1"}) {
-        ethPriceUSD
+      token1 {
+        id
+        symbol
+        name
+        decimals
+        derivedETH
       }
+      token0Price
+      token1Price
+      volumeUSD
+      volumeToken0
+      volumeToken1
+      txCount
+      totalValueLockedToken0
+      totalValueLockedToken1
+      totalValueLockedUSD
     }
-    `
-  return gql(queryString)
-}
+    bundles(where: { id: "1" }) {
+      ethPriceUSD
+    }
+  }
+`
 
 export interface PoolData {
   // basic token info
@@ -105,7 +99,8 @@ export function usePoolData(
   const { blocks, error: blockError } = useBlocksFromTimestamps([t24, t48, tWeek], chainId || ChainId.MAINNET)
   const [block24, block48, blockWeek] = blocks ?? []
 
-  const { loading, error, data } = useQuery(POOLS_BULK(poolId, undefined), {
+  const { loading, error, data } = usePoolDataQuery({
+    variables: { poolId },
     client: apolloClient,
     fetchPolicy: 'no-cache',
   })
@@ -114,17 +109,29 @@ export function usePoolData(
     loading: loading24,
     error: error24,
     data: data24,
-  } = useQuery(POOLS_BULK(poolId, block24?.number), { client: apolloClient, fetchPolicy: 'no-cache' })
+  } = usePoolDataQuery({
+    variables: { poolId, block: { number: parseFloat(block24?.number) } },
+    client: apolloClient,
+    fetchPolicy: 'no-cache',
+  })
   const {
     loading: loading48,
     error: error48,
     data: data48,
-  } = useQuery(POOLS_BULK(poolId, block48?.number), { client: apolloClient, fetchPolicy: 'no-cache' })
+  } = usePoolDataQuery({
+    variables: { poolId, block: { number: parseFloat(block48?.number) } },
+    client: apolloClient,
+    fetchPolicy: 'no-cache',
+  })
   const {
     loading: loadingWeek,
     error: errorWeek,
     data: dataWeek,
-  } = useQuery(POOLS_BULK(poolId, blockWeek?.number), { client: apolloClient, fetchPolicy: 'no-cache' })
+  } = usePoolDataQuery({
+    variables: { poolId, block: { number: parseFloat(blockWeek?.number) } },
+    client: apolloClient,
+    fetchPolicy: 'no-cache',
+  })
 
   return useMemo(() => {
     const anyError = Boolean(error || error24 || error48 || blockError || errorWeek)
@@ -140,10 +147,10 @@ export function usePoolData(
     }
 
     // format data and calculate daily changes
-    const current: Pool | undefined = data?.pools[0]
-    const oneDay: Pool | undefined = data24?.pools[0]
-    const twoDay: Pool | undefined = data48?.pools[0]
-    const week: Pool | undefined = dataWeek?.pools[0]
+    const current: Pool | undefined = data?.pools[0] as Pool
+    const oneDay: Pool | undefined = data24?.pools[0] as Pool
+    const twoDay: Pool | undefined = data48?.pools[0] as Pool
+    const week: Pool | undefined = dataWeek?.pools[0] as Pool
 
     const ethPriceUSD = data?.bundles?.[0]?.ethPriceUSD ? parseFloat(data?.bundles?.[0]?.ethPriceUSD) : 0
 
