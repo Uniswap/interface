@@ -2,7 +2,7 @@
 import { ImageResponse } from '@vercel/og'
 import React from 'react'
 
-import { blocklistedCollections } from '../../../../../src/nft/utils/collection'
+import { blocklistedCollections } from '../../../../../src/nft/utils/constants'
 import { CHECK_URL, WATERMARK_URL } from '../../../../constants'
 import getCollection from '../../../../utils/getCollection'
 import getColor from '../../../../utils/getColor'
