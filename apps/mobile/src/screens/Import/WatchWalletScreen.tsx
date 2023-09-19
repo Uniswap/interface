@@ -42,7 +42,12 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
 
   // ENS and address parsing.
   const normalizedValue = normalizeTextInput(value ?? '')
-  const { address: resolvedAddress, name } = useENS(ChainId.Mainnet, normalizedValue, true)
+  const hasSuffixIncluded = normalizedValue.includes('.')
+  const { address: resolvedAddress, name } = useENS(
+    ChainId.Mainnet,
+    normalizedValue,
+    !hasSuffixIncluded
+  )
   const isAddress = getValidAddress(normalizedValue, true, false)
   const { isSmartContractAddress, loading } = useIsSmartContractAddress(
     isAddress ?? undefined,
@@ -123,7 +128,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
         <GenericImportForm
           blurOnSubmit
           errorMessage={errorText}
-          inputSuffix={isAddress ? undefined : '.eth'}
+          inputSuffix={isAddress || hasSuffixIncluded ? undefined : '.eth'}
           liveCheck={showLiveCheck}
           placeholderLabel="address or ENS"
           showSuccess={Boolean(isValid)}
