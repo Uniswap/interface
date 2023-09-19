@@ -346,6 +346,10 @@ export function isClassicTrade(trade?: InterfaceTrade): trade is ClassicTrade {
   return trade?.fillType === TradeFillType.Classic
 }
 
+export function isPreviewTrade(trade?: InterfaceTrade): trade is PreviewTrade {
+  return trade?.fillType === TradeFillType.None
+}
+
 export function isSubmittableTrade(trade?: InterfaceTrade): trade is SubmittableTrade {
   return trade?.fillType === TradeFillType.Classic || trade?.fillType === TradeFillType.UniswapX
 }

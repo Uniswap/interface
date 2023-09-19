@@ -50,7 +50,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useAppSelector } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
-import { isClassicTrade, isSubmittableTrade } from 'state/routing/utils'
+import { isClassicTrade, isPreviewTrade, isSubmittableTrade } from 'state/routing/utils'
 import { Field, forceExactInput, replaceSwapState } from 'state/swap/actions'
 import { useDefaultsFromURLSearch, useDerivedSwapInfo, useSwapActionHandlers } from 'state/swap/hooks'
 import swapReducer, { initialState as initialSwapState, SwapState } from 'state/swap/reducer'
@@ -117,12 +117,16 @@ const OutputSwapSection = styled(SwapSection)`
   border-bottom: ${({ theme }) => `1px solid ${theme.surface1}`};
 `
 
-function getIsValidSwapQuote(
+function getIsProgressableQuote(
   trade: InterfaceTrade | undefined,
   tradeState: TradeState,
   swapInputError?: ReactNode
 ): boolean {
-  return Boolean(!swapInputError && trade && tradeState === TradeState.VALID)
+  if (swapInputError) return false
+  // if the current quote is a preview quote, allow the user to progress to the Swap review screen
+  if (isPreviewTrade(trade)) return true
+
+  return Boolean(trade && tradeState === TradeState.VALID)
 }
 
 function largerPercentValue(a?: Percent, b?: Percent) {
@@ -573,6 +577,7 @@ export function Swap({
   const isDark = useIsDarkMode()
   const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
 
+  console.log('trade state', tradeState)
   const swapElement = (
     <SwapWrapper isDark={isDark} className={className} id="swap-page">
       <TokenSafetyModal
@@ -720,7 +725,7 @@ export function Swap({
             <TraceEvent
               events={[BrowserEvent.onClick]}
               name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
-              properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
+              properties={{ received_swap_quote: getIsProgressableQuote(trade, tradeState, swapInputError) }}
               element={InterfaceElementName.CONNECT_WALLET_BUTTON}
             >
               <ButtonLight onClick={toggleWalletDrawer} fontWeight={535} $borderRadius="16px">
@@ -779,7 +784,7 @@ export function Swap({
                 }}
                 id="swap-button"
                 data-testid="swap-button"
-                disabled={!getIsValidSwapQuote(trade, tradeState, swapInputError)}
+                disabled={!getIsProgressableQuote(trade, tradeState, swapInputError)}
                 error={!swapInputError && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
               >
                 <Text fontSize={20}>
@@ -798,7 +803,6 @@ export function Swap({
           )}
         </div>
       </AutoColumn>
-      {/* <div>{trade?.fillType === TradeFillType.None && 'Preview trade'}</div> */}
       {!showOptInSmall && !isUniswapXDefaultEnabled && <UniswapXOptIn isSmall={false} swapInfo={swapInfo} />}
     </SwapWrapper>
   )

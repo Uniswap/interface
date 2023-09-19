@@ -14,6 +14,7 @@ import useIsWindowVisible from './useIsWindowVisible'
 
 // Prevents excessive quote requests between keystrokes.
 const DEBOUNCE_TIME = 350
+const DEBOUNCE_TIME_QUICKROUTE = 50
 
 // Temporary until we remove the feature flag.
 const DEBOUNCE_TIME_INCREASED = 650
@@ -80,7 +81,7 @@ export function useDebouncedTrade(
   const isDebouncing =
     useDebounce(inputs, debouncedSwapQuoteFlagEnabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME) !== inputs
 
-  // const isPreviewTradeDebouncing = useDebounce(inputs, 100) !== inputs
+  const isPreviewTradeDebouncing = useDebounce(inputs, DEBOUNCE_TIME_QUICKROUTE) !== inputs
 
   const isWrap = useMemo(() => {
     if (!chainId || !amountSpecified || !otherCurrency) return false
@@ -93,9 +94,10 @@ export function useDebouncedTrade(
 
   const [routerPreference] = useRouterPreference()
 
-  const skipRoutingFetch = isDebouncing || !autoRouterSupported || !isWindowVisible || isWrap
+  const skipBothFetches = !autoRouterSupported || !isWindowVisible || isWrap
+  const skipRoutingFetch = skipBothFetches || isDebouncing
   const skipPreviewTradeFetch =
-    !autoRouterSupported || !isWindowVisible || isWrap || routerPreference === RouterPreference.CLIENT
+    skipBothFetches || routerPreference === RouterPreference.CLIENT || isPreviewTradeDebouncing
 
   const previewTradeResult = usePreviewTrade(
     skipPreviewTradeFetch,
@@ -117,15 +119,11 @@ export function useDebouncedTrade(
   )
 
   return useMemo(() => {
-    if (!previewTradeResult.currentTrade && !routingApiTradeResult.currentTrade) {
-      console.log('no trade results from either', previewTradeResult.state, routingApiTradeResult.state)
-    }
     // only show PreviewTrade if the more comprehensive routing-api request hasn't come back yet
     if (previewTradeResult.currentTrade && !routingApiTradeResult.currentTrade) {
-      console.log('✅showing preview trade')
+      // always override state to be `loading` if the trade shown is a PreviewTrade, since we're still searching
+      // for a more accurate route
       return { ...previewTradeResult, state: TradeState.LOADING }
-    } else if (routingApiTradeResult.currentTrade) {
-      console.log('showing regular trade: ', routingApiTradeResult.currentTrade.outputAmount.quotient.toString())
     }
 
     return routingApiTradeResult

@@ -108,7 +108,6 @@ export function usePreviewTrade(
     } else if (!tradeResult?.trade) {
       return TRADE_LOADING
     } else {
-      console.log('currentData in usePreviewTrade:', currentData?.trade?.outputAmount.quotient.toString())
       return {
         state: isFetching ? TradeState.LOADING : TradeState.VALID,
         trade: tradeResult.trade,
