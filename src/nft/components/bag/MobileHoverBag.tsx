@@ -1,9 +1,10 @@
+import { formatEther } from '@ethersproject/units'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { body, bodySmall } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
 import { useBagTotalEthPrice, useBagTotalUsdPrice } from 'nft/hooks/useBagTotalEthPrice'
-import { formatWeiToDecimal, roundAndPluralize } from 'nft/utils'
+import { roundAndPluralize } from 'nft/utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import * as styles from './MobileHoverBag.css'
@@ -50,7 +51,10 @@ export const MobileHoverBag = () => {
             {roundAndPluralize(itemsInBag.length, 'NFT')}
           </Box>
           <Row gap="8">
-            <Box className={body}>{`${formatWeiToDecimal(totalEthPrice.toString())}`} ETH</Box>
+            <Box className={body}>
+              {`${formatNumberOrString({ input: formatEther(totalEthPrice.toString()), type: NumberType.NFTToken })}`}{' '}
+              ETH
+            </Box>
             <Box color="neutral2" className={bodySmall}>
               {formatNumberOrString({ input: totalUsdPrice, type: NumberType.FiatNFTToken })}
             </Box>

@@ -43,37 +43,6 @@ export const numberToWei = (amount: number) => {
   return parseEther(amount.toString())
 }
 
-export const ethNumberStandardFormatter = (
-  amount: string | number | undefined,
-  includeDollarSign = false,
-  removeZeroes = false,
-  roundToNearestWholeNumber = false
-): string => {
-  if (!amount) return '-'
-
-  const amountInDecimals = parseFloat(amount.toString())
-  const conditionalDollarSign = includeDollarSign ? '$' : ''
-
-  if (amountInDecimals <= 0) return '-'
-  if (amountInDecimals < 0.0001) return `< ${conditionalDollarSign}0.00001`
-  if (amountInDecimals < 1) return `${conditionalDollarSign}${parseFloat(amountInDecimals.toFixed(3))}`
-  const formattedPrice = (
-    removeZeroes
-      ? parseFloat(amountInDecimals.toFixed(2))
-      : roundToNearestWholeNumber
-      ? Math.round(amountInDecimals)
-      : amountInDecimals.toFixed(2)
-  )
-    .toString()
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-  return conditionalDollarSign + formattedPrice
-}
-
-export const formatWeiToDecimal = (amount: string, removeZeroes = false) => {
-  if (!amount) return '-'
-  return ethNumberStandardFormatter(formatEther(amount), false, removeZeroes, false)
-}
-
 // prevent BigNumber overflow by properly handling scientific notation and comma delimited values
 export function wrapScientificNotation(value: string | number): string {
   return parseFloat(value.toString())

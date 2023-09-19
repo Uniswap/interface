@@ -18,7 +18,7 @@ import {
 import { bodySmall } from 'nft/css/common.css'
 import { loadingBlock } from 'nft/css/loading.css'
 import { GenieAsset, UpdatedGenieAsset } from 'nft/types'
-import { formatWeiToDecimal, getAssetHref } from 'nft/utils'
+import { getAssetHref } from 'nft/utils'
 import { MouseEvent, useCallback, useEffect, useReducer, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
@@ -101,7 +101,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
   const showRemoveButton = Boolean(showRemove && cardHovered && !isMobile)
 
   const assetEthPrice = asset.updatedPriceInfo ? asset.updatedPriceInfo.ETHPrice : asset.priceInfo.ETHPrice
-  const assetEthPriceFormatted = formatWeiToDecimal(assetEthPrice)
+  const assetEthPriceFormatted = formatNumberOrString({ input: formatEther(assetEthPrice), type: NumberType.NFTToken })
   const assetUSDPriceFormatted = formatNumberOrString({
     input: usdPrice ? parseFloat(formatEther(assetEthPrice)) * usdPrice : usdPrice,
     type: NumberType.FiatNFTToken,
@@ -177,6 +177,7 @@ interface PriceChangeBagRowProps {
 }
 
 export const PriceChangeBagRow = ({ asset, usdPrice, markAssetAsReviewed, top, isMobile }: PriceChangeBagRowProps) => {
+  const { formatNumberOrString } = useFormatter()
   const isPriceIncrease = BigNumber.from(asset.updatedPriceInfo?.ETHPrice).gt(BigNumber.from(asset.priceInfo.ETHPrice))
   const handleRemove = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
@@ -200,9 +201,10 @@ export const PriceChangeBagRow = ({ asset, usdPrice, markAssetAsReviewed, top, i
     <Column className={styles.priceChangeColumn} borderTopColor={top ? 'surface3' : 'transparent'}>
       <Row className={styles.priceChangeRow}>
         {isPriceIncrease ? <SquareArrowUpIcon /> : <SquareArrowDownIcon />}
-        <Box>{`Price ${isPriceIncrease ? 'increased' : 'decreased'} from ${formatWeiToDecimal(
-          asset.priceInfo.ETHPrice
-        )} ETH`}</Box>
+        <Box>{`Price ${isPriceIncrease ? 'increased' : 'decreased'} from ${formatNumberOrString({
+          input: formatEther(asset.priceInfo.ETHPrice),
+          type: NumberType.NFTToken,
+        })} ETH`}</Box>
       </Row>
       <Box style={{ marginLeft: '-8px', marginRight: '-8px' }}>
         <BagRow asset={asset} usdPrice={usdPrice} removeAsset={() => undefined} isMobile={isMobile} />

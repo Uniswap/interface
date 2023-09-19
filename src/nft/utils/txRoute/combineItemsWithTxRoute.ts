@@ -1,10 +1,6 @@
+import { formatEther } from '@ethersproject/units'
 import { BuyItem, GenieAsset, isPooledMarket, Markets, PriceInfo, RoutingItem, UpdatedGenieAsset } from 'nft/types'
-import {
-  calcAvgGroupPoolPrice,
-  formatWeiToDecimal,
-  isInSameMarketplaceCollection,
-  isInSameSudoSwapPool,
-} from 'nft/utils'
+import { calcAvgGroupPoolPrice, isInSameMarketplaceCollection, isInSameSudoSwapPool } from 'nft/utils'
 
 const isTheSame = (item: GenieAsset, routeAsset: BuyItem | PriceInfo) => {
   // if route asset has id, match by id
@@ -21,7 +17,7 @@ const isTheSame = (item: GenieAsset, routeAsset: BuyItem | PriceInfo) => {
 
 const getPriceDiff = (oldPrice: string, newPrice: string): { hasPriceDiff: boolean; hasVisiblePriceDiff: boolean } => {
   const hasPriceDiff = oldPrice !== newPrice
-  const hasVisiblePriceDiff = formatWeiToDecimal(oldPrice) !== formatWeiToDecimal(newPrice)
+  const hasVisiblePriceDiff = formatEther(oldPrice) !== formatEther(newPrice)
 
   return { hasPriceDiff, hasVisiblePriceDiff }
 }

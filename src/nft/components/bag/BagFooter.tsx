@@ -31,7 +31,6 @@ import { useSubscribeTransactionState } from 'nft/hooks/useSubscribeTransactionS
 import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
-import { formatWeiToDecimal } from 'nft/utils'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { InterfaceTrade, TradeFillType, TradeState } from 'state/routing/types'
@@ -195,7 +194,7 @@ const InputCurrencyValue = ({
   if (!usingPayWithAnyToken) {
     return (
       <ThemedText.BodyPrimary lineHeight="20px" fontWeight="535">
-        {formatWeiToDecimal(totalEthPrice.toString())}
+        {formatNumberOrString({ input: formatEther(totalEthPrice.toString()), type: NumberType.NFTToken })}
         &nbsp;{activeCurrency?.symbol ?? 'ETH'}
       </ThemedText.BodyPrimary>
     )

@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { formatEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
@@ -6,8 +7,8 @@ import { NftCard, NftCardDisplayProps } from 'nft/components/card'
 import { Ranking as RankingContainer, Suspicious as SuspiciousContainer } from 'nft/components/card/icons'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, UniformAspectRatio } from 'nft/types'
-import { formatWeiToDecimal } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 interface CollectionAssetProps {
   asset: GenieAsset
@@ -31,6 +32,7 @@ export const CollectionAsset = ({
   renderedHeight,
   setRenderedHeight,
 }: CollectionAssetProps) => {
+  const { formatNumberOrString } = useFormatter()
   const bagManuallyClosed = useBag((state) => state.bagManuallyClosed)
   const addAssetsToBag = useBag((state) => state.addAssetsToBag)
   const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
@@ -76,12 +78,23 @@ export const CollectionAsset = ({
       primaryInfo: asset.name ? asset.name : `#${asset.tokenId}`,
       primaryInfoIcon: asset.susFlag ? <SuspiciousContainer /> : null,
       primaryInfoRight: asset.rarity && provider ? <RankingContainer provider={provider} /> : null,
-      secondaryInfo: notForSale ? '' : `${formatWeiToDecimal(asset.priceInfo.ETHPrice, true)} ETH`,
+      secondaryInfo: notForSale
+        ? ''
+        : `${formatNumberOrString({ input: formatEther(asset.priceInfo.ETHPrice), type: NumberType.NFTToken })} ETH`,
       selectedInfo: <Trans>Remove from bag</Trans>,
       notSelectedInfo: <Trans>Add to bag</Trans>,
       disabledInfo: <Trans>Not listed</Trans>,
     }
-  }, [asset.name, asset.priceInfo.ETHPrice, asset.rarity, asset.susFlag, asset.tokenId, notForSale, provider])
+  }, [
+    asset.name,
+    asset.priceInfo.ETHPrice,
+    asset.rarity,
+    asset.susFlag,
+    asset.tokenId,
+    formatNumberOrString,
+    notForSale,
+    provider,
+  ])
 
   return (
     <NftCard
