@@ -50,24 +50,23 @@ export function ExperimentsModal(): JSX.Element {
         pt="$spacing12"
         px="$spacing24">
         <Flex gap="$spacing8">
-          <Flex my="$spacing16">
+          <Flex gap="$spacing16" my="$spacing16">
             <Text variant="subheadLarge">⚙️ Custom GraphQL Endpoint</Text>
             <Text variant="bodySmall">
               You will need to restart the application to pick up any changes in this section.
               Beware of client side caching!
             </Text>
-            <Flex row alignItems="center">
+            <Flex row alignItems="center" gap="$spacing16">
               <Text variant="bodySmall">URL</Text>
               <TextInput flex={1} value={url} onChangeText={setUrl} />
             </Flex>
-            <Flex row alignItems="center">
+            <Flex row alignItems="center" gap="$spacing16">
               <Text variant="bodySmall">Key</Text>
               <TextInput flex={1} value={key} onChangeText={setKey} />
             </Flex>
             <Button label="Set" size={ButtonSize.Small} onPress={setEndpoint} />
             <Button label="Clear" size={ButtonSize.Small} onPress={clearEndpoint} />
           </Flex>
-
           <Text variant="subheadLarge">⛳️ Feature Flags</Text>
           <Text variant="bodySmall">
             Overridden feature flags are reset when the app is restarted
@@ -85,7 +84,7 @@ function FeatureFlagRow({ featureFlag }: { featureFlag: FEATURE_FLAGS }): JSX.El
   const status = useFeatureFlag(featureFlag)
 
   return (
-    <Flex row alignItems="center" justifyContent="space-between">
+    <Flex row alignItems="center" gap="$spacing16" justifyContent="space-between">
       <Text variant="bodyLarge">{featureFlag}</Text>
       <Switch
         value={status}

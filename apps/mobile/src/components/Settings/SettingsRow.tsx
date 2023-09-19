@@ -56,7 +56,7 @@ export function SettingsRow({
   }
   return (
     <TouchableArea disabled={Boolean(action)} onPress={handleRow}>
-      <Flex grow row alignItems="center" minHeight={40}>
+      <Flex grow row alignItems="center" gap="$spacing16" minHeight={40}>
         <Flex
           grow
           row
@@ -66,7 +66,7 @@ export function SettingsRow({
           <Flex centered height={32} width={32}>
             {icon}
           </Flex>
-          <Flex fill grow alignItems="stretch" gap="$none">
+          <Flex fill grow alignItems="stretch">
             <Text numberOfLines={1} variant="bodyLarge">
               {text}
             </Text>
@@ -78,15 +78,9 @@ export function SettingsRow({
           </Flex>
         </Flex>
         {screen ? (
-          <Flex centered row gap="$none">
+          <Flex centered row>
             {currentSetting ? (
-              <Flex
-                row
-                shrink
-                alignItems="flex-end"
-                flexBasis="30%"
-                gap="$none"
-                justifyContent="flex-end">
+              <Flex row shrink alignItems="flex-end" flexBasis="30%" justifyContent="flex-end">
                 <Text
                   adjustsFontSizeToFit
                   color="$neutral2"

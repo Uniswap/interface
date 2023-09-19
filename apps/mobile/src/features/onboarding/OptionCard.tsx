@@ -57,7 +57,6 @@ export function OptionCard({
             alignItems="center"
             backgroundColor="$DEP_magentaDark"
             borderRadius="$roundedFull"
-            gap="$none"
             height={iconSize}
             justifyContent="center"
             padding="$spacing16"

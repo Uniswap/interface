@@ -131,7 +131,7 @@ export default function TokenWarningModal({
             width={iconSizes.icon16}
           />
         </TouchableArea>
-        <Flex centered row mt="$spacing16">
+        <Flex centered row gap="$spacing16" mt="$spacing16">
           <Button
             fill
             emphasis={ButtonEmphasis.Tertiary}

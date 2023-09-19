@@ -9,7 +9,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
       "backgroundColor": "#FFFFFF",
       "flex": 1,
       "flexDirection": "column",
-      "gap": 0,
       "paddingTop": 200,
     }
   }
@@ -119,7 +118,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
             "flex": 1,
             "flexDirection": "column",
             "flexGrow": 1,
-            "gap": 16,
             "justifyContent": "space-between",
           }
         }
@@ -130,7 +128,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               "alignItems": "stretch",
               "flexDirection": "column",
               "flexGrow": 1,
-              "gap": 16,
               "justifyContent": "space-between",
             }
           }
@@ -213,7 +210,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       "borderTopLeftRadius": 999999,
                       "borderTopRightRadius": 999999,
                       "flexDirection": "column",
-                      "gap": 0,
                       "height": 36,
                       "justifyContent": "center",
                       "paddingBottom": 16,
@@ -416,7 +412,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       "borderTopLeftRadius": 999999,
                       "borderTopRightRadius": 999999,
                       "flexDirection": "column",
-                      "gap": 0,
                       "height": 36,
                       "justifyContent": "center",
                       "paddingBottom": 16,
@@ -653,7 +648,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
       "backgroundColor": "#FFFFFF",
       "flex": 1,
       "flexDirection": "column",
-      "gap": 0,
       "paddingTop": 200,
     }
   }
@@ -763,7 +757,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
             "flex": 1,
             "flexDirection": "column",
             "flexGrow": 1,
-            "gap": 16,
             "justifyContent": "space-between",
           }
         }
@@ -774,7 +767,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               "alignItems": "stretch",
               "flexDirection": "column",
               "flexGrow": 1,
-              "gap": 16,
               "justifyContent": "space-between",
             }
           }
@@ -857,7 +849,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       "borderTopLeftRadius": 999999,
                       "borderTopRightRadius": 999999,
                       "flexDirection": "column",
-                      "gap": 0,
                       "height": 36,
                       "justifyContent": "center",
                       "paddingBottom": 16,
@@ -1060,7 +1051,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       "borderTopLeftRadius": 999999,
                       "borderTopRightRadius": 999999,
                       "flexDirection": "column",
-                      "gap": 0,
                       "height": 36,
                       "justifyContent": "center",
                       "paddingBottom": 16,

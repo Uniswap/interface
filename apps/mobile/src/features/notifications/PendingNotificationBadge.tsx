@@ -72,7 +72,6 @@ export function PendingNotificationBadge({
         }>
         <Flex
           alignItems="center"
-          gap="$none"
           height={size}
           justifyContent="center"
           position="absolute"
@@ -97,7 +96,6 @@ export function PendingNotificationBadge({
       <Flex
         backgroundColor="$accent1"
         borderRadius="$roundedFull"
-        gap="$none"
         height={iconSizes.icon8}
         width={iconSizes.icon8}
       />

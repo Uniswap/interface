@@ -69,7 +69,7 @@ export function DappConnectedNetworkModal({
             {dapp.url}
           </Text>
         </Flex>
-        <Flex row gap="$none">
+        <Flex row>
           <Flex
             grow
             borderColor="$surface3"
@@ -87,7 +87,6 @@ export function DappConnectedNetworkModal({
                   <Flex
                     bg="$statusSuccess"
                     borderRadius="$roundedFull"
-                    gap="$none"
                     height={iconSizes.icon8}
                     width={iconSizes.icon8}
                   />
@@ -96,7 +95,7 @@ export function DappConnectedNetworkModal({
             ))}
           </Flex>
         </Flex>
-        <Flex centered row>
+        <Flex centered row gap="$spacing16">
           <Button fill emphasis={ButtonEmphasis.Secondary} label={t('Close')} onPress={onClose} />
           <Button
             fill

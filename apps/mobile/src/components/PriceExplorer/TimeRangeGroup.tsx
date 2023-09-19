@@ -70,12 +70,11 @@ export function TimeRangeGroup({
   }))
 
   return (
-    <Flex row alignSelf="center" gap="$none" width={CHART_WIDTH}>
+    <Flex row alignSelf="center" width={CHART_WIDTH}>
       <View style={StyleSheet.absoluteFill}>
         <AnimatedBox
           bg="$surface3"
           borderRadius="$rounded20"
-          gap="$none"
           style={[StyleSheet.absoluteFillObject, sliderStyle]}
           width={LABEL_WIDTH}
         />

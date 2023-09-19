@@ -39,7 +39,7 @@ type ListItem = 'ellipsis' | number
 
 function renderItem({ item: chainId }: { item: ListItem }): JSX.Element {
   return (
-    <Flex key={chainId} borderColor="$surface2" gap="$none" style={styles.networksInSeriesIcon}>
+    <Flex key={chainId} borderColor="$surface2" style={styles.networksInSeriesIcon}>
       {chainId === ELLIPSIS ? (
         <Flex
           centered
@@ -82,7 +82,7 @@ function NetworksInSeries({
   }
 
   return (
-    <Flex gap="$none">
+    <Flex>
       <VirtualizedList<ListItem>
         contentContainerStyle={styles.networkListContainer}
         getItem={getItem}

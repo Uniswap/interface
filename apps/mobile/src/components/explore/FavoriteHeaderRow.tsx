@@ -19,7 +19,13 @@ export function FavoriteHeaderRow({
   const { t } = useTranslation()
   const colors = useSporeColors()
   return (
-    <Flex row alignItems="center" justifyContent="space-between" mb="$spacing8" mx="$spacing8">
+    <Flex
+      row
+      alignItems="center"
+      gap="$spacing16"
+      justifyContent="space-between"
+      mb="$spacing8"
+      mx="$spacing8">
       <Text color="$neutral2" variant="subheadSmall">
         {isEditing ? editingTitle : title}
       </Text>

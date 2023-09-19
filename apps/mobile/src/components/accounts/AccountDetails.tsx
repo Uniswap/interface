@@ -13,7 +13,7 @@ export function AccountDetails({
   chevron?: boolean
 }): JSX.Element {
   return (
-    <Flex row shrink alignItems="center" justifyContent="space-between">
+    <Flex row shrink alignItems="center" gap="$spacing16" justifyContent="space-between">
       <Flex fill row shrink>
         <AddressDisplay
           hideAddressInSubtitle

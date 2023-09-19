@@ -100,12 +100,12 @@ export function SwapDetails({
             justifyContent="space-between"
             px="$spacing12"
             py="$spacing12">
-            <Flex centered row gap="$none">
+            <Flex centered row>
               <Text color="$accent1" variant="bodySmall">
                 {t('New rate')}
               </Text>
             </Flex>
-            <Flex fill row shrink flexBasis="100%" gap="$none" justifyContent="flex-end">
+            <Flex fill row shrink flexBasis="100%" justifyContent="flex-end">
               <TouchableOpacity onPress={(): void => setShowInverseRate(!showInverseRate)}>
                 <Text
                   adjustsFontSizeToFit
@@ -117,7 +117,7 @@ export function SwapDetails({
                 </Text>
               </TouchableOpacity>
             </Flex>
-            <Flex centered row gap="$none">
+            <Flex centered row>
               <Trace logPress element={ElementName.AcceptNewRate}>
                 <TouchableArea
                   backgroundColor="$accent1"
@@ -144,7 +144,7 @@ export function SwapDetails({
       onShowWarning={onShowWarning}>
       <Flex row alignItems="center" justifyContent="space-between">
         <Text variant="bodySmall">{t('Rate')}</Text>
-        <Flex row shrink gap="$none" justifyContent="flex-end">
+        <Flex row shrink justifyContent="flex-end">
           <TouchableOpacity onPress={(): void => setShowInverseRate(!showInverseRate)}>
             <Text adjustsFontSizeToFit numberOfLines={1} variant="bodySmall">
               {acceptedRate}

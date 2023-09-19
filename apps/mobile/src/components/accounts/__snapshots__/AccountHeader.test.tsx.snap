@@ -6,7 +6,6 @@ exports[`AccountHeader renders without error 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "row",
-      "gap": 16,
       "justifyContent": "space-between",
       "marginTop": 16,
     }
@@ -76,7 +75,6 @@ exports[`AccountHeader renders without error 1`] = `
             "alignItems": "stretch",
             "flexDirection": "column",
             "flexShrink": 1,
-            "gap": 16,
           }
         }
       >
@@ -94,7 +92,6 @@ exports[`AccountHeader renders without error 1`] = `
               {
                 "alignItems": "stretch",
                 "flexDirection": "column",
-                "gap": 0,
                 "position": "relative",
               }
             }
@@ -118,7 +115,6 @@ exports[`AccountHeader renders without error 1`] = `
                   "borderTopRightRadius": 999999,
                   "borderTopWidth": 0,
                   "flexDirection": "column",
-                  "gap": 0,
                   "padding": 0,
                   "position": "relative",
                 }
@@ -129,7 +125,6 @@ exports[`AccountHeader renders without error 1`] = `
                   {
                     "alignItems": "stretch",
                     "flexDirection": "column",
-                    "gap": 0,
                     "height": 28,
                     "width": 28,
                   }
@@ -140,7 +135,6 @@ exports[`AccountHeader renders without error 1`] = `
                     {
                       "alignItems": "stretch",
                       "flexDirection": "column",
-                      "gap": 0,
                       "height": 28,
                       "width": 28,
                     }
@@ -326,7 +320,6 @@ exports[`AccountHeader renders without error 1`] = `
             "borderTopLeftRadius": 999999,
             "borderTopRightRadius": 999999,
             "flexDirection": "column",
-            "gap": 0,
             "justifyContent": "center",
             "transform": [
               {

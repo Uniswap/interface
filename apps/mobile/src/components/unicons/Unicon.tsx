@@ -259,8 +259,8 @@ export function _Unicon({
   if (!address || !isEthAddress(address) || !attributeIndices) return null
 
   return (
-    <Flex gap="$none" height={size} width={size}>
-      <Flex gap="$none" height={size} width={size}>
+    <Flex height={size} width={size}>
+      <Flex height={size} width={size}>
         <UniconSvg
           attributeIndices={attributeIndices}
           lightModeOverlay={isLightMode}
@@ -269,7 +269,7 @@ export function _Unicon({
         />
       </Flex>
       {showBorder && (
-        <Flex gap="$none" height={size} position="absolute" width={size} zIndex="$negative">
+        <Flex height={size} position="absolute" width={size} zIndex="$negative">
           <UniconBG
             attributeIndices={attributeIndices}
             backgroundColor={backgroundColor}

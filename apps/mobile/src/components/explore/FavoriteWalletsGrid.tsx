@@ -29,7 +29,7 @@ export function FavoriteWalletsGrid({ showLoading }: { showLoading: boolean }): 
   }, [watchedWalletsSet.size])
 
   return (
-    <AnimatedBox entering={FadeIn} gap="$none">
+    <AnimatedBox entering={FadeIn}>
       <FavoriteHeaderRow
         editingTitle={t('Edit favorite wallets')}
         isEditing={isEditing}
@@ -39,7 +39,7 @@ export function FavoriteWalletsGrid({ showLoading }: { showLoading: boolean }): 
       {showLoading ? (
         <FavoriteWalletsGridLoader />
       ) : (
-        <Flex row flexWrap="wrap" gap="$none">
+        <Flex row flexWrap="wrap">
           {watchedWalletsList.map((address) => (
             <FavoriteWalletCard
               key={address}
@@ -58,10 +58,10 @@ export function FavoriteWalletsGrid({ showLoading }: { showLoading: boolean }): 
 function FavoriteWalletsGridLoader(): JSX.Element {
   return (
     <Flex row gap="$spacing8">
-      <Flex gap="$none" style={ITEM_FLEX}>
+      <Flex style={ITEM_FLEX}>
         <Loader.Favorite contrast height={48} />
       </Flex>
-      <Flex gap="$none" style={ITEM_FLEX}>
+      <Flex style={ITEM_FLEX}>
         <Loader.Favorite contrast height={48} />
       </Flex>
     </Flex>

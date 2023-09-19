@@ -172,7 +172,7 @@ export function TransactionReview({
         {currencyOutInfo && formattedAmountOut ? (
           <Flex centered gap={innerGap} pb={bottomPadding}>
             <Flex centered gap={amountAndEquivalentValueGap}>
-              <Flex gap="$none" height={lineHeight} justifyContent="center" overflow="hidden">
+              <Flex height={lineHeight} justifyContent="center" overflow="hidden">
                 <AmountInput
                   alignSelf="stretch"
                   backgroundColor="none"

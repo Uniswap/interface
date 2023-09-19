@@ -53,7 +53,7 @@ export default function WalletPreviewCard({
           height={ADDRESS_WRAPPER_HEIGHT}
           justifyContent="flex-start">
           <Unicon address={address} size={UNICON_SIZE} />
-          <Flex gap="$none">
+          <Flex>
             <Text variant="bodyLarge">{ensName ?? shortenAddress(address)}</Text>
             {balance ? (
               <Text color="$neutral2" variant="subheadSmall">

@@ -20,11 +20,10 @@ export function TokenLoader({ opacity }: TokenLoaderProps): JSX.Element {
         <Flex
           bg="$surface3"
           borderRadius="$roundedFull"
-          gap="$none"
           minHeight={iconSizes.icon40}
           minWidth={iconSizes.icon40}
         />
-        <Flex shrink alignItems="flex-start" gap="$none">
+        <Flex shrink alignItems="flex-start">
           <Text
             loading="no-shimmer"
             loadingPlaceholderText="Token Full Name"

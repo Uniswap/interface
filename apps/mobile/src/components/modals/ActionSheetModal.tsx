@@ -27,7 +27,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps): JS
 
   return (
     <Flex gap="$spacing12" justifyContent="flex-end">
-      <Flex centered bg="$surface2" borderRadius="$rounded16" gap="$none" overflow="hidden">
+      <Flex centered bg="$surface2" borderRadius="$rounded16" overflow="hidden">
         {typeof header === 'string' ? (
           <Flex centered gap="$spacing4" py="$spacing16">
             <Text variant="buttonLabelMedium">{header}</Text>
@@ -36,7 +36,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps): JS
           header
         )}
 
-        <Flex gap="$none" maxHeight={dimensions.fullHeight * 0.5} width="100%">
+        <Flex maxHeight={dimensions.fullHeight * 0.5} width="100%">
           <ScrollView bounces={false} style={flex.grow}>
             {options.map(({ key, onPress, render }) => {
               return (

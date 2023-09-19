@@ -185,7 +185,7 @@ export function SettingsScreen(): JSX.Element {
           renderItem={renderItem}
           renderSectionFooter={(): JSX.Element => <Flex pt="$spacing24" />}
           renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
-            <Flex bg="$surface1" gap="$none" pb="$spacing12">
+            <Flex bg="$surface1" pb="$spacing12">
               <Text color="$neutral2" variant="bodyLarge">
                 {subTitle}
               </Text>
@@ -213,13 +213,8 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
         dispatch(resetWallet())
         dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
       }}>
-      <Flex
-        alignItems="center"
-        flexDirection="row"
-        gap="$none"
-        justifyContent="space-between"
-        py="$spacing4">
-        <Flex alignItems="center" flexDirection="row" gap="$none">
+      <Flex row alignItems="center" justifyContent="space-between" py="$spacing4">
+        <Flex row alignItems="center">
           <Flex centered height={32} width={32}>
             <UniswapIcon {...iconProps} />
           </Flex>
@@ -270,7 +265,7 @@ function WalletSettings(): JSX.Element {
   }
 
   return (
-    <Flex flexDirection="column" gap="$none" mb="$spacing16">
+    <Flex mb="$spacing16">
       <Flex row justifyContent="space-between">
         <Text color="$neutral2" variant="bodyLarge">
           {t('Wallet settings')}
@@ -291,11 +286,7 @@ function WalletSettings(): JSX.Element {
             pl="$spacing4"
             py="$spacing12"
             onPress={(): void => handleNavigation(account.address)}>
-            <Flex
-              alignItems="center"
-              flexDirection="row"
-              gap="$none"
-              justifyContent="space-between">
+            <Flex row alignItems="center" justifyContent="space-between">
               <Flex shrink>
                 <AddressDisplay
                   address={account.address}

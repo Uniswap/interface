@@ -172,7 +172,7 @@ export function NFTItemScreen({
                 imageUri={imageUrl}
               />
             ) : (
-              <Flex bg="$surface2" gap="$none" style={StyleSheet.absoluteFill} />
+              <Flex bg="$surface2" style={StyleSheet.absoluteFill} />
             )}
             <HeaderScrollScreen
               backButtonColor="$neutral1"
@@ -181,7 +181,6 @@ export function NFTItemScreen({
                 imageUrl ? (
                   <Flex
                     borderRadius="$rounded8"
-                    gap="$none"
                     maxHeight={theme.iconSizes.icon40}
                     maxWidth={theme.iconSizes.icon40}
                     ml="$spacing16"
@@ -212,7 +211,7 @@ export function NFTItemScreen({
                   shadowRadius={16}>
                   <Flex centered borderRadius="$rounded16" overflow="hidden">
                     {nftLoading ? (
-                      <Flex aspectRatio={1} gap="$none" width="100%">
+                      <Flex aspectRatio={1} width="100%">
                         <Loader.Image />
                       </Flex>
                     ) : imageUrl ? (
@@ -222,7 +221,6 @@ export function NFTItemScreen({
                     ) : (
                       <Flex
                         aspectRatio={1}
-                        gap="$none"
                         style={{ backgroundColor: colorsDark.surface2 }}
                         width="100%">
                         <BaseCard.ErrorState
@@ -259,7 +257,7 @@ export function NFTItemScreen({
                 {/* Description */}
                 <Flex px="$spacing24">
                   {nftLoading ? (
-                    <Flex gap="$none" mt="$spacing12">
+                    <Flex mt="$spacing12">
                       <Loader.Box
                         height={theme.textVariants.bodySmall.lineHeight}
                         // TODO EXT-259 make work with shortcut props like "mb", etc
@@ -357,9 +355,7 @@ function AssetMetadata({
           {title}
         </Text>
       </Flex>
-      <Flex gap="$none" maxWidth="60%">
-        {valueComponent}
-      </Flex>
+      <Flex maxWidth="60%">{valueComponent}</Flex>
     </Flex>
   )
 }
@@ -386,7 +382,6 @@ function RightElement({
   return (
     <Flex
       alignItems="center"
-      gap="$none"
       height={iconSizes.icon40}
       justifyContent="center"
       width={iconSizes.icon40}>

@@ -271,14 +271,14 @@ export function SettingsWallet({
       </BackHeader>
 
       <Flex fill p="$spacing24">
-        <Flex fill gap="$none">
+        <Flex fill>
           <SectionList
             ItemSeparatorComponent={renderItemSeparator}
             keyExtractor={(_item, index): string => 'wallet_settings' + index}
             renderItem={renderItem}
             renderSectionFooter={(): JSX.Element => <Flex pt="$spacing24" />}
             renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
-              <Flex bg="$surface1" gap="$none" pb="$spacing12">
+              <Flex bg="$surface1" pb="$spacing12">
                 <Text color="$neutral2" variant="bodyLarge">
                   {subTitle}
                 </Text>

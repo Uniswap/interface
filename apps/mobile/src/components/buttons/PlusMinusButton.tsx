@@ -35,13 +35,7 @@ export default function PlusMinusButton({
           width={iconSizes.icon12}
         />
       ) : (
-        <Flex
-          backgroundColor="$surface1"
-          borderRadius="$rounded12"
-          gap="$none"
-          height={2}
-          width={10}
-        />
+        <Flex backgroundColor="$surface1" borderRadius="$rounded12" height={2} width={10} />
       )}
     </TouchableArea>
   )

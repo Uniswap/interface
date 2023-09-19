@@ -90,7 +90,6 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
       <AnimatedBox
         bottom={0}
         entering={FadeIn}
-        gap="$none"
         height={HEADER_GRADIENT_HEIGHT}
         left={0}
         position="absolute"
@@ -132,7 +131,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
           textAlign="flex-start"
           variant="headlineSmall"
         />
-        <Flex gap="$none" position="absolute" right={0}>
+        <Flex position="absolute" right={0}>
           <Flex centered row gap="$spacing8" mt="$spacing12">
             <TouchableArea
               hapticFeedback

@@ -137,7 +137,7 @@ function OtherChainBalance({
               symbol={balance.currencyInfo.currency.symbol}
               url={balance.currencyInfo.logoUrl ?? undefined}
             />
-            <Flex alignItems="flex-start" gap="$none">
+            <Flex alignItems="flex-start">
               <Text px="$spacing4" variant="bodyLarge">
                 {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
               </Text>

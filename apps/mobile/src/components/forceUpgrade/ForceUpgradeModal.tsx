@@ -91,13 +91,13 @@ export function ForceUpgradeModal(): JSX.Element {
           backgroundColor={colors.surface1.val}
           name={ModalName.ForceUpgradeModal}
           onClose={onDismiss}>
-          <Flex fill px="$spacing24" py="$spacing24">
+          <Flex fill gap="$spacing16" px="$spacing24" py="$spacing24">
             <Flex row alignItems="center" justifyContent="flex-start">
               <TouchableArea onPress={onDismiss}>
                 <BackButtonView size={BACK_BUTTON_SIZE} />
               </TouchableArea>
               <Text variant="subheadLarge">{t('Recovery phrase')}</Text>
-              <Flex gap="$none" width={BACK_BUTTON_SIZE} />
+              <Flex width={BACK_BUTTON_SIZE} />
             </Flex>
             <SeedPhraseDisplay mnemonicId={mnemonicId} onDismiss={onDismiss} />
           </Flex>

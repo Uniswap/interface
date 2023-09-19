@@ -38,12 +38,11 @@ export function WaveLoader(): JSX.Element {
       grow
       row
       alignItems="center"
-      gap="$none"
       height={CHART_HEIGHT}
       justifyContent="center"
       sentry-label="WaveLoader">
       <Animated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
-        <Flex centered grow row gap="$none" height="100%">
+        <Flex centered grow row height="100%">
           <Wave color={colors.surface3.val} />
           <Wave color={colors.surface3.val} />
           <Wave color={colors.surface3.val} />

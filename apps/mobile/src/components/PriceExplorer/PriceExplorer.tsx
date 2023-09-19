@@ -25,7 +25,7 @@ type PriceTextProps = {
 
 function PriceTextSection({ loading, relativeChange }: PriceTextProps): JSX.Element {
   return (
-    <Flex gap="$none" mx="$spacing12">
+    <Flex mx="$spacing12">
       <PriceText loading={loading} />
       <Flex row gap="$spacing4">
         <RelativeChangeText loading={loading} spotRelativeChange={relativeChange} />
@@ -68,14 +68,14 @@ export function PriceExplorer({
   const lastPricePoint = data?.priceHistory ? data.priceHistory.length - 1 : 0
 
   return (
-    <Flex gap="$none" overflow="hidden">
+    <Flex overflow="hidden">
       {data?.priceHistory ? (
         <LineChartProvider
           data={data.priceHistory}
           onCurrentIndexChange={invokeImpact[ImpactFeedbackStyle.Light]}>
           <Flex gap="$spacing8">
             <PriceTextSection loading={loading} relativeChange={data.spot?.relativeChange} />
-            <Flex gap="$none" my="$spacing24">
+            <Flex my="$spacing24">
               <LineChart
                 height={CHART_HEIGHT}
                 width={SCREEN_WIDTH - additionalPadding}
@@ -108,7 +108,7 @@ export function PriceExplorer({
       ) : (
         <Flex gap="$spacing8">
           <PriceTextSection loading={loading} />
-          <Flex gap="$none" my="$spacing24">
+          <Flex my="$spacing24">
             <Loader.Graph />
           </Flex>
         </Flex>

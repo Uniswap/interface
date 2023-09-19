@@ -21,7 +21,7 @@ export const HandleBar = ({
   const bg = hidden ? 'transparent' : backgroundColor ?? colors.surface1.val
 
   return (
-    <Flex gap="$none" mt={IS_ANDROID ? '$spacing4' : '$none'}>
+    <Flex mt={IS_ANDROID ? '$spacing4' : '$none'}>
       <Flex
         alignItems="center"
         borderRadius="$rounded24"
@@ -34,7 +34,6 @@ export const HandleBar = ({
           alignSelf="center"
           backgroundColor={hidden ? '$transparent' : '$surface3'}
           borderRadius="$rounded24"
-          gap="$none"
           height={HANDLEBAR_HEIGHT}
           overflow="hidden"
           width={HANDLEBAR_WIDTH}

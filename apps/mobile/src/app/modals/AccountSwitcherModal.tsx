@@ -180,7 +180,6 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
             alignItems="center"
             borderBottomColor="$surface3"
             borderBottomWidth={1}
-            gap="$none"
             p="$spacing16">
             <Text variant="bodyLarge">{t('Create a new wallet')}</Text>
           </Flex>
@@ -190,7 +189,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         key: ElementName.AddViewOnlyWallet,
         onPress: onPressAddViewOnlyWallet,
         render: () => (
-          <Flex alignItems="center" gap="$none" p="$spacing16">
+          <Flex alignItems="center" p="$spacing16">
             <Text variant="bodyLarge">{t('Add a view-only wallet')}</Text>
           </Flex>
         ),
@@ -199,12 +198,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         key: ElementName.ImportAccount,
         onPress: onPressImportWallet,
         render: () => (
-          <Flex
-            alignItems="center"
-            borderTopColor="$surface3"
-            borderTopWidth={1}
-            gap="$none"
-            p="$spacing16">
+          <Flex alignItems="center" borderTopColor="$surface3" borderTopWidth={1} p="$spacing16">
             <Text variant="bodyLarge">{t('Import a new wallet')}</Text>
           </Flex>
         ),
@@ -216,12 +210,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         key: ElementName.RestoreFromCloud,
         onPress: onPressRestore,
         render: () => (
-          <Flex
-            alignItems="center"
-            borderTopColor="$surface3"
-            borderTopWidth={1}
-            gap="$none"
-            p="$spacing16">
+          <Flex alignItems="center" borderTopColor="$surface3" borderTopWidth={1} p="$spacing16">
             <Text variant="bodyLarge">
               {IS_ANDROID ? t('Restore from Google Drive') : t('Restore from iCloud')}
             </Text>
@@ -245,8 +234,8 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const fullScreenContentHeight = 0.89 * dimensions.fullHeight
 
   return (
-    <Flex fill gap="$none" maxHeight={fullScreenContentHeight} mb="$spacing12">
-      <Flex pb="$spacing16" pt="$spacing12">
+    <Flex fill maxHeight={fullScreenContentHeight} mb="$spacing12">
+      <Flex gap="$spacing16" pb="$spacing16" pt="$spacing12">
         <AddressDisplay
           showCopy
           address={activeAccountAddress}
@@ -255,7 +244,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
           showViewOnlyBadge={isViewOnly}
           size={spacing.spacing60 - spacing.spacing4}
         />
-        <Flex gap="$none" px="$spacing24">
+        <Flex px="$spacing24">
           <Button
             emphasis={ButtonEmphasis.Secondary}
             label={t('Manage wallet')}
@@ -271,13 +260,8 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         onPress={onPressAccount}
       />
       <TouchableArea hapticFeedback mb="$spacing48" mt="$spacing16" onPress={onPressAddWallet}>
-        <Flex row alignItems="center" ml="$spacing24">
-          <Flex
-            borderColor="$surface3"
-            borderRadius="$roundedFull"
-            borderWidth={1}
-            gap="$none"
-            p="$spacing8">
+        <Flex row alignItems="center" gap="$spacing16" ml="$spacing24">
+          <Flex borderColor="$surface3" borderRadius="$roundedFull" borderWidth={1} p="$spacing8">
             <Icons.Plus
               color="$neutral2"
               height={iconSizes.icon12}
@@ -290,7 +274,6 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
           </Text>
         </Flex>
       </TouchableArea>
-
       <ActionSheetModal
         isVisible={showAddWalletModal}
         name={ModalName.AddWallet}

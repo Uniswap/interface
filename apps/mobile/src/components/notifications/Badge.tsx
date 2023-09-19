@@ -11,14 +11,13 @@ const NOTIFICATION_DOT_SIZE = 12
 function _NotificationBadge({ children, address }: Props): JSX.Element {
   const hasNotifications = useSelectAddressHasNotifications(address)
   return (
-    <Flex gap="$none" position="relative">
+    <Flex position="relative">
       {hasNotifications ? (
         <Flex
           backgroundColor="$accent1"
           borderColor="$surface2"
           borderRadius="$roundedFull"
           borderWidth={2}
-          gap="$none"
           height={NOTIFICATION_DOT_SIZE}
           position="absolute"
           right={-NOTIFICATION_DOT_SIZE / 4}

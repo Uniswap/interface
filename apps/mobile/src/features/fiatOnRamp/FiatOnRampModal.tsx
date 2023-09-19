@@ -205,7 +205,10 @@ export function FiatOnRampModal(): JSX.Element {
             px="spacing24"
             style={{ marginBottom: insets.bottom }}
             width="100%">
-            <Flex style={{ height: maxContentHeight }} onLayout={onInputPanelLayout}>
+            <Flex
+              gap="$spacing16"
+              style={{ height: maxContentHeight }}
+              onLayout={onInputPanelLayout}>
               <Text variant="subheadLarge">{t('Buy')}</Text>
               <AnimatedFlex
                 grow
@@ -250,7 +253,6 @@ export function FiatOnRampModal(): JSX.Element {
                   />
                 )}
                 <Flex
-                  gap="$none"
                   /* We want to reserve the space here, so when error occurs - layout does not jump */
                   height={spacing.spacing24}>
                   {errorText && errorColor && (

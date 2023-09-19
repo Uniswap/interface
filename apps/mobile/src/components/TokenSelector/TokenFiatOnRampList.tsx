@@ -126,7 +126,7 @@ function _TokenFiatOnRampList({ onSelectCurrency, onBack }: Props): JSX.Element 
     return (
       <>
         <Header onBack={onBack} />
-        <Flex centered grow gap="$none">
+        <Flex centered grow>
           <BaseCard.ErrorState
             retryButtonLabel="Retry"
             title={t('Couldn’t load tokens to buy')}
@@ -146,7 +146,7 @@ function _TokenFiatOnRampList({ onSelectCurrency, onBack }: Props): JSX.Element 
 
   if (supportedTokensLoading || loading) {
     return (
-      <Flex gap="$none">
+      <Flex>
         <Header onBack={onBack} />
         <Loader.Token repeat={5} />
       </Flex>
@@ -154,7 +154,7 @@ function _TokenFiatOnRampList({ onSelectCurrency, onBack }: Props): JSX.Element 
   }
 
   return (
-    <Flex grow gap="$none">
+    <Flex grow>
       <Header onBack={onBack} />
       <BottomSheetFlatList
         ref={flatListRef}
@@ -180,7 +180,7 @@ function Header({ onBack }: { onBack: () => void }): JSX.Element {
         <Icons.RotatableChevron color="$neutral1" />
       </TouchableArea>
       <Text variant="bodyLarge">{t('Select a token to buy')}</Text>
-      <Flex gap="$none" width={24} />
+      <Flex width={24} />
     </Flex>
   )
 }

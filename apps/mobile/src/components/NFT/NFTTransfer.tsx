@@ -12,19 +12,13 @@ export function NFTTransfer({
   nftSize?: number
 }): JSX.Element {
   return (
-    <Flex centered>
-      <Flex
-        borderRadius="$rounded16"
-        gap="$none"
-        height={nftSize}
-        overflow="hidden"
-        width={nftSize}>
+    <Flex centered gap="$spacing16">
+      <Flex borderRadius="$rounded16" height={nftSize} overflow="hidden" width={nftSize}>
         <NFTViewer squareGridView maxHeight={nftSize} uri={asset?.image?.url} />
       </Flex>
       <Flex centered row gap="$spacing8">
         <Flex
           borderRadius="$roundedFull"
-          gap="$none"
           height={iconSizes.icon28}
           overflow="hidden"
           width={iconSizes.icon28}>

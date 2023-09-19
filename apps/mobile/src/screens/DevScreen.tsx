@@ -58,24 +58,18 @@ export function DevScreen(): JSX.Element {
 
   return (
     <SheetScreen>
-      <Flex
-        row
-        gap="$none"
-        justifyContent="flex-end"
-        pb="$spacing12"
-        pt="$spacing36"
-        px="$spacing16">
+      <Flex row justifyContent="flex-end" pb="$spacing12" pt="$spacing36" px="$spacing16">
         <BackButton />
       </Flex>
       <ScrollView>
-        <Flex alignItems="center" gap="$none">
+        <Flex alignItems="center">
           <Text color="$neutral1" textAlign="center" variant="headlineSmall">
             {`Your Account: ${activeAccount?.address || 'none'}`}
           </Text>
           <Text mt="$spacing16" textAlign="center" variant="headlineSmall">
             🌀🌀Screen Stargate🌀🌀
           </Text>
-          <Flex centered row flexWrap="wrap" gap="$none">
+          <Flex centered row flexWrap="wrap">
             {Object.values(Screens).map((s) => (
               <TouchableArea
                 key={s}

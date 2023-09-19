@@ -82,7 +82,6 @@ export function NFTCollectionHeader({
         ) : (
           // No uri found on collection
           <Flex
-            gap="$none"
             style={[
               bannerImageStyle,
               { backgroundColor: bannerColorsFallback?.base ?? colors.surface2.val },
@@ -115,7 +114,7 @@ export function NFTCollectionHeader({
         </Flex>
 
         {/* Profile image */}
-        <Flex gap="$none" px="$spacing24" style={profileImageWrapperStyle}>
+        <Flex px="$spacing24" style={profileImageWrapperStyle}>
           <Flex
             alignItems="center"
             bg="$surface1"
@@ -125,7 +124,6 @@ export function NFTCollectionHeader({
             width={PROFILE_IMAGE_WRAPPER_SIZE}>
             {data?.image?.url ? (
               <Flex
-                gap="$none"
                 height={PROFILE_IMAGE_SIZE}
                 overflow="hidden"
                 style={{ borderRadius: PROFILE_IMAGE_SIZE }}
@@ -136,7 +134,6 @@ export function NFTCollectionHeader({
               <Flex
                 backgroundColor="$surface2"
                 borderRadius="$roundedFull"
-                gap="$none"
                 height={PROFILE_IMAGE_SIZE}
                 width={PROFILE_IMAGE_SIZE}
               />
@@ -188,7 +185,7 @@ export function NFTCollectionHeader({
               <Text color="$neutral2" variant="subheadSmall">
                 {t('Floor')}
               </Text>
-              <Flex row alignItems="center" gap="$none">
+              <Flex row alignItems="center">
                 <Text loading={loading} variant="bodyLarge">
                   {`${formatNumber(
                     collectionStats?.floorPrice?.value,
@@ -221,7 +218,6 @@ export function NFTCollectionHeader({
           {/* Collection description */}
           {data?.description ? (
             <LongText
-              gap="$none"
               initialDisplayedLines={3}
               lineBreakMode="tail"
               mt="$spacing4"

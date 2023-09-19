@@ -29,7 +29,7 @@ type AccountWithPortfolioValue = {
 const ViewOnlyHeader = (): JSX.Element => {
   const { t } = useTranslation()
   return (
-    <Flex fill gap="$none" px="$spacing24" py="$spacing8">
+    <Flex fill px="$spacing24" py="$spacing8">
       <Text color="$neutral2" variant="subheadSmall">
         {t('View only wallets')}
       </Text>
@@ -109,7 +109,7 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
   )
 
   return (
-    <Flex shrink gap="$none" position="relative">
+    <Flex shrink position="relative">
       {/* TODO(MOB-646): attempt to switch gradients to react-native-svg#LinearGradient and avoid new clear color */}
       <LinearGradient
         colors={[opacify(0, colors.surface1.val), colors.surface1.val]}

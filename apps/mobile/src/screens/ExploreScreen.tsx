@@ -81,7 +81,7 @@ export function ExploreScreen(): JSX.Element {
   return (
     <Screen bg="$transparent" edges={['top']}>
       <HandleBar backgroundColor="none" />
-      <Flex backgroundColor="$transparent" gap="$none" p="$spacing16">
+      <Flex backgroundColor="$transparent" p="$spacing16">
         <SearchTextInput
           ref={textInputRef}
           showCancelButton
@@ -98,7 +98,7 @@ export function ExploreScreen(): JSX.Element {
         <KeyboardAvoidingView behavior="height" style={flex.fill}>
           <Flex grow mx="$spacing16">
             <VirtualizedList onScroll={onScroll}>
-              <Flex gap="$none" p="$spacing4" />
+              <Flex p="$spacing4" />
               {debouncedSearchQuery.length === 0 ? (
                 <SearchEmptySection />
               ) : (

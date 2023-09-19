@@ -20,7 +20,6 @@ exports[`PortfolioBalance renders without error 1`] = `
       {
         "alignItems": "stretch",
         "flexDirection": "column",
-        "gap": 0,
         "opacity": 0,
       }
     }
@@ -55,7 +54,6 @@ exports[`PortfolioBalance renders without error 1`] = `
                 "borderTopLeftRadius": 4,
                 "borderTopRightRadius": 4,
                 "flexDirection": "row",
-                "gap": 0,
                 "opacity": 0,
               }
             }
@@ -1955,7 +1953,6 @@ exports[`PortfolioBalance renders without error 1`] = `
         {
           "alignItems": "stretch",
           "flexDirection": "column",
-          "gap": 16,
         }
       }
     >
@@ -1965,7 +1962,6 @@ exports[`PortfolioBalance renders without error 1`] = `
           {
             "alignItems": "stretch",
             "flexDirection": "column",
-            "gap": 0,
             "opacity": 0,
           }
         }

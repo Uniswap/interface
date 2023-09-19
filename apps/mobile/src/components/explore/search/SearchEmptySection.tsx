@@ -48,7 +48,12 @@ export function SearchEmptySection(): JSX.Element {
         <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
           <FlatList
             ListHeaderComponent={
-              <Flex row alignItems="center" justifyContent="space-between" mb="$spacing4">
+              <Flex
+                row
+                alignItems="center"
+                gap="$spacing16"
+                justifyContent="space-between"
+                mb="$spacing4">
                 <SectionHeaderText icon={<RecentIcon />} title={t('Recent searches')} />
                 <TouchableArea onPress={onPressClearSearchHistory}>
                   <Text color="$accent1" variant="buttonLabelSmall">

@@ -181,12 +181,7 @@ const AnimatedNumber = ({
 
     return (
       <TextLoaderWrapper loadingShimmer={loading !== 'no-shimmer'}>
-        <Flex
-          alignItems="flex-start"
-          borderRadius="$rounded4"
-          flexDirection="row"
-          gap="$none"
-          opacity={0}>
+        <Flex alignItems="flex-start" borderRadius="$rounded4" flexDirection="row" opacity={0}>
           {placeholderChars.map((_, index) => (
             <Char
               key={
@@ -206,12 +201,7 @@ const AnimatedNumber = ({
   }
 
   return (
-    <Flex
-      row
-      alignItems="flex-start"
-      backgroundColor="$surface1"
-      borderRadius="$rounded4"
-      gap="$none">
+    <Flex row alignItems="flex-start" backgroundColor="$surface1" borderRadius="$rounded4">
       <Svg height={DIGIT_HEIGHT} style={AnimatedNumberStyles.gradientStyle} width="100%">
         <Defs>
           <LinearGradient id="backgroundTop" x1="0%" x2="0%" y1="15%" y2="0%">

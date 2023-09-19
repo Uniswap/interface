@@ -30,7 +30,7 @@ function Page({
           onPress={(event): void =>
             event.nativeEvent.locationX < fullWidth * 0.33 ? context.goToPrev() : context.goToNext()
           }>
-          <Flex centered>
+          <Flex centered gap="$spacing16">
             <Flex
               row
               alignItems="center"

@@ -50,7 +50,6 @@ export function AccountIcon({
       borderColor={showBackground ? '$surface1' : '$transparent'}
       borderRadius="$roundedFull"
       borderWidth={showBackground ? 2 : 0}
-      gap="$none"
       position="relative"
       style={{
         padding: shouldShowUniconInsetPadding ? INSET_PADDING : spacing.none,

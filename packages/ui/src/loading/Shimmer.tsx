@@ -46,7 +46,7 @@ export function Shimmer({ children, contrast }: Props): JSX.Element {
 
   if (!layout) {
     return (
-      <Flex gap="$none" opacity={0} onLayout={(event): void => setLayout(event.nativeEvent.layout)}>
+      <Flex opacity={0} onLayout={(event): void => setLayout(event.nativeEvent.layout)}>
         {children}
       </Flex>
     )
@@ -60,12 +60,7 @@ export function Shimmer({ children, contrast }: Props): JSX.Element {
         width: layout.width,
         height: layout.height,
       }}>
-      <Flex
-        grow
-        backgroundColor={contrast ? '$neutral2' : '$surface3'}
-        gap="$none"
-        overflow="hidden"
-      />
+      <Flex grow backgroundColor={contrast ? '$neutral2' : '$surface3'} overflow="hidden" />
       <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
         <MaskedView
           maskElement={

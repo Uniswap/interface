@@ -51,7 +51,7 @@ export function Carousel({ slides, ...flatListProps }: CarouselProps): JSX.Eleme
 
   return (
     <CarouselContext.Provider value={{ goToNext, goToPrev, current: 0 }}>
-      <Flex grow mb="$spacing24">
+      <Flex grow gap="$spacing16" mb="$spacing24">
         <AnimatedIndicator scroll={scroll} stepCount={slides.length} />
         <AnimatedFlatList
           horizontal

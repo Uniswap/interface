@@ -35,7 +35,7 @@ function HiddenWordViewColumn({ indexes }: { indexes: number[] }): JSX.Element {
           px="$spacing12"
           py="$spacing16">
           <Text color="$neutral2">{value}</Text>
-          <Flex fill bg="$neutral3" borderRadius="$rounded20" gap="$none" height={9} />
+          <Flex fill bg="$neutral3" borderRadius="$rounded20" height={9} />
         </Flex>
       ))}
     </>

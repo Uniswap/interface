@@ -7,7 +7,6 @@ exports[`ActivityTab renders without error 1`] = `
       "alignItems": "stretch",
       "flexDirection": "column",
       "flexGrow": 1,
-      "gap": 16,
       "paddingLeft": 24,
       "paddingRight": 24,
     }
@@ -296,7 +295,6 @@ exports[`ActivityTab renders without error 2`] = `
       "alignItems": "stretch",
       "flexDirection": "column",
       "flexGrow": 1,
-      "gap": 16,
       "paddingLeft": 24,
       "paddingRight": 24,
     }
@@ -313,7 +311,6 @@ exports[`ActivityTab renders without error 2`] = `
     <RCTScrollView
       ListEmptyComponent={
         <ForwardRef
-          gap="$none"
           grow={true}
         >
           <EmptyState
@@ -481,7 +478,6 @@ exports[`ActivityTab renders without error 2`] = `
           },
           "props": {
             "ListEmptyComponent": <ForwardRef
-              gap="$none"
               grow={true}
             >
               <EmptyState

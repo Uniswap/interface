@@ -79,7 +79,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
             symbol={currency.symbol}
             url={currencyInfo.logoUrl ?? undefined}
           />
-          <Flex shrink alignItems="flex-start" gap="$none">
+          <Flex shrink alignItems="flex-start">
             <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
               {currency.name ?? shortenedSymbol}
             </Text>

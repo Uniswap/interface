@@ -55,7 +55,7 @@ export const BaseAnimatedText = ({
   if (loading) {
     return (
       <TextLoaderWrapper loadingShimmer={loading !== 'no-shimmer'}>
-        <Flex row gap="$none">
+        <Flex row>
           {/* Use empty input for loading shimmer height calculation (it is different
           than the text component height) */}
           <AnimatedTextInput

@@ -43,7 +43,6 @@ exports[`PriceText renders loading state 1`] = `
     {
       "alignItems": "stretch",
       "flexDirection": "column",
-      "gap": 0,
       "opacity": 0,
     }
   }
@@ -74,7 +73,6 @@ exports[`PriceText renders loading state 1`] = `
             {
               "alignItems": "stretch",
               "flexDirection": "row",
-              "gap": 0,
             }
           }
         >
@@ -332,7 +330,6 @@ exports[`RelativeChangeText renders loading state 1`] = `
     {
       "alignItems": "stretch",
       "flexDirection": "column",
-      "gap": 16,
       "marginTop": 2,
     }
   }
@@ -343,7 +340,6 @@ exports[`RelativeChangeText renders loading state 1`] = `
       {
         "alignItems": "stretch",
         "flexDirection": "column",
-        "gap": 0,
         "opacity": 0,
       }
     }
@@ -374,7 +370,6 @@ exports[`RelativeChangeText renders loading state 1`] = `
               {
                 "alignItems": "stretch",
                 "flexDirection": "row",
-                "gap": 0,
               }
             }
           >

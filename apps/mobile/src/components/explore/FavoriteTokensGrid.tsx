@@ -30,7 +30,7 @@ export function FavoriteTokensGrid({ showLoading }: { showLoading: boolean }): J
   }, [favoriteCurrencyIds.length])
 
   return (
-    <AnimatedBox entering={FadeIn} gap="$none">
+    <AnimatedBox entering={FadeIn}>
       <FavoriteHeaderRow
         editingTitle={t('Edit favorite tokens')}
         isEditing={isEditing}
@@ -40,7 +40,7 @@ export function FavoriteTokensGrid({ showLoading }: { showLoading: boolean }): J
       {showLoading ? (
         <FavoriteTokensGridLoader />
       ) : (
-        <Flex row flexWrap="wrap" gap="$none">
+        <Flex row flexWrap="wrap">
           {favoriteCurrencyIds.map((currencyId) => (
             <FavoriteTokenCard
               key={currencyId}
@@ -58,11 +58,11 @@ export function FavoriteTokensGrid({ showLoading }: { showLoading: boolean }): J
 
 function FavoriteTokensGridLoader(): JSX.Element {
   return (
-    <Flex row gap="$spacing8">
-      <Flex gap="$none" style={ITEM_FLEX}>
+    <Flex row>
+      <Flex m="$spacing4" style={ITEM_FLEX}>
         <Loader.Favorite contrast height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} />
       </Flex>
-      <Flex style={ITEM_FLEX}>
+      <Flex m="$spacing4" style={ITEM_FLEX}>
         <Loader.Favorite contrast height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} />
       </Flex>
     </Flex>

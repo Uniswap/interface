@@ -140,9 +140,9 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
     item: { text, subText, value, onValueChange },
   }: ListRenderItemInfo<BiometricAuthSetting>): JSX.Element => {
     return (
-      <Flex row alignItems="center" gap="$none" justifyContent="space-between">
+      <Flex row alignItems="center" justifyContent="space-between">
         <Flex row>
-          <Flex gap="$none">
+          <Flex>
             <Text variant="bodyLarge">{text}</Text>
             <Text color="$neutral2" variant="bodyMicro">
               {subText}
@@ -185,7 +185,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
             {t('{{authenticationTypeName}}', { authenticationTypeName })}
           </Text>
         </BackHeader>
-        <Flex gap="$none" p="$spacing24">
+        <Flex p="$spacing24">
           <FlatList
             ItemSeparatorComponent={renderItemSeparator}
             data={options}

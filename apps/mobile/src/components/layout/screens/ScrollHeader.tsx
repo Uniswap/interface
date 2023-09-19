@@ -40,7 +40,7 @@ export function ScrollHeader({
   scrollY,
   showHeaderScrollYDistance,
   centerElement,
-  rightElement = <Flex gap="$none" width={iconSizes.icon24} />,
+  rightElement = <Flex width={iconSizes.icon24} />,
   alwaysShowCenterElement,
   fullScreen = false,
   backgroundColor,
@@ -85,13 +85,11 @@ export function ScrollHeader({
           my="$spacing12"
           style={headerRowStyles}>
           <BackButton color={backButtonColor} />
-          <Flex shrink>
+          <Flex shrink gap="$spacing16">
             {alwaysShowCenterElement ? (
               centerElement
             ) : (
-              <AnimatedBox gap="$none" style={visibleOnScrollStyle}>
-                {centerElement}
-              </AnimatedBox>
+              <AnimatedBox style={visibleOnScrollStyle}>{centerElement}</AnimatedBox>
             )}
           </Flex>
           {rightElement}
@@ -99,7 +97,6 @@ export function ScrollHeader({
         <AnimatedBox
           borderBottomColor={backgroundColor ?? '$surface3'}
           borderBottomWidth={0.25}
-          gap="$none"
           height={1}
           overflow="visible"
           style={visibleOnScrollStyle}
@@ -122,16 +119,11 @@ function HeaderWrapper({
   backgroundColor?: ColorTokens
 }): JSX.Element {
   if (!fullScreen) {
-    return (
-      <Flex bg={backgroundColor} gap="$none">
-        {children}
-      </Flex>
-    )
+    return <Flex bg={backgroundColor}>{children}</Flex>
   }
   return (
     <AnimatedBox
       bg={backgroundColor}
-      gap="$none"
       left={0}
       opacity={0}
       position="absolute"

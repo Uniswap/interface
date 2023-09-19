@@ -68,7 +68,7 @@ export function SeedPhraseDisplay({
   return (
     <>
       {showSeedPhrase ? (
-        <Flex grow gap="$none" mt="$spacing16">
+        <Flex grow mt="$spacing16">
           <Flex grow pt="$spacing16" px="$spacing16">
             <MnemonicDisplay mnemonicId={mnemonicId} />
           </Flex>

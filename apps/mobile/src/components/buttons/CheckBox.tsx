@@ -31,7 +31,6 @@ export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.
           borderColor={checked ? '$neutral1' : '$neutral3'}
           borderRadius="$roundedFull"
           borderWidth={1.5}
-          gap="$none"
           height={iconSizes.icon24}
           justifyContent="center"
           mt="$spacing4"
@@ -45,7 +44,7 @@ export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.
             />
           ) : null}
         </Flex>
-        <Flex shrink gap="$none">
+        <Flex shrink>
           {typeof text === 'string' ? <Text variant={fontSize}>{text}</Text> : text}
         </Flex>
       </Flex>

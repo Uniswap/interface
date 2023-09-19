@@ -22,7 +22,7 @@ export function DappHeaderIcon({
   const fallback = <DappIconPlaceholder iconSize={iconSizes.icon40} name={dapp.name} />
 
   return (
-    <Flex gap="$none" height={iconSizes.icon40} width={iconSizes.icon40}>
+    <Flex height={iconSizes.icon40} width={iconSizes.icon40}>
       {dapp.icon ? (
         <ImageUri
           fallback={fallback}

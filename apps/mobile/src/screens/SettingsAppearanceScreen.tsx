@@ -26,7 +26,7 @@ export function SettingsAppearanceScreen(): JSX.Element {
       <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
         <Text variant="bodyLarge">{t('Appearance')}</Text>
       </BackHeader>
-      <Flex gap="$none" p="$spacing24">
+      <Flex p="$spacing24">
         <AppearanceOption
           Icon={ContrastIcon}
           active={currentTheme === 'system'}
@@ -86,8 +86,8 @@ function AppearanceOption({
         strokeWidth={1.5}
         width={iconSizes.icon24}
       />
-      <Flex row shrink gap="$none">
-        <Flex shrink gap="$none" ml="$spacing16">
+      <Flex row shrink>
+        <Flex shrink ml="$spacing16">
           <Text variant="bodyLarge">{title}</Text>
           <Text color="$neutral2" pr="$spacing12" variant="bodySmall">
             {subtitle}

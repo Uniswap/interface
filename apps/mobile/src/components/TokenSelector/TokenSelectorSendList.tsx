@@ -77,7 +77,7 @@ function EmptyList({ onClose }: { onClose: () => void }): JSX.Element {
   return (
     <Flex>
       <SectionHeader title={t('Your tokens')} />
-      <Flex gap="$none" paddingHorizontal="$spacing16" paddingTop="$spacing16">
+      <Flex paddingHorizontal="$spacing16" paddingTop="$spacing16">
         {isLoading ? (
           <Flex centered row flexDirection="row" gap="$spacing4" mt="$spacing60" p="$spacing4">
             <SpinningLoader color="neutral3" size={iconSizes.icon64} />

@@ -106,7 +106,6 @@ export function NotificationToast({
         borderColor={useSmallDisplay ? '$transparent' : '$surface2'}
         borderRadius="$rounded16"
         borderWidth={1}
-        gap="$none"
         left={0}
         marginHorizontal="$spacing16"
         pointerEvents="box-none"

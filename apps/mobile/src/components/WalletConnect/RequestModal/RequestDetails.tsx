@@ -91,7 +91,7 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): JSX.Eleme
               <Text color="$neutral2" py="$spacing4" variant="monospace">
                 {objKey}
               </Text>
-              <Flex flexShrink={1}>
+              <Flex shrink gap="$spacing16">
                 {getValidAddress(childValue, true) ? (
                   <AddressButton address={childValue} chainId={chainId} textVariant="monospace" />
                 ) : (
@@ -172,7 +172,6 @@ function TransactionDetails({
         <Flex
           backgroundColor={isLoading ? '$transparent' : '$surface3'}
           borderRadius="$rounded12"
-          gap="$none"
           px="$spacing8"
           py="$spacing4">
           <Text color="$neutral1" loading={isLoading} variant="monospace">

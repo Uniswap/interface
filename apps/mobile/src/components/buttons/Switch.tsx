@@ -19,7 +19,7 @@ export function Switch({ value, onValueChange, disabled, ...rest }: Props): JSX.
   const colors = useSporeColors()
 
   return (
-    <Flex gap="$none">
+    <Flex>
       <BaseSwitch
         ios_backgroundColor="transparent"
         // TODO(MOB-1226): pull colors from dark/light theme with Tamagui

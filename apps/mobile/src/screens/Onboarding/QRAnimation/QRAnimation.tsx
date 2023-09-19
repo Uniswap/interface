@@ -214,7 +214,6 @@ export function QRAnimation({
                     borderColor="$surface3"
                     borderRadius="$rounded20"
                     borderWidth={2}
-                    gap="$none"
                     height={QR_CONTAINER_SIZE}
                     overflow="hidden"
                     width={QR_CONTAINER_SIZE}>
@@ -310,10 +309,9 @@ export function QRAnimation({
             <Button
               CustomIcon={
                 <Flex grow row alignItems="center" justifyContent="space-between">
-                  <Flex row alignItems="center" space="$spacing8">
+                  <Flex row alignItems="center" gap="$spacing8">
                     <Flex
                       borderRadius="$roundedFull"
-                      gap="$none"
                       padding="$spacing8"
                       style={{ backgroundColor: opacify(10, colors.sporeWhite.val) }}>
                       <LockIcon

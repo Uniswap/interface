@@ -129,16 +129,11 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
         }>
         {!balancesById ? (
           isNonPollingRequestInFlight(networkStatus) ? (
-            <Flex gap="$none" px="$spacing24" style={containerProps?.loadingContainerStyle}>
+            <Flex px="$spacing24" style={containerProps?.loadingContainerStyle}>
               <Loader.Token repeat={4} />
             </Flex>
           ) : (
-            <Flex
-              flex={1}
-              flexGrow={1}
-              gap="$none"
-              justifyContent="center"
-              style={containerProps?.emptyContainerStyle}>
+            <Flex fill grow justifyContent="center" style={containerProps?.emptyContainerStyle}>
               <BaseCard.ErrorState
                 retryButtonLabel="Retry"
                 title={t('Couldn’t load token balances')}
@@ -150,11 +145,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
           <AnimatedFlashList
             ref={ref}
             ListEmptyComponent={
-              <Flex
-                flexGrow={1}
-                gap="$none"
-                px="$spacing24"
-                style={containerProps?.emptyContainerStyle}>
+              <Flex grow px="$spacing24" style={containerProps?.emptyContainerStyle}>
                 {empty}
               </Flex>
             }
@@ -164,12 +155,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
             ListFooterComponentStyle={{ zIndex: zIndices.negative }}
             ListHeaderComponent={
               isError(networkStatus, !!balancesById) ? (
-                <AnimatedBox
-                  entering={FadeInDown}
-                  exiting={FadeOut}
-                  gap="$none"
-                  px="$spacing24"
-                  py="$spacing8">
+                <AnimatedBox entering={FadeInDown} exiting={FadeOut} px="$spacing24" py="$spacing8">
                   <BaseCard.InlineErrorState
                     title={t('Failed to fetch token balances')}
                     onRetry={refetch}

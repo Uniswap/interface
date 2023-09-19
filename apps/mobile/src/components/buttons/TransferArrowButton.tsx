@@ -31,7 +31,7 @@ export function TransferArrowButton({
       p={padding}
       onPress={onPress}
       {...rest}>
-      <Flex alignItems="center" gap="$none" justifyContent="center" p="$spacing2">
+      <Flex centered p="$spacing2">
         <Arrow color={colors.neutral2.val} direction="s" size={ICON_SIZE} />
       </Flex>
     </TouchableArea>

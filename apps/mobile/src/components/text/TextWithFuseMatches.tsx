@@ -62,5 +62,9 @@ export function TextWithFuseMatches({
     </>
   )
 
-  return <Flex row>{elements}</Flex>
+  return (
+    <Flex row gap="$spacing16">
+      {elements}
+    </Flex>
+  )
 }

@@ -104,7 +104,7 @@ export const TokenItem = memo(function _TokenItem({
         <AnimatedFlex grow row gap="spacing12" px="spacing24" py="spacing8">
           <Flex centered row gap="$spacing4" overflow="hidden">
             {index !== undefined && (
-              <Flex gap="$none" minWidth={16}>
+              <Flex minWidth={16}>
                 <Text color="$neutral2" variant="buttonLabelMicro">
                   {index + 1}
                 </Text>

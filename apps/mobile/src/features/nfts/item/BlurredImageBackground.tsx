@@ -29,7 +29,7 @@ export const BlurredImageBackground = ({
         </AnimatedFlex>
       ) : null}
       <BlurView intensity={99} style={StyleSheet.absoluteFill} />
-      <Flex gap="$none" opacity={0.8} style={[StyleSheet.absoluteFill, { backgroundColor }]} />
+      <Flex opacity={0.8} style={[StyleSheet.absoluteFill, { backgroundColor }]} />
     </View>
   )
 }

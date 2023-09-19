@@ -25,13 +25,12 @@ const ThemedAnimatedText = createText<Theme>(Animated.Text)
 const TextPlaceholder = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   return (
     <Flex row alignItems="center">
-      <Flex row alignItems="center" position="relative">
+      <Flex row alignItems="center" gap="$spacing16" position="relative">
         <HiddenFromScreenReaders>{children}</HiddenFromScreenReaders>
         <Flex
           bg="$surface3"
           borderRadius="$rounded4"
           bottom="5%"
-          gap="$none"
           left={0}
           position="absolute"
           right={0}

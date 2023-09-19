@@ -83,7 +83,6 @@ export function CancelConfirmationView({
         borderBottomColor="$surface3"
         borderBottomWidth={1}
         borderRadius="$rounded16"
-        gap="$none"
         width="100%">
         <Flex grow row justifyContent="space-between" p="$spacing12">
           <Text variant="subheadSmall">{t('Network fee')}</Text>

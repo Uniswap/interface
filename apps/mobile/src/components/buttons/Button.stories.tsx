@@ -9,7 +9,7 @@ export default {
   component: Button,
   decorators: [
     (Story): JSX.Element => (
-      <Flex gap="$none" m="$spacing24">
+      <Flex m="$spacing24">
         <Story />
       </Flex>
     ),

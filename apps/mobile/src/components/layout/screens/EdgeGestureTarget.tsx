@@ -20,7 +20,6 @@ export function HorizontalEdgeGestureTarget({
   return (
     <Flex
       bg="$accent1"
-      gap="$none"
       height={height}
       left={edge === 'left' ? 0 : undefined}
       opacity={0}

@@ -96,16 +96,10 @@ export function DappConnectionItem({
               width={iconSizes.icon28}
               zIndex="$tooltip"
               onPress={onDisconnect}>
-              <Flex
-                backgroundColor="$surface1"
-                borderRadius="$rounded12"
-                gap="$none"
-                height={2}
-                width={14}
-              />
+              <Flex backgroundColor="$surface1" borderRadius="$rounded12" height={2} width={14} />
             </AnimatedTouchableArea>
           ) : (
-            <Flex gap="$none" height={iconSizes.icon28} width={iconSizes.icon28} />
+            <Flex height={iconSizes.icon28} width={iconSizes.icon28} />
           )}
         </Flex>
         <Flex grow alignItems="center" gap="$spacing8">

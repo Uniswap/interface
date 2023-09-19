@@ -76,7 +76,7 @@ function _TokenOptionItem({
               symbol={currency.symbol}
               url={currencyInfo.logoUrl ?? undefined}
             />
-            <Flex shrink alignItems="flex-start" gap="$none">
+            <Flex shrink alignItems="flex-start">
               <Flex centered row gap="$spacing8">
                 <Flex shrink>
                   <Text color="$neutral1" numberOfLines={1} variant="bodyLarge">
@@ -98,7 +98,7 @@ function _TokenOptionItem({
                   {getSymbolDisplayText(currency.symbol)}
                 </Text>
                 {!currency.isNative && showTokenAddress && (
-                  <Flex shrink gap="$none">
+                  <Flex shrink>
                     <Text color="$neutral3" numberOfLines={1} variant="subheadSmall">
                       {shortenAddress(currency.address)}
                     </Text>
@@ -110,7 +110,7 @@ function _TokenOptionItem({
           </Flex>
 
           {quantity && quantity !== 0 ? (
-            <Flex alignItems="flex-end" gap="$none">
+            <Flex alignItems="flex-end">
               <Text variant="bodyLarge">{formatNumber(quantity, NumberType.TokenTx)}</Text>
               <Text color="$neutral2" variant="subheadSmall">
                 {formatUSDPrice(balanceUSD)}

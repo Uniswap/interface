@@ -49,18 +49,17 @@ export function CollectionPreviewCard({
           {collection?.image?.url ? (
             <Flex
               borderRadius="$roundedFull"
-              gap="$none"
               height={imageSizes.image40}
               overflow="hidden"
               width={imageSizes.image40}>
               <NFTViewer squareGridView maxHeight={spacing.spacing60} uri={collection.image.url} />
             </Flex>
           ) : null}
-          <Flex shrink gap="$none">
+          <Flex shrink>
             <Flex grow row alignItems="center" gap="$spacing8">
               {/* Width chosen to ensure truncation of collection name on both small
                 and large screens with sufficient padding */}
-              <Flex shrink gap="$none">
+              <Flex shrink>
                 <Text color="$neutral1" numberOfLines={1} variant="bodyLarge">
                   {collection?.name || fallbackData?.name || '-'}
                 </Text>

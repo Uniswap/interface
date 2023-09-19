@@ -7,7 +7,7 @@ import { theme } from 'ui/src/theme/restyle'
 
 export const NoTransactions = memo(function _NoTransactions() {
   return (
-    <Flex gap="$none" mb="$spacing24">
+    <Flex mb="$spacing24">
       <OverlayIcon
         bottom={-23}
         icon={<NoTransactionBgIcon color={theme.colors.neutral3} />}

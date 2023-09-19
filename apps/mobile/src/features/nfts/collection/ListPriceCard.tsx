@@ -35,7 +35,7 @@ export function ListPriceBadge({
           <PriceAmount {...priceAmountProps} />
         </BlurView>
       ) : (
-        <Flex gap="$none" style={[styles.background, { backgroundColor: colors.surface2.val }]}>
+        <Flex style={[styles.background, { backgroundColor: colors.surface2.val }]}>
           <PriceAmount {...priceAmountProps} />
         </Flex>
       )}

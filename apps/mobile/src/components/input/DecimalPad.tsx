@@ -90,16 +90,10 @@ export function _DecimalPad({
     ]
   }, [disabled, hideDecimal, cursorAtStart])
   return (
-    <AnimatedBox flexDirection="row" flexWrap="wrap" gap="$none">
+    <AnimatedBox flexDirection="row" flexWrap="wrap">
       {keys.map((key, i) =>
         key.hidden ? (
-          <Flex
-            key={i}
-            alignItems={key.align}
-            gap="$none"
-            height="25%"
-            width={i % 3 === 1 ? '50%' : '25%'}
-          />
+          <Flex key={i} alignItems={key.align} height="25%" width={i % 3 === 1 ? '50%' : '25%'} />
         ) : (
           <KeyButton
             {...key}

@@ -54,7 +54,6 @@ exports[`renders wallet preview card 1`] = `
       {
         "alignItems": "center",
         "flexDirection": "row",
-        "gap": 16,
         "justifyContent": "space-between",
       }
     }
@@ -75,7 +74,6 @@ exports[`renders wallet preview card 1`] = `
           {
             "alignItems": "stretch",
             "flexDirection": "column",
-            "gap": 0,
             "height": 32,
             "width": 32,
           }
@@ -86,7 +84,6 @@ exports[`renders wallet preview card 1`] = `
             {
               "alignItems": "stretch",
               "flexDirection": "column",
-              "gap": 0,
               "height": 32,
               "width": 32,
             }
@@ -225,7 +222,6 @@ exports[`renders wallet preview card 1`] = `
           {
             "alignItems": "stretch",
             "flexDirection": "column",
-            "gap": 0,
           }
         }
       >
@@ -264,7 +260,6 @@ exports[`renders wallet preview card 1`] = `
           "borderTopRightRadius": 999999,
           "borderTopWidth": 1,
           "flexDirection": "column",
-          "gap": 16,
           "height": 16,
           "justifyContent": "center",
           "width": 16,
@@ -281,7 +276,6 @@ exports[`renders wallet preview card 1`] = `
             "borderTopLeftRadius": 999999,
             "borderTopRightRadius": 999999,
             "flexDirection": "column",
-            "gap": 0,
             "height": 8,
             "opacity": 1,
             "width": 8,

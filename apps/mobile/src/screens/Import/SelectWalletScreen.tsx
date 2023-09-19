@@ -262,7 +262,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
             </Flex>
           </ScrollView>
         )}
-        <Flex gap="$none" opacity={showError ? 0 : 1}>
+        <Flex opacity={showError ? 0 : 1}>
           <Button
             disabled={
               isImportingAccounts || isLoading || !!showError || selectedAddresses.length === 0

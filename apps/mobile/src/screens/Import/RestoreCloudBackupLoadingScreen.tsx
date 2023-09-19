@@ -133,7 +133,7 @@ export function RestoreCloudBackupLoadingScreen({
 
   if (isError) {
     return (
-      <Flex alignSelf="center" gap="$none" px="$spacing16">
+      <Flex alignSelf="center" px="$spacing16">
         <BaseCard.ErrorState
           description={t(
             `Failed to import backups due to lack of permissions, interruption of authorization, or due to a cloud error`
@@ -162,7 +162,7 @@ export function RestoreCloudBackupLoadingScreen({
       })
     } else {
       return (
-        <Flex alignSelf="center" gap="$none" px="$spacing16">
+        <Flex alignSelf="center" px="$spacing16">
           <BaseCard.ErrorState
             description={
               IS_ANDROID

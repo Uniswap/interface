@@ -38,7 +38,6 @@ function _RotatableChevron({
     <Flex
       centered
       borderRadius="$roundedFull"
-      gap="$none"
       style={{ transform: [{ rotate: degree }] }}
       {...rest}>
       <Icons.Chevron color={color} height={height} width={width} />

@@ -63,38 +63,38 @@ const SitePermissions = (): JSX.Element => {
         {t('App permissions')}
       </Text>
       <Flex row alignItems="flex-start" gap="$spacing8">
-        <Flex gap="$none" mt="$spacing2">
+        <Flex mt="$spacing2">
           <Checkmark
             color={colors.statusSuccess.val}
             height={iconSizes.icon16}
             width={iconSizes.icon16}
           />
         </Flex>
-        <Flex fill gap="$none">
+        <Flex fill>
           <Text color="$neutral1" variant="bodySmall">
             {t('View your wallet address')}
           </Text>
         </Flex>
       </Flex>
       <Flex row alignItems="flex-start" gap="$spacing8">
-        <Flex gap="$none" mt="$spacing2">
+        <Flex mt="$spacing2">
           <Checkmark
             color={colors.statusSuccess.val}
             height={iconSizes.icon16}
             width={iconSizes.icon16}
           />
         </Flex>
-        <Flex fill gap="$none">
+        <Flex fill>
           <Text color="$neutral1" variant="bodySmall">
             {t('View your token balances')}
           </Text>
         </Flex>
       </Flex>
       <Flex row alignItems="flex-start" gap="$spacing8">
-        <Flex gap="$none" mt="$spacing2">
+        <Flex mt="$spacing2">
           <X color={colors.statusCritical.val} height={iconSizes.icon16} width={iconSizes.icon16} />
         </Flex>
-        <Flex fill gap="$none">
+        <Flex fill>
           <Text color="$neutral1" variant="bodySmall">
             {t('Transfer your assets without consent')}
           </Text>
@@ -262,7 +262,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
           <NetworksRow chains={pendingSession.chains} />
           <Separator borderColor="$surface1" width={1} />
           <SwitchAccountRow activeAddress={activeAddress} setModalState={setModalState} />
-          <Flex gap="$none" />
+          <Flex />
         </Flex>
         <Flex flexDirection="row" gap="$spacing8" justifyContent="space-between">
           <Button

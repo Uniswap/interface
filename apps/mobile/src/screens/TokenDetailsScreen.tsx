@@ -84,7 +84,6 @@ function HeaderTitleElement({
   return (
     <Flex
       alignItems="center"
-      gap="$none"
       justifyContent="space-between"
       ml={ellipsisMenuVisible ? '$spacing32' : '$none'}>
       <HeaderPriceLabel price={tokenProject?.markets?.[0]?.price} />
@@ -309,7 +308,7 @@ function TokenDetails({
         centerElement={<HeaderTitleElement data={data} ellipsisMenuVisible={ellipsisMenuVisible} />}
         renderedInModal={inModal}
         rightElement={
-          <Flex row alignItems="center">
+          <Flex row alignItems="center" gap="$spacing16">
             {ellipsisMenuVisible && (
               <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
                 <TouchableArea
@@ -341,7 +340,7 @@ function TokenDetails({
             />
           </Flex>
           {error ? (
-            <AnimatedBox entering={FadeInDown} exiting={FadeOutDown} gap="$none" px="$spacing24">
+            <AnimatedBox entering={FadeInDown} exiting={FadeOutDown} px="$spacing24">
               <BaseCard.InlineErrorState onRetry={retry} />
             </AnimatedBox>
           ) : null}

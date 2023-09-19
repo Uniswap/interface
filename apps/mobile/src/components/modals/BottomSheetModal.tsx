@@ -199,7 +199,7 @@ export function BottomSheetModal({
             tint={isDarkMode ? 'dark' : 'light'}
           />
         ) : (
-          <Flex fill bg="$surface2" gap="$none" />
+          <Flex fill bg="$surface2" />
         )}
       </Animated.View>
     ),

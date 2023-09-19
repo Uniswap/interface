@@ -85,7 +85,7 @@ export function NFTCollectionContextMenu({
   // Only display menu if valid options from data response, otherwise return empty
   // element for spacing purposes
   if (!homepageUrl && !twitterURL)
-    return <Flex gap="$none" style={{ padding: ICON_PADDING }} width={ICON_SIZE} />
+    return <Flex style={{ padding: ICON_PADDING }} width={ICON_SIZE} />
 
   return (
     <ContextMenu

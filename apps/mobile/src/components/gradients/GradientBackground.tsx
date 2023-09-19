@@ -7,7 +7,6 @@ export function GradientBackground({ children, ...rest }: FlexProps): JSX.Elemen
   return (
     <Flex
       bottom={0}
-      gap="$none"
       left={0}
       position="absolute"
       right={0}

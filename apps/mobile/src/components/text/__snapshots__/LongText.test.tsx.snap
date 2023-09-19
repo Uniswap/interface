@@ -16,7 +16,6 @@ exports[`renders a LongText 1`] = `
       {
         "alignItems": "stretch",
         "flexDirection": "column",
-        "gap": 0,
       }
     }
   >

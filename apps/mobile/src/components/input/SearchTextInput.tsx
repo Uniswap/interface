@@ -157,7 +157,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       : null
 
     return (
-      <Flex row shrink alignItems="center" gap="$none">
+      <Flex row shrink alignItems="center">
         <AnimatedFlex
           row
           alignItems="center"
@@ -171,7 +171,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           py={py}
           style={textInputStyle}
           {...shadowProps}>
-          <Flex gap="$none" py="$spacing4">
+          <Flex py="$spacing4">
             <Icons.Search color="$neutral2" height={iconSizes.icon20} width={iconSizes.icon20} />
           </Flex>
           <TextInput
@@ -198,18 +198,15 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           />
 
           {showClearButtonJS ? (
-            <AnimatedBox gap="$none" style={[clearButtonStyle]}>
+            <AnimatedBox style={[clearButtonStyle]}>
               <ClearButton clearIcon={clearIcon} onPress={onClear} />
             </AnimatedBox>
           ) : (
-            <AnimatedBox gap="$none" style={[endAdornmentStyle]}>
-              {endAdornment}
-            </AnimatedBox>
+            <AnimatedBox style={[endAdornmentStyle]}>{endAdornment}</AnimatedBox>
           )}
         </AnimatedFlex>
         {showCancelButton && (
           <AnimatedBox
-            gap="$none"
             style={[cancelButtonStyle, CancelButtonDefaultStyle]}
             onLayout={onCancelLayout}>
             <TouchableArea onPress={onPressCancel}>

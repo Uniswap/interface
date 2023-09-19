@@ -97,7 +97,6 @@ export function GenericImportForm({
           }
           borderRadius="$rounded20"
           borderWidth={1}
-          gap="$none"
           minHeight={minHeight}
           px={px}
           py={py}

@@ -39,18 +39,10 @@ export function FiatOnRampConnectingView({
         exiting={FadeOut}
         style={{ marginBottom: insets.bottom }}>
         <Flex row gap="$spacing16" pb="$spacing16">
-          <Flex
-            alignItems="center"
-            gap="$none"
-            justifyContent="center"
-            style={styles.uniswapLogoWrapper}>
+          <Flex alignItems="center" justifyContent="center" style={styles.uniswapLogoWrapper}>
             <Image source={UNISWAP_LOGO_LARGE} style={styles.uniswapLogo} />
           </Flex>
-          <Flex
-            alignItems="center"
-            gap="$none"
-            justifyContent="center"
-            style={styles.moonpayLogoWrapper}>
+          <Flex alignItems="center" justifyContent="center" style={styles.moonpayLogoWrapper}>
             <MoonpayLogo height={ICON_SIZE} width={ICON_SIZE} />
           </Flex>
         </Flex>

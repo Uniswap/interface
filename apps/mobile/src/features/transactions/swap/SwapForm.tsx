@@ -261,8 +261,8 @@ function _SwapForm({
             </Flex>
           </Trace>
 
-          <Flex gap="$none" zIndex="$popover">
-            <Flex alignItems="center" gap="$none" height={0} style={StyleSheet.absoluteFill}>
+          <Flex zIndex="$popover">
+            <Flex alignItems="center" height={0} style={StyleSheet.absoluteFill}>
               <Flex
                 alignItems="center"
                 bottom={
@@ -276,7 +276,6 @@ function _SwapForm({
                     )
                   ) / 2
                 }
-                gap="$none"
                 position="absolute">
                 <Trace logPress element={ElementName.SwitchCurrenciesButton}>
                   <SwapArrowButton
@@ -290,7 +289,7 @@ function _SwapForm({
           </Flex>
 
           <Trace section={SectionName.CurrencyOutputPanel}>
-            <Flex gap="$none">
+            <Flex>
               <Flex
                 backgroundColor="$surface2"
                 borderBottomLeftRadius={
@@ -301,7 +300,6 @@ function _SwapForm({
                 }
                 borderTopLeftRadius="$rounded20"
                 borderTopRightRadius="$rounded20"
-                gap="$none"
                 overflow="hidden"
                 position="relative">
                 <CurrencyInputPanel
@@ -370,7 +368,7 @@ function _SwapForm({
                       strokeWidth={1.5}
                       width={iconSizes.icon16}
                     />
-                    <Flex row gap="$none">
+                    <Flex row>
                       <Text color={swapWarningColor.text} variant="subheadSmall">
                         {trade.trade && isPriceImpactWarning(swapWarning)
                           ? getRateToDisplay(trade.trade, showInverseRate)
@@ -424,7 +422,7 @@ function _SwapForm({
                         width={iconSizes.icon20}
                       />
                     )}
-                    <Flex row gap="$none">
+                    <Flex row>
                       <Text
                         color={swapDataRefreshing ? '$neutral3' : '$neutral2'}
                         variant="subheadSmall">

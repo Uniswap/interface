@@ -25,7 +25,7 @@ export function FiatOnRampBanner(props: TouchableAreaProps): JSX.Element {
         }}
         {...props}
         hapticFeedback>
-        <Flex fill gap="$none" position="absolute" right={0} top={0}>
+        <Flex fill position="absolute" right={0} top={0}>
           <FiatOnRampBackground color={colors.sporeWhite.val} />
         </Flex>
         <Flex gap="$spacing4">

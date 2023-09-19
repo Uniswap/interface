@@ -64,7 +64,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                 <Flex row alignItems="center" justifyContent="space-between">
                   <Flex centered row gap="$spacing12">
                     <Unicon address={mnemonicId} size={32} />
-                    <Flex gap="$none">
+                    <Flex>
                       <Text numberOfLines={1} variant="subheadSmall">
                         {t('Backup {{backupIndex}}', { backupIndex: sortedBackups.length - index })}
                       </Text>

@@ -31,7 +31,6 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         "borderTopWidth": 1,
         "flexDirection": "column",
         "flexShrink": 1,
-        "gap": 0,
         "justifyContent": "center",
         "minHeight": 120,
         "paddingBottom": 16,
@@ -47,7 +46,6 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         {
           "alignItems": "flex-end",
           "flexDirection": "row",
-          "gap": 0,
           "justifyContent": "center",
           "width": "100%",
         }
@@ -255,7 +253,6 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
       {
         "alignItems": "stretch",
         "flexDirection": "column",
-        "gap": 16,
       }
     }
   />

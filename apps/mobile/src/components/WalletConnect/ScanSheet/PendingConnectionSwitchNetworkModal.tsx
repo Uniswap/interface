@@ -42,7 +42,7 @@ export const PendingConnectionSwitchNetworkModal = ({
                 <Text color="$neutral1" variant="bodyLarge">
                   {info.label}
                 </Text>
-                <Flex gap="$none" height={iconSizes.icon24} width={iconSizes.icon24}>
+                <Flex height={iconSizes.icon24} width={iconSizes.icon24}>
                   {chainId === selectedChainId && (
                     <Check
                       color={colors.accent1.val}

@@ -240,11 +240,7 @@ export function TransferTokenForm({
           {nftIn ? (
             <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 4} />
           ) : (
-            <Flex
-              backgroundColor="$surface2"
-              borderRadius="$rounded20"
-              gap="$none"
-              justifyContent="center">
+            <Flex backgroundColor="$surface2" borderRadius="$rounded20" justifyContent="center">
               <CurrencyInputPanel
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
@@ -274,10 +270,9 @@ export function TransferTokenForm({
             </Flex>
           )}
 
-          <Flex gap="$none" zIndex="$popover">
+          <Flex zIndex="$popover">
             <Flex
               alignItems="center"
-              gap="$none"
               height={
                 TRANSFER_DIRECTION_BUTTON_SIZE +
                 TRANSFER_DIRECTION_BUTTON_INNER_PADDING +
@@ -287,21 +282,19 @@ export function TransferTokenForm({
               <Flex
                 alignItems="center"
                 bottom={TRANSFER_DIRECTION_BUTTON_SIZE / 2}
-                gap="$none"
                 position="absolute">
                 <TransferArrowButton disabled bg="$surface2" padding="$spacing8" />
               </Flex>
             </Flex>
           </Flex>
 
-          <Flex gap="$none">
+          <Flex>
             <Flex
               backgroundColor={recipient ? '$surface2' : '$transparent'}
               borderBottomLeftRadius={transferWarning || isBlocked ? '$none' : '$rounded20'}
               borderBottomRightRadius={transferWarning || isBlocked ? '$none' : '$rounded20'}
               borderTopLeftRadius="$rounded20"
               borderTopRightRadius="$rounded20"
-              gap="$none"
               justifyContent="center">
               {recipient && (
                 <RecipientInputPanel

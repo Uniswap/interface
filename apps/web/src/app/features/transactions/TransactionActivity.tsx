@@ -29,7 +29,7 @@ const loadingData: ActivityItem[] = [
 ]
 
 const SectionTitle = ({ title }: { title: string }): JSX.Element => (
-  <Flex gap="$none" pb="$spacing12">
+  <Flex pb="$spacing12">
     <Text color="$neutral2" variant="subheadSmall">
       {title}
     </Text>

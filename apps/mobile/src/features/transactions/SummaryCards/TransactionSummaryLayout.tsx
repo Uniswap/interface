@@ -103,7 +103,7 @@ function TransactionSummaryLayout({
       width={TXN_STATUS_ICON_SIZE}
     />
   ) : status === TransactionStatus.Failed ? (
-    <Flex grow alignItems="flex-end" gap="$none" justifyContent="space-between">
+    <Flex grow alignItems="flex-end" justifyContent="space-between">
       <AlertTriangle
         color={colors.DEP_accentWarning.val}
         fill={statusIconFill}
@@ -126,22 +126,22 @@ function TransactionSummaryLayout({
               {icon}
             </Flex>
           )}
-          <Flex grow shrink gap="$none">
-            <Flex grow gap="$none">
+          <Flex grow shrink>
+            <Flex grow>
               <Flex grow row alignItems="center" gap="$spacing4" justifyContent="space-between">
                 <Text color="$neutral2" numberOfLines={1} variant="bodyLarge">
                   {title}
                 </Text>
                 {!inProgress && rightBlock}
               </Flex>
-              <Flex grow row>
-                <Flex grow shrink gap="$none">
+              <Flex grow row gap="$spacing16">
+                <Flex grow shrink>
                   <Text color="$neutral1" variant="subheadSmall">
                     {caption}
                   </Text>
                 </Flex>
                 {status === TransactionStatus.Failed && onRetry && (
-                  <Flex flexShrink={0} gap="$none">
+                  <Flex flexShrink={0}>
                     <Text color="$accent1" variant="buttonLabelSmall" onPress={onRetry}>
                       {t('Retry')}
                     </Text>

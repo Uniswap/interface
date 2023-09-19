@@ -60,7 +60,7 @@ export function SettingsWalletEdit({
         <Text variant="bodyLarge">{t('Nickname')}</Text>
       </BackHeader>
       <Flex gap="$spacing36" px="$spacing24" py="$spacing24">
-        <Flex gap="$none">
+        <Flex>
           <Flex row alignItems="center">
             {showEditInput ? (
               <TextInput
@@ -83,14 +83,14 @@ export function SettingsWalletEdit({
                 onSubmitEditing={handleNicknameUpdate}
               />
             ) : (
-              <Flex row alignItems="center">
+              <Flex row alignItems="center" gap="$spacing16">
                 <Flex shrink>
                   <Text color="$neutral1" variant="headlineMedium">
                     {nickname || shortenAddress(address)}
                   </Text>
                 </Flex>
                 {!ensName && (
-                  <Flex gap="$none" ml="$spacing12">
+                  <Flex ml="$spacing12">
                     <Button
                       IconName={PencilIcon}
                       emphasis={ButtonEmphasis.Secondary}

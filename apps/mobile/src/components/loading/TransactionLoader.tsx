@@ -30,7 +30,7 @@ export function TransactionLoader({ opacity }: TransactionLoaderProps): JSX.Elem
             height={TXN_HISTORY_ICON_SIZE}
             width={TXN_HISTORY_ICON_SIZE}
           />
-          <Flex shrink gap="$none">
+          <Flex shrink>
             <Flex row alignItems="center" gap="$spacing4">
               <Text
                 loading

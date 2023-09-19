@@ -96,7 +96,7 @@ function SectionContainer({
   style,
 }: PropsWithChildren<{ style?: StyleProp<ViewStyle> }>): JSX.Element | null {
   return children ? (
-    <Flex gap="$none" p="$spacing16" style={style}>
+    <Flex p="$spacing16" style={style}>
       {children}
     </Flex>
   ) : null
@@ -277,8 +277,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
               backgroundColor="$surface2"
               borderBottomColor="$surface2"
               borderBottomWidth={1}
-              borderRadius="$rounded16"
-              gap="$none">
+              borderRadius="$rounded16">
               {!permitInfo && (
                 <SectionContainer style={requestMessageStyle}>
                   <Flex gap="$spacing12">
@@ -286,7 +285,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                   </Flex>
                 </SectionContainer>
               )}
-              <Flex gap="$none" px="$spacing16" py="$spacing12">
+              <Flex px="$spacing16" py="$spacing12">
                 {methodCostsGas(request) ? (
                   <NetworkFee
                     chainId={chainId}

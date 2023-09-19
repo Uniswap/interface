@@ -7,7 +7,7 @@ import { theme } from 'ui/src/theme/restyle'
 
 export const NoTokens = memo(function _NoTokens() {
   return (
-    <Flex gap="$none">
+    <Flex>
       <OverlayIcon
         bottom={0}
         icon={<NoTokensBgIcon color={theme.colors.neutral2} />}

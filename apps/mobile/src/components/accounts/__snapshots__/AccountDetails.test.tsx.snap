@@ -19,7 +19,6 @@ exports[`AccountDetails renders without error 1`] = `
         "flex": 1,
         "flexDirection": "row",
         "flexShrink": 1,
-        "gap": 16,
       }
     }
   >
@@ -37,7 +36,6 @@ exports[`AccountDetails renders without error 1`] = `
           {
             "alignItems": "stretch",
             "flexDirection": "column",
-            "gap": 0,
             "position": "relative",
           }
         }
@@ -61,7 +59,6 @@ exports[`AccountDetails renders without error 1`] = `
               "borderTopRightRadius": 999999,
               "borderTopWidth": 0,
               "flexDirection": "column",
-              "gap": 0,
               "padding": 0,
               "position": "relative",
             }
@@ -72,7 +69,6 @@ exports[`AccountDetails renders without error 1`] = `
               {
                 "alignItems": "stretch",
                 "flexDirection": "column",
-                "gap": 0,
                 "height": 50,
                 "width": 50,
               }
@@ -83,7 +79,6 @@ exports[`AccountDetails renders without error 1`] = `
                 {
                   "alignItems": "stretch",
                   "flexDirection": "column",
-                  "gap": 0,
                   "height": 50,
                   "width": 50,
                 }
@@ -310,7 +305,6 @@ exports[`AccountDetails renders without error with chevron 1`] = `
         "flex": 1,
         "flexDirection": "row",
         "flexShrink": 1,
-        "gap": 16,
       }
     }
   >
@@ -328,7 +322,6 @@ exports[`AccountDetails renders without error with chevron 1`] = `
           {
             "alignItems": "stretch",
             "flexDirection": "column",
-            "gap": 0,
             "position": "relative",
           }
         }
@@ -352,7 +345,6 @@ exports[`AccountDetails renders without error with chevron 1`] = `
               "borderTopRightRadius": 999999,
               "borderTopWidth": 0,
               "flexDirection": "column",
-              "gap": 0,
               "padding": 0,
               "position": "relative",
             }
@@ -363,7 +355,6 @@ exports[`AccountDetails renders without error with chevron 1`] = `
               {
                 "alignItems": "stretch",
                 "flexDirection": "column",
-                "gap": 0,
                 "height": 50,
                 "width": 50,
               }
@@ -374,7 +365,6 @@ exports[`AccountDetails renders without error with chevron 1`] = `
                 {
                   "alignItems": "stretch",
                   "flexDirection": "column",
-                  "gap": 0,
                   "height": 50,
                   "width": 50,
                 }
@@ -587,7 +577,6 @@ exports[`AccountDetails renders without error with chevron 1`] = `
           "borderTopLeftRadius": 999999,
           "borderTopRightRadius": 999999,
           "flexDirection": "column",
-          "gap": 0,
           "justifyContent": "center",
           "transform": [
             {

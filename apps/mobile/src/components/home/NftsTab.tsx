@@ -96,7 +96,7 @@ function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Elemen
   })
 
   return (
-    <Flex fill gap="$none" justifyContent="flex-start" m="$spacing4">
+    <Flex fill justifyContent="flex-start" m="$spacing4">
       <ContextMenu
         actions={menuActions}
         disabled={menuActions.length === 0}
@@ -112,7 +112,6 @@ function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Elemen
             aspectRatio={1}
             backgroundColor="$surface3"
             borderRadius="$rounded12"
-            gap="$none"
             overflow="hidden"
             width="100%">
             <NFTViewer
@@ -255,7 +254,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(function _NftsTa
             </Flex>
           ) : (
             // empty view
-            <Flex grow gap="$none" style={containerProps?.emptyContainerStyle}>
+            <Flex grow style={containerProps?.emptyContainerStyle}>
               <BaseCard.EmptyState
                 buttonLabel={isExternalProfile ? undefined : t('Receive NFTs')}
                 description={

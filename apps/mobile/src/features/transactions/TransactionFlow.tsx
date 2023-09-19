@@ -122,7 +122,7 @@ export function TransactionFlow({
 
   return (
     <TouchableWithoutFeedback>
-      <Flex gap="$none" style={{ marginTop: insets.top }}>
+      <Flex style={{ marginTop: insets.top }}>
         <HandleBar backgroundColor="none" />
         <AnimatedFlex grow row gap="none" height="100%" style={wrapperStyle}>
           <Flex

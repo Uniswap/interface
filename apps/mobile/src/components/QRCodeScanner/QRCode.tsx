@@ -118,7 +118,6 @@ const _QRCodeDisplay = ({
       borderColor="$surface3"
       borderRadius="$rounded32"
       borderWidth={hideOutline ? 0 : 2}
-      gap="$none"
       justifyContent="center"
       padding="$spacing24"
       position="relative"
@@ -126,7 +125,7 @@ const _QRCodeDisplay = ({
       shadowOffset={{ width: 0, height: 16 }}
       shadowOpacity={displayShadow ? 0.1 : 0}
       shadowRadius={16}>
-      <Flex gap="$none">
+      <Flex>
         <AddressQRCode
           address={address}
           backgroundColor={backgroundColor}
@@ -136,7 +135,7 @@ const _QRCodeDisplay = ({
           size={size}
         />
         {overlayOpacityPercent && (
-          <Flex gap="$none" style={StyleSheet.absoluteFill}>
+          <Flex style={StyleSheet.absoluteFill}>
             <AddressQRCode
               address={address}
               backgroundColor="$transparent"
@@ -153,7 +152,6 @@ const _QRCodeDisplay = ({
         alignItems="center"
         backgroundColor="$transparent"
         borderRadius="$roundedFull"
-        gap="$none"
         overflow="visible"
         paddingLeft="$spacing2"
         paddingTop="$spacing2"

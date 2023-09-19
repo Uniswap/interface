@@ -147,7 +147,6 @@ export function NFTCollectionScreen({
         aspectRatio={1}
         backgroundColor="$surface3"
         borderRadius="$rounded16"
-        gap="$none"
         overflow="hidden"
         style={containerStyle}>
         {typeof item === 'string' ? (
@@ -171,7 +170,6 @@ export function NFTCollectionScreen({
             {item.listPrice && (
               <ListPriceBadge
                 bottom={spacing.spacing4}
-                gap="$none"
                 iconColor={priceColor}
                 iconSize={iconSizes.icon12}
                 position="absolute"
@@ -211,7 +209,7 @@ export function NFTCollectionScreen({
   if (isError(networkStatus, !!data)) {
     return (
       <Screen noInsets={true}>
-        <Flex grow>
+        <Flex grow gap="$spacing16">
           <NFTCollectionHeader data={undefined} loading={true} />
           <BaseCard.ErrorState
             description={t('Something went wrong.')}

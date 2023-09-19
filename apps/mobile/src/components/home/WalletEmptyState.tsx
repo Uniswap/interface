@@ -162,7 +162,7 @@ const ActionCard = ({
 }: ActionCardItem): JSX.Element => (
   <Trace logPress element={elementName}>
     <TouchableArea backgroundColor="$surface2" borderRadius="$rounded20" onPress={onPress}>
-      <Flex centered row p="$spacing16">
+      <Flex centered row gap="$spacing16" p="$spacing16">
         {icon}
         <Flex shrink gap="$spacing4">
           <Flex row alignItems="center" gap="$spacing8">

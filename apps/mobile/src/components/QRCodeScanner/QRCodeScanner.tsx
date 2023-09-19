@@ -92,10 +92,9 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
       entering={FadeIn}
       exiting={FadeOut}
       overflow="hidden">
-      <Flex gap="$none" justifyContent="center" style={StyleSheet.absoluteFill}>
+      <Flex justifyContent="center" style={StyleSheet.absoluteFill}>
         <Flex
           bg="$sporeBlack"
-          gap="$none"
           height={Math.min((4 / 3) * dimensions.fullWidth, dimensions.fullHeight)}
           overflow="hidden">
           {permissionStatus === PermissionStatus.GRANTED && (
@@ -110,7 +109,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
         </Flex>
       </Flex>
       <Flex centered gap="$spacing48" style={StyleSheet.absoluteFill}>
-        <Flex alignItems="center" gap="$none">
+        <Flex alignItems="center">
           <Flex
             centered
             gap="$spacing12"
@@ -140,7 +139,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             />
           ) : (
             // camera has been frozen (has seen a barcode) — show the loading spinner and "Connecting..." or "Loading..."
-            <Flex gap="$none" height={SCANNER_SIZE} width={SCANNER_SIZE}>
+            <Flex height={SCANNER_SIZE} width={SCANNER_SIZE}>
               <Flex
                 alignItems="center"
                 height="100%"
@@ -153,7 +152,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                   top={SCANNER_SIZE / 2 - LOADER_SIZE / 2}>
                   <SpinningLoader color="neutral1" size={iconSizes.icon40} />
                 </Flex>
-                <Flex gap="$none" style={{ marginTop: LOADER_SIZE + spacing.spacing24 }} />
+                <Flex style={{ marginTop: LOADER_SIZE + spacing.spacing24 }} />
                 <Text color="$neutral1" textAlign="center" variant="bodyLarge">
                   {isWalletConnectModal ? t('Connecting...') : t('Loading...')}
                 </Text>
@@ -186,7 +185,6 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
           {isWalletConnectModal && props.numConnections > 0 && (
             <Flex
               bottom={0}
-              gap="$none"
               position="absolute"
               style={{
                 transform: [
@@ -256,7 +254,6 @@ const GradientOverlay = memo(function GradientOverlay({
   return (
     <Flex
       alignItems="center"
-      gap="$none"
       justifyContent="center"
       position="absolute"
       style={StyleSheet.absoluteFill}

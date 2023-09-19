@@ -71,7 +71,6 @@ export function NavBar(): JSX.Element {
         row
         alignItems="center"
         bottom={0}
-        gap="$none"
         justifyContent="flex-end"
         left={0}
         pointerEvents="box-none"
@@ -137,16 +136,10 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
   })
 
   return (
-    <Flex
-      alignItems="center"
-      bg="$transparent"
-      gap="$none"
-      pointerEvents="box-none"
-      position="relative">
+    <Flex alignItems="center" bg="$transparent" pointerEvents="box-none" position="relative">
       <TapGestureHandler onGestureEvent={onGestureEvent}>
         <AnimatedBox
           centered
-          gap="$none"
           height={SWAP_BUTTON_HEIGHT}
           pointerEvents="auto"
           px="$spacing24"
@@ -159,7 +152,6 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
           <Flex
             borderRadius="$rounded32"
             bottom={0}
-            gap="$none"
             left={0}
             overflow="hidden"
             pointerEvents="auto"

@@ -8,7 +8,7 @@ import { Flex, FlexProps } from 'ui/src'
 // top-bottom padding appearance on different iOS devices
 export function SheetScreen(props: FlexProps): JSX.Element {
   return (
-    <Flex fill bg="$surface1" gap="$none" py="$spacing24" {...props}>
+    <Flex fill bg="$surface1" py="$spacing24" {...props}>
       {/* Need to include toast here because nothing can be rendered on top of `SheetScreen` */}
       <NotificationToastWrapper />
       {props.children}

@@ -24,7 +24,6 @@ export function Container({
         borderColor="$surface3"
         borderRadius="$rounded16"
         borderWidth={0.25}
-        gap="$none"
         overflow="visible"
         shadowColor="$sporeBlack"
         // TODO(MOB-1211): figure out shadow offset in Tamagui
@@ -44,7 +43,6 @@ export function Shadow({ children, ...rest }: FlexProps): JSX.Element {
   return (
     <Flex
       borderRadius="$rounded16"
-      gap="$none"
       p="$spacing12"
       shadowColor={isDarkMode ? '$sporeBlack' : '$transparent'}
       // TODO(MOB-1211): figure out shadow offset in Tamagui
@@ -75,7 +73,7 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
       py="$spacing12"
       onPress={onPress}
       {...buttonProps}>
-      <Flex row alignItems="center" justifyContent="space-between">
+      <Flex row alignItems="center" gap="$spacing16" justifyContent="space-between">
         <Flex gap="$spacing4">
           <Flex row alignItems="center" gap="$spacing8">
             {icon}
@@ -123,7 +121,7 @@ function EmptyState({
 }: EmptyStateProps): JSX.Element {
   return (
     <Flex centered gap="$spacing24" p="$spacing12" width="100%">
-      <Flex centered>
+      <Flex centered gap="$spacing16">
         {icon}
         <Flex centered gap="$spacing8">
           {title && (
@@ -136,7 +134,7 @@ function EmptyState({
           </Text>
         </Flex>
       </Flex>
-      <Flex row>
+      <Flex row gap="$spacing16">
         {buttonLabel && (
           <TouchableArea hapticFeedback onPress={onPress}>
             <Text color="$accent1" variant="buttonLabelMedium">
@@ -170,7 +168,7 @@ function ErrorState(props: ErrorStateProps): JSX.Element {
   const { title, description = t('Something went wrong'), retryButtonLabel, onRetry, icon } = props
   return (
     <Flex centered grow gap="$spacing24" p="$spacing12" width="100%">
-      <Flex centered>
+      <Flex centered gap="$spacing16">
         {icon}
         <Flex centered gap="$spacing8">
           {title ? (

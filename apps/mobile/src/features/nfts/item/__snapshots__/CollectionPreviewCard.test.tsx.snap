@@ -83,7 +83,6 @@ exports[`renders collection preview card 1`] = `
             "borderTopLeftRadius": 999999,
             "borderTopRightRadius": 999999,
             "flexDirection": "column",
-            "gap": 0,
             "height": 40,
             "overflow": "hidden",
             "width": 40,
@@ -127,7 +126,6 @@ exports[`renders collection preview card 1`] = `
             "alignItems": "stretch",
             "flexDirection": "column",
             "flexShrink": 1,
-            "gap": 0,
           }
         }
       >
@@ -147,7 +145,6 @@ exports[`renders collection preview card 1`] = `
                 "alignItems": "stretch",
                 "flexDirection": "column",
                 "flexShrink": 1,
-                "gap": 0,
               }
             }
           >
@@ -186,7 +183,6 @@ exports[`renders collection preview card 1`] = `
           "borderTopLeftRadius": 999999,
           "borderTopRightRadius": 999999,
           "flexDirection": "column",
-          "gap": 0,
           "justifyContent": "center",
           "transform": [
             {

@@ -15,14 +15,14 @@ export function NetworkLogos({
   const firstChain = chains[0]
 
   return (
-    <Flex row alignItems="center" gap="$none" justifyContent="center" {...rest}>
+    <Flex centered row {...rest}>
       {chains.length === 1 && firstChain && showFirstChainLabel ? (
         <Flex fill row justifyContent="space-between">
           <NetworkLogo chainId={firstChain} />
           <Text color="$neutral2" numberOfLines={1} variant="buttonLabelSmall">
             {CHAIN_INFO[firstChain].label}
           </Text>
-          <Flex gap="$none" width={iconSizes.icon20} />
+          <Flex width={iconSizes.icon20} />
         </Flex>
       ) : (
         <Flex centered row gap="$spacing4">

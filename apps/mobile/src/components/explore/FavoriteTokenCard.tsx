@@ -32,7 +32,7 @@ import {
 } from 'wallet/src/features/transactions/transactionState/types'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
-export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 102
+export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 114
 
 type FavoriteTokenCardProps = {
   currencyId: string
@@ -156,7 +156,7 @@ function FavoriteTokenCard({
               {isEditing ? (
                 <RemoveButton onPress={onRemove} />
               ) : (
-                <Flex gap="$none" height={imageSizes.image24} />
+                <Flex height={imageSizes.image24} />
               )}
             </Flex>
             <Flex gap="$spacing2">

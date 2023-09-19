@@ -166,7 +166,7 @@ function _TokenSelectorList({
   if (hasError) {
     return (
       <>
-        <Flex grow gap="$none" justifyContent="center">
+        <Flex grow justifyContent="center">
           <BaseCard.ErrorState
             retryButtonLabel={t('Retry')}
             title={errorText ?? t('Couldn’t load tokens')}
@@ -177,15 +177,15 @@ function _TokenSelectorList({
           This is needed to position error message roughly in the center of
           the sheet initially when modal is opened to 65% only
         */}
-        <Flex grow gap="$none" />
+        <Flex grow />
       </>
     )
   }
 
   if (loading) {
     return (
-      <Flex grow gap="$none">
-        <Flex gap="$none" py="$spacing16" width={80}>
+      <Flex grow>
+        <Flex py="$spacing16" width={80}>
           <Loader.Box height={fonts.subheadSmall.lineHeight} />
         </Flex>
         <Loader.Token repeat={5} />
@@ -194,7 +194,7 @@ function _TokenSelectorList({
   }
 
   return (
-    <Flex grow gap="$none">
+    <Flex grow>
       <BottomSheetSectionList<TokenOption | TokenOption[], SuggestedTokenSection | TokenSection>
         ref={sectionListRef}
         ListEmptyComponent={emptyElement}

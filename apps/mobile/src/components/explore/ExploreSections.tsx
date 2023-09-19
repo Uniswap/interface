@@ -123,7 +123,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
 
   if (!hasAllData && error) {
     return (
-      <Flex gap="$none" height="100%" pb="$spacing60">
+      <Flex height="100%" pb="$spacing60">
         <BaseCard.ErrorState
           retryButtonLabel={t('Retry')}
           title={t('Couldn’t load tokens')}
@@ -137,7 +137,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
     <BottomSheetFlatList
       ref={listRef}
       ListEmptyComponent={
-        <Flex gap="$none" mx="$spacing24" my="$spacing12">
+        <Flex mx="$spacing24" my="$spacing12">
           <Loader.Token contrast repeat={5} />
         </Flex>
       }

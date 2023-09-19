@@ -100,7 +100,7 @@ export function SwapSettingsModal({
       backgroundColor={colors.surface1.val}
       name={ModalName.SwapSettings}
       onClose={onClose}>
-      <Flex mb="$spacing28" px="$spacing24" py="$spacing12">
+      <Flex gap="$spacing16" mb="$spacing28" px="$spacing24" py="$spacing12">
         <Flex row justifyContent="space-between">
           <TouchableArea onPress={(): void => setView(SwapSettingsModalView.Options)}>
             <Icons.Chevron
@@ -112,7 +112,7 @@ export function SwapSettingsModal({
           <Text textAlign="center" variant="bodyLarge">
             {getTitle()}
           </Text>
-          <Flex gap="$none" width={iconSizes.icon24} />
+          <Flex width={iconSizes.icon24} />
         </Flex>
         {innerContent}
         <Flex centered row>
@@ -400,7 +400,7 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
         </TouchableArea>
       </Text>
       <Flex gap="$spacing12">
-        <Flex centered row mt="$spacing12">
+        <Flex centered row gap="$spacing16" mt="$spacing12">
           <PlusMinusButton
             disabled={currentSlippageToleranceNum === 0}
             type={PlusMinusButtonType.Minus}
@@ -440,7 +440,7 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
               onChangeText={onChangeSlippageInput}
               onFocus={onFocusSlippageInput}
             />
-            <Flex gap="$none" width={iconSizes.icon28}>
+            <Flex width={iconSizes.icon28}>
               <Text color="$neutral2" textAlign="center" variant="subheadLarge">
                 %
               </Text>
@@ -526,6 +526,6 @@ function BottomLabel({
       ) : null}
     </Flex>
   ) : (
-    <Flex gap="$none" height={fonts.bodySmall.lineHeight} />
+    <Flex height={fonts.bodySmall.lineHeight} />
   )
 }

@@ -93,7 +93,7 @@ export default function FavoriteWalletCard({
             {isEditing ? (
               <RemoveButton onPress={onRemove} />
             ) : (
-              <Flex gap="$none" height={theme.imageSizes.image24} />
+              <Flex height={theme.imageSizes.image24} />
             )}
           </Flex>
         </BaseCard.Shadow>

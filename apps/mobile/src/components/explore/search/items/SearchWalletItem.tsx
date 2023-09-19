@@ -91,7 +91,7 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
         }}>
         <Flex row alignItems="center" gap="$spacing12" px="$spacing8" py="$spacing12">
           <AccountIcon address={address} avatarUri={avatar} size={imageSizes.image40} />
-          <Flex shrink gap="$none">
+          <Flex shrink>
             <Text
               ellipsizeMode="tail"
               numberOfLines={1}

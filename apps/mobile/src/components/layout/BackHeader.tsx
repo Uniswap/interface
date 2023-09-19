@@ -13,7 +13,7 @@ type BackButtonRowProps = {
 export function BackHeader({
   alignment = 'center',
   children,
-  endAdornment = <Flex gap="$none" width={BACK_BUTTON_SIZE} />,
+  endAdornment = <Flex width={BACK_BUTTON_SIZE} />,
   onPressBack,
   ...spacingProps
 }: PropsWithChildren<BackButtonRowProps>): JSX.Element {

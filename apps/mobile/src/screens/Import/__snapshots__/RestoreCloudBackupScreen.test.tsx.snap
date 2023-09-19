@@ -9,7 +9,6 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
       "backgroundColor": "#FFFFFF",
       "flex": 1,
       "flexDirection": "column",
-      "gap": 0,
       "paddingTop": 200,
     }
   }
@@ -119,7 +118,6 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
             "flex": 1,
             "flexDirection": "column",
             "flexGrow": 1,
-            "gap": 16,
             "justifyContent": "space-between",
           }
         }

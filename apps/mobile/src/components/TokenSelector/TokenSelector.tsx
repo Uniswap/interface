@@ -129,7 +129,7 @@ function _TokenSelectorModal({
       snapPoints={['65%', '100%']}
       onClose={onClose}>
       <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
-        <Flex grow pb={IS_IOS ? '$spacing16' : '$none'} px="$spacing16">
+        <Flex grow gap="$spacing16" pb={IS_IOS ? '$spacing16' : '$none'} px="$spacing16">
           <SearchTextInput
             backgroundColor="surface2"
             endAdornment={hasClipboardString ? <PasteButton inline onPress={handlePaste} /> : null}
@@ -138,7 +138,7 @@ function _TokenSelectorModal({
             value={searchFilter ?? ''}
             onChangeText={onChangeText}
           />
-          <Flex grow gap="$none">
+          <Flex grow>
             {searchFilter ? (
               <TokenSelectorSearchResultsList
                 chainFilter={chainFilter}
@@ -163,7 +163,7 @@ function _TokenSelectorModal({
                 onSelectCurrency={onSelectCurrencyCallback}
               />
             ) : null}
-            <Flex gap="$none" position="absolute" right={0}>
+            <Flex position="absolute" right={0}>
               <NetworkFilter
                 includeAllNetworks
                 selectedChain={chainFilter}

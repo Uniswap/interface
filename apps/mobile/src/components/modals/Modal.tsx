@@ -51,7 +51,6 @@ Props): JSX.Element {
         onPress={dismissable ? hide : undefined}>
         <Flex
           backgroundColor="$surface1"
-          gap="$none"
           style={width === '100%' ? style.modalBoxFullWidth : style.modalBox}
           width={width}>
           {title && (

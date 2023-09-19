@@ -28,7 +28,7 @@ export function SwapArrowButton(props: SwapArrowButtonProps): JSX.Element {
         onPress={onPress}
         {...rest}>
         {/* hack to add 2px more padding without adjusting design system values */}
-        <Flex centered gap="$none" p="$spacing2">
+        <Flex centered p="$spacing2">
           <Arrow color={colors.neutral2.val} direction="s" size={size} />
         </Flex>
       </TouchableArea>

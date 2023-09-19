@@ -50,7 +50,7 @@ export class ErrorBoundary extends React.Component<PropsWithChildren<unknown>, E
 function ErrorScreen({ error }: { error: Error }): JSX.Element {
   const { t } = useTranslation()
   return (
-    <Flex alignItems="center" flex={1} justifyContent="center" px="$spacing16" py="$spacing48">
+    <Flex centered fill gap="$spacing16" px="$spacing16" py="$spacing48">
       <Flex centered grow gap="$spacing36">
         <DeadLuni />
         <Flex centered gap="$spacing8">
@@ -59,7 +59,7 @@ function ErrorScreen({ error }: { error: Error }): JSX.Element {
         </Flex>
         {error.message && __DEV__ && <Text variant="bodySmall">{error.message}</Text>}
       </Flex>
-      <Flex alignSelf="stretch" gap="$none">
+      <Flex alignSelf="stretch">
         <Button
           onPress={(): void => {
             RNRestart.Restart()

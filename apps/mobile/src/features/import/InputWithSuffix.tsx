@@ -29,7 +29,7 @@ interface Props {
 
 export default function InputWithSuffix(props: Props): JSX.Element {
   return IS_ANDROID && props.inputSuffix ? (
-    <Flex gap="$none" width="100%">
+    <Flex width="100%">
       <Inputs {...props} layerType="foreground" />
       <Inputs {...props} layerType="background" />
     </Flex>
@@ -75,7 +75,6 @@ function Inputs({
     <Flex
       alignItems="flex-end"
       flexDirection="row"
-      gap="$none"
       justifyContent={inputAlignment}
       width="100%"
       {...(layerType === 'foreground' ? { position: 'absolute', left: 0, bottom: 0 } : {})}

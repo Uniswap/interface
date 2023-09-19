@@ -47,7 +47,7 @@ function SafeAreaWithInsets({ children, edges, noInsets, ...rest }: ScreenProps)
   }, [edges, insets, noInsets])
 
   return (
-    <Flex gap="$none" style={safeAreaStyles} {...rest}>
+    <Flex style={safeAreaStyles} {...rest}>
       {children}
     </Flex>
   )

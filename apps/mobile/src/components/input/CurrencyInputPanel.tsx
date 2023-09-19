@@ -257,7 +257,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
             />
           </Flex>
         )}
-        <Flex row alignItems="center" gap="$none">
+        <Flex row alignItems="center">
           <SelectTokenButton
             selectedCurrencyInfo={currencyInfo}
             showNonZeroBalancesOnly={showNonZeroBalancesOnly}

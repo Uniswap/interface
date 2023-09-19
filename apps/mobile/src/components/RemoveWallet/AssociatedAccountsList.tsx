@@ -42,7 +42,6 @@ function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Ele
       borderColor="$surface3"
       borderRadius="$rounded16"
       borderWidth={1}
-      gap="$none"
       maxHeight={accountsScrollViewHeight}
       mb="$spacing16"
       px="$spacing12"

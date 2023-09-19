@@ -8,7 +8,6 @@ exports[`renders a Unicon 1`] = `
     {
       "alignItems": "stretch",
       "flexDirection": "column",
-      "gap": 0,
       "height": 36,
       "width": 36,
     }
@@ -19,7 +18,6 @@ exports[`renders a Unicon 1`] = `
       {
         "alignItems": "stretch",
         "flexDirection": "column",
-        "gap": 0,
         "height": 36,
         "width": 36,
       }

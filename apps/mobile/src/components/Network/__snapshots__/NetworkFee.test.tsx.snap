@@ -6,7 +6,6 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "row",
-      "gap": 16,
       "justifyContent": "space-between",
     }
   }
@@ -162,7 +161,6 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
         {
           "alignItems": "stretch",
           "flexDirection": "column",
-          "gap": 0,
           "transform": [
             {
               "rotateZ": "0deg",
@@ -188,7 +186,6 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "row",
-      "gap": 16,
       "justifyContent": "space-between",
     }
   }
@@ -343,7 +340,6 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
         {
           "alignItems": "center",
           "flexDirection": "row",
-          "gap": 16,
           "justifyContent": "space-between",
         }
       }
@@ -374,7 +370,6 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "row",
-      "gap": 16,
       "justifyContent": "space-between",
     }
   }
@@ -529,7 +524,6 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
         {
           "alignItems": "center",
           "flexDirection": "row",
-          "gap": 16,
           "justifyContent": "space-between",
         }
       }

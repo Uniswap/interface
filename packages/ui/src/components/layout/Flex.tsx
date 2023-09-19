@@ -10,7 +10,6 @@ export type FlexProps = StackProps & {
 
 export const Flex = styled(Stack, {
   flexDirection: 'column',
-  gap: '$spacing16',
 
   variants: {
     row: {

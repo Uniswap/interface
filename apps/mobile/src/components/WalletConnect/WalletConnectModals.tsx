@@ -125,7 +125,6 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
           alignSelf="stretch"
           backgroundColor="$surface2"
           borderRadius="$rounded16"
-          gap="$none"
           p="$spacing16">
           <AccountDetails address={currRequest.account} iconSize={iconSizes.icon24} />
         </Flex>

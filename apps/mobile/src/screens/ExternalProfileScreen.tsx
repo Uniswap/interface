@@ -94,7 +94,7 @@ export function ExternalProfileScreen({
   const renderTabBar = useCallback(
     (sceneProps: SceneRendererProps) => {
       return (
-        <Flex bg="$surface1" gap="$none" pl="$spacing12">
+        <Flex bg="$surface1" pl="$spacing12">
           <TabBar
             {...sceneProps}
             indicatorStyle={TAB_STYLES.activeTabIndicator}
@@ -130,7 +130,7 @@ export function ExternalProfileScreen({
           logImpression
           properties={traceProperties}
           screen={Screens.ExternalProfile}>
-          <Flex grow>
+          <Flex grow gap="$spacing16">
             <ProfileHeader address={address} />
             <TraceTabView
               navigationState={{ index: tabIndex, routes: tabs }}

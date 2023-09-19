@@ -120,14 +120,13 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
           }
         )}
         title={t('Protect your wallet')}>
-        <Flex centered shrink my="$spacing12" position="relative" py="$spacing24">
-          <Flex gap="$none" paddingTop="$spacing24">
+        <Flex centered shrink gap="$spacing16" my="$spacing12" position="relative" py="$spacing24">
+          <Flex paddingTop="$spacing24">
             <SecurityBackgroundImage />
           </Flex>
           <Flex
             borderRadius="$rounded16"
             borderWidth={1}
-            gap="$none"
             overflow="hidden"
             padding="$spacing36"
             position="absolute"

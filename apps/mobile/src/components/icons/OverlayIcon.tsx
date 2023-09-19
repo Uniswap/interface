@@ -11,7 +11,7 @@ export default function OverlayIcon({ icon, overlay, ...props }: Props): JSX.Ele
   return (
     <>
       {icon}
-      <Flex gap="$none" position="absolute" {...props}>
+      <Flex position="absolute" {...props}>
         {overlay}
       </Flex>
     </>

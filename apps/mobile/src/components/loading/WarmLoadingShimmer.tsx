@@ -48,7 +48,7 @@ export function WarmLoadingShimmer({
 
   if (!layout) {
     return (
-      <Flex gap="$none" opacity={0} onLayout={(event): void => setLayout(event.nativeEvent.layout)}>
+      <Flex opacity={0} onLayout={(event): void => setLayout(event.nativeEvent.layout)}>
         {children}
       </Flex>
     )
@@ -57,7 +57,7 @@ export function WarmLoadingShimmer({
   if (isWarmLoading) {
     return (
       <MaskedView maskElement={children} style={{ width: layout.width, height: layout.height }}>
-        <Flex grow backgroundColor="$neutral2" gap="$none" height="100%" overflow="hidden" />
+        <Flex grow backgroundColor="$neutral2" height="100%" overflow="hidden" />
         <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
           <LinearGradient
             colors={[

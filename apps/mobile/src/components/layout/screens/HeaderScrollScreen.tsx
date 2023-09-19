@@ -27,7 +27,7 @@ type HeaderScrollScreenProps = {
 
 export function HeaderScrollScreen({
   centerElement,
-  rightElement = <Flex gap="$none" width={iconSizes.icon24} />,
+  rightElement = <Flex width={iconSizes.icon24} />,
   alwaysShowCenterElement,
   fullScreen = false,
   renderedInModal = false,

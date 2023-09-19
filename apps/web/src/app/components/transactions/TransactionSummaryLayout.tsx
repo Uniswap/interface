@@ -38,7 +38,7 @@ function TransactionSummaryLayout({
       width={TXN_STATUS_ICON_SIZE}
     />
   ) : status === TransactionStatus.Failed ? (
-    <Flex grow alignItems="flex-end" gap="$none" justifyContent="space-between">
+    <Flex grow alignItems="flex-end" justifyContent="space-between">
       <Icons.AlertTriangle
         color="DEP_accentWarning"
         fill="surface1"
@@ -53,15 +53,15 @@ function TransactionSummaryLayout({
   )
 
   return (
-    <Flex mb="$spacing16" width="100%" onPress={onPress}>
+    <Flex gap="$spacing16" mb="$spacing16" width="100%" onPress={onPress}>
       <Flex grow row gap="$spacing12">
         {icon && (
           <Flex centered width={TXN_HISTORY_ICON_SIZE}>
             {icon}
           </Flex>
         )}
-        <Flex grow shrink gap="$none">
-          <Flex grow gap="$none">
+        <Flex grow shrink>
+          <Flex grow>
             <Flex grow row alignItems="center" gap="$spacing4" justifyContent="space-between">
               <Text color="$neutral2" numberOfLines={1} variant="bodySmall">
                 {title}
@@ -69,7 +69,7 @@ function TransactionSummaryLayout({
               {!inProgress && rightBlock}
             </Flex>
             <Flex grow row>
-              <Flex grow shrink gap="$none">
+              <Flex grow shrink>
                 <Text color="$neutral1" variant="bodyMicro">
                   {caption}
                 </Text>

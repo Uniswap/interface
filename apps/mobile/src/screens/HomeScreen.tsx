@@ -249,10 +249,10 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const contentHeader = useMemo(() => {
     return (
       <Flex bg="$surface1" gap="$spacing12" pb="$spacing16" px="$spacing24">
-        <Flex gap="$none" pb="$spacing12">
+        <Flex pb="$spacing12">
           <AccountHeader />
         </Flex>
-        <Flex gap="$none" pb="$spacing4">
+        <Flex pb="$spacing4">
           <PortfolioBalance owner={activeAccount.address} />
         </Flex>
         <QuickActions sentry-label="QuickActions" />
@@ -467,7 +467,6 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       </View>
       <NavBar />
       <AnimatedBox
-        gap="$none"
         height={insets.top}
         position="absolute"
         style={statusBarStyle}

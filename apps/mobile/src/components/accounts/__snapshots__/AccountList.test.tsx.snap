@@ -7,7 +7,6 @@ exports[`AccountList renders without error 1`] = `
       "alignItems": "stretch",
       "flexDirection": "column",
       "flexShrink": 1,
-      "gap": 0,
       "position": "relative",
     }
   }
@@ -37,7 +36,6 @@ exports[`AccountList renders without error 1`] = `
             "alignItems": "stretch",
             "flex": 1,
             "flexDirection": "column",
-            "gap": 16,
             "paddingBottom": 8,
             "paddingLeft": 24,
             "paddingRight": 24,
@@ -142,7 +140,6 @@ exports[`AccountList renders without error 1`] = `
                   "alignItems": "stretch",
                   "flex": 1,
                   "flexDirection": "column",
-                  "gap": 0,
                 }
               }
             >
@@ -160,7 +157,6 @@ exports[`AccountList renders without error 1`] = `
                     {
                       "alignItems": "stretch",
                       "flexDirection": "column",
-                      "gap": 0,
                       "position": "relative",
                     }
                   }
@@ -184,7 +180,6 @@ exports[`AccountList renders without error 1`] = `
                         "borderTopRightRadius": 999999,
                         "borderTopWidth": 0,
                         "flexDirection": "column",
-                        "gap": 0,
                         "padding": 0,
                         "position": "relative",
                       }
@@ -195,7 +190,6 @@ exports[`AccountList renders without error 1`] = `
                         {
                           "alignItems": "stretch",
                           "flexDirection": "column",
-                          "gap": 0,
                           "height": 36,
                           "width": 36,
                         }
@@ -206,7 +200,6 @@ exports[`AccountList renders without error 1`] = `
                           {
                             "alignItems": "stretch",
                             "flexDirection": "column",
-                            "gap": 0,
                             "height": 36,
                             "width": 36,
                           }

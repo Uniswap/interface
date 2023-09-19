@@ -20,7 +20,6 @@ exports[`renders wallet loader 1`] = `
       "borderTopRightRadius": 20,
       "borderTopWidth": 1,
       "flexDirection": "row",
-      "gap": 16,
       "justifyContent": "flex-start",
       "opacity": 1,
       "overflow": "hidden",
@@ -51,7 +50,6 @@ exports[`renders wallet loader 1`] = `
           "borderTopLeftRadius": 999999,
           "borderTopRightRadius": 999999,
           "flexDirection": "column",
-          "gap": 0,
           "height": 32,
           "width": 32,
         }
@@ -62,7 +60,6 @@ exports[`renders wallet loader 1`] = `
         {
           "alignItems": "flex-start",
           "flexDirection": "column",
-          "gap": 0,
           "width": "100%",
         }
       }
@@ -73,7 +70,6 @@ exports[`renders wallet loader 1`] = `
           {
             "alignItems": "stretch",
             "flexDirection": "column",
-            "gap": 0,
             "opacity": 0,
           }
         }
@@ -143,7 +139,6 @@ exports[`renders wallet loader 1`] = `
           {
             "alignItems": "stretch",
             "flexDirection": "column",
-            "gap": 0,
             "opacity": 0,
           }
         }

@@ -38,7 +38,7 @@ export const ACTIVITY_TAB_DATA_DEPENDENCIES = [GQLQueries.TransactionList]
 const ESTIMATED_ITEM_SIZE = 92
 
 const SectionTitle = ({ title }: { title: string }): JSX.Element => (
-  <Flex gap="$none" pb="$spacing12">
+  <Flex pb="$spacing12">
     <Text color="$neutral2" variant="subheadSmall">
       {title}
     </Text>
@@ -147,7 +147,7 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(function _Ac
             ? errorCard
             : // empty view
               (!isLoading && (
-                <Flex grow gap="$none" style={containerProps?.emptyContainerStyle}>
+                <Flex grow style={containerProps?.emptyContainerStyle}>
                   <BaseCard.EmptyState
                     buttonLabel={isExternalProfile ? undefined : 'Receive tokens or NFTs'}
                     description={

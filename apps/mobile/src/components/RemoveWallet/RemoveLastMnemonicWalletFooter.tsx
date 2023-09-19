@@ -23,7 +23,6 @@ export function RemoveLastMnemonicWalletFooter({
       <Flex
         backgroundColor="$surface2"
         borderRadius="$rounded16"
-        gap="$none"
         mx="$spacing16"
         px="$spacing8"
         py="$spacing12">

@@ -22,7 +22,7 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props): JSX.Elem
       <Separator />
       <Flex row alignItems="center" justifyContent="space-between" px="$spacing24" py="$spacing8">
         <Unicon address={account.address} size={ICON_SIZE} />
-        <Flex shrink alignItems="center" gap="$none" p="$none">
+        <Flex shrink alignItems="center" p="$none">
           <Text
             color="$neutral1"
             numberOfLines={1}
@@ -34,7 +34,7 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props): JSX.Elem
             {shortenAddress(account.address)}
           </Text>
         </Flex>
-        <Flex gap="$none" height={ICON_SIZE} width={ICON_SIZE}>
+        <Flex height={ICON_SIZE} width={ICON_SIZE}>
           {activeAccount?.address === account.address && (
             <Check color={colors.accent1.val} height={ICON_SIZE} width={ICON_SIZE} />
           )}

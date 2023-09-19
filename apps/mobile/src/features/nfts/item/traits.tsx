@@ -51,7 +51,7 @@ export function NFTTraitList({
 }
 
 function Separator(): JSX.Element {
-  return <Flex gap="$none" width={spacing.spacing8} />
+  return <Flex width={spacing.spacing8} />
 }
 
 const Styles = StyleSheet.create({

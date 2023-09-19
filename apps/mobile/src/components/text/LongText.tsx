@@ -72,7 +72,7 @@ export function LongText(props: LongTextProps): JSX.Element {
 
   return (
     <Flex gap={gap}>
-      <Flex gap="$none" onLayout={onLayout}>
+      <Flex onLayout={onLayout}>
         {renderAsMarkdown ? (
           <Markdown
             style={{

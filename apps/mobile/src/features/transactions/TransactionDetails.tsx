@@ -57,7 +57,7 @@ export function TransactionDetails({
   }
 
   return (
-    <Flex gap="$none">
+    <Flex>
       {showWarning && warning && onShowWarning && (
         <TouchableArea mb="$spacing8" onPress={onShowWarning}>
           <Flex
@@ -91,7 +91,7 @@ export function TransactionDetails({
           <Text color="$statusCritical">{t('This transaction is expected to fail')}</Text>
         </Box>
       )}
-      <Flex backgroundColor="$surface2" borderRadius="$rounded16" gap="$none">
+      <Flex backgroundColor="$surface2" borderRadius="$rounded16">
         {!showWarning && (
           <>
             {banner}
@@ -108,7 +108,7 @@ export function TransactionDetails({
           />
         </Flex>
         <Separator borderColor="$surface2" width={1} />
-        <Flex gap="$none" px="$spacing12" py="$spacing12">
+        <Flex px="$spacing12" py="$spacing12">
           <AccountDetails address={userAddress} iconSize={iconSizes.icon20} />
         </Flex>
       </Flex>

@@ -14,7 +14,6 @@ function _CheckmarkCircle({ color, checkmarkStrokeWidth = 3, size, ...rest }: Pr
     <Flex
       alignItems="center"
       borderRadius="$roundedFull"
-      gap="$none"
       height={size}
       justifyContent="center"
       width={size}

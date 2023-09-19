@@ -24,10 +24,9 @@ export function Indicator({
       {[...Array(stepCount)].map((_, i) => (
         <Flex
           key={`indicator-${i}`}
+          fill
           bg="$neutral1"
           borderRadius="$rounded16"
-          flex={1}
-          gap="$none"
           height={4}
           opacity={i === currentStep ? 1 : 0.2}
         />
@@ -72,7 +71,6 @@ function AnimatedIndicatorPill({
       bg="$neutral1"
       borderRadius="$rounded16"
       flex={1}
-      gap="$none"
       height={4}
       style={style}
     />

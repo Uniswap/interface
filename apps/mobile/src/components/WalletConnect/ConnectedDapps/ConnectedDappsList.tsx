@@ -24,7 +24,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
     <>
       <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} pt="spacing12">
         <Flex row alignItems="center" justifyContent="space-between" px="$spacing24">
-          <Flex grow gap="$none" width={iconSizes.icon40}>
+          <Flex grow width={iconSizes.icon40}>
             {backButton ?? <BackButton />}
           </Flex>
           <Text color="$neutral1" numberOfLines={1} variant="bodyLarge">
