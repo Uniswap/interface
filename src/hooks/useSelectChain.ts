@@ -1,7 +1,5 @@
-import { InterfaceEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { getConnection } from 'connection'
 import { didUserReject } from 'connection/utils'
 import { CHAIN_IDS_TO_NAMES, isSupportedChain } from 'constants/chains'
@@ -16,18 +14,11 @@ export default function useSelectChain() {
   const dispatch = useAppDispatch()
   const { connector } = useWeb3React()
   const switchChain = useSwitchChain()
-  const analyticsContext = useTrace()
   const [searchParams, setSearchParams] = useSearchParams()
 
   return useCallback(
     async (targetChain: ChainId) => {
       if (!connector) return
-
-      sendAnalyticsEvent(InterfaceEventName.SELECT_CHAIN_INITIATED, {
-        wallet_type: getConnection(connector).getName(),
-        chain_id: targetChain,
-        ...analyticsContext,
-      })
 
       const connection = getConnection(connector)
 
@@ -49,6 +40,6 @@ export default function useSelectChain() {
         }
       }
     },
-    [analyticsContext, connector, dispatch, searchParams, setSearchParams, switchChain]
+    [connector, dispatch, searchParams, setSearchParams, switchChain]
   )
 }

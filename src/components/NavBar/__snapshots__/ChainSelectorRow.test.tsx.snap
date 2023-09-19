@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ChainSelectorRow should match snapshot 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 240px;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c2 {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+  font-weight: 485;
+}
+
+.c3 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+.c1 {
+  height: 20px;
+  width: 20px;
+  margin-right: 12px;
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    width: 100%;
+  }
+}
+
+<div>
+  <button
+    class="c0"
+    data-testid="Optimism-selector"
+  >
+    <img
+      alt="Optimism"
+      class="c1"
+      src="optimistic_ethereum.svg"
+    />
+    <div
+      class="c2"
+    >
+      Optimism
+    </div>
+    <div
+      class="c3"
+    />
+  </button>
+</div>
+`;
