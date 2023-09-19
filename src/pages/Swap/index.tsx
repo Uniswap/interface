@@ -314,18 +314,17 @@ export function Swap({
     [independentField, parsedAmount, showWrap, trade]
   )
 
+  const getSingleUnitAmount = (currency: Currency | undefined) => {
+    if (!currency) return undefined
+    return CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(10 ** currency.decimals))
+  }
+
   const fiatValueInput = useUSDPrice(
-    parsedAmounts[Field.INPUT] ??
-      (currencies[Field.INPUT]
-        ? CurrencyAmount.fromRawAmount(currencies[Field.INPUT], JSBI.BigInt(10 ** currencies[Field.INPUT].decimals))
-        : undefined),
+    parsedAmounts[Field.INPUT] ?? getSingleUnitAmount(currencies[Field.INPUT]),
     currencies[Field.INPUT]
   )
   const fiatValueOutput = useUSDPrice(
-    parsedAmounts[Field.OUTPUT] ??
-      (currencies[Field.OUTPUT]
-        ? CurrencyAmount.fromRawAmount(currencies[Field.OUTPUT], JSBI.BigInt(10 ** currencies[Field.OUTPUT].decimals))
-        : undefined),
+    parsedAmounts[Field.OUTPUT] ?? getSingleUnitAmount(currencies[Field.OUTPUT]),
     currencies[Field.OUTPUT]
   )
 
