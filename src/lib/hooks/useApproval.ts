@@ -54,7 +54,6 @@ export function useApproval(
 
   // check the current approval status
   const approvalState = useApprovalStateForSpender(amountToApprove, spender || '', useIsPendingApproval)
-  console.log('approval', approvalState)
 
   const tokenContract = useTokenContract(token?.address)
 
