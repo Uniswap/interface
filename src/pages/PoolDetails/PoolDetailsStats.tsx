@@ -94,7 +94,6 @@ interface PoolDetailsStatsProps {
 }
 
 export function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsStatsProps) {
-  // add tests
   const isScreenSize = useScreenSize()
   const screenIsNotLarge = isScreenSize['lg']
   const { formatNumber } = useFormatter()
@@ -166,7 +165,7 @@ export function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsS
           </PoolBalanceTokenNames>
         </PoolBalanceSymbols>
         {screenIsNotLarge && (
-          <Row>
+          <Row data-testid="pool-balance-chart">
             {token0.color && <BalanceChartSide percent={token0.percent} $color={token0.color} isLeft={true} />}
             {token1.color && <BalanceChartSide percent={token1.percent} $color={token1.color} isLeft={false} />}
           </Row>
