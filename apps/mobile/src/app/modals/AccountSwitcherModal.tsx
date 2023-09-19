@@ -8,7 +8,6 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Screen } from 'src/components/layout/Screen'
 import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -19,7 +18,7 @@ import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
-import { Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { dimensions, iconSizes, spacing } from 'ui/src/theme'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
@@ -271,7 +270,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         isVisible={modalState.isOpen}
         onPress={onPressAccount}
       />
-      <TouchableArea hapticFeedback mb="spacing48" mt="spacing16" onPress={onPressAddWallet}>
+      <TouchableArea hapticFeedback mb="$spacing48" mt="$spacing16" onPress={onPressAddWallet}>
         <Flex row alignItems="center" ml="$spacing24">
           <Flex
             borderColor="$surface3"

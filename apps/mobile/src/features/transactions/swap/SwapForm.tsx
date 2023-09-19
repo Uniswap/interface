@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleSheet, TextInputProps } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { Button, ButtonSize } from 'src/components/buttons/Button'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { AnimatedFlex } from 'src/components/layout'
@@ -35,7 +34,7 @@ import {
 } from 'src/features/transactions/swap/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -281,7 +280,7 @@ function _SwapForm({
                 position="absolute">
                 <Trace logPress element={ElementName.SwitchCurrenciesButton}>
                   <SwapArrowButton
-                    bg="surface2"
+                    bg="$surface2"
                     size={SWAP_DIRECTION_BUTTON_SIZE}
                     onPress={onSwitchCurrencies}
                   />
@@ -353,7 +352,7 @@ function _SwapForm({
                 )}
               </Flex>
               {swapWarning && !isBlocked ? (
-                <TouchableArea mt="spacing1" onPress={onSwapWarningClick}>
+                <TouchableArea mt="$spacing1" onPress={onSwapWarningClick}>
                   <Flex
                     grow
                     row

@@ -510,7 +510,6 @@ exports[`SearchPopularTokens renders without error 2`] = `
           onStartShouldSetResponder={[Function]}
           style={
             {
-              "display": "flex",
               "opacity": 1,
             }
           }
@@ -708,7 +707,6 @@ exports[`SearchPopularTokens renders without error 2`] = `
           onStartShouldSetResponder={[Function]}
           style={
             {
-              "display": "flex",
               "opacity": 1,
             }
           }

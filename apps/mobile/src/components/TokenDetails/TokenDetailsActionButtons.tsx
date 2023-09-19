@@ -1,11 +1,10 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { getButtonProperties } from 'src/components/buttons/utils'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { getContrastPassingTextColor } from 'wallet/src/utils/colors'
 
 function CTAButton({
@@ -30,12 +29,13 @@ function CTAButton({
       <TouchableArea
         hapticFeedback
         alignItems="center"
-        borderColor={borderColor}
-        borderRadius={borderRadius}
+        // TODO(MOB-1340): take tamagui props once we rewrite Button and getButtonProperties
+        borderColor={borderColor === 'none' ? '$transparent' : `$${borderColor}`}
+        borderRadius={`$${borderRadius}`}
         borderWidth={1}
         flexGrow={1}
-        px={paddingX}
-        py={paddingY}
+        px={`$${paddingX}`}
+        py={`$${paddingY}`}
         style={{ backgroundColor: tokenColor ?? colors.accent1.val }}
         onPress={onPress}>
         <Text

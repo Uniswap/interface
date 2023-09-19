@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import Trace from 'src/components/Trace/Trace'
 import { IS_IOS } from 'src/constants/globals'
 import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
@@ -17,7 +16,7 @@ import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { ONBOARDING_NOTIFICATIONS_DARK, ONBOARDING_NOTIFICATIONS_LIGHT } from 'ui/src/assets'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import {
@@ -128,7 +127,11 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
           </TouchableArea>
         </Trace>
         <Trace logPress element={ElementName.Enable}>
-          <Button label={t('Turn on notifications')} onPress={onPressEnableNotifications} />
+          <Button
+            label={t('Turn on notifications')}
+            testID="turn-on-notifications"
+            onPress={onPressEnableNotifications}
+          />
         </Trace>
       </Flex>
     </OnboardingScreen>

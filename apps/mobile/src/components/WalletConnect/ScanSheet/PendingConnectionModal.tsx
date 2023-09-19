@@ -5,7 +5,6 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { LinkButton } from 'src/components/buttons/LinkButton'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
@@ -23,7 +22,7 @@ import {
   removePendingSession,
   WalletConnectPendingSession,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Separator, Text, useSporeColors } from 'ui/src'
+import { Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/check.svg'
 import X from 'ui/src/assets/icons/x.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -142,8 +141,8 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps):
   return (
     <TouchableArea
       disabled={!accountIsSwitchable}
-      m="none"
-      p="spacing12"
+      m="$none"
+      p="$spacing12"
       testID={ElementName.WCDappSwitchAccount}
       onPress={onPress}>
       <AccountDetails address={activeAddress} chevron={accountIsSwitchable} />
@@ -244,14 +243,14 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
             })}{' '}
           </Text>
           <LinkButton
-            backgroundColor="surface2"
-            borderRadius="rounded16"
+            backgroundColor="$surface2"
+            borderRadius="$rounded16"
             color={colors.accent1.val}
             iconColor={colors.accent1.val}
             label={pendingSession.dapp.url}
-            mb="spacing12"
-            px="spacing8"
-            py="spacing4"
+            mb="$spacing12"
+            px="$spacing8"
+            py="$spacing4"
             size={iconSizes.icon12}
             textVariant="buttonLabelMicro"
             url={pendingSession.dapp.url}
@@ -270,11 +269,13 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
             fill
             emphasis={ButtonEmphasis.Secondary}
             label={t('Cancel')}
+            testID="cancel-pending-connection"
             onPress={(): Promise<void> => onPressSettleConnection(false)}
           />
           <Button
             fill
             label={t('Connect')}
+            testID="connect-pending-connection"
             onPress={(): Promise<void> => onPressSettleConnection(true)}
           />
         </Flex>

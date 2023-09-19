@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import Trace from 'src/components/Trace/Trace'
 import { RECOVERY_PHRASE_HELP_URL } from 'src/constants/urls'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
@@ -16,7 +15,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
@@ -173,7 +172,12 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
       </Flex>
 
       <Trace logPress element={ElementName.Next}>
-        <Button disabled={!!errorMessage || !value} label={t('Continue')} onPress={onSubmit} />
+        <Button
+          disabled={!!errorMessage || !value}
+          label={t('Continue')}
+          testID="seed-input-submit"
+          onPress={onSubmit}
+        />
       </Trace>
     </SafeKeyboardOnboardingScreen>
   )

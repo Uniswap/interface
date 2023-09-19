@@ -5,7 +5,6 @@ import { Alert } from 'react-native'
 import 'react-native-reanimated'
 import { useAppSelector } from 'src/app/hooks'
 import { useEagerExternalProfileRootNavigation } from 'src/app/navigation/hooks'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BackButtonView } from 'src/components/layout/BackButtonView'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
@@ -17,7 +16,7 @@ import { getSupportedURI, URIType } from 'src/components/WalletConnect/ScanSheet
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -203,11 +202,11 @@ export function WalletConnectModal({
         <Flex centered mb="$spacing48" mt="$spacing16" mx="$spacing16">
           <TouchableArea
             hapticFeedback
-            borderColor={isDarkMode ? 'none' : 'surface3'}
-            borderRadius="roundedFull"
+            borderColor={isDarkMode ? '$transparent' : '$surface3'}
+            borderRadius="$roundedFull"
             borderWidth={1}
-            p="spacing16"
-            paddingEnd="spacing24"
+            p="$spacing16"
+            paddingEnd="$spacing24"
             style={{ backgroundColor: colors.DEP_backgroundOverlay.val }}
             testID={ElementName.QRCodeModalToggle}
             onPress={onPressBottomToggle}>

@@ -1,11 +1,10 @@
 import React, { useMemo } from 'react'
-import { BaseButtonProps, TouchableArea } from 'src/components/buttons/TouchableArea'
 import { openUri } from 'src/utils/linking'
-import { Flex, FlexProps, Text, useSporeColors } from 'ui/src'
+import { Flex, FlexProps, Text, TouchableArea, TouchableAreaProps, useSporeColors } from 'ui/src'
 import ExternalLinkIcon from 'ui/src/assets/icons/external-link.svg'
 import { iconSizes, TextVariantTokens } from 'ui/src/theme'
 
-interface LinkButtonProps extends Omit<BaseButtonProps, 'onPress'> {
+interface LinkButtonProps extends Omit<TouchableAreaProps, 'onPress'> {
   label: string
   url: string
   openExternalBrowser?: boolean

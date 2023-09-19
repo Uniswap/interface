@@ -3,11 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { ImageStyle } from 'react-native-fast-image'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Loader } from 'src/components/loading'
 import { LongText } from 'src/components/text/LongText'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
-import { Flex, FlexProps, Logos, Text, useSporeColors } from 'ui/src'
+import { Flex, FlexProps, Logos, Text, TouchableArea, useSporeColors } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
@@ -100,9 +99,9 @@ export function NFTCollectionHeader({
           pt="$spacing48">
           <TouchableArea
             hapticFeedback
-            backgroundColor="sporeBlack"
-            borderRadius="roundedFull"
-            padding="spacing12">
+            backgroundColor="$sporeBlack"
+            borderRadius="$roundedFull"
+            padding="$spacing12">
             <Flex centered grow height={iconSizes.icon8} width={iconSizes.icon8}>
               <BackButton color="$sporeWhite" size={iconSizes.icon24} />
             </Flex>
@@ -147,12 +146,16 @@ export function NFTCollectionHeader({
 
         {/* Collection stats */}
         <Flex
-          gap="$spacing4"
+          gap="$spacing12"
           pt="$spacing12"
           px="$spacing24"
           style={{ marginTop: PROFILE_IMAGE_WRAPPER_SIZE }}>
           <Flex row alignItems="center" gap="$spacing8">
-            <Text loading={loading} loadingPlaceholderText="Collection Name" variant="subheadLarge">
+            <Text
+              loading={loading}
+              loadingPlaceholderText="Collection Name"
+              mt="$spacing16"
+              variant="subheadLarge">
               {data?.name ?? '-'}
             </Text>
             {data?.isVerified ? (

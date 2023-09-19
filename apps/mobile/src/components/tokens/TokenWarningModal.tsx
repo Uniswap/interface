@@ -2,14 +2,13 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { getTokenSafetyHeaderText } from 'src/components/tokens/utils'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useTokenSafetyLevelColors } from 'src/features/tokens/safetyHooks'
 import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import ExternalLinkIcon from 'ui/src/assets/icons/external-link.svg'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes, imageSizes, opacify } from 'ui/src/theme'
@@ -111,12 +110,12 @@ export default function TokenWarningModal({
         </Flex>
         <TouchableArea
           alignItems="center"
-          bg="accent2"
-          borderRadius="rounded16"
+          bg="$accent2"
+          borderRadius="$rounded16"
           flexDirection="row"
-          mx="spacing48"
-          px="spacing12"
-          py="spacing8"
+          mx="$spacing48"
+          px="$spacing12"
+          py="$spacing8"
           onPress={(): Promise<void> => openUri(explorerLink)}>
           <Text
             color="$accent1"

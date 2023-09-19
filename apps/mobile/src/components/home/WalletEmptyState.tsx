@@ -1,14 +1,13 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import Trace from 'src/components/Trace/Trace'
 import { UNISWAP_HELP_CENTER_WALLET_URL } from 'src/constants/urls'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { openUri } from 'src/utils/linking'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import BookIcon from 'ui/src/assets/icons/book.svg'
 import DollarSign from 'ui/src/assets/icons/dollar.svg'
 import PaperStackIcon from 'ui/src/assets/icons/paper-stack.svg'
@@ -162,7 +161,7 @@ const ActionCard = ({
   elementName,
 }: ActionCardItem): JSX.Element => (
   <Trace logPress element={elementName}>
-    <TouchableArea backgroundColor="surface2" borderRadius="rounded20" onPress={onPress}>
+    <TouchableArea backgroundColor="$surface2" borderRadius="$rounded20" onPress={onPress}>
       <Flex centered row p="$spacing16">
         {icon}
         <Flex shrink gap="$spacing4">

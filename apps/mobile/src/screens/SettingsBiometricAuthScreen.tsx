@@ -4,7 +4,6 @@ import { Alert, ListRenderItemInfo } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { useAppDispatch } from 'src/app/hooks'
 import { Switch } from 'src/components/buttons/Switch'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
@@ -23,7 +22,7 @@ import {
   setRequiredForTransactions,
 } from 'src/features/biometrics/slice'
 import { openSettings } from 'src/utils/linking'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 
 interface BiometricAuthSetting {
   onValueChange: (newValue: boolean) => void

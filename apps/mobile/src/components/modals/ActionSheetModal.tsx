@@ -1,10 +1,9 @@
 import React, { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BottomSheetDetachedModal } from 'src/components/modals/BottomSheetModal'
 import { ModalName } from 'src/features/telemetry/constants'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { dimensions } from 'ui/src/theme'
 import { flex } from 'ui/src/theme/restyle'
 

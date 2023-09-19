@@ -1,6 +1,5 @@
 import React from 'react'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Flex, Icons } from 'ui/src'
+import { Flex, Icons, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
 export enum PlusMinusButtonType {
@@ -21,8 +20,8 @@ export default function PlusMinusButton({
     <TouchableArea
       hapticFeedback
       alignItems="center"
-      backgroundColor={disabled ? 'surface3' : 'neutral2'}
-      borderRadius="roundedFull"
+      backgroundColor={disabled ? '$surface3' : '$neutral2'}
+      borderRadius="$roundedFull"
       disabled={disabled}
       height={iconSizes.icon28}
       justifyContent="center"

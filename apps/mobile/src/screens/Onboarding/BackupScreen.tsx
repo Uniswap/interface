@@ -10,7 +10,6 @@ import {
   useOnboardingStackNavigation,
 } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { EducationContentType } from 'src/components/education'
 import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID } from 'src/constants/globals'
@@ -21,7 +20,7 @@ import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
-import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import PaperIcon from 'ui/src/assets/icons/paper-stack.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -172,7 +171,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
       <Flex grow justifyContent="space-between">
         <Flex gap="$spacing12">{options}</Flex>
         <Flex gap="$spacing12" justifyContent="flex-end">
-          <TouchableArea alignSelf="center" py="none" onPress={onPressEducationButton}>
+          <TouchableArea alignSelf="center" py="$none" onPress={onPressEducationButton}>
             <Flex centered row gap="$spacing4">
               <InfoCircle
                 color={colors.neutral2.val}

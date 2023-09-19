@@ -1,18 +1,14 @@
 import { useNavigation } from '@react-navigation/native'
-import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React from 'react'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BackButtonView } from 'src/components/layout/BackButtonView'
-import { ColorTokens } from 'ui/src'
-import { Theme } from 'ui/src/theme/restyle'
+import { ColorTokens, TouchableArea, TouchableAreaProps } from 'ui/src'
 
 type Props = {
   size?: number
   color?: ColorTokens
   showButtonLabel?: boolean
   onPressBack?: () => void
-} & SpacingProps<Theme> &
-  SpacingShorthandProps<Theme>
+} & TouchableAreaProps
 
 export function BackButton({
   onPressBack,

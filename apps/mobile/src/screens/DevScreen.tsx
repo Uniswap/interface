@@ -3,11 +3,10 @@ import { ScrollView } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { resetDismissedWarnings } from 'src/features/tokens/tokensSlice'
 import { Screens } from 'src/screens/Screens'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -80,7 +79,7 @@ export function DevScreen(): JSX.Element {
             {Object.values(Screens).map((s) => (
               <TouchableArea
                 key={s}
-                m="spacing8"
+                m="$spacing8"
                 testID={`dev_screen/${s}`}
                 onPress={(): void => activateWormhole(s)}>
                 <Text color="$neutral1">{s}</Text>
@@ -90,16 +89,16 @@ export function DevScreen(): JSX.Element {
           <Text mt="$spacing12" textAlign="center" variant="bodyLarge">
             🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀
           </Text>
-          <TouchableArea mt="spacing16" onPress={onPressCreate}>
+          <TouchableArea mt="$spacing16" onPress={onPressCreate}>
             <Text color="$neutral1">Create account</Text>
           </TouchableArea>
-          <TouchableArea mt="spacing12" onPress={onPressResetTokenWarnings}>
+          <TouchableArea mt="$spacing12" onPress={onPressResetTokenWarnings}>
             <Text color="$neutral1">Reset token warnings</Text>
           </TouchableArea>
-          <TouchableArea mt="spacing12" onPress={onPressShowError}>
+          <TouchableArea mt="$spacing12" onPress={onPressShowError}>
             <Text color="$neutral1">Show global error</Text>
           </TouchableArea>
-          <TouchableArea mt="spacing12" onPress={onPressResetOnboarding}>
+          <TouchableArea mt="$spacing12" onPress={onPressResetOnboarding}>
             <Text color="$neutral1">Reset onboarding</Text>
           </TouchableArea>
         </Flex>

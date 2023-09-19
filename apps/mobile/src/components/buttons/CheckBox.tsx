@@ -1,7 +1,6 @@
 import { useResponsiveProp } from '@shopify/restyle'
 import React from 'react'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Flex, Icons, Text } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 

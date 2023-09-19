@@ -2,13 +2,12 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import React, { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Warning } from 'src/components/modals/WarningModal/types'
 import { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { FeeOnTransferInfo } from 'src/features/transactions/swap/FeeOnTransferInfo'
-import { Box, Flex, Separator, Text, useSporeColors } from 'ui/src'
+import { Box, Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import AnglesMaximize from 'ui/src/assets/icons/angles-maximize.svg'
 import AnglesMinimize from 'ui/src/assets/icons/angles-minimize.svg'
@@ -58,7 +57,7 @@ export function TransactionDetails({
   return (
     <Flex gap="$none">
       {showWarning && warning && onShowWarning && (
-        <TouchableArea mb="spacing8" onPress={onShowWarning}>
+        <TouchableArea mb="$spacing8" onPress={onShowWarning}>
           <Flex
             grow
             row
@@ -112,7 +111,7 @@ export function TransactionDetails({
           alignItems="center"
           flexDirection="row"
           justifyContent="center"
-          py="spacing8"
+          py="$spacing8"
           onPress={onPressToggleShowChildren}>
           <Text color="$neutral3" variant="bodySmall">
             {showChildren ? t('Show less') : t('Show more')}

@@ -1,7 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box, Flex, Text, useSporeColors } from 'ui/src'
+import { Box, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import InfoCircleIcon from 'ui/src/assets/icons/info-circle.svg'
 import { iconSizes } from 'ui/src/theme'
 import { formatPercent } from 'utilities/src/format/format'

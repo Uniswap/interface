@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { IS_ANDROID } from 'src/constants/globals'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
@@ -13,7 +12,7 @@ import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Flex, Icons, Text } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -56,11 +55,11 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
             return (
               <TouchableArea
                 key={backup.mnemonicId}
-                backgroundColor="surface2"
-                borderColor="surface2"
-                borderRadius="rounded16"
+                backgroundColor="$surface2"
+                borderColor="$surface2"
+                borderRadius="$rounded16"
                 borderWidth={1}
-                p="spacing16"
+                p="$spacing16"
                 onPress={(): Promise<void> => onPressRestoreBackup(backup)}>
                 <Flex row alignItems="center" justifyContent="space-between">
                   <Flex centered row gap="$spacing12">

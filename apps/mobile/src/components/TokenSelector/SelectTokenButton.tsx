@@ -1,7 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Flex, Icons, Text } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
@@ -22,8 +21,8 @@ export function SelectTokenButton({
   return (
     <TouchableArea
       hapticFeedback
-      bg={selectedCurrencyInfo ? 'surface1' : 'accent1'}
-      borderRadius="roundedFull"
+      bg={selectedCurrencyInfo ? '$surface1' : '$accent1'}
+      borderRadius="$roundedFull"
       testID={`currency-selector-toggle-${showNonZeroBalancesOnly ? 'in' : 'out'}`}
       onPress={onPress}>
       {selectedCurrencyInfo ? (

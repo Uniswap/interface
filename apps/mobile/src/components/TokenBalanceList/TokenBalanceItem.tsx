@@ -3,11 +3,10 @@ import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex } from 'src/components/layout'
 import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { borderRadii, spacing } from 'ui/src/theme'
 import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
@@ -59,13 +58,13 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       <TouchableArea
         hapticFeedback
         alignItems="flex-start"
-        bg="none"
+        bg="$transparent"
         flexDirection="row"
         hapticStyle={ImpactFeedbackStyle.Light}
         justifyContent="space-between"
         minHeight={TOKEN_BALANCE_ITEM_HEIGHT}
-        px="spacing12"
-        py="spacing8"
+        px="$spacing12"
+        py="$spacing8"
         onPress={onPress}>
         <AnimatedFlex
           row

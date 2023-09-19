@@ -1,9 +1,8 @@
 import { useResponsiveProp } from '@shopify/restyle'
 import React from 'react'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -43,14 +42,14 @@ export function OptionCard({
   return (
     <Trace logPress element={elementName}>
       <TouchableArea
-        backgroundColor="surface2"
-        borderColor={isDarkMode ? 'none' : 'surface3'}
-        borderRadius="rounded20"
+        backgroundColor="$surface2"
+        borderColor={isDarkMode ? '$transparent' : '$surface3'}
+        borderRadius="$rounded20"
         borderWidth={1}
         disabled={disabled}
         hapticFeedback={hapticFeedback}
         opacity={disabled ? 0.5 : opacity}
-        p="spacing16"
+        p="$spacing16"
         testID={elementName}
         onPress={onPress}>
         <Flex row alignContent="center" alignItems="center" gap="$spacing16">

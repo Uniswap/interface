@@ -2,11 +2,10 @@ import { ImpactFeedbackStyle, selectionAsync } from 'expo-haptics'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, LayoutAnimation, StyleSheet, VirtualizedList } from 'react-native'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { useNetworkOptions } from 'src/components/Network/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
-import { Flex, Icons, Text } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { colors, iconSizes } from 'ui/src/theme'
 import {
@@ -131,7 +130,7 @@ export function NetworkFilter({
       <TouchableArea
         hapticFeedback
         hapticStyle={ImpactFeedbackStyle.Light}
-        py="spacing8"
+        py="$spacing8"
         onPress={(): void => {
           Keyboard.dismiss()
           setShowModal(true)

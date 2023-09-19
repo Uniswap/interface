@@ -6,7 +6,7 @@ exports[`renders collection preview card 1`] = `
     {
       "busy": undefined,
       "checked": undefined,
-      "disabled": false,
+      "disabled": undefined,
       "expanded": undefined,
       "selected": undefined,
     }
@@ -39,7 +39,7 @@ exports[`renders collection preview card 1`] = `
   onStartShouldSetResponder={[Function]}
   style={
     {
-      "display": "flex",
+      "disabled": false,
       "opacity": 1,
     }
   }

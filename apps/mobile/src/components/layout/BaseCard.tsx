@@ -1,9 +1,8 @@
 import { ShadowProps } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import Trace from 'src/components/Trace/Trace'
-import { ColorTokens, Flex, FlexProps, Icons, Text, useSporeColors } from 'ui/src'
+import { ColorTokens, Flex, FlexProps, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes, opacify } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
@@ -70,10 +69,10 @@ type HeaderProps = {
 function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps): JSX.Element {
   return (
     <TouchableArea
-      borderBottomColor="surface3"
+      borderBottomColor="$surface3"
       borderBottomWidth={0.25}
-      px="spacing16"
-      py="spacing12"
+      px="$spacing16"
+      py="$spacing12"
       onPress={onPress}
       {...buttonProps}>
       <Flex row alignItems="center" justifyContent="space-between">

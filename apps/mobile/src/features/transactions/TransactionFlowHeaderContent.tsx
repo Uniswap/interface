@@ -1,11 +1,10 @@
 import React, { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useTokenFormActionHandlers } from 'src/features/transactions/hooks'
 import { TransactionFlowProps, TransactionStep } from 'src/features/transactions/TransactionFlow'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import DollarSign from 'ui/src/assets/icons/dollar.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
@@ -63,10 +62,10 @@ export function HeaderContent({
         {step === TransactionStep.FORM && showUSDToggle ? (
           <TouchableArea
             hapticFeedback
-            bg={isUSDInput ? 'accent2' : 'surface2'}
-            borderRadius="rounded16"
-            px="spacing8"
-            py="spacing4"
+            bg={isUSDInput ? '$accent2' : '$surface2'}
+            borderRadius="$rounded16"
+            px="$spacing8"
+            py="$spacing4"
             onPress={(): void => onToggleUSDInput(!isUSDInput)}>
             <Flex row alignItems="center" gap="$spacing4">
               <DollarSign
@@ -82,11 +81,11 @@ export function HeaderContent({
         ) : null}
         {isViewOnlyWallet ? (
           <TouchableArea
-            bg="surface2"
-            borderRadius="rounded12"
+            bg="$surface2"
+            borderRadius="$rounded12"
             justifyContent="center"
-            px="spacing8"
-            py="spacing4"
+            px="$spacing8"
+            py="$spacing4"
             onPress={(): void => setShowViewOnlyModal(true)}>
             <Flex row alignItems="center" gap="$spacing4">
               <EyeIcon

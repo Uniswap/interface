@@ -3,7 +3,6 @@ import { providers } from 'ethers'
 import { default as React, memo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -11,7 +10,7 @@ import { useLowestPendingNonce } from 'src/features/transactions/hooks'
 import { CancelConfirmationView } from 'src/features/transactions/SummaryCards/CancelConfirmationView'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
 import { openMoonpayTransactionLink, openTransactionLink } from 'src/utils/linking'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
 import { cancelTransaction } from 'wallet/src/features/transactions/slice'
@@ -120,7 +119,7 @@ function TransactionSummaryLayout({
 
   return (
     <>
-      <TouchableArea mb="spacing24" overflow="hidden" onPress={onPress}>
+      <TouchableArea mb="$spacing24" overflow="hidden" onPress={onPress}>
         <Flex grow row bg="$surface1" gap="$spacing12">
           {icon && (
             <Flex centered width={TXN_HISTORY_ICON_SIZE}>

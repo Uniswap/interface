@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID } from 'src/constants/globals'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
@@ -15,7 +14,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import ImportIcon from 'ui/src/assets/icons/paper-stack.svg'
 import { AppTFunction } from 'ui/src/i18n/types'
@@ -142,7 +141,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
         ))}
       </Flex>
       <Trace logPress element={ElementName.OnboardingImportBackup}>
-        <TouchableArea alignItems="center" mb="spacing12">
+        <TouchableArea alignItems="center" mb="$spacing12">
           <Flex row alignItems="center" gap="$spacing4">
             <EyeIcon
               color={colors.accent1.val}

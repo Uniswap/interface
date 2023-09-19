@@ -1,6 +1,6 @@
 import React from 'react'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { ON_PRESS_EVENT_PAYLOAD } from 'src/components/buttons/TouchableArea.test'
+import { ON_PRESS_EVENT_PAYLOAD } from 'src/test/eventFixtures'
 import { fireEvent, render, screen } from 'src/test/test-utils'
 
 const mockedGoBack = jest.fn()

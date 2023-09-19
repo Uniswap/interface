@@ -2,12 +2,11 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { ModalName } from 'src/features/telemetry/constants'
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
 import { openUri } from 'src/utils/linking'
-import { Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { formatCurrencyAmount, formatPercent, NumberType } from 'utilities/src/format/format'
@@ -124,7 +123,13 @@ export function SlippageInfoModal({
           </Flex>
         ) : null}
         <Flex centered row gap="$spacing12" pt="$spacing12">
-          <Button fill emphasis={ButtonEmphasis.Secondary} label={t('Close')} onPress={onClose} />
+          <Button
+            fill
+            emphasis={ButtonEmphasis.Secondary}
+            label={t('Close')}
+            testID="slippage-info-close"
+            onPress={onClose}
+          />
         </Flex>
       </Flex>
     </BottomSheetModal>

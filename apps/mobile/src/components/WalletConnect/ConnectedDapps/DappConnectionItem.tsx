@@ -7,13 +7,12 @@ import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context
 import 'react-native-reanimated'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
-import { AnimatedTouchableArea, TouchableArea } from 'src/components/buttons/TouchableArea'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { NetworkLogos } from 'src/components/WalletConnect/NetworkLogos'
 import { ElementName } from 'src/features/telemetry/constants'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { removeSession, WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Text } from 'ui/src'
+import { AnimatedTouchableArea, Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -88,14 +87,14 @@ export function DappConnectionItem({
             <AnimatedTouchableArea
               hapticFeedback
               alignItems="center"
-              backgroundColor="neutral3"
-              borderRadius="roundedFull"
+              backgroundColor="$neutral3"
+              borderRadius="$roundedFull"
               entering={FadeIn}
               exiting={FadeOut}
               height={iconSizes.icon28}
               justifyContent="center"
               width={iconSizes.icon28}
-              zIndex="tooltip"
+              zIndex="$tooltip"
               onPress={onDisconnect}>
               <Flex
                 backgroundColor="$surface1"

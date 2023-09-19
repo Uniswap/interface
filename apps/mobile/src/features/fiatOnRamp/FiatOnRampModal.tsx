@@ -13,7 +13,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { TextInputProps } from 'src/components/input/TextInput'
@@ -31,7 +30,7 @@ import { ElementName, MobileEventName, ModalName } from 'src/features/telemetry/
 import { MobileEventProperties } from 'src/features/telemetry/types'
 import { useDynamicFontSizing, useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
 import { openUri } from 'src/utils/linking'
-import { Flex, Icons, Text } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import InformationIcon from 'ui/src/assets/icons/i-icon.svg'
 import { dimensions, iconSizes, spacing } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
@@ -418,7 +417,7 @@ function SelectTokenButton({
   return (
     <TouchableArea
       hapticFeedback
-      borderRadius="roundedFull"
+      borderRadius="$roundedFull"
       testID={ElementName.TokenSelectorToggle}
       onPress={onPress}>
       <Flex centered row flexDirection="row" gap="$spacing4" p="$spacing4">

@@ -1,5 +1,4 @@
 import React from 'react'
-import { IS_IOS } from 'src/constants/globals'
 import { Flex, FlexProps } from 'ui/src'
 import { zIndices } from 'ui/src/theme'
 
@@ -13,7 +12,7 @@ export function GradientBackground({ children, ...rest }: FlexProps): JSX.Elemen
       position="absolute"
       right={0}
       top={0}
-      zIndex={IS_IOS ? '$background' : zIndices.background}
+      zIndex={zIndices.background}
       {...rest}>
       {children}
     </Flex>

@@ -3,13 +3,12 @@ import React, { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { setClipboard } from 'src/utils/clipboard'
 import { isDevBuild } from 'src/utils/version'
-import { Flex, Icons, useSporeColors } from 'ui/src'
+import { Flex, Icons, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
@@ -54,7 +53,7 @@ export function AccountHeader(): JSX.Element {
         flex={1}
         flexDirection="row"
         hapticStyle={ImpactFeedbackStyle.Medium}
-        mr="spacing12"
+        mr="$spacing12"
         testID={ElementName.Manage}
         onLongPress={async (): Promise<void> => {
           await onPressCopyAddress()

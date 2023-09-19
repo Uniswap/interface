@@ -7,11 +7,10 @@ import {
   SettingsStackNavigationProp,
   SettingsStackParamList,
 } from 'src/app/navigation/types'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Arrow } from 'src/components/icons/Arrow'
 import { Screens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
-import { Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
 export interface SettingsSection {

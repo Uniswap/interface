@@ -2,12 +2,11 @@ import { useResponsiveProp } from '@shopify/restyle'
 import React from 'react'
 import { SvgProps } from 'react-native-svg'
 import { useAppDispatch } from 'src/app/hooks'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
 import { setClipboard } from 'src/utils/clipboard'
 import { openUri } from 'src/utils/linking'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import CopyIcon from 'ui/src/assets/icons/copy-sheets.svg'
 import { iconSizes } from 'ui/src/theme'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -65,10 +64,10 @@ export function LinkButton({
     <Trace logPress element={element}>
       <TouchableArea
         hapticFeedback
-        backgroundColor="surface2"
-        borderRadius="rounded20"
-        paddingHorizontal="spacing12"
-        paddingVertical="spacing8"
+        backgroundColor="$surface2"
+        borderRadius="$rounded20"
+        paddingHorizontal="$spacing12"
+        paddingVertical="$spacing8"
         testID={element}
         onPress={onPress}>
         <Flex centered row gap="$spacing8">

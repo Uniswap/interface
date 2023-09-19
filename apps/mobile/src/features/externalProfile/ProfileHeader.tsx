@@ -7,7 +7,6 @@ import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Favorite } from 'src/components/icons/Favorite'
 import { AnimatedBox } from 'src/components/layout/Box'
 import { useUniconColors } from 'src/components/unicons/utils'
@@ -16,7 +15,7 @@ import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -109,10 +108,10 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
       {/* header row */}
       <Flex row alignItems="center" justifyContent="space-between" mx="$spacing4">
         <TouchableArea
-          backgroundColor="sporeBlack"
-          borderRadius="roundedFull"
+          backgroundColor="$sporeBlack"
+          borderRadius="$roundedFull"
           opacity={0.8}
-          padding="spacing8">
+          padding="$spacing8">
           <Flex centered grow height={iconSizes.icon16} width={iconSizes.icon16}>
             <BackButton color="$sporeWhite" size={iconSizes.icon24} />
           </Flex>
@@ -138,12 +137,12 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
             <TouchableArea
               hapticFeedback
               activeOpacity={1}
-              backgroundColor="surface1"
-              borderColor="surface3"
-              borderRadius="rounded20"
+              backgroundColor="$surface1"
+              borderColor="$surface3"
+              borderRadius="$rounded20"
               borderWidth={1}
               height={46}
-              padding="spacing12"
+              padding="$spacing12"
               testID={ElementName.Favorite}
               onPress={onPressFavorite}>
               <Favorite isFavorited={isFavorited} size={iconSizes.icon20} />
@@ -151,12 +150,12 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
             <TouchableArea
               hapticFeedback
               activeOpacity={1}
-              backgroundColor="surface1"
-              borderColor="surface3"
-              borderRadius="rounded20"
+              backgroundColor="$surface1"
+              borderColor="$surface3"
+              borderRadius="$rounded20"
               borderWidth={1}
               height={46}
-              padding="spacing12"
+              padding="$spacing12"
               testID={ElementName.Send}
               onPress={onPressSend}>
               <Flex row alignItems="center" gap="$spacing8">

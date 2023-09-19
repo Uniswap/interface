@@ -6,7 +6,6 @@ import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
-import { AnimatedTouchableArea } from 'src/components/buttons/TouchableArea'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
@@ -16,7 +15,7 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
-import { Flex, Text } from 'ui/src'
+import { AnimatedTouchableArea, Flex, Text } from 'ui/src'
 import { borderRadii, iconSizes, imageSizes } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
@@ -135,11 +134,11 @@ function FavoriteTokenCard({
       {...rest}>
       <AnimatedTouchableArea
         hapticFeedback
-        borderRadius="rounded16"
+        borderRadius="$rounded16"
         entering={FadeIn}
         exiting={FadeOut}
         hapticStyle={ImpactFeedbackStyle.Light}
-        m="spacing4"
+        m="$spacing4"
         testID={`token-box-${token?.symbol}`}
         onPress={onPress}>
         <BaseCard.Shadow>

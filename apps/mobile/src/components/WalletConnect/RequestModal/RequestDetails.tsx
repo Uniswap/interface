@@ -41,12 +41,12 @@ const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps): JSX.E
 
   return (
     <LinkButton
-      backgroundColor="surface3"
-      borderRadius="rounded12"
+      backgroundColor="$surface3"
+      borderRadius="$rounded12"
       iconColor={colors.neutral1.val}
       label={name || shortenAddress(address)}
-      px="spacing8"
-      py="spacing4"
+      px="$spacing8"
+      py="$spacing4"
       size={iconSizes.icon16}
       textVariant="bodySmall"
       url={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}

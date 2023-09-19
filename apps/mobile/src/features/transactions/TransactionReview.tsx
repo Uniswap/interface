@@ -101,7 +101,7 @@ export function TransactionReview({
     sm: 'bodyLarge',
   })
 
-  const arrowPadding = useResponsiveProp({ xs: 'spacing4', sm: 'spacing8' })
+  const arrowPadding = useResponsiveProp({ xs: '$spacing4', sm: '$spacing8' })
 
   const amountAndEquivalentValueGap = useResponsiveProp({ xs: '$spacing4', sm: '$spacing4' })
 
@@ -163,7 +163,12 @@ export function TransactionReview({
             <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 5} />
           </Flex>
         ) : null}
-        <TransferArrowButton disabled bg="none" borderColor="none" padding={arrowPadding} />
+        <TransferArrowButton
+          disabled
+          bg="$transparent"
+          borderColor="$transparent"
+          padding={arrowPadding}
+        />
         {currencyOutInfo && formattedAmountOut ? (
           <Flex centered gap={innerGap} pb={bottomPadding}>
             <Flex centered gap={amountAndEquivalentValueGap}>

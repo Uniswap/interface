@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { FlatList } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SearchPopularNFTCollections } from 'src/components/explore/search/SearchPopularNFTCollections'
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
 import { renderSearchItem } from 'src/components/explore/search/SearchResultsSection'
@@ -15,7 +14,7 @@ import {
   selectSearchHistory,
   WalletSearchResult,
 } from 'src/features/explore/searchHistorySlice'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import ClockIcon from 'ui/src/assets/icons/clock.svg'
 import TrendArrowIcon from 'ui/src/assets/icons/trend-up.svg'
 import { iconSizes } from 'ui/src/theme'

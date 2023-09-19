@@ -2,11 +2,10 @@ import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo } from 'react'
 import { SvgProps } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
-import { BaseButtonProps, TouchableArea } from 'src/components/buttons/TouchableArea'
 import { getButtonProperties } from 'src/components/buttons/utils'
 import { DeprecatedMobileOnlyFlex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { withAnimated } from 'ui/src'
+import { TouchableArea, withAnimated } from 'ui/src'
 
 export enum ButtonSize {
   Small = 'small',
@@ -55,7 +54,9 @@ const _Button = ({
   onPress,
   onPressIn,
   size = ButtonSize.Medium,
-}: ButtonProps & Pick<BaseButtonProps, 'testID'>): JSX.Element => {
+}: ButtonProps & {
+  testID?: string
+}): JSX.Element => {
   // TODO(MOB-1274): refactor Button to remove useAppTheme, Restyle Flex, Restyle Text
   const theme = useAppTheme()
 
@@ -94,9 +95,10 @@ const _Button = ({
   return (
     <TouchableArea
       alignItems="center"
-      backgroundColor={backgroundColor}
-      borderColor={borderColor}
-      borderRadius={borderRadius}
+      // MOB-1365: until we convert this over to shared Button
+      backgroundColor={backgroundColor === 'none' ? '$transparent' : `$${backgroundColor}`}
+      borderColor={borderColor === 'none' ? '$transparent' : `$${borderColor}`}
+      borderRadius={`$${borderRadius}`}
       borderWidth={1}
       disabled={disabled}
       flex={fill ? 1 : undefined}

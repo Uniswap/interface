@@ -1,7 +1,6 @@
 import React from 'react'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import WarningIcon from 'src/components/tokens/WarningIcon'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { flex, theme } from 'ui/src/theme/restyle'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { SafetyLevel, TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'

@@ -1,13 +1,12 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import { memo } from 'react'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Pill } from 'src/components/text/Pill'
 import {
   OnSelectCurrency,
   SuggestedTokenSection,
 } from 'src/components/TokenSelector/TokenSelectorList'
 import { TokenOption } from 'src/components/TokenSelector/types'
-import { useSporeColors } from 'ui/src'
+import { TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'

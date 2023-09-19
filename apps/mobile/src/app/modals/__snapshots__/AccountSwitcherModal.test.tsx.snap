@@ -296,7 +296,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
           onStartShouldSetResponder={[Function]}
           style={
             {
-              "display": "flex",
               "opacity": 1,
             }
           }
@@ -414,7 +413,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
           {
             "busy": undefined,
             "checked": undefined,
-            "disabled": false,
+            "disabled": undefined,
             "expanded": undefined,
             "selected": undefined,
           }
@@ -452,7 +451,10 @@ exports[`AccountSwitcher renders correctly 1`] = `
             "borderColor": "transparent",
             "borderRadius": 12,
             "borderWidth": 1,
-            "display": "flex",
+            "disabled": false,
+            "flex": undefined,
+            "onLongPress": undefined,
+            "onPressIn": undefined,
             "opacity": 1,
           }
         }
@@ -567,7 +569,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
     onStartShouldSetResponder={[Function]}
     style={
       {
-        "display": "flex",
         "marginBottom": 48,
         "marginTop": 16,
         "opacity": 1,

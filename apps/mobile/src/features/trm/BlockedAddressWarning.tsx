@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BlockedAddressModal } from 'src/components/modals/WarningModal/BlockedAddressModal'
-import { Flex, FlexProps, Text, useSporeColors } from 'ui/src'
+import { Flex, FlexProps, Text, TouchableArea, useSporeColors } from 'ui/src'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { iconSizes } from 'ui/src/theme'
 

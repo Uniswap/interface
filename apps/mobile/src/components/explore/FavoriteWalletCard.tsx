@@ -6,11 +6,10 @@ import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { AccountIcon } from 'src/components/AccountIcon'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { removeWatchedAddress } from 'src/features/favorites/slice'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { flex, theme } from 'ui/src/theme/restyle'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -69,9 +68,9 @@ export default function FavoriteWalletCard({
       {...rest}>
       <TouchableArea
         hapticFeedback
-        borderRadius="rounded16"
+        borderRadius="$rounded16"
         hapticStyle={ImpactFeedbackStyle.Light}
-        m="spacing4"
+        m="$spacing4"
         onPress={(): void => {
           navigate(address)
         }}

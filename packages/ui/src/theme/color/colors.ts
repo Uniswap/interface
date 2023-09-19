@@ -160,6 +160,7 @@ export const colors = {
   networkArbitrum: '#28A0F0',
   networkBase: '#2151F5',
   networkBnb: '#F0B90B',
+  fiatOnRampBanner: '#FB36D0',
 }
 
 // TODO: map named colors to new Spore colors
@@ -262,6 +263,8 @@ export const colorsLight = {
   DEP_brandedAccentSoft: colors.magenta100,
   DEP_magentaDark: opacify(12, colors.magentaVibrant),
 
+  DEP_fiatBanner: colors.fiatOnRampBanner,
+
   chain_1: colors.networkLightEthereum,
   chain_3: colors.yellow400,
   chain_4: colors.pink400,
@@ -319,6 +322,8 @@ export const colorsDark = {
   DEP_blue300: colors.blue300,
   DEP_brandedAccentSoft: '#46244F', // git blame Chelsy
   DEP_magentaDark: opacify(12, colors.magentaVibrant),
+
+  DEP_fiatBanner: colors.fiatOnRampBanner,
 
   chain_1: colors.networkDarkEthereum,
   chain_3: colors.yellow400,

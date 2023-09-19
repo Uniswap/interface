@@ -128,7 +128,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
           {
             "busy": undefined,
             "checked": undefined,
-            "disabled": false,
+            "disabled": undefined,
             "expanded": undefined,
             "selected": undefined,
           }
@@ -166,7 +166,10 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             "borderColor": "#2222220D",
             "borderRadius": 12,
             "borderWidth": 1,
-            "display": "flex",
+            "disabled": false,
+            "flex": undefined,
+            "onLongPress": undefined,
+            "onPressIn": undefined,
             "opacity": 1,
           }
         }

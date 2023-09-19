@@ -119,7 +119,6 @@ exports[`AccountList renders without error 1`] = `
           onStartShouldSetResponder={[Function]}
           style={
             {
-              "display": "flex",
               "opacity": 1,
               "paddingBottom": 12,
               "paddingHorizontal": 24,

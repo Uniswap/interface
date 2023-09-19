@@ -1,7 +1,6 @@
 import React from 'react'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex } from 'ui/src'
+import { Flex, TouchableArea } from 'ui/src'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { iconSizes } from 'ui/src/theme'
 
@@ -13,7 +12,7 @@ type Props = {
 
 export function SendButton({ onPress, color, size = iconSizes.icon24 }: Props): JSX.Element {
   return (
-    <TouchableArea hapticFeedback padding="spacing4" testID={ElementName.Send} onPress={onPress}>
+    <TouchableArea hapticFeedback padding="$spacing4" testID={ElementName.Send} onPress={onPress}>
       <Flex centered row gap="$spacing8">
         <SendIcon color={color} height={size} width={size} />
       </Flex>

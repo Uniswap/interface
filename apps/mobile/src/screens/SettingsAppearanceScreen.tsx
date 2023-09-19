@@ -3,10 +3,9 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { SvgProps } from 'react-native-svg'
 import { useAppDispatch } from 'src/app/hooks'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
 import MoonIcon from 'ui/src/assets/icons/moon.svg'
@@ -79,7 +78,7 @@ function AppearanceOption({
       alignItems="center"
       flexDirection="row"
       justifyContent="space-between"
-      py="spacing12"
+      py="$spacing12"
       onPress={(): Action => dispatch(setSelectedAppearanceSettings(option))}>
       <Icon
         color={colors.neutral2.val}

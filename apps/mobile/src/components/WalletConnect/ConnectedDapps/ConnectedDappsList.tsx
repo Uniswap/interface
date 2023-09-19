@@ -1,15 +1,13 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, StyleSheet, ViewStyle } from 'react-native'
-import 'react-native-reanimated'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex } from 'src/components/layout'
 import { DappConnectedNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappConnectedNetworksModal'
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { dimensions, iconSizes, spacing } from 'ui/src/theme'
 
 type ConnectedDappsProps = {

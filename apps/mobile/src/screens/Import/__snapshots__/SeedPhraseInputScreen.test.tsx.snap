@@ -276,7 +276,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                         {
                           "busy": undefined,
                           "checked": undefined,
-                          "disabled": false,
+                          "disabled": undefined,
                           "expanded": undefined,
                           "selected": undefined,
                         }
@@ -314,7 +314,10 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                           "borderColor": "#2222220D",
                           "borderRadius": 12,
                           "borderWidth": 1,
-                          "display": "flex",
+                          "disabled": false,
+                          "flex": undefined,
+                          "onLongPress": undefined,
+                          "onPressIn": [Function],
                           "opacity": 1,
                         }
                       }
@@ -453,7 +456,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                   onStartShouldSetResponder={[Function]}
                   style={
                     {
-                      "display": "flex",
                       "opacity": 1,
                     }
                   }
@@ -481,7 +483,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                 {
                   "busy": undefined,
                   "checked": undefined,
-                  "disabled": true,
+                  "disabled": undefined,
                   "expanded": undefined,
                   "selected": undefined,
                 }
@@ -519,10 +521,14 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                   "borderColor": "transparent",
                   "borderRadius": 16,
                   "borderWidth": 1,
-                  "display": "flex",
+                  "disabled": true,
+                  "flex": undefined,
+                  "onLongPress": undefined,
+                  "onPressIn": undefined,
                   "opacity": 0.4,
                 }
               }
+              testID="seed-input-submit"
             >
               <View
                 sentry-label="Flex"

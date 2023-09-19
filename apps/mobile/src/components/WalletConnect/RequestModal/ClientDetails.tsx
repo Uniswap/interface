@@ -34,14 +34,14 @@ export function ClientDetails({
           request={request}
         />
         <LinkButton
-          backgroundColor="surface2"
-          borderRadius="rounded16"
+          backgroundColor="$surface2"
+          borderRadius="$rounded16"
           color={colors.accent1.val}
           iconColor={colors.accent1.val}
           label={dapp.url}
-          mb="spacing12"
-          px="spacing8"
-          py="spacing4"
+          mb="$spacing12"
+          px="$spacing8"
+          py="$spacing4"
           size={iconSizes.icon12}
           textVariant="buttonLabelMicro"
           url={dapp.url}

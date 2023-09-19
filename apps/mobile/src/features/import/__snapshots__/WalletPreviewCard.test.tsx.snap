@@ -43,7 +43,6 @@ exports[`renders wallet preview card 1`] = `
       "borderColor": "#FC72FF",
       "borderRadius": 20,
       "borderWidth": 1,
-      "display": "flex",
       "opacity": 1,
       "paddingHorizontal": 16,
       "paddingVertical": 16,

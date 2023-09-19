@@ -2,13 +2,12 @@ import React, { forwardRef, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, LayoutChangeEvent, TextInput as NativeTextInput, ViewStyle } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { AnimatedBox, AnimatedFlex } from 'src/components/layout'
 import { SHADOW_OFFSET_SMALL } from 'src/components/layout/BaseCard'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import X from 'ui/src/assets/icons/x.svg'
 import { dimensions, fonts, iconSizes, spacing } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
@@ -245,9 +244,9 @@ function ClearButton(props: ClearButtonProps): JSX.Element {
 
   return (
     <TouchableArea
-      backgroundColor="surface3"
-      borderRadius="roundedFull"
-      p="spacing4"
+      backgroundColor="$surface3"
+      borderRadius="$roundedFull"
+      p="$spacing4"
       onPress={onPress}>
       {clearIcon}
     </TouchableArea>

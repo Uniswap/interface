@@ -11,7 +11,6 @@ import {
   useSettingsStackNavigation,
 } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import {
@@ -24,7 +23,7 @@ import { APP_FEEDBACK_LINK, GET_HELP_LINK } from 'src/constants/urls'
 import { useBiometricName, useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { Screens } from 'src/screens/Screens'
 import { getFullAppVersion } from 'src/utils/version'
-import { Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AVATARS_DARK, AVATARS_LIGHT } from 'ui/src/assets'
 import BookOpenIcon from 'ui/src/assets/icons/book-open.svg'
 import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
@@ -289,8 +288,8 @@ function WalletSettings(): JSX.Element {
         .map((account) => (
           <TouchableArea
             key={account.address}
-            pl="spacing4"
-            py="spacing12"
+            pl="$spacing4"
+            py="$spacing12"
             onPress={(): void => handleNavigation(account.address)}>
             <Flex
               alignItems="center"

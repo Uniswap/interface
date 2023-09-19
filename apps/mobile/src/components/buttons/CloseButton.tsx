@@ -1,7 +1,6 @@
-import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
+import { TouchableArea, TouchableAreaProps } from 'ui/src'
 import XIcon from 'ui/src/assets/icons/x.svg'
 import { Theme } from 'ui/src/theme/restyle'
 
@@ -10,8 +9,7 @@ type Props = {
   size?: number
   strokeWidth?: number
   color?: keyof Theme['colors']
-} & SpacingProps<Theme> &
-  SpacingShorthandProps<Theme>
+} & TouchableAreaProps
 
 export function CloseButton({ onPress, size, strokeWidth, color, ...rest }: Props): JSX.Element {
   // TODO(MOB-1275): remove this usage of Restyle, change behavior of XIcon to support Tamagui

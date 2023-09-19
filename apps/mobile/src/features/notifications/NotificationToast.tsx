@@ -8,10 +8,9 @@ import {
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedBox } from 'src/components/layout'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { useTimeout } from 'utilities/src/time/timing'
 import { popNotification } from 'wallet/src/features/notifications/slice'
 
@@ -148,13 +147,13 @@ export function NotificationContent({
   return (
     <TouchableArea
       alignItems="center"
-      bg="surface2"
-      borderRadius="rounded16"
+      bg="$surface2"
+      borderRadius="$rounded16"
       flex={1}
       flexDirection="row"
       minHeight={NOTIFICATION_HEIGHT}
-      px="spacing16"
-      py="spacing16"
+      px="$spacing16"
+      py="$spacing16"
       onPress={onPress}
       onPressIn={onPressIn}>
       <Flex row alignItems="center" gap="$spacing8" justifyContent="space-between" width="100%">
@@ -174,7 +173,7 @@ export function NotificationContent({
         </Flex>
         {actionButton && (
           <Flex shrink alignItems="flex-end" flexBasis="25%" gap="$spacing4">
-            <TouchableArea p="spacing8" onPress={actionButton.onPress}>
+            <TouchableArea p="$spacing8" onPress={actionButton.onPress}>
               <Text color="$accent1">{actionButton.title}</Text>
             </TouchableArea>
           </Flex>
@@ -193,11 +192,11 @@ export function NotificationContentSmall({
   return (
     <Flex row flexShrink={1} justifyContent="center" pointerEvents="box-none">
       <TouchableArea
-        bg="surface2"
-        borderColor="surface2"
-        borderRadius="roundedFull"
+        bg="$surface2"
+        borderColor="$surface2"
+        borderRadius="$roundedFull"
         borderWidth={1}
-        p="spacing12"
+        p="$spacing12"
         onPress={onPress}
         onPressIn={onPressIn}>
         <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" pr="$spacing4">

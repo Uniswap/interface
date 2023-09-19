@@ -2,11 +2,10 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
 import { maxAmountSpend } from 'src/utils/balance'
-import { Text } from 'ui/src'
+import { Text, TouchableArea } from 'ui/src'
 
 interface MaxAmountButtonProps {
   currencyAmount: CurrencyAmount<Currency> | null | undefined

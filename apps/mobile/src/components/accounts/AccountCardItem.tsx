@@ -5,12 +5,11 @@ import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { setClipboard } from 'src/utils/clipboard'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -112,9 +111,9 @@ export function AccountCardItem({
       }}>
       <TouchableArea
         hapticFeedback
-        pb="spacing12"
-        pt="spacing8"
-        px="spacing24"
+        pb="$spacing12"
+        pt="$spacing8"
+        px="$spacing24"
         onPress={(): void => onPress(address)}>
         <Flex row alignItems="flex-start" testID={`account_item/${address}`}>
           <Flex fill gap="$none">

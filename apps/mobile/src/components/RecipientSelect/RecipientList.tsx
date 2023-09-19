@@ -3,9 +3,8 @@ import React from 'react'
 import { ListRenderItemInfo, SectionListData } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Inset } from 'src/components/layout'
-import { Text } from 'ui/src'
+import { Text, TouchableArea } from 'ui/src'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
 
 interface RecipientListProps {

@@ -2,14 +2,13 @@ import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import {
   getTokensOrderByMenuLabel,
   getTokensOrderBySelectedLabel,
 } from 'src/features/explore/utils'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { Flex, Icons, Text } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { TokenSortableField } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -76,11 +75,11 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
       }}>
       <TouchableArea
         alignItems="center"
-        backgroundColor={isDarkMode ? 'DEP_backgroundOverlay' : 'surface1'}
-        borderRadius="roundedFull"
+        backgroundColor={isDarkMode ? '$DEP_backgroundOverlay' : '$surface1'}
+        borderRadius="$roundedFull"
         flexDirection="row"
-        px="spacing16"
-        py="spacing8">
+        px="$spacing16"
+        py="$spacing8">
         <Flex row gap="$spacing4">
           {orderBy === TokenSortableField.Volume || orderBy === TokenSortableField.TotalValueLocked}
           <Text color="$neutral2" variant="buttonLabelSmall">

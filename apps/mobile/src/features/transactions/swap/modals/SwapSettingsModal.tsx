@@ -16,7 +16,6 @@ import {
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import PlusMinusButton, { PlusMinusButtonType } from 'src/components/buttons/PlusMinusButton'
 import { Switch } from 'src/components/buttons/Switch'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -25,7 +24,7 @@ import { SwapProtectionInfoModal } from 'src/features/transactions/swap/modals/S
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
 import { transactionStateActions } from 'src/features/transactions/transactionState/transactionState'
 import { openUri } from 'src/utils/linking'
-import { Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
@@ -117,7 +116,13 @@ export function SwapSettingsModal({
         </Flex>
         {innerContent}
         <Flex centered row>
-          <Button fill emphasis={ButtonEmphasis.Secondary} label={t('Close')} onPress={onClose} />
+          <Button
+            fill
+            emphasis={ButtonEmphasis.Secondary}
+            label={t('Close')}
+            testID="swap-settings-close"
+            onPress={onClose}
+          />
         </Flex>
       </Flex>
     </BottomSheetModal>

@@ -1,8 +1,7 @@
 import React from 'react'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SearchTextInput, SearchTextInputProps } from 'src/components/input/SearchTextInput'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex, Icons } from 'ui/src'
+import { Flex, Icons, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
 interface SearchBarProps extends SearchTextInputProps {

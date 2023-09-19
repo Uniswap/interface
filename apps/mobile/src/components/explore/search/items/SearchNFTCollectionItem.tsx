@@ -2,7 +2,6 @@ import { ImpactFeedbackStyle } from 'expo-haptics'
 import { default as React } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
 import {
   addToSearchHistory,
@@ -12,7 +11,7 @@ import {
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import { Flex, Icons, Text } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 

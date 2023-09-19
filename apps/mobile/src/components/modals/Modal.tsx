@@ -2,8 +2,7 @@ import { ResponsiveValue } from '@shopify/restyle'
 import React from 'react'
 import { Modal as BaseModal, ModalProps, StyleSheet, View } from 'react-native'
 import { CloseButton } from 'src/components/buttons/CloseButton'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { Theme } from 'ui/src/theme/restyle'
 
 interface Props extends ModalProps {

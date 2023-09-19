@@ -2,13 +2,12 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Warning } from 'src/components/modals/WarningModal/types'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
 import { getRateToDisplay, getTokenFeePercentage } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
-import { Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { iconSizes } from 'ui/src/theme'
 import { formatPercent, formatPrice, NumberType } from 'utilities/src/format/format'
@@ -119,10 +118,10 @@ export function SwapDetails({
             <Flex centered row gap="$none">
               <Trace logPress element={ElementName.AcceptNewRate}>
                 <TouchableArea
-                  backgroundColor="accent1"
-                  borderRadius="rounded8"
-                  px="spacing8"
-                  py="spacing4"
+                  backgroundColor="$accent1"
+                  borderRadius="$rounded8"
+                  px="$spacing8"
+                  py="$spacing4"
                   onPress={onAcceptTrade}>
                   <Text color="$sporeWhite" variant="buttonLabelSmall">
                     {t('Accept')}

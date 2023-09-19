@@ -1,9 +1,9 @@
 import React from 'react'
 import { useAppSelector } from 'src/app/hooks'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Favorite } from 'src/components/icons/Favorite'
 import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectFavoriteTokens } from 'src/features/favorites/selectors'
+import { TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
 export function TokenDetailsFavoriteButton({ currencyId }: { currencyId: string }): JSX.Element {

@@ -1,8 +1,7 @@
 import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import TripleDots from 'ui/src/assets/icons/triple-dots.svg'
 import { iconSizes } from 'ui/src/theme'
 

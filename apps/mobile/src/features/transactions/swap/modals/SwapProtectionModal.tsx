@@ -1,10 +1,9 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { ModalName } from 'src/features/telemetry/constants'
 import { openUri } from 'src/utils/linking'
-import { Icons, Text, useSporeColors } from 'ui/src'
+import { Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 

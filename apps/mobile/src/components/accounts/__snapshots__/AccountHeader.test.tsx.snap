@@ -52,10 +52,10 @@ exports[`AccountHeader renders without error 1`] = `
     style={
       {
         "alignItems": "center",
-        "display": "flex",
         "flex": 1,
         "flexDirection": "row",
         "marginRight": 12,
+        "onLongPress": [Function],
         "opacity": 1,
       }
     }
@@ -453,7 +453,6 @@ exports[`AccountHeader renders without error 1`] = `
     onStartShouldSetResponder={[Function]}
     style={
       {
-        "display": "flex",
         "opacity": 1,
       }
     }

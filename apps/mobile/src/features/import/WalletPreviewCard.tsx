@@ -1,9 +1,8 @@
 import React from 'react'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SelectionCircle } from 'src/components/input/SelectionCircle'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
@@ -34,16 +33,16 @@ export default function WalletPreviewCard({
   const { name: ensName } = useENS(ChainId.Mainnet, address)
   const isDarkMode = useIsDarkMode()
 
-  const unselectedBorderColor = isDarkMode ? 'none' : 'surface3'
+  const unselectedBorderColor = isDarkMode ? '$transparent' : '$surface3'
 
   return (
     <TouchableArea
-      backgroundColor="surface2"
-      borderColor={selected ? 'accent1' : unselectedBorderColor}
-      borderRadius="rounded20"
+      backgroundColor="$surface2"
+      borderColor={selected ? '$accent1' : unselectedBorderColor}
+      borderRadius="$rounded20"
       borderWidth={1}
-      px="spacing16"
-      py="spacing16"
+      px="$spacing16"
+      py="$spacing16"
       onPress={(): void => onSelect(address)}
       {...rest}>
       <Flex row alignItems="center" justifyContent="space-between">

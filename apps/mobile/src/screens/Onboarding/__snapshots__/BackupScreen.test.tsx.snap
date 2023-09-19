@@ -186,7 +186,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   "borderColor": "#2222220D",
                   "borderRadius": 20,
                   "borderWidth": 1,
-                  "display": "flex",
+                  "disabled": undefined,
                   "opacity": 1,
                   "padding": 16,
                 }
@@ -389,7 +389,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   "borderColor": "#2222220D",
                   "borderRadius": 20,
                   "borderWidth": 1,
-                  "display": "flex",
+                  "disabled": undefined,
                   "opacity": 1,
                   "padding": 16,
                 }
@@ -548,7 +548,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               style={
                 {
                   "alignSelf": "center",
-                  "display": "flex",
                   "opacity": 1,
                   "paddingVertical": 0,
                 }
@@ -794,7 +793,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 {
                   "busy": undefined,
                   "checked": undefined,
-                  "disabled": true,
+                  "disabled": undefined,
                   "expanded": undefined,
                   "selected": undefined,
                 }
@@ -831,7 +830,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   "borderColor": "#2222220D",
                   "borderRadius": 20,
                   "borderWidth": 1,
-                  "display": "flex",
+                  "disabled": true,
                   "opacity": 0.5,
                   "padding": 16,
                 }
@@ -997,7 +996,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 {
                   "busy": undefined,
                   "checked": undefined,
-                  "disabled": false,
+                  "disabled": undefined,
                   "expanded": undefined,
                   "selected": undefined,
                 }
@@ -1034,7 +1033,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   "borderColor": "#2222220D",
                   "borderRadius": 20,
                   "borderWidth": 1,
-                  "display": "flex",
+                  "disabled": false,
                   "opacity": 1,
                   "padding": 16,
                 }
@@ -1193,7 +1192,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               style={
                 {
                   "alignSelf": "center",
-                  "display": "flex",
                   "opacity": 1,
                   "paddingVertical": 0,
                 }

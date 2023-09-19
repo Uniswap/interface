@@ -1,12 +1,11 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex } from 'src/components/layout'
 import { ElementName } from 'src/features/telemetry/constants'
 import { StatusAnimation } from 'src/features/transactions/TransactionPending/StatusAnimation'
 import { openTransactionLink } from 'src/utils/linking'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { ChainId } from 'wallet/src/constants/chains'
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 
@@ -64,6 +63,7 @@ export function TransactionPending({
         <Button
           emphasis={ButtonEmphasis.Tertiary}
           label={t('View transaction')}
+          testID="transaction-pending-view"
           onPress={onPressViewTransaction}
         />
       ) : null}

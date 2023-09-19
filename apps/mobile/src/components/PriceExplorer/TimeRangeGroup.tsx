@@ -6,7 +6,6 @@ import {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedBox } from 'src/components/layout/Box'
 import {
   BUTTON_PADDING,
@@ -17,7 +16,7 @@ import {
 } from 'src/components/PriceExplorer/constants'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, TouchableArea, useSporeColors } from 'ui/src'
 import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
 
 interface Props {
@@ -85,7 +84,7 @@ export function TimeRangeGroup({
         return (
           <Trace key={label} logPress element={element}>
             <TouchableArea
-              p="spacing4"
+              p="$spacing4"
               width={BUTTON_WIDTH}
               onPress={(): void => {
                 setDuration(duration)

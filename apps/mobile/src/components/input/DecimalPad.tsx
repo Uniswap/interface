@@ -2,9 +2,8 @@ import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo, useMemo } from 'react'
 import { TextInputProps } from 'react-native'
 import { getNumberFormatSettings } from 'react-native-localize'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedBox } from 'src/components/layout'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 
 // if this setting is changed in phone settings the app would be restarted
 const { decimalSeparator } = getNumberFormatSettings()
@@ -19,7 +18,7 @@ type KeyProps = {
   disabled?: (value: string) => boolean
   label: string
   hidden?: boolean
-  paddingTop?: 'spacing12'
+  paddingTop?: '$spacing12'
   align: 'flex-start' | 'center' | 'flex-end'
 }
 
@@ -51,21 +50,21 @@ export function _DecimalPad({
         label: '1',
         action: KeyAction.Insert,
         align: 'center',
-        paddingTop: 'spacing12',
+        paddingTop: '$spacing12',
         disabled: () => disabled,
       },
       {
         label: '2',
         action: KeyAction.Insert,
         align: 'center',
-        paddingTop: 'spacing12',
+        paddingTop: '$spacing12',
         disabled: () => disabled,
       },
       {
         label: '3',
         action: KeyAction.Insert,
         align: 'center',
-        paddingTop: 'spacing12',
+        paddingTop: '$spacing12',
         disabled: () => disabled,
       },
       { label: '4', action: KeyAction.Insert, align: 'center', disabled: () => disabled },
@@ -202,7 +201,7 @@ function KeyButton({
       disabled={isDisabled}
       hapticStyle={ImpactFeedbackStyle.Light}
       justifyContent="center"
-      padding="spacing16"
+      padding="$spacing16"
       paddingTop={paddingTop}
       scaleTo={1.125}
       testID={'decimal-pad-' + label}
