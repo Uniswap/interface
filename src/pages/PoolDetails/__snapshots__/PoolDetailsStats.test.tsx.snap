@@ -125,6 +125,7 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
+  min-width: 180px;
 }
 
 .c7 {
@@ -483,6 +484,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
+  min-width: 180px;
 }
 
 .c7 {

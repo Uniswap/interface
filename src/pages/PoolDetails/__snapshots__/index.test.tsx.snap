@@ -232,6 +232,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
+  min-width: 180px;
 }
 
 .c19 {
@@ -285,7 +286,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
 }
 
 .c2 {
-  padding: 48px 56px;
+  padding: 48px;
   width: 100%;
   -webkit-align-items: flex-start;
   -webkit-box-align: flex-start;
@@ -359,6 +360,12 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
+  }
+}
+
+@media (max-width:639px) {
+  .c2 {
+    padding: 48px 16px;
   }
 }
 

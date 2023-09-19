@@ -12,12 +12,16 @@ import { PoolDetailsHeader } from './PoolDetailsHeader'
 import { PoolDetailsStats } from './PoolDetailsStats'
 
 const PageWrapper = styled(Row)`
-  padding: 48px 56px;
+  padding: 48px;
   width: 100%;
   align-items: flex-start;
 
   @media (max-width: ${BREAKPOINTS.lg - 1}px) {
     flex-direction: column;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm - 1}px) {
+    padding: 48px 16px;
   }
 `
 

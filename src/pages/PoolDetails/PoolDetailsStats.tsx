@@ -45,6 +45,7 @@ const StatsWrapper = styled(Column)`
 const StatItemColumn = styled(Column)`
   gap: 8px;
   flex: 1;
+  min-width: 180px;
 `
 
 const PoolBalanceSymbols = styled(Row)`
