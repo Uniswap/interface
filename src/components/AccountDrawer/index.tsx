@@ -2,6 +2,7 @@ import { BrowserEvent, InterfaceEventName } from '@uniswap/analytics-events'
 import { TraceEvent } from 'analytics'
 import { ScrollBarStyles } from 'components/Common'
 import useDisableScrolling from 'hooks/useDisableScrolling'
+import usePrevious from 'hooks/usePrevious'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
@@ -166,12 +167,13 @@ const CloseDrawer = styled.div`
 
 function AccountDrawer() {
   const [walletDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
+  const wasWalletDrawerOpen = usePrevious(walletDrawerOpen)
   const scrollRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    if (!walletDrawerOpen) {
+    if (wasWalletDrawerOpen && !walletDrawerOpen) {
       scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
     }
-  }, [walletDrawerOpen])
+  }, [walletDrawerOpen, wasWalletDrawerOpen])
 
   // close on escape keypress
   useEffect(() => {

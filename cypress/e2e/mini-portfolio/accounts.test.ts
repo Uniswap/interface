@@ -2,43 +2,48 @@ import { getTestSelector } from '../../utils'
 
 describe('Mini Portfolio account drawer', () => {
   beforeEach(() => {
-    cy.intercept(/api.uniswap.org\/v1\/graphql/, cy.spy().as('gqlSpy'))
+    const portfolioSpy = cy.spy().as('portfolioSpy')
+    cy.intercept(/api.uniswap.org\/v1\/graphql/, (req) => {
+      if (req.body.operationName === 'PortfolioBalances') {
+        portfolioSpy(req)
+      }
+    })
     cy.visit('/swap')
   })
 
   it('fetches balances when account button is first hovered', () => {
     // The balances should not be fetched before the account button is hovered
-    cy.get('@gqlSpy').should('not.have.been.called')
+    cy.get('@portfolioSpy').should('not.have.been.called')
 
     // Balances should have been fetched once after hover
     cy.get(getTestSelector('web3-status-connected')).trigger('mouseover')
-    cy.get('@gqlSpy').should('have.been.calledOnce')
+    cy.get('@portfolioSpy').should('have.been.calledOnce')
   })
 
   it('should not re-fetch balances on second hover', () => {
     // The balances should not be fetched before the account button is hovered
-    cy.get('@gqlSpy').should('not.have.been.called')
+    cy.get('@portfolioSpy').should('not.have.been.called')
 
     // Balances should have been fetched once after hover
     cy.get(getTestSelector('web3-status-connected')).trigger('mouseover')
-    cy.get('@gqlSpy').should('have.been.calledOnce')
+    cy.get('@portfolioSpy').should('have.been.calledOnce')
 
     // Balances should not be refetched upon second hover
     cy.get(getTestSelector('web3-status-connected')).trigger('mouseover')
-    cy.get('@gqlSpy').should('have.been.calledOnce')
+    cy.get('@portfolioSpy').should('have.been.calledOnce')
   })
 
   it('should not re-fetch balances when the account drawer is opened', () => {
     // The balances should not be fetched before the account button is hovered
-    cy.get('@gqlSpy').should('not.have.been.called')
+    cy.get('@portfolioSpy').should('not.have.been.called')
 
     // Balances should have been fetched once after hover
     cy.get(getTestSelector('web3-status-connected')).trigger('mouseover')
-    cy.get('@gqlSpy').should('have.been.calledOnce')
+    cy.get('@portfolioSpy').should('have.been.calledOnce')
 
     // Balances should not be refetched upon opening drawer
     cy.get(getTestSelector('web3-status-connected')).click()
-    cy.get('@gqlSpy').should('have.been.calledOnce')
+    cy.get('@portfolioSpy').should('have.been.calledOnce')
   })
 
   it('fetches account information', () => {
