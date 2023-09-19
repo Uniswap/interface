@@ -6,6 +6,7 @@ export enum FEATURE_FLAGS {
   ExampleFlag = 'example-flag', // FEATURE_FLAGS enum cannot be empty for string typings to work
   RestoreWallet = 'restore-wallet',
   MevBlocker = 'mev-blocker',
+  SwapRewrite = 'swap-rewrite',
 }
 
 /**

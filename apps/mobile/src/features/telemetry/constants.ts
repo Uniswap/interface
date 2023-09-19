@@ -120,6 +120,7 @@ export const enum ModalName {
   SendWarning = 'send-warning-modal',
   SlippageInfo = 'slippage-info-modal',
   Swap = 'swap-modal',
+  SwapReview = 'swap-review',
   SwapSettings = 'swap-settings-modal',
   SwapWarning = 'swap-warning-modal',
   SwapProtection = 'swap-protection-modal',
