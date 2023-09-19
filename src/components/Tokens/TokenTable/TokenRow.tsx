@@ -16,7 +16,7 @@ import { CSSProperties, ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS, ClickableStyle } from 'theme'
-import { formatUSDPrice, NumberType, useFormatter } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -440,7 +440,7 @@ interface LoadedRowProps {
 
 /* Loaded State: row component with token information */
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
-  const { formatNumber } = useFormatter()
+  const { formatFiatPrice, formatNumber } = useFormatter()
 
   const { tokenListIndex, tokenListLength, token, sortRank } = props
   const filterString = useAtomValue(filterStringAtom)
@@ -463,7 +463,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   }
 
   // A simple 0 price indicates the price is not currently available from the api
-  const price = token.market?.price?.value === 0 ? '-' : formatUSDPrice(token.market?.price?.value)
+  const price = token.market?.price?.value === 0 ? '-' : formatFiatPrice({ price: token.market?.price?.value })
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
