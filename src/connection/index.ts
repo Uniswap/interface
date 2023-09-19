@@ -14,7 +14,7 @@ import { useSyncExternalStore } from 'react'
 import { isMobile, isNonIOSPhone } from 'utils/userAgent'
 
 import { RPC_URLS } from '../constants/networks'
-import { RPC_PROVIDERS } from '../constants/providers'
+import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from '../constants/providers'
 import { Connection, ConnectionType } from './types'
 import { getInjection, getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
 import { UniwalletConnect as UniwalletWCV2Connect, WalletConnectV2 } from './WalletConnectV2'
@@ -30,6 +30,17 @@ export const networkConnection: Connection = {
   getName: () => 'Network',
   connector: web3Network,
   hooks: web3NetworkHooks,
+  type: ConnectionType.NETWORK,
+  shouldDisplay: () => false,
+}
+
+const [deprecatedWeb3Network, deprecatedWeb3NetworkHooks] = initializeConnector<Network>(
+  (actions) => new Network({ actions, urlMap: DEPRECATED_RPC_PROVIDERS, defaultChainId: 1 })
+)
+export const deprecatedNetworkConnection: Connection = {
+  getName: () => 'Network',
+  connector: deprecatedWeb3Network,
+  hooks: deprecatedWeb3NetworkHooks,
   type: ConnectionType.NETWORK,
   shouldDisplay: () => false,
 }
@@ -179,6 +190,7 @@ export const connections = [
   walletConnectV2Connection,
   coinbaseWalletConnection,
   networkConnection,
+  deprecatedNetworkConnection,
 ]
 
 export function getConnection(c: Connector | ConnectionType) {
@@ -200,6 +212,8 @@ export function getConnection(c: Connector | ConnectionType) {
         return uniwalletWCV2ConnectConnection
       case ConnectionType.NETWORK:
         return networkConnection
+      case ConnectionType.DEPRECATED_NETWORK:
+        return deprecatedNetworkConnection
       case ConnectionType.GNOSIS_SAFE:
         return gnosisSafeConnection
     }

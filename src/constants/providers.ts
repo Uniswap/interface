@@ -66,3 +66,26 @@ export const RPC_PROVIDERS: { [key in SupportedInterfaceChain]: AppRpcProvider }
     new AppStaticJsonRpcProvider(ChainId.BASE, RPC_URLS[ChainId.BASE][1]),
   ]),
 }
+
+export const DEPRECATED_RPC_PROVIDERS: { [key in SupportedInterfaceChain]: AppStaticJsonRpcProvider } = {
+  [ChainId.MAINNET]: new AppStaticJsonRpcProvider(ChainId.MAINNET, RPC_URLS[ChainId.MAINNET][0]),
+  [ChainId.GOERLI]: new AppStaticJsonRpcProvider(ChainId.GOERLI, RPC_URLS[ChainId.GOERLI][0]),
+  [ChainId.SEPOLIA]: new AppStaticJsonRpcProvider(ChainId.SEPOLIA, RPC_URLS[ChainId.SEPOLIA][0]),
+  [ChainId.OPTIMISM]: new AppStaticJsonRpcProvider(ChainId.OPTIMISM, RPC_URLS[ChainId.OPTIMISM][0]),
+  [ChainId.OPTIMISM_GOERLI]: new AppStaticJsonRpcProvider(
+    ChainId.OPTIMISM_GOERLI,
+    RPC_URLS[ChainId.OPTIMISM_GOERLI][0]
+  ),
+  [ChainId.ARBITRUM_ONE]: new AppStaticJsonRpcProvider(ChainId.ARBITRUM_ONE, RPC_URLS[ChainId.ARBITRUM_ONE][0]),
+  [ChainId.ARBITRUM_GOERLI]: new AppStaticJsonRpcProvider(
+    ChainId.ARBITRUM_GOERLI,
+    RPC_URLS[ChainId.ARBITRUM_GOERLI][0]
+  ),
+  [ChainId.POLYGON]: new AppStaticJsonRpcProvider(ChainId.POLYGON, RPC_URLS[ChainId.POLYGON][0]),
+  [ChainId.POLYGON_MUMBAI]: new AppStaticJsonRpcProvider(ChainId.POLYGON_MUMBAI, RPC_URLS[ChainId.POLYGON_MUMBAI][0]),
+  [ChainId.CELO]: new AppStaticJsonRpcProvider(ChainId.CELO, RPC_URLS[ChainId.CELO][0]),
+  [ChainId.CELO_ALFAJORES]: new AppStaticJsonRpcProvider(ChainId.CELO_ALFAJORES, RPC_URLS[ChainId.CELO_ALFAJORES][0]),
+  [ChainId.BNB]: new AppStaticJsonRpcProvider(ChainId.BNB, RPC_URLS[ChainId.BNB][0]),
+  [ChainId.AVALANCHE]: new AppStaticJsonRpcProvider(ChainId.AVALANCHE, RPC_URLS[ChainId.AVALANCHE][0]),
+  [ChainId.BASE]: new AppStaticJsonRpcProvider(ChainId.BASE, RPC_URLS[ChainId.BASE][0]),
+}

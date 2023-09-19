@@ -4,7 +4,8 @@ import { Connector } from '@web3-react/types'
 import { sendAnalyticsEvent, user } from 'analytics'
 import { connections, getConnection } from 'connection'
 import { isSupportedChain } from 'constants/chains'
-import { RPC_PROVIDERS } from 'constants/providers'
+import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from 'constants/providers'
+import { useFallbackProviderFlagEnabled } from 'featureFlags/flags/fallbackProvider'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import usePrevious from 'hooks/usePrevious'
@@ -32,8 +33,10 @@ function Updater() {
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
 
+  const providers = useFallbackProviderFlagEnabled() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
+
   // Trace RPC calls (for debugging).
-  const networkProvider = isSupportedChain(chainId) ? RPC_PROVIDERS[chainId] : undefined
+  const networkProvider = isSupportedChain(chainId) ? providers[chainId] : undefined
   const shouldTrace = useTraceJsonRpcFlag() === TraceJsonRpcVariant.Enabled
   useEffect(() => {
     if (shouldTrace) {
