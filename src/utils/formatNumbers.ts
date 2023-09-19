@@ -59,9 +59,21 @@ const THREE_DECIMALS_CURRENCY: NumberFormatOptions = {
   style: 'currency',
 }
 
+const THREE_DECIMALS_NO_TRAILING_ZEROS_CURRENCY: NumberFormatOptions = {
+  ...THREE_DECIMALS_NO_TRAILING_ZEROS,
+  currency: 'USD',
+  style: 'currency',
+}
+
 const TWO_DECIMALS_NO_TRAILING_ZEROS: NumberFormatOptions = {
   notation: 'standard',
   maximumFractionDigits: 2,
+}
+
+const TWO_DECIMALS_NO_TRAILING_ZEROS_CURRENCY: NumberFormatOptions = {
+  ...TWO_DECIMALS_NO_TRAILING_ZEROS,
+  currency: 'USD',
+  style: 'currency',
 }
 
 const TWO_DECIMALS: NumberFormatOptions = {
@@ -87,6 +99,12 @@ const SHORTHAND_TWO_DECIMALS: NumberFormatOptions = {
 const SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS: NumberFormatOptions = {
   notation: 'compact',
   maximumFractionDigits: 2,
+}
+
+const SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS_CURRENCY: NumberFormatOptions = {
+  ...SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS,
+  currency: 'USD',
+  style: 'currency',
 }
 
 const SHORTHAND_ONE_DECIMAL: NumberFormatOptions = {
@@ -324,6 +342,23 @@ const nftTokenFormatter: FormatterRule[] = [
   },
 ]
 
+const fiatNftTokenFormatter: FormatterRule[] = [
+  { exact: 0, hardCodedInput: { hardcodedOutput: '-' }, formatterOptions: NO_DECIMALS },
+  {
+    upperBound: 0.0001,
+    hardCodedInput: { input: 0.0001, prefix: '<' },
+    formatterOptions: ONE_SIG_FIG_CURRENCY,
+  },
+  { upperBound: 1.0, formatterOptions: THREE_DECIMALS_NO_TRAILING_ZEROS_CURRENCY },
+  { upperBound: 1000, formatterOptions: TWO_DECIMALS_NO_TRAILING_ZEROS_CURRENCY },
+  { upperBound: 1e15, formatterOptions: SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS_CURRENCY },
+  {
+    upperBound: Infinity,
+    hardCodedInput: { input: 999_000_000_000_000, prefix: '>' },
+    formatterOptions: SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS_CURRENCY,
+  },
+]
+
 export enum NumberType {
   // used for token quantities in non-transaction contexts (e.g. portfolio balances)
   TokenNonTx = 'token-non-tx',
@@ -368,6 +403,9 @@ export enum NumberType {
 
   // nft token price in currency
   NFTToken = 'nft-token',
+
+  // nft token price in local fiat currency
+  FiatNFTToken = 'fiat-nft-token',
 }
 
 type FormatterType = NumberType | FormatterRule[]
@@ -386,6 +424,7 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.NFTTokenFloorPriceTrailingZeros]: ntfTokenFloorPriceFormatterTrailingZeros,
   [NumberType.NFTCollectionStats]: ntfCollectionStatsFormatter,
   [NumberType.NFTToken]: nftTokenFormatter,
+  [NumberType.FiatNFTToken]: fiatNftTokenFormatter,
 }
 
 function getFormatterRule(input: number, type: FormatterType, conversionRate?: number): FormatterRule {
