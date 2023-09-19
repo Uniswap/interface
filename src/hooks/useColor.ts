@@ -10,7 +10,7 @@ function URIForEthToken(address: string) {
   return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 }
 
-async function getColorFromToken(token: Token): Promise<string | null> {
+async function getColorFromToken(token: Token, muted: boolean): Promise<string | null> {
   if (!(token instanceof WrappedTokenInfo)) {
     return null
   }
@@ -27,7 +27,7 @@ async function getColorFromToken(token: Token): Promise<string | null> {
   }
 
   try {
-    return await getColorFromUriPath(logoURI)
+    return await getColorFromUriPath(logoURI, muted)
   } catch (e) {
     if (logoURI === URIForEthToken(address)) {
       return null
@@ -35,7 +35,7 @@ async function getColorFromToken(token: Token): Promise<string | null> {
 
     try {
       logoURI = URIForEthToken(address)
-      return await getColorFromUriPath(logoURI)
+      return await getColorFromUriPath(logoURI, muted)
     } catch (error) {
       console.warn(`Unable to load logoURI (${token.symbol}): ${logoURI}`)
       return null
@@ -43,7 +43,7 @@ async function getColorFromToken(token: Token): Promise<string | null> {
   }
 }
 
-async function getColorFromUriPath(uri: string): Promise<string | null> {
+async function getColorFromUriPath(uri: string, muted: boolean): Promise<string | null> {
   const formattedPath = uriToHttp(uri)[0]
 
   let palette
@@ -53,11 +53,12 @@ async function getColorFromUriPath(uri: string): Promise<string | null> {
   } catch (err) {
     return null
   }
-  if (!palette?.Vibrant) {
+  const detected = muted ? palette?.Muted : palette?.Vibrant
+  if (!detected) {
     return null
   }
 
-  let detectedHex = palette.Vibrant.hex
+  let detectedHex = detected.hex
   let AAscore = hex(detectedHex, '#FFF')
   while (AAscore < 3) {
     detectedHex = shade(0.005, detectedHex)
@@ -67,14 +68,14 @@ async function getColorFromUriPath(uri: string): Promise<string | null> {
   return detectedHex
 }
 
-export function useColor(token?: Token) {
+export function useColor(token?: Token, muted = false) {
   const [color, setColor] = useState('#2172E5')
 
   useEffect(() => {
     let stale = false
 
     if (token) {
-      getColorFromToken(token).then((tokenColor) => {
+      getColorFromToken(token, muted).then((tokenColor) => {
         if (!stale && tokenColor !== null) {
           setColor(tokenColor)
         }

@@ -77,11 +77,6 @@ const PoolBalanceTokenNames = styled(Text)`
   line-height: 24px;
 `
 
-interface Token {
-  id: string
-  symbol: string
-}
-
 interface PoolDetailsStatsProps {
   poolData: PoolData
   isReversed: boolean
@@ -108,18 +103,17 @@ const BalanceChartSide = styled.div<{ percent: number; $color: string; isLeft: b
 `
 
 function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsStatsProps) {
-  // TODO: vs https://info.uniswap.org/#/polygon/pools/0x167384319b41f7094e62f7506409eb38079abff8
-  // fix color extraction for tokens
   const { formatNumber } = useFormatter()
   const currencies = [
     useCurrency(poolData?.token0?.id, chainId) ?? undefined,
     useCurrency(poolData?.token1?.id, chainId) ?? undefined,
   ]
 
-  // We can't wrap this in a eseMemo hook because useColor is also a hook
+  // We can't wrap this in a useMemo hook because useColor is also a hook
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const color0 = useColor(currencies[0]?.wrapped)
-  const color1 = useColor(currencies[1]?.wrapped)
+  const color0 = useColor(currencies[0]?.wrapped, true)
+  const color1 = useColor(currencies[1]?.wrapped, true)
+
   const [token0, token1] = useMemo(() => {
     const fullWidth = poolData?.tvlToken0 / poolData?.token0Price + poolData?.tvlToken1
     const token0FullData = {
