@@ -106,6 +106,7 @@ export const enum ModalName {
   FiatOnRamp = 'fiat-on-ramp',
   ForceUpgradeModal = 'force-upgrade-modal',
   CloudBackupInfo = 'cloud-backup-info-modal',
+  NetworkFeeInfo = 'network-fee-info',
   NetworkSelector = 'network-selector-modal',
   NftCollection = 'nft-collection',
   RecoveryWarning = 'recovery-warning',

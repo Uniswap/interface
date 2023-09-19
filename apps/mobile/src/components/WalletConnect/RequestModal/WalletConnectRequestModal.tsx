@@ -1,7 +1,7 @@
 import { useNetInfo } from '@react-native-community/netinfo'
 import { getSdkError } from '@walletconnect/utils'
 import { providers } from 'ethers'
-import React, { PropsWithChildren, useMemo, useRef } from 'react'
+import React, { PropsWithChildren, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
@@ -17,6 +17,7 @@ import { RequestDetails } from 'src/components/WalletConnect/RequestModal/Reques
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName, ModalName } from 'src/features/telemetry/constants'
+import { NetworkFeeInfoModal } from 'src/features/transactions/swap/modals/NetworkFeeInfoModal'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
@@ -106,6 +107,16 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const netInfo = useNetInfo()
   const didOpenFromDeepLink = useAppSelector(selectDidOpenFromDeepLink)
   const chainId = request.chainId
+
+  const [showNetworkFeeInfoModal, setShowNetworkFeeInfoModal] = useState(false)
+
+  const onShowNetworkFeeInfo = (): void => {
+    setShowNetworkFeeInfoModal(true)
+  }
+
+  const onCloseNetworkFeeInfo = (): void => {
+    setShowNetworkFeeInfoModal(false)
+  }
 
   const tx: providers.TransactionRequest | null = useMemo(() => {
     if (!isTransactionRequest(request)) {
@@ -252,106 +263,113 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const permitInfo = getPermitInfo(request)
 
   return (
-    <BottomSheetModal name={ModalName.WCSignRequest} onClose={handleClose}>
-      <Flex
-        gap="$spacing24"
-        paddingBottom="$spacing48"
-        paddingHorizontal="$spacing16"
-        pt="$spacing36">
-        <ClientDetails permitInfo={permitInfo} request={request} />
-        <Flex gap="$spacing12">
-          <Flex
-            backgroundColor="$surface2"
-            borderBottomColor="$surface2"
-            borderBottomWidth={1}
-            borderRadius="$rounded16"
-            gap="$none">
-            {!permitInfo && (
-              <SectionContainer style={requestMessageStyle}>
-                <Flex gap="$spacing12">
-                  <RequestDetails request={request} />
-                </Flex>
-              </SectionContainer>
-            )}
-            <Flex gap="$none" px="$spacing16" py="$spacing12">
-              {methodCostsGas(request) ? (
-                <NetworkFee chainId={chainId} gasFee={gasFee} />
-              ) : (
-                <Flex row alignItems="center" justifyContent="space-between">
-                  <Text color="$neutral1" variant="subheadSmall">
-                    {t('Network')}
-                  </Text>
-                  <NetworkPill
-                    showIcon
+    <>
+      {showNetworkFeeInfoModal && <NetworkFeeInfoModal onClose={onCloseNetworkFeeInfo} />}
+      <BottomSheetModal name={ModalName.WCSignRequest} onClose={handleClose}>
+        <Flex
+          gap="$spacing24"
+          paddingBottom="$spacing48"
+          paddingHorizontal="$spacing16"
+          pt="$spacing36">
+          <ClientDetails permitInfo={permitInfo} request={request} />
+          <Flex gap="$spacing12">
+            <Flex
+              backgroundColor="$surface2"
+              borderBottomColor="$surface2"
+              borderBottomWidth={1}
+              borderRadius="$rounded16"
+              gap="$none">
+              {!permitInfo && (
+                <SectionContainer style={requestMessageStyle}>
+                  <Flex gap="$spacing12">
+                    <RequestDetails request={request} />
+                  </Flex>
+                </SectionContainer>
+              )}
+              <Flex gap="$none" px="$spacing16" py="$spacing12">
+                {methodCostsGas(request) ? (
+                  <NetworkFee
                     chainId={chainId}
-                    gap="$spacing4"
-                    pl="$spacing4"
-                    pr="$spacing8"
-                    py="$spacing2"
-                    textVariant="subheadSmall"
+                    gasFee={gasFee}
+                    onShowNetworkFeeInfo={onShowNetworkFeeInfo}
                   />
-                </Flex>
-              )}
-            </Flex>
+                ) : (
+                  <Flex row alignItems="center" justifyContent="space-between">
+                    <Text color="$neutral1" variant="subheadSmall">
+                      {t('Network')}
+                    </Text>
+                    <NetworkPill
+                      showIcon
+                      chainId={chainId}
+                      gap="$spacing4"
+                      pl="$spacing4"
+                      pr="$spacing8"
+                      py="$spacing2"
+                      textVariant="subheadSmall"
+                    />
+                  </Flex>
+                )}
+              </Flex>
 
-            <SectionContainer>
-              <AccountDetails address={request.account} />
-              {!hasSufficientFunds && (
-                <Text color="$DEP_accentWarning" pt="$spacing8" variant="bodySmall">
-                  {t('You don’t have enough {{symbol}} to complete this transaction.', {
-                    symbol: nativeCurrency?.symbol,
-                  })}
-                </Text>
-              )}
-            </SectionContainer>
-          </Flex>
-          {!netInfo.isInternetReachable ? (
-            <BaseCard.InlineErrorState
-              backgroundColor="$DEP_accentWarningSoft"
-              icon={
-                <AlertTriangle
-                  color={colors.DEP_accentWarning.val}
-                  height={iconSizes.icon16}
-                  width={iconSizes.icon16}
-                />
-              }
-              textColor="$DEP_accentWarning"
-              title={t('Internet or network connection error')}
-            />
-          ) : (
-            <WarningSection
-              isBlockedAddress={isBlocked}
-              request={request}
-              showUnsafeWarning={isPotentiallyUnsafe(request)}
-            />
-          )}
-          <Flex row gap="$spacing12">
-            <Button
-              fill
-              emphasis={ButtonEmphasis.Tertiary}
-              label={t('Cancel')}
-              size={ButtonSize.Medium}
-              testID={ElementName.Cancel}
-              onPress={onReject}
-            />
-            <Button
-              fill
-              disabled={!confirmEnabled}
-              label={isTransactionRequest(request) ? t('Accept') : t('Sign')}
-              size={ButtonSize.Medium}
-              testID={ElementName.Confirm}
-              onPress={async (): Promise<void> => {
-                if (requiredForTransactions) {
-                  await actionButtonTrigger()
-                } else {
-                  await onConfirm()
+              <SectionContainer>
+                <AccountDetails address={request.account} />
+                {!hasSufficientFunds && (
+                  <Text color="$DEP_accentWarning" pt="$spacing8" variant="bodySmall">
+                    {t('You don’t have enough {{symbol}} to complete this transaction.', {
+                      symbol: nativeCurrency?.symbol,
+                    })}
+                  </Text>
+                )}
+              </SectionContainer>
+            </Flex>
+            {!netInfo.isInternetReachable ? (
+              <BaseCard.InlineErrorState
+                backgroundColor="$DEP_accentWarningSoft"
+                icon={
+                  <AlertTriangle
+                    color={colors.DEP_accentWarning.val}
+                    height={iconSizes.icon16}
+                    width={iconSizes.icon16}
+                  />
                 }
-              }}
-            />
+                textColor="$DEP_accentWarning"
+                title={t('Internet or network connection error')}
+              />
+            ) : (
+              <WarningSection
+                isBlockedAddress={isBlocked}
+                request={request}
+                showUnsafeWarning={isPotentiallyUnsafe(request)}
+              />
+            )}
+            <Flex row gap="$spacing12">
+              <Button
+                fill
+                emphasis={ButtonEmphasis.Tertiary}
+                label={t('Cancel')}
+                size={ButtonSize.Medium}
+                testID={ElementName.Cancel}
+                onPress={onReject}
+              />
+              <Button
+                fill
+                disabled={!confirmEnabled}
+                label={isTransactionRequest(request) ? t('Accept') : t('Sign')}
+                size={ButtonSize.Medium}
+                testID={ElementName.Confirm}
+                onPress={async (): Promise<void> => {
+                  if (requiredForTransactions) {
+                    await actionButtonTrigger()
+                  } else {
+                    await onConfirm()
+                  }
+                }}
+              />
+            </Flex>
           </Flex>
         </Flex>
-      </Flex>
-    </BottomSheetModal>
+      </BottomSheetModal>
+    </>
   )
 }
 

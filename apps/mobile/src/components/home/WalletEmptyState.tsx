@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import Trace from 'src/components/Trace/Trace'
-import { UNISWAP_HELP_CENTER_WALLET_URL } from 'src/constants/urls'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { openUri } from 'src/utils/linking'
@@ -13,6 +12,7 @@ import DollarSign from 'ui/src/assets/icons/dollar.svg'
 import PaperStackIcon from 'ui/src/assets/icons/paper-stack.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-receive.svg'
 import { colors as rawColors, iconSizes } from 'ui/src/theme'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { opacify } from 'wallet/src/utils/colors'
@@ -114,7 +114,7 @@ export function WalletEmptyState(): JSX.Element {
             }
           />
         ),
-        onPress: () => openUri(UNISWAP_HELP_CENTER_WALLET_URL),
+        onPress: () => openUri(uniswapUrls.helpArticleUrls.walletHelp),
       },
       [ActionOption.Import]: {
         title: t('Import wallet'),

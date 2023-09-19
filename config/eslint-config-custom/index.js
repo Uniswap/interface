@@ -269,6 +269,8 @@ module.exports = {
               'you’re',
               'you’ve',
               'Arbitrum',
+              'blockchain',
+              'validators',
             ],
           },
 

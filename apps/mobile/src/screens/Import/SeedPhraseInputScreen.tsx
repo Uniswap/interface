@@ -6,7 +6,6 @@ import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
 import Trace from 'src/components/Trace/Trace'
-import { RECOVERY_PHRASE_HELP_URL } from 'src/constants/urls'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
@@ -16,6 +15,7 @@ import { OnboardingScreens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Flex, Text, TouchableArea } from 'ui/src'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
@@ -119,7 +119,8 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
     setValue(text)
   }
 
-  const onPressRecoveryHelpButton = (): Promise<void> => openUri(RECOVERY_PHRASE_HELP_URL)
+  const onPressRecoveryHelpButton = (): Promise<void> =>
+    openUri(uniswapUrls.helpArticleUrls.recoveryPhraseHelp)
 
   const onPressTryAgainButton = (): void => {
     navigation.replace(OnboardingScreens.RestoreCloudBackupLoading, params)

@@ -12,6 +12,7 @@ import {
   AccountListQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { mockWalletPreloadedState, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
+import { noOpFunction } from 'wallet/src/test/utils'
 
 const preloadedState = {
   ...mockWalletPreloadedState,
@@ -38,14 +39,10 @@ const AccountListMock: MockedResponse<AccountListQuery> = {
 // TODO [MOB-259]: Figure out how to do snapshot tests when there is a BottomSheetModal
 describe(AccountSwitcher, () => {
   it('renders correctly', () => {
-    const tree = render(
-      <AccountSwitcher
-        onClose={(): void => {
-          return
-        }}
-      />,
-      { preloadedState, mocks: [AccountListMock] }
-    ).toJSON()
+    const tree = render(<AccountSwitcher onClose={noOpFunction} />, {
+      preloadedState,
+      mocks: [AccountListMock],
+    }).toJSON()
 
     expect(tree).toMatchSnapshot()
   })

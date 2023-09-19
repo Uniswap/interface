@@ -1,6 +1,7 @@
 import React from 'react'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { render, screen } from 'src/test/test-utils'
+import { noOpFunction } from 'wallet/src/test/utils'
 
 describe(GenericImportForm, () => {
   it('renders a placeholder when there is no value', async () => {
@@ -9,9 +10,7 @@ describe(GenericImportForm, () => {
         errorMessage={undefined}
         placeholderLabel="seed phrase"
         value={undefined}
-        onChange={(): void => {
-          return
-        }}
+        onChange={noOpFunction}
       />
     )
 
@@ -25,9 +24,7 @@ describe(GenericImportForm, () => {
         errorMessage={undefined}
         placeholderLabel="seed phrase"
         value="hello"
-        onChange={(): void => {
-          return
-        }}
+        onChange={noOpFunction}
       />
     )
 
@@ -41,9 +38,7 @@ describe(GenericImportForm, () => {
         errorMessage="there is an error"
         placeholderLabel="seed phrase"
         value="wrong value"
-        onChange={(): void => {
-          return
-        }}
+        onChange={noOpFunction}
       />
     )
 

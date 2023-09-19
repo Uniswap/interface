@@ -26,6 +26,7 @@ interface TransactionDetailsProps {
   showWarning?: boolean
   warning?: Warning
   feeOnTransferInfo?: FeeOnTransferInfo
+  onShowNetworkFeeInfo: () => void
   onShowWarning?: () => void
 }
 
@@ -38,6 +39,7 @@ export function TransactionDetails({
   showWarning,
   warning,
   feeOnTransferInfo,
+  onShowNetworkFeeInfo,
   onShowWarning,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
   const colors = useSporeColors()
@@ -99,7 +101,11 @@ export function TransactionDetails({
         <Flex gap="$spacing12" pt={banner ? '$none' : '$spacing8'} px="$spacing12">
           {showChildren ? <Flex gap="$spacing12">{children}</Flex> : null}
           {feeOnTransferInfo && <FeeOnTransferInfo {...feeOnTransferInfo} />}
-          <NetworkFee chainId={chainId} gasFee={gasFee} />
+          <NetworkFee
+            chainId={chainId}
+            gasFee={gasFee}
+            onShowNetworkFeeInfo={onShowNetworkFeeInfo}
+          />
         </Flex>
         <Separator borderColor="$surface2" width={1} />
         <Flex gap="$none" px="$spacing12" py="$spacing12">

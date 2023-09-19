@@ -27,6 +27,7 @@ interface SwapDetailsProps {
   warning?: Warning
   gasFee: GasFeeResult
   onAcceptTrade: () => void
+  onShowNetworkFeeInfo: () => void
   onShowWarning?: () => void
   onShowSlippageModal: () => void
   onShowSwapProtectionModal: () => void
@@ -42,6 +43,7 @@ export function SwapDetails({
   warning,
   gasFee,
   onAcceptTrade,
+  onShowNetworkFeeInfo,
   onShowWarning,
   onShowSlippageModal,
   onShowSwapProtectionModal,
@@ -138,6 +140,7 @@ export function SwapDetails({
       showExpandedChildren={!!customSlippageTolerance}
       showWarning={warning && !newTradeRequiresAcceptance}
       warning={warning}
+      onShowNetworkFeeInfo={onShowNetworkFeeInfo}
       onShowWarning={onShowWarning}>
       <Flex row alignItems="center" justifyContent="space-between">
         <Text variant="bodySmall">{t('Rate')}</Text>

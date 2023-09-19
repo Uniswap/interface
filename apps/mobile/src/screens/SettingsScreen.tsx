@@ -19,7 +19,7 @@ import {
   SettingsSectionItem,
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
-import { APP_FEEDBACK_LINK, GET_HELP_LINK } from 'src/constants/urls'
+import { APP_FEEDBACK_LINK } from 'src/constants/urls'
 import { useBiometricName, useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { Screens } from 'src/screens/Screens'
 import { getFullAppVersion } from 'src/utils/version'
@@ -108,7 +108,7 @@ export function SettingsScreen(): JSX.Element {
           {
             screen: Screens.WebView,
             screenProps: {
-              uriLink: GET_HELP_LINK,
+              uriLink: uniswapUrls.helpUrl,
               headerTitle: t('Get Help'),
             },
             text: t('Get Help'),

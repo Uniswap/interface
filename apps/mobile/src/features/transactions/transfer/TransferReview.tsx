@@ -1,9 +1,10 @@
 import { providers } from 'ethers'
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { NetworkFeeInfoModal } from 'src/features/transactions/swap/modals/NetworkFeeInfoModal'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
 import {
@@ -39,14 +40,23 @@ export function TransferReview({
   const { t } = useTranslation()
   const account = useActiveAccountWithThrow()
   const [showWarningModal, setShowWarningModal] = useState(false)
+  const [showNetworkFeeInfoModal, setShowNetworkFeeInfoModal] = useState(false)
 
-  const onShowWarning = useCallback(() => {
+  const onShowWarning = (): void => {
     setShowWarningModal(true)
-  }, [])
+  }
 
-  const onCloseWarning = useCallback(() => {
+  const onCloseWarning = (): void => {
     setShowWarningModal(false)
-  }, [])
+  }
+
+  const onShowNetworkFeeInfo = (): void => {
+    setShowNetworkFeeInfoModal(true)
+  }
+
+  const onCloseNetworkFeeInfo = (): void => {
+    setShowNetworkFeeInfoModal(false)
+  }
 
   const {
     currencyAmounts,
@@ -129,6 +139,7 @@ export function TransferReview({
           onConfirm={onCloseWarning}
         />
       )}
+      {showNetworkFeeInfoModal && <NetworkFeeInfoModal onClose={onCloseNetworkFeeInfo} />}
       <TransactionReview
         actionButtonProps={actionButtonProps}
         currencyInInfo={currencyInInfo}
@@ -143,6 +154,7 @@ export function TransferReview({
             gasFee={gasFee}
             showWarning={Boolean(transferWarning)}
             warning={transferWarning}
+            onShowNetworkFeeInfo={onShowNetworkFeeInfo}
             onShowWarning={onShowWarning}
           />
         }
