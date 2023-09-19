@@ -30,7 +30,8 @@ const hasUnfetchedBalancesAtom = atom<boolean>(true)
 export default function PrefetchBalancesWrapper({
   children,
   shouldFetchOnAccountUpdate,
-}: PropsWithChildren<{ shouldFetchOnAccountUpdate: boolean }>) {
+  className,
+}: PropsWithChildren<{ shouldFetchOnAccountUpdate: boolean; className?: string }>) {
   const { account } = useWeb3React()
   const [prefetchPortfolioBalances] = usePortfolioBalancesLazyQuery()
 
@@ -64,5 +65,9 @@ export default function PrefetchBalancesWrapper({
     if (hasUnfetchedBalances) fetchBalances()
   }, [fetchBalances, hasUnfetchedBalances])
 
-  return <div onMouseEnter={onHover}>{children}</div>
+  return (
+    <div onMouseEnter={onHover} className={className}>
+      {children}
+    </div>
+  )
 }
