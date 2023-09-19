@@ -1,16 +1,18 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import { DeltaArrow, formatDelta } from 'components/Tokens/TokenDetails/Delta'
-import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { chainIdToBackendName, getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { PoolData, usePoolData } from 'graphql/thegraph/PoolData'
 import { useCurrency } from 'hooks/Tokens'
+import { useScreenSize } from 'hooks/useScreenSize'
 import NotFound from 'pages/NotFound'
 import { ReactNode, useMemo, useReducer } from 'react'
 import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { css } from 'styled-components'
-import { ThemedText } from 'theme'
+import { BREAKPOINTS, ThemedText } from 'theme'
 import { isAddress } from 'utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -21,12 +23,19 @@ const PageWrapper = styled(Row)`
   padding: 48px 56px;
   width: 100%;
   align-items: flex-start;
+
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) {
+    flex-direction: column;
+  }
 `
 
 const HeaderText = styled(Text)`
   font-weight: 485;
   font-size: 24px;
   line-height: 36px;
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) {
+    width: 100%;
+  }
 `
 
 export default function PoolDetailsPage() {
@@ -67,14 +76,39 @@ const StatsWrapper = styled(Column)`
   padding: 20px;
   border-radius: 20px;
   background: ${({ theme }) => theme.surface2};
-  // TODO: find a better solution for the width?
   width: 22vw;
+  min-width: 360px;
+
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) {
+    margin: 44px 0px;
+    width: 100%;
+    flex-direction: row;
+    background: ${({ theme }) => theme.surface1};
+    flex-wrap: wrap;
+    padding: 20px 0px;
+    justify-content: space-between;
+  }
 `
 
-const PoolBalanceTokenNames = styled(Text)`
+const PoolBalanceSymbols = styled(Row)`
+  justify-content: space-between;
+
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) {
+    flex-direction: column;
+  }
+`
+
+const PoolBalanceTokenNames = styled(Row)`
   font-weight: 485;
   font-size: 18px;
   line-height: 24px;
+  width: max-content;
+
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) {
+    font-size: 20px;
+    line-height: 28px;
+    width: 100%;
+  }
 `
 
 interface PoolDetailsStatsProps {
@@ -102,8 +136,20 @@ const BalanceChartSide = styled.div<{ percent: number; $color: string; isLeft: b
   ${({ isLeft }) => (isLeft ? left : right)}
 `
 
+const StatItemColumn = styled(Column)`
+  gap: 8px;
+  flex: 1;
+`
+
 function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsStatsProps) {
+  // split into its own file
+  // add tests
+  const isScreenSize = useScreenSize()
+  const screenIsNotLarge = isScreenSize['lg']
   const { formatNumber } = useFormatter()
+
+  // We can't wrap this in a useMemo hook because useCurrency is also a hook
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const currencies = [
     useCurrency(poolData?.token0?.id, chainId) ?? undefined,
     useCurrency(poolData?.token1?.id, chainId) ?? undefined,
@@ -122,6 +168,7 @@ function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsStatsPro
       tvl: poolData?.tvlToken0,
       color: color0,
       percent: poolData?.tvlToken0 / poolData?.token0Price / fullWidth,
+      currency: currencies[0],
     }
     const token1FullData = {
       ...poolData?.token1,
@@ -129,21 +176,27 @@ function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsStatsPro
       tvl: poolData?.tvlToken1,
       color: color1,
       percent: poolData?.tvlToken1 / fullWidth,
+      chain: chainIdToBackendName(chainId),
+      currency: currencies[1],
     }
     return isReversed ? [token1FullData, token0FullData] : [token0FullData, token1FullData]
-  }, [color0, color1, isReversed, poolData])
+  }, [chainId, color0, color1, currencies, isReversed, poolData])
+  console.log(token0)
 
   return (
     <StatsWrapper>
       <HeaderText>
         <Trans>Stats</Trans>
       </HeaderText>
-      <Column gap="sm">
+      <StatItemColumn>
         <ThemedText.BodySecondary>
           <Trans>Pool balances</Trans>
         </ThemedText.BodySecondary>
-        <Row justify="space-between">
+        <PoolBalanceSymbols>
           <PoolBalanceTokenNames>
+            {!screenIsNotLarge && (
+              <CurrencyLogo currency={token0.currency} size="20px" style={{ marginRight: '8px' }} />
+            )}
             {formatNumber({
               input: token0.tvl,
               type: NumberType.TokenNonTx,
@@ -152,6 +205,9 @@ function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsStatsPro
             {token0.symbol}
           </PoolBalanceTokenNames>
           <PoolBalanceTokenNames>
+            {!screenIsNotLarge && (
+              <CurrencyLogo currency={token1.currency} size="20px" style={{ marginRight: '8px' }} />
+            )}
             {formatNumber({
               input: token1.tvl,
               type: NumberType.TokenNonTx,
@@ -159,12 +215,14 @@ function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsStatsPro
             &nbsp;
             {token1.symbol}
           </PoolBalanceTokenNames>
-        </Row>
-        <Row>
-          {token0.color && <BalanceChartSide percent={token0.percent} $color={token0.color} isLeft={true} />}
-          {token1.color && <BalanceChartSide percent={token1.percent} $color={token1.color} isLeft={false} />}
-        </Row>
-      </Column>
+        </PoolBalanceSymbols>
+        {screenIsNotLarge && (
+          <Row>
+            {token0.color && <BalanceChartSide percent={token0.percent} $color={token0.color} isLeft={true} />}
+            {token1.color && <BalanceChartSide percent={token1.percent} $color={token1.color} isLeft={false} />}
+          </Row>
+        )}
+      </StatItemColumn>
       <StatItem title={<Trans>TVL</Trans>} value={poolData.tvlUSD} delta={poolData.tvlUSDChange} />
       <StatItem title={<Trans>24H volume</Trans>} value={poolData.volumeUSD} delta={poolData.volumeUSDChange} />
       <StatItem title={<Trans>24H fees</Trans>} value={poolData.volumeUSD * (poolData.feeTier / 1000000)} />
@@ -172,26 +230,50 @@ function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsStatsPro
   )
 }
 
+const StatItemText = styled(Text)`
+  color: ${({ theme }) => theme.neutral1};
+  font-size: 36px;
+  font-weight: 485;
+  line-height: 44px;
+
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) {
+    font-size: 20px;
+    line-height: 28px;
+  }
+`
+
+const StatsTextContainer = styled(Row)`
+  gap: 4px;
+  width: 100%;
+  align-items: flex-end;
+
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) {
+    flex-direction: column;
+    gap: 0px;
+    align-items: flex-start;
+  }
+`
+
 function StatItem({ title, value, delta }: { title: ReactNode; value: number; delta?: number }) {
   const { formatNumber } = useFormatter()
 
   return (
-    <Column gap="sm">
+    <StatItemColumn>
       <ThemedText.BodySecondary>{title}</ThemedText.BodySecondary>
-      <Row gap="4px" width="full" align="flex-end">
-        <ThemedText.HeadlineLarge>
+      <StatsTextContainer>
+        <StatItemText>
           {formatNumber({
             input: value,
             type: NumberType.FiatTokenStats,
           })}
-        </ThemedText.HeadlineLarge>
+        </StatItemText>
         {!!delta && (
           <Row width="max-content" padding="4px 0px">
             <DeltaArrow delta={delta} />
             <ThemedText.BodySecondary>{formatDelta(delta)}</ThemedText.BodySecondary>
           </Row>
         )}
-      </Row>
-    </Column>
+      </StatsTextContainer>
+    </StatItemColumn>
   )
 }
