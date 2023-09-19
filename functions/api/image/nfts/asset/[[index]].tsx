@@ -2,6 +2,7 @@
 import { ImageResponse } from '@vercel/og'
 import React from 'react'
 
+import { blocklistedCollections } from '../../../../../src/nft/utils/blocklist'
 import { WATERMARK_URL } from '../../../../constants'
 import getAsset from '../../../../utils/getAsset'
 import getFont from '../../../../utils/getFont'
@@ -14,6 +15,10 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     const collectionAddress = index[0]?.toString()
     const tokenId = index[1]?.toString()
     const cacheUrl = origin + '/nfts/asset/' + collectionAddress + '/' + tokenId
+
+    if (blocklistedCollections.includes(collectionAddress)) {
+      return new Response('Collection unsupported.', { status: 404 })
+    }
 
     const data = await getRequest(
       cacheUrl,
