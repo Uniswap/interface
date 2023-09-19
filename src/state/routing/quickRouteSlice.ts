@@ -4,14 +4,7 @@ import ms from 'ms'
 import { logSwapQuoteRequest } from 'tracing/swapFlowLoggers'
 import { trace } from 'tracing/trace'
 
-import {
-  GetQuoteArgs,
-  INTERNAL_ROUTER_PREFERENCE_PRICE,
-  QuickRouteResponse,
-  QuoteState,
-  RouterPreference,
-  TradeResult,
-} from './types'
+import { GetQuickQuoteArgs, PreviewTradeResult, QuickRouteResponse, QuoteState, RouterPreference } from './types'
 import { isExactInput, transformQuickRouteToTrade } from './utils'
 
 const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
@@ -30,8 +23,8 @@ export const quickRouteApi = createApi({
     baseUrl: UNISWAP_API_URL,
   }),
   endpoints: (build) => ({
-    getQuickRoute: build.query<TradeResult, GetQuoteArgs>({
-      async onQueryStarted(args: GetQuoteArgs, { queryFulfilled }) {
+    getQuickRoute: build.query<PreviewTradeResult, GetQuickQuoteArgs>({
+      async onQueryStarted(args: GetQuickQuoteArgs, { queryFulfilled }) {
         trace(
           'quickroute',
           async ({ setTraceError, setTraceStatus }) => {
@@ -52,14 +45,12 @@ export const quickRouteApi = createApi({
           {
             data: {
               ...args,
-              isPrice: args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE,
-              isAutoRouter: args.routerPreference === RouterPreference.API,
             },
           }
         )
       },
       async queryFn(args, _api, _extraOptions, fetch) {
-        logSwapQuoteRequest(args.tokenInChainId, args.routerPreference, true)
+        logSwapQuoteRequest(args.tokenInChainId, RouterPreference.API, true)
         const quoteStartMark = performance.mark(`quote-fetch-start-${Date.now()}`)
         const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
         const type = isExactInput(tradeType) ? 'EXACT_IN' : 'EXACT_OUT'
@@ -90,7 +81,6 @@ export const quickRouteApi = createApi({
             sendAnalyticsEvent('No quote received from quickroute API', {
               requestBody,
               response,
-              routerPreference: args.routerPreference,
             })
             return {
               data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },

@@ -798,6 +798,7 @@ export function Swap({
           )}
         </div>
       </AutoColumn>
+      {/* <div>{trade?.fillType === TradeFillType.None && 'Preview trade'}</div> */}
       {!showOptInSmall && !isUniswapXDefaultEnabled && <UniswapXOptIn isSmall={false} swapInfo={swapInfo} />}
     </SwapWrapper>
   )

@@ -4,6 +4,7 @@ import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { DebounceSwapQuoteVariant, useDebounceSwapQuoteFlag } from 'featureFlags/flags/debounceSwapQuote'
 import { useMemo } from 'react'
 import { ClassicTrade, InterfaceTrade, QuoteMethod, RouterPreference, TradeState } from 'state/routing/types'
+import { usePreviewTrade } from 'state/routing/usePreviewTrade'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRouterPreference } from 'state/user/hooks'
 
@@ -79,26 +80,54 @@ export function useDebouncedTrade(
   const isDebouncing =
     useDebounce(inputs, debouncedSwapQuoteFlagEnabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME) !== inputs
 
+  // const isPreviewTradeDebouncing = useDebounce(inputs, 100) !== inputs
+
   const isWrap = useMemo(() => {
     if (!chainId || !amountSpecified || !otherCurrency) return false
     const weth = WRAPPED_NATIVE_CURRENCY[chainId]
-    return (
+    return Boolean(
       (amountSpecified.currency.isNative && weth?.equals(otherCurrency)) ||
-      (otherCurrency.isNative && weth?.equals(amountSpecified.currency))
+        (otherCurrency.isNative && weth?.equals(amountSpecified.currency))
     )
   }, [amountSpecified, chainId, otherCurrency])
 
-  const skipFetch = isDebouncing || !autoRouterSupported || !isWindowVisible || isWrap
-
   const [routerPreference] = useRouterPreference()
-  return useRoutingAPITrade(
+
+  const skipRoutingFetch = isDebouncing || !autoRouterSupported || !isWindowVisible || isWrap
+  const skipPreviewTradeFetch =
+    !autoRouterSupported || !isWindowVisible || isWrap || routerPreference === RouterPreference.CLIENT
+
+  const previewTradeResult = usePreviewTrade(
+    skipPreviewTradeFetch,
+    tradeType,
+    amountSpecified,
+    otherCurrency,
+    inputTax,
+    outputTax
+  )
+  const routingApiTradeResult = useRoutingAPITrade(
+    skipRoutingFetch,
     tradeType,
     amountSpecified,
     otherCurrency,
     routerPreferenceOverride ?? routerPreference,
-    skipFetch,
     account,
     inputTax,
     outputTax
   )
+
+  return useMemo(() => {
+    if (!previewTradeResult.currentTrade && !routingApiTradeResult.currentTrade) {
+      console.log('no trade results from either', previewTradeResult.state, routingApiTradeResult.state)
+    }
+    // only show PreviewTrade if the more comprehensive routing-api request hasn't come back yet
+    if (previewTradeResult.currentTrade && !routingApiTradeResult.currentTrade) {
+      console.log('✅showing preview trade')
+      return { ...previewTradeResult, state: TradeState.LOADING }
+    } else if (routingApiTradeResult.currentTrade) {
+      console.log('showing regular trade: ', routingApiTradeResult.currentTrade.outputAmount.quotient.toString())
+    }
+
+    return routingApiTradeResult
+  }, [previewTradeResult, routingApiTradeResult])
 }

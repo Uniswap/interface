@@ -121,13 +121,13 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
           open={showDetails}
         >
           <RowFixed>
-            {Boolean(loading || syncing) && (
+            {/* {Boolean(loading || syncing) && trade?.fillType !== TradeFillType.None && (
               <StyledPolling>
                 <StyledPollingDot>
                   <Spinner />
                 </StyledPollingDot>
               </StyledPolling>
-            )}
+            )} */}
             {trade ? (
               <LoadingOpacityContainer $loading={syncing} data-testid="trade-price-container">
                 <TradePrice price={trade.executionPrice} />

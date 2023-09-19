@@ -15,6 +15,7 @@ import {
   ClassicQuoteData,
   ClassicTrade,
   DutchOrderTrade,
+  GetQuickQuoteArgs,
   GetQuoteArgs,
   InterfaceTrade,
   isClassicQuoteResponse,
@@ -136,7 +137,7 @@ function toDutchOrderInfo(orderInfoJSON: DutchOrderInfoJSON): DutchOrderInfo {
 // Prepares the currencies used for the actual Swap (either UniswapX or Universal Router)
 // May not match `currencyIn` that the user selected because for ETH inputs in UniswapX, the actual
 // swap will use WETH.
-function getTradeCurrencies(args: GetQuoteArgs, isUniswapXTrade: boolean): [Currency, Currency] {
+function getTradeCurrencies(args: GetQuoteArgs | GetQuickQuoteArgs, isUniswapXTrade: boolean): [Currency, Currency] {
   const {
     tokenInAddress,
     tokenInChainId,
@@ -190,7 +191,7 @@ function getClassicTradeDetails(
   }
 }
 
-export function transformQuickRouteToTrade(args: GetQuoteArgs, data: QuickRouteResponse): PreviewTrade {
+export function transformQuickRouteToTrade(args: GetQuickQuoteArgs, data: QuickRouteResponse): PreviewTrade {
   const [currencyIn, currencyOut] = getTradeCurrencies(args, false)
   const [rawAmountIn, rawAmountOut] =
     data.tradeType === 'EXACT_IN' ? [args.amount, data.quote.amount] : [data.quote.amount, args.amount]
@@ -221,7 +222,6 @@ export async function transformRoutesToTrade(
     (routerPreference === RouterPreference.X || (isUniswapXDefaultEnabled && routerPreference === RouterPreference.API))
 
   const [currencyIn, currencyOut] = getTradeCurrencies(args, showUniswapXTrade)
-  console.log('currencyIn here', currencyIn?.symbol)
   const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate } = getClassicTradeDetails(
     currencyIn,
     currencyOut,

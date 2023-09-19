@@ -5,11 +5,11 @@ import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
 
 export enum TradeState {
-  LOADING,
-  INVALID,
-  STALE,
-  NO_ROUTE_FOUND,
-  VALID,
+  LOADING = 'loading',
+  INVALID = 'invalid',
+  STALE = 'stale',
+  NO_ROUTE_FOUND = 'no_route_found',
+  VALID = 'valid',
 }
 
 export enum QuoteMethod {
@@ -52,6 +52,20 @@ export interface GetQuoteArgs {
   outputTax: Percent
 }
 
+export type GetQuickQuoteArgs = {
+  amount: string
+  tokenInAddress: string
+  tokenInChainId: ChainId
+  tokenInDecimals: number
+  tokenInSymbol?: string
+  tokenOutAddress: string
+  tokenOutChainId: ChainId
+  tokenOutDecimals: number
+  tokenOutSymbol?: string
+  tradeType: TradeType
+  inputTax: Percent
+  outputTax: Percent
+}
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
 
 type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
@@ -431,7 +445,19 @@ export type TradeResult =
     }
   | {
       state: QuoteState.SUCCESS
-      trade: InterfaceTrade
+      trade: SubmittableTrade
+      latencyMs?: number
+    }
+
+export type PreviewTradeResult =
+  | {
+      state: QuoteState.NOT_FOUND
+      trade?: undefined
+      latencyMs?: number
+    }
+  | {
+      state: QuoteState.SUCCESS
+      trade: PreviewTrade
       latencyMs?: number
     }
 

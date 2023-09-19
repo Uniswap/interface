@@ -1,14 +1,10 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
-import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { ZERO_PERCENT } from 'constants/misc'
-import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
-import ms from 'ms'
 import { useMemo } from 'react'
 
 import { useGetQuickRouteQuery, useGetQuickRouteQueryState } from './quickRouteSlice'
-import { useGetQuoteQuery, useGetQuoteQueryState } from './slice'
-import { INTERNAL_ROUTER_PREFERENCE_PRICE, PreviewTrade, QuoteState, RouterPreference, TradeState } from './types'
+import { GetQuickQuoteArgs, PreviewTrade, QuoteState, TradeState } from './types'
 import { currencyAddressForSwapQuote } from './utils'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
@@ -28,7 +24,7 @@ function useQuickRouteArguments({
   tradeType: TradeType
   inputTax: Percent
   outputTax: Percent
-}) {
+}): GetQuickQuoteArgs | typeof skipToken {
   return useMemo(() => {
     if (!tokenIn || !tokenOut || !amount) return skipToken
 
@@ -54,16 +50,17 @@ function useQuickRouteArguments({
  * @param amountSpecified the exact amount to swap in/out
  * @param otherCurrency the desired output/payment currency
  */
-function usePreviewTrade(
+export function usePreviewTrade(
+  skipFetch = false,
   tradeType: TradeType,
   amountSpecified: CurrencyAmount<Currency> | undefined,
   otherCurrency: Currency | undefined,
-  skipFetch = false,
   inputTax = ZERO_PERCENT,
   outputTax = ZERO_PERCENT
 ): {
   state: TradeState
   trade?: PreviewTrade
+  currentTrade?: PreviewTrade
   swapQuoteLatency?: number
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
@@ -85,23 +82,10 @@ function usePreviewTrade(
 
   const { isError, data: tradeResult, error, currentData } = useGetQuickRouteQueryState(queryArgs)
   useGetQuickRouteQuery(skipFetch ? skipToken : queryArgs, {
-    // Price-fetching is informational and costly, so it's done less frequently.
-    pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms(`1m`) : AVERAGE_L1_BLOCK_TIME,
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
     refetchOnMountOrArgChange: 2 * 60,
   })
 
-  const { data } = useGetQuickRouteQueryState(queryArgs)
-  const skipQuickRoute =
-    routerPreference !== RouterPreference.API ||
-    tradeType !== TradeType.EXACT_INPUT ||
-    currencyIn?.chainId !== ChainId.MAINNET
-  useGetQuickRouteQuery(skipQuickRoute ? skipToken : queryArgs, {
-    // Price-fetching is informational and costly, so it's done less frequently.
-    pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms(`1m`) : AVERAGE_L1_BLOCK_TIME,
-    // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
-    refetchOnMountOrArgChange: 2 * 60,
-  })
   const isFetching = currentData !== tradeResult || !currentData
 
   return useMemo(() => {
@@ -109,12 +93,14 @@ function usePreviewTrade(
       return {
         state: TradeState.STALE,
         trade: tradeResult?.trade,
+        currentTrade: currentData?.trade,
         swapQuoteLatency: tradeResult?.latencyMs,
       }
     } else if (!amountSpecified || isError || queryArgs === skipToken) {
       return {
         state: TradeState.INVALID,
         trade: undefined,
+        currentTrade: currentData?.trade,
         error: JSON.stringify(error),
       }
     } else if (tradeResult?.state === QuoteState.NOT_FOUND && !isFetching) {
@@ -122,10 +108,12 @@ function usePreviewTrade(
     } else if (!tradeResult?.trade) {
       return TRADE_LOADING
     } else {
+      console.log('currentData in usePreviewTrade:', currentData?.trade?.outputAmount.quotient.toString())
       return {
         state: isFetching ? TradeState.LOADING : TradeState.VALID,
-        trade: tradeResult?.trade,
-        swapQuoteLatency: tradeResult?.latencyMs,
+        trade: tradeResult.trade,
+        currentTrade: currentData?.trade,
+        swapQuoteLatency: tradeResult.latencyMs,
       }
     }
   }, [
@@ -137,5 +125,6 @@ function usePreviewTrade(
     tradeResult?.latencyMs,
     tradeResult?.state,
     tradeResult?.trade,
+    currentData?.trade,
   ])
 }
