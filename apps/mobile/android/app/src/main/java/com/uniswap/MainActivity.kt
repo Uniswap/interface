@@ -26,7 +26,7 @@ class MainActivity : ReactActivity() {
 
     // Required for react-navigation to work on Android
     override fun onCreate(savedInstanceState: Bundle?) {
-      super.onCreate(savedInstanceState);
+      super.onCreate(null);
 
        window.navigationBarColor = Color.TRANSPARENT
 
