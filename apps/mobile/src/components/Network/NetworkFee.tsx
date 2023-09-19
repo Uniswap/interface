@@ -1,46 +1,24 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
-import { Flex, Text, useSporeColors } from 'ui/src'
-import InfoCircleSVG from 'ui/src/assets/icons/info-circle.svg'
+import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useUSDValue } from 'wallet/src/features/gas/hooks'
+import { GasFeeResult } from 'wallet/src/features/gas/types'
 
 export function NetworkFee({
   chainId,
-  gasFeeUSD,
-  gasFallbackUsed,
-  onShowGasWarning,
+  gasFee,
 }: {
   chainId: ChainId
-  gasFeeUSD?: string
-  gasFallbackUsed?: boolean
-  onShowGasWarning?: () => void
+  gasFee: GasFeeResult
 }): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
 
-  const feeSectionContent = (
-    <>
-      <Text
-        color={gasFallbackUsed && gasFeeUSD ? '$DEP_accentWarning' : '$neutral1'}
-        variant="subheadSmall">
-        {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
-      </Text>
-      {gasFallbackUsed && gasFeeUSD && (
-        <Flex gap="$none" ml="$spacing4">
-          <InfoCircleSVG
-            color={colors.DEP_accentWarning.val}
-            height={iconSizes.icon20}
-            width={iconSizes.icon20}
-          />
-        </Flex>
-      )}
-    </>
-  )
+  const gasFeeUSD = useUSDValue(chainId, gasFee.value ?? undefined)
 
   return (
     <Flex row alignItems="center" justifyContent="space-between">
@@ -48,19 +26,19 @@ export function NetworkFee({
       <Flex row alignItems="center" gap="$spacing8">
         <InlineNetworkPill chainId={chainId} />
         <Text variant="subheadSmall">•</Text>
-        {!gasFeeUSD ? (
+        {gasFee.loading ? (
           <SpinningLoader size={iconSizes.icon20} />
-        ) : gasFallbackUsed && onShowGasWarning ? (
-          <TouchableArea
-            alignItems="center"
-            flexDirection="row"
-            justifyContent="space-between"
-            onPress={onShowGasWarning}>
-            {feeSectionContent}
-          </TouchableArea>
         ) : (
           <Flex row alignItems="center" justifyContent="space-between">
-            {feeSectionContent}
+            {gasFee.error ? (
+              <Text color="$neutral2" variant="subheadSmall">
+                {t('N/A')}
+              </Text>
+            ) : (
+              <Text color="$neutral1" variant="subheadSmall">
+                {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
+              </Text>
+            )}
           </Flex>
         )}
       </Flex>

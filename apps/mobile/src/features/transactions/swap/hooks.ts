@@ -43,7 +43,7 @@ import { Erc20 } from 'wallet/src/abis/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
-import { GasSpeed, SimulatedGasEstimationInfo } from 'wallet/src/features/gas/types'
+import { GasFeeResult, GasSpeed, SimulatedGasEstimationInfo } from 'wallet/src/features/gas/types'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useOnChainCurrencyBalance } from 'wallet/src/features/portfolio/api'
@@ -331,7 +331,6 @@ type TokenApprovalInfo =
 
 interface TransactionRequestInfo {
   transactionRequest: providers.TransactionRequest | undefined
-  gasFallbackUsed: boolean
 }
 
 interface Permit2SignatureInfo {
@@ -355,7 +354,6 @@ function useTransactionRequestInfo(
   const isWrapApplicable = derivedSwapInfo.wrapType !== WrapType.NotApplicable
   return {
     transactionRequest: isWrapApplicable ? wrapTxRequest : swapTxRequest.transactionRequest,
-    gasFallbackUsed: !isWrapApplicable && swapTxRequest.gasFallbackUsed,
   }
 }
 
@@ -503,11 +501,7 @@ function useSwapTransactionRequest(
     tokenApprovalInfo?.action === ApprovalAction.Approve ||
     tokenApprovalInfo?.action === ApprovalAction.Permit2Approve
 
-  const {
-    isLoading: simulatedGasLimitLoading,
-    simulatedGasLimit,
-    gasFallbackUsed,
-  } = simulatedGasEstimationInfo
+  const { loading: simulatedGasLimitLoading, simulatedGasLimit } = simulatedGasEstimationInfo
 
   const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
   return useMemo(() => {
@@ -519,7 +513,7 @@ function useSwapTransactionRequest(
       permit2InfoLoading ||
       !trade
     ) {
-      return { transactionRequest: undefined, gasFallbackUsed }
+      return { transactionRequest: undefined }
     }
 
     // if the swap transaction does not require a Tenderly gas limit simulation, submit "undefined" here
@@ -540,12 +534,11 @@ function useSwapTransactionRequest(
       value,
     }
 
-    return { transactionRequest, gasFallbackUsed }
+    return { transactionRequest }
   }, [
     address,
     chainId,
     currencyAmountIn,
-    gasFallbackUsed,
     permit2InfoLoading,
     permit2Signature,
     shouldFetchSimulatedGasLimit,
@@ -560,9 +553,7 @@ function useSwapTransactionRequest(
 interface SwapTxAndGasInfo {
   txRequest?: providers.TransactionRequest
   approveTxRequest?: providers.TransactionRequest
-  totalGasFee?: string
-  gasFallbackUsed: boolean
-  isLoading: boolean
+  gasFee: GasFeeResult
 }
 
 export function useSwapTxAndGasInfo(
@@ -591,11 +582,10 @@ export function useSwapTxAndGasInfo(
     tokenApprovalInfo?.action === ApprovalAction.Permit2Approve
 
   const simulatedGasEstimationInfo = useSimulatedGasLimit(
-    chainId,
     currencyAmounts[exactCurrencyField],
     otherCurrency,
     tradeType,
-    !shouldFetchSimulatedGasLimit,
+    /* skip */ !shouldFetchSimulatedGasLimit,
     permit2SignatureInfo.data
   )
 
@@ -606,65 +596,68 @@ export function useSwapTxAndGasInfo(
     permit2SignatureInfo
   )
 
-  const approveFeeInfo = useTransactionGasFee(
+  const approveGasFee = useTransactionGasFee(
     tokenApprovalInfo?.txRequest,
-    GasSpeed.Urgent,
-    skipGasFeeQuery
-  ).data
-
-  const txFeeInfoResponse = useTransactionGasFee(
-    transactionRequest,
     GasSpeed.Urgent,
     skipGasFeeQuery
   )
 
+  const swapGasFee = useTransactionGasFee(transactionRequest, GasSpeed.Urgent, skipGasFeeQuery)
+
   useEffect(() => {
-    if (txFeeInfoResponse.error && simulatedGasEstimationInfo.error) {
+    if (swapGasFee.error && simulatedGasEstimationInfo.error) {
       const simulationError =
         typeof simulatedGasEstimationInfo.error === 'boolean'
           ? new Error('Unknown gas simulation error')
           : simulatedGasEstimationInfo.error
       sendMobileAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
         ...getBaseTradeAnalyticsPropertiesFromSwapInfo(derivedSwapInfo),
-        error: shouldFetchSimulatedGasLimit ? simulationError : txFeeInfoResponse.error,
+        error: shouldFetchSimulatedGasLimit
+          ? simulationError.toString()
+          : swapGasFee.error.toString(),
         txRequest: transactionRequest,
       })
     }
   }, [
     derivedSwapInfo,
     transactionRequest,
-    txFeeInfoResponse.error,
     shouldFetchSimulatedGasLimit,
     simulatedGasEstimationInfo.error,
+    swapGasFee.error,
   ])
 
-  const txFeeInfo = txFeeInfoResponse.data
-  const totalGasFee = sumGasFees(approveFeeInfo?.gasFee, txFeeInfo?.gasFee)
+  const txRequestWithGasSettings = useMemo((): providers.TransactionRequest | undefined => {
+    if (!transactionRequest || !swapGasFee.params) return
 
-  const txRequestWithGasSettings = useMemo(() => {
-    if (!transactionRequest || !txFeeInfo) return
+    return { ...transactionRequest, ...swapGasFee.params }
+  }, [transactionRequest, swapGasFee])
 
-    return { ...transactionRequest, ...txFeeInfo.params }
-  }, [transactionRequest, txFeeInfo])
+  const approveLoading = !tokenApprovalInfo || approveGasFee.loading
 
-  const approveLoading =
-    !tokenApprovalInfo || Boolean(tokenApprovalInfo.txRequest && !approveFeeInfo)
-
-  const approveTxWithGasSettings: providers.TransactionRequest | undefined = useMemo(() => {
-    if (approveLoading || !tokenApprovalInfo?.txRequest) return
+  const approveTxWithGasSettings = useMemo((): providers.TransactionRequest | undefined => {
+    if (!tokenApprovalInfo?.txRequest || !approveGasFee?.params) return
 
     return {
       ...tokenApprovalInfo.txRequest,
-      ...approveFeeInfo?.params,
+      ...approveGasFee?.params,
     }
-  }, [approveLoading, tokenApprovalInfo?.txRequest, approveFeeInfo?.params])
+  }, [tokenApprovalInfo?.txRequest, approveGasFee?.params])
+
+  const totalGasFee = sumGasFees(approveGasFee?.value, swapGasFee?.value)
 
   return {
     txRequest: txRequestWithGasSettings,
     approveTxRequest: approveTxWithGasSettings,
-    totalGasFee,
-    gasFallbackUsed: simulatedGasEstimationInfo.gasFallbackUsed,
-    isLoading: approveLoading,
+    gasFee: {
+      value: totalGasFee,
+      loading:
+        approveLoading ||
+        (shouldFetchSimulatedGasLimit && simulatedGasEstimationInfo.loading) ||
+        swapGasFee.loading,
+      error: Boolean(
+        shouldFetchSimulatedGasLimit ? simulatedGasEstimationInfo.error : swapGasFee.error
+      ),
+    },
   }
 }
 
@@ -672,7 +665,7 @@ export function useSwapTxAndGasInfo(
 export function useSwapCallback(
   approveTxRequest: providers.TransactionRequest | undefined,
   swapTxRequest: providers.TransactionRequest | undefined,
-  totalGasFee: string | undefined,
+  gasFee: GasFeeResult,
   trade: Trade | null | undefined,
   currencyInAmountUSD: Maybe<CurrencyAmount<Currency>>,
   currencyOutAmountUSD: Maybe<CurrencyAmount<Currency>>,
@@ -684,13 +677,13 @@ export function useSwapCallback(
   const account = useActiveAccount()
 
   return useMemo(() => {
-    if (!account || !swapTxRequest || !trade || !totalGasFee) {
+    if (!account || !swapTxRequest || !trade || !gasFee.value) {
       return () => {
         logger.error('Attempted swap with missing required parameters', {
           tags: {
             file: 'swap/hooks',
             function: 'useSwapCallback',
-            params: JSON.stringify({ account, swapTxRequest, trade, totalGasFee }),
+            params: JSON.stringify({ account, swapTxRequest, trade, gasFee }),
           },
         })
       }
@@ -712,7 +705,7 @@ export function useSwapCallback(
 
       sendMobileAnalyticsEvent(SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED, {
         ...getBaseTradeAnalyticsProperties(trade),
-        estimated_network_fee_wei: totalGasFee,
+        estimated_network_fee_wei: gasFee.value,
         gas_limit: toStringish(swapTxRequest.gasLimit),
         token_in_amount_usd: currencyInAmountUSD
           ? parseFloat(currencyInAmountUSD.toFixed(2))
@@ -729,7 +722,7 @@ export function useSwapCallback(
     account,
     swapTxRequest,
     trade,
-    totalGasFee,
+    gasFee,
     appDispatch,
     txId,
     currencyInAmountUSD,

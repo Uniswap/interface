@@ -130,7 +130,7 @@ export type MobileEventProperties = {
     swap_quote_block_number?: string
   } & SwapTradeBaseProperties
   [SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED]: {
-    error?: ApolloError | FetchBaseQueryError | SerializedError | Error
+    error?: ApolloError | FetchBaseQueryError | SerializedError | Error | string
     txRequest?: providers.TransactionRequest
   } & SwapTradeBaseProperties
 }

@@ -66,9 +66,9 @@ export type TransactionGasFeeInfo = {
   type: FeeType
   speed: GasSpeed
 
-  // gasFee is the total network fee denoted in wei of the native currency
+  // gasFee.value is the total network fee denoted in wei of the native currency
   // this is the value to be converted into USD and shown to the user
-  gasFee: string
+  gasFee: GasFeeResult
 
   // these are the values corresponding to gasFee that are eventually
   // passed to the transaction itself
@@ -81,8 +81,14 @@ export type UseTransactionGasFeeResponse = {
 }
 
 export interface SimulatedGasEstimationInfo {
-  isLoading: boolean
-  simulatedGasLimit: string
-  gasFallbackUsed: boolean
+  loading: boolean
+  simulatedGasLimit?: string
   error?: boolean | FetchBaseQueryError | SerializedError
+}
+
+export type GasFeeResult = {
+  value?: string
+  loading: boolean
+  error?: ApolloError | string | boolean
+  params?: TransactionLegacyFeeParams | TransactionEip1559FeeParams
 }

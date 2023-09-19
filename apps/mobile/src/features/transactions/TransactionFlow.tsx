@@ -25,6 +25,7 @@ import { TransferTokenForm } from 'src/features/transactions/transfer/TransferTo
 import { Flex, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { dimensions, iconSizes } from 'ui/src/theme'
+import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { ANIMATE_SPRING_CONFIG } from 'wallet/src/features/transactions/utils'
 
 export enum TransactionStep {
@@ -42,9 +43,7 @@ export interface TransactionFlowProps {
   onClose: () => void
   approveTxRequest?: providers.TransactionRequest
   txRequest?: providers.TransactionRequest
-  totalGasFee?: string
-  gasFeeUSD?: string
-  gasFallbackUsed?: boolean
+  gasFee: GasFeeResult
   step: TransactionStep
   setStep: (newStep: TransactionStep) => void
   warnings: Warning[]
@@ -58,8 +57,7 @@ type InnerContentProps = Pick<
   | 'derivedInfo'
   | 'onClose'
   | 'dispatch'
-  | 'totalGasFee'
-  | 'gasFallbackUsed'
+  | 'gasFee'
   | 'txRequest'
   | 'approveTxRequest'
   | 'warnings'
@@ -68,7 +66,7 @@ type InnerContentProps = Pick<
   step: number
   setStep: (step: TransactionStep) => void
   showingSelectorScreen: boolean
-  gasFeeUSD?: string
+  gasFee: GasFeeResult
 }
 
 function isSwapInfo(
@@ -84,9 +82,7 @@ export function TransactionFlow({
   derivedInfo,
   approveTxRequest,
   txRequest,
-  totalGasFee,
-  gasFeeUSD,
-  gasFallbackUsed,
+  gasFee,
   step,
   setStep,
   onClose,
@@ -154,12 +150,10 @@ export function TransactionFlow({
                 derivedInfo={derivedInfo}
                 dispatch={dispatch}
                 exactValue={exactValue}
-                gasFallbackUsed={gasFallbackUsed}
-                gasFeeUSD={gasFeeUSD}
+                gasFee={gasFee}
                 setStep={setStep}
                 showingSelectorScreen={!!showRecipientSelector}
                 step={step}
-                totalGasFee={totalGasFee}
                 txRequest={txRequest}
                 warnings={warnings}
                 onClose={onClose}
@@ -238,7 +232,6 @@ function InnerContentRouter(props: InnerContentProps): JSX.Element {
 
 interface SwapInnerContentProps extends InnerContentProps {
   derivedSwapInfo: DerivedSwapInfo
-  gasFeeUSD?: string
   onFormNext: () => void
   onReviewNext: () => void
   onReviewPrev: () => void
@@ -249,9 +242,7 @@ function SwapInnerContent({
   derivedSwapInfo,
   onClose,
   dispatch,
-  totalGasFee,
-  gasFeeUSD,
-  gasFallbackUsed,
+  gasFee,
   approveTxRequest,
   txRequest,
   warnings,
@@ -295,9 +286,7 @@ function SwapInnerContent({
           approveTxRequest={approveTxRequest}
           derivedSwapInfo={derivedSwapInfo}
           exactValue={exactValue}
-          gasFallbackUsed={gasFallbackUsed}
-          gasFeeUSD={gasFeeUSD}
-          totalGasFee={totalGasFee}
+          gasFee={gasFee}
           txRequest={txRequest}
           warnings={warnings}
           onNext={onReviewNext}
@@ -323,7 +312,7 @@ function TransferInnerContent({
   onClose,
   dispatch,
   step,
-  gasFeeUSD,
+  gasFee,
   txRequest,
   warnings,
   onFormNext,
@@ -359,7 +348,7 @@ function TransferInnerContent({
         <Trace logImpression section={SectionName.TransferReview}>
           <TransferReview
             derivedTransferInfo={derivedTransferInfo}
-            gasFeeUSD={gasFeeUSD}
+            gasFee={gasFee}
             txRequest={txRequest}
             warnings={warnings}
             onNext={onReviewNext}

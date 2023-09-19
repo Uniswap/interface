@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import { providers } from 'ethers'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -22,9 +21,8 @@ import {
 } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
-import { Icons, useSporeColors } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'utilities/src/format/format'
+import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -35,9 +33,7 @@ interface SwapFormProps {
   derivedSwapInfo: DerivedSwapInfo
   approveTxRequest?: providers.TransactionRequest
   txRequest?: providers.TransactionRequest
-  totalGasFee?: string
-  gasFeeUSD?: string
-  gasFallbackUsed?: boolean
+  gasFee: GasFeeResult
   warnings: Warning[]
   exactValue: string
 }
@@ -48,17 +44,13 @@ export function SwapReview({
   derivedSwapInfo,
   approveTxRequest,
   txRequest,
-  totalGasFee,
-  gasFeeUSD,
-  gasFallbackUsed,
+  gasFee,
   warnings,
   exactValue,
 }: SwapFormProps): JSX.Element | null {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const account = useActiveAccountWithThrow()
   const [showWarningModal, setShowWarningModal] = useState(false)
-  const [showGasWarningModal, setShowGasWarningModal] = useState(false)
   const [showSlippageModal, setShowSlippageModal] = useState(false)
   const [warningAcknowledged, setWarningAcknowledged] = useState(false)
   const [shouldSubmitTx, setShouldSubmitTx] = useState(false)
@@ -99,7 +91,7 @@ export function SwapReview({
   const onSwap = useSwapCallback(
     approveTxRequest,
     txRequest,
-    totalGasFee,
+    gasFee,
     trade,
     currencyAmountsUSDValue[CurrencyField.INPUT],
     currencyAmountsUSDValue[CurrencyField.OUTPUT],
@@ -141,14 +133,6 @@ export function SwapReview({
     setShowWarningModal(false)
   }, [])
 
-  const onShowGasWarning = useCallback(() => {
-    setShowGasWarningModal(true)
-  }, [])
-
-  const onCloseGasWarning = useCallback(() => {
-    setShowGasWarningModal(false)
-  }, [])
-
   const onShowSlippageModal = useCallback(() => {
     setShowSlippageModal(true)
   }, [])
@@ -168,7 +152,7 @@ export function SwapReview({
     noValidSwap ||
     blockingWarning ||
     newTradeRequiresAcceptance ||
-    !totalGasFee ||
+    !gasFee.value ||
     !txRequest ||
     account.type === AccountType.Readonly
 
@@ -184,10 +168,8 @@ export function SwapReview({
       return (
         <TransactionDetails
           chainId={chainId}
-          gasFallbackUsed={gasFallbackUsed}
-          gasFeeUSD={gasFeeUSD}
+          gasFee={gasFee}
           warning={swapWarning}
-          onShowGasWarning={onShowGasWarning}
           onShowWarning={onShowWarning}
         />
       )
@@ -200,13 +182,11 @@ export function SwapReview({
         acceptedTrade={acceptedTrade}
         autoSlippageTolerance={autoSlippageTolerance}
         customSlippageTolerance={customSlippageTolerance}
-        gasFallbackUsed={gasFallbackUsed}
-        gasFeeUSD={gasFeeUSD}
+        gasFee={gasFee}
         newTradeRequiresAcceptance={newTradeRequiresAcceptance}
         trade={trade}
         warning={swapWarning}
         onAcceptTrade={onAcceptTrade}
-        onShowGasWarning={onShowGasWarning}
         onShowSlippageModal={onShowSlippageModal}
         onShowSwapProtectionModal={onShowSwapProtectionModal}
         onShowWarning={onShowWarning}
@@ -251,27 +231,6 @@ export function SwapReview({
           onCancel={onCancelWarning}
           onClose={onCloseWarning}
           onConfirm={onConfirmWarning}
-        />
-      )}
-      {showGasWarningModal && (
-        <WarningModal
-          backgroundIconColor={colors.surface3.val}
-          caption={t(
-            'This maximum network fee estimate is more conservative than usual—we’re unable to provide a more accurate figure at this time.'
-          )}
-          closeText={t('Dismiss')}
-          icon={
-            <Icons.InfoCircleFilled
-              color={colors.neutral2.val}
-              size={iconSizes.icon24}
-              // not sure why this one is upside down
-              style={{ transform: [{ rotate: '180deg' }] }}
-            />
-          }
-          modalName={ModalName.GasEstimateWarning}
-          severity={WarningSeverity.Medium}
-          title={t('Conservative network fee estimate')}
-          onClose={onCloseGasWarning}
         />
       )}
       {showSlippageModal && acceptedTrade && (

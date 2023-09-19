@@ -1,3 +1,4 @@
+import { providers } from 'ethers'
 import React, { useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WarningAction } from 'src/components/modals/WarningModal/types'
@@ -14,7 +15,7 @@ import {
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
 import { useTransactionGasWarning } from 'src/features/transactions/useTransactionGasWarning'
-import { useTransactionGasFee, useUSDValue } from 'wallet/src/features/gas/hooks'
+import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasSpeed } from 'wallet/src/features/gas/types'
 import {
   CurrencyField,
@@ -43,20 +44,21 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
   const [step, setStep] = useState<TransactionStep>(TransactionStep.FORM)
   const txRequest = useTransferTransactionRequest(derivedTransferInfo)
   const warnings = useTransferWarnings(t, derivedTransferInfo)
-  const gasFeeInfo = useTransactionGasFee(
+  const gasFee = useTransactionGasFee(
     txRequest,
     GasSpeed.Urgent,
     // stop polling for gas once transaction is submitted
     step === TransactionStep.SUBMITTED ||
       warnings.some((warning) => warning.action === WarningAction.DisableReview)
-  ).data
+  )
 
-  const gasFeeUSD = useUSDValue(derivedTransferInfo.chainId, gasFeeInfo?.gasFee)
-  const transferTxWithGasSettings = useMemo(() => {
-    return gasFeeInfo ? { ...txRequest, ...gasFeeInfo.params } : txRequest
-  }, [gasFeeInfo, txRequest])
+  const transferTxWithGasSettings = useMemo(
+    (): providers.TransactionRequest | undefined =>
+      gasFee?.params ? { ...txRequest, ...gasFee.params } : txRequest,
+    [gasFee?.params, txRequest]
+  )
 
-  const gasWarning = useTransactionGasWarning(derivedTransferInfo, gasFeeInfo?.gasFee)
+  const gasWarning = useTransactionGasWarning(derivedTransferInfo, gasFee?.value)
 
   const allWarnings = useMemo(() => {
     return !gasWarning ? warnings : [...warnings, gasWarning]
@@ -75,8 +77,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
         dispatch={dispatch}
         exactValue={isUSDInput ? exactAmountUSD : exactAmountToken}
         flowName={t('Send')}
-        gasFallbackUsed={false}
-        gasFeeUSD={gasFeeUSD}
+        gasFee={gasFee}
         isUSDInput={derivedTransferInfo.isUSDInput}
         recipientSelector={
           <RecipientSelect
@@ -88,7 +89,6 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
         setStep={setStep}
         showRecipientSelector={state.showRecipientSelector}
         step={step}
-        totalGasFee={gasFeeInfo?.gasFee}
         txRequest={transferTxWithGasSettings}
         warnings={allWarnings}
         onClose={onClose}

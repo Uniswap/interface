@@ -1,11 +1,6 @@
 import { BigNumber, BigNumberish, providers } from 'ethers'
 import { BigNumberMax } from 'src/utils/number'
-import {
-  FeeType,
-  TransactionEip1559FeeParams,
-  TransactionGasFeeInfo,
-  TransactionLegacyFeeParams,
-} from 'wallet/src/features/gas/types'
+import { FeeType, GasFeeResult } from 'wallet/src/features/gas/types'
 
 export type FeeDetails =
   | { type: FeeType.Legacy; params: { gasPrice: string } }
@@ -13,40 +8,47 @@ export type FeeDetails =
 // Returns gas prices params adjusted by provided factor
 export function getAdjustedGasFeeDetails(
   request: providers.TransactionRequest,
-  currentGasFeeInfo: TransactionGasFeeInfo,
+  currentGasFeeParams: NonNullable<GasFeeResult['params']>,
   adjustmentFactor: number
 ): FeeDetails {
-  if (request.gasPrice) {
+  // Legacy
+  if (request.gasPrice && 'gasPrice' in currentGasFeeParams) {
     return {
       type: FeeType.Legacy,
       params: {
         gasPrice: multiplyByFactor(
           request.gasPrice,
-          (currentGasFeeInfo.params as TransactionLegacyFeeParams).gasPrice,
+          currentGasFeeParams.gasPrice,
           adjustmentFactor
         ),
       },
     }
-  } else if (request.maxFeePerGas && request.maxPriorityFeePerGas) {
-    const feeParams = currentGasFeeInfo.params as TransactionEip1559FeeParams
+  }
+
+  // EIP-1559
+  if (
+    request.maxFeePerGas &&
+    request.maxPriorityFeePerGas &&
+    'maxFeePerGas' in currentGasFeeParams
+  ) {
     return {
       type: FeeType.Eip1559,
       params: {
         maxFeePerGas: multiplyByFactor(
           request.maxFeePerGas,
-          feeParams.maxFeePerGas,
+          currentGasFeeParams.maxFeePerGas,
           adjustmentFactor
         ),
         maxPriorityFeePerGas: multiplyByFactor(
           request.maxPriorityFeePerGas,
-          feeParams.maxPriorityFeePerGas,
+          currentGasFeeParams.maxPriorityFeePerGas,
           adjustmentFactor
         ),
       },
     }
-  } else {
-    throw new Error('Transaction request has no gas values')
   }
+
+  throw new Error('Transaction request has no gas values')
 }
 
 function multiplyByFactor(

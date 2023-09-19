@@ -15,7 +15,6 @@ import {
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
 import { useTransactionGasWarning } from 'src/features/transactions/useTransactionGasWarning'
-import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import {
   CurrencyField,
   TransactionState,
@@ -42,18 +41,16 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps): JSX.Elemen
   const [step, setStep] = useState<TransactionStep>(TransactionStep.FORM)
 
   const warnings = useSwapWarnings(t, derivedSwapInfo)
-  const { txRequest, approveTxRequest, totalGasFee, gasFallbackUsed } = useSwapTxAndGasInfo(
+  const { txRequest, approveTxRequest, gasFee } = useSwapTxAndGasInfo(
     derivedSwapInfo,
-    step === TransactionStep.SUBMITTED ||
+    /* skipGasFeeQuery */ step === TransactionStep.SUBMITTED ||
       warnings.some((warning) => warning.action === WarningAction.DisableReview)
   )
-  const gasWarning = useTransactionGasWarning(derivedSwapInfo, totalGasFee)
+  const gasWarning = useTransactionGasWarning(derivedSwapInfo, gasFee.value)
 
   const allWarnings = useMemo(() => {
     return !gasWarning ? warnings : [...warnings, gasWarning]
   }, [warnings, gasWarning])
-
-  const gasFeeUSD = useUSDValue(derivedSwapInfo.chainId, totalGasFee)
 
   // keep currencies list option as state so that rendered list remains stable through the slide animation
   const [listVariation, setListVariation] = useState<TokenSelectorVariation>(
@@ -84,11 +81,9 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps): JSX.Elemen
         dispatch={dispatch}
         exactValue={exactValue ?? ''}
         flowName={t('Swap')}
-        gasFallbackUsed={gasFallbackUsed}
-        gasFeeUSD={gasFeeUSD}
+        gasFee={gasFee}
         setStep={setStep}
         step={step}
-        totalGasFee={totalGasFee}
         txRequest={txRequest}
         warnings={allWarnings}
         onClose={onClose}

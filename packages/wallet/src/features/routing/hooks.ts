@@ -1,11 +1,9 @@
-import { SerializedError } from '@reduxjs/toolkit'
-import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
-import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
+import { SimulatedGasEstimationInfo } from 'wallet/src/features/gas/types'
 import { TradeQuoteRequest, useQuoteQuery } from 'wallet/src/features/routing/api'
 import { TradeQuoteResult } from 'wallet/src/features/routing/types'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
@@ -110,30 +108,13 @@ export function useRouterQuote(params: UseQuoteProps): GqlResult<TradeQuoteResul
   return result
 }
 
-const SWAP_GAS_LIMIT_FALLBACKS: Record<ChainId, string> = {
-  [ChainId.Mainnet]: '420000',
-  [ChainId.Goerli]: '420000',
-  [ChainId.ArbitrumOne]: '1200000',
-  [ChainId.Base]: '420000',
-  [ChainId.Bnb]: '1200000',
-  [ChainId.Optimism]: '420000',
-  [ChainId.Polygon]: '420000',
-  [ChainId.PolygonMumbai]: '420000',
-}
-
 export function useSimulatedGasLimit(
-  chainId: ChainId,
   amountSpecified: CurrencyAmount<Currency> | null | undefined,
   otherCurrency: Currency | null | undefined,
   tradeType: TradeType,
   skip: boolean,
   permitSignatureInfo?: PermitSignatureInfo | null
-): {
-  isLoading: boolean
-  error?: boolean | FetchBaseQueryError | SerializedError
-  simulatedGasLimit: string
-  gasFallbackUsed: boolean
-} {
+): SimulatedGasEstimationInfo {
   const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified)
 
   const { loading, error, data } = useRouterQuote({
@@ -147,15 +128,10 @@ export function useSimulatedGasLimit(
 
   return useMemo(
     () => ({
-      isLoading: loading || isDebouncing,
+      loading: loading || isDebouncing,
       error: error || data?.simulationError,
-      // if there is a simulation error, gasUseEstimate will be the router-api estimate instead of the accurate
-      // Tenderly estimate, and the router-api estimate isn't accurate enough for submitting on-chain
-      // instead, fall back to one of our hard-coded estimates
-      simulatedGasLimit:
-        (data && !data.simulationError && data.gasUseEstimate) || SWAP_GAS_LIMIT_FALLBACKS[chainId],
-      gasFallbackUsed: !skip && !!data?.simulationError,
+      simulatedGasLimit: data?.gasUseEstimate,
     }),
-    [loading, isDebouncing, error, data, chainId, skip]
+    [loading, isDebouncing, error, data]
   )
 }

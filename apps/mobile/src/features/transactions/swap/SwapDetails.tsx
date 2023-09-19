@@ -12,6 +12,7 @@ import { Flex, Icons, Text, useSporeColors } from 'ui/src'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { iconSizes } from 'ui/src/theme'
 import { formatPercent, formatPrice, NumberType } from 'utilities/src/format/format'
+import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
 import { useShouldUseMEVBlocker } from 'wallet/src/features/transactions/swap/customRpc'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
@@ -19,7 +20,6 @@ import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 interface SwapDetailsProps {
   acceptedTrade: Trade<Currency, Currency, TradeType>
   trade: Trade<Currency, Currency, TradeType>
-  gasFeeUSD?: string
   gasFallbackUsed?: boolean
   customSlippageTolerance?: number
   autoSlippageTolerance?: number
@@ -27,15 +27,13 @@ interface SwapDetailsProps {
   warning?: Warning
   onAcceptTrade: () => void
   onShowWarning?: () => void
-  onShowGasWarning: () => void
   onShowSlippageModal: () => void
   onShowSwapProtectionModal: () => void
+  gasFee: GasFeeResult
 }
 
 export function SwapDetails({
   acceptedTrade,
-  gasFeeUSD,
-  gasFallbackUsed,
   newTradeRequiresAcceptance,
   customSlippageTolerance,
   autoSlippageTolerance,
@@ -43,9 +41,9 @@ export function SwapDetails({
   warning,
   onAcceptTrade,
   onShowWarning,
-  onShowGasWarning,
   onShowSlippageModal,
   onShowSwapProtectionModal,
+  gasFee,
 }: SwapDetailsProps): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
@@ -112,12 +110,10 @@ export function SwapDetails({
         ) : null
       }
       chainId={acceptedTrade.inputAmount.currency.chainId}
-      gasFallbackUsed={gasFallbackUsed}
-      gasFeeUSD={gasFeeUSD}
+      gasFee={gasFee}
       showExpandedChildren={!!customSlippageTolerance}
       showWarning={warning && !newTradeRequiresAcceptance}
       warning={warning}
-      onShowGasWarning={onShowGasWarning}
       onShowWarning={onShowWarning}>
       <Flex row alignItems="center" justifyContent="space-between">
         <Text variant="subheadSmall">{t('Rate')}</Text>

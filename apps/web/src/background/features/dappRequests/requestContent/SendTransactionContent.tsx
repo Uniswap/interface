@@ -27,7 +27,7 @@ export const SendTransactionDetails = ({
   const networkFee = useTransactionGasFee({
     chainId,
     ...sendTransactionRequest.transaction,
-  }).data?.gasFee
+  }).value
   const gasFeeUSD = useUSDValue(chainId, networkFee)
 
   const contractFunction = sendTransactionRequest.transaction.type

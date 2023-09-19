@@ -27,13 +27,13 @@ export function useCancelationGasFeeInfo(
     }
   }, [transaction])
 
-  const baseTxGasFee = useTransactionGasFee(cancelationRequest, GasSpeed.Urgent).data
+  const baseTxGasFee = useTransactionGasFee(cancelationRequest, GasSpeed.Urgent)
   return useMemo(() => {
-    if (!baseTxGasFee) return
+    if (!baseTxGasFee.params) return
 
     const adjustedFeeDetails = getAdjustedGasFeeDetails(
       transaction.options.request,
-      baseTxGasFee,
+      baseTxGasFee.params,
       TRANSACTION_CANCELLATION_GAS_FACTOR
     )
 

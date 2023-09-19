@@ -7,12 +7,13 @@ import { Warning } from 'src/components/modals/WarningModal/types'
 import { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { Flex, Separator, Text, useSporeColors } from 'ui/src'
+import { Box, Flex, Separator, Text, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import AnglesMaximize from 'ui/src/assets/icons/angles-maximize.svg'
 import AnglesMinimize from 'ui/src/assets/icons/angles-minimize.svg'
 import { iconSizes } from 'ui/src/theme'
 import { ChainId } from 'wallet/src/constants/chains'
+import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const ALERT_ICONS_SIZE = 18
@@ -20,13 +21,11 @@ const ALERT_ICONS_SIZE = 18
 interface TransactionDetailsProps {
   banner?: ReactNode
   chainId: ChainId
-  gasFeeUSD?: string
-  gasFallbackUsed?: boolean
+  gasFee: GasFeeResult
   showExpandedChildren?: boolean
   showWarning?: boolean
   warning?: Warning
   onShowWarning?: () => void
-  onShowGasWarning?: () => void
 }
 
 export function TransactionDetails({
@@ -34,11 +33,9 @@ export function TransactionDetails({
   children,
   showExpandedChildren,
   chainId,
-  gasFeeUSD,
-  gasFallbackUsed,
+  gasFee,
   showWarning,
   warning,
-  onShowGasWarning,
   onShowWarning,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
   const colors = useSporeColors()
@@ -81,6 +78,15 @@ export function TransactionDetails({
           </Flex>
         </TouchableArea>
       )}
+      {gasFee.error && (
+        <Box
+          backgroundColor="$DEP_accentCriticalSoft"
+          borderRadius="$rounded16"
+          mb="$spacing12"
+          p="$spacing12">
+          <Text color="$statusCritical">{t('This transaction is expected to fail')}</Text>
+        </Box>
+      )}
       <Flex backgroundColor="$surface2" borderRadius="$rounded16" gap="$none">
         {!showWarning && (
           <>
@@ -90,12 +96,7 @@ export function TransactionDetails({
         )}
         <Flex gap="$spacing12" px="$spacing12" py="$spacing12">
           {showChildren ? <Flex gap="$spacing12">{children}</Flex> : null}
-          <NetworkFee
-            chainId={chainId}
-            gasFallbackUsed={gasFallbackUsed}
-            gasFeeUSD={gasFeeUSD}
-            onShowGasWarning={onShowGasWarning}
-          />
+          <NetworkFee chainId={chainId} gasFee={gasFee} />
         </Flex>
         <Separator borderColor="$surface2" width={1} />
         <Flex gap="$none" px="$spacing12" py="$spacing12">

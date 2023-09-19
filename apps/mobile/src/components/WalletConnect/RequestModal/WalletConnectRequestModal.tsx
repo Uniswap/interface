@@ -32,7 +32,7 @@ import { Flex, Text, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
-import { useTransactionGasFee, useUSDValue } from 'wallet/src/features/gas/hooks'
+import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasSpeed } from 'wallet/src/features/gas/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { useIsBlocked } from 'wallet/src/features/trm/hooks'
@@ -119,12 +119,11 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const signerAccount = signerAccounts.find((account) =>
     areAddressesEqual(account.address, request.account)
   )
-  const gasFeeInfo = useTransactionGasFee(tx, GasSpeed.Urgent).data
-  const gasFeeUSD = useUSDValue(chainId, gasFeeInfo?.gasFee)
+  const gasFee = useTransactionGasFee(tx, GasSpeed.Urgent)
   const hasSufficientFunds = useHasSufficientFunds({
     account: request.account,
     chainId,
-    gasFeeInfo,
+    gasFee,
     value: isTransactionRequest(request) ? request.transaction.value : undefined,
   })
 
@@ -137,7 +136,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
 
     if (isBlocked || isBlockedLoading) return false
 
-    if (methodCostsGas(request)) return !!(tx && hasSufficientFunds && gasFeeInfo)
+    if (methodCostsGas(request)) return !!(tx && hasSufficientFunds && gasFee.value)
 
     if (isTransactionRequest(request)) return !!tx
 
@@ -187,13 +186,13 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const onConfirm = async (): Promise<void> => {
     if (!confirmEnabled || !signerAccount) return
     if (request.type === EthMethod.EthSendTransaction) {
-      if (!gasFeeInfo) return // appeasing typescript
+      if (!gasFee.params) return // appeasing typescript
       dispatch(
         signWcRequestActions.trigger({
           sessionId: request.sessionId,
           requestInternalId: request.internalId,
           method: request.type,
-          transaction: { ...tx, ...gasFeeInfo.params },
+          transaction: { ...tx, ...gasFee.params },
           account: signerAccount,
           dapp: request.dapp,
           chainId,
@@ -276,7 +275,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
             )}
             <Flex gap="$none" px="$spacing16" py="$spacing12">
               {methodCostsGas(request) ? (
-                <NetworkFee chainId={chainId} gasFeeUSD={gasFeeUSD} />
+                <NetworkFee chainId={chainId} gasFee={gasFee} />
               ) : (
                 <Flex row alignItems="center" justifyContent="space-between">
                   <Text color="$neutral1" variant="subheadSmall">
