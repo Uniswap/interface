@@ -111,8 +111,8 @@ function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsStatsPro
 
   // We can't wrap this in a useMemo hook because useColor is also a hook
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const color0 = useColor(currencies[0]?.wrapped, true)
-  const color1 = useColor(currencies[1]?.wrapped, true)
+  const color0 = useColor(currencies[0]?.wrapped)
+  const color1 = useColor(currencies[1]?.wrapped)
 
   const [token0, token1] = useMemo(() => {
     const fullWidth = poolData?.tvlToken0 / poolData?.token0Price + poolData?.tvlToken1

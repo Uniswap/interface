@@ -26,6 +26,7 @@ const TableHeader = styled.div`
   font-size: 14px;
   font-weight: normal;
   line-height: 20px;
+  border-radius: 12px;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     padding-left: 48px;

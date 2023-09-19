@@ -17,7 +17,7 @@ import { Info, TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
-import { formatUSDPrice } from 'utils/formatNumbers'
+import { useFormatter } from 'utils/formatNumbers'
 
 import { calculateDelta, DeltaArrow, formatDelta } from './Delta'
 
@@ -87,6 +87,7 @@ interface PriceChartProps {
 export function PriceChart({ width, height, prices: originalPrices, timePeriod }: PriceChartProps) {
   const locale = useActiveLocale()
   const theme = useTheme()
+  const { formatFiatPrice } = useFormatter()
 
   const { prices, blanks } = useMemo(
     () =>
@@ -208,13 +209,13 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
       <ChartHeader data-cy="chart-header">
         {displayPrice.value ? (
           <>
-            <TokenPrice>{formatUSDPrice(displayPrice.value)}</TokenPrice>
+            <TokenPrice>{formatFiatPrice({ price: displayPrice.value })}</TokenPrice>
             <ChartDelta startingPrice={startingPrice} endingPrice={displayPrice} />
           </>
         ) : lastPrice.value ? (
           <OutdatedContainer>
             <OutdatedPriceContainer>
-              <TokenPrice>{formatUSDPrice(lastPrice.value)}</TokenPrice>
+              <TokenPrice>{formatFiatPrice({ price: lastPrice.value })}</TokenPrice>
               <MouseoverTooltip text={tooltipMessage}>
                 <Info size={16} />
               </MouseoverTooltip>

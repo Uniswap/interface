@@ -139,6 +139,7 @@ const FloatingConfirmationBar = styled(Row)<{ issues: boolean }>`
 const Overlay = styled.div`
   position: fixed;
   bottom: 0px;
+  left: 0px;
   height: 158px;
   width: 100vw;
   background: ${({ theme }) => `linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, ${theme.surface2} 100%)`};
