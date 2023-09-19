@@ -105,8 +105,6 @@ export function usePoolData(
     fetchPolicy: 'no-cache',
   })
 
-  console.log('data', data)
-
   const {
     loading: loading24,
     error: error24,
@@ -153,8 +151,6 @@ export function usePoolData(
     const oneDay: Pool | undefined = data24?.pools[0] as Pool
     const twoDay: Pool | undefined = data48?.pools[0] as Pool
     const week: Pool | undefined = dataWeek?.pools[0] as Pool
-
-    console.log('current', current)
 
     const ethPriceUSD = data?.bundles?.[0]?.ethPriceUSD ? parseFloat(data?.bundles?.[0]?.ethPriceUSD) : 0
 
