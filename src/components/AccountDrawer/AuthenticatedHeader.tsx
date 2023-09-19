@@ -31,11 +31,11 @@ import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal 
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import StatusIcon from '../Identicon/StatusIcon'
+import { useCachedPortfolioBalancesQuery } from '../PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { useToggleAccountDrawer } from '.'
 import IconButton, { IconHoverText, IconWithConfirmTextButton } from './IconButton'
 import MiniPortfolio from './MiniPortfolio'
 import { portfolioFadeInAnimation } from './MiniPortfolio/PortfolioRow'
-import { useCachedPortfolioBalancesQuery } from './PrefetchBalancesWrapper'
 
 const AuthenticatedHeaderWrapper = styled.div`
   padding: 20px 16px;
