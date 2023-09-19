@@ -7,7 +7,7 @@ import { volumeFormatter } from 'nft/utils'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { NO_DECIMALS, NumberType, useFormatter } from 'utils/formatNumbers'
 
 import * as styles from './Cells.css'
 
@@ -118,7 +118,7 @@ export const EthCell = ({
   const denominatedValue = getDenominatedValue(denomination, false, value, usdPrice)
   const formattedValue = denominatedValue
     ? denomination === Denomination.ETH
-      ? formatNumberOrString({ input: denominatedValue.toString(), type: NumberType.NFTTokenFloorPrice }) + ' ETH'
+      ? formatNumberOrString({ input: denominatedValue.toString(), type: NumberType.NFTToken }) + ' ETH'
       : formatNumberOrString({ input: denominatedValue, type: NumberType.FiatTokenStats })
     : '-'
 
@@ -148,7 +148,10 @@ export const VolumeCell = ({
 
   const formattedValue = denominatedValue
     ? denomination === Denomination.ETH
-      ? formatNumberOrString({ input: denominatedValue.toString(), type: NumberType.NFTTokenFloorPrice }) + ' ETH'
+      ? formatNumberOrString({
+          input: denominatedValue.toString(),
+          type: [{ upperBound: Infinity, formatterOptions: NO_DECIMALS }],
+        }) + ' ETH'
       : formatNumberOrString({ input: denominatedValue, type: NumberType.FiatTokenStats })
     : '-'
 

@@ -33,7 +33,7 @@ const FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN_NO_COMMAS: NumberFormatOptions = {
   useGrouping: false,
 }
 
-const NO_DECIMALS: NumberFormatOptions = {
+export const NO_DECIMALS: NumberFormatOptions = {
   notation: 'standard',
   maximumFractionDigits: 0,
   minimumFractionDigits: 0,
@@ -307,6 +307,23 @@ const ntfCollectionStatsFormatter: FormatterRule[] = [
   { upperBound: Infinity, formatterOptions: SHORTHAND_ONE_DECIMAL },
 ]
 
+const nftTokenFormatter: FormatterRule[] = [
+  { exact: 0, hardCodedInput: { hardcodedOutput: '-' }, formatterOptions: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN },
+  {
+    upperBound: 0.0001,
+    hardCodedInput: { input: 0.0001, prefix: '<' },
+    formatterOptions: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN,
+  },
+  { upperBound: 1.0, formatterOptions: THREE_DECIMALS },
+  { upperBound: 1000, formatterOptions: TWO_DECIMALS_NO_TRAILING_ZEROS },
+  { upperBound: 1e15, formatterOptions: SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS },
+  {
+    upperBound: Infinity,
+    hardCodedInput: { input: 999_000_000_000_000, prefix: '>' },
+    formatterOptions: SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS,
+  },
+]
+
 export enum NumberType {
   // used for token quantities in non-transaction contexts (e.g. portfolio balances)
   TokenNonTx = 'token-non-tx',
@@ -348,6 +365,9 @@ export enum NumberType {
 
   // nft floor price with trailing zeros
   NFTTokenFloorPriceTrailingZeros = 'nft-token-floor-price-trailing-zeros',
+
+  // nft token price in currency
+  NFTToken = 'nft-token',
 }
 
 type FormatterType = NumberType | FormatterRule[]
@@ -365,6 +385,7 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.NFTTokenFloorPrice]: ntfTokenFloorPriceFormatter,
   [NumberType.NFTTokenFloorPriceTrailingZeros]: ntfTokenFloorPriceFormatterTrailingZeros,
   [NumberType.NFTCollectionStats]: ntfCollectionStatsFormatter,
+  [NumberType.NFTToken]: nftTokenFormatter,
 }
 
 function getFormatterRule(input: number, type: FormatterType, conversionRate?: number): FormatterRule {
