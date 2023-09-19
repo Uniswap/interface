@@ -18,10 +18,11 @@ import {
 import { bodySmall } from 'nft/css/common.css'
 import { loadingBlock } from 'nft/css/loading.css'
 import { GenieAsset, UpdatedGenieAsset } from 'nft/types'
-import { ethNumberStandardFormatter, formatWeiToDecimal, getAssetHref } from 'nft/utils'
+import { formatWeiToDecimal, getAssetHref } from 'nft/utils'
 import { MouseEvent, useCallback, useEffect, useReducer, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import * as styles from './BagRow.css'
 
@@ -90,6 +91,7 @@ interface BagRowProps {
 }
 
 export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, isMobile }: BagRowProps) => {
+  const { formatNumberOrString } = useFormatter()
   const [loadedImage, setImageLoaded] = useState(false)
   const [noImageAvailable, setNoImageAvailable] = useState(!asset.smallImageUrl)
 
@@ -100,10 +102,10 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
 
   const assetEthPrice = asset.updatedPriceInfo ? asset.updatedPriceInfo.ETHPrice : asset.priceInfo.ETHPrice
   const assetEthPriceFormatted = formatWeiToDecimal(assetEthPrice)
-  const assetUSDPriceFormatted = ethNumberStandardFormatter(
-    usdPrice ? parseFloat(formatEther(assetEthPrice)) * usdPrice : usdPrice,
-    true
-  )
+  const assetUSDPriceFormatted = formatNumberOrString({
+    input: usdPrice ? parseFloat(formatEther(assetEthPrice)) * usdPrice : usdPrice,
+    type: NumberType.FiatNFTToken,
+  })
 
   const handleRemoveClick = useCallback(
     (e: MouseEvent<HTMLElement>) => {

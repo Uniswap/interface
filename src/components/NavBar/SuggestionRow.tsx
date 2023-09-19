@@ -12,13 +12,12 @@ import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { vars } from 'nft/css/sprinkles.css'
 import { GenieCollection } from 'nft/types'
-import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
-import { useFormatter } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { DeltaArrow, DeltaText } from '../Tokens/TokenDetails/Delta'
 import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
@@ -48,6 +47,8 @@ export const CollectionRow = ({
   index,
   eventProperties,
 }: CollectionRowProps) => {
+  const { formatNumberOrString } = useFormatter()
+
   const [brokenImage, setBrokenImage] = useState(false)
   const [loaded, setLoaded] = useState(false)
 
@@ -107,7 +108,9 @@ export const CollectionRow = ({
       {collection.stats?.floor_price ? (
         <Column className={styles.suggestionSecondaryContainer}>
           <Row gap="4">
-            <Box className={styles.primaryText}>{ethNumberStandardFormatter(collection.stats?.floor_price)} ETH</Box>
+            <Box className={styles.primaryText}>
+              {formatNumberOrString({ input: collection.stats?.floor_price, type: NumberType.NFTToken })} ETH
+            </Box>
           </Row>
           <Box className={styles.secondaryText}>Floor</Box>
         </Column>
