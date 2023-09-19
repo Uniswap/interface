@@ -17,7 +17,10 @@ test.each([...collectionImageUrls, ...nonexistentImageUrls])('collectionImageUrl
   expect(response.headers.get('content-type')).toBe('image/png')
 })
 
-const invalidCollectionImageUrls = ['http://127.0.0.1:3000/api/image/nfts/collection/0xd3adb33f']
+const invalidCollectionImageUrls = [
+  'http://127.0.0.1:3000/api/image/nfts/collection/0xd3adb33f',
+  'http://127.0.0.1:3000/api/image/nfts/collection/0xd4d871419714b778ebec2e22c7c53572b573706e',
+]
 
 test.each(invalidCollectionImageUrls)('invalidAssetImageUrl', async (url) => {
   const response = await fetch(new Request(url))

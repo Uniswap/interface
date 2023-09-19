@@ -18,3 +18,12 @@ test.each(invalidAssetImageUrl)('invalidAssetImageUrl', async (url) => {
   const response = await fetch(new Request(url))
   expect(response.status).toBe(404)
 })
+
+const blockedAssetImageUrl = [
+  'http://127.0.0.1:3000/api/image/nfts/asset/0xd4d871419714b778ebec2e22c7c53572b573706e/276',
+]
+
+test.each(blockedAssetImageUrl)('blockedAssetImageUrl', async (url) => {
+  const response = await fetch(new Request(url))
+  expect(response.status).toBe(404)
+})
