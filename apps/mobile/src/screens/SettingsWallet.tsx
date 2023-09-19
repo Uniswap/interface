@@ -41,6 +41,8 @@ import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import KeyIcon from 'ui/src/assets/icons/key.svg'
 import ShieldQuestionIcon from 'ui/src/assets/icons/shield-question.svg'
 import { iconSizes } from 'ui/src/theme'
+import { ChainId } from 'wallet/src/constants/chains'
+import { useENS } from 'wallet/src/features/ens/useENS'
 import {
   EditAccountAction,
   editAccountActions,
@@ -65,6 +67,7 @@ export function SettingsWallet({
   const colors = useSporeColors()
   const addressToAccount = useAccounts()
   const currentAccount = addressToAccount[address]
+  const ensName = useENS(ChainId.Mainnet, address)?.name
   const readonly = currentAccount?.type === AccountType.Readonly
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
 
@@ -161,6 +164,7 @@ export function SettingsWallet({
           text: t('Nickname'),
           icon: <EditIcon fill={colors.neutral2.val} {...iconProps} />,
           screenProps: { address },
+          isHidden: !!ensName,
         },
         {
           action: (
