@@ -131,7 +131,7 @@ exports[`should inject metadata for valid assets 1`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script></head>
+  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Azuki #2550"/><meta property="og:image" content="http://127.0.0.1:3000/api/image/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544/2550"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Azuki #2550"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544/2550"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Azuki #2550"/><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544/2550"/><meta property="twitter:image:alt" content="Azuki #2550"/></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -278,7 +278,7 @@ exports[`should inject metadata for valid assets 2`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script></head>
+  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Bored Ape Yacht Club #3735"/><meta property="og:image" content="http://127.0.0.1:3000/api/image/nfts/asset/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/3735"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Bored Ape Yacht Club #3735"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/nfts/asset/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/3735"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Bored Ape Yacht Club #3735"/><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/nfts/asset/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/3735"/><meta property="twitter:image:alt" content="Bored Ape Yacht Club #3735"/></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -425,7 +425,7 @@ exports[`should inject metadata for valid assets 3`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script></head>
+  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="CryptoPunk #3947"/><meta property="og:image" content="http://127.0.0.1:3000/api/image/nfts/asset/0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb/3947"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="CryptoPunk #3947"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/nfts/asset/0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb/3947"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="CryptoPunk #3947"/><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/nfts/asset/0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb/3947"/><meta property="twitter:image:alt" content="CryptoPunk #3947"/></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
