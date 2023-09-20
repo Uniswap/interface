@@ -72,7 +72,7 @@ export function CollectionPreviewCard({
                 />
               )}
             </Flex>
-            {collection?.markets?.[0]?.floorPrice?.value && (
+            {collection?.markets?.[0]?.floorPrice && (
               <Flex row gap="$spacing4">
                 <Text color="$neutral2" numberOfLines={1} variant="subheadSmall">
                   {t('Floor')}:
