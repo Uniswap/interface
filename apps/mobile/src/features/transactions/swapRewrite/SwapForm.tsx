@@ -10,7 +10,6 @@ import {
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Button, ButtonSize } from 'src/components/buttons/Button'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { AnimatedFlex, Box } from 'src/components/layout'
@@ -23,7 +22,7 @@ import { useDerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { SwapArrowButton } from 'src/features/transactions/swap/SwapArrowButton'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
@@ -295,7 +294,7 @@ function SwapFormContent(): JSX.Element {
               position="absolute">
               <Trace logPress element={ElementName.SwitchCurrenciesButton}>
                 <SwapArrowButton
-                  bg="surface2"
+                  bg="$surface2"
                   size={SWAP_DIRECTION_BUTTON_SIZE}
                   onPress={onSwitchCurrencies}
                 />
