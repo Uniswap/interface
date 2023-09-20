@@ -41,9 +41,8 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
     chainId?: number
     block?: number
     mainnetBlock?: number
-  }>({
-    chainId: activeChainId,
-  })
+  }>({})
+  const activeBlock = chainId === activeChainId ? block : undefined
 
   const onChainBlock = useCallback((chainId: number, block: number) => {
     setChainBlock((chainBlock) => {
@@ -65,12 +64,13 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
     let stale = false
 
     if (provider && activeChainId && windowVisible) {
-      // If chainId hasn't changed, don't clear the block. This prevents re-fetching still valid data.
-      setChainBlock((chainBlock) =>
-        chainBlock.chainId === activeChainId
-          ? chainBlock
-          : { chainId: activeChainId, mainnetBlock: chainBlock.mainnetBlock }
-      )
+      setChainBlock((chainBlock) => {
+        // If chainId hasn't changed, don't clear the block. This prevents re-fetching still valid data.
+        if (chainBlock.chainId !== activeChainId) {
+          return { chainId: activeChainId, mainnetBlock: chainBlock.mainnetBlock }
+        }
+        return chainBlock
+      })
 
       provider
         .getBlockNumber()
@@ -107,7 +107,7 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
   const value = useMemo(
     () => ({
       fastForward: (update: number) => {
-        if (block && update > block) {
+        if (activeBlock && update > activeBlock) {
           setChainBlock({
             chainId: activeChainId,
             block: update,
@@ -115,10 +115,10 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
           })
         }
       },
-      block: chainId === activeChainId ? block : undefined,
+      block: activeBlock,
       mainnetBlock,
     }),
-    [activeChainId, block, chainId, mainnetBlock]
+    [activeBlock, activeChainId, mainnetBlock]
   )
   return <BlockNumberContext.Provider value={value}>{children}</BlockNumberContext.Provider>
 }
