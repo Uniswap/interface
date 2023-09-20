@@ -4,18 +4,19 @@ import LoadingGifLight from 'assets/images/lightLoading.gif'
 import LoadingGif from 'assets/images/loading.gif'
 import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { GAMMA_MASTERCHEF_ADDRESSES } from 'constants/addresses'
-import { getGammaData, getGammaRewards } from 'graphql/utils/util'
+import { getGammaData, getGammaPositions, getGammaRewards } from 'graphql/utils/util'
+import { useMasterChefContract } from 'hooks/useContract'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Frown } from 'react-feather'
 import { useQuery } from 'react-query'
 import { useCombinedActiveList } from 'state/lists/hooks'
 import styled from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { getTokenFromAddress, useUSDCPricesFromAddresses } from 'utils/farmUtils'
+import { getTokenFromAddress } from 'utils/farmUtils'
 
 import { GammaPairs, GlobalData } from '../constants'
 import { checkCondition, sortFarms } from '../utils'
-import GammaFarmCard from './GammaFarmCard'
+import { GammaFarmCard } from './GammaFarmCard'
 
 const NoFarmsContainer = styled.div`
   display: flex;
@@ -35,6 +36,7 @@ const GammaFarmsPage: React.FC<{
   const { chainId } = useWeb3React()
   const tokenMap = useCombinedActiveList()
   const isDarkMode = useIsDarkMode()
+  const masterChefContract = useMasterChefContract()
 
   const allGammaFarms = useMemo(() => {
     const pairsGroups = GammaPairs[ChainId.ROLLUX]
@@ -53,6 +55,11 @@ const GammaFarmsPage: React.FC<{
   const fetchGammaData = async () => {
     const gammaData = await getGammaData()
     return gammaData
+  }
+
+  const fetchGammaPositions = async () => {
+    const gammaPositions = await getGammaPositions(masterChefContract?.address)
+    return gammaPositions
   }
 
   const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 1000))
@@ -83,41 +90,53 @@ const GammaFarmsPage: React.FC<{
     queryFn: fetchGammaRewards,
   })
 
+  const {
+    isLoading: gammaPositionsLoading,
+    data: gammaPositions,
+    refetch: refetchGammaPositions,
+  } = useQuery({
+    queryKey: ['fetchGammaPositionsFarms'],
+    queryFn: fetchGammaPositions,
+  })
+  // console.log('gammaPositions', gammaPositions)
+
   useEffect(() => {
     refetchGammaData()
-    refetchGammaRewards()
+    // refetchGammaRewards()
+    refetchGammaPositions()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTime])
 
-  const gammaRewardTokenAddresses = Object.values(GAMMA_MASTERCHEF_ADDRESSES).reduce<string[]>((memo, masterChef) => {
-    const gammaReward =
-      gammaRewards && chainId && masterChef[chainId] && gammaRewards[masterChef[chainId].toLowerCase()]
-        ? gammaRewards[masterChef[chainId].toLowerCase()]['pools']
-        : undefined
+  // shares = totaldepositado
+  // const gammaRewardTokenAddresses = Object.values(GAMMA_MASTERCHEF_ADDRESSES).reduce<string[]>((memo, masterChef) => {
+  //   const gammaReward =
+  //     gammaRewards && chainId && masterChef[chainId] && gammaRewards[masterChef[chainId].toLowerCase()]
+  //       ? gammaRewards[masterChef[chainId].toLowerCase()]['pools']
+  //       : undefined
 
-    if (gammaReward) {
-      const gammaRewardArr: any[] = Object.values(gammaReward)
-      for (const item of gammaRewardArr) {
-        if (item && item['rewarders']) {
-          const rewarders: any[] = Object.values(item['rewarders'])
-          for (const rewarder of rewarders) {
-            if (
-              rewarder &&
-              rewarder['rewardPerSecond'] &&
-              Number(rewarder['rewardPerSecond']) > 0 &&
-              rewarder.rewardToken &&
-              !memo.includes(rewarder.rewardToken)
-            ) {
-              memo.push(rewarder.rewardToken)
-            }
-          }
-        }
-      }
-    }
-    return memo
-  }, [])
+  //   if (gammaReward) {
+  //     const gammaRewardArr: any[] = Object.values(gammaReward)
+  //     for (const item of gammaRewardArr) {
+  //       if (item && item['rewarders']) {
+  //         const rewarders: any[] = Object.values(item['rewarders'])
+  //         for (const rewarder of rewarders) {
+  //           if (
+  //             rewarder &&
+  //             rewarder['rewardPerSecond'] &&
+  //             Number(rewarder['rewardPerSecond']) > 0 &&
+  //             rewarder.rewardToken &&
+  //             !memo.includes(rewarder.rewardToken)
+  //           ) {
+  //             memo.push(rewarder.rewardToken)
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return memo
+  // }, [])
 
-  const gammaRewardsWithUSDPrice = useUSDCPricesFromAddresses(gammaRewardTokenAddresses)
+  // const gammaRewardsWithUSDPrice = useUSDCPricesFromAddresses(gammaRewardTokenAddresses)
 
   const filteredFarms = allGammaFarms
     .map((item) => {
@@ -129,13 +148,11 @@ const GammaFarmsPage: React.FC<{
       return { ...item, token0: null, token1: null }
     })
     .filter((item: any) => checkCondition(item, search, GlobalData, farmFilter))
-    .sort((farm0, farm1) =>
-      sortFarms(farm0, farm1, gammaData, gammaRewards, sortBy, sortDesc, gammaRewardsWithUSDPrice)
-    )
+    .sort((farm0, farm1) => sortFarms(farm0, farm1, gammaData, gammaRewards, sortBy, sortDesc, []))
 
   return (
     <div style={{ padding: '2 3' }}>
-      {gammaFarmsLoading || gammaRewardsLoading ? (
+      {gammaFarmsLoading || gammaPositionsLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '10px', paddingBottom: '30px' }}>
           <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="3.5rem" />
         </div>
@@ -154,6 +171,11 @@ const GammaFarmsPage: React.FC<{
                 ? Object.values(gammaData).find((poolData) => poolData.poolAddress === farm.address.toLowerCase())
                 : undefined
 
+              const tvl = gammaPositions ? gammaPositions[farm.hypervisor || allGammaFarms[0].hypervisor].balanceUSD : 0
+
+              const rewardData = {
+                tvl,
+              }
               return (
                 <div style={{ marginBottom: '20px' }} key={farm.address}>
                   <GammaFarmCard
@@ -162,6 +184,7 @@ const GammaFarmsPage: React.FC<{
                     pairData={farm}
                     data={foundData}
                     rewardData={gammaRewards?.[gmMasterChef]?.['pools']?.[farm.address.toLowerCase()] ?? undefined}
+                    tvl={tvl}
                   />
                 </div>
               )

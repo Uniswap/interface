@@ -21,7 +21,7 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { getTokenFromAddress, useUSDCPricesFromAddresses } from 'utils/farmUtils'
 
 import { GammaPair, GammaPairs, GlobalConst } from '../constants'
-import GammaFarmCard from '../GammaFarms/GammaFarmCard'
+import { GammaFarmCard } from '../GammaFarms/GammaFarmCard'
 import SortColumns from '../SortColumn'
 import { gammaRewardTokenAddresses, getStakedAmount, sortColumnsGamma, sortFarms } from '../utils'
 

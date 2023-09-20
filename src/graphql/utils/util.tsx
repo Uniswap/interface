@@ -1,5 +1,5 @@
 import { Currency } from '@pollum-io/sdk-core'
-import { FarmPoolData } from 'components/Farm/constants'
+import { FarmPoolData, InfoAddress } from 'components/Farm/constants'
 import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
@@ -187,11 +187,12 @@ export const getGammaData = async () => {
   }
 }
 
-const getGammaPositions = async (account?: string) => {
+export const getGammaPositions = async (account?: string) => {
   if (!account) return null
   try {
     const data = await fetch(`${process.env.REACT_APP_GAMMA_API_ENDPOINT}/pegasys/rollux/user/${account}`)
-    const positions = await data.json()
+    const positions = (await data.json()) as { [key: string]: InfoAddress }
+
     return positions[account.toLowerCase()]
   } catch (e) {
     console.log(e)

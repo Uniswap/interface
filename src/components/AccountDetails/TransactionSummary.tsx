@@ -356,5 +356,7 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.SUBMIT_PROPOSAL:
       return <SubmitProposalTransactionSummary />
+    default:
+      return <div>Unknown Transaction Type</div>
   }
 }

@@ -3,15 +3,19 @@ import { formatNumber } from '@uniswap/conedison/format'
 import { TokenList } from '@uniswap/token-lists'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import TotalAPRTooltip from 'components/TotalAPRTooltip/TotalAPRTooltip'
+import { formatUnits } from 'ethers/lib/utils'
+import { useToken } from 'hooks/Tokens'
+import { useMasterChefContract } from 'hooks/useContract'
+import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useIsMobile } from 'nft/hooks'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { AlertCircle, ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Box } from 'rebass'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import styled, { useTheme } from 'styled-components/macro'
 
-import { FarmPoolData } from '../constants'
+import { FarmPoolData, MINICHEF_ABI } from '../constants'
 import GammaFarmCardDetails from './GammafarmCardDetails'
 
 const CardContainer = styled.div<{ showDetails: boolean }>`
@@ -24,7 +28,8 @@ const CardContainer = styled.div<{ showDetails: boolean }>`
   background: ${({ theme }) => theme.backgroundSurface};
   border: 1px solid ${({ showDetails, theme }) => (showDetails ? theme.userThemeColor : 'none')};
 `
-const GammaFarmCard: React.FC<{
+
+interface GammaFarmProps {
   data?: FarmPoolData
   rewardData: any
   token0:
@@ -40,17 +45,34 @@ const GammaFarmCard: React.FC<{
         list?: TokenList
       }
   pairData: any
-}> = ({ data, rewardData, pairData, token0, token1 }) => {
-  const rewards: any[] = rewardData && rewardData['rewarders'] ? Object.values(rewardData['rewarders']) : []
+  apr?: number
+  tvl?: number
+}
+
+export function GammaFarmCard({ data, rewardData, pairData, token0, token1, apr, tvl }: GammaFarmProps) {
+  // const rewards: any[] = rewardData && rewardData['rewarders'] ? Object.values(rewardData['rewarders']) : []
   const [showDetails, setShowDetails] = useState(false)
   const theme = useTheme()
   const isMobile = useIsMobile()
+  const masterChefContract = useMasterChefContract(undefined, MINICHEF_ABI)
 
-  const farmAPR = rewardData && rewardData['apr'] ? Number(rewardData['apr']) : 0
+  // const hypervisorContract = useGammaHypervisorContract(pairData.hypervisor)
+
+  // const farmAPR = rewardData && rewardData['apr'] ? Number(rewardData['apr']) : 0
+  const farmAPR = apr ? apr : 0
   const poolAPR =
     data && data.returns && data.returns.allTime && data.returns.allTime.feeApr
       ? Number(data.returns.allTime.feeApr)
       : 0
+  const rewardPerSecond = useSingleCallResult(masterChefContract, 'rewardPerSecond')
+  const rewardTokenAddress = useSingleCallResult(masterChefContract, 'REWARD')
+  const token = useToken(rewardTokenAddress?.result?.toString())
+  const rewardsPerSecondBN =
+    !rewardPerSecond.loading && rewardPerSecond.result && rewardPerSecond.result.length > 0
+      ? rewardPerSecond.result[0]
+      : undefined
+
+  const rewardsAmount = rewardsPerSecondBN ? formatUnits(rewardsPerSecondBN, 18) : '0'
 
   const getToken = (token: Token | { token: WrappedTokenInfo }): Token | WrappedTokenInfo => {
     return 'address' in token ? token : token.token
@@ -91,22 +113,15 @@ const GammaFarmCard: React.FC<{
           </div>
           {!isMobile && (
             <>
-              <Box width="20%" className="flex justify-between">
-                {rewardData && (
-                  <small style={{ fontWeight: 600 }}>${formatNumber(rewardData['stakedAmountUSD'])}</small>
-                )}
-              </Box>
-              <Box width="30%">
-                {rewards?.map((reward, ind) => (
-                  <div key={ind}>
-                    {reward && Number(reward['rewardPerSecond']) > 0 && (
-                      <small style={{ fontWeight: 600 }}>
-                        {formatNumber(reward.rewardPerSecond * 3600 * 24)} {reward.rewardTokenSymbol} / day
-                      </small>
-                    )}
-                  </div>
-                ))}
-              </Box>
+              <div style={{ width: '20%', display: 'flex', justifyContent: 'space-between' }}>
+                {tvl && <small style={{ fontWeight: 600 }}>${formatNumber(tvl)}</small>}
+              </div>
+              <small style={{ width: '30%', fontWeight: 600 }}>
+                {rewardsAmount &&
+                  Number(rewardsAmount) > 0 &&
+                  token &&
+                  `${formatNumber(Number(rewardsAmount) * 3600 * 24)} ${token.symbol} / day`}
+              </small>
             </>
           )}
 
@@ -141,9 +156,7 @@ const GammaFarmCard: React.FC<{
           </Box>
         </div>
       </div>
-      {showDetails && <GammaFarmCardDetails data={data} pairData={pairData} rewardData={rewardData} />}
+      {showDetails && data && <GammaFarmCardDetails data={data} pairData={pairData} rewardData={rewardData} />}
     </CardContainer>
   )
 }
-
-export default GammaFarmCard

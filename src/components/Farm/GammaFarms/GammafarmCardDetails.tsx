@@ -7,6 +7,7 @@ import { ButtonPrimary } from 'components/Button'
 import Divider from 'components/Divider/Divider'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useGammaHypervisorContract, useMasterChefContract } from 'hooks/useContract'
 import { useMultipleContractSingleData, useSingleCallResult } from 'lib/hooks/multicall'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -18,10 +19,11 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { getTokenFromAddress, useTransactionFinalizer } from 'utils/farmUtils'
+
 import GammaRewarder from '../../../abis/gamma-rewarder.json'
-import { GridItemGammaCard } from './GridItemGammaCard'
-import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { TransactionType } from '../../../state/transactions/types'
+import { FarmPoolData } from '../constants'
+import { GridItemGammaCard } from './GridItemGammaCard'
 
 // Estilo do Grid
 const Grid = styled.div`
@@ -45,7 +47,7 @@ const ClaimContainer = styled.div`
   flex-direction: column;
 `
 const GammaFarmCardDetails: React.FC<{
-  data: any
+  data: FarmPoolData
   pairData: any
   rewardData: any
 }> = ({ pairData, rewardData, data }) => {
@@ -199,7 +201,7 @@ const GammaFarmCardDetails: React.FC<{
     addTransaction(response, {
       type: TransactionType.DEPOSIT_FARM,
       pid: pairData.pid,
-      amount: stakeAmount
+      amount: stakeAmount,
     })
     const receipt = await response.wait()
     finalizedTransaction(receipt, {
@@ -243,7 +245,7 @@ const GammaFarmCardDetails: React.FC<{
       addTransaction(response, {
         type: TransactionType.WITHDRAW_FARM,
         pid: pairData.pid,
-        amount: unStakeAmount
+        amount: unStakeAmount,
       })
       const receipt = await response.wait()
       finalizedTransaction(receipt, {
@@ -260,17 +262,15 @@ const GammaFarmCardDetails: React.FC<{
     if (!masterChefContract || !account) return
     setAttemptClaiming(true)
     try {
-      let response: TransactionResponse
-      
-        const estimatedGas = await masterChefContract.estimateGas.harvest(pairData.pid, account)
-        response = await masterChefContract.harvest(pairData.pid, account, {
-          gasLimit: calculateGasMargin(estimatedGas),
-        })
-      
-        addTransaction(response, {
-          type: TransactionType.CLAIM_FARM,
-          pid: pairData.pid,
-        })
+      const estimatedGas = await masterChefContract.estimateGas.harvest(pairData.pid, account)
+      const response: TransactionResponse = await masterChefContract.harvest(pairData.pid, account, {
+        gasLimit: calculateGasMargin(estimatedGas),
+      })
+
+      addTransaction(response, {
+        type: TransactionType.CLAIM_FARM,
+        pid: pairData.pid,
+      })
       const receipt = await response.wait()
       finalizedTransaction(receipt, {
         summary: 'claimrewards',
@@ -312,8 +312,8 @@ const GammaFarmCardDetails: React.FC<{
             <small className="text-success weight-600">
               {formatNumber(
                 Number(
-                  data && data['returns'] && data['returns']['allTime'] && data['returns']['allTime']['feeApr']
-                    ? data['returns']['allTime']['feeApr']
+                  data && data.returns && data.returns.allTime && data.returns.allTime.feeApr
+                    ? data.returns.allTime.feeApr
                     : 0
                 ) * 100
               )}
