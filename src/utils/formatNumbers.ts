@@ -359,6 +359,8 @@ const fiatNftTokenFormatter: FormatterRule[] = [
   },
 ]
 
+const wholeNumberFormatter: FormatterRule[] = [{ upperBound: Infinity, formatterOptions: NO_DECIMALS }]
+
 export enum NumberType {
   // used for token quantities in non-transaction contexts (e.g. portfolio balances)
   TokenNonTx = 'token-non-tx',
@@ -406,6 +408,9 @@ export enum NumberType {
 
   // nft token price in local fiat currency
   FiatNFTToken = 'fiat-nft-token',
+
+  // whole number formatting
+  WholeNumber = 'whole-number',
 }
 
 type FormatterType = NumberType | FormatterRule[]
@@ -425,6 +430,7 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.NFTCollectionStats]: ntfCollectionStatsFormatter,
   [NumberType.NFTToken]: nftTokenFormatter,
   [NumberType.FiatNFTToken]: fiatNftTokenFormatter,
+  [NumberType.WholeNumber]: wholeNumberFormatter,
 }
 
 function getFormatterRule(input: number, type: FormatterType, conversionRate?: number): FormatterRule {

@@ -27,7 +27,6 @@ import {
 import { getMarketplaceIcon } from 'nft/utils'
 import { buildActivityAsset } from 'nft/utils/buildActivityAsset'
 import { getTimeDifference } from 'nft/utils/date'
-import { putCommas } from 'nft/utils/putCommas'
 import { MouseEvent, ReactNode, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { ExternalLink } from 'theme'
@@ -326,6 +325,7 @@ interface RankingProps {
 }
 
 const Ranking = ({ rarity, collectionName, rarityVerified }: RankingProps) => {
+  const { formatNumber } = useFormatter()
   const rank = (rarity as TokenRarity).rank || (rarity as Rarity).providers?.[0].rank
 
   if (!rank) return null
@@ -347,7 +347,7 @@ const Ranking = ({ rarity, collectionName, rarityVerified }: RankingProps) => {
       >
         <Box className={styles.rarityInfo}>
           <Box paddingTop="2" paddingBottom="2" display="flex">
-            {putCommas(rank)}
+            {formatNumber({ input: rank, type: NumberType.WholeNumber })}
           </Box>
 
           <Box display="flex" height="16">

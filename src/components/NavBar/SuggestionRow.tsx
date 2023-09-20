@@ -12,7 +12,6 @@ import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { vars } from 'nft/css/sprinkles.css'
 import { GenieCollection } from 'nft/types'
-import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
@@ -102,7 +101,9 @@ export const CollectionRow = ({
             <Box className={styles.primaryText}>{collection.name}</Box>
             {collection.isVerified && <VerifiedIcon className={styles.suggestionIcon} />}
           </Row>
-          <Box className={styles.secondaryText}>{putCommas(collection?.stats?.total_supply ?? 0)} items</Box>
+          <Box className={styles.secondaryText}>
+            {formatNumberOrString({ input: collection?.stats?.total_supply ?? 0, type: NumberType.WholeNumber })} items
+          </Box>
         </Column>
       </Row>
       {collection.stats?.floor_price ? (

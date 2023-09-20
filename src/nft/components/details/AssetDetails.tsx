@@ -12,7 +12,6 @@ import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { ActivityEventType, CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
-import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Link as RouterLink } from 'react-router-dom'
@@ -362,7 +361,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                 }
                 placement="top"
               >
-                <RarityWrap>Rarity: {putCommas(rarity.score)}</RarityWrap>
+                <RarityWrap>
+                  Rarity: {formatNumberOrString({ input: rarity.score, type: NumberType.WholeNumber })}
+                </RarityWrap>
               </MouseoverTooltip>
             ) : null
           }
