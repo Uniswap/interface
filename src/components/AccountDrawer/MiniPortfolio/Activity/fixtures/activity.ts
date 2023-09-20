@@ -345,6 +345,15 @@ export const MockTokenTransfer = {
   },
 } as AssetActivityPartsFragment
 
+export const MockSwapOrder = {
+  ...mockAssetActivityPartsFragment,
+  details: {
+    ...commonTransactionDetailsFields,
+    type: TransactionType.SwapOrder,
+    assetChanges: [mockTokenTransferOutPartsFragment, mockTokenTransferInPartsFragment],
+  },
+} as AssetActivityPartsFragment
+
 export const MockTokenApproval = {
   ...mockAssetActivityPartsFragment,
   details: {

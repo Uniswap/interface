@@ -16,6 +16,7 @@ import {
   MockRecipientAddress,
   MockRemoveLiquidity,
   MockSenderAddress,
+  MockSwapOrder,
   MockTokenApproval,
   MockTokenReceive,
   MockTokenSend,
@@ -308,6 +309,41 @@ describe('parseRemote', () => {
         status: 'CONFIRMED',
         timestamp: 10000,
         title: 'Purchased',
+      })
+    })
+    it('should parse swap order', () => {
+      const result = parseRemoteActivities(jest.fn().mockReturnValue('100'), [MockSwapOrder])
+      expect(result?.['someHash']).toEqual({
+        chainId: 1,
+        currencies: [
+          {
+            address: DAI.address,
+            chainId: 1,
+            decimals: 18,
+            isNative: false,
+            isToken: true,
+            name: 'DAI',
+            symbol: 'DAI',
+          },
+          {
+            address: WETH9[1].address,
+            chainId: 1,
+            decimals: 18,
+            isNative: false,
+            isToken: true,
+            symbol: 'WETH',
+            name: 'Wrapped Ether',
+          },
+        ],
+        descriptor: '100 DAI for 100 WETH',
+        from: MockSenderAddress,
+        hash: 'someHash',
+        logos: ['logoUrl'],
+        prefixIconSrc: 'bolt.svg',
+        nonce: 12345,
+        status: 'CONFIRMED',
+        timestamp: 10000,
+        title: 'Swapped',
       })
     })
   })
