@@ -57,9 +57,12 @@ const SitePermissions = (): JSX.Element => {
   const colors = useSporeColors()
   const { t } = useTranslation()
 
+  const normalInfoTextSize = 'bodySmall'
+  const shortInfoTextSize = 'bodyMicro'
+
   return (
-    <Flex gap="$spacing12" p="$spacing16">
-      <Text color="$neutral2" variant="subheadSmall">
+    <Flex gap="$spacing12" px="$spacing16" py="$spacing8">
+      <Text $short={{ variant: 'bodyMicro' }} color="$neutral2" variant="subheadSmall">
         {t('App permissions')}
       </Text>
       <Flex row alignItems="flex-start" gap="$spacing8">
@@ -71,7 +74,10 @@ const SitePermissions = (): JSX.Element => {
           />
         </Flex>
         <Flex fill>
-          <Text color="$neutral1" variant="bodySmall">
+          <Text
+            $short={{ variant: shortInfoTextSize }}
+            color="$neutral1"
+            variant={normalInfoTextSize}>
             {t('View your wallet address')}
           </Text>
         </Flex>
@@ -85,7 +91,10 @@ const SitePermissions = (): JSX.Element => {
           />
         </Flex>
         <Flex fill>
-          <Text color="$neutral1" variant="bodySmall">
+          <Text
+            $short={{ variant: shortInfoTextSize }}
+            color="$neutral1"
+            variant={normalInfoTextSize}>
             {t('View your token balances')}
           </Text>
         </Flex>
@@ -95,7 +104,10 @@ const SitePermissions = (): JSX.Element => {
           <X color={colors.statusCritical.val} height={iconSizes.icon16} width={iconSizes.icon16} />
         </Flex>
         <Flex fill>
-          <Text color="$neutral1" variant="bodySmall">
+          <Text
+            $short={{ variant: shortInfoTextSize }}
+            color="$neutral1"
+            variant={normalInfoTextSize}>
             {t('Transfer your assets without consent')}
           </Text>
         </Flex>
@@ -108,14 +120,8 @@ const NetworksRow = ({ chains }: { chains: ChainId[] }): JSX.Element => {
   const { t } = useTranslation()
 
   return (
-    <Flex
-      row
-      shrink
-      alignItems="center"
-      gap="$spacing12"
-      justifyContent="space-between"
-      p="$spacing12">
-      <Flex grow row gap="$spacing8" justifyContent="space-between">
+    <Flex row shrink alignItems="center" justifyContent="space-between" px="$spacing12">
+      <Flex grow row justifyContent="space-between">
         <Text color="$neutral1" variant="subheadSmall">
           {t('Networks')}
         </Text>
@@ -231,13 +237,16 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         fill
         backgroundColor="surface1"
         borderRadius="rounded12"
-        gap="spacing24"
         overflow="hidden"
         px="spacing24"
-        py="spacing60">
+        py="spacing24">
         <Flex fill alignItems="center" gap="$spacing16" justifyContent="flex-end">
           <DappHeaderIcon dapp={pendingSession.dapp} />
-          <Text fontWeight="bold" textAlign="center" variant="headlineSmall">
+          <Text
+            $short={{ variant: 'subheadSmall' }}
+            fontWeight="bold"
+            textAlign="center"
+            variant="headlineSmall">
             {t('{{ dappName }} wants to connect to your wallet', {
               dappName: truncateDappName(dappName),
             })}{' '}
