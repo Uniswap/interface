@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { useFormatter } from 'utils/formatNumbers'
 
 import { UNI } from '../../constants/tokens'
 import useENS from '../../hooks/useENS'
@@ -43,6 +43,7 @@ interface VoteModalProps {
 
 export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalProps) {
   const { account, chainId } = useWeb3React()
+  const { formatCurrencyAmount } = useFormatter()
 
   // state for delegate input
   const [usingDelegate, setUsingDelegate] = useState(false)
@@ -124,7 +125,10 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
             <ThemedText.DeprecatedLargeHeader>
               {usingDelegate ? <Trans>Delegating votes</Trans> : <Trans>Unlocking Votes</Trans>}
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}> {formatCurrencyAmount(uniBalance, 4)}</ThemedText.DeprecatedMain>
+            <ThemedText.DeprecatedMain fontSize={36}>
+              {' '}
+              {formatCurrencyAmount({ amount: uniBalance })}
+            </ThemedText.DeprecatedMain>
           </AutoColumn>
         </LoadingView>
       )}
@@ -134,7 +138,9 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
             <ThemedText.DeprecatedLargeHeader>
               <Trans>Transaction Submitted</Trans>
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(uniBalance, 4)}</ThemedText.DeprecatedMain>
+            <ThemedText.DeprecatedMain fontSize={36}>
+              {formatCurrencyAmount({ amount: uniBalance })}
+            </ThemedText.DeprecatedMain>
           </AutoColumn>
         </SubmittedView>
       )}

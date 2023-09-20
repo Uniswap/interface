@@ -3,7 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { useFormatter } from 'utils/formatNumbers'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import { useUserVotes, useVoteCallback } from '../../state/governance/hooks'
@@ -47,6 +47,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
   const { chainId } = useWeb3React()
   const voteCallback = useVoteCallback()
   const { votes: availableVotes } = useUserVotes()
+  const { formatCurrencyAmount } = useFormatter()
 
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()
@@ -97,7 +98,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
               <StyledClosed onClick={wrappedOnDismiss} />
             </RowBetween>
             <ThemedText.DeprecatedLargeHeader>
-              <Trans>{formatCurrencyAmount(availableVotes, 4)} Votes</Trans>
+              <Trans>{formatCurrencyAmount({ amount: availableVotes })} Votes</Trans>
             </ThemedText.DeprecatedLargeHeader>
             <ButtonPrimary onClick={onVote}>
               <ThemedText.DeprecatedMediumHeader color="white">

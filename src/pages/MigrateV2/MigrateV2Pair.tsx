@@ -34,7 +34,7 @@ import { useRangeHopCallbacks, useV3DerivedMintInfo, useV3MintActionHandlers } f
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useTheme } from 'styled-components'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 import { AutoColumn } from '../../components/Column'
@@ -130,6 +130,7 @@ function V2PairMigration({
   const theme = useTheme()
   const v2FactoryAddress = chainId ? V2_FACTORY_ADDRESSES[chainId] : undefined
   const trace = useTrace()
+  const { formatCurrencyAmount } = useFormatter()
 
   const pairFactory = useSingleCallResult(pair, 'factory')
   const isNotUniswap = pairFactory.result?.[0] && pairFactory.result[0] !== v2FactoryAddress
@@ -601,9 +602,9 @@ function V2PairMigration({
                 {chainId && refund0 && refund1 ? (
                   <ThemedText.DeprecatedBlack fontSize={12}>
                     <Trans>
-                      At least {formatCurrencyAmount(refund0, 4)}{' '}
+                      At least {formatCurrencyAmount({ amount: refund0 })}{' '}
                       {chainId && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(token0) ? 'ETH' : token0.symbol} and{' '}
-                      {formatCurrencyAmount(refund1, 4)}{' '}
+                      {formatCurrencyAmount({ amount: refund1 })}{' '}
                       {chainId && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(token1) ? 'ETH' : token1.symbol} will be
                       refunded to your wallet due to selected price range.
                     </Trans>

@@ -36,7 +36,6 @@ import styled, { useTheme } from 'styled-components'
 import { ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { WrongChainError } from 'utils/errors'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
@@ -388,7 +387,7 @@ function PositionPageContent() {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const { chainId, account, provider } = useWeb3React()
   const theme = useTheme()
-  const { formatTickPrice } = useFormatter()
+  const { formatCurrencyAmount, formatTickPrice } = useFormatter()
 
   const parsedTokenId = tokenIdFromUrl ? BigNumber.from(tokenIdFromUrl) : undefined
   const { loading, position: positionDetails } = useV3PositionFromTokenId(parsedTokenId)
@@ -597,7 +596,7 @@ function PositionPageContent() {
               <RowFixed>
                 <CurrencyLogo currency={feeValueUpper?.currency} size="20px" style={{ marginRight: '0.5rem' }} />
                 <ThemedText.DeprecatedMain>
-                  {feeValueUpper ? formatCurrencyAmount(feeValueUpper, 4) : '-'}
+                  {feeValueUpper ? formatCurrencyAmount({ amount: feeValueUpper }) : '-'}
                 </ThemedText.DeprecatedMain>
               </RowFixed>
               <ThemedText.DeprecatedMain>{feeValueUpper?.currency?.symbol}</ThemedText.DeprecatedMain>
@@ -606,7 +605,7 @@ function PositionPageContent() {
               <RowFixed>
                 <CurrencyLogo currency={feeValueLower?.currency} size="20px" style={{ marginRight: '0.5rem' }} />
                 <ThemedText.DeprecatedMain>
-                  {feeValueLower ? formatCurrencyAmount(feeValueLower, 4) : '-'}
+                  {feeValueLower ? formatCurrencyAmount({ amount: feeValueLower }) : '-'}
                 </ThemedText.DeprecatedMain>
               </RowFixed>
               <ThemedText.DeprecatedMain>{feeValueLower?.currency?.symbol}</ThemedText.DeprecatedMain>
@@ -879,7 +878,7 @@ function PositionPageContent() {
                           </RowFixed>
                           <RowFixed>
                             <ThemedText.DeprecatedMain>
-                              {feeValueUpper ? formatCurrencyAmount(feeValueUpper, 4) : '-'}
+                              {feeValueUpper ? formatCurrencyAmount({ amount: feeValueUpper }) : '-'}
                             </ThemedText.DeprecatedMain>
                           </RowFixed>
                         </RowBetween>
@@ -894,7 +893,7 @@ function PositionPageContent() {
                           </RowFixed>
                           <RowFixed>
                             <ThemedText.DeprecatedMain>
-                              {feeValueLower ? formatCurrencyAmount(feeValueLower, 4) : '-'}
+                              {feeValueLower ? formatCurrencyAmount({ amount: feeValueLower }) : '-'}
                             </ThemedText.DeprecatedMain>
                           </RowFixed>
                         </RowBetween>
