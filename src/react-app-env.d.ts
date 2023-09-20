@@ -20,6 +20,8 @@ interface Window {
     isRabby?: true
     // set by the Trust Wallet browser extension
     isTrust?: true
+    // set by the Zeal browser extension
+    isZeal?: true
     // set by the Ledger Extension Web 3 browser extension
     isLedgerConnect?: true
     autoRefreshOnNetworkChange?: boolean

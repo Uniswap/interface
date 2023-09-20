@@ -5,6 +5,7 @@ import LEDGER_ICON from 'assets/wallets/ledger-icon.svg'
 import METAMASK_ICON from 'assets/wallets/metamask-icon.svg'
 import RABBY_ICON from 'assets/wallets/rabby-icon.svg'
 import TRUST_WALLET_ICON from 'assets/wallets/trustwallet-icon.svg'
+import ZEAL_ICON from 'assets/wallets/zeal-icon.svg'
 import { Connection, ConnectionType } from 'connection/types'
 
 export const getIsInjected = () => Boolean(window.ethereum)
@@ -13,6 +14,7 @@ const InjectedWalletTable: { [key in keyof NonNullable<Window['ethereum']>]?: { 
   isBraveWallet: { name: 'Brave', icon: BRAVE_ICON },
   isRabby: { name: 'Rabby', icon: RABBY_ICON },
   isTrust: { name: 'Trust Wallet', icon: TRUST_WALLET_ICON },
+  isZeal: { name: 'Zeal', icon: ZEAL_ICON },
   isLedgerConnect: { name: 'Ledger', icon: LEDGER_ICON },
 }
 

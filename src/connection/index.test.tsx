@@ -84,6 +84,16 @@ describe('connection utility/metadata tests', () => {
     expect(displayed.length).toEqual(4)
   })
 
+  it('Zeal Wallet Injected Desktop', async () => {
+    const { displayed, injected } = createWalletEnvironment({ isZeal: true, isMetaMask: true }) // Zeal sets isMetaMask to true
+
+    expect(displayed.includes(injected)).toBe(true)
+    expect(injected.getName()).toBe('Zeal')
+    expect(injected.overrideActivate?.()).toBeFalsy()
+
+    expect(displayed.length).toEqual(4)
+  })
+
   it('Rabby Wallet Injected Desktop', async () => {
     const { displayed, injected } = createWalletEnvironment({ isRabby: true, isMetaMask: true }) // Rabby sets isMetaMask to true
 
