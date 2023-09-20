@@ -4,7 +4,7 @@ import { ScreenHeader } from 'src/app/components/layout/SreenHeader'
 import { SettingsWalletRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { useAppDispatch } from 'src/background/store'
-import { Button, Icons, Switch, Text, XStack, YStack } from 'ui/src'
+import { Button, Flex, Icons, Switch, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import {
   EditAccountAction,
@@ -51,39 +51,39 @@ function WalletScreenContent({ address }: { address: Address }): JSX.Element {
   }
 
   return (
-    <YStack backgroundColor="$surface1" flex={1}>
+    <Flex fill bg="$surface1">
       <ScreenHeader title={displayName ?? t('Wallet')} />
-      <YStack flexGrow={1} justifyContent="space-between" padding="$spacing12">
-        <YStack>
-          <XStack flexGrow={1} justifyContent="space-between" paddingVertical="$spacing12">
-            <YStack>
+      <Flex grow justifyContent="space-between" p="$spacing12">
+        <Flex>
+          <Flex grow row justifyContent="space-between" py="$spacing12">
+            <Flex>
               <Text variant="bodyLarge">{t('Edit nickname')}</Text>
               <Text variant="bodyMicro">{displayName}</Text>
-            </YStack>
+            </Flex>
             <Button onPress={(): void => navigate(SettingsWalletRoutes.EditNickname.valueOf())}>
               <Icons.Pencil color="$neutral2" height={iconSizes.icon24} width={iconSizes.icon24} />
             </Button>
-          </XStack>
-          <XStack flexGrow={1} justifyContent="space-between" paddingVertical="$spacing12">
-            <YStack>
+          </Flex>
+          <Flex grow row justifyContent="space-between" py="$spacing12">
+            <Flex>
               <Text variant="bodyLarge">{t('Hide unknown tokens')}</Text>
-            </YStack>
+            </Flex>
             <Switch
               alignItems="center"
               backgroundColor="$surface2"
               checked={!account.showSpamTokens}
               height={32}
-              padding="$spacing4"
+              p="$spacing4"
               width={48}
               onCheckedChange={handleSpamTokensToggle}>
               <Switch.Thumb backgroundColor="$DEP_accentBranded" size="$spacing24" />
             </Switch>
-          </XStack>
-        </YStack>
+          </Flex>
+        </Flex>
         <Button theme="dark_detrimental_Button" onPress={onPressRemoveWallet}>
           {t('Remove wallet')}
         </Button>
-      </YStack>
-    </YStack>
+      </Flex>
+    </Flex>
   )
 }

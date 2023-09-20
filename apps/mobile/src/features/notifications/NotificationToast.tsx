@@ -107,7 +107,7 @@ export function NotificationToast({
         borderRadius="$rounded16"
         borderWidth={1}
         left={0}
-        marginHorizontal="$spacing16"
+        mx="$spacing16"
         pointerEvents="box-none"
         position="absolute"
         right={0}

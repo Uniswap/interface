@@ -3,7 +3,7 @@ import { selectChainByDappAndWallet } from 'src/background/features/dapp/selecto
 import { AddressFooter } from 'src/background/features/dappRequests/requestContent/AddressFooter'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { Image } from 'tamagui'
-import { Button, Text, XStack, YStack } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { DappRequestType } from './dappRequestTypes'
@@ -85,36 +85,36 @@ export function DappRequestContent(): JSX.Element {
   }
 
   return (
-    <YStack
+    <Flex
       key={request.dappRequest.requestId}
+      fill
       alignItems="stretch"
-      backgroundColor="$surface1"
-      flex={1}
+      bg="$surface1"
       gap="$spacing12"
       justifyContent="space-between"
-      paddingHorizontal="$spacing24"
-      paddingVertical="$spacing12"
+      px="$spacing24"
+      py="$spacing12"
       width="100%">
-      <YStack gap="$spacing16" paddingTop="$spacing32">
+      <Flex gap="$spacing16" pt="$spacing32">
         <Image height={iconSizes.icon40} source={{ uri: dappIconUrl }} width={iconSizes.icon40} />
-        <YStack gap="$spacing8">
+        <Flex gap="$spacing8">
           <Text textAlign="left" variant="headlineSmall">
             {title}
           </Text>
           <Text color="$accent1" textAlign="left" variant="bodySmall">
             {dappUrl}
           </Text>
-        </YStack>
-        <YStack alignItems="stretch" flexShrink={1} width="100%">
+        </Flex>
+        <Flex shrink alignItems="stretch" width="100%">
           {displayDetails}
-        </YStack>
-      </YStack>
+        </Flex>
+      </Flex>
 
-      <YStack>
-        <XStack borderColor="$surface3" borderWidth={1} marginBottom="$spacing8" width="100%" />
-        <YStack gap="$spacing12" paddingBottom="$spacing12">
+      <Flex>
+        <Flex row borderColor="$surface3" borderWidth={1} mb="$spacing8" width="100%" />
+        <Flex gap="$spacing12" pb="$spacing12">
           <AddressFooter account={activeAccount} />
-          <XStack gap="$spacing12">
+          <Flex row gap="$spacing12">
             <Button
               theme="secondary"
               width="50%"
@@ -127,9 +127,9 @@ export function DappRequestContent(): JSX.Element {
               onPress={async (): Promise<void> => await onConfirm(request)}>
               {callToAction}
             </Button>
-          </XStack>
-        </YStack>
-      </YStack>
-    </YStack>
+          </Flex>
+        </Flex>
+      </Flex>
+    </Flex>
   )
 }

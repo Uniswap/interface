@@ -18,11 +18,11 @@ export function SendFormScreen(): JSX.Element {
         <ScreenHeader title={t('Send')} onBackClick={(): void => navigate(`/${AppRoutes.Home}`)} />
       </Flex>
 
-      <Flex row borderBottomColor="$neutral3" borderBottomWidth={1} paddingBottom="$spacing16">
+      <Flex row borderBottomColor="$neutral3" borderBottomWidth={1} pb="$spacing16">
         <RecipientSelector />
       </Flex>
 
-      <Flex centered row flex={1}>
+      <Flex centered fill row>
         <AmountSelector />
       </Flex>
 

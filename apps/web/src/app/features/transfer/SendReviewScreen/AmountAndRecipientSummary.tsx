@@ -13,7 +13,7 @@ export function AmountAndRecipientSummary(): JSX.Element {
         </Text>
 
         <Flex centered grow row>
-          <Flex flex={1} gap="$spacing8">
+          <Flex fill gap="$spacing8">
             <Flex>
               <Text fontSize={24}>XX.XX ETH</Text>
             </Flex>
@@ -44,7 +44,7 @@ export function AmountAndRecipientSummary(): JSX.Element {
         </Text>
 
         <Flex centered grow row>
-          <Flex flex={1} gap="$spacing8">
+          <Flex fill gap="$spacing8">
             <Flex>
               <Text fontSize={24}>demo.eth</Text>
             </Flex>

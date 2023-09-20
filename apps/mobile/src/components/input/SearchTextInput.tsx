@@ -159,12 +159,12 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     return (
       <Flex row shrink alignItems="center">
         <AnimatedFlex
+          fill
+          grow
           row
           alignItems="center"
           backgroundColor={backgroundColorValue}
           borderRadius="roundedFull"
-          flex={1}
-          flexGrow={1}
           gap="spacing8"
           minHeight={48}
           px="spacing16"

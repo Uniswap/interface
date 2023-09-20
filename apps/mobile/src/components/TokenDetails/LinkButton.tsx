@@ -66,8 +66,8 @@ export function LinkButton({
         hapticFeedback
         backgroundColor="$surface2"
         borderRadius="$rounded20"
-        paddingHorizontal="$spacing12"
-        paddingVertical="$spacing8"
+        px="$spacing12"
+        py="$spacing8"
         testID={element}
         onPress={onPress}>
         <Flex centered row gap="$spacing8">

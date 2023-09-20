@@ -81,7 +81,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
         backgroundColor="$surface3"
         borderRadius="$roundedFull"
         opacity={0.8}
-        padding="$spacing8">
+        p="$spacing8">
         <Flex centered grow height={iconSizes.icon16} width={iconSizes.icon16}>
           <TripleDot color="$sporeWhite" size={3.5} />
         </Flex>

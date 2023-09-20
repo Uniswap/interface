@@ -3,7 +3,7 @@ import { PortfolioActionButtons } from 'src/app/features/home/PortfolioActionBut
 import { PortfolioHeader } from 'src/app/features/home/PortfolioHeader'
 import { TransactionActivity } from 'src/app/features/transactions/TransactionActivity'
 import { Tabs } from 'tamagui'
-import { Flex, Text, YStack } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
 import { TokenBalanceList } from 'wallet/src/features/portfolio/TokenBalanceList'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -18,15 +18,10 @@ export function HomeScreen(): JSX.Element {
   const [selectedTab, setSelectedTab] = useState<HomeTabs>(HomeTabs.Tokens)
 
   return (
-    <Flex
-      alignItems="center"
-      flexGrow={1}
-      paddingHorizontal="$spacing16"
-      paddingVertical="$spacing8"
-      width="100%">
+    <Flex grow alignItems="center" px="$spacing16" py="$spacing8" width="100%">
       {address ? (
-        <Flex backgroundColor="$surface1" flexGrow={1} gap="$spacing8" width="100%">
-          <YStack gap="$spacing12">
+        <Flex grow bg="$surface1" gap="$spacing8" width="100%">
+          <Flex gap="$spacing12">
             <PortfolioHeader address={address} />
             <PortfolioBalance address={address} />
             <PortfolioActionButtons />
@@ -35,16 +30,16 @@ export function HomeScreen(): JSX.Element {
               onValueChange={(v: string): void => {
                 setSelectedTab(HomeTabs[v as keyof typeof HomeTabs])
               }}>
-              <YStack width="100%">
-                <Tabs.List unstyled gap="$spacing16" paddingVertical="$spacing8">
-                  <Tabs.Tab unstyled height="auto" padding="$none" value={HomeTabs.Tokens}>
+              <Flex width="100%">
+                <Tabs.List unstyled gap="$spacing16" py="$spacing8">
+                  <Tabs.Tab unstyled height="auto" p="$none" value={HomeTabs.Tokens}>
                     <Text
                       color={selectedTab === HomeTabs.Tokens ? '$neutral1' : '$neutral2'}
                       variant="subheadLarge">
                       Tokens
                     </Text>
                   </Tabs.Tab>
-                  <Tabs.Tab unstyled height="auto" padding="$none" value={HomeTabs.Activity}>
+                  <Tabs.Tab unstyled height="auto" p="$none" value={HomeTabs.Activity}>
                     <Text
                       color={selectedTab === HomeTabs.Activity ? '$neutral1' : '$neutral2'}
                       variant="subheadLarge">
@@ -59,9 +54,9 @@ export function HomeScreen(): JSX.Element {
                 <Tabs.Content value={HomeTabs.Activity}>
                   <TransactionActivity address={address} />
                 </Tabs.Content>
-              </YStack>
+              </Flex>
             </Tabs>
-          </YStack>
+          </Flex>
         </Flex>
       ) : (
         <Text color="$statusCritical" variant="subheadLarge">

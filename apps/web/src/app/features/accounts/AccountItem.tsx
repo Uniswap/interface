@@ -1,6 +1,6 @@
 import { useToastController } from '@tamagui/toast'
 import { GestureResponderEvent } from 'react-native'
-import { ColorTokens, Flex, Text, Unicon, XStack, YStack } from 'ui/src'
+import { ColorTokens, Flex, Text, TouchableArea, Unicon } from 'ui/src'
 import CheckIcon from 'ui/src/assets/icons/check.svg'
 import CopyIcon from 'ui/src/assets/icons/copy-sheets.svg'
 import { colorsDark, iconSizes } from 'ui/src/theme'
@@ -36,35 +36,34 @@ export function AccountItem({
   }
 
   return (
-    // TODO(EXT-248): Change to TouchableArea
-    // https://linear.app/uniswap/issue/EXT-248/need-web-equivalent-of-touchablearea
-    <XStack
+    <TouchableArea
       backgroundColor="$surface1"
       borderColor={selected ? accentColor : '$surface3'}
       borderRadius={16}
       borderWidth={1.5}
       cursor="pointer"
+      flexDirection="row"
       gap="$spacing8"
       justifyContent="space-between"
-      padding="$spacing12"
+      p="$spacing12"
       shadowColor="$surface3"
       shadowRadius={10}
       onPress={onAccountSelect}>
-      <YStack flexGrow={1} gap="$spacing8">
-        <XStack>
-          <Flex flex={1}>
+      <Flex grow gap="$spacing8">
+        <Flex row>
+          <Flex fill>
             <Unicon address={address} size={iconSizes.icon36} />
           </Flex>
           {selected && (
             <CheckIcon color={accentColor} height={iconSizes.icon20} width={iconSizes.icon20} />
           )}
-        </XStack>
+        </Flex>
         <Flex>
           <Text color="$neutral1" variant="bodyLarge">
             {displayName}
           </Text>
-          <XStack>
-            <XStack space alignItems="center" flex={1}>
+          <Flex row>
+            <Flex fill row space alignItems="center">
               <Text color="$neutral2" variant="bodySmall">
                 {sanitizeAddressText(shortenAddress(address))}
               </Text>
@@ -76,13 +75,13 @@ export function AccountItem({
                   width={iconSizes.icon12}
                 />
               </Flex>
-            </XStack>
+            </Flex>
             <Text color="$neutral2" variant="bodySmall">
               ${loading || error ? '' : portfolioBalanceUSD?.toFixed(2)}
             </Text>
-          </XStack>
+          </Flex>
         </Flex>
-      </YStack>
-    </XStack>
+      </Flex>
+    </TouchableArea>
   )
 }

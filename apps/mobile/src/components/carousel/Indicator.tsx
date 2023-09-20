@@ -68,9 +68,9 @@ function AnimatedIndicatorPill({
   return (
     <AnimatedBox
       key={`indicator-${index}`}
+      fill
       bg="$neutral1"
       borderRadius="$rounded16"
-      flex={1}
       height={4}
       style={style}
     />

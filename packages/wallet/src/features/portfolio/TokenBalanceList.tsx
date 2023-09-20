@@ -57,7 +57,7 @@ export function TokenBalanceList({ owner }: TokenBalanceListProps): JSX.Element 
   }
 
   return (
-    <ScrollView paddingTop="$spacing8" showsVerticalScrollIndicator={false} width="100%">
+    <ScrollView pt="$spacing8" showsVerticalScrollIndicator={false} width="100%">
       {listItems?.map((balance: PortfolioBalance) => {
         return (
           <TokenBalanceItem

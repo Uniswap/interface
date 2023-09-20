@@ -59,7 +59,7 @@ export function OptionCard({
             borderRadius="$roundedFull"
             height={iconSize}
             justifyContent="center"
-            padding="$spacing16"
+            p="$spacing16"
             width={iconSize}>
             {icon}
           </Flex>

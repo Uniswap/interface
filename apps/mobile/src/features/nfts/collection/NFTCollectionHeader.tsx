@@ -100,7 +100,7 @@ export function NFTCollectionHeader({
             hapticFeedback
             backgroundColor="$sporeBlack"
             borderRadius="$roundedFull"
-            padding="$spacing12">
+            p="$spacing12">
             <Flex centered grow height={iconSizes.icon8} width={iconSizes.icon8}>
               <BackButton color="$sporeWhite" size={iconSizes.icon24} />
             </Flex>

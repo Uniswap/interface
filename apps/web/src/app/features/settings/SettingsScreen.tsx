@@ -5,7 +5,7 @@ import { AccountRowItem } from 'src/app/features/accounts/AccountRowItem'
 import { SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
-import { Button, Icons, ListItem, ScrollView, Text, TouchableArea, YGroup, YStack } from 'ui/src'
+import { Button, Flex, Icons, ListItem, ScrollView, Text, TouchableArea, YGroup } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { authActions } from 'wallet/src/features/auth/saga'
 import { AuthActionType } from 'wallet/src/features/auth/types'
@@ -30,9 +30,9 @@ export function SettingsScreen(): JSX.Element {
   }
 
   return (
-    <YStack backgroundColor="$surface1" flex={1} gap="$spacing12">
+    <Flex fill bg="$surface1" gap="$spacing12">
       <ScreenHeader title={t('Settings')} />
-      <ScrollView padding="$spacing12" showsVerticalScrollIndicator={false}>
+      <ScrollView p="$spacing12" showsVerticalScrollIndicator={false}>
         <Text color="$neutral2" variant="subheadSmall">
           {t('Wallet settings')}
         </Text>
@@ -48,7 +48,7 @@ export function SettingsScreen(): JSX.Element {
         {showAllWalletsButton ? (
           <TouchableArea
             borderRadius="$roundedFull"
-            padding="$spacing4"
+            p="$spacing4"
             onPress={(): void => setShowAll(!showAll)}>
             {showAll
               ? t('Hide wallets')
@@ -69,7 +69,7 @@ export function SettingsScreen(): JSX.Element {
                   width={iconSizes.icon20}
                 />
               }
-              padding="$none"
+              p="$none"
               size={48}
               title={<Text variant="subheadSmall">{t('View recovery phrase')}</Text>}
               onPress={(): void => navigateTo(SettingsRoutes.ViewRecoveryPhrase.valueOf())}
@@ -86,7 +86,7 @@ export function SettingsScreen(): JSX.Element {
                   width={iconSizes.icon20}
                 />
               }
-              padding="$none"
+              p="$none"
               size={48}
               title={<Text variant="subheadSmall">{t('Help center')}</Text>}
             />
@@ -96,6 +96,6 @@ export function SettingsScreen(): JSX.Element {
       <Button icon={<Icons.Lock />} theme="secondary" onPress={onPressLockWallet}>
         {t('Lock Wallet')}
       </Button>
-    </YStack>
+    </Flex>
   )
 }

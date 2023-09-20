@@ -2,7 +2,7 @@ import { selectChainByDappAndWallet } from 'src/background/features/dapp/selecto
 import { SendTransactionRequest } from 'src/background/features/dappRequests/dappRequestTypes'
 import { DappRequestStoreItem } from 'src/background/features/dappRequests/slice'
 import { useAppSelector } from 'src/background/store'
-import { Text, XStack, YStack } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { useTransactionGasFee, useUSDValue } from 'wallet/src/features/gas/hooks'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
@@ -32,59 +32,57 @@ export const SendTransactionDetails = ({
 
   const contractFunction = sendTransactionRequest.transaction.type
   return (
-    <YStack>
-      <YStack
-        backgroundColor="$surface2"
+    <Flex>
+      <Flex
+        bg="$surface2"
         borderTopLeftRadius="$rounded16"
         borderTopRightRadius="$rounded16"
         gap="$spacing16"
-        margin="$none"
-        paddingHorizontal="$spacing16"
-        paddingVertical="$spacing12">
-        <XStack justifyContent="space-between">
+        m="$none"
+        px="$spacing16"
+        py="$spacing12">
+        <Flex row justifyContent="space-between">
           <Text color="$neutral2" variant="bodySmall">
             Sending
           </Text>
-          <XStack gap="$spacing4">
+          <Flex row gap="$spacing4">
             <Text textAlign="right" variant="subheadSmall">
               {sending}
             </Text>
-          </XStack>
-        </XStack>
+          </Flex>
+        </Flex>
 
-        <XStack justifyContent="space-between">
+        <Flex row justifyContent="space-between">
           <Text color="$neutral2" variant="bodySmall">
             To
           </Text>
-          <XStack gap="$spacing4">
+          <Flex row gap="$spacing4">
             <Text textAlign="right" variant="bodySmall">
               {toAddress?.substring(0, 10)}...
             </Text>
-          </XStack>
-        </XStack>
+          </Flex>
+        </Flex>
         {contractFunction ? (
-          <XStack justifyContent="space-between">
+          <Flex row justifyContent="space-between">
             <Text color="$neutral2" variant="bodySmall">
               Function
             </Text>
-            <XStack gap="$spacing4">
+            <Flex row gap="$spacing4">
               <Text textAlign="right" variant="bodySmall">
                 {contractFunction}
               </Text>
-            </XStack>
-          </XStack>
+            </Flex>
+          </Flex>
         ) : null}
-      </YStack>
-      <YStack
-        backgroundColor="$surface2"
-        borderBottomLeftRadius="$rounded16"
-        borderBottomRightRadius="$rounded16">
-        <XStack
+      </Flex>
+      <Flex bg="$surface2" borderBottomLeftRadius="$rounded16" borderBottomRightRadius="$rounded16">
+        <Flex
+          row
           borderTopColor="$background"
           borderTopWidth="$spacing1"
           justifyContent="space-between"
-          paddingHorizontal="$spacing16"
-          paddingVertical="$spacing12"
+          px="$spacing16"
+          py="$spacing12"
           width="100%">
           <Text color="$neutral2" variant="bodySmall">
             Network fee
@@ -92,8 +90,8 @@ export const SendTransactionDetails = ({
           <Text color="$neutral2" textAlign="right" variant="bodySmall">
             {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
           </Text>
-        </XStack>
-      </YStack>
-    </YStack>
+        </Flex>
+      </Flex>
+    </Flex>
   )
 }

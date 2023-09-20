@@ -228,9 +228,9 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
   return (
     <BottomSheetModal name={ModalName.WCPendingConnection} onClose={onClose}>
       <AnimatedFlex
+        fill
         backgroundColor="surface1"
         borderRadius="rounded12"
-        flex={1}
         gap="spacing24"
         overflow="hidden"
         px="spacing24"

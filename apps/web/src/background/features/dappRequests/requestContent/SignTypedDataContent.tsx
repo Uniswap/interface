@@ -1,6 +1,6 @@
 import { SignTypedDataRequest } from 'src/background/features/dappRequests/dappRequestTypes'
 import { DappRequestStoreItem } from 'src/background/features/dappRequests/slice'
-import { Text, XStack, YStack } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { EthTypedMessage } from 'wallet/src/features/wallet/signing/types'
 
 export const SignTypedDataDetails = ({
@@ -14,11 +14,11 @@ export const SignTypedDataDetails = ({
   const typedData: EthTypedMessage = JSON.parse(rawTypedData)
 
   return (
-    <YStack backgroundColor="$surface2" borderRadius="$rounded16" flex={1}>
-      <YStack flexShrink={1} gap="$spacing16" margin="$none" overflow="scroll" padding="$spacing16">
+    <Flex fill bg="$surface2" borderRadius="$rounded16">
+      <Flex shrink gap="$spacing16" m="$none" overflow="scroll" p="$spacing16">
         {getParsedObjectDisplay(chainId, typedData.message)}
-      </YStack>
-    </YStack>
+      </Flex>
+    </Flex>
   )
 }
 
@@ -34,14 +34,14 @@ const getParsedObjectDisplay = (
   }
 
   return (
-    <YStack gap="$spacing4">
+    <Flex gap="$spacing4">
       {Object.keys(obj).map((objKey) => {
         const childValue = obj[objKey]
 
         // obj is a json object, check if childValue is an array:
         if (typeof childValue === 'object') {
           return (
-            <YStack key={objKey} gap="$spacing8">
+            <Flex key={objKey} gap="$spacing8">
               <Text
                 alignItems="flex-start"
                 color="$neutral2"
@@ -52,18 +52,19 @@ const getParsedObjectDisplay = (
                 {objKey}
               </Text>
               {getParsedObjectDisplay(chainId, childValue, depth + 1)}
-            </YStack>
+            </Flex>
           )
         }
 
         if (typeof childValue === 'string') {
           return (
-            <XStack
+            <Flex
               key={objKey}
+              fill
+              row
               alignItems="center"
-              flex={1}
               gap="$spacing8"
-              paddingVertical="$spacing4"
+              py="$spacing4"
               width="100%">
               <Text color="$neutral2" fontSize={14} fontWeight="300" variant="monospace">
                 {objKey}
@@ -71,12 +72,12 @@ const getParsedObjectDisplay = (
               <Text fontSize={14} fontWeight="300">
                 {childValue}
               </Text>
-            </XStack>
+            </Flex>
           )
         }
 
         return null
       })}
-    </YStack>
+    </Flex>
   )
 }

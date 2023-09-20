@@ -145,7 +145,7 @@ export function NFTCollectionScreen({
       <Flex
         fill
         aspectRatio={1}
-        backgroundColor="$surface3"
+        bg="$surface3"
         borderRadius="$rounded16"
         overflow="hidden"
         style={containerStyle}>

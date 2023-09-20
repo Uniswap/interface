@@ -27,8 +27,8 @@ export function HideContentShield({
       <Button
         backgroundColor="$surface2"
         borderRadius="$rounded12"
-        paddingHorizontal="$spacing16"
-        paddingVertical="$spacing8"
+        px="$spacing16"
+        py="$spacing8"
         onPress={onShowContent}>
         {t('Reveal')}
       </Button>

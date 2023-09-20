@@ -9,7 +9,7 @@ import {
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
 import { useAppDispatch } from 'src/background/store'
-import { Button, Icons, ScrollView, Stack, Text, XStack, YStack } from 'ui/src'
+import { Button, Flex, Icons, ScrollView, Text } from 'ui/src'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { useSelectWalletScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -189,12 +189,12 @@ export function SelectWallets(): JSX.Element {
 
   if (isLoading) {
     return (
-      <YStack alignItems="center" gap="$spacing36" justifyContent="center">
-        <Stack height={80} position="relative" width={80}>
-          <Stack bottom={0} left={0} position="absolute" right={0} top={0}>
+      <Flex centered gap="$spacing36">
+        <Flex height={80} position="relative" width={80}>
+          <Flex bottom={0} left={0} position="absolute" right={0} top={0}>
             <Icons.LoadingSpinnerOuter color="$DEP_brandedAccentSoft" size={80} />
-          </Stack>
-          <Stack
+          </Flex>
+          <Flex
             bottom={0}
             left={0}
             position="absolute"
@@ -202,12 +202,12 @@ export function SelectWallets(): JSX.Element {
             style={{ animation: `spin ${SPIN_SPEED}ms linear infinite` }}
             top={0}>
             <Icons.LoadingSpinnerInner color="$accent1" size={80} />
-          </Stack>
-        </Stack>
+          </Flex>
+        </Flex>
         <Text color="$neutral2" textAlign="center" variant="headlineSmall">
           Finding your wallets...
         </Text>
-      </YStack>
+      </Flex>
     )
   }
 
@@ -228,18 +228,18 @@ export function SelectWallets(): JSX.Element {
       onSubmit={onSubmit}>
       <ScrollView maxHeight="55vh" showsVerticalScrollIndicator={false} width="100%">
         {showError ? (
-          <Stack gap="$spacing24" p="$spacing12" width="100%">
+          <Flex gap="$spacing24" p="$spacing12" width="100%">
             <Text color="$statusCritical" textAlign="center" variant="buttonLabelMedium">
               {t('Couldn’t load addresses')}
             </Text>
-            <XStack justifyContent="center">
+            <Flex row justifyContent="center">
               <Button theme="secondary" onPress={onRetry}>
                 Retry
               </Button>
-            </XStack>
-          </Stack>
+            </Flex>
+          </Flex>
         ) : (
-          <YStack gap="$spacing12" position="relative" width="100%">
+          <Flex gap="$spacing12" position="relative" width="100%">
             {initialShownAccounts?.map((account) => {
               const { ownerAddress, balance } = account
               return (
@@ -253,7 +253,7 @@ export function SelectWallets(): JSX.Element {
                 />
               )
             })}
-          </YStack>
+          </Flex>
         )}
       </ScrollView>
     </OnboardingScreen>

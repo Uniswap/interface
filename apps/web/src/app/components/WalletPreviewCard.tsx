@@ -1,4 +1,4 @@
-import { Circle, Stack, Text, Unicon, useUniconColors, XStack, YStack } from 'ui/src'
+import { Circle, Flex, Text, Unicon, useUniconColors } from 'ui/src'
 import { CheckmarkIcon } from 'ui/src/assets/icons/CheckmarkIcon'
 import { iconSizes, validToken } from 'ui/src/theme'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
@@ -28,34 +28,35 @@ export default function WalletPreviewCard({
   const { gradientStart } = useUniconColors(address)
 
   return (
-    <Stack
+    <Flex
       alignItems="center"
       borderColor={validToken(selected ? gradientStart : unselectedBorderColor)}
       borderRadius="$rounded20"
       borderWidth={2}
       cursor="pointer"
-      paddingHorizontal="$spacing16"
-      paddingVertical="$spacing16"
+      px="$spacing16"
+      py="$spacing16"
       width="100%"
       onPress={(): void => onSelect(address)}
       {...rest}>
-      <XStack
+      <Flex
+        row
         alignItems="center"
         gap="$spacing12"
         height={ADDRESS_WRAPPER_HEIGHT}
         justifyContent="space-between"
         width="100%">
-        <XStack alignItems="center" gap="$spacing12" justifyContent="center">
+        <Flex centered row gap="$spacing12">
           <Unicon address={address} size={UNICON_SIZE} />
-          <YStack>
+          <Flex>
             <Text variant="subheadLarge">{shortenAddress(address)}</Text>
             {balance ? (
               <Text color="$neutral2" variant="bodySmall">
                 {formatUSDPrice(balance, NumberType.FiatTokenQuantity)}
               </Text>
             ) : null}
-          </YStack>
-        </XStack>
+          </Flex>
+        </Flex>
         {!hideSelectionCircle ? (
           selected ? (
             <CheckmarkIcon color={gradientStart} />
@@ -63,7 +64,7 @@ export default function WalletPreviewCard({
             <Circle borderColor="$surface3" borderWidth={2} size={iconSizes.icon20} />
           )
         ) : null}
-      </XStack>
-    </Stack>
+      </Flex>
+    </Flex>
   )
 }

@@ -20,7 +20,7 @@ export function EducationScreen({
   )
 
   return (
-    <SheetScreen flex={1}>
+    <SheetScreen>
       <Carousel slides={content} />
     </SheetScreen>
   )

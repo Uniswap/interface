@@ -68,10 +68,10 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
         onPress={onPress}>
         <AnimatedFlex
           row
+          shrink
           alignItems="center"
           entering={FadeIn}
           exiting={FadeOut}
-          flexShrink={1}
           gap="spacing12"
           overflow="hidden">
           <TokenLogo
@@ -93,7 +93,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} justifyContent="space-between">
           <WarmLoadingShimmer isWarmLoading={isWarmLoading}>
             {!portfolioBalance.balanceUSD ? (
-              <Flex centered flex={1}>
+              <Flex centered fill>
                 <Text color="$neutral2">{t('N/A')}</Text>
               </Flex>
             ) : (

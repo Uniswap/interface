@@ -89,7 +89,7 @@ export function CancelConfirmationView({
           {!gasFeeUSD ? <ActivityIndicator /> : <Text variant="subheadSmall">{gasFeeUSD}</Text>}
         </Flex>
         {accountAddress && (
-          <Flex grow row justifyContent="space-between" padding="$spacing12">
+          <Flex grow row justifyContent="space-between" p="$spacing12">
             <AddressDisplay
               hideAddressInSubtitle
               address={transactionDetails.from}

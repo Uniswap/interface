@@ -7,7 +7,6 @@ export {
   ListItem,
   Popover,
   ScrollView,
-  Stack,
   Switch,
   TamaguiProvider,
   Theme,
@@ -15,9 +14,7 @@ export {
   useTheme as useSporeColors,
   useTheme,
   useThemeName,
-  XStack,
   YGroup,
-  YStack,
 } from 'tamagui'
 export type {
   Adapt,
@@ -33,8 +30,6 @@ export type {
   SpaceTokens,
   SwitchProps,
   TamaguiProviderProps,
-  XStackProps,
-  YStackProps,
 } from 'tamagui'
 export { LinearGradient } from 'tamagui/linear-gradient'
 export { Button } from './components/button/Button'

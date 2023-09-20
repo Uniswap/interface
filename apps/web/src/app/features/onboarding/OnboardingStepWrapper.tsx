@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import { TopLevelRoutes } from 'src/app/navigation/constants'
-import { Circle, getTokenValue, Icons, Stack, XStack } from 'ui/src'
+import { Circle, Flex, getTokenValue, Icons } from 'ui/src'
 
 type OnboardingStepsProps = {
   methodRoute?: string
@@ -10,9 +10,9 @@ type OnboardingStepsProps = {
 export function OnboardingStepWrapper({ steps, methodRoute }: OnboardingStepsProps): JSX.Element {
   return (
     <>
-      <Stack alignItems="center" flexGrow={1} justifyContent="center" width="100%">
+      <Flex centered grow width="100%">
         <Outlet />
-      </Stack>
+      </Flex>
       <OnboardingStepIndicator methodRoute={methodRoute} steps={steps} />
     </>
   )
@@ -24,14 +24,14 @@ function OnboardingStepIndicator({ steps, methodRoute }: OnboardingStepsProps): 
   }
 
   return (
-    <XStack alignItems="center" gap="$spacing12" justifyContent="center" marginBottom="$spacing36">
+    <Flex centered row gap="$spacing12" mb="$spacing36">
       {steps.map((step) => (
         <StepCircle
           key={step}
           route={methodRoute ? `/${TopLevelRoutes.Onboarding}/${methodRoute}/${step}` : ''}
         />
       ))}
-    </XStack>
+    </Flex>
   )
 }
 

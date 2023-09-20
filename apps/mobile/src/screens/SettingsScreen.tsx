@@ -350,7 +350,7 @@ function FooterSettings(): JSX.Element {
       <Text
         color="$neutral3"
         mt="$spacing8"
-        paddingBottom="$spacing24"
+        pb="$spacing24"
         variant="bodySmall"
         onLongPress={(): void => {
           setShowSignature(true)

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { SwitchNetworksModal } from 'src/app/features/home/SwitchNetworksModal'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { useDappContext } from 'src/background/features/dapp/hooks'
-import { Icons, Popover, Text, TouchableArea, Unicon, XStack } from 'ui/src'
+import { Flex, Icons, Popover, Text, TouchableArea, Unicon } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
@@ -25,17 +25,16 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
   const { dappConnected } = useDappContext(undefined, updateConnectionStatus)
 
   return (
-    <XStack alignItems="center" justifyContent="space-between">
-      <XStack
-        alignItems="center"
+    <Flex row alignItems="center" justifyContent="space-between">
+      <Flex
+        centered
+        row
         borderRadius="$rounded24"
         cursor="pointer"
-        flexDirection="row"
         gap="$spacing8"
-        justifyContent="center"
         onPress={onPressAccount}>
         <Unicon address={address} size={iconSizes.icon36} />
-        <XStack gap="$spacing4" paddingVertical="$spacing16">
+        <Flex row gap="$spacing4" py="$spacing16">
           <Text variant="subheadSmall">{displayName}</Text>
           <Icons.Chevron
             color="$neutral2"
@@ -43,9 +42,9 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
             // TODO (MOB-1240): make Chevron component more reusable
             style={{ transform: [{ rotate: '270deg' }] }}
           />
-        </XStack>
-      </XStack>
-      <XStack alignItems="center" gap="$spacing16" justifyContent="space-around">
+        </Flex>
+      </Flex>
+      <Flex row alignItems="center" gap="$spacing16" justifyContent="space-around">
         {dappConnected ? (
           <Popover placement="left-start">
             <Popover.Trigger
@@ -56,7 +55,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
               borderColor="$surface2"
               borderRadius="$rounded12"
               borderWidth={1}
-              paddingLeft="$spacing4">
+              pl="$spacing4">
               <SwitchNetworksModal />
             </Popover.Content>
           </Popover>
@@ -64,7 +63,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
         <TouchableArea onPress={(): void => navigate('/settings')}>
           <Icons.Settings color="$neutral2" height={iconSizes.icon24} width={iconSizes.icon24} />
         </TouchableArea>
-      </XStack>
-    </XStack>
+      </Flex>
+    </Flex>
   )
 }

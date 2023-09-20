@@ -119,7 +119,7 @@ const _QRCodeDisplay = ({
       borderRadius="$rounded32"
       borderWidth={hideOutline ? 0 : 2}
       justifyContent="center"
-      padding="$spacing24"
+      p="$spacing24"
       position="relative"
       shadowColor="$sporeBlack"
       shadowOffset={{ width: 0, height: 16 }}
@@ -150,12 +150,12 @@ const _QRCodeDisplay = ({
       </Flex>
       <Flex
         alignItems="center"
-        backgroundColor="$transparent"
+        bg="$transparent"
         borderRadius="$roundedFull"
         overflow="visible"
-        paddingLeft="$spacing2"
-        paddingTop="$spacing2"
-        position="absolute">
+        pl="$spacing2"
+        position="absolute"
+        pt="$spacing2">
         <Unicon
           showBorder
           address={address}

@@ -113,7 +113,7 @@ export function AddressDisplay({
   return (
     <Flex alignItems={contentAlign} flexDirection={direction} gap={horizontalGap}>
       {showAccountIcon && <NotificationBadge address={address}>{icon}</NotificationBadge>}
-      <Flex alignItems={itemAlignment} flexShrink={1} gap={gapBetweenLines}>
+      <Flex shrink alignItems={itemAlignment} gap={gapBetweenLines}>
         <CopyButtonWrapper
           onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
           <Flex centered row gap="$spacing12">
@@ -138,7 +138,7 @@ export function AddressDisplay({
               backgroundColor={showCopyWrapperButton ? '$DEP_backgroundOverlay' : '$transparent'}
               borderRadius="$roundedFull"
               gap="$spacing4"
-              marginTop={showCopyWrapperButton ? '$spacing8' : '$none'}
+              mt={showCopyWrapperButton ? '$spacing8' : '$none'}
               px={showCopyWrapperButton ? '$spacing8' : '$none'}
               py={showCopyWrapperButton ? '$spacing4' : '$none'}>
               <Text color={captionTextColor} variant={captionVariant}>

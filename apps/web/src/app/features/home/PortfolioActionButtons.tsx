@@ -2,7 +2,7 @@ import { useToastController } from '@tamagui/toast'
 import { cloneElement } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppRoutes } from 'src/app/navigation/constants'
-import { Flex, getTokenValue, Icons, Text, YStack } from 'ui/src'
+import { Flex, getTokenValue, Icons, Text } from 'ui/src'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -41,22 +41,22 @@ function ActionButton({ label, Icon, onClick, url }: ActionButtonProps): JSX.Ele
   return (
     // TODO(EXT-248): Change to TouchableArea
     // https://linear.app/uniswap/issue/EXT-248/need-web-equivalent-of-touchablearea
-    <YStack
+    <Flex
+      fill
       alignItems="flex-start"
-      backgroundColor="$accentSoft"
+      bg="$accentSoft"
       borderRadius="$rounded16"
-      flex={1}
       flexBasis={1}
       gap="$spacing12"
       hoverStyle={enabledHoverStyle}
       justifyContent="space-between"
-      padding="$spacing12"
+      p="$spacing12"
       onPress={actionHandler}>
       {cloneElement(Icon, { color: ICON_COLOR, size: ICON_SIZE })}
       <Text color="$accent1" fontWeight="600" variant="bodyLarge">
         {label}
       </Text>
-    </YStack>
+    </Flex>
   )
 }
 
@@ -87,7 +87,7 @@ export function PortfolioActionButtons(): JSX.Element {
   }
 
   return (
-    <YStack gap="$spacing8">
+    <Flex gap="$spacing8">
       <Flex flexDirection="row" gap="$spacing8">
         <ActionButton Icon={<Icons.CoinConvert />} label="Swap" url="https://app.uniswap.org" />
         <ActionButton
@@ -100,6 +100,6 @@ export function PortfolioActionButtons(): JSX.Element {
         <ActionButton Icon={<Icons.SendRoundedAirplane />} label="Send" onClick={onSendClick} />
         <ActionButton Icon={<Icons.ReceiveArrow />} label="Receive" onClick={onCopyClick} />
       </Flex>
-    </YStack>
+    </Flex>
   )
 }

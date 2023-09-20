@@ -110,7 +110,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
           backgroundColor="$sporeBlack"
           borderRadius="$roundedFull"
           opacity={0.8}
-          padding="$spacing8">
+          p="$spacing8">
           <Flex centered grow height={iconSizes.icon16} width={iconSizes.icon16}>
             <BackButton color="$sporeWhite" size={iconSizes.icon24} />
           </Flex>
@@ -141,7 +141,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
               borderRadius="$rounded20"
               borderWidth={1}
               height={46}
-              padding="$spacing12"
+              p="$spacing12"
               testID={ElementName.Favorite}
               onPress={onPressFavorite}>
               <Favorite isFavorited={isFavorited} size={iconSizes.icon20} />
@@ -154,7 +154,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
               borderRadius="$rounded20"
               borderWidth={1}
               height={46}
-              padding="$spacing12"
+              p="$spacing12"
               testID={ElementName.Send}
               onPress={onPressSend}>
               <Flex row alignItems="center" gap="$spacing8">

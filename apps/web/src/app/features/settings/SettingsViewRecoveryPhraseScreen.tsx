@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { HideContentShield } from 'src/app/components/hideContent/HideContentShield'
 import { ScreenHeader } from 'src/app/components/layout/SreenHeader'
-import { Flex, Text, XStack, YStack } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes } from 'ui/src/theme'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -30,22 +30,22 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
   const [showPhrase, setShowPhrase] = useState(false)
 
   return (
-    <YStack backgroundColor="$surface1" flexGrow={1} gap="$spacing12">
+    <Flex grow bg="$surface1" gap="$spacing12">
       <ScreenHeader title={t('Recovery phrase')} />
-      <YStack gap="$spacing24" padding="$spacing12">
+      <Flex gap="$spacing24" p="$spacing12">
         <Flex position="relative" onHoverOut={(): void => setShowPhrase(false)}>
-          <YStack
-            backgroundColor="$surface2"
+          <Flex
+            fill
+            bg="$surface2"
             borderRadius="$rounded16"
-            flex={1}
             gap="$spacing12"
-            padding="$spacing24"
+            p="$spacing24"
             width="100%">
-            <XStack flex={1}>
+            <Flex fill row>
               <SeedPhraseColumn indexOffset={1} words={firstHalfWords} />
               <SeedPhraseColumn indexOffset={halfLength + 1} words={secondHalfWords} />
-            </XStack>
-          </YStack>
+            </Flex>
+          </Flex>
           <HideContentShield
             color="$surface2"
             visibility={showPhrase}
@@ -53,20 +53,20 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
           />
         </Flex>
 
-        <YStack alignItems="center" gap="$spacing8">
-          <XStack alignItems="center" gap="$spacing8">
+        <Flex alignItems="center" gap="$spacing8">
+          <Flex row alignItems="center" gap="$spacing8">
             {/* TODO: Replace with proper color once available */}
             <AlertTriangleIcon color="#FF5F52" height={iconSizes.icon24} width={iconSizes.icon24} />
             <Text color="#FF5F52" variant="subheadSmall">
               {t('View in private')}
             </Text>
-          </XStack>
+          </Flex>
           <Text textAlign="center" variant="bodySmall">
             {t('Anyone who knows your recovery phrase can access your wallet and funds.')}
           </Text>
-        </YStack>
-      </YStack>
-    </YStack>
+        </Flex>
+      </Flex>
+    </Flex>
   )
 }
 
@@ -78,15 +78,15 @@ function SeedPhraseColumn({
   indexOffset: number
 }): JSX.Element {
   return (
-    <YStack flex={1} gap="$spacing16">
+    <Flex fill gap="$spacing16">
       {words.map((word, index) => (
-        <XStack key={index} gap="$spacing12">
+        <Flex key={index} row gap="$spacing12">
           <Text color="$neutral3" variant="bodySmall">
             {index + indexOffset}
           </Text>
           <Text variant="bodySmall">{word}</Text>
-        </XStack>
+        </Flex>
       ))}
-    </YStack>
+    </Flex>
   )
 }

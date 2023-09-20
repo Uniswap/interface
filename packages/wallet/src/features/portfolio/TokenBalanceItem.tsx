@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { Flex, getTokenValue, Icons, Text, XStack, YStack } from 'ui/src'
+import { Flex, getTokenValue, Icons, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { theme } from 'ui/src/theme/restyle'
 import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
@@ -43,15 +43,15 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       alignItems="flex-start"
       justifyContent="space-between"
       minHeight={TOKEN_BALANCE_ITEM_HEIGHT}
-      paddingVertical="$spacing8"
+      py="$spacing8"
       width="100%"
       onPress={onPress}>
       {loading ? (
         <Flex
           backgroundColor="$neutral3"
           borderRadius="$rounded16"
-          paddingHorizontal="$spacing16"
-          paddingVertical="$spacing12"
+          px="$spacing16"
+          py="$spacing12"
         />
       ) : (
         <Flex row alignItems="center" gap="$spacing12" width="100%">
@@ -63,7 +63,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
           />
 
           {/* Currency name */}
-          <YStack flex={1.5} flexBasis={0}>
+          <Flex flex={1.5} flexBasis={0}>
             <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
               {currency.name ?? getSymbolDisplayText(currency.symbol)}
             </Text>
@@ -71,14 +71,14 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
               {`${formatNumber(quantity, NumberType.TokenNonTx)}`}{' '}
               {getSymbolDisplayText(currency.symbol)}
             </Text>
-          </YStack>
+          </Flex>
 
           {/* Portfolio balance */}
-          <YStack alignItems="flex-end" flex={1} justifyContent="flex-end" width={0}>
+          <Flex fill alignItems="flex-end" justifyContent="flex-end" width={0}>
             <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
               {balanceUSD === 0 ? 'N/A' : formatUSDPrice(balanceUSD, NumberType.FiatTokenQuantity)}
             </Text>
-            <XStack alignItems="center" gap="$spacing4">
+            <Flex row alignItems="center" gap="$spacing4">
               <Icons.ArrowChange
                 color={arrowColor}
                 rotation={isPositiveChange ? 180 : 0}
@@ -87,9 +87,9 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
               <Text color="$neutral2" numberOfLines={1} variant="bodyLarge">
                 {formattedChange}
               </Text>
-            </XStack>
+            </Flex>
             <Flex maxWidth={100} />
-          </YStack>
+          </Flex>
         </Flex>
       )}
     </Flex>

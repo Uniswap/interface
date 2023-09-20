@@ -229,11 +229,11 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
           <BlurView intensity={IS_IOS ? 100 : 0}>
             <Flex
               {...contentProps}
+              fill
               grow
               row
               alignItems="center"
               borderRadius="$roundedFull"
-              flex={1}
               gap="$spacing8"
               justifyContent="flex-start"
               p="$spacing16"

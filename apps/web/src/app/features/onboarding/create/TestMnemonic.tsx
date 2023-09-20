@@ -10,7 +10,7 @@ import {
   OnboardingRoutes,
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
-import { Stack, Text, XStack } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 
 export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }): JSX.Element {
   const navigate = useNavigate()
@@ -67,12 +67,12 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
       nextButtonText="Next"
       subtitle="Let's make sure you’ve recorded it down"
       title={
-        <Stack paddingHorizontal="$spacing36">
+        <Flex px="$spacing36">
           <Text variant="headlineMedium">
             What's the <Text color="$accent1">{getNumberWithOrdinal(nextWordNumber)} </Text> word of
             your recovery phrase?
           </Text>
-        </Stack>
+        </Flex>
       }
       onBack={(): void =>
         navigate(
@@ -83,8 +83,8 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
         )
       }
       onSubmit={onNext}>
-      <XStack position="relative" width="100%">
-        <Text color="$neutral3" padding="$spacing24" position="absolute" variant="headlineSmall">
+      <Flex row position="relative" width="100%">
+        <Text color="$neutral3" p="$spacing24" position="absolute" variant="headlineSmall">
           {String(nextWordNumber).padStart(2, '0')}
         </Text>
         <Input
@@ -96,7 +96,7 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
           onChangeText={setUserWordInput}
           onSubmitEditing={onNext}
         />
-      </XStack>
+      </Flex>
     </OnboardingScreen>
   )
 }

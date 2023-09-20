@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ONBOARDING_CONTENT_WIDTH } from 'src/app/features/onboarding/utils'
-import { Circle, Image, Stack, XStack, YStack } from 'tamagui'
+import { Circle, Image } from 'tamagui'
 import { ColorTokens, Flex, Icons, Text, Unicon } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import MoreIcon from 'ui/src/assets/icons/more.svg'
@@ -58,22 +58,22 @@ export function Complete(): JSX.Element {
 
   return (
     <>
-      <Stack alignItems="center" width={ONBOARDING_CONTENT_WIDTH}>
-        <YStack gap="$spacing12">
-          <YStack alignItems="center" gap="$spacing12">
-            <YStack alignItems="center" gap="$spacing24">
+      <Flex alignItems="center" width={ONBOARDING_CONTENT_WIDTH}>
+        <Flex gap="$spacing12">
+          <Flex alignItems="center" gap="$spacing12">
+            <Flex alignItems="center" gap="$spacing24">
               {/* TODO: use AddressDisplay here */}
               <Unicon address={address} size={iconSizes.icon64} />
               <Text color="$neutral1" variant="headlineLarge">
                 {nickname}
               </Text>
-            </YStack>
+            </Flex>
             <Text color="$neutral2" variant="subheadSmall">
               {sanitizeAddressText(shortenAddress(address))}
             </Text>
-          </YStack>
-          <YStack gap="$spacing12" paddingVertical="$spacing36">
-            <XStack gap="$spacing12">
+          </Flex>
+          <Flex gap="$spacing12" py="$spacing36">
+            <Flex row gap="$spacing12">
               {/* TODO(EXT-210): clean up use of colors here and just pass color value */}
               <OnboardingCompleteCard
                 Icon={<Icons.Buy color={ONBOARDING_COLORS.GREEN} size={iconSizes.icon20} />}
@@ -90,8 +90,8 @@ export function Complete(): JSX.Element {
                 title="Transfer from exchange"
                 url={uniswapUrls.interfaceUrl}
               />
-            </XStack>
-            <XStack gap="$spacing12">
+            </Flex>
+            <Flex row gap="$spacing12">
               <OnboardingCompleteCard
                 Icon={
                   <Icons.SwapActionButton color={ONBOARDING_COLORS.PINK} size={iconSizes.icon20} />
@@ -109,35 +109,35 @@ export function Complete(): JSX.Element {
                 title="Take a tour"
                 url={uniswapUrls.interfaceUrl}
               />
-            </XStack>
-          </YStack>
-        </YStack>
-      </Stack>
+            </Flex>
+          </Flex>
+        </Flex>
+      </Flex>
 
       {/* check for false because !isPinned will trigger on undefined, and since that's what the value gets initialized as */}
       {/* it would flicker with a false positive before it can check if it's pinned or not */}
       {isPinned === false && (
         // extension is not pinned, show reminder popup
         // TODO: try using Tamagui Popover component here
-        <Stack position="absolute" right={0} top={-60}>
+        <Flex position="absolute" right={0} top={-60}>
           {/* pinning reminder popup container */}
-          <Stack
-            backgroundColor="$surface2"
+          <Flex
+            bg="$surface2"
             borderRadius="$rounded20"
             gap="$spacing24"
-            marginRight={POPUP_OFFSET}
-            marginTop={POPUP_OFFSET}
-            padding="$spacing24"
+            mr={POPUP_OFFSET}
+            mt={POPUP_OFFSET}
+            p="$spacing24"
             // TODO(EXT-141): revisit design of shadow (tweak color, figure out why opacity doesn't apply, tweak radius)
             shadowColor="$neutral3"
             shadowRadius={POPUP_SHADOW_RADIUS}
             width={POPUP_WIDTH}>
             {/* heading and puzzle icon */}
-            <Stack gap="$spacing2">
+            <Flex gap="$spacing2">
               <Text numberOfLines={1} variant="bodySmall">
                 Pin the extension to your browser window
               </Text>
-              <XStack alignItems="center" gap="$spacing8">
+              <Flex row alignItems="center" gap="$spacing8">
                 <Text numberOfLines={1} variant="bodySmall">
                   by clicking on the
                 </Text>
@@ -146,39 +146,39 @@ export function Complete(): JSX.Element {
                 <Text numberOfLines={1} variant="bodySmall">
                   icon, and then the pin
                 </Text>
-              </XStack>
-            </Stack>
+              </Flex>
+            </Flex>
             {/* mocked extension list item container */}
-            <XStack
+            <Flex
+              row
               alignItems="center"
-              backgroundColor="$surface1"
+              bg="$surface1"
               borderRadius="$rounded4"
-              paddingHorizontal="$spacing12"
-              paddingVertical="$spacing8">
+              px="$spacing12"
+              py="$spacing8">
               {/* mocked extension icon and name */}
-              <XStack alignItems="center" flexGrow={1} gap="$spacing12" justifyContent="flex-start">
+              <Flex grow row alignItems="center" gap="$spacing12" justifyContent="flex-start">
                 {/* mocked extension icon */}
-                <Stack
-                  alignItems="center"
-                  backgroundColor="$sporeWhite"
+                <Flex
+                  centered
+                  bg="$sporeWhite"
                   borderRadius="$roundedFull"
                   flexGrow={0}
-                  justifyContent="center"
-                  padding="$spacing4">
+                  p="$spacing4">
                   <Image
                     height={iconSizes.icon24}
                     source={UNISWAP_LOGO}
                     theme="primary"
                     width={iconSizes.icon24}
                   />
-                </Stack>
+                </Flex>
                 {/* mocked extension list item name */}
                 <Text variant="bodyLarge">Uniswap Wallet</Text>
-              </XStack>
+              </Flex>
               {/* mocked extension list item pin button and more icon container */}
-              <XStack alignItems="center" gap="$spacing12">
+              <Flex row alignItems="center" gap="$spacing12">
                 {/* mocked extension list item pin button */}
-                <Stack alignItems="center" justifyContent="center">
+                <Flex alignItems="center" justifyContent="center">
                   <Circle backgroundColor="$DEP_accentBranded" opacity={0.25} size={40} />
                   <Flex
                     alignItems="center"
@@ -188,31 +188,31 @@ export function Complete(): JSX.Element {
                     width={40}>
                     <PinIcon height={iconSizes.icon20} width={iconSizes.icon20} />
                   </Flex>
-                </Stack>
+                </Flex>
                 {/* mocked extension list item more icon */}
                 <MoreIcon height={iconSizes.icon20} width={iconSizes.icon20} />
-              </XStack>
-            </XStack>
-          </Stack>
-        </Stack>
+              </Flex>
+            </Flex>
+          </Flex>
+        </Flex>
       )}
 
       {/* this and the condition above are separated out as two separate conditions that check for false and true respectively */}
       {/* instead of as a ternary, because we initialize the value as undefined instead of false, to avoid a flicker on re-render */}
       {isPinned && (
         <Toast
-          backgroundColor="$surface2"
+          bg="$surface2"
           borderColor="$surface3"
           borderRadius="$roundedFull"
           borderWidth={1}
           duration={30_000}
           gap="$spacing4"
           justifyContent="center"
-          marginTop="$spacing12"
+          mt="$spacing12"
           opacity={0.9}
           open={true}
-          paddingHorizontal="$spacing36"
-          paddingVertical="$spacing24"
+          px="$spacing36"
+          py="$spacing24"
           viewportName="onboarding">
           <Toast.Title alignItems="center" display="flex" flexDirection="row" gap="$spacing8">
             <Icons.Checkmark color="$statusSuccess" size={iconSizes.icon24} />
@@ -247,23 +247,22 @@ function OnboardingCompleteCard({
 }: OnboardingCompleteCardProps): JSX.Element {
   return (
     <Link rel="noopener noreferrer" style={{ ...linkStyles }} target="_blank" to={url}>
-      <Stack
+      <Flex
         alignItems="flex-start"
-        backgroundColor={backgroundColor}
+        bg={backgroundColor}
         borderColor="$surface3"
         borderRadius="$rounded20"
         borderWidth={1}
         cursor={disabled ? 'not-allowed' : 'pointer'}
-        display="flex"
         height={100}
         justifyContent="space-between"
-        padding="$spacing16"
+        p="$spacing16"
         width={200}>
         {Icon}
         <Text color={color} textDecorationLine="none" variant="subheadSmall">
           {title}
         </Text>
-      </Stack>
+      </Flex>
     </Link>
   )
 }

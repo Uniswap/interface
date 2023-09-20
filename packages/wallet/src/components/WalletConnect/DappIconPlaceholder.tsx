@@ -11,10 +11,10 @@ export function DappIconPlaceholder({
   return (
     <Flex
       centered
+      fill
       row
       backgroundColor="$surface2"
       borderRadius="$roundedFull"
-      flex={1}
       height={iconSize}
       width={iconSize}>
       <Text

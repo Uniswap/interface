@@ -43,7 +43,7 @@ export function SafeKeyboardOnboardingScreen({
 
   const header = (
     <Flex gap="$spacing12" m="$spacing12">
-      <Text paddingTop={paddingTop} textAlign="center" variant={titleSize}>
+      <Text pt={paddingTop} textAlign="center" variant={titleSize}>
         {title}
       </Text>
       {subtitle ? (

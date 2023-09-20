@@ -1,4 +1,4 @@
-import { ColorTokens, Flex, Icons, Text, XStack } from 'ui/src'
+import { ColorTokens, Flex, Icons, Text } from 'ui/src'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { formatNumber, formatPercent, NumberType } from 'utilities/src/format/format'
 
@@ -36,7 +36,8 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
     : ''
 
   return (
-    <XStack
+    <Flex
+      row
       alignItems="center"
       gap="$spacing2"
       justifyContent={alignRight ? 'flex-end' : 'flex-start'}>
@@ -54,6 +55,6 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
           {absoluteChange ? `${formattedAbsChange} (${formattedChange})` : formattedChange}
         </Text>
       </Flex>
-    </XStack>
+    </Flex>
   )
 }

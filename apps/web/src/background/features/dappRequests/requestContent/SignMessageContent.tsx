@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { SignMessageRequest } from 'src/background/features/dappRequests/dappRequestTypes'
 import { DappRequestStoreItem } from 'src/background/features/dappRequests/slice'
-import { Icons, Text, XStack, YStack } from 'ui/src'
+import { Flex, Icons, Text } from 'ui/src'
 import { colors } from 'ui/src/theme/color'
 import { opacify } from 'ui/src/theme/color/utils'
 import { iconSizes } from 'ui/src/theme/iconSizes'
@@ -13,8 +13,8 @@ const EDUCATION_BLUE_SOFT = opacify(4, EDUCATION_BLUE)
 function SignatureEducationBox(): JSX.Element {
   const { t } = useTranslation()
   return (
-    <YStack gap="$spacing8" padding="$spacing16" style={{ backgroundColor: EDUCATION_BLUE_SOFT }}>
-      <XStack gap="$spacing8">
+    <Flex gap="$spacing8" p="$spacing16" style={{ backgroundColor: EDUCATION_BLUE_SOFT }}>
+      <Flex row gap="$spacing8">
         <Icons.GraduationCap
           color={EDUCATION_BLUE}
           height={iconSizes.icon20}
@@ -23,13 +23,13 @@ function SignatureEducationBox(): JSX.Element {
         <Text style={{ color: EDUCATION_BLUE }} variant="bodySmall">
           {t('What‘s a signature request?')}
         </Text>
-      </XStack>
+      </Flex>
       <Text color="$neutral2" variant="bodySmall">
         {t(
           'A signature is required to prove that you own the wallet without exposing your private keys'
         )}
       </Text>
-    </YStack>
+    </Flex>
   )
 }
 
@@ -41,23 +41,23 @@ export const SignMessageDetails = ({ request }: { request: DappRequestStoreItem 
 
   return (
     <>
-      <XStack borderColor="$surface3" borderWidth={1} marginVertical="$spacing16" width="100%" />
-      <YStack flex={1} gap="$spacing16" width="100%">
-        <YStack
-          backgroundColor="$surface2"
+      <Flex row borderColor="$surface3" borderWidth={1} my="$spacing16" width="100%" />
+      <Flex fill gap="$spacing16" width="100%">
+        <Flex
+          fill
+          bg="$surface2"
           borderRadius="$rounded16"
-          flex={1}
           gap="$spacing16"
-          margin="$none"
+          m="$none"
           overflow="scroll"
-          paddingHorizontal="$spacing16"
-          paddingVertical="$spacing12">
+          px="$spacing16"
+          py="$spacing12">
           <Text color="$neutral2" variant="bodySmall">
             {signMessageRequest.messageHex}
           </Text>
-        </YStack>
+        </Flex>
         <SignatureEducationBox />
-      </YStack>
+      </Flex>
     </>
   )
 }

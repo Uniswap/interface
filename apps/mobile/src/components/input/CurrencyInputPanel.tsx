@@ -216,8 +216,8 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
         alignItems="center"
         gap="$spacing8"
         justifyContent={!currencyInfo ? 'center' : 'space-between'}
-        paddingBottom={innerPaddingBottom}
-        paddingTop={innerPaddingTop}>
+        pb={innerPaddingBottom}
+        pt={innerPaddingTop}>
         {currencyInfo && (
           <Flex
             fill

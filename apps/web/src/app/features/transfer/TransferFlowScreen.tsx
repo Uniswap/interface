@@ -10,7 +10,7 @@ import { Flex } from 'ui/src'
 export function TransferFlowScreen(): JSX.Element {
   return (
     <TransferContextProvider>
-      <Flex flex={1} padding="$spacing16">
+      <Flex fill p="$spacing16">
         <CurrentScreen />
       </Flex>
     </TransferContextProvider>

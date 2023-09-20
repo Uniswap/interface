@@ -69,7 +69,7 @@ export function SettingsCloudBackupPasswordCreateScreen({
                   borderColor="$accent1"
                   borderRadius="$rounded12"
                   borderWidth={1}
-                  padding="$spacing12">
+                  p="$spacing12">
                   <Icons.OSDynamicCloudIcon
                     color={colors.accent1.val}
                     height={iconSizes.icon20}

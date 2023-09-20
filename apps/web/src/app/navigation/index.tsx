@@ -6,7 +6,7 @@ import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import { DappRequestContent } from 'src/background/features/dappRequests/DappRequestContent'
 import { useAppSelector } from 'src/background/store'
 import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
-import { Flex, YStack } from 'ui/src'
+import { Flex } from 'ui/src'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
 export function MainContent(): JSX.Element {
@@ -27,11 +27,11 @@ export function WebNavigation(): JSX.Element {
   const isLoggedIn = useAppSelector((state) => state.wallet.isUnlocked)
 
   return (
-    <YStack backgroundColor="$surface1" flex={1} minHeight="100vh">
-      <Flex flex={1} flexGrow={1} overflow="visible">
+    <Flex fill bg="$surface1" minHeight="100vh">
+      <Flex fill grow overflow="visible">
         {isLoggedIn ? <Outlet /> : <LoggedOut />}
       </Flex>
-    </YStack>
+    </Flex>
   )
 }
 

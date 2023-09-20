@@ -69,11 +69,7 @@ export function OnboardingScreen({
           {/* Text content */}
           <Flex centered gap="$spacing12" m="$spacing12">
             {title && (
-              <Text
-                allowFontScaling={false}
-                paddingTop={paddingTop}
-                textAlign="center"
-                variant={titleSize}>
+              <Text allowFontScaling={false} pt={paddingTop} textAlign="center" variant={titleSize}>
                 {title}
               </Text>
             )}

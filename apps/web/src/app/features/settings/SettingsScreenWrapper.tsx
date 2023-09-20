@@ -6,7 +6,7 @@ import { Flex } from 'ui/src'
  */
 export function SettingsScreenWrapper(): JSX.Element {
   return (
-    <Flex backgroundColor="$surface1" flex={1} padding="$spacing16">
+    <Flex fill backgroundColor="$surface1" p="$spacing16">
       <Outlet />
     </Flex>
   )

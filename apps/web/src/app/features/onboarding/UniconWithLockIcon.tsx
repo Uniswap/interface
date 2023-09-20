@@ -9,7 +9,7 @@ export function UniconWithLockIcon({ address }: { address: Address }): JSX.Eleme
         backgroundColor="$surface2"
         borderRadius="$roundedFull"
         bottom={-4}
-        padding="$spacing8"
+        p="$spacing8"
         position="absolute"
         right={-4}>
         <Icons.FileListLock color="$accent1" size={iconSizes.icon16} />

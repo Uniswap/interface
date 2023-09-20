@@ -10,7 +10,7 @@ export function RecipientSelector(): JSX.Element {
         <Text variant="bodySmall">{t('To')}</Text>
       </Flex>
 
-      <Flex flex={1}>Recipient Input</Flex>
+      <Flex fill>Recipient Input</Flex>
     </Flex>
   )
 }

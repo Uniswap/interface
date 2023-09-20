@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Text, Unicon, XStack } from 'ui/src'
+import { Flex, Text, Unicon } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
@@ -20,20 +20,21 @@ export function AccountRowItem({ address, onPress }: AccountRowItemProps): JSX.E
   }, [address])
 
   return (
-    <XStack
+    <Flex
+      fill
+      row
       alignItems="center"
-      flex={1}
       gap="$spacing12"
       justifyContent="space-between"
-      paddingVertical="$spacing12"
+      py="$spacing12"
       onPress={onPress}>
-      <XStack alignItems="center" gap="$spacing12">
+      <Flex row alignItems="center" gap="$spacing12">
         {icon}
         <Text variant="bodyLarge">{name}</Text>
-      </XStack>
+      </Flex>
       <Text color="$neutral3" variant="monospace">
         {shortenAddress(address)}
       </Text>
-    </XStack>
+    </Flex>
   )
 }

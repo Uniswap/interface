@@ -332,13 +332,13 @@ export function TransferTokenForm({
             {transferWarning && !isBlocked ? (
               <TouchableArea mt="$spacing1" onPress={onTransferWarningClick}>
                 <Flex
+                  grow
                   row
                   alignItems="center"
                   alignSelf="stretch"
                   backgroundColor={transferWarningColor.background}
                   borderBottomLeftRadius="$rounded16"
                   borderBottomRightRadius="$rounded16"
-                  flexGrow={1}
                   gap="$spacing8"
                   px="$spacing16"
                   py="$spacing12">

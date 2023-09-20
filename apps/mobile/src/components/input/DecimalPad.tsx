@@ -195,8 +195,8 @@ function KeyButton({
       disabled={isDisabled}
       hapticStyle={ImpactFeedbackStyle.Light}
       justifyContent="center"
-      padding="$spacing16"
-      paddingTop={paddingTop}
+      p="$spacing16"
+      pt={paddingTop}
       scaleTo={1.125}
       testID={'decimal-pad-' + label}
       width={index % 3 === 1 ? '50%' : '25%'}

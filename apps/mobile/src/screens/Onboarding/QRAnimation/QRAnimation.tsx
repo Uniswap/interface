@@ -312,7 +312,7 @@ export function QRAnimation({
                   <Flex row alignItems="center" gap="$spacing8">
                     <Flex
                       borderRadius="$roundedFull"
-                      padding="$spacing8"
+                      p="$spacing8"
                       style={{ backgroundColor: opacify(10, colors.sporeWhite.val) }}>
                       <LockIcon
                         color={colors.sporeWhite.val}

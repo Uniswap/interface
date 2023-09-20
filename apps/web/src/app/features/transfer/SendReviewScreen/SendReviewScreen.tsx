@@ -12,11 +12,11 @@ export function SendReviewScreen(): JSX.Element {
         <Top />
       </Flex>
 
-      <Flex row flex={1}>
+      <Flex fill row>
         <AmountAndRecipientSummary />
       </Flex>
 
-      <Flex centered row borderTopColor="$neutral3" borderTopWidth={1} paddingTop="$spacing24">
+      <Flex centered row borderTopColor="$neutral3" borderTopWidth={1} pt="$spacing24">
         <NetworkAndWalletSummary />
       </Flex>
 
@@ -42,11 +42,11 @@ function Top(): JSX.Element {
       </Flex>
 
       <Flex
+        fill
         borderBottomColor="$neutral3"
         borderBottomWidth={1}
-        flex={1}
-        marginRight={iconSizes.icon24}
-        paddingBottom="$spacing16">
+        mr={iconSizes.icon24}
+        pb="$spacing16">
         <Text fontSize={24} fontWeight="300">
           {t('Review send')}
         </Text>

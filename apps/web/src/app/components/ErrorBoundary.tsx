@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRouteError } from 'react-router-dom'
-import { Button, Flex, Stack, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import DeadLuni from 'ui/src/assets/graphics/dead-luni.svg'
 
 export function ErrorBoundary({ children }: PropsWithChildren<unknown>): JSX.Element {
@@ -13,10 +13,10 @@ export function ErrorBoundary({ children }: PropsWithChildren<unknown>): JSX.Ele
   }
 
   return (
-    <Stack
+    <Flex
+      fill
       alignItems="center"
-      backgroundColor="$surface2"
-      flex={1}
+      bg="$surface2"
       minHeight="100vh"
       px="$spacing16"
       py="$spacing48"
@@ -36,6 +36,6 @@ export function ErrorBoundary({ children }: PropsWithChildren<unknown>): JSX.Ele
       <Button theme="primary" onPress={(): void => chrome.runtime.reload()}>
         {t('Restart app')}
       </Button>
-    </Stack>
+    </Flex>
   )
 }

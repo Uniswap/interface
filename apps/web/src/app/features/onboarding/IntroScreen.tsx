@@ -8,7 +8,7 @@ import {
 } from 'src/app/navigation/constants'
 import { useAppSelector } from 'src/background/store'
 import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
-import { Button, Image, Stack, Text, XStack, YStack } from 'ui/src'
+import { Button, Flex, Image, Text } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
 
@@ -23,12 +23,8 @@ export function IntroScreen(): JSX.Element {
   if (isOnboarded) {
     // this case will only be triggered if a user manually arrives directly on /onboarding after having completed onboarding
     return (
-      <Stack
-        alignItems="center"
-        flexGrow={1}
-        justifyContent="center"
-        width={ONBOARDING_CONTENT_WIDTH}>
-        <YStack alignItems="center" gap="$spacing12">
+      <Flex centered grow width={ONBOARDING_CONTENT_WIDTH}>
+        <Flex alignItems="center" gap="$spacing12">
           <Text color="$neutral1" variant="subheadLarge">
             {t('You’ve already completed onboarding')}
           </Text>
@@ -37,44 +33,32 @@ export function IntroScreen(): JSX.Element {
               'To create more wallets, open the account switcher inside the extension popup, or reinstall the extension to start over'
             )}
           </Text>
-        </YStack>
-      </Stack>
+        </Flex>
+      </Flex>
     )
   }
 
   return (
-    <XStack
-      alignItems="center"
-      flexGrow={1}
-      gap={100}
-      justifyContent="center"
-      marginBottom="$spacing60"
-      minWidth={INTRO_SCREEN_WIDTH}>
-      <YStack gap="$spacing12" width="100%">
-        <Stack alignItems="center" justifyContent="center" paddingBottom="$spacing8">
-          <Stack
-            alignItems="center"
-            backgroundColor="$sporeWhite"
-            borderRadius="$rounded24"
-            flexGrow={0}
-            justifyContent="center"
-            padding="$spacing12">
+    <Flex centered grow row gap={100} mb="$spacing60" minWidth={INTRO_SCREEN_WIDTH}>
+      <Flex gap="$spacing12" width="100%">
+        <Flex centered pb="$spacing8">
+          <Flex centered bg="$sporeWhite" borderRadius="$rounded24" flexGrow={0} p="$spacing12">
             <Image
               height={iconSizes.icon64}
               source={UNISWAP_LOGO}
               theme="primary"
               width={iconSizes.icon64}
             />
-          </Stack>
-        </Stack>
-        <Stack marginBottom="$spacing48">
+          </Flex>
+        </Flex>
+        <Flex mb="$spacing48">
           <Text textAlign="center" variant="headlineMedium">
             Welcome to
           </Text>
           <Text color="$accent1" textAlign="center" variant="headlineMedium">
             Uniswap Wallet
           </Text>
-        </Stack>
+        </Flex>
         <Button
           flexGrow={1}
           theme="primary"
@@ -95,7 +79,7 @@ export function IntroScreen(): JSX.Element {
           }>
           {t('I already have a wallet')}
         </Button>
-      </YStack>
-    </XStack>
+      </Flex>
+    </Flex>
   )
 }

@@ -174,7 +174,7 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
       isDismissible={false}
       name={ModalName.SeedPhraseWarningModal}>
       <Flex centered gap="$spacing12" pb="$spacing48" pt="$spacing36" px="$spacing24">
-        <Flex centered backgroundColor="$surface2" borderRadius="$roundedFull" padding="$spacing8">
+        <Flex centered backgroundColor="$surface2" borderRadius="$roundedFull" p="$spacing8">
           <LockIcon
             color={colors.neutral1.val}
             height={iconSizes.icon24}
@@ -190,7 +190,7 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
           )}
         </Text>
         <TouchableOpacity onPress={onPress}>
-          <Text color="$accent1" paddingTop="$spacing24" variant="buttonLabelMedium">
+          <Text color="$accent1" pt="$spacing24" variant="buttonLabelMedium">
             {t('I’m ready')}
           </Text>
         </TouchableOpacity>

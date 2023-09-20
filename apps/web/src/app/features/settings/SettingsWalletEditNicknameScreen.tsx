@@ -5,7 +5,7 @@ import { Input } from 'src/app/components/Input'
 import { ScreenHeader } from 'src/app/components/layout/SreenHeader'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { useAppDispatch } from 'src/background/store'
-import { Button, Text, YStack } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import {
   EditAccountAction,
   editAccountActions,
@@ -41,10 +41,10 @@ function EditNicknameScreenContent({ address }: { address: Address }): JSX.Eleme
   }
 
   return (
-    <YStack backgroundColor="$surface1" flexGrow={1} gap="$spacing12">
+    <Flex grow bg="$surface1" gap="$spacing12">
       <ScreenHeader title={t('Edit nickname')} />
-      <YStack flex={1} justifyContent="space-between" padding="$spacing12">
-        <YStack flex={1} gap="$spacing24">
+      <Flex fill justifyContent="space-between" p="$spacing12">
+        <Flex fill gap="$spacing24">
           <Input
             centered
             large
@@ -68,12 +68,12 @@ function EditNicknameScreenContent({ address }: { address: Address }): JSX.Eleme
           <Text color="$neutral3" textAlign="center" variant="bodySmall">
             {t('This nickname is only visible to you.')}
           </Text>
-        </YStack>
+        </Flex>
 
         <Button theme="secondary" onPress={handleNicknameUpdate}>
           {t('Save')}
         </Button>
-      </YStack>
-    </YStack>
+      </Flex>
+    </Flex>
   )
 }

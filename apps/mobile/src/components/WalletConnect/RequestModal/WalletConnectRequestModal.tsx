@@ -266,11 +266,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     <>
       {showNetworkFeeInfoModal && <NetworkFeeInfoModal onClose={onCloseNetworkFeeInfo} />}
       <BottomSheetModal name={ModalName.WCSignRequest} onClose={handleClose}>
-        <Flex
-          gap="$spacing24"
-          paddingBottom="$spacing48"
-          paddingHorizontal="$spacing16"
-          pt="$spacing36">
+        <Flex gap="$spacing24" pb="$spacing48" pt="$spacing36" px="$spacing16">
           <ClientDetails permitInfo={permitInfo} request={request} />
           <Flex gap="$spacing12">
             <Flex

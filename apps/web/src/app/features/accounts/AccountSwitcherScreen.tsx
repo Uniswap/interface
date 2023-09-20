@@ -5,7 +5,7 @@ import { ScreenHeader } from 'src/app/components/layout/SreenHeader'
 import { AccountItem } from 'src/app/features/accounts/AccountItem'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { useSagaStatus } from 'src/background/utils/useSagaStatus'
-import { Flex, Icons, ScrollView, Text, useUniconColors, XStack, YStack } from 'ui/src'
+import { Flex, Icons, ScrollView, Text, useUniconColors } from 'ui/src'
 import { iconSizes, validToken } from 'ui/src/theme'
 import {
   createAccountActions,
@@ -47,14 +47,10 @@ export function AccountSwitcherScreen(): JSX.Element {
   }
 
   return (
-    <YStack
-      backgroundColor="$surface1"
-      gap="$spacing12"
-      paddingHorizontal="$spacing12"
-      paddingVertical="$spacing8">
+    <Flex bg="$surface1" gap="$spacing12" px="$spacing12" py="$spacing8">
       <ScreenHeader title={t('Your wallets')} />
       <ScrollView backgroundColor="$surface1" borderBottomEndRadius="$rounded16" height="auto">
-        <YStack gap="$spacing12">
+        <Flex gap="$spacing12">
           {accountAddresses.map((address: string) => {
             return (
               <AccountItem
@@ -69,8 +65,8 @@ export function AccountSwitcherScreen(): JSX.Element {
               />
             )
           })}
-        </YStack>
-        <XStack alignItems="center" cursor="pointer" gap="$spacing12" marginTop="$spacing12">
+        </Flex>
+        <Flex row alignItems="center" cursor="pointer" gap="$spacing12" mt="$spacing12">
           <Flex
             centered
             borderColor="$surface2"
@@ -80,15 +76,11 @@ export function AccountSwitcherScreen(): JSX.Element {
             width={iconSizes.icon36}>
             <Icons.Plus color="$neutral2" height={iconSizes.icon20} width={iconSizes.icon20} />
           </Flex>
-          <Text
-            color="$neutral2"
-            paddingVertical="$spacing8"
-            variant="bodyLarge"
-            onPress={onCreateWallet}>
+          <Text color="$neutral2" py="$spacing8" variant="bodyLarge" onPress={onCreateWallet}>
             Add wallet
           </Text>
-        </XStack>
+        </Flex>
       </ScrollView>
-    </YStack>
+    </Flex>
   )
 }

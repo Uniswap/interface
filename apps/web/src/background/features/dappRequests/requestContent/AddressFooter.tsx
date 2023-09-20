@@ -1,24 +1,25 @@
-import { Text, Unicon, XStack, YStack } from 'ui/src'
+import { Flex, Text, Unicon } from 'ui/src'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 export function AddressFooter({ account }: { account: Account }): JSX.Element {
   return (
-    <YStack borderBottomLeftRadius="$rounded16" borderBottomRightRadius="$rounded16" width="100%">
-      <XStack
+    <Flex borderBottomLeftRadius="$rounded16" borderBottomRightRadius="$rounded16" width="100%">
+      <Flex
+        fill
+        row
         borderTopColor="$background"
         borderTopWidth="$spacing1"
-        flex={1}
         justifyContent="space-between"
-        paddingHorizontal="$spacing16"
-        paddingVertical="$spacing16"
+        px="$spacing16"
+        py="$spacing16"
         width="100%">
-        <XStack alignItems="center" gap="$spacing8" maxWidth="100%">
+        <Flex row alignItems="center" gap="$spacing8" maxWidth="100%">
           <Unicon address={account.address} />
           <Text textOverflow="ellipsis" variant="subheadSmall">
             {account.name === undefined ? 'Wallet' : account.name}
           </Text>
-        </XStack>
+        </Flex>
         <Text
           color="$neutral2"
           overflow="hidden"
@@ -27,7 +28,7 @@ export function AddressFooter({ account }: { account: Account }): JSX.Element {
           variant="bodySmall">
           {sanitizeAddressText(shortenAddress(account.address))}
         </Text>
-      </XStack>
-    </YStack>
+      </Flex>
+    </Flex>
   )
 }
