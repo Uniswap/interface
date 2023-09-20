@@ -301,12 +301,12 @@ export const MockClosedUniswapXOrder = {
 
 const commonTransactionDetailsFields = {
   __typename: 'TransactionDetails',
-  from: '0xFromAddress',
+  from: MockSenderAddress,
   hash: 'someHash',
   id: 'transactionId',
   nonce: 12345,
   status: TransactionStatus.Confirmed,
-  to: '0xToAddress',
+  to: MockRecipientAddress,
 }
 
 export const MockNFTApproval = {
@@ -397,6 +397,20 @@ export const MockMoonpayPurchase = {
       {
         ...mockTokenTransferInPartsFragment,
         sender: MOONPAY_SENDER_ADDRESSES[0],
+      },
+    ],
+  },
+} as AssetActivityPartsFragment
+
+export const MockNFTReceive = {
+  ...mockAssetActivityPartsFragment,
+  details: {
+    ...commonTransactionDetailsFields,
+    type: TransactionType.Receive,
+    assetChanges: [
+      {
+        ...mockNftTransferPartsFragment,
+        direction: TransactionDirection.In,
       },
     ],
   },
