@@ -17,7 +17,7 @@ import { ExternalLink as LinkIconFeather } from 'react-feather'
 import { Text } from 'rebass'
 import { useAddUserToken } from 'state/user/hooks'
 import styled from 'styled-components'
-import { ButtonText, CopyLinkIcon, ExternalLink } from 'theme'
+import { ButtonText, CopyLinkIcon, ExternalLink } from 'theme/components'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const Wrapper = styled.div`

@@ -7,7 +7,8 @@ import { Listing, WalletAsset } from 'nft/types'
 import React from 'react'
 import { AlertTriangle, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
-import { BREAKPOINTS, ThemedText } from 'theme'
+import { BREAKPOINTS } from 'theme'
+import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 
 const ModalWrapper = styled(Column)`

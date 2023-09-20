@@ -12,7 +12,8 @@ import { useBag, useProfilePageState, useSellAsset, useWalletCollections } from 
 import { ProfilePageStateType } from 'nft/types'
 import { Suspense, useEffect, useRef } from 'react'
 import styled from 'styled-components'
-import { BREAKPOINTS, ThemedText } from 'theme'
+import { BREAKPOINTS } from 'theme'
+import { ThemedText } from 'theme/components'
 
 import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from './shared'
 

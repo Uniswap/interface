@@ -7,7 +7,7 @@ import { asSupportedChain } from 'constants/chains'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import styled, { useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const BalancesCard = styled.div`

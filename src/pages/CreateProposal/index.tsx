@@ -24,7 +24,7 @@ import {
   useUserVotes,
 } from 'state/governance/hooks'
 import styled from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme'
+import { ExternalLink, ThemedText } from 'theme/components'
 
 import { LATEST_GOVERNOR_INDEX } from '../../constants/governance'
 import { UNI } from '../../constants/tokens'

@@ -5,7 +5,7 @@ import { SmallButtonPrimary } from 'components/Button'
 import { useIsMobile } from 'nft/hooks'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import darkImage from '../../assets/images/404-page-dark.png'

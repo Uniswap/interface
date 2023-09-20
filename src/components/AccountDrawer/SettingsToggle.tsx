@@ -2,7 +2,7 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import Toggle from 'components/Toggle'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 const StyledColumn = styled(Column)`
   width: 100%;

@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { ButtonOutlined } from 'components/Button'
 import { AutoRow } from 'components/Row'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 const Button = styled(ButtonOutlined).attrs(() => ({
   padding: '6px',

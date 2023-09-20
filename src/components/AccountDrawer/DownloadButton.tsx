@@ -1,7 +1,7 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { PropsWithChildren, useCallback } from 'react'
 import styled from 'styled-components'
-import { ClickableStyle } from 'theme'
+import { ClickableStyle } from 'theme/components'
 import { openDownloadApp } from 'utils/openDownloadApp'
 
 const StyledButton = styled.button<{ padded?: boolean; branded?: boolean }>`

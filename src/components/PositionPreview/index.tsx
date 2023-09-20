@@ -13,7 +13,7 @@ import JSBI from 'jsbi'
 import { ReactNode, useCallback, useState } from 'react'
 import { Bound } from 'state/mint/v3/actions'
 import { useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
 

@@ -10,7 +10,7 @@ import { calcPoolPrice, formatWeiToDecimal, isInSameSudoSwapPool } from 'nft/uti
 import { default as Slider } from 'rc-slider'
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 const SweepContainer = styled.div`
   display: flex;
