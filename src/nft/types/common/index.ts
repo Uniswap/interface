@@ -1,9 +1,9 @@
-import { MediaType, NftMarketplace, NftStandard } from 'graphql/data/__generated__/types-and-hooks'
+import { MediaType, NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SortBy } from 'nft/hooks'
 
 import { SellOrder } from '../sell'
 
-export interface OpenSeaCollection {
+interface OpenSeaCollection {
   name: string
   slug: string
   image_url: string
@@ -60,12 +60,6 @@ export interface PriceInfo {
   basePrice: string
 }
 
-export interface AssetSellOrder {
-  ammFeePercent: number
-  ethReserves: number
-  tokenReserves: number
-}
-
 export interface Rarity {
   primaryProvider: string
   providers?: { provider: string; rank?: number; url?: string; score?: number }[]
@@ -78,20 +72,6 @@ export interface Trait {
   max_value?: any
   trait_count?: number
   order?: any
-}
-
-export interface Offer {
-  createdAt: number
-  endAt?: number
-  id: string
-  maker: string
-  marketplace: NftMarketplace
-  marketplaceUrl: string
-  price: {
-    currency?: string
-    value: number
-  }
-  quantity?: number
 }
 
 export interface GenieAsset {
@@ -171,11 +151,6 @@ export enum Markets {
 export const isPooledMarket = (market?: Markets): boolean => {
   if (!market) return false
   return market === Markets.NFTX || market === Markets.NFT20 || market === Markets.Sudoswap
-}
-
-export enum ToolTipType {
-  pool,
-  sus,
 }
 
 // index starts at 1 for boolean reasons

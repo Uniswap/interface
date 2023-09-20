@@ -14,7 +14,7 @@ export enum RoutingActions {
   Swap = 'Swap',
 }
 
-export type SellItem = {
+type SellItem = {
   id?: string
   symbol?: string
   name: string

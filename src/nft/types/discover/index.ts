@@ -6,33 +6,6 @@ export enum TimePeriod {
 }
 
 export type VolumeType = 'nft' | 'eth'
-export interface TransactionsResponse {
-  __v: number
-  _id: string
-  bannerImage: string
-  blockNumber: string
-  blockTimestamp: string
-  collections: [string]
-  createdAt: string
-  ethValue: number
-  from_address: string
-  gas: string
-  gasPrice: string
-  hash: string
-  isVerified: boolean
-  nftCount: number
-  profileImage: string
-  receiptContractAddress: string | null
-  receiptCumulatioveGasUsed: string
-  receiptGasUsed: string
-  receiptStatus: string
-  sweep: boolean
-  timestamp: string
-  to_address: string
-  updatedAt: string
-  usdValue: number
-  title: string
-}
 
 export interface TrendingCollection {
   name?: string
