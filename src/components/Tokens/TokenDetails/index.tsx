@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
+import { TokenInfo } from '@uniswap/token-lists'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -23,6 +24,8 @@ import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
+import { BaseVariant } from 'featureFlags'
+import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
 import { TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { Chain, TokenQuery, TokenQueryData } from 'graphql/data/Token'
 import { QueryToken } from 'graphql/data/Token'
@@ -39,6 +42,7 @@ import styled from 'styled-components'
 import { isAddress } from 'utils'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
+import { ActivitySection } from './ActivitySection'
 import { OnChangeTimePeriod } from './ChartSection'
 import InvalidTokenDetails from './InvalidTokenDetails'
 
@@ -56,6 +60,11 @@ const TokenTitle = styled.div`
   display: flex;
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
     display: inline;
+  }
+`
+const DividerLine = styled(Hr)`
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    display: none;
   }
 `
 
@@ -192,6 +201,8 @@ export default function TokenDetails({
     [continueSwap, setContinueSwap]
   )
 
+  const infoTokenDetailsPageEnabled = useInfoTDPFlag() === BaseVariant.Enabled
+
   // address will never be undefined if token is defined; address is checked here to appease typechecker
   if (detailedToken === undefined || !address) {
     return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!address} />
@@ -239,6 +250,12 @@ export default function TokenDetails({
               twitterName={tokenQueryData?.project?.twitterName}
             />
             {!detailedToken.isNative && <AddressSection address={address} />}
+            {infoTokenDetailsPageEnabled && (
+              <>
+                <DividerLine />
+                <ActivitySection tokenInfo={detailedToken as TokenInfo} />
+              </>
+            )}
           </LeftPanel>
         ) : (
           <TokenDetailsSkeleton />
