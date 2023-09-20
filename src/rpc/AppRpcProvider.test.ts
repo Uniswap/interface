@@ -1,5 +1,6 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { JsonRpcProvider, Network, Provider } from '@ethersproject/providers'
+import { ChainId } from '@uniswap/sdk-core'
 
 import AppRpcProvider from './AppRpcProvider'
 
@@ -32,27 +33,27 @@ describe('AppRpcProvider', () => {
   })
 
   test('constructor initializes with valid providers', () => {
-    expect(() => new AppRpcProvider(mockProviders)).not.toThrow()
+    expect(() => new AppRpcProvider(ChainId.MAINNET, mockProviders)).not.toThrow()
   })
 
   test('constructor throws with empty providers array', () => {
-    expect(() => new AppRpcProvider([])).toThrow('providers array empty')
+    expect(() => new AppRpcProvider(ChainId.MAINNET, [])).toThrow('providers array empty')
   })
 
   test('constructor throws with network mismatch', () => {
     mockProviders[0].network.chainId = 2
-    expect(() => new AppRpcProvider(mockProviders)).toThrow('networks mismatch')
+    expect(() => new AppRpcProvider(ChainId.MAINNET, mockProviders)).toThrow('networks mismatch')
   })
 
   test('constructor throws with invalid providers', () => {
     mockIsProvider.mockReturnValueOnce(false)
-    expect(() => new AppRpcProvider([{} as JsonRpcProvider])).toThrow('invalid provider')
+    expect(() => new AppRpcProvider(ChainId.MAINNET, [{} as JsonRpcProvider])).toThrow('invalid provider')
   })
 
   test('handles sendTransaction', async () => {
     const hash = '0x123'
     mockProvider1.sendTransaction.mockResolvedValue({ hash } as TransactionResponse)
-    const provider = new AppRpcProvider([mockProvider1])
+    const provider = new AppRpcProvider(ChainId.MAINNET, [mockProvider1])
 
     const result = await provider.perform('sendTransaction', { signedTransaction: '0xabc' })
     expect(result).toBe(hash)
@@ -65,7 +66,7 @@ describe('AppRpcProvider', () => {
     const FAST = 10
     mockProvider2.getBlockNumber = jest.fn(() => new Promise((resolve) => setTimeout(() => resolve(1), FAST)))
 
-    const appRpcProvider = new AppRpcProvider(mockProviders)
+    const appRpcProvider = new AppRpcProvider(ChainId.MAINNET, mockProviders)
 
     // Evaluate all providers
     const evaluationPromises = appRpcProvider.providerEvaluations.map(appRpcProvider.evaluateProvider)
@@ -83,7 +84,7 @@ describe('AppRpcProvider', () => {
     )
     mockProvider2.getBlockNumber = jest.fn(() => new Promise((resolve) => setTimeout(() => resolve(1), 100)))
 
-    const appRpcProvider = new AppRpcProvider(mockProviders)
+    const appRpcProvider = new AppRpcProvider(ChainId.MAINNET, mockProviders)
 
     // Evaluate all providers
     const evaluationPromises = appRpcProvider.providerEvaluations.map(appRpcProvider.evaluateProvider)
@@ -91,18 +92,18 @@ describe('AppRpcProvider', () => {
 
     // Validate that the providers are sorted correctly by latency
     const [provider, failingProvider] = AppRpcProvider.sortProviders(appRpcProvider.providerEvaluations.slice())
-    expect(provider.performance.failureRate).toBeLessThan(failingProvider.performance.failureRate)
+    expect(provider.performance.failureCount).toBeLessThan(failingProvider.performance.failureCount)
   })
 
-  test('should increment failureRate on provider failure', async () => {
+  test('should increment failureCount on provider failure', async () => {
     mockProvider1.getBlockNumber.mockRejectedValue(new Error('Failed'))
 
-    const appRpcProvider = new AppRpcProvider(mockProviders)
+    const appRpcProvider = new AppRpcProvider(ChainId.MAINNET, mockProviders)
 
     // Evaluate the failing provider
     await appRpcProvider.evaluateProvider(appRpcProvider.providerEvaluations[0])
 
-    // Validate that the failureRate was incremented
-    expect(appRpcProvider.providerEvaluations[0].performance.failureRate).toBe(1)
+    // Validate that the failureCount was incremented
+    expect(appRpcProvider.providerEvaluations[0].performance.failureCount).toBe(1)
   })
 })
