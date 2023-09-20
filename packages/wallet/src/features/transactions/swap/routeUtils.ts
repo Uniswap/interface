@@ -21,8 +21,12 @@ export function transformQuoteToTrade(
   deadline: number | undefined,
   slippageTolerance: number | undefined,
   quoteResult: QuoteResult | undefined
-): Trade {
+): Trade | null {
   const routes = computeRoutes(tokenInIsNative, tokenOutIsNative, quoteResult)
+
+  if (!routes) {
+    return null
+  }
 
   return new Trade({
     quote: quoteResult,

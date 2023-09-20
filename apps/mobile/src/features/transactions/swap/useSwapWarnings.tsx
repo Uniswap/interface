@@ -12,7 +12,11 @@ import {
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { formatPriceImpact } from 'utilities/src/format/format'
 import { useMemoCompare } from 'utilities/src/react/hooks'
-import { API_RATE_LIMIT_ERROR, SWAP_NO_ROUTE_ERROR } from 'wallet/src/features/routing/api'
+import {
+  API_RATE_LIMIT_ERROR,
+  NO_QUOTE_DATA,
+  SWAP_QUOTE_ERROR,
+} from 'wallet/src/features/routing/api'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { isOffline } from 'wallet/src/features/transactions/utils'
 
@@ -55,8 +59,8 @@ export function getSwapWarnings(
     // https://github.com/reduxjs/redux-toolkit/issues/1591
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const errorData = trade.error as any
-    // assume swaps with no routes available are due to low liquidity
-    if (errorData?.data?.errorCode === SWAP_NO_ROUTE_ERROR) {
+
+    if (errorData?.data?.errorCode === SWAP_QUOTE_ERROR || errorData?.message === NO_QUOTE_DATA) {
       warnings.push({
         type: WarningLabel.LowLiquidity,
         severity: WarningSeverity.Medium,
