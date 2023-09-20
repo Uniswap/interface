@@ -1,6 +1,6 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { Fraction, TradeType } from '@uniswap/sdk-core'
-import { BigNumber } from 'ethers/lib/ethers'
 import JSBI from 'jsbi'
 
 import { nativeOnChain } from '../../constants/tokens'

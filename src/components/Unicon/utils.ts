@@ -1,4 +1,4 @@
-import { isAddress } from 'ethers/lib/utils'
+import { isAddress } from '@ethersproject/address'
 
 import { svgPaths as containerPaths } from './Container'
 import { svgPaths as emblemPaths } from './Emblem'

@@ -1,3 +1,4 @@
+import { BaseContract } from '@ethersproject/contracts'
 import {
   ChainId,
   MULTICALL_ADDRESSES,
@@ -10,7 +11,6 @@ import NFTPositionManagerJSON from '@uniswap/v3-periphery/artifacts/contracts/No
 import { useWeb3React } from '@web3-react/core'
 import { isSupportedChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
-import { BaseContract } from 'ethers/lib/ethers'
 import { ContractInput, useUniswapPricesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { toContractInput } from 'graphql/data/util'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'

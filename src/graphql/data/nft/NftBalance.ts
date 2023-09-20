@@ -1,4 +1,4 @@
-import { parseEther } from 'ethers/lib/utils'
+import { parseEther } from '@ethersproject/units'
 import gql from 'graphql-tag'
 import { GenieCollection, WalletAsset } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'

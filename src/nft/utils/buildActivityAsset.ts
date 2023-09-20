@@ -1,4 +1,4 @@
-import { parseEther } from 'ethers/lib/utils'
+import { parseEther } from '@ethersproject/units'
 import { ActivityEvent, GenieAsset } from 'nft/types'
 
 import { formatEth } from './currency'
