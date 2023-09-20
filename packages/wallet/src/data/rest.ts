@@ -1,6 +1,7 @@
 import { gql, NetworkStatus, OperationVariables, QueryHookOptions, useQuery } from '@apollo/client'
 import { useEffect, useMemo } from 'react'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
+import { ROUTING_API_PATH } from 'wallet/src/features/routing/api'
 
 /** Wrapper around Apollo client `useQuery` that calls REST APIs */
 export function useRestQuery<
@@ -45,9 +46,12 @@ export function useRestQuery<
 
   // re-export query result with easier data access
   const result = useMemo(
-    // invalidate old query results if beyond TTL
-    () => ({ ...queryResult, data: cacheExpired ? undefined : queryResult.data?.data }),
-    [cacheExpired, queryResult]
+    // clear old routing API results if beyond TTL to avoid submitting outdated quotes
+    () => ({
+      ...queryResult,
+      data: cacheExpired && path === ROUTING_API_PATH ? undefined : queryResult.data?.data,
+    }),
+    [path, cacheExpired, queryResult]
   )
 
   useEffect(() => {

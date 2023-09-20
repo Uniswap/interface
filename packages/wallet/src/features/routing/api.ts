@@ -22,6 +22,8 @@ export const SWAP_NO_ROUTE_ERROR = 'NO_ROUTE'
 // https://github.com/Uniswap/api/blob/main/bin/stacks/api-v1.ts#L234
 export const API_RATE_LIMIT_ERROR = 'TOO_MANY_REQUESTS'
 
+export const ROUTING_API_PATH = '/v2/quote'
+
 export interface TradeQuoteRequest {
   amount: string
   deadline?: number
@@ -114,7 +116,7 @@ export function useQuoteQuery(
   }, [request])
 
   const result = useRestQuery<QuoteResponse, QuoteRequest | Record<string, never>>(
-    '/v2/quote',
+    ROUTING_API_PATH,
     params ?? {},
     ['quote', 'routing'],
     {
