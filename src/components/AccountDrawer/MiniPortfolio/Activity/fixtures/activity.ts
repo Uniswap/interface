@@ -13,6 +13,8 @@ import {
 } from 'graphql/data/__generated__/types-and-hooks'
 
 export const MockOrderTimestamp = 10000
+export const MockRecipientAddress = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
+export const MockSenderAddress = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
 
 const mockAssetActivityPartsFragment = {
   __typename: 'AssetActivity',
@@ -155,8 +157,8 @@ const mockNftTransferPartsFragment = {
   __typename: 'NftTransfer',
   id: 'transferId',
   nftStandard: NftStandard.Erc721,
-  sender: '0xSenderAddress',
-  recipient: '0xRecipientAddress',
+  sender: MockSenderAddress,
+  recipient: MockRecipientAddress,
   direction: TransactionDirection.Out,
   asset: {
     __typename: 'NftAsset',
@@ -187,8 +189,8 @@ const mockTokenTransferOutPartsFragment = {
   id: 'tokenTransferId',
   tokenStandard: TokenStandard.Erc20,
   quantity: '100',
-  sender: '0xSenderAddress',
-  recipient: '0xRecipientAddress',
+  sender: MockSenderAddress,
+  recipient: MockRecipientAddress,
   direction: TransactionDirection.Out,
   asset: {
     __typename: 'Token',
@@ -223,8 +225,8 @@ const mockTokenTransferInPartsFragment = {
   id: 'tokenTransferId',
   tokenStandard: TokenStandard.Erc20,
   quantity: '1',
-  sender: '0xSenderAddress',
-  recipient: '0xRecipientAddress',
+  sender: MockSenderAddress,
+  recipient: MockRecipientAddress,
   direction: TransactionDirection.In,
   asset: {
     __typename: 'Token',
@@ -347,5 +349,23 @@ export const MockTokenApproval = {
     ...commonTransactionDetailsFields,
     type: TransactionType.Approve,
     assetChanges: [mockTokenApprovalPartsFragment],
+  },
+} as AssetActivityPartsFragment
+
+export const MockTokenSend = {
+  ...mockAssetActivityPartsFragment,
+  details: {
+    ...commonTransactionDetailsFields,
+    type: TransactionType.Send,
+    assetChanges: [mockTokenTransferOutPartsFragment],
+  },
+} as AssetActivityPartsFragment
+
+export const MockTokenReceive = {
+  ...mockAssetActivityPartsFragment,
+  details: {
+    ...commonTransactionDetailsFields,
+    type: TransactionType.Receive,
+    assetChanges: [mockTokenTransferInPartsFragment],
   },
 } as AssetActivityPartsFragment

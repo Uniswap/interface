@@ -8,7 +8,11 @@ import {
   MockNFTTransfer,
   MockOpenUniswapXOrder,
   MockOrderTimestamp,
+  MockRecipientAddress,
+  MockSenderAddress,
   MockTokenApproval,
+  MockTokenReceive,
+  MockTokenSend,
   MockTokenTransfer,
 } from './fixtures/activity'
 import { parseRemoteActivities, useTimeSince } from './parseRemote'
@@ -42,8 +46,8 @@ describe('parseRemote', () => {
             decimals: 18,
             isNative: false,
             isToken: true,
-            name: 'WETH',
-            symbol: 'Wrapped Ether',
+            symbol: 'WETH',
+            name: 'Wrapped Ether',
           },
         ],
         descriptor: '100 DAI for 200 WETH',
@@ -120,8 +124,8 @@ describe('parseRemote', () => {
             decimals: 18,
             isNative: false,
             isToken: true,
-            name: 'WETH',
-            symbol: 'Wrapped Ether',
+            symbol: 'WETH',
+            name: 'Wrapped Ether',
           },
         ],
         descriptor: '100 DAI for 100 WETH',
@@ -157,6 +161,58 @@ describe('parseRemote', () => {
         status: 'CONFIRMED',
         timestamp: 10000,
         title: 'Approved',
+      })
+    })
+    it('should parse send', () => {
+      const result = parseRemoteActivities(jest.fn().mockReturnValue(100), [MockTokenSend])
+      expect(result?.['someHash']).toEqual({
+        chainId: 1,
+        currencies: [
+          {
+            address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+            chainId: 1,
+            decimals: 18,
+            isNative: false,
+            isToken: true,
+            name: 'DAI',
+            symbol: 'DAI',
+          },
+        ],
+        descriptor: '100 DAI to ',
+        otherAccount: MockRecipientAddress,
+        from: '0xFromAddress',
+        hash: 'someHash',
+        logos: ['logoUrl'],
+        nonce: 12345,
+        status: 'CONFIRMED',
+        timestamp: 10000,
+        title: 'Sent',
+      })
+    })
+    it('should parse receive', () => {
+      const result = parseRemoteActivities(jest.fn().mockReturnValue(100), [MockTokenReceive])
+      expect(result?.['someHash']).toEqual({
+        chainId: 1,
+        currencies: [
+          {
+            address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+            chainId: 1,
+            decimals: 18,
+            isNative: false,
+            isToken: true,
+            name: 'Wrapped Ether',
+            symbol: 'WETH',
+          },
+        ],
+        descriptor: '100 WETH from ',
+        otherAccount: MockSenderAddress,
+        from: '0xFromAddress',
+        hash: 'someHash',
+        logos: ['logoUrl'],
+        nonce: 12345,
+        status: 'CONFIRMED',
+        timestamp: 10000,
+        title: 'Received',
       })
     })
   })
