@@ -1,14 +1,16 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId, SUPPORTED_CHAINS } from '@uniswap/sdk-core'
 import { render } from 'test-utils/render'
 
 import ChainSelectorRow from './ChainSelectorRow'
 
 describe('ChainSelectorRow', () => {
-  it('should match snapshot', () => {
-    const { container } = render(
-      <ChainSelectorRow targetChain={ChainId.OPTIMISM} onSelectChain={jest.fn()} isPending={false} disabled={false} />
-    )
-    expect(container).toMatchSnapshot()
+  SUPPORTED_CHAINS.forEach((chainId) => {
+    it(`should match snapshot for chainId ${chainId}`, () => {
+      const { container } = render(
+        <ChainSelectorRow targetChain={chainId} onSelectChain={jest.fn()} isPending={false} disabled={false} />
+      )
+      expect(container).toMatchSnapshot()
+    })
   })
 
   it('should be clickable when enabled', () => {

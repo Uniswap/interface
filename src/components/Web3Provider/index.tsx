@@ -58,6 +58,7 @@ function Updater() {
         wallet_address: account,
         wallet_type: getConnection(connector).getName(),
         chain_id: chainId,
+        previousConnectedChainId,
         page: currentPage,
       })
     }
