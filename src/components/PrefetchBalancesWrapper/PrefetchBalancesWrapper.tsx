@@ -5,7 +5,7 @@ import usePrevious from 'hooks/usePrevious'
 import { atom, useAtom } from 'jotai'
 import { PropsWithChildren, useCallback, useEffect } from 'react'
 
-import { usePendingActivity } from './MiniPortfolio/Activity/hooks'
+import { usePendingActivity } from '../AccountDrawer/MiniPortfolio/Activity/hooks'
 
 /** Returns true if the number of pending activities has decreased */
 function useHasUpdatedTx() {

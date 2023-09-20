@@ -21,7 +21,7 @@ import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromG
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
-import { formatFiatPrice, formatNumberOrString, NumberType } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { MOONPAY_SENDER_ADDRESSES, OrderStatusTable, OrderTextTable } from '../constants'
 import { Activity } from './types'
@@ -33,6 +33,8 @@ type TransactionChanges = {
   NftApproval: NftApprovalPartsFragment[]
   NftApproveForAll: NftApproveForAllPartsFragment[]
 }
+
+type FormatNumberOrStringFunctionType = ReturnType<typeof useFormatter>['formatNumberOrString']
 
 // TODO: Move common contract metadata to a backend service
 const UNI_IMG =
@@ -140,13 +142,13 @@ function getSwapDescriptor({
  * @param transactedValue Transacted value amount from TokenTransfer API response
  * @returns parsed & formatted USD value as a string if currency is of type USD
  */
-function formatTransactedValue(transactedValue: TokenTransferPartsFragment['transactedValue']): string {
-  if (!transactedValue) return '-'
+function getTransactedValue(transactedValue: TokenTransferPartsFragment['transactedValue']): number | undefined {
+  if (!transactedValue) return undefined
   const price = transactedValue?.currency === GQLCurrency.Usd ? transactedValue.value ?? undefined : undefined
-  return formatFiatPrice(price)
+  return price
 }
 
-function parseSwap(changes: TransactionChanges) {
+function parseSwap(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
   if (changes.NftTransfer.length > 0 && changes.TokenTransfer.length === 1) {
     const collectionCounts = getCollectionCounts(changes.NftTransfer)
 
@@ -168,8 +170,8 @@ function parseSwap(changes: TransactionChanges) {
 
     if (sent && received) {
       const adjustedInput = parseFloat(sent.quantity) - parseFloat(refund?.quantity ?? '0')
-      const inputAmount = formatNumberOrString(adjustedInput, NumberType.TokenNonTx)
-      const outputAmount = formatNumberOrString(received.quantity, NumberType.TokenNonTx)
+      const inputAmount = formatNumberOrString({ input: adjustedInput, type: NumberType.TokenNonTx })
+      const outputAmount = formatNumberOrString({ input: received.quantity, type: NumberType.TokenNonTx })
       return {
         title: getSwapTitle(sent, received),
         descriptor: getSwapDescriptor({ tokenIn: sent.asset, inputAmount, tokenOut: received.asset, outputAmount }),
@@ -180,8 +182,8 @@ function parseSwap(changes: TransactionChanges) {
   return { title: t`Unknown Swap` }
 }
 
-function parseSwapOrder(changes: TransactionChanges) {
-  return { ...parseSwap(changes), prefixIconSrc: UniswapXBolt }
+function parseSwapOrder(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
+  return { ...parseSwap(changes, formatNumberOrString), prefixIconSrc: UniswapXBolt }
 }
 
 function parseApprove(changes: TransactionChanges) {
@@ -194,12 +196,12 @@ function parseApprove(changes: TransactionChanges) {
   return { title: t`Unknown Approval` }
 }
 
-function parseLPTransfers(changes: TransactionChanges) {
+function parseLPTransfers(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
   const poolTokenA = changes.TokenTransfer[0]
   const poolTokenB = changes.TokenTransfer[1]
 
-  const tokenAQuanitity = formatNumberOrString(poolTokenA.quantity, NumberType.TokenNonTx)
-  const tokenBQuantity = formatNumberOrString(poolTokenB.quantity, NumberType.TokenNonTx)
+  const tokenAQuanitity = formatNumberOrString({ input: poolTokenA.quantity, type: NumberType.TokenNonTx })
+  const tokenBQuantity = formatNumberOrString({ input: poolTokenB.quantity, type: NumberType.TokenNonTx })
 
   return {
     descriptor: `${tokenAQuanitity} ${poolTokenA.asset.symbol} and ${tokenBQuantity} ${poolTokenB.asset.symbol}`,
@@ -211,11 +213,15 @@ function parseLPTransfers(changes: TransactionChanges) {
 type TransactionActivity = AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment }
 type OrderActivity = AssetActivityPartsFragment & { details: SwapOrderDetailsPartsFragment }
 
-function parseSendReceive(changes: TransactionChanges, assetActivity: TransactionActivity) {
+function parseSendReceive(
+  changes: TransactionChanges,
+  formatNumberOrString: FormatNumberOrStringFunctionType,
+  assetActivity: TransactionActivity
+) {
   // TODO(cartcrom): remove edge cases after backend implements
   // Edge case: Receiving two token transfers in interaction w/ V3 manager === removing liquidity. These edge cases should potentially be moved to backend
   if (changes.TokenTransfer.length === 2 && callsPositionManagerContract(assetActivity)) {
-    return { title: t`Removed Liquidity`, ...parseLPTransfers(changes) }
+    return { title: t`Removed Liquidity`, ...parseLPTransfers(changes, formatNumberOrString) }
   }
 
   let transfer: NftTransferPartsFragment | TokenTransferPartsFragment | undefined
@@ -230,7 +236,7 @@ function parseSendReceive(changes: TransactionChanges, assetActivity: Transactio
   } else if (changes.TokenTransfer.length === 1) {
     transfer = changes.TokenTransfer[0]
     assetName = transfer.asset.symbol
-    amount = formatNumberOrString(transfer.quantity, NumberType.TokenNonTx)
+    amount = formatNumberOrString({ input: transfer.quantity, type: NumberType.TokenNonTx })
     currencies = [gqlToCurrency(transfer.asset)]
   }
 
@@ -241,7 +247,10 @@ function parseSendReceive(changes: TransactionChanges, assetActivity: Transactio
       return isMoonpayPurchase && transfer.__typename === 'TokenTransfer'
         ? {
             title: t`Purchased`,
-            descriptor: `${amount} ${assetName} ${t`for`} ${formatTransactedValue(transfer.transactedValue)}`,
+            descriptor: `${amount} ${assetName} ${t`for`} ${formatNumberOrString({
+              input: getTransactedValue(transfer.transactedValue),
+              type: NumberType.FiatTokenPrice,
+            })}`,
             logos: [moonpayLogoSrc],
             currencies,
           }
@@ -263,25 +272,37 @@ function parseSendReceive(changes: TransactionChanges, assetActivity: Transactio
   return { title: t`Unknown Send` }
 }
 
-function parseMint(changes: TransactionChanges, assetActivity: TransactionActivity) {
+function parseMint(
+  changes: TransactionChanges,
+  formatNumberOrString: FormatNumberOrStringFunctionType,
+  assetActivity: TransactionActivity
+) {
   const collectionMap = getCollectionCounts(changes.NftTransfer)
   if (Object.keys(collectionMap).length === 1) {
     const collectionName = Object.keys(collectionMap)[0]
 
     // Edge case: Minting a v3 positon represents adding liquidity
     if (changes.TokenTransfer.length === 2 && callsPositionManagerContract(assetActivity)) {
-      return { title: t`Added Liquidity`, ...parseLPTransfers(changes) }
+      return { title: t`Added Liquidity`, ...parseLPTransfers(changes, formatNumberOrString) }
     }
     return { title: t`Minted`, descriptor: `${collectionMap[collectionName]} ${collectionName}` }
   }
   return { title: t`Unknown Mint` }
 }
 
-function parseUnknown(_changes: TransactionChanges, assetActivity: TransactionActivity) {
+function parseUnknown(
+  _changes: TransactionChanges,
+  _formatNumberOrString: FormatNumberOrStringFunctionType,
+  assetActivity: TransactionActivity
+) {
   return { title: t`Contract Interaction`, ...COMMON_CONTRACTS[assetActivity.details.to.toLowerCase()] }
 }
 
-type ActivityTypeParser = (changes: TransactionChanges, assetActivity: TransactionActivity) => Partial<Activity>
+type ActivityTypeParser = (
+  changes: TransactionChanges,
+  formatNumberOrString: FormatNumberOrStringFunctionType,
+  assetActivity: TransactionActivity
+) => Partial<Activity>
 const ActivityParserByType: { [key: string]: ActivityTypeParser | undefined } = {
   [ActivityType.Swap]: parseSwap,
   [ActivityType.SwapOrder]: parseSwapOrder,
@@ -345,7 +366,10 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
   }
 }
 
-function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activity | undefined {
+function parseRemoteActivity(
+  assetActivity: AssetActivityPartsFragment,
+  formatNumberOrString: FormatNumberOrStringFunctionType
+): Activity | undefined {
   try {
     if (assetActivity.details.__typename === 'SwapOrderDetails') {
       return parseUniswapXOrder(assetActivity as OrderActivity)
@@ -385,6 +409,7 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
 
     const parsedFields = ActivityParserByType[assetActivity.details.type]?.(
       changes,
+      formatNumberOrString,
       assetActivity as TransactionActivity
     )
     return { ...defaultFields, ...parsedFields }
@@ -394,9 +419,12 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
   }
 }
 
-export function parseRemoteActivities(assetActivities?: readonly AssetActivityPartsFragment[]) {
+export function parseRemoteActivities(
+  formatNumberOrString: FormatNumberOrStringFunctionType,
+  assetActivities?: readonly AssetActivityPartsFragment[]
+) {
   return assetActivities?.reduce((acc: { [hash: string]: Activity }, assetActivity) => {
-    const activity = parseRemoteActivity(assetActivity)
+    const activity = parseRemoteActivity(assetActivity, formatNumberOrString)
     if (activity) acc[activity.hash] = activity
     return acc
   }, {})

@@ -248,10 +248,8 @@ export default function TokenDetails({
           <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
             <Swap
               chainId={pageChainId}
-              prefilledState={{
-                [Field.INPUT]: { currencyId: inputTokenAddress },
-                [Field.OUTPUT]: { currencyId: address === NATIVE_CHAIN_ID ? 'ETH' : address },
-              }}
+              initialInputCurrencyId={inputTokenAddress}
+              initialOutputCurrencyId={address === NATIVE_CHAIN_ID ? 'ETH' : address}
               onCurrencyChange={handleCurrencyChange}
               disableTokenInputs={pageChainId !== connectedChainId}
             />

@@ -335,7 +335,7 @@ export default function AddLiquidity() {
   return (
     <>
       <AppBody>
-        <AddRemoveTabs creating={isCreate} adding={true} autoSlippage={DEFAULT_ADD_V2_SLIPPAGE_TOLERANCE} />
+        <AddRemoveTabs creating={isCreate} adding={true} />
         <Wrapper>
           <TransactionConfirmationModal
             isOpen={showConfirm}
