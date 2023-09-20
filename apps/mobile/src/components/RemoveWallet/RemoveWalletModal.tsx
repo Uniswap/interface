@@ -19,9 +19,13 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { Flex, Text } from 'ui/src'
 import { iconSizes, opacify } from 'ui/src/theme'
+import {
+  EditAccountAction,
+  editAccountActions,
+} from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { selectSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
-import { removeAccounts, setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
+import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 
 export interface RemoveWalletModalState {
   address?: Address
@@ -75,13 +79,20 @@ export function RemoveWalletModal(): JSX.Element | null {
         },
       })
     }
-    const accountsToRemove = isReplacing
-      ? associatedAccounts.map((acc) => acc.address as string)
-      : [address]
-    dispatch(removeAccounts(accountsToRemove))
+    const accountsToRemove = isReplacing ? associatedAccounts : account ? [account] : []
+    accountsToRemove.forEach(({ address: accAddress, pushNotificationsEnabled }) => {
+      dispatch(
+        editAccountActions.trigger({
+          type: EditAccountAction.Remove,
+          address: accAddress,
+          notificationsEnabled: !!pushNotificationsEnabled,
+        })
+      )
+    })
+
     onClose()
     setInProgress(false)
-  }, [address, associatedAccounts, dispatch, isReplacing, hasAccountsLeft, onClose])
+  }, [account, associatedAccounts, dispatch, isReplacing, hasAccountsLeft, onClose])
 
   const { trigger } = useBiometricPrompt(
     () => {
