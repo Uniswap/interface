@@ -59,6 +59,15 @@ describe('AppRpcProvider', () => {
     expect(result).toBe(hash)
   })
 
+  test('handles send', async () => {
+    const hash = '0x123'
+    mockProvider1.sendTransaction.mockResolvedValue({ hash } as TransactionResponse)
+    const provider = new AppRpcProvider(ChainId.MAINNET, [mockProvider1])
+
+    const result = await provider.perform('send', [hash])
+    expect(result).toBe(hash)
+  })
+
   test('should sort faster providers before slower providers', async () => {
     const SLOW = 100
     mockProvider1.getBlockNumber = jest.fn(() => new Promise((resolve) => setTimeout(() => resolve(1), SLOW)))
