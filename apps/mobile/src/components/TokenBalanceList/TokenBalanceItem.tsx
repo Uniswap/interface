@@ -2,7 +2,7 @@ import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
-import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { FadeIn } from 'react-native-reanimated'
 import { AnimatedFlex } from 'src/components/layout'
 import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
@@ -70,8 +70,9 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
           row
           shrink
           alignItems="center"
+          // use only entering animation without exiting animation as it caused
+          // crashes on Android when the list was re-rendered
           entering={FadeIn}
-          exiting={FadeOut}
           gap="spacing12"
           overflow="hidden">
           <TokenLogo
@@ -90,7 +91,11 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
             </Flex>
           </Flex>
         </AnimatedFlex>
-        <AnimatedFlex entering={FadeIn} exiting={FadeOut} justifyContent="space-between">
+        <AnimatedFlex
+          // use only entering animation without exiting animation as it caused
+          // crashes on Android when the list was re-rendered
+          entering={FadeIn}
+          justifyContent="space-between">
           <WarmLoadingShimmer isWarmLoading={isWarmLoading}>
             {!portfolioBalance.balanceUSD ? (
               <Flex centered fill>
