@@ -8,7 +8,7 @@ import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { CancelListingIcon, VerifiedIcon } from 'nft/components/icons'
 import { useBag, useNativeUsdPrice, useProfilePageState, useSellAsset, useUsdPriceofNftAsset } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, ProfilePageStateType, WalletAsset } from 'nft/types'
-import { formatEthPrice, generateTweetForAsset, getMarketplaceIcon, timeLeft } from 'nft/utils'
+import { generateTweetForAsset, getMarketplaceIcon, timeLeft } from 'nft/utils'
 import { useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
@@ -246,7 +246,11 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
         {listing ? (
           <>
             <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
-              {formatEthPrice(asset.priceInfo?.ETHPrice)} ETH
+              {formatNumberOrString({
+                input: asset.priceInfo?.ETHPrice ? formatEther(asset.priceInfo?.ETHPrice) : undefined,
+                type: NumberType.NFTToken,
+              })}{' '}
+              ETH
             </ThemedText.MediumHeader>
             {USDPrice && (
               <ThemedText.BodySecondary lineHeight="24px">

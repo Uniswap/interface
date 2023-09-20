@@ -26,13 +26,13 @@ import {
 } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
 import { buildActivityAsset } from 'nft/utils/buildActivityAsset'
-import { formatEth } from 'nft/utils/currency'
 import { getTimeDifference } from 'nft/utils/date'
 import { putCommas } from 'nft/utils/putCommas'
 import { MouseEvent, ReactNode, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { ExternalLink } from 'theme'
 import { shortenAddress } from 'utils'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import * as styles from './Activity.css'
@@ -185,7 +185,11 @@ const PriceTooltip = ({ price }: { price: string }) => (
 )
 
 export const PriceCell = ({ marketplace, price }: { marketplace?: Markets | string; price?: string | number }) => {
-  const formattedPrice = useMemo(() => (price ? formatEth(parseFloat(price?.toString())) : null), [price])
+  const { formatNumberOrString } = useFormatter()
+  const formattedPrice = useMemo(
+    () => (price ? formatNumberOrString({ input: parseFloat(price?.toString()), type: NumberType.NFTToken }) : null),
+    [formatNumberOrString, price]
+  )
 
   return (
     <Row display={{ sm: 'none', md: 'flex' }} gap="8">
@@ -257,7 +261,11 @@ export const EventCell = ({
   price,
   isMobile,
 }: EventCellProps) => {
-  const formattedPrice = useMemo(() => (price ? formatEth(parseFloat(price?.toString())) : null), [price])
+  const { formatNumberOrString } = useFormatter()
+  const formattedPrice = useMemo(
+    () => (price ? formatNumberOrString({ input: parseFloat(price?.toString()), type: NumberType.NFTToken }) : null),
+    [formatNumberOrString, price]
+  )
   return (
     <Column height="full" justifyContent="center" gap="4">
       <Row className={styles.eventDetail} color={eventColors(eventType)}>

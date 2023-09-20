@@ -18,7 +18,6 @@ import { useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/
 import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from 'nft/pages/profile/shared'
 import { looksRareNonceFetcher } from 'nft/queries'
 import { ProfilePageStateType } from 'nft/types'
-import { formatEth } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -182,6 +181,7 @@ const EthValueWrapper = styled.span<{ totalEthListingValue: boolean }>`
 `
 
 export const ListPage = () => {
+  const { formatNumberOrString } = useFormatter()
   const { setProfilePageState: setSellPageState } = useProfilePageState()
   const { provider, chainId } = useWeb3React()
   const isMobile = useIsMobile()
@@ -294,7 +294,10 @@ export const ListPage = () => {
         <ProceedsAndButtonWrapper>
           <ProceedsWrapper>
             <EthValueWrapper totalEthListingValue={!!totalEthListingValue}>
-              {totalEthListingValue > 0 ? formatEth(totalEthListingValue) : '-'} ETH
+              {totalEthListingValue > 0
+                ? formatNumberOrString({ input: totalEthListingValue, type: NumberType.NFTToken })
+                : '-'}{' '}
+              ETH
             </EthValueWrapper>
             {!!usdcValue && <UsdValue>{usdcAmount}</UsdValue>}
           </ProceedsWrapper>
