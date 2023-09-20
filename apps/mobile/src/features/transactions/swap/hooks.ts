@@ -645,6 +645,8 @@ export function useSwapTxAndGasInfo(
 
   const totalGasFee = sumGasFees(approveGasFee?.value, swapGasFee?.value)
 
+  const error = shouldFetchSimulatedGasLimit ? simulatedGasEstimationInfo.error : swapGasFee.error
+
   return {
     txRequest: txRequestWithGasSettings,
     approveTxRequest: approveTxWithGasSettings,
@@ -654,9 +656,7 @@ export function useSwapTxAndGasInfo(
         approveLoading ||
         (shouldFetchSimulatedGasLimit && simulatedGasEstimationInfo.loading) ||
         swapGasFee.loading,
-      error: Boolean(
-        shouldFetchSimulatedGasLimit ? simulatedGasEstimationInfo.error : swapGasFee.error
-      ),
+      error,
     },
   }
 }

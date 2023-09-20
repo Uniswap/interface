@@ -175,6 +175,7 @@ export function SwapReview({
     blockingWarning ||
     newTradeRequiresAcceptance ||
     !gasFee.value ||
+    !!gasFee.error ||
     !txRequest ||
     account.type === AccountType.Readonly
 

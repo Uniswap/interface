@@ -78,7 +78,11 @@ export function TransferReview({
   )
 
   const actionButtonDisabled =
-    blockingWarning || !gasFee.value || !txRequest || account.type === AccountType.Readonly
+    blockingWarning ||
+    !gasFee.value ||
+    !!gasFee.error ||
+    !txRequest ||
+    account.type === AccountType.Readonly
 
   const transferERC20Callback = useTransferERC20Callback(
     txId,

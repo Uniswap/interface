@@ -89,6 +89,6 @@ export interface SimulatedGasEstimationInfo {
 export type GasFeeResult = {
   value?: string
   loading: boolean
-  error?: ApolloError | string | boolean
+  error?: FetchBaseQueryError | SerializedError | ApolloError | string | boolean
   params?: TransactionLegacyFeeParams | TransactionEip1559FeeParams
 }
