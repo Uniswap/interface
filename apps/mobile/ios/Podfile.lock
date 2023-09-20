@@ -355,7 +355,7 @@ PODS:
     - BoringSSL-GRPC/Interface (= 0.0.7)
   - BoringSSL-GRPC/Interface (0.0.7)
   - DoubleConversion (1.1.6)
-  - EthersRS (0.0.1)
+  - EthersRS (0.0.2)
   - EXApplication (5.1.1):
     - ExpoModulesCore
   - EXAV (13.4.1):
@@ -1327,7 +1327,7 @@ SPEC CHECKSUMS:
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  EthersRS: fcaf94e30ebdd795bfe1f9332cec8175566ba066
+  EthersRS: 8c9242d94dc8e8ee4ae54123556414458e7e578c
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXAV: f393dfc0b28214d62855a31e06eb21d426d6e2da
   EXBarCodeScanner: 8e23fae8d267dbef9f04817833a494200f1fce35

@@ -87,7 +87,7 @@
     "@shopify/restyle": "1.6.1",
     "@uniswap/analytics": "1.4.0",
     "@uniswap/analytics-events": "2.15.0",
-    "@uniswap/ethers-rs-mobile": "0.0.1",
+    "@uniswap/ethers-rs-mobile": "0.0.2",
     "@uniswap/permit2-sdk": "1.2.0",
     "@uniswap/router-sdk": "1.7.0",
     "@uniswap/sdk-core": "4.0.7",

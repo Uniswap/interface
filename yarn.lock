@@ -11696,10 +11696,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/ethers-rs-mobile@npm:0.0.1":
-  version: 0.0.1
-  resolution: "@uniswap/ethers-rs-mobile@npm:0.0.1"
-  checksum: b6f3097cacfbf6ed4fe1b72f543db21590cf6b2724781c7cb0f562ee5351c642d15f3617437706d9f3745f6ec151ec4f9d89a89e6c8d12a5cef48c79a06f3b29
+"@uniswap/ethers-rs-mobile@npm:0.0.2":
+  version: 0.0.2
+  resolution: "@uniswap/ethers-rs-mobile@npm:0.0.2"
+  checksum: 58fcee8e61349938cd9eb10a047ee79741a74505f2336a1097a7492f72b8a24b7649c5b016845fd139675cbb45969fdaed49217de8f41ab83ba0543ee866d445
   languageName: node
   linkType: hard
 
@@ -11776,7 +11776,7 @@ __metadata:
     "@types/wcag-contrast": 3.0.0
     "@uniswap/analytics": 1.4.0
     "@uniswap/analytics-events": 2.15.0
-    "@uniswap/ethers-rs-mobile": 0.0.1
+    "@uniswap/ethers-rs-mobile": 0.0.2
     "@uniswap/permit2-sdk": 1.2.0
     "@uniswap/router-sdk": 1.7.0
     "@uniswap/sdk-core": 4.0.7

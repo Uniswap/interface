@@ -155,6 +155,14 @@ android {
     composeOptions {
          kotlinCompilerExtensionVersion = "1.4.6"
     }
+
+    sourceSets {
+        main {
+          jniLibs {
+            srcDir '../../../../node_modules/@uniswap/ethers-rs-mobile/android/jniLibs'
+          }
+        }
+    }
 }
 
 dependencies {
