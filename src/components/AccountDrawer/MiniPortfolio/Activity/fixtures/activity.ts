@@ -415,3 +415,18 @@ export const MockNFTReceive = {
     ],
   },
 } as AssetActivityPartsFragment
+
+export const MockNFTPurchase = {
+  ...mockAssetActivityPartsFragment,
+  details: {
+    ...commonTransactionDetailsFields,
+    type: TransactionType.Swap,
+    assetChanges: [
+      mockTokenTransferOutPartsFragment,
+      {
+        ...mockNftTransferPartsFragment,
+        direction: TransactionDirection.In,
+      },
+    ],
+  },
+} as AssetActivityPartsFragment

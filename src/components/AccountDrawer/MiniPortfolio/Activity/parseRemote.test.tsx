@@ -8,6 +8,7 @@ import {
   MockMoonpayPurchase,
   MockNFTApproval,
   MockNFTApprovalForAll,
+  MockNFTPurchase,
   MockNFTReceive,
   MockNFTTransfer,
   MockOpenUniswapXOrder,
@@ -141,6 +142,20 @@ describe('parseRemote', () => {
         status: 'CONFIRMED',
         timestamp: 10000,
         title: 'Swapped',
+      })
+    })
+    it('should parse nft purchase', () => {
+      const result = parseRemoteActivities(jest.fn().mockReturnValue('100'), [MockNFTPurchase])
+      expect(result?.['someHash']).toEqual({
+        chainId: 1,
+        descriptor: '1 SomeCollectionName',
+        from: MockSenderAddress,
+        hash: 'someHash',
+        logos: ['imageUrl'],
+        nonce: 12345,
+        status: 'CONFIRMED',
+        timestamp: 10000,
+        title: 'Bought',
       })
     })
     it('should parse token approval', () => {
