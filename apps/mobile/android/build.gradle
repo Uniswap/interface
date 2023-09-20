@@ -12,6 +12,7 @@ buildscript {
     appCompat = "1.6.1"
     compose = "1.4.3"
     flowlayout = "0.23.1"
+    kotlinSerialization = "1.5.1"
     lifecycle = "2.5.1"
     multidexVersion = "2.0.1"
   }
@@ -29,6 +30,9 @@ buildscript {
   }
 }
 
+plugins {
+  id 'org.jetbrains.kotlin.plugin.serialization' version "$kotlinVersion"
+}
 
 allprojects {
   project.pluginManager.withPlugin("com.facebook.react") {

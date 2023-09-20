@@ -140,9 +140,6 @@
 		681301B22A3726EE00A5BF43 /* pending_send.riv in Resources */ = {isa = PBXBuildFile; fileRef = 681301AE2A3726EE00A5BF43 /* pending_send.riv */; };
 		681301B32A3726EE00A5BF43 /* onboarding_light.riv in Resources */ = {isa = PBXBuildFile; fileRef = 681301AF2A3726EE00A5BF43 /* onboarding_light.riv */; };
 		681301B42A3726EE00A5BF43 /* pending_swap.riv in Resources */ = {isa = PBXBuildFile; fileRef = 681301B02A3726EE00A5BF43 /* pending_swap.riv */; };
-		6C84F057283D83ED0071FA2E /* MnemonicDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C84F056283D83ED0071FA2E /* MnemonicDisplayView.swift */; };
-		6C84F05D283DB7050071FA2E /* RNTMnemonicDisplayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C84F05C283DB7050071FA2E /* RNTMnemonicDisplayManager.m */; };
-		6C84F05F283DB7150071FA2E /* MnemonicWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C84F05E283DB7150071FA2E /* MnemonicWordView.swift */; };
 		6C8EFC2D2891B99100FBD8EB /* EncryptionHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8EFC2C2891B99100FBD8EB /* EncryptionHelperTests.swift */; };
 		6CA91BDB2A95223C00C4063E /* RNEthersRS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA91BD92A95223C00C4063E /* RNEthersRS.swift */; };
 		6CA91BDC2A95223C00C4063E /* RnEthersRS.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CA91BDA2A95223C00C4063E /* RnEthersRS.m */; };
@@ -151,7 +148,21 @@
 		6CA91BE32A95226200C4063E /* RNCloudStorageBackupsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA91BE02A95226200C4063E /* RNCloudStorageBackupsManager.swift */; };
 		77CF6065C8A24FE48204A2C1 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF9176E944C84910B1C0B057 /* SplashScreen.storyboard */; };
 		8385A47D3C765B841F450090 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C26D739993D5C939C6FBB58A /* ExpoModulesProvider.swift */; };
+		8E89C3AE2AB8AAA400C84DE5 /* MnemonicConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E89C3A62AB8AAA400C84DE5 /* MnemonicConfirmationView.swift */; };
+		8E89C3AF2AB8AAA400C84DE5 /* MnemonicDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E89C3A72AB8AAA400C84DE5 /* MnemonicDisplayView.swift */; };
+		8E89C3B02AB8AAA400C84DE5 /* MnemonicWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E89C3A82AB8AAA400C84DE5 /* MnemonicWordView.swift */; };
+		8E89C3B12AB8AAA400C84DE5 /* MnemonicConfirmationWordBankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E89C3A92AB8AAA400C84DE5 /* MnemonicConfirmationWordBankView.swift */; };
+		8E89C3B22AB8AAA400C84DE5 /* MnemonicTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E89C3AA2AB8AAA400C84DE5 /* MnemonicTextField.swift */; };
+		8E89C3B32AB8AAA400C84DE5 /* MnemonicDisplayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E89C3AB2AB8AAA400C84DE5 /* MnemonicDisplayManager.m */; };
+		8E89C3B42AB8AAA400C84DE5 /* MnemonicConfirmationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E89C3AC2AB8AAA400C84DE5 /* MnemonicConfirmationManager.m */; };
+		8EA8AB3B2AB7ED3C004E7EF3 /* SeedPhraseInputManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA8AB302AB7ED3C004E7EF3 /* SeedPhraseInputManager.m */; };
+		8EA8AB3C2AB7ED3C004E7EF3 /* SeedPhraseInputViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA8AB312AB7ED3C004E7EF3 /* SeedPhraseInputViewModel.swift */; };
+		8EA8AB3D2AB7ED3C004E7EF3 /* SeedPhraseInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA8AB322AB7ED3C004E7EF3 /* SeedPhraseInputView.swift */; };
+		8EA8AB3E2AB7ED3C004E7EF3 /* SeedPhraseInputManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA8AB332AB7ED3C004E7EF3 /* SeedPhraseInputManager.swift */; };
+		8EA8AB412AB7ED76004E7EF3 /* AlertTriangleIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA8AB402AB7ED76004E7EF3 /* AlertTriangleIcon.swift */; };
+		8EBFB1552ABA6AA6006B32A8 /* PasteIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBFB1542ABA6AA6006B32A8 /* PasteIcon.swift */; };
 		8ED0562C2AA78E2C009BD5A2 /* ScrollFadeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED0562B2AA78E2C009BD5A2 /* ScrollFadeExtensions.swift */; };
+		8EEFCB4D2AB8A8980077AF4D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8EEFCB4B2AB8A7E10077AF4D /* Assets.xcassets */; };
 		9C9285C0639E520B3453B9C0 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A82B0304EEE753C6DEB3943E /* libPods-OneSignalNotificationServiceExtension.a */; };
 		9F3500842A8AAAF50077BFC5 /* libreact-native-splash-screen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F3500832A8AAAF50077BFC5 /* libreact-native-splash-screen.a */; };
 		9F78980B2A819CC4004D5A98 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 072F6C222A44A32E00DA720A /* SwiftUI.framework */; };
@@ -178,12 +189,8 @@
 		F35AFD3E27EE49990011A725 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35AFD3D27EE49990011A725 /* NotificationService.swift */; };
 		F35AFD4227EE49990011A725 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F35AFD3B27EE49990011A725 /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FD54D51D296C79A4007A37E9 /* GoogleServiceInfo in Resources */ = {isa = PBXBuildFile; fileRef = FD54D51C296C79A4007A37E9 /* GoogleServiceInfo */; };
-		FD7304CA28A364E70085BDEA /* MnemonicConfirmationWordBankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7304C928A364E70085BDEA /* MnemonicConfirmationWordBankView.swift */; };
-		FD7304CC28A364EF0085BDEA /* MnemonicTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7304CB28A364EF0085BDEA /* MnemonicTextField.swift */; };
 		FD7304CE28A364FC0085BDEA /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD7304CD28A364FC0085BDEA /* Colors.xcassets */; };
 		FD7304D028A3650A0085BDEA /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7304CF28A3650A0085BDEA /* Colors.swift */; };
-		FDB23E4F289D935800248737 /* RNMnemonicConfirmationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB23E4E289D935800248737 /* RNMnemonicConfirmationManager.m */; };
-		FDDCC725289AE92600BCD4F3 /* MnemonicConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDDCC720289AE92600BCD4F3 /* MnemonicConfirmationView.swift */; };
 		FFD8F7BC6B871CC6D7CBE0C7 /* libPods-WidgetsCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 26CB04CC7EAFA26FBB06896D /* libPods-WidgetsCore.a */; };
 /* End PBXBuildFile section */
 
@@ -427,9 +434,6 @@
 		681301AF2A3726EE00A5BF43 /* onboarding_light.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = onboarding_light.riv; sourceTree = "<group>"; };
 		681301B02A3726EE00A5BF43 /* pending_swap.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = pending_swap.riv; sourceTree = "<group>"; };
 		68FD07BE7700B63D569EB256 /* Pods-WidgetIntentExtension.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetIntentExtension.dev.xcconfig"; path = "Target Support Files/Pods-WidgetIntentExtension/Pods-WidgetIntentExtension.dev.xcconfig"; sourceTree = "<group>"; };
-		6C84F056283D83ED0071FA2E /* MnemonicDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MnemonicDisplayView.swift; path = Uniswap/Onboarding/MnemonicDisplayView.swift; sourceTree = "<group>"; };
-		6C84F05C283DB7050071FA2E /* RNTMnemonicDisplayManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = RNTMnemonicDisplayManager.m; path = Uniswap/Onboarding/RNTMnemonicDisplayManager.m; sourceTree = "<group>"; };
-		6C84F05E283DB7150071FA2E /* MnemonicWordView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MnemonicWordView.swift; path = Uniswap/Onboarding/MnemonicWordView.swift; sourceTree = "<group>"; };
 		6C8EFC2C2891B99100FBD8EB /* EncryptionHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionHelperTests.swift; sourceTree = "<group>"; };
 		6CA91BD82A95223C00C4063E /* RNEthersRS-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RNEthersRS-Bridging-Header.h"; sourceTree = "<group>"; };
 		6CA91BD92A95223C00C4063E /* RNEthersRS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNEthersRS.swift; sourceTree = "<group>"; };
@@ -441,7 +445,22 @@
 		78C41378CE69EDD92DFAD177 /* Pods-OneSignalNotificationServiceExtension.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.dev.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.dev.xcconfig"; sourceTree = "<group>"; };
 		811E7ED33487936333408382 /* Pods-OneSignalNotificationServiceExtension.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.beta.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.beta.xcconfig"; sourceTree = "<group>"; };
 		8816FB4EC77AF22919705454 /* Pods-WidgetsCoreTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCoreTests.beta.xcconfig"; path = "Target Support Files/Pods-WidgetsCoreTests/Pods-WidgetsCoreTests.beta.xcconfig"; sourceTree = "<group>"; };
+		8E89C3A62AB8AAA400C84DE5 /* MnemonicConfirmationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MnemonicConfirmationView.swift; sourceTree = "<group>"; };
+		8E89C3A72AB8AAA400C84DE5 /* MnemonicDisplayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MnemonicDisplayView.swift; sourceTree = "<group>"; };
+		8E89C3A82AB8AAA400C84DE5 /* MnemonicWordView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MnemonicWordView.swift; sourceTree = "<group>"; };
+		8E89C3A92AB8AAA400C84DE5 /* MnemonicConfirmationWordBankView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MnemonicConfirmationWordBankView.swift; sourceTree = "<group>"; };
+		8E89C3AA2AB8AAA400C84DE5 /* MnemonicTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MnemonicTextField.swift; sourceTree = "<group>"; };
+		8E89C3AB2AB8AAA400C84DE5 /* MnemonicDisplayManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MnemonicDisplayManager.m; sourceTree = "<group>"; };
+		8E89C3AC2AB8AAA400C84DE5 /* MnemonicConfirmationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MnemonicConfirmationManager.m; sourceTree = "<group>"; };
+		8E89C3AD2AB8AAA400C84DE5 /* RNSwiftUI-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RNSwiftUI-Bridging-Header.h"; sourceTree = "<group>"; };
+		8EA8AB302AB7ED3C004E7EF3 /* SeedPhraseInputManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SeedPhraseInputManager.m; sourceTree = "<group>"; };
+		8EA8AB312AB7ED3C004E7EF3 /* SeedPhraseInputViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeedPhraseInputViewModel.swift; sourceTree = "<group>"; };
+		8EA8AB322AB7ED3C004E7EF3 /* SeedPhraseInputView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeedPhraseInputView.swift; sourceTree = "<group>"; };
+		8EA8AB332AB7ED3C004E7EF3 /* SeedPhraseInputManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeedPhraseInputManager.swift; sourceTree = "<group>"; };
+		8EA8AB402AB7ED76004E7EF3 /* AlertTriangleIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertTriangleIcon.swift; sourceTree = "<group>"; };
+		8EBFB1542ABA6AA6006B32A8 /* PasteIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteIcon.swift; sourceTree = "<group>"; };
 		8ED0562B2AA78E2C009BD5A2 /* ScrollFadeExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollFadeExtensions.swift; sourceTree = "<group>"; };
+		8EEFCB4B2AB8A7E10077AF4D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Uniswap/Assets.xcassets; sourceTree = "<group>"; };
 		9BF90CF492394DF50D3BAF76 /* Pods-WidgetsCoreTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCoreTests.debug.xcconfig"; path = "Target Support Files/Pods-WidgetsCoreTests/Pods-WidgetsCoreTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9F3500812A8AA5890077BFC5 /* EXSplashScreen.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = EXSplashScreen.xcframework; path = "../../../node_modules/expo-splash-screen/ios/EXSplashScreen.xcframework"; sourceTree = "<group>"; };
 		9F3500832A8AAAF50077BFC5 /* libreact-native-splash-screen.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libreact-native-splash-screen.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -488,13 +507,8 @@
 		FD21B73B081B800A44E7F682 /* libPods-WidgetIntentExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WidgetIntentExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD54D51C296C79A4007A37E9 /* GoogleServiceInfo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GoogleServiceInfo; sourceTree = SOURCE_ROOT; };
 		FD72162492D6B68BBC15F3ED /* Pods-Uniswap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.release.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.release.xcconfig"; sourceTree = "<group>"; };
-		FD7304C928A364E70085BDEA /* MnemonicConfirmationWordBankView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MnemonicConfirmationWordBankView.swift; path = Uniswap/Onboarding/MnemonicConfirmationWordBankView.swift; sourceTree = "<group>"; };
-		FD7304CB28A364EF0085BDEA /* MnemonicTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MnemonicTextField.swift; path = Uniswap/Onboarding/MnemonicTextField.swift; sourceTree = "<group>"; };
 		FD7304CD28A364FC0085BDEA /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Colors.xcassets; path = Uniswap/Colors.xcassets; sourceTree = "<group>"; };
 		FD7304CF28A3650A0085BDEA /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Colors.swift; path = Uniswap/Colors.swift; sourceTree = "<group>"; };
-		FDB23E4E289D935800248737 /* RNMnemonicConfirmationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNMnemonicConfirmationManager.m; path = Uniswap/Onboarding/RNMnemonicConfirmationManager.m; sourceTree = "<group>"; };
-		FDDCC720289AE92600BCD4F3 /* MnemonicConfirmationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MnemonicConfirmationView.swift; path = Uniswap/Onboarding/MnemonicConfirmationView.swift; sourceTree = "<group>"; };
-		FDDCC727289B040900BCD4F3 /* RNSwiftUI-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNSwiftUI-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -853,6 +867,7 @@
 		13B07FAE1A68108700A75B9A /* Uniswap */ = {
 			isa = PBXGroup;
 			children = (
+				8EA8AB3F2AB7ED76004E7EF3 /* Icons */,
 				8E566D9F2AA1095000D4AA76 /* Components */,
 				07B067692A7D6EC8001DD9B9 /* Widget */,
 				03DD298C2A4CE34B00E3E0F5 /* Appearance */,
@@ -915,14 +930,8 @@
 		6C84F055283D83CF0071FA2E /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
-				FD7304CB28A364EF0085BDEA /* MnemonicTextField.swift */,
-				FD7304C928A364E70085BDEA /* MnemonicConfirmationWordBankView.swift */,
-				FDDCC727289B040900BCD4F3 /* RNSwiftUI-Bridging-Header.h */,
-				FDDCC720289AE92600BCD4F3 /* MnemonicConfirmationView.swift */,
-				FDB23E4E289D935800248737 /* RNMnemonicConfirmationManager.m */,
-				6C84F056283D83ED0071FA2E /* MnemonicDisplayView.swift */,
-				6C84F05E283DB7150071FA2E /* MnemonicWordView.swift */,
-				6C84F05C283DB7050071FA2E /* RNTMnemonicDisplayManager.m */,
+				8E89C3A52AB8AAA400C84DE5 /* Backup */,
+				8EA8AB2F2AB7ED3C004E7EF3 /* Import */,
 			);
 			name = Onboarding;
 			sourceTree = "<group>";
@@ -970,6 +979,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				8EEFCB4B2AB8A7E10077AF4D /* Assets.xcassets */,
 				074321872A82BA2700F8518D /* Fonts */,
 				FD54D51C296C79A4007A37E9 /* GoogleServiceInfo */,
 				13B07FAE1A68108700A75B9A /* Uniswap */,
@@ -1011,6 +1021,44 @@
 				8ED0562B2AA78E2C009BD5A2 /* ScrollFadeExtensions.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		8E89C3A52AB8AAA400C84DE5 /* Backup */ = {
+			isa = PBXGroup;
+			children = (
+				8E89C3A62AB8AAA400C84DE5 /* MnemonicConfirmationView.swift */,
+				8E89C3A72AB8AAA400C84DE5 /* MnemonicDisplayView.swift */,
+				8E89C3A82AB8AAA400C84DE5 /* MnemonicWordView.swift */,
+				8E89C3A92AB8AAA400C84DE5 /* MnemonicConfirmationWordBankView.swift */,
+				8E89C3AA2AB8AAA400C84DE5 /* MnemonicTextField.swift */,
+				8E89C3AB2AB8AAA400C84DE5 /* MnemonicDisplayManager.m */,
+				8E89C3AC2AB8AAA400C84DE5 /* MnemonicConfirmationManager.m */,
+				8E89C3AD2AB8AAA400C84DE5 /* RNSwiftUI-Bridging-Header.h */,
+			);
+			name = Backup;
+			path = Uniswap/Onboarding/Backup;
+			sourceTree = "<group>";
+		};
+		8EA8AB2F2AB7ED3C004E7EF3 /* Import */ = {
+			isa = PBXGroup;
+			children = (
+				8EA8AB302AB7ED3C004E7EF3 /* SeedPhraseInputManager.m */,
+				8EA8AB312AB7ED3C004E7EF3 /* SeedPhraseInputViewModel.swift */,
+				8EA8AB322AB7ED3C004E7EF3 /* SeedPhraseInputView.swift */,
+				8EA8AB332AB7ED3C004E7EF3 /* SeedPhraseInputManager.swift */,
+			);
+			name = Import;
+			path = Uniswap/Onboarding/Import;
+			sourceTree = "<group>";
+		};
+		8EA8AB3F2AB7ED76004E7EF3 /* Icons */ = {
+			isa = PBXGroup;
+			children = (
+				8EA8AB402AB7ED76004E7EF3 /* AlertTriangleIcon.swift */,
+				8EBFB1542ABA6AA6006B32A8 /* PasteIcon.swift */,
+			);
+			name = Icons;
+			path = Uniswap/Icons;
 			sourceTree = "<group>";
 		};
 		9759A762F61D6B2F01C79DBF /* Uniswap */ = {
@@ -1359,6 +1407,7 @@
 				A32F9FBD272343C9002CFCDB /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				77CF6065C8A24FE48204A2C1 /* SplashScreen.storyboard in Resources */,
+				8EEFCB4D2AB8A8980077AF4D /* Assets.xcassets in Resources */,
 				681301B42A3726EE00A5BF43 /* pending_swap.riv in Resources */,
 				681301B22A3726EE00A5BF43 /* pending_send.riv in Resources */,
 				AEE498F72A85AD86000DDF8E /* Basel-Book.ttf in Resources */,
@@ -1842,30 +1891,36 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EA8AB3E2AB7ED3C004E7EF3 /* SeedPhraseInputManager.swift in Sources */,
+				8EA8AB412AB7ED76004E7EF3 /* AlertTriangleIcon.swift in Sources */,
+				8E89C3B22AB8AAA400C84DE5 /* MnemonicTextField.swift in Sources */,
 				FD7304D028A3650A0085BDEA /* Colors.swift in Sources */,
+				8E89C3AF2AB8AAA400C84DE5 /* MnemonicDisplayView.swift in Sources */,
 				9FEC9B8B2A858CF1003CD019 /* AppDelegate.m in Sources */,
+				8EA8AB3B2AB7ED3C004E7EF3 /* SeedPhraseInputManager.m in Sources */,
 				6CA91BDB2A95223C00C4063E /* RNEthersRS.swift in Sources */,
+				8EA8AB3C2AB7ED3C004E7EF3 /* SeedPhraseInputViewModel.swift in Sources */,
 				072F6C2E2A44A32F00DA720A /* TokenPriceWidget.intentdefinition in Sources */,
+				8E89C3B12AB8AAA400C84DE5 /* MnemonicConfirmationWordBankView.swift in Sources */,
 				07B0676D2A7D6EC8001DD9B9 /* RNWidgets.m in Sources */,
+				8EBFB1552ABA6AA6006B32A8 /* PasteIcon.swift in Sources */,
+				8E89C3B02AB8AAA400C84DE5 /* MnemonicWordView.swift in Sources */,
 				07B0676C2A7D6EC8001DD9B9 /* RNWidgets.swift in Sources */,
+				8E89C3AE2AB8AAA400C84DE5 /* MnemonicConfirmationView.swift in Sources */,
 				8ED0562C2AA78E2C009BD5A2 /* ScrollFadeExtensions.swift in Sources */,
-				FD7304CA28A364E70085BDEA /* MnemonicConfirmationWordBankView.swift in Sources */,
-				6C84F05D283DB7050071FA2E /* RNTMnemonicDisplayManager.m in Sources */,
 				6CA91BE22A95226200C4063E /* EncryptionHelper.swift in Sources */,
 				9FCEBF002A95A8E00079EDDB /* RNWalletConnect.m in Sources */,
-				6C84F05F283DB7150071FA2E /* MnemonicWordView.swift in Sources */,
-				FDB23E4F289D935800248737 /* RNMnemonicConfirmationManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				6CA91BE32A95226200C4063E /* RNCloudStorageBackupsManager.swift in Sources */,
-				FD7304CC28A364EF0085BDEA /* MnemonicTextField.swift in Sources */,
 				9FCEBF042A95A99C0079EDDB /* RCTThemeModule.m in Sources */,
 				9FCEBF012A95A8E00079EDDB /* RNWalletConnect.swift in Sources */,
 				6CA91BDC2A95223C00C4063E /* RnEthersRS.m in Sources */,
 				6CA91BE12A95226200C4063E /* RNCloudStorageBackupsManager.m in Sources */,
-				FDDCC725289AE92600BCD4F3 /* MnemonicConfirmationView.swift in Sources */,
 				A3F0A5B1272B1DFA00895B25 /* KeychainSwiftDistrib.swift in Sources */,
+				8E89C3B42AB8AAA400C84DE5 /* MnemonicConfirmationManager.m in Sources */,
 				1440B371A1C9A42F3E91DAAE /* ExpoModulesProvider.swift in Sources */,
-				6C84F057283D83ED0071FA2E /* MnemonicDisplayView.swift in Sources */,
+				8E89C3B32AB8AAA400C84DE5 /* MnemonicDisplayManager.m in Sources */,
+				8EA8AB3D2AB7ED3C004E7EF3 /* SeedPhraseInputView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1940,7 +1995,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = UniswapTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1968,7 +2023,7 @@
 				COPY_PHASE_STRIP = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = UniswapTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2721,7 +2776,7 @@
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = Uniswap/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2760,7 +2815,7 @@
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = Uniswap/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2831,7 +2886,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -2891,7 +2946,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -2930,7 +2985,7 @@
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = OneSignalNotificationServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2975,7 +3030,7 @@
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = OneSignalNotificationServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -3039,7 +3094,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -3073,7 +3128,7 @@
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = Uniswap/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -3103,7 +3158,7 @@
 				COPY_PHASE_STRIP = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = UniswapTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -3145,7 +3200,7 @@
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = OneSignalNotificationServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -3209,7 +3264,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -3243,7 +3298,7 @@
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = Uniswap/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -3273,7 +3328,7 @@
 				COPY_PHASE_STRIP = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = UniswapTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -3315,7 +3370,7 @@
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = OneSignalNotificationServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

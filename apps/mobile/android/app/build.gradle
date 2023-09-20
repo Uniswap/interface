@@ -174,6 +174,7 @@ dependencies {
     implementation "androidx.multidex:multidex:$multidexVersion"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerialization"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
 
     implementation 'com.google.android.play:integrity:1.2.0'

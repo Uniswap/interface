@@ -1,4 +1,4 @@
-package com.uniswap.onboarding.ui
+package com.uniswap.onboarding.backup.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints

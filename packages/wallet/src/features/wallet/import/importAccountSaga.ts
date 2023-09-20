@@ -30,6 +30,15 @@ export function* importAccount(params: ImportAccountParams) {
       params.markAsActive,
       params.ignoreActivate
     )
+  } else if (type === ImportAccountType.MnemonicNative) {
+    yield* call(
+      importMnemonicAccountsFromId,
+      params.mnemonicId,
+      name,
+      params.indexes,
+      params.markAsActive,
+      params.ignoreActivate
+    )
   } else if (type === ImportAccountType.RestoreBackup) {
     yield* call(importRestoreBackupAccounts, params.mnemonicId, params.indexes)
   } else {
@@ -89,6 +98,17 @@ function* importMnemonicAccounts(
     validatedMnemonic,
     validatedPassword
   )
+
+  yield* call(importMnemonicAccountsFromId, mnemonicId, name, indexes, markAsActive, ignoreActivate)
+}
+
+function* importMnemonicAccountsFromId(
+  mnemonicId: string,
+  name?: string,
+  indexes = [0],
+  markAsActive?: boolean,
+  ignoreActivate?: boolean
+) {
   // generate private keys and return addresses for all derivation indexes
   const addresses = yield* all(
     indexes.map((index) => {

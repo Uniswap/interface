@@ -1,4 +1,4 @@
-package com.uniswap.onboarding
+package com.uniswap.onboarding.backup
 
 import android.view.View
 import androidx.compose.runtime.collectAsState
@@ -12,8 +12,8 @@ import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.uimanager.events.RCTEventEmitter
 import com.uniswap.R
 import com.uniswap.RnEthersRs
-import com.uniswap.onboarding.ui.MnemonicConfirmation
-import com.uniswap.onboarding.ui.MnemonicConfirmationViewModel
+import com.uniswap.onboarding.backup.ui.MnemonicConfirmation
+import com.uniswap.onboarding.backup.ui.MnemonicConfirmationViewModel
 import com.uniswap.theme.UniswapComponent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -43,7 +43,7 @@ class MnemonicConfirmationViewManager : ViewGroupManager<ComposeView>() {
             val reactContext = context as ReactContext
             reactContext
               .getJSModule(RCTEventEmitter::class.java)
-              .receiveEvent(id, EVENT_COMPLETED, null) // Sends event to event emitter
+              .receiveEvent(id, EVENT_COMPLETED, null) // Sends event to RN bridge
           }
         }
       }

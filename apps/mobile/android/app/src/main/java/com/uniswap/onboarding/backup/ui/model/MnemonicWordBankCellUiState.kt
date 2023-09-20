@@ -1,4 +1,4 @@
-package com.uniswap.onboarding.ui.model
+package com.uniswap.onboarding.backup.ui.model
 
 data class MnemonicWordBankCellUiState(
   val text: String,

@@ -1,10 +1,10 @@
-package com.uniswap.onboarding.ui
+package com.uniswap.onboarding.backup.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uniswap.RnEthersRs
-import com.uniswap.onboarding.ui.model.MnemonicWordBankCellUiState
-import com.uniswap.onboarding.ui.model.MnemonicWordUiState
+import com.uniswap.onboarding.backup.ui.model.MnemonicWordBankCellUiState
+import com.uniswap.onboarding.backup.ui.model.MnemonicWordUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
