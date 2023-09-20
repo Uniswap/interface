@@ -1,4 +1,6 @@
 import { act, renderHook } from '@testing-library/react'
+import { WETH9 } from '@uniswap/sdk-core'
+import { DAI } from 'constants/tokens'
 import ms from 'ms'
 
 import {
@@ -9,6 +11,7 @@ import {
   MockOpenUniswapXOrder,
   MockOrderTimestamp,
   MockRecipientAddress,
+  MockRemoveLiquidity,
   MockSenderAddress,
   MockTokenApproval,
   MockTokenReceive,
@@ -32,7 +35,7 @@ describe('parseRemote', () => {
         chainId: 1,
         currencies: [
           {
-            address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+            address: DAI.address,
             chainId: 1,
             decimals: 18,
             isNative: false,
@@ -41,7 +44,7 @@ describe('parseRemote', () => {
             symbol: 'DAI',
           },
           {
-            address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+            address: WETH9[1].address,
             chainId: 1,
             decimals: 18,
             isNative: false,
@@ -110,7 +113,7 @@ describe('parseRemote', () => {
         chainId: 1,
         currencies: [
           {
-            address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+            address: DAI.address,
             chainId: 1,
             decimals: 18,
             isNative: false,
@@ -119,7 +122,7 @@ describe('parseRemote', () => {
             symbol: 'DAI',
           },
           {
-            address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+            address: WETH9[1].address,
             chainId: 1,
             decimals: 18,
             isNative: false,
@@ -144,7 +147,7 @@ describe('parseRemote', () => {
         chainId: 1,
         currencies: [
           {
-            address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+            address: DAI.address,
             chainId: 1,
             decimals: 18,
             isNative: false,
@@ -169,7 +172,7 @@ describe('parseRemote', () => {
         chainId: 1,
         currencies: [
           {
-            address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+            address: DAI.address,
             chainId: 1,
             decimals: 18,
             isNative: false,
@@ -195,7 +198,7 @@ describe('parseRemote', () => {
         chainId: 1,
         currencies: [
           {
-            address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+            address: WETH9[1].address,
             chainId: 1,
             decimals: 18,
             isNative: false,
@@ -213,6 +216,40 @@ describe('parseRemote', () => {
         status: 'CONFIRMED',
         timestamp: 10000,
         title: 'Received',
+      })
+    })
+    it('should parse remove liquidity', () => {
+      const result = parseRemoteActivities(jest.fn().mockReturnValue(100), [MockRemoveLiquidity])
+      expect(result?.['someHash']).toEqual({
+        chainId: 1,
+        currencies: [
+          {
+            address: WETH9[1].address,
+            chainId: 1,
+            decimals: 18,
+            isNative: false,
+            isToken: true,
+            name: 'Wrapped Ether',
+            symbol: 'WETH',
+          },
+          {
+            address: DAI.address,
+            chainId: 1,
+            decimals: 18,
+            isNative: false,
+            isToken: true,
+            name: 'DAI',
+            symbol: 'DAI',
+          },
+        ],
+        descriptor: '100 WETH and 100 DAI',
+        from: '0xFromAddress',
+        hash: 'someHash',
+        logos: ['logoUrl', 'logoUrl'],
+        nonce: 12345,
+        status: 'CONFIRMED',
+        timestamp: 10000,
+        title: 'Removed Liquidity',
       })
     })
   })

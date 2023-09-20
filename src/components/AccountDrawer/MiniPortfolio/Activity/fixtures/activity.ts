@@ -1,4 +1,4 @@
-import { WETH9 } from '@uniswap/sdk-core'
+import { ChainId, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, WETH9 } from '@uniswap/sdk-core'
 import { DAI } from 'constants/tokens'
 import {
   AssetActivityPartsFragment,
@@ -367,5 +367,21 @@ export const MockTokenReceive = {
     ...commonTransactionDetailsFields,
     type: TransactionType.Receive,
     assetChanges: [mockTokenTransferInPartsFragment],
+  },
+} as AssetActivityPartsFragment
+
+export const MockRemoveLiquidity = {
+  ...mockAssetActivityPartsFragment,
+  details: {
+    ...commonTransactionDetailsFields,
+    to: NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[ChainId.MAINNET],
+    type: TransactionType.Receive,
+    assetChanges: [
+      mockTokenTransferInPartsFragment,
+      {
+        ...mockTokenTransferOutPartsFragment,
+        direction: TransactionDirection.In,
+      },
+    ],
   },
 } as AssetActivityPartsFragment
