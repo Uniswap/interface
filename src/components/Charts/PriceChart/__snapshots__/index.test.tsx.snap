@@ -15,9 +15,13 @@ exports[`PriceChart renders correctly with all prices filled 1`] = `
 }
 
 .c1 {
-  font-size: 36px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 6px;
+  font-size: 24px;
   line-height: 44px;
-  font-weight: 485;
 }
 
 .c2 {
@@ -38,11 +42,15 @@ exports[`PriceChart renders correctly with all prices filled 1`] = `
     class="c0"
     data-cy="chart-header"
   >
-    <span
+    <div
       class="c1"
     >
-      $1.00
-    </span>
+      <div
+        class="css-15popx1"
+      >
+        $1.00
+      </div>
+    </div>
     <div
       class="c2"
     >
@@ -337,10 +345,10 @@ exports[`PriceChart renders correctly with all prices filled 1`] = `
 </DocumentFragment>
 `;
 
-exports[`PriceChart renders correctly with no prices filled 1`] = `
+exports[`PriceChart renders correctly with empty price array 1`] = `
 <DocumentFragment>
-  .c3 {
-  color: #222222;
+  .c1 {
+  color: #CECECE;
 }
 
 .c0 {
@@ -351,41 +359,22 @@ exports[`PriceChart renders correctly with no prices filled 1`] = `
   animation-duration: 250ms;
 }
 
-.c1 {
-  font-size: 36px;
-  line-height: 44px;
-  font-weight: 485;
-}
-
-.c2 {
-  font-size: 24px;
-  line-height: 44px;
-  color: #CECECE;
-}
-
 <div
     class="c0"
     data-cy="chart-header"
   >
-    <span
-      class="c1 c2"
+    <div
+      class="c1 css-slqfkh"
     >
       Price Unavailable
-    </span>
+    </div>
     <div
-      class="c3 css-142zc9n"
-      style="color: rgb(206, 206, 206);"
+      class="c1 css-142zc9n"
     >
-      Missing chart data
+      Missing price data due to recently low trading volume on Uniswap v3
     </div>
   </div>
-  .c0 text {
-  font-size: 12px;
-  font-weight: 485;
-}
-
-<svg
-    class="c0"
+  <svg
     data-cy="missing-chart"
     height="392"
     style="min-width: 100%;"
@@ -398,23 +387,18 @@ exports[`PriceChart renders correctly with no prices filled 1`] = `
       stroke="#22222212"
       stroke-width="2"
     />
-    <text
-      fill="#CECECE"
-      x="20"
-      y="377"
-    />
   </svg>
 </DocumentFragment>
 `;
 
 exports[`PriceChart renders correctly with some prices filled 1`] = `
 <DocumentFragment>
-  .c4 {
+  .c2 {
   display: inline-block;
   height: inherit;
 }
 
-.c6 {
+.c4 {
   color: #7D7D7D;
 }
 
@@ -424,19 +408,20 @@ exports[`PriceChart renders correctly with some prices filled 1`] = `
   animation: iAjNNh 125ms ease-in;
   -webkit-animation-duration: 250ms;
   animation-duration: 250ms;
-}
-
-.c3 {
-  font-size: 36px;
-  line-height: 44px;
-  font-weight: 485;
-}
-
-.c1 {
   color: #7D7D7D;
 }
 
-.c5 {
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 6px;
+  font-size: 24px;
+  line-height: 44px;
+}
+
+.c3 {
   height: 16px;
   display: -webkit-box;
   display: -webkit-flex;
@@ -450,16 +435,6 @@ exports[`PriceChart renders correctly with some prices filled 1`] = `
   color: #7D7D7D;
 }
 
-.c2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 6px;
-  font-size: 24px;
-  line-height: 44px;
-}
-
 <div
     class="c0"
     data-cy="chart-header"
@@ -468,68 +443,65 @@ exports[`PriceChart renders correctly with some prices filled 1`] = `
       class="c1"
     >
       <div
-        class="c2"
+        class="css-15popx1"
       >
-        <span
-          class="c3"
-        >
-          $1.00
-        </span>
-        <div
-          class="c4"
-        >
-          <div>
-            <svg
-              fill="none"
-              height="16"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              width="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle
-                cx="12"
-                cy="12"
-                r="10"
-              />
-              <line
-                x1="12"
-                x2="12"
-                y1="16"
-                y2="12"
-              />
-              <line
-                x1="12"
-                x2="12.01"
-                y1="8"
-                y2="8"
-              />
-            </svg>
-          </div>
-        </div>
+        $1.00
       </div>
       <div
-        class="c5"
+        class="c2"
       >
-        0.00%
-        <svg
-          aria-label="up"
-          class="c6"
-          fill="none"
-          height="16"
-          viewBox="0 0 24 24"
-          width="16"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
-            fill="currentColor"
-          />
-        </svg>
+        <div>
+          <svg
+            data-testid="chart-stale-icon"
+            fill="none"
+            height="16"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+            />
+            <line
+              x1="12"
+              x2="12"
+              y1="16"
+              y2="12"
+            />
+            <line
+              x1="12"
+              x2="12.01"
+              y1="8"
+              y2="8"
+            />
+          </svg>
+        </div>
       </div>
+    </div>
+    <div
+      class="c3"
+    >
+      0.00%
+      <svg
+        aria-label="up"
+        class="c4"
+        fill="none"
+        height="16"
+        viewBox="0 0 24 24"
+        width="16"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+          fill="currentColor"
+        />
+      </svg>
     </div>
   </div>
   <svg
@@ -790,6 +762,551 @@ exports[`PriceChart renders correctly with some prices filled 1`] = `
               x="722.2222222222222"
             >
               40,000
+            </tspan>
+          </text>
+        </svg>
+      </g>
+    </g>
+    <rect
+      fill="transparent"
+      height="392"
+      width="780"
+      x="0"
+      y="0"
+    />
+  </svg>
+</DocumentFragment>
+`;
+
+exports[`PriceChart renders correctly with undefined prices 1`] = `
+<DocumentFragment>
+  .c1 {
+  color: #CECECE;
+}
+
+.c0 {
+  position: absolute;
+  -webkit-animation: iAjNNh 125ms ease-in;
+  animation: iAjNNh 125ms ease-in;
+  -webkit-animation-duration: 250ms;
+  animation-duration: 250ms;
+}
+
+<div
+    class="c0"
+    data-cy="chart-header"
+  >
+    <div
+      class="c1 css-slqfkh"
+    >
+      Price Unavailable
+    </div>
+    <div
+      class="c1 css-142zc9n"
+    >
+      Missing chart data
+    </div>
+  </div>
+  <svg
+    data-cy="missing-chart"
+    height="392"
+    style="min-width: 100%;"
+    width="780"
+  >
+    <path
+      d="M 0 241 Q 104 171, 208 241 T 416 241
+          M 416 241 Q 520 171, 624 241 T 832 241"
+      fill="transparent"
+      stroke="#22222212"
+      stroke-width="2"
+    />
+  </svg>
+</DocumentFragment>
+`;
+
+exports[`PriceChart renders stale UI 1`] = `
+<DocumentFragment>
+  .c2 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c4 {
+  color: #7D7D7D;
+}
+
+.c0 {
+  position: absolute;
+  -webkit-animation: iAjNNh 125ms ease-in;
+  animation: iAjNNh 125ms ease-in;
+  -webkit-animation-duration: 250ms;
+  animation-duration: 250ms;
+  color: #7D7D7D;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 6px;
+  font-size: 24px;
+  line-height: 44px;
+}
+
+.c3 {
+  height: 16px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-top: 4px;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0"
+    data-cy="chart-header"
+  >
+    <div
+      class="c1"
+    >
+      <div
+        class="css-15popx1"
+      >
+        $1.00
+      </div>
+      <div
+        class="c2"
+      >
+        <div>
+          <svg
+            data-testid="chart-stale-icon"
+            fill="none"
+            height="16"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+            />
+            <line
+              x1="12"
+              x2="12"
+              y1="16"
+              y2="12"
+            />
+            <line
+              x1="12"
+              x2="12.01"
+              y1="8"
+              y2="8"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c3"
+    >
+      0.00%
+      <svg
+        aria-label="up"
+        class="c4"
+        fill="none"
+        height="16"
+        viewBox="0 0 24 24"
+        width="16"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+          fill="currentColor"
+        />
+      </svg>
+    </div>
+  </div>
+  <svg
+    data-cy="price-chart"
+    height="392"
+    style="min-width: 100%;"
+    width="780"
+  >
+    <g
+      class="visx-group visx-axis visx-axis-bottom"
+      transform="translate(0, 391)"
+    >
+      <g
+        class="visx-group visx-axis-tick"
+        transform="translate(0, 0)"
+      >
+        <svg
+          font-size="10"
+          style="overflow: visible;"
+          x="0"
+          y="0.25em"
+        >
+          <text
+            fill="#222"
+            font-family="Arial"
+            font-size="10"
+            text-anchor="middle"
+            transform=""
+            x="48.75"
+            y="18"
+          >
+            <tspan
+              dy="0em"
+              x="48.75"
+            >
+              1,694,538,840
+            </tspan>
+          </text>
+        </svg>
+      </g>
+      <g
+        class="visx-group visx-axis-tick"
+        transform="translate(0, 0)"
+      >
+        <svg
+          font-size="10"
+          style="overflow: visible;"
+          x="0"
+          y="0.25em"
+        >
+          <text
+            fill="#222"
+            font-family="Arial"
+            font-size="10"
+            text-anchor="middle"
+            transform=""
+            x="109.6875"
+            y="18"
+          >
+            <tspan
+              dy="0em"
+              x="109.6875"
+            >
+              1,694,538,845
+            </tspan>
+          </text>
+        </svg>
+      </g>
+      <g
+        class="visx-group visx-axis-tick"
+        transform="translate(0, 0)"
+      >
+        <svg
+          font-size="10"
+          style="overflow: visible;"
+          x="0"
+          y="0.25em"
+        >
+          <text
+            fill="#222"
+            font-family="Arial"
+            font-size="10"
+            text-anchor="middle"
+            transform=""
+            x="170.625"
+            y="18"
+          >
+            <tspan
+              dy="0em"
+              x="170.625"
+            >
+              1,694,538,850
+            </tspan>
+          </text>
+        </svg>
+      </g>
+      <g
+        class="visx-group visx-axis-tick"
+        transform="translate(0, 0)"
+      >
+        <svg
+          font-size="10"
+          style="overflow: visible;"
+          x="0"
+          y="0.25em"
+        >
+          <text
+            fill="#222"
+            font-family="Arial"
+            font-size="10"
+            text-anchor="middle"
+            transform=""
+            x="231.5625"
+            y="18"
+          >
+            <tspan
+              dy="0em"
+              x="231.5625"
+            >
+              1,694,538,855
+            </tspan>
+          </text>
+        </svg>
+      </g>
+      <g
+        class="visx-group visx-axis-tick"
+        transform="translate(0, 0)"
+      >
+        <svg
+          font-size="10"
+          style="overflow: visible;"
+          x="0"
+          y="0.25em"
+        >
+          <text
+            fill="#222"
+            font-family="Arial"
+            font-size="10"
+            text-anchor="middle"
+            transform=""
+            x="292.5"
+            y="18"
+          >
+            <tspan
+              dy="0em"
+              x="292.5"
+            >
+              1,694,538,860
+            </tspan>
+          </text>
+        </svg>
+      </g>
+      <g
+        class="visx-group visx-axis-tick"
+        transform="translate(0, 0)"
+      >
+        <svg
+          font-size="10"
+          style="overflow: visible;"
+          x="0"
+          y="0.25em"
+        >
+          <text
+            fill="#222"
+            font-family="Arial"
+            font-size="10"
+            text-anchor="middle"
+            transform=""
+            x="353.4375"
+            y="18"
+          >
+            <tspan
+              dy="0em"
+              x="353.4375"
+            >
+              1,694,538,865
+            </tspan>
+          </text>
+        </svg>
+      </g>
+      <g
+        class="visx-group visx-axis-tick"
+        transform="translate(0, 0)"
+      >
+        <svg
+          font-size="10"
+          style="overflow: visible;"
+          x="0"
+          y="0.25em"
+        >
+          <text
+            fill="#222"
+            font-family="Arial"
+            font-size="10"
+            text-anchor="middle"
+            transform=""
+            x="414.375"
+            y="18"
+          >
+            <tspan
+              dy="0em"
+              x="414.375"
+            >
+              1,694,538,870
+            </tspan>
+          </text>
+        </svg>
+      </g>
+      <g
+        class="visx-group visx-axis-tick"
+        transform="translate(0, 0)"
+      >
+        <svg
+          font-size="10"
+          style="overflow: visible;"
+          x="0"
+          y="0.25em"
+        >
+          <text
+            fill="#222"
+            font-family="Arial"
+            font-size="10"
+            text-anchor="middle"
+            transform=""
+            x="475.3125"
+            y="18"
+          >
+            <tspan
+              dy="0em"
+              x="475.3125"
+            >
+              1,694,538,875
+            </tspan>
+          </text>
+        </svg>
+      </g>
+      <g
+        class="visx-group visx-axis-tick"
+        transform="translate(0, 0)"
+      >
+        <svg
+          font-size="10"
+          style="overflow: visible;"
+          x="0"
+          y="0.25em"
+        >
+          <text
+            fill="#222"
+            font-family="Arial"
+            font-size="10"
+            text-anchor="middle"
+            transform=""
+            x="536.25"
+            y="18"
+          >
+            <tspan
+              dy="0em"
+              x="536.25"
+            >
+              1,694,538,880
+            </tspan>
+          </text>
+        </svg>
+      </g>
+      <g
+        class="visx-group visx-axis-tick"
+        transform="translate(0, 0)"
+      >
+        <svg
+          font-size="10"
+          style="overflow: visible;"
+          x="0"
+          y="0.25em"
+        >
+          <text
+            fill="#222"
+            font-family="Arial"
+            font-size="10"
+            text-anchor="middle"
+            transform=""
+            x="597.1875"
+            y="18"
+          >
+            <tspan
+              dy="0em"
+              x="597.1875"
+            >
+              1,694,538,885
+            </tspan>
+          </text>
+        </svg>
+      </g>
+      <g
+        class="visx-group visx-axis-tick"
+        transform="translate(0, 0)"
+      >
+        <svg
+          font-size="10"
+          style="overflow: visible;"
+          x="0"
+          y="0.25em"
+        >
+          <text
+            fill="#222"
+            font-family="Arial"
+            font-size="10"
+            text-anchor="middle"
+            transform=""
+            x="658.125"
+            y="18"
+          >
+            <tspan
+              dy="0em"
+              x="658.125"
+            >
+              1,694,538,890
+            </tspan>
+          </text>
+        </svg>
+      </g>
+      <g
+        class="visx-group visx-axis-tick"
+        transform="translate(0, 0)"
+      >
+        <svg
+          font-size="10"
+          style="overflow: visible;"
+          x="0"
+          y="0.25em"
+        >
+          <text
+            fill="#222"
+            font-family="Arial"
+            font-size="10"
+            text-anchor="middle"
+            transform=""
+            x="719.0625"
+            y="18"
+          >
+            <tspan
+              dy="0em"
+              x="719.0625"
+            >
+              1,694,538,895
+            </tspan>
+          </text>
+        </svg>
+      </g>
+      <g
+        class="visx-group visx-axis-tick"
+        transform="translate(0, 0)"
+      >
+        <svg
+          font-size="10"
+          style="overflow: visible;"
+          x="0"
+          y="0.25em"
+        >
+          <text
+            fill="#222"
+            font-family="Arial"
+            font-size="10"
+            text-anchor="middle"
+            transform=""
+            x="780"
+            y="18"
+          >
+            <tspan
+              dy="0em"
+              x="780"
+            >
+              1,694,538,900
             </tspan>
           </text>
         </svg>
