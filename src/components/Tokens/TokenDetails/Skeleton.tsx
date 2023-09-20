@@ -2,9 +2,9 @@ import { SwapSkeleton } from 'components/swap/SwapSkeleton'
 import { ArrowLeft } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
+import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
 
-import { TokenPrice } from '../../Charts/PriceChart'
 import { LoadingBubble } from '../loading'
 import { AboutContainer, AboutHeader } from './About'
 import { BreadcrumbNavLink } from './BreadcrumbNavLink'
@@ -168,9 +168,9 @@ function Wave() {
 export function LoadingChart() {
   return (
     <ChartContainer>
-      <TokenPrice>
+      <ThemedText.HeadlineLarge>
         <PriceBubble />
-      </TokenPrice>
+      </ThemedText.HeadlineLarge>
       <Space heightSize={6} />
       <LoadingChartContainer>
         <div>

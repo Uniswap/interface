@@ -30,16 +30,6 @@ const ChartHeaderWrapper = styled.div<{ stale?: boolean }>`
   animation-duration: ${({ theme }) => theme.transition.duration.medium};
   ${({ theme, stale }) => stale && `color: ${theme.neutral2}`};
 `
-export const TokenPrice = styled.span`
-  font-size: 36px;
-  line-height: 44px;
-  font-weight: 485;
-`
-const MissingPrice = styled(TokenPrice)`
-  font-size: 24px;
-  line-height: 44px;
-  color: ${({ theme }) => theme.neutral3};
-`
 const PriceContainer = styled.div`
   display: flex;
   gap: 6px;
@@ -85,7 +75,7 @@ function ChartHeader({ crosshairPrice, chart }: ChartHeaderProps) {
   return (
     <ChartHeaderWrapper data-cy="chart-header" stale={displayIsStale}>
       <PriceContainer>
-        <TokenPrice>{formatUSDPrice(displayPrice.value)}</TokenPrice>
+        <ThemedText.HeadlineLarge color="inherit">{formatUSDPrice(displayPrice.value)}</ThemedText.HeadlineLarge>
         {displayIsStale && (
           <MouseoverTooltip text={<Trans>This price may not be up-to-date due to low trading volume.</Trans>}>
             <Info size={16} data-testid="chart-stale-icon" />
@@ -264,10 +254,10 @@ function MissingPriceChart({ chart }: { chart: ErroredChartModel }) {
   return (
     <>
       <ChartHeaderWrapper data-cy="chart-header">
-        <MissingPrice>Price Unavailable</MissingPrice>
-        <ThemedText.BodySmall style={{ color: theme.neutral3 }}>
-          {CHART_ERROR_MESSAGES[chart.error]}
-        </ThemedText.BodySmall>
+        <ThemedText.HeadlineLarge fontSize={24} color="neutral3">
+          Price Unavailable
+        </ThemedText.HeadlineLarge>
+        <ThemedText.BodySmall color="neutral3">{CHART_ERROR_MESSAGES[chart.error]}</ThemedText.BodySmall>
       </ChartHeaderWrapper>
       <svg
         data-cy="missing-chart"
