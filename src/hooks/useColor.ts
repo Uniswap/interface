@@ -49,8 +49,8 @@ async function getColorFromToken(token: Token, primarySrc?: string): Promise<str
   }
 }
 
-function convertColorArrayToString(color: number[]): string {
-  return rgb({ red: color[0], green: color[1], blue: color[2] })
+function convertColorArrayToString([red, green, blue]: number[]): string {
+  return rgb({ red, green, blue })
 }
 
 export function useColor(token?: Token) {
