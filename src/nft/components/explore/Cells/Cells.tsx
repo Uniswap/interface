@@ -3,7 +3,6 @@ import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { VerifiedIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import { Denomination } from 'nft/types'
-import { volumeFormatter } from 'nft/utils'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
@@ -94,9 +93,12 @@ export const CollectionTitleCell = ({ value }: CellProps) => {
   )
 }
 
-export const DiscreteNumberCell = ({ value }: CellProps) => (
-  <span>{value.value ? volumeFormatter(value.value) : '-'}</span>
-)
+export const DiscreteNumberCell = ({ value }: CellProps) => {
+  const { formatNumberOrString } = useFormatter()
+  return (
+    <span>{value.value ? formatNumberOrString({ input: value.value, type: NumberType.NFTCollectionStats }) : '-'}</span>
+  )
+}
 
 const getDenominatedValue = (denomination: Denomination, inWei: boolean, value?: number, usdPrice?: number) => {
   if (denomination === Denomination.ETH) return value
