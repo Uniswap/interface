@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 import { Column } from 'react-table'
 import { useTheme } from 'styled-components'
 import { shortenAddress } from 'utils/addresses'
-import { formatNumber, NumberType } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { mockSwapData } from './mockData'
 import { Swap, SwapAction, SwapInOut } from './types'
@@ -22,6 +22,7 @@ enum ColumnHeader {
 
 export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAddress: string }) {
   const locale = useActiveLocale()
+  const { formatNumber } = useFormatter()
   const theme = useTheme()
 
   const columns: Column<Swap>[] = useMemo(() => {
@@ -55,7 +56,7 @@ export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAdd
           const swapType = getSwapType(value.input.contractAddress, referenceTokenAddress)
           const token = swapType === SwapAction.Buy ? value.output : value.input
           return (
-            <TextCell color={getColor(swapType)}>{`${formatNumber(token.amount, NumberType.TokenTx)} ${
+            <TextCell color={getColor(swapType)}>{`${formatNumber({ input: token.amount, type: NumberType.TokenTx })} ${
               token.symbol
             }`}</TextCell>
           )
@@ -70,7 +71,7 @@ export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAdd
           const swapType = getSwapType(value.input.contractAddress, referenceTokenAddress)
           const token = swapType === SwapAction.Buy ? value.input : value.output
           return (
-            <TextCell color={getColor(swapType)}>{`${formatNumber(token.amount, NumberType.TokenTx)} ${
+            <TextCell color={getColor(swapType)}>{`${formatNumber({ input: token.amount, type: NumberType.TokenTx })} ${
               token.symbol
             }`}</TextCell>
           )
@@ -84,7 +85,9 @@ export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAdd
         Cell: ({ value }: { value: { input: SwapInOut; usdValue: number } }) => {
           const swapType = getSwapType(value.input.contractAddress, referenceTokenAddress)
           return (
-            <TextCell color={getColor(swapType)}>{formatNumber(value.usdValue, NumberType.PortfolioBalance)}</TextCell>
+            <TextCell color={getColor(swapType)}>
+              {formatNumber({ input: value.usdValue, type: NumberType.PortfolioBalance })}
+            </TextCell>
           )
         },
         disableSortBy: true,
@@ -100,7 +103,7 @@ export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAdd
         id: ColumnHeader.Maker,
       },
     ]
-  }, [referenceTokenAddress, locale, theme])
+  }, [theme.success, theme.critical, locale, referenceTokenAddress, formatNumber])
   return (
     <Table
       columns={columns}
