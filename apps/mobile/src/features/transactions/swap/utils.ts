@@ -102,21 +102,6 @@ export function tradeToTransactionInfo(
       }
 }
 
-export function getTokenFeePercentage(currency: Currency, side: CurrencyField): number {
-  if (currency.isNative) {
-    return 0
-  }
-
-  switch (side) {
-    case CurrencyField.OUTPUT:
-      return currency.buyFeeBps ? currency.buyFeeBps.toNumber() / 100 : 0
-    case CurrencyField.INPUT:
-      return currency.sellFeeBps ? currency.sellFeeBps.toNumber() / 100 : 0
-    default:
-      return 0
-  }
-}
-
 // any price movement below ACCEPT_NEW_TRADE_THRESHOLD is auto-accepted for the user
 const ACCEPT_NEW_TRADE_THRESHOLD = new Percent(1, 100)
 export function requireAcceptNewTrade(oldTrade: Maybe<Trade>, newTrade: Maybe<Trade>): boolean {

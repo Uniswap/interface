@@ -11778,7 +11778,7 @@ __metadata:
     "@uniswap/analytics-events": 2.15.0
     "@uniswap/ethers-rs-mobile": 0.0.1
     "@uniswap/permit2-sdk": 1.2.0
-    "@uniswap/router-sdk": 1.6.0
+    "@uniswap/router-sdk": 1.7.0
     "@uniswap/sdk-core": 4.0.7
     "@uniswap/universal-router-sdk": 1.5.7
     "@uniswap/v2-sdk": 3.2.1
@@ -11905,16 +11905,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/router-sdk@npm:1.6.0, @uniswap/router-sdk@npm:^1.6.0":
-  version: 1.6.0
-  resolution: "@uniswap/router-sdk@npm:1.6.0"
+"@uniswap/router-sdk@npm:1.7.0, @uniswap/router-sdk@npm:^1.6.0":
+  version: 1.7.0
+  resolution: "@uniswap/router-sdk@npm:1.7.0"
   dependencies:
     "@ethersproject/abi": ^5.5.0
-    "@uniswap/sdk-core": ^4
-    "@uniswap/swap-router-contracts": 1.1.0
+    "@uniswap/sdk-core": ^4.0.7
+    "@uniswap/swap-router-contracts": ^1.1.0
     "@uniswap/v2-sdk": ^3.2.0
     "@uniswap/v3-sdk": ^3.10.0
-  checksum: 941f03ed193a395e44e505da581a0a8926a9ecbcf866cce974ee4140db26e398cf53c2302b4ef3269e52def5d2fa11f52f69d668fcd3b55b1fe5452ca4b3f16e
+  checksum: 047fe078f152ff24b73caac2be848a5d10c34bc8f7f00089f1ce2b8201b5a41634992a50868687b3ea0de2dcd4863bb19a8f124d50182abf3d7e1a8148384444
   languageName: node
   linkType: hard
 
@@ -11932,20 +11932,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/swap-router-contracts@npm:1.1.0":
-  version: 1.1.0
-  resolution: "@uniswap/swap-router-contracts@npm:1.1.0"
-  dependencies:
-    "@openzeppelin/contracts": 3.4.1-solc-0.7-2
-    "@uniswap/v2-core": 1.0.1
-    "@uniswap/v3-core": 1.0.0
-    "@uniswap/v3-periphery": 1.3.0
-    hardhat-watcher: ^2.1.1
-  checksum: bea8490b1bb6d6522382f197dadd3c74dc5ebe510560a4c05f12cdd26de9aaa7bcb2c038153e297815b46a3a970d574c7211568adbbc79cd649dd1dea2769caa
-  languageName: node
-  linkType: hard
-
-"@uniswap/swap-router-contracts@npm:^1.2.1":
+"@uniswap/swap-router-contracts@npm:^1.1.0, @uniswap/swap-router-contracts@npm:^1.2.1":
   version: 1.3.0
   resolution: "@uniswap/swap-router-contracts@npm:1.3.0"
   dependencies:
@@ -12010,20 +11997,6 @@ __metadata:
   version: 1.0.0
   resolution: "@uniswap/v3-core@npm:1.0.0"
   checksum: 0e7654cfbf9885f1ca94446c3b220aeddb039af7892bc4ae94669512570ceefdf1ce6c2b0703396927d5a203d7c6c5ccaf8bd61426e52372aafb6ada64141055
-  languageName: node
-  linkType: hard
-
-"@uniswap/v3-periphery@npm:1.3.0":
-  version: 1.3.0
-  resolution: "@uniswap/v3-periphery@npm:1.3.0"
-  dependencies:
-    "@openzeppelin/contracts": 3.4.1-solc-0.7-2
-    "@uniswap/lib": ^4.0.1-alpha
-    "@uniswap/v2-core": 1.0.1
-    "@uniswap/v3-core": 1.0.0
-    base64-sol: 1.0.1
-    hardhat-watcher: ^2.1.1
-  checksum: 669200142f23b610911adf9fef87c3af0e16772b51d4bc5a4f8b444c879f7a397d92bcdadf6a19a8bea37991d93751bd9d4c9937a2a3c3f9c0bc60d970fad5b5
   languageName: node
   linkType: hard
 
@@ -37828,7 +37801,7 @@ __metadata:
     "@tamagui/theme-base": 1.61.1
     "@types/react": ^18.0.15
     "@uniswap/permit2-sdk": 1.2.0
-    "@uniswap/router-sdk": 1.6.0
+    "@uniswap/router-sdk": 1.7.0
     "@uniswap/sdk-core": 4.0.7
     "@uniswap/universal-router-sdk": 1.5.7
     "@uniswap/v2-sdk": 3.2.1

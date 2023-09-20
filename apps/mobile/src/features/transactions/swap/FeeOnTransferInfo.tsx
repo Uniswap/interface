@@ -1,3 +1,4 @@
+import { Percent } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Box, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -13,7 +14,7 @@ export type FeeOnTransferInfo = {
 
 export type TokenFeeInfo = {
   tokenSymbol: string
-  feePercentage: number
+  fee: Percent
 }
 
 export function FeeOnTransferInfo({
@@ -21,16 +22,18 @@ export function FeeOnTransferInfo({
   outputTokenInfo,
   onShowInfo,
 }: FeeOnTransferInfo): JSX.Element | null {
-  const inputFee = inputTokenInfo.feePercentage
-  const outputFee = outputTokenInfo.feePercentage
-  if (!inputFee && !outputFee) {
+  if (!inputTokenInfo.fee && !outputTokenInfo.fee) {
     return null
   }
 
   return (
     <Flex gap="$spacing12">
-      {inputFee > 0 && <FeeOnTransferInfoRow feeInfo={inputTokenInfo} onShowInfo={onShowInfo} />}
-      {outputFee > 0 && <FeeOnTransferInfoRow feeInfo={outputTokenInfo} onShowInfo={onShowInfo} />}
+      {inputTokenInfo.fee.greaterThan(0) && (
+        <FeeOnTransferInfoRow feeInfo={inputTokenInfo} onShowInfo={onShowInfo} />
+      )}
+      {outputTokenInfo.fee.greaterThan(0) && (
+        <FeeOnTransferInfoRow feeInfo={outputTokenInfo} onShowInfo={onShowInfo} />
+      )}
     </Flex>
   )
 }
@@ -65,7 +68,7 @@ function FeeOnTransferInfoRow({
       </Flex>
       <Flex row alignItems="center" gap="$spacing8">
         <Text flex={0} variant="bodySmall">
-          {formatPercent(feeInfo.feePercentage)}
+          {formatPercent(feeInfo.fee.toFixed(6))}
         </Text>
       </Flex>
     </TouchableArea>

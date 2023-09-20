@@ -16,7 +16,7 @@
     "@tamagui/shorthands": "1.61.1",
     "@tamagui/theme-base": "1.61.1",
     "@uniswap/permit2-sdk": "1.2.0",
-    "@uniswap/router-sdk": "1.6.0",
+    "@uniswap/router-sdk": "1.7.0",
     "@uniswap/sdk-core": "4.0.7",
     "@uniswap/universal-router-sdk": "1.5.7",
     "@uniswap/v2-sdk": "3.2.1",

@@ -5,7 +5,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Warning } from 'src/components/modals/WarningModal/types'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
-import { getRateToDisplay, getTokenFeePercentage } from 'src/features/transactions/swap/utils'
+import { FeeOnTransferInfo } from 'src/features/transactions/swap/FeeOnTransferInfo'
+import { getRateToDisplay } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
@@ -15,7 +16,6 @@ import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
 import { useShouldUseMEVBlocker } from 'wallet/src/features/transactions/swap/customRpc'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
 interface SwapDetailsProps {
   acceptedTrade: Trade<Currency, Currency, TradeType>
@@ -65,25 +65,25 @@ export function SwapDetails({
 
   const shouldUseMevBlocker = useShouldUseMEVBlocker(trade?.inputAmount.currency.chainId)
 
-  const feeOnTransferInfo = useMemo(
+  const feeOnTransferInfo: FeeOnTransferInfo = useMemo(
     () => ({
       inputTokenInfo: {
-        feePercentage: getTokenFeePercentage(
-          acceptedTrade.inputAmount.currency,
-          CurrencyField.INPUT
-        ),
+        fee: acceptedTrade.inputTax,
         tokenSymbol: acceptedTrade.inputAmount.currency.symbol ?? 'Token sell',
       },
       outputTokenInfo: {
-        feePercentage: getTokenFeePercentage(
-          acceptedTrade.outputAmount.currency,
-          CurrencyField.OUTPUT
-        ),
+        fee: acceptedTrade.outputTax,
         tokenSymbol: acceptedTrade.outputAmount.currency.symbol ?? 'Token buy',
       },
       onShowInfo: onShowFOTInfo,
     }),
-    [acceptedTrade.inputAmount.currency, acceptedTrade.outputAmount.currency, onShowFOTInfo]
+    [
+      acceptedTrade.inputAmount.currency.symbol,
+      acceptedTrade.inputTax,
+      acceptedTrade.outputAmount.currency.symbol,
+      acceptedTrade.outputTax,
+      onShowFOTInfo,
+    ]
   )
 
   return (
