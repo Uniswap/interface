@@ -41,18 +41,16 @@ export default function Updater(): null {
   // fetch all lists every 10 minutes, but only after we initialize provider
   useInterval(fetchAllListsCallback, provider ? ms(`10m`) : null)
 
-  // whenever a list is not loaded and not loading, try again to load it
   useEffect(() => {
+    if (!rehydrated) return // loaded lists will not be available until state is rehydrated
+
+    // whenever a list is not loaded and not loading, try again to load it
     Object.keys(lists).forEach((listUrl) => {
       const list = lists[listUrl]
       if (!list.current && !list.loadingRequestId && !list.error) {
         fetchList(listUrl).catch((error) => console.debug('list added fetching error', error))
       }
     })
-  }, [dispatch, fetchList, lists])
-
-  // if any lists from unsupported lists are loaded, check them too (in case new updates since last visit)
-  useEffect(() => {
     UNSUPPORTED_LIST_URLS.forEach((listUrl) => {
       const list = lists[listUrl]
       if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
@@ -61,7 +59,7 @@ export default function Updater(): null {
         )
       }
     })
-  }, [dispatch, fetchList, lists])
+  }, [dispatch, fetchList, lists, rehydrated])
 
   // automatically update lists if versions are minor/patch
   useEffect(() => {
