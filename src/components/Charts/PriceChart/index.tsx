@@ -18,7 +18,7 @@ import { Info } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
-import { formatUSDPrice } from 'utils/formatNumbers'
+import { useFormatter } from 'utils/formatNumbers'
 
 import { calculateDelta, DeltaArrow, formatDelta } from '../../Tokens/TokenDetails/Delta'
 
@@ -66,6 +66,8 @@ interface ChartHeaderProps {
 }
 
 function ChartHeader({ crosshairPrice, chart }: ChartHeaderProps) {
+  const { formatFiatPrice } = useFormatter()
+
   const { startingPrice, endingPrice, lastValidPrice } = chart
 
   const priceOutdated = lastValidPrice !== endingPrice
@@ -75,7 +77,9 @@ function ChartHeader({ crosshairPrice, chart }: ChartHeaderProps) {
   return (
     <ChartHeaderWrapper data-cy="chart-header" stale={displayIsStale}>
       <PriceContainer>
-        <ThemedText.HeadlineLarge color="inherit">{formatUSDPrice(displayPrice.value)}</ThemedText.HeadlineLarge>
+        <ThemedText.HeadlineLarge color="inherit">
+          {formatFiatPrice({ price: displayPrice.value })}
+        </ThemedText.HeadlineLarge>
         {displayIsStale && (
           <MouseoverTooltip text={<Trans>This price may not be up-to-date due to low trading volume.</Trans>}>
             <Info size={16} data-testid="chart-stale-icon" />
