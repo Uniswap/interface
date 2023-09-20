@@ -116,7 +116,7 @@ export function useCurrencyFromMap(
 
   const token = useTokenFromMapOrNetwork(tokens, isNative ? undefined : shorthandMatchAddress ?? currencyId)
 
-  if (currencyId === null || currencyId === undefined || !isSupportedChain(chainId)) return undefined
+  if (currencyId === null || currencyId === undefined || !isSupportedChain(chainId)) return
 
   // this case so we use our builtin wrapped token instead of wrapped tokens on token lists
   const wrappedNative = nativeCurrency?.wrapped

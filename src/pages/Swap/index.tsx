@@ -314,8 +314,8 @@ export function Swap({
     [independentField, parsedAmount, showWrap, trade]
   )
 
-  const getSingleUnitAmount = (currency: Currency | undefined) => {
-    if (!currency) return undefined
+  const getSingleUnitAmount = (currency?: Currency) => {
+    if (!currency) return
     return CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(10 ** currency.decimals))
   }
 
