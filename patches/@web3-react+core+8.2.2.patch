@@ -1,0 +1,13 @@
+diff --git a/node_modules/@web3-react/core/dist/hooks.js b/node_modules/@web3-react/core/dist/hooks.js
+index f4750ac..adce1fd 100644
+--- a/node_modules/@web3-react/core/dist/hooks.js
++++ b/node_modules/@web3-react/core/dist/hooks.js
+@@ -42,7 +42,7 @@ function importProvider() {
+     return __awaiter(this, void 0, void 0, function* () {
+         if (DynamicProvider === undefined) {
+             try {
+-                const { Web3Provider } = yield Promise.resolve().then(() => __importStar(require('@ethersproject/providers')));
++                const { Web3Provider } = yield Promise.resolve().then(() => __importStar(require('@ethersproject/providers/lib.esm/web3-provider')));
+                 DynamicProvider = Web3Provider;
+             }
+             catch (_a) {

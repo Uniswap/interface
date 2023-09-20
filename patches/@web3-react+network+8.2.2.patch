@@ -1,0 +1,13 @@
+diff --git a/node_modules/@web3-react/network/dist/index.js b/node_modules/@web3-react/network/dist/index.js
+index a289251..1bbb42a 100644
+--- a/node_modules/@web3-react/network/dist/index.js
++++ b/node_modules/@web3-react/network/dist/index.js
+@@ -66,7 +66,7 @@ class Network extends types_1.Connector {
+             if (urls.length === 1 && !isUrl(urls[0])) {
+                 return (this.providerCache[chainId] = Promise.resolve(urls[0]));
+             }
+-            return (this.providerCache[chainId] = Promise.resolve().then(() => __importStar(require('@ethersproject/providers'))).then(({ JsonRpcProvider }) => {
++            return (this.providerCache[chainId] = Promise.resolve().then(() => __importStar(require('@ethersproject/providers/lib.esm/json-rpc-provider'))).then(({ JsonRpcProvider }) => {
+                 const providers = urls.map((url) => (isUrl(url) ? new JsonRpcProvider(url, chainId) : url));
+                 return (0, utils_1.getBestProvider)(providers, this.timeout);
+             }));
