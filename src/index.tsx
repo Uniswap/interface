@@ -14,7 +14,7 @@ import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { BrowserRouter, HashRouter } from 'react-router-dom'
-import { SystemThemeUpdater } from 'theme/components/ThemeToggle'
+import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/ThemeToggle'
 import { isBrowserRouterEnabled } from 'utils/env'
 
 import Web3Provider from './components/Web3Provider'
@@ -40,6 +40,7 @@ function Updaters() {
       <RadialGradientByChainUpdater />
       <ListsUpdater />
       <SystemThemeUpdater />
+      <ThemeColorMetaUpdater />
       <ApplicationUpdater />
       <TransactionUpdater />
       <OrderUpdater />
