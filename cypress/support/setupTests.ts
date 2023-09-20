@@ -9,7 +9,7 @@ beforeEach(() => {
     req.headers['origin'] = 'https://app.uniswap.org'
   })
 
-  // network rpc is disabled for cypress tests - calls should be routed through the connected wallet instead.
+  // Network RPCs are disabled for cypress tests - calls should be routed through the connected wallet instead.
   cy.intercept(/infura.io/, { statusCode: 404 })
   cy.intercept(/quiknode.pro/, { statusCode: 404 })
 
