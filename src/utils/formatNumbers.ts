@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import {
   DEFAULT_LOCAL_CURRENCY,
   LOCAL_CURRENCY_SYMBOL_DISPLAY_TYPE,
@@ -12,6 +12,7 @@ import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useMemo } from 'react'
+import { Bound } from 'state/mint/v3/actions'
 
 type Nullish<T> = T | null | undefined
 type NumberFormatOptions = Intl.NumberFormatOptions
@@ -392,7 +393,7 @@ interface FormatNumberOptions {
   conversionRate?: number
 }
 
-export function formatNumber({
+function formatNumber({
   input,
   type = NumberType.TokenNonTx,
   placeholder = '-',
@@ -434,7 +435,7 @@ interface FormatCurrencyAmountOptions {
   conversionRate?: number
 }
 
-export function formatCurrencyAmount({
+function formatCurrencyAmount({
   amount,
   type = NumberType.TokenNonTx,
   placeholder,
@@ -452,7 +453,7 @@ export function formatCurrencyAmount({
   })
 }
 
-export function formatPriceImpact(priceImpact: Percent | undefined, locale: SupportedLocale = DEFAULT_LOCALE): string {
+function formatPriceImpact(priceImpact: Percent | undefined, locale: SupportedLocale = DEFAULT_LOCALE): string {
   if (!priceImpact) return '-'
 
   return `${Number(priceImpact.multiply(-1).toFixed(3)).toLocaleString(locale, {
@@ -462,13 +463,17 @@ export function formatPriceImpact(priceImpact: Percent | undefined, locale: Supp
   })}%`
 }
 
-export function formatSlippage(slippage: Percent | undefined) {
+function formatSlippage(slippage: Percent | undefined, locale: SupportedLocale = DEFAULT_LOCALE) {
   if (!slippage) return '-'
 
-  return `${slippage.toFixed(3)}%`
+  return `${Number(slippage.toFixed(3)).toLocaleString(locale, {
+    minimumFractionDigits: 3,
+    maximumFractionDigits: 3,
+    useGrouping: false,
+  })}%`
 }
 
-interface FormatPriceProps {
+interface FormatPriceOptions {
   price: Nullish<Price<Currency, Currency>>
   type: FormatterType
   locale?: SupportedLocale
@@ -476,13 +481,13 @@ interface FormatPriceProps {
   conversionRate?: number
 }
 
-export function formatPrice({
+function formatPrice({
   price,
   type = NumberType.FiatTokenPrice,
   locale = DEFAULT_LOCALE,
   localCurrency = DEFAULT_LOCAL_CURRENCY,
   conversionRate,
-}: FormatPriceProps): string {
+}: FormatPriceOptions): string {
   if (price === null || price === undefined) {
     return '-'
   }
@@ -490,45 +495,80 @@ export function formatPrice({
   return formatNumber({ input: parseFloat(price.toSignificant()), type, locale, localCurrency, conversionRate })
 }
 
-export function formatNumberOrString(price: Nullish<number | string>, type: FormatterType): string {
-  if (price === null || price === undefined) return '-'
-  if (typeof price === 'string') return formatNumber({ input: parseFloat(price), type })
-  return formatNumber({ input: price, type })
+interface FormatTickPriceOptions {
+  price?: Price<Token, Token>
+  atLimit: { [bound in Bound]?: boolean | undefined }
+  direction: Bound
+  placeholder?: string
+  numberType?: NumberType
+  locale?: SupportedLocale
+  localCurrency?: SupportedLocalCurrency
+  conversionRate?: number
 }
 
-export function formatUSDPrice(price: Nullish<number | string>, type: NumberType = NumberType.FiatTokenPrice): string {
-  return formatNumberOrString(price, type)
-}
-
-/** Formats USD and non-USD prices */
-export function formatFiatPrice(price: Nullish<number>, currency = 'USD'): string {
-  if (price === null || price === undefined) return '-'
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(price)
-}
-
-// Convert [CurrencyAmount] to number with necessary precision for price formatting.
-export const currencyAmountToPreciseFloat = (currencyAmount: CurrencyAmount<Currency> | undefined) => {
-  if (!currencyAmount) return undefined
-  const floatForLargerNumbers = parseFloat(currencyAmount.toExact())
-  if (floatForLargerNumbers < 0.1) {
-    return parseFloat(currencyAmount.toSignificant(6))
+function formatTickPrice({
+  price,
+  atLimit,
+  direction,
+  placeholder,
+  numberType,
+  locale,
+  localCurrency,
+  conversionRate,
+}: FormatTickPriceOptions) {
+  if (atLimit[direction]) {
+    return direction === Bound.LOWER ? '0' : '∞'
   }
-  return floatForLargerNumbers
+
+  if (!price && placeholder !== undefined) {
+    return placeholder
+  }
+
+  return formatPrice({ price, type: numberType ?? NumberType.TokenNonTx, locale, localCurrency, conversionRate })
 }
 
-// Convert [Price] to number with necessary precision for price formatting.
-export const priceToPreciseFloat = (price: Price<Currency, Currency> | undefined) => {
-  if (!price) return undefined
-  const floatForLargerNumbers = parseFloat(price.toFixed(9))
-  if (floatForLargerNumbers < 0.1) {
-    return parseFloat(price.toSignificant(6))
-  }
-  return floatForLargerNumbers
+interface FormatNumberOrStringOptions {
+  input: Nullish<number | string>
+  type: FormatterType
+  locale?: SupportedLocale
+  localCurrency?: SupportedLocalCurrency
+  conversionRate?: number
+}
+
+function formatNumberOrString({
+  input,
+  type,
+  locale,
+  localCurrency,
+  conversionRate,
+}: FormatNumberOrStringOptions): string {
+  if (input === null || input === undefined) return '-'
+  if (typeof input === 'string')
+    return formatNumber({ input: parseFloat(input), type, locale, localCurrency, conversionRate })
+  return formatNumber({ input, type, locale, localCurrency, conversionRate })
+}
+
+interface FormatFiatPriceOptions {
+  price: Nullish<number | string>
+  type?: FormatterType
+  locale?: SupportedLocale
+  localCurrency?: SupportedLocalCurrency
+  conversionRate?: number
+}
+
+function formatFiatPrice({
+  price,
+  type = NumberType.FiatTokenPrice,
+  locale,
+  localCurrency,
+  conversionRate,
+}: FormatFiatPriceOptions): string {
+  return formatNumberOrString({ input: price, type, locale, localCurrency, conversionRate })
 }
 
 const MAX_AMOUNT_STR_LENGTH = 9
 
-export function formatReviewSwapCurrencyAmount(
+function formatReviewSwapCurrencyAmount(
   amount: CurrencyAmount<Currency>,
   locale: SupportedLocale = DEFAULT_LOCALE
 ): string {
@@ -539,7 +579,7 @@ export function formatReviewSwapCurrencyAmount(
   return formattedAmount
 }
 
-export function useFormatterLocales(): {
+function useFormatterLocales(): {
   formatterLocale: SupportedLocale
   formatterLocalCurrency: SupportedLocalCurrency
 } {
@@ -620,7 +660,7 @@ export function useFormatter() {
   )
 
   const formatPriceWithLocales = useCallback(
-    (options: Omit<FormatPriceProps, LocalesType>) =>
+    (options: Omit<FormatPriceOptions, LocalesType>) =>
       formatPrice({
         ...options,
         locale: formatterLocale,
@@ -640,20 +680,66 @@ export function useFormatter() {
     [formatterLocale]
   )
 
+  const formatSlippageWithLocales = useCallback(
+    (slippage: Percent | undefined) => formatSlippage(slippage, formatterLocale),
+    [formatterLocale]
+  )
+
+  const formatTickPriceWithLocales = useCallback(
+    (options: Omit<FormatTickPriceOptions, LocalesType>) =>
+      formatTickPrice({
+        ...options,
+        locale: formatterLocale,
+        localCurrency: currencyToFormatWith,
+        conversionRate: localCurrencyConversionRateToFormatWith,
+      }),
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
+  )
+
+  const formatNumberOrStringWithLocales = useCallback(
+    (options: Omit<FormatNumberOrStringOptions, LocalesType>) =>
+      formatNumberOrString({
+        ...options,
+        locale: formatterLocale,
+        localCurrency: currencyToFormatWith,
+        conversionRate: localCurrencyConversionRateToFormatWith,
+      }),
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
+  )
+
+  const formatFiatPriceWithLocales = useCallback(
+    (options: Omit<FormatFiatPriceOptions, LocalesType>) =>
+      formatFiatPrice({
+        ...options,
+        locale: formatterLocale,
+        localCurrency: currencyToFormatWith,
+        conversionRate: localCurrencyConversionRateToFormatWith,
+      }),
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
+  )
+
   return useMemo(
     () => ({
       formatCurrencyAmount: formatCurrencyAmountWithLocales,
+      formatFiatPrice: formatFiatPriceWithLocales,
       formatNumber: formatNumberWithLocales,
+      formatNumberOrString: formatNumberOrStringWithLocales,
       formatPrice: formatPriceWithLocales,
       formatPriceImpact: formatPriceImpactWithLocales,
       formatReviewSwapCurrencyAmount: formatReviewSwapCurrencyAmountWithLocales,
+      formatSlippage: formatSlippageWithLocales,
+      formatTickPrice: formatTickPriceWithLocales,
     }),
     [
       formatCurrencyAmountWithLocales,
+      formatFiatPriceWithLocales,
+      formatNumberOrStringWithLocales,
       formatNumberWithLocales,
       formatPriceImpactWithLocales,
       formatPriceWithLocales,
       formatReviewSwapCurrencyAmountWithLocales,
+      formatSlippageWithLocales,
+      formatTickPriceWithLocales,
     ]
   )
 }

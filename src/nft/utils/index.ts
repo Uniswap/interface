@@ -1,4 +1,5 @@
 export * from './asset'
+export * from './blocklist'
 export * from './buildActivityAsset'
 export * from './buildSellObject'
 export * from './carousel'

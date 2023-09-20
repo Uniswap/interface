@@ -1,13 +1,12 @@
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { sendAnalyticsEvent, user } from 'analytics'
+import { sendAnalyticsEvent, user, useTrace } from 'analytics'
 import { connections, getConnection } from 'connection'
 import { isSupportedChain } from 'constants/chains'
 import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from 'constants/providers'
 import { useFallbackProvider } from 'featureFlags/flags/fallbackProvider'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
-import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import usePrevious from 'hooks/usePrevious'
 import { ReactNode, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -16,7 +15,6 @@ import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getWalletMeta } from 'utils/walletMeta'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
-  useEagerlyConnect()
   const connectors = connections.map<[Connector, Web3ReactHooks]>(({ hooks, connector }) => [connector, hooks])
 
   return (
@@ -32,6 +30,7 @@ function Updater() {
   const { account, chainId, connector, provider } = useWeb3React()
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
+  const analyticsContext = useTrace()
 
   const providers = useFallbackProvider() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
 
@@ -49,7 +48,22 @@ function Updater() {
       provider?.off('debug', trace)
       networkProvider?.off('debug', trace)
     }
-  }, [networkProvider, provider, shouldTrace])
+  }, [analyticsContext, networkProvider, provider, shouldTrace])
+
+  const previousConnectedChainId = usePrevious(chainId)
+  useEffect(() => {
+    const chainChanged = previousConnectedChainId && previousConnectedChainId !== chainId
+    if (chainChanged) {
+      sendAnalyticsEvent(InterfaceEventName.CHAIN_CHANGED, {
+        result: WalletConnectionResult.SUCCEEDED,
+        wallet_address: account,
+        wallet_type: getConnection(connector).getName(),
+        chain_id: chainId,
+        previousConnectedChainId,
+        page: currentPage,
+      })
+    }
+  }, [account, chainId, connector, currentPage, previousConnectedChainId])
 
   // Send analytics events when the active account changes.
   const previousAccount = usePrevious(account)

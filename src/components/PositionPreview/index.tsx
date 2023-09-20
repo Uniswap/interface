@@ -14,7 +14,7 @@ import { ReactNode, useCallback, useState } from 'react'
 import { Bound } from 'state/mint/v3/actions'
 import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
-import { formatTickPrice } from 'utils/formatTickPrice'
+import { useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 export const PositionPreview = ({
@@ -31,6 +31,7 @@ export const PositionPreview = ({
   ticksAtLimit: { [bound: string]: boolean | undefined }
 }) => {
   const theme = useTheme()
+  const { formatTickPrice } = useFormatter()
 
   const currency0 = unwrappedToken(position.pool.token0)
   const currency1 = unwrappedToken(position.pool.token1)

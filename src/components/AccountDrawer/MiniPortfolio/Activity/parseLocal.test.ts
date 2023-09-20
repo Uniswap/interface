@@ -11,6 +11,7 @@ import {
   TransactionType as MockTxType,
 } from 'state/transactions/types'
 import { renderHook } from 'test-utils/render'
+import { useFormatter } from 'utils/formatNumbers'
 
 import { UniswapXOrderStatus } from '../../../../lib/hooks/orders/types'
 import { SignatureDetails, SignatureType } from '../../../../state/signatures/types'
@@ -237,6 +238,8 @@ jest.mock('../../../../state/transactions/hooks', () => {
 
 describe('parseLocalActivity', () => {
   it('returns swap activity fields with known tokens, exact input', () => {
+    const { formatNumber } = renderHook(() => useFormatter()).result.current
+
     const details = {
       info: mockSwapInfo(
         MockTradeType.EXACT_INPUT,
@@ -251,7 +254,7 @@ describe('parseLocalActivity', () => {
       },
     } as TransactionDetails
     const chainId = ChainId.MAINNET
-    expect(transactionToActivity(details, chainId, mockTokenAddressMap)).toEqual({
+    expect(transactionToActivity(details, chainId, mockTokenAddressMap, formatNumber)).toEqual({
       chainId: 1,
       currencies: [MockUSDC_MAINNET, MockDAI],
       descriptor: '1.00 USDC for 1.00 DAI',
@@ -264,6 +267,8 @@ describe('parseLocalActivity', () => {
   })
 
   it('returns swap activity fields with known tokens, exact output', () => {
+    const { formatNumber } = renderHook(() => useFormatter()).result.current
+
     const details = {
       info: mockSwapInfo(
         MockTradeType.EXACT_OUTPUT,
@@ -278,7 +283,7 @@ describe('parseLocalActivity', () => {
       },
     } as TransactionDetails
     const chainId = ChainId.MAINNET
-    expect(transactionToActivity(details, chainId, mockTokenAddressMap)).toMatchObject({
+    expect(transactionToActivity(details, chainId, mockTokenAddressMap, formatNumber)).toMatchObject({
       chainId: 1,
       currencies: [MockUSDC_MAINNET, MockDAI],
       descriptor: '1.00 USDC for 1.00 DAI',
@@ -288,6 +293,8 @@ describe('parseLocalActivity', () => {
   })
 
   it('returns swap activity fields with unknown tokens', () => {
+    const { formatNumber } = renderHook(() => useFormatter()).result.current
+
     const details = {
       info: mockSwapInfo(
         MockTradeType.EXACT_INPUT,
@@ -303,7 +310,7 @@ describe('parseLocalActivity', () => {
     } as TransactionDetails
     const chainId = ChainId.MAINNET
     const tokens = {} as ChainTokenMap
-    expect(transactionToActivity(details, chainId, tokens)).toMatchObject({
+    expect(transactionToActivity(details, chainId, tokens, formatNumber)).toMatchObject({
       chainId: 1,
       currencies: [undefined, undefined],
       descriptor: 'Unknown for Unknown',
@@ -496,13 +503,16 @@ describe('parseLocalActivity', () => {
   })
 
   it('Signature to activity - returns undefined if is on chain order', () => {
+    const { formatNumber } = renderHook(() => useFormatter()).result.current
+
     expect(
       signatureToActivity(
         {
           type: SignatureType.SIGN_UNISWAPX_ORDER,
           status: UniswapXOrderStatus.FILLED,
         } as SignatureDetails,
-        {}
+        {},
+        formatNumber
       )
     ).toBeUndefined()
 
@@ -512,7 +522,8 @@ describe('parseLocalActivity', () => {
           type: SignatureType.SIGN_UNISWAPX_ORDER,
           status: UniswapXOrderStatus.CANCELLED,
         } as SignatureDetails,
-        {}
+        {},
+        formatNumber
       )
     ).toBeUndefined()
   })
