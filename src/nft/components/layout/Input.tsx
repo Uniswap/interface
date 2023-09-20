@@ -1,7 +1,11 @@
-import { isNumber } from 'nft/utils/numbers'
 import { FormEvent, forwardRef } from 'react'
 
 import { Box, BoxProps } from '../Box'
+
+const isNumber = (s: string): boolean => {
+  const reg = /^-?\d+\.?\d*$/
+  return reg.test(s) && !isNaN(parseFloat(s)) && isFinite(parseFloat(s))
+}
 
 export const Input = forwardRef<HTMLInputElement, BoxProps>((props, ref) => (
   <Box
