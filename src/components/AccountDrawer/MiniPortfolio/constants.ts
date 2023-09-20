@@ -136,8 +136,22 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
     [TransactionStatus.Confirmed]: t`Submitted proposal`,
     [TransactionStatus.Failed]: t`Submit proposal failed`,
   },
+  [TransactionType.CLAIM_FARM]: {
+    [TransactionStatus.Pending]: t`Claiming`,
+    [TransactionStatus.Confirmed]: t`Claimed`,
+    [TransactionStatus.Failed]: t`Claim failed`,
+  },
+  [TransactionType.DEPOSIT_FARM]: {
+    [TransactionStatus.Pending]: t`Depositing`,
+    [TransactionStatus.Confirmed]: t`Deposited`,
+    [TransactionStatus.Failed]: t`Deposit failed`,
+  },
+  [TransactionType.WITHDRAW_FARM]: {
+    [TransactionStatus.Pending]: t`Withdrawing`,
+    [TransactionStatus.Confirmed]: t`Withdrew`,
+    [TransactionStatus.Failed]: t`Withdraw failed`,
+  },
 }
-
 const AlternateTransactionTitleTable: { [key in TransactionType]?: { [state in TransactionStatus]: string } } = {
   [TransactionType.WRAP]: {
     [TransactionStatus.Pending]: t`Unwrapping`,
