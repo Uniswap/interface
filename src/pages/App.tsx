@@ -32,7 +32,7 @@ import Swap from './Swap'
 const AppChrome = lazy(() => import('./AppChrome'))
 const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
-const Profile = lazy(() => import('nft/pages/profile/profile'))
+const Profile = lazy(() => import('nft/pages/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
 const AddLiquidity = lazy(() => import('pages/AddLiquidity'))
 const RedirectDuplicateTokenIds = lazy(() => import('pages/AddLiquidity/redirects'))
