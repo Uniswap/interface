@@ -8,11 +8,12 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { GenieCollection, TokenType } from 'nft/types'
-import { floorFormatter, quantityFormatter, roundWholePercentage, volumeFormatter } from 'nft/utils/numbers'
+import { roundWholePercentage } from 'nft/utils/numbers'
 import { ReactNode, useEffect, useReducer, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import styled, { css } from 'styled-components'
 import { ThemedText } from 'theme'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { DiscordIcon, EllipsisIcon, ExternalIcon, InstagramIcon, TwitterIcon, VerifiedIcon, XMarkIcon } from '../icons'
 import * as styles from './CollectionStats.css'
@@ -338,18 +339,28 @@ const statsLoadingSkeleton = (isMobile: boolean) =>
   ))
 
 const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
+  const { formatNumberOrString } = useFormatter()
+
   const uniqueOwnersPercentage = stats?.stats?.total_supply
     ? roundWholePercentage(((stats.stats.num_owners ?? 0) / stats.stats.total_supply) * 100)
     : 0
-  const totalSupplyStr = stats.stats ? quantityFormatter(stats.stats.total_supply ?? 0) : 0
+  const totalSupplyStr = stats.stats
+    ? formatNumberOrString({ input: stats.stats.total_supply ?? 0, type: NumberType.NFTCollectionStats })
+    : 0
   const listedPercentageStr = stats?.stats?.total_supply
     ? roundWholePercentage(((stats.stats.total_listings ?? 0) / stats.stats.total_supply) * 100)
     : 0
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   // round daily volume & floorPrice to 3 decimals or less
-  const totalVolumeStr = volumeFormatter(Number(stats.stats?.total_volume) ?? 0)
-  const floorPriceStr = floorFormatter(stats.stats?.floor_price ?? 0)
+  const totalVolumeStr = formatNumberOrString({
+    input: Number(stats.stats?.total_volume) ?? 0,
+    type: NumberType.NFTCollectionStats,
+  })
+  const floorPriceStr = formatNumberOrString({
+    input: stats.stats?.floor_price ?? 0,
+    type: NumberType.NFTTokenFloorPrice,
+  })
   // graphQL formatted %age values out of 100, whereas v3 endpoint did a decimal between 0 & 1
   const floorChangeStr = Math.round(Math.abs(stats?.stats?.one_day_floor_change ?? 0))
 

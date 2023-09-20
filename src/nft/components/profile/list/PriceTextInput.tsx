@@ -7,12 +7,12 @@ import { useUpdateInputAndWarnings } from 'nft/components/profile/list/utils'
 import { body } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
-import { formatEth } from 'nft/utils/currency'
 import { Dispatch, useRef, useState } from 'react'
 import { AlertTriangle, Link } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { colors } from 'theme/colors'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { WarningType } from './shared'
 
@@ -104,6 +104,7 @@ export const PriceTextInput = ({
   globalOverride,
   asset,
 }: PriceTextInputProps) => {
+  const { formatNumberOrString } = useFormatter()
   const [warningType, setWarningType] = useState(WarningType.NONE)
   const removeSellAsset = useSellAsset((state) => state.removeSellAsset)
   const showResolveIssues = useSellAsset((state) => state.showResolveIssues)
@@ -162,7 +163,11 @@ export const PriceTextInput = ({
               {warningType === WarningType.BELOW_FLOOR && `${percentBelowFloor.toFixed(0)}% `}
               {getWarningMessage(warningType)}
               &nbsp;
-              {warningType === WarningType.ALREADY_LISTED && `${formatEth(asset?.floor_sell_order_price ?? 0)} ETH`}
+              {warningType === WarningType.ALREADY_LISTED &&
+                `${formatNumberOrString({
+                  input: asset?.floor_sell_order_price ?? 0,
+                  type: NumberType.NFTToken,
+                })} ETH`}
             </span>
             <WarningAction
               onClick={() => {

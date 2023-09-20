@@ -31,12 +31,12 @@ import { useSubscribeTransactionState } from 'nft/hooks/useSubscribeTransactionS
 import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
-import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { InterfaceTrade, TradeFillType, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { BuyButtonStateData, BuyButtonStates, getBuyButtonStateData } from './ButtonStates'
 
@@ -189,10 +189,12 @@ const InputCurrencyValue = ({
   tradeState: TradeState
   trade?: InterfaceTrade
 }) => {
+  const { formatNumberOrString } = useFormatter()
+
   if (!usingPayWithAnyToken) {
     return (
       <ThemedText.BodyPrimary lineHeight="20px" fontWeight="535">
-        {formatWeiToDecimal(totalEthPrice.toString())}
+        {formatNumberOrString({ input: formatEther(totalEthPrice.toString()), type: NumberType.NFTToken })}
         &nbsp;{activeCurrency?.symbol ?? 'ETH'}
       </ThemedText.BodyPrimary>
     )
@@ -208,7 +210,7 @@ const InputCurrencyValue = ({
 
   return (
     <ValueText color={tradeState === TradeState.LOADING ? 'neutral3' : 'neutral1'}>
-      {ethNumberStandardFormatter(trade?.inputAmount.toExact())}
+      {formatNumberOrString({ input: trade?.inputAmount.toExact(), type: NumberType.NFTToken })}
     </ValueText>
   )
 }
@@ -224,6 +226,8 @@ const FiatValue = ({
   tradeState: TradeState
   usingPayWithAnyToken: boolean
 }) => {
+  const { formatNumberOrString } = useFormatter()
+
   if (!usdcValue) {
     if (usingPayWithAnyToken && (tradeState === TradeState.INVALID || tradeState === TradeState.NO_ROUTE_FOUND)) {
       return null
@@ -247,7 +251,7 @@ const FiatValue = ({
         </>
       )}
       <ThemedText.BodySmall color="neutral3" lineHeight="20px">
-        {`${ethNumberStandardFormatter(usdcValue?.toExact(), true)}`}
+        {`${formatNumberOrString({ input: usdcValue?.toExact(), type: NumberType.FiatNFTToken })}`}
       </ThemedText.BodySmall>
     </PriceImpactContainer>
   )

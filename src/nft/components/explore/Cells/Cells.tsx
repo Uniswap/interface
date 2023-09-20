@@ -3,10 +3,10 @@ import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { VerifiedIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import { Denomination } from 'nft/types'
-import { ethNumberStandardFormatter, volumeFormatter } from 'nft/utils'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
+import { NO_DECIMALS, NumberType, useFormatter } from 'utils/formatNumbers'
 
 import * as styles from './Cells.css'
 
@@ -93,9 +93,12 @@ export const CollectionTitleCell = ({ value }: CellProps) => {
   )
 }
 
-export const DiscreteNumberCell = ({ value }: CellProps) => (
-  <span>{value.value ? volumeFormatter(value.value) : '-'}</span>
-)
+export const DiscreteNumberCell = ({ value }: CellProps) => {
+  const { formatNumberOrString } = useFormatter()
+  return (
+    <span>{value.value ? formatNumberOrString({ input: value.value, type: NumberType.NFTCollectionStats }) : '-'}</span>
+  )
+}
 
 const getDenominatedValue = (denomination: Denomination, inWei: boolean, value?: number, usdPrice?: number) => {
   if (denomination === Denomination.ETH) return value
@@ -113,11 +116,12 @@ export const EthCell = ({
   denomination: Denomination
   usdPrice?: number
 }) => {
+  const { formatNumberOrString } = useFormatter()
   const denominatedValue = getDenominatedValue(denomination, false, value, usdPrice)
   const formattedValue = denominatedValue
     ? denomination === Denomination.ETH
-      ? ethNumberStandardFormatter(denominatedValue.toString(), false, true, false) + ' ETH'
-      : ethNumberStandardFormatter(denominatedValue, true, false, true)
+      ? formatNumberOrString({ input: denominatedValue.toString(), type: NumberType.NFTToken }) + ' ETH'
+      : formatNumberOrString({ input: denominatedValue, type: NumberType.FiatTokenStats })
     : '-'
 
   const isMobile = useIsMobile()
@@ -141,12 +145,16 @@ export const VolumeCell = ({
   denomination: Denomination
   usdPrice?: number
 }) => {
+  const { formatNumberOrString } = useFormatter()
   const denominatedValue = getDenominatedValue(denomination, false, value, usdPrice)
 
   const formattedValue = denominatedValue
     ? denomination === Denomination.ETH
-      ? ethNumberStandardFormatter(denominatedValue.toString(), false, false, true) + ' ETH'
-      : ethNumberStandardFormatter(denominatedValue, true, false, true)
+      ? formatNumberOrString({
+          input: denominatedValue.toString(),
+          type: [{ upperBound: Infinity, formatterOptions: NO_DECIMALS }],
+        }) + ' ETH'
+      : formatNumberOrString({ input: denominatedValue, type: NumberType.FiatTokenStats })
     : '-'
 
   return (

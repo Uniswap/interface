@@ -5,10 +5,10 @@ import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { getMarketplaceIcon } from 'nft/components/card/utils'
 import { CollectionSelectedAssetIcon } from 'nft/components/icons'
 import { Markets } from 'nft/types'
-import { putCommas } from 'nft/utils'
 import { AlertTriangle, Check, Tag } from 'react-feather'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const StyledMarketplaceContainer = styled.div<{ isText?: boolean }>`
   position: absolute;
@@ -114,6 +114,8 @@ const RarityInfo = styled(ThemedText.BodySmall)`
 `
 
 export const Ranking = ({ provider }: RankingProps) => {
+  const { formatNumber } = useFormatter()
+
   if (!provider.rank) {
     return null
   }
@@ -131,7 +133,7 @@ export const Ranking = ({ provider }: RankingProps) => {
         }
         placement="top"
       >
-        # {putCommas(provider.rank)}
+        # {formatNumber({ input: provider.rank, type: NumberType.WholeNumber })}
       </MouseoverTooltip>
     </RarityInfo>
   )

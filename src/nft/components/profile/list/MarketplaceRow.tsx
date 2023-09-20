@@ -8,10 +8,10 @@ import { useSellAsset } from 'nft/hooks'
 import { useNativeUsdPrice } from 'nft/hooks/useUsdPrice'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
-import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { Dispatch, DispatchWithoutAction, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { PriceTextInput } from './PriceTextInput'
 import { RoyaltyTooltip } from './RoyaltyTooltip'
@@ -248,6 +248,7 @@ export const MarketplaceRow = ({
 }
 
 const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
+  const { formatNumberOrString } = useFormatter()
   const ethUsdPrice = useNativeUsdPrice()
 
   return (
@@ -255,8 +256,10 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
       <ThemedText.BodyPrimary lineHeight="24px" color={ethPrice ? 'neutral1' : 'neutral2'} textAlign="right">
         {ethPrice !== 0 ? (
           <Column>
-            <span>{formatEth(ethPrice)} ETH</span>
-            <ThemedText.BodyPrimary color="neutral2">{formatUsdPrice(ethPrice * ethUsdPrice)}</ThemedText.BodyPrimary>
+            <span>{formatNumberOrString({ input: ethPrice, type: NumberType.NFTToken })} ETH</span>
+            <ThemedText.BodyPrimary color="neutral2">
+              {formatNumberOrString({ input: ethPrice * ethUsdPrice, type: NumberType.FiatNFTToken })}
+            </ThemedText.BodyPrimary>
           </Column>
         ) : (
           '- ETH'
