@@ -19,7 +19,7 @@ import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
 import { useFormatter } from 'utils/formatNumbers'
 
-import { calculateDelta, DeltaArrow, formatDelta } from './Delta'
+import { calculateDelta, DeltaArrow } from './Delta'
 
 const DATA_EMPTY = { value: 0, timestamp: 0 }
 
@@ -68,10 +68,11 @@ interface ChartDeltaProps {
 }
 
 function ChartDelta({ startingPrice, endingPrice, noColor }: ChartDeltaProps) {
+  const { formatPercent } = useFormatter()
   const delta = calculateDelta(startingPrice.value, endingPrice.value)
   return (
     <DeltaContainer>
-      {formatDelta(delta)}
+      {formatPercent(delta)}
       <DeltaArrow delta={delta} noColor={noColor} />
     </DeltaContainer>
   )

@@ -9,7 +9,7 @@ import { Power } from 'components/Icons/Power'
 import { Settings } from 'components/Icons/Settings'
 import { AutoRow } from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { DeltaArrow, formatDelta } from 'components/Tokens/TokenDetails/Delta'
+import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import Tooltip from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
@@ -159,7 +159,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
-  const { formatNumber } = useFormatter()
+  const { formatNumber, formatPercent } = useFormatter()
 
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
@@ -282,7 +282,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
                     {`${formatNumber({
                       input: Math.abs(absoluteChange as number),
                       type: NumberType.PortfolioBalance,
-                    })} (${formatDelta(percentChange)})`}
+                    })} (${formatPercent(percentChange)})`}
                   </ThemedText.BodySecondary>
                 </>
               )}
