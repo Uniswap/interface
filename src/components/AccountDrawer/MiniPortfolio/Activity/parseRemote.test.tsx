@@ -5,6 +5,7 @@ import ms from 'ms'
 
 import {
   MockClosedUniswapXOrder,
+  MockMoonpayPurchase,
   MockNFTApproval,
   MockNFTApprovalForAll,
   MockNFTTransfer,
@@ -250,6 +251,31 @@ describe('parseRemote', () => {
         status: 'CONFIRMED',
         timestamp: 10000,
         title: 'Removed Liquidity',
+      })
+    })
+    it('should parse moonpay purchase', () => {
+      const result = parseRemoteActivities(jest.fn().mockReturnValue('100'), [MockMoonpayPurchase])
+      expect(result?.['someHash']).toEqual({
+        chainId: 1,
+        currencies: [
+          {
+            address: WETH9[1].address,
+            chainId: 1,
+            decimals: 18,
+            isNative: false,
+            isToken: true,
+            name: 'Wrapped Ether',
+            symbol: 'WETH',
+          },
+        ],
+        descriptor: '100 WETH for 100', // typically this includes the locale currency, but our mock just returns 100
+        from: '0xFromAddress',
+        hash: 'someHash',
+        logos: ['moonpay.svg'],
+        nonce: 12345,
+        status: 'CONFIRMED',
+        timestamp: 10000,
+        title: 'Purchased',
       })
     })
   })
