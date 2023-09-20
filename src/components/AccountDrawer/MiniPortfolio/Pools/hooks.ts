@@ -32,7 +32,7 @@ function useContractMultichain<T extends BaseContract>(
 ): ContractMap<T> {
   const { chainId: walletChainId, provider: walletProvider } = useWeb3React()
 
-  const providers = useFallbackProviderFlagEnabled() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
+  const networkProviders = useFallbackProviderFlagEnabled() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
 
   return useMemo(() => {
     const relevantChains =
@@ -46,14 +46,14 @@ function useContractMultichain<T extends BaseContract>(
         walletProvider && walletChainId === chainId
           ? walletProvider
           : isSupportedChain(chainId)
-          ? providers[chainId]
+          ? networkProviders[chainId]
           : undefined
       if (provider) {
         acc[chainId] = getContract(addressMap[chainId] ?? '', ABI, provider) as T
       }
       return acc
     }, {})
-  }, [ABI, addressMap, chainIds, walletChainId, walletProvider])
+  }, [ABI, addressMap, chainIds, networkProviders, walletChainId, walletProvider])
 }
 
 export function useV3ManagerContracts(chainIds: ChainId[]): ContractMap<NonfungiblePositionManager> {

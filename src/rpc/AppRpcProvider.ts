@@ -1,5 +1,8 @@
 import { Network } from '@ethersproject/networks'
 import { JsonRpcProvider, Provider } from '@ethersproject/providers'
+import { SupportedInterfaceChain } from 'constants/chains'
+
+import AppStaticJsonRpcProvider from './StaticJsonRpcProvider'
 
 function now() {
   return new Date().getTime()
@@ -37,7 +40,7 @@ function checkNetworks(networks: Array<Network>): Network | null {
 
 interface ProviderPerformance {
   latency: number
-  failureRate: number
+  failureCount: number
   lastEvaluated: number
 }
 
@@ -47,14 +50,13 @@ interface FallbackProviderEvaluation {
 }
 
 /**
- * AppRpcProvider is an extension of the JsonRpcProvider class from the ethers.js library.
  * This provider balances requests among multiple JSON-RPC endpoints.
  */
-export default class AppRpcProvider extends JsonRpcProvider {
+export default class AppRpcProvider extends AppStaticJsonRpcProvider {
   readonly providerEvaluations: ReadonlyArray<FallbackProviderEvaluation>
   readonly evaluationInterval: number
 
-  constructor(providers: JsonRpcProvider[], evaluationInterval = 30000) {
+  constructor(chainId: SupportedInterfaceChain, providers: JsonRpcProvider[], evaluationInterval = 30000) {
     if (providers.length === 0) throw new Error('providers array empty')
     providers.forEach((provider, i) => {
       if (!Provider.isProvider(provider)) throw new Error(`invalid provider ${i}`)
@@ -62,13 +64,13 @@ export default class AppRpcProvider extends JsonRpcProvider {
     const agreedUponNetwork = checkNetworks(providers.map((p) => p.network))
     if (!agreedUponNetwork) throw new Error('networks mismatch')
 
-    super(providers[0].connection)
+    super(chainId, providers[0].connection.url)
     this.providerEvaluations = providers.map((provider) => {
       return Object.freeze({
         provider,
         performance: {
           latency: Number.MAX_SAFE_INTEGER,
-          failureRate: 0,
+          failureCount: 0,
           lastEvaluated: 0,
         },
       })
@@ -118,9 +120,10 @@ export default class AppRpcProvider extends JsonRpcProvider {
     } else {
       for (const { provider, performance } of sortedEvaluations) {
         try {
-          return provider.perform(method, params)
+          return await provider.perform(method, params)
         } catch (error) {
-          performance.failureRate++ // Increment failure rate
+          performance.failureCount++ // Increment failure rate
+          console.warn('rpc action failed', error)
         }
       }
       throw new Error('All providers failed to perform the operation.')
@@ -139,17 +142,17 @@ export default class AppRpcProvider extends JsonRpcProvider {
       await config.provider.getBlockNumber()
       const latency = now() - startTime
       config.performance.latency = latency
-      config.performance.failureRate = 0 // Reset failure rate on successful request
+      config.performance.failureCount = 0 // Reset failure rate on successful request
     } catch (error) {
-      config.performance.failureRate += 1 // Increase failure rate on failed request
+      config.performance.failureCount += 1 // Increase failure rate on failed request
     }
     config.performance.lastEvaluated = now()
   }
 
   static sortProviders(providerEvaluations: FallbackProviderEvaluation[]) {
     return providerEvaluations.sort((a, b) => {
-      const scoreA = a.performance.latency * (a.performance.failureRate + 1)
-      const scoreB = b.performance.latency * (b.performance.failureRate + 1)
+      const scoreA = a.performance.latency * (a.performance.failureCount + 1)
+      const scoreB = b.performance.latency * (b.performance.failureCount + 1)
       return scoreA - scoreB
     })
   }
