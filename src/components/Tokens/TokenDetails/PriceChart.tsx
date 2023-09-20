@@ -15,7 +15,7 @@ import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { Info, TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { useFormatter } from 'utils/formatNumbers'
 

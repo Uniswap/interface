@@ -3,7 +3,7 @@ import Row from 'components/Row'
 import { ArrowRight } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import { useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
 
 export function TradeSummary({ trade }: { trade: Pick<InterfaceTrade, 'inputAmount' | 'postTaxOutputAmount'> }) {

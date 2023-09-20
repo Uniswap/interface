@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme'
+import { ExternalLink, ThemedText } from 'theme/components'
 
 const StyledLink = styled(ExternalLink)`
   font-weight: 535;

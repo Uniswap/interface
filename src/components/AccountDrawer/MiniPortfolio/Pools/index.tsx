@@ -12,7 +12,7 @@ import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletConten
 import { useCallback, useMemo, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { ExpandoRow } from '../ExpandoRow'

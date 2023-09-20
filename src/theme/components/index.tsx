@@ -12,15 +12,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import {
-  AlertTriangle,
-  ArrowLeft,
-  CheckCircle,
-  Copy,
-  ExternalLink as ExternalLinkIconFeather,
-  Icon,
-  X,
-} from 'react-feather'
+import { AlertTriangle, ArrowLeft, CheckCircle, Copy, Icon, X } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, keyframes } from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
@@ -30,23 +22,11 @@ import { anonymizeLink } from '../../utils/anonymizeLink'
 
 // TODO: Break this file into a components folder
 
+export { ThemedText } from './text'
+
 export const CloseIcon = styled(X)<{ onClick: () => void }>`
   color: ${({ theme }) => theme.neutral1};
   cursor: pointer;
-`
-
-// for wrapper react feather icons
-export const IconWrapper = styled.div<{ stroke?: string; size?: string; marginRight?: string; marginLeft?: string }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: ${({ size }) => size ?? '20px'};
-  height: ${({ size }) => size ?? '20px'};
-  margin-right: ${({ marginRight }) => marginRight ?? 0};
-  margin-left: ${({ marginLeft }) => marginLeft ?? 0};
-  & > * {
-    stroke: ${({ theme, stroke }) => stroke ?? theme.accent1};
-  }
 `
 
 // A button that triggers some onClick result, but looks like a link.
@@ -113,7 +93,7 @@ export const ClickableStyle = css`
   }
 `
 
-export const LinkStyle = css`
+const LinkStyle = css`
   color: ${({ theme }) => theme.accent1};
   stroke: ${({ theme }) => theme.accent1};
   font-weight: 500;
@@ -125,22 +105,10 @@ export const StyledInternalLink = styled(Link)`
   ${LinkStyle}
 `
 
-const LinkIconWrapper = styled.a`
-  align-items: center;
-  justify-content: center;
-  display: flex;
-`
-
 const IconStyle = css`
   height: 16px;
   width: 18px;
   margin-left: 10px;
-`
-
-const LinkIcon = styled(ExternalLinkIconFeather)`
-  ${IconStyle}
-  ${ClickableStyle}
-  ${LinkStyle}
 `
 
 const CopyIcon = styled(Copy)`
@@ -201,19 +169,6 @@ export function ExternalLink({
   ...rest
 }: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & { href: string }) {
   return <StyledLink target={target} rel={rel} href={href} onClick={handleClickExternalLink} {...rest} />
-}
-
-export function ExternalLinkIcon({
-  target = '_blank',
-  href,
-  rel = 'noopener noreferrer',
-  ...rest
-}: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & { href: string }) {
-  return (
-    <LinkIconWrapper target={target} rel={rel} href={href} onClick={handleClickExternalLink} {...rest}>
-      <LinkIcon />
-    </LinkIconWrapper>
-  )
 }
 
 const TOOLTIP_WIDTH = 60
@@ -510,11 +465,6 @@ export const Separator = styled.div`
   width: 100%;
   height: 1px;
   background-color: ${({ theme }) => theme.surface3};
-`
-
-export const GlowEffect = styled.div`
-  border-radius: 32px;
-  box-shadow: ${({ theme }) => theme.deprecated_networkDefaultShadow};
 `
 
 export const CautionTriangle = styled(AlertTriangle)`

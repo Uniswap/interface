@@ -5,7 +5,7 @@ import { ColumnCenter } from 'components/Column'
 import Row from 'components/Row'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components'
-import { CloseIcon, ThemedText } from 'theme'
+import { CloseIcon, ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
 
 import Modal from '../Modal'
