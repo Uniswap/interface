@@ -5,7 +5,7 @@ import { sendAnalyticsEvent, user } from 'analytics'
 import { connections, getConnection } from 'connection'
 import { isSupportedChain } from 'constants/chains'
 import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from 'constants/providers'
-import { useFallbackProviderFlagEnabled } from 'featureFlags/flags/fallbackProvider'
+import { useFallbackProvider } from 'featureFlags/flags/fallbackProvider'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import usePrevious from 'hooks/usePrevious'
@@ -33,7 +33,7 @@ function Updater() {
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
 
-  const providers = useFallbackProviderFlagEnabled() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
+  const providers = useFallbackProvider() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
 
   // Trace RPC calls (for debugging).
   const networkProvider = isSupportedChain(chainId) ? providers[chainId] : undefined

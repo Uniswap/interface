@@ -1,7 +1,7 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from 'constants/providers'
-import { useFallbackProviderFlagEnabled } from 'featureFlags/flags/fallbackProvider'
+import { useFallbackProvider } from 'featureFlags/flags/fallbackProvider'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
@@ -93,7 +93,7 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
     return void 0
   }, [activeChainId, provider, windowVisible, onChainBlock])
 
-  const networkProviders = useFallbackProviderFlagEnabled() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
+  const networkProviders = useFallbackProvider() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
 
   useEffect(() => {
     if (mainnetBlock === undefined) {

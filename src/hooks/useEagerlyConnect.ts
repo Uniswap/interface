@@ -1,7 +1,7 @@
 import { Connector } from '@web3-react/types'
 import { deprecatedNetworkConnection, gnosisSafeConnection, networkConnection } from 'connection'
 import { getConnection } from 'connection'
-import { useFallbackProviderFlagEnabled } from 'featureFlags/flags/fallbackProvider'
+import { useFallbackProvider } from 'featureFlags/flags/fallbackProvider'
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
@@ -25,7 +25,7 @@ export default function useEagerlyConnect() {
 
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
   const rehydrated = useStateRehydrated()
-  const fallbackProviderEnabled = useFallbackProviderFlagEnabled()
+  const fallbackProviderEnabled = useFallbackProvider()
 
   useEffect(() => {
     try {

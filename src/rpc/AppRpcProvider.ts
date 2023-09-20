@@ -4,10 +4,6 @@ import { SupportedInterfaceChain } from 'constants/chains'
 
 import AppStaticJsonRpcProvider from './StaticJsonRpcProvider'
 
-function now() {
-  return new Date().getTime()
-}
-
 function checkNetworks(networks: Array<Network>): Network | null {
   let result: Network | null = null
 
@@ -16,7 +12,7 @@ function checkNetworks(networks: Array<Network>): Network | null {
 
     // Null! We do not know our network; bail.
     if (network == null) {
-      return null
+      throw new Error('unknown network')
     }
 
     if (result) {
@@ -28,7 +24,7 @@ function checkNetworks(networks: Array<Network>): Network | null {
           (result.ensAddress === network.ensAddress || (result.ensAddress == null && network.ensAddress == null))
         )
       ) {
-        return null
+        throw new Error('networks mismatch')
       }
     } else {
       result = network
@@ -53,56 +49,49 @@ interface FallbackProviderEvaluation {
  * This provider balances requests among multiple JSON-RPC endpoints.
  */
 export default class AppRpcProvider extends AppStaticJsonRpcProvider {
-  readonly providerEvaluations: ReadonlyArray<FallbackProviderEvaluation>
-  readonly evaluationInterval: number
+  providerEvaluations: ReadonlyArray<FallbackProviderEvaluation>
+  readonly evaluationIntervalMs: number
 
-  constructor(chainId: SupportedInterfaceChain, providers: JsonRpcProvider[], evaluationInterval = 30000) {
+  constructor(chainId: SupportedInterfaceChain, providers: JsonRpcProvider[], evaluationIntervalMs = 30000) {
     if (providers.length === 0) throw new Error('providers array empty')
     providers.forEach((provider, i) => {
       if (!Provider.isProvider(provider)) throw new Error(`invalid provider ${i}`)
     })
-    const agreedUponNetwork = checkNetworks(providers.map((p) => p.network))
-    if (!agreedUponNetwork) throw new Error('networks mismatch')
+    checkNetworks(providers.map((p) => p.network))
 
     super(chainId, providers[0].connection.url)
-    this.providerEvaluations = providers.map((provider) => {
-      return Object.freeze({
-        provider,
-        performance: {
-          latency: Number.MAX_SAFE_INTEGER,
-          failureCount: 0,
-          lastEvaluated: 0,
-        },
-      })
-    })
+    this.providerEvaluations = providers.map((provider) => ({
+      provider,
+      performance: {
+        latency: Number.MAX_SAFE_INTEGER,
+        failureCount: 0,
+        lastEvaluated: 0,
+      },
+    }))
 
-    this.evaluationInterval = evaluationInterval
+    this.evaluationIntervalMs = evaluationIntervalMs
   }
 
   /**
    * Perform a JSON-RPC request.
-   *
-   * method - The JSON-RPC method name.
-   * params - The parameters for the JSON-RPC method.
-   * Returns a Promise that resolves with the result of the JSON-RPC method.
    * Throws an error if all providers fail to perform the operation.
    */
   async perform(method: string, params: { [name: string]: any }): Promise<any> {
     // Periodically evaluate all providers
-    const currentTime = now()
+    const currentTime = Date.now()
+    // Note that this async action will not affect the current perform call
     this.providerEvaluations.forEach((providerEval) => {
-      if (currentTime - providerEval.performance.lastEvaluated >= this.evaluationInterval) {
+      if (currentTime - providerEval.performance.lastEvaluated >= this.evaluationIntervalMs) {
         this.evaluateProvider(providerEval)
       }
     })
 
-    // Sort providers by performance score (latency and failure rate)
-    const sortedEvaluations = AppRpcProvider.sortProviders(this.providerEvaluations.slice())
+    this.providerEvaluations = AppRpcProvider.sortProviders(this.providerEvaluations.slice())
 
     // Always broadcast "sendTransaction" to all backends
     if (method === 'sendTransaction') {
       const results: Array<string | Error> = await Promise.all(
-        sortedEvaluations.map(({ provider }) => {
+        this.providerEvaluations.map(({ provider }) => {
           return provider.sendTransaction(params.signedTransaction).then(
             (result) => result.hash,
             (error) => error
@@ -118,7 +107,7 @@ export default class AppRpcProvider extends AppStaticJsonRpcProvider {
       // They were all an error; pick the first error
       throw results[0]
     } else {
-      for (const { provider, performance } of sortedEvaluations) {
+      for (const { provider, performance } of this.providerEvaluations) {
         try {
           return await provider.perform(method, params)
         } catch (error) {
@@ -137,16 +126,16 @@ export default class AppRpcProvider extends AppStaticJsonRpcProvider {
    * Returns a Promise that resolves when the evaluation is complete.
    */
   async evaluateProvider(config: FallbackProviderEvaluation): Promise<void> {
-    const startTime = now()
+    const startTime = Date.now()
     try {
       await config.provider.getBlockNumber()
-      const latency = now() - startTime
+      const latency = Date.now() - startTime
       config.performance.latency = latency
       config.performance.failureCount = 0 // Reset failure rate on successful request
     } catch (error) {
       config.performance.failureCount += 1 // Increase failure rate on failed request
     }
-    config.performance.lastEvaluated = now()
+    config.performance.lastEvaluated = Date.now()
   }
 
   static sortProviders(providerEvaluations: FallbackProviderEvaluation[]) {

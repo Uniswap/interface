@@ -4,6 +4,6 @@ export function useFallbackProviderFlag(): BaseVariant {
   return useBaseFlag(FeatureFlag.fallbackProvider)
 }
 
-export function useFallbackProviderFlagEnabled(): boolean {
+export function useFallbackProvider(): boolean {
   return useFallbackProviderFlag() === BaseVariant.Enabled
 }
