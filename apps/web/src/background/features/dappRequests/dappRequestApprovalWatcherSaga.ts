@@ -45,6 +45,7 @@ export function* dappRequestApprovalWatcher() {
             )
             break
           case DappRequestType.GetAccount:
+          case DappRequestType.GetAccountRequest:
             yield* call(getAccount, request.dappRequest.requestId, request.senderTabId)
             break
           case DappRequestType.ChangeChain:

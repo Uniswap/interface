@@ -71,7 +71,10 @@ export function* handleRequest(requestParams: DappRequestSagaParams) {
   }
 
   // If the request is a connect, we don't need to prompt the user since it just getting the provider url
-  if (requestForStore.dappRequest.type === DappRequestType.Connect) {
+  if (
+    requestForStore.dappRequest.type === DappRequestType.Connect ||
+    requestForStore.dappRequest.type === DappRequestType.GetAccount
+  ) {
     yield* put(confirmRequest(requestForStore))
   } else {
     yield* put(dappRequestActions.add(requestForStore))

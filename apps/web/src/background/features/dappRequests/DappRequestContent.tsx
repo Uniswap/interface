@@ -78,7 +78,7 @@ export function DappRequestContent(): JSX.Element {
       title = `Approve transaction from ${dappName}`
       callToAction = 'Approve'
       break
-    case DappRequestType.GetAccount:
+    case DappRequestType.GetAccountRequest:
       title = `Connect to ${dappName}?`
       callToAction = 'Connect'
       break

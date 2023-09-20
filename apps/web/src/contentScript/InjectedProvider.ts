@@ -385,37 +385,53 @@ export class InjectedProvider extends EventEmitter {
   }
 
   /**
-   * Handle eth_accounts requests
+   * Handle eth_accounts requests. This is called when a dapp first loads.
+   * If the user has already connected then this will automatically reconnect them.
    */
   handleEthAccounts = async (): Promise<string[]> => {
-    if (this.isConnected() && this.publicKey) {
+    // Send request to the RPC API.
+    if (this.publicKey) {
       return [this.publicKey]
     }
-    return []
+
+    const getAccountRequest: GetAccountRequest = {
+      type: DappRequestType.GetAccount,
+      requestId: uuidv4(),
+    }
+    return this._handleEthAccounts(getAccountRequest)
   }
 
   /**
-   * Handle eth_requestAccounts requests
+   * Handle eth_requestAccounts requests.
+   * The same as handleEthAccounts but it requires user approval for the first connection.
    */
   handleEthRequestAccounts = async (): Promise<string[]> => {
     // Send request to the RPC API.
-    if (!this.publicKey) {
-      const getAccountRequest: GetAccountRequest = {
-        type: DappRequestType.GetAccount,
-        requestId: uuidv4(),
-      }
-      const { accountAddress, chainId, providerUrl } = await sendRequestAsync<AccountResponse>(
-        getAccountRequest,
-        DappResponseType.AccountResponse
-      )
-      this.publicKey = accountAddress
-
-      // TODO: Remove this once we have a better way to handle the connection state.
-      this.setState({ ...this.state, isConnected: true })
-      this.chainId = chainId
-      this.provider = new ethers.providers.JsonRpcProvider(providerUrl)
-      this.emit('connect', { chainId } as ProviderConnectInfo)
+    if (this.publicKey) {
+      return [this.publicKey]
     }
+
+    const getAccountRequest: GetAccountRequest = {
+      type: DappRequestType.GetAccountRequest,
+      requestId: uuidv4(),
+    }
+    return this._handleEthAccounts(getAccountRequest)
+  }
+
+  private _handleEthAccounts = async (request: GetAccountRequest): Promise<string[]> => {
+    // Send request to the RPC API.
+    const { accountAddress, chainId, providerUrl } = await sendRequestAsync<AccountResponse>(
+      request,
+      DappResponseType.AccountResponse
+    )
+    this.publicKey = accountAddress
+
+    // TODO: Remove this once we have a better way to handle the connection state.
+    this.setState({ ...this.state, isConnected: true })
+    this.chainId = chainId
+    this.provider = new ethers.providers.JsonRpcProvider(providerUrl)
+    this.emit('connect', { chainId } as ProviderConnectInfo)
+
     return [this.publicKey]
   }
 

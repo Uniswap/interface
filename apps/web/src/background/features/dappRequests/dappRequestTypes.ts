@@ -21,6 +21,7 @@ export enum DappRequestType {
   Connect = 'Connect',
   ChangeChain = 'ChangeChain',
   GetAccount = 'GetAccount',
+  GetAccountRequest = 'GetAccountRequest',
   SendTransaction = 'SendTransaction',
   SignMessage = 'SignMessage',
   SignTransaction = 'SignTransaction',
@@ -70,7 +71,7 @@ export interface ChangeChainRequest extends BaseDappRequest {
 }
 
 export interface GetAccountRequest extends BaseDappRequest {
-  type: DappRequestType.GetAccount
+  type: DappRequestType.GetAccount | DappRequestType.GetAccountRequest
 }
 
 /* Content script response types */
