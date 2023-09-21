@@ -1,4 +1,4 @@
-import { ConnectionType } from './types'
+import { ConnectionType, toConnectionType } from './types'
 
 export interface ConnectionMeta {
   type: ConnectionType
@@ -17,7 +17,15 @@ export function getConnectionMeta(): ConnectionMeta | undefined {
   try {
     const value = localStorage.getItem(connectionMetaKey)
     if (value) {
-      return JSON.parse(value) as ConnectionMeta
+      const raw = JSON.parse(value) as ConnectionMeta
+      const connectionType = toConnectionType(raw.type)
+      if (connectionType) {
+        return {
+          type: connectionType,
+          display: raw.display,
+          displayType: raw.displayType,
+        }
+      }
     }
   } catch (e) {
     console.warn(e)
