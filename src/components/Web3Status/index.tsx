@@ -9,7 +9,7 @@ import { IconWrapper } from 'components/Identicon/StatusIcon'
 import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { getConnection } from 'connection'
 import { useConnectionReady } from 'connection/eagerlyConnect'
-import { ConnectionMeta, getConnectionMeta, setConnectionMeta } from 'connection/meta'
+import { ConnectionDisplayType, ConnectionMeta, getConnectionMeta, setConnectionMeta } from 'connection/meta'
 import useENSName from 'hooks/useENSName'
 import useLast from 'hooks/useLast'
 import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
@@ -154,13 +154,13 @@ function Web3StatusInner() {
       const meta: ConnectionMeta = {
         type: connection.type,
         display: displayName,
-        displayType: ENSName ? 'ENSName' : undefined,
+        displayType: ENSName ? ConnectionDisplayType.ENSName : ConnectionDisplayType.Address,
       }
       setConnectionMeta(meta)
     }
   }, [ENSName, account, connection.type, displayName])
 
-  if (!connectionReady || (account && meta.current?.displayType === 'ENSName' && ENSLoading)) {
+  if (!connectionReady || (account && meta.current?.displayType === ConnectionDisplayType.ENSName && ENSLoading)) {
     return (
       <Web3StatusConnected disabled={true}>
         <IconWrapper size={24}>

@@ -3,7 +3,12 @@ import { ConnectionType } from './types'
 export interface ConnectionMeta {
   type: ConnectionType
   display?: string
-  displayType?: 'ENSName'
+  displayType?: ConnectionDisplayType
+}
+
+export enum ConnectionDisplayType {
+  Address = 'Address',
+  ENSName = 'ENSName',
 }
 
 const connectionMetaKey = 'connection_meta'
