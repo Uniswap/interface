@@ -9,7 +9,7 @@ import { IconWrapper } from 'components/Identicon/StatusIcon'
 import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { getConnection } from 'connection'
 import { useConnectionReady } from 'connection/eagerlyConnect'
-import { selectedWalletDisplayKey } from 'connection/types'
+import { ConnectionMeta, getConnectionMeta, setConnectionMeta } from 'connection/meta'
 import useENSName from 'hooks/useENSName'
 import useLast from 'hooks/useLast'
 import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
@@ -96,8 +96,9 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{
   }
 `
 
-const AddressAndChevronContainer = styled.div`
+const AddressAndChevronContainer = styled.div<{ loading?: boolean }>`
   display: flex;
+  opacity: ${({ loading, theme }) => loading && theme.opacity.disabled};
 
   @media only screen and (max-width: ${navSearchInputVisibleSize}px) {
     display: none;
@@ -134,7 +135,7 @@ function Web3StatusInner() {
   const activeWeb3 = useWeb3React()
   const lastWeb3 = useLast(useWeb3React(), ignoreWhileSwitchingChain)
   const { account, connector } = useMemo(() => (activeWeb3.account ? activeWeb3 : lastWeb3), [activeWeb3, lastWeb3])
-  const { ENSName } = useENSName(account)
+  const { ENSName, loading: ENSLoading } = useENSName(account)
   const connection = getConnection(connector)
 
   const [, toggleAccountDrawer] = useAccountDrawer()
@@ -147,15 +148,30 @@ function Web3StatusInner() {
   const { hasPendingActivity, pendingActivityCount } = usePendingActivity()
 
   const displayName = useMemo(() => (account ? ENSName || shortenAddress(account) : null), [account, ENSName])
-  const lastDisplayName = useRef(localStorage.getItem(selectedWalletDisplayKey) ?? null)
+  const meta = useRef(getConnectionMeta())
   useEffect(() => {
     if (displayName) {
-      // It takes a moment to load the ENSName, so set the lastDisplayName (for next time) to the account to reduce layout shift.
-      localStorage.setItem(selectedWalletDisplayKey, shortenAddress(account))
+      const meta: ConnectionMeta = {
+        type: connection.type,
+        display: displayName,
+        displayType: ENSName ? 'ENSName' : undefined,
+      }
+      setConnectionMeta(meta)
     }
-  }, [account, displayName])
+  }, [ENSName, account, connection.type, displayName])
 
-  if (account) {
+  if (!connectionReady || (account && meta.current?.displayType === 'ENSName' && ENSLoading)) {
+    return (
+      <Web3StatusConnected disabled={true}>
+        <IconWrapper size={24}>
+          <LoaderV3 size="24px" />
+        </IconWrapper>
+        <AddressAndChevronContainer loading={true}>
+          <Text>{meta.current?.display}</Text>
+        </AddressAndChevronContainer>
+      </Web3StatusConnected>
+    )
+  } else if (account) {
     return (
       <TraceEvent
         events={[BrowserEvent.onClick]}
@@ -186,18 +202,6 @@ function Web3StatusInner() {
           )}
         </Web3StatusConnected>
       </TraceEvent>
-    )
-  } else if (!connectionReady) {
-    return (
-      <Web3StatusConnected disabled={true}>
-        <IconWrapper size={24}>
-          <LoaderV3 size="24px" />
-        </IconWrapper>
-        <AddressAndChevronContainer>
-          {/* Render the last known wallet address to prevent a layout shift on initial connection. */}
-          <Text style={{ visibility: 'hidden' }}>{lastDisplayName.current}</Text>
-        </AddressAndChevronContainer>
-      </Web3StatusConnected>
     )
   } else {
     return (

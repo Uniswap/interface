@@ -2,7 +2,8 @@ import { Connector } from '@web3-react/types'
 import { useSyncExternalStore } from 'react'
 
 import { getConnection, gnosisSafeConnection, networkConnection } from './index'
-import { ConnectionType, selectedWalletKey, toConnectionType } from './types'
+import { deleteConnectionMeta, getConnectionMeta } from './meta'
+import { ConnectionType } from './types'
 
 let connectionReady: Promise<void> | true = true
 
@@ -39,17 +40,17 @@ class FailedToConnect extends Error {}
 
 connect(gnosisSafeConnection.connector, ConnectionType.GNOSIS_SAFE)
 connect(networkConnection.connector, ConnectionType.NETWORK)
-const selectedWallet = toConnectionType(localStorage.getItem(selectedWalletKey) ?? undefined)
-if (selectedWallet) {
-  const selectedConnection = getConnection(selectedWallet)
+const meta = getConnectionMeta()
+if (meta?.type) {
+  const selectedConnection = getConnection(meta.type)
   if (selectedConnection) {
-    connectionReady = connect(selectedConnection.connector, selectedWallet)
+    connectionReady = connect(selectedConnection.connector, meta.type)
       .then((connected) => {
         if (!connected) throw new FailedToConnect()
       })
       .catch((error) => {
         // Clear the persisted wallet type if it failed to connect.
-        localStorage.removeItem(selectedWalletKey)
+        deleteConnectionMeta()
         // Log it if it threw an unknown error.
         if (!(error instanceof FailedToConnect)) {
           console.error(error)
