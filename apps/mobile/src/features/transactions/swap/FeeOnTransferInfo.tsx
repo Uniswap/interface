@@ -22,7 +22,7 @@ export function FeeOnTransferInfo({
   outputTokenInfo,
   onShowInfo,
 }: FeeOnTransferInfo): JSX.Element | null {
-  if (!inputTokenInfo.fee && !outputTokenInfo.fee) {
+  if (!inputTokenInfo.fee.greaterThan(0) && !outputTokenInfo.fee.greaterThan(0)) {
     return null
   }
 
