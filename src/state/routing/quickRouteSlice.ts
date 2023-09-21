@@ -13,8 +13,8 @@ if (UNISWAP_API_URL === undefined) {
 }
 
 function getQuoteLatencyMeasure(mark: PerformanceMark): PerformanceMeasure {
-  performance.mark('quote-fetch-end')
-  return performance.measure('quote-fetch-latency', mark.name, 'quote-fetch-end')
+  performance.mark('quickroute-fetch-end')
+  return performance.measure('quickroute-fetch-latency', mark.name, 'quickroute-fetch-end')
 }
 
 export const quickRouteApi = createApi({
@@ -51,7 +51,7 @@ export const quickRouteApi = createApi({
       },
       async queryFn(args, _api, _extraOptions, fetch) {
         logSwapQuoteRequest(args.tokenInChainId, RouterPreference.API, true)
-        const quoteStartMark = performance.mark(`quote-fetch-start-${Date.now()}`)
+        const quoteStartMark = performance.mark(`quickroute-fetch-start-${Date.now()}`)
         const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
         const type = isExactInput(tradeType) ? 'EXACT_IN' : 'EXACT_OUT'
 

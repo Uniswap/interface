@@ -6,6 +6,8 @@ import { useMemo } from 'react'
 import { useGetQuickRouteQuery, useGetQuickRouteQueryState } from './quickRouteSlice'
 import { GetQuickQuoteArgs, PreviewTrade, QuoteState, TradeState } from './types'
 import { currencyAddressForSwapQuote } from './utils'
+import { useQuickRouteMainnetEnabled } from 'featureFlags/flags/quickRouteMainnet'
+import { useQuickRouteAllChainsEnabled } from 'featureFlags/flags/quickRouteAllChains'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined } as const
@@ -25,6 +27,9 @@ function useQuickRouteArguments({
   inputTax: Percent
   outputTax: Percent
 }): GetQuickQuoteArgs | typeof skipToken {
+  const enabledMainnet = useQuickRouteMainnetEnabled()
+  const enableAllChains = useQuickRouteAllChainsEnabled()
+  
   return useMemo(() => {
     if (!tokenIn || !tokenOut || !amount) return skipToken
 
