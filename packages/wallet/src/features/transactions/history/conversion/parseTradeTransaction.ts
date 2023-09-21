@@ -41,10 +41,11 @@ export default function parseTradeTransaction(
   const chainId = fromGraphQLChain(transaction.chain)
   if (!chainId) return
 
-  const txAssetChanges = transaction.details.assetChanges.filter(
-    (t): t is TransferAssetChange =>
-      t?.__typename === 'TokenTransfer' || t?.__typename === 'NftTransfer'
-  )
+  const txAssetChanges =
+    transaction.details.assetChanges?.filter(
+      (t): t is TransferAssetChange =>
+        t?.__typename === 'TokenTransfer' || t?.__typename === 'NftTransfer'
+    ) ?? []
 
   // for detecting wraps
   const nativeCurrencyID = buildNativeCurrencyId(chainId).toLocaleLowerCase()

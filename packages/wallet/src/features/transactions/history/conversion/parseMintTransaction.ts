@@ -15,10 +15,10 @@ export default function parseNFTMintTransaction(
 ): NFTMintTransactionInfo | undefined {
   if (transaction.details.__typename !== 'TransactionDetails') return undefined
 
-  const tokenChange = transaction.details.assetChanges.find(
+  const tokenChange = transaction.details.assetChanges?.find(
     (change) => change?.__typename === 'TokenTransfer'
   )
-  const nftChange = transaction.details.assetChanges.find(
+  const nftChange = transaction.details.assetChanges?.find(
     (change) => change?.__typename === 'NftTransfer'
   )
 

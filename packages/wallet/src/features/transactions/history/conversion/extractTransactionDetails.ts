@@ -69,16 +69,17 @@ export default function extractTransactionDetails(
   // No match found, default to unknown.
   if (!typeInfo) {
     // If a parsing util returns undefined type info, we still want to check if its spam
-    const isSpam = transaction.details.assetChanges.some((change) => {
-      switch (change?.__typename) {
-        case 'NftTransfer':
-          return change.asset?.isSpam
-        case 'TokenTransfer':
-          return change.asset.project?.isSpam || change.asset.project?.spamCode === SpamCode.HIGH
-        default:
-          return false
-      }
-    })
+    const isSpam =
+      transaction.details.assetChanges?.some((change) => {
+        switch (change?.__typename) {
+          case 'NftTransfer':
+            return change.asset?.isSpam
+          case 'TokenTransfer':
+            return change.asset.project?.isSpam || change.asset.project?.spamCode === SpamCode.HIGH
+          default:
+            return false
+        }
+      }) ?? true
     typeInfo = {
       type: TransactionType.Unknown,
       tokenAddress: transaction.details.to,

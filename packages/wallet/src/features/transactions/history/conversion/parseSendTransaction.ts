@@ -16,7 +16,7 @@ export default function parseSendTransaction(
 ): SendTokenTransactionInfo | undefined {
   if (transaction.details.__typename !== 'TransactionDetails') return undefined
 
-  const change = transaction.details.assetChanges[0]
+  const change = transaction.details.assetChanges?.[0]
 
   if (!change) return undefined
 
