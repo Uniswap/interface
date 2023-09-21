@@ -10,7 +10,7 @@ import { startTransition, Suspense, useMemo } from 'react'
 import { PriceChart } from '../../Charts/PriceChart'
 import TimePeriodSelector from './TimeSelector'
 
-function usePriceHistory(tokenPriceData: TokenPriceQuery): PricePoint[] | undefined {
+export function usePriceHistory(tokenPriceData: TokenPriceQuery): PricePoint[] | undefined {
   // Appends the current price to the end of the priceHistory array
   const priceHistory = useMemo(() => {
     const market = tokenPriceData.token?.market

@@ -117,15 +117,18 @@ const OutputSwapSection = styled(SwapSection)`
   border-bottom: ${({ theme }) => `1px solid ${theme.surface1}`};
 `
 
-function getIsValidSwapQuote(
+export function getIsValidSwapQuote(
   trade: InterfaceTrade | undefined,
   tradeState: TradeState,
   swapInputError?: ReactNode
 ): boolean {
+  // console.log('Trade: ' + trade?.tradeType)
+  // console.log('State: ' + tradeState)
+  // console.log('Error: ' + swapInputError)
   return Boolean(!swapInputError && trade && tradeState === TradeState.VALID)
 }
 
-function largerPercentValue(a?: Percent, b?: Percent) {
+export function largerPercentValue(a?: Percent, b?: Percent) {
   if (a && b) {
     return a.greaterThan(b) ? a : b
   } else if (a) {

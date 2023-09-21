@@ -44,6 +44,7 @@ export enum ApplicationModal {
   TIME_SELECTOR,
   VOTE,
   UNISWAP_NFT_AIRDROP_CLAIM,
+  ONE_CLICK_BUY,
 }
 
 export type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>

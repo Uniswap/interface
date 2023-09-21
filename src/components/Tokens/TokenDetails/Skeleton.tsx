@@ -1,3 +1,5 @@
+import { AutoColumn } from 'components/Column'
+import Row from 'components/Row'
 import { SwapSkeleton } from 'components/swap/SwapSkeleton'
 import { ArrowLeft } from 'react-feather'
 import { useParams } from 'react-router-dom'
@@ -155,6 +157,33 @@ const ChartAnimation = styled.div`
 const Space = styled.div<{ heightSize: number }>`
   height: ${({ heightSize }) => `${heightSize}px`};
 `
+const OneClickBuyContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`
+const BannerImageContainer = styled.div`
+  width: 30%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+`
+const Blob = styled.div<{ width?: number; radius?: number }>`
+  background-color: ${({ theme }) => theme.background};
+  border-radius: 12px;
+  height: 48px;
+  width: ${({ width }) => (width ? width + 'px' : '100%')};
+  padding: 8px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`
 
 function Wave() {
   const theme = useTheme()
@@ -264,5 +293,37 @@ export function TokenDetailsPageSkeleton() {
         <SwapSkeleton />
       </RightPanel>
     </TokenDetailsLayout>
+  )
+}
+
+// eslint-disable-next-line import/no-unused-modules
+export function OneClickBuySkeleton() {
+  return (
+    <OneClickBuyContainer>
+      <AutoColumn gap="md">
+        <Row width="30%">
+          <DetailBubble />
+        </Row>
+        <Row justify="center">
+          <BannerImageContainer>
+            <TokenLogoBubble />
+            <WideBubble />
+            <WideBubble />
+            <Row justify="space-between" gap="sm">
+              <HalfWideBubble />
+              <HalfWideBubble />
+            </Row>
+          </BannerImageContainer>
+        </Row>
+        <AutoColumn gap="md">
+          <Row gap="sm">
+            <Blob radius={16} />
+            <Blob radius={16} />
+            <Blob radius={16} />
+          </Row>
+          <Blob radius={16} />
+        </AutoColumn>
+      </AutoColumn>
+    </OneClickBuyContainer>
   )
 }
