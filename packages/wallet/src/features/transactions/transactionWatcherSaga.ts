@@ -275,6 +275,7 @@ export function logTransactionEvent(
       outputCurrencyId,
       tradeType,
       protocol,
+      transactedUSDValue,
     } = typeInfo as BaseSwapTransactionInfo
     const eventName =
       status === TransactionStatus.Success
@@ -297,6 +298,7 @@ export function logTransactionEvent(
       quoteId,
       submitViaPrivateRpc,
       protocol,
+      transactedUSDValue,
     })
   }
 

@@ -34,6 +34,7 @@ type SwapTransactionResultProperties = {
   quoteId?: string
   submitViaPrivateRpc?: boolean
   protocol?: Protocol
+  transactedUSDValue?: number
 }
 
 type TransferProperties = {

@@ -100,6 +100,7 @@ export function useQuoteQuery(
       tokenOut: tokenOutAddress,
       amount,
       type: type === 'exactIn' ? 'EXACT_INPUT' : 'EXACT_OUTPUT',
+      slippageTolerance,
       configs: [
         {
           protocols,

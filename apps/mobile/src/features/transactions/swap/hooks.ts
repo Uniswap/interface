@@ -586,7 +586,8 @@ export function useSwapTxAndGasInfo(
     otherCurrency,
     tradeType,
     /* skip */ !shouldFetchSimulatedGasLimit,
-    permit2SignatureInfo.data
+    permit2SignatureInfo.data,
+    derivedSwapInfo.customSlippageTolerance
   )
 
   const { transactionRequest } = useTransactionRequestInfo(

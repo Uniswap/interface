@@ -109,11 +109,12 @@ export function useRouterQuote(params: UseQuoteProps): GqlResult<TradeQuoteResul
 }
 
 export function useSimulatedGasLimit(
-  amountSpecified: CurrencyAmount<Currency> | null | undefined,
-  otherCurrency: Currency | null | undefined,
+  amountSpecified: Maybe<CurrencyAmount<Currency>>,
+  otherCurrency: Maybe<Currency>,
   tradeType: TradeType,
   skip: boolean,
-  permitSignatureInfo?: PermitSignatureInfo | null
+  permitSignatureInfo: Maybe<PermitSignatureInfo>,
+  customSlippageTolerance?: number
 ): SimulatedGasEstimationInfo {
   const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified)
 
@@ -124,6 +125,7 @@ export function useSimulatedGasLimit(
     skip,
     fetchSimulatedGasLimit: true,
     permitSignatureInfo,
+    customSlippageTolerance,
   })
 
   return useMemo(
