@@ -3,6 +3,7 @@ import { Web3ReactHooks } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 
 export const selectedWalletKey = 'selected_wallet'
+export const selectedWalletDisplayKey = 'selected_wallet_display'
 
 export enum ConnectionType {
   UNISWAP_WALLET_V2 = 'UNISWAP_WALLET_V2',

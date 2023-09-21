@@ -9,13 +9,14 @@ import { IconWrapper } from 'components/Identicon/StatusIcon'
 import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { getConnection } from 'connection'
 import { useConnectionReady } from 'connection/eagerlyConnect'
+import { selectedWalletDisplayKey } from 'connection/types'
 import useENSName from 'hooks/useENSName'
 import useLast from 'hooks/useLast'
 import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { darken } from 'polished'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useAppSelector } from 'state/hooks'
 import styled from 'styled-components'
 import { colors } from 'theme/colors'
@@ -145,6 +146,15 @@ function Web3StatusInner() {
 
   const { hasPendingActivity, pendingActivityCount } = usePendingActivity()
 
+  const displayName = useMemo(() => (account ? ENSName || shortenAddress(account) : null), [account, ENSName])
+  const lastDisplayName = useRef(localStorage.getItem(selectedWalletDisplayKey) ?? null)
+  useEffect(() => {
+    if (displayName) {
+      // It takes a moment to load the ENSName, so set the lastDisplayName (for next time) to the account to reduce layout shift.
+      localStorage.setItem(selectedWalletDisplayKey, shortenAddress(account))
+    }
+  }, [account, displayName])
+
   if (account) {
     return (
       <TraceEvent
@@ -171,7 +181,7 @@ function Web3StatusInner() {
             </RowBetween>
           ) : (
             <AddressAndChevronContainer>
-              <Text>{ENSName || shortenAddress(account)}</Text>
+              <Text>{displayName}</Text>
             </AddressAndChevronContainer>
           )}
         </Web3StatusConnected>
@@ -180,7 +190,13 @@ function Web3StatusInner() {
   } else if (!connectionReady) {
     return (
       <Web3StatusConnected disabled={true}>
-        <LoaderV3 size="24px" />
+        <IconWrapper size={24}>
+          <LoaderV3 size="24px" />
+        </IconWrapper>
+        <AddressAndChevronContainer>
+          {/* Render the last known wallet address to prevent a layout shift on initial connection. */}
+          <Text style={{ visibility: 'hidden' }}>{lastDisplayName.current}</Text>
+        </AddressAndChevronContainer>
       </Web3StatusConnected>
     )
   } else {

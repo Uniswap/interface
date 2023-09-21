@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { ConnectionType, selectedWalletKey, toConnectionType } from '../../connection/types'
+import { ConnectionType, selectedWalletDisplayKey, selectedWalletKey, toConnectionType } from '../../connection/types'
 import { SupportedLocale } from '../../constants/locales'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { RouterPreference } from '../../state/routing/types'
@@ -77,6 +77,9 @@ const userSlice = createSlice({
   reducers: {
     updateSelectedWallet(state, { payload: { wallet } }) {
       localStorage.setItem(selectedWalletKey, wallet)
+      if (!wallet) {
+        localStorage.removeItem(selectedWalletDisplayKey)
+      }
       state.selectedWallet = wallet
     },
     updateUserLocale(state, action) {
