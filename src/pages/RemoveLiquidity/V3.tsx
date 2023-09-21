@@ -300,7 +300,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         pendingText={pendingText}
       />
       <AppBody $maxWidth="unset">
-        <AddRemoveTabs creating={false} adding={false} positionID={tokenId.toString()} />
+        <AddRemoveTabs
+          creating={false}
+          adding={false}
+          positionID={tokenId.toString()}
+          autoSlippage={DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE}
+        />
         <Wrapper>
           {position ? (
             <AutoColumn gap="lg">
