@@ -92,7 +92,13 @@ export const quickRouteApi = createApi({
 
         const quickRouteResponse = response.data as QuickRouteResponse
         const previewTrade = transformQuickRouteToTrade(args, quickRouteResponse)
-        return { data: { state: QuoteState.SUCCESS, trade: previewTrade } }
+        return {
+          data: {
+            state: QuoteState.SUCCESS,
+            trade: previewTrade,
+            latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration,
+          },
+        }
       },
       keepUnusedDataFor: ms(`10s`),
       extraOptions: {
