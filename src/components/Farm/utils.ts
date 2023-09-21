@@ -1,6 +1,5 @@
 import { Token } from '@pollum-io/sdk-core'
 import { ChainId } from '@pollum-io/smart-order-router'
-import { CallState } from '@uniswap/redux-multicall'
 import { GAMMA_MASTERCHEF_ADDRESSES, PSYS_ADDRESS } from 'constants/addresses'
 import { BigNumber } from 'ethers/lib/ethers'
 import { formatUnits } from 'ethers/lib/utils'
@@ -11,7 +10,7 @@ import { ParsedQs } from 'qs'
 import { useEffect, useMemo, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
-import { GammaPairTokens, GlobalConst, MINICHEF_ABI, ZERO } from './constants'
+import { GammaPairTokens, GlobalConst, MINICHEF_ABI } from './constants'
 
 const { v3FarmSortBy } = GlobalConst.utils
 
@@ -330,12 +329,12 @@ export function useRewardPerSecond() {
   return useSingleCallResult(masterChefContract, 'rewardPerSecond')
 }
 
-function usePoolInfo(poolId: string) {
+export function usePoolInfo(poolId: string) {
   const masterChefContract = useMasterChefContract(undefined, MINICHEF_ABI)
   return useSingleCallResult(masterChefContract, 'poolInfo', [poolId])
 }
 
-function useTotalAllocationPoints() {
+export function useTotalAllocationPoints() {
   const masterChefContract = useMasterChefContract(undefined, MINICHEF_ABI)
   return useSingleCallResult(masterChefContract, 'totalAllocPoint')
 }
@@ -347,58 +346,34 @@ export function useRewardTokenAddress() {
 
 function safeDivide(numerator: number, denominator: number): number {
   if (denominator === 0) {
-    console.error('Denominator is zero')
-    return 0 // or throw an error
+    return numerator / 1
   }
   return numerator / denominator
 }
 
-function safeDivideBigNumber(numerator: BigNumber, denominator: number): BigNumber {
-  if (denominator === 0) {
-    console.error('Denominator is zero')
-    return ZERO // or throw an error
-  }
-  return numerator.div(denominator)
-}
-
-export const useApr = (poolId: string, rewardPerSecond: CallState, tvlPoolUSD: number) => {
+export const useApr = (poolId: string, poolRewardPerSecInPSYS: BigNumber, tvlPoolUSD: number) => {
   const [stakingAPR, setStakingAPR] = useState<number>(0)
 
   const poolInfo = usePoolInfo(poolId)
   const totalAllocPoints = useTotalAllocationPoints()
   const { loading: tokenDataLoading, data: tokenData } = useFetchedTokenData([PSYS_ADDRESS])
-
   const PSYSUSD = useMemo(() => {
     if (!tokenDataLoading && tokenData?.[0]) return tokenData?.[0].priceUSD
     return 1
   }, [tokenData, tokenDataLoading])
-
   const stakedPSYS = safeDivide(tvlPoolUSD, PSYSUSD)
 
-  // console.log('rewardPerSecond?.result?.[0]:', rewardPerSecond?.result?.[0])
-  // console.log('totalAllocPoints:', totalAllocPoints.result?.[0])
-
-  // console.log('BigNumber.from(stakedPSYS):', BigNumber.from(stakedPSYS))
-
   useEffect(() => {
-    // Handle asynchronous operations here
     const fetchData = async () => {
-      const poolRewardPerSecInPSYS = rewardPerSecond?.result?.[0]
-        .mul(poolInfo?.result?.allocPoint)
-        .div(totalAllocPoints?.result?.[0]) as BigNumber
-
       const stakingValue = safeDivide(
-        Number(formatUnits(poolRewardPerSecInPSYS.mul(100).mul(60 * 60 * 24 * 365), 10)),
+        Number(formatUnits(poolRewardPerSecInPSYS?.mul(60 * 60 * 24 * 365), 18)),
         stakedPSYS
       )
-      console.log('stakingValue', stakingValue)
-
       setStakingAPR(stakingValue)
     }
 
     fetchData()
-  }, [PSYSUSD, poolInfo?.result?.allocPoint, rewardPerSecond?.result, stakedPSYS, totalAllocPoints.result, tvlPoolUSD])
+  }, [PSYSUSD, poolInfo?.result?.allocPoint, poolRewardPerSecInPSYS, stakedPSYS, totalAllocPoints.result, tvlPoolUSD])
 
-  console.log('stakingAPR', stakingAPR)
   return stakingAPR
 }

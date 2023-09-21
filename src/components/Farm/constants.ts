@@ -3,7 +3,7 @@ import { Currency, Price, Token } from '@pollum-io/sdk-core'
 import { ChainId } from '@pollum-io/smart-order-router'
 import { Pair } from '@pollum-io/v1-sdk'
 import { TokenList } from '@uniswap/token-lists'
-import { BigNumber } from 'ethers'
+import { BigNumber } from 'ethers/lib/ethers'
 import { TokenAmount } from 'graphql/utils/types'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { Presets } from 'state/mint/v3/reducer'
@@ -267,7 +267,7 @@ export enum FarmingType {
 }
 
 export const ZERO = BigNumber.from('0')
-const ONE_TOKEN = BigNumber.from('1000000000000000000')
+export const ONE_TOKEN = BigNumber.from('1000000000000000000')
 
 export const MINICHEF_ABI = [
   {

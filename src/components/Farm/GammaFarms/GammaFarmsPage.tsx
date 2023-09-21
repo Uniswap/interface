@@ -44,21 +44,6 @@ const GammaFarmsPage: React.FC<{
     return { rewardPerSecond, rewardTokenAddress }
   }, [rewardPerSecond, rewardTokenAddress])
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       if (userewardPerSecond && userewardTokenAddress) {
-  //         setRewardPerSecond(userewardPerSecond)
-  //         setRewardTokenAddress(userewardTokenAddress)
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching APR:', error)
-  //     }
-  //   }
-
-  //   fetchData()
-  // }, [userewardPerSecond, userewardTokenAddress])
-
   const allGammaFarms = useMemo(() => {
     const pairsGroups = GammaPairs[ChainId.ROLLUX]
     if (!pairsGroups) {
@@ -84,7 +69,7 @@ const GammaFarmsPage: React.FC<{
     const interval = setInterval(() => {
       const _currentTime = Math.floor(Date.now() / 1000)
       setCurrentTime(_currentTime)
-    }, 300000)
+    }, 3000)
     return () => clearInterval(interval)
   }, [])
 
@@ -138,6 +123,7 @@ const GammaFarmsPage: React.FC<{
         </NoFarmsContainer>
       ) : (
         !gammaFarmsLoading &&
+        !gammaPositionsLoading &&
         filteredFarms.length > 0 && (
           <div>
             {filteredFarms.map((farm: any) => {
@@ -145,7 +131,7 @@ const GammaFarmsPage: React.FC<{
                 ? Object.values(gammaData).find((poolData) => poolData.poolAddress === farm.address.toLowerCase())
                 : undefined
 
-              const tvl = gammaPositions ? gammaPositions[farm.hypervisor || allGammaFarms[0].hypervisor].balanceUSD : 0
+              const tvl = gammaPositions ? gammaPositions[farm.hypervisor].balanceUSD : 0
 
               const rewardData = {
                 tvl,
