@@ -20,6 +20,7 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { APP_FEEDBACK_LINK } from 'src/constants/urls'
+import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricName, useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { Screens } from 'src/screens/Screens'
 import { getFullAppVersion } from 'src/utils/version'
@@ -45,6 +46,7 @@ import { resetWallet, setFinishedOnboarding } from 'wallet/src/features/wallet/s
 export function SettingsScreen(): JSX.Element {
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
   const colors = useSporeColors()
+  const { deviceSupportsBiometrics } = useBiometricContext()
   const { t } = useTranslation()
 
   // check if device supports biometric authentication, if not, hide option
@@ -80,16 +82,20 @@ export function SettingsScreen(): JSX.Element {
                 : t('Light mode'),
             icon: <ContrastIcon {...iconProps} />,
           },
-          {
-            screen: Screens.SettingsBiometricAuth,
-            isHidden: !isTouchIdSupported && !isFaceIdSupported,
-            text: authenticationTypeName,
-            icon: isTouchIdSupported ? (
-              <FingerprintIcon {...iconProps} />
-            ) : (
-              <FaceIdIcon {...iconProps} />
-            ),
-          },
+          ...(deviceSupportsBiometrics
+            ? [
+                {
+                  screen: Screens.SettingsBiometricAuth as Screens.SettingsBiometricAuth,
+                  isHidden: !isTouchIdSupported && !isFaceIdSupported,
+                  text: authenticationTypeName,
+                  icon: isTouchIdSupported ? (
+                    <FingerprintIcon {...iconProps} />
+                  ) : (
+                    <FaceIdIcon {...iconProps} />
+                  ),
+                },
+              ]
+            : []),
           // @TODO: [MOB-250] add back testnet toggle once we support testnets
         ],
       },
@@ -156,6 +162,7 @@ export function SettingsScreen(): JSX.Element {
     colors.neutral2.val,
     t,
     currentAppearanceSetting,
+    deviceSupportsBiometrics,
     isTouchIdSupported,
     isFaceIdSupported,
     authenticationTypeName,

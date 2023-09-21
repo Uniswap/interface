@@ -8,6 +8,7 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import Trace from 'src/components/Trace/Trace'
 import { IS_IOS } from 'src/constants/globals'
+import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
@@ -51,6 +52,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   const dispatch = useAppDispatch()
   const addresses = Object.keys(accounts)
   const hasSeedPhrase = useNativeAccountExists()
+  const { deviceSupportsBiometrics } = useBiometricContext()
 
   const onCompleteOnboarding = useCompleteOnboardingCallback(params.entryPoint, params.importType)
 
@@ -86,6 +88,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   const navigateToNextScreen = useCallback(async () => {
     // Skip security setup if already enabled or already imported seed phrase
     if (
+      !deviceSupportsBiometrics ||
       isBiometricAuthEnabled ||
       (params.entryPoint === OnboardingEntryPoint.Sidebar && hasSeedPhrase)
     ) {
@@ -93,7 +96,14 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
     } else {
       navigation.navigate({ name: OnboardingScreens.Security, params, merge: true })
     }
-  }, [hasSeedPhrase, isBiometricAuthEnabled, navigation, onCompleteOnboarding, params])
+  }, [
+    deviceSupportsBiometrics,
+    hasSeedPhrase,
+    isBiometricAuthEnabled,
+    navigation,
+    onCompleteOnboarding,
+    params,
+  ])
 
   const onPressEnableNotifications = useCallback(async () => {
     promptPushPermission(() => {
