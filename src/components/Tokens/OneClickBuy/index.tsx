@@ -13,7 +13,6 @@ import { getChainInfo } from 'constants/chainInfo'
 import { TokenPriceQuery, TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { QueryToken } from 'graphql/data/Token'
 import { useAllTokensMultichain } from 'hooks/Tokens'
-import { useImageColor } from 'hooks/useImageColor'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useSwitchChain } from 'hooks/useSwitchChain'
@@ -29,7 +28,7 @@ import { Field } from 'state/swap/actions'
 import { useDerivedSwapInfo, useSwapActionHandlers } from 'state/swap/hooks'
 import swapReducer, { initialState as initialSwapState, SwapState } from 'state/swap/reducer'
 import { useSwapTransactionStatus, useTransaction } from 'state/transactions/hooks'
-import styled, { useTheme } from 'styled-components'
+import styled from 'styled-components'
 import { ClickableStyle, CopyHelper, CopyHelperRefType } from 'theme'
 import { ThemedText } from 'theme'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
@@ -88,7 +87,7 @@ const ButtonRow = styled.div`
   height: 48px;
   gap: 8px;
 `
-const LoadingBar = styled.div<{ color: string; percentage: number }>`
+const LoadingBar = styled.div<{ percentage: number }>`
   width: ${({ percentage }) => percentage}%;
   height: 100%;
   background: linear-gradient(to right, ${({ theme }) => theme.accent1}, ${({ theme }) => theme.accent2});
@@ -125,12 +124,10 @@ export function OneClickBuy({
 }) {
   // setup
   const trace = useTrace()
-  const theme = useTheme()
   const { account, chainId: connectedChainId, connector } = useWeb3React()
   const switchChain = useSwitchChain()
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
 
-  const color = useImageColor(tokenLogoUrl)
   const [percentage, setPercentage] = useState(0)
 
   useEffect(() => {
@@ -166,7 +163,7 @@ export function OneClickBuy({
   const chainId = token?.chainId
   const swapInfo = useDerivedSwapInfo(state, chainId)
   const {
-    trade: { state: tradeState, trade, swapQuoteLatency },
+    trade: { state: tradeState, trade },
     allowedSlippage,
     currencies,
     inputError: swapInputError,
@@ -383,7 +380,7 @@ export function OneClickBuy({
             {swapStatus === TransactionStatus.Pending ? (
               <ButtonRow>
                 <LoadingBarContainer>
-                  <LoadingBar color={`rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.7)`} percentage={percentage} />
+                  <LoadingBar percentage={percentage} />
                 </LoadingBarContainer>
               </ButtonRow>
             ) : (

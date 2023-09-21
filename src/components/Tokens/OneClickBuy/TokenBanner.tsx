@@ -4,7 +4,7 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import { QueryToken } from 'graphql/data/Token'
 import { TokenPriceQuery } from 'graphql/data/TokenPrice'
-import { useImageColor } from 'hooks/useImageColor'
+import { useColor } from 'hooks/useColor'
 import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
 import { useFormatter } from 'utils/formatNumbers'
@@ -54,12 +54,12 @@ export function TokenBanner({
   const endingPrice = prices?.[prices.length - 1] ?? DATA_EMPTY
   const delta = calculateDelta(startingPrice.value, endingPrice.value)
   const formattedDelta = formatDelta(delta)
-  const color = useImageColor(tokenLogoUrl)
+  const color = useColor(token as Token)
   const { formatFiatPrice } = useFormatter()
   const theme = useTheme()
 
   return (
-    <Container logo={tokenLogoUrl} color={`rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.7)`}>
+    <Container logo={tokenLogoUrl} color={color}>
       <Row justify="center">
         <CurrencyLogo currency={token} size="32px" hideL2Icon={false} />
       </Row>
