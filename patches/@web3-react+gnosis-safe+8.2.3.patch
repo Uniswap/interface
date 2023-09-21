@@ -1,0 +1,15 @@
+diff --git a/node_modules/@web3-react/gnosis-safe/dist/index.js b/node_modules/@web3-react/gnosis-safe/dist/index.js
+index 015a33c..4cd7cde 100644
+--- a/node_modules/@web3-react/gnosis-safe/dist/index.js
++++ b/node_modules/@web3-react/gnosis-safe/dist/index.js
+@@ -68,8 +68,8 @@ class GnosisSafe extends types_1.Connector {
+             if (this.eagerConnection)
+                 return;
+             // kick off import early to minimize waterfalls
+-            const SafeAppProviderPromise = Promise.resolve().then(() => __importStar(require('@safe-global/safe-apps-provider'))).then(({ SafeAppProvider }) => SafeAppProvider);
+-            yield (this.eagerConnection = Promise.resolve().then(() => __importStar(require('@safe-global/safe-apps-sdk'))).then((m) => __awaiter(this, void 0, void 0, function* () {
++            const SafeAppProviderPromise = Promise.resolve().then(async () => __importStar(await import('@safe-global/safe-apps-provider'))).then(({ SafeAppProvider }) => SafeAppProvider);
++            yield (this.eagerConnection = Promise.resolve().then(async () => __importStar(await import('@safe-global/safe-apps-sdk'))).then((m) => __awaiter(this, void 0, void 0, function* () {
+                 this.sdk = new m.default(this.options);
+                 const safe = yield Promise.race([
+                     this.sdk.safe.getInfo(),

@@ -5,6 +5,8 @@ import { getConnection, gnosisSafeConnection, networkConnection } from './index'
 import { deleteConnectionMeta, getConnectionMeta } from './meta'
 import { ConnectionType } from './types'
 
+class FailedToConnect extends Error {}
+
 let connectionReady: Promise<void> | true = true
 
 export function useConnectionReady() {
@@ -36,10 +38,14 @@ async function connect(connector: Connector, type: ConnectionType) {
   }
 }
 
-class FailedToConnect extends Error {}
+// The Safe connector will only work from safe.global, which iframes;
+// it is only necessary to try (and to load all the deps) if we are in an iframe.
+if (window !== window.parent) {
+  connect(gnosisSafeConnection.connector, ConnectionType.GNOSIS_SAFE)
+}
 
-connect(gnosisSafeConnection.connector, ConnectionType.GNOSIS_SAFE)
 connect(networkConnection.connector, ConnectionType.NETWORK)
+
 const meta = getConnectionMeta()
 if (meta?.type) {
   const selectedConnection = getConnection(meta.type)

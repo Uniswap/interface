@@ -5,7 +5,6 @@ const { execSync } = require('child_process')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
-const TerserPlugin = require('terser-webpack-plugin')
 const { IgnorePlugin, ProvidePlugin } = require('webpack')
 const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
 
@@ -146,18 +145,20 @@ module.exports = {
         return rule
       })
 
+      // Run terser compression on node_modules before tree-shaking, so that tree-shaking is more effective.
+      // This works by eliminating dead code, so that webpack can identify unused imports and tree-shake them;
+      // it is only necessary for node_modules - it is done through linting for our own source code -
+      // see https://medium.com/engineering-housing/dead-code-elimination-and-tree-shaking-at-housing-part-1-307a94b30f23#7e03:
+      webpackConfig.module.rules.push({
+        enforce: 'post',
+        test: /node_modules.*\.(js)$/,
+        loader: path.join(__dirname, 'scripts/terser-loader.js'),
+        options: { compress: true, mangle: false },
+      })
+
       // Configure webpack optimization:
       webpackConfig.optimization = Object.assign(
         webpackConfig.optimization,
-        {
-          minimize: isProduction,
-          minimizer: [
-            new TerserPlugin({
-              minify: TerserPlugin.swcMinify,
-              parallel: require('os').cpus().length,
-            }),
-          ],
-        },
         isProduction
           ? {
               splitChunks: {
