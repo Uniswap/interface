@@ -2,13 +2,8 @@ import { ConnectionType, toConnectionType } from './types'
 
 export interface ConnectionMeta {
   type: ConnectionType
-  display?: string
-  displayType?: ConnectionDisplayType
-}
-
-export enum ConnectionDisplayType {
-  Address = 'Address',
-  ENSName = 'ENSName',
+  address?: string
+  ENSName?: string
 }
 
 export const connectionMetaKey = 'connection_meta'
@@ -22,8 +17,8 @@ export function getConnectionMeta(): ConnectionMeta | undefined {
       if (connectionType) {
         return {
           type: connectionType,
-          display: raw.display,
-          displayType: raw.displayType,
+          address: raw.address,
+          ENSName: raw.ENSName,
         }
       }
     }

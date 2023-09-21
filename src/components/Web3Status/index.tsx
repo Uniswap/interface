@@ -9,7 +9,7 @@ import { IconWrapper } from 'components/Identicon/StatusIcon'
 import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { getConnection } from 'connection'
 import { useConnectionReady } from 'connection/eagerlyConnect'
-import { ConnectionDisplayType, ConnectionMeta, getConnectionMeta, setConnectionMeta } from 'connection/meta'
+import { ConnectionMeta, getConnectionMeta, setConnectionMeta } from 'connection/meta'
 import useENSName from 'hooks/useENSName'
 import useLast from 'hooks/useLast'
 import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
@@ -159,25 +159,23 @@ function Web3StatusInner() {
     if (displayName) {
       const meta: ConnectionMeta = {
         type: connection.type,
-        display: displayName,
-        displayType: ENSName ? ConnectionDisplayType.ENSName : ConnectionDisplayType.Address,
+        address: account,
+        ENSName: ENSName ?? undefined,
       }
       setConnectionMeta(meta)
     }
   }, [ENSName, account, connection.type, displayName])
 
-  const isDisplayNameLoading = Boolean(
-    account && meta.current?.displayType === ConnectionDisplayType.ENSName && ENSLoading
-  )
+  const isENSNameLoading = Boolean(meta.current?.address === account && meta.current?.ENSName && ENSLoading)
 
-  if (!connectionReady || isDisplayNameLoading) {
+  if (!connectionReady || isENSNameLoading) {
     return (
-      <Web3StatusConnecting disabled={!isDisplayNameLoading} onClick={handleWalletDropdownClick}>
+      <Web3StatusConnecting disabled={!isENSNameLoading} onClick={handleWalletDropdownClick}>
         <IconWrapper size={24}>
           <LoaderV3 size="24px" />
         </IconWrapper>
         <AddressAndChevronContainer loading={true}>
-          <Text>{meta.current?.display}</Text>
+          <Text>{meta.current?.ENSName ?? meta.current?.address}</Text>
         </AddressAndChevronContainer>
       </Web3StatusConnecting>
     )
