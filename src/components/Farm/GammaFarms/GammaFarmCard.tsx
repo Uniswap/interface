@@ -4,7 +4,6 @@ import { CallState } from '@uniswap/redux-multicall'
 import { TokenList } from '@uniswap/token-lists'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import TotalAPRTooltip from 'components/TotalAPRTooltip/TotalAPRTooltip'
-import { BigNumber } from 'ethers/lib/ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
 import { useIsMobile } from 'nft/hooks'
@@ -15,7 +14,7 @@ import { Box } from 'rebass'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import styled, { useTheme } from 'styled-components/macro'
 
-import { FarmPoolData, ZERO } from '../constants'
+import { FarmPoolData } from '../constants'
 import { useApr } from '../utils'
 import GammaFarmCardDetails from './GammafarmCardDetails'
 
@@ -59,7 +58,7 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
   const rewardPerSecond = rewardData?.rewardPerSecond
   const rewardTokenAddress = rewardData?.rewardTokenAddress
 
-  const [farmAPR, setFarmAPR] = useState<BigNumber>(ZERO)
+  const [farmAPR, setFarmAPR] = useState<number>(0)
   const apr = useApr(pairData?.pid, rewardPerSecond, rewardData?.tvl)
   console.log('apr', apr)
 
@@ -148,10 +147,10 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
               }}
             >
               <small style={{ color: theme.accentSuccess, fontWeight: 600 }}>
-                {formatNumber((poolAPR + farmAPR.toNumber()) * 100)}%
+                {formatNumber((poolAPR + farmAPR) * 100)}%
               </small>
               <div style={{ marginLeft: '5px', alignItems: 'center' }}>
-                <TotalAPRTooltip farmAPR={farmAPR.toNumber() * 100} poolAPR={poolAPR * 100}>
+                <TotalAPRTooltip farmAPR={farmAPR * 100} poolAPR={poolAPR * 100}>
                   <AlertCircle size={16} />
                 </TotalAPRTooltip>
               </div>

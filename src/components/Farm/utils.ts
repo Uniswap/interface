@@ -3,6 +3,7 @@ import { ChainId } from '@pollum-io/smart-order-router'
 import { CallState } from '@uniswap/redux-multicall'
 import { GAMMA_MASTERCHEF_ADDRESSES, PSYS_ADDRESS } from 'constants/addresses'
 import { BigNumber } from 'ethers/lib/ethers'
+import { formatUnits } from 'ethers/lib/utils'
 import { useFetchedTokenData } from 'graphql/tokens/TokenData'
 import { useMasterChefContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
@@ -10,7 +11,7 @@ import { ParsedQs } from 'qs'
 import { useEffect, useMemo, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
-import { GammaPairTokens, GlobalConst, MINICHEF_ABI } from './constants'
+import { GammaPairTokens, GlobalConst, MINICHEF_ABI, ZERO } from './constants'
 
 const { v3FarmSortBy } = GlobalConst.utils
 
@@ -344,8 +345,24 @@ export function useRewardTokenAddress() {
   return useSingleCallResult(masterChefContract, 'REWARD')
 }
 
+function safeDivide(numerator: number, denominator: number): number {
+  if (denominator === 0) {
+    console.error('Denominator is zero')
+    return 0 // or throw an error
+  }
+  return numerator / denominator
+}
+
+function safeDivideBigNumber(numerator: BigNumber, denominator: number): BigNumber {
+  if (denominator === 0) {
+    console.error('Denominator is zero')
+    return ZERO // or throw an error
+  }
+  return numerator.div(denominator)
+}
+
 export const useApr = (poolId: string, rewardPerSecond: CallState, tvlPoolUSD: number) => {
-  const [stakingAPR, setStakingAPR] = useState<BigNumber | null>(null)
+  const [stakingAPR, setStakingAPR] = useState<number>(0)
 
   const poolInfo = usePoolInfo(poolId)
   const totalAllocPoints = useTotalAllocationPoints()
@@ -356,30 +373,31 @@ export const useApr = (poolId: string, rewardPerSecond: CallState, tvlPoolUSD: n
     return 1
   }, [tokenData, tokenDataLoading])
 
-  const stakedPSYS = tvlPoolUSD / PSYSUSD
-  console.log('PSYSUSD:', PSYSUSD)
-  console.log('totalAllocPoints:', totalAllocPoints.result?.[0])
-  console.log('stakedPSYS:', stakedPSYS)
+  const stakedPSYS = safeDivide(tvlPoolUSD, PSYSUSD)
+
+  // console.log('rewardPerSecond?.result?.[0]:', rewardPerSecond?.result?.[0])
+  // console.log('totalAllocPoints:', totalAllocPoints.result?.[0])
+
+  // console.log('BigNumber.from(stakedPSYS):', BigNumber.from(stakedPSYS))
+
   useEffect(() => {
     // Handle asynchronous operations here
     const fetchData = async () => {
       const poolRewardPerSecInPSYS = rewardPerSecond?.result?.[0]
         .mul(poolInfo?.result?.allocPoint)
-        .div(totalAllocPoints.result?.[0]) as BigNumber
+        .div(totalAllocPoints?.result?.[0]) as BigNumber
 
-      const stakingValue = poolRewardPerSecInPSYS
-        // Percentage
-        .mul(100)
-        // Calculate reward rate per year
-        .mul(60 * 60 * 24 * 365)
-        // Divide by amount staked to get APR
-        .div(stakedPSYS)
-      // ... your async logic
+      const stakingValue = safeDivide(
+        Number(formatUnits(poolRewardPerSecInPSYS.mul(100).mul(60 * 60 * 24 * 365), 10)),
+        stakedPSYS
+      )
+      console.log('stakingValue', stakingValue)
+
       setStakingAPR(stakingValue)
     }
 
     fetchData()
-  }, [PSYSUSD, poolInfo?.result?.allocPoint, rewardPerSecond?.result, totalAllocPoints.result, tvlPoolUSD])
+  }, [PSYSUSD, poolInfo?.result?.allocPoint, rewardPerSecond?.result, stakedPSYS, totalAllocPoints.result, tvlPoolUSD])
 
   console.log('stakingAPR', stakingAPR)
   return stakingAPR
