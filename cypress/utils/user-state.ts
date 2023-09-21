@@ -1,3 +1,4 @@
+import { connectionMetaKey } from '../../src/connection/meta'
 import { ConnectionType } from '../../src/connection/types'
 import { UserState } from '../../src/state/user/reducer'
 
@@ -13,7 +14,12 @@ export const DISCONNECTED_WALLET_USER_STATE: Partial<UserState> = { selectedWall
 export function setInitialUserState(win: Cypress.AUTWindow, state: UserState) {
   // Selected wallet should also be reflected in localStorage, so that eager connections work.
   if (state.selectedWallet) {
-    win.localStorage.setItem('selected_wallet', state.selectedWallet)
+    win.localStorage.setItem(
+      connectionMetaKey,
+      JSON.stringify({
+        type: state.selectedWallet,
+      })
+    )
   }
 
   win.indexedDB.deleteDatabase('redux')

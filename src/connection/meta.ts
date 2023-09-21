@@ -11,7 +11,7 @@ export enum ConnectionDisplayType {
   ENSName = 'ENSName',
 }
 
-const connectionMetaKey = 'connection_meta'
+export const connectionMetaKey = 'connection_meta'
 
 export function getConnectionMeta(): ConnectionMeta | undefined {
   try {
