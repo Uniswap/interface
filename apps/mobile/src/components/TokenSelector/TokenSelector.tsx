@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import PasteButton from 'src/components/buttons/PasteButton'
 import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
+import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { useFilterCallbacks } from 'src/components/TokenSelector/hooks'
 import { NetworkFilter } from 'src/components/TokenSelector/NetworkFilter'
@@ -61,7 +62,7 @@ interface TokenSelectorProps {
   ) => void
 }
 
-function _TokenSelectorModal({
+function TokenSelectorContent({
   currencyField,
   flow,
   onSelectCurrency,
@@ -69,6 +70,8 @@ function _TokenSelectorModal({
   onClose,
   variation,
 }: TokenSelectorProps): JSX.Element {
+  const { isSheetReady } = useBottomSheetContext()
+
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter } = useFilterCallbacks(
     chainId ?? null,
     flow
@@ -87,7 +90,6 @@ function _TokenSelectorModal({
   }, [])
 
   const { t } = useTranslation()
-  const colors = useSporeColors()
 
   // Log currency field only for Swap as for Transfer it's always input
   const currencyFieldName =
@@ -119,25 +121,18 @@ function _TokenSelectorModal({
   }
 
   return (
-    <BottomSheetModal
-      extendOnKeyboardVisible
-      fullScreen
-      hideKeyboardOnDismiss
-      hideKeyboardOnSwipeDown
-      backgroundColor={colors.surface1.val}
-      name={ModalName.TokenSelector}
-      snapPoints={['65%', '100%']}
-      onClose={onClose}>
-      <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
-        <Flex grow gap="$spacing16" pb={IS_IOS ? '$spacing16' : '$none'} px="$spacing16">
-          <SearchTextInput
-            backgroundColor="surface2"
-            endAdornment={hasClipboardString ? <PasteButton inline onPress={handlePaste} /> : null}
-            placeholder={t('Search tokens')}
-            py="spacing8"
-            value={searchFilter ?? ''}
-            onChangeText={onChangeText}
-          />
+    <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
+      <Flex grow gap="$spacing16" pb={IS_IOS ? '$spacing16' : '$none'} px="$spacing16">
+        <SearchTextInput
+          backgroundColor="surface2"
+          endAdornment={hasClipboardString ? <PasteButton inline onPress={handlePaste} /> : null}
+          placeholder={t('Search tokens')}
+          py="spacing8"
+          value={searchFilter ?? ''}
+          onChangeText={onChangeText}
+        />
+
+        {isSheetReady && (
           <Flex grow>
             {searchFilter ? (
               <TokenSelectorSearchResultsList
@@ -171,8 +166,26 @@ function _TokenSelectorModal({
               />
             </Flex>
           </Flex>
-        </Flex>
-      </Trace>
+        )}
+      </Flex>
+    </Trace>
+  )
+}
+
+function _TokenSelectorModal(props: TokenSelectorProps): JSX.Element {
+  const colors = useSporeColors()
+
+  return (
+    <BottomSheetModal
+      extendOnKeyboardVisible
+      fullScreen
+      hideKeyboardOnDismiss
+      hideKeyboardOnSwipeDown
+      backgroundColor={colors.surface1.val}
+      name={ModalName.TokenSelector}
+      snapPoints={['65%', '100%']}
+      onClose={props.onClose}>
+      <TokenSelectorContent {...props} />
     </BottomSheetModal>
   )
 }
