@@ -18,6 +18,7 @@ import { DecimalPad } from 'src/components/input/DecimalPad'
 import { TextInputProps } from 'src/components/input/TextInput'
 import { AnimatedFlex } from 'src/components/layout'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
+import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Pill } from 'src/components/text/Pill'
 import { FiatOnRampTokenSelector } from 'src/components/TokenSelector/FiatOnRampTokenSelector'
@@ -30,7 +31,7 @@ import { ElementName, MobileEventName, ModalName } from 'src/features/telemetry/
 import { MobileEventProperties } from 'src/features/telemetry/types'
 import { useDynamicFontSizing, useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
 import { openUri } from 'src/utils/linking'
-import { Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import InformationIcon from 'ui/src/assets/icons/i-icon.svg'
 import { dimensions, iconSizes, spacing } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
@@ -63,9 +64,31 @@ const MAX_CHAR_PIXEL_WIDTH = 40
 const CONNECTING_TIMEOUT = 2000
 
 export function FiatOnRampModal(): JSX.Element {
+  const colors = useSporeColors()
+
+  const dispatch = useAppDispatch()
+  const onClose = useCallback((): void => {
+    dispatch(closeModal({ name: ModalName.FiatOnRamp }))
+  }, [dispatch])
+
+  return (
+    <BottomSheetModal
+      fullScreen
+      hideKeyboardOnDismiss
+      backgroundColor={colors.surface1.val}
+      name={ModalName.FiatOnRamp}
+      onClose={onClose}>
+      <FiatOnRampContent onClose={onClose} />
+    </BottomSheetModal>
+  )
+}
+
+function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const inputRef = useRef<TextInput>(null)
+
+  const { isSheetReady } = useBottomSheetContext()
 
   const [showConnectingToMoonpayScreen, setShowConnectingToMoonpayScreen] = useState(false)
 
@@ -84,11 +107,6 @@ export function FiatOnRampModal(): JSX.Element {
   }
 
   const [value, setValue] = useState('')
-
-  const dispatch = useAppDispatch()
-  const onClose = useCallback((): void => {
-    dispatch(closeModal({ name: ModalName.FiatOnRamp }))
-  }, [dispatch])
 
   // We hardcode ETH as the starting currency
   const [currency, setCurrency] = useState<FiatOnRampCurrency>({
@@ -189,12 +207,7 @@ export function FiatOnRampModal(): JSX.Element {
   const selectTokenLoading = quoteCurrencyAmountLoading && !errorText && !!value
 
   return (
-    <BottomSheetModal
-      fullScreen
-      hideKeyboardOnDismiss
-      backgroundColor={theme.colors.surface1}
-      name={ModalName.FiatOnRamp}
-      onClose={onClose}>
+    <>
       {!showConnectingToMoonpayScreen && (
         <AnimatedFlex row gap="none" height="100%" style={wrapperStyle}>
           <AnimatedFlex
@@ -210,58 +223,60 @@ export function FiatOnRampModal(): JSX.Element {
               style={{ height: maxContentHeight }}
               onLayout={onInputPanelLayout}>
               <Text variant="subheading1">{t('Buy')}</Text>
-              <AnimatedFlex
-                grow
-                alignItems="center"
-                gap="spacing16"
-                justifyContent="center"
-                onLayout={onInputLayout}>
-                <AmountInput
-                  ref={inputRef}
-                  autoFocus
-                  alignSelf="stretch"
-                  backgroundColor="none"
-                  borderWidth={0}
-                  caretHidden={!showNativeKeyboard}
-                  fontFamily={theme.textVariants.heading2.fontFamily}
-                  fontSize={fontSize}
-                  maxFontSizeMultiplier={theme.textVariants.heading2.maxFontSizeMultiplier}
-                  minHeight={MAX_INPUT_FONT_SIZE}
-                  mt="spacing48"
-                  overflow="visible"
-                  placeholder="$0"
-                  placeholderTextColor={theme.colors.neutral3}
-                  px="none"
-                  py="none"
-                  returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
-                  showCurrencySign={value !== ''}
-                  showSoftInputOnFocus={showSoftInputOnFocus}
-                  textAlign="center"
-                  value={value}
-                  onChangeText={onChangeValue('textInput')}
-                  onSelectionChange={onSelectionChange}
-                />
-                {currency.currencyInfo && (
-                  <SelectTokenButton
-                    amount={quoteAmount}
-                    disabled={!quoteCurrencyAmountReady}
-                    loading={selectTokenLoading}
-                    selectedCurrencyInfo={currency.currencyInfo}
-                    onPress={(): void => {
-                      setShowTokenSelector(true)
-                    }}
+              {isSheetReady && (
+                <AnimatedFlex
+                  grow
+                  alignItems="center"
+                  gap="spacing16"
+                  justifyContent="center"
+                  onLayout={onInputLayout}>
+                  <AmountInput
+                    ref={inputRef}
+                    autoFocus
+                    alignSelf="stretch"
+                    backgroundColor="none"
+                    borderWidth={0}
+                    caretHidden={!showNativeKeyboard}
+                    fontFamily={theme.textVariants.heading2.fontFamily}
+                    fontSize={fontSize}
+                    maxFontSizeMultiplier={theme.textVariants.heading2.maxFontSizeMultiplier}
+                    minHeight={MAX_INPUT_FONT_SIZE}
+                    mt="spacing48"
+                    overflow="visible"
+                    placeholder="$0"
+                    placeholderTextColor={theme.colors.neutral3}
+                    px="none"
+                    py="none"
+                    returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
+                    showCurrencySign={value !== ''}
+                    showSoftInputOnFocus={showSoftInputOnFocus}
+                    textAlign="center"
+                    value={value}
+                    onChangeText={onChangeValue('textInput')}
+                    onSelectionChange={onSelectionChange}
                   />
-                )}
-                <Flex
-                  /* We want to reserve the space here, so when error occurs - layout does not jump */
-                  height={spacing.spacing24}>
-                  {errorText && errorColor && (
-                    <Text color={errorColor} textAlign="center" variant="buttonLabel4">
-                      {errorText}
-                    </Text>
+                  {currency.currencyInfo && (
+                    <SelectTokenButton
+                      amount={quoteAmount}
+                      disabled={!quoteCurrencyAmountReady}
+                      loading={selectTokenLoading}
+                      selectedCurrencyInfo={currency.currencyInfo}
+                      onPress={(): void => {
+                        setShowTokenSelector(true)
+                      }}
+                    />
                   )}
-                </Flex>
-              </AnimatedFlex>
+                  <Flex
+                    /* We want to reserve the space here, so when error occurs - layout does not jump */
+                    height={spacing.spacing24}>
+                    {errorText && errorColor && (
+                      <Text color={errorColor} textAlign="center" variant="buttonLabel4">
+                        {errorText}
+                      </Text>
+                    )}
+                  </Flex>
+                </AnimatedFlex>
+              )}
               <Flex centered row pb="$spacing16">
                 {['100', '300', '1000'].map((amount) => (
                   <PredefinedAmount
@@ -324,7 +339,7 @@ export function FiatOnRampModal(): JSX.Element {
           quoteCurrencyCode={currency.currencyInfo?.currency.symbol}
         />
       )}
-    </BottomSheetModal>
+    </>
   )
 }
 
