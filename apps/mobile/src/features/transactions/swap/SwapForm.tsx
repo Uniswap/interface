@@ -5,7 +5,6 @@ import React, { Dispatch, memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleSheet, TextInputProps } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
-import { Button, ButtonSize } from 'src/components/buttons/Button'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { AnimatedFlex } from 'src/components/layout'
@@ -34,7 +33,7 @@ import {
 } from 'src/features/transactions/swap/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -465,11 +464,11 @@ function _SwapForm({
           <Trace logPress element={ElementName.SwapReview}>
             <Button
               disabled={actionButtonDisabled}
-              label={getReviewActionName(t, wrapType)}
-              size={ButtonSize.Large}
+              size="large"
               testID={ElementName.ReviewSwap}
-              onPress={onReview}
-            />
+              onPress={onReview}>
+              {getReviewActionName(t, wrapType)}
+            </Button>
           </Trace>
         </AnimatedFlex>
       </Flex>

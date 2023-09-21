@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
-import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
@@ -29,7 +28,7 @@ import {
   TransactionRequest,
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
@@ -340,17 +339,16 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
             <Flex row gap="$spacing12">
               <Button
                 fill
-                emphasis={ButtonEmphasis.Tertiary}
-                label={t('Cancel')}
-                size={ButtonSize.Medium}
+                size="medium"
                 testID={ElementName.Cancel}
-                onPress={onReject}
-              />
+                theme="tertiary"
+                onPress={onReject}>
+                {t('Cancel')}
+              </Button>
               <Button
                 fill
                 disabled={!confirmEnabled}
-                label={isTransactionRequest(request) ? t('Accept') : t('Sign')}
-                size={ButtonSize.Medium}
+                size="medium"
                 testID={ElementName.Confirm}
                 onPress={async (): Promise<void> => {
                   if (requiredForTransactions) {
@@ -358,8 +356,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                   } else {
                     await onConfirm()
                   }
-                }}
-              />
+                }}>
+                {isTransactionRequest(request) ? t('Accept') : t('Sign')}
+              </Button>
             </Flex>
           </Flex>
         </Flex>

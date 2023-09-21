@@ -5,15 +5,13 @@ import { useTranslation } from 'react-i18next'
 import { Alert, LayoutChangeEvent, LayoutRectangle, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Defs, LinearGradient, Path, Rect, Stop, Svg } from 'react-native-svg'
-import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import PasteButton from 'src/components/buttons/PasteButton'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
 import { AnimatedFlex } from 'src/components/layout'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { openSettings } from 'src/utils/linking'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
-import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import { dimensions, iconSizes, spacing } from 'ui/src/theme'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -196,18 +194,13 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
               onLayout={(event: LayoutChangeEvent): void =>
                 setConnectionLayout(event.nativeEvent.layout)
               }>
-              <Button
-                IconName={GlobalIcon}
-                emphasis={ButtonEmphasis.Secondary}
-                label={
-                  props.numConnections === 1
-                    ? t('1 app connected')
-                    : t('{{numConnections}} apps connected', {
-                        numConnections: props.numConnections,
-                      })
-                }
-                onPress={props.onPressConnections}
-              />
+              <Button icon={Icons.Global} theme="secondary" onPress={props.onPressConnections}>
+                {props.numConnections === 1
+                  ? t('1 app connected')
+                  : t('{{numConnections}} apps connected', {
+                      numConnections: props.numConnections,
+                    })}
+              </Button>
             </Flex>
           )}
         </Flex>

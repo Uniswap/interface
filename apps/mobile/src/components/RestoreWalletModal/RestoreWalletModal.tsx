@@ -2,13 +2,12 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { closeAllModals, closeModal } from 'src/features/modals/modalSlice'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { iconSizes, opacify } from 'ui/src/theme'
 
@@ -60,19 +59,12 @@ export function RestoreWalletModal(): JSX.Element | null {
           )}
         </Text>
         <Flex centered row gap="$spacing12" pt="$spacing12">
-          <Button
-            fill
-            emphasis={ButtonEmphasis.Tertiary}
-            label={t('Dismiss')}
-            onPress={onDismiss}
-          />
-          <Button
-            fill
-            emphasis={ButtonEmphasis.Primary}
-            label="Restore"
-            testID={ElementName.RestoreWallet}
-            onPress={onRestore}
-          />
+          <Button fill theme="tertiary" onPress={onDismiss}>
+            {t('Dismiss')}
+          </Button>
+          <Button fill testID={ElementName.RestoreWallet} theme="primary" onPress={onRestore}>
+            {t('Restore')}
+          </Button>
         </Flex>
       </Flex>
     </BottomSheetModal>

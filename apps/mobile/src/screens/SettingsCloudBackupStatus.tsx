@@ -5,7 +5,6 @@ import { Alert } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
@@ -15,7 +14,7 @@ import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { deleteCloudStorageMnemonicBackup } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
@@ -131,13 +130,13 @@ export function SettingsCloudBackupStatus({
           </Flex>
         </Flex>
         <Button
-          emphasis={ButtonEmphasis.Detrimental}
-          label={IS_ANDROID ? t('Delete Google Drive backup') : t('Delete iCloud backup')}
           testID={ElementName.Remove}
+          theme="detrimental"
           onPress={(): void => {
             setShowBackupDeleteWarning(true)
-          }}
-        />
+          }}>
+          {IS_ANDROID ? t('Delete Google Drive backup') : t('Delete iCloud backup')}
+        </Button>
       </Flex>
 
       {showBackupDeleteWarning && (

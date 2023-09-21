@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { CheckBox } from 'src/components/buttons/CheckBox'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 
 export function RemoveLastMnemonicWalletFooter({
   onPress,
@@ -44,13 +43,13 @@ export function RemoveLastMnemonicWalletFooter({
       <Flex centered row gap="$spacing12" pt="$spacing12">
         <Button
           fill
-          CustomIcon={inProgress ? <SpinningLoader color="statusCritical" /> : undefined}
           disabled={!checkBoxAccepted}
-          emphasis={ButtonEmphasis.Detrimental}
-          label={!inProgress ? t('Remove wallet') : undefined}
+          icon={inProgress ? <SpinningLoader color="statusCritical" /> : undefined}
           testID={ElementName.Confirm}
-          onPress={onPress}
-        />
+          theme="detrimental"
+          onPress={onPress}>
+          {!inProgress ? t('Remove wallet') : undefined}
+        </Button>
       </Flex>
     </>
   )

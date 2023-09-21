@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { Button } from 'src/components/buttons/Button'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
@@ -15,7 +14,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Flex } from 'ui/src'
+import { Button, Flex } from 'ui/src'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
@@ -139,12 +138,9 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           }}
         />
       </Flex>
-      <Button
-        disabled={!isValid}
-        label={t('Continue')}
-        testID={ElementName.Next}
-        onPress={onSubmit}
-      />
+      <Button disabled={!isValid} testID={ElementName.Next} onPress={onSubmit}>
+        {t('Continue')}
+      </Button>
     </SafeKeyboardOnboardingScreen>
   )
 }

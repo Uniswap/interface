@@ -4,6 +4,7 @@ import {
   ButtonText,
   GetProps,
   getTokenValue,
+  SizeTokens,
   spacedChildren,
   SpecificTokens,
   styled,
@@ -41,6 +42,7 @@ const CustomButtonFrame = styled(XStack, {
 
   pressStyle: {
     backgroundColor: '$backgroundPress',
+    opacity: 0.7,
   },
 
   variants: {
@@ -63,11 +65,33 @@ const CustomButtonFrame = styled(XStack, {
       },
     },
 
+    fill: {
+      true: {
+        flex: 1,
+      },
+    },
+
     disabled: {
       true: {
         opacity: 0.4,
         pointerEvents: 'none',
         userSelect: 'none',
+      },
+    },
+
+    fadeIn: {
+      true: {
+        enterStyle: {
+          opacity: 0,
+        },
+      },
+    },
+
+    fadeOut: {
+      true: {
+        enterStyle: {
+          opacity: 0,
+        },
       },
     },
   } as const,
@@ -115,7 +139,8 @@ const CustomButtonText = styled(Text, {
 
 type CustomButtonProps = GetProps<typeof CustomButtonFrame>
 
-type ButtonIconProps = { color?: string; size?: number; cursor: 'pointer' }
+type ButtonIconProps = { color?: string; size?: number | SizeTokens; cursor: 'pointer' }
+
 type IconProp = JSX.Element | FunctionComponent<ButtonIconProps> | null
 
 export type ButtonProps = CustomButtonProps &

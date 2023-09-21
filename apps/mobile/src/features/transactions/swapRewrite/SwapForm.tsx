@@ -9,7 +9,6 @@ import {
   useSharedValue,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Button, ButtonSize } from 'src/components/buttons/Button'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { AnimatedFlex, Box } from 'src/components/layout'
@@ -21,8 +20,7 @@ import { useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
 import { SwapArrowButton } from 'src/features/transactions/swap/SwapArrowButton'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { InfoCircleFilled } from 'ui/src/components/icons'
+import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -339,7 +337,7 @@ function SwapFormContent(): JSX.Element {
                     gap="$spacing8"
                     px="$spacing12"
                     py="$spacing12">
-                    <InfoCircleFilled
+                    <Icons.InfoCircleFilled
                       color={colors.DEP_accentWarning.val}
                       height={iconSizes.icon20}
                       width={iconSizes.icon20}
@@ -391,12 +389,9 @@ function SwapFormContent(): JSX.Element {
           />
         )}
         <Trace logPress element={ElementName.SwapReview}>
-          <Button
-            label={t('Review swap')}
-            size={ButtonSize.Large}
-            testID={ElementName.ReviewSwap}
-            onPress={onReview}
-          />
+          <Button size="large" testID={ElementName.ReviewSwap} onPress={onReview}>
+            {t('Review swap')}
+          </Button>
         </Trace>
       </AnimatedFlex>
     </Flex>

@@ -4,11 +4,10 @@ import { default as React, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { useCancelationGasFeeInfo } from 'src/features/gas/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
@@ -103,15 +102,17 @@ export function CancelConfirmationView({
         )}
       </Flex>
       <Flex grow row gap="$spacing8" px="$spacing4">
-        <Button fill emphasis={ButtonEmphasis.Tertiary} label={t('Back')} onPress={onBack} />
+        <Button fill theme="tertiary" onPress={onBack}>
+          {t('Back')}
+        </Button>
         <Button
           fill
           disabled={transactionDetails.status !== TransactionStatus.Pending}
-          emphasis={ButtonEmphasis.Detrimental}
-          label={t('Confirm')}
           testID={ElementName.Cancel}
-          onPress={onPressCancel}
-        />
+          theme="detrimental"
+          onPress={onPressCancel}>
+          {t('Confirm')}
+        </Button>
       </Flex>
     </Flex>
   )

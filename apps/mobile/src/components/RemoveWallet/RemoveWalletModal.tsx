@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { AnimatedBox } from 'src/components/layout'
 import { Delay } from 'src/components/layout/Delayed'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
@@ -17,7 +16,7 @@ import { closeModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
-import { Flex, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { iconSizes, opacify } from 'ui/src/theme'
 import {
   EditAccountAction,
@@ -133,7 +132,7 @@ export function RemoveWalletModal(): JSX.Element | null {
     return null
   }
 
-  const { title, description, Icon, iconColorLabel, actionButtonEmphasis, actionButtonLabel } =
+  const { title, description, Icon, iconColorLabel, actionButtonTheme, actionButtonLabel } =
     modalContent
 
   return (
@@ -171,23 +170,19 @@ export function RemoveWalletModal(): JSX.Element | null {
             {inProgress ? (
               <AnimatedBox style={animatedCancelButtonSpanStyles} />
             ) : (
-              <Button
-                fill
-                disabled={inProgress}
-                emphasis={ButtonEmphasis.Tertiary}
-                label={t('Cancel')}
-                onPress={onClose}
-              />
+              <Button fill disabled={inProgress} theme="tertiary" onPress={onClose}>
+                {t('Cancel')}
+              </Button>
             )}
 
             <Button
               fill
-              CustomIcon={inProgress ? <SpinningLoader color={iconColorLabel} /> : undefined}
-              emphasis={actionButtonEmphasis}
-              label={inProgress ? undefined : actionButtonLabel}
+              icon={inProgress ? <SpinningLoader color={iconColorLabel} /> : undefined}
               testID={isRemovingRecoveryPhrase ? ElementName.Continue : ElementName.Remove}
-              onPress={onPress}
-            />
+              theme={actionButtonTheme}
+              onPress={onPress}>
+              {inProgress ? undefined : actionButtonLabel}
+            </Button>
           </Flex>
         )}
       </Flex>

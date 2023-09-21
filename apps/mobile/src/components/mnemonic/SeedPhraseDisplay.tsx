@@ -2,14 +2,13 @@ import { addScreenshotListener } from 'expo-screen-capture'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { usePrevious } from 'react-native-wagmi-charts'
-import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { HiddenMnemonicWordView } from 'src/components/mnemonic/HiddenMnemonicWordView'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { Flex } from 'ui/src'
+import { Button, Flex } from 'ui/src'
 
 type Props = {
   mnemonicId: string
@@ -74,13 +73,13 @@ export function SeedPhraseDisplay({
           </Flex>
           <Flex borderTopColor="$surface3" borderTopWidth={1} pt="$spacing12" px="$spacing16">
             <Button
-              emphasis={ButtonEmphasis.Secondary}
-              label={t('Hide recovery phrase')}
               testID={ElementName.Next}
+              theme="secondary"
               onPress={(): void => {
                 setShowSeedPhrase(false)
-              }}
-            />
+              }}>
+              {t('Hide recovery phrase')}
+            </Button>
           </Flex>
         </Flex>
       ) : (

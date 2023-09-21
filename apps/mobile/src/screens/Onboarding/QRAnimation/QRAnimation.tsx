@@ -23,7 +23,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Button } from 'src/components/buttons/Button'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { UniconThemedGradient } from 'src/components/gradients/UniconThemedGradient'
 import { Arrow } from 'src/components/icons/Arrow'
@@ -43,7 +42,7 @@ import {
   textSlideUpAtEnd,
   videoFadeOut,
 } from 'src/screens/Onboarding/QRAnimation/animations'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'ui/src/assets'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { fonts, iconSizes, opacify } from 'ui/src/theme'
@@ -307,7 +306,7 @@ export function QRAnimation({
         <Animated.View entering={letsGoButtonFadeIn}>
           <Trace logPress element={ElementName.Next}>
             <Button
-              CustomIcon={
+              icon={
                 <Flex grow row alignItems="center" justifyContent="space-between">
                   <Flex row alignItems="center" gap="$spacing8">
                     <Flex

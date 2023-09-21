@@ -1,11 +1,18 @@
 import { createMedia } from '@tamagui/react-native-media-driver'
-import { shorthands } from '@tamagui/shorthands'
+import { shorthands as tamaguiShorthands } from '@tamagui/shorthands'
 import { createTamagui } from 'tamagui'
 import { animations } from 'ui/src/theme/animations'
 import { breakpoints } from 'ui/src/theme/breakpoints'
 import { bodyFont, buttonFont, headingFont, subHeadingFont } from 'ui/src/theme/fonts'
 import { themes } from 'ui/src/theme/themes'
 import { tokens } from 'ui/src/theme/tokens'
+
+const {
+  // tamagui has this terribly awkward bc that is the same as bg :/, removing it for our purposes
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  bc,
+  ...shorthands
+} = tamaguiShorthands
 
 export const config = createTamagui({
   animations,

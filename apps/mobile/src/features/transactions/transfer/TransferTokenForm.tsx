@@ -5,7 +5,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
-import { Button, ButtonSize } from 'src/components/buttons/Button'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
@@ -31,7 +30,7 @@ import {
 import { TransferFormSpeedbumps } from 'src/features/transactions/transfer/TransferFormWarnings'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import { dimensions, iconSizes, spacing } from 'ui/src/theme'
@@ -393,11 +392,11 @@ export function TransferTokenForm({
           )}
           <Button
             disabled={actionButtonDisabled}
-            label={t('Review transfer')}
-            size={ButtonSize.Large}
+            size="large"
             testID={ElementName.ReviewTransfer}
-            onPress={onPressReview}
-          />
+            onPress={onPressReview}>
+            {t('Review transfer')}
+          </Button>
         </AnimatedFlex>
       </Flex>
     </>

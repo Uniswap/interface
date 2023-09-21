@@ -1,8 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { getClipboard } from 'src/utils/clipboard'
-import { Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Icons, Text, TouchableArea } from 'ui/src'
 import PasteIcon from 'ui/src/assets/icons/paste.svg'
 import { iconSizes } from 'ui/src/theme'
 
@@ -49,12 +48,12 @@ export default function PasteButton({
 
   return (
     <Button
-      IconName={PasteIcon}
-      emphasis={ButtonEmphasis.Tertiary}
-      label={label}
-      size={ButtonSize.Small}
+      icon={<PasteIcon />}
+      size="small"
+      theme="tertiary"
       onPress={onPressButton}
-      onPressIn={beforePress}
-    />
+      onPressIn={beforePress}>
+      {label}
+    </Button>
   )
 }

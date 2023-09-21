@@ -3,6 +3,9 @@
 import { colorsDark, colorsLight } from 'ui/src/theme/color/colors'
 import { opacify } from 'ui/src/theme/color/utils'
 
+// this is just a helper for things that want to accept theme names as props
+export type ThemeNames = 'primary' | 'secondary' | 'tertiary' | 'warning' | 'detrimental'
+
 // TODO: systematize hover and focus states. requires consolidating mobile and web design systems (they have different button styles right now)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const hoverColor = (color: any): string => opacify(85, color)

@@ -1,17 +1,16 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
-import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { getTokenSafetyHeaderText } from 'src/components/tokens/utils'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useTokenSafetyLevelColors } from 'src/features/tokens/safetyHooks'
 import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import ExternalLinkIcon from 'ui/src/assets/icons/external-link.svg'
 import { AppTFunction } from 'ui/src/i18n/types'
-import { iconSizes, imageSizes, opacify } from 'ui/src/theme'
+import { iconSizes, imageSizes, opacify, ThemeNames } from 'ui/src/theme'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -132,21 +131,17 @@ export default function TokenWarningModal({
           />
         </TouchableArea>
         <Flex centered row gap="$spacing16" mt="$spacing16">
-          <Button
-            fill
-            emphasis={ButtonEmphasis.Tertiary}
-            label={closeButtonText}
-            testID={ElementName.Cancel}
-            onPress={onClose}
-          />
+          <Button fill testID={ElementName.Cancel} theme="tertiary" onPress={onClose}>
+            {closeButtonText}
+          </Button>
           {!hideAcceptButton && (
             <Button
               fill
-              emphasis={getButtonEmphasis(safetyLevel)}
-              label={showWarningIcon ? t('I understand') : t('Continue')}
               testID={ElementName.TokenWarningAccept}
-              onPress={onAccept}
-            />
+              theme={getButtonTheme(safetyLevel)}
+              onPress={onAccept}>
+              {showWarningIcon ? t('I understand') : t('Continue')}
+            </Button>
           )}
         </Flex>
       </Flex>
@@ -154,12 +149,12 @@ export default function TokenWarningModal({
   )
 }
 
-function getButtonEmphasis(safetyLevel: Maybe<SafetyLevel>): ButtonEmphasis | undefined {
+function getButtonTheme(safetyLevel: Maybe<SafetyLevel>): ThemeNames | undefined {
   switch (safetyLevel) {
     case SafetyLevel.MediumWarning:
-      return ButtonEmphasis.Secondary
+      return 'secondary'
     case SafetyLevel.StrongWarning:
-      return ButtonEmphasis.Detrimental
+      return 'detrimental'
     default:
       return undefined
   }

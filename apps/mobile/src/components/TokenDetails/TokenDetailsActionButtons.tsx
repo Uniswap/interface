@@ -1,10 +1,8 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
-import { getButtonProperties } from 'src/components/buttons/utils'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Button, Flex, useSporeColors } from 'ui/src'
 import { getContrastPassingTextColor } from 'wallet/src/utils/colors'
 
 function CTAButton({
@@ -19,31 +17,21 @@ function CTAButton({
   tokenColor?: Maybe<string>
 }): JSX.Element {
   const colors = useSporeColors()
-  const { textVariant, paddingX, paddingY, borderRadius, borderColor } = getButtonProperties(
-    ButtonEmphasis.Secondary,
-    ButtonSize.Large
-  )
 
   return (
     <Trace logPress element={element} section={SectionName.TokenDetails}>
-      <TouchableArea
+      <Button
+        fill
         hapticFeedback
-        alignItems="center"
-        // TODO(MOB-1340): take tamagui props once we rewrite Button and getButtonProperties
-        borderColor={borderColor === 'none' ? '$transparent' : `$${borderColor}`}
-        borderRadius={`$${borderRadius}`}
-        borderWidth={1}
-        flexGrow={1}
-        px={`$${paddingX}`}
-        py={`$${paddingY}`}
-        style={{ backgroundColor: tokenColor ?? colors.accent1.val }}
-        onPress={onPress}>
-        <Text
-          color={tokenColor ? getContrastPassingTextColor(tokenColor) : '$sporeWhite'}
-          variant={textVariant}>
-          {title}
-        </Text>
-      </TouchableArea>
+        color={tokenColor ? getContrastPassingTextColor(tokenColor) : '$sporeWhite'}
+        // idk why this eslint warning is coming up because it auto-sorts it back on format to invalid order
+        // eslint-disable-next-line react/jsx-sort-props
+        onPress={onPress}
+        size="large"
+        // @ts-expect-error intentional bypass of strict token types for our custom color
+        bg={tokenColor ?? colors.accent1.val}>
+        {title}
+      </Button>
     </Trace>
   )
 }

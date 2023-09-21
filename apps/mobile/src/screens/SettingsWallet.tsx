@@ -11,7 +11,6 @@ import {
   SettingsStackParamList,
 } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Switch } from 'src/components/buttons/Switch'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
@@ -33,7 +32,7 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
-import { Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
 import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import ChartIcon from 'ui/src/assets/icons/chart.svg'
 import EditIcon from 'ui/src/assets/icons/edit.svg'
@@ -289,12 +288,9 @@ export function SettingsWallet({
             stickySectionHeadersEnabled={false}
           />
         </Flex>
-        <Button
-          emphasis={ButtonEmphasis.Detrimental}
-          label={t('Remove wallet')}
-          testID={ElementName.Remove}
-          onPress={onRemoveWallet}
-        />
+        <Button testID={ElementName.Remove} theme="detrimental" onPress={onRemoveWallet}>
+          {t('Remove wallet')}
+        </Button>
       </Flex>
     </Screen>
   )

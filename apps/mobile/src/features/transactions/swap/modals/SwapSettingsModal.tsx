@@ -12,7 +12,6 @@ import {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
-import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import PlusMinusButton, { PlusMinusButtonType } from 'src/components/buttons/PlusMinusButton'
 import { Switch } from 'src/components/buttons/Switch'
 import { AnimatedFlex } from 'src/components/layout'
@@ -22,7 +21,7 @@ import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { SwapProtectionInfoModal } from 'src/features/transactions/swap/modals/SwapProtectionModal'
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
 import { openUri } from 'src/utils/linking'
-import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
@@ -128,13 +127,9 @@ export function SwapSettingsModal({
         </Flex>
         {innerContent}
         <Flex centered row>
-          <Button
-            fill
-            emphasis={ButtonEmphasis.Secondary}
-            label={t('Close')}
-            testID="swap-settings-close"
-            onPress={onClose}
-          />
+          <Button fill testID="swap-settings-close" theme="secondary" onPress={onClose}>
+            {t('Close')}
+          </Button>
         </Flex>
       </Flex>
     </BottomSheetModal>

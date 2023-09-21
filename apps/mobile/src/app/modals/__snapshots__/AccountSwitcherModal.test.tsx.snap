@@ -403,35 +403,9 @@ exports[`AccountSwitcher renders correctly 1`] = `
       }
     >
       <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        hitSlop={
-          {
-            "bottom": 5,
-            "left": 5,
-            "right": 5,
-            "top": 5,
-          }
-        }
+        onBlur={[Function]}
         onClick={[Function]}
+        onFocus={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
         onResponderRelease={[Function]}
@@ -442,53 +416,47 @@ exports[`AccountSwitcher renders correctly 1`] = `
           {
             "alignItems": "center",
             "backgroundColor": "#F9F9F9",
-            "borderColor": "transparent",
-            "borderRadius": 12,
-            "borderWidth": 1,
-            "disabled": false,
-            "flex": undefined,
-            "onLongPress": undefined,
-            "onPressIn": undefined,
+            "borderBottomColor": "transparent",
+            "borderBottomLeftRadius": 8,
+            "borderBottomRightRadius": 8,
+            "borderBottomWidth": 1,
+            "borderLeftColor": "transparent",
+            "borderLeftWidth": 1,
+            "borderRightColor": "transparent",
+            "borderRightWidth": 1,
+            "borderStyle": "solid",
+            "borderTopColor": "transparent",
+            "borderTopLeftRadius": 8,
+            "borderTopRightRadius": 8,
+            "borderTopWidth": 1,
+            "flexDirection": "row",
+            "gap": 4,
+            "height": "auto",
+            "justifyContent": "center",
             "opacity": 1,
+            "paddingBottom": 8,
+            "paddingLeft": 8,
+            "paddingRight": 8,
+            "paddingTop": 8,
           }
         }
         testID="WalletSettings"
       >
-        <View
-          sentry-label="Flex"
+        <Text
+          maxFontSizeMultiplier={1.2}
           style={
-            [
-              {
-                "alignItems": "center",
-                "display": "flex",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "paddingHorizontal": 8,
-                "paddingVertical": 8,
-              },
-            ]
-          }
-        >
-          <Text
-            allowFontScaling={true}
-            maxFontSizeMultiplier={1.2}
-            style={
-              [
-                {
-                  "color": "#222222",
-                  "display": "flex",
-                  "fontFamily": "Basel-Medium",
-                  "fontSize": 17,
-                  "fontWeight": "500",
-                  "lineHeight": 24,
-                  "textAlign": "center",
-                },
-              ]
+            {
+              "color": "#000000",
+              "display": "flex",
+              "fontFamily": "Basel-Medium",
+              "fontSize": 17,
+              "lineHeight": 24,
             }
-          >
-            Manage wallet
-          </Text>
-        </View>
+          }
+          suppressHighlighting={true}
+        >
+          Manage wallet
+        </Text>
       </View>
     </View>
   </View>

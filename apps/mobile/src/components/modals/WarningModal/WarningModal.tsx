@@ -1,11 +1,10 @@
 import React, { PropsWithChildren, ReactNode } from 'react'
 import { ColorValue } from 'react-native'
-import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { WarningColor, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
 import { iconSizes, opacify } from 'ui/src/theme'
 
 export type WarningModalProps = {
@@ -91,21 +90,18 @@ export default function WarningModal({
         {children}
         <Flex centered row gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'}>
           {closeText && (
-            <Button
-              fill
-              emphasis={ButtonEmphasis.Secondary}
-              label={closeText}
-              onPress={onCancel ?? onClose}
-            />
+            <Button fill theme="secondary" onPress={onCancel ?? onClose}>
+              {closeText}
+            </Button>
           )}
           {confirmText && (
             <Button
               fill
-              emphasis={alertColor.buttonEmphasis}
-              label={confirmText}
               testID={ElementName.Confirm}
-              onPress={onPressConfirm}
-            />
+              theme={alertColor.buttonTheme}
+              onPress={onPressConfirm}>
+              {confirmText}
+            </Button>
           )}
         </Flex>
       </Flex>
@@ -119,31 +115,31 @@ export const getAlertColor = (severity?: WarningSeverity): WarningColor => {
       return {
         text: '$neutral2',
         background: '$neutral2',
-        buttonEmphasis: ButtonEmphasis.Secondary,
+        buttonTheme: 'secondary',
       }
     case WarningSeverity.Low:
       return {
         text: '$neutral2',
         background: '$surface2',
-        buttonEmphasis: ButtonEmphasis.Tertiary,
+        buttonTheme: 'tertiary',
       }
     case WarningSeverity.High:
       return {
         text: '$statusCritical',
         background: '$DEP_accentCriticalSoft',
-        buttonEmphasis: ButtonEmphasis.Detrimental,
+        buttonTheme: 'detrimental',
       }
     case WarningSeverity.Medium:
       return {
         text: '$DEP_accentWarning',
         background: '$DEP_accentWarningSoft',
-        buttonEmphasis: ButtonEmphasis.Warning,
+        buttonTheme: 'warning',
       }
     default:
       return {
         text: '$neutral2',
         background: '$transparent',
-        buttonEmphasis: ButtonEmphasis.Tertiary,
+        buttonTheme: 'tertiary',
       }
   }
 }

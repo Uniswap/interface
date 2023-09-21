@@ -1,12 +1,11 @@
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, TextInput } from 'react-native'
-import { Button } from 'src/components/buttons/Button'
 import { CheckBox } from 'src/components/buttons/CheckBox'
 import { PasswordInput } from 'src/components/input/PasswordInput'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex } from 'ui/src'
+import { Button, Flex } from 'ui/src'
 import { validatePassword } from 'wallet/src/utils/password'
 
 export enum PasswordErrors {
@@ -113,12 +112,9 @@ export function CloudBackupPasswordForm({
           />
         )}
       </Flex>
-      <Button
-        disabled={isButtonDisabled}
-        label={t('Continue')}
-        testID={ElementName.Next}
-        onPress={onPressNext}
-      />
+      <Button disabled={isButtonDisabled} testID={ElementName.Next} onPress={onPressNext}>
+        {t('Continue')}
+      </Button>
     </>
   )
 }

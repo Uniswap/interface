@@ -21,6 +21,7 @@
     "tamagui": "1.61.1"
   },
   "devDependencies": {
+    "@tamagui/animations-moti": "1.61.1",
     "@tamagui/build": "1.61.1",
     "camelcase": "^6.0.0",
     "cheerio": "^1.0.0-rc.5",

@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { SvgProps } from 'react-native-svg'
-import { ButtonEmphasis } from 'src/components/buttons/Button'
 import { concatListOfAccountNames } from 'src/components/RemoveWallet/utils'
 import { IS_ANDROID } from 'src/constants/globals'
 import { Text } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import TrashIcon from 'ui/src/assets/icons/trash.svg'
 import WalletIcon from 'ui/src/assets/icons/wallet-filled.svg'
+import { ThemeNames } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -31,7 +31,7 @@ interface ModalContentResult {
   Icon: React.ComponentType<SvgProps>
   iconColorLabel: keyof Theme['colors']
   actionButtonLabel?: string
-  actionButtonEmphasis?: ButtonEmphasis
+  actionButtonTheme?: ThemeNames
 }
 
 export const useModalContent = ({
@@ -68,7 +68,7 @@ export const useModalContent = ({
         Icon: TrashIcon,
         iconColorLabel: 'statusCritical',
         actionButtonLabel: t('Continue'),
-        actionButtonEmphasis: ButtonEmphasis.Detrimental,
+        actionButtonTheme: 'detrimental',
       }
     }
 
@@ -82,7 +82,7 @@ export const useModalContent = ({
         Icon: WalletIcon,
         iconColorLabel: 'neutral2',
         actionButtonLabel: t('Continue'),
-        actionButtonEmphasis: ButtonEmphasis.Secondary,
+        actionButtonTheme: 'secondary',
       }
     }
 
@@ -147,7 +147,7 @@ export const useModalContent = ({
         Icon: TrashIcon,
         iconColorLabel: 'statusCritical',
         actionButtonLabel: t('Remove'),
-        actionButtonEmphasis: ButtonEmphasis.Detrimental,
+        actionButtonTheme: 'detrimental',
       }
     }
 
@@ -171,7 +171,7 @@ export const useModalContent = ({
         Icon: TrashIcon,
         iconColorLabel: 'neutral2',
         actionButtonLabel: t('Remove'),
-        actionButtonEmphasis: ButtonEmphasis.Secondary,
+        actionButtonTheme: 'secondary',
       }
     }
   }, [

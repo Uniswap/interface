@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { Button } from 'src/components/buttons/Button'
 import Trace from 'src/components/Trace/Trace'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
@@ -19,6 +18,7 @@ import {
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { Button } from 'ui/src'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
@@ -108,12 +108,12 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
       <Trace logPress element={ElementName.Next}>
         <Button
           disabled={!submitEnabled}
-          label={t('Continue')}
           testID="seed-input-submit"
           onPress={(): void => {
             seedPhraseInputRef.current?.handleSubmit()
-          }}
-        />
+          }}>
+          {t('Continue')}
+        </Button>
       </Trace>
     </SafeKeyboardOnboardingScreen>
   )

@@ -3,7 +3,6 @@ import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
-import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { AnimatedFlex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -22,7 +21,7 @@ import {
   removePendingSession,
   WalletConnectPendingSession,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Button, Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/check.svg'
 import X from 'ui/src/assets/icons/x.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -276,17 +275,17 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         <Flex flexDirection="row" gap="$spacing8" justifyContent="space-between">
           <Button
             fill
-            emphasis={ButtonEmphasis.Secondary}
-            label={t('Cancel')}
             testID="cancel-pending-connection"
-            onPress={(): Promise<void> => onPressSettleConnection(false)}
-          />
+            theme="secondary"
+            onPress={(): Promise<void> => onPressSettleConnection(false)}>
+            {t('Cancel')}
+          </Button>
           <Button
             fill
-            label={t('Connect')}
             testID="connect-pending-connection"
-            onPress={(): Promise<void> => onPressSettleConnection(true)}
-          />
+            onPress={(): Promise<void> => onPressSettleConnection(true)}>
+            {t('Connect')}
+          </Button>
         </Flex>
       </AnimatedFlex>
       {modalState === PendingConnectionModalState.SwitchAccount && (

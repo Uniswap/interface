@@ -12,7 +12,6 @@ import {
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { TextInputProps } from 'src/components/input/TextInput'
@@ -31,7 +30,7 @@ import { ElementName, MobileEventName, ModalName } from 'src/features/telemetry/
 import { MobileEventProperties } from 'src/features/telemetry/types'
 import { useDynamicFontSizing, useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
 import { openUri } from 'src/utils/linking'
-import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import InformationIcon from 'ui/src/assets/icons/i-icon.svg'
 import { dimensions, iconSizes, spacing } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
@@ -367,25 +366,23 @@ function MoonpayCtaButton({
       pressEvent={MobileEventName.FiatOnRampWidgetOpened}
       properties={properties}>
       <Button
-        CustomIcon={
+        disabled={disabled}
+        icon={
           isLoading ? (
             <SpinningLoader color="sporeWhite" />
           ) : !eligible ? (
             <InformationIcon color={theme.colors.neutral1} width={theme.iconSizes.icon20} />
           ) : undefined
         }
-        disabled={disabled}
-        emphasis={!isLoading && !eligible ? ButtonEmphasis.Secondary : ButtonEmphasis.Primary}
-        label={
-          isLoading
-            ? undefined
-            : eligible
-            ? t('Continue to checkout')
-            : t('Not supported in region')
-        }
-        size={ButtonSize.Large}
-        onPress={onPress}
-      />
+        size="large"
+        theme={!isLoading && !eligible ? 'secondary' : 'primary'}
+        onPress={onPress}>
+        {isLoading
+          ? undefined
+          : eligible
+          ? t('Continue to checkout')
+          : t('Not supported in region')}
+      </Button>
     </Trace>
   )
 }

@@ -153,92 +153,55 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               }
             />
             <View
-              accessibilityState={
-                {
-                  "busy": undefined,
-                  "checked": undefined,
-                  "disabled": undefined,
-                  "expanded": undefined,
-                  "selected": undefined,
-                }
-              }
-              accessibilityValue={
-                {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
-                }
-              }
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              hitSlop={
-                {
-                  "bottom": 5,
-                  "left": 5,
-                  "right": 5,
-                  "top": 5,
-                }
-              }
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
+              onBlur={[Function]}
+              onFocus={[Function]}
+              pointerEvents="none"
               style={
                 {
                   "alignItems": "center",
                   "backgroundColor": "#FC72FF",
-                  "borderColor": "transparent",
-                  "borderRadius": 16,
-                  "borderWidth": 1,
-                  "disabled": true,
-                  "flex": undefined,
-                  "onLongPress": undefined,
-                  "onPressIn": undefined,
+                  "borderBottomColor": "transparent",
+                  "borderBottomLeftRadius": 16,
+                  "borderBottomRightRadius": 16,
+                  "borderBottomWidth": 1,
+                  "borderLeftColor": "transparent",
+                  "borderLeftWidth": 1,
+                  "borderRightColor": "transparent",
+                  "borderRightWidth": 1,
+                  "borderStyle": "solid",
+                  "borderTopColor": "transparent",
+                  "borderTopLeftRadius": 16,
+                  "borderTopRightRadius": 16,
+                  "borderTopWidth": 1,
+                  "flexDirection": "row",
+                  "gap": 8,
+                  "height": "auto",
+                  "justifyContent": "center",
                   "opacity": 0.4,
+                  "paddingBottom": 12,
+                  "paddingLeft": 12,
+                  "paddingRight": 12,
+                  "paddingTop": 12,
                 }
               }
               testID="seed-input-submit"
+              userSelect="none"
             >
-              <View
-                sentry-label="Flex"
+              <Text
+                maxFontSizeMultiplier={1.2}
                 style={
-                  [
-                    {
-                      "alignItems": "center",
-                      "display": "flex",
-                      "flexDirection": "row",
-                      "justifyContent": "flex-start",
-                      "paddingHorizontal": 12,
-                      "paddingVertical": 12,
-                    },
-                  ]
-                }
-              >
-                <Text
-                  allowFontScaling={true}
-                  maxFontSizeMultiplier={1.2}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "display": "flex",
-                        "fontFamily": "Basel-Medium",
-                        "fontSize": 19,
-                        "fontWeight": "500",
-                        "lineHeight": 24,
-                        "textAlign": "center",
-                      },
-                    ]
+                  {
+                    "color": "#FFFFFF",
+                    "display": "flex",
+                    "fontFamily": "Basel-Medium",
+                    "fontSize": 19,
+                    "lineHeight": 24,
                   }
-                >
-                  Continue
-                </Text>
-              </View>
+                }
+                suppressHighlighting={true}
+              >
+                Continue
+              </Text>
             </View>
           </View>
         </View>

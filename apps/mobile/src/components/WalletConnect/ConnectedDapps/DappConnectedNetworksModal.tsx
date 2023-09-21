@@ -3,13 +3,12 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
-import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { ModalName } from 'src/features/telemetry/constants'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { removeSession, WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -96,13 +95,12 @@ export function DappConnectedNetworkModal({
           </Flex>
         </Flex>
         <Flex centered row gap="$spacing16">
-          <Button fill emphasis={ButtonEmphasis.Secondary} label={t('Close')} onPress={onClose} />
-          <Button
-            fill
-            emphasis={ButtonEmphasis.Detrimental}
-            label={t('Disconnect')}
-            onPress={onDisconnect}
-          />
+          <Button fill theme="secondary" onPress={onClose}>
+            {t('Close')}
+          </Button>
+          <Button fill theme="detrimental" onPress={onDisconnect}>
+            {t('Disconnect')}
+          </Button>
         </Flex>
       </Flex>
     </BottomSheetModal>

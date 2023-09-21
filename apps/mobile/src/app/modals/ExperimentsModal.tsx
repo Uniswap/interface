@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Action } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { Button, ButtonSize } from 'src/components/buttons/Button'
 import { Switch } from 'src/components/buttons/Switch'
 import { TextInput } from 'src/components/input/TextInput'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -10,7 +9,7 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import { setCustomEndpoint } from 'src/features/tweaks/slice'
 import { Statsig } from 'statsig-react'
-import { Flex, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 
@@ -64,8 +63,12 @@ export function ExperimentsModal(): JSX.Element {
               <Text variant="body2">Key</Text>
               <TextInput flex={1} value={key} onChangeText={setKey} />
             </Flex>
-            <Button label="Set" size={ButtonSize.Small} onPress={setEndpoint} />
-            <Button label="Clear" size={ButtonSize.Small} onPress={clearEndpoint} />
+            <Button size="small" onPress={setEndpoint}>
+              Set
+            </Button>
+            <Button size="small" onPress={clearEndpoint}>
+              Clear
+            </Button>
           </Flex>
           <Text variant="subheading1">⛳️ Feature Flags</Text>
           <Text variant="body2">Overridden feature flags are reset when the app is restarted</Text>

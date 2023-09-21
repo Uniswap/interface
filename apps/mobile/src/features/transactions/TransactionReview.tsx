@@ -5,7 +5,6 @@ import React, { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInUp, FadeOut } from 'react-native-reanimated'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { Arrow } from 'src/components/icons/Arrow'
 import { AmountInput } from 'src/components/input/AmountInput'
@@ -15,7 +14,7 @@ import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { dimensions, fonts, iconSizes } from 'ui/src/theme'
 import { formatNumberOrString, NumberType } from 'utilities/src/format/format'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
@@ -218,16 +217,15 @@ export function TransactionReview({
         {transactionDetails}
         <Flex row gap="$spacing8">
           <Button
-            CustomIcon={<Arrow color={colors.neutral1.val} direction="w" size={iconSizes.icon24} />}
-            emphasis={ButtonEmphasis.Tertiary}
-            size={ButtonSize.Large}
+            icon={<Arrow color={colors.neutral1.val} direction="w" size={iconSizes.icon24} />}
+            size="large"
+            theme="tertiary"
             onPress={onPrev}
           />
           <Button
             fill
             disabled={actionButtonProps.disabled}
-            label={actionButtonProps.label}
-            size={ButtonSize.Large}
+            size="large"
             testID={actionButtonProps.name}
             onPress={async (): Promise<void> => {
               await notificationAsync()
@@ -236,8 +234,9 @@ export function TransactionReview({
               } else {
                 actionButtonProps.onPress()
               }
-            }}
-          />
+            }}>
+            {actionButtonProps.label}
+          </Button>
         </Flex>
       </AnimatedFlex>
     </>

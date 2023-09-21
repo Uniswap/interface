@@ -1,8 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { setClipboard } from 'src/utils/clipboard'
-import { useSporeColors } from 'ui/src'
+import { Button, useSporeColors } from 'ui/src'
 import CheckCircle from 'ui/src/assets/icons/check-circle.svg'
 import CopySheets from 'ui/src/assets/icons/copy-sheets.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -40,11 +39,8 @@ export function CopyTextButton({ copyText }: Props): JSX.Element {
   useTimeout(resetIsCopied, RESET_COPY_STATE_DELAY)
 
   return (
-    <Button
-      CustomIcon={isCopied ? copiedIcon : copyIcon}
-      emphasis={ButtonEmphasis.Tertiary}
-      label={isCopied ? t`Copied` : t`Copy`}
-      onPress={onPress}
-    />
+    <Button icon={isCopied ? copiedIcon : copyIcon} theme="tertiary" onPress={onPress}>
+      {isCopied ? t`Copied` : t`Copy`}
+    </Button>
   )
 }

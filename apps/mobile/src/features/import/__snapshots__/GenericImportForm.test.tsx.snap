@@ -122,35 +122,9 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         Type or
       </Text>
       <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        hitSlop={
-          {
-            "bottom": 5,
-            "left": 5,
-            "right": 5,
-            "top": 5,
-          }
-        }
+        onBlur={[Function]}
         onClick={[Function]}
+        onFocus={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
         onResponderRelease={[Function]}
@@ -160,73 +134,52 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         style={
           {
             "alignItems": "center",
-            "backgroundColor": "transparent",
-            "borderColor": "#2222220D",
-            "borderRadius": 12,
-            "borderWidth": 1,
-            "disabled": false,
-            "flex": undefined,
-            "onLongPress": undefined,
-            "onPressIn": undefined,
+            "backgroundColor": "#2222220D",
+            "borderBottomColor": "transparent",
+            "borderBottomLeftRadius": 8,
+            "borderBottomRightRadius": 8,
+            "borderBottomWidth": 1,
+            "borderLeftColor": "transparent",
+            "borderLeftWidth": 1,
+            "borderRightColor": "transparent",
+            "borderRightWidth": 1,
+            "borderStyle": "solid",
+            "borderTopColor": "transparent",
+            "borderTopLeftRadius": 8,
+            "borderTopRightRadius": 8,
+            "borderTopWidth": 1,
+            "flexDirection": "row",
+            "gap": 4,
+            "height": "auto",
+            "justifyContent": "center",
             "opacity": 1,
+            "paddingBottom": 8,
+            "paddingLeft": 8,
+            "paddingRight": 8,
+            "paddingTop": 8,
           }
         }
       >
-        <View
-          sentry-label="Flex"
+        <svg
+          color="#222222"
+          data-file-name="SvgPaste"
+          size={12}
+        />
+        <Text
+          maxFontSizeMultiplier={1.2}
           style={
-            [
-              {
-                "alignItems": "center",
-                "display": "flex",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "paddingHorizontal": 8,
-                "paddingVertical": 8,
-              },
-            ]
+            {
+              "color": "#222222",
+              "display": "flex",
+              "fontFamily": "Basel-Medium",
+              "fontSize": 17,
+              "lineHeight": 24,
+            }
           }
+          suppressHighlighting={true}
         >
-          <svg
-            color="#222222"
-            data-file-name="SvgPaste"
-            height={16}
-            strokeWidth={2}
-            width={16}
-          />
-          <View
-            style={
-              [
-                {
-                  "display": "flex",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "height": 4,
-                  "width": 4,
-                },
-              ]
-            }
-          />
-          <Text
-            allowFontScaling={true}
-            maxFontSizeMultiplier={1.2}
-            style={
-              [
-                {
-                  "color": "#222222",
-                  "display": "flex",
-                  "fontFamily": "Basel-Medium",
-                  "fontSize": 17,
-                  "fontWeight": "500",
-                  "lineHeight": 24,
-                  "textAlign": "center",
-                },
-              ]
-            }
-          >
-            Paste
-          </Text>
-        </View>
+          Paste
+        </Text>
       </View>
       <Text
         adjustsFontSizeToFit={true}

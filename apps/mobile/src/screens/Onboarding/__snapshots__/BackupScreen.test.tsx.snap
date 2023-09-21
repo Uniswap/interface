@@ -1251,6 +1251,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   "gap": 8,
                   "height": "auto",
                   "justifyContent": "center",
+                  "opacity": 1,
                   "paddingBottom": 12,
                   "paddingLeft": 12,
                   "paddingRight": 12,

@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard, TextInput } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { Button } from 'src/components/buttons/Button'
 import { PasswordInput } from 'src/components/input/PasswordInput'
 import { IS_ANDROID } from 'src/constants/globals'
 import {
@@ -22,7 +21,7 @@ import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
@@ -190,10 +189,10 @@ export function RestoreCloudBackupPasswordScreen({
         )}
         <Button
           disabled={!enteredPassword || isLockedOut}
-          label={t('Continue')}
           testID={ElementName.Submit}
-          onPress={onPasswordSubmit}
-        />
+          onPress={onPasswordSubmit}>
+          {t('Continue')}
+        </Button>
       </Flex>
     </OnboardingScreen>
   )

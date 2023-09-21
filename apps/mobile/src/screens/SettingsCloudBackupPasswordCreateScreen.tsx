@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { SettingsStackParamList } from 'src/app/navigation/types'
-import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -11,7 +10,7 @@ import { IS_ANDROID } from 'src/constants/globals'
 import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import { Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
 type Props = NativeStackScreenProps<
@@ -92,18 +91,15 @@ export function SettingsCloudBackupPasswordCreateScreen({
                 </Text>
               </Flex>
               <Flex centered row gap="$spacing12" pt="$spacing24">
+                <Button fill theme="tertiary" onPress={(): void => navigation.goBack()}>
+                  {t('Cancel')}
+                </Button>
                 <Button
                   fill
-                  emphasis={ButtonEmphasis.Tertiary}
-                  label={t('Cancel')}
-                  onPress={(): void => navigation.goBack()}
-                />
-                <Button
-                  fill
-                  label={t('Back up')}
                   testID={ElementName.Confirm}
-                  onPress={(): void => setShowCloudBackupInfoModal(false)}
-                />
+                  onPress={(): void => setShowCloudBackupInfoModal(false)}>
+                  {t('Back up')}
+                </Button>
               </Flex>
             </Flex>
           </BottomSheetModal>

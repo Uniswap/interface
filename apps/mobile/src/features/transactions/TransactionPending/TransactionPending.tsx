@@ -1,11 +1,10 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { AnimatedFlex } from 'src/components/layout'
 import { ElementName } from 'src/features/telemetry/constants'
 import { StatusAnimation } from 'src/features/transactions/TransactionPending/StatusAnimation'
 import { openTransactionLink } from 'src/utils/linking'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { ChainId } from 'wallet/src/constants/chains'
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 
@@ -60,14 +59,13 @@ export function TransactionPending({
         </Flex>
       </Flex>
       {transaction && isFinalizedState(transaction.status) ? (
-        <Button
-          emphasis={ButtonEmphasis.Tertiary}
-          label={t('View transaction')}
-          testID="transaction-pending-view"
-          onPress={onPressViewTransaction}
-        />
+        <Button testID="transaction-pending-view" theme="tertiary" onPress={onPressViewTransaction}>
+          {t('View transaction')}
+        </Button>
       ) : null}
-      <Button label={t('Close')} testID={ElementName.OK} onPress={onNext} />
+      <Button testID={ElementName.OK} onPress={onNext}>
+        {t('Close')}
+      </Button>
     </AnimatedFlex>
   )
 }

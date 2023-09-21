@@ -1,6 +1,5 @@
 import { FunctionComponent } from 'react'
 import { SvgProps } from 'react-native-svg'
-import { ButtonEmphasis } from 'src/components/buttons/Button'
 import { ColorTokens } from 'ui/src'
 
 export enum WarningSeverity {
@@ -13,7 +12,7 @@ export enum WarningSeverity {
 export type WarningColor = {
   text: ColorTokens
   background: ColorTokens
-  buttonEmphasis: ButtonEmphasis
+  buttonTheme: 'primary' | 'secondary' | 'tertiary' | 'detrimental' | 'warning'
 }
 
 export enum WarningAction {

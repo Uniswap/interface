@@ -4,12 +4,10 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
-import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { TextInput } from 'src/components/input/TextInput'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
-import { Flex, Text, useSporeColors } from 'ui/src'
-import PencilIcon from 'ui/src/assets/icons/pencil.svg'
+import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -92,9 +90,9 @@ export function SettingsWalletEdit({
                 {!ensName && (
                   <Flex ml="$spacing12">
                     <Button
-                      IconName={PencilIcon}
-                      emphasis={ButtonEmphasis.Secondary}
-                      size={ButtonSize.Small}
+                      icon={Icons.Pencil}
+                      size="small"
+                      theme="secondary"
                       onPress={onPressShowEditInput}
                     />
                   </Flex>
