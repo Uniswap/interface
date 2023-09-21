@@ -150,10 +150,8 @@ export default function SwapPage({ className }: { className?: string }) {
         <Swap
           className={className}
           chainId={supportedChainId ?? ChainId.MAINNET}
-          prefilledState={{
-            [Field.INPUT]: { currencyId: loadedUrlParams?.[Field.INPUT]?.currencyId },
-            [Field.OUTPUT]: { currencyId: loadedUrlParams?.[Field.OUTPUT]?.currencyId },
-          }}
+          initialInputCurrencyId={loadedUrlParams?.[Field.INPUT]?.currencyId}
+          initialOutputCurrencyId={loadedUrlParams?.[Field.OUTPUT]?.currencyId}
           disableTokenInputs={supportedChainId === undefined}
         />
         <NetworkAlert />
@@ -172,13 +170,15 @@ export default function SwapPage({ className }: { className?: string }) {
  */
 export function Swap({
   className,
-  prefilledState = {},
+  initialInputCurrencyId,
+  initialOutputCurrencyId,
   chainId,
   onCurrencyChange,
   disableTokenInputs = false,
 }: {
   className?: string
-  prefilledState?: Partial<SwapState>
+  initialInputCurrencyId?: string | null
+  initialOutputCurrencyId?: string | null
   chainId?: ChainId
   onCurrencyChange?: (selected: Pick<SwapState, Field.INPUT | Field.OUTPUT>) => void
   disableTokenInputs?: boolean
@@ -187,8 +187,8 @@ export function Swap({
   const trace = useTrace()
 
   // token warning stuff
-  const prefilledInputCurrency = useCurrency(prefilledState?.[Field.INPUT]?.currencyId)
-  const prefilledOutputCurrency = useCurrency(prefilledState?.[Field.OUTPUT]?.currencyId)
+  const prefilledInputCurrency = useCurrency(initialInputCurrencyId)
+  const prefilledOutputCurrency = useCurrency(initialOutputCurrencyId)
 
   const [loadedInputCurrency, setLoadedInputCurrency] = useState(prefilledInputCurrency)
   const [loadedOutputCurrency, setLoadedOutputCurrency] = useState(prefilledOutputCurrency)
@@ -236,6 +236,13 @@ export function Swap({
   const toggleWalletDrawer = useToggleAccountDrawer()
 
   // swap state
+  const prefilledState = useMemo(
+    () => ({
+      [Field.INPUT]: { currencyId: initialInputCurrencyId },
+      [Field.OUTPUT]: { currencyId: initialOutputCurrencyId },
+    }),
+    [initialInputCurrencyId, initialOutputCurrencyId]
+  )
   const [state, dispatch] = useReducer(swapReducer, { ...initialSwapState, ...prefilledState })
   const { typedValue, recipient, independentField } = state
 

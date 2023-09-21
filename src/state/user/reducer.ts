@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { ConnectionType } from '../../connection/types'
+import { ConnectionType, selectedWalletKey, toConnectionType } from '../../connection/types'
 import { SupportedLocale } from '../../constants/locales'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { RouterPreference } from '../../state/routing/types'
 import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 
+const selectedWallet = toConnectionType(localStorage.getItem(selectedWalletKey) ?? undefined)
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
@@ -56,7 +57,7 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  selectedWallet: undefined,
+  selectedWallet,
   userLocale: null,
   userRouterPreference: RouterPreference.API,
   userHideClosedPositions: false,
@@ -75,11 +76,14 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     updateSelectedWallet(state, { payload: { wallet } }) {
+      localStorage.setItem(selectedWalletKey, wallet)
       state.selectedWallet = wallet
     },
     updateUserLocale(state, action) {
-      state.userLocale = action.payload.userLocale
-      state.timestamp = currentTimestamp()
+      if (action.payload.userLocale !== state.userLocale) {
+        state.userLocale = action.payload.userLocale
+        state.timestamp = currentTimestamp()
+      }
     },
     updateUserSlippageTolerance(state, action) {
       state.userSlippageTolerance = action.payload.userSlippageTolerance

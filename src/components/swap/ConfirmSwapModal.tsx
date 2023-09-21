@@ -12,7 +12,6 @@ import Badge from 'components/Badge'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { RowFixed } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
-import { USDT as USDT_MAINNET } from 'constants/tokens'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
@@ -35,6 +34,7 @@ import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import { ConfirmationModalContent } from '../TransactionConfirmationModal'
+import { RESET_APPROVAL_TOKENS } from './constants'
 import { PendingConfirmModalState, PendingModalContent } from './PendingModalContent'
 import { ErrorModalContent, PendingModalError } from './PendingModalContent/ErrorModalContent'
 import SwapModalFooter from './SwapModalFooter'
@@ -43,7 +43,7 @@ import SwapModalHeader from './SwapModalHeader'
 export enum ConfirmModalState {
   REVIEWING,
   WRAPPING,
-  RESETTING_USDT,
+  RESETTING_TOKEN_ALLOWANCE,
   APPROVING_TOKEN,
   PERMITTING,
   PENDING_CONFIRMATION,
@@ -60,7 +60,7 @@ const StyledL2Logo = styled.img`
 
 function isInApprovalPhase(confirmModalState: ConfirmModalState) {
   return (
-    confirmModalState === ConfirmModalState.RESETTING_USDT ||
+    confirmModalState === ConfirmModalState.RESETTING_TOKEN_ALLOWANCE ||
     confirmModalState === ConfirmModalState.APPROVING_TOKEN ||
     confirmModalState === ConfirmModalState.PERMITTING
   )
@@ -94,15 +94,13 @@ function useConfirmModalState({
     if (trade.fillType === TradeFillType.UniswapX && trade.wrapInfo.needsWrap) {
       steps.push(ConfirmModalState.WRAPPING)
     }
-    // Any existing USDT allowance needs to be reset before we can approve the new amount (mainnet only).
-    // See the `approve` function here: https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7#code
     if (
       allowance.state === AllowanceState.REQUIRED &&
       allowance.needsSetupApproval &&
-      allowance.token.equals(USDT_MAINNET) &&
+      RESET_APPROVAL_TOKENS.some((token) => token.equals(allowance.token)) &&
       allowance.allowedAmount.greaterThan(0)
     ) {
-      steps.push(ConfirmModalState.RESETTING_USDT)
+      steps.push(ConfirmModalState.RESETTING_TOKEN_ALLOWANCE)
     }
     if (allowance.state === AllowanceState.REQUIRED && allowance.needsSetupApproval) {
       steps.push(ConfirmModalState.APPROVING_TOKEN)
@@ -159,8 +157,8 @@ function useConfirmModalState({
             })
             .catch((e) => catchUserReject(e, PendingModalError.WRAP_ERROR))
           break
-        case ConfirmModalState.RESETTING_USDT:
-          setConfirmModalState(ConfirmModalState.RESETTING_USDT)
+        case ConfirmModalState.RESETTING_TOKEN_ALLOWANCE:
+          setConfirmModalState(ConfirmModalState.RESETTING_TOKEN_ALLOWANCE)
           invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
           allowance.revoke().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
           break
