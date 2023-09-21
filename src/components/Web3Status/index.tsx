@@ -159,14 +159,17 @@ function Web3StatusInner() {
       setConnectionMeta(meta)
     }
   }, [ENSName, account, connection.type, displayName])
+  const isDisplayNameLoading = Boolean(
+    account && meta.current?.displayType === ConnectionDisplayType.ENSName && ENSLoading
+  )
 
-  if (!connectionReady || (account && meta.current?.displayType === ConnectionDisplayType.ENSName && ENSLoading)) {
+  if (!connectionReady || isDisplayNameLoading) {
     return (
-      <Web3StatusConnected disabled={true}>
+      <Web3StatusConnected disabled={!isDisplayNameLoading} onClick={handleWalletDropdownClick}>
         <IconWrapper size={24}>
           <LoaderV3 size="24px" />
         </IconWrapper>
-        <AddressAndChevronContainer loading={true}>
+        <AddressAndChevronContainer loading={isDisplayNameLoading}>
           <Text>{meta.current?.display}</Text>
         </AddressAndChevronContainer>
       </Web3StatusConnected>
