@@ -73,7 +73,7 @@ fun SeedPhraseInput(viewModel: SeedPhraseInputViewModel, onHelpTextPress: () -> 
         .focusRequester(focusRequester),
       value = viewModel.input,
       onValueChange = { viewModel.handleInputChange(it) },
-      textStyle = UniswapTheme.typography.bodyLarge.copy(textAlign = TextAlign.Center),
+      textStyle = UniswapTheme.typography.body1.copy(textAlign = TextAlign.Center),
     ) { innerTextField ->
       Box(
         modifier = Modifier
