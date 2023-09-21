@@ -74,7 +74,7 @@ module.exports = {
           'error',
           {
             selector: ':matches(ExportAllDeclaration)',
-            message: 'Barrel exports bloat the bundle size.',
+            message: 'Barrel exports bloat the bundle size by preventing tree-shaking.',
           },
         ],
       },
