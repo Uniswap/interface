@@ -97,7 +97,7 @@ export type PendingConfirmModalState = Extract<
   | ConfirmModalState.PERMITTING
   | ConfirmModalState.PENDING_CONFIRMATION
   | ConfirmModalState.WRAPPING
-  | ConfirmModalState.RESETTING_USDT
+  | ConfirmModalState.RESETTING_TOKEN_ALLOWANCE
 >
 
 interface PendingModalStep {
@@ -207,9 +207,9 @@ function useStepContents(args: ContentArgs): Record<PendingConfirmModalState, Pe
         ),
         bottomLabel: wrapPending ? t`Pending...` : t`Proceed in your wallet`,
       },
-      [ConfirmModalState.RESETTING_USDT]: {
-        title: t`Reset USDT`,
-        subtitle: t`USDT requires resetting approval when spending limits are too low.`,
+      [ConfirmModalState.RESETTING_TOKEN_ALLOWANCE]: {
+        title: t`Reset ${approvalCurrency?.symbol}`,
+        subtitle: t`${approvalCurrency?.symbol} requires resetting approval when spending limits are too low.`,
         bottomLabel: revocationPending ? t`Pending...` : t`Proceed in your wallet`,
       },
       [ConfirmModalState.APPROVING_TOKEN]: {
