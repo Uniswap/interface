@@ -35,6 +35,8 @@ async function connect(connector: Connector, type: ConnectionType) {
   }
 }
 
+class FailedToConnect extends Error {}
+
 connect(gnosisSafeConnection.connector, ConnectionType.GNOSIS_SAFE)
 connect(networkConnection.connector, ConnectionType.NETWORK)
 const selectedWallet = toConnectionType(localStorage.getItem(selectedWalletKey) ?? undefined)
@@ -43,9 +45,14 @@ if (selectedWallet) {
   if (selectedConnection) {
     connectionReady = connect(selectedConnection.connector, selectedWallet)
       .then((connected) => {
-        if (!connected) {
-          // only clear the persisted wallet type if it failed to connect.
-          localStorage.removeItem(selectedWalletKey)
+        if (!connected) throw new FailedToConnect()
+      })
+      .catch((error) => {
+        // Clear the persisted wallet type if it failed to connect.
+        localStorage.removeItem(selectedWalletKey)
+        // Log it if it threw an unknown error.
+        if (!(error instanceof FailedToConnect)) {
+          console.error(error)
         }
       })
       .finally(() => {

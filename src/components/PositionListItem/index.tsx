@@ -15,7 +15,7 @@ import { Link } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components'
 import { HideSmall, MEDIA_WIDTHS, SmallOnly, ThemedText } from 'theme'
-import { formatTickPrice } from 'utils/formatTickPrice'
+import { useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
@@ -172,6 +172,8 @@ export default function PositionListItem({
   tickLower,
   tickUpper,
 }: PositionListItemProps) {
+  const { formatTickPrice } = useFormatter()
+
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
 
