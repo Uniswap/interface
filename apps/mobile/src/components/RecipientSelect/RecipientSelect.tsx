@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AnimatedFlex } from 'src/components/layout'
+import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { filterRecipientByNameAndAddress } from 'src/components/RecipientSelect/filter'
 import { useRecipients } from 'src/components/RecipientSelect/hooks'
 import { RecipientList } from 'src/components/RecipientSelect/RecipientList'
@@ -36,6 +37,8 @@ export function _RecipientSelect({
   recipient,
 }: RecipientSelectProps): JSX.Element {
   const { t } = useTranslation()
+  const { isSheetReady } = useBottomSheetContext()
+
   const [showQRScanner, setShowQRScanner] = useState(false)
   const { sections, searchableRecipientOptions, pattern, onChangePattern, loading } =
     useRecipients()
@@ -86,10 +89,12 @@ export function _RecipientSelect({
           </Flex>
         ) : (
           // Show either suggested recipients or filtered sections based on query
-          <RecipientList
-            sections={filteredSections.length === 0 ? sections : filteredSections}
-            onPress={onSelectRecipient}
-          />
+          isSheetReady && (
+            <RecipientList
+              sections={filteredSections.length === 0 ? sections : filteredSections}
+              onPress={onSelectRecipient}
+            />
+          )
         )}
       </AnimatedFlex>
       {showQRScanner && (
