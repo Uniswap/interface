@@ -14,7 +14,7 @@ export enum TradeState {
 
 export enum QuoteMethod {
   ROUTING_API = 'ROUTING_API',
-  QUICK_ROUTES = 'QUICK_ROUTES',
+  QUICK_ROUTE = 'QUICK_ROUTE',
   CLIENT_SIDE = 'CLIENT_SIDE',
   CLIENT_SIDE_FALLBACK = 'CLIENT_SIDE_FALLBACK', // If client-side was used after the routing-api call failed.
 }
@@ -337,7 +337,7 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
 
 export class PreviewTrade {
   public readonly fillType = TradeFillType.None
-  public readonly quoteMethod = QuoteMethod.QUICK_ROUTES
+  public readonly quoteMethod = QuoteMethod.QUICK_ROUTE
   public readonly tradeType: TradeType
   public readonly inputAmount: CurrencyAmount<Currency>
   public readonly outputAmount: CurrencyAmount<Currency>
@@ -364,6 +364,17 @@ export class PreviewTrade {
     this.outputTax = outputTax
   }
 
+  public get totalTaxRate(): Percent {
+    return this.inputTax.add(this.outputTax)
+  }
+
+  public get postTaxOutputAmount() {
+    // Ideally we should calculate the final output amount by ammending the inputAmount based on the input tax and then applying the output tax,
+    // but this isn't currently possible because V2Trade reconstructs the total inputAmount based on the swap routes
+    // TODO(WEB-2761): Amend V2Trade objects in the v2-sdk to have a separate field for post-input tax routes
+    return this.outputAmount.multiply(new Fraction(ONE).subtract(this.totalTaxRate))
+  }
+
   // copied from router-sdk Trade
   public minimumAmountOut(slippageTolerance: Percent, amountOut = this.outputAmount): CurrencyAmount<Currency> {
     if (this.tradeType === TradeType.EXACT_OUTPUT) {
@@ -387,8 +398,8 @@ export class PreviewTrade {
     }
   }
 
+  // copied from router-sdk Trade
   private _executionPrice: Price<Currency, Currency> | undefined
-
   /**
    * The price expressed in terms of output amount/input amount.
    */
@@ -404,6 +415,7 @@ export class PreviewTrade {
     )
   }
 
+  // copied from router-sdk Trade
   public worstExecutionPrice(slippageTolerance: Percent): Price<Currency, Currency> {
     return new Price(
       this.inputAmount.currency,
@@ -411,17 +423,6 @@ export class PreviewTrade {
       this.maximumAmountIn(slippageTolerance).quotient,
       this.minimumAmountOut(slippageTolerance).quotient
     )
-  }
-
-  public get totalTaxRate(): Percent {
-    return this.inputTax.add(this.outputTax)
-  }
-
-  public get postTaxOutputAmount() {
-    // Ideally we should calculate the final output amount by ammending the inputAmount based on the input tax and then applying the output tax,
-    // but this isn't currently possible because V2Trade reconstructs the total inputAmount based on the swap routes
-    // TODO(WEB-2761): Amend V2Trade objects in the v2-sdk to have a separate field for post-input tax routes
-    return this.outputAmount.multiply(new Fraction(ONE).subtract(this.totalTaxRate))
   }
 }
 

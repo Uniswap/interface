@@ -117,7 +117,7 @@ const OutputSwapSection = styled(SwapSection)`
   border-bottom: ${({ theme }) => `1px solid ${theme.surface1}`};
 `
 
-function getIsProgressableQuote(
+function getIsReviewableQuote(
   trade: InterfaceTrade | undefined,
   tradeState: TradeState,
   swapInputError?: ReactNode
@@ -725,7 +725,7 @@ export function Swap({
             <TraceEvent
               events={[BrowserEvent.onClick]}
               name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
-              properties={{ received_swap_quote: getIsProgressableQuote(trade, tradeState, swapInputError) }}
+              properties={{ received_swap_quote: getIsReviewableQuote(trade, tradeState, swapInputError) }}
               element={InterfaceElementName.CONNECT_WALLET_BUTTON}
             >
               <ButtonLight onClick={toggleWalletDrawer} fontWeight={535} $borderRadius="16px">
@@ -784,7 +784,7 @@ export function Swap({
                 }}
                 id="swap-button"
                 data-testid="swap-button"
-                disabled={!getIsProgressableQuote(trade, tradeState, swapInputError)}
+                disabled={!getIsReviewableQuote(trade, tradeState, swapInputError)}
                 error={!swapInputError && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
               >
                 <Text fontSize={20}>

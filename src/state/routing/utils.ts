@@ -195,7 +195,7 @@ export function transformQuickRouteToTrade(args: GetQuickQuoteArgs, data: QuickR
   const { amount, tradeType, inputTax, outputTax } = args
   const [currencyIn, currencyOut] = getTradeCurrencies(args, false)
   const [rawAmountIn, rawAmountOut] =
-    data.tradeType === 'EXACT_IN' ? [args.amount, data.quote.amount] : [data.quote.amount, amount]
+    data.tradeType === 'EXACT_IN' ? [amount, data.quote.amount] : [data.quote.amount, amount]
   const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn)
   const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut)
 
