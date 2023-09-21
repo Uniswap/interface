@@ -96,6 +96,12 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{
   }
 `
 
+const Web3StatusConnecting = styled(Web3StatusConnected)`
+  &:disabled {
+    opacity: 1;
+  }
+`
+
 const AddressAndChevronContainer = styled.div<{ loading?: boolean }>`
   display: flex;
   opacity: ${({ loading, theme }) => loading && theme.opacity.disabled};
@@ -159,20 +165,21 @@ function Web3StatusInner() {
       setConnectionMeta(meta)
     }
   }, [ENSName, account, connection.type, displayName])
+
   const isDisplayNameLoading = Boolean(
     account && meta.current?.displayType === ConnectionDisplayType.ENSName && ENSLoading
   )
 
   if (!connectionReady || isDisplayNameLoading) {
     return (
-      <Web3StatusConnected disabled={!isDisplayNameLoading} onClick={handleWalletDropdownClick}>
+      <Web3StatusConnecting disabled={!isDisplayNameLoading} onClick={handleWalletDropdownClick}>
         <IconWrapper size={24}>
           <LoaderV3 size="24px" />
         </IconWrapper>
-        <AddressAndChevronContainer loading={isDisplayNameLoading}>
+        <AddressAndChevronContainer loading={true}>
           <Text>{meta.current?.display}</Text>
         </AddressAndChevronContainer>
-      </Web3StatusConnected>
+      </Web3StatusConnecting>
     )
   } else {
     // Update meta once a connection (or lack thereof) has loaded.
