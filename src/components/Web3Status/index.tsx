@@ -171,7 +171,12 @@ function Web3StatusInner() {
         </AddressAndChevronContainer>
       </Web3StatusConnected>
     )
-  } else if (account) {
+  } else {
+    // Update meta once a connection (or lack thereof) has loaded.
+    meta.current = getConnectionMeta()
+  }
+
+  if (account) {
     return (
       <TraceEvent
         events={[BrowserEvent.onClick]}
