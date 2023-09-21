@@ -7,10 +7,10 @@ import { TokenPriceQuery } from 'graphql/data/TokenPrice'
 import { useImageColor } from 'hooks/useImageColor'
 import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
+import { useFormatter } from 'utils/formatNumbers'
 
 import { usePriceHistory } from '../TokenDetails/ChartSection'
-import { useFormatter } from 'utils/formatNumbers'
-import { DeltaArrow, DeltaText, calculateDelta, formatDelta } from '../TokenDetails/Delta'
+import { calculateDelta, DeltaArrow, DeltaText, formatDelta } from '../TokenDetails/Delta'
 
 const Container = styled.div<{ logo?: string; color: string }>`
   width: 434px;
@@ -74,8 +74,8 @@ export function TokenBanner({
         </BannerText>
       </Row>
       <Row justify="center">
-        <StyledPrice>{formatFiatPrice({price: endingPrice.value})}</StyledPrice>
-        <DeltaArrow delta={delta}/>
+        <StyledPrice>{formatFiatPrice({ price: endingPrice.value })}</StyledPrice>
+        <DeltaArrow delta={delta} />
         <DeltaText delta={delta}>{formattedDelta}</DeltaText>
       </Row>
     </Container>

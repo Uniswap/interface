@@ -1,11 +1,5 @@
 import { Trans } from '@lingui/macro'
-import {
-  BrowserEvent,
-  InterfaceElementName,
-  InterfaceEventName,
-  SharedEventName,
-  SwapEventName,
-} from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName } from '@uniswap/analytics-events'
 import { ChainId, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent, useTrace } from 'analytics'
@@ -21,11 +15,9 @@ import { QueryToken } from 'graphql/data/Token'
 import { useAllTokensMultichain } from 'hooks/Tokens'
 import { useImageColor } from 'hooks/useImageColor'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
-import usePrevious from 'hooks/usePrevious'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useUSDPrice } from 'hooks/useUSDPrice'
-import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { getIsValidSwapQuote, largerPercentValue } from 'pages/Swap'
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { Copy, Globe, Twitter, X } from 'react-feather'
@@ -42,15 +34,13 @@ import { ClickableStyle, CopyHelper, CopyHelperRefType } from 'theme'
 import { ThemedText } from 'theme'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
+import { useFormatter } from 'utils/formatNumbers'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 import { LoadingBubble } from '../loading'
-import { usePriceHistory } from '../TokenDetails/ChartSection'
-import { BottomSection } from './BottomSection'
 import { ProtectedBadge } from './ProtectedBadge'
 import { TokenBanner } from './TokenBanner'
-import { useFormatter } from 'utils/formatNumbers'
 
 const OneClickBuyContainer = styled.div`
   width: 100%;
@@ -465,7 +455,6 @@ export function OneClickBuy({
             )}
           </ButtonContainer>
         )}
-        <BottomSection token={token} swapStatus={swapStatus} />
       </AutoColumn>
     </OneClickBuyContainer>
   )

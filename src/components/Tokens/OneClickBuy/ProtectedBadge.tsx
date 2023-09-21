@@ -1,8 +1,8 @@
 import Badge, { BadgeVariant } from 'components/Badge'
-import { opacify } from 'theme/utils'
 import { Check, Shield } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
+import { opacify } from 'theme/utils'
 
 const StyledBadge = styled(Badge)`
   color: ${({ theme }) => theme.success};
