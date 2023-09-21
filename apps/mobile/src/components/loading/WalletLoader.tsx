@@ -23,8 +23,8 @@ export function WalletLoader({ opacity }: Props): JSX.Element {
       <Flex row alignItems="center" gap="$spacing12" height={ADDRESS_WRAPPER_HEIGHT}>
         <Flex bg="$surface3" borderRadius="$roundedFull" height={32} width={32} />
         <Flex alignItems="flex-start" width="100%">
-          <Text loading loadingPlaceholderText="Wallet Nickname" variant="bodyLarge" />
-          <Text loading loadingPlaceholderText="0xaaaa...aaaa" variant="subheadSmall" />
+          <Text loading loadingPlaceholderText="Wallet Nickname" variant="body1" />
+          <Text loading loadingPlaceholderText="0xaaaa...aaaa" variant="subheading2" />
         </Flex>
       </Flex>
     </Flex>

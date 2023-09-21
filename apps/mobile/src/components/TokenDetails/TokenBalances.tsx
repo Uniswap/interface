@@ -64,7 +64,7 @@ export function TokenBalances({
       )}
       {hasOtherChainBalances && otherChainBalances ? (
         <Flex>
-          <Text color="$neutral2" variant="subheadSmall">
+          <Text color="$neutral2" variant="subheading2">
             {t('Balances on other networks')}
           </Text>
           <Flex gap="$spacing12">
@@ -101,13 +101,13 @@ export function CurrentChainBalance({
   return (
     <Flex row>
       <Flex fill gap="$spacing4">
-        <Text color="$neutral2" variant="subheadSmall">
+        <Text color="$neutral2" variant="subheading2">
           {isReadonly ? t('{{owner}}’s balance', { owner: displayName }) : t('Your balance')}
         </Text>
-        <Text variant="subheadLarge">
+        <Text variant="subheading1">
           {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
         </Text>
-        <Text color="$neutral2" variant="bodySmall">
+        <Text color="$neutral2" variant="body2">
           {formatNumber(balance.quantity, NumberType.TokenNonTx)}{' '}
           {getSymbolDisplayText(balance.currencyInfo.currency.symbol)}
         </Text>
@@ -138,17 +138,17 @@ function OtherChainBalance({
               url={balance.currencyInfo.logoUrl ?? undefined}
             />
             <Flex alignItems="flex-start">
-              <Text px="$spacing4" variant="bodyLarge">
+              <Text px="$spacing4" variant="body1">
                 {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
               </Text>
               <InlineNetworkPill
                 chainId={balance.currencyInfo.currency.chainId}
                 showBackgroundColor={false}
-                textVariant="buttonLabelMicro"
+                textVariant="buttonLabel4"
               />
             </Flex>
           </Flex>
-          <Text color="$neutral2" variant="bodyLarge">
+          <Text color="$neutral2" variant="body1">
             {formatNumber(balance.quantity, NumberType.TokenNonTx)}{' '}
             {getSymbolDisplayText(balance.currencyInfo.currency.symbol)}
           </Text>

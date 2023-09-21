@@ -59,12 +59,12 @@ export function AccountItem({
           )}
         </Flex>
         <Flex>
-          <Text color="$neutral1" variant="bodyLarge">
+          <Text color="$neutral1" variant="body1">
             {displayName}
           </Text>
           <Flex row>
             <Flex fill row space alignItems="center">
-              <Text color="$neutral2" variant="bodySmall">
+              <Text color="$neutral2" variant="body2">
                 {sanitizeAddressText(shortenAddress(address))}
               </Text>
               <Flex onPress={copyAddress}>
@@ -76,7 +76,7 @@ export function AccountItem({
                 />
               </Flex>
             </Flex>
-            <Text color="$neutral2" variant="bodySmall">
+            <Text color="$neutral2" variant="body2">
               ${loading || error ? '' : portfolioBalanceUSD?.toFixed(2)}
             </Text>
           </Flex>

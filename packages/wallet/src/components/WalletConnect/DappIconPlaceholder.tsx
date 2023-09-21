@@ -20,7 +20,7 @@ export function DappIconPlaceholder({
       <Text
         color="$neutral2"
         textAlign="center"
-        variant={iconSize >= iconSizes.icon40 ? 'subheadLarge' : 'bodySmall'}>
+        variant={iconSize >= iconSizes.icon40 ? 'subheading1' : 'body2'}>
         {name.length > 0 ? name.charAt(0) : ' '}
       </Text>
     </Flex>

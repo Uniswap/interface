@@ -181,7 +181,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
             borderBottomColor="$surface3"
             borderBottomWidth={1}
             p="$spacing16">
-            <Text variant="bodyLarge">{t('Create a new wallet')}</Text>
+            <Text variant="body1">{t('Create a new wallet')}</Text>
           </Flex>
         ),
       },
@@ -190,7 +190,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         onPress: onPressAddViewOnlyWallet,
         render: () => (
           <Flex alignItems="center" p="$spacing16">
-            <Text variant="bodyLarge">{t('Add a view-only wallet')}</Text>
+            <Text variant="body1">{t('Add a view-only wallet')}</Text>
           </Flex>
         ),
       },
@@ -199,7 +199,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         onPress: onPressImportWallet,
         render: () => (
           <Flex alignItems="center" borderTopColor="$surface3" borderTopWidth={1} p="$spacing16">
-            <Text variant="bodyLarge">{t('Import a new wallet')}</Text>
+            <Text variant="body1">{t('Import a new wallet')}</Text>
           </Flex>
         ),
       },
@@ -211,7 +211,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         onPress: onPressRestore,
         render: () => (
           <Flex alignItems="center" borderTopColor="$surface3" borderTopWidth={1} p="$spacing16">
-            <Text variant="bodyLarge">
+            <Text variant="body1">
               {IS_ANDROID ? t('Restore from Google Drive') : t('Restore from iCloud')}
             </Text>
           </Flex>
@@ -269,7 +269,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
               width={iconSizes.icon12}
             />
           </Flex>
-          <Text color="$neutral2" variant="buttonLabelSmall">
+          <Text color="$neutral2" variant="buttonLabel3">
             {t('Add wallet')}
           </Text>
         </Flex>

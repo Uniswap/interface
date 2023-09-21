@@ -61,10 +61,10 @@ export function SlippageInfoModal({
             width={iconSizes.icon28}
           />
         </Flex>
-        <Text textAlign="center" variant="bodyLarge">
+        <Text textAlign="center" variant="body1">
           {t('Maximum slippage')}
         </Text>
-        <Text color="$neutral2" textAlign="center" variant="bodySmall">
+        <Text color="$neutral2" textAlign="center" variant="body2">
           {tradeType === TradeType.EXACT_INPUT
             ? t(
                 'If the price slips any further, your transaction will revert. Below is the minimum amount you are guaranteed to receive.'
@@ -73,39 +73,36 @@ export function SlippageInfoModal({
                 'If the price slips any further, your transaction will revert. Below is the maximum amount you would need to spend.'
               )}{' '}
           <TouchableArea onPress={onPressLearnMore}>
-            <Text
-              color="$accent1"
-              lineHeight={fonts.bodySmall.fontSize - 1}
-              variant="buttonLabelSmall">
+            <Text color="$accent1" lineHeight={fonts.body2.fontSize - 1} variant="buttonLabel3">
               {t('Learn more')}
             </Text>
           </TouchableArea>
         </Text>
         <Flex fill bg="$surface2" borderRadius="$rounded20" p="$spacing12" width="100%">
           <Flex fill row justifyContent="space-between">
-            <Text color="$neutral2" variant="bodySmall">
+            <Text color="$neutral2" variant="body2">
               {t('Max slippage')}
             </Text>
             <Flex row gap="$spacing8">
               {!isCustomSlippage ? (
                 <Flex centered bg="$accent2" borderRadius="$roundedFull" px="$spacing8">
-                  <Text color="$accent1" variant="buttonLabelMicro">
+                  <Text color="$accent1" variant="buttonLabel4">
                     {t('Auto')}
                   </Text>
                 </Flex>
               ) : null}
               <Text
                 color={showSlippageWarning ? '$DEP_accentWarning' : '$neutral1'}
-                variant="subheadSmall">
+                variant="subheading2">
                 {formatPercent(slippageTolerance)}
               </Text>
             </Flex>
           </Flex>
           <Flex fill row justifyContent="space-between">
-            <Text color="$neutral2" variant="bodySmall">
+            <Text color="$neutral2" variant="body2">
               {tradeType === TradeType.EXACT_INPUT ? t('Receive at least') : t('Spend at most')}
             </Text>
-            <Text color="$neutral1" textAlign="center" variant="subheadSmall">
+            <Text color="$neutral1" textAlign="center" variant="subheading2">
               {amount + ' ' + getSymbolDisplayText(symbol)}
             </Text>
           </Flex>
@@ -117,7 +114,7 @@ export function SlippageInfoModal({
               height={iconSizes.icon16}
               width={iconSizes.icon16}
             />
-            <Text color="$DEP_accentWarning" variant="bodySmall">
+            <Text color="$DEP_accentWarning" variant="body2">
               {t('Slippage may be higher than necessary')}
             </Text>
           </Flex>

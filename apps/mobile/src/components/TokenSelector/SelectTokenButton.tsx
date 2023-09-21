@@ -28,7 +28,7 @@ export function SelectTokenButton({
       {selectedCurrencyInfo ? (
         <Flex centered row gap="$spacing4" p="$spacing4">
           <CurrencyLogo currencyInfo={selectedCurrencyInfo} size={iconSizes.icon28} />
-          <Text color="$neutral1" pl="$spacing4" variant="buttonLabelLarge">
+          <Text color="$neutral1" pl="$spacing4" variant="buttonLabel1">
             {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
           </Text>
           <Icons.RotatableChevron color="$neutral3" direction="e" />
@@ -36,7 +36,7 @@ export function SelectTokenButton({
       ) : (
         <Flex centered row py="$spacing4">
           <Flex centered row gap="$spacing4" pl="$spacing12" pr="$spacing8" py="$spacing2">
-            <Text color="$sporeWhite" variant="buttonLabelLarge">
+            <Text color="$sporeWhite" variant="buttonLabel1">
               {t('Choose a token')}
             </Text>
             <Icons.RotatableChevron color="$sporeWhite" direction="e" />

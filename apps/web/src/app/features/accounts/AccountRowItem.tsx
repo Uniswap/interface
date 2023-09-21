@@ -30,7 +30,7 @@ export function AccountRowItem({ address, onPress }: AccountRowItemProps): JSX.E
       onPress={onPress}>
       <Flex row alignItems="center" gap="$spacing12">
         {icon}
-        <Text variant="bodyLarge">{name}</Text>
+        <Text variant="body1">{name}</Text>
       </Flex>
       <Text color="$neutral3" variant="monospace">
         {shortenAddress(address)}

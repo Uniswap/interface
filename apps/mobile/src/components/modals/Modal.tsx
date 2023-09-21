@@ -54,7 +54,7 @@ Props): JSX.Element {
           style={width === '100%' ? style.modalBoxFullWidth : style.modalBox}
           width={width}>
           {title && (
-            <Text mb="$spacing12" px="$spacing16" variant="headlineSmall">
+            <Text mb="$spacing12" px="$spacing16" variant="heading3">
               {title}
             </Text>
           )}

@@ -27,7 +27,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
           <Flex grow width={iconSizes.icon40}>
             {backButton ?? <BackButton />}
           </Flex>
-          <Text color="$neutral1" numberOfLines={1} variant="bodyLarge">
+          <Text color="$neutral1" numberOfLines={1} variant="body1">
             {t('Manage connections')}
           </Text>
           <TouchableArea
@@ -40,7 +40,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
               color={isEditing ? '$accent1' : '$neutral2'}
               numberOfLines={1}
               textAlign="right"
-              variant="subheadSmall">
+              variant="subheading2">
               {isEditing ? t('Done') : t('Edit')}
             </Text>
           </TouchableArea>
@@ -63,10 +63,10 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
           />
         ) : (
           <Flex fill alignItems="center" gap="$spacing8" px="$spacing24" style={emptyCardStyle}>
-            <Text color="$neutral1" variant="subheadLarge">
+            <Text color="$neutral1" variant="subheading1">
               {t('No apps connected')}
             </Text>
-            <Text color="$neutral2" textAlign="center" variant="bodySmall">
+            <Text color="$neutral2" textAlign="center" variant="body2">
               {t('Connect to an app by scanning a code via WalletConnect')}
             </Text>
           </Flex>

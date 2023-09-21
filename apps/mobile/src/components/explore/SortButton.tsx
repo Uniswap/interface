@@ -82,7 +82,7 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
         py="$spacing8">
         <Flex row gap="$spacing4">
           {orderBy === TokenSortableField.Volume || orderBy === TokenSortableField.TotalValueLocked}
-          <Text color="$neutral2" variant="buttonLabelSmall">
+          <Text color="$neutral2" variant="buttonLabel3">
             {getTokensOrderBySelectedLabel(orderBy, t)}
           </Text>
           <Icons.RotatableChevron

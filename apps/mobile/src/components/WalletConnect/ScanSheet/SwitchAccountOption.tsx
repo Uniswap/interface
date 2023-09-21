@@ -27,10 +27,10 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props): JSX.Elem
             color="$neutral1"
             numberOfLines={1}
             testID={`address-display/name/${displayName?.name}`}
-            variant="bodyLarge">
+            variant="body1">
             {displayName?.name}
           </Text>
-          <Text color="$neutral2" variant="subheadSmall">
+          <Text color="$neutral2" variant="subheading2">
             {shortenAddress(account.address)}
           </Text>
         </Flex>

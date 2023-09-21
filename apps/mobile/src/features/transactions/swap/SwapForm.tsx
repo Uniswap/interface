@@ -342,7 +342,7 @@ function _SwapForm({
                         height={iconSizes.icon20}
                         width={iconSizes.icon20}
                       />
-                      <Text color="$DEP_accentWarning" variant="subheadSmall">
+                      <Text color="$DEP_accentWarning" variant="subheading2">
                         {t('Restore your wallet to swap')}
                       </Text>
                     </Flex>
@@ -369,13 +369,13 @@ function _SwapForm({
                       width={iconSizes.icon16}
                     />
                     <Flex row>
-                      <Text color={swapWarningColor.text} variant="subheadSmall">
+                      <Text color={swapWarningColor.text} variant="subheading2">
                         {trade.trade && isPriceImpactWarning(swapWarning)
                           ? getRateToDisplay(trade.trade, showInverseRate)
                           : swapWarning.title}
                       </Text>
                       {isPriceImpactWarning(swapWarning) && (
-                        <Text color="$neutral2" variant="bodySmall">
+                        <Text color="$neutral2" variant="body2">
                           {rateUnitPrice &&
                             ` (${formatPrice(rateUnitPrice, NumberType.FiatTokenPrice)})`}
                         </Text>
@@ -425,14 +425,14 @@ function _SwapForm({
                     <Flex row>
                       <Text
                         color={swapDataRefreshing ? '$neutral3' : '$neutral2'}
-                        variant="subheadSmall">
+                        variant="subheading2">
                         {trade.trade
                           ? getRateToDisplay(trade.trade, showInverseRate)
                           : t('Fetching price...')}
                       </Text>
                       <Text
                         color={swapDataRefreshing ? '$neutral3' : '$neutral2'}
-                        variant="subheadSmall">
+                        variant="subheading2">
                         {rateUnitPrice &&
                           ` (${formatPrice(rateUnitPrice, NumberType.FiatTokenPrice)})`}
                       </Text>

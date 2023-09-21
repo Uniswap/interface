@@ -24,7 +24,7 @@ export function NFTTransfer({
           width={iconSizes.icon28}>
           <NFTViewer uri={asset?.collection?.image?.url} />
         </Flex>
-        <Text variant="buttonLabelLarge">{asset?.name}</Text>
+        <Text variant="buttonLabel1">{asset?.name}</Text>
       </Flex>
     </Flex>
   )

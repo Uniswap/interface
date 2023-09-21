@@ -32,13 +32,13 @@ export function SafeKeyboardOnboardingScreen({
   const keyboard = useKeyboardLayout()
 
   const titleSize = useResponsiveProp({
-    xs: 'bodyLarge',
-    sm: 'headlineSmall',
+    xs: 'body1',
+    sm: 'heading3',
   })
 
   const subtitleSize = useResponsiveProp({
-    xs: 'bodyMicro',
-    sm: 'bodySmall',
+    xs: 'body3',
+    sm: 'body2',
   })
 
   const header = (

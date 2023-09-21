@@ -30,9 +30,9 @@ export function SwitchNetworksModal(): JSX.Element {
       gap="$spacing8"
       width={260}>
       <Flex borderBottomColor="$surface3" borderBottomWidth={1} gap="$spacing4" p="$spacing8">
-        {dappName ? <Text variant="subheadLarge">{dappName}</Text> : null}
+        {dappName ? <Text variant="subheading1">{dappName}</Text> : null}
         {dappUrl ? (
-          <Text color="$blue400" variant="bodyMicro">
+          <Text color="$blue400" variant="body3">
             {dappUrl}
           </Text>
         ) : null}
@@ -53,7 +53,7 @@ export function SwitchNetworksModal(): JSX.Element {
                   source={CHAIN_INFO[chain].logo ?? { uri: '' }}
                   width={iconSizes.icon28}
                 />
-                <Text color="$neutral1" variant="subheadSmall">
+                <Text color="$neutral1" variant="subheading2">
                   {CHAIN_INFO[chain]?.label}
                 </Text>
               </Flex>
@@ -77,7 +77,7 @@ export function SwitchNetworksModal(): JSX.Element {
           <Flex centered row gap="$spacing8">
             <Icons.Power color="$neutral1" size={getTokenValue('$icon.16')} />
             {/* TODO(EXT-207 / EXT-208): fix button component styling and derive text color from theme */}{' '}
-            <Text color="$neutral1" variant="subheadSmall">
+            <Text color="$neutral1" variant="subheading2">
               Disconnect
             </Text>
           </Flex>

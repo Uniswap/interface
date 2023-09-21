@@ -80,11 +80,11 @@ export default function WarningModal({
             />
           )}
         </Flex>
-        <Text textAlign="center" variant="bodyLarge">
+        <Text textAlign="center" variant="body1">
           {title}
         </Text>
         {caption && (
-          <Text color="$neutral2" textAlign="center" variant="bodySmall">
+          <Text color="$neutral2" textAlign="center" variant="body2">
             {caption}
           </Text>
         )}

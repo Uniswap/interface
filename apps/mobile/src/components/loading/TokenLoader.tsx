@@ -28,14 +28,14 @@ export function TokenLoader({ opacity }: TokenLoaderProps): JSX.Element {
             loading="no-shimmer"
             loadingPlaceholderText="Token Full Name"
             numberOfLines={1}
-            variant="bodyLarge"
+            variant="body1"
           />
           <Flex row alignItems="center" gap="$spacing8" minHeight={20}>
             <Text
               loading="no-shimmer"
               loadingPlaceholderText="1,000 TFN"
               numberOfLines={1}
-              variant="subheadSmall"
+              variant="subheading2"
             />
           </Flex>
         </Flex>

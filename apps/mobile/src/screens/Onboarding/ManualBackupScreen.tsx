@@ -181,16 +181,16 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
             width={iconSizes.icon24}
           />
         </Flex>
-        <Text color="$neutral1" variant="bodyLarge">
+        <Text color="$neutral1" variant="body1">
           {t('Do this step in a private place')}
         </Text>
-        <Text color="$neutral2" textAlign="center" variant="bodySmall">
+        <Text color="$neutral2" textAlign="center" variant="body2">
           {t(
             'Your recovery phrase is what grants you (and anyone who has it) access to your funds. Be sure to store it in a memorable, safe space.'
           )}
         </Text>
         <TouchableOpacity onPress={onPress}>
-          <Text color="$accent1" pt="$spacing24" variant="buttonLabelMedium">
+          <Text color="$accent1" pt="$spacing24" variant="buttonLabel2">
             {t('I’m ready')}
           </Text>
         </TouchableOpacity>

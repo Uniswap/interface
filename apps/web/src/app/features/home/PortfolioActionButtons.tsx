@@ -53,7 +53,7 @@ function ActionButton({ label, Icon, onClick, url }: ActionButtonProps): JSX.Ele
       p="$spacing12"
       onPress={actionHandler}>
       {cloneElement(Icon, { color: ICON_COLOR, size: ICON_SIZE })}
-      <Text color="$accent1" fontWeight="600" variant="bodyLarge">
+      <Text color="$accent1" fontWeight="600" variant="body1">
         {label}
       </Text>
     </Flex>

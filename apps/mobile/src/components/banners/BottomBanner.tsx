@@ -54,7 +54,7 @@ export function BottomBanner({
       style={animatedStyle}
       zIndex="modal">
       {icon}
-      <Text variant="bodySmall">{text}</Text>
+      <Text variant="body2">{text}</Text>
     </AnimatedFlex>
   )
 }

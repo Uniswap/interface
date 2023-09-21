@@ -12,10 +12,10 @@ export function PriceText({ loading }: { loading: boolean }): JSX.Element {
   const price = useLineChartPrice()
 
   if (loading) {
-    return <AnimatedText loading loadingPlaceholderText="$10,000" variant="headlineLarge" />
+    return <AnimatedText loading loadingPlaceholderText="$10,000" variant="heading1" />
   }
 
-  return <AnimatedDecimalNumber number={price} testID="price-text" variant="headlineLarge" />
+  return <AnimatedDecimalNumber number={price} testID="price-text" variant="heading1" />
 }
 
 export function RelativeChangeText({
@@ -40,7 +40,7 @@ export function RelativeChangeText({
   if (loading) {
     return (
       <Flex mt={IS_ANDROID ? '$none' : '$spacing2'}>
-        <AnimatedText loading loadingPlaceholderText="00.00%" variant="bodyLarge" />
+        <AnimatedText loading loadingPlaceholderText="00.00%" variant="body1" />
       </Flex>
     )
   }
@@ -66,7 +66,7 @@ export function RelativeChangeText({
         style={styles}
         testID="relative-change-text"
         text={relativeChange.formatted}
-        variant="bodyLarge"
+        variant="body1"
       />
     </Flex>
   )
@@ -78,5 +78,5 @@ export function DatetimeText({ loading }: { loading: boolean }): JSX.Element | n
 
   if (loading) return null
 
-  return <AnimatedText color="neutral2" text={datetime.formatted} variant="bodyLarge" />
+  return <AnimatedText color="neutral2" text={datetime.formatted} variant="body1" />
 }

@@ -20,11 +20,11 @@ function SignatureEducationBox(): JSX.Element {
           height={iconSizes.icon20}
           width={iconSizes.icon20}
         />
-        <Text style={{ color: EDUCATION_BLUE }} variant="bodySmall">
+        <Text style={{ color: EDUCATION_BLUE }} variant="body2">
           {t('What‘s a signature request?')}
         </Text>
       </Flex>
-      <Text color="$neutral2" variant="bodySmall">
+      <Text color="$neutral2" variant="body2">
         {t(
           'A signature is required to prove that you own the wallet without exposing your private keys'
         )}
@@ -52,7 +52,7 @@ export const SignMessageDetails = ({ request }: { request: DappRequestStoreItem 
           overflow="scroll"
           px="$spacing16"
           py="$spacing12">
-          <Text color="$neutral2" variant="bodySmall">
+          <Text color="$neutral2" variant="body2">
             {signMessageRequest.messageHex}
           </Text>
         </Flex>

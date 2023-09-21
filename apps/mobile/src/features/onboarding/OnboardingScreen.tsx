@@ -30,17 +30,17 @@ export function OnboardingScreen({
 
   const subtitleMaxFontScaleMultiplier = useResponsiveProp({
     xs: 1.1,
-    sm: fonts.bodySmall.maxFontSizeMultiplier,
+    sm: fonts.body2.maxFontSizeMultiplier,
   })
 
   const titleSize = useResponsiveProp({
-    xs: 'subheadLarge',
-    sm: 'headlineSmall',
+    xs: 'subheading1',
+    sm: 'heading3',
   })
 
   const subtitleSize = useResponsiveProp({
-    xs: 'bodyMicro',
-    sm: 'bodySmall',
+    xs: 'body3',
+    sm: 'body2',
   })
 
   const gapSize = useResponsiveProp({

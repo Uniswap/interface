@@ -57,7 +57,7 @@ export function SettingsWalletEdit({
   return (
     <Screen>
       <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
-        <Text variant="bodyLarge">{t('Nickname')}</Text>
+        <Text variant="body1">{t('Nickname')}</Text>
       </BackHeader>
       <Flex gap="$spacing36" px="$spacing24" py="$spacing24">
         <Flex>
@@ -67,8 +67,8 @@ export function SettingsWalletEdit({
                 autoFocus
                 autoCapitalize="none"
                 color={nickname === activeAccount?.name ? 'neutral3' : 'neutral1'}
-                fontFamily={fonts.headlineMedium.family}
-                fontSize={fonts.headlineMedium.fontSize}
+                fontFamily={fonts.heading2.family}
+                fontSize={fonts.heading2.fontSize}
                 margin="none"
                 maxLength={NICKNAME_MAX_LENGTH}
                 numberOfLines={1}
@@ -85,7 +85,7 @@ export function SettingsWalletEdit({
             ) : (
               <Flex row alignItems="center" gap="$spacing16">
                 <Flex shrink>
-                  <Text color="$neutral1" variant="headlineMedium">
+                  <Text color="$neutral1" variant="heading2">
                     {nickname || shortenAddress(address)}
                   </Text>
                 </Flex>

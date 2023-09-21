@@ -20,7 +20,7 @@ export function PasswordError({ errorText, style }: PasswordErrorProps): JSX.Ele
         width={ERROR_ICON_HEIGHT}
       />
       <Flex>
-        <Text color="$statusCritical" variant="bodySmall">
+        <Text color="$statusCritical" variant="body2">
           {errorText}
         </Text>
       </Flex>

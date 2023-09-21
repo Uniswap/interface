@@ -92,7 +92,7 @@ export function CloudBackupProcessingAnimation({
   return processing ? (
     <Flex centered grow gap="$spacing24">
       <ActivityIndicator size="large" />
-      <Text variant="headlineSmall">
+      <Text variant="heading3">
         {IS_ANDROID ? t('Backing up to Google Drive...') : t('Backing up to iCloud...')}
       </Text>
     </Flex>
@@ -105,7 +105,7 @@ export function CloudBackupProcessingAnimation({
         color={colors.statusSuccess.val}
         size={iconSizes.icon40}
       />
-      <Text variant="headlineSmall">
+      <Text variant="heading3">
         {IS_ANDROID ? t('Backed up to Google Drive') : t('Backed up to iCloud')}
       </Text>
     </Flex>

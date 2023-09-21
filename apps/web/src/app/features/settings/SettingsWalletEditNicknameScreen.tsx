@@ -61,11 +61,11 @@ function EditNicknameScreenContent({ address }: { address: Address }): JSX.Eleme
               right={0}
               textAlign="center"
               top={0}
-              variant="subheadLarge">
+              variant="subheading1">
               {nickname}
             </Text>
           ) : null}
-          <Text color="$neutral3" textAlign="center" variant="bodySmall">
+          <Text color="$neutral3" textAlign="center" variant="body2">
             {t('This nickname is only visible to you.')}
           </Text>
         </Flex>

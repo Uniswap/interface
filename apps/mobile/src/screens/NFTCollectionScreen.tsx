@@ -233,9 +233,7 @@ export function NFTCollectionScreen({
           <ScrollHeader
             fullScreen
             centerElement={
-              collectionData?.name ? (
-                <Text variant="bodyLarge">{collectionData.name}</Text>
-              ) : undefined
+              collectionData?.name ? <Text variant="body1">{collectionData.name}</Text> : undefined
             }
             listRef={listRef}
             rightElement={

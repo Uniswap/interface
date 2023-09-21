@@ -28,7 +28,7 @@ export function TooltipInfoButton({ size, content, ...rest }: InfoButtonProps): 
           backgroundColor={colors.surface2.val}
           name={ModalName.TooltipContent}
           onClose={(): void => setShowModal(false)}>
-          <Text p="$spacing16" variant="bodyLarge">
+          <Text p="$spacing16" variant="body1">
             {content}
           </Text>
         </BottomSheetDetachedModal>

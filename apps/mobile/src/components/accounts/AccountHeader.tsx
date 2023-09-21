@@ -71,7 +71,7 @@ export function AccountHeader(): JSX.Element {
                 address={activeAddress}
                 horizontalGap="$spacing8"
                 size={iconSizes.icon28}
-                variant="subheadLarge"
+                variant="subheading1"
               />
             </Flex>
             <Icons.RotatableChevron

@@ -28,7 +28,7 @@ export function NetworkFee({
     <Flex row alignItems="center" justifyContent="space-between">
       <TouchableArea onPress={onShowNetworkFeeInfo}>
         <Flex centered row gap="$spacing4">
-          <Text variant="bodySmall">{t('Network fee')}</Text>
+          <Text variant="body2">{t('Network fee')}</Text>
           <InfoCircleIcon
             color={colors.neutral1.val}
             height={iconSizes.icon20}
@@ -38,17 +38,17 @@ export function NetworkFee({
       </TouchableArea>
       <Flex row alignItems="center" gap="$spacing8">
         <InlineNetworkPill chainId={chainId} />
-        <Text variant="bodySmall">•</Text>
+        <Text variant="body2">•</Text>
         {gasFee.loading ? (
           <SpinningLoader size={iconSizes.icon20} />
         ) : (
           <Flex row alignItems="center" justifyContent="space-between">
             {gasFee.error ? (
-              <Text color="$neutral2" variant="bodySmall">
+              <Text color="$neutral2" variant="body2">
                 {t('N/A')}
               </Text>
             ) : (
-              <Text color="$neutral1" variant="bodySmall">
+              <Text color="$neutral1" variant="body2">
                 {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
               </Text>
             )}

@@ -43,11 +43,11 @@ function getButtonBorderColor(emphasis: ButtonEmphasis): keyof Theme['colors'] {
 function getButtonTextSizeVariant(size: ButtonSize): keyof Theme['textVariants'] {
   switch (size) {
     case ButtonSize.Large:
-      return 'buttonLabelLarge'
+      return 'buttonLabel1'
     case ButtonSize.Medium:
-      return 'buttonLabelMedium'
+      return 'buttonLabel2'
     case ButtonSize.Small:
-      return 'buttonLabelSmall'
+      return 'buttonLabel3'
   }
 }
 

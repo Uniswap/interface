@@ -86,7 +86,7 @@ export default function FavoriteWalletCard({
                 color="$neutral1"
                 numberOfLines={1}
                 style={flex.shrink}
-                variant="bodyLarge">
+                variant="body1">
                 {displayName?.name}
               </Text>
             </Flex>

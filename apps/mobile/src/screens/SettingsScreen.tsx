@@ -181,7 +181,7 @@ export function SettingsScreen(): JSX.Element {
   return (
     <HeaderScrollScreen
       alwaysShowCenterElement
-      centerElement={<Text variant="bodyLarge">{t('Settings')}</Text>}>
+      centerElement={<Text variant="body1">{t('Settings')}</Text>}>
       <Flex px="$spacing24" py="$spacing12">
         <SectionList
           ItemSeparatorComponent={renderItemSeparator}
@@ -193,7 +193,7 @@ export function SettingsScreen(): JSX.Element {
           renderSectionFooter={(): JSX.Element => <Flex pt="$spacing24" />}
           renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
             <Flex bg="$surface1" pb="$spacing12">
-              <Text color="$neutral2" variant="bodyLarge">
+              <Text color="$neutral2" variant="body1">
                 {subTitle}
               </Text>
             </Flex>
@@ -225,7 +225,7 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
           <Flex centered height={32} width={32}>
             <UniswapIcon {...iconProps} />
           </Flex>
-          <Text ml="$spacing12" variant="bodyLarge">
+          <Text ml="$spacing12" variant="body1">
             {t('Onboarding')}
           </Text>
         </Flex>
@@ -274,12 +274,12 @@ function WalletSettings(): JSX.Element {
   return (
     <Flex mb="$spacing16">
       <Flex row justifyContent="space-between">
-        <Text color="$neutral2" variant="bodyLarge">
+        <Text color="$neutral2" variant="body1">
           {t('Wallet settings')}
         </Text>
         {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
           <TouchableArea onPress={toggleViewAll}>
-            <Text color="$neutral2" mb="$spacing12" variant="subheadSmall">
+            <Text color="$neutral2" mb="$spacing12" variant="subheading2">
               {showAll ? t('View less') : t('View all')}
             </Text>
           </TouchableArea>
@@ -297,9 +297,9 @@ function WalletSettings(): JSX.Element {
               <Flex shrink>
                 <AddressDisplay
                   address={account.address}
-                  captionVariant="subheadSmall"
+                  captionVariant="subheading2"
                   size={iconSizes.icon40}
-                  variant="bodyLarge"
+                  variant="body1"
                 />
               </Flex>
               <Icons.RotatableChevron
@@ -340,10 +340,10 @@ function FooterSettings(): JSX.Element {
           gap="none"
           mt="spacing16">
           <Flex gap="$spacing4">
-            <Text color="$neutral3" textAlign="center" variant="bodySmall">
+            <Text color="$neutral3" textAlign="center" variant="body2">
               {t('Made with love, ')}
             </Text>
-            <Text color="$neutral3" textAlign="center" variant="bodySmall">
+            <Text color="$neutral3" textAlign="center" variant="body2">
               {t('Uniswap Team 🦄')}
             </Text>
           </Flex>
@@ -358,7 +358,7 @@ function FooterSettings(): JSX.Element {
         color="$neutral3"
         mt="$spacing8"
         pb="$spacing24"
-        variant="bodySmall"
+        variant="body2"
         onLongPress={(): void => {
           setShowSignature(true)
         }}>

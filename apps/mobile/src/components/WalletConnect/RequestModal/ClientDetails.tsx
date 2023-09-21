@@ -43,7 +43,7 @@ export function ClientDetails({
           px="$spacing8"
           py="$spacing4"
           size={iconSizes.icon12}
-          textVariant="buttonLabelMicro"
+          textVariant="buttonLabel4"
           url={dapp.url}
         />
       </Flex>

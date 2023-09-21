@@ -65,20 +65,20 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                   <Flex centered row gap="$spacing12">
                     <Unicon address={mnemonicId} size={32} />
                     <Flex>
-                      <Text numberOfLines={1} variant="subheadSmall">
+                      <Text numberOfLines={1} variant="subheading2">
                         {t('Backup {{backupIndex}}', { backupIndex: sortedBackups.length - index })}
                       </Text>
-                      <Text color="$neutral2" variant="buttonLabelMicro">
+                      <Text color="$neutral2" variant="buttonLabel4">
                         {shortenAddress(mnemonicId)}
                       </Text>
                     </Flex>
                   </Flex>
                   <Flex row gap="$spacing12">
                     <Flex alignItems="flex-end" gap="$spacing4">
-                      <Text color="$neutral2" variant="buttonLabelMicro">
+                      <Text color="$neutral2" variant="buttonLabel4">
                         {t('Backed up on:')}
                       </Text>
-                      <Text variant="buttonLabelMicro">
+                      <Text variant="buttonLabel4">
                         {dayjs.unix(createdAt).format('MMM D, YYYY, h:mma')}
                       </Text>
                     </Flex>

@@ -38,8 +38,8 @@ export function LinkButton({
   const colors = useSporeColors()
 
   const fontSize = useResponsiveProp({
-    xs: 'buttonLabelMicro',
-    sm: 'buttonLabelSmall',
+    xs: 'buttonLabel4',
+    sm: 'buttonLabel3',
   })
 
   const copyValue = async (): Promise<void> => {

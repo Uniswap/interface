@@ -28,8 +28,8 @@ export function OptionCard({
   hapticFeedback?: boolean | undefined
 }): JSX.Element {
   const titleSize = useResponsiveProp({
-    xs: 'subheadSmall',
-    sm: 'bodyLarge',
+    xs: 'subheading2',
+    sm: 'body1',
   })
 
   const iconSize = useResponsiveProp({
@@ -75,13 +75,13 @@ export function OptionCard({
                     backgroundColor="$DEP_magentaDark"
                     borderRadius="$rounded8"
                     px="$spacing8">
-                    <Text color="$accent1" variant="buttonLabelMicro">
+                    <Text color="$accent1" variant="buttonLabel4">
                       {badgeText}
                     </Text>
                   </Flex>
                 )}
               </Flex>
-              <Text allowFontScaling={false} color="$neutral2" variant="bodySmall">
+              <Text allowFontScaling={false} color="$neutral2" variant="body2">
                 {blurb}
               </Text>
             </Flex>

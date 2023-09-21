@@ -183,7 +183,7 @@ export function RestoreCloudBackupPasswordScreen({
       <Flex>
         {isRestoringMnemonic && (
           <TouchableArea onPress={navigateToEnterRecoveryPhrase}>
-            <Text color="$accent1" mb="$spacing12" textAlign="center" variant="buttonLabelSmall">
+            <Text color="$accent1" mb="$spacing12" textAlign="center" variant="buttonLabel3">
               {t('Enter your recovery phrase instead')}
             </Text>
           </TouchableArea>

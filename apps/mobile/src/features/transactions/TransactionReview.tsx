@@ -76,29 +76,29 @@ export function TransactionReview({
   const innerGap = useResponsiveProp({ xs: '$none', sm: '$spacing12' })
 
   const fontFamily = useResponsiveProp({
-    xs: fonts.headlineSmall.family,
-    sm: fonts.headlineMedium.family,
+    xs: fonts.heading3.family,
+    sm: fonts.heading2.family,
   })
 
   const fontSize = useResponsiveProp({
-    xs: fonts.headlineSmall.fontSize,
-    sm: fonts.headlineMedium.fontSize,
+    xs: fonts.heading3.fontSize,
+    sm: fonts.heading2.fontSize,
   })
 
   const lineHeight =
     useResponsiveProp({
-      xs: fonts.headlineSmall.lineHeight,
-      sm: fonts.headlineMedium.lineHeight - 16,
-    }) ?? fonts.headlineMedium.lineHeight
+      xs: fonts.heading3.lineHeight,
+      sm: fonts.heading2.lineHeight - 16,
+    }) ?? fonts.heading2.lineHeight
 
   const maxFontSizeMultiplier = useResponsiveProp({
-    xs: fonts.headlineSmall.maxFontSizeMultiplier,
-    sm: fonts.headlineMedium.maxFontSizeMultiplier,
+    xs: fonts.heading3.maxFontSizeMultiplier,
+    sm: fonts.heading2.maxFontSizeMultiplier,
   })
 
   const equivalentValueTextVariant = useResponsiveProp({
-    xs: 'bodySmall',
-    sm: 'bodyLarge',
+    xs: 'body2',
+    sm: 'body1',
   })
 
   const arrowPadding = useResponsiveProp({ xs: '$spacing4', sm: '$spacing8' })
@@ -121,7 +121,7 @@ export function TransactionReview({
           <Flex centered gap={innerGap}>
             <Flex centered gap={amountAndEquivalentValueGap}>
               {recipient && (
-                <Text color="$neutral2" variant="bodyLarge">
+                <Text color="$neutral2" variant="body1">
                   {t('Sending')}
                 </Text>
               )}
@@ -199,7 +199,7 @@ export function TransactionReview({
           </Flex>
         ) : recipient ? (
           <Flex centered gap="$spacing12">
-            <Text color="$neutral2" variant="bodyLarge">
+            <Text color="$neutral2" variant="body1">
               {t('To')}
             </Text>
             <Flex centered gap="$spacing8">
@@ -207,7 +207,7 @@ export function TransactionReview({
                 hideAddressInSubtitle
                 address={recipient}
                 size={24}
-                variant="headlineMedium"
+                variant="heading2"
               />
               <RecipientPrevTransfers recipient={recipient} />
             </Flex>
@@ -250,7 +250,7 @@ function CurrencyLogoWithLabel({ currencyInfo }: { currencyInfo: CurrencyInfo })
   return (
     <Flex centered row gap={gap}>
       <CurrencyLogo currencyInfo={currencyInfo} size={size} />
-      <Text color="$neutral1" variant="buttonLabelLarge">
+      <Text color="$neutral1" variant="buttonLabel1">
         {getSymbolDisplayText(currencyInfo.currency.symbol)}
       </Text>
     </Flex>

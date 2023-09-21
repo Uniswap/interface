@@ -35,14 +35,14 @@ export function HomeScreen(): JSX.Element {
                   <Tabs.Tab unstyled height="auto" p="$none" value={HomeTabs.Tokens}>
                     <Text
                       color={selectedTab === HomeTabs.Tokens ? '$neutral1' : '$neutral2'}
-                      variant="subheadLarge">
+                      variant="subheading1">
                       Tokens
                     </Text>
                   </Tabs.Tab>
                   <Tabs.Tab unstyled height="auto" p="$none" value={HomeTabs.Activity}>
                     <Text
                       color={selectedTab === HomeTabs.Activity ? '$neutral1' : '$neutral2'}
-                      variant="subheadLarge">
+                      variant="subheading1">
                       Activity
                     </Text>
                   </Tabs.Tab>
@@ -59,7 +59,7 @@ export function HomeScreen(): JSX.Element {
           </Flex>
         </Flex>
       ) : (
-        <Text color="$statusCritical" variant="subheadLarge">
+        <Text color="$statusCritical" variant="subheading1">
           Error loading accounts
         </Text>
       )}

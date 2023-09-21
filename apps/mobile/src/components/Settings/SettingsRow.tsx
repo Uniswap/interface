@@ -67,11 +67,11 @@ export function SettingsRow({
             {icon}
           </Flex>
           <Flex fill grow alignItems="stretch">
-            <Text numberOfLines={1} variant="bodyLarge">
+            <Text numberOfLines={1} variant="body1">
               {text}
             </Text>
             {subText && (
-              <Text color="$neutral2" numberOfLines={1} variant="buttonLabelMicro">
+              <Text color="$neutral2" numberOfLines={1} variant="buttonLabel4">
                 {subText}
               </Text>
             )}
@@ -86,7 +86,7 @@ export function SettingsRow({
                   color="$neutral2"
                   mr="$spacing8"
                   numberOfLines={1}
-                  variant="bodyMicro">
+                  variant="body3">
                   {currentSetting}
                 </Text>
               </Flex>

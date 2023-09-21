@@ -322,7 +322,7 @@ export function TransferTokenForm({
                       height={iconSizes.icon20}
                       width={iconSizes.icon20}
                     />
-                    <Text color="$DEP_accentWarning" variant="subheadSmall">
+                    <Text color="$DEP_accentWarning" variant="subheading2">
                       {t('Restore your wallet to send')}
                     </Text>
                   </Flex>
@@ -348,7 +348,7 @@ export function TransferTokenForm({
                     strokeWidth={1.5}
                     width={iconSizes.icon16}
                   />
-                  <Text color={transferWarningColor.text} variant="subheadSmall">
+                  <Text color={transferWarningColor.text} variant="subheading2">
                     {transferWarning.title}
                   </Text>
                 </Flex>

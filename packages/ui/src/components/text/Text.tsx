@@ -20,88 +20,88 @@ export const TextFrame = styled(TamaguiText, {
     // https://tamagui.dev/docs/core/configuration#font-tokens
     // https://tamagui.dev/docs/core/font-language
     variant: {
-      headlineLarge: {
+      heading1: {
         fontFamily: '$heading',
-        fontSize: fonts.headlineLarge.fontSize,
-        lineHeight: fonts.headlineLarge.lineHeight,
-        fontWeight: fonts.headlineLarge.fontWeight,
+        fontSize: fonts.heading1.fontSize,
+        lineHeight: fonts.heading1.lineHeight,
+        fontWeight: fonts.heading1.fontWeight,
       },
-      headlineMedium: {
+      heading2: {
         fontFamily: '$heading',
-        fontSize: fonts.headlineMedium.fontSize,
-        lineHeight: fonts.headlineMedium.lineHeight,
-        fontWeight: fonts.headlineMedium.fontWeight,
+        fontSize: fonts.heading2.fontSize,
+        lineHeight: fonts.heading2.lineHeight,
+        fontWeight: fonts.heading2.fontWeight,
       },
-      headlineSmall: {
+      heading3: {
         fontFamily: '$heading',
-        fontSize: fonts.headlineSmall.fontSize,
-        lineHeight: fonts.headlineSmall.lineHeight,
-        fontWeight: fonts.headlineSmall.fontWeight,
+        fontSize: fonts.heading3.fontSize,
+        lineHeight: fonts.heading3.lineHeight,
+        fontWeight: fonts.heading3.fontWeight,
       },
-      subheadLarge: {
+      subheading1: {
         fontFamily: '$subHeading',
-        fontSize: fonts.subheadLarge.fontSize,
-        lineHeight: fonts.subheadLarge.lineHeight,
-        fontWeight: fonts.subheadLarge.fontWeight,
+        fontSize: fonts.subheading1.fontSize,
+        lineHeight: fonts.subheading1.lineHeight,
+        fontWeight: fonts.subheading1.fontWeight,
       },
-      subheadSmall: {
+      subheading2: {
         fontFamily: '$subHeading',
-        fontSize: fonts.subheadSmall.fontSize,
-        lineHeight: fonts.subheadSmall.lineHeight,
-        fontWeight: fonts.subheadSmall.fontWeight,
+        fontSize: fonts.subheading2.fontSize,
+        lineHeight: fonts.subheading2.lineHeight,
+        fontWeight: fonts.subheading2.fontWeight,
       },
-      bodyLarge: {
+      body1: {
         fontFamily: '$body',
-        fontSize: fonts.bodyLarge.fontSize,
-        lineHeight: fonts.bodyLarge.lineHeight,
-        fontWeight: fonts.bodyLarge.fontWeight,
+        fontSize: fonts.body1.fontSize,
+        lineHeight: fonts.body1.lineHeight,
+        fontWeight: fonts.body1.fontWeight,
       },
-      bodySmall: {
+      body2: {
         fontFamily: '$body',
-        fontSize: fonts.bodySmall.fontSize,
-        lineHeight: fonts.bodySmall.lineHeight,
-        fontWeight: fonts.bodySmall.fontWeight,
+        fontSize: fonts.body2.fontSize,
+        lineHeight: fonts.body2.lineHeight,
+        fontWeight: fonts.body2.fontWeight,
       },
-      bodyMicro: {
+      body3: {
         fontFamily: '$body',
-        fontSize: fonts.bodyMicro.fontSize,
-        lineHeight: fonts.bodyMicro.lineHeight,
-        fontWeight: fonts.bodyMicro.fontWeight,
+        fontSize: fonts.body3.fontSize,
+        lineHeight: fonts.body3.lineHeight,
+        fontWeight: fonts.body3.fontWeight,
       },
-      buttonLabelLarge: {
+      buttonLabel1: {
         fontFamily: '$body',
-        fontSize: fonts.buttonLabelLarge.fontSize,
-        lineHeight: fonts.buttonLabelLarge.lineHeight,
-        fontWeight: fonts.buttonLabelLarge.fontWeight,
+        fontSize: fonts.buttonLabel1.fontSize,
+        lineHeight: fonts.buttonLabel1.lineHeight,
+        fontWeight: fonts.buttonLabel1.fontWeight,
       },
-      buttonLabelMedium: {
+      buttonLabel2: {
         fontFamily: '$body',
-        fontSize: fonts.buttonLabelMedium.fontSize,
-        lineHeight: fonts.buttonLabelMedium.lineHeight,
-        fontWeight: fonts.buttonLabelMedium.fontWeight,
+        fontSize: fonts.buttonLabel2.fontSize,
+        lineHeight: fonts.buttonLabel2.lineHeight,
+        fontWeight: fonts.buttonLabel2.fontWeight,
       },
-      buttonLabelSmall: {
+      buttonLabel3: {
         fontFamily: '$body',
-        fontSize: fonts.buttonLabelSmall.fontSize,
-        lineHeight: fonts.buttonLabelSmall.lineHeight,
-        fontWeight: fonts.buttonLabelSmall.fontWeight,
+        fontSize: fonts.buttonLabel3.fontSize,
+        lineHeight: fonts.buttonLabel3.lineHeight,
+        fontWeight: fonts.buttonLabel3.fontWeight,
       },
-      buttonLabelMicro: {
+      buttonLabel4: {
         fontFamily: '$body',
-        fontSize: fonts.buttonLabelMicro.fontSize,
-        lineHeight: fonts.buttonLabelMicro.lineHeight,
-        fontWeight: fonts.buttonLabelMicro.fontWeight,
+        fontSize: fonts.buttonLabel4.fontSize,
+        lineHeight: fonts.buttonLabel4.lineHeight,
+        fontWeight: fonts.buttonLabel4.fontWeight,
       },
       monospace: {
         fontFamily: '$body',
-        fontSize: fonts.bodySmall.fontSize,
-        lineHeight: fonts.bodySmall.lineHeight,
+        fontSize: fonts.body2.fontSize,
+        lineHeight: fonts.body2.lineHeight,
       },
     },
   } as const,
 
   defaultVariants: {
-    variant: 'bodySmall',
+    variant: 'body2',
   },
 })
 

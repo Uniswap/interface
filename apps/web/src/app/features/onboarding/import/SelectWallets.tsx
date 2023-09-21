@@ -204,7 +204,7 @@ export function SelectWallets(): JSX.Element {
             <Icons.LoadingSpinnerInner color="$accent1" size={80} />
           </Flex>
         </Flex>
-        <Text color="$neutral2" textAlign="center" variant="headlineSmall">
+        <Text color="$neutral2" textAlign="center" variant="heading3">
           Finding your wallets...
         </Text>
       </Flex>
@@ -229,7 +229,7 @@ export function SelectWallets(): JSX.Element {
       <ScrollView maxHeight="55vh" showsVerticalScrollIndicator={false} width="100%">
         {showError ? (
           <Flex gap="$spacing24" p="$spacing12" width="100%">
-            <Text color="$statusCritical" textAlign="center" variant="buttonLabelMedium">
+            <Text color="$statusCritical" textAlign="center" variant="buttonLabel2">
               {t('Couldn’t load addresses')}
             </Text>
             <Flex row justifyContent="center">

@@ -55,7 +55,7 @@ function FeeOnTransferInfoRow({
       justifyContent="space-between"
       onPress={onShowInfo}>
       <Flex row alignItems="center" gap="$spacing1">
-        <Text flex={0} variant="bodySmall">
+        <Text flex={0} variant="body2">
           {t('{{ token }} fee', { token: feeInfo.tokenSymbol })}
         </Text>
         <Box ml="$spacing4">
@@ -67,7 +67,7 @@ function FeeOnTransferInfoRow({
         </Box>
       </Flex>
       <Flex row alignItems="center" gap="$spacing8">
-        <Text flex={0} variant="bodySmall">
+        <Text flex={0} variant="body2">
           {formatPercent(feeInfo.fee.toFixed(6))}
         </Text>
       </Flex>

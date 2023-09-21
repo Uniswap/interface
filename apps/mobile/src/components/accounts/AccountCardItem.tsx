@@ -37,7 +37,7 @@ function PortfolioValue({
       color="$neutral2"
       loading={isLoading}
       loadingPlaceholderText="$000.00"
-      variant="subheadSmall">
+      variant="subheading2">
       {formatUSDPrice(portfolioValue, NumberType.PortfolioBalance)}
     </Text>
   )
@@ -119,7 +119,7 @@ export function AccountCardItem({
           <Flex fill>
             <AddressDisplay
               address={address}
-              captionVariant="bodyMicro"
+              captionVariant="body3"
               gapBetweenLines="$spacing2"
               showViewOnlyBadge={isViewOnly}
               size={iconSizes.icon36}

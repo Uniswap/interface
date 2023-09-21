@@ -63,7 +63,7 @@ function HeaderPriceLabel({ price }: { price: Price }): JSX.Element {
   const { t } = useTranslation()
 
   return (
-    <Text color="$neutral1" variant="bodyLarge">
+    <Text color="$neutral1" variant="body1">
       {formatUSDPrice(price?.value) ?? t('Unknown token')}
     </Text>
   )
@@ -94,7 +94,7 @@ function HeaderTitleElement({
           symbol={token?.symbol ?? undefined}
           url={tokenProject?.logoUrl ?? undefined}
         />
-        <Text color="$neutral2" numberOfLines={1} variant="buttonLabelMicro">
+        <Text color="$neutral2" numberOfLines={1} variant="buttonLabel4">
           {token?.symbol ?? t('Unknown token')}
         </Text>
       </Flex>

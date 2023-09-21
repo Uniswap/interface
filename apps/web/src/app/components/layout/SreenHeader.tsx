@@ -21,7 +21,7 @@ export function ScreenHeader({
 
       {/* When there's no right column, we adjust the margin to match the icon width. This is so that the title is centered on the screen. */}
       <Flex centered fill mr={rightColumn ? '$none' : iconSizes.icon24} py="$spacing8">
-        <Text variant="bodyLarge">{title}</Text>
+        <Text variant="body1">{title}</Text>
       </Flex>
 
       {rightColumn && <Flex>{rightColumn}</Flex>}

@@ -60,7 +60,7 @@ export function CollectionPreviewCard({
               {/* Width chosen to ensure truncation of collection name on both small
                 and large screens with sufficient padding */}
               <Flex shrink>
-                <Text color="$neutral1" numberOfLines={1} variant="bodyLarge">
+                <Text color="$neutral1" numberOfLines={1} variant="body1">
                   {collection?.name || fallbackData?.name || '-'}
                 </Text>
               </Flex>
@@ -74,7 +74,7 @@ export function CollectionPreviewCard({
             </Flex>
             {collection?.markets?.[0]?.floorPrice && (
               <Flex row gap="$spacing4">
-                <Text color="$neutral2" numberOfLines={1} variant="subheadSmall">
+                <Text color="$neutral2" numberOfLines={1} variant="subheading2">
                   {t('Floor')}:
                 </Text>
                 <PriceAmount
@@ -85,7 +85,7 @@ export function CollectionPreviewCard({
                     currency: Currency.Eth,
                   }}
                   textColor="$neutral2"
-                  textVariant="subheadSmall"
+                  textVariant="subheading2"
                 />
               </Flex>
             )}

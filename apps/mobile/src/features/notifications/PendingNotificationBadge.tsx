@@ -77,7 +77,7 @@ export function PendingNotificationBadge({
           position="absolute"
           width={size}
           zIndex="$modal">
-          <Text color="$neutral2" fontSize={8} textAlign="center" variant="buttonLabelMicro">
+          <Text color="$neutral2" fontSize={8} textAlign="center" variant="buttonLabel4">
             {countToDisplay}
           </Text>
         </Flex>

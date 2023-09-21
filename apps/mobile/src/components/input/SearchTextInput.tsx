@@ -182,9 +182,9 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             backgroundColor="none"
             borderWidth={0}
             flex={1}
-            fontFamily={fonts.bodyLarge.family}
-            fontSize={fonts.bodyLarge.fontSize}
-            maxFontSizeMultiplier={fonts.bodyLarge.maxFontSizeMultiplier}
+            fontFamily={fonts.body1.family}
+            fontSize={fonts.body1.fontSize}
+            maxFontSizeMultiplier={fonts.body1.maxFontSizeMultiplier}
             placeholder={placeholder}
             placeholderTextColor={colors.neutral2.val}
             px="none"
@@ -210,7 +210,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             style={[cancelButtonStyle, CancelButtonDefaultStyle]}
             onLayout={onCancelLayout}>
             <TouchableArea onPress={onPressCancel}>
-              <Text variant="buttonLabelMedium">{t('Cancel')}</Text>
+              <Text variant="buttonLabel2">{t('Cancel')}</Text>
             </TouchableArea>
           </AnimatedBox>
         )}

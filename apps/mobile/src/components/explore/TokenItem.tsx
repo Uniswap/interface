@@ -105,7 +105,7 @@ export const TokenItem = memo(function _TokenItem({
           <Flex centered row gap="$spacing4" overflow="hidden">
             {index !== undefined && (
               <Flex minWidth={16}>
-                <Text color="$neutral2" variant="buttonLabelMicro">
+                <Text color="$neutral2" variant="buttonLabel4">
                   {index + 1}
                 </Text>
               </Flex>
@@ -113,19 +113,19 @@ export const TokenItem = memo(function _TokenItem({
             <TokenLogo symbol={symbol} url={logoUrl} />
           </Flex>
           <Flex shrink gap="$spacing2">
-            <Text numberOfLines={1} variant="bodyLarge">
+            <Text numberOfLines={1} variant="body1">
               {name}
             </Text>
-            <Text color="$neutral2" numberOfLines={1} variant="subheadSmall">
+            <Text color="$neutral2" numberOfLines={1} variant="subheading2">
               {getMetadataSubtitle()}
             </Text>
           </Flex>
           <Flex grow row alignItems="center" justifyContent="flex-end">
             <TokenMetadata>
-              <Text lineHeight={24} variant="bodyLarge">
+              <Text lineHeight={24} variant="body1">
                 {formatUSDPrice(price)}
               </Text>
-              <RelativeChange change={pricePercentChange24h} variant="bodySmall" />
+              <RelativeChange change={pricePercentChange24h} variant="body2" />
             </TokenMetadata>
           </Flex>
         </AnimatedFlex>

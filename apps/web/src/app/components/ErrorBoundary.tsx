@@ -24,11 +24,11 @@ export function ErrorBoundary({ children }: PropsWithChildren<unknown>): JSX.Ele
       <Flex centered grow gap="$spacing36">
         <DeadLuni />
         <Flex centered gap="$spacing12">
-          <Text variant="subheadLarge">{t('Uh oh!')}</Text>
-          <Text variant="bodySmall">{t('Something crashed.')}</Text>
+          <Text variant="subheading1">{t('Uh oh!')}</Text>
+          <Text variant="body2">{t('Something crashed.')}</Text>
         </Flex>
         {__DEV__ && (
-          <Text variant="bodySmall">
+          <Text variant="body2">
             {error instanceof Error ? error.message : JSON.stringify(error)}
           </Text>
         )}

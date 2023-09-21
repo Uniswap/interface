@@ -209,7 +209,7 @@ export function FiatOnRampModal(): JSX.Element {
               gap="$spacing16"
               style={{ height: maxContentHeight }}
               onLayout={onInputPanelLayout}>
-              <Text variant="subheadLarge">{t('Buy')}</Text>
+              <Text variant="subheading1">{t('Buy')}</Text>
               <AnimatedFlex
                 grow
                 alignItems="center"
@@ -223,9 +223,9 @@ export function FiatOnRampModal(): JSX.Element {
                   backgroundColor="none"
                   borderWidth={0}
                   caretHidden={!showNativeKeyboard}
-                  fontFamily={theme.textVariants.headlineMedium.fontFamily}
+                  fontFamily={theme.textVariants.heading2.fontFamily}
                   fontSize={fontSize}
-                  maxFontSizeMultiplier={theme.textVariants.headlineMedium.maxFontSizeMultiplier}
+                  maxFontSizeMultiplier={theme.textVariants.heading2.maxFontSizeMultiplier}
                   minHeight={MAX_INPUT_FONT_SIZE}
                   mt="spacing48"
                   overflow="visible"
@@ -256,7 +256,7 @@ export function FiatOnRampModal(): JSX.Element {
                   /* We want to reserve the space here, so when error occurs - layout does not jump */
                   height={spacing.spacing24}>
                   {errorText && errorColor && (
-                    <Text color={errorColor} textAlign="center" variant="buttonLabelMicro">
+                    <Text color={errorColor} textAlign="center" variant="buttonLabel4">
                       {errorText}
                     </Text>
                   )}
@@ -393,7 +393,7 @@ function PredefinedAmount({
         foregroundColor={theme.colors[highlighted ? 'accent1' : 'neutral2']}
         label={`$${amount}`}
         px="$spacing16"
-        textVariant="buttonLabelMedium"
+        textVariant="buttonLabel2"
       />
     </TouchableOpacity>
   )
@@ -428,10 +428,10 @@ function SelectTokenButton({
         ) : (
           <CurrencyLogo currencyInfo={selectedCurrencyInfo} size={iconSizes.icon24} />
         )}
-        <Text color={textColor} pl="$spacing4" variant="bodyLarge">
+        <Text color={textColor} pl="$spacing4" variant="body1">
           {amount}
         </Text>
-        <Text color={textColor} pl="$spacing1" variant="bodyLarge">
+        <Text color={textColor} pl="$spacing1" variant="body1">
           {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
         </Text>
         <Icons.RotatableChevron color={textColor} direction="e" height={iconSizes.icon16} />

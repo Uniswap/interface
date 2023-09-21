@@ -93,16 +93,16 @@ export default function TokenWarningModal({
               }}>
               <WarningIcon safetyLevel={safetyLevel} width={iconSizes.icon24} />
             </Flex>
-            <Text variant="buttonLabelMedium">{getTokenSafetyHeaderText(safetyLevel, t)}</Text>
+            <Text variant="buttonLabel2">{getTokenSafetyHeaderText(safetyLevel, t)}</Text>
           </Flex>
         ) : (
           <TokenLogo size={imageSizes.image48} url={tokenLogoUrl} />
         )}
         <Flex centered gap="$spacing4" width="90%">
-          <Text color="$neutral2" textAlign="center" variant="bodySmall">
+          <Text color="$neutral2" textAlign="center" variant="body2">
             {getTokenSafetyBodyText(safetyLevel, t)}{' '}
             <TouchableArea height={18} onPress={onPressLearnMore}>
-              <Text color="$accent1" variant="buttonLabelSmall">
+              <Text color="$accent1" variant="buttonLabel3">
                 {t('Learn more')}
               </Text>
             </TouchableArea>
@@ -122,7 +122,7 @@ export default function TokenWarningModal({
             ellipsizeMode="tail"
             mx="$spacing8"
             numberOfLines={1}
-            variant="buttonLabelMicro">
+            variant="buttonLabel4">
             {explorerLink}
           </Text>
           <ExternalLinkIcon

@@ -30,10 +30,10 @@ export function RemoveLastMnemonicWalletFooter({
           checked={checkBoxAccepted}
           text={
             <Trans t={t}>
-              <Text color="$neutral1" variant="subheadSmall">
+              <Text color="$neutral1" variant="subheading2">
                 I backed up my recovery phrase
               </Text>
-              <Text color="$neutral2" variant="bodyMicro">
+              <Text color="$neutral2" variant="body3">
                 I understand that Uniswap Labs can’t help me recover my wallets if I failed to do so
               </Text>
             </Trans>

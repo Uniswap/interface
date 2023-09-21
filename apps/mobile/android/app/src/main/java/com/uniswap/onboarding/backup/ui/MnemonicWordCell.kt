@@ -30,7 +30,7 @@ fun MnemonicWordCell(
   onClick: (() -> Unit)? = null,
 ) {
   val textStyle =
-    if (showCompact) UniswapTheme.typography.bodySmall else UniswapTheme.typography.bodyLarge
+    if (showCompact) UniswapTheme.typography.body2 else UniswapTheme.typography.body1
 
   val shape = UniswapTheme.shapes.large
   var rowModifier = modifier

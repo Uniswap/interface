@@ -98,10 +98,10 @@ export function DappRequestContent(): JSX.Element {
       <Flex gap="$spacing16" pt="$spacing32">
         <Image height={iconSizes.icon40} source={{ uri: dappIconUrl }} width={iconSizes.icon40} />
         <Flex gap="$spacing8">
-          <Text textAlign="left" variant="headlineSmall">
+          <Text textAlign="left" variant="heading3">
             {title}
           </Text>
-          <Text color="$accent1" textAlign="left" variant="bodySmall">
+          <Text color="$accent1" textAlign="left" variant="body2">
             {dappUrl}
           </Text>
         </Flex>

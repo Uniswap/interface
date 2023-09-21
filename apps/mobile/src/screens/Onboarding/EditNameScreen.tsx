@@ -134,8 +134,8 @@ function CustomizationSection({
   }
 
   const inputSize = useResponsiveProp({
-    xs: fonts.headlineSmall.fontSize,
-    sm: fonts.headlineMedium.fontSize,
+    xs: fonts.heading3.fontSize,
+    sm: fonts.heading2.fontSize,
   })
 
   return (
@@ -152,7 +152,7 @@ function CustomizationSection({
             autoFocus
             backgroundColor="none"
             fontSize={inputSize}
-            maxFontSizeMultiplier={fonts.headlineMedium.maxFontSizeMultiplier}
+            maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
             maxLength={NICKNAME_MAX_LENGTH}
             placeholder="Nickname"
             placeholderTextColor={colors.neutral3.val}
@@ -175,10 +175,10 @@ function CustomizationSection({
           )}
         </Flex>
         <Flex centered gap="$spacing4">
-          <Text color="$neutral3" variant="bodyMicro">
+          <Text color="$neutral3" variant="body3">
             {t('Your public address will be')}
           </Text>
-          <Text color="$neutral3" variant="buttonLabelSmall">
+          <Text color="$neutral3" variant="buttonLabel3">
             {shortenAddress(address)}
           </Text>
         </Flex>

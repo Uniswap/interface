@@ -125,7 +125,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             top={0}
             width="100%"
             onLayout={(event: LayoutChangeEvent): void => setInfoLayout(event.nativeEvent.layout)}>
-            <Text color="$neutral1" variant="subheadLarge">
+            <Text color="$neutral1" variant="subheading1">
               {t('Scan a QR code')}
             </Text>
           </Flex>
@@ -153,7 +153,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                   <SpinningLoader color="neutral1" size={iconSizes.icon40} />
                 </Flex>
                 <Flex style={{ marginTop: LOADER_SIZE + spacing.spacing24 }} />
-                <Text color="$neutral1" textAlign="center" variant="bodyLarge">
+                <Text color="$neutral1" textAlign="center" variant="body1">
                   {isWalletConnectModal ? t('Connecting...') : t('Loading...')}
                 </Text>
               </Flex>
@@ -174,7 +174,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                   m="$spacing12"
                   opacity={0.6}
                   p="$spacing12">
-                  <Text color="$neutral1" textAlign="center" variant="bodyLarge">
+                  <Text color="$neutral1" textAlign="center" variant="body1">
                     This paste button will only show up in development mode
                   </Text>
                   <PasteButton onPress={onScanCode} />

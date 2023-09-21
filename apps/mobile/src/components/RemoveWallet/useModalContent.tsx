@@ -92,14 +92,14 @@ export const useModalContent = ({
         description: IS_ANDROID ? (
           <Trans t={t}>
             Make sure you’ve written down your recovery phrase or backed it up on Google Drive.{' '}
-            <Text color="$neutral2" maxFontSizeMultiplier={1.4} variant="buttonLabelSmall">
+            <Text color="$neutral2" maxFontSizeMultiplier={1.4} variant="buttonLabel3">
               You will not be able to access your funds otherwise.
             </Text>
           </Trans>
         ) : (
           <Trans t={t}>
             Make sure you’ve written down your recovery phrase or backed it up on iCloud.{' '}
-            <Text color="$neutral2" maxFontSizeMultiplier={1.4} variant="buttonLabelSmall">
+            <Text color="$neutral2" maxFontSizeMultiplier={1.4} variant="buttonLabel3">
               You will not be able to access your funds otherwise.
             </Text>
           </Trans>

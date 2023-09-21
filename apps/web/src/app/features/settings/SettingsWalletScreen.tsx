@@ -57,8 +57,8 @@ function WalletScreenContent({ address }: { address: Address }): JSX.Element {
         <Flex>
           <Flex grow row justifyContent="space-between" py="$spacing12">
             <Flex>
-              <Text variant="bodyLarge">{t('Edit nickname')}</Text>
-              <Text variant="bodyMicro">{displayName}</Text>
+              <Text variant="body1">{t('Edit nickname')}</Text>
+              <Text variant="body3">{displayName}</Text>
             </Flex>
             <Button onPress={(): void => navigate(SettingsWalletRoutes.EditNickname.valueOf())}>
               <Icons.Pencil color="$neutral2" height={iconSizes.icon24} width={iconSizes.icon24} />
@@ -66,7 +66,7 @@ function WalletScreenContent({ address }: { address: Address }): JSX.Element {
           </Flex>
           <Flex grow row justifyContent="space-between" py="$spacing12">
             <Flex>
-              <Text variant="bodyLarge">{t('Hide unknown tokens')}</Text>
+              <Text variant="body1">{t('Hide unknown tokens')}</Text>
             </Flex>
             <Switch
               alignItems="center"

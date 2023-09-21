@@ -68,7 +68,7 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
       subtitle="Let's make sure you’ve recorded it down"
       title={
         <Flex px="$spacing36">
-          <Text variant="headlineMedium">
+          <Text variant="heading2">
             What's the <Text color="$accent1">{getNumberWithOrdinal(nextWordNumber)} </Text> word of
             your recovery phrase?
           </Text>
@@ -84,7 +84,7 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
       }
       onSubmit={onNext}>
       <Flex row position="relative" width="100%">
-        <Text color="$neutral3" p="$spacing24" position="absolute" variant="headlineSmall">
+        <Text color="$neutral3" p="$spacing24" position="absolute" variant="heading3">
           {String(nextWordNumber).padStart(2, '0')}
         </Text>
         <Input

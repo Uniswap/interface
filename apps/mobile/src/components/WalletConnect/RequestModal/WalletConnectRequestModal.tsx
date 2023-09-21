@@ -290,7 +290,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                   />
                 ) : (
                   <Flex row alignItems="center" justifyContent="space-between">
-                    <Text color="$neutral1" variant="subheadSmall">
+                    <Text color="$neutral1" variant="subheading2">
                       {t('Network')}
                     </Text>
                     <NetworkPill
@@ -300,7 +300,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                       pl="$spacing4"
                       pr="$spacing8"
                       py="$spacing2"
-                      textVariant="subheadSmall"
+                      textVariant="subheading2"
                     />
                   </Flex>
                 )}
@@ -309,7 +309,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
               <SectionContainer>
                 <AccountDetails address={request.account} />
                 {!hasSufficientFunds && (
-                  <Text color="$DEP_accentWarning" pt="$spacing8" variant="bodySmall">
+                  <Text color="$DEP_accentWarning" pt="$spacing8" variant="body2">
                     {t('You don’t have enough {{symbol}} to complete this transaction.', {
                       symbol: nativeCurrency?.symbol,
                     })}
@@ -393,7 +393,7 @@ function WarningSection({
         height={iconSizes.icon16}
         width={iconSizes.icon16}
       />
-      <Text color="$neutral2" fontStyle="italic" variant="bodyMicro">
+      <Text color="$neutral2" fontStyle="italic" variant="body3">
         {t('Be careful: this {{ requestType }} may transfer assets', {
           requestType: isTransactionRequest(request) ? 'transaction' : 'message',
         })}

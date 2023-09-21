@@ -9,20 +9,20 @@ import Foundation
 import SwiftUI
 
 public extension Text {
-  func withHeadlineLargeStyle() -> some View {
+  func withHeading1Style() -> some View {
     self.font(.custom("Basel-Book", size: 28))
       .foregroundColor(.white)
   }
   
-  func withHeadlineSmallStyle() -> some View {
+  func withHeading2Style() -> some View {
+    self.font(.custom("Basel-Book", size: 20))
+      .foregroundColor(.widgetLightGrey)
+  }
+  
+  func withHeading3Style() -> some View {
     self.font(.custom("Basel", size: 12))
       .fontWeight(.medium)
       .foregroundColor(.widgetGrey)
-  }
-  
-  func withHeadlineMediumStyle() -> some View {
-    self.font(.custom("Basel-Book", size: 20))
-      .foregroundColor(.widgetLightGrey)
   }
 }
 

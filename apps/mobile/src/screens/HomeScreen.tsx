@@ -602,7 +602,7 @@ function ActionButton({
               strokeWidth={2}
               width={iconSizes.icon20 * iconScale}
             />
-            <Text color="$accent1" marginLeft="$spacing8" variant="buttonLabelMedium">
+            <Text color="$accent1" marginLeft="$spacing8" variant="buttonLabel2">
               {label}
             </Text>
           </AnimatedFlex>

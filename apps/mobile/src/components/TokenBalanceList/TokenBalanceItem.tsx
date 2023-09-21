@@ -81,11 +81,11 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
             url={currencyInfo.logoUrl ?? undefined}
           />
           <Flex shrink alignItems="flex-start">
-            <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
+            <Text ellipsizeMode="tail" numberOfLines={1} variant="body1">
               {currency.name ?? shortenedSymbol}
             </Text>
             <Flex row alignItems="center" gap="$spacing8" minHeight={20}>
-              <Text color="$neutral2" numberOfLines={1} variant="subheadSmall">
+              <Text color="$neutral2" numberOfLines={1} variant="subheading2">
                 {`${formatNumber(quantity)}`} {shortenedSymbol}
               </Text>
             </Flex>
@@ -103,7 +103,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
               </Flex>
             ) : (
               <Flex alignItems="flex-end" gap="$spacing4" pl="$spacing8">
-                <Text color="$neutral1" numberOfLines={1} variant="bodyLarge">
+                <Text color="$neutral1" numberOfLines={1} variant="body1">
                   {formatUSDPrice(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)}
                 </Text>
                 <RelativeChange
@@ -111,7 +111,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
                   change={relativeChange24 ?? undefined}
                   negativeChangeColor="$statusCritical"
                   positiveChangeColor="$statusSuccess"
-                  variant="bodySmall"
+                  variant="body2"
                 />
               </Flex>
             )}

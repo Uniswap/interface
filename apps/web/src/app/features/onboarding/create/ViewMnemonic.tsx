@@ -155,11 +155,11 @@ function SeedPhraseWord({
       px="$spacing16"
       py={12}
       width={132}>
-      <Text color="$neutral3" variant="bodySmall">
+      <Text color="$neutral3" variant="body2">
         {/* padStart adds a 0 at the start of 1-character numbers so they'll show up like "01, 02, ... 09, 10" instead of "1, 2, ... 9, 10" in order to match the designs*/}
         {String(index + indexOffset).padStart(2, '0')}
       </Text>
-      <Text variant="bodySmall">{word}</Text>
+      <Text variant="body2">{word}</Text>
     </Flex>
   )
 }

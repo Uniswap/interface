@@ -40,7 +40,7 @@ export function InlineNetworkPill(props: NetworkPillProps): JSX.Element {
       borderRadius="$rounded12"
       px="$spacing4"
       py="$none"
-      textVariant="buttonLabelMicro"
+      textVariant="buttonLabel4"
       {...props}
     />
   )

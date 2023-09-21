@@ -166,7 +166,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
               width="100%"
             />
           </Flex>
-          <Text color="$sporeWhite" variant="buttonLabelMedium">
+          <Text color="$sporeWhite" variant="buttonLabel2">
             {t('Swap')}
           </Text>
         </AnimatedBox>
@@ -243,7 +243,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
               shadowOpacity={isDarkMode ? 0.6 : 0.4}
               shadowRadius={borderRadii.rounded20}>
               <Icons.Search color="$neutral2" size={iconSizes.icon24} />
-              <Text color="$neutral1" variant="bodyLarge">
+              <Text color="$neutral1" variant="body1">
                 {t('Search web3')}
               </Text>
             </Flex>

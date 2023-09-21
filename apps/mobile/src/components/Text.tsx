@@ -67,7 +67,7 @@ export const Text = ({
   ...rest
 }: TextProps): JSX.Element => {
   const { fontScale } = useWindowDimensions()
-  const variant = useResponsiveProp(rest.variant ?? 'bodySmall') as keyof typeof textVariants
+  const variant = useResponsiveProp(rest.variant ?? 'body2') as keyof typeof textVariants
   const enableFontScaling = allowFontScaling ?? fontScale > DEFAULT_FONT_SCALE
   const multiplier = maxFontSizeMultiplier ?? textVariants[variant].maxFontSizeMultiplier
 

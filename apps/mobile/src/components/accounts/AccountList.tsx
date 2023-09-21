@@ -30,7 +30,7 @@ const ViewOnlyHeader = (): JSX.Element => {
   const { t } = useTranslation()
   return (
     <Flex fill px="$spacing24" py="$spacing8">
-      <Text color="$neutral2" variant="subheadSmall">
+      <Text color="$neutral2" variant="subheading2">
         {t('View only wallets')}
       </Text>
     </Flex>
@@ -41,7 +41,7 @@ const SignerHeader = (): JSX.Element => {
   const { t } = useTranslation()
   return (
     <Flex fill px="$spacing24" py="$spacing8">
-      <Text color="$neutral2" variant="subheadSmall">
+      <Text color="$neutral2" variant="subheading2">
         {t('Your other wallets')}
       </Text>
     </Flex>

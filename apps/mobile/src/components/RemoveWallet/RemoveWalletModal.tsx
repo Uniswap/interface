@@ -155,10 +155,10 @@ export function RemoveWalletModal(): JSX.Element | null {
             width={iconSizes.icon24}
           />
         </Flex>
-        <Text textAlign="center" variant="bodyLarge">
+        <Text textAlign="center" variant="body1">
           {title}
         </Text>
-        <Text color="$neutral2" textAlign="center" variant="bodySmall">
+        <Text color="$neutral2" textAlign="center" variant="body2">
           {description}
         </Text>
         {currentStep === RemoveWalletStep.Final && isRemovingRecoveryPhrase ? (

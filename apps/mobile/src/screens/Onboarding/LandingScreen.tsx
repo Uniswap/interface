@@ -73,25 +73,25 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
           </Trace>
           <Trace logPress element={ElementName.ImportAccount}>
             <TouchableArea hapticFeedback alignItems="center" onPress={onPressImportWallet}>
-              <Text color="$accent1" variant="buttonLabelLarge">
+              <Text color="$accent1" variant="buttonLabel1">
                 {t('Add an existing wallet')}
               </Text>
             </TouchableArea>
           </Trace>
           <Flex $short={{ pb: '$none' }} mx="$spacing24" py="$spacing12">
-            <Text color="$neutral2" mx="$spacing4" textAlign="center" variant="buttonLabelMicro">
+            <Text color="$neutral2" mx="$spacing4" textAlign="center" variant="buttonLabel4">
               <Trans t={t}>
                 By continuing, I agree to the{' '}
                 <Text
                   color="$accent1"
-                  variant="buttonLabelMicro"
+                  variant="buttonLabel4"
                   onPress={(): Promise<void> => openUri(uniswapUrls.termsOfServiceUrl)}>
                   Terms of Service
                 </Text>{' '}
                 and consent to the{' '}
                 <Text
                   color="$accent1"
-                  variant="buttonLabelMicro"
+                  variant="buttonLabel4"
                   onPress={(): Promise<void> => openUri(uniswapUrls.privacyPolicyUrl)}>
                   Privacy Policy
                 </Text>

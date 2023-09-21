@@ -19,7 +19,7 @@ export function AmountAndRecipientSummary(): JSX.Element {
             </Flex>
 
             <Flex>
-              <Text color="$neutral2" variant="bodySmall">
+              <Text color="$neutral2" variant="body2">
                 $YY.YY
               </Text>
             </Flex>
@@ -50,7 +50,7 @@ export function AmountAndRecipientSummary(): JSX.Element {
             </Flex>
 
             <Flex>
-              <Text color="$neutral2" variant="bodySmall">
+              <Text color="$neutral2" variant="body2">
                 0x1234...1234
               </Text>
             </Flex>

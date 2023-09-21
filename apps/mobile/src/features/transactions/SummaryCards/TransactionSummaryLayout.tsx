@@ -112,7 +112,7 @@ function TransactionSummaryLayout({
       />
     </Flex>
   ) : (
-    <Text color="$neutral3" variant="bodyMicro">
+    <Text color="$neutral3" variant="body3">
       {formattedAddedTime}
     </Text>
   )
@@ -129,20 +129,20 @@ function TransactionSummaryLayout({
           <Flex grow shrink>
             <Flex grow>
               <Flex grow row alignItems="center" gap="$spacing4" justifyContent="space-between">
-                <Text color="$neutral2" numberOfLines={1} variant="bodyLarge">
+                <Text color="$neutral2" numberOfLines={1} variant="body1">
                   {title}
                 </Text>
                 {!inProgress && rightBlock}
               </Flex>
               <Flex grow row gap="$spacing16">
                 <Flex grow shrink>
-                  <Text color="$neutral1" variant="subheadSmall">
+                  <Text color="$neutral1" variant="subheading2">
                     {caption}
                   </Text>
                 </Flex>
                 {status === TransactionStatus.Failed && onRetry && (
                   <Flex flexShrink={0}>
-                    <Text color="$accent1" variant="buttonLabelSmall" onPress={onRetry}>
+                    <Text color="$accent1" variant="buttonLabel3" onPress={onRetry}>
                       {t('Retry')}
                     </Text>
                   </Flex>

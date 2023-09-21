@@ -16,7 +16,7 @@ export function AddressFooter({ account }: { account: Account }): JSX.Element {
         width="100%">
         <Flex row alignItems="center" gap="$spacing8" maxWidth="100%">
           <Unicon address={account.address} />
-          <Text textOverflow="ellipsis" variant="subheadSmall">
+          <Text textOverflow="ellipsis" variant="subheading2">
             {account.name === undefined ? 'Wallet' : account.name}
           </Text>
         </Flex>
@@ -25,7 +25,7 @@ export function AddressFooter({ account }: { account: Account }): JSX.Element {
           overflow="hidden"
           textAlign="right"
           textOverflow="ellipsis"
-          variant="bodySmall">
+          variant="body2">
           {sanitizeAddressText(shortenAddress(account.address))}
         </Text>
       </Flex>

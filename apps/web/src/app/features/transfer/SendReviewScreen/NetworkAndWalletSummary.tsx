@@ -12,7 +12,7 @@ export function NetworkAndWalletSummary(): JSX.Element {
     <Flex grow gap="$spacing16">
       <Flex grow row justifyContent="space-between">
         <Flex>
-          <Text color="$neutral2" variant="bodySmall">
+          <Text color="$neutral2" variant="body2">
             {t('Network fee')}
           </Text>
         </Flex>
@@ -22,14 +22,14 @@ export function NetworkAndWalletSummary(): JSX.Element {
 
       <Flex grow row justifyContent="space-between">
         <Flex>
-          <Text color="$neutral2" variant="bodySmall">
+          <Text color="$neutral2" variant="body2">
             {t('Wallet')}
           </Text>
         </Flex>
 
         <Flex centered row gap="$spacing8">
           <Unicon address={address} size={iconSizes.icon16} />
-          <Text variant="subheadSmall">{displayName}</Text>
+          <Text variant="subheading2">{displayName}</Text>
         </Flex>
       </Flex>
     </Flex>

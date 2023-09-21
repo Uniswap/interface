@@ -37,7 +37,7 @@ export const PendingConnectionSwitchAccountModal = ({
     <ActionSheetModal
       header={
         <Flex centered gap="$spacing4" py="$spacing16">
-          <Text variant="buttonLabelMedium">{t('Switch Account')}</Text>
+          <Text variant="buttonLabel2">{t('Switch Account')}</Text>
         </Flex>
       }
       isVisible={true}

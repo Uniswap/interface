@@ -28,7 +28,7 @@ export function BottomToast(): JSX.Element | null {
         mb="$spacing24"
         px="$spacing24"
         py="$spacing16">
-        <Text variant="bodyLarge">{toastData.title ?? null}</Text>
+        <Text variant="body1">{toastData.title ?? null}</Text>
       </Flex>
     </Toast>
   )

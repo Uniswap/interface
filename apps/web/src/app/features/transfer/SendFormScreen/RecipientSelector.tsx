@@ -7,7 +7,7 @@ export function RecipientSelector(): JSX.Element {
   return (
     <Flex grow row alignItems="center" gap="$spacing12">
       <Flex>
-        <Text variant="bodySmall">{t('To')}</Text>
+        <Text variant="body2">{t('To')}</Text>
       </Flex>
 
       <Flex fill>Recipient Input</Flex>

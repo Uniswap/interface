@@ -42,33 +42,33 @@ export const SendTransactionDetails = ({
         px="$spacing16"
         py="$spacing12">
         <Flex row justifyContent="space-between">
-          <Text color="$neutral2" variant="bodySmall">
+          <Text color="$neutral2" variant="body2">
             Sending
           </Text>
           <Flex row gap="$spacing4">
-            <Text textAlign="right" variant="subheadSmall">
+            <Text textAlign="right" variant="subheading2">
               {sending}
             </Text>
           </Flex>
         </Flex>
 
         <Flex row justifyContent="space-between">
-          <Text color="$neutral2" variant="bodySmall">
+          <Text color="$neutral2" variant="body2">
             To
           </Text>
           <Flex row gap="$spacing4">
-            <Text textAlign="right" variant="bodySmall">
+            <Text textAlign="right" variant="body2">
               {toAddress?.substring(0, 10)}...
             </Text>
           </Flex>
         </Flex>
         {contractFunction ? (
           <Flex row justifyContent="space-between">
-            <Text color="$neutral2" variant="bodySmall">
+            <Text color="$neutral2" variant="body2">
               Function
             </Text>
             <Flex row gap="$spacing4">
-              <Text textAlign="right" variant="bodySmall">
+              <Text textAlign="right" variant="body2">
                 {contractFunction}
               </Text>
             </Flex>
@@ -84,10 +84,10 @@ export const SendTransactionDetails = ({
           px="$spacing16"
           py="$spacing12"
           width="100%">
-          <Text color="$neutral2" variant="bodySmall">
+          <Text color="$neutral2" variant="body2">
             Network fee
           </Text>
-          <Text color="$neutral2" textAlign="right" variant="bodySmall">
+          <Text color="$neutral2" textAlign="right" variant="body2">
             {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
           </Text>
         </Flex>

@@ -57,12 +57,12 @@ const SitePermissions = (): JSX.Element => {
   const colors = useSporeColors()
   const { t } = useTranslation()
 
-  const normalInfoTextSize = 'bodySmall'
-  const shortInfoTextSize = 'bodyMicro'
+  const normalInfoTextSize = 'body2'
+  const shortInfoTextSize = 'body3'
 
   return (
     <Flex gap="$spacing12" px="$spacing16" py="$spacing8">
-      <Text $short={{ variant: 'bodyMicro' }} color="$neutral2" variant="subheadSmall">
+      <Text $short={{ variant: 'body3' }} color="$neutral2" variant="subheading2">
         {t('App permissions')}
       </Text>
       <Flex row alignItems="flex-start" gap="$spacing8">
@@ -122,7 +122,7 @@ const NetworksRow = ({ chains }: { chains: ChainId[] }): JSX.Element => {
   return (
     <Flex row shrink alignItems="center" justifyContent="space-between" px="$spacing12">
       <Flex grow row justifyContent="space-between">
-        <Text color="$neutral1" variant="subheadSmall">
+        <Text color="$neutral1" variant="subheading2">
           {t('Networks')}
         </Text>
         <NetworkLogos chains={chains} />
@@ -243,10 +243,10 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         <Flex fill alignItems="center" gap="$spacing16" justifyContent="flex-end">
           <DappHeaderIcon dapp={pendingSession.dapp} />
           <Text
-            $short={{ variant: 'subheadSmall' }}
+            $short={{ variant: 'subheading2' }}
             fontWeight="bold"
             textAlign="center"
-            variant="headlineSmall">
+            variant="heading3">
             {t('{{ dappName }} wants to connect to your wallet', {
               dappName: truncateDappName(dappName),
             })}{' '}
@@ -261,7 +261,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
             px="$spacing8"
             py="$spacing4"
             size={iconSizes.icon12}
-            textVariant="buttonLabelMicro"
+            textVariant="buttonLabel4"
             url={pendingSession.dapp.url}
           />
         </Flex>

@@ -25,7 +25,7 @@ function StatsRow({
           height={iconSizes.icon12}
           width={iconSizes.icon12}
         />
-        <Text color="$neutral1" variant="bodySmall">
+        <Text color="$neutral1" variant="body2">
           {label}
         </Text>
       </Flex>
@@ -55,7 +55,7 @@ export function TokenDetailsMarketData({
   const FormattedValue = useCallback(
     ({ value, numberType }: { value?: number; numberType: NumberType }) => {
       return (
-        <Text loading={isLoading} variant="bodySmall">
+        <Text loading={isLoading} variant="body2">
           {formatNumber(value, numberType)}
         </Text>
       )
@@ -101,7 +101,7 @@ export function TokenDetailsStats({
       {tokenProjectData?.description && (
         <Flex gap="$spacing4">
           {tokenProjectData?.name && (
-            <Text color="$neutral2" variant="subheadSmall">
+            <Text color="$neutral2" variant="subheading2">
               {t('About {{ token }}', { token: tokenProjectData.name })}
             </Text>
           )}
@@ -117,7 +117,7 @@ export function TokenDetailsStats({
         </Flex>
       )}
       <Flex gap="$spacing4">
-        <Text color="$neutral2" variant="subheadSmall">
+        <Text color="$neutral2" variant="subheading2">
           {t('Stats')}
         </Text>
         <TokenDetailsMarketData

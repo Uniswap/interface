@@ -75,7 +75,7 @@ export function TransactionDetails({
               width={ALERT_ICONS_SIZE}
             />
             <Flex grow py="$spacing2">
-              <Text color={warningColor.text} variant="subheadSmall">
+              <Text color={warningColor.text} variant="subheading2">
                 {warning.title}
               </Text>
             </Flex>
@@ -119,7 +119,7 @@ export function TransactionDetails({
           justifyContent="center"
           py="$spacing8"
           onPress={onPressToggleShowChildren}>
-          <Text color="$neutral3" variant="bodySmall">
+          <Text color="$neutral3" variant="body2">
             {showChildren ? t('Show less') : t('Show more')}
           </Text>
           {showChildren ? (

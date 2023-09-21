@@ -33,7 +33,7 @@ export function TokenDetailsLinks({
     // eslint-disable-next-line react-native/no-inline-styles
     <View style={{ marginHorizontal: -14 }}>
       <Flex gap="$spacing8">
-        <Text color="$neutral2" mx="$spacing16" variant="subheadSmall">
+        <Text color="$neutral2" mx="$spacing16" variant="subheading2">
           {t('Links')}
         </Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>

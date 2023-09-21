@@ -25,10 +25,10 @@ export function IntroScreen(): JSX.Element {
     return (
       <Flex centered grow width={ONBOARDING_CONTENT_WIDTH}>
         <Flex alignItems="center" gap="$spacing12">
-          <Text color="$neutral1" variant="subheadLarge">
+          <Text color="$neutral1" variant="subheading1">
             {t('You’ve already completed onboarding')}
           </Text>
-          <Text color="$neutral2" textAlign="center" variant="bodySmall">
+          <Text color="$neutral2" textAlign="center" variant="body2">
             {t(
               'To create more wallets, open the account switcher inside the extension popup, or reinstall the extension to start over'
             )}
@@ -52,10 +52,10 @@ export function IntroScreen(): JSX.Element {
           </Flex>
         </Flex>
         <Flex mb="$spacing48">
-          <Text textAlign="center" variant="headlineMedium">
+          <Text textAlign="center" variant="heading2">
             Welcome to
           </Text>
-          <Text color="$accent1" textAlign="center" variant="headlineMedium">
+          <Text color="$accent1" textAlign="center" variant="heading2">
             Uniswap Wallet
           </Text>
         </Flex>

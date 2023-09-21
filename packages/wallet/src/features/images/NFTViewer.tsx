@@ -40,7 +40,7 @@ export function NFTViewer({
         justifyContent="center"
         maxHeight={maxHeight ?? '100%'}
         width="100%">
-        <Text color="$neutral2" flex={0} variant="subheadSmall">
+        <Text color="$neutral2" flex={0} variant="subheading2">
           {placeholderContent || t('Content not available')}
         </Text>
       </Box>

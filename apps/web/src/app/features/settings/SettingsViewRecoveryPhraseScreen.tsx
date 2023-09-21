@@ -57,11 +57,11 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
           <Flex row alignItems="center" gap="$spacing8">
             {/* TODO: Replace with proper color once available */}
             <AlertTriangleIcon color="#FF5F52" height={iconSizes.icon24} width={iconSizes.icon24} />
-            <Text color="#FF5F52" variant="subheadSmall">
+            <Text color="#FF5F52" variant="subheading2">
               {t('View in private')}
             </Text>
           </Flex>
-          <Text textAlign="center" variant="bodySmall">
+          <Text textAlign="center" variant="body2">
             {t('Anyone who knows your recovery phrase can access your wallet and funds.')}
           </Text>
         </Flex>
@@ -81,10 +81,10 @@ function SeedPhraseColumn({
     <Flex fill gap="$spacing16">
       {words.map((word, index) => (
         <Flex key={index} row gap="$spacing12">
-          <Text color="$neutral3" variant="bodySmall">
+          <Text color="$neutral3" variant="body2">
             {index + indexOffset}
           </Text>
-          <Text variant="bodySmall">{word}</Text>
+          <Text variant="body2">{word}</Text>
         </Flex>
       ))}
     </Flex>

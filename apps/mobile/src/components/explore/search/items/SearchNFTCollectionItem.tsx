@@ -89,7 +89,7 @@ export function SearchNFTCollectionItem({
           )}
         </Flex>
         <Flex shrink>
-          <Text color="$neutral1" numberOfLines={1} variant="bodyLarge">
+          <Text color="$neutral1" numberOfLines={1} variant="body1">
             {name}
           </Text>
         </Flex>

@@ -202,10 +202,7 @@ function KeyButton({
       width={index % 3 === 1 ? '50%' : '25%'}
       onLongPress={onLongPress}
       onPress={onPress}>
-      <Text
-        color={isDisabled ? '$neutral2' : '$neutral1'}
-        textAlign="center"
-        variant="headlineMedium">
+      <Text color={isDisabled ? '$neutral2' : '$neutral1'} textAlign="center" variant="heading2">
         {
           label === '.' ? decimalSeparator : label
           /* respect phone settings to show decimal separator in the numpad,

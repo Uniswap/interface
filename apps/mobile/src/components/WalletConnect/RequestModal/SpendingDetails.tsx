@@ -31,16 +31,16 @@ export function SpendingDetails({
 
   return (
     <Flex row alignItems="center" gap="$spacing16">
-      <Text color="$neutral2" variant="bodySmall">
+      <Text color="$neutral2" variant="body2">
         {t('Sending')}:
       </Text>
       <Flex row alignItems="center" gap="$spacing4">
         <CurrencyLogo currencyInfo={nativeCurrencyInfo} size={iconSizes.icon16} />
-        <Text variant="subheadSmall">
+        <Text variant="subheading2">
           {formatCurrencyAmount(nativeCurrencyAmount, NumberType.TokenTx)}{' '}
           {getSymbolDisplayText(nativeCurrencyInfo?.currency.symbol)}
         </Text>
-        <Text color="$neutral2" loading={!usdValue} variant="subheadSmall">
+        <Text color="$neutral2" loading={!usdValue} variant="subheading2">
           ({formatUSDPrice(usdValue)})
         </Text>
       </Flex>

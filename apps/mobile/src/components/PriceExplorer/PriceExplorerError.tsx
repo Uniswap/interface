@@ -14,7 +14,7 @@ export function PriceExplorerError({
   return (
     <Flex gap="$spacing16" mx="$spacing24">
       <Flex gap="$spacing12">
-        <Text color="$neutral3" variant="headlineLarge">
+        <Text color="$neutral3" variant="heading1">
           {
             '\u2013' // em dash
           }

@@ -166,7 +166,7 @@ const ActionCard = ({
         {icon}
         <Flex shrink gap="$spacing4">
           <Flex row alignItems="center" gap="$spacing8">
-            <Text variant="subheadSmall">{title}</Text>
+            <Text variant="subheading2">{title}</Text>
             {badgeText && (
               <Flex
                 centered
@@ -174,13 +174,13 @@ const ActionCard = ({
                 borderRadius="$rounded8"
                 px="$spacing8"
                 py="$spacing4">
-                <Text color="$accent1" variant="buttonLabelMicro">
+                <Text color="$accent1" variant="buttonLabel4">
                   {badgeText}
                 </Text>
               </Flex>
             )}
           </Flex>
-          <Text color="$neutral2" variant="bodySmall">
+          <Text color="$neutral2" variant="body2">
             {blurb}
           </Text>
         </Flex>

@@ -20,11 +20,11 @@ export function AccountDetails({
           address={address}
           horizontalGap="$spacing8"
           size={iconSize}
-          variant="subheadSmall"
+          variant="subheading2"
         />
       </Flex>
       <Flex fill row shrink gap="$spacing4" justifyContent="flex-end">
-        <Text color="$neutral2" variant="subheadSmall">
+        <Text color="$neutral2" variant="subheading2">
           {shortenAddress(address)}
         </Text>
         {chevron && (

@@ -124,12 +124,12 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
           showCopy
           showIconBackground
           address={address}
-          captionVariant="bodySmall"
+          captionVariant="body2"
           contentAlign="flex-start"
           direction="column"
           size={HEADER_ICON_SIZE}
           textAlign="flex-start"
-          variant="headlineSmall"
+          variant="heading3"
         />
         <Flex position="absolute" right={0}>
           <Flex centered row gap="$spacing8" mt="$spacing12">
@@ -163,7 +163,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
                   height={iconSizes.icon20}
                   width={iconSizes.icon20}
                 />
-                <Text color="$neutral2" lineHeight={20} variant="buttonLabelMedium">
+                <Text color="$neutral2" lineHeight={20} variant="buttonLabel2">
                   {t('Send')}
                 </Text>
               </Flex>

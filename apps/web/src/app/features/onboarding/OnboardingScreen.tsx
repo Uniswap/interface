@@ -34,15 +34,15 @@ export function OnboardingScreen({
       <Flex alignItems="center" gap="$spacing32">
         {Icon}
         <Flex alignItems="center" gap="$spacing12">
-          <Text textAlign="center" variant="headlineMedium">
+          <Text textAlign="center" variant="heading2">
             {title}
           </Text>
           <Flex alignItems="center" gap="$spacing4">
-            <Text color="$neutral2" textAlign="center" variant="subheadSmall">
+            <Text color="$neutral2" textAlign="center" variant="subheading2">
               {subtitle}
             </Text>
             {warningSubtitle && (
-              <Text color="$statusCritical" textAlign="center" variant="bodySmall">
+              <Text color="$statusCritical" textAlign="center" variant="body2">
                 {warningSubtitle}
               </Text>
             )}

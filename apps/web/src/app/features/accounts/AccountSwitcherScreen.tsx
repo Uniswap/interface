@@ -76,7 +76,7 @@ export function AccountSwitcherScreen(): JSX.Element {
             width={iconSizes.icon36}>
             <Icons.Plus color="$neutral2" height={iconSizes.icon20} width={iconSizes.icon20} />
           </Flex>
-          <Text color="$neutral2" py="$spacing8" variant="bodyLarge" onPress={onCreateWallet}>
+          <Text color="$neutral2" py="$spacing8" variant="body1" onPress={onCreateWallet}>
             Add wallet
           </Text>
         </Flex>

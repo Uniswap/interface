@@ -154,7 +154,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
             mr="$spacing12"
             mt="$spacing16"
             pl="$spacing4">
-            <Text color="$neutral2" variant="subheadSmall">
+            <Text color="$neutral2" variant="subheading2">
               {t('Top tokens')}
             </Text>
             <SortButton orderBy={orderBy} />

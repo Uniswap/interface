@@ -51,10 +51,10 @@ export function RestoreWalletModal(): JSX.Element | null {
             width={iconSizes.icon24}
           />
         </Flex>
-        <Text textAlign="center" variant="bodyLarge">
+        <Text textAlign="center" variant="body1">
           {t('Restore wallet')}
         </Text>
-        <Text color="$neutral2" textAlign="center" variant="bodySmall">
+        <Text color="$neutral2" textAlign="center" variant="body2">
           {t(
             'Because you’re on a new device, you’ll need to restore your recovery phrase. This will allow you to swap and send tokens.'
           )}

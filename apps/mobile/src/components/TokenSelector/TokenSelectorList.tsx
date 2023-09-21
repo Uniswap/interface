@@ -186,7 +186,7 @@ function _TokenSelectorList({
     return (
       <Flex grow>
         <Flex py="$spacing16" width={80}>
-          <Loader.Box height={fonts.subheadSmall.lineHeight} />
+          <Loader.Box height={fonts.subheading2.lineHeight} />
         </Flex>
         <Loader.Token repeat={5} />
       </Flex>
@@ -217,7 +217,7 @@ function _TokenSelectorList({
 export function SectionHeader({ title }: { title: string }): JSX.Element {
   return (
     <Flex backgroundColor="$surface1" py="$spacing16">
-      <Text color="$neutral2" variant="subheadSmall">
+      <Text color="$neutral2" variant="subheading2">
         {title}
       </Text>
     </Flex>

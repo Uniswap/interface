@@ -14,7 +14,7 @@ export const SectionHeaderText = ({
   return (
     <Flex row alignItems="center" gap="$spacing12" mb="$spacing4" mx="$spacing4">
       {icon && icon}
-      <Text color="$neutral2" variant="subheadSmall" {...rest}>
+      <Text color="$neutral2" variant="subheading2" {...rest}>
         {title}
       </Text>
     </Flex>

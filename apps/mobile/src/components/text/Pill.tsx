@@ -22,7 +22,7 @@ export function Pill({
   label,
   px = '$spacing4',
   py = '$spacing8',
-  textVariant = 'bodySmall',
+  textVariant = 'body2',
   ...rest
 }: PillProps): JSX.Element {
   return (

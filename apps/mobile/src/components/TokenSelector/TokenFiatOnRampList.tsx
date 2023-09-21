@@ -179,7 +179,7 @@ function Header({ onBack }: { onBack: () => void }): JSX.Element {
       <TouchableArea testID={ElementName.Back} onPress={onBack}>
         <Icons.RotatableChevron color="$neutral1" />
       </TouchableArea>
-      <Text variant="bodyLarge">{t('Select a token to buy')}</Text>
+      <Text variant="body1">{t('Select a token to buy')}</Text>
       <Flex width={24} />
     </Flex>
   )

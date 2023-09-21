@@ -33,7 +33,7 @@ export function SwapProtectionInfoModal({ onClose }: { onClose: () => void }): J
       title={t('Swap Protection')}
       onClose={onClose}>
       <TouchableArea onPress={onPressLearnMoreSwapModal}>
-        <Text color="$magentaVibrant" variant="bodyLarge">
+        <Text color="$magentaVibrant" variant="body1">
           {t('Learn more')}
         </Text>
       </TouchableArea>

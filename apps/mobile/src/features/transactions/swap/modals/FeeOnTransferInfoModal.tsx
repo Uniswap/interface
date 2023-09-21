@@ -33,7 +33,7 @@ export function FeeOnTransferInfoModal({ onClose }: { onClose: () => void }): JS
       title={t('Why is there an additional fee?')}
       onClose={onClose}>
       <TouchableArea onPress={onPressFOTLearnMore}>
-        <Text color="$magentaVibrant" variant="bodyLarge">
+        <Text color="$magentaVibrant" variant="body1">
           {t('Learn more')}
         </Text>
       </TouchableArea>

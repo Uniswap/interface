@@ -25,7 +25,7 @@ export function NetworkOption({
         {(chainId && <NetworkLogo chainId={chainId} size={NETWORK_OPTION_ICON_SIZE} />) || (
           <Flex width={NETWORK_OPTION_ICON_SIZE} />
         )}
-        <Text color="$neutral1" variant="bodyLarge">
+        <Text color="$neutral1" variant="body1">
           {info?.label ?? t('All networks')}
         </Text>
         <Flex centered height={NETWORK_OPTION_ICON_SIZE} width={NETWORK_OPTION_ICON_SIZE}>

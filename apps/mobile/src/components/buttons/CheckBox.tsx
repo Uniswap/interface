@@ -18,8 +18,8 @@ export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.
   }
 
   const fontSize = useResponsiveProp({
-    xs: 'buttonLabelMicro',
-    sm: 'subheadSmall',
+    xs: 'buttonLabel4',
+    sm: 'subheading2',
   })
 
   return (

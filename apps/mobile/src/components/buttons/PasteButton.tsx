@@ -39,7 +39,7 @@ export default function PasteButton({
             height={iconSizes.icon16}
             width={iconSizes.icon16}
           />
-          <Text color="$neutral2" variant="buttonLabelMicro">
+          <Text color="$neutral2" variant="buttonLabel4">
             {label}
           </Text>
         </Flex>

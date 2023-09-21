@@ -104,7 +104,7 @@ export const AnimatedText = (
   const { fontScale } = useWindowDimensions()
   const enableFontScaling = fontScale > DEFAULT_FONT_SCALE
 
-  const variant = useResponsiveProp(props.variant ?? 'bodySmall') as keyof typeof textVariants
+  const variant = useResponsiveProp(props.variant ?? 'body2') as keyof typeof textVariants
   const multiplier = textVariants[variant].maxFontSizeMultiplier
 
   return (

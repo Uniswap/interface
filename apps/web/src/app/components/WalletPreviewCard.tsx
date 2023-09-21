@@ -49,9 +49,9 @@ export default function WalletPreviewCard({
         <Flex centered row gap="$spacing12">
           <Unicon address={address} size={UNICON_SIZE} />
           <Flex>
-            <Text variant="subheadLarge">{shortenAddress(address)}</Text>
+            <Text variant="subheading1">{shortenAddress(address)}</Text>
             {balance ? (
-              <Text color="$neutral2" variant="bodySmall">
+              <Text color="$neutral2" variant="body2">
                 {formatUSDPrice(balance, NumberType.FiatTokenQuantity)}
               </Text>
             ) : null}

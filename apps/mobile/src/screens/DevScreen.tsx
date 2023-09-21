@@ -63,10 +63,10 @@ export function DevScreen(): JSX.Element {
       </Flex>
       <ScrollView>
         <Flex alignItems="center">
-          <Text color="$neutral1" textAlign="center" variant="headlineSmall">
+          <Text color="$neutral1" textAlign="center" variant="heading3">
             {`Your Account: ${activeAccount?.address || 'none'}`}
           </Text>
-          <Text mt="$spacing16" textAlign="center" variant="headlineSmall">
+          <Text mt="$spacing16" textAlign="center" variant="heading3">
             🌀🌀Screen Stargate🌀🌀
           </Text>
           <Flex centered row flexWrap="wrap">
@@ -80,7 +80,7 @@ export function DevScreen(): JSX.Element {
               </TouchableArea>
             ))}
           </Flex>
-          <Text mt="$spacing12" textAlign="center" variant="bodyLarge">
+          <Text mt="$spacing12" textAlign="center" variant="body1">
             🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀
           </Text>
           <TouchableArea mt="$spacing16" onPress={onPressCreate}>

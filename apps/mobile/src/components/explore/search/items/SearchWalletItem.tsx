@@ -96,11 +96,11 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
               ellipsizeMode="tail"
               numberOfLines={1}
               testID={`address-display/name/${ensName}`}
-              variant="bodyLarge">
+              variant="body1">
               {completedENSName || formattedAddress}
             </Text>
             {showOwnedBy ? (
-              <Text color="$neutral2" ellipsizeMode="tail" numberOfLines={1} variant="subheadSmall">
+              <Text color="$neutral2" ellipsizeMode="tail" numberOfLines={1} variant="subheading2">
                 {t('Owned by {{owner}}', {
                   owner: primaryENSName || formattedAddress,
                 })}

@@ -33,7 +33,7 @@ export function LongText(props: LongTextProps): JSX.Element {
     readMoreOrLessColor = colors.neutral2.val,
     renderAsMarkdown = false,
     codeBackgroundColor = colors.surface3.val,
-    variant = 'bodySmall',
+    variant = 'body2',
     ...rest
   } = props
 
@@ -88,8 +88,8 @@ export function LongText(props: LongTextProps): JSX.Element {
               paragraph: {
                 marginBottom: 0,
                 marginTop: 0,
-                fontSize: fonts.bodySmall.fontSize,
-                lineHeight: fonts.bodySmall.lineHeight,
+                fontSize: fonts.body2.fontSize,
+                lineHeight: fonts.body2.lineHeight,
               },
             }}
             onLinkPress={(url): false => {
@@ -120,7 +120,7 @@ export function LongText(props: LongTextProps): JSX.Element {
           py="$none"
           style={{ color: readMoreOrLessColor }}
           testID="read-more-button"
-          variant="buttonLabelSmall"
+          variant="buttonLabel3"
           onPress={toggleExpanded}>
           {expanded ? t('Read less') : t('Read more')}
         </Text>

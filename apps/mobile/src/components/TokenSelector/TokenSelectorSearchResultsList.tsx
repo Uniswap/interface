@@ -23,7 +23,7 @@ function EmptyResults({ searchFilter }: { searchFilter: string }): JSX.Element {
   return (
     <Flex>
       <SectionHeader title={t('Search results')} />
-      <Text color="$neutral3" textAlign="center" variant="subheadSmall">
+      <Text color="$neutral3" textAlign="center" variant="subheading2">
         <Trans t={t}>
           No results found for <Text color="$neutral1">"{searchFilter}"</Text>
         </Trans>

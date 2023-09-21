@@ -158,7 +158,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
         <Flex gap="$spacing24">
           <Trace logPress element={ElementName.Skip}>
             <TouchableArea onPress={onMaybeLaterPressed}>
-              <Text color="$accent1" textAlign="center" variant="buttonLabelMedium">
+              <Text color="$accent1" textAlign="center" variant="buttonLabel2">
                 {t('Maybe later')}
               </Text>
             </TouchableArea>

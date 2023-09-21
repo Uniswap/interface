@@ -152,7 +152,7 @@ export function NFTCollectionHeader({
               loading={loading}
               loadingPlaceholderText="Collection Name"
               mt="$spacing16"
-              variant="subheadLarge">
+              variant="subheading1">
               {data?.name ?? '-'}
             </Text>
             {data?.isVerified ? (
@@ -166,27 +166,27 @@ export function NFTCollectionHeader({
 
           <Flex row gap="$spacing24" justifyContent="space-between">
             <Flex fill alignItems="flex-start" gap="$spacing4">
-              <Text color="$neutral2" variant="subheadSmall">
+              <Text color="$neutral2" variant="subheading2">
                 {t('Items')}
               </Text>
-              <Text loading={loading} variant="bodyLarge">
+              <Text loading={loading} variant="body1">
                 {formatNumber(data?.numAssets, NumberType.NFTCollectionStats)}
               </Text>
             </Flex>
             <Flex fill alignItems="flex-start" gap="$spacing4">
-              <Text color="$neutral2" variant="subheadSmall">
+              <Text color="$neutral2" variant="subheading2">
                 {t('Owners')}
               </Text>
-              <Text loading={loading} variant="bodyLarge">
+              <Text loading={loading} variant="body1">
                 {formatNumber(collectionStats?.owners, NumberType.NFTCollectionStats)}
               </Text>
             </Flex>
             <Flex fill alignItems="flex-start" gap="$spacing4">
-              <Text color="$neutral2" variant="subheadSmall">
+              <Text color="$neutral2" variant="subheading2">
                 {t('Floor')}
               </Text>
               <Flex row alignItems="center">
-                <Text loading={loading} variant="bodyLarge">
+                <Text loading={loading} variant="body1">
                   {`${formatNumber(
                     collectionStats?.floorPrice?.value,
                     NumberType.NFTTokenFloorPrice
@@ -198,11 +198,11 @@ export function NFTCollectionHeader({
               </Flex>
             </Flex>
             <Flex fill alignItems="flex-start" gap="$spacing4">
-              <Text color="$neutral2" variant="subheadSmall">
+              <Text color="$neutral2" variant="subheading2">
                 {t('Volume')}
               </Text>
               <Flex row alignItems="center" gap="$spacing4">
-                <Text loading={loading} pr="$spacing1" variant="bodyLarge">
+                <Text loading={loading} pr="$spacing1" variant="body1">
                   {`${formatNumber(
                     collectionStats?.totalVolume?.value,
                     NumberType.NFTCollectionStats

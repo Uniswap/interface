@@ -154,7 +154,7 @@ export function NetworkFilter({
       <ActionSheetModal
         header={
           <Flex centered gap="$spacing4" py="$spacing16">
-            <Text variant="buttonLabelMedium">{t('Switch Network')}</Text>
+            <Text variant="buttonLabel2">{t('Switch Network')}</Text>
           </Flex>
         }
         isVisible={showModal}

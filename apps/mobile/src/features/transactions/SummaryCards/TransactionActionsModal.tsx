@@ -21,7 +21,7 @@ function renderOptionItem(label: string, textColorOverride?: ColorTokens): () =>
           color={textColorOverride ?? '$neutral1'}
           p="$spacing16"
           textAlign="center"
-          variant="bodyLarge">
+          variant="body1">
           {label}
         </Text>
       </>
@@ -156,7 +156,7 @@ export default function TransactionActionsModal({
       <Flex pb="$spacing24" px="$spacing12">
         <ActionSheetModalContent
           header={
-            <Text color="$neutral3" p="$spacing16" variant="bodySmall">
+            <Text color="$neutral3" p="$spacing16" variant="body2">
               {t('Submitted on') + ' ' + dateString}
             </Text>
           }

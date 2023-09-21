@@ -27,20 +27,20 @@ const iconSize = {
 const imageSize = { ...imageSizes, true: imageSizes.image40 }
 
 const fontSize = {
-  headlineLarge: fonts.headlineLarge.fontSize,
-  headlineMedium: fonts.headlineMedium.fontSize,
-  headlineSmall: fonts.headlineSmall.fontSize,
-  subheadLarge: fonts.subheadLarge.fontSize,
-  subheadSmall: fonts.subheadSmall.fontSize,
-  bodyLarge: fonts.bodyLarge.fontSize,
-  bodySmall: fonts.bodySmall.fontSize,
-  bodyMicro: fonts.bodyMicro.fontSize,
-  buttonLabelLarge: fonts.buttonLabelLarge.fontSize,
-  buttonLabelMedium: fonts.buttonLabelMedium.fontSize,
-  buttonLabelSmall: fonts.buttonLabelSmall.fontSize,
-  buttonLabelMicro: fonts.buttonLabelMicro.fontSize,
+  heading1: fonts.heading1.fontSize,
+  heading2: fonts.heading2.fontSize,
+  heading3: fonts.heading3.fontSize,
+  subheading1: fonts.subheading1.fontSize,
+  subheading2: fonts.subheading2.fontSize,
+  body1: fonts.body1.fontSize,
+  body2: fonts.body2.fontSize,
+  body3: fonts.body3.fontSize,
+  buttonLabel1: fonts.buttonLabel1.fontSize,
+  buttonLabel2: fonts.buttonLabel2.fontSize,
+  buttonLabel3: fonts.buttonLabel3.fontSize,
+  buttonLabel4: fonts.buttonLabel4.fontSize,
   monospace: fonts.monospace.fontSize,
-  true: fonts.bodySmall.fontSize,
+  true: fonts.body2.fontSize,
 }
 
 const radius = { ...borderRadii, true: borderRadii.none }

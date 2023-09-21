@@ -178,7 +178,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
                 height={iconSizes.icon24}
                 width={iconSizes.icon24}
               />
-              <Text color="$neutral1" variant="subheadSmall">
+              <Text color="$neutral1" variant="subheading2">
                 {t('Learn about wallet safety and recovery')}
               </Text>
             </Flex>

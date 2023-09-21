@@ -55,7 +55,7 @@ export function HeaderContent({
       pb="$spacing8"
       pl="$spacing12"
       pr={customSlippageTolerance ? '$spacing8' : '$spacing16'}>
-      <Text $sm={{ variant: 'subheadLarge' }} $xs={{ variant: 'subheadSmall' }}>
+      <Text $sm={{ variant: 'subheading1' }} $xs={{ variant: 'subheading2' }}>
         {flowName}
       </Text>
       <Flex row gap="$spacing4">
@@ -73,7 +73,7 @@ export function HeaderContent({
                 height={iconSizes.icon16}
                 width={iconSizes.icon16}
               />
-              <Text color={isUSDInput ? '$accent1' : '$neutral2'} variant="buttonLabelSmall">
+              <Text color={isUSDInput ? '$accent1' : '$neutral2'} variant="buttonLabel3">
                 {t('USD')}
               </Text>
             </Flex>
@@ -93,7 +93,7 @@ export function HeaderContent({
                 height={iconSizes.icon16}
                 width={iconSizes.icon16}
               />
-              <Text color="$neutral2" variant="buttonLabelSmall">
+              <Text color="$neutral2" variant="buttonLabel3">
                 {t('View-only')}
               </Text>
             </Flex>
@@ -113,7 +113,7 @@ export function HeaderContent({
               px={customSlippageTolerance ? '$spacing8' : '$none'}
               py="$spacing4">
               {customSlippageTolerance ? (
-                <Text color="$neutral2" variant="buttonLabelMicro">
+                <Text color="$neutral2" variant="buttonLabel4">
                   {`${formatPercent(customSlippageTolerance)} ${t('slippage')}`}
                 </Text>
               ) : null}

@@ -109,7 +109,7 @@ export function SwapSettingsModal({
               width={iconSizes.icon24}
             />
           </TouchableArea>
-          <Text textAlign="center" variant="bodyLarge">
+          <Text textAlign="center" variant="body1">
             {getTitle()}
           </Text>
           <Flex width={iconSizes.icon24} />
@@ -146,19 +146,19 @@ function SwapSettingsOptions({
   return (
     <Flex fill gap="$spacing16" py="$spacing12">
       <Flex fill row justifyContent="space-between">
-        <Text color="$neutral1" variant="subheadSmall">
+        <Text color="$neutral1" variant="subheading2">
           {t('Max slippage')}
         </Text>
         <TouchableArea onPress={(): void => setView(SwapSettingsModalView.Slippage)}>
           <Flex row gap="$spacing8">
             {!isCustomSlippage ? (
               <Flex centered bg="$accent2" borderRadius="$roundedFull" px="$spacing8">
-                <Text color="$accent1" variant="buttonLabelMicro">
+                <Text color="$accent1" variant="buttonLabel4">
                   {t('Auto')}
                 </Text>
               </Flex>
             ) : null}
-            <Text color="$neutral2" variant="subheadSmall">
+            <Text color="$neutral2" variant="subheading2">
               {formatPercent(slippage)}
             </Text>
             <Icons.Chevron
@@ -207,7 +207,7 @@ function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Eleme
           <TouchableArea onPress={(): void => setShowInfoModal(true)}>
             <Flex gap="$spacing4">
               <Flex row alignItems="center" gap="$spacing4">
-                <Text color="$neutral1" variant="subheadSmall">
+                <Text color="$neutral1" variant="subheading2">
                   {t('Swap protection')}
                 </Text>
                 <InfoCircle
@@ -216,7 +216,7 @@ function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Eleme
                   width={iconSizes.icon16}
                 />
               </Flex>
-              <Text color="$neutral2" variant="bodyMicro">
+              <Text color="$neutral2" variant="body3">
                 {subText}
               </Text>
             </Flex>
@@ -391,10 +391,10 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
 
   return (
     <Flex gap="$spacing16">
-      <Text color="$neutral2" textAlign="center" variant="bodySmall">
+      <Text color="$neutral2" textAlign="center" variant="body2">
         {t('Your transaction will revert if the price changes more than the slippage percentage.')}{' '}
         <TouchableArea height={18} onPress={onPressLearnMore}>
-          <Text color="$accent1" variant="buttonLabelSmall">
+          <Text color="$accent1" variant="buttonLabel3">
             {t('Learn more')}
           </Text>
         </TouchableArea>
@@ -417,7 +417,7 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
             p="spacing16"
             style={inputAnimatedStyle}>
             <TouchableArea hapticFeedback onPress={onPressAutoSlippage}>
-              <Text color="$accent1" variant="buttonLabelSmall">
+              <Text color="$accent1" variant="buttonLabel3">
                 {t('Auto')}
               </Text>
             </TouchableArea>
@@ -425,9 +425,9 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
               keyboardType="numeric"
               style={{
                 color: autoSlippageEnabled ? colors.neutral2.val : colors.neutral1.val,
-                fontSize: fonts.subheadLarge.fontSize,
-                fontFamily: fonts.subheadLarge.family,
-                width: fonts.subheadLarge.fontSize * 4,
+                fontSize: fonts.subheading1.fontSize,
+                fontFamily: fonts.subheading1.family,
+                width: fonts.subheading1.fontSize * 4,
                 padding: spacing.none,
               }}
               textAlign="center"
@@ -441,7 +441,7 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
               onFocus={onFocusSlippageInput}
             />
             <Flex width={iconSizes.icon28}>
-              <Text color="$neutral2" textAlign="center" variant="subheadLarge">
+              <Text color="$neutral2" textAlign="center" variant="subheading1">
                 %
               </Text>
             </Flex>
@@ -480,13 +480,13 @@ function BottomLabel({
 
   if (inputWarning) {
     return (
-      <Flex centered row gap="$spacing8" height={fonts.bodySmall.lineHeight * 2 + spacing.spacing8}>
+      <Flex centered row gap="$spacing8" height={fonts.body2.lineHeight * 2 + spacing.spacing8}>
         <AlertTriangleIcon
           color={colors.DEP_accentWarning.val}
           height={iconSizes.icon16}
           width={iconSizes.icon16}
         />
-        <Text color="$DEP_accentWarning" textAlign="center" variant="bodySmall">
+        <Text color="$DEP_accentWarning" textAlign="center" variant="body2">
           {inputWarning}
         </Text>
       </Flex>
@@ -494,8 +494,8 @@ function BottomLabel({
   }
 
   return trade ? (
-    <Flex centered gap="$spacing8" height={fonts.bodySmall.lineHeight * 2 + spacing.spacing8}>
-      <Text color="$neutral2" textAlign="center" variant="bodySmall">
+    <Flex centered gap="$spacing8" height={fonts.body2.lineHeight * 2 + spacing.spacing8}>
+      <Text color="$neutral2" textAlign="center" variant="body2">
         {trade.tradeType === TradeType.EXACT_INPUT
           ? t('Receive at least {{amount}} {{symbol}}', {
               amount: formatCurrencyAmount(
@@ -519,13 +519,13 @@ function BottomLabel({
             height={iconSizes.icon16}
             width={iconSizes.icon16}
           />
-          <Text color="$DEP_accentWarning" variant="bodySmall">
+          <Text color="$DEP_accentWarning" variant="body2">
             {t('Slippage may be higher than necessary')}
           </Text>
         </Flex>
       ) : null}
     </Flex>
   ) : (
-    <Flex height={fonts.bodySmall.lineHeight} />
+    <Flex height={fonts.body2.lineHeight} />
   )
 }

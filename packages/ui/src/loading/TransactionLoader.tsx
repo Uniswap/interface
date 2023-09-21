@@ -38,7 +38,7 @@ export function TransactionLoader({ opacity }: TransactionLoaderProps): JSX.Elem
                 loading
                 loadingPlaceholderText="Contract Interaction"
                 numberOfLines={1}
-                variant="bodyLarge"
+                variant="body1"
               />
             </Flex>
             <Text
@@ -46,7 +46,7 @@ export function TransactionLoader({ opacity }: TransactionLoaderProps): JSX.Elem
               color="$neutral2"
               loadingPlaceholderText="Caption Text"
               numberOfLines={1}
-              variant="subheadSmall"
+              variant="subheading2"
             />
           </Flex>
         </Flex>

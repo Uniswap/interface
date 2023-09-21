@@ -26,7 +26,7 @@ export function FavoriteHeaderRow({
       justifyContent="space-between"
       mb="$spacing8"
       mx="$spacing8">
-      <Text color="$neutral2" variant="subheadSmall">
+      <Text color="$neutral2" variant="subheading2">
         {isEditing ? editingTitle : title}
       </Text>
       {!isEditing ? (
@@ -41,7 +41,7 @@ export function FavoriteHeaderRow({
         </TouchableArea>
       ) : (
         <TouchableArea height={iconSizes.icon20} onPress={onPress}>
-          <Text color="$accent1" variant="buttonLabelSmall">
+          <Text color="$accent1" variant="buttonLabel3">
             {t('Done')}
           </Text>
         </TouchableArea>

@@ -64,10 +64,10 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
 
           {/* Currency name */}
           <Flex flex={1.5} flexBasis={0}>
-            <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
+            <Text ellipsizeMode="tail" numberOfLines={1} variant="body1">
               {currency.name ?? getSymbolDisplayText(currency.symbol)}
             </Text>
-            <Text color="$neutral2" numberOfLines={1} variant="bodyLarge">
+            <Text color="$neutral2" numberOfLines={1} variant="body1">
               {`${formatNumber(quantity, NumberType.TokenNonTx)}`}{' '}
               {getSymbolDisplayText(currency.symbol)}
             </Text>
@@ -75,7 +75,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
 
           {/* Portfolio balance */}
           <Flex fill alignItems="flex-end" justifyContent="flex-end" width={0}>
-            <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
+            <Text ellipsizeMode="tail" numberOfLines={1} variant="body1">
               {balanceUSD === 0 ? 'N/A' : formatUSDPrice(balanceUSD, NumberType.FiatTokenQuantity)}
             </Text>
             <Flex row alignItems="center" gap="$spacing4">
@@ -84,7 +84,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
                 rotation={isPositiveChange ? 180 : 0}
                 size={getTokenValue('$icon.20')}
               />
-              <Text color="$neutral2" numberOfLines={1} variant="bodyLarge">
+              <Text color="$neutral2" numberOfLines={1} variant="body1">
                 {formattedChange}
               </Text>
             </Flex>

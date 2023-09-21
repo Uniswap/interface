@@ -48,7 +48,7 @@ const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps): JSX.E
       px="$spacing8"
       py="$spacing4"
       size={iconSizes.icon16}
-      textVariant="bodySmall"
+      textVariant="body2"
       url={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}
       {...rest}
     />
@@ -159,14 +159,14 @@ function TransactionDetails({
       ) : null}
       {to ? (
         <Flex row alignItems="center" gap="$spacing16">
-          <Text color="$neutral2" variant="bodySmall">
+          <Text color="$neutral2" variant="body2">
             {t('To')}:
           </Text>
           <AddressButton address={to} chainId={chainId} />
         </Flex>
       ) : null}
       <Flex row alignItems="center" gap="$spacing16">
-        <Text color="$neutral2" variant="bodySmall">
+        <Text color="$neutral2" variant="body2">
           {t('Function')}:
         </Text>
         <Flex
@@ -210,9 +210,9 @@ function RequestDetailsContent({ request }: Props): JSX.Element {
 
   const message = getStrMessage(request)
   return message ? (
-    <Text variant="bodySmall">{message}</Text>
+    <Text variant="body2">{message}</Text>
   ) : (
-    <Text color="$neutral2" variant="bodySmall">
+    <Text color="$neutral2" variant="body2">
       {t('No message found.')}
     </Text>
   )

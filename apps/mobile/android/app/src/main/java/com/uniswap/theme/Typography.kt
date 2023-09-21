@@ -20,84 +20,84 @@ data class CustomTypography(
     Font(R.font.basel_bold, FontWeight.Bold),
   ),
   val defaultLetterSpacing: TextUnit = 0.sp,
-  val headlineLarge: TextStyle = TextStyle(
+  val heading1: TextStyle = TextStyle(
     fontFamily = defaultFontFamily,
     fontSize = 52.sp,
     lineHeight = 60.sp,
     fontWeight = FontWeight.Normal,
     letterSpacing = defaultLetterSpacing,
   ),
-  val headlineMedium: TextStyle = TextStyle(
+  val heading2: TextStyle = TextStyle(
     fontFamily = defaultFontFamily,
     fontSize = 36.sp,
     lineHeight = 44.sp,
     fontWeight = FontWeight.Normal,
     letterSpacing = defaultLetterSpacing,
   ),
-  val headlineSmall: TextStyle = TextStyle(
+  val heading3: TextStyle = TextStyle(
     fontFamily = defaultFontFamily,
     fontSize = 24.sp,
     lineHeight = 32.sp,
     fontWeight = FontWeight.Normal,
     letterSpacing = defaultLetterSpacing,
   ),
-  val subheadLarge: TextStyle = TextStyle(
+  val subheading1: TextStyle = TextStyle(
     fontFamily = defaultFontFamily,
     fontSize = 18.sp,
     lineHeight = 24.sp,
     fontWeight = FontWeight.Normal,
     letterSpacing = defaultLetterSpacing,
   ),
-  val subheadSmall: TextStyle = TextStyle(
+  val subheading2: TextStyle = TextStyle(
     fontFamily = defaultFontFamily,
     fontSize = 16.sp,
     lineHeight = 24.sp,
     fontWeight = FontWeight.Normal,
     letterSpacing = defaultLetterSpacing,
   ),
-  val bodyLarge: TextStyle = TextStyle(
+  val body1: TextStyle = TextStyle(
     fontFamily = defaultFontFamily,
     fontSize = 18.sp,
     lineHeight = 24.sp,
     fontWeight = FontWeight.Normal,
     letterSpacing = defaultLetterSpacing,
   ),
-  val bodySmall: TextStyle = TextStyle(
+  val body2: TextStyle = TextStyle(
     fontFamily = defaultFontFamily,
     fontSize = 16.sp,
     lineHeight = 24.sp,
     fontWeight = FontWeight.Normal,
     letterSpacing = defaultLetterSpacing,
   ),
-  val bodyMicro: TextStyle = TextStyle(
+  val body3: TextStyle = TextStyle(
     fontFamily = defaultFontFamily,
     fontSize = 14.sp,
     lineHeight = 16.sp,
     fontWeight = FontWeight.Normal,
     letterSpacing = defaultLetterSpacing,
   ),
-  val buttonLabelLarge: TextStyle = TextStyle(
+  val buttonLabel1: TextStyle = TextStyle(
     fontFamily = defaultFontFamily,
     fontSize = 20.sp,
     lineHeight = 24.sp,
     fontWeight = FontWeight.Medium,
     letterSpacing = defaultLetterSpacing,
   ),
-  val buttonLabelMedium: TextStyle = TextStyle(
+  val buttonLabel2: TextStyle = TextStyle(
     fontFamily = defaultFontFamily,
     fontSize = 18.sp,
     lineHeight = 24.sp,
     fontWeight = FontWeight.Medium,
     letterSpacing = defaultLetterSpacing,
   ),
-  val buttonLabelSmall: TextStyle = TextStyle(
+  val buttonLabel3: TextStyle = TextStyle(
     fontFamily = defaultFontFamily,
     fontSize = 16.sp,
     lineHeight = 24.sp,
     fontWeight = FontWeight.Medium,
     letterSpacing = defaultLetterSpacing,
   ),
-  val buttonLabelMicro: TextStyle = TextStyle(
+  val buttonLabel4: TextStyle = TextStyle(
     fontFamily = defaultFontFamily,
     fontSize = 12.sp,
     lineHeight = 16.sp,

@@ -28,7 +28,7 @@ export function BlockedAddressWarning(props: FlexProps): JSX.Element {
             height={iconSizes.icon16}
             width={iconSizes.icon16}
           />
-          <Text color="$neutral2" variant="subheadSmall">
+          <Text color="$neutral2" variant="subheading2">
             {t('This wallet is blocked')}
           </Text>
         </Flex>

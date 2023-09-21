@@ -67,10 +67,10 @@ export function Locked(): JSX.Element {
           </Flex>
         </Flex>
         <Flex pb="$spacing32" pt="$spacing24">
-          <Text color="$neutral1" textAlign="center" variant="headlineMedium">
+          <Text color="$neutral1" textAlign="center" variant="heading2">
             Welcome back
           </Text>
-          <Text color="$DEP_accentBranded" textAlign="center" variant="headlineMedium">
+          <Text color="$DEP_accentBranded" textAlign="center" variant="heading2">
             Uniswap Wallet
           </Text>
         </Flex>
@@ -78,7 +78,7 @@ export function Locked(): JSX.Element {
       <Flex alignItems="stretch" gap="$spacing12" pt="$spacing32">
         {isIncorrectPassword && (
           <Flex position="absolute" top={0} width="100%">
-            <Text color="$statusCritical" textAlign="center" variant="bodySmall">
+            <Text color="$statusCritical" textAlign="center" variant="body2">
               Wrong password. Try again
             </Text>
           </Flex>

@@ -47,10 +47,10 @@ export function SettingsCloudBackupPasswordCreateScreen({
       <BackHeader mb="$spacing16" />
       <ScrollView bounces={false} keyboardShouldPersistTaps="handled">
         <Flex alignItems="center" justifyContent="space-between" mb="$spacing24" mx="$spacing12">
-          <Text variant="headlineSmall">
+          <Text variant="heading3">
             {IS_ANDROID ? t('Back up to Google Drive') : t('Back up to iCloud')}
           </Text>
-          <Text color="$neutral2" textAlign="center" variant="bodySmall">
+          <Text color="$neutral2" textAlign="center" variant="body2">
             {IS_ANDROID
               ? t(
                   'Setting a password will encrypt your recovery phrase backup, adding an extra level of protection if your Google Drive account is ever compromised.'
@@ -76,12 +76,12 @@ export function SettingsCloudBackupPasswordCreateScreen({
                     width={iconSizes.icon20}
                   />
                 </Flex>
-                <Text textAlign="center" variant="buttonLabelMedium">
+                <Text textAlign="center" variant="buttonLabel2">
                   {IS_ANDROID
                     ? t('Back up recovery phrase to Google Drive?')
                     : t('Back up recovery phrase to iCloud?')}
                 </Text>
-                <Text color="$neutral2" textAlign="center" variant="bodySmall">
+                <Text color="$neutral2" textAlign="center" variant="body2">
                   {IS_ANDROID
                     ? t(
                         'It looks like you haven’t backed up your recovery phrase to Google Drive yet. By doing so, you can recover your wallet just by being logged into Google Drive on any device.'

@@ -265,7 +265,7 @@ export function SettingsWallet({
             hideAddressInSubtitle
             address={address}
             showAccountIcon={false}
-            variant="bodyLarge"
+            variant="body1"
           />
         </Flex>
       </BackHeader>
@@ -279,7 +279,7 @@ export function SettingsWallet({
             renderSectionFooter={(): JSX.Element => <Flex pt="$spacing24" />}
             renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
               <Flex bg="$surface1" pb="$spacing12">
-                <Text color="$neutral2" variant="bodyLarge">
+                <Text color="$neutral2" variant="body1">
                   {subTitle}
                 </Text>
               </Flex>

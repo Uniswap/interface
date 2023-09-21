@@ -58,8 +58,8 @@ export function GenericImportForm({
   const [layout, setLayout] = useState<LayoutRectangle | null>()
   const textInputRef = useRef<NativeTextInput>(null)
 
-  const INPUT_FONT_SIZE = fonts.bodyLarge.fontSize
-  const INPUT_MAX_FONT_SIZE_MULTIPLIER = fonts.bodyLarge.maxFontSizeMultiplier
+  const INPUT_FONT_SIZE = fonts.body1.fontSize
+  const INPUT_MAX_FONT_SIZE_MULTIPLIER = fonts.body1.maxFontSizeMultiplier
 
   const minHeight = useResponsiveProp({ xs: 90, sm: 120 })
   const px = useResponsiveProp({ xs: '$spacing24', sm: '$spacing36' })
@@ -133,7 +133,7 @@ export function GenericImportForm({
                 maxFontSizeMultiplier={INPUT_MAX_FONT_SIZE_MULTIPLIER}
                 numberOfLines={1}
                 style={styles.placeholderLabelStyle}
-                variant="bodyLarge">
+                variant="body1">
                 {t('Type or')}
               </Text>
               <PasteButton
@@ -147,7 +147,7 @@ export function GenericImportForm({
                   color="$neutral2"
                   numberOfLines={1}
                   style={styles.placeholderLabelStyle}
-                  variant="bodyLarge">
+                  variant="body1">
                   {placeholderLabel}
                 </Text>
               )}
@@ -158,7 +158,7 @@ export function GenericImportForm({
           {errorMessage && value && (liveCheck || !focused) && (
             <Flex centered row gap="$spacing12">
               <AlertTriangle color={colors.statusCritical.val} />
-              <Text color="$statusCritical" variant="bodyLarge">
+              <Text color="$statusCritical" variant="body1">
                 {errorMessage}
               </Text>
             </Flex>

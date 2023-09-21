@@ -47,7 +47,7 @@ function TransactionSummaryLayout({
       />
     </Flex>
   ) : (
-    <Text color="$neutral3" variant="bodyMicro">
+    <Text color="$neutral3" variant="body3">
       {formattedAddedTime}
     </Text>
   )
@@ -63,14 +63,14 @@ function TransactionSummaryLayout({
         <Flex grow shrink>
           <Flex grow>
             <Flex grow row alignItems="center" gap="$spacing4" justifyContent="space-between">
-              <Text color="$neutral2" numberOfLines={1} variant="bodySmall">
+              <Text color="$neutral2" numberOfLines={1} variant="body2">
                 {title}
               </Text>
               {!inProgress && rightBlock}
             </Flex>
             <Flex grow row>
               <Flex grow shrink>
-                <Text color="$neutral1" variant="bodyMicro">
+                <Text color="$neutral1" variant="body3">
                   {caption}
                 </Text>
               </Flex>
@@ -80,7 +80,7 @@ function TransactionSummaryLayout({
         {inProgress && (
           <Flex height="100%" justifyContent="center">
             {/* TODO actual loading spinner */}
-            <Text color="$neutral1" variant="bodyMicro">
+            <Text color="$neutral1" variant="body3">
               Loading...
             </Text>
           </Flex>

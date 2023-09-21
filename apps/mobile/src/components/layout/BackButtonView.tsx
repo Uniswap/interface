@@ -15,7 +15,7 @@ export function BackButtonView({ size, color, showButtonLabel }: Props): JSX.Ele
     <Flex row alignItems="center" gap="$spacing8">
       <Icons.RotatableChevron color={color ?? '$neutral2'} height={size} width={size} />
       {showButtonLabel && (
-        <Text color="$neutral2" variant="subheadLarge">
+        <Text color="$neutral2" variant="subheading1">
           {t('Back')}
         </Text>
       )}

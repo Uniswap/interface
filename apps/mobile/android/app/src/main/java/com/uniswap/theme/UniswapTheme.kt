@@ -28,7 +28,7 @@ fun UniswapTheme(
     MaterialTheme(
       colors = if (darkTheme) DarkColors else LightColors
     ) {
-      ProvideTextStyle(value = customTypography.bodyLarge) {
+      ProvideTextStyle(value = customTypography.body1) {
         content()
       }
     }

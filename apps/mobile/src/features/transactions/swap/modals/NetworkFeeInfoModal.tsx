@@ -35,7 +35,7 @@ export function NetworkFeeInfoModal({ onClose }: { onClose: () => void }): JSX.E
       title={t('Network Fees')}
       onClose={onClose}>
       <TouchableArea onPress={onPressLearnMore}>
-        <Text color="$magentaVibrant" variant="bodyLarge">
+        <Text color="$magentaVibrant" variant="body1">
           {t('Learn more')}
         </Text>
       </TouchableArea>

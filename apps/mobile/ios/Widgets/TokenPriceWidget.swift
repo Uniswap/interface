@@ -117,7 +117,7 @@ struct TokenPriceWidgetEntryView: View {
         }
         Spacer()
         Text(entry.symbol)
-          .withHeadlineSmallStyle()
+          .withHeading3Style()
           .padding(.vertical, 2)
       } else {
         Placeholder.Circle(width: 40, height: 40)
@@ -131,7 +131,7 @@ struct TokenPriceWidgetEntryView: View {
     return VStack(alignment: .leading, spacing: 0) {
       if (!isPlaceholder && entry.spotPrice != nil && entry.pricePercentChange != nil) {
         Text(NumberFormatter.fiatTokenDetailsFormatter(price: entry.spotPrice))
-          .withHeadlineLargeStyle()
+          .withHeading1Style()
           .frame(minHeight: 28)
           .minimumScaleFactor(0.3)
           .padding(.bottom, 4)
@@ -150,7 +150,7 @@ struct TokenPriceWidgetEntryView: View {
   
   func timeStamp() -> some View {
     return Text("\(Date().formatted(date: .omitted, time: .shortened).lowercased())")
-      .withHeadlineSmallStyle()
+      .withHeading3Style()
   }
   
   func smallWidget() -> some View {

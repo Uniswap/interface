@@ -39,7 +39,7 @@ const ESTIMATED_ITEM_SIZE = 92
 
 const SectionTitle = ({ title }: { title: string }): JSX.Element => (
   <Flex pb="$spacing12">
-    <Text color="$neutral2" variant="subheadSmall">
+    <Text color="$neutral2" variant="subheading2">
       {title}
     </Text>
   </Flex>

@@ -151,7 +151,7 @@ function FavoriteTokenCard({
                   symbol={token?.symbol ?? undefined}
                   url={token?.project?.logoUrl ?? undefined}
                 />
-                <Text variant="bodyLarge">{getSymbolDisplayText(token?.symbol)}</Text>
+                <Text variant="body1">{getSymbolDisplayText(token?.symbol)}</Text>
               </Flex>
               {isEditing ? (
                 <RemoveButton onPress={onRemove} />
@@ -160,14 +160,14 @@ function FavoriteTokenCard({
               )}
             </Flex>
             <Flex gap="$spacing2">
-              <Text adjustsFontSizeToFit numberOfLines={1} variant="headlineSmall">
+              <Text adjustsFontSizeToFit numberOfLines={1} variant="heading3">
                 {formatUSDPrice(usdPrice)}
               </Text>
               <RelativeChange
                 arrowSize={iconSizes.icon16}
                 change={pricePercentChange ?? undefined}
                 semanticColor={true}
-                variant="subheadSmall"
+                variant="subheading2"
               />
             </Flex>
           </Flex>

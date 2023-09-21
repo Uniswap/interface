@@ -33,7 +33,7 @@ export function SettingsScreen(): JSX.Element {
     <Flex fill bg="$surface1" gap="$spacing12">
       <ScreenHeader title={t('Settings')} />
       <ScrollView p="$spacing12" showsVerticalScrollIndicator={false}>
-        <Text color="$neutral2" variant="subheadSmall">
+        <Text color="$neutral2" variant="subheading2">
           {t('Wallet settings')}
         </Text>
         {allAccountsSorted
@@ -71,7 +71,7 @@ export function SettingsScreen(): JSX.Element {
               }
               p="$none"
               size={48}
-              title={<Text variant="subheadSmall">{t('View recovery phrase')}</Text>}
+              title={<Text variant="subheading2">{t('View recovery phrase')}</Text>}
               onPress={(): void => navigateTo(SettingsRoutes.ViewRecoveryPhrase.valueOf())}
             />
           </YGroup.Item>
@@ -88,7 +88,7 @@ export function SettingsScreen(): JSX.Element {
               }
               p="$none"
               size={48}
-              title={<Text variant="subheadSmall">{t('Help center')}</Text>}
+              title={<Text variant="subheading2">{t('Help center')}</Text>}
             />
           </YGroup.Item>
         </YGroup>

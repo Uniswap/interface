@@ -58,10 +58,10 @@ function CopyButtonWrapper({
 export function AddressDisplay({
   address,
   size = 24,
-  variant = 'bodyLarge',
+  variant = 'body1',
   textColor = '$neutral1',
   captionTextColor = '$neutral2',
-  captionVariant = 'subheadSmall',
+  captionVariant = 'subheading2',
   hideAddressInSubtitle,
   direction = 'row',
   showCopy = false,

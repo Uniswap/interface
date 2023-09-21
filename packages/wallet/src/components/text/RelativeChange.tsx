@@ -18,7 +18,7 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
   const {
     absoluteChange,
     change,
-    variant = 'subheadSmall',
+    variant = 'subheading2',
     semanticColor,
     positiveChangeColor = '$statusSuccess',
     negativeChangeColor = '$statusCritical',

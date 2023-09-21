@@ -71,8 +71,8 @@ export function CancelConfirmationView({
         <SlashCircleIcon color={colors.neutral2.val} height={24} strokeWidth="1" width={24} />
       </Flex>
       <Flex centered gap="$spacing8">
-        <Text variant="buttonLabelMedium">{t('Cancel this transaction?')}</Text>
-        <Text color="$neutral2" textAlign="center" variant="bodySmall">
+        <Text variant="buttonLabel2">{t('Cancel this transaction?')}</Text>
+        <Text color="$neutral2" textAlign="center" variant="body2">
           {t(
             'If you cancel this transaction before it’s processed by the network, you’ll pay a new network fee instead of the original one.'
           )}
@@ -85,8 +85,8 @@ export function CancelConfirmationView({
         borderRadius="$rounded16"
         width="100%">
         <Flex grow row justifyContent="space-between" p="$spacing12">
-          <Text variant="subheadSmall">{t('Network fee')}</Text>
-          {!gasFeeUSD ? <ActivityIndicator /> : <Text variant="subheadSmall">{gasFeeUSD}</Text>}
+          <Text variant="subheading2">{t('Network fee')}</Text>
+          {!gasFeeUSD ? <ActivityIndicator /> : <Text variant="subheading2">{gasFeeUSD}</Text>}
         </Flex>
         {accountAddress && (
           <Flex grow row justifyContent="space-between" p="$spacing12">
@@ -94,9 +94,9 @@ export function CancelConfirmationView({
               hideAddressInSubtitle
               address={transactionDetails.from}
               horizontalGap="$spacing8"
-              variant="subheadSmall"
+              variant="subheading2"
             />
-            <Text color="$neutral2" variant="subheadSmall">
+            <Text color="$neutral2" variant="subheading2">
               {shortenAddress(transactionDetails.from)}
             </Text>
           </Flex>

@@ -19,7 +19,7 @@ export function NetworkLogos({
       {chains.length === 1 && firstChain && showFirstChainLabel ? (
         <Flex fill row justifyContent="space-between">
           <NetworkLogo chainId={firstChain} />
-          <Text color="$neutral2" numberOfLines={1} variant="buttonLabelSmall">
+          <Text color="$neutral2" numberOfLines={1} variant="buttonLabel3">
             {CHAIN_INFO[firstChain].label}
           </Text>
           <Flex width={iconSizes.icon20} />

@@ -122,11 +122,11 @@ const TransferRecipient = ({
       gap="$spacing8"
       px="$spacing16"
       py="$spacing12">
-      <Text color="$neutral1" textAlign="center" variant="subheadSmall">
+      <Text color="$neutral1" textAlign="center" variant="subheading2">
         {type === 'ens' ? displayName : address}
       </Text>
       {type === 'ens' && (
-        <Text color="$neutral2" textAlign="center" variant="buttonLabelMicro">
+        <Text color="$neutral2" textAlign="center" variant="buttonLabel4">
           {address}
         </Text>
       )}

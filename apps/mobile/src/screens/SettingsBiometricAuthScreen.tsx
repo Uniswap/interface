@@ -143,8 +143,8 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
       <Flex row alignItems="center" justifyContent="space-between">
         <Flex row>
           <Flex>
-            <Text variant="bodyLarge">{text}</Text>
-            <Text color="$neutral2" variant="bodyMicro">
+            <Text variant="body1">{text}</Text>
+            <Text color="$neutral2" variant="body3">
               {subText}
             </Text>
           </Flex>
@@ -181,9 +181,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
       )}
       <Screen>
         <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
-          <Text variant="bodyLarge">
-            {t('{{authenticationTypeName}}', { authenticationTypeName })}
-          </Text>
+          <Text variant="body1">{t('{{authenticationTypeName}}', { authenticationTypeName })}</Text>
         </BackHeader>
         <Flex p="$spacing24">
           <FlatList

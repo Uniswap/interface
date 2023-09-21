@@ -30,7 +30,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps): JS
       <Flex centered bg="$surface2" borderRadius="$rounded16" overflow="hidden">
         {typeof header === 'string' ? (
           <Flex centered gap="$spacing4" py="$spacing16">
-            <Text variant="buttonLabelMedium">{header}</Text>
+            <Text variant="buttonLabel2">{header}</Text>
           </Flex>
         ) : (
           header
@@ -51,7 +51,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps): JS
       <Flex bg="$surface2" borderRadius="$rounded12">
         <TouchableArea hapticFeedback onPress={onClose}>
           <Flex centered bg="$surface2" borderRadius="$rounded12" py="$spacing16">
-            <Text color="$neutral1" variant="buttonLabelMedium">
+            <Text color="$neutral1" variant="buttonLabel2">
               {closeButtonLabel}
             </Text>
           </Flex>

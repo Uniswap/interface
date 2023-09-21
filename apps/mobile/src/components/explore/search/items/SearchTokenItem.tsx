@@ -80,7 +80,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
           <Flex shrink alignItems="flex-start">
             <Flex centered row gap="$spacing8">
               <Flex shrink>
-                <Text color="$neutral1" numberOfLines={1} variant="bodyLarge">
+                <Text color="$neutral1" numberOfLines={1} variant="body1">
                   {name}
                 </Text>
               </Flex>
@@ -95,12 +95,12 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
               )}
             </Flex>
             <Flex centered row gap="$spacing8">
-              <Text color="$neutral2" numberOfLines={1} variant="subheadSmall">
+              <Text color="$neutral2" numberOfLines={1} variant="subheading2">
                 {symbol}
               </Text>
               {address && (
                 <Flex shrink>
-                  <Text color="$neutral3" numberOfLines={1} variant="subheadSmall">
+                  <Text color="$neutral3" numberOfLines={1} variant="subheading2">
                     {shortenAddress(address)}
                   </Text>
                 </Flex>

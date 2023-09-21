@@ -188,7 +188,7 @@ export function NFTItemScreen({
                     <NFTViewer autoplay uri={imageUrl} />
                   </Flex>
                 ) : (
-                  <Text color="$neutral1" numberOfLines={1} variant="bodyLarge">
+                  <Text color="$neutral1" numberOfLines={1} variant="body1">
                     {name}
                   </Text>
                 )
@@ -239,10 +239,10 @@ export function NFTItemScreen({
                       loading={nftLoading}
                       loadingPlaceholderText="#0000 NFT Title"
                       mt="$spacing4"
-                      variant="subheadLarge"
+                      variant="subheading1"
                     />
                   ) : name ? (
-                    <Text color="$neutral1" mt="$spacing4" numberOfLines={2} variant="subheadLarge">
+                    <Text color="$neutral1" mt="$spacing4" numberOfLines={2} variant="subheading1">
                       {name}
                     </Text>
                   ) : null}
@@ -259,7 +259,7 @@ export function NFTItemScreen({
                   {nftLoading ? (
                     <Flex mt="$spacing12">
                       <Loader.Box
-                        height={theme.textVariants.bodySmall.lineHeight}
+                        height={theme.textVariants.body2.lineHeight}
                         // TODO EXT-259 make work with shortcut props like "mb", etc
                         marginBottom="$spacing4"
                         repeat={3}
@@ -285,7 +285,7 @@ export function NFTItemScreen({
                           iconColor="$neutral1"
                           price={listingPrice}
                           textColor="$neutral1"
-                          textVariant="buttonLabelSmall"
+                          textVariant="buttonLabel3"
                         />
                       }
                     />
@@ -298,7 +298,7 @@ export function NFTItemScreen({
                           iconColor="$neutral1"
                           price={lastSaleData.price}
                           textColor="$neutral1"
-                          textVariant="buttonLabelSmall"
+                          textVariant="buttonLabel3"
                         />
                       }
                     />
@@ -315,7 +315,7 @@ export function NFTItemScreen({
                             horizontalGap="$spacing4"
                             size={iconSizes.icon20}
                             textColor="$neutral1"
-                            variant="buttonLabelSmall"
+                            variant="buttonLabel3"
                           />
                         </TouchableArea>
                       }
@@ -326,7 +326,7 @@ export function NFTItemScreen({
                 {/* Traits */}
                 {asset?.traits && asset?.traits?.length > 0 ? (
                   <Flex gap="$spacing12">
-                    <Text color="$neutral1" ml="$spacing24" variant="bodySmall">
+                    <Text color="$neutral1" ml="$spacing24" variant="body2">
                       {t('Traits')}
                     </Text>
                     <NFTTraitList titleTextColor={accentTextColor} traits={asset.traits} />
@@ -351,7 +351,7 @@ function AssetMetadata({
   return (
     <Flex row alignItems="center" justifyContent="space-between" pl="$spacing2">
       <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" maxWidth="40%">
-        <Text color="$neutral2" variant="bodySmall">
+        <Text color="$neutral2" variant="body2">
           {title}
         </Text>
       </Flex>

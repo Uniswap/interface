@@ -64,11 +64,11 @@ export function Complete(): JSX.Element {
             <Flex alignItems="center" gap="$spacing24">
               {/* TODO: use AddressDisplay here */}
               <Unicon address={address} size={iconSizes.icon64} />
-              <Text color="$neutral1" variant="headlineLarge">
+              <Text color="$neutral1" variant="heading1">
                 {nickname}
               </Text>
             </Flex>
-            <Text color="$neutral2" variant="subheadSmall">
+            <Text color="$neutral2" variant="subheading2">
               {sanitizeAddressText(shortenAddress(address))}
             </Text>
           </Flex>
@@ -134,16 +134,16 @@ export function Complete(): JSX.Element {
             width={POPUP_WIDTH}>
             {/* heading and puzzle icon */}
             <Flex gap="$spacing2">
-              <Text numberOfLines={1} variant="bodySmall">
+              <Text numberOfLines={1} variant="body2">
                 Pin the extension to your browser window
               </Text>
               <Flex row alignItems="center" gap="$spacing8">
-                <Text numberOfLines={1} variant="bodySmall">
+                <Text numberOfLines={1} variant="body2">
                   by clicking on the
                 </Text>
                 {/* TODO(EXT-210): constant icon sizes */}
                 <Icons.Puzzle color="$accent1" size={iconSizes.icon20} />
-                <Text numberOfLines={1} variant="bodySmall">
+                <Text numberOfLines={1} variant="body2">
                   icon, and then the pin
                 </Text>
               </Flex>
@@ -173,7 +173,7 @@ export function Complete(): JSX.Element {
                   />
                 </Flex>
                 {/* mocked extension list item name */}
-                <Text variant="bodyLarge">Uniswap Wallet</Text>
+                <Text variant="body1">Uniswap Wallet</Text>
               </Flex>
               {/* mocked extension list item pin button and more icon container */}
               <Flex row alignItems="center" gap="$spacing12">
@@ -216,7 +216,7 @@ export function Complete(): JSX.Element {
           viewportName="onboarding">
           <Toast.Title alignItems="center" display="flex" flexDirection="row" gap="$spacing8">
             <Icons.Checkmark color="$statusSuccess" size={iconSizes.icon24} />
-            <Text variant="bodyLarge">{t('Pinned! It’s safe to close this tab now')}</Text>
+            <Text variant="body1">{t('Pinned! It’s safe to close this tab now')}</Text>
           </Toast.Title>
         </Toast>
       )}
@@ -259,7 +259,7 @@ function OnboardingCompleteCard({
         p="$spacing16"
         width={200}>
         {Icon}
-        <Text color={color} textDecorationLine="none" variant="subheadSmall">
+        <Text color={color} textDecorationLine="none" variant="subheading2">
           {title}
         </Text>
       </Flex>

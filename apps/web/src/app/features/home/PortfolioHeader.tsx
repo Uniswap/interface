@@ -35,7 +35,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
         onPress={onPressAccount}>
         <Unicon address={address} size={iconSizes.icon36} />
         <Flex row gap="$spacing4" py="$spacing16">
-          <Text variant="subheadSmall">{displayName}</Text>
+          <Text variant="subheading2">{displayName}</Text>
           <Icons.Chevron
             color="$neutral2"
             size={iconSizes.icon20}

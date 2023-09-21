@@ -79,8 +79,8 @@ export function _RecipientSelect({
         />
         {noResults ? (
           <Flex centered gap="$spacing12" mt="$spacing24" px="$spacing24">
-            <Text variant="buttonLabelMedium">{t('No results found')}</Text>
-            <Text color="$neutral3" textAlign="center" variant="bodyLarge">
+            <Text variant="buttonLabel2">{t('No results found')}</Text>
+            <Text color="$neutral3" textAlign="center" variant="body1">
               {t('The address you typed either does not exist or is spelled incorrectly.')}
             </Text>
           </Flex>

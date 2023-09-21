@@ -78,7 +78,7 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
           <Flex row alignItems="center" gap="$spacing8">
             {icon}
             {typeof title === 'string' ? (
-              <Text color="$neutral2" variant="subheadSmall">
+              <Text color="$neutral2" variant="subheading2">
                 {title}
               </Text>
             ) : (
@@ -87,7 +87,7 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
           </Flex>
           {subtitle ? (
             typeof subtitle === 'string' ? (
-              <Text variant="subheadLarge">{subtitle}</Text>
+              <Text variant="subheading1">{subtitle}</Text>
             ) : (
               subtitle
             )
@@ -125,11 +125,11 @@ function EmptyState({
         {icon}
         <Flex centered gap="$spacing8">
           {title && (
-            <Text textAlign="center" variant="buttonLabelMedium">
+            <Text textAlign="center" variant="buttonLabel2">
               {title}
             </Text>
           )}
-          <Text color="$neutral2" textAlign="center" variant="bodySmall">
+          <Text color="$neutral2" textAlign="center" variant="body2">
             {description}
           </Text>
         </Flex>
@@ -137,14 +137,14 @@ function EmptyState({
       <Flex row gap="$spacing16">
         {buttonLabel && (
           <TouchableArea hapticFeedback onPress={onPress}>
-            <Text color="$accent1" variant="buttonLabelMedium">
+            <Text color="$accent1" variant="buttonLabel2">
               {buttonLabel}
             </Text>
           </TouchableArea>
         )}
         {additionalButtonLabel && (
           <TouchableArea onPress={onPressAdditional}>
-            <Text color="$accent1" variant="buttonLabelMedium">
+            <Text color="$accent1" variant="buttonLabel2">
               {additionalButtonLabel}
             </Text>
           </TouchableArea>
@@ -172,11 +172,11 @@ function ErrorState(props: ErrorStateProps): JSX.Element {
         {icon}
         <Flex centered gap="$spacing8">
           {title ? (
-            <Text textAlign="center" variant="buttonLabelMedium">
+            <Text textAlign="center" variant="buttonLabel2">
               {title}
             </Text>
           ) : null}
-          <Text color="$neutral2" textAlign="center" variant="bodySmall">
+          <Text color="$neutral2" textAlign="center" variant="body2">
             {description}
           </Text>
         </Flex>
@@ -184,7 +184,7 @@ function ErrorState(props: ErrorStateProps): JSX.Element {
       <Flex row>
         {retryButtonLabel ? (
           <TouchableArea hapticFeedback onPress={onRetry}>
-            <Text color="$accent1" variant="buttonLabelSmall">
+            <Text color="$accent1" variant="buttonLabel3">
               {retryButtonLabel}
             </Text>
           </TouchableArea>
@@ -235,13 +235,13 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
           ellipsizeMode="tail"
           numberOfLines={1}
           textAlign="center"
-          variant="subheadSmall">
+          variant="subheading2">
           {title}
         </Text>
       </Flex>
       {retry ? (
         <TouchableArea hapticFeedback onPress={retry}>
-          <Text color="$accent1" variant="buttonLabelSmall">
+          <Text color="$accent1" variant="buttonLabel3">
             {retryButtonLabel}
           </Text>
         </TouchableArea>

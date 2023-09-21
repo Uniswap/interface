@@ -58,9 +58,9 @@ function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Ele
               hideAddressInSubtitle
               address={address}
               size={24}
-              variant="subheadSmall"
+              variant="subheading2"
             />
-            <Text color="$neutral2" loading={loading} numberOfLines={1} variant="bodyMicro">
+            <Text color="$neutral2" loading={loading} numberOfLines={1} variant="body3">
               {formatUSDPrice(balance, NumberType.PortfolioBalance)}
             </Text>
           </Flex>

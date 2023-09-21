@@ -47,7 +47,7 @@ export function PriceAmount({
   price,
   gap = '$spacing4',
   iconSize = iconSizes.icon16,
-  textVariant = 'buttonLabelMicro',
+  textVariant = 'buttonLabel4',
   iconColor = '$neutral1',
   textColor = '$neutral1',
 }: ListPriceProps): JSX.Element {

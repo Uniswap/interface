@@ -13,7 +13,7 @@ interface TextWithFuseMatchesProps {
 export function TextWithFuseMatches({
   matches,
   text,
-  variant = 'bodyLarge',
+  variant = 'body1',
   numberOfLines = 1,
 }: TextWithFuseMatchesProps & TextProps): JSX.Element {
   if (!matches || matches.length === 0) {

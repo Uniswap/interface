@@ -35,15 +35,15 @@ public struct PricePercentChangeTextWithIcon: View {
         if (pricePercentChange >= 0) {
           Image("caret-up")
           Text("\(pricePercentChange, specifier: "%.2f")%")
-            .withHeadlineMediumStyle()
+            .withHeading2Style()
         } else {
           Image("caret-up").rotationEffect(.degrees(-180))
           Text("\(-pricePercentChange, specifier: "%.2f")%")
-            .withHeadlineMediumStyle()
+            .withHeading2Style()
         }
       } else {
         Text("--")
-          .withHeadlineMediumStyle()
+          .withHeading2Style()
       }
     }
   }

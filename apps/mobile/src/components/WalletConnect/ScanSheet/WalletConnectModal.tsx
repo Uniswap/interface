@@ -224,7 +224,7 @@ export function WalletConnectModal({
                   width={iconSizes.icon24}
                 />
               )}
-              <Text color="$neutral1" variant="buttonLabelMedium">
+              <Text color="$neutral1" variant="buttonLabel2">
                 {currentScreenState === ScannerModalState.ScanQr
                   ? t('Show my QR code')
                   : t('Scan a QR code')}

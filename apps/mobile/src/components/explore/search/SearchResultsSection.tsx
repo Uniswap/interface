@@ -217,7 +217,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
       <FlatList
         ListEmptyComponent={
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="spacing8" mx="spacing8">
-            <Text color="$neutral2" variant="bodyLarge">
+            <Text color="$neutral2" variant="body1">
               <Trans t={t}>
                 No results found for <Text color="$neutral1">"{searchQuery}"</Text>
               </Trans>

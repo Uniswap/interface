@@ -55,9 +55,9 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
           showCopy
           showCopyWrapperButton
           address={address}
-          captionVariant="bodyLarge"
+          captionVariant="body1"
           showAccountIcon={false}
-          variant="headlineSmall"
+          variant="heading3"
         />
         <QRCodeDisplay
           hideOutline
@@ -70,13 +70,13 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
           safeAreaColor="$surface1"
           size={QR_CODE_SIZE}
         />
-        <Text color="$neutral2" lineHeight={20} textAlign="center" variant="bodyMicro">
+        <Text color="$neutral2" lineHeight={20} textAlign="center" variant="body3">
           {t(
             'Only send tokens on Ethereum, Arbitrum, Optimism, Polygon, Base, BNB networks to this address.'
           )}{' '}
         </Text>
         <TouchableArea height={18} onPress={onPressLearnMore}>
-          <Text color="$accent1" variant="buttonLabelSmall">
+          <Text color="$accent1" variant="buttonLabel3">
             {t('Learn more')}
           </Text>
         </TouchableArea>

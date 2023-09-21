@@ -13,7 +13,7 @@ export function WebViewScreen({
   return (
     <Screen edges={['top', 'left', 'right']}>
       <BackHeader alignment="center" mb="$spacing16" pt="$spacing4" px="$spacing12">
-        <Text variant="bodyLarge">{headerTitle}</Text>
+        <Text variant="body1">{headerTitle}</Text>
       </BackHeader>
       <Separator />
       <WebView

@@ -56,7 +56,7 @@ export function SearchEmptySection(): JSX.Element {
                 mb="$spacing4">
                 <SectionHeaderText icon={<RecentIcon />} title={t('Recent searches')} />
                 <TouchableArea onPress={onPressClearSearchHistory}>
-                  <Text color="$accent1" variant="buttonLabelSmall">
+                  <Text color="$accent1" variant="buttonLabel3">
                     {t('Clear all')}
                   </Text>
                 </TouchableArea>

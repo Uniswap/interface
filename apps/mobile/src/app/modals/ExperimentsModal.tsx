@@ -51,26 +51,24 @@ export function ExperimentsModal(): JSX.Element {
         px="$spacing24">
         <Flex gap="$spacing8">
           <Flex gap="$spacing16" my="$spacing16">
-            <Text variant="subheadLarge">⚙️ Custom GraphQL Endpoint</Text>
-            <Text variant="bodySmall">
+            <Text variant="subheading1">⚙️ Custom GraphQL Endpoint</Text>
+            <Text variant="body2">
               You will need to restart the application to pick up any changes in this section.
               Beware of client side caching!
             </Text>
             <Flex row alignItems="center" gap="$spacing16">
-              <Text variant="bodySmall">URL</Text>
+              <Text variant="body2">URL</Text>
               <TextInput flex={1} value={url} onChangeText={setUrl} />
             </Flex>
             <Flex row alignItems="center" gap="$spacing16">
-              <Text variant="bodySmall">Key</Text>
+              <Text variant="body2">Key</Text>
               <TextInput flex={1} value={key} onChangeText={setKey} />
             </Flex>
             <Button label="Set" size={ButtonSize.Small} onPress={setEndpoint} />
             <Button label="Clear" size={ButtonSize.Small} onPress={clearEndpoint} />
           </Flex>
-          <Text variant="subheadLarge">⛳️ Feature Flags</Text>
-          <Text variant="bodySmall">
-            Overridden feature flags are reset when the app is restarted
-          </Text>
+          <Text variant="subheading1">⛳️ Feature Flags</Text>
+          <Text variant="body2">Overridden feature flags are reset when the app is restarted</Text>
         </Flex>
         {Object.values(FEATURE_FLAGS).map((featureFlag) => {
           return <FeatureFlagRow key={featureFlag} featureFlag={featureFlag} />
@@ -85,7 +83,7 @@ function FeatureFlagRow({ featureFlag }: { featureFlag: FEATURE_FLAGS }): JSX.El
 
   return (
     <Flex row alignItems="center" gap="$spacing16" justifyContent="space-between">
-      <Text variant="bodyLarge">{featureFlag}</Text>
+      <Text variant="body1">{featureFlag}</Text>
       <Switch
         value={status}
         onValueChange={(newValue: boolean): void => {

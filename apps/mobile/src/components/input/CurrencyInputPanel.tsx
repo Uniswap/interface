@@ -234,9 +234,9 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
               borderWidth={0}
               dimTextColor={dimTextColor}
               flex={1}
-              fontFamily={fonts.headlineMedium.family}
+              fontFamily={fonts.heading2.family}
               fontSize={fontSize}
-              maxFontSizeMultiplier={fonts.headlineMedium.maxFontSizeMultiplier}
+              maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
               // This is a hacky workaround for Android to prevent text from being cut off
               // (the text input height is greater than the font size and the input is
               // centered vertically, so the caret is cut off but the text is not)
@@ -269,14 +269,14 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
       {currencyInfo && (
         <Flex row alignItems="center" gap="$spacing8" justifyContent="space-between" mb="$spacing4">
           <Flex shrink>
-            <Text color="$neutral2" numberOfLines={1} variant="subheadSmall">
+            <Text color="$neutral2" numberOfLines={1} variant="subheading2">
               {!isUSDInput ? formattedUSDValue : formattedCurrencyAmount}
             </Text>
           </Flex>
           <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">
             <Text
               color={showInsufficientBalanceWarning ? '$DEP_accentWarning' : '$neutral2'}
-              variant="subheadSmall">
+              variant="subheading2">
               {t('Balance')}: {formatCurrencyAmount(currencyBalance, NumberType.TokenNonTx)}
             </Text>
 

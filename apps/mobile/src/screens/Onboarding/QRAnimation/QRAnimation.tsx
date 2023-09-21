@@ -157,22 +157,22 @@ export function QRAnimation({
 
   const finalTitleMaxFontSizeMultiplier = useResponsiveProp({
     xs: 1.1,
-    sm: fonts.headlineSmall.maxFontSizeMultiplier,
+    sm: fonts.heading3.maxFontSizeMultiplier,
   })
 
   const finalBodyMaxFontSizeMultiplier = useResponsiveProp({
     xs: 1.1,
-    sm: fonts.bodyLarge.maxFontSizeMultiplier,
+    sm: fonts.body1.maxFontSizeMultiplier,
   })
 
   const titleSize = useResponsiveProp({
-    xs: 'subheadSmall',
-    sm: 'subheadLarge',
+    xs: 'subheading2',
+    sm: 'subheading1',
   })
 
   const bodySize = useResponsiveProp({
-    xs: 'bodyMicro',
-    sm: 'bodySmall',
+    xs: 'body3',
+    sm: 'body2',
   })
 
   return (
@@ -274,9 +274,9 @@ export function QRAnimation({
                       showCopy
                       address={activeAddress}
                       captionTextColor="$neutral3"
-                      captionVariant="subheadSmall"
+                      captionVariant="subheading2"
                       showAccountIcon={false}
-                      variant="headlineSmall"
+                      variant="heading3"
                     />
                   </Flex>
                 </Animated.View>
@@ -320,7 +320,7 @@ export function QRAnimation({
                         width={iconSizes.icon16}
                       />
                     </Flex>
-                    <Text color="$sporeWhite" variant="buttonLabelMedium">
+                    <Text color="$sporeWhite" variant="buttonLabel2">
                       {t('Let’s keep it safe')}
                     </Text>
                   </Flex>

@@ -151,7 +151,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
             />
             <Text
               color="$accent1"
-              variant="buttonLabelMedium"
+              variant="buttonLabel2"
               onPress={(): Promise<void> =>
                 handleOnPress(OnboardingScreens.WatchWallet, ImportType.Watch)
               }>

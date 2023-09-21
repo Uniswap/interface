@@ -61,11 +61,11 @@ export function DappConnectedNetworkModal({
       <Flex centered gap="$spacing16" mb="$spacing24" px="$spacing24" py="$spacing12">
         <Flex alignItems="center" gap="$spacing8">
           <DappHeaderIcon dapp={dapp} />
-          <Text textAlign="center" variant="buttonLabelMedium">
-            <Text variant="bodyLarge">{t('Connected to ')}</Text>
+          <Text textAlign="center" variant="buttonLabel2">
+            <Text variant="body1">{t('Connected to ')}</Text>
             {dapp.name || dapp.url}
           </Text>
-          <Text color="$accent1" numberOfLines={1} textAlign="center" variant="buttonLabelMicro">
+          <Text color="$accent1" numberOfLines={1} textAlign="center" variant="buttonLabel4">
             {dapp.url}
           </Text>
         </Flex>
@@ -80,7 +80,7 @@ export function DappConnectedNetworkModal({
             {session.chains.map((chainId) => (
               <Flex key={chainId} row alignItems="center" justifyContent="space-between">
                 <NetworkLogo chainId={chainId} size={iconSizes.icon24} />
-                <Text color="$neutral1" numberOfLines={1} variant="bodyLarge">
+                <Text color="$neutral1" numberOfLines={1} variant="body1">
                   {CHAIN_INFO[chainId].label}
                 </Text>
                 <Flex centered height={iconSizes.icon24} width={iconSizes.icon24}>

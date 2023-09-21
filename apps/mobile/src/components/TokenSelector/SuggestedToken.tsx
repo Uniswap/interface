@@ -44,7 +44,7 @@ function _SuggestedToken({
         pl="$spacing4"
         pr="$spacing12"
         py="$spacing4"
-        textVariant="bodyLarge"
+        textVariant="body1"
       />
     </TouchableArea>
   )
