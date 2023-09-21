@@ -1,14 +1,16 @@
-import { gql } from '@apollo/client'
 import { Token } from '@pollum-io/sdk-core'
 import { ChainId } from '@pollum-io/smart-order-router'
-import { GAMMA_MASTERCHEF_ADDRESSES } from 'constants/addresses'
+import { CallState } from '@uniswap/redux-multicall'
+import { GAMMA_MASTERCHEF_ADDRESSES, PSYS_ADDRESS } from 'constants/addresses'
 import { BigNumber } from 'ethers/lib/ethers'
+import { useFetchedTokenData } from 'graphql/tokens/TokenData'
 import { useMasterChefContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { ParsedQs } from 'qs'
+import { useEffect, useMemo, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
-import { GammaPairTokens, GlobalConst, MINICHEF_ABI, ONE_TOKEN, ZERO } from './constants'
+import { GammaPairTokens, GlobalConst, MINICHEF_ABI } from './constants'
 
 const { v3FarmSortBy } = GlobalConst.utils
 
@@ -321,112 +323,64 @@ export const checkCondition = (item: any, search: string, GlobalData: any, farmF
       : true)
   )
 }
-function GetPoolTokens(address: string[]) {
-  const masterChefContract = useMasterChefContract(undefined, MINICHEF_ABI)
-  return useSingleCallResult(masterChefContract, 'poolTokens', [address])
-}
 
-export function GetRewardPerSecond() {
+export function useRewardPerSecond() {
   const masterChefContract = useMasterChefContract(undefined, MINICHEF_ABI)
   return useSingleCallResult(masterChefContract, 'rewardPerSecond')
 }
 
-function GetPoolInfo(poolId: string) {
+function usePoolInfo(poolId: string) {
   const masterChefContract = useMasterChefContract(undefined, MINICHEF_ABI)
   return useSingleCallResult(masterChefContract, 'poolInfo', [poolId])
 }
 
-function GetTotalAllocationPoints() {
+function useTotalAllocationPoints() {
   const masterChefContract = useMasterChefContract(undefined, MINICHEF_ABI)
-  return useSingleCallResult(masterChefContract, 'totalAllocationPoints')
+  return useSingleCallResult(masterChefContract, 'totalAllocPoint')
 }
 
-export function GetRewardTokenAddress() {
+export function useRewardTokenAddress() {
   const masterChefContract = useMasterChefContract(undefined, MINICHEF_ABI)
   return useSingleCallResult(masterChefContract, 'REWARD')
 }
 
-function GetStakingTokenAddress(poolId: string) {
-  const masterChefContract = useMasterChefContract(undefined, MINICHEF_ABI)
-  return useSingleCallResult(masterChefContract, 'stakingTokenAddress', [poolId])
-}
+export const useApr = (poolId: string, rewardPerSecond: CallState, tvlPoolUSD: number) => {
+  const [stakingAPR, setStakingAPR] = useState<BigNumber | null>(null)
 
-function convertStringToBigNumber(input: string, inputDecimals: number, outputDecimals: number): BigNumber {
-  const LEADING_ZERO_REGEX = /^0+/
-  const adjustedStringValue = Number.parseFloat(input)
-    .toFixed(outputDecimals - inputDecimals)
-    .replace('.', '')
-    .replace(LEADING_ZERO_REGEX, '')
-  return adjustedStringValue.length === 0 ? ZERO : BigNumber.from(adjustedStringValue)
-}
+  const poolInfo = usePoolInfo(poolId)
+  const totalAllocPoints = useTotalAllocationPoints()
+  const { loading: tokenDataLoading, data: tokenData } = useFetchedTokenData([PSYS_ADDRESS])
 
-export const getApr = async function (poolId: string) {
-  const stakingTokenAddress = await GetStakingTokenAddress(poolId)
-  // Number of days to average swap volume from
-  const days = 7
+  const PSYSUSD = useMemo(() => {
+    if (!tokenDataLoading && tokenData?.[0]) return tokenData?.[0].priceUSD
+    return 1
+  }, [tokenData, tokenDataLoading])
 
-  const [
-    { pairDayDatas },
-    {
-      bundle: { sysPrice: sysPriceString },
-    },
-    {
-      token: { derivedSYS: derivedPsysString },
-    },
-    [token0, token1],
-    rewardPerSecond,
-    poolInfo,
-    totalAllocPoints,
-    rewarderAddress,
-  ] = await Promise.all([
-    // Swap volume over 7 days
-    gql.request(QUERIES.DAILY_VOLUME, {
-      days,
-      pairAddress: stakingTokenAddress,
-    }),
+  const stakedPSYS = tvlPoolUSD / PSYSUSD
+  console.log('PSYSUSD:', PSYSUSD)
+  console.log('totalAllocPoints:', totalAllocPoints.result?.[0])
+  console.log('stakedPSYS:', stakedPSYS)
+  useEffect(() => {
+    // Handle asynchronous operations here
+    const fetchData = async () => {
+      const poolRewardPerSecInPSYS = rewardPerSecond?.result?.[0]
+        .mul(poolInfo?.result?.allocPoint)
+        .div(totalAllocPoints.result?.[0]) as BigNumber
 
-    // SYS price in terms of USD
-    gql.request(QUERIES.SYS_PRICE),
-
-    // PSYS price in terms of SYS
-    gql.request(QUERIES.TOKEN_PRICE, {
-      address: PSYS_ADDRESS.toLowerCase(),
-    }),
-
-    GetPoolTokens(stakingTokenAddress),
-    GetRewardPerSecond(),
-    GetPoolInfo(poolId),
-    GetTotalAllocationPoints(),
-  ])
-
-  const sysPrice = convertStringToBigNumber(sysPriceString, 0, 18)
-  const psysPrice = convertStringToBigNumber(derivedPsysString, 0, 18).mul(sysPrice).div(ONE_TOKEN)
-
-  const extraRewardTokensPerSecondInPSYS = ZERO
-  const stakedPSYS = ZERO
-
-  // if ([token0, token1].includes(PSYS_ADDRESS.toLowerCase())) {
-  //   const pairValueInPSYS = (await getBalance(PSYS_ADDRESS, stakingTokenAddress)).mul(2)
-  //   stakedPSYS = pairValueInPSYS.mul(plpStaked).div(plpTotalSupply)
-  // } else if ([token0, token1].includes(WSYS_ADDRESS.toLowerCase())) {
-  //   const pairValueInWSYS = (await getBalance(WSYS_ADDRESS, stakingTokenAddress)).mul(2)
-  //   const adjustedPairValue = pairValueInWSYS.mul(sysPrice).div(psysPrice)
-  //   stakedPSYS = adjustedPairValue.mul(plpStaked).div(plpTotalSupply)
-  // }
-
-  const poolRewardPerSecInPSYS = rewardPerSecond?.result?.[0]
-    .mul(poolInfo?.result?.[0].allocPoint)
-    .div(totalAllocPoints)
-  const stakingAPR = stakedPSYS.isZero()
-    ? ZERO
-    : poolRewardPerSecInPSYS
-        .add(extraRewardTokensPerSecondInPSYS)
+      const stakingValue = poolRewardPerSecInPSYS
         // Percentage
         .mul(100)
         // Calculate reward rate per year
         .mul(60 * 60 * 24 * 365)
         // Divide by amount staked to get APR
         .div(stakedPSYS)
+      // ... your async logic
+      setStakingAPR(stakingValue)
+    }
 
+    fetchData()
+  }, [PSYSUSD, poolInfo?.result?.allocPoint, rewardPerSecond?.result, totalAllocPoints.result, tvlPoolUSD])
+
+  console.log('stakingAPR', stakingAPR)
   return stakingAPR
 }

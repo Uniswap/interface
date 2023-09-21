@@ -14,7 +14,7 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { getTokenFromAddress } from 'utils/farmUtils'
 
 import { GammaPairs, GlobalData } from '../constants'
-import { checkCondition, GetRewardPerSecond, GetRewardTokenAddress, sortFarms } from '../utils'
+import { checkCondition, sortFarms, useRewardPerSecond, useRewardTokenAddress } from '../utils'
 import { GammaFarmCard } from './GammaFarmCard'
 
 const NoFarmsContainer = styled.div`
@@ -36,6 +36,28 @@ const GammaFarmsPage: React.FC<{
   const tokenMap = useCombinedActiveList()
   const isDarkMode = useIsDarkMode()
   const masterChefContract = useMasterChefContract()
+
+  const rewardPerSecond = useRewardPerSecond()
+  const rewardTokenAddress = useRewardTokenAddress()
+
+  const rewardsData = useMemo(() => {
+    return { rewardPerSecond, rewardTokenAddress }
+  }, [rewardPerSecond, rewardTokenAddress])
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       if (userewardPerSecond && userewardTokenAddress) {
+  //         setRewardPerSecond(userewardPerSecond)
+  //         setRewardTokenAddress(userewardTokenAddress)
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching APR:', error)
+  //     }
+  //   }
+
+  //   fetchData()
+  // }, [userewardPerSecond, userewardTokenAddress])
 
   const allGammaFarms = useMemo(() => {
     const pairsGroups = GammaPairs[ChainId.ROLLUX]
@@ -124,24 +146,23 @@ const GammaFarmsPage: React.FC<{
                 : undefined
 
               const tvl = gammaPositions ? gammaPositions[farm.hypervisor || allGammaFarms[0].hypervisor].balanceUSD : 0
-              const rewardPerSecond = GetRewardPerSecond()
-              const rewardTokenAddress = GetRewardTokenAddress()
 
               const rewardData = {
                 tvl,
-                rewardPerSecond,
-                rewardTokenAddress,
+                ...rewardsData,
               }
 
               return (
                 <div style={{ marginBottom: '20px' }} key={farm.address}>
-                  <GammaFarmCard
-                    token0={farm.token0}
-                    token1={farm.token1}
-                    pairData={farm}
-                    data={foundData}
-                    rewardData={rewardData}
-                  />
+                  {rewardPerSecond && rewardTokenAddress && (
+                    <GammaFarmCard
+                      token0={farm.token0}
+                      token1={farm.token1}
+                      pairData={farm}
+                      data={foundData}
+                      rewardData={rewardData}
+                    />
+                  )}
                 </div>
               )
             })}
