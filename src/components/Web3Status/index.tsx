@@ -9,14 +9,14 @@ import { IconWrapper } from 'components/Identicon/StatusIcon'
 import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { getConnection } from 'connection'
 import { useConnectionReady } from 'connection/eagerlyConnect'
-import { ConnectionMeta, getConnectionMeta, setConnectionMeta } from 'connection/meta'
+import { ConnectionMeta, getPersistedConnectionMeta, setPersistedConnectionMeta } from 'connection/meta'
 import useENSName from 'hooks/useENSName'
 import useLast from 'hooks/useLast'
 import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { darken } from 'polished'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppSelector } from 'state/hooks'
 import styled from 'styled-components'
 import { colors } from 'theme/colors'
@@ -153,35 +153,35 @@ function Web3StatusInner() {
 
   const { hasPendingActivity, pendingActivityCount } = usePendingActivity()
 
-  const displayName = useMemo(() => (account ? ENSName || shortenAddress(account) : null), [account, ENSName])
-  const meta = useRef(getConnectionMeta())
+  // Display a loading state for the initial connection, based on the last session's persisted connection.
+  // Subsequent connection changes will not display this loading state, it is meant only for pageload.
+  const [initialMeta, setInitialMeta] = useState(getPersistedConnectionMeta())
+  const isInitialMetaLoading = Boolean(initialMeta?.address === account && initialMeta?.ENSName && ENSLoading)
   useEffect(() => {
-    if (displayName) {
+    if (account || ENSName) {
       const meta: ConnectionMeta = {
         type: connection.type,
         address: account,
         ENSName: ENSName ?? undefined,
       }
-      setConnectionMeta(meta)
+      setPersistedConnectionMeta(meta)
     }
-  }, [ENSName, account, connection.type, displayName])
+  }, [ENSName, account, connection.type])
 
-  const isENSNameLoading = Boolean(meta.current?.address === account && meta.current?.ENSName && ENSLoading)
-
-  if (!connectionReady || isENSNameLoading) {
+  if (!connectionReady || isInitialMetaLoading) {
     return (
-      <Web3StatusConnecting disabled={!isENSNameLoading} onClick={handleWalletDropdownClick}>
+      <Web3StatusConnecting disabled={!isInitialMetaLoading} onClick={handleWalletDropdownClick}>
         <IconWrapper size={24}>
           <LoaderV3 size="24px" />
         </IconWrapper>
         <AddressAndChevronContainer loading={true}>
-          <Text>{meta.current?.ENSName ?? meta.current?.address}</Text>
+          <Text>{initialMeta?.ENSName ?? shortenAddress(initialMeta?.address)}</Text>
         </AddressAndChevronContainer>
       </Web3StatusConnecting>
     )
   } else {
-    // Update meta once a connection (or lack thereof) has loaded.
-    meta.current = getConnectionMeta()
+    // Clear meta once the initial connection (or lack thereof) has loaded.
+    setInitialMeta(undefined)
   }
 
   if (account) {
@@ -210,7 +210,7 @@ function Web3StatusInner() {
             </RowBetween>
           ) : (
             <AddressAndChevronContainer>
-              <Text>{displayName}</Text>
+              <Text>{ENSName ?? shortenAddress(account)}</Text>
             </AddressAndChevronContainer>
           )}
         </Web3StatusConnected>

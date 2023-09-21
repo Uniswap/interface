@@ -8,7 +8,7 @@ export interface ConnectionMeta {
 
 export const connectionMetaKey = 'connection_meta'
 
-export function getConnectionMeta(): ConnectionMeta | undefined {
+export function getPersistedConnectionMeta(): ConnectionMeta | undefined {
   try {
     const value = localStorage.getItem(connectionMetaKey)
     if (value) {
@@ -28,10 +28,10 @@ export function getConnectionMeta(): ConnectionMeta | undefined {
   return
 }
 
-export function setConnectionMeta(meta: ConnectionMeta) {
+export function setPersistedConnectionMeta(meta: ConnectionMeta) {
   localStorage.setItem(connectionMetaKey, JSON.stringify(meta))
 }
 
-export function deleteConnectionMeta() {
+export function deletePersistedConnectionMeta() {
   localStorage.removeItem(connectionMetaKey)
 }

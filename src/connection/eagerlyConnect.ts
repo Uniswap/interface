@@ -2,7 +2,7 @@ import { Connector } from '@web3-react/types'
 import { useSyncExternalStore } from 'react'
 
 import { getConnection, gnosisSafeConnection, networkConnection } from './index'
-import { deleteConnectionMeta, getConnectionMeta } from './meta'
+import { deletePersistedConnectionMeta, getPersistedConnectionMeta } from './meta'
 import { ConnectionType } from './types'
 
 class FailedToConnect extends Error {}
@@ -46,7 +46,8 @@ if (window !== window.parent) {
 
 connect(networkConnection.connector, ConnectionType.NETWORK)
 
-const meta = getConnectionMeta()
+// Get the persisted wallet type from the last session.
+const meta = getPersistedConnectionMeta()
 if (meta?.type) {
   const selectedConnection = getConnection(meta.type)
   if (selectedConnection) {
@@ -56,7 +57,7 @@ if (meta?.type) {
       })
       .catch((error) => {
         // Clear the persisted wallet type if it failed to connect.
-        deleteConnectionMeta()
+        deletePersistedConnectionMeta()
         // Log it if it threw an unknown error.
         if (!(error instanceof FailedToConnect)) {
           console.error(error)
