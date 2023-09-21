@@ -65,7 +65,7 @@ export default class AppRpcProvider extends AppStaticJsonRpcProvider {
       provider,
       performance: {
         callCount: 0,
-        latency: Number.MAX_SAFE_INTEGER,
+        latency: 1,
         failureCount: 0,
         lastEvaluated: 0,
       },
@@ -125,33 +125,31 @@ export default class AppRpcProvider extends AppStaticJsonRpcProvider {
 
   /**
    * Evaluates the performance of a provider. Updates latency and failure count metrics.
-   *
-   * config - The provider evaluation configuration.
-   * Returns a Promise that resolves when the evaluation is complete.
    */
   async evaluateProvider(config: FallbackProviderEvaluation): Promise<void> {
     const startTime = Date.now()
+    config.performance.callCount++
     try {
       await config.provider.getBlockNumber()
-      const latency = Date.now() - startTime
-      config.performance.latency += latency
-      config.performance.callCount++
     } catch (error) {
       config.performance.failureCount++
     }
+    const latency = Date.now() - startTime
+    config.performance.latency += latency
+
     config.performance.lastEvaluated = Date.now()
   }
 
   static sortProviders(providerEvaluations: FallbackProviderEvaluation[]) {
     return providerEvaluations.sort((a, b) => {
       // Provider a calculations
-      const aAverageLatency = a.performance.latency / a.performance.callCount // Example: 10 / 10 = 1
-      const aFailRate = Math.pow((a.performance.failureCount + 1) / (a.performance.callCount + 1), 2) // Example: ((1 + 1) / (10 + 1))^2 = (2 / 11)^2 ≈ 0.0330
+      const aAverageLatency = a.performance.latency / (a.performance.callCount || 1) // Example: 10 / 10 = 1
+      const aFailRate = Math.pow((a.performance.failureCount || 0.01) / (a.performance.callCount || 1), 2) // Example: ((1 ||  1) / (10 + 1))^2 = (2 / 11)^2 ≈ 0.0330
       const aScore = aAverageLatency / aFailRate // Example: 1 / 0.0330 ≈ 30.3
 
       // Provider b calculations
-      const bAverageLatency = b.performance.latency / b.performance.callCount // Example: 100 / 10 = 10
-      const bFailRate = Math.pow((b.performance.failureCount + 1) / (b.performance.callCount + 1), 2) // Example: ((10 + 1) / (10 + 1))^2 = (11 / 11)^2 = 1^2 = 1
+      const bAverageLatency = b.performance.latency / (b.performance.callCount || 1) // Example: 100 / 10 = 10
+      const bFailRate = Math.pow((b.performance.failureCount || 0.01) / (b.performance.callCount || 1), 2) // Example: ((10 + 1) / (10 + 1))^2 = (11 / 11)^2 = 1^2 = 1
       const bScore = bAverageLatency / bFailRate // Example: 10 / 1 = 10
 
       // Higher scores are more performant and should appear first

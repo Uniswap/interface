@@ -29,6 +29,9 @@ describe('AppRpcProvider', () => {
         name: 'homestead',
         chainId: 1,
       } as Network)
+      // override readonly property
+      // @ts-expect-error
+      provider.connection = { url: '' }
     })
   })
 
@@ -59,20 +62,20 @@ describe('AppRpcProvider', () => {
     expect(result).toBe(hash)
   })
 
-  test('handles send', async () => {
+  test('handles call', async () => {
     const hash = '0x123'
-    mockProvider1.sendTransaction.mockResolvedValue({ hash } as TransactionResponse)
+    mockProvider1.send.mockResolvedValue({ hash } as TransactionResponse)
     const provider = new AppRpcProvider(ChainId.MAINNET, [mockProvider1])
 
-    const result = await provider.perform('send', [hash])
+    const result = await provider.perform('call', [{ hash }])
     expect(result).toBe(hash)
   })
 
   test('should sort faster providers before slower providers', async () => {
-    const SLOW = 100
+    const SLOW = 500
     mockProvider1.getBlockNumber = jest.fn(() => new Promise((resolve) => setTimeout(() => resolve(1), SLOW)))
 
-    const FAST = 10
+    const FAST = 1
     mockProvider2.getBlockNumber = jest.fn(() => new Promise((resolve) => setTimeout(() => resolve(1), FAST)))
 
     const appRpcProvider = new AppRpcProvider(ChainId.MAINNET, mockProviders)
@@ -89,9 +92,9 @@ describe('AppRpcProvider', () => {
 
   test('should sort failing providers after successful providers', async () => {
     mockProvider1.getBlockNumber = jest.fn(
-      () => new Promise((_resolve, reject) => setTimeout(() => reject('fail'), 100))
+      () => new Promise((_resolve, reject) => setTimeout(() => reject('fail'), 50))
     )
-    mockProvider2.getBlockNumber = jest.fn(() => new Promise((resolve) => setTimeout(() => resolve(1), 100)))
+    mockProvider2.getBlockNumber = jest.fn(() => new Promise((resolve) => setTimeout(() => resolve(1), 50)))
 
     const appRpcProvider = new AppRpcProvider(ChainId.MAINNET, mockProviders)
 
