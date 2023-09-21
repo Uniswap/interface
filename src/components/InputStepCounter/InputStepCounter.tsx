@@ -34,7 +34,7 @@ const SmallButton = styled(ButtonGray)`
 `
 
 const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boolean }>`
-  border-color: ${({ active, theme }) => active && theme.accent1};
+  border-color: ${({ active, theme }) => active && theme.deprecated_stateOverlayPressed};
   padding: 12px;
   animation: ${({ pulsing, theme }) => pulsing && pulse(theme.accent1)} 0.8s linear;
 `
@@ -62,6 +62,7 @@ const InputTitle = styled(ThemedText.DeprecatedSmall)`
 
 const ButtonLabel = styled(ThemedText.DeprecatedWhite)<{ disabled: boolean }>`
   color: ${({ theme, disabled }) => (disabled ? theme.neutral2 : theme.neutral1)} !important;
+  display: flex;
 `
 
 interface StepCounterProps {

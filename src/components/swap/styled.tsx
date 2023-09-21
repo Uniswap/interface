@@ -22,23 +22,43 @@ export const PageWrapper = styled.div`
 `
 
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
-export const SwapWrapper = styled.main<{ isDark?: boolean }>`
+const SwapWrapperOuter = styled.main<{ isDark?: boolean }>`
   position: relative;
-  background: ${({ theme }) => theme.surface1};
-  border-radius: 24px;
-  border: 1px solid ${({ theme }) => theme.surface3};
-  padding: 8px;
-  padding-top: 12px;
-  box-shadow: ${({ isDark }) =>
-    `0px 0px 10px 0px rgba(252, 114, 255, ${isDark ? '0.08' : '0.04'}), 0px 40px 120px 0px rgba(252, 114, 255, ${
-      isDark ? '0.18' : '0.12'
-    })`};
   z-index: ${Z_INDEX.default};
+  border: 1px solid ${({ theme }) => theme.surface3};
   transition: transform 250ms ease;
+  border-radius: 24px;
+
+  &:before {
+    content: ' ';
+    display: flex;
+    position: absolute;
+    inset: 0;
+    transform: scale(1.1);
+    filter: blur(50px);
+    background-color: rgba(252, 114, 255, 0.075);
+    z-index: -2;
+  }
 
   &:hover {
     border: 1px solid ${({ theme }) => theme.surface3};
   }
+`
+
+export const SwapWrapper = (props: React.ComponentProps<typeof SwapWrapperOuter>) => {
+  return (
+    <SwapWrapperOuter {...props}>
+      <SwapWrapperInner>{props.children}</SwapWrapperInner>
+    </SwapWrapperOuter>
+  )
+}
+
+const SwapWrapperInner = styled.div`
+  border-radius: 24px;
+  background: ${({ theme }) => theme.surface1};
+  z-index: -1;
+  padding: 8px;
+  padding-top: 12px;
 `
 
 export const UniswapPopoverContainer = styled.div`

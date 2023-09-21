@@ -17,7 +17,7 @@ exports[`should inject metadata for valid tokens 1`] = `
     <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#FC72FF" />
+    <meta name="theme-color" content="#fff" />
     <meta
       http-equiv="Content-Security-Policy"
       
@@ -164,7 +164,7 @@ exports[`should inject metadata for valid tokens 2`] = `
     <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#FC72FF" />
+    <meta name="theme-color" content="#fff" />
     <meta
       http-equiv="Content-Security-Policy"
       
@@ -311,7 +311,7 @@ exports[`should inject metadata for valid tokens 3`] = `
     <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#FC72FF" />
+    <meta name="theme-color" content="#fff" />
     <meta
       http-equiv="Content-Security-Policy"
       
@@ -458,7 +458,7 @@ exports[`should inject metadata for valid tokens 4`] = `
     <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#FC72FF" />
+    <meta name="theme-color" content="#fff" />
     <meta
       http-equiv="Content-Security-Policy"
       
