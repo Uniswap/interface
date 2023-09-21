@@ -73,7 +73,8 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   // UniswapX doesn't support native out, exact-out, or non-mainnet trades (yet),
   // so even if the user has selected UniswapX as their router preference, force them to receive a Classic quote.
   if (
-    (args.userDisabledUniswapX && routerPreference !== RouterPreference.X) ||
+    // If the user has opted out of UniswapX during the opt-out transition period, we should respect that preference and only request classic quotes.
+    (args.userOptedOutOfUniswapX && routerPreference !== RouterPreference.X) ||
     (tokenOutIsNative && !uniswapXEthOutputEnabled) ||
     (!uniswapXExactOutputEnabled && tradeType === TradeType.EXACT_OUTPUT) ||
     !isUniswapXSupportedChain(tokenInChainId) ||
