@@ -59,7 +59,7 @@ export function SwapFormHeader(): JSX.Element {
         pb="$spacing8"
         pl="$spacing12"
         pr={customSlippageTolerance ? '$spacing8' : '$spacing16'}>
-        <Text $sm={{ variant: 'subheadLarge' }} $xs={{ variant: 'subheadSmall' }}>
+        <Text $sm={{ variant: 'subheading1' }} $xs={{ variant: 'subheading2' }}>
           {t('Swap')}
         </Text>
 
@@ -76,7 +76,7 @@ export function SwapFormHeader(): JSX.Element {
                   height={iconSizes.icon16}
                   width={iconSizes.icon16}
                 />
-                <Text color={isFiatInput ? '$accent1' : '$neutral2'} variant="buttonLabelSmall">
+                <Text color={isFiatInput ? '$accent1' : '$neutral2'} variant="buttonLabel3">
                   {t('USD')}
                 </Text>
               </Flex>
@@ -97,7 +97,7 @@ export function SwapFormHeader(): JSX.Element {
                   height={iconSizes.icon16}
                   width={iconSizes.icon16}
                 />
-                <Text color="$neutral2" variant="buttonLabelSmall">
+                <Text color="$neutral2" variant="buttonLabel3">
                   {t('View-only')}
                 </Text>
               </Flex>
@@ -118,7 +118,7 @@ export function SwapFormHeader(): JSX.Element {
                 px={customSlippageTolerance ? '$spacing8' : '$none'}
                 py="$spacing4">
                 {customSlippageTolerance && (
-                  <Text color="$neutral2" variant="buttonLabelMicro">
+                  <Text color="$neutral2" variant="buttonLabel4">
                     {t('{{slippageTolerancePercent}} slippage', {
                       slippageTolerancePercent: formatPercent(customSlippageTolerance),
                     })}
