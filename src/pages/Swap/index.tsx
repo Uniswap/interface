@@ -50,7 +50,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useAppSelector } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
-import { isClassicTrade, isPreviewTrade, isSubmittableTrade } from 'state/routing/utils'
+import { isClassicTrade, isPreviewTrade } from 'state/routing/utils'
 import { Field, forceExactInput, replaceSwapState } from 'state/swap/actions'
 import { useDefaultsFromURLSearch, useDerivedSwapInfo, useSwapActionHandlers } from 'state/swap/hooks'
 import swapReducer, { initialState as initialSwapState, SwapState } from 'state/swap/reducer'
@@ -589,7 +589,7 @@ export function Swap({
         showCancel={true}
       />
       <SwapHeader trade={trade} autoSlippage={autoSlippage} chainId={chainId} />
-      {isSubmittableTrade(trade) && showConfirm && allowance.state !== AllowanceState.LOADING && (
+      {trade && showConfirm && allowance.state !== AllowanceState.LOADING && (
         <ConfirmSwapModal
           trade={trade}
           inputCurrency={inputCurrency}

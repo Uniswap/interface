@@ -22,7 +22,8 @@ import useWrapCallback from 'hooks/useWrapCallback'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
-import { InterfaceTrade, SubmittableTrade, TradeFillType } from 'state/routing/types'
+import { InterfaceTrade, TradeFillType } from 'state/routing/types'
+import { isPreviewTrade } from 'state/routing/utils'
 import { Field } from 'state/swap/actions'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled from 'styled-components'
@@ -74,7 +75,7 @@ function useConfirmModalState({
   doesTradeDiffer,
   onCurrencySelection,
 }: {
-  trade: SubmittableTrade
+  trade: InterfaceTrade
   allowedSlippage: Percent
   onSwap: () => void
   allowance: Allowance
@@ -275,7 +276,7 @@ export default function ConfirmSwapModal({
   fiatValueInput,
   fiatValueOutput,
 }: {
-  trade: SubmittableTrade
+  trade: InterfaceTrade
   inputCurrency?: Currency
   originalTrade?: InterfaceTrade
   swapResult?: SwapResult
@@ -359,7 +360,8 @@ export default function ConfirmSwapModal({
           trade={trade}
           swapResult={swapResult}
           allowedSlippage={allowedSlippage}
-          disabledConfirm={showAcceptChanges}
+          isLoading={isPreviewTrade(trade)}
+          disabledConfirm={showAcceptChanges || isPreviewTrade(trade)}
           fiatValueInput={fiatValueInput}
           fiatValueOutput={fiatValueOutput}
           showAcceptChanges={showAcceptChanges}

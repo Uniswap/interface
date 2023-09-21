@@ -11,10 +11,10 @@ import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { ClassicTrade, RouterPreference, SubmittableTrade } from 'state/routing/types'
-import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
+import { ClassicTrade, InterfaceTrade, PreviewTrade, RouterPreference } from 'state/routing/types'
+import { getTransactionCount, isClassicTrade, isPreviewTrade, isSubmittableTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
-import styled, { DefaultTheme, useTheme } from 'styled-components'
+import styled, { DefaultTheme, keyframes, useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
 import { formatPriceImpact, NumberType, useFormatter } from 'utils/formatNumbers'
 import { formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
@@ -48,6 +48,57 @@ const DetailRowValue = styled(ThemedText.BodySmall)<{ warningColor?: keyof Defau
   ${({ warningColor, theme }) => warningColor && `color: ${theme[warningColor]};`};
 `
 
+const StyledPollingDot = styled.div`
+  width: 8px;
+  height: 8px;
+  min-height: 8px;
+  min-width: 8px;
+  border-radius: 50%;
+  position: relative;
+  background-color: ${({ theme }) => theme.surface3};
+  transition: 250ms ease background-color;
+`
+
+const StyledPolling = styled.div`
+  display: flex;
+  height: 16px;
+  width: 16px;
+  margin-right: 2px;
+  margin-left: 2px;
+  align-items: center;
+  color: ${({ theme }) => theme.neutral1};
+  transition: 250ms ease color;
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
+    display: none;
+  `}
+`
+
+const rotate360 = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`
+
+const Spinner = styled.div`
+  animation: ${rotate360} 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
+  transform: translateZ(0);
+  border-top: 1px solid transparent;
+  border-right: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-left: 2px solid ${({ theme }) => theme.neutral1};
+  background: transparent;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  position: relative;
+  transition: 250ms ease border-color;
+  left: -3px;
+  top: -3px;
+`
+
 export default function SwapModalFooter({
   trade,
   allowedSlippage,
@@ -59,8 +110,9 @@ export default function SwapModalFooter({
   fiatValueOutput,
   showAcceptChanges,
   onAcceptChanges,
+  isLoading,
 }: {
-  trade: SubmittableTrade
+  trade: InterfaceTrade
   swapResult?: SwapResult
   allowedSlippage: Percent
   onConfirm: () => void
@@ -70,6 +122,7 @@ export default function SwapModalFooter({
   fiatValueOutput: { data?: number; isLoading: boolean }
   showAcceptChanges: boolean
   onAcceptChanges: () => void
+  isLoading: boolean
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
@@ -111,15 +164,17 @@ export default function SwapModalFooter({
             </MouseoverTooltip>
             <MouseoverTooltip placement="right" size={TooltipSize.Small} text={<GasBreakdownTooltip trade={trade} />}>
               <DetailRowValue>
-                {formatNumber({
-                  input: trade.totalGasUseEstimateUSD,
-                  type: NumberType.FiatGasPrice,
-                })}
+                {isSubmittableTrade(trade)
+                  ? formatNumber({
+                      input: trade.totalGasUseEstimateUSD,
+                      type: NumberType.FiatGasPrice,
+                    })
+                  : '-'}
               </DetailRowValue>
             </MouseoverTooltip>
           </Row>
         </ThemedText.BodySmall>
-        {isClassicTrade(trade) && (
+        {(isClassicTrade(trade) || isPreviewTrade(trade)) && (
           <>
             <TokenTaxLineItem trade={trade} type="input" />
             <TokenTaxLineItem trade={trade} type="output" />
@@ -130,8 +185,10 @@ export default function SwapModalFooter({
                     <Trans>Price impact</Trans>
                   </Label>
                 </MouseoverTooltip>
-                <DetailRowValue warningColor={getPriceImpactColor(trade.priceImpact)}>
-                  {trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-'}
+                <DetailRowValue
+                  warningColor={isClassicTrade(trade) ? getPriceImpactColor(trade.priceImpact) : undefined}
+                >
+                  {isClassicTrade(trade) && trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-'}
                 </DetailRowValue>
               </Row>
             </ThemedText.BodySmall>
@@ -210,7 +267,18 @@ export default function SwapModalFooter({
               id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
             >
               <ThemedText.HeadlineSmall color="deprecated_accentTextLightPrimary">
-                <Trans>Confirm swap</Trans>
+                {isLoading ? (
+                  <Row>
+                    <StyledPolling>
+                      <StyledPollingDot>
+                        <Spinner />
+                      </StyledPollingDot>
+                    </StyledPolling>
+                    <Trans>Finalizing quote...</Trans>
+                  </Row>
+                ) : (
+                  <Trans>Confirm swap</Trans>
+                )}
               </ThemedText.HeadlineSmall>
             </ConfirmButton>
           </TraceEvent>
@@ -222,7 +290,7 @@ export default function SwapModalFooter({
   )
 }
 
-function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' | 'output' }) {
+function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade | PreviewTrade; type: 'input' | 'output' }) {
   const [currency, percentage] =
     type === 'input' ? [trade.inputAmount.currency, trade.inputTax] : [trade.outputAmount.currency, trade.outputTax]
 

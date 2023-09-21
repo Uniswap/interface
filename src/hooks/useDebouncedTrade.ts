@@ -118,14 +118,7 @@ export function useDebouncedTrade(
     outputTax
   )
 
-  return useMemo(() => {
-    // only show PreviewTrade if the more comprehensive routing-api request hasn't come back yet
-    if (previewTradeResult.currentTrade && !routingApiTradeResult.currentTrade) {
-      // always override state to be `loading` if the trade shown is a PreviewTrade, since we're still searching
-      // for a more accurate route
-      return { ...previewTradeResult, state: TradeState.LOADING }
-    }
-
-    return routingApiTradeResult
-  }, [previewTradeResult, routingApiTradeResult])
+  return previewTradeResult.currentTrade && !routingApiTradeResult.currentTrade
+    ? previewTradeResult
+    : routingApiTradeResult
 }

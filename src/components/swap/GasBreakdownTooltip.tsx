@@ -3,8 +3,8 @@ import { AutoColumn } from 'components/Column'
 import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/UniswapXRouterLabel'
 import Row from 'components/Row'
 import { ReactNode } from 'react'
-import { SubmittableTrade } from 'state/routing/types'
-import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
+import { InterfaceTrade } from 'state/routing/types'
+import { isClassicTrade, isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components'
 import { Divider, ExternalLink, ThemedText } from 'theme'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -56,10 +56,12 @@ export function GasBreakdownTooltip({
   hideFees = false,
   hideUniswapXDescription = false,
 }: {
-  trade: SubmittableTrade
+  trade: InterfaceTrade
   hideFees?: boolean
   hideUniswapXDescription?: boolean
 }) {
+  if (isPreviewTrade(trade)) return null
+
   const swapEstimate = isClassicTrade(trade) ? trade.gasUseEstimateUSD : undefined
   const approvalEstimate = trade.approveInfo.needsApprove ? trade.approveInfo.approveGasEstimateUSD : undefined
   const wrapEstimate =

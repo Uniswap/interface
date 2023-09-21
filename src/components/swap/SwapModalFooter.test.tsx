@@ -15,6 +15,7 @@ describe('SwapModalFooter.tsx', () => {
   it('matches base snapshot, test trade exact input', () => {
     const { asFragment } = render(
       <SwapModalFooter
+        isLoading={false}
         trade={TEST_TRADE_EXACT_INPUT}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
@@ -50,6 +51,7 @@ describe('SwapModalFooter.tsx', () => {
     const mockAcceptChanges = jest.fn()
     render(
       <SwapModalFooter
+        isLoading={false}
         trade={TEST_TRADE_EXACT_INPUT}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
@@ -77,6 +79,7 @@ describe('SwapModalFooter.tsx', () => {
   it('test trade exact output, no recipient', () => {
     render(
       <SwapModalFooter
+        isLoading={false}
         trade={TEST_TRADE_EXACT_OUTPUT}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
@@ -109,6 +112,7 @@ describe('SwapModalFooter.tsx', () => {
   it('test trade fee on input token transfer', () => {
     render(
       <SwapModalFooter
+        isLoading={false}
         trade={TEST_TRADE_FEE_ON_SELL}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
@@ -138,6 +142,7 @@ describe('SwapModalFooter.tsx', () => {
   it('test trade fee on output token transfer', () => {
     render(
       <SwapModalFooter
+        isLoading={false}
         trade={TEST_TRADE_FEE_ON_BUY}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}

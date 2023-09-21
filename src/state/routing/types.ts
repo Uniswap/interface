@@ -341,21 +341,27 @@ export class PreviewTrade {
   public readonly tradeType: TradeType
   public readonly inputAmount: CurrencyAmount<Currency>
   public readonly outputAmount: CurrencyAmount<Currency>
-  inputTax = new Percent(0, 100)
-  outputTax = new Percent(0, 100)
+  inputTax: Percent
+  outputTax: Percent
 
   constructor({
     inputAmount,
     outputAmount,
     tradeType,
+    inputTax,
+    outputTax,
   }: {
     inputAmount: CurrencyAmount<Currency>
     outputAmount: CurrencyAmount<Currency>
     tradeType: TradeType
+    inputTax: Percent
+    outputTax: Percent
   }) {
     this.inputAmount = inputAmount
     this.outputAmount = outputAmount
     this.tradeType = tradeType
+    this.inputTax = inputTax
+    this.outputTax = outputTax
   }
 
   // copied from router-sdk Trade
