@@ -54,7 +54,12 @@ export const useModalContent = ({
       return {
         title: (
           <Trans t={t}>
-            You’re removing <Text color="$statusCritical">{{ wallet: account?.name }}</Text>
+            <Text color="$neutral1" variant="body1">
+              You’re removing{' '}
+              <Text color="$statusCritical" variant="body1">
+                {{ wallet: account?.name }}
+              </Text>
+            </Text>
           </Trans>
         ),
         description: t(
@@ -86,7 +91,12 @@ export const useModalContent = ({
       return {
         title: (
           <Trans t={t}>
-            You’re removing your <Text color="$statusCritical">recovery phrase</Text>
+            <Text color="$neutral1" variant="body1">
+              You’re removing your{' '}
+              <Text color="$statusCritical" variant="body1">
+                recovery phrase
+              </Text>
+            </Text>
           </Trans>
         ),
         description: IS_ANDROID ? (
@@ -119,7 +129,12 @@ export const useModalContent = ({
       return {
         title: (
           <Trans t={t}>
-            You’re removing <Text color="$statusCritical">{{ wallet: account?.name }}</Text>
+            <Text color="$neutral1" variant="body1">
+              You’re removing{' '}
+              <Text color="$statusCritical" variant="body1">
+                {{ wallet: account?.name }}
+              </Text>
+            </Text>
           </Trans>
         ),
         description: (
@@ -141,9 +156,13 @@ export const useModalContent = ({
       return {
         title: (
           <Trans t={t}>
-            You’re removing {/* https://react.i18next.com/latest/trans-component#interpolation */}
-            {/* @ts-expect-error: react-i18next uses this ^ syntax and it's not canonic */}
-            <Text color="neutral2">{{ wallet: viewOnlyDisplayName?.name }}</Text>
+            <Text color="$neutral1" variant="body1">
+              You’re removing {/* https://react.i18next.com/latest/trans-component#interpolation */}
+              {/* @ts-expect-error: react-i18next uses this ^ syntax and it's not canonic */}
+              <Text color="neutral2" variant="body1">
+                {{ wallet: viewOnlyDisplayName?.name }}
+              </Text>
+            </Text>
           </Trans>
         ),
         description: t(
