@@ -19,6 +19,7 @@ import { SwapForm } from 'src/features/transactions/swap/SwapForm'
 import { SwapReview } from 'src/features/transactions/swap/SwapReview'
 import { SwapStatus } from 'src/features/transactions/swap/SwapStatus'
 import { HeaderContent } from 'src/features/transactions/TransactionFlowHeaderContent'
+import { transactionStateActions } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { TransferReview } from 'src/features/transactions/transfer/TransferReview'
 import { TransferStatus } from 'src/features/transactions/transfer/TransferStatus'
@@ -123,6 +124,12 @@ export function TransactionFlow({
     transform: [{ translateX: screenXOffset.value }],
   }))
 
+  const setCustomSlippageTolerance = useCallback(
+    (newCustomSlippageTolerance: number | undefined): void =>
+      dispatch(transactionStateActions.setCustomSlippageTolerance(newCustomSlippageTolerance)),
+    [dispatch]
+  )
+
   return (
     <TouchableWithoutFeedback>
       <Flex style={{ marginTop: insets.top }}>
@@ -188,7 +195,7 @@ export function TransactionFlow({
           {isSwap && showSettingsModal ? (
             <SwapSettingsModal
               derivedSwapInfo={derivedInfo}
-              dispatch={dispatch}
+              setCustomSlippageTolerance={setCustomSlippageTolerance}
               onClose={(): void => {
                 setShowSettingsModal(false)
               }}

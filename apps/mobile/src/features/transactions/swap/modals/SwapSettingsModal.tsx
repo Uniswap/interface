@@ -1,10 +1,9 @@
 /* eslint-disable max-lines */
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet'
-import { AnyAction } from '@reduxjs/toolkit'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { impactAsync } from 'expo-haptics'
-import React, { Dispatch, useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Easing,
@@ -22,7 +21,6 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { SwapProtectionInfoModal } from 'src/features/transactions/swap/modals/SwapProtectionModal'
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
-import { transactionStateActions } from 'src/features/transactions/transactionState/transactionState'
 import { openUri } from 'src/utils/linking'
 import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
@@ -52,13 +50,15 @@ enum SwapSettingsModalView {
 
 export type SwapSettingsModalProps = {
   derivedSwapInfo: DerivedSwapInfo
-  dispatch: Dispatch<AnyAction>
+  setCustomSlippageTolerance: (customSlippageTolerance: number | undefined) => void
   onClose?: () => void
 }
 
+// NOTE: This modal is shared between the old and new swap flows!
+//       If you make changes to this modal, make sure it works for both flows.
 export function SwapSettingsModal({
   derivedSwapInfo,
-  dispatch,
+  setCustomSlippageTolerance,
   onClose,
 }: SwapSettingsModalProps): JSX.Element {
   const colors = useSporeColors()
@@ -91,9 +91,21 @@ export function SwapSettingsModal({
           />
         )
       case SwapSettingsModalView.Slippage:
-        return <SlippageSettings derivedSwapInfo={derivedSwapInfo} dispatch={dispatch} />
+        return (
+          <SlippageSettings
+            derivedSwapInfo={derivedSwapInfo}
+            setCustomSlippageTolerance={setCustomSlippageTolerance}
+          />
+        )
     }
-  }, [chainId, currentSlippage, derivedSwapInfo, dispatch, isCustomSlippage, view])
+  }, [
+    chainId,
+    currentSlippage,
+    derivedSwapInfo,
+    isCustomSlippage,
+    setCustomSlippageTolerance,
+    view,
+  ])
 
   return (
     <BottomSheetModal
@@ -232,7 +244,10 @@ function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Eleme
   )
 }
 
-function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps): JSX.Element {
+function SlippageSettings({
+  derivedSwapInfo,
+  setCustomSlippageTolerance,
+}: SwapSettingsModalProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
 
@@ -277,7 +292,7 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
     setAutoSlippageEnabled(true)
     setInputWarning(undefined)
     setInputSlippageTolerance('')
-    dispatch(transactionStateActions.setCustomSlippageTolerance(undefined))
+    setCustomSlippageTolerance(undefined)
   }
 
   const onChangeSlippageInput = useCallback(
@@ -335,9 +350,9 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
       }
 
       setInputSlippageTolerance(value)
-      dispatch(transactionStateActions.setCustomSlippageTolerance(parsedValue))
+      setCustomSlippageTolerance(parsedValue)
     },
-    [dispatch, inputShakeX, t]
+    [inputShakeX, setCustomSlippageTolerance, t]
   )
 
   const onFocusSlippageInput = useCallback((): void => {
@@ -356,12 +371,12 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
     // Set autoSlippageEnabled to true if input is invalid (ex. '' or '.')
     if (isNaN(parsedInputSlippageTolerance)) {
       setAutoSlippageEnabled(true)
-      dispatch(transactionStateActions.setCustomSlippageTolerance(undefined))
+      setCustomSlippageTolerance(undefined)
       return
     }
 
     setInputSlippageTolerance(parsedInputSlippageTolerance.toFixed(2))
-  }, [parsedInputSlippageTolerance, dispatch])
+  }, [parsedInputSlippageTolerance, setCustomSlippageTolerance])
 
   const onPressPlusMinusButton = useCallback(
     (type: PlusMinusButtonType): void => {
@@ -384,9 +399,9 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
       }
 
       setInputSlippageTolerance(constrainedNewSlippage.toFixed(2).toString())
-      dispatch(transactionStateActions.setCustomSlippageTolerance(constrainedNewSlippage))
+      setCustomSlippageTolerance(constrainedNewSlippage)
     },
-    [autoSlippageEnabled, currentSlippageToleranceNum, dispatch, t]
+    [autoSlippageEnabled, currentSlippageToleranceNum, setCustomSlippageTolerance, t]
   )
 
   return (

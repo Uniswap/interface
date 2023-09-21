@@ -18,7 +18,6 @@ import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID } from 'src/constants/globals'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
-import { useDerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { SwapArrowButton } from 'src/features/transactions/swap/SwapArrowButton'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
@@ -30,6 +29,7 @@ import { CurrencyField } from 'wallet/src/features/transactions/transactionState
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { SwapScreen, useSwapContext } from './SwapContext'
+import { SwapFormHeader } from './SwapFormHeader'
 import { TokenSelector } from './TokenSelector'
 
 const SWAP_DIRECTION_BUTTON_SIZE = iconSizes.icon20
@@ -71,16 +71,12 @@ export function SwapForm(): JSX.Element {
   )
 }
 
-function SwapFormHeader(): JSX.Element {
-  return <Text>TODO: HEADER</Text>
-}
-
 function SwapFormContent(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
 
   const {
-    customSlippageTolerance,
+    derivedSwapInfo,
     exactAmountFiat,
     exactAmountToken,
     exactCurrencyField,
@@ -88,24 +84,10 @@ function SwapFormContent(): JSX.Element {
     input,
     isFiatInput,
     output,
-    selectingCurrencyField,
-    txId,
     updateSwapForm,
   } = useSwapContext()
 
-  const { currencyAmounts, currencyBalances, currencies, currencyAmountsUSDValue } =
-    useDerivedSwapInfo({
-      txId,
-      input: input ?? null,
-      output: output ?? null,
-      exactCurrencyField,
-      exactAmountToken: exactAmountToken ?? '',
-      exactAmountUSD: exactAmountFiat,
-      focusOnCurrencyField,
-      isUSDInput: isFiatInput,
-      selectingCurrencyField,
-      customSlippageTolerance,
-    })
+  const { currencyAmounts, currencyBalances, currencies, currencyAmountsUSDValue } = derivedSwapInfo
 
   const { isBlocked } = useIsBlockedActiveAddress()
 

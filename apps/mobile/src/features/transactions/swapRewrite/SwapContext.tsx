@@ -8,6 +8,7 @@ import {
   useMemo,
   useState,
 } from 'react'
+import { useDerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
@@ -33,6 +34,7 @@ export type SwapFormState = {
 
 type DerivedSwapFormState = {
   isFiatInput: boolean
+  derivedSwapInfo: ReturnType<typeof useDerivedSwapInfo>
 }
 
 type SwapContextState = {
@@ -78,6 +80,24 @@ export function SwapContextProvider({
     [setSwapForm]
   )
 
+  const isFiatInput = useMemo<boolean>(
+    () => swapForm.exactAmountFiat !== undefined,
+    [swapForm.exactAmountFiat]
+  )
+
+  const derivedSwapInfo = useDerivedSwapInfo({
+    txId: swapForm.txId,
+    input: swapForm.input ?? null,
+    output: swapForm.output ?? null,
+    exactCurrencyField: swapForm.exactCurrencyField,
+    exactAmountToken: swapForm.exactAmountToken ?? '',
+    exactAmountUSD: swapForm.exactAmountFiat,
+    focusOnCurrencyField: swapForm.focusOnCurrencyField,
+    isUSDInput: isFiatInput,
+    selectingCurrencyField: swapForm.selectingCurrencyField,
+    customSlippageTolerance: swapForm.customSlippageTolerance,
+  })
+
   const state = useMemo<SwapContextState>(
     (): SwapContextState => ({
       customSlippageTolerance: swapForm.customSlippageTolerance,
@@ -86,7 +106,7 @@ export function SwapContextProvider({
       exactCurrencyField: swapForm.exactCurrencyField,
       focusOnCurrencyField: swapForm.focusOnCurrencyField,
       input: swapForm.input,
-      isFiatInput: swapForm.exactAmountFiat !== undefined,
+      isFiatInput,
       onClose,
       output: swapForm.output,
       screen: swapForm.screen,
@@ -94,8 +114,11 @@ export function SwapContextProvider({
       setSwapForm,
       txId: swapForm.txId,
       updateSwapForm,
+      derivedSwapInfo,
     }),
     [
+      derivedSwapInfo,
+      isFiatInput,
       onClose,
       swapForm.customSlippageTolerance,
       swapForm.exactAmountFiat,
