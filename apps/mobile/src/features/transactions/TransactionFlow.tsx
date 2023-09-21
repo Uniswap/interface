@@ -6,6 +6,7 @@ import { TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { AnimatedFlex } from 'src/components/layout'
+import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import { Warning, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
@@ -96,6 +97,8 @@ export function TransactionFlow({
   const insets = useSafeAreaInsets()
   const { t } = useTranslation()
 
+  const { isSheetReady } = useBottomSheetContext()
+
   const [showViewOnlyModal, setShowViewOnlyModal] = useState(false)
   const [showSettingsModal, setShowSettingsModal] = useState(false)
 
@@ -144,7 +147,7 @@ export function TransactionFlow({
                 step={step}
               />
             )}
-            {renderInnerContentRouter && (
+            {renderInnerContentRouter && isSheetReady && (
               <InnerContentRouter
                 approveTxRequest={approveTxRequest}
                 derivedInfo={derivedInfo}

@@ -7,7 +7,14 @@ import {
 } from '@gorhom/bottom-sheet'
 import { useResponsiveProp } from '@shopify/restyle'
 import { BlurView } from 'expo-blur'
-import React, { ComponentProps, PropsWithChildren, useCallback, useEffect, useRef } from 'react'
+import React, {
+  ComponentProps,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { BackHandler, Keyboard, StyleSheet } from 'react-native'
 import Animated, {
   Extrapolate,
@@ -16,6 +23,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { BottomSheetContextProvider } from 'src/components/modals/BottomSheetContext'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
@@ -105,6 +113,8 @@ export function BottomSheetModal({
   const insets = useSafeAreaInsets()
   const modalRef = useRef<BaseModal>(null)
   const keyboard = useKeyboardLayout()
+
+  const [isSheetReady, setIsSheetReady] = useState(false)
 
   useModalBackHandler(modalRef, isDismissible && dismissOnBackPress)
 
@@ -210,11 +220,10 @@ export function BottomSheetModal({
   const backdrop = { backdropComponent: renderBackdrop }
 
   // onAnimate is called when the sheet is about to animate to a new position.
-  // `About to` is crucial here, cause we want to start hiding the keyboard during the process of hiding the sheet.
+  // `About to` is crucial here, because we want to trigger these actions as soon as possible.
   // See here: https://gorhom.github.io/react-native-bottom-sheet/props#onanimate
-  //
-  // onDismiss on the other hand is called when a sheet is already closed, hence too late for us here.
   const onAnimate = useCallback(
+    // We want to start hiding the keyboard during the process of hiding the sheet.
     (fromIndex: number, toIndex: number): void => {
       if (
         (hideKeyboardOnDismiss && toIndex === DISAPPEARS_ON_INDEX) ||
@@ -222,8 +231,14 @@ export function BottomSheetModal({
       ) {
         Keyboard.dismiss()
       }
+
+      // When a sheet has too much content it can lag and take a while to begin opening, so we want to delay rendering some of the content until the sheet is ready.
+      // We consider the sheet to be "ready" as soon as it starts animating from the bottom to the top.
+      if (!isSheetReady && fromIndex === -1 && toIndex === 0) {
+        setIsSheetReady(true)
+      }
     },
-    [hideKeyboardOnDismiss, hideKeyboardOnSwipeDown]
+    [hideKeyboardOnDismiss, hideKeyboardOnSwipeDown, isSheetReady]
   )
 
   return (
@@ -268,7 +283,9 @@ export function BottomSheetModal({
               : []),
           ]}
           onLayout={handleContentLayout}>
-          {children}
+          <BottomSheetContextProvider isSheetReady={isSheetReady}>
+            {children}
+          </BottomSheetContextProvider>
         </BottomSheetView>
       </Trace>
     </BaseModal>

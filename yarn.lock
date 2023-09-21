@@ -4112,9 +4112,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gorhom/bottom-sheet@npm:4.4.7":
-  version: 4.4.7
-  resolution: "@gorhom/bottom-sheet@npm:4.4.7"
+"@gorhom/bottom-sheet@npm:4.4.8":
+  version: 4.4.8
+  resolution: "@gorhom/bottom-sheet@npm:4.4.8"
   dependencies:
     "@gorhom/portal": 1.0.14
     invariant: ^2.2.4
@@ -4130,29 +4130,7 @@ __metadata:
       optional: true
     "@types/react-native":
       optional: true
-  checksum: ae330e7712fa58d78dc91e089e29f07b23c0c581e8a152b806c39dd831d64a7979e274f188868b086ebbb6f435ce8575fc32f2a1df6b8cf2d522a13b7182374c
-  languageName: node
-  linkType: hard
-
-"@gorhom/bottom-sheet@patch:@gorhom/bottom-sheet@npm%3A4.4.7#./.yarn/patches/@gorhom-bottom-sheet-npm-4.4.7-1316853536.patch::locator=universe%40workspace%3A.":
-  version: 4.4.7
-  resolution: "@gorhom/bottom-sheet@patch:@gorhom/bottom-sheet@npm%3A4.4.7#./.yarn/patches/@gorhom-bottom-sheet-npm-4.4.7-1316853536.patch::version=4.4.7&hash=5bb64c&locator=universe%40workspace%3A."
-  dependencies:
-    "@gorhom/portal": 1.0.14
-    invariant: ^2.2.4
-  peerDependencies:
-    "@types/react": "*"
-    "@types/react-native": "*"
-    react: "*"
-    react-native: "*"
-    react-native-gesture-handler: ">=1.10.1"
-    react-native-reanimated: ">=2.2.0"
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-    "@types/react-native":
-      optional: true
-  checksum: 42d696d995985542000c982149f42d8307bf84f96609a95dddfa63d0b9ab11f89d38b6987066af3caecfd660d1cccb019b50ad3a5ab7eb1506424384af835cbf
+  checksum: b26eb2975a4ad7bec4385ff82e0ca9df047a58619f6323e23e7821c116de4f20885b882efe6f05338af68f88dfcf719811322edd79e76383ae8423a62d3b53e4
   languageName: node
   linkType: hard
 
@@ -11735,7 +11713,7 @@ __metadata:
     "@formatjs/intl-numberformat": 7.4.1
     "@formatjs/intl-pluralrules": 4.3.1
     "@formatjs/intl-relativetimeformat": 11.1.2
-    "@gorhom/bottom-sheet": 4.4.7
+    "@gorhom/bottom-sheet": 4.4.8
     "@react-native-async-storage/async-storage": 1.17.10
     "@react-native-community/eslint-config": 3.0.3
     "@react-native-community/netinfo": 9.3.0

@@ -13,6 +13,7 @@ import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { AnimatedFlex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
+import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import { useReduxModalBackHandler } from 'src/features/modals/hooks'
 import { selectModalState } from 'src/features/modals/modalSlice'
@@ -27,6 +28,8 @@ import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 export function ExploreScreen(): JSX.Element {
   const modalInitialState = useAppSelector(selectModalState(ModalName.Explore)).initialState
   const navigation = useExploreStackNavigation()
+
+  const { isSheetReady } = useBottomSheetContext()
 
   useReduxModalBackHandler(ModalName.Explore)
 
@@ -110,7 +113,7 @@ export function ExploreScreen(): JSX.Element {
           </Flex>
         </KeyboardAvoidingView>
       ) : (
-        <ExploreSections listRef={listRef} />
+        isSheetReady && <ExploreSections listRef={listRef} />
       )}
     </Screen>
   )
