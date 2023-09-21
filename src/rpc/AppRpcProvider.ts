@@ -35,6 +35,7 @@ function checkNetworks(networks: Array<Network>): Network | null {
 }
 
 interface ProviderPerformance {
+  callCount: number
   latency: number
   failureCount: number
   lastEvaluated: number
@@ -63,6 +64,7 @@ export default class AppRpcProvider extends AppStaticJsonRpcProvider {
     this.providerEvaluations = providers.map((provider) => ({
       provider,
       performance: {
+        callCount: 0,
         latency: Number.MAX_SAFE_INTEGER,
         failureCount: 0,
         lastEvaluated: 0,
@@ -91,7 +93,8 @@ export default class AppRpcProvider extends AppStaticJsonRpcProvider {
     // Always broadcast "sendTransaction" to all backends
     if (method === 'sendTransaction') {
       const results: Array<string | Error> = await Promise.all(
-        this.providerEvaluations.map(({ provider }) => {
+        this.providerEvaluations.map(({ performance, provider }) => {
+          performance.callCount++
           return provider.sendTransaction(params.signedTransaction).then(
             (result) => result.hash,
             (error) => error
@@ -108,10 +111,11 @@ export default class AppRpcProvider extends AppStaticJsonRpcProvider {
       throw results[0]
     } else {
       for (const { provider, performance } of this.providerEvaluations) {
+        performance.callCount++
         try {
-          return await provider.perform(method, params)
+          return provider.perform(method, params)
         } catch (error) {
-          performance.failureCount++ // Increment failure rate
+          performance.failureCount++
           console.warn('rpc action failed', error)
         }
       }
@@ -120,7 +124,7 @@ export default class AppRpcProvider extends AppStaticJsonRpcProvider {
   }
 
   /**
-   * Evaluates the performance of a provider. Updates latency and failure rate metrics.
+   * Evaluates the performance of a provider. Updates latency and failure count metrics.
    *
    * config - The provider evaluation configuration.
    * Returns a Promise that resolves when the evaluation is complete.
@@ -130,19 +134,28 @@ export default class AppRpcProvider extends AppStaticJsonRpcProvider {
     try {
       await config.provider.getBlockNumber()
       const latency = Date.now() - startTime
-      config.performance.latency = latency
-      config.performance.failureCount = 0 // Reset failure rate on successful request
+      config.performance.latency += latency
+      config.performance.callCount++
     } catch (error) {
-      config.performance.failureCount += 1 // Increase failure rate on failed request
+      config.performance.failureCount++
     }
     config.performance.lastEvaluated = Date.now()
   }
 
   static sortProviders(providerEvaluations: FallbackProviderEvaluation[]) {
     return providerEvaluations.sort((a, b) => {
-      const scoreA = a.performance.latency * (a.performance.failureCount + 1)
-      const scoreB = b.performance.latency * (b.performance.failureCount + 1)
-      return scoreA - scoreB
+      // Provider a calculations
+      const aAverageLatency = a.performance.latency / a.performance.callCount // Example: 10 / 10 = 1
+      const aFailRate = Math.pow((a.performance.failureCount + 1) / (a.performance.callCount + 1), 2) // Example: ((1 + 1) / (10 + 1))^2 = (2 / 11)^2 ≈ 0.0330
+      const aScore = aAverageLatency / aFailRate // Example: 1 / 0.0330 ≈ 30.3
+
+      // Provider b calculations
+      const bAverageLatency = b.performance.latency / b.performance.callCount // Example: 100 / 10 = 10
+      const bFailRate = Math.pow((b.performance.failureCount + 1) / (b.performance.callCount + 1), 2) // Example: ((10 + 1) / (10 + 1))^2 = (11 / 11)^2 = 1^2 = 1
+      const bScore = bAverageLatency / bFailRate // Example: 10 / 1 = 10
+
+      // Higher scores are more performant and should appear first
+      return bScore - aScore // Example: 10 - 30.3 = -20.3
     })
   }
 }
