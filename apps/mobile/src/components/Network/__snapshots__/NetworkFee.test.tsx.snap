@@ -69,8 +69,8 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
             "color": "#222222",
             "display": "flex",
             "fontFamily": "Basel-Book",
-            "fontSize": 17,
-            "lineHeight": 24,
+            "fontSize": 15,
+            "lineHeight": 16,
           }
         }
         suppressHighlighting={true}
@@ -147,8 +147,8 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
           "color": "#222222",
           "display": "flex",
           "fontFamily": "Basel-Book",
-          "fontSize": 17,
-          "lineHeight": 24,
+          "fontSize": 15,
+          "lineHeight": 16,
         }
       }
       suppressHighlighting={true}
@@ -249,8 +249,8 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
             "color": "#222222",
             "display": "flex",
             "fontFamily": "Basel-Book",
-            "fontSize": 17,
-            "lineHeight": 24,
+            "fontSize": 15,
+            "lineHeight": 16,
           }
         }
         suppressHighlighting={true}
@@ -327,8 +327,8 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
           "color": "#222222",
           "display": "flex",
           "fontFamily": "Basel-Book",
-          "fontSize": 17,
-          "lineHeight": 24,
+          "fontSize": 15,
+          "lineHeight": 16,
         }
       }
       suppressHighlighting={true}
@@ -351,8 +351,8 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
             "color": "#7D7D7D",
             "display": "flex",
             "fontFamily": "Basel-Book",
-            "fontSize": 17,
-            "lineHeight": 24,
+            "fontSize": 15,
+            "lineHeight": 16,
           }
         }
         suppressHighlighting={true}
@@ -433,8 +433,8 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
             "color": "#222222",
             "display": "flex",
             "fontFamily": "Basel-Book",
-            "fontSize": 17,
-            "lineHeight": 24,
+            "fontSize": 15,
+            "lineHeight": 16,
           }
         }
         suppressHighlighting={true}
@@ -511,8 +511,8 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
           "color": "#222222",
           "display": "flex",
           "fontFamily": "Basel-Book",
-          "fontSize": 17,
-          "lineHeight": 24,
+          "fontSize": 15,
+          "lineHeight": 16,
         }
       }
       suppressHighlighting={true}
@@ -535,8 +535,8 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
             "color": "#222222",
             "display": "flex",
             "fontFamily": "Basel-Book",
-            "fontSize": 17,
-            "lineHeight": 24,
+            "fontSize": 15,
+            "lineHeight": 16,
           }
         }
         suppressHighlighting={true}

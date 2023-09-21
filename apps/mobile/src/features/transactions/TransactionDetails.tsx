@@ -7,8 +7,7 @@ import { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { FeeOnTransferInfo } from 'src/features/transactions/swap/FeeOnTransferInfo'
-import { Box, Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
-import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
+import { Box, Flex, Icons, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import AnglesMaximize from 'ui/src/assets/icons/angles-maximize.svg'
 import AnglesMinimize from 'ui/src/assets/icons/angles-minimize.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -16,7 +15,7 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
-const ALERT_ICONS_SIZE = 18
+const ALERT_ICONS_SIZE = iconSizes.icon16
 
 interface TransactionDetailsProps {
   banner?: ReactNode
@@ -69,13 +68,13 @@ export function TransactionDetails({
             gap="$spacing8"
             px="$spacing16"
             py="$spacing8">
-            <AlertTriangle
+            <Icons.AlertTriangle
               color={warningColor?.text}
               height={ALERT_ICONS_SIZE}
               width={ALERT_ICONS_SIZE}
             />
             <Flex grow py="$spacing2">
-              <Text color={warningColor.text} variant="subheading2">
+              <Text color={warningColor.text} variant="body3">
                 {warning.title}
               </Text>
             </Flex>
@@ -117,9 +116,9 @@ export function TransactionDetails({
           alignItems="center"
           flexDirection="row"
           justifyContent="center"
-          py="$spacing8"
+          pt="$spacing12"
           onPress={onPressToggleShowChildren}>
-          <Text color="$neutral3" variant="body2">
+          <Text color="$neutral3" variant="body3">
             {showChildren ? t('Show less') : t('Show more')}
           </Text>
           {showChildren ? (

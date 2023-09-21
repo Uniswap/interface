@@ -242,8 +242,8 @@ exports[`AccountDetails renders without error 1`] = `
                 "color": "#222222",
                 "display": "flex",
                 "fontFamily": "Basel-Book",
-                "fontSize": 17,
-                "lineHeight": 24,
+                "fontSize": 15,
+                "lineHeight": 16,
               }
             }
             suppressHighlighting={true}
@@ -274,8 +274,8 @@ exports[`AccountDetails renders without error 1`] = `
           "color": "#7D7D7D",
           "display": "flex",
           "fontFamily": "Basel-Book",
-          "fontSize": 17,
-          "lineHeight": 24,
+          "fontSize": 15,
+          "lineHeight": 16,
         }
       }
       suppressHighlighting={true}
@@ -528,8 +528,8 @@ exports[`AccountDetails renders without error with chevron 1`] = `
                 "color": "#222222",
                 "display": "flex",
                 "fontFamily": "Basel-Book",
-                "fontSize": 17,
-                "lineHeight": 24,
+                "fontSize": 15,
+                "lineHeight": 16,
               }
             }
             suppressHighlighting={true}
@@ -560,8 +560,8 @@ exports[`AccountDetails renders without error with chevron 1`] = `
           "color": "#7D7D7D",
           "display": "flex",
           "fontFamily": "Basel-Book",
-          "fontSize": 17,
-          "lineHeight": 24,
+          "fontSize": 15,
+          "lineHeight": 16,
         }
       }
       suppressHighlighting={true}
