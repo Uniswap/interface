@@ -1013,7 +1013,7 @@ PODS:
 DEPENDENCIES:
   - "amplitude-react-native (from `../../../node_modules/@amplitude/analytics-react-native`)"
   - Apollo (= 1.2.1)
-  - Argon2Swift
+  - Argon2Swift (= 1.0.3)
   - boost (from `../../../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - "EthersRS (from `../../../node_modules/@uniswap/ethers-rs-mobile`)"
@@ -1038,7 +1038,7 @@ DEPENDENCIES:
   - glog (from `../../../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../../../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - libevent (~> 2.1.12)
-  - OneSignalXCFramework (< 4.0, >= 3.0)
+  - OneSignalXCFramework (= 3.12.4)
   - Permission-FaceID (from `../../../node_modules/react-native-permissions/ios/FaceID`)
   - Permission-Notifications (from `../../../node_modules/react-native-permissions/ios/Notifications`)
   - RCT-Folly (from `../../../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
@@ -1441,6 +1441,6 @@ SPEC CHECKSUMS:
   Yoga: f7decafdc5e8c125e6fa0da38a687e35238420fa
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 9f13062fc9373184e90d8def82fec1671f3f5b9e
+PODFILE CHECKSUM: 649b401645bc66eefcd5d7750ad92b4d0bf5a4dd
 
 COCOAPODS: 1.11.3
