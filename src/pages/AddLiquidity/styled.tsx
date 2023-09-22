@@ -1,5 +1,4 @@
 import { AutoColumn } from 'components/Column'
-import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import { Input } from 'components/NumericalInput'
 import styled from 'styled-components'
 
@@ -30,10 +29,6 @@ export const ScrollablePage = styled.div`
 export const DynamicSection = styled(AutoColumn)<{ disabled?: boolean }>`
   opacity: ${({ disabled }) => (disabled ? '0.2' : '1')};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'initial')};
-`
-
-export const CurrencyDropdown = styled(CurrencyInputPanel)`
-  width: 48.5%;
 `
 
 export const StyledInput = styled(Input)`

@@ -11,7 +11,7 @@ const DESKTOP_NAVBAR_WIDTH_XXL = 640
 
 const baseSearchStyle = style([
   sprinkles({
-    paddingY: '12',
+    paddingY: '8',
     width: { sm: 'viewWidth' },
     borderStyle: 'solid',
     borderWidth: '1px',
@@ -61,7 +61,7 @@ export const searchBarContainerNft = style([
   }),
   {
     backdropFilter: 'blur(60px)',
-    borderRadius: '12px',
+    borderRadius: '16px',
   },
 ])
 
@@ -73,7 +73,7 @@ export const searchBar = style([
   baseSearchStyle,
   sprinkles({
     color: 'neutral2',
-    paddingX: '16',
+    paddingX: '12',
   }),
 ])
 
@@ -81,7 +81,7 @@ export const nftSearchBar = style([
   baseSearchNftStyle,
   sprinkles({
     color: 'neutral2',
-    paddingX: '16',
+    paddingX: '12',
   }),
   {
     backdropFilter: 'blur(60px)',
@@ -104,8 +104,8 @@ export const searchBarInput = style([
 export const searchBarDropdownNft = style([
   baseSearchNftStyle,
   sprinkles({
-    borderBottomLeftRadius: '12',
-    borderBottomRightRadius: '12',
+    borderBottomLeftRadius: '16',
+    borderBottomRightRadius: '16',
     height: { sm: 'viewHeight', md: 'auto' },
     backgroundColor: 'surface1',
   }),

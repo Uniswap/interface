@@ -1,4 +1,4 @@
-import { calculateElapsedTimeWithPerformanceMark } from './utils'
+import { calculateElapsedTimeWithPerformanceMarkMs } from './utils'
 
 // These events should happen in this order.
 export enum SwapEventType {
@@ -18,6 +18,7 @@ export enum SwapEventType {
 
 export class SwapEventTimestampTracker {
   private static _instance: SwapEventTimestampTracker
+  private createdAt = Date.now()
   private constructor() {
     // Private constructor to prevent direct construction calls with the `new` operator.
   }
@@ -36,7 +37,7 @@ export class SwapEventTimestampTracker {
 
   public setElapsedTime(eventType: SwapEventType): number | undefined {
     if (this.timestamps.has(eventType)) return undefined
-    const elapsedTime = calculateElapsedTimeWithPerformanceMark(eventType)
+    const elapsedTime = calculateElapsedTimeWithPerformanceMarkMs(eventType, this.createdAt)
     if (elapsedTime) {
       this.timestamps.set(eventType, elapsedTime)
     }

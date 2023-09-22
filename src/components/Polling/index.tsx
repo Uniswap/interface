@@ -10,7 +10,7 @@ import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms'
 import { useEffect, useMemo, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme'
+import { ExternalLink, ThemedText } from 'theme/components'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { MouseoverTooltip } from '../Tooltip'

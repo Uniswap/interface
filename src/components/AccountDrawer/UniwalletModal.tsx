@@ -12,7 +12,7 @@ import { UniwalletConnect as UniwalletConnectV2 } from 'connection/WalletConnect
 import { QRCodeSVG } from 'qrcode.react'
 import { useEffect, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
-import { CloseIcon, ThemedText } from 'theme'
+import { CloseIcon, ThemedText } from 'theme/components'
 import { isIOS } from 'utils/userAgent'
 
 import uniPng from '../../assets/images/uniwallet_modal_icon.png'

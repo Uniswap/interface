@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { ArrowContainer } from 'pages/Swap'
 import { ArrowDown } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 import { ArrowWrapper } from './styled'
 

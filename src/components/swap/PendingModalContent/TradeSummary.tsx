@@ -3,11 +3,13 @@ import Row from 'components/Row'
 import { ArrowRight } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import { useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
-import { formatReviewSwapCurrencyAmount } from 'utils/formatNumbers'
+import { ThemedText } from 'theme/components'
+import { useFormatter } from 'utils/formatNumbers'
 
 export function TradeSummary({ trade }: { trade: Pick<InterfaceTrade, 'inputAmount' | 'postTaxOutputAmount'> }) {
   const theme = useTheme()
+  const { formatReviewSwapCurrencyAmount } = useFormatter()
+
   return (
     <Row gap="sm" justify="center" align="center">
       <CurrencyLogo currency={trade.inputAmount.currency} size="16px" />

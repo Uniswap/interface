@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { useConnectionReady } from 'connection/eagerlyConnect'
 import { useFotAdjustmentsEnabled } from 'featureFlags/flags/fotAdjustments'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
@@ -168,11 +169,12 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
   // slippage amount used to submit the trade
   const allowedSlippage = uniswapXAutoSlippage ?? classicAllowedSlippage
 
+  const connectionReady = useConnectionReady()
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
 
     if (!account) {
-      inputError = <Trans>Connect Wallet</Trans>
+      inputError = connectionReady ? <Trans>Connect Wallet</Trans> : <Trans>Connecting Wallet...</Trans>
     }
 
     if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
@@ -200,7 +202,7 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
     }
 
     return inputError
-  }, [account, currencies, parsedAmount, to, currencyBalances, trade.trade, allowedSlippage])
+  }, [account, currencies, parsedAmount, to, currencyBalances, trade?.trade, allowedSlippage, connectionReady])
 
   return useMemo(
     () => ({

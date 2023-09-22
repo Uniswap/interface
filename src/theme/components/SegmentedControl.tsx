@@ -2,7 +2,7 @@ import Row, { AutoRow } from 'components/Row'
 import { PropsWithChildren } from 'react'
 import { Icon } from 'react-feather'
 import styled, { css } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 const SegmentWrapper = styled(AutoRow)<{ active?: boolean }>`
   display: flex;

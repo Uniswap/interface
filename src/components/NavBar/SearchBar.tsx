@@ -163,11 +163,11 @@ export const SearchBar = () => {
             !isOpen && !isMobile && magicalGradientOnHover,
             isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)
           )}
-          borderRadius={isOpen || isMobileOrTablet ? undefined : '12'}
-          borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
-          borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
+          borderRadius={isOpen || isMobileOrTablet ? undefined : '16'}
+          borderTopRightRadius={isOpen && !isMobile ? '16' : undefined}
+          borderTopLeftRadius={isOpen && !isMobile ? '16' : undefined}
           borderBottomWidth={isOpen || isMobileOrTablet ? '0px' : '1px'}
-          backgroundColor={isOpen ? 'surface1' : 'surface2'}
+          backgroundColor={isOpen ? 'surface1' : 'surface1'}
           onClick={() => !isOpen && toggleOpen()}
           gap="12"
         >

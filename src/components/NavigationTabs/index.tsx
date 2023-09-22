@@ -1,6 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { Percent } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { ReactNode } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Link, useLocation } from 'react-router-dom'
@@ -9,11 +7,10 @@ import { useAppDispatch } from 'state/hooks'
 import { resetMintState } from 'state/mint/actions'
 import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
 import styled, { useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { flexRowNoWrap } from 'theme/styles'
 
 import { RowBetween } from '../Row'
-import SettingsTab from '../Settings'
 
 const Tabs = styled.div`
   ${flexRowNoWrap};
@@ -24,6 +21,8 @@ const Tabs = styled.div`
 
 const StyledLink = styled(Link)<{ flex?: string }>`
   flex: ${({ flex }) => flex ?? 'none'};
+  display: flex;
+  align-items: center;
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     flex: none;
@@ -64,18 +63,15 @@ const AddRemoveTitleText = styled(ThemedText.SubHeaderLarge)`
 export function AddRemoveTabs({
   adding,
   creating,
-  autoSlippage,
   positionID,
   children,
 }: {
   adding: boolean
   creating: boolean
-  autoSlippage: Percent
   positionID?: string
   showBackLink?: boolean
   children?: ReactNode
 }) {
-  const { chainId } = useWeb3React()
   const theme = useTheme()
   // reset states on back
   const dispatch = useAppDispatch()
@@ -88,7 +84,7 @@ export function AddRemoveTabs({
 
   return (
     <Tabs>
-      <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
+      <RowBetween style={{ padding: '1rem 1rem 0 1rem' }} align="center">
         <StyledLink
           to={poolLink}
           onClick={() => {
@@ -112,7 +108,6 @@ export function AddRemoveTabs({
           )}
         </AddRemoveTitleText>
         {children && <Box style={{ marginRight: '.5rem' }}>{children}</Box>}
-        <SettingsTab autoSlippage={autoSlippage} chainId={chainId} />
       </RowBetween>
     </Tabs>
   )

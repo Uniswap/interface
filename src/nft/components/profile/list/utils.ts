@@ -7,10 +7,9 @@ import { useNFTList, useSellAsset } from 'nft/hooks'
 import {
   LOOKSRARE_MARKETPLACE_CONTRACT_721,
   LOOKSRARE_MARKETPLACE_CONTRACT_1155,
-  X2Y2_TRANSFER_CONTRACT_721,
-  X2Y2_TRANSFER_CONTRACT_1155,
-} from 'nft/queries'
-import { OPENSEA_CROSS_CHAIN_CONDUIT } from 'nft/queries/openSea'
+} from 'nft/queries/looksRare/constants'
+import { OPENSEA_CROSS_CHAIN_CONDUIT } from 'nft/queries/openSea/constants'
+import { X2Y2_TRANSFER_CONTRACT_721, X2Y2_TRANSFER_CONTRACT_1155 } from 'nft/queries/x2y2'
 import { CollectionRow, Listing, ListingMarket, ListingRow, ListingStatus, WalletAsset } from 'nft/types'
 import { approveCollection, LOOKS_RARE_CREATOR_BASIS_POINTS, signListing } from 'nft/utils/listNfts'
 import { Dispatch, useEffect } from 'react'

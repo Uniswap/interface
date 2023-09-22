@@ -14,7 +14,7 @@
     <link rel="apple-touch-icon" sizes="512x512" href="%PUBLIC_URL%/images/512x512_App_Icon.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#FC72FF" />
+    <meta name="theme-color" content="#fff" />
     <meta
       http-equiv="Content-Security-Policy"
       <% if (process.env.REACT_APP_CSP_ALLOW_UNSAFE_EVAL) { %>
@@ -36,7 +36,8 @@
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-    <link rel="preconnect" href="%REACT_APP_AMPLITUDE_PROXY_URL%" />
+    <link rel="preconnect" href="https://api.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
     <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
