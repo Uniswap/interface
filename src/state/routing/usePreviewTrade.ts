@@ -1,13 +1,13 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { ZERO_PERCENT } from 'constants/misc'
+import { useQuickRouteAllChainsEnabled } from 'featureFlags/flags/quickRouteAllChains'
+import { useQuickRouteMainnetEnabled } from 'featureFlags/flags/quickRouteMainnet'
 import { useMemo } from 'react'
 
 import { useGetQuickRouteQuery, useGetQuickRouteQueryState } from './quickRouteSlice'
 import { GetQuickQuoteArgs, PreviewTrade, QuoteState, TradeState } from './types'
 import { currencyAddressForSwapQuote } from './utils'
-import { useQuickRouteMainnetEnabled } from 'featureFlags/flags/quickRouteMainnet'
-import { useQuickRouteAllChainsEnabled } from 'featureFlags/flags/quickRouteAllChains'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined } as const
@@ -28,10 +28,12 @@ function useQuickRouteArguments({
   outputTax: Percent
 }): GetQuickQuoteArgs | typeof skipToken {
   const enabledMainnet = useQuickRouteMainnetEnabled()
-  const enableAllChains = useQuickRouteAllChainsEnabled()
-  
+  const enabledAllChains = useQuickRouteAllChainsEnabled()
+
   return useMemo(() => {
     if (!tokenIn || !tokenOut || !amount) return skipToken
+    if (tokenIn.chainId === ChainId.MAINNET && !enabledMainnet) return skipToken
+    if (tokenIn.chainId !== ChainId.MAINNET && !enabledAllChains) return skipToken
 
     return {
       amount: amount.quotient.toString(),
