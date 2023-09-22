@@ -8,8 +8,8 @@ import { isUniswapXSupportedChain } from 'constants/chains'
 import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
 import { useAppDispatch } from 'state/hooks'
 import { RouterPreference } from 'state/routing/types'
-import { useRouterPreference, useUserDisabledUniswapX } from 'state/user/hooks'
-import { updateDisabledUniswapX } from 'state/user/reducer'
+import { useRouterPreference, useUserOptedOutOfUniswapX } from 'state/user/hooks'
+import { updateDisabledUniswapX, updateOptedOutOfUniswapX } from 'state/user/reducer'
 import styled from 'styled-components'
 import { Divider, ExternalLink, ThemedText } from 'theme/components'
 
@@ -27,9 +27,9 @@ export default function RouterPreferenceSettings() {
   const [routerPreference, setRouterPreference] = useRouterPreference()
   const uniswapXEnabled = chainId && isUniswapXSupportedChain(chainId)
   const dispatch = useAppDispatch()
-  const userDisabledUniswapX = useUserDisabledUniswapX()
+  const userOptedOutOfUniswapX = useUserOptedOutOfUniswapX()
   const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
-  const isUniswapXOverrideEnabled = isUniswapXDefaultEnabled && !userDisabledUniswapX
+  const isUniswapXOverrideEnabled = isUniswapXDefaultEnabled && !userOptedOutOfUniswapX
 
   const uniswapXInEffect =
     routerPreference === RouterPreference.X ||
@@ -61,8 +61,13 @@ export default function RouterPreferenceSettings() {
               isActive={uniswapXInEffect}
               toggle={() => {
                 if (uniswapXInEffect) {
-                  // We need to remember if a user disables Uniswap X, so we don't show the opt-in flow again.
-                  dispatch(updateDisabledUniswapX({ disabledUniswapX: true }))
+                  if (isUniswapXDefaultEnabled) {
+                    // We need to remember if a opts out of UniswapX, so we don't request UniswapX quotes.
+                    dispatch(updateOptedOutOfUniswapX({ optedOutOfUniswapX: true }))
+                  } else {
+                    // We need to remember if a user disables Uniswap X, so we don't show the opt-in flow again.
+                    dispatch(updateDisabledUniswapX({ disabledUniswapX: true }))
+                  }
                 }
                 setRouterPreference(uniswapXInEffect ? RouterPreference.API : RouterPreference.X)
               }}
