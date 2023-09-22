@@ -70,6 +70,13 @@ module.exports = {
             ],
           },
         ],
+        'no-restricted-syntax': [
+          'error',
+          {
+            selector: ':matches(ExportAllDeclaration)',
+            message: 'Barrel exports bloat the bundle size by preventing tree-shaking.',
+          },
+        ],
       },
     },
     {

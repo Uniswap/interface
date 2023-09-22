@@ -23,7 +23,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import styled from 'styled-components'
-import { CopyHelper, ExternalLink, ThemedText } from 'theme'
+import { CopyHelper, ExternalLink, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 

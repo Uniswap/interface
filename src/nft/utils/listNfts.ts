@@ -9,23 +9,20 @@ import { ItemType } from '@opensea/seaport-js/lib/constants'
 import { ConsiderationInputItem } from '@opensea/seaport-js/lib/types'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
+import { createLooksRareOrder } from 'nft/queries/looksRare'
+import { LOOKSRARE_MARKETPLACE_CONTRACT_721 } from 'nft/queries/looksRare/constants'
+import { PostOpenSeaSellOrder } from 'nft/queries/openSea'
 import {
   OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY,
   OPENSEA_FEE_ADDRESS,
   OPENSEA_KEY_TO_CONDUIT,
   OPENSEA_SEAPORT_V1_5_CONTRACT,
-} from 'nft/queries/openSea'
+} from 'nft/queries/openSea/constants'
+import { INVERSE_BASIS_POINTS } from 'nft/queries/openSea/constants'
+import { getX2Y2OrderId, newX2Y2Order } from 'nft/queries/x2y2'
 
 import ERC721 from '../../abis/erc721.json'
 import ERC1155 from '../../abis/erc1155.json'
-import {
-  createLooksRareOrder,
-  getOrderId,
-  LOOKSRARE_MARKETPLACE_CONTRACT_721,
-  newX2Y2Order,
-  PostOpenSeaSellOrder,
-} from '../queries'
-import { INVERSE_BASIS_POINTS } from '../queries/openSea'
 import { ListingMarket, ListingStatus, WalletAsset } from '../types'
 import { createSellOrder, encodeOrder, OfferItem, OrderPayload, signOrderData } from './x2y2'
 
@@ -247,7 +244,7 @@ export async function signListing(
       }
       const order = createSellOrder(signerAddress, asset.expirationTime, [orderItem], asset.asset_contract.tokenType)
       try {
-        const prevOrderId = await getOrderId(asset.asset_contract.address, asset.tokenId)
+        const prevOrderId = await getX2Y2OrderId(asset.asset_contract.address, asset.tokenId)
         await signOrderData(provider, order)
         const payload: OrderPayload = {
           order: encodeOrder(order),

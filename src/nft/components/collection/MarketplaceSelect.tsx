@@ -11,7 +11,7 @@ import { TraitPosition, useTraitsOpen } from 'nft/hooks/useTraitsOpen'
 import { getMarketplaceIcon } from 'nft/utils'
 import { FormEvent, useEffect, useMemo, useReducer, useState } from 'react'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 import { Checkbox } from '../layout/Checkbox'
 

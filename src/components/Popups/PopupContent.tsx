@@ -16,7 +16,7 @@ import { X } from 'react-feather'
 import { useOrder } from 'state/signatures/hooks'
 import { useTransaction } from 'state/transactions/hooks'
 import styled from 'styled-components'
-import { EllipsisStyle, ThemedText } from 'theme'
+import { EllipsisStyle, ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 

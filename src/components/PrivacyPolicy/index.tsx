@@ -6,7 +6,7 @@ import Row, { AutoRow, RowBetween } from 'components/Row'
 import { useEffect, useRef } from 'react'
 import { ArrowDown, Info, X } from 'react-feather'
 import styled from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme'
+import { ExternalLink, ThemedText } from 'theme/components'
 import { isMobile } from 'utils/userAgent'
 
 import { useModalIsOpen, useTogglePrivacyPolicy } from '../../state/application/hooks'

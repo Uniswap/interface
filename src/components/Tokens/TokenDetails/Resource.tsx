@@ -1,6 +1,6 @@
 import { darken } from 'polished'
 import styled from 'styled-components'
-import { ExternalLink } from 'theme'
+import { ExternalLink } from 'theme/components'
 
 const ResourceLink = styled(ExternalLink)`
   display: flex;

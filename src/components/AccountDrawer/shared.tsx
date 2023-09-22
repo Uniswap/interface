@@ -5,7 +5,8 @@ import { Check } from 'react-feather'
 import type { To } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
-import { BREAKPOINTS, ClickableStyle, ThemedText } from 'theme'
+import { BREAKPOINTS } from 'theme'
+import { ClickableStyle, ThemedText } from 'theme/components'
 
 const InternalLinkMenuItem = styled(Link)`
   ${ClickableStyle}

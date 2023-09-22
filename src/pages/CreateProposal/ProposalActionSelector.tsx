@@ -7,7 +7,7 @@ import { MenuItem, PaddedColumn, Separator } from 'components/SearchModal/styled
 import React, { useCallback } from 'react'
 import { Text } from 'rebass'
 import styled from 'styled-components'
-import { CloseIcon } from 'theme'
+import { CloseIcon } from 'theme/components'
 
 export enum ProposalAction {
   TRANSFER_TOKEN = 'Transfer Token',

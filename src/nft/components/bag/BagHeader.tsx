@@ -3,7 +3,7 @@ import { OpacityHoverState } from 'components/Common'
 import { BagCloseIcon } from 'nft/components/icons'
 import { useMemo } from 'react'
 import styled from 'styled-components'
-import { ButtonText, ThemedText } from 'theme'
+import { ButtonText, ThemedText } from 'theme/components'
 
 const ClearButton = styled(ButtonText)`
   color: ${({ theme }) => theme.neutral2};

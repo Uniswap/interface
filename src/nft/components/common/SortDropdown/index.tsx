@@ -11,6 +11,8 @@ import { useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } fro
 
 import * as styles from './SortDropdown.css'
 
+export { FilterSortDropdown } from './FilterSortDropdown'
+
 export const SortDropdown = ({
   dropDownOptions,
   inFilters,
