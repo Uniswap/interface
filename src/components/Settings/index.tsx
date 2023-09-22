@@ -59,9 +59,9 @@ const MenuFlyout = styled(AutoColumn)`
   padding: 16px;
 `
 
-const ExpandColumn = styled(AutoColumn)`
+const ExpandColumn = styled(AutoColumn)<{ $padTop: boolean }>`
   gap: 16px;
-  padding-top: 16px;
+  padding-top: ${({ $padTop }) => ($padTop ? '16px' : '0')};
 `
 
 const MobileMenuContainer = styled(Row)`
@@ -101,10 +101,12 @@ export default function SettingsTab({
   autoSlippage,
   chainId,
   trade,
+  showRoutingSettings = true,
 }: {
   autoSlippage: Percent
   chainId?: number
   trade?: InterfaceTrade
+  showRoutingSettings?: boolean
 }) {
   const { chainId: connectedChainId } = useWeb3React()
   const showDeadlineSettings = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
@@ -123,16 +125,17 @@ export default function SettingsTab({
   useDisableScrolling(isOpen)
 
   const isChainSupported = isSupportedChain(chainId)
-
   const Settings = useMemo(
     () => (
       <>
-        <AutoColumn gap="16px">
-          <RouterPreferenceSettings />
-        </AutoColumn>
+        {showRoutingSettings && (
+          <AutoColumn gap="16px">
+            <RouterPreferenceSettings />
+          </AutoColumn>
+        )}
         <AnimatedDropdown open={!isUniswapXTrade(trade)}>
-          <ExpandColumn>
-            <Divider />
+          <ExpandColumn $padTop={showRoutingSettings}>
+            {showRoutingSettings && <Divider />}
             <MaxSlippageSettings autoSlippage={autoSlippage} />
             {showDeadlineSettings && (
               <>
@@ -144,7 +147,7 @@ export default function SettingsTab({
         </AnimatedDropdown>
       </>
     ),
-    [autoSlippage, showDeadlineSettings, trade]
+    [autoSlippage, showDeadlineSettings, showRoutingSettings, trade]
   )
 
   return (
