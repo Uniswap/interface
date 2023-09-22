@@ -2,6 +2,7 @@ import { renderHook } from '@testing-library/react'
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { RouterPreference, TradeState } from 'state/routing/types'
+import { usePreviewTrade } from 'state/routing/usePreviewTrade'
 import { useRouterPreference } from 'state/user/hooks'
 import { mocked } from 'test-utils/mocked'
 
@@ -18,11 +19,13 @@ jest.mock('./useAutoRouterSupported')
 jest.mock('./useDebounce')
 jest.mock('./useIsWindowVisible')
 jest.mock('state/routing/useRoutingAPITrade')
+jest.mock('state/routing/usePreviewTrade')
 jest.mock('state/user/hooks')
 
 // helpers to set mock expectations
 const expectRouterMock = (state: TradeState) => {
   mocked(useRoutingAPITrade).mockReturnValue({ state, trade: undefined })
+  mocked(usePreviewTrade).mockReturnValue({ state, trade: undefined })
 }
 
 beforeEach(() => {
@@ -42,11 +45,11 @@ describe('#useBestV3Trade ExactIn', () => {
     const { result } = renderHook(() => useDebouncedTrade(TradeType.EXACT_INPUT, USDCAmount, DAI))
 
     expect(useRoutingAPITrade).toHaveBeenCalledWith(
+      /* skipFetch = */ true,
       TradeType.EXACT_INPUT,
       USDCAmount,
       DAI,
       RouterPreference.CLIENT,
-      /* skipFetch = */ true,
       /* account = */ undefined,
       /* inputTax = */ undefined,
       /* outputTax = */ undefined
@@ -62,11 +65,11 @@ describe('#useDebouncedTrade ExactOut', () => {
 
     const { result } = renderHook(() => useDebouncedTrade(TradeType.EXACT_OUTPUT, DAIAmount, USDC_MAINNET))
     expect(useRoutingAPITrade).toHaveBeenCalledWith(
+      /* skipFetch = */ true,
       TradeType.EXACT_OUTPUT,
       DAIAmount,
       USDC_MAINNET,
       RouterPreference.CLIENT,
-      /* skipFetch = */ true,
       /* account = */ undefined,
       /* inputTax = */ undefined,
       /* outputTax = */ undefined
