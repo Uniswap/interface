@@ -164,6 +164,12 @@ function Web3StatusInner() {
     initialConnection.current?.address === account && initialConnection.current?.ENSName && ENSLoading
   )
   const isConnectionInitialized = connectionReady && !isConnectionInitializing
+  // Clear the initial connection once initialized so it does not interfere with subsequent connections.
+  useEffect(() => {
+    if (isConnectionInitialized) {
+      initialConnection.current = undefined
+    }
+  }, [isConnectionInitialized])
   // Persist the connection if it changes, so it can be used to initialize the next session's connection.
   useEffect(() => {
     if (account || ENSName) {
@@ -175,12 +181,6 @@ function Web3StatusInner() {
       setPersistedConnectionMeta(meta)
     }
   }, [ENSName, account, connection.type])
-  // Clear the initial connection once initialized so it does not interfere with subsequent connections.
-  useEffect(() => {
-    if (isConnectionInitialized) {
-      initialConnection.current = undefined
-    }
-  }, [isConnectionInitialized])
 
   if (!isConnectionInitialized) {
     return (
