@@ -1,7 +1,6 @@
 import { ShadowProps } from '@shopify/restyle'
-import React, { ComponentProps, PropsWithChildren, ReactNode } from 'react'
+import React, { ComponentProps, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import Trace from 'src/components/Trace/Trace'
 import { ColorTokens, Flex, FlexProps, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes, opacify } from 'ui/src/theme'
@@ -11,30 +10,6 @@ import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 // TODO(MOB-1211): figure out shadow offset in Tamagui
 // const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 4, height: 8 }
 export const SHADOW_OFFSET_SMALL: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }
-
-// Container
-export function Container({
-  children,
-  ...trace
-}: PropsWithChildren<ComponentProps<typeof Trace>>): JSX.Element {
-  return (
-    <Trace {...trace}>
-      <Flex
-        bg="$surface2"
-        borderColor="$surface3"
-        borderRadius="$rounded16"
-        borderWidth={0.25}
-        overflow="visible"
-        shadowColor="$sporeBlack"
-        // TODO(MOB-1211): figure out shadow offset in Tamagui
-        // shadowOffset={SHADOW_OFFSET}
-        shadowOpacity={0.05}
-        shadowRadius={10}>
-        {children}
-      </Flex>
-    </Trace>
-  )
-}
 
 export function Shadow({ children, ...rest }: FlexProps): JSX.Element {
   const isDarkMode = useIsDarkMode()
@@ -47,8 +22,8 @@ export function Shadow({ children, ...rest }: FlexProps): JSX.Element {
       shadowColor={isDarkMode ? '$sporeBlack' : '$transparent'}
       // TODO(MOB-1211): figure out shadow offset in Tamagui
       // shadowOffset={SHADOW_OFFSET_SMALL}
-      shadowOpacity={0.4}
-      shadowRadius={6}
+      shadowOpacity={0.0075}
+      shadowRadius={10}
       style={{ backgroundColor: opacify(isDarkMode ? 10 : 100, colors.sporeWhite.val) }}
       {...rest}>
       {children}
@@ -251,7 +226,6 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
 }
 
 export const BaseCard = {
-  Container,
   EmptyState,
   ErrorState,
   Header,
