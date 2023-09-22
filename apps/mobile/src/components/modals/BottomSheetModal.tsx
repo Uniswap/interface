@@ -233,8 +233,9 @@ export function BottomSheetModal({
 
       // When a sheet has too much content it can lag and take a while to begin opening, so we want to delay rendering some of the content until the sheet is ready.
       // We consider the sheet to be "ready" as soon as it starts animating from the bottom to the top.
+      // We add a short delay given that this callback is called when the sheet is "about to" animate.
       if (!isSheetReady && fromIndex === -1 && toIndex === 0) {
-        setIsSheetReady(true)
+        setTimeout(() => setIsSheetReady(true), 50)
       }
     },
     [hideKeyboardOnDismiss, hideKeyboardOnSwipeDown, isSheetReady]
