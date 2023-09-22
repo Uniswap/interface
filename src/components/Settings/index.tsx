@@ -59,9 +59,9 @@ const MenuFlyout = styled(AutoColumn)`
   padding: 16px;
 `
 
-const ExpandColumn = styled(AutoColumn)<{ padTop: boolean }>`
+const ExpandColumn = styled(AutoColumn)<{ $padTop: boolean }>`
   gap: 16px;
-  padding-top: ${({ padTop }) => (padTop ? '16px' : '0')};
+  padding-top: ${({ $padTop }) => ($padTop ? '16px' : '0')};
 `
 
 const MobileMenuContainer = styled(Row)`
@@ -134,7 +134,7 @@ export default function SettingsTab({
           </AutoColumn>
         )}
         <AnimatedDropdown open={!isUniswapXTrade(trade)}>
-          <ExpandColumn padTop={showRoutingSettings}>
+          <ExpandColumn $padTop={showRoutingSettings}>
             {showRoutingSettings && <Divider />}
             <MaxSlippageSettings autoSlippage={autoSlippage} />
             {showDeadlineSettings && (
