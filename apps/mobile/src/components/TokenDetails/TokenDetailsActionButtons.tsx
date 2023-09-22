@@ -24,6 +24,8 @@ function CTAButton({
         fill
         hapticFeedback
         color={tokenColor ? getContrastPassingTextColor(tokenColor) : '$sporeWhite'}
+        // eslint-disable-next-line react-native/no-inline-styles
+        pressStyle={{ opacity: 0.6 }}
         // idk why this eslint warning is coming up because it auto-sorts it back on format to invalid order
         // eslint-disable-next-line react/jsx-sort-props
         onPress={onPress}
