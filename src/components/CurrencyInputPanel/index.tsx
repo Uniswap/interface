@@ -161,6 +161,10 @@ const StyledNumericalInput = styled(NumericalInput)<{ $loading: boolean }>`
   text-align: left;
 `
 
+const StyledPrefetchBalancesWrapper = styled(PrefetchBalancesWrapper)<{ $fullWidth: boolean }>`
+  width: ${({ $fullWidth }) => ($fullWidth ? '100%' : 'auto')};
+`
+
 interface CurrencyInputPanelProps {
   value: string
   onUserInput: (value: string) => void
@@ -231,7 +235,7 @@ export default function CurrencyInputPanel({
                 />
               )}
 
-              <PrefetchBalancesWrapper shouldFetchOnAccountUpdate={modalOpen}>
+              <StyledPrefetchBalancesWrapper shouldFetchOnAccountUpdate={modalOpen} $fullWidth={hideInput}>
                 <CurrencySelect
                   disabled={!chainAllowed}
                   visible={currency !== undefined}
@@ -274,7 +278,7 @@ export default function CurrencyInputPanel({
                     {onCurrencySelect && <StyledDropDown selected={!!currency} />}
                   </Aligner>
                 </CurrencySelect>
-              </PrefetchBalancesWrapper>
+              </StyledPrefetchBalancesWrapper>
             </InputRow>
             {Boolean(!hideInput && !hideBalance && currency) && (
               <FiatRow>
