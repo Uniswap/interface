@@ -156,7 +156,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
             class="c5"
           >
             <div
-              class="c8 css-1geukv8"
+              class="css-1geukv8"
               data-testid="INPUT-amount"
             >
               &lt;0.00001 ABC
@@ -204,7 +204,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
             class="c5"
           >
             <div
-              class="c8 css-1geukv8"
+              class="css-1geukv8"
               data-testid="OUTPUT-amount"
             >
               &lt;0.00001 DEF
@@ -390,7 +390,7 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
             class="c5"
           >
             <div
-              class="c8 css-1geukv8"
+              class="css-1geukv8"
               data-testid="INPUT-amount"
             >
               &lt;0.00001 ETH
@@ -438,7 +438,7 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
             class="c5"
           >
             <div
-              class="c8 css-1geukv8"
+              class="css-1geukv8"
               data-testid="OUTPUT-amount"
             >
               &lt;0.00001 DEF
@@ -624,7 +624,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
             class="c5"
           >
             <div
-              class="c8 css-1geukv8"
+              class="css-1geukv8"
               data-testid="INPUT-amount"
             >
               &lt;0.00001 ABC
@@ -672,7 +672,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
             class="c5"
           >
             <div
-              class="c8 css-1geukv8"
+              class="css-1geukv8"
               data-testid="OUTPUT-amount"
             >
               &lt;0.00001 GHI
