@@ -10,6 +10,8 @@ const Container = styled(Column)`
   height: 75vh;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  padding: 48px;
   gap: 8px;
 `
 const LinkStyles = css`
