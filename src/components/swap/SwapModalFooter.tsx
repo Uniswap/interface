@@ -15,7 +15,7 @@ import { ClassicTrade, InterfaceTrade, RouterPreference } from 'state/routing/ty
 import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { DefaultTheme, useTheme } from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme'
+import { ExternalLink, ThemedText } from 'theme/components'
 import { FormatterRule, NumberType, SIX_SIG_FIGS_NO_COMMAS, useFormatter } from 'utils/formatNumbers'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'

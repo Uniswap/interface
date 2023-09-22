@@ -15,7 +15,8 @@ import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
-import { BREAKPOINTS, ClickableStyle } from 'theme'
+import { BREAKPOINTS } from 'theme'
+import { ClickableStyle } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import {

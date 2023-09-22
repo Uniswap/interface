@@ -6,7 +6,7 @@ import { AutoColumn } from 'components/Column'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import styled, { keyframes } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 import { Input as NumericalInput } from '../NumericalInput'
 

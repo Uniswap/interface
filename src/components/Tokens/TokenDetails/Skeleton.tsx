@@ -2,7 +2,7 @@ import { SwapSkeleton } from 'components/swap/SwapSkeleton'
 import { ArrowLeft } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 
 import { LoadingBubble } from '../loading'

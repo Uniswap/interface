@@ -7,10 +7,6 @@ import { navDimensions } from '../nft/css/sprinkles.css'
 import { darkTheme, lightTheme } from './colors'
 import { darkDeprecatedTheme, lightDeprecatedTheme } from './deprecatedColors'
 
-// todo - remove and replace imports with a new path
-export * from './components'
-export * from './components/text'
-
 export const MEDIA_WIDTHS = {
   deprecated_upToExtraSmall: 500,
   deprecated_upToSmall: 720,

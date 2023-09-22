@@ -6,7 +6,7 @@ import { atom, useAtom } from 'jotai'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 import { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
 import { ActivityRow } from './ActivityRow'

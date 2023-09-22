@@ -11,6 +11,7 @@ import { ChevronsRight } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
+import { ExternalLink, HideSmall, ThemedText } from 'theme/components'
 
 import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import Card from '../../components/Card'
@@ -25,7 +26,6 @@ import { useV2Pairs } from '../../hooks/useV2Pairs'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/connection/hooks'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
-import { ExternalLink, HideSmall, ThemedText } from '../../theme'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;

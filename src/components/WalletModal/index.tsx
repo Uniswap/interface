@@ -8,7 +8,7 @@ import { ActivationStatus, useActivationState } from 'connection/activate'
 import { isSupportedChain } from 'constants/chains'
 import { useEffect } from 'react'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
 
 import ConnectionErrorView from './ConnectionErrorView'

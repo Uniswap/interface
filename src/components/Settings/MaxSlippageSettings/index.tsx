@@ -7,7 +7,7 @@ import React, { useState } from 'react'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import styled from 'styled-components'
-import { CautionTriangle, ThemedText } from 'theme'
+import { CautionTriangle, ThemedText } from 'theme/components'
 
 import { Input, InputContainer } from '../Input'
 

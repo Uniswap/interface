@@ -5,7 +5,7 @@ import QuestionHelper from 'components/QuestionHelper'
 import Row from 'components/Row'
 import { AlertTriangle } from 'react-feather'
 import { useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 import { PendingModalContainer } from '.'
 

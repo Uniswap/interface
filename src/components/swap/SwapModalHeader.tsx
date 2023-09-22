@@ -5,7 +5,7 @@ import { useUSDPrice } from 'hooks/useUSDPrice'
 import { InterfaceTrade } from 'state/routing/types'
 import { Field } from 'state/swap/actions'
 import styled from 'styled-components'
-import { Divider, ThemedText } from 'theme'
+import { Divider, ThemedText } from 'theme/components'
 
 import { SwapModalHeaderAmount } from './SwapModalHeaderAmount'
 

@@ -4,7 +4,7 @@ import { useTokenWarningColor, useTokenWarningTextColor } from 'hooks/useTokenWa
 import { AlertTriangle, Slash } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components'
-import { ExternalLink } from 'theme'
+import { ExternalLink } from 'theme/components'
 
 const Label = styled.div<{ color: string; backgroundColor: string }>`
   width: 100%;
