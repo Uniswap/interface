@@ -13,7 +13,7 @@ export const HandleBar = ({
   containerFlexStyles,
 }: {
   // string instead of keyof Theme['colors] because this is sometimes a raw hex value when used with BottomSheet components
-  backgroundColor: ColorValue
+  backgroundColor?: ColorValue
   hidden?: boolean
   containerFlexStyles?: FlexStyle
 }): JSX.Element => {

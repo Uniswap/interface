@@ -1,6 +1,7 @@
 import {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
+  BottomSheetHandleProps,
   BottomSheetModal as BaseModal,
   BottomSheetView,
   useBottomSheetDynamicSnapPoints,
@@ -141,8 +142,7 @@ export function BottomSheetModal({
     : backgroundColor ?? colors.surface1.val
 
   const renderBackdrop = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (props: any) => (
+    (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
         {...props}
         appearsOnIndex={BACKDROP_APPEARS_ON_INDEX}
@@ -155,8 +155,7 @@ export function BottomSheetModal({
   )
 
   const renderHandleBar = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (props: any) => {
+    (props: BottomSheetHandleProps) => {
       // This adds an extra gap of unwanted space
       if (renderBehindInset && hideHandlebar) {
         return null
@@ -321,8 +320,7 @@ export function BottomSheetDetachedModal({
   }, [modalRef])
 
   const renderHandleBar = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (props: any) => {
+    (props: BottomSheetHandleProps) => {
       return <HandleBar {...props} backgroundColor={backgroundColor} hidden={hideHandlebar} />
     },
     [backgroundColor, hideHandlebar]
