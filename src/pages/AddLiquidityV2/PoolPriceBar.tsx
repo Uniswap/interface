@@ -2,12 +2,12 @@ import { Trans } from '@lingui/macro'
 import { Currency, Percent, Price } from '@uniswap/sdk-core'
 import { Text } from 'rebass'
 import { useTheme } from 'styled-components'
+import { ThemedText } from 'theme/components'
 
 import { AutoColumn } from '../../components/Column'
 import { AutoRow } from '../../components/Row'
 import { ONE_BIPS } from '../../constants/misc'
 import { Field } from '../../state/mint/actions'
-import { ThemedText } from '../../theme'
 
 export function PoolPriceBar({
   currencies,

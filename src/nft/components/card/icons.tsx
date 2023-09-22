@@ -8,7 +8,7 @@ import { Markets } from 'nft/types'
 import { putCommas } from 'nft/utils'
 import { AlertTriangle, Check, Tag } from 'react-feather'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 const StyledMarketplaceContainer = styled.div<{ isText?: boolean }>`
   position: absolute;

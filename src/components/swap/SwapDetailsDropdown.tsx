@@ -11,7 +11,7 @@ import { useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { keyframes, useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import GasEstimateTooltip from './GasEstimateTooltip'

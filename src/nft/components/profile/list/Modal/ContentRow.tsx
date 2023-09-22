@@ -8,7 +8,7 @@ import { getMarketplaceIcon } from 'nft/utils'
 import { useEffect, useRef } from 'react'
 import { Check, XOctagon } from 'react-feather'
 import styled, { css, useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
 
 const ContentColumn = styled(Column)<{ failed: boolean }>`

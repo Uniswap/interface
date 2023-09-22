@@ -11,7 +11,7 @@ import { RouterPreference } from 'state/routing/types'
 import { useRouterPreference, useUserDisabledUniswapX } from 'state/user/hooks'
 import { updateDisabledUniswapX } from 'state/user/reducer'
 import styled from 'styled-components'
-import { Divider, ExternalLink, ThemedText } from 'theme'
+import { Divider, ExternalLink, ThemedText } from 'theme/components'
 
 const InlineLink = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.accent1};

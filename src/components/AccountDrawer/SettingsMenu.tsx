@@ -8,7 +8,7 @@ import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
 import styled from 'styled-components'
-import { ClickableStyle, ThemedText } from 'theme'
+import { ClickableStyle, ThemedText } from 'theme/components'
 import ThemeToggle from 'theme/components/ThemeToggle'
 
 import { AnalyticsToggle } from './AnalyticsToggle'

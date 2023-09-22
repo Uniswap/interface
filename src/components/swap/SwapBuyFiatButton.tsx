@@ -7,7 +7,7 @@ import { ButtonText } from 'components/Button'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { ExternalLink } from 'theme'
+import { ExternalLink } from 'theme/components'
 
 import { useFiatOnrampAvailability, useOpenModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
