@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { AnimatedFlex, Box } from 'src/components/layout'
+import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID } from 'src/constants/globals'
@@ -37,6 +38,8 @@ const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
 export function SwapForm(): JSX.Element {
   const { selectingCurrencyField } = useSwapContext()
 
+  const { isSheetReady } = useBottomSheetContext()
+
   const insets = useSafeAreaInsets()
 
   const screenXOffset = useSharedValue(0)
@@ -58,7 +61,7 @@ export function SwapForm(): JSX.Element {
               style={{ marginBottom: insets.bottom }}
               width="100%">
               <SwapFormHeader />
-              <SwapFormContent />
+              {isSheetReady && <SwapFormContent />}
             </Flex>
           </AnimatedFlex>
         </Box>
