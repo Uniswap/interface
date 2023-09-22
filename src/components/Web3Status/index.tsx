@@ -159,7 +159,7 @@ function Web3StatusInner() {
   // - initializing:  account is available, but ENS (if preset on the persisted initialMeta) is still loading
   // - initialized:   account and ENS are available
   // Subsequent connections are always considered initialized, and will not display startup/initializing states.
-  const [initialConnection, onInitializedConnection] = useState<ConnectionMeta | void>(getPersistedConnectionMeta())
+  const [initialConnection, onConnectionInitialized] = useState<void | ConnectionMeta>(getPersistedConnectionMeta())
   const isConnectionInitializing = Boolean(
     initialConnection?.address === account && initialConnection?.ENSName && ENSLoading
   )
@@ -175,6 +175,10 @@ function Web3StatusInner() {
       setPersistedConnectionMeta(meta)
     }
   }, [ENSName, account, connection.type])
+  // Clear the initial connection once the connection has initialized.
+  useEffect(() => {
+    onConnectionInitialized()
+  }, [isConnectionInitialized])
 
   if (!isConnectionInitialized) {
     return (
@@ -187,9 +191,6 @@ function Web3StatusInner() {
         </AddressAndChevronContainer>
       </Web3StatusConnecting>
     )
-  } else {
-    // Clear meta once the initial connection (or lack thereof) has loaded.
-    onInitializedConnection()
   }
 
   if (account) {
