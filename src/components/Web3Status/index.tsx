@@ -16,7 +16,7 @@ import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { darken } from 'polished'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useAppSelector } from 'state/hooks'
 import styled from 'styled-components'
 import { colors } from 'theme/colors'
@@ -159,9 +159,9 @@ function Web3StatusInner() {
   // - initializing:  account is available, but ENS (if preset on the persisted initialMeta) is still loading
   // - initialized:   account and ENS are available
   // Subsequent connections are always considered initialized, and will not display startup/initializing states.
-  const [initialConnection, onConnectionInitialized] = useState<void | ConnectionMeta>(getPersistedConnectionMeta())
+  const initialConnection = useRef(getPersistedConnectionMeta())
   const isConnectionInitializing = Boolean(
-    initialConnection?.address === account && initialConnection?.ENSName && ENSLoading
+    initialConnection.current?.address === account && initialConnection.current?.ENSName && ENSLoading
   )
   const isConnectionInitialized = connectionReady && !isConnectionInitializing
   // Persist the connection if it changes, so it can be used to initialize the next session's connection.
@@ -175,9 +175,11 @@ function Web3StatusInner() {
       setPersistedConnectionMeta(meta)
     }
   }, [ENSName, account, connection.type])
-  // Clear the initial connection once the connection has initialized.
+  // Clear the initial connection once initialized so it does not interfere with subsequent connections.
   useEffect(() => {
-    onConnectionInitialized()
+    if (isConnectionInitialized) {
+      initialConnection.current = undefined
+    }
   }, [isConnectionInitialized])
 
   if (!isConnectionInitialized) {
@@ -187,7 +189,7 @@ function Web3StatusInner() {
           <LoaderV3 size="24px" />
         </IconWrapper>
         <AddressAndChevronContainer loading={true}>
-          <Text>{initialConnection?.ENSName ?? shortenAddress(initialConnection?.address)}</Text>
+          <Text>{initialConnection.current?.ENSName ?? shortenAddress(initialConnection.current?.address)}</Text>
         </AddressAndChevronContainer>
       </Web3StatusConnecting>
     )
