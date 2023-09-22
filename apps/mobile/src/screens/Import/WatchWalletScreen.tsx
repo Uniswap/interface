@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useResponsiveProp } from '@shopify/restyle'
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { TFunction, useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -17,6 +17,7 @@ import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Button, Flex } from 'ui/src'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
 import { ChainId } from 'wallet/src/constants/chains'
+import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
@@ -26,6 +27,50 @@ import { getValidAddress } from 'wallet/src/utils/addresses'
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.WatchWallet>
 
 const LIVE_CHECK_DELAY = 1000
+
+const validateForm = ({
+  isAddress,
+  name,
+  walletExists,
+  loading,
+  isSmartContractAddress,
+  isValidSmartContract,
+}: {
+  isAddress: string | null
+  name: string | null
+  walletExists: boolean
+  loading: boolean
+  isSmartContractAddress: boolean
+  isValidSmartContract: boolean
+}): boolean => {
+  return (
+    (!!isAddress || !!name) &&
+    !walletExists &&
+    !loading &&
+    (!isSmartContractAddress || isValidSmartContract)
+  )
+}
+
+const getErrorText = ({
+  walletExists,
+  isSmartContractAddress,
+  loading,
+  t,
+}: {
+  walletExists: boolean
+  isSmartContractAddress: boolean
+  loading: boolean
+  t: TFunction
+}): string | undefined => {
+  if (walletExists) {
+    return t('This address is already imported')
+  } else if (isSmartContractAddress) {
+    return t('Address is a smart contract')
+  } else if (!loading) {
+    return t('Address does not exist')
+  }
+  return undefined
+}
 
 export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX.Element {
   const dispatch = useAppDispatch()
@@ -49,9 +94,16 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   )
   const isAddress = getValidAddress(normalizedValue, true, false)
   const { isSmartContractAddress, loading } = useIsSmartContractAddress(
-    isAddress ?? undefined,
+    (isAddress || resolvedAddress) ?? undefined,
     ChainId.Mainnet
   )
+  // Allow smart contracts with non-null balances
+  const { data: balancesById } = usePortfolioBalances({
+    address: isSmartContractAddress ? (isAddress || resolvedAddress) ?? undefined : undefined,
+    shouldPoll: false,
+    fetchPolicy: 'cache-and-network',
+  })
+  const isValidSmartContract = isSmartContractAddress && !!balancesById
 
   const onCompleteOnboarding = useCompleteOnboardingCallback(params.entryPoint, params.importType)
 
@@ -59,16 +111,18 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   const walletExists =
     (resolvedAddress && importedAddresses.includes(resolvedAddress)) ||
     importedAddresses.includes(normalizedValue)
-  const isValid = (isAddress || name) && !walletExists && !loading && !isSmartContractAddress
+  const isValid = validateForm({
+    isAddress,
+    name,
+    walletExists,
+    loading,
+    isSmartContractAddress,
+    isValidSmartContract,
+  })
 
-  let errorText
-  if (!isValid && walletExists) {
-    errorText = t('This address is already imported')
-  } else if (!isValid && isSmartContractAddress) {
-    errorText = t('Address is a smart contract')
-  } else if (!isValid && !loading) {
-    errorText = t('Address does not exist')
-  }
+  const errorText = !isValid
+    ? getErrorText({ walletExists, isSmartContractAddress, loading, t })
+    : undefined
 
   const onSubmit = useCallback(async () => {
     if (isValid && value) {
