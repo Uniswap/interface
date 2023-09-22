@@ -113,7 +113,7 @@ export default class AppRpcProvider extends AppStaticJsonRpcProvider {
       for (const { provider, performance } of this.providerEvaluations) {
         performance.callCount++
         try {
-          return provider.perform(method, params)
+          return await provider.perform(method, params)
         } catch (error) {
           performance.failureCount++
           console.warn('rpc action failed', error)
@@ -143,17 +143,16 @@ export default class AppRpcProvider extends AppStaticJsonRpcProvider {
   static sortProviders(providerEvaluations: FallbackProviderEvaluation[]) {
     return providerEvaluations.sort((a, b) => {
       // Provider a calculations
-      const aAverageLatency = a.performance.latency / (a.performance.callCount || 1) // Example: 10 / 10 = 1
-      const aFailRate = Math.pow((a.performance.failureCount || 0.01) / (a.performance.callCount || 1), 2) // Example: ((1 ||  1) / (10 + 1))^2 = (2 / 11)^2 ≈ 0.0330
-      const aScore = aAverageLatency / aFailRate // Example: 1 / 0.0330 ≈ 30.3
+      const aAverageLatency = a.performance.latency / (a.performance.callCount || 1)
+      const aFailRate = (a.performance.failureCount || 0.01) / (a.performance.callCount || 1)
 
       // Provider b calculations
-      const bAverageLatency = b.performance.latency / (b.performance.callCount || 1) // Example: 100 / 10 = 10
-      const bFailRate = Math.pow((b.performance.failureCount || 0.01) / (b.performance.callCount || 1), 2) // Example: ((10 + 1) / (10 + 1))^2 = (11 / 11)^2 = 1^2 = 1
-      const bScore = bAverageLatency / bFailRate // Example: 10 / 1 = 10
+      const bAverageLatency = b.performance.latency / (b.performance.callCount || 1)
+      const bFailRate = (b.performance.failureCount || 0.01) / (b.performance.callCount || 1)
 
-      // Higher scores are more performant and should appear first
-      return bScore - aScore // Example: 10 - 30.3 = -20.3
+      if (aFailRate < bFailRate) return -1
+      if (aAverageLatency < bAverageLatency) return -1
+      return 1
     })
   }
 }

@@ -64,10 +64,10 @@ describe('AppRpcProvider', () => {
 
   test('handles call', async () => {
     const hash = '0x123'
-    mockProvider1.send.mockResolvedValue({ hash } as TransactionResponse)
+    mockProvider1.perform.mockResolvedValue({ hash } as TransactionResponse)
     const provider = new AppRpcProvider(ChainId.MAINNET, [mockProvider1])
 
-    const result = await provider.perform('call', [{ hash }])
+    const { hash: result } = await provider.perform('call', [{ hash }])
     expect(result).toBe(hash)
   })
 
