@@ -29,7 +29,7 @@ function useETHPrice(currency?: Currency): {
 
   const amountOut = isSupported ? ETH_AMOUNT_OUT[chainId] : undefined
   const { trade, state } = useRoutingAPITrade(
-    !isSupported,
+    !isSupported /* skip */,
     TradeType.EXACT_OUTPUT,
     amountOut,
     currency,

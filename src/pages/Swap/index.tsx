@@ -577,7 +577,6 @@ export function Swap({
   const isDark = useIsDarkMode()
   const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
 
-  console.log('trade state', tradeState)
   const swapElement = (
     <SwapWrapper isDark={isDark} className={className} id="swap-page">
       <TokenSafetyModal

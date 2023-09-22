@@ -37,7 +37,7 @@ export default function useStablecoinPrice(currency?: Currency): Price<Currency,
   const stablecoin = amountOut?.currency
 
   const { trade } = useRoutingAPITrade(
-    false,
+    false /* skip */,
     TradeType.EXACT_OUTPUT,
     amountOut,
     currency,
