@@ -56,6 +56,9 @@ describe('Token details', () => {
       cy.get('[data-cy="missing-chart"]').should('exist')
     }
 
+    // Stats should not exist
+    cy.get(getTestSelector('token-details-stats')).should('not.exist')
+
     // About section should have description of token
     cy.get(getTestSelector('token-details-about-section')).should('exist')
     cy.contains('QOM is the Shiba Predator').should('exist')
