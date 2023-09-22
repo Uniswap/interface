@@ -112,7 +112,11 @@ export default function SwapModalFooter({
                 <Plural value={txCount} one="Network fee" other="Network fees" />
               </Label>
             </MouseoverTooltip>
-            <MouseoverTooltip placement="right" size={TooltipSize.Small} text={<GasBreakdownTooltip trade={trade} />}>
+            <MouseoverTooltip
+              placement="right"
+              size={TooltipSize.Small}
+              text={isSubmittableTrade(trade) ? <GasBreakdownTooltip trade={trade} /> : undefined}
+            >
               <DetailRowValue>
                 {isSubmittableTrade(trade)
                   ? formatNumber({

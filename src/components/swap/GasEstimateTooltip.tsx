@@ -7,8 +7,8 @@ import { UniswapXRouterIcon } from 'components/RouterLabel/UniswapXRouterLabel'
 import Row, { RowFixed } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
-import { InterfaceTrade } from 'state/routing/types'
-import { isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
+import { SubmittableTrade } from 'state/routing/types'
+import { isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -24,11 +24,11 @@ const StyledGasIcon = styled(Gas)`
   }
 `
 
-export default function GasEstimateTooltip({ trade, loading }: { trade?: InterfaceTrade; loading: boolean }) {
+export default function GasEstimateTooltip({ trade, loading }: { trade?: SubmittableTrade; loading: boolean }) {
   const { chainId } = useWeb3React()
   const { formatNumber } = useFormatter()
 
-  if (!isSubmittableTrade(trade) || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) {
+  if (!trade || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) {
     return null
   }
 
