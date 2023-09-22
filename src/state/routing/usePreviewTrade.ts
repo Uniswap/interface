@@ -49,7 +49,7 @@ function useQuickRouteArguments({
       inputTax,
       outputTax,
     }
-  }, [amount, inputTax, outputTax, tokenIn, tokenOut, tradeType])
+  }, [amount, enabledAllChains, enabledMainnet, inputTax, outputTax, tokenIn, tokenOut, tradeType])
 }
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
