@@ -1,4 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { Percent } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
+import SettingsTab from 'components/Settings'
 import { ReactNode } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Link, useLocation } from 'react-router-dom'
@@ -63,15 +66,18 @@ const AddRemoveTitleText = styled(ThemedText.SubHeaderLarge)`
 export function AddRemoveTabs({
   adding,
   creating,
+  autoSlippage,
   positionID,
   children,
 }: {
   adding: boolean
   creating: boolean
+  autoSlippage: Percent
   positionID?: string
   showBackLink?: boolean
   children?: ReactNode
 }) {
+  const { chainId } = useWeb3React()
   const theme = useTheme()
   // reset states on back
   const dispatch = useAppDispatch()
@@ -108,6 +114,7 @@ export function AddRemoveTabs({
           )}
         </AddRemoveTitleText>
         {children && <Box style={{ marginRight: '.5rem' }}>{children}</Box>}
+        <SettingsTab autoSlippage={autoSlippage} chainId={chainId} showRoutingSettings={false} />
       </RowBetween>
     </Tabs>
   )

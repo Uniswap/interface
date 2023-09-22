@@ -599,7 +599,13 @@ function AddLiquidity() {
           pendingText={pendingText}
         />
         <StyledBodyWrapper $hasExistingPosition={hasExistingPosition}>
-          <AddRemoveTabs creating={false} adding={true} positionID={tokenId} showBackLink={!hasExistingPosition}>
+          <AddRemoveTabs
+            creating={false}
+            adding={true}
+            positionID={tokenId}
+            autoSlippage={DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE}
+            showBackLink={!hasExistingPosition}
+          >
             {!hasExistingPosition && (
               <Row justifyContent="flex-end" style={{ width: 'fit-content', minWidth: 'fit-content' }}>
                 <MediumOnly>

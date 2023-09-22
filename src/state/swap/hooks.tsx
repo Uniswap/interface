@@ -78,7 +78,7 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
 }
 
 export type SwapInfo = {
-  currencies: { [field in Field]?: Currency | null }
+  currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   inputTax: Percent
   outputTax: Percent
@@ -148,7 +148,7 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
     [relevantTokenBalances]
   )
 
-  const currencies: { [field in Field]?: Currency | null } = useMemo(
+  const currencies: { [field in Field]?: Currency } = useMemo(
     () => ({
       [Field.INPUT]: inputCurrency,
       [Field.OUTPUT]: outputCurrency,

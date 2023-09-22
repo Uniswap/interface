@@ -1,80 +1,67 @@
 import { ChainId, Token } from '@uniswap/sdk-core'
-import uriToHttp from 'lib/utils/uriToHttp'
-import Vibrant from 'node-vibrant/lib/bundle.js'
-import { shade } from 'polished'
+import { DEFAULT_COLOR } from 'constants/tokenColors'
+import useTokenLogoSource from 'hooks/useAssetLogoSource'
+import { rgb } from 'polished'
 import { useEffect, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
-import { hex } from 'wcag-contrast'
+import { getColor } from 'utils/getColor'
 
 function URIForEthToken(address: string) {
   return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 }
 
-async function getColorFromToken(token: Token): Promise<string | null> {
+/**
+ * Retrieves the average color from a token's symbol using various sources.
+ *
+ * @param {Token} token - The token for which to fetch the color.
+ * @param {string} primarySrc - Primary source URL for color retrieval (optional).
+ *
+ * @returns {Promise< | null>} A promise that resolves to a color string or null if color cannot be determined.
+ */
+async function getColorFromToken(token: Token, primarySrc?: string): Promise<string | null> {
   if (!(token instanceof WrappedTokenInfo)) {
     return null
   }
 
   const wrappedToken = token as WrappedTokenInfo
-  const { address } = wrappedToken
-  let { logoURI } = wrappedToken
-  if (!logoURI) {
-    if (token.chainId !== ChainId.MAINNET) {
-      return null
-    } else {
-      logoURI = URIForEthToken(address)
-    }
-  }
+  let color: string | null = null
 
   try {
-    return await getColorFromUriPath(logoURI)
-  } catch (e) {
-    if (logoURI === URIForEthToken(address)) {
-      return null
+    if (primarySrc) {
+      const colorArray = await getColor(primarySrc)
+      color = colorArray === DEFAULT_COLOR ? null : convertColorArrayToString(colorArray)
     }
 
-    try {
-      logoURI = URIForEthToken(address)
-      return await getColorFromUriPath(logoURI)
-    } catch (error) {
-      console.warn(`Unable to load logoURI (${token.symbol}): ${logoURI}`)
-      return null
+    if (!color && wrappedToken.logoURI) {
+      const colorArray = await getColor(wrappedToken.logoURI)
+      color = colorArray === DEFAULT_COLOR ? null : convertColorArrayToString(colorArray)
     }
+
+    if (!color && token.chainId === ChainId.MAINNET) {
+      const colorArray = await getColor(URIForEthToken(wrappedToken.address))
+      color = colorArray === DEFAULT_COLOR ? null : convertColorArrayToString(colorArray)
+    }
+
+    return color
+  } catch (error) {
+    console.warn(`Unable to load logoURI (${token.symbol}): ${primarySrc}, ${wrappedToken.logoURI}`)
+    return null
   }
 }
 
-async function getColorFromUriPath(uri: string): Promise<string | null> {
-  const formattedPath = uriToHttp(uri)[0]
-
-  let palette
-
-  try {
-    palette = await Vibrant.from(formattedPath).getPalette()
-  } catch (err) {
-    return null
-  }
-  if (!palette?.Vibrant) {
-    return null
-  }
-
-  let detectedHex = palette.Vibrant.hex
-  let AAscore = hex(detectedHex, '#FFF')
-  while (AAscore < 3) {
-    detectedHex = shade(0.005, detectedHex)
-    AAscore = hex(detectedHex, '#FFF')
-  }
-
-  return detectedHex
+function convertColorArrayToString([red, green, blue]: number[]): string {
+  return rgb({ red, green, blue })
 }
 
 export function useColor(token?: Token) {
   const [color, setColor] = useState('#2172E5')
+  const [src] = useTokenLogoSource(token?.address, token?.chainId, token?.isNative)
 
   useEffect(() => {
     let stale = false
 
     if (token) {
-      getColorFromToken(token).then((tokenColor) => {
+      getColorFromToken(token, src).then((tokenColor) => {
         if (!stale && tokenColor !== null) {
           setColor(tokenColor)
         }
@@ -85,7 +72,7 @@ export function useColor(token?: Token) {
       stale = true
       setColor('#2172E5')
     }
-  }, [token])
+  }, [src, token])
 
   return color
 }

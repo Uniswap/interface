@@ -2,8 +2,8 @@
 import { ImageResponse } from '@vercel/og'
 import React from 'react'
 
+import { getColor } from '../../../../src/utils/getColor'
 import { WATERMARK_URL } from '../../../constants'
-import getColor from '../../../utils/getColor'
 import getFont from '../../../utils/getFont'
 import getNetworkLogoUrl from '../../../utils/getNetworkLogoURL'
 import { getRequest } from '../../../utils/getRequest'

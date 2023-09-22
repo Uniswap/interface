@@ -2,9 +2,9 @@ import { Buffer } from 'buffer'
 import JPEG from 'jpeg-js'
 import PNG from 'png-ts'
 
-import { DEFAULT_COLOR, predefinedTokenColors } from '../constants'
+import { DEFAULT_COLOR, predefinedTokenColors } from '../constants/tokenColors'
 
-export default async function getColor(image: string | undefined, checkDistance = false) {
+export async function getColor(image: string | undefined, checkDistance = false) {
   if (!image) {
     return DEFAULT_COLOR
   }

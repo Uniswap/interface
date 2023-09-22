@@ -7,10 +7,9 @@ import { ButtonPrimary } from 'components/Button'
 import { XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { ListPage } from 'nft/components/profile/list/ListPage'
 import { ProfilePage } from 'nft/components/profile/view/ProfilePage'
-import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
 import { useBag, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
-import { Suspense, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
@@ -60,7 +59,7 @@ const ConnectWalletButton = styled(ButtonPrimary)`
   border: none;
 `
 
-const ProfileContent = () => {
+export default function Profile() {
   const sellPageState = useProfilePageState((state) => state.state)
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const resetSellAssets = useSellAsset((state) => state.reset)
@@ -104,13 +103,3 @@ const ProfileContent = () => {
     </Trace>
   )
 }
-
-const Profile = () => {
-  return (
-    <Suspense fallback={<ProfilePageLoadingSkeleton />}>
-      <ProfileContent />
-    </Suspense>
-  )
-}
-
-export default Profile
