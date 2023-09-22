@@ -60,9 +60,8 @@ const ButtonContent = () => {
   const tooHigh = userSlippageTolerance.greaterThan(MAXIMUM_RECOMMENDED_SLIPPAGE)
 
   return (
-    <IconContainerWithSlippage data-testid="settings-icon-with-slippage" gap="sm">
+    <IconContainerWithSlippage gap="sm">
       {tooHigh && <AlertTriangleFilled />}
-
       <ThemedText.BodySmall>
         <Trans>{userSlippageTolerance.toFixed(2)}% slippage</Trans>
       </ThemedText.BodySmall>

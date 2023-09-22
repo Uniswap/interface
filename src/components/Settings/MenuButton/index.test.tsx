@@ -3,7 +3,6 @@ import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
-import { lightDeprecatedTheme } from 'theme/deprecatedColors'
 import noop from 'utils/noop'
 
 import MenuButton from '.'
@@ -25,12 +24,9 @@ describe('MenuButton', () => {
     renderButton()
     expect(screen.queryByText('0.05% slippage')).toBeInTheDocument()
   })
-  it('should render an icon with a custom slippage and a warning when value is out of bounds', () => {
-    mocked(useUserSlippageTolerance).mockReturnValue([new Percent(1, 10_000), noop])
+  it('should render an icon with a custom slippage and a warning when value is over 2%', () => {
+    mocked(useUserSlippageTolerance).mockReturnValue([new Percent(50, 100), noop])
     renderButton()
-    expect(screen.getByTestId('settings-icon-with-slippage')).toHaveStyleRule(
-      'background-color',
-      lightDeprecatedTheme.deprecated_accentWarningSoft
-    )
+    expect(screen.getByTestId('warning-icon')).toBeDefined()
   })
 })
