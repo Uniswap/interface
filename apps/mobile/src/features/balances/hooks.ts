@@ -14,14 +14,18 @@ import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 
+import { useNavigateToSend } from 'src/features/send/hooks'
+import { useNavigateToSwap } from 'src/features/swap/hooks'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
+import { ChainId } from 'wallet/src/constants/chains'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import {
   useActiveAccountAddressWithThrow,
   useSelectAccountHideSmallBalances,
   useSelectAccountHideSpamTokens,
 } from 'wallet/src/features/wallet/hooks'
-import { CurrencyId } from 'wallet/src/utils/currencyId'
+import { CurrencyId, currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
 interface TokenMenuParams {
   currencyId: CurrencyId
@@ -114,6 +118,8 @@ export function useTokenContextMenu({
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
+  const navigateToSwap = useNavigateToSwap()
+  const navigateToSend = useNavigateToSend()
 
   const { hideSmallBalances, hideSpamTokens, accountTokensVisibility, sentOrSwappedLocally } =
     useAccountTokensVisibilitySettings(activeAccountAddress)
@@ -133,6 +139,22 @@ export function useTokenContextMenu({
   })
 
   const activeAccountHoldsToken = accountHoldsToken || Boolean(balancesById?.[currencyId])
+
+  const currencyAddress = currencyIdToAddress(currencyId)
+  const currencyChainId = currencyIdToChain(currencyId) ?? ChainId.Mainnet
+
+  const onPressSwap = useCallback(
+    (currencyField: CurrencyField) => {
+      // Do not show warning modal speedbump if user is trying to swap tokens they own
+      navigateToSwap(currencyField, currencyAddress, currencyChainId)
+    },
+    [currencyAddress, currencyChainId, navigateToSwap]
+  )
+
+  const onPressSend = useCallback(() => {
+    // Do not show warning modal speedbump if user is trying to send tokens they own
+    navigateToSend(currencyAddress, currencyChainId)
+  }, [currencyAddress, currencyChainId, navigateToSend])
 
   const onPressShare = useCallback(async () => {
     const tokenUrl = getTokenUrl(currencyId)
@@ -172,6 +194,26 @@ export function useTokenContextMenu({
 
   const menuActions = useMemo(
     () => [
+      {
+        title: t('Buy'),
+        systemIcon: 'arrow.down',
+        onPress: () => onPressSwap(CurrencyField.OUTPUT),
+      },
+      {
+        title: t('Sell'),
+        systemIcon: 'arrow.up',
+        onPress: () => onPressSwap(CurrencyField.INPUT),
+      },
+      {
+        title: t('Send'),
+        systemIcon: 'paperplane',
+        onPress: onPressSend,
+      },
+      {
+        title: t('Share'),
+        systemIcon: 'square.and.arrow.up',
+        onPress: onPressShare,
+      },
       ...(activeAccountHoldsToken
         ? [
             {
@@ -182,18 +224,21 @@ export function useTokenContextMenu({
             },
           ]
         : []),
-      {
-        title: t('Share'),
-        systemIcon: 'square.and.arrow.up',
-        onPress: onPressShare,
-      },
     ],
-    [activeAccountHoldsToken, isHidden, t, onPressHiddenStatus, onPressShare]
+    [
+      t,
+      onPressSend,
+      onPressShare,
+      activeAccountHoldsToken,
+      isHidden,
+      onPressHiddenStatus,
+      onPressSwap,
+    ]
   )
 
   const onContextMenuPress = useCallback(
-    async (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): Promise<void> => {
-      await menuActions[e.nativeEvent.index]?.onPress?.()
+    (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): void => {
+      menuActions[e.nativeEvent.index]?.onPress?.()
     },
     [menuActions]
   )

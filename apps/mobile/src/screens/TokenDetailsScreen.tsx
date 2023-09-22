@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { AnimatedBox, AnimatedFlex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
@@ -23,7 +23,9 @@ import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
-import { openModal, selectModalState } from 'src/features/modals/modalSlice'
+import { selectModalState } from 'src/features/modals/modalSlice'
+import { useNavigateToSend } from 'src/features/send/hooks'
+import { useNavigateToSwap } from 'src/features/swap/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
 import { Screens } from 'src/screens/Screens'
@@ -40,20 +42,12 @@ import {
   TokenDetailsScreenQuery,
   useTokenDetailsScreenQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
-import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
-import {
-  CurrencyField,
-  TransactionState,
-} from 'wallet/src/features/transactions/transactionState/types'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useExtractedTokenColor } from 'wallet/src/utils/colors'
-import {
-  currencyIdToAddress,
-  currencyIdToChain,
-  getNativeCurrencyAddressForChain,
-} from 'wallet/src/utils/currencyId'
+import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
 type Price = NonNullable<
   NonNullable<NonNullable<NonNullable<TokenDetailsScreenQuery['token']>['project']>['markets']>[0]
@@ -100,12 +94,6 @@ function HeaderTitleElement({
       </Flex>
     </Flex>
   )
-}
-
-enum TransactionType {
-  BUY,
-  SELL,
-  SEND,
 }
 
 export function TokenDetailsScreen({
@@ -171,7 +159,6 @@ function TokenDetails({
   retry: () => void
   loading: boolean
 }): JSX.Element {
-  const dispatch = useAppDispatch()
   const colors = useSporeColors()
   const insets = useSafeAreaInsets()
 
@@ -200,8 +187,11 @@ function TokenDetails({
     retry()
   }, [error, retry])
 
+  const navigateToSwap = useNavigateToSwap()
+  const navigateToSend = useNavigateToSend()
+
   // set if attempting buy or sell, use for warning modal
-  const [activeTransactionType, setActiveTransactionType] = useState<TransactionType | undefined>(
+  const [activeTransactionType, setActiveTransactionType] = useState<CurrencyField | undefined>(
     undefined
   )
 
@@ -210,78 +200,40 @@ function TokenDetails({
 
   const safetyLevel = token?.project?.safetyLevel
 
-  const initialSendState = useMemo((): TransactionState => {
-    return {
-      exactCurrencyField: CurrencyField.INPUT,
-      exactAmountToken: '',
-      [CurrencyField.INPUT]: {
-        address: currencyAddress,
-        chainId: currencyChainId,
-        type: AssetType.Currency,
-      },
-      [CurrencyField.OUTPUT]: null,
-      showRecipientSelector: true,
-    }
-  }, [currencyAddress, currencyChainId])
-
-  const navigateToSwap = useCallback(
-    (swapType: TransactionType) => {
-      if (swapType !== TransactionType.SELL && swapType !== TransactionType.BUY) return
-
-      setActiveTransactionType(undefined)
-      const nativeTokenAddress = getNativeCurrencyAddressForChain(currencyChainId)
-      const nativeToken: CurrencyAsset = {
-        address: nativeTokenAddress,
-        chainId: currencyChainId,
-        type: AssetType.Currency,
-      }
-      const chosenToken: CurrencyAsset = {
-        address: currencyAddress,
-        chainId: currencyChainId,
-        type: AssetType.Currency,
-      }
-
-      const opposedToken = nativeTokenAddress !== currencyAddress ? nativeToken : null
-
-      const swapFormState: TransactionState = {
-        exactCurrencyField:
-          swapType === TransactionType.SELL ? CurrencyField.INPUT : CurrencyField.OUTPUT,
-        exactAmountToken: '',
-        [CurrencyField.INPUT]: swapType === TransactionType.SELL ? chosenToken : opposedToken,
-        [CurrencyField.OUTPUT]: swapType === TransactionType.BUY ? chosenToken : opposedToken,
-      }
-      dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
-    },
-    [currencyAddress, currencyChainId, dispatch]
-  )
-
   const onPressSwap = useCallback(
-    (swapType: TransactionType.BUY | TransactionType.SELL) => {
+    (currencyField: CurrencyField) => {
       if (safetyLevel === SafetyLevel.Blocked) {
         setShowWarningModal(true)
         // show warning modal speed bump if token has a warning level and user has not dismissed
       } else if (safetyLevel !== SafetyLevel.Verified && !tokenWarningDismissed) {
-        setActiveTransactionType(swapType)
+        setActiveTransactionType(currencyField)
         setShowWarningModal(true)
       } else {
-        navigateToSwap(swapType)
+        setActiveTransactionType(undefined)
+        navigateToSwap(currencyField, currencyAddress, currencyChainId)
       }
     },
-    [navigateToSwap, safetyLevel, tokenWarningDismissed]
+    [currencyAddress, currencyChainId, navigateToSwap, safetyLevel, tokenWarningDismissed]
   )
 
   const onPressSend = useCallback(() => {
     // Do not show warning modal speedbump if user is trying to send tokens they own
-    dispatch(openModal({ name: ModalName.Send, ...{ initialState: initialSendState } }))
-  }, [dispatch, initialSendState])
+    navigateToSend(currencyAddress, currencyChainId)
+  }, [currencyAddress, currencyChainId, navigateToSend])
 
   const onAcceptWarning = useCallback(() => {
     dismissWarningCallback()
     setShowWarningModal(false)
-    if (activeTransactionType) {
-      navigateToSwap(activeTransactionType)
+    if (activeTransactionType !== undefined) {
+      navigateToSwap(activeTransactionType, currencyAddress, currencyChainId)
     }
-  }, [activeTransactionType, dismissWarningCallback, navigateToSwap])
+  }, [
+    activeTransactionType,
+    currencyAddress,
+    currencyChainId,
+    dismissWarningCallback,
+    navigateToSwap,
+  ])
 
   const pb = useResponsiveProp(IS_IOS ? { xs: 'none', sm: 'spacing16' } : 'none')
 
@@ -365,8 +317,8 @@ function TokenDetails({
           style={{ marginBottom: IS_ANDROID ? insets.bottom : undefined }}>
           <TokenDetailsActionButtons
             tokenColor={tokenColor}
-            onPressBuy={(): void => onPressSwap(TransactionType.BUY)}
-            onPressSell={(): void => onPressSwap(TransactionType.SELL)}
+            onPressBuy={(): void => onPressSwap(CurrencyField.OUTPUT)}
+            onPressSell={(): void => onPressSwap(CurrencyField.INPUT)}
           />
         </AnimatedFlex>
       ) : null}
