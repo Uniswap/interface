@@ -45,6 +45,24 @@ export function SystemThemeUpdater() {
   return null
 }
 
+export function ThemeColorMetaUpdater() {
+  const isDark = useIsDarkMode()
+
+  useEffect(() => {
+    const meta = document.querySelector('meta[name=theme-color]')
+    if (!meta) return
+
+    if (isDark) {
+      // this color comes from #background-radial-gradient
+      meta.setAttribute('content', 'rgb(19, 19, 19)')
+    } else {
+      meta.setAttribute('content', '#fff')
+    }
+  }, [isDark])
+
+  return null
+}
+
 export function useIsDarkMode(): boolean {
   const mode = useAtomValue(themeModeAtom)
   const systemTheme = useAtomValue(systemThemeAtom)

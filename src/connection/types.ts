@@ -11,6 +11,14 @@ export enum ConnectionType {
   GNOSIS_SAFE = 'GNOSIS_SAFE',
 }
 
+export function toConnectionType(value = ''): ConnectionType | undefined {
+  if (Object.keys(ConnectionType).includes(value)) {
+    return value as ConnectionType
+  } else {
+    return undefined
+  }
+}
+
 export interface Connection {
   getName(): string
   connector: Connector

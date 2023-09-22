@@ -10,7 +10,8 @@ import { useScreenSize } from 'hooks/useScreenSize'
 import { ReactNode, useMemo } from 'react'
 import { Text } from 'rebass'
 import styled, { css } from 'styled-components'
-import { BREAKPOINTS, ThemedText } from 'theme'
+import { BREAKPOINTS } from 'theme'
+import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const HeaderText = styled(Text)`

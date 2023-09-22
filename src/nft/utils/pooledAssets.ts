@@ -77,7 +77,7 @@ const calcSudoSwapXykBondingCurve = (
   return currentPrice
 }
 
-export const calcSudoSwapPrice = (asset: GenieAsset, position = 0): string | undefined => {
+const calcSudoSwapPrice = (asset: GenieAsset, position = 0): string | undefined => {
   if (!asset.sellorders) return undefined
 
   const sudoSwapParameters = asset.sellorders[0].protocolParameters

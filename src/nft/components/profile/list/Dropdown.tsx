@@ -3,7 +3,7 @@ import Row from 'components/Row'
 import { DropDownOption } from 'nft/types'
 import { Check } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 const DropdownWrapper = styled(Column)<{ $width: number }>`
   gap: 4px;
