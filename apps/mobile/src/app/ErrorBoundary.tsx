@@ -1,9 +1,12 @@
 import React, { ErrorInfo, PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import RNRestart from 'react-native-restart'
+import { useAppDispatch } from 'src/app/hooks'
 import { Button, Flex, Text } from 'ui/src'
 import DeadLuni from 'ui/src/assets/graphics/dead-luni.svg'
 import { logger } from 'utilities/src/logger/logger'
+import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 
 interface ErrorBoundaryState {
   error: Error | null
@@ -49,6 +52,14 @@ export class ErrorBoundary extends React.Component<PropsWithChildren<unknown>, E
 
 function ErrorScreen({ error }: { error: Error }): JSX.Element {
   const { t } = useTranslation()
+  const dispatch = useAppDispatch()
+  const accounts = useAccounts()
+
+  // If there is no active account, we need to reset the onboarding flow
+  if (error.message === 'No active account' && Object.values(accounts).length === 0) {
+    dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
+  }
+
   return (
     <Flex centered fill gap="$spacing16" px="$spacing16" py="$spacing48">
       <Flex centered grow gap="$spacing36">
