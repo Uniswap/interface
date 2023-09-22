@@ -153,10 +153,18 @@ function Web3StatusInner() {
 
   const { hasPendingActivity, pendingActivityCount } = usePendingActivity()
 
-  // Display a loading state for the initial connection, based on the last session's persisted connection.
-  // Subsequent connection changes will not display this loading state, it is meant only for pageload.
-  const [initialMeta, setInitialMeta] = useState(getPersistedConnectionMeta())
-  const isInitialMetaLoading = Boolean(initialMeta?.address === account && initialMeta?.ENSName && ENSLoading)
+  // Display a loading state while initializing the connection, based on the last session's persisted connection.
+  // The connection will go through three states:
+  // - startup:       connection is not ready
+  // - initializing:  account is available, but ENS (if preset on the persisted initialMeta) is still loading
+  // - initialized:   account and ENS are available
+  // Subsequent connections are always considered initialized, and will not display startup/initializing states.
+  const [initialConnection, onInitializedConnection] = useState<ConnectionMeta | void>(getPersistedConnectionMeta())
+  const isConnectionInitializing = Boolean(
+    initialConnection?.address === account && initialConnection?.ENSName && ENSLoading
+  )
+  const isConnectionInitialized = connectionReady && !isConnectionInitializing
+  // Persist the connection if it changes, so it can be used to initialize the next session's connection.
   useEffect(() => {
     if (account || ENSName) {
       const meta: ConnectionMeta = {
@@ -168,20 +176,20 @@ function Web3StatusInner() {
     }
   }, [ENSName, account, connection.type])
 
-  if (!connectionReady || isInitialMetaLoading) {
+  if (!isConnectionInitialized) {
     return (
-      <Web3StatusConnecting disabled={!isInitialMetaLoading} onClick={handleWalletDropdownClick}>
+      <Web3StatusConnecting disabled={!isConnectionInitializing} onClick={handleWalletDropdownClick}>
         <IconWrapper size={24}>
           <LoaderV3 size="24px" />
         </IconWrapper>
         <AddressAndChevronContainer loading={true}>
-          <Text>{initialMeta?.ENSName ?? shortenAddress(initialMeta?.address)}</Text>
+          <Text>{initialConnection?.ENSName ?? shortenAddress(initialConnection?.address)}</Text>
         </AddressAndChevronContainer>
       </Web3StatusConnecting>
     )
   } else {
     // Clear meta once the initial connection (or lack thereof) has loaded.
-    setInitialMeta(undefined)
+    onInitializedConnection()
   }
 
   if (account) {
