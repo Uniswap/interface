@@ -67,4 +67,8 @@ export function useLockScreenOnBlur(isDisabled?: boolean): void {
     if (!isFocused || isDisabled) return
     setIsLockScreenVisible(false)
   })
+  useAppStateTrigger('active', 'background', () => {
+    if (!isFocused || isDisabled) return
+    setIsLockScreenVisible(true)
+  })
 }

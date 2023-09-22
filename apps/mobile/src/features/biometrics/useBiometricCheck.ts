@@ -39,6 +39,12 @@ export function useBiometricCheck(): void {
     }
   })
 
+  useAppStateTrigger('active', 'background', () => {
+    if (requiredForAppAccess) {
+      setIsLockScreenVisible(true)
+    }
+  })
+
   useAppStateTrigger('inactive', 'active', () => {
     hideSplashScreen() // In case of a race condition where splash screen is not hidden, we want to hide when FaceID forces an app state change
     if (

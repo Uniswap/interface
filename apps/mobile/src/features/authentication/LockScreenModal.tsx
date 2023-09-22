@@ -35,7 +35,7 @@ export function LockScreenModal(): JSX.Element | null {
       <TouchableArea onPress={(): Promise<void> => trigger()}>
         <Flex
           alignItems="center"
-          backgroundColor={!isDarkMode ? '$sporeBlack' : '$sporeWhite'}
+          backgroundColor={isDarkMode ? '$surface1' : '$sporeWhite'}
           justifyContent={IS_ANDROID ? 'center' : undefined}
           pointerEvents="none"
           style={{

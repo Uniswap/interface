@@ -3,11 +3,8 @@ package com.uniswap
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.view.Window
 import android.view.WindowManager
-import androidx.core.content.ContextCompat
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.concurrentReactEnabled
@@ -16,26 +13,27 @@ import com.facebook.react.defaults.DefaultReactActivityDelegate
 
 
 class MainActivity : ReactActivity() {
-    /**
-     * Returns the name of the main component registered from JavaScript. This is used to schedule
-     * rendering of the component.
-     */
-    override fun getMainComponentName(): String {
-        return "Uniswap"
-    }
 
-    // Required for react-navigation to work on Android
-    override fun onCreate(savedInstanceState: Bundle?) {
-      super.onCreate(null);
+  /**
+   * Returns the name of the main component registered from JavaScript. This is used to schedule
+   * rendering of the component.
+   */
+  override fun getMainComponentName(): String {
+    return "Uniswap"
+  }
 
-       window.navigationBarColor = Color.TRANSPARENT
+  // Required for react-navigation to work on Android
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(null);
 
-       if (Build.VERSION_CODES.Q <= Build.VERSION.SDK_INT) {
-         window.isNavigationBarContrastEnforced = false
-       }
-       window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
+      window.navigationBarColor = Color.TRANSPARENT
 
-    }
+      if (Build.VERSION_CODES.Q <= Build.VERSION.SDK_INT) {
+        window.isNavigationBarContrastEnforced = false
+      }
+      window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
+
+  }
 
   /**
    * Returns the instance of the [ReactActivityDelegate]. Here we use a util class [ ] which allows you to easily enable Fabric and Concurrent React
