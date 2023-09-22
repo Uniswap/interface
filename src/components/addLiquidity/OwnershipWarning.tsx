@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 const ExplainerText = styled.div`
   color: ${({ theme }) => theme.neutral2};

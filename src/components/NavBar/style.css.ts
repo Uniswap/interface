@@ -43,9 +43,10 @@ export const searchContainer = style([
     justifyContent: { lg: 'flex-end', xl: 'center' },
     display: { sm: 'none' },
     alignSelf: 'center',
-    height: '48',
+
     alignItems: 'flex-start',
   }),
+  { height: '42px' },
 ])
 
 export const rightSideContainer = style([

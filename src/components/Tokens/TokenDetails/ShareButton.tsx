@@ -10,12 +10,11 @@ import { Link, Twitter } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components'
-import { ClickableStyle, CopyHelperRefType } from 'theme'
 import { colors } from 'theme/colors'
+import { ClickableStyle, CopyHelperRefType } from 'theme/components'
+import { CopyHelper } from 'theme/components'
 import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
-
-import { CopyHelper } from '../../../theme'
 
 const TWITTER_WIDTH = 560
 const TWITTER_HEIGHT = 480

@@ -2,6 +2,7 @@ import { BrowserEvent, InterfaceEventName } from '@uniswap/analytics-events'
 import { TraceEvent } from 'analytics'
 import { ScrollBarStyles } from 'components/Common'
 import useDisableScrolling from 'hooks/useDisableScrolling'
+import usePrevious from 'hooks/usePrevious'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
@@ -9,7 +10,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronsRight } from 'react-feather'
 import { useGesture } from 'react-use-gesture'
 import styled from 'styled-components'
-import { BREAKPOINTS, ClickableStyle } from 'theme'
+import { BREAKPOINTS } from 'theme'
+import { ClickableStyle } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { isMobile } from 'utils/userAgent'
 
@@ -166,12 +168,13 @@ const CloseDrawer = styled.div`
 
 function AccountDrawer() {
   const [walletDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
+  const wasWalletDrawerOpen = usePrevious(walletDrawerOpen)
   const scrollRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    if (!walletDrawerOpen) {
+    if (wasWalletDrawerOpen && !walletDrawerOpen) {
       scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
     }
-  }, [walletDrawerOpen])
+  }, [walletDrawerOpen, wasWalletDrawerOpen])
 
   // close on escape keypress
   useEffect(() => {

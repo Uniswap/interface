@@ -90,6 +90,7 @@ interface ExpectedUserState {
   hideBaseWalletBanner: boolean
   showSurveyPopup?: boolean
   disabledUniswapX?: boolean
+  optedOutOfUniswapX?: boolean
 }
 
 assert<Equals<UserState, ExpectedUserState>>()

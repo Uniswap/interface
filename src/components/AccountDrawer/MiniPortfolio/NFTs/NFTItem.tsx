@@ -11,7 +11,7 @@ import { WalletAsset } from 'nft/types'
 import { floorFormatter } from 'nft/utils'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 const FloorPrice = styled(Row)`
   opacity: 0;

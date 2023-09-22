@@ -1,4 +1,4 @@
-import { formatEther, parseEther } from '@ethersproject/units'
+import { formatEther } from '@ethersproject/units'
 
 export const formatUsdPrice = (price: number) => {
   if (price > 1000000) {
@@ -36,11 +36,6 @@ export const formatEthPrice = (price: string | undefined) => {
     Math.round(formattedPrice * (formattedPrice >= 1 ? 100 : 1000) + Number.EPSILON) /
     (formattedPrice >= 1 ? 100 : 1000)
   )
-}
-
-// Stringify the `price` anyway because the `price` is being passed as any in some places
-export const numberToWei = (amount: number) => {
-  return parseEther(amount.toString())
 }
 
 export const ethNumberStandardFormatter = (

@@ -5,7 +5,7 @@ import { useHref } from 'react-router-dom'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components'
-import { CustomLightSpinner, ThemedText } from 'theme'
+import { CustomLightSpinner, ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import Circle from '../../assets/images/blue-loader.svg'

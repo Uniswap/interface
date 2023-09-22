@@ -6,7 +6,7 @@ import { Markets, TrendingCollection } from 'nft/types'
 import { ethNumberStandardFormatter } from 'nft/utils'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
-import { formatNumberOrString, NumberType } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const CarouselCardBorder = styled.div`
   width: 100%;
@@ -198,6 +198,8 @@ interface MarketplaceRowProps {
 }
 
 const MarketplaceRow = ({ marketplace, floorInEth, listings }: MarketplaceRowProps) => {
+  const { formatNumberOrString } = useFormatter()
+
   return (
     <>
       <TableElement>
@@ -212,7 +214,7 @@ const MarketplaceRow = ({ marketplace, floorInEth, listings }: MarketplaceRowPro
       <TableElement>
         <ThemedText.BodySmall color="neutral2">
           {Number(floorInEth) > 0
-            ? `${formatNumberOrString(floorInEth, NumberType.NFTTokenFloorPriceTrailingZeros)} ETH`
+            ? `${formatNumberOrString({ input: floorInEth, type: NumberType.NFTTokenFloorPriceTrailingZeros })} ETH`
             : '-'}
         </ThemedText.BodySmall>
       </TableElement>

@@ -60,6 +60,8 @@ const customRenderHook = <Result, Props>(
   return renderHook(hook, { ...options, wrapper: WithProviders })
 }
 
+// Testing utils may export *.
+// eslint-disable-next-line no-restricted-syntax
 export * from '@testing-library/react'
 export { customRender as render }
 export { customRenderHook as renderHook }

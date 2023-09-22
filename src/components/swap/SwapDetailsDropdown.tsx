@@ -10,8 +10,9 @@ import { formatCommonPropertiesForTrade } from 'lib/utils/analytics'
 import { useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
+import { isSubmittableTrade } from 'state/routing/utils'
 import styled, { useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import GasEstimateTooltip from './GasEstimateTooltip'
@@ -80,7 +81,9 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
             ) : null}
           </RowFixed>
           <RowFixed gap="xs">
-            {!showDetails && <GasEstimateTooltip trade={trade} loading={syncing || loading} />}
+            {!showDetails && isSubmittableTrade(trade) && (
+              <GasEstimateTooltip trade={trade} loading={syncing || loading} />
+            )}
             <RotatingArrow stroke={trade ? theme.neutral3 : theme.surface2} open={Boolean(trade && showDetails)} />
           </RowFixed>
         </StyledHeaderRow>

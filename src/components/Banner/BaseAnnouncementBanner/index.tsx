@@ -7,7 +7,7 @@ import baseLogoUrl from 'assets/svg/base_background_icon.svg'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { useLocation } from 'react-router-dom'
 import { useHideBaseWalletBanner } from 'state/user/hooks'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { openDownloadApp, openWalletMicrosite } from 'utils/openDownloadApp'
 import { isIOS, isMobileSafari } from 'utils/userAgent'
 

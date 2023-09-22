@@ -8,7 +8,7 @@ import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import useENSName from 'hooks/useENSName'
 import { useCallback } from 'react'
 import styled from 'styled-components'
-import { EllipsisStyle, ThemedText } from 'theme'
+import { EllipsisStyle, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 

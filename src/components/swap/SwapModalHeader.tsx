@@ -6,7 +6,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import { isPreviewTrade } from 'state/routing/utils'
 import { Field } from 'state/swap/actions'
 import styled from 'styled-components'
-import { Divider, ThemedText } from 'theme'
+import { Divider, ThemedText } from 'theme/components'
 
 import { SwapModalHeaderAmount } from './SwapModalHeaderAmount'
 

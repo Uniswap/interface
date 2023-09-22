@@ -6,7 +6,7 @@ import { Denomination } from 'nft/types'
 import { ethNumberStandardFormatter, volumeFormatter } from 'nft/utils'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 import * as styles from './Cells.css'
 

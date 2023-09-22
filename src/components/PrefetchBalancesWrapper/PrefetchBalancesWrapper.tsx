@@ -5,7 +5,7 @@ import usePrevious from 'hooks/usePrevious'
 import { atom, useAtom } from 'jotai'
 import { PropsWithChildren, useCallback, useEffect } from 'react'
 
-import { usePendingActivity } from './MiniPortfolio/Activity/hooks'
+import { usePendingActivity } from '../AccountDrawer/MiniPortfolio/Activity/hooks'
 
 /** Returns true if the number of pending activities has decreased */
 function useHasUpdatedTx() {
@@ -30,7 +30,8 @@ const hasUnfetchedBalancesAtom = atom<boolean>(true)
 export default function PrefetchBalancesWrapper({
   children,
   shouldFetchOnAccountUpdate,
-}: PropsWithChildren<{ shouldFetchOnAccountUpdate: boolean }>) {
+  className,
+}: PropsWithChildren<{ shouldFetchOnAccountUpdate: boolean; className?: string }>) {
   const { account } = useWeb3React()
   const [prefetchPortfolioBalances] = usePortfolioBalancesLazyQuery()
 
@@ -64,5 +65,9 @@ export default function PrefetchBalancesWrapper({
     if (hasUnfetchedBalances) fetchBalances()
   }, [fetchBalances, hasUnfetchedBalances])
 
-  return <div onMouseEnter={onHover}>{children}</div>
+  return (
+    <div onMouseEnter={onHover} className={className}>
+      {children}
+    </div>
+  )
 }

@@ -13,8 +13,7 @@ import {
   SquareSudoSwapMarketplaceIcon,
   SquareZoraMarketplaceIcon,
 } from 'nft/components/icons'
-import { DetailsOrigin, GenieAsset, Listing, Markets, Trait, UpdatedGenieAsset, WalletAsset } from 'nft/types'
-import qs from 'qs'
+import { DetailsOrigin, GenieAsset, Listing, Markets, UpdatedGenieAsset, WalletAsset } from 'nft/types'
 import { v4 as uuidv4 } from 'uuid'
 
 export function getRarityStatus(
@@ -124,15 +123,4 @@ export const generateTweetForList = (assets: WalletAsset[]): string => {
           .map(({ collection, items }) => `${collection} ${items.map((item) => item).join(', ')}`)
           .join(', ')} \n\nMarketplaces: ${assets[0].marketplaces?.map((market) => market.name).join(', ')}`
   return `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`
-}
-
-export function getLinkForTrait(trait: Trait, collectionAddress: string): string {
-  const params = qs.stringify(
-    { traits: [`("${trait.trait_type}","${trait.trait_value}")`] },
-    {
-      arrayFormat: 'comma',
-    }
-  )
-
-  return `/nfts/collection/${collectionAddress}?${params}`
 }
