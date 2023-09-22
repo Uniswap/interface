@@ -230,16 +230,18 @@ export default function SwapModalFooter({
               $borderRadius="12px"
               id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
             >
-              <ThemedText.HeadlineSmall color="deprecated_accentTextLightPrimary">
-                {isLoading ? (
+              {isLoading ? (
+                <ThemedText.HeadlineSmall color="neutral2">
                   <Row>
                     <SpinningLoader />
                     <Trans>Finalizing quote...</Trans>
                   </Row>
-                ) : (
+                </ThemedText.HeadlineSmall>
+              ) : (
+                <ThemedText.HeadlineSmall color="deprecated_accentTextLightPrimary">
                   <Trans>Confirm swap</Trans>
-                )}
-              </ThemedText.HeadlineSmall>
+                </ThemedText.HeadlineSmall>
+              )}
             </ConfirmButton>
           </TraceEvent>
 
