@@ -1,9 +1,9 @@
 import { BaseVariant, FeatureFlag, useBaseFlag } from '../index'
 
-export function useFallbackProviderFlag(): BaseVariant {
+export function useFallbackProviderEnabledFlag(): BaseVariant {
   return useBaseFlag(FeatureFlag.fallbackProvider)
 }
 
-export function useFallbackProvider(): boolean {
-  return useFallbackProviderFlag() === BaseVariant.Enabled
+export function useFallbackProviderEnabled(): boolean {
+  return useFallbackProviderEnabledFlag() === BaseVariant.Enabled
 }

@@ -1,12 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { deletePersistedConnectionMeta, getPersistedConnectionMeta } from 'connection/meta'
 
-import { ConnectionType, selectedWalletKey, toConnectionType } from '../../connection/types'
+import { ConnectionType } from '../../connection/types'
 import { SupportedLocale } from '../../constants/locales'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { RouterPreference } from '../../state/routing/types'
 import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 
-const selectedWallet = toConnectionType(localStorage.getItem(selectedWalletKey) ?? undefined)
+const selectedWallet = getPersistedConnectionMeta()?.type
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
@@ -47,7 +48,10 @@ export interface UserState {
 
   timestamp: number
   hideBaseWalletBanner: boolean
+  // legacy field indicating the user disabled UniswapX during the opt-in period, or dismissed the UniswapX opt-in modal.
   disabledUniswapX?: boolean
+  // temporary field indicating the user disabled UniswapX during the transition to the opt-out model
+  optedOutOfUniswapX?: boolean
   // undefined means has not gone through A/B split yet
   showSurveyPopup?: boolean
 }
@@ -76,7 +80,9 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     updateSelectedWallet(state, { payload: { wallet } }) {
-      localStorage.setItem(selectedWalletKey, wallet)
+      if (!wallet) {
+        deletePersistedConnectionMeta()
+      }
       state.selectedWallet = wallet
     },
     updateUserLocale(state, action) {
@@ -104,6 +110,9 @@ const userSlice = createSlice({
     },
     updateDisabledUniswapX(state, action) {
       state.disabledUniswapX = action.payload.disabledUniswapX
+    },
+    updateOptedOutOfUniswapX(state, action) {
+      state.optedOutOfUniswapX = action.payload.optedOutOfUniswapX
     },
     addSerializedToken(state, { payload: { serializedToken } }) {
       if (!state.tokens) {
@@ -138,5 +147,6 @@ export const {
   updateUserSlippageTolerance,
   updateHideBaseWalletBanner,
   updateDisabledUniswapX,
+  updateOptedOutOfUniswapX,
 } = userSlice.actions
 export default userSlice.reducer

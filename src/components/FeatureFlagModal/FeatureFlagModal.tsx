@@ -1,7 +1,7 @@
 import Column from 'components/Column'
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
-import { useFallbackProviderFlag } from 'featureFlags/flags/fallbackProvider'
+import { useFallbackProviderEnabledFlag } from 'featureFlags/flags/fallbackProvider'
 import { useFotAdjustmentsFlag } from 'featureFlags/flags/fotAdjustments'
 import { useInfoExploreFlag } from 'featureFlags/flags/infoExplore'
 import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
@@ -232,7 +232,7 @@ export default function FeatureFlagModal() {
         </Header>
         <FeatureFlagOption
           variant={BaseVariant}
-          value={useFallbackProviderFlag()}
+          value={useFallbackProviderEnabledFlag()}
           featureFlag={FeatureFlag.fallbackProvider}
           label="Enable fallback provider"
         />

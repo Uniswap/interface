@@ -30,7 +30,7 @@ import WETH_ABI from 'abis/weth.json'
 import { sendAnalyticsEvent } from 'analytics'
 import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import { useFallbackProvider } from 'featureFlags/flags/fallbackProvider'
+import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
 import { useEffect, useMemo } from 'react'
 import { NonfungiblePositionManager, TickLens, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
@@ -70,7 +70,7 @@ function useMainnetContract<T extends Contract = Contract>(address: string | und
   const { chainId } = useWeb3React()
   const isMainnet = chainId === ChainId.MAINNET
   const contract = useContract(isMainnet ? address : undefined, ABI, false)
-  const providers = useFallbackProvider() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
+  const providers = useFallbackProviderEnabled() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
 
   return useMemo(() => {
     if (isMainnet) return contract

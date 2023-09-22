@@ -6,7 +6,7 @@ import { AutoRow } from 'components/Row'
 import { connections, deprecatedNetworkConnection, networkConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { isSupportedChain } from 'constants/chains'
-import { useFallbackProvider } from 'featureFlags/flags/fallbackProvider'
+import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
@@ -42,7 +42,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
   const { connector, chainId } = useWeb3React()
 
   const { activationState } = useActivationState()
-  const fallbackProviderEnabled = useFallbackProvider()
+  const fallbackProviderEnabled = useFallbackProviderEnabled()
   // Keep the network connector in sync with any active user connector to prevent chain-switching on wallet disconnection.
   useEffect(() => {
     if (chainId && isSupportedChain(chainId) && connector !== networkConnection.connector) {

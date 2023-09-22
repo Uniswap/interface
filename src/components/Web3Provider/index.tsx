@@ -5,7 +5,7 @@ import { sendAnalyticsEvent, user, useTrace } from 'analytics'
 import { connections, getConnection } from 'connection'
 import { isSupportedChain } from 'constants/chains'
 import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from 'constants/providers'
-import { useFallbackProvider } from 'featureFlags/flags/fallbackProvider'
+import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import usePrevious from 'hooks/usePrevious'
 import { ReactNode, useEffect } from 'react'
@@ -32,7 +32,7 @@ function Updater() {
   const currentPage = getCurrentPageFromLocation(pathname)
   const analyticsContext = useTrace()
 
-  const providers = useFallbackProvider() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
+  const providers = useFallbackProviderEnabled() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
 
   // Trace RPC calls (for debugging).
   const networkProvider = isSupportedChain(chainId) ? providers[chainId] : undefined
