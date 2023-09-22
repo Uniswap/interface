@@ -65,8 +65,8 @@ target 'OneSignalNotificationServiceExtension' do
 end
 
 def widget_pods
-  pod "Apollo"
-  pod 'UIImageColors'
+  pod 'Apollo', '1.2.1'
+  pod 'UIImageColors' '2.1.0'
 end
 
 target 'Widgets' do
