@@ -14,9 +14,9 @@ import {
 
 import { MOONPAY_SENDER_ADDRESSES } from '../../constants'
 
-export const MockOrderTimestamp = 10000
-export const MockRecipientAddress = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
-export const MockSenderAddress = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
+const MockOrderTimestamp = 10000
+const MockRecipientAddress = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
+const MockSenderAddress = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
 
 const mockAssetActivityPartsFragment = {
   __typename: 'AssetActivity',

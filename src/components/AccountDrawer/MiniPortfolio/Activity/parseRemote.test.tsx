@@ -1,6 +1,4 @@
 import { act, renderHook } from '@testing-library/react'
-import { WETH9 } from '@uniswap/sdk-core'
-import { DAI } from 'constants/tokens'
 import ms from 'ms'
 
 import {
@@ -12,10 +10,7 @@ import {
   MockNFTReceive,
   MockNFTTransfer,
   MockOpenUniswapXOrder,
-  MockOrderTimestamp,
-  MockRecipientAddress,
   MockRemoveLiquidity,
-  MockSenderAddress,
   MockSwapOrder,
   MockTokenApproval,
   MockTokenReceive,
@@ -35,316 +30,55 @@ describe('parseRemote', () => {
     })
     it('should parse closed UniswapX order', () => {
       const result = parseRemoteActivities(jest.fn(), [MockClosedUniswapXOrder])
-      expect(result?.['someHash']).toEqual({
-        chainId: 1,
-        currencies: [
-          {
-            address: DAI.address,
-            chainId: 1,
-            decimals: 18,
-            isNative: false,
-            isToken: true,
-            name: 'DAI',
-            symbol: 'DAI',
-          },
-          {
-            address: WETH9[1].address,
-            chainId: 1,
-            decimals: 18,
-            isNative: false,
-            isToken: true,
-            symbol: 'WETH',
-            name: 'Wrapped Ether',
-          },
-        ],
-        descriptor: '100 DAI for 200 WETH',
-        from: 'someOfferer',
-        hash: 'someHash',
-        logos: ['someUrl', 'someUrl'],
-        offchainOrderStatus: 'expired',
-        prefixIconSrc: 'bolt.svg',
-        status: 'FAILED',
-        statusMessage: 'Your swap could not be fulfilled at this time. Please try again.',
-        timestamp: MockOrderTimestamp,
-        title: 'Swap expired',
-      })
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse NFT approval', () => {
       const result = parseRemoteActivities(jest.fn(), [MockNFTApproval])
-      expect(result?.['someHash']).toEqual({
-        chainId: 1,
-        descriptor: MockRecipientAddress,
-        from: MockSenderAddress,
-        hash: 'someHash',
-        logos: [],
-        nonce: 12345,
-        status: 'CONFIRMED',
-        timestamp: 10000,
-        title: 'Unknown Approval',
-      })
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse NFT approval for all', () => {
       const result = parseRemoteActivities(jest.fn(), [MockNFTApprovalForAll])
-      expect(result?.['someHash']).toEqual({
-        chainId: 1,
-        descriptor: MockRecipientAddress,
-        from: MockSenderAddress,
-        hash: 'someHash',
-        logos: [],
-        nonce: 12345,
-        status: 'CONFIRMED',
-        timestamp: 10000,
-        title: 'Unknown Approval',
-      })
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse NFT transfer', () => {
       const result = parseRemoteActivities(jest.fn(), [MockNFTTransfer])
-      expect(result?.['someHash']).toEqual({
-        chainId: 1,
-        descriptor: '1 SomeCollectionName',
-        from: MockSenderAddress,
-        hash: 'someHash',
-        logos: ['imageUrl'],
-        nonce: 12345,
-        status: 'CONFIRMED',
-        timestamp: 10000,
-        title: 'Minted',
-      })
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse swap', () => {
       const result = parseRemoteActivities(jest.fn().mockReturnValue('100'), [MockTokenTransfer])
-      expect(result?.['someHash']).toEqual({
-        chainId: 1,
-        currencies: [
-          {
-            address: DAI.address,
-            chainId: 1,
-            decimals: 18,
-            isNative: false,
-            isToken: true,
-            name: 'DAI',
-            symbol: 'DAI',
-          },
-          {
-            address: WETH9[1].address,
-            chainId: 1,
-            decimals: 18,
-            isNative: false,
-            isToken: true,
-            symbol: 'WETH',
-            name: 'Wrapped Ether',
-          },
-        ],
-        descriptor: '100 DAI for 100 WETH',
-        from: MockSenderAddress,
-        hash: 'someHash',
-        logos: ['logoUrl'],
-        nonce: 12345,
-        status: 'CONFIRMED',
-        timestamp: 10000,
-        title: 'Swapped',
-      })
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse nft purchase', () => {
       const result = parseRemoteActivities(jest.fn().mockReturnValue('100'), [MockNFTPurchase])
-      expect(result?.['someHash']).toEqual({
-        chainId: 1,
-        descriptor: '1 SomeCollectionName',
-        from: MockSenderAddress,
-        hash: 'someHash',
-        logos: ['imageUrl'],
-        nonce: 12345,
-        status: 'CONFIRMED',
-        timestamp: 10000,
-        title: 'Bought',
-      })
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse token approval', () => {
       const result = parseRemoteActivities(jest.fn(), [MockTokenApproval])
-      expect(result?.['someHash']).toEqual({
-        chainId: 1,
-        currencies: [
-          {
-            address: DAI.address,
-            chainId: 1,
-            decimals: 18,
-            isNative: false,
-            isToken: true,
-            name: 'DAI',
-            symbol: 'DAI',
-          },
-        ],
-        descriptor: 'DAI',
-        from: MockSenderAddress,
-        hash: 'someHash',
-        logos: ['logoUrl'],
-        nonce: 12345,
-        status: 'CONFIRMED',
-        timestamp: 10000,
-        title: 'Approved',
-      })
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse send', () => {
       const result = parseRemoteActivities(jest.fn().mockReturnValue(100), [MockTokenSend])
-      expect(result?.['someHash']).toEqual({
-        chainId: 1,
-        currencies: [
-          {
-            address: DAI.address,
-            chainId: 1,
-            decimals: 18,
-            isNative: false,
-            isToken: true,
-            name: 'DAI',
-            symbol: 'DAI',
-          },
-        ],
-        descriptor: '100 DAI to ',
-        otherAccount: MockRecipientAddress,
-        from: MockSenderAddress,
-        hash: 'someHash',
-        logos: ['logoUrl'],
-        nonce: 12345,
-        status: 'CONFIRMED',
-        timestamp: 10000,
-        title: 'Sent',
-      })
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse receive', () => {
       const result = parseRemoteActivities(jest.fn().mockReturnValue(100), [MockTokenReceive])
-      expect(result?.['someHash']).toEqual({
-        chainId: 1,
-        currencies: [
-          {
-            address: WETH9[1].address,
-            chainId: 1,
-            decimals: 18,
-            isNative: false,
-            isToken: true,
-            name: 'Wrapped Ether',
-            symbol: 'WETH',
-          },
-        ],
-        descriptor: '100 WETH from ',
-        otherAccount: MockSenderAddress,
-        from: MockSenderAddress,
-        hash: 'someHash',
-        logos: ['logoUrl'],
-        nonce: 12345,
-        status: 'CONFIRMED',
-        timestamp: 10000,
-        title: 'Received',
-      })
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse NFT receive', () => {
       const result = parseRemoteActivities(jest.fn().mockReturnValue(100), [MockNFTReceive])
-      expect(result?.['someHash']).toEqual({
-        chainId: 1,
-        currencies: undefined,
-        descriptor: '1 SomeCollectionName from ',
-        otherAccount: MockSenderAddress,
-        from: MockSenderAddress,
-        hash: 'someHash',
-        logos: ['imageUrl'],
-        nonce: 12345,
-        status: 'CONFIRMED',
-        timestamp: 10000,
-        title: 'Received',
-      })
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse remove liquidity', () => {
       const result = parseRemoteActivities(jest.fn().mockReturnValue(100), [MockRemoveLiquidity])
-      expect(result?.['someHash']).toEqual({
-        chainId: 1,
-        currencies: [
-          {
-            address: WETH9[1].address,
-            chainId: 1,
-            decimals: 18,
-            isNative: false,
-            isToken: true,
-            name: 'Wrapped Ether',
-            symbol: 'WETH',
-          },
-          {
-            address: DAI.address,
-            chainId: 1,
-            decimals: 18,
-            isNative: false,
-            isToken: true,
-            name: 'DAI',
-            symbol: 'DAI',
-          },
-        ],
-        descriptor: '100 WETH and 100 DAI',
-        from: MockSenderAddress,
-        hash: 'someHash',
-        logos: ['logoUrl', 'logoUrl'],
-        nonce: 12345,
-        status: 'CONFIRMED',
-        timestamp: 10000,
-        title: 'Removed Liquidity',
-      })
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse moonpay purchase', () => {
       const result = parseRemoteActivities(jest.fn().mockReturnValue('100'), [MockMoonpayPurchase])
-      expect(result?.['someHash']).toEqual({
-        chainId: 1,
-        currencies: [
-          {
-            address: WETH9[1].address,
-            chainId: 1,
-            decimals: 18,
-            isNative: false,
-            isToken: true,
-            name: 'Wrapped Ether',
-            symbol: 'WETH',
-          },
-        ],
-        descriptor: '100 WETH for 100', // typically this includes the locale currency, but our mock just returns 100
-        from: MockSenderAddress,
-        hash: 'someHash',
-        logos: ['moonpay.svg'],
-        nonce: 12345,
-        status: 'CONFIRMED',
-        timestamp: 10000,
-        title: 'Purchased',
-      })
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse swap order', () => {
       const result = parseRemoteActivities(jest.fn().mockReturnValue('100'), [MockSwapOrder])
-      expect(result?.['someHash']).toEqual({
-        chainId: 1,
-        currencies: [
-          {
-            address: DAI.address,
-            chainId: 1,
-            decimals: 18,
-            isNative: false,
-            isToken: true,
-            name: 'DAI',
-            symbol: 'DAI',
-          },
-          {
-            address: WETH9[1].address,
-            chainId: 1,
-            decimals: 18,
-            isNative: false,
-            isToken: true,
-            symbol: 'WETH',
-            name: 'Wrapped Ether',
-          },
-        ],
-        descriptor: '100 DAI for 100 WETH',
-        from: MockSenderAddress,
-        hash: 'someHash',
-        logos: ['logoUrl'],
-        prefixIconSrc: 'bolt.svg',
-        nonce: 12345,
-        status: 'CONFIRMED',
-        timestamp: 10000,
-        title: 'Swapped',
-      })
+      expect(result?.['someHash']).toMatchSnapshot()
     })
   })
 
