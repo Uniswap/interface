@@ -1102,7 +1102,7 @@ DEPENDENCIES:
   - RNScreens (from `../../../node_modules/react-native-screens`)
   - "RNSentry (from `../../../node_modules/@sentry/react-native`)"
   - RNSVG (from `../../../node_modules/react-native-svg`)
-  - UIImageColors
+  - UIImageColors (= 2.1.0)
   - Yoga (from `../../../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -1441,6 +1441,6 @@ SPEC CHECKSUMS:
   Yoga: f7decafdc5e8c125e6fa0da38a687e35238420fa
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: e2b276b6221d7b99e2d3ab756a9f5ab373786b3a
+PODFILE CHECKSUM: 9f13062fc9373184e90d8def82fec1671f3f5b9e
 
 COCOAPODS: 1.11.3
