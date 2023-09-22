@@ -7,7 +7,6 @@ import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
-import validateUserSlippageTolerance, { SlippageValidationResult } from 'utils/validateUserSlippageTolerance'
 
 const Icon = styled(Settings)`
   height: 24px;
@@ -37,12 +36,12 @@ const IconContainer = styled(Row)`
   border-radius: 16px;
 `
 
-const IconContainerWithSlippage = styled(IconContainer)<{ displayWarning?: boolean }>`
+const IconContainerWithSlippage = styled(IconContainer)`
   div {
-    color: ${({ theme, displayWarning }) => (displayWarning ? theme.neutral2 : theme.neutral2)};
+    color: ${({ theme }) => theme.neutral2};
   }
 
-  background-color: ${({ theme, displayWarning }) => (displayWarning ? theme.surface2 : theme.surface2)};
+  background-color: ${({ theme }) => theme.surface2};
 `
 
 const MAXIMUM_RECOMMENDED_SLIPPAGE = new Percent(1, 100)
@@ -60,10 +59,8 @@ const ButtonContent = () => {
 
   const tooHigh = userSlippageTolerance.greaterThan(MAXIMUM_RECOMMENDED_SLIPPAGE)
 
-  const isInvalidSlippage = validateUserSlippageTolerance(userSlippageTolerance) !== SlippageValidationResult.Valid
-
   return (
-    <IconContainerWithSlippage data-testid="settings-icon-with-slippage" gap="sm" displayWarning={isInvalidSlippage}>
+    <IconContainerWithSlippage data-testid="settings-icon-with-slippage" gap="sm">
       {tooHigh && <AlertTriangleFilled />}
 
       <ThemedText.BodySmall>
