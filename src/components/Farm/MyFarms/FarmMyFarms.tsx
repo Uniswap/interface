@@ -48,6 +48,7 @@ export default function FarmingMyFarms({ chainId }: { search: string; chainId: n
   const [sortByGamma, setSortByGamma] = useState(v3FarmSortBy.pool)
   const [sortDescGamma, setSortDescGamma] = useState(false)
   const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 1000))
+  const masterChefContract = useMasterChefContract()
 
   const allGammaFarms = useMemo(() => {
     const pairsGroups = GammaPairs[570] || {}
@@ -78,7 +79,7 @@ export default function FarmingMyFarms({ chainId }: { search: string; chainId: n
   })
 
   const fetchGammaPositions = async () => {
-    const gammaPositions = await getGammaPositions()
+    const gammaPositions = await getGammaPositions(masterChefContract?.address)
     return gammaPositions
   }
 
@@ -120,7 +121,6 @@ export default function FarmingMyFarms({ chainId }: { search: string; chainId: n
   }, [currentTime])
 
   const allGammaPairsToFarm = chainId ? ([] as GammaPair[]).concat(...Object.values(GammaPairs[ChainId.ROLLUX])) : []
-  const masterChefContract = useMasterChefContract()
 
   const stakedAmountData = useSingleContractMultipleData(
     masterChefContract,
@@ -190,14 +190,18 @@ export default function FarmingMyFarms({ chainId }: { search: string; chainId: n
                 )}
                 <Box pb={2}>
                   {myGammaFarms.map((farm: any) => {
+                    console.log('farm', farm)
                     const foundData = gammaData
                       ? Object.values(gammaData).find((poolData) => poolData.poolAddress === farm.address.toLowerCase())
                       : undefined
                     const tvl = gammaPositions ? gammaPositions[farm.hypervisor].balanceUSD : 0
+                    console.log('gammaPositions', gammaPositions)
+                    console.log('tvl', tvl)
                     const rewardData = {
                       tvl,
                       ...rewardsData,
                     }
+                    console.log('rewardsData', rewardsData)
 
                     return (
                       <div style={{ marginBottom: '20px' }} key={farm.address}>
