@@ -12,7 +12,6 @@ export {
   TamaguiProvider,
   Theme,
   useMedia,
-  useTheme as useSporeColors,
   useTheme,
   useThemeName,
   YGroup,
@@ -44,4 +43,5 @@ export { Text, TextProps } from './components/text/Text'
 export * from './components/touchable'
 export * from './components/Unicon'
 export * from './components/Unicon/utils'
+export { useSporeColors } from './hooks/useSporeColors'
 export { config as tamaguiConfig } from './tamagui.config'
