@@ -146,7 +146,7 @@ export function SettingsWallet({
   }
 
   const iconProps: SvgProps = {
-    color: colors.neutral3.val,
+    color: colors.neutral2.val,
     height: iconSizes.icon24,
     strokeLinecap: 'round',
     strokeLinejoin: 'round',
