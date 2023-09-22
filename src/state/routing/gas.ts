@@ -4,7 +4,7 @@ import ERC20_ABI from 'abis/erc20.json'
 import { Erc20, Weth } from 'abis/types'
 import WETH_ABI from 'abis/weth.json'
 import { SupportedInterfaceChain } from 'constants/chains'
-import { RPC_PROVIDERS } from 'constants/providers'
+import { DEPRECATED_RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { getContract } from 'utils'
 
@@ -26,7 +26,7 @@ export async function getApproveInfo(
   // If any of these arguments aren't provided, then we cannot generate approval cost info
   if (!account || !usdCostPerGas) return { needsApprove: false }
 
-  const provider = RPC_PROVIDERS[currency.chainId as SupportedInterfaceChain]
+  const provider = DEPRECATED_RPC_PROVIDERS[currency.chainId as SupportedInterfaceChain]
   const tokenContract = getContract(currency.address, ERC20_ABI, provider) as Erc20
 
   let approveGasUseEstimate
@@ -58,7 +58,7 @@ export async function getWrapInfo(
 ): Promise<WrapInfo> {
   if (!needsWrap) return { needsWrap: false }
 
-  const provider = RPC_PROVIDERS[chainId]
+  const provider = DEPRECATED_RPC_PROVIDERS[chainId]
   const wethAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address
 
   // If any of these arguments aren't provided, then we cannot generate wrap cost info
