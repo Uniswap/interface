@@ -7,7 +7,6 @@ import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
 import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
 import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
-import { useQuickRouteAllChainsFlag } from 'featureFlags/flags/quickRouteAllChains'
 import { useQuickRouteMainnetFlag } from 'featureFlags/flags/quickRouteMainnet'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useUniswapXDefaultEnabledFlag } from 'featureFlags/flags/uniswapXDefault'
@@ -250,12 +249,6 @@ export default function FeatureFlagModal() {
           label="Enable fee-on-transfer UI and slippage adjustments"
         />
         <FeatureFlagGroup name="Quick routes">
-          <FeatureFlagOption
-            variant={BaseVariant}
-            value={useQuickRouteAllChainsFlag()}
-            featureFlag={FeatureFlag.quickRouteAllChains}
-            label="Enable quick routes for all chains"
-          />
           <FeatureFlagOption
             variant={BaseVariant}
             value={useQuickRouteMainnetFlag()}
