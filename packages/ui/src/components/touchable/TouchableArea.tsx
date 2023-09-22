@@ -89,12 +89,13 @@ export function TouchableArea({
     }
   }, [scale, scaleTo])
 
-  const { style, ...restStyles } = rest
+  const { style, onLongPress, ...restStyles } = rest
 
   const baseProps: TouchableBoxProps = {
     onPress: onPressHandler,
     onPressIn: onPressInHandler,
     onPressOut: onPressOutHandler,
+    onLongPress,
     activeOpacity,
     hitSlop: defaultHitslopInset,
     testID,
