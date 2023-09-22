@@ -156,13 +156,14 @@ android {
          kotlinCompilerExtensionVersion = "1.4.6"
     }
 
-    sourceSets {
-        main {
-          jniLibs {
-            srcDir '../../../../node_modules/@uniswap/ethers-rs-mobile/android/jniLibs'
-          }
-        }
-    }
+    // TODO: Enable this once 0.0.2 is audited, and remove binary in codebase
+    // sourceSets {
+    //     main {
+    //       jniLibs {
+    //         srcDir '../../../../node_modules/@uniswap/ethers-rs-mobile/android/jniLibs'
+    //       }
+    //     }
+    // }
 }
 
 dependencies {
