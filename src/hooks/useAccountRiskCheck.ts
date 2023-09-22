@@ -15,9 +15,7 @@ export default function useAccountRiskCheck(account: string | null | undefined) 
         const storedTime = localStorage.getItem(riskCheckLocalStorageKey)
         const checkExpirationTime = storedTime ? parseInt(storedTime) : now - 1
         if (checkExpirationTime < Date.now()) {
-          const headers = new Headers({
-            'Content-Type': 'application/json',
-          })
+          const headers = new Headers({ 'Content-Type': 'application/json' })
           fetch('https://api.uniswap.org/v1/screen', {
             method: 'POST',
             headers,
@@ -29,8 +27,7 @@ export default function useAccountRiskCheck(account: string | null | undefined) 
                 dispatch(setOpenModal(ApplicationModal.BLOCKED_ACCOUNT))
               }
             })
-            .catch((e) => {
-              console.error(e)
+            .catch(() => {
               dispatch(setOpenModal(null))
             })
         }
