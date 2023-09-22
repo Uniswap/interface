@@ -20,7 +20,6 @@ export enum FeatureFlag {
   infoLiveViews = 'info_live_views',
   uniswapXDefaultEnabled = 'uniswapx_default_enabled',
   quickRouteMainnet = 'enable_quick_route_mainnet',
-  quickRouteAllChains = 'enable_quick_route_all_chains',
 }
 
 interface FeatureFlagsContextType {

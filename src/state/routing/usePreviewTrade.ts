@@ -1,7 +1,6 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { ZERO_PERCENT } from 'constants/misc'
-import { useQuickRouteAllChainsEnabled } from 'featureFlags/flags/quickRouteAllChains'
 import { useQuickRouteMainnetEnabled } from 'featureFlags/flags/quickRouteMainnet'
 import { useMemo } from 'react'
 
@@ -28,12 +27,11 @@ function useQuickRouteArguments({
   outputTax: Percent
 }): GetQuickQuoteArgs | typeof skipToken {
   const enabledMainnet = useQuickRouteMainnetEnabled()
-  const enabledAllChains = useQuickRouteAllChainsEnabled()
 
   return useMemo(() => {
     if (!tokenIn || !tokenOut || !amount) return skipToken
-    if (tokenIn.chainId === ChainId.MAINNET && !enabledMainnet) return skipToken
-    if (tokenIn.chainId !== ChainId.MAINNET && !enabledAllChains) return skipToken
+    if (tokenIn.chainId !== ChainId.MAINNET || (tokenIn.chainId === ChainId.MAINNET && !enabledMainnet))
+      return skipToken
 
     return {
       amount: amount.quotient.toString(),
@@ -49,7 +47,7 @@ function useQuickRouteArguments({
       inputTax,
       outputTax,
     }
-  }, [amount, enabledAllChains, enabledMainnet, inputTax, outputTax, tokenIn, tokenOut, tradeType])
+  }, [amount, enabledMainnet, inputTax, outputTax, tokenIn, tokenOut, tradeType])
 }
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
