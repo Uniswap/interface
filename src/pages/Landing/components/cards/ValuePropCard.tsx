@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { Box } from './Generics'
+import { Box } from '../Generics'
 
 type ValuePropCardProps = {
   isDarkMode?: boolean
@@ -10,6 +10,7 @@ type ValuePropCardProps = {
   tagText?: string
   titleText?: string
   children?: React.ReactNode
+  button?: React.ReactNode
 }
 
 export default function ValuePropCard(props: ValuePropCardProps) {
@@ -18,10 +19,7 @@ export default function ValuePropCard(props: ValuePropCardProps) {
   return (
     <Container isDarkMode={isDarkMode} backgroundColor={backgroundColor} height={height}>
       <Box direction="column" padding="32px" gap="24px">
-        <Pill>
-          {/* Icon goes here */}
-          <Label color={textColor}>{props.tagText}</Label>
-        </Pill>
+        {props.button}
         <Title color={textColor}>{props.titleText}</Title>
       </Box>
       {props.children}
@@ -38,12 +36,6 @@ const Container = styled.div<ValuePropCardProps>`
   overflow: hidden;
 `
 
-// const Imagery = styled.div`
-//   position: absolute;
-//   width: 100%;
-//   height: 100%;
-// `
-
 const Title = styled.div`
   color: ${(props) => props.color};
   font-feature-settings: 'ss07' on;
@@ -52,22 +44,5 @@ const Title = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: 44px; /* 122.222% */
-  white-space: pre-line;
-`
-
-const Pill = styled.div`
-  padding: 12px 16px;
-  border-radius: 24px;
-  background-color: ${({ theme }) => theme.surface1};
-`
-
-const Label = styled.div`
-  color: ${(props) => props.color};
-  /* Button Label/1 */
-  font-family: Basel;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 535;
-  line-height: 24px; /* 120% */
   white-space: pre-line;
 `

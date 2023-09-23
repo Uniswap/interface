@@ -22,6 +22,9 @@ export const H1 = styled.h1`
   font-weight: 500;
   line-height: 120%; /* 76.8px */
   white-space: pre-line;
+  @media (max-width: 768px) {
+    font-size: 36px;
+  }
 `
 
 export const H2 = styled.h2`
@@ -112,6 +115,7 @@ type BoxProps = {
   marginLeft?: string
   borderRadius?: string
   pointerEvents?: 'none' | 'auto'
+  overflow?: 'visible' | 'hidden' | 'scroll' | 'auto'
 }
 
 export const Box = styled.div<BoxProps>`
@@ -148,6 +152,7 @@ export const Box = styled.div<BoxProps>`
 
   border-radius: ${(props) => props.borderRadius || '0'};
   pointer-events: ${(props) => props.pointerEvents || 'auto'};
+  overflow: ${(props) => props.overflow || 'visible'};
 `
 
 export const Button = styled.button`

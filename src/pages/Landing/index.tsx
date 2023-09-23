@@ -5,10 +5,13 @@ import styled from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import { Hover, RiseIn, RiseInText } from './components/Animate'
+import { DocumentationCard } from './components/cards/DocumentationCard'
+import { DownloadWalletCard } from './components/cards/DownloadWalletCard'
+import { LiquidityCard } from './components/cards/LiquidityCard'
+import { WebappCard } from './components/cards/WebappCard'
 import { Body1, Body2, Box, Button, Container, H1, H2, Subheading } from './components/Generics'
 import { PoissonHero as Hero } from './components/PoissonHero'
 import StatCard from './components/StatCard'
-import ValuePropCard from './components/ValuePropCard'
 
 function Landing() {
   const isDarkMode = useIsDarkMode()
@@ -78,40 +81,12 @@ function Landing() {
           <H2>Go direct to DeFi</H2>
           <Box direction="row" gap="24px">
             <Box direction="column" gap="24px">
-              <ValuePropCard
-                tagText="Web app"
-                titleText={`Swapping made simple.\nAccess thousands of tokens on 7+ chains.`}
-                height="696px"
-                isDarkMode={isDarkMode}
-                textColor="#627EEA"
-                backgroundColor={{ dark: 'rgba(98, 126, 234, 0.20)', light: 'rgba(98, 126, 234, 0.10)' }}
-              />
-              <ValuePropCard
-                tagText="Documentation"
-                titleText={`Build open apps and\ntools that you want to\nsee in the world.`}
-                height="320px"
-                isDarkMode={isDarkMode}
-                textColor="#1DA16A"
-                backgroundColor={{ dark: 'rgba(22, 222, 139, 0.12)', light: 'rgba(22, 222, 139, 0.06)' }}
-              />
+              <WebappCard />
+              <DocumentationCard />
             </Box>
             <Box direction="column" gap="24px">
-              <ValuePropCard
-                tagText="Provide Liquidity"
-                titleText={`Provide liquidity to pools\non the Uniswap protocol\nand earn fees on swaps.`}
-                height="320px"
-                isDarkMode={isDarkMode}
-                textColor="#A457FF"
-                backgroundColor={{ dark: 'rgba(164, 87, 255, 0.15)', light: 'rgba(164, 87, 255, 0.15)' }}
-              />
-              <ValuePropCard
-                tagText="Download the wallet"
-                titleText={`The power of Uniswap in your\npocket`}
-                height="696px"
-                isDarkMode={isDarkMode}
-                textColor="#FC72FF"
-                backgroundColor={{ dark: 'rgba(252, 114, 255, 0.12)', light: 'rgba(252, 114, 255, 0.12)' }}
-              />
+              <LiquidityCard />
+              <DownloadWalletCard />
             </Box>
           </Box>
         </Box>

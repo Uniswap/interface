@@ -5,6 +5,8 @@ import { H3 } from './Generics'
 type StatCardProps = {
   title: string
   value: string
+  prefix?: string
+  suffix?: string
 }
 
 export default function ValuePropCard(props: StatCardProps) {
