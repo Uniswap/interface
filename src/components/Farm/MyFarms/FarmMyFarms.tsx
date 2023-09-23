@@ -195,13 +195,10 @@ export default function FarmingMyFarms({ chainId }: { search: string; chainId: n
                       ? Object.values(gammaData).find((poolData) => poolData.poolAddress === farm.address.toLowerCase())
                       : undefined
                     const tvl = gammaPositions ? gammaPositions[farm.hypervisor].balanceUSD : 0
-                    console.log('gammaPositions', gammaPositions)
-                    console.log('tvl', tvl)
                     const rewardData = {
                       tvl,
                       ...rewardsData,
                     }
-                    console.log('rewardsData', rewardsData)
 
                     return (
                       <div style={{ marginBottom: '20px' }} key={farm.address}>
