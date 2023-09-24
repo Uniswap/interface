@@ -4,7 +4,7 @@ import { darken } from 'polished'
 import { AlertTriangle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 const Container = styled(Column)`
   height: 75vh;
