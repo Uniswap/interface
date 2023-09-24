@@ -1,4 +1,3 @@
-import { SCREEN_WIDTH } from '@gorhom/bottom-sheet'
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import React from 'react'
 import { SharedValue } from 'react-native-reanimated'
@@ -62,10 +61,6 @@ export function PriceExplorer({
     }
     return <PriceExplorerError showRetry={error !== undefined} onRetry={refetchAndRetry} />
   }
-  const shouldShowAnimatedDot =
-    selectedDuration === HistoryDuration.Day || selectedDuration === HistoryDuration.Hour
-  const additionalPadding = shouldShowAnimatedDot ? 40 : 0
-  const lastPricePoint = data?.priceHistory ? data.priceHistory.length - 1 : 0
 
   return (
     <Flex overflow="hidden">
@@ -76,23 +71,8 @@ export function PriceExplorer({
           <Flex gap="$spacing8">
             <PriceTextSection loading={loading} relativeChange={data.spot?.relativeChange} />
             <Flex my="$spacing24">
-              <LineChart
-                height={CHART_HEIGHT}
-                width={SCREEN_WIDTH - additionalPadding}
-                yGutter={20}>
-                <LineChart.Path color={tokenColor} pathProps={{ isTransitionEnabled: false }}>
-                  {shouldShowAnimatedDot && (
-                    <LineChart.Dot
-                      key={data.priceHistory[lastPricePoint]?.timestamp}
-                      at={lastPricePoint}
-                      color={tokenColor}
-                      hasPulse={true}
-                      inactiveColor="transparent"
-                      pulseDurationMs={2000}
-                      size={5}
-                    />
-                  )}
-                </LineChart.Path>
+              <LineChart height={CHART_HEIGHT}>
+                <LineChart.Path color={tokenColor} pathProps={{ isTransitionEnabled: false }} />
                 <LineChart.CursorLine color={tokenColor} />
                 <LineChart.CursorCrosshair
                   color={tokenColor}
