@@ -7,7 +7,7 @@ import { AnimatedFlex } from 'src/components/layout'
 import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
 import { Flex, Text, TouchableArea } from 'ui/src'
-import { borderRadii, spacing } from 'ui/src/theme'
+import { borderRadii } from 'ui/src/theme'
 import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
@@ -52,18 +52,18 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       disabled={menuActions.length === 0}
       style={{
         borderRadius: borderRadii.rounded16,
-        paddingHorizontal: spacing.spacing12,
       }}
       onPress={onContextMenuPress}>
       <TouchableArea
         hapticFeedback
         alignItems="flex-start"
-        bg="$transparent"
+        bg="$surface1"
+        borderRadius="$rounded16"
         flexDirection="row"
         hapticStyle={ImpactFeedbackStyle.Light}
         justifyContent="space-between"
         minHeight={TOKEN_BALANCE_ITEM_HEIGHT}
-        px="$spacing12"
+        px="$spacing24"
         py="$spacing8"
         onPress={onPress}>
         <AnimatedFlex
