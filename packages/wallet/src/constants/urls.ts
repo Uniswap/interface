@@ -24,6 +24,7 @@ export const uniswapUrls = {
   graphQLUrl: getUniswapGraphQLUrl(),
   trmPath: getUniswapTrmPath(),
   amplitudeProxyUrl: getUniswapAmplitudeProxyUrl(),
+  statsigProxyUrl: getUniswapStatsigProxyUrl(),
   termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
   appUrl: `https://${UNISWAP_APP_HOSTNAME}`,
@@ -52,4 +53,8 @@ function getUniswapTrmPath(): string {
 
 function getUniswapAmplitudeProxyUrl(): string {
   return `${config.uniswapApiBaseUrl}/v1/amplitude-proxy`
+}
+
+function getUniswapStatsigProxyUrl(): string {
+  return `${config.uniswapApiBaseUrl}/v1/statsig-proxy`
 }

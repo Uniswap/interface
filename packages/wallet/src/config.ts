@@ -8,7 +8,6 @@ import {
   ONESIGNAL_APP_ID,
   QUICKNODE_BNB_RPC_URL,
   SENTRY_DSN,
-  STATSIG_PROXY_URL,
   UNISWAP_API_BASE_URL,
   UNISWAP_API_KEY,
   UNISWAP_APP_URL,
@@ -27,7 +26,6 @@ export interface Config {
   infuraProjectId: string
   onesignalAppId: string
   sentryDsn: string
-  statSigProxyUrl: string
   walletConnectProjectId: string
   quicknodeBnbRpcUrl: string
 }
@@ -44,7 +42,6 @@ const _config: Config = {
   infuraProjectId: process.env.INFURA_PROJECT_ID || INFURA_PROJECT_ID,
   onesignalAppId: process.env.ONESIGNAL_APP_ID || ONESIGNAL_APP_ID,
   sentryDsn: process.env.SENTRY_DSN || SENTRY_DSN,
-  statSigProxyUrl: process.env.STATSIG_PROXY_URL || STATSIG_PROXY_URL,
   walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID || WALLETCONNECT_PROJECT_ID,
   quicknodeBnbRpcUrl: process.env.QUICKNODE_BNB_RPC_URL || QUICKNODE_BNB_RPC_URL,
 }

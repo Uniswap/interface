@@ -43,6 +43,7 @@ import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { config } from 'wallet/src/config'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useCurrentAppearanceSetting, useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { useTrmQuery } from 'wallet/src/features/trm/api'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
@@ -104,7 +105,7 @@ function App(): JSX.Element | null {
       environment: {
         tier: getStatsigEnvironmentTier(),
       },
-      api: config.statSigProxyUrl,
+      api: uniswapUrls.statsigProxyUrl,
     },
     sdkKey: DUMMY_STATSIG_SDK_KEY,
     user: deviceId ? { userID: deviceId } : {},
