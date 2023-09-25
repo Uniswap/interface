@@ -100,17 +100,11 @@ export function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsS
   const screenIsNotLarge = isScreenSize['lg']
   const { formatNumber } = useFormatter()
 
-  // We can't wrap this in a useMemo hook because useCurrency is also a hook
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const currencies = [
-    useCurrency(poolData?.token0?.id, chainId) ?? undefined,
-    useCurrency(poolData?.token1?.id, chainId) ?? undefined,
-  ]
+  const currency0 = useCurrency(poolData?.token0?.id, chainId) ?? undefined
+  const currency1 = useCurrency(poolData?.token1?.id, chainId) ?? undefined
 
-  // We can't wrap this in a useMemo hook because useColor is also a hook
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const color0 = useColor(currencies[0]?.wrapped)
-  const color1 = useColor(currencies[1]?.wrapped)
+  const color0 = useColor(currency0?.wrapped)
+  const color1 = useColor(currency1?.wrapped)
 
   const [token0, token1] = useMemo(() => {
     const fullWidth = poolData?.tvlToken0 / poolData?.token0Price + poolData?.tvlToken1
@@ -120,7 +114,7 @@ export function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsS
       tvl: poolData?.tvlToken0,
       color: color0,
       percent: poolData?.tvlToken0 / poolData?.token0Price / fullWidth,
-      currency: currencies[0],
+      currency: currency0,
     }
     const token1FullData = {
       ...poolData?.token1,
@@ -128,10 +122,10 @@ export function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsS
       tvl: poolData?.tvlToken1,
       color: color1,
       percent: poolData?.tvlToken1 / fullWidth,
-      currency: currencies[1],
+      currency: currency1,
     }
     return isReversed ? [token1FullData, token0FullData] : [token0FullData, token1FullData]
-  }, [color0, color1, currencies, isReversed, poolData])
+  }, [color0, color1, currency0, currency1, isReversed, poolData])
 
   return (
     <StatsWrapper>
