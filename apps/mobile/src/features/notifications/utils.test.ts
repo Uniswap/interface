@@ -2,7 +2,6 @@ import { TradeType } from '@uniswap/sdk-core'
 import { createFinalizedTxAction } from 'src/features/notifications/notificationWatcherSaga.test'
 import {
   buildReceiveNotification,
-  createBalanceUpdate,
   formSwapNotificationTitle,
 } from 'src/features/notifications/utils'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -10,7 +9,6 @@ import { DAI, USDC } from 'wallet/src/constants/tokens'
 import { AssetType } from 'wallet/src/entities/assets'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import {
-  NFTTradeType,
   ReceiveTokenTransactionInfo,
   TransactionStatus,
   TransactionType,
@@ -66,85 +64,6 @@ describe(formSwapNotificationTitle, () => {
         '1000000'
       )
     ).toEqual('Failed to swap 1.00 DAI for ~1.00 USDC.')
-  })
-})
-
-describe(createBalanceUpdate, () => {
-  it('handles unconfirmed transactions', () => {
-    expect(
-      createBalanceUpdate({
-        transactionType: TransactionType.Approve,
-        transactionStatus: TransactionStatus.Cancelled,
-        currency: DAI,
-        currencyAmountRaw: '1000000000000000000',
-      })
-    ).toBeUndefined()
-
-    expect(
-      createBalanceUpdate({
-        transactionType: TransactionType.Approve,
-        transactionStatus: TransactionStatus.Failed,
-        currency: DAI,
-        currencyAmountRaw: '1000000000000000000',
-      })
-    ).toBeUndefined()
-  })
-
-  it('handles balance increase', () => {
-    expect(
-      createBalanceUpdate({
-        transactionType: TransactionType.Receive,
-        transactionStatus: TransactionStatus.Success,
-        currency: DAI,
-        currencyAmountRaw: '1000000000000000000',
-        transactedUSDValue: '1',
-      })
-    ).toEqual({
-      assetValueChange: '+1.00 DAI',
-      usdValueChange: '$1.00',
-    })
-  })
-
-  it('handles balance decrease', () => {
-    expect(
-      createBalanceUpdate({
-        transactionType: TransactionType.Send,
-        transactionStatus: TransactionStatus.Success,
-        currency: DAI,
-        currencyAmountRaw: '1000000000000000000',
-        transactedUSDValue: '1',
-      })
-    ).toEqual({
-      assetValueChange: '-1.00 DAI',
-      usdValueChange: '$1.00',
-    })
-
-    expect(
-      createBalanceUpdate({
-        transactionType: TransactionType.NFTMint,
-        transactionStatus: TransactionStatus.Success,
-        currency: DAI,
-        currencyAmountRaw: '1000000000000000000',
-        transactedUSDValue: '1',
-      })
-    ).toEqual({
-      assetValueChange: '-1.00 DAI',
-      usdValueChange: '$1.00',
-    })
-
-    expect(
-      createBalanceUpdate({
-        transactionType: TransactionType.NFTTrade,
-        transactionStatus: TransactionStatus.Success,
-        nftTradeType: NFTTradeType.BUY,
-        currency: DAI,
-        currencyAmountRaw: '1000000000000000000',
-        transactedUSDValue: '1',
-      })
-    ).toEqual({
-      assetValueChange: '-1.00 DAI',
-      usdValueChange: '$1.00',
-    })
   })
 })
 

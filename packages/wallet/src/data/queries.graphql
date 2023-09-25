@@ -705,23 +705,6 @@ query ExploreSearch(
   }
 }
 
-query SpotPrices($contracts: [ContractInput!]!) {
-  tokenProjects(contracts: $contracts) {
-    id
-    markets(currencies: [USD]) {
-      id
-      price {
-        id
-        value
-      }
-      pricePercentChange24h {
-        id
-        value
-      }
-    }
-  }
-}
-
 fragment TopTokenParts on Token {
   symbol
   chain

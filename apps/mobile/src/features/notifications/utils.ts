@@ -1,7 +1,5 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { SpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
-import { formatUSDPrice } from 'utilities/src/format/format'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import {
@@ -11,7 +9,6 @@ import {
   WalletConnectNotification,
 } from 'wallet/src/features/notifications/types'
 import {
-  NFTTradeType,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
@@ -233,70 +230,6 @@ const formTransferTxTitle = (
     assetInfo,
     senderOrRecipient,
   })
-}
-
-export interface BalanceUpdate {
-  assetValueChange: string
-  usdValueChange: string | undefined
-}
-
-interface BalanceUpdateProps {
-  transactionType: TransactionType
-  transactionStatus: TransactionStatus
-  currency: Maybe<Currency>
-  currencyAmountRaw: string
-  spotPrice?: SpotPrice
-  nftTradeType?: NFTTradeType
-  transactedUSDValue?: string | number | undefined // optional if USD amount already known
-}
-
-interface NFTTradeBalanceUpdateProps extends BalanceUpdateProps {
-  transactionType: TransactionType.NFTTrade
-  nftTradeType: NFTTradeType
-}
-
-export const createBalanceUpdate = ({
-  transactionType,
-  transactionStatus,
-  currency,
-  currencyAmountRaw,
-  spotPrice,
-  nftTradeType,
-  transactedUSDValue,
-}: BalanceUpdateProps | NFTTradeBalanceUpdateProps): BalanceUpdate | undefined => {
-  if (
-    !currency ||
-    !(
-      transactionStatus === TransactionStatus.Success ||
-      transactionStatus === TransactionStatus.Pending ||
-      transactionStatus === TransactionStatus.FailedCancel
-    )
-  ) {
-    return undefined
-  }
-  const currencyAmount = getFormattedCurrencyAmount(currency, currencyAmountRaw)
-  const isDecrease =
-    transactionType === TransactionType.Send ||
-    transactionType === TransactionType.NFTMint ||
-    (transactionType === TransactionType.NFTTrade && nftTradeType === NFTTradeType.BUY)
-  return {
-    assetValueChange: `${isDecrease ? '-' : '+'}${currencyAmount}${currency.symbol}`,
-    usdValueChange: transactedUSDValue
-      ? formatUSDPrice(transactedUSDValue)
-      : getUSDValue(spotPrice, currencyAmountRaw, currency),
-  }
-}
-
-const getUSDValue = (
-  spotPrice: SpotPrice | undefined,
-  currencyAmountRaw: string,
-  currency: Maybe<Currency>
-): string | undefined => {
-  const price = spotPrice?.price?.value
-  if (!currency || !price) return undefined
-
-  const usdValue = (Number(currencyAmountRaw) / 10 ** currency.decimals) * price
-  return formatUSDPrice(usdValue)
 }
 
 const getShortenedAddressOrEns = (addressOrENS: string): string => {
