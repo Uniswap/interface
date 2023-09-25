@@ -42,8 +42,7 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
 `
 
 function localeUsesComma(locale: SupportedLocale): boolean {
-  const n = 1.1
-  const decimalSeparator = new Intl.NumberFormat(locale).format(n)[1]
+  const decimalSeparator = new Intl.NumberFormat(locale).format(1.1)[1]
 
   return decimalSeparator === ','
 }
