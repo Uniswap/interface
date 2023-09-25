@@ -3,6 +3,7 @@ import { parseUri } from '@walletconnect/utils'
 import { Alert } from 'react-native'
 import { URL } from 'react-native-url-polyfill'
 import { appSelect } from 'src/app/hooks'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { handleMoonpayReturnLink } from 'src/features/deepLinking/handleMoonpayReturnLinkSaga'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
@@ -58,6 +59,10 @@ export function* deepLinkWatcher() {
 }
 
 export function* handleUniswapAppDeepLink(path: string, url: string, linkSource: LinkSource) {
+  // Navigate to the home page to ensure that a page isn't already open as a screen,
+  // which causes the bottom sheet to break
+  navigate(Screens.Home)
+
   // Handle NFT Item share (ex. https://app.uniswap.org/#/nfts/asset/0x.../123)
   if (NFT_ITEM_SHARE_LINK_HASH_REGEX.test(path)) {
     const [, , contractAddress, tokenId] = path.match(NFT_ITEM_SHARE_LINK_HASH_REGEX) || []
