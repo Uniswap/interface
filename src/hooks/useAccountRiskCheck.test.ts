@@ -32,8 +32,8 @@ describe('useAccountRiskCheck', () => {
     })
   })
 
-  it('should handle unblocked account', async () => {
-    const account = 'unblocked-account'
+  it('should handle non-blocked account', async () => {
+    const account = 'non-blocked-account'
     const mockResponse = { block: false }
     const fetchMock = jest.spyOn(window, 'fetch').mockResolvedValueOnce({
       json: jest.fn().mockResolvedValueOnce(mockResponse),
