@@ -595,7 +595,7 @@ export function Swap({
         showCancel={true}
       />
       <SwapHeader trade={trade} autoSlippage={autoSlippage} chainId={chainId} />
-      {trade && showConfirm && allowance.state !== AllowanceState.LOADING && (
+      {trade && showConfirm && (
         <ConfirmSwapModal
           trade={trade}
           inputCurrency={inputCurrency}
