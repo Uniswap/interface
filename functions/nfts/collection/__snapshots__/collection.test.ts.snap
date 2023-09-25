@@ -17,7 +17,7 @@ exports[`should inject metadata for collections 1`] = `
     <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#FC72FF" />
+    <meta name="theme-color" content="#fff" />
     <meta
       http-equiv="Content-Security-Policy"
       
@@ -37,7 +37,8 @@ exports[`should inject metadata for collections 1`] = `
     -->
     <link rel="manifest" href="/manifest.json" />
 
-    <link rel="preconnect" href="https://api.uniswap.org/v1/amplitude-proxy" />
+    <link rel="preconnect" href="https://api.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
     <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
@@ -164,7 +165,7 @@ exports[`should inject metadata for collections 2`] = `
     <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#FC72FF" />
+    <meta name="theme-color" content="#fff" />
     <meta
       http-equiv="Content-Security-Policy"
       
@@ -184,7 +185,8 @@ exports[`should inject metadata for collections 2`] = `
     -->
     <link rel="manifest" href="/manifest.json" />
 
-    <link rel="preconnect" href="https://api.uniswap.org/v1/amplitude-proxy" />
+    <link rel="preconnect" href="https://api.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
     <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
@@ -311,7 +313,7 @@ exports[`should inject metadata for collections 3`] = `
     <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#FC72FF" />
+    <meta name="theme-color" content="#fff" />
     <meta
       http-equiv="Content-Security-Policy"
       
@@ -331,7 +333,8 @@ exports[`should inject metadata for collections 3`] = `
     -->
     <link rel="manifest" href="/manifest.json" />
 
-    <link rel="preconnect" href="https://api.uniswap.org/v1/amplitude-proxy" />
+    <link rel="preconnect" href="https://api.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
     <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
@@ -458,7 +461,7 @@ exports[`should inject metadata for collections 4`] = `
     <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#FC72FF" />
+    <meta name="theme-color" content="#fff" />
     <meta
       http-equiv="Content-Security-Policy"
       
@@ -478,7 +481,8 @@ exports[`should inject metadata for collections 4`] = `
     -->
     <link rel="manifest" href="/manifest.json" />
 
-    <link rel="preconnect" href="https://api.uniswap.org/v1/amplitude-proxy" />
+    <link rel="preconnect" href="https://api.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
     <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />

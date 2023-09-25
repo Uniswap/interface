@@ -4,7 +4,7 @@ import Badge from 'components/Badge'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState } from 'hooks/usePools'
 import React from 'react'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 export function FeeTierPercentageBadge({
   feeAmount,

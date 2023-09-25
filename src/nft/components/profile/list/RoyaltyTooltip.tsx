@@ -5,7 +5,7 @@ import { getRoyalty } from 'nft/components/profile/list/utils'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { formatEth, getMarketplaceIcon } from 'nft/utils'
 import styled, { css } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 const FeeWrap = styled(Row)`
   margin-bottom: 4px;

@@ -48,7 +48,7 @@ import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useTokenBalance } from '../../state/connection/hooks'
 import { TransactionType } from '../../state/transactions/types'
-import { BackArrowLink, ExternalLink, ThemedText } from '../../theme'
+import { BackArrowLink, ExternalLink, ThemedText } from '../../theme/components'
 import { isAddress } from '../../utils'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
@@ -739,7 +739,11 @@ export default function MigrateV2Pair() {
           <ThemedText.DeprecatedMediumHeader>
             <Trans>Migrate V2 Liquidity</Trans>
           </ThemedText.DeprecatedMediumHeader>
-          <SettingsTab autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} chainId={chainId} />
+          <SettingsTab
+            autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE}
+            chainId={chainId}
+            showRoutingSettings={false}
+          />
         </AutoRow>
 
         {!account ? (

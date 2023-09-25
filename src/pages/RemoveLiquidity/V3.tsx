@@ -33,7 +33,7 @@ import { useBurnV3ActionHandlers, useBurnV3State, useDerivedV3BurnInfo } from 's
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { WrongChainError } from 'utils/errors'
 
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'

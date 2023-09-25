@@ -3,7 +3,7 @@ import { BigintIsh, ChainId, CurrencyAmount, Token, TradeType } from '@uniswap/s
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { AlphaRouter, AlphaRouterConfig } from '@uniswap/smart-order-router'
 import { asSupportedChain } from 'constants/chains'
-import { RPC_PROVIDERS } from 'constants/providers'
+import { DEPRECATED_RPC_PROVIDERS } from 'constants/providers'
 import { nativeOnChain } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { GetQuoteArgs, QuoteResult, QuoteState, SwapRouterNativeAssets } from 'state/routing/types'
@@ -16,7 +16,7 @@ export function getRouter(chainId: ChainId): AlphaRouter {
 
   const supportedChainId = asSupportedChain(chainId)
   if (supportedChainId) {
-    const provider = RPC_PROVIDERS[supportedChainId]
+    const provider = DEPRECATED_RPC_PROVIDERS[supportedChainId]
     const router = new AlphaRouter({ chainId, provider })
     routers.set(chainId, router)
     return router

@@ -25,6 +25,7 @@ import {
   useV3MintState,
 } from 'state/mint/v3/hooks'
 import styled, { useTheme } from 'styled-components'
+import { ThemedText } from 'theme/components'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { WrongChainError } from 'utils/errors'
 
@@ -58,22 +59,13 @@ import { Bound, Field } from '../../state/mint/v3/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { TransactionInfo, TransactionType } from '../../state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
-import { ThemedText } from '../../theme'
 import approveAmountCalldata from '../../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { Dots } from '../Pool/styled'
 import { Review } from './Review'
-import {
-  CurrencyDropdown,
-  DynamicSection,
-  MediumOnly,
-  ResponsiveTwoColumns,
-  ScrollablePage,
-  StyledInput,
-  Wrapper,
-} from './styled'
+import { DynamicSection, MediumOnly, ResponsiveTwoColumns, ScrollablePage, StyledInput, Wrapper } from './styled'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -637,11 +629,11 @@ function AddLiquidity() {
                           <Trans>Select Pair</Trans>
                         </ThemedText.DeprecatedLabel>
                       </RowBetween>
-                      <RowBetween>
-                        <CurrencyDropdown
+                      <RowBetween gap="md">
+                        <CurrencyInputPanel
                           value={formattedAmounts[Field.CURRENCY_A]}
                           onUserInput={onFieldAInput}
-                          hideInput={true}
+                          hideInput
                           onMax={() => {
                             onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
                           }}
@@ -652,11 +644,9 @@ function AddLiquidity() {
                           showCommonBases
                         />
 
-                        <div style={{ width: '12px' }} />
-
-                        <CurrencyDropdown
+                        <CurrencyInputPanel
                           value={formattedAmounts[Field.CURRENCY_B]}
-                          hideInput={true}
+                          hideInput
                           onUserInput={onFieldBInput}
                           onCurrencySelect={handleCurrencyBSelect}
                           onMax={() => {

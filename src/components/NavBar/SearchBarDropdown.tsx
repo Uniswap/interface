@@ -20,7 +20,7 @@ import { GenieCollection, TrendingCollection } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
 import { SuspendConditionally } from '../Suspense/SuspendConditionally'

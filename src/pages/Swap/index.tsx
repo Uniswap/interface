@@ -29,6 +29,7 @@ import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import SwapHeader from 'components/swap/SwapHeader'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
+import { useConnectionReady } from 'connection/eagerlyConnect'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { getSwapCurrencyId, TOKEN_SHORTHANDS } from 'constants/tokens'
@@ -55,7 +56,7 @@ import { Field, forceExactInput, replaceSwapState } from 'state/swap/actions'
 import { useDefaultsFromURLSearch, useDerivedSwapInfo, useSwapActionHandlers } from 'state/swap/hooks'
 import swapReducer, { initialState as initialSwapState, SwapState } from 'state/swap/reducer'
 import styled, { useTheme } from 'styled-components'
-import { LinkStyledButton, ThemedText } from 'theme'
+import { LinkStyledButton, ThemedText } from 'theme/components'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -150,10 +151,8 @@ export default function SwapPage({ className }: { className?: string }) {
         <Swap
           className={className}
           chainId={supportedChainId ?? ChainId.MAINNET}
-          prefilledState={{
-            [Field.INPUT]: { currencyId: loadedUrlParams?.[Field.INPUT]?.currencyId },
-            [Field.OUTPUT]: { currencyId: loadedUrlParams?.[Field.OUTPUT]?.currencyId },
-          }}
+          initialInputCurrencyId={loadedUrlParams?.[Field.INPUT]?.currencyId}
+          initialOutputCurrencyId={loadedUrlParams?.[Field.OUTPUT]?.currencyId}
           disableTokenInputs={supportedChainId === undefined}
         />
         <NetworkAlert />
@@ -172,23 +171,26 @@ export default function SwapPage({ className }: { className?: string }) {
  */
 export function Swap({
   className,
-  prefilledState = {},
+  initialInputCurrencyId,
+  initialOutputCurrencyId,
   chainId,
   onCurrencyChange,
   disableTokenInputs = false,
 }: {
   className?: string
-  prefilledState?: Partial<SwapState>
+  initialInputCurrencyId?: string | null
+  initialOutputCurrencyId?: string | null
   chainId?: ChainId
   onCurrencyChange?: (selected: Pick<SwapState, Field.INPUT | Field.OUTPUT>) => void
   disableTokenInputs?: boolean
 }) {
+  const connectionReady = useConnectionReady()
   const { account, chainId: connectedChainId, connector } = useWeb3React()
   const trace = useTrace()
 
   // token warning stuff
-  const prefilledInputCurrency = useCurrency(prefilledState?.[Field.INPUT]?.currencyId)
-  const prefilledOutputCurrency = useCurrency(prefilledState?.[Field.OUTPUT]?.currencyId)
+  const prefilledInputCurrency = useCurrency(initialInputCurrencyId)
+  const prefilledOutputCurrency = useCurrency(initialOutputCurrencyId)
 
   const [loadedInputCurrency, setLoadedInputCurrency] = useState(prefilledInputCurrency)
   const [loadedOutputCurrency, setLoadedOutputCurrency] = useState(prefilledOutputCurrency)
@@ -236,6 +238,13 @@ export function Swap({
   const toggleWalletDrawer = useToggleAccountDrawer()
 
   // swap state
+  const prefilledState = useMemo(
+    () => ({
+      [Field.INPUT]: { currencyId: initialInputCurrencyId },
+      [Field.OUTPUT]: { currencyId: initialOutputCurrencyId },
+    }),
+    [initialInputCurrencyId, initialOutputCurrencyId]
+  )
   const [state, dispatch] = useReducer(swapReducer, { ...initialSwapState, ...prefilledState })
   const { typedValue, recipient, independentField } = state
 
@@ -314,10 +323,19 @@ export function Swap({
     [independentField, parsedAmount, showWrap, trade]
   )
 
-  const fiatValueInput = useUSDPrice(parsedAmounts[Field.INPUT], currencies[Field.INPUT] ?? undefined)
-  const fiatValueOutput = useUSDPrice(parsedAmounts[Field.OUTPUT], currencies[Field.OUTPUT] ?? undefined)
-  const showFiatValueInput = Boolean(parsedAmounts[Field.INPUT])
-  const showFiatValueOutput = Boolean(parsedAmounts[Field.OUTPUT])
+  const getSingleUnitAmount = (currency?: Currency) => {
+    if (!currency) return
+    return CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(10 ** currency.decimals))
+  }
+
+  const fiatValueInput = useUSDPrice(
+    parsedAmounts[Field.INPUT] ?? getSingleUnitAmount(currencies[Field.INPUT]),
+    currencies[Field.INPUT]
+  )
+  const fiatValueOutput = useUSDPrice(
+    parsedAmounts[Field.OUTPUT] ?? getSingleUnitAmount(currencies[Field.OUTPUT]),
+    currencies[Field.OUTPUT]
+  )
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
     () => [
@@ -623,7 +641,7 @@ export function Swap({
               currency={currencies[Field.INPUT] ?? null}
               onUserInput={handleTypeInput}
               onMax={handleMaxInput}
-              fiatValue={showFiatValueInput ? fiatValueInput : undefined}
+              fiatValue={fiatValueInput}
               onCurrencySelect={handleInputSelect}
               otherCurrency={currencies[Field.OUTPUT]}
               showCommonBases
@@ -664,7 +682,7 @@ export function Swap({
                 label={<Trans>You receive</Trans>}
                 showMaxButton={false}
                 hideBalance={false}
-                fiatValue={showFiatValueOutput ? fiatValueOutput : undefined}
+                fiatValue={fiatValueOutput}
                 priceImpact={stablecoinPriceImpact}
                 currency={currencies[Field.OUTPUT] ?? null}
                 onCurrencySelect={handleOutputSelect}
@@ -716,7 +734,7 @@ export function Swap({
             <ButtonPrimary $borderRadius="16px" disabled={true}>
               <Trans>Connecting to {getChainInfo(switchingChain)?.label}</Trans>
             </ButtonPrimary>
-          ) : !account ? (
+          ) : connectionReady && !account ? (
             <TraceEvent
               events={[BrowserEvent.onClick]}
               name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}

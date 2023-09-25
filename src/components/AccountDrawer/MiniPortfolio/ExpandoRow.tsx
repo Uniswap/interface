@@ -4,7 +4,7 @@ import Row from 'components/Row'
 import { PropsWithChildren } from 'react'
 import { ChevronDown } from 'react-feather'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 const ExpandIcon = styled(ChevronDown)<{ $expanded: boolean }>`
   color: ${({ theme }) => theme.neutral2};

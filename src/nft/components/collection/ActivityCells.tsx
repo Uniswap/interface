@@ -31,7 +31,7 @@ import { getTimeDifference } from 'nft/utils/date'
 import { putCommas } from 'nft/utils/putCommas'
 import { MouseEvent, ReactNode, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { ExternalLink } from 'theme'
+import { ExternalLink } from 'theme/components'
 import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 

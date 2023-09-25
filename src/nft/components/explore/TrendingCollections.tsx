@@ -5,7 +5,7 @@ import { useNativeUsdPrice } from 'nft/hooks'
 import { CollectionTableColumn, Denomination, TimePeriod, VolumeType } from 'nft/types'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 import CollectionTable from './CollectionTable'
 

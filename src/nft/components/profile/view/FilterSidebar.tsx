@@ -26,7 +26,7 @@ import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList, ListOnItemsRenderedProps } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import noop from 'utils/noop'
 

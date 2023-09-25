@@ -15,9 +15,8 @@ import { ClassicTrade, InterfaceTrade, RouterPreference } from 'state/routing/ty
 import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { DefaultTheme, useTheme } from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme'
+import { ExternalLink, ThemedText } from 'theme/components'
 import { FormatterRule, NumberType, SIX_SIG_FIGS_NO_COMMAS, useFormatter } from 'utils/formatNumbers'
-import { priceToPreciseFloat } from 'utils/formatNumbers'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
 import { getPriceImpactColor } from 'utils/prices'
@@ -85,7 +84,7 @@ export default function SwapModalFooter({
   const label = `${trade.executionPrice.baseCurrency?.symbol} `
   const labelInverted = `${trade.executionPrice.quoteCurrency?.symbol}`
   const formattedPrice = formatNumber({
-    input: priceToPreciseFloat(trade.executionPrice),
+    input: trade.executionPrice ? parseFloat(trade.executionPrice.toFixed(9)) : undefined,
     type: NumberType.TokenTx,
   })
   const txCount = getTransactionCount(trade)

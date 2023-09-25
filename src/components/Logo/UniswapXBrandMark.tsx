@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 import UniswapXRouterLabel, { UnswapXRouterLabelProps } from '../RouterLabel/UniswapXRouterLabel'
 
