@@ -24,6 +24,7 @@ const FarmsLayout = styled.div`
   flex-direction: column;
   border-radius: 16px;
   padding: 0 12px 0;
+  gap: 10px;
   background: ${({ theme }) => theme.backgroundScrolledSurface};
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   margin-left: auto;

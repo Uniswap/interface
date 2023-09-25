@@ -115,10 +115,17 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
   return (
     <CardContainer showDetails={showDetails}>
       <div style={{ width: '100%', display: 'flex', justifyContent: 'center', height: '60px', alignItems: 'center' }}>
-        <div style={{ width: '90%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div
+          style={{
+            width: '90%',
+            display: 'flex',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            marginRight: '15px',
+          }}
+        >
           <div
             style={{
-              width: isMobile ? (showDetails ? '100%' : '70%') : '30%',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
@@ -142,12 +149,13 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
               </>
             )}
           </div>
+
           {!isMobile && (
             <>
-              <div style={{ width: '20%', display: 'flex', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 {rewardData?.tvl && <small style={{ fontWeight: 600 }}>${formatNumber(rewardData.tvl)}</small>}
               </div>
-              <small style={{ width: '30%', fontWeight: 600 }}>
+              <small style={{ fontWeight: 600 }}>
                 {rewardsAmount &&
                   Number(rewardsAmount) > 0 &&
                   token &&
@@ -156,24 +164,21 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
             </>
           )}
 
-          {(!isMobile || !showDetails) && (
-            <div
-              style={{
-                width: isMobile ? '30%' : '20%',
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              <small style={{ color: theme.accentSuccess, fontWeight: 600 }}>
-                {formatNumber((poolAPR + farmAPR) * 100)}%
-              </small>
-              <div style={{ marginLeft: '5px', alignItems: 'center' }}>
-                <TotalAPRTooltip farmAPR={farmAPR * 100} poolAPR={poolAPR * 100}>
-                  <AlertCircle size={16} />
-                </TotalAPRTooltip>
-              </div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <small style={{ color: theme.accentSuccess, fontWeight: 600 }}>
+              {formatNumber((poolAPR + farmAPR) * 100)}%
+            </small>
+            <div style={{ marginLeft: '5px', alignItems: 'center' }}>
+              <TotalAPRTooltip farmAPR={farmAPR * 100} poolAPR={poolAPR * 100}>
+                <AlertCircle size={16} />
+              </TotalAPRTooltip>
             </div>
-          )}
+          </div>
         </div>
 
         <div style={{ width: '10%', display: 'flex', justifyContent: 'center' }}>

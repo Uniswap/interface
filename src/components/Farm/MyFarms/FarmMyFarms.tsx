@@ -190,7 +190,6 @@ export default function FarmingMyFarms({ chainId }: { search: string; chainId: n
                 )}
                 <Box pb={2}>
                   {myGammaFarms.map((farm: any) => {
-                    console.log('farm', farm)
                     const foundData = gammaData
                       ? Object.values(gammaData).find((poolData) => poolData.poolAddress === farm.address.toLowerCase())
                       : undefined
