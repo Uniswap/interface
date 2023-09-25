@@ -24,7 +24,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
             "justifyContent": "flex-end",
           },
           {
-            "marginBottom": 10,
+            "marginBottom": undefined,
           },
         ],
         {

@@ -6,7 +6,6 @@ import {
   BottomSheetView,
   useBottomSheetDynamicSnapPoints,
 } from '@gorhom/bottom-sheet'
-import { useResponsiveProp } from '@shopify/restyle'
 import { BlurView } from 'expo-blur'
 import React, {
   ComponentProps,
@@ -30,9 +29,8 @@ import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, useMedia, useSporeColors } from 'ui/src'
 import { borderRadii, dimensions, spacing } from 'ui/src/theme'
-import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 /**
@@ -136,6 +134,7 @@ export function BottomSheetModal({
   const animatedPosition = useSharedValue(0)
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
+  const media = useMedia()
 
   const backgroundColorValue = blurredBackground
     ? colors.transparent.val
@@ -165,8 +164,8 @@ export function BottomSheetModal({
           {...props}
           backgroundColor={backgroundColorValue}
           containerFlexStyles={{
-            marginBottom: FixedTheme.spacing.spacing12,
-            marginTop: FixedTheme.spacing.spacing16,
+            marginBottom: spacing.spacing12,
+            marginTop: spacing.spacing16,
           }}
           hidden={hideHandlebar}
         />
@@ -177,11 +176,8 @@ export function BottomSheetModal({
 
   const fullScreenContentHeight = (renderBehindInset ? 1 : FULL_HEIGHT) * dimensions.fullHeight
 
-  const borderRadius = useResponsiveProp({
-    // on screens without rounded corners, remove rounded corners when modal is fullscreen
-    xs: borderRadii.none,
-    sm: borderRadii.rounded24,
-  })
+  // on screens < xs (iPhone SE), assume no rounded corners on screen and remove rounded corners from fullscreen modal
+  const borderRadius = media.short ? borderRadii.none : borderRadii.rounded24
 
   const hiddenHandlebarStyle = {
     borderTopLeftRadius: borderRadius,

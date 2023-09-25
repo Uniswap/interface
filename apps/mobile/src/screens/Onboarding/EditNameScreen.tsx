@@ -1,5 +1,4 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { useResponsiveProp } from '@shopify/restyle'
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, TextInput as NativeTextInput } from 'react-native'
@@ -12,7 +11,7 @@ import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { AnimatePresence, Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { AnimatePresence, Button, Flex, Icons, Text, useMedia, useSporeColors } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import {
@@ -114,6 +113,7 @@ function CustomizationSection({
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const media = useMedia()
   const textInputRef = useRef<NativeTextInput>(null)
 
   // we default it to `true` to avoid flickering of a pencil icon,
@@ -124,10 +124,7 @@ function CustomizationSection({
     textInputRef.current?.focus()
   }
 
-  const inputSize = useResponsiveProp({
-    xs: fonts.heading3.fontSize,
-    sm: fonts.heading2.fontSize,
-  })
+  const inputSize = media.short ? fonts.heading3.fontSize : fonts.heading2.fontSize
 
   return (
     <Flex

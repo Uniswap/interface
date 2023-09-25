@@ -1,4 +1,3 @@
-import { useResponsiveProp } from '@shopify/restyle'
 import React from 'react'
 import { SvgProps } from 'react-native-svg'
 import { useAppDispatch } from 'src/app/hooks'
@@ -37,11 +36,6 @@ export function LinkButton({
   const dispatch = useAppDispatch()
   const colors = useSporeColors()
 
-  const fontSize = useResponsiveProp({
-    xs: 'buttonLabel4',
-    sm: 'buttonLabel3',
-  })
-
   const copyValue = async (): Promise<void> => {
     await setClipboard(value)
     dispatch(
@@ -74,7 +68,7 @@ export function LinkButton({
           {Icon && (
             <Icon color={colors.neutral1.val} height={iconSizes.icon16} width={iconSizes.icon16} />
           )}
-          <Text color="$neutral1" variant={fontSize}>
+          <Text $short={{ variant: 'buttonLabel4' }} color="$neutral1" variant="buttonLabel3">
             {label}
           </Text>
           {buttonType === LinkButtonType.Copy && (

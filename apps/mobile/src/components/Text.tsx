@@ -1,10 +1,11 @@
-import { createText, useResponsiveProp } from '@shopify/restyle'
+import { createText } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren } from 'react'
 import { useWindowDimensions } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenReaders'
 import { Flex } from 'ui/src'
 import { Shimmer } from 'ui/src/loading'
+import { TextVariantTokens } from 'ui/src/theme'
 import { textVariants, Theme } from 'ui/src/theme/restyle'
 
 export const DEFAULT_FONT_SCALE = 1
@@ -67,7 +68,7 @@ export const Text = ({
   ...rest
 }: TextProps): JSX.Element => {
   const { fontScale } = useWindowDimensions()
-  const variant = useResponsiveProp(rest.variant ?? 'body2') as keyof typeof textVariants
+  const variant = (rest.variant ?? 'body2') as TextVariantTokens
   const enableFontScaling = allowFontScaling ?? fontScale > DEFAULT_FONT_SCALE
   const multiplier = maxFontSizeMultiplier ?? textVariants[variant].maxFontSizeMultiplier
 

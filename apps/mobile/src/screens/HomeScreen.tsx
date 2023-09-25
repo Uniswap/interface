@@ -1,7 +1,6 @@
 /* eslint-disable max-lines */
 import { useScrollToTop } from '@react-navigation/native'
 import { FlashList } from '@shopify/flash-list'
-import { useResponsiveProp } from '@shopify/restyle'
 import { impactAsync } from 'expo-haptics'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -61,7 +60,7 @@ import { useWalletRestore } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { hideSplashScreen } from 'src/utils/splashScreen'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
 import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-receive.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
@@ -89,6 +88,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const activeAccount = useActiveAccountWithThrow()
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const media = useMedia()
   const insets = useSafeAreaInsets()
   const dispatch = useAppDispatch()
 
@@ -99,11 +99,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const lastBalancesReporter = useLastBalancesReporter()
   useInterval(lastBalancesReporter, ONE_SECOND_MS * 15, true)
 
-  const listBottomPadding =
-    useResponsiveProp({
-      xs: spacing.spacing36,
-      sm: spacing.spacing12,
-    }) ?? 0
+  const listBottomPadding = media.short ? spacing.spacing36 : spacing.spacing12
 
   const [tabIndex, setTabIndex] = useState(props?.route?.params?.tab ?? TabIndex.Tokens)
   const routes = useMemo(

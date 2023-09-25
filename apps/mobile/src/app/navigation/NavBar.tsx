@@ -1,4 +1,4 @@
-import { ShadowProps, useResponsiveProp } from '@shopify/restyle'
+import { ShadowProps } from '@shopify/restyle'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { BlurView } from 'expo-blur'
 import { impactAsync } from 'expo-haptics'
@@ -23,7 +23,16 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { prepareSwapFormState } from 'src/features/transactions/swap/utils'
 import { Screens } from 'src/screens/Screens'
-import { Flex, FlexProps, Icons, LinearGradient, Text, TouchableArea, useSporeColors } from 'ui/src'
+import {
+  Flex,
+  FlexProps,
+  Icons,
+  LinearGradient,
+  Text,
+  TouchableArea,
+  useMedia,
+  useSporeColors,
+} from 'ui/src'
 import { borderRadii, iconSizes, spacing } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
@@ -48,9 +57,9 @@ export function NavBar(): JSX.Element {
   const insets = useSafeAreaInsets()
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
+  const { short } = useMedia()
 
-  const BUTTONS_OFFSET =
-    useResponsiveProp({ xs: spacing.spacing24, sm: spacing.none }) ?? spacing.none
+  const BUTTONS_OFFSET = short ? spacing.spacing24 : spacing.none
 
   return (
     <>

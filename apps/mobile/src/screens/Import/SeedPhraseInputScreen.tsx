@@ -83,7 +83,6 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
           : t('Your recovery phrase will only be stored locally on your device.')
       }
       title={isRestoringMnemonic ? t('No backups found') : t('Enter your recovery phrase')}>
-      {/* <Flex gap={itemSpacing}> */}
       <SeedPhraseInput
         ref={seedPhraseInputRef}
         helpText={

@@ -9,6 +9,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
       "backgroundColor": "#FFFFFF",
       "flex": 1,
       "flexDirection": "column",
+      "paddingLeft": undefined,
+      "paddingRight": undefined,
       "paddingTop": 200,
     }
   }
@@ -648,6 +650,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
       "backgroundColor": "#FFFFFF",
       "flex": 1,
       "flexDirection": "column",
+      "paddingLeft": undefined,
+      "paddingRight": undefined,
       "paddingTop": 200,
     }
   }

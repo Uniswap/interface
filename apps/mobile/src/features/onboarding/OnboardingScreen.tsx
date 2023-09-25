@@ -1,5 +1,4 @@
 import { useHeaderHeight } from '@react-navigation/elements'
-import { useResponsiveProp } from '@shopify/restyle'
 import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -7,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { AnimatedFlex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { IS_IOS } from 'src/constants/globals'
-import { Flex, SpaceTokens, Text } from 'ui/src'
+import { Flex, SpaceTokens, Text, useMedia } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 
 type OnboardingScreenProps = {
@@ -27,34 +26,12 @@ export function OnboardingScreen({
 }: PropsWithChildren<OnboardingScreenProps>): JSX.Element {
   const headerHeight = useHeaderHeight()
   const insets = useSafeAreaInsets()
+  const media = useMedia()
 
-  const subtitleMaxFontScaleMultiplier = useResponsiveProp({
-    xs: 1.1,
-    sm: fonts.body2.maxFontSizeMultiplier,
-  })
-
-  const titleSize = useResponsiveProp({
-    xs: 'subheading1',
-    sm: 'heading3',
-  })
-
-  const subtitleSize = useResponsiveProp({
-    xs: 'body3',
-    sm: 'body2',
-  })
-
-  const gapSize = useResponsiveProp({
-    xs: 'none',
-    sm: 'spacing16',
-  })
-
-  const responsiveHeaderHeight = useResponsiveProp({
-    xs: headerHeight * 0.88,
-    sm: headerHeight,
-  })
+  const gapSize = media.short ? 'none' : 'spacing16'
 
   return (
-    <Screen edges={['right', 'left']} style={{ paddingTop: responsiveHeaderHeight }}>
+    <Screen $short={{ pt: headerHeight * 0.88 }} edges={['right', 'left']} pt={headerHeight}>
       <KeyboardAvoidingView
         behavior={IS_IOS ? 'padding' : undefined}
         enabled={keyboardAvoidingViewEnabled}
@@ -69,16 +46,22 @@ export function OnboardingScreen({
           {/* Text content */}
           <Flex centered gap="$spacing12" m="$spacing12">
             {title && (
-              <Text allowFontScaling={false} pt={paddingTop} textAlign="center" variant={titleSize}>
+              <Text
+                $short={{ variant: 'subheading1' }}
+                allowFontScaling={false}
+                pt={paddingTop}
+                textAlign="center"
+                variant="heading3">
                 {title}
               </Text>
             )}
             {subtitle ? (
               <Text
+                $short={{ variant: 'body3', maxFontSizeMultiplier: 1.1 }}
                 color="$neutral2"
-                maxFontSizeMultiplier={subtitleMaxFontScaleMultiplier}
+                maxFontSizeMultiplier={fonts.body2.maxFontSizeMultiplier}
                 textAlign="center"
-                variant={subtitleSize}>
+                variant="body2">
                 {subtitle}
               </Text>
             ) : null}

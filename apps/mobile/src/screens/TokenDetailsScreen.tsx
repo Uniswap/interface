@@ -1,5 +1,4 @@
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
-import { useResponsiveProp } from '@shopify/restyle'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
@@ -29,7 +28,7 @@ import { useNavigateToSwap } from 'src/features/swap/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
 import { Screens } from 'src/screens/Screens'
-import { Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Separator, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
@@ -160,6 +159,7 @@ function TokenDetails({
   loading: boolean
 }): JSX.Element {
   const colors = useSporeColors()
+  const media = useMedia()
   const insets = useSafeAreaInsets()
 
   const currencyChainId = currencyIdToChain(_currencyId) ?? ChainId.Mainnet
@@ -235,7 +235,7 @@ function TokenDetails({
     navigateToSwap,
   ])
 
-  const pb = useResponsiveProp(IS_IOS ? { xs: 'none', sm: 'spacing16' } : 'none')
+  const pb = IS_IOS && !media.short ? 'spacing16' : 'none'
 
   const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen
 
@@ -278,7 +278,7 @@ function TokenDetails({
           </Flex>
         }
         showHandleBar={inModal}>
-        <Flex gap="$spacing36" my="$spacing8" pb="$spacing16">
+        <Flex gap="$spacing16" pb="$spacing16">
           <Flex gap="$spacing4">
             <TokenDetailsHeader
               data={data}
@@ -296,7 +296,7 @@ function TokenDetails({
               <BaseCard.InlineErrorState onRetry={retry} />
             </AnimatedBox>
           ) : null}
-          <Flex gap="$spacing24" mb="$spacing8" px="$spacing16">
+          <Flex gap="$spacing16" mb="$spacing8" px="$spacing16">
             <TokenBalances
               currentChainBalance={currentChainBalance}
               otherChainBalances={otherChainBalances}

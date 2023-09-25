@@ -1,8 +1,8 @@
 import { createMedia } from '@tamagui/react-native-media-driver'
 import { shorthands as tamaguiShorthands } from '@tamagui/shorthands'
 import { createTamagui } from 'tamagui'
+import { breakpoints, heightBreakpoints } from 'ui/src/theme'
 import { animations } from 'ui/src/theme/animations'
-import { breakpoints } from 'ui/src/theme/breakpoints'
 import { bodyFont, buttonFont, headingFont, subHeadingFont } from 'ui/src/theme/fonts'
 import { themes } from 'ui/src/theme/themes'
 import { tokens } from 'ui/src/theme/tokens'
@@ -38,7 +38,7 @@ export const config = createTamagui({
     xxxl: { maxWidth: breakpoints.xxxl },
 
     // height based, equivalent to "sm" in restyle setup
-    short: { maxHeight: 736 },
+    short: { maxHeight: heightBreakpoints.short },
   }),
   settings: {
     allowedStyleValues: 'somewhat-strict-web',

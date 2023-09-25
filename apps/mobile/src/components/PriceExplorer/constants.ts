@@ -1,13 +1,10 @@
 import { ElementName } from 'src/features/telemetry/constants'
-import { dimensions } from 'ui/src/theme'
-import { theme as FixedTheme } from 'ui/src/theme/restyle'
+import { dimensions, heightBreakpoints } from 'ui/src/theme'
 import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
 
-// sets the height of the chart short enough on small devices that the
-// "Your balance" section will always show above the fold
-// we can't use useResponsiveProps for this because CHART_HEIGHT gets
-// used in non-component code related to chart functionality
-export const CHART_HEIGHT = dimensions.fullHeight < FixedTheme.breakpoints.sm.height ? 180 : 264
+// TODO (MOB-1387): account for height in a more dynamic way to ensure
+// that "Your balance" section will always show above the fold
+export const CHART_HEIGHT = dimensions.fullHeight < heightBreakpoints.short ? 180 : 280
 export const CHART_WIDTH = dimensions.fullWidth
 
 export const NUM_GRAPHS = 5

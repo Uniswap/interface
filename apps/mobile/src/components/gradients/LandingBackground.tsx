@@ -1,9 +1,9 @@
 import { useFocusEffect } from '@react-navigation/core'
-import { useResponsiveProp } from '@shopify/restyle'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { ViewStyle } from 'react-native'
 import Rive, { Alignment, Fit, RiveRef } from 'rive-react-native'
 import { useAppStackNavigation } from 'src/app/navigation/types'
+import { useMedia } from 'ui/src'
 import { useTimeout } from 'utilities/src/time/timing'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -19,7 +19,8 @@ const animationStyles: ViewStyle = {
 const OnboardingAnimation = (): JSX.Element => {
   const isDarkMode = useIsDarkMode()
   const animationRef = useRef<RiveRef>(null)
-  const fitValue = useResponsiveProp({ xs: Fit.FitWidth, sm: Fit.FitHeight })
+  const media = useMedia()
+  const fitValue = media.short ? Fit.FitWidth : Fit.FitHeight
 
   return (
     <Rive

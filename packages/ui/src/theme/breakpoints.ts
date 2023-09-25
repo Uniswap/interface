@@ -8,3 +8,7 @@ export const breakpoints = {
   xxl: 1280,
   xxxl: 1536,
 }
+
+export const heightBreakpoints = {
+  short: 736,
+}

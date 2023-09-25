@@ -1,8 +1,7 @@
-import { useResponsiveProp } from '@shopify/restyle'
 import React from 'react'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea, useMedia } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -27,17 +26,10 @@ export function OptionCard({
   badgeText?: string | undefined
   hapticFeedback?: boolean | undefined
 }): JSX.Element {
-  const titleSize = useResponsiveProp({
-    xs: 'subheading2',
-    sm: 'body1',
-  })
-
-  const iconSize = useResponsiveProp({
-    xs: iconSizes.icon24,
-    sm: iconSizes.icon36,
-  })
-
+  const media = useMedia()
   const isDarkMode = useIsDarkMode()
+
+  const iconSize = media.short ? iconSizes.icon24 : iconSizes.icon36
 
   return (
     <Trace logPress element={elementName}>
@@ -66,7 +58,7 @@ export function OptionCard({
           <Flex row alignItems="center" gap="$spacing4" pr="$spacing60">
             <Flex fill alignItems="flex-start" gap="$spacing4" justifyContent="space-around">
               <Flex row gap="$spacing8">
-                <Text allowFontScaling={false} variant={titleSize}>
+                <Text $short={{ variant: 'subheading2' }} allowFontScaling={false} variant="body1">
                   {title}
                 </Text>
                 {badgeText && (

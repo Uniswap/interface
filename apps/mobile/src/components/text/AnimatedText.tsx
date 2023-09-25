@@ -5,7 +5,6 @@ import {
   createVariant,
   typography,
   TypographyProps,
-  useResponsiveProp,
   VariantProps,
 } from '@shopify/restyle'
 import React from 'react'
@@ -20,7 +19,8 @@ import Animated, { useAnimatedProps } from 'react-native-reanimated'
 import { DEFAULT_FONT_SCALE } from 'src/components/Text'
 import { Flex } from 'ui/src'
 import { TextLoaderWrapper } from 'ui/src/components/text/Text'
-import { textVariants, Theme } from 'ui/src/theme/restyle'
+import { fonts, TextVariantTokens } from 'ui/src/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 // base animated text component using a TextInput
 // forked from https://github.com/wcandillon/react-native-redash/blob/master/src/ReText.tsx
@@ -104,8 +104,8 @@ export const AnimatedText = (
   const { fontScale } = useWindowDimensions()
   const enableFontScaling = fontScale > DEFAULT_FONT_SCALE
 
-  const variant = useResponsiveProp(props.variant ?? 'body2') as keyof typeof textVariants
-  const multiplier = textVariants[variant].maxFontSizeMultiplier
+  const variant = (props.variant ?? 'body2') as TextVariantTokens
+  const multiplier = fonts[variant].maxFontSizeMultiplier
 
   return (
     <StyledBaseAnimatedText

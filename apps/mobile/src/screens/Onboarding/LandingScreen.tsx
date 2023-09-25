@@ -1,5 +1,4 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { useResponsiveProp } from '@shopify/restyle'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
@@ -12,7 +11,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
 import { hideSplashScreen } from 'src/utils/splashScreen'
-import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Text, TouchableArea, useMedia } from 'ui/src'
 import { useTimeout } from 'utilities/src/time/timing'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
@@ -26,7 +25,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 export function LandingScreen({ navigation }: Props): JSX.Element {
   const dispatch = useAppDispatch()
-
+  const media = useMedia()
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
 
@@ -46,9 +45,6 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
     })
   }
 
-  // TODO(MOB-826): improve responsiveness (pull variables from getButtonProperties into TouchableArea)
-  const buttonSize = useResponsiveProp({ xs: 'medium', sm: 'large' })
-
   // Hides lock screen on next js render cycle, ensuring this component is loaded when the screen is hidden
   useTimeout(hideSplashScreen, 1)
 
@@ -67,18 +63,21 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
           justifyContent="flex-end"
           mx="$spacing16">
           <Trace logPress element={ElementName.CreateAccount}>
-            <Button hapticFeedback size={buttonSize} onPress={onPressCreateWallet}>
+            <Button
+              hapticFeedback
+              size={media.short ? 'medium' : 'large'}
+              onPress={onPressCreateWallet}>
               {t('Create a new wallet')}
             </Button>
           </Trace>
           <Trace logPress element={ElementName.ImportAccount}>
             <TouchableArea hapticFeedback alignItems="center" onPress={onPressImportWallet}>
-              <Text color="$accent1" variant="buttonLabel1">
+              <Text $short={{ variant: 'buttonLabel2' }} color="$accent1" variant="buttonLabel1">
                 {t('Add an existing wallet')}
               </Text>
             </TouchableArea>
           </Trace>
-          <Flex $short={{ pb: '$none' }} mx="$spacing24" py="$spacing12">
+          <Flex $short={{ pb: '$spacing16' }} mx="$spacing24" py="$spacing12">
             <Text color="$neutral2" mx="$spacing4" textAlign="center" variant="buttonLabel4">
               <Trans t={t}>
                 By continuing, I agree to the{' '}

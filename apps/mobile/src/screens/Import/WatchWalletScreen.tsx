@@ -1,5 +1,4 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { useResponsiveProp } from '@shopify/restyle'
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useEffect, useState } from 'react'
 import { TFunction, useTranslation } from 'react-i18next'
@@ -166,18 +165,13 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
     }
   }, [value])
 
-  const itemSpacing = useResponsiveProp({
-    xs: '$none',
-    sm: '$spacing8',
-  })
-
   return (
     <SafeKeyboardOnboardingScreen
       subtitle={t(
         'Enter an Ethereum wallet address (starting with 0x) or ENS name (ending in .eth).'
       )}
       title={t('Enter a wallet address')}>
-      <Flex gap={itemSpacing}>
+      <Flex $short={{ gap: '$none' }} gap="$spacing8">
         <GenericImportForm
           blurOnSubmit
           errorMessage={errorText}

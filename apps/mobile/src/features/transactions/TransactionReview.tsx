@@ -1,4 +1,3 @@
-import { useResponsiveProp } from '@shopify/restyle'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { notificationAsync } from 'expo-haptics'
 import React, { ReactNode } from 'react'
@@ -14,7 +13,7 @@ import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import { dimensions, fonts, iconSizes } from 'ui/src/theme'
 import { formatNumberOrString, NumberType } from 'utilities/src/format/format'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
@@ -66,45 +65,32 @@ export function TransactionReview({
   onPrev,
 }: TransactionReviewProps): JSX.Element {
   const colors = useSporeColors()
+  const media = useMedia()
   const { t } = useTranslation()
 
   const { trigger: actionButtonTrigger } = useBiometricPrompt(actionButtonProps.onPress)
   const { requiredForTransactions } = useBiometricAppSettings()
 
-  const spacingGap = { xs: '$none', sm: '$spacing4' }
-  const innerGap = useResponsiveProp({ xs: '$none', sm: '$spacing12' })
+  const textProps = media.short
+    ? {
+        fontFamily: fonts.heading3.family,
+        fontSize: fonts.heading3.fontSize,
+        lineHeight: fonts.heading3.lineHeight,
+        maxFontSizeMultiplier: fonts.body2.maxFontSizeMultiplier,
+      }
+    : {
+        fontFamily: fonts.heading2.family,
+        fontSize: fonts.heading2.fontSize,
+        lineHeight: fonts.heading3.lineHeight,
+        maxFontSizeMultiplier: fonts.heading2.maxFontSizeMultiplier,
+      }
 
-  const fontFamily = useResponsiveProp({
-    xs: fonts.heading3.family,
-    sm: fonts.heading2.family,
-  })
+  const equivalentValueTextVariant = media.short ? 'body2' : 'body1'
 
-  const fontSize = useResponsiveProp({
-    xs: fonts.heading3.fontSize,
-    sm: fonts.heading2.fontSize,
-  })
-
-  const lineHeight =
-    useResponsiveProp({
-      xs: fonts.heading3.lineHeight,
-      sm: fonts.heading2.lineHeight - 16,
-    }) ?? fonts.heading2.lineHeight
-
-  const maxFontSizeMultiplier = useResponsiveProp({
-    xs: fonts.heading3.maxFontSizeMultiplier,
-    sm: fonts.heading2.maxFontSizeMultiplier,
-  })
-
-  const equivalentValueTextVariant = useResponsiveProp({
-    xs: 'body2',
-    sm: 'body1',
-  })
-
-  const arrowPadding = useResponsiveProp({ xs: '$spacing4', sm: '$spacing8' })
-
-  const amountAndEquivalentValueGap = useResponsiveProp({ xs: '$spacing4', sm: '$spacing4' })
-
-  const bottomPadding = useResponsiveProp({ xs: '$spacing4', sm: '$none' })
+  const spacingGap = media.short ? 'none' : 'spacing4'
+  const innerGap = media.short ? '$none' : '$spacing12'
+  const arrowPadding = media.short ? '$spacing4' : '$spacing8'
+  const amountAndEquivalentValueGap = media.short ? '$spacing4' : '$spacing4'
 
   const formattedInputUsdValue = inputCurrencyUSDValue
     ? formatNumberOrString(inputCurrencyUSDValue?.toExact(), NumberType.FiatTokenQuantity)
@@ -125,14 +111,11 @@ export function TransactionReview({
                 </Text>
               )}
               <AmountInput
+                {...textProps}
                 alignSelf="stretch"
                 backgroundColor="none"
                 borderWidth={0}
                 editable={false}
-                fontFamily={fontFamily}
-                fontSize={fontSize}
-                height={lineHeight}
-                maxFontSizeMultiplier={maxFontSizeMultiplier}
                 my="none"
                 px="spacing16"
                 py="none"
@@ -154,8 +137,8 @@ export function TransactionReview({
                   {usdTokenEquivalentAmount}
                 </Text>
               ) : null}
+              <CurrencyLogoWithLabel currencyInfo={currencyInInfo} />
             </Flex>
-            <CurrencyLogoWithLabel currencyInfo={currencyInInfo} />
           </Flex>
         ) : nftIn ? (
           <Flex mt="$spacing60">
@@ -169,18 +152,15 @@ export function TransactionReview({
           padding={arrowPadding}
         />
         {currencyOutInfo && formattedAmountOut ? (
-          <Flex centered gap={innerGap} pb={bottomPadding}>
+          <Flex centered $short={{ pb: '$spacing4' }} gap={innerGap} pb="$none">
             <Flex centered gap={amountAndEquivalentValueGap}>
-              <Flex height={lineHeight} justifyContent="center" overflow="hidden">
+              <Flex height={textProps.lineHeight} justifyContent="center" overflow="hidden">
                 <AmountInput
+                  {...textProps}
                   alignSelf="stretch"
                   backgroundColor="none"
                   borderWidth={0}
                   editable={false}
-                  fontFamily={fontFamily}
-                  fontSize={fontSize}
-                  maxFontSizeMultiplier={maxFontSizeMultiplier}
-                  minHeight={2 * lineHeight}
                   showCurrencySign={isUSDInput}
                   showSoftInputOnFocus={false}
                   testID="amount-input-out"
@@ -244,10 +224,11 @@ export function TransactionReview({
 }
 
 function CurrencyLogoWithLabel({ currencyInfo }: { currencyInfo: CurrencyInfo }): JSX.Element {
-  const gap = useResponsiveProp({ xs: '$spacing4', sm: '$spacing8' })
-  const size = useResponsiveProp({ xs: iconSizes.icon20, sm: iconSizes.icon24 })
+  const media = useMedia()
+  const size = media.short ? iconSizes.icon20 : iconSizes.icon24
+
   return (
-    <Flex centered row gap={gap}>
+    <Flex centered row $short={{ gap: '$spacing4' }} gap="$spacing8">
       <CurrencyLogo currencyInfo={currencyInfo} size={size} />
       <Text color="$neutral1" variant="buttonLabel1">
         {getSymbolDisplayText(currencyInfo.currency.symbol)}

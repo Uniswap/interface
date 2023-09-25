@@ -1,5 +1,6 @@
 export * from './animations'
 export * from './borderRadii'
+export * from './breakpoints'
 export * from './color'
 export * from './fonts'
 export * from './iconSizes'

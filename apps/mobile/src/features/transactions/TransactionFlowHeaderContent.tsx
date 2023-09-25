@@ -55,7 +55,7 @@ export function HeaderContent({
       pb="$spacing8"
       pl="$spacing12"
       pr={customSlippageTolerance ? '$spacing8' : '$spacing16'}>
-      <Text $sm={{ variant: 'subheading1' }} $xs={{ variant: 'subheading2' }}>
+      <Text $short={{ variant: 'subheading2' }} $sm={{ variant: 'subheading1' }}>
         {flowName}
       </Text>
       <Flex row gap="$spacing4">

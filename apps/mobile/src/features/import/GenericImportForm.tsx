@@ -1,4 +1,3 @@
-import { useResponsiveProp } from '@shopify/restyle'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -61,10 +60,6 @@ export function GenericImportForm({
   const INPUT_FONT_SIZE = fonts.body1.fontSize
   const INPUT_MAX_FONT_SIZE_MULTIPLIER = fonts.body1.maxFontSizeMultiplier
 
-  const minHeight = useResponsiveProp({ xs: 90, sm: 120 })
-  const px = useResponsiveProp({ xs: '$spacing24', sm: '$spacing36' })
-  const py = useResponsiveProp({ xs: '$spacing8', sm: '$spacing16' })
-
   const handleBlur = (): void => {
     setFocused(false)
     onBlur?.()
@@ -81,12 +76,16 @@ export function GenericImportForm({
     onSubmit && onSubmit()
   }
 
+  const INPUT_MIN_HEIGHT = 120
+  const INPUT_MIN_HEIGHT_SHORT = 90
+
   return (
     <Trace section={SectionName.ImportAccountForm}>
       <Flex gap="$spacing16" onTouchEnd={handleFocus}>
         <Flex
           centered
           shrink
+          $short={{ px: '$spacing24', py: '$spacing8', minHeight: INPUT_MIN_HEIGHT_SHORT }}
           backgroundColor="$surface2"
           borderColor={
             showSuccess
@@ -97,9 +96,9 @@ export function GenericImportForm({
           }
           borderRadius="$rounded20"
           borderWidth={1}
-          minHeight={minHeight}
-          px={px}
-          py={py}
+          minHeight={INPUT_MIN_HEIGHT}
+          px="$spacing36"
+          py="$spacing16"
           width="100%">
           {/* TODO: [MOB-225] make Box press re-focus TextInput. Fine for now since TexInput has autoFocus */}
           <InputWithSuffix

@@ -1,5 +1,4 @@
 import { useHeaderHeight } from '@react-navigation/elements'
-import { useResponsiveProp } from '@shopify/restyle'
 import { LinearGradient } from 'expo-linear-gradient'
 import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, ScrollView, StyleSheet } from 'react-native'
@@ -9,7 +8,7 @@ import { AnimatedFlex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { IS_IOS } from 'src/constants/globals'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
-import { Flex, SpaceTokens, Text, useSporeColors } from 'ui/src'
+import { Flex, SpaceTokens, Text, useMedia, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 import { flex } from 'ui/src/theme/restyle'
 
@@ -28,26 +27,17 @@ export function SafeKeyboardOnboardingScreen({
 }: PropsWithChildren<OnboardingScreenProps>): JSX.Element {
   const headerHeight = useHeaderHeight()
   const colors = useSporeColors()
+  const media = useMedia()
   const insets = useSafeAreaInsets()
   const keyboard = useKeyboardLayout()
 
-  const titleSize = useResponsiveProp({
-    xs: 'body1',
-    sm: 'heading3',
-  })
-
-  const subtitleSize = useResponsiveProp({
-    xs: 'body3',
-    sm: 'body2',
-  })
-
   const header = (
     <Flex gap="$spacing12" m="$spacing12">
-      <Text pt={paddingTop} textAlign="center" variant={titleSize}>
+      <Text $short={{ variant: 'body1' }} pt={paddingTop} textAlign="center" variant="heading3">
         {title}
       </Text>
       {subtitle ? (
-        <Text color="$neutral2" textAlign="center" variant={subtitleSize}>
+        <Text $short={{ variant: 'body3' }} color="$neutral2" textAlign="center" variant="body2">
           {subtitle}
         </Text>
       ) : null}
@@ -61,10 +51,7 @@ export function SafeKeyboardOnboardingScreen({
   )
 
   const normalGradientPadding = 1.5
-  const responsiveGradientPadding = useResponsiveProp({
-    xs: 1.25,
-    sm: normalGradientPadding,
-  })
+  const responsiveGradientPadding = media.short ? 1.25 : normalGradientPadding
 
   const topGradient = (
     <LinearGradient
@@ -84,15 +71,8 @@ export function SafeKeyboardOnboardingScreen({
   // there's enough space on the screen to show all components.
   const minHeight = compact ? keyboard.containerHeight : 0
 
-  const responsiveSpacing = useResponsiveProp({
-    xs: 'none',
-    sm: 'spacing16',
-  })
-
-  const responsiveBottom = useResponsiveProp({
-    xs: 10,
-    sm: insets.bottom,
-  })
+  const responsiveSpacing = media.short ? 'none' : 'spacing16'
+  const responsiveBottom = media.short ? 10 : insets.bottom
 
   return (
     <Screen edges={['right', 'left']}>

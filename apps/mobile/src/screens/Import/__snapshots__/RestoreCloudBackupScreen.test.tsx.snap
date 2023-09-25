@@ -9,6 +9,8 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
       "backgroundColor": "#FFFFFF",
       "flex": 1,
       "flexDirection": "column",
+      "paddingLeft": undefined,
+      "paddingRight": undefined,
       "paddingTop": 200,
     }
   }

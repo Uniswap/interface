@@ -6,11 +6,6 @@ import { HiddenFromScreenReaders } from 'ui/src/components/text/HiddenFromScreen
 import { Shimmer } from 'ui/src/loading/Shimmer'
 import { fonts } from 'ui/src/theme/fonts'
 
-// import { createText, useResponsiveProp } from '@shopify/restyle'
-// import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenReaders'
-// import { textVariants } from 'ui/src/theme/restyle/font'
-// import { Theme } from 'ui/src/theme/restyle/theme'
-
 export const TextFrame = styled(TamaguiText, {
   fontFamily: '$body',
   wordWrap: 'break-word',
