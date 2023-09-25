@@ -6,23 +6,21 @@ import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ReactShadowNode
 import com.facebook.react.uimanager.ViewManager
-import com.uniswap.onboarding.backup.MnemonicDisplayViewManager
-import com.uniswap.onboarding.backup.MnemonicConfirmationViewManager
-import com.uniswap.onboarding.import.SeedPhraseInputViewManager
+import com.uniswap.onboarding.MnemonicDisplayViewManager
+import com.uniswap.onboarding.MnemonicConfirmationViewManager
 
 class UniswapPackage : ReactPackage {
     override fun createViewManagers(
         reactContext: ReactApplicationContext
     ): List<ViewManager<out View, out ReactShadowNode<*>>> = listOf(
-      MnemonicConfirmationViewManager(),
       MnemonicDisplayViewManager(),
-      SeedPhraseInputViewManager(),
+      MnemonicConfirmationViewManager(),
     )
 
     override fun createNativeModules(
         reactContext: ReactApplicationContext
     ): List<NativeModule> = listOf(
-      RNEthersRSModule(reactContext),
       ThemeModule(reactContext),
+      RNEthersRSModule(reactContext)
     )
 }

@@ -1,8 +1,8 @@
-package com.uniswap.onboarding.backup.ui
+package com.uniswap.onboarding.ui
 
 import androidx.lifecycle.ViewModel
 import com.uniswap.RnEthersRs
-import com.uniswap.onboarding.backup.ui.model.MnemonicWordUiState
+import com.uniswap.onboarding.ui.model.MnemonicWordUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

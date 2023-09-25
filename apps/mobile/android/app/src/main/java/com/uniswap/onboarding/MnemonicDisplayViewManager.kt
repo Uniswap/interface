@@ -1,4 +1,4 @@
-package com.uniswap.onboarding.backup
+package com.uniswap.onboarding
 
 import android.view.View
 import androidx.compose.runtime.collectAsState
@@ -8,8 +8,8 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewGroupManager
 import com.facebook.react.uimanager.annotations.ReactProp
 import com.uniswap.RnEthersRs
-import com.uniswap.onboarding.backup.ui.MnemonicDisplay
-import com.uniswap.onboarding.backup.ui.MnemonicDisplayViewModel
+import com.uniswap.onboarding.ui.MnemonicDisplay
+import com.uniswap.onboarding.ui.MnemonicDisplayViewModel
 import com.uniswap.theme.UniswapComponent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update

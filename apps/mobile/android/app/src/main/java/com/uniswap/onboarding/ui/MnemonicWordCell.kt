@@ -1,4 +1,4 @@
-package com.uniswap.onboarding.backup.ui
+package com.uniswap.onboarding.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,7 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.uniswap.onboarding.backup.ui.model.MnemonicWordUiState
+import com.uniswap.onboarding.ui.model.MnemonicWordUiState
 import com.uniswap.theme.UniswapTheme
 
 /**

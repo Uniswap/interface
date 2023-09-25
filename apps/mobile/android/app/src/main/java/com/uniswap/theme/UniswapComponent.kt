@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun UniswapComponent(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+fun UniswapComponent(content: @Composable () -> Unit) {
   UniswapTheme {
-    Surface(modifier = modifier, content = content)
+    Surface(modifier = Modifier.fillMaxSize(), content = content)
   }
 }
