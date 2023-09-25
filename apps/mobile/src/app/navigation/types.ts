@@ -6,10 +6,10 @@ import {
 } from '@react-navigation/native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { EducationContentType } from 'src/components/education'
-import { NFTItem } from 'src/features/nfts/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { TabIndex } from 'src/screens/HomeScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
+import { NFTItem } from 'wallet/src/features/nfts/types'
 
 type NFTItemScreenParams = {
   owner?: Address

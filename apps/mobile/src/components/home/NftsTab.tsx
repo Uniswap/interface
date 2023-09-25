@@ -24,7 +24,6 @@ import {
   useGroupNftsByVisibility,
   useNFTMenu,
 } from 'src/features/nfts/hooks'
-import { NFTItem } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
@@ -34,8 +33,10 @@ import NoNFTsIcon from 'ui/src/assets/icons/empty-state-picture.svg'
 import { borderRadii, dimensions, spacing } from 'ui/src/theme'
 import { GQLQueries } from 'wallet/src/data/queries'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import { NftsTabQuery, useNftsTabQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { useNftsTabQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
+import { NFTItem } from 'wallet/src/features/nfts/types'
+import { formatNftItems } from 'wallet/src/features/nfts/utils'
 
 export const NFTS_TAB_DATA_DEPENDENCIES = [GQLQueries.NftsTab]
 
@@ -43,35 +44,6 @@ const MAX_NFT_IMAGE_SIZE = 375
 const ESTIMATED_ITEM_SIZE = 251 // heuristic provided by FlashList
 const PREFETCH_ITEMS_THRESHOLD = 0.5
 const LOADING_ITEM = 'loading'
-
-function formatNftItems(data: NftsTabQuery | undefined): NFTItem[] | undefined {
-  const items = data?.nftBalances?.edges?.flatMap((item) => item.node)
-  if (!items) return
-
-  const nfts = items
-    .filter((item) => item?.ownedAsset?.nftContract?.address && item?.ownedAsset?.tokenId)
-    .map((item): NFTItem => {
-      return {
-        name: item?.ownedAsset?.name ?? undefined,
-        description: item?.ownedAsset?.description ?? undefined,
-        contractAddress: item?.ownedAsset?.nftContract?.address ?? undefined,
-        tokenId: item?.ownedAsset?.tokenId ?? undefined,
-        imageUrl: item?.ownedAsset?.image?.url ?? undefined,
-        collectionName: item?.ownedAsset?.collection?.name ?? undefined,
-        isVerifiedCollection: item?.ownedAsset?.collection?.isVerified ?? undefined,
-        floorPrice: item?.ownedAsset?.collection?.markets?.[0]?.floorPrice?.value ?? undefined,
-        isSpam: item?.ownedAsset?.isSpam ?? undefined,
-        imageDimensions:
-          item?.ownedAsset?.image?.dimensions?.height && item?.ownedAsset?.image?.dimensions?.width
-            ? {
-                width: item?.ownedAsset?.image.dimensions.width,
-                height: item?.ownedAsset?.image.dimensions.height,
-              }
-            : undefined,
-      }
-    })
-  return nfts
-}
 
 const keyExtractor = (item: NFTItem | string): string =>
   typeof item === 'string' ? item : getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')

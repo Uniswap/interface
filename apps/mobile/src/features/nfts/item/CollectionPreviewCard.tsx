@@ -2,12 +2,12 @@ import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Loader } from 'src/components/loading'
 import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
-import { NFTItem } from 'src/features/nfts/types'
 import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { Currency, NftItemScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
+import { NFTItem } from 'wallet/src/features/nfts/types'
 
 export type Collection = NonNullable<
   NonNullable<NonNullable<NftItemScreenQuery['nftAssets']>>['edges'][0]

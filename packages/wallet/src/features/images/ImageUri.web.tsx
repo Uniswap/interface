@@ -47,5 +47,13 @@ export function ImageUri({
   }
 
   // TODO: get sizing and other params accounted for
-  return <RemoteImage borderRadius={0} height={height} uri={uri} width={width} />
+  return (
+    <RemoteImage
+      aspectRatio={width / height}
+      borderRadius={0}
+      height={height}
+      uri={uri}
+      width={width}
+    />
+  )
 }

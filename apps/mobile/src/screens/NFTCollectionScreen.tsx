@@ -19,7 +19,6 @@ import {
   NFTCollectionHeader,
   NFT_BANNER_HEIGHT,
 } from 'src/features/nfts/collection/NFTCollectionHeader'
-import { NFTItem } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
@@ -32,6 +31,7 @@ import {
   useNftCollectionScreenQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
+import { NFTItem } from 'wallet/src/features/nfts/types'
 
 const PREFETCH_ITEMS_THRESHOLD = 0.5
 const ASSET_FETCH_PAGE_SIZE = 30

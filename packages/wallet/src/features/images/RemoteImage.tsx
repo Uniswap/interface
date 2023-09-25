@@ -4,6 +4,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { RemoteSvg } from './RemoteSvg'
 
 type Props = {
+  aspectRatio?: number
   backgroundColor?: string
   borderRadius?: number
   uri: string
@@ -15,6 +16,7 @@ type Props = {
 const RESIZE_MODE_CONTAIN: ImageResizeMode = 'contain'
 
 export function RemoteImage({
+  aspectRatio,
   backgroundColor,
   borderRadius = 0,
   uri,
@@ -41,16 +43,15 @@ export function RemoteImage({
     )
   }
 
-  return (
-    <Image
-      source={{ uri: imageHttpUrl }}
-      style={{
-        backgroundColor,
-        borderRadius,
-        height,
-        resizeMode: RESIZE_MODE_CONTAIN,
-        width,
-      }}
-    />
-  )
+  const style = {
+    aspectRatio,
+    flex: aspectRatio ? 1 : undefined,
+    backgroundColor,
+    borderRadius,
+    resizeMode: RESIZE_MODE_CONTAIN,
+    width: !aspectRatio ? width : undefined,
+    height: !aspectRatio ? height : undefined,
+  }
+
+  return <Image source={{ uri: imageHttpUrl }} style={style} />
 }
