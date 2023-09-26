@@ -103,7 +103,7 @@ export function ViewMnemonic(): JSX.Element {
               Array.from({ length: NUM_ROWS }).map((_, i) => (
                 <Flex row gap="$spacing16">
                   {Array.from({ length: ROW_SIZE }).map((__, j) => (
-                    <SeedPhraseWord key={j} index={j} indexOffset={i * ROW_SIZE + 1} word="..." />
+                    <SeedPhraseWord key={j} index={j} indexOffset={i * ROW_SIZE + 1} word="" />
                   ))}
                 </Flex>
               ))}

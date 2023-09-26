@@ -17,13 +17,17 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
   if (!mnemonicAccount) {
     throw new Error('Screen should not be accessed unless mnemonic account exists')
   }
+
+  const placeholderWordArrayLength = 12
+
   const recoveryPhraseArray =
     useAsyncData(
       useCallback(
         async () => Keyring.retrieveMnemonicUnlocked(mnemonicAccount.mnemonicId),
         [mnemonicAccount.mnemonicId]
       )
-    ).data?.split(' ') ?? []
+    ).data?.split(' ') ?? Array(placeholderWordArrayLength).fill('')
+
   const halfLength = recoveryPhraseArray.length / 2
   const firstHalfWords = recoveryPhraseArray.slice(0, halfLength)
   const secondHalfWords = recoveryPhraseArray.slice(halfLength)
@@ -49,7 +53,12 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
           <HideContentShield
             color="$surface2"
             visibility={showPhrase}
-            onShowContent={(): void => setShowPhrase(true)}
+            onShowContent={(): void => {
+              // TODO: add better loading state of seed phrase words
+              if (!recoveryPhraseArray.includes('')) {
+                setShowPhrase(true)
+              }
+            }}
           />
         </Flex>
 
@@ -80,13 +89,19 @@ function SeedPhraseColumn({
   return (
     <Flex fill gap="$spacing16">
       {words.map((word, index) => (
-        <Flex key={index} row gap="$spacing12">
-          <Text color="$neutral3" variant="body2">
-            {index + indexOffset}
-          </Text>
-          <Text variant="body2">{word}</Text>
-        </Flex>
+        <SeedPhraseWord key={index} index={index + indexOffset} word={word} />
       ))}
+    </Flex>
+  )
+}
+
+function SeedPhraseWord({ index, word }: { index: number; word: string }): JSX.Element {
+  return (
+    <Flex key={index} gap="$spacing12">
+      <Text color="$neutral3" variant="body2">
+        {index}
+      </Text>
+      <Text variant="body2">{word}</Text>
     </Flex>
   )
 }
