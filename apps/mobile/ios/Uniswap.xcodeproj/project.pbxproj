@@ -27,7 +27,6 @@
 		0743218C2A82C6C000F8518D /* Basel-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0743218B2A82C6C000F8518D /* Basel-Book.otf */; };
 		0743218D2A82C6C000F8518D /* Basel-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0743218B2A82C6C000F8518D /* Basel-Book.otf */; };
 		074321EB2A83E3CA00F8518D /* TokenDetailsScreenQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321902A83E3C900F8518D /* TokenDetailsScreenQuery.graphql.swift */; };
-		074321EC2A83E3CA00F8518D /* SpotPricesQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321912A83E3C900F8518D /* SpotPricesQuery.graphql.swift */; };
 		074321ED2A83E3CA00F8518D /* ExploreTokensTabQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321922A83E3C900F8518D /* ExploreTokensTabQuery.graphql.swift */; };
 		074321EE2A83E3CA00F8518D /* NftsTabQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321932A83E3C900F8518D /* NftsTabQuery.graphql.swift */; };
 		074321EF2A83E3CA00F8518D /* TokenQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321942A83E3C900F8518D /* TokenQuery.graphql.swift */; };
@@ -304,7 +303,6 @@
 		0741433F2A588F5800A157D3 /* Structs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Structs.swift; sourceTree = "<group>"; };
 		0743218B2A82C6C000F8518D /* Basel-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Basel-Book.otf"; sourceTree = "<group>"; };
 		074321902A83E3C900F8518D /* TokenDetailsScreenQuery.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenDetailsScreenQuery.graphql.swift; sourceTree = "<group>"; };
-		074321912A83E3C900F8518D /* SpotPricesQuery.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotPricesQuery.graphql.swift; sourceTree = "<group>"; };
 		074321922A83E3C900F8518D /* ExploreTokensTabQuery.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreTokensTabQuery.graphql.swift; sourceTree = "<group>"; };
 		074321932A83E3C900F8518D /* NftsTabQuery.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NftsTabQuery.graphql.swift; sourceTree = "<group>"; };
 		074321942A83E3C900F8518D /* TokenQuery.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenQuery.graphql.swift; sourceTree = "<group>"; };
@@ -676,7 +674,6 @@
 			children = (
 				077E60382A85587800ABC4B9 /* TokensQuery.graphql.swift */,
 				074321902A83E3C900F8518D /* TokenDetailsScreenQuery.graphql.swift */,
-				074321912A83E3C900F8518D /* SpotPricesQuery.graphql.swift */,
 				077E603A2A86D06100ABC4B9 /* MultiplePortfolioBalancesQuery.graphql.swift */,
 				074321922A83E3C900F8518D /* ExploreTokensTabQuery.graphql.swift */,
 				074321932A83E3C900F8518D /* NftsTabQuery.graphql.swift */,
@@ -1806,7 +1803,6 @@
 				0743221A2A83E3CA00F8518D /* TokenMarket.graphql.swift in Sources */,
 				074322322A83E3CA00F8518D /* NftBalance.graphql.swift in Sources */,
 				9F813EA02AA8FB7500438D89 /* TransactionDetails.graphql.swift in Sources */,
-				074321EC2A83E3CA00F8518D /* SpotPricesQuery.graphql.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

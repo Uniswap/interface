@@ -27,7 +27,7 @@
     "graphql:generate:swift": "cd ios && ./Pods/Apollo/apollo-ios-cli generate",
     "hardhat": "hardhat node",
     "ios": "yarn ios:prebuild && SKIP_BUNDLING=1 react-native run-ios",
-    "ios:prebuild": "yarn graphql:generate:swift && yarn env:local:copy:swift",
+    "ios:prebuild": "yarn graphql:generate:swift && cd ios/WidgetsCore/MobileSchema && rm -rf !(README.md) && cd ../../.. && yarn graphql:generate:swift && yarn env:local:copy:swift",
     "ios:smol": "SKIP_BUNDLING=1 react-native run-ios --simulator=\"iPhone SE (3rd generation)\"",
     "ios:dev:release": "react-native run-ios --configuration Dev",
     "ios:beta": "react-native run-ios --configuration Beta",
