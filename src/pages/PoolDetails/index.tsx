@@ -1,15 +1,20 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { usePoolData } from 'graphql/thegraph/PoolData'
+import { useCurrency } from 'hooks/Tokens'
+import { useSwitchChain } from 'hooks/useSwitchChain'
 import NotFound from 'pages/NotFound'
 import { useReducer } from 'react'
 import { useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { isAddress } from 'utils'
+import { currencyId } from 'utils/currencyId'
 
 import { PoolDetailsHeader } from './PoolDetailsHeader'
 import { PoolDetailsStats } from './PoolDetailsStats'
@@ -61,6 +66,24 @@ export default function PoolDetailsPage() {
   const isInvalidPool = !chainName || !poolAddress || !getValidUrlChainName(chainName) || !isAddress(poolAddress)
   const poolNotFound = (!loading && !poolData) || isInvalidPool
 
+  const { chainId: walletChainId, connector } = useWeb3React()
+  const switchChain = useSwitchChain()
+  const navigate = useNavigate()
+  const currency0 = useCurrency(token0?.id, chainId)
+  const currency1 = useCurrency(token1?.id, chainId)
+  const handleOnClick = async (toSwap: boolean) => {
+    if (currency0 && currency1) {
+      if (walletChainId !== chainId && chainId) await switchChain(connector, chainId)
+      navigate(
+        toSwap
+          ? `/swap?inputCurrency=${currency0.isNative ? currency0.symbol : currencyId(currency0)}&outputCurrency=${
+              currency1.isNative ? currency1.symbol : currencyId(currency1)
+            }`
+          : `/increase/${currencyId(currency0)}/${currencyId(currency1)}/${poolData?.feeTier}`
+      )
+    }
+  }
+
   // TODO(WEB-2814): Add skeleton once designed
   if (loading) return null
   if (poolNotFound) return <NotFound />
@@ -75,14 +98,22 @@ export default function PoolDetailsPage() {
         toggleReversed={toggleReversed}
       />
       <RightColumn>
-        <Row gap="12px">
-          <PoolButton size={ButtonSize.medium} emphasis={ButtonEmphasis.highSoft}>
-            <Trans>Add liquidity</Trans>
-          </PoolButton>
-          <PoolButton size={ButtonSize.medium} emphasis={ButtonEmphasis.highSoft}>
-            <Trans>Swap</Trans>
-          </PoolButton>
-        </Row>
+        {currency0 && currency1 && (
+          <Row gap="12px">
+            <PoolButton
+              size={ButtonSize.medium}
+              emphasis={ButtonEmphasis.highSoft}
+              // TODO take into account tokenId if account logged in
+              onClick={() => handleOnClick(false)}
+            >
+              <Trans>Add liquidity</Trans>
+            </PoolButton>
+
+            <PoolButton size={ButtonSize.medium} emphasis={ButtonEmphasis.highSoft} onClick={() => handleOnClick(true)}>
+              <Trans>Swap</Trans>
+            </PoolButton>
+          </Row>
+        )}
         {poolData && <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} />}
       </RightColumn>
     </PageWrapper>
