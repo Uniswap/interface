@@ -169,12 +169,90 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
         }
       }
     >
-      <svg
-        color="#222222"
-        data-file-name="SvgCircleSpinner"
-        height={20}
-        width={20}
-      />
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight="20"
+        bbWidth="20"
+        fill="none"
+        focusable={false}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        strokeWidth={8}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "color": "#222222",
+              "height": 20,
+              "width": 20,
+            },
+            {
+              "flex": 0,
+              "height": 20,
+              "width": 20,
+            },
+          ]
+        }
+        tintColor="#222222"
+        vbHeight={24}
+        vbWidth={24}
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
+            [
+              "fill",
+              "strokeWidth",
+            ]
+          }
+          strokeWidth="8"
+        >
+          <RNSVGPath
+            d="M21 12C21 7.02944 16.9706 3 12 3"
+            fill={
+              {
+                "payload": 4278190080,
+                "type": 0,
+              }
+            }
+            propList={
+              [
+                "stroke",
+                "strokeWidth",
+                "strokeLinecap",
+              ]
+            }
+            stroke={
+              {
+                "type": 2,
+              }
+            }
+            strokeLinecap={1}
+            strokeWidth="3"
+          />
+          <RNSVGCircle
+            cx="12"
+            cy="12"
+            fill={
+              {
+                "type": 2,
+              }
+            }
+            fillOpacity={0.14}
+            propList={
+              [
+                "fill",
+                "fillOpacity",
+              ]
+            }
+            r="6"
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
     </View>
   </View>
 </View>

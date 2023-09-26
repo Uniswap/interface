@@ -148,7 +148,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                   left={SCANNER_SIZE / 2 - LOADER_SIZE / 2}
                   position="absolute"
                   top={SCANNER_SIZE / 2 - LOADER_SIZE / 2}>
-                  <SpinningLoader color="neutral1" size={iconSizes.icon40} />
+                  <SpinningLoader color="$neutral1" size={iconSizes.icon40} />
                 </Flex>
                 <Flex style={{ marginTop: LOADER_SIZE + spacing.spacing24 }} />
                 <Text color="$neutral1" textAlign="center" variant="body1">

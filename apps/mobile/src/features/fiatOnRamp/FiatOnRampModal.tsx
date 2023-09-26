@@ -369,7 +369,7 @@ function MoonpayCtaButton({
         disabled={disabled}
         icon={
           isLoading ? (
-            <SpinningLoader color="sporeWhite" />
+            <SpinningLoader color="$sporeWhite" />
           ) : !eligible ? (
             <InformationIcon color={theme.colors.neutral1} width={theme.iconSizes.icon20} />
           ) : undefined

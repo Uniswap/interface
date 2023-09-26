@@ -44,7 +44,7 @@ export function RemoveLastMnemonicWalletFooter({
         <Button
           fill
           disabled={!checkBoxAccepted}
-          icon={inProgress ? <SpinningLoader color="statusCritical" /> : undefined}
+          icon={inProgress ? <SpinningLoader color="$statusCritical" /> : undefined}
           testID={ElementName.Confirm}
           theme="detrimental"
           onPress={onPress}>
