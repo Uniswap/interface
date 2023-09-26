@@ -141,6 +141,7 @@ export default function App() {
     user.set(CustomUserProperties.BROWSER, getBrowser())
     user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
     user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
+    user.set(CustomUserProperties.GIT_COMMIT_HASH, process.env.REACT_APP_GIT_COMMIT_HASH ?? 'unknown')
 
     // Service Worker analytics
     const isServiceWorkerInstalled = Boolean(window.navigator.serviceWorker?.controller)
