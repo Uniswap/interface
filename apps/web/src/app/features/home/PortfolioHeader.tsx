@@ -7,6 +7,8 @@ import { Flex, Icons, Popover, Text, TouchableArea, Unicon } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
+const POPUP_SHADOW_RADIUS = 4
+
 type PortfolioHeaderProps = {
   address: Address
 }
@@ -46,7 +48,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
       </Flex>
       <Flex row alignItems="center" gap="$spacing16" justifyContent="space-around">
         {dappConnected ? (
-          <Popover placement="left-start">
+          <Popover stayInFrame>
             <Popover.Trigger
               onTouchEnd={(): void => setUpdateConnectionStatus(!updateConnectionStatus)}>
               <Icons.Globe color="$neutral2" height={iconSizes.icon20} width={iconSizes.icon20} />
@@ -55,7 +57,9 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
               borderColor="$surface2"
               borderRadius="$rounded12"
               borderWidth={1}
-              pl="$spacing4">
+              pl="$spacing4"
+              shadowColor="$neutral3"
+              shadowRadius={POPUP_SHADOW_RADIUS}>
               <SwitchNetworksModal />
             </Popover.Content>
           </Popover>

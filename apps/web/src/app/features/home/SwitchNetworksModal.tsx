@@ -4,6 +4,7 @@ import { disconnectAction, saveChainAction } from 'src/background/features/dappR
 import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { Button, Circle, Flex, getTokenValue, Icons, Image, Popover, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -27,9 +28,13 @@ export function SwitchNetworksModal(): JSX.Element {
       // TODO:  update background color to blurry scrim when available
       bg="$surface1"
       borderRadius="$rounded12"
-      gap="$spacing8"
-      width={260}>
-      <Flex borderBottomColor="$surface3" borderBottomWidth={1} gap="$spacing4" p="$spacing8">
+      width={235}>
+      <Flex
+        borderBottomColor="$surface3"
+        borderBottomWidth={1}
+        gap="$spacing4"
+        mb="$spacing8"
+        p="$spacing8">
         {dappName ? <Text variant="subheading1">{dappName}</Text> : null}
         {dappUrl ? (
           <Text color="$blue400" variant="body3">
@@ -42,11 +47,12 @@ export function SwitchNetworksModal(): JSX.Element {
         return (
           <Button
             key={chain}
-            flex={1}
             justifyContent="space-between"
+            theme={null}
             onPress={async (): Promise<void> => onNetworkClicked(chain)}>
             <Flex grow row alignItems="center" justifyContent="flex-start">
-              <Flex row alignItems="center" gap="$spacing12" pr="$spacing8">
+              <Flex grow row alignItems="center" gap="$spacing8" pr="$spacing8">
+                <NetworkLogo chainId={chain} size={iconSizes.icon20} />
                 <Image
                   borderRadius="$roundedFull"
                   height={iconSizes.icon28}
@@ -58,9 +64,9 @@ export function SwitchNetworksModal(): JSX.Element {
                 </Text>
               </Flex>
               {activeChain === chain ? (
-                <Flex grow row>
+                <Flex row>
                   <Circle
-                    backgroundColor="$accent1"
+                    backgroundColor="$statusSuccess"
                     height={iconSizes.icon8}
                     marginRight="$spacing8"
                     width={iconSizes.icon8}
@@ -73,7 +79,7 @@ export function SwitchNetworksModal(): JSX.Element {
       })}
 
       <Popover.Close asChild>
-        <Button borderRadius="$rounded32" theme="secondary" onPress={onDisconnect}>
+        <Button borderRadius="$rounded32" mt="$spacing8" theme="tertiary" onPress={onDisconnect}>
           <Flex centered row gap="$spacing8">
             <Icons.Power color="$neutral1" size={getTokenValue('$icon.16')} />
             {/* TODO(EXT-207 / EXT-208): fix button component styling and derive text color from theme */}{' '}
