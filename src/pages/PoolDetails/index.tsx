@@ -1,3 +1,5 @@
+import { Trans } from '@lingui/macro'
+import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
@@ -39,6 +41,12 @@ const RightColumn = styled(Column)`
   }
 `
 
+const PoolButton = styled(ThemeButton)`
+  padding: 12px 16px 12px 12px;
+  border-radius: 900px;
+  width: 50%;
+`
+
 export default function PoolDetailsPage() {
   const { poolAddress, chainName } = useParams<{
     poolAddress: string
@@ -67,6 +75,14 @@ export default function PoolDetailsPage() {
         toggleReversed={toggleReversed}
       />
       <RightColumn>
+        <Row gap="12px">
+          <PoolButton size={ButtonSize.medium} emphasis={ButtonEmphasis.highSoft}>
+            <Trans>Add liquidity</Trans>
+          </PoolButton>
+          <PoolButton size={ButtonSize.medium} emphasis={ButtonEmphasis.highSoft}>
+            <Trans>Swap</Trans>
+          </PoolButton>
+        </Row>
         {poolData && <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} />}
       </RightColumn>
     </PageWrapper>
