@@ -273,6 +273,7 @@ export default function ConfirmSwapModal({
   swapResult,
   fiatValueInput,
   fiatValueOutput,
+  onRetryUniswapXSignature,
 }: {
   trade: InterfaceTrade
   inputCurrency?: Currency
@@ -287,6 +288,10 @@ export default function ConfirmSwapModal({
   onCurrencySelection: (field: Field, currency: Currency) => void
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
+  // onConfirm triggers the same callback, but it also clears other swap state.
+  // for the UniswapX signature expiration logic, we need a callback which only
+  // requests the signature without clearing swap state.
+  onRetryUniswapXSignature?: () => void
 }) {
   const { chainId } = useWeb3React()
   const doesTradeDiffer = originalTrade && tradeMeaningfullyDiffers(trade, originalTrade, allowedSlippage)
@@ -378,7 +383,7 @@ export default function ConfirmSwapModal({
         tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
         revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
         swapError={swapError}
-        onRetry={startSwapFlow}
+        onRetryUniswapXSignature={onRetryUniswapXSignature}
       />
     )
   }, [
@@ -396,6 +401,7 @@ export default function ConfirmSwapModal({
     fiatValueOutput,
     onAcceptChanges,
     swapFailed,
+    onRetryUniswapXSignature,
   ])
 
   const l2Badge = () => {

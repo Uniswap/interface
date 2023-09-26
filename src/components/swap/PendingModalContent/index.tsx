@@ -109,7 +109,7 @@ interface PendingModalContentProps {
   tokenApprovalPending?: boolean
   revocationPending?: boolean
   swapError?: Error | string
-  onRetry?: () => void
+  onRetryUniswapXSignature?: () => void
 }
 
 interface ContentArgs {
@@ -124,7 +124,7 @@ interface ContentArgs {
   chainId?: number
   order?: UniswapXOrderDetails
   swapError?: Error | string
-  onRetry?: () => void
+  onRetryUniswapXSignature?: () => void
 }
 
 function getPendingConfirmationContent({
@@ -134,10 +134,10 @@ function getPendingConfirmationContent({
   chainId,
   swapResult,
   swapError,
-  onRetry,
+  onRetryUniswapXSignature,
 }: Pick<
   ContentArgs,
-  'swapConfirmed' | 'swapPending' | 'trade' | 'chainId' | 'swapResult' | 'swapError' | 'onRetry'
+  'swapConfirmed' | 'swapPending' | 'trade' | 'chainId' | 'swapResult' | 'swapError' | 'onRetryUniswapXSignature'
 >): PendingModalStep {
   const title = swapPending ? t`Swap submitted` : swapConfirmed ? t`Swap success!` : t`Confirm Swap`
   const tradeSummary = trade ? <TradeSummary trade={trade} /> : null
@@ -178,9 +178,10 @@ function getPendingConfirmationContent({
     return {
       title: (
         <TransitionText
+          key={swapError.id}
           initialText={<Trans>Time expired</Trans>}
           transitionText={<Trans>Retry confirmation</Trans>}
-          onTransitionEnded={onRetry}
+          onTransition={onRetryUniswapXSignature}
         />
       ),
       subtitle: tradeSummary,
@@ -207,7 +208,7 @@ function useStepContents(args: ContentArgs): Record<PendingConfirmModalState, Pe
     swapResult,
     chainId,
     swapError,
-    onRetry,
+    onRetryUniswapXSignature,
   } = args
 
   return useMemo(
@@ -251,7 +252,7 @@ function useStepContents(args: ContentArgs): Record<PendingConfirmModalState, Pe
         swapResult,
         trade,
         swapError,
-        onRetry,
+        onRetryUniswapXSignature,
       }),
     }),
     [
@@ -265,7 +266,7 @@ function useStepContents(args: ContentArgs): Record<PendingConfirmModalState, Pe
       trade,
       wrapPending,
       swapError,
-      onRetry,
+      onRetryUniswapXSignature,
     ]
   )
 }
@@ -280,7 +281,7 @@ export function PendingModalContent({
   tokenApprovalPending = false,
   revocationPending = false,
   swapError,
-  onRetry,
+  onRetryUniswapXSignature,
 }: PendingModalContentProps) {
   const { chainId } = useWeb3React()
 
@@ -304,7 +305,7 @@ export function PendingModalContent({
     trade,
     chainId,
     swapError,
-    onRetry,
+    onRetryUniswapXSignature,
   })
 
   const currentStepContainerRef = useRef<HTMLDivElement>(null)

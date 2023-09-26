@@ -10,7 +10,7 @@ interface TransitionTextProps {
   initialText: ReactNode
   transitionText: ReactNode
   transitionTimeMs?: number
-  onTransitionEnded?: () => void
+  onTransition?: () => void
 }
 
 const Container = styled.div`
@@ -44,47 +44,25 @@ const TransitionTextContainer = styled.div`
 export function TransitionText({
   initialText,
   transitionText,
-  transitionTimeMs = 1000,
-  onTransitionEnded,
+  transitionTimeMs = 1500,
+  onTransition,
 }: TransitionTextProps) {
   const [transitioned, setTransitioned] = useState(false)
-  const [transitionEnded, setTransitionEnded] = useState(false)
 
   useEffect(() => {
     // Transition from initial text to transition text.
     const timeout = setTimeout(() => {
-      setTransitioned(true)
+      if (!transitioned) {
+        setTransitioned(true)
+        onTransition?.()
+      }
     }, transitionTimeMs)
 
     return () => clearTimeout(timeout)
-  }, [transitionTimeMs])
-
-  useEffect(() => {
-    // Show the transition text for a bit before removing it.
-    if (transitioned) {
-      const timeout = setTimeout(() => {
-        setTransitionEnded(true)
-      }, transitionTimeMs)
-      return () => clearTimeout(timeout)
-    }
-    return
-  }, [transitionTimeMs, transitioned])
-
-  useEffect(() => {
-    // Delay the onTransitionEnded callback until the transition has ended.
-    if (transitioned && transitionEnded) {
-      const timeout = setTimeout(() => {
-        onTransitionEnded?.()
-      }, 125 /* theme.transition.duration.fast */)
-      return () => clearTimeout(timeout)
-    }
-    return
-  }, [onTransitionEnded, transitionEnded, transitionTimeMs, transitioned])
+  }, [onTransition, transitionTimeMs, transitioned])
 
   const initialTextRef = useRef<HTMLDivElement>(null)
-  const transitionTextRef = useRef<HTMLDivElement>(null)
   useUnmountingAnimation(initialTextRef, () => AnimationType.EXITING)
-  useUnmountingAnimation(transitionTextRef, () => AnimationType.EXITING)
 
   return (
     <Container>
@@ -93,8 +71,8 @@ export function TransitionText({
           <Trans>{initialText}</Trans>
         </InitialTextContainer>
       )}
-      {transitioned && !transitionEnded && (
-        <TransitionTextContainer ref={transitionTextRef}>
+      {transitioned && (
+        <TransitionTextContainer>
           <Trans>{transitionText}</Trans>
         </TransitionTextContainer>
       )}

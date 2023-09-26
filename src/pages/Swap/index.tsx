@@ -484,6 +484,15 @@ export function Swap({
       })
   }, [swapCallback, preTaxStablecoinPriceImpact])
 
+  const handleRetryUniswapXSignature = useCallback(() => {
+    swapCallback?.().catch((error) => {
+      setSwapState((currentState) => ({
+        ...currentState,
+        swapError: error,
+      }))
+    })
+  }, [swapCallback])
+
   const handleOnWrap = useCallback(async () => {
     if (!onWrap) return
     try {
@@ -617,6 +626,7 @@ export function Swap({
           onDismiss={handleConfirmDismiss}
           fiatValueInput={fiatValueTradeInput}
           fiatValueOutput={fiatValueTradeOutput}
+          onRetryUniswapXSignature={handleRetryUniswapXSignature}
         />
       )}
       {showPriceImpactModal && showPriceImpactWarning && (

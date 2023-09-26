@@ -1,4 +1,5 @@
 import { t } from '@lingui/macro'
+import { v4 as uuid } from 'uuid'
 
 // You may throw an instance of this class when the user rejects a request in their wallet.
 // The benefit is that you can distinguish this error from other errors using didUserReject().
@@ -24,8 +25,14 @@ export class WrongChainError extends Error {
 }
 
 export class SignatureExpiredError extends Error {
+  private _id: string
   constructor() {
     super(t`Your signature has expired.`)
     this.name = 'SignatureExpiredError'
+    this._id = `SignatureExpiredError-${uuid()}`
+  }
+
+  get id(): string {
+    return this._id
   }
 }
