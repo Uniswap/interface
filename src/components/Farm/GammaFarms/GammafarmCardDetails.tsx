@@ -7,6 +7,7 @@ import { ButtonPrimary } from 'components/Button'
 import Divider from 'components/Divider/Divider'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { useToken } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useGammaHypervisorContract, useMasterChefContract } from 'hooks/useContract'
 import { useMultipleContractSingleData, useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
@@ -27,9 +28,12 @@ import { GridItemGammaCard } from './GridItemGammaCard'
 import { useToken } from 'hooks/Tokens'
 
 // Estilo do Grid
-const Grid = styled.div`
+const Grid = styled.div<{ isMobile: boolean; hasRewards: boolean }>`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: ${(props) => (props.isMobile ? 'none' : 'repeat(3, 1fr)')};
+  grid-template-rows: ${(props) =>
+    props.isMobile ? (props.hasRewards ? 'repeat(3, 1fr)' : 'repeat(2, 1fr)') : 'none'};
   gap: 16px;
 `
 
@@ -64,9 +68,17 @@ const GammaFarmCardDetails: React.FC<{
   const theme = useTheme()
 
   const tokenMap = useCombinedActiveList()
-
+  const rewardPerSecond = rewardData?.rewardPerSecond
+  const rewardTokenAddress = rewardData?.rewardTokenAddress
   const masterChefContract = useMasterChefContract()
   const hypervisorContract = useGammaHypervisorContract(pairData.hypervisor)
+  const rewardsPerSecondBN =
+    rewardPerSecond && !rewardPerSecond.loading && rewardPerSecond.result && rewardPerSecond.result.length > 0
+      ? rewardPerSecond.result[0]
+      : undefined
+
+  const rewardsAmount = rewardsPerSecondBN ? formatUnits(rewardsPerSecondBN, 18) : '0'
+  const token = useToken(rewardTokenAddress?.result?.toString())
 
   const stakedData = useSingleCallResult(masterChefContract, 'userInfo', [pairData.pid, account ?? undefined])
 
@@ -251,50 +263,43 @@ const GammaFarmCardDetails: React.FC<{
 
   return (
     <Box width="100%">
-      <Divider margin="none" />
+      {!isMobile && <Divider margin="none" />}
       {isMobile && (
-        <div style={{ padding: 1.5 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
-            <small className="text-secondary">tvl</small>
-            <small className="weight-600">
-              ${formatNumber(rewardData && rewardData['stakedAmountUSD'] ? rewardData['stakedAmountUSD'] : 0)}
-            </small>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
-            <small className="text-secondary">rewards</small>
-            <div style={{ textAlign: 'right' }}>
-                <div>
-                  {lpToken && (
-                    <p className="small weight-600">
-                      {formatNumber(Number(rewardsAmount) * 3600 * 24)} {lpToken.symbol} / day
-                    </p>
-                  )}
-                </div>
+        <>
+          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                flexDirection: 'column',
+                fontWeight: 600,
+              }}
+            >
+              <small style={{ color: theme.accentActive }}>TVL</small>
+              {rewardData?.tvl && <small style={{ fontWeight: 600 }}> ${formatNumber(rewardData.tvl)}</small>}
+            </div>
+            <div
+              style={{
+                fontWeight: 600,
+                display: 'flex',
+                justifyContent: 'space-between',
+                flexDirection: 'column',
+              }}
+            >
+              <small style={{ color: theme.accentActive }}>Rewards</small>
+              <small style={{ display: 'flex', justifyContent: 'space-between' }}>
+                {rewardsAmount &&
+                  Number(rewardsAmount) > 0 &&
+                  token &&
+                  `${formatNumber(Number(rewardsAmount) * 3600 * 24)} ${token.symbol} / day`}
+              </small>
             </div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
-            <small className="text-secondary">poolAPR</small>
-            <small className="text-success weight-600">
-              {formatNumber(
-                Number(
-                  data && data.returns && data.returns.allTime && data.returns.allTime.feeApr
-                    ? data.returns.allTime.feeApr
-                    : 0
-                ) * 100
-              )}
-              %
-            </small>
-          </div>
-          <Box className="flex justify-between">
-            <small className="text-secondary">farmAPR</small>
-            <small className="text-success weight-600">
-              {formatNumber(Number(rewardData && rewardData['apr'] ? rewardData['apr'] : 0) * 100)}%
-            </small>
-          </Box>
-        </div>
+          <Divider margin="none" />
+        </>
       )}
       <div style={{ padding: 1.5 }}>
-        <Grid>
+        <Grid isMobile={isMobile} hasRewards={rewards.length > 0}>
           {pairData.ableToFarm && (
             <GridItemGammaCard
               titleText="Available:"

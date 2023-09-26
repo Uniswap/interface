@@ -1,10 +1,16 @@
 import { Token } from '@pollum-io/sdk-core'
 import { ChainId } from '@pollum-io/smart-order-router'
-import { GAMMA_MASTERCHEF_ADDRESSES } from 'constants/addresses'
+import { GAMMA_MASTERCHEF_ADDRESSES, PSYS_ADDRESS } from 'constants/addresses'
+import { BigNumber } from 'ethers/lib/ethers'
+import { formatUnits } from 'ethers/lib/utils'
+import { useFetchedTokenData } from 'graphql/tokens/TokenData'
+import { useMasterChefContract } from 'hooks/useContract'
+import { useSingleCallResult } from 'lib/hooks/multicall'
 import { ParsedQs } from 'qs'
+import { useEffect, useMemo, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
-import { GammaPairTokens, GlobalConst } from './constants'
+import { GammaPairTokens, GlobalConst, MINICHEF_ABI } from './constants'
 
 const { v3FarmSortBy } = GlobalConst.utils
 
@@ -240,6 +246,7 @@ export const sortFarms = (
   sortDescGamma: boolean,
   gammaRewardsWithUSDPrice: any
 ) => {
+  // TODO: refactior filter with new function api
   const sortMultiplierGamma = sortDescGamma ? -1 : 1
   const gammaData0 = gammaData ? gammaData[farm0.address.toLowerCase()] : undefined
   const gammaData1 = gammaData ? gammaData[farm1.address.toLowerCase()] : undefined
@@ -315,4 +322,58 @@ export const checkCondition = (item: any, search: string, GlobalData: any, farmF
       ? otherLPCondition
       : true)
   )
+}
+
+export function useRewardPerSecond() {
+  const masterChefContract = useMasterChefContract(undefined, MINICHEF_ABI)
+  return useSingleCallResult(masterChefContract, 'rewardPerSecond')
+}
+
+export function usePoolInfo(poolId: string) {
+  const masterChefContract = useMasterChefContract(undefined, MINICHEF_ABI)
+  return useSingleCallResult(masterChefContract, 'poolInfo', [poolId])
+}
+
+export function useTotalAllocationPoints() {
+  const masterChefContract = useMasterChefContract(undefined, MINICHEF_ABI)
+  return useSingleCallResult(masterChefContract, 'totalAllocPoint')
+}
+
+export function useRewardTokenAddress() {
+  const masterChefContract = useMasterChefContract(undefined, MINICHEF_ABI)
+  return useSingleCallResult(masterChefContract, 'REWARD')
+}
+
+function safeDivide(numerator: number, denominator: number): number {
+  if (denominator === 0) {
+    return numerator / 1
+  }
+  return numerator / denominator
+}
+
+export const useApr = (poolId: string, poolRewardPerSecInPSYS: BigNumber, tvlPoolUSD: number) => {
+  const [stakingAPR, setStakingAPR] = useState<number>(0)
+
+  const poolInfo = usePoolInfo(poolId)
+  const totalAllocPoints = useTotalAllocationPoints()
+  const { loading: tokenDataLoading, data: tokenData } = useFetchedTokenData([PSYS_ADDRESS])
+  const PSYSUSD = useMemo(() => {
+    if (!tokenDataLoading && tokenData?.[0]) return tokenData?.[0].priceUSD
+    return 1
+  }, [tokenData, tokenDataLoading])
+  const stakedPSYS = safeDivide(tvlPoolUSD, PSYSUSD)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const stakingValue = safeDivide(
+        Number(formatUnits(poolRewardPerSecInPSYS?.mul(60 * 60 * 24 * 365), 18)),
+        stakedPSYS
+      )
+      setStakingAPR(stakingValue)
+    }
+
+    fetchData()
+  }, [PSYSUSD, poolInfo?.result?.allocPoint, poolRewardPerSecInPSYS, stakedPSYS, totalAllocPoints.result, tvlPoolUSD])
+
+  return stakingAPR
 }

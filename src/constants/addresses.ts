@@ -6,6 +6,7 @@ import { constructSameAddressMap } from '../utils/constructSameAddressMap'
 
 type AddressMap = { [chainId: number]: string }
 
+export const PSYS_ADDRESS = '0x48023b16c3e81aa7f6effbdeb35bb83f4f31a8fd'
 export const UNI_ADDRESS: AddressMap = {
   [SupportedChainId.ROLLUX_TANENBAUM]: '0x817C777DEf2Fd6ffE2492C6CD124985C78Ee9235',
   [SupportedChainId.ROLLUX]: '0x48023b16c3e81AA7F6eFFbdEB35Bb83f4f31a8fd',

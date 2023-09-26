@@ -21,6 +21,7 @@ const SortColumnsLayout = styled.div`
   width: 90%;
   align-items: center;
   justify-content: space-evenly;
+  margin-left: 20px;
 `
 
 export default function SortColumns({ sortColumns, selectedSort, sortDesc }: SortColumnsProps) {

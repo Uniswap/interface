@@ -1,21 +1,21 @@
 import { Token } from '@pollum-io/sdk-core'
 import { formatNumber } from '@uniswap/conedison/format'
+import { CallState } from '@uniswap/redux-multicall'
 import { TokenList } from '@uniswap/token-lists'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import TotalAPRTooltip from 'components/TotalAPRTooltip/TotalAPRTooltip'
 import { formatUnits } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
-import { useMasterChefContract } from 'hooks/useContract'
-import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useIsMobile } from 'nft/hooks'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { AlertCircle, ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Box } from 'rebass'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import styled, { useTheme } from 'styled-components/macro'
 
-import { FarmPoolData, MINICHEF_ABI } from '../constants'
+import { FarmPoolData, ONE_TOKEN, ZERO } from '../constants'
+import { useApr, usePoolInfo, useTotalAllocationPoints } from '../utils'
 import GammaFarmCardDetails from './GammafarmCardDetails'
 
 const CardContainer = styled.div<{ showDetails: boolean }>`
@@ -31,7 +31,11 @@ const CardContainer = styled.div<{ showDetails: boolean }>`
 
 interface GammaFarmProps {
   data?: FarmPoolData
-  rewardData: any
+  rewardData: {
+    tvl: number
+    rewardPerSecond: CallState
+    rewardTokenAddress: CallState
+  }
   token0:
     | Token
     | {
@@ -45,30 +49,57 @@ interface GammaFarmProps {
         list?: TokenList
       }
   pairData: any
-  apr?: number
-  tvl?: number
 }
 
-export function GammaFarmCard({ data, rewardData, pairData, token0, token1, apr, tvl }: GammaFarmProps) {
-  // const rewards: any[] = rewardData && rewardData['rewarders'] ? Object.values(rewardData['rewarders']) : []
+export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: GammaFarmProps) {
   const [showDetails, setShowDetails] = useState(false)
   const theme = useTheme()
   const isMobile = useIsMobile()
-  const masterChefContract = useMasterChefContract(undefined, MINICHEF_ABI)
+  const rewardPerSecond = rewardData?.rewardPerSecond
+  const rewardTokenAddress = rewardData?.rewardTokenAddress
+  const totalAllocPoints = useTotalAllocationPoints()
+  const poolInfo = usePoolInfo(pairData?.pid)
+  const [farmAPR, setFarmAPR] = useState<number>(0)
 
-  // const hypervisorContract = useGammaHypervisorContract(pairData.hypervisor)
+  const rewardPerSecondResult = useMemo(() => {
+    if (!rewardPerSecond.loading && rewardPerSecond?.result) {
+      return rewardPerSecond.result[0]
+    }
+    return ZERO
+  }, [rewardPerSecond.loading, rewardPerSecond?.result])
 
-  // const farmAPR = rewardData && rewardData['apr'] ? Number(rewardData['apr']) : 0
-  const farmAPR = apr ? apr : 0
+  const poolInfoResultAllocPoint = useMemo(() => {
+    if (!poolInfo.loading && poolInfo?.result) {
+      return poolInfo.result.allocPoint
+    }
+    return ZERO
+  }, [poolInfo.loading, poolInfo?.result])
+
+  const totalAllocPointValue = totalAllocPoints?.result?.[0] || ONE_TOKEN
+  const poolRewardPerSecInPSYS = rewardPerSecondResult.mul(poolInfoResultAllocPoint).div(totalAllocPointValue)
+
+  const apr = useApr(pairData?.pid, poolRewardPerSecInPSYS, rewardData?.tvl)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const resolvedApr = await apr
+        if (resolvedApr) setFarmAPR(resolvedApr)
+      } catch (error) {
+        console.error('Error fetching APR:', error)
+      }
+    }
+
+    fetchData()
+  }, [pairData, rewardPerSecond, rewardData, apr])
+
   const poolAPR =
     data && data.returns && data.returns.allTime && data.returns.allTime.feeApr
       ? Number(data.returns.allTime.feeApr)
       : 0
-  const rewardPerSecond = useSingleCallResult(masterChefContract, 'rewardPerSecond')
-  const rewardTokenAddress = useSingleCallResult(masterChefContract, 'REWARD')
   const token = useToken(rewardTokenAddress?.result?.toString())
   const rewardsPerSecondBN =
-    !rewardPerSecond.loading && rewardPerSecond.result && rewardPerSecond.result.length > 0
+    rewardPerSecond && !rewardPerSecond.loading && rewardPerSecond.result && rewardPerSecond.result.length > 0
       ? rewardPerSecond.result[0]
       : undefined
 
@@ -84,10 +115,17 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1, apr,
   return (
     <CardContainer showDetails={showDetails}>
       <div style={{ width: '100%', display: 'flex', justifyContent: 'center', height: '60px', alignItems: 'center' }}>
-        <div style={{ width: '90%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div
+          style={{
+            width: '90%',
+            display: 'flex',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            marginRight: '15px',
+          }}
+        >
           <div
             style={{
-              width: isMobile ? (showDetails ? '100%' : '70%') : '30%',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
@@ -111,12 +149,13 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1, apr,
               </>
             )}
           </div>
+
           {!isMobile && (
             <>
-              <div style={{ width: '20%', display: 'flex', justifyContent: 'space-between' }}>
-                {tvl && <small style={{ fontWeight: 600 }}>${formatNumber(tvl)}</small>}
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                {rewardData?.tvl && <small style={{ fontWeight: 600 }}>${formatNumber(rewardData.tvl)}</small>}
               </div>
-              <small style={{ width: '30%', fontWeight: 600 }}>
+              <small style={{ fontWeight: 600 }}>
                 {rewardsAmount &&
                   Number(rewardsAmount) > 0 &&
                   token &&
@@ -125,24 +164,21 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1, apr,
             </>
           )}
 
-          {(!isMobile || !showDetails) && (
-            <div
-              style={{
-                width: isMobile ? '30%' : '20%',
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              <small style={{ color: theme.accentSuccess, fontWeight: 600 }}>
-                {formatNumber((poolAPR + farmAPR) * 100)}%
-              </small>
-              <div style={{ marginLeft: '5px', alignItems: 'center' }}>
-                <TotalAPRTooltip farmAPR={farmAPR * 100} poolAPR={poolAPR * 100}>
-                  <AlertCircle size={16} />
-                </TotalAPRTooltip>
-              </div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <small style={{ color: theme.accentSuccess, fontWeight: 600 }}>
+              {formatNumber((poolAPR + farmAPR) * 100)}%
+            </small>
+            <div style={{ marginLeft: '5px', alignItems: 'center' }}>
+              <TotalAPRTooltip farmAPR={farmAPR * 100} poolAPR={poolAPR * 100}>
+                <AlertCircle size={16} />
+              </TotalAPRTooltip>
             </div>
-          )}
+          </div>
         </div>
 
         <div style={{ width: '10%', display: 'flex', justifyContent: 'center' }}>
