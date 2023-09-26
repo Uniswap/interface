@@ -25,16 +25,12 @@ const HeaderText = styled(Text)`
 
 const StatsWrapper = styled(Column)`
   gap: 24px;
-  margin: 0 48px 0 auto;
   padding: 20px;
   border-radius: 20px;
   background: ${({ theme }) => theme.surface2};
-  width: 22vw;
-  min-width: 360px;
+  width: 100%;
 
   @media (max-width: ${BREAKPOINTS.lg - 1}px) {
-    margin: 44px 0px;
-    width: 100%;
     flex-direction: row;
     background: ${({ theme }) => theme.surface1};
     flex-wrap: wrap;
@@ -47,6 +43,10 @@ const StatItemColumn = styled(Column)`
   gap: 8px;
   flex: 1;
   min-width: 180px;
+
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    min-width: 150px;
+  }
 `
 
 const PoolBalanceSymbols = styled(Row)`

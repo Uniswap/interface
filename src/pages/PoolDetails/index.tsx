@@ -1,3 +1,4 @@
+import Column from 'components/Column'
 import Row from 'components/Row'
 import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { usePoolData } from 'graphql/thegraph/PoolData'
@@ -22,6 +23,19 @@ const PageWrapper = styled(Row)`
 
   @media (max-width: ${BREAKPOINTS.sm - 1}px) {
     padding: 48px 16px;
+  }
+`
+
+const RightColumn = styled(Column)`
+  gap: 24px;
+  margin: 0 48px 0 auto;
+  width: 22vw;
+  min-width: 360px;
+
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) {
+    margin: 44px 0px;
+    width: 100%;
+    min-width: unset;
   }
 `
 
@@ -52,7 +66,9 @@ export default function PoolDetailsPage() {
         feeTier={poolData?.feeTier}
         toggleReversed={toggleReversed}
       />
-      {poolData && <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} />}
+      <RightColumn>
+        {poolData && <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} />}
+      </RightColumn>
     </PageWrapper>
   )
 }
