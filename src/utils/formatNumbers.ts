@@ -579,7 +579,7 @@ function formatReviewSwapCurrencyAmount(
   return formattedAmount
 }
 
-function useFormatterLocales(): {
+export function useFormatterLocales(): {
   formatterLocale: SupportedLocale
   formatterLocalCurrency: SupportedLocalCurrency
 } {
