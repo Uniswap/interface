@@ -53,19 +53,19 @@ interface BaseTransactionInfo {
   type: TransactionType
 }
 
-export interface DepositFarm extends BaseTransactionInfo {
+export interface DepositFarmTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.DEPOSIT_FARM
   pid: number
   amount: string
 }
 
-export interface WithdrawFarm extends BaseTransactionInfo {
+export interface WithdrawFarmTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.WITHDRAW_FARM
   pid: number
   amount: string
 }
 
-export interface ClaimFarm extends BaseTransactionInfo {
+export interface ClaimFarmTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.CLAIM_FARM
   pid: number
 }
@@ -216,9 +216,9 @@ export type TransactionInfo =
   | CollectFeesTransactionInfo
   | RemoveLiquidityV3TransactionInfo
   | SubmitProposalTransactionInfo
-  | DepositFarm
-  | WithdrawFarm
-  | ClaimFarm
+  | DepositFarmTransactionInfo
+  | WithdrawFarmTransactionInfo
+  | ClaimFarmTransactionInfo
 
 export interface TransactionDetails {
   hash: string

@@ -10,7 +10,7 @@ import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useGammaHypervisorContract, useMasterChefContract } from 'hooks/useContract'
-import { useMultipleContractSingleData, useSingleCallResult } from 'lib/hooks/multicall'
+import { useMultipleContractSingleData, useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useIsMobile } from 'nft/hooks'
 import React, { useState } from 'react'
@@ -25,6 +25,7 @@ import GammaRewarder from '../../../abis/gamma-rewarder.json'
 import { TransactionType } from '../../../state/transactions/types'
 import { FarmPoolData } from '../constants'
 import { GridItemGammaCard } from './GridItemGammaCard'
+import { useToken } from 'hooks/Tokens'
 
 // Estilo do Grid
 const Grid = styled.div<{ isMobile: boolean; hasRewards: boolean }>`
@@ -91,49 +92,15 @@ const GammaFarmCardDetails: React.FC<{
       : 0
   const stakedUSD = Number(stakedAmount) * lpTokenUSD
 
-  const rewards: any[] = rewardData && rewardData['rewarders'] ? Object.values(rewardData['rewarders']) : []
-  const rewarderAddresses =
-    pairData.masterChefIndex !== 2 && rewardData && rewardData['rewarders'] ? Object.keys(rewardData['rewarders']) : []
-  const gammaPendingRewardsData = useMultipleContractSingleData(
-    rewarderAddresses,
-    new Interface(GammaRewarder),
-    'pendingToken',
-    [pairData.pid, account ?? undefined]
-  )
-
-  const pendingRewards = gammaPendingRewardsData
-    .reduce<{ token: Token; amount: number }[]>((rewardArray, callData, index) => {
-      const reward = rewards.length > 0 ? rewards[index] : undefined
-      if (chainId && reward && tokenMap) {
-        const rewardToken = getTokenFromAddress(reward.rewardToken, tokenMap, [])
-
-        if (rewardToken) {
-          const rToken = 'address' in rewardToken ? (rewardToken as Token) : rewardToken.token
-          const existingRewardIndex = rewardArray.findIndex(
-            (item) => item.token.address.toLowerCase() === reward.rewardToken.toLowerCase()
-          )
-          const rewardAmountBN =
-            !callData.loading && callData.result && callData.result.length > 0 ? callData.result[0] : undefined
-
-          const rewardAmount =
-            (rewardAmountBN ? Number(formatUnits(rewardAmountBN, rToken.decimals)) : 0) +
-            0 +
-            (existingRewardIndex > -1 ? rewardArray[existingRewardIndex].amount : 0)
-          if (existingRewardIndex === -1) {
-            rewardArray.push({ token: rToken, amount: rewardAmount })
-          } else {
-            rewardArray[existingRewardIndex] = {
-              token: rToken,
-              amount: rewardAmount,
-            }
-          }
-        }
-      }
-      return rewardArray
-    }, [])
-    .filter((reward) => reward && Number(reward.amount) > 0)
-
+  const rewards = useSingleCallResult(masterChefContract, 'pendingReward', [pairData.pid, account ?? undefined])
+  const rewardsBN = !rewards.loading && rewards.result  && rewards.result.length > 0? rewards.result[0] : undefined
+  const rewardsAmount = rewardsBN ? formatUnits(rewardsBN, 18) : '0'
+  
   const lpToken = chainId ? new Token(chainId, pairData.hypervisor, 18) : undefined
+
+  const rewardTokenContract = useSingleCallResult(masterChefContract, 'REWARD')
+  const rewardToken = useToken(rewardTokenContract?.result?.toString())
+
   const lpBalanceData = useSingleCallResult(hypervisorContract, 'balanceOf', [account ?? undefined])
   const lpBalanceBN =
     !lpBalanceData.loading && lpBalanceData.result && lpBalanceData.result.length > 0
@@ -163,7 +130,7 @@ const GammaFarmCardDetails: React.FC<{
 
   const [approval, approveCallback] = useApproveCallback(parsedStakeAmount, masterChefContract?.address)
 
-  const claimButtonDisabled = pendingRewards.length === 0 || attemptClaiming
+  const claimButtonDisabled = Number(rewardsAmount) == 0 || attemptClaiming
 
   const approveOrStakeLP = async () => {
     setApproveOrStaking(true)
@@ -213,7 +180,7 @@ const GammaFarmCardDetails: React.FC<{
     addTransaction(response, {
       type: TransactionType.DEPOSIT_FARM,
       pid: pairData.pid,
-      amount: stakeAmount,
+      amount: stakeAmount
     })
     const receipt = await response.wait()
     finalizedTransaction(receipt, {
@@ -368,26 +335,22 @@ const GammaFarmCardDetails: React.FC<{
             unStakeLP={unStakeLP}
           />
 
-          {rewards.length > 0 && (
+          {rewardToken && Number(rewardsAmount) !== 0 && (
             <GridItem>
               <ClaimContainer>
                 <small style={{ color: theme.textSecondary }}>EarnedRewards</small>
                 <div style={{ marginBottom: 10, marginTop: 10 }}>
-                  {pendingRewards.map((reward) => {
-                    return (
-                      <div
-                        key={reward.token.address}
-                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                      >
-                        <CurrencyLogo currency={reward.token} size="16px" />
-                        <div style={{ marginLeft: '6px' }}>
-                          <small>
-                            {formatNumber(reward.amount)} {reward.token.symbol}
-                          </small>
-                        </div>
+                    <div
+                      key={rewardToken.address}
+                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    >
+                      <CurrencyLogo currency={rewardToken} size="16px" />
+                      <div style={{ marginLeft: '6px' }}>
+                        <small>
+                          {rewardsAmount} {rewardToken.symbol}
+                        </small>
                       </div>
-                    )
-                  })}
+                    </div>
                 </div>
                 <Box width="100%">
                   <ButtonPrimary style={{ height: '40px' }} disabled={claimButtonDisabled} onClick={claimReward}>
