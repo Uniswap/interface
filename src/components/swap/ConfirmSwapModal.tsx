@@ -423,7 +423,7 @@ export default function ConfirmSwapModal({
     if (approvalError) return approvalError
     // SignatureExpiredError is a special case. The UI is shown in the PendingModalContent component.
     if (swapError instanceof SignatureExpiredError) return
-    if (swapError) return PendingModalError.CONFIRMATION_ERROR
+    if (swapError && !didUserReject(swapError)) return PendingModalError.CONFIRMATION_ERROR
     return
   }, [approvalError, swapError])
 
