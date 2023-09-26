@@ -25,7 +25,7 @@ const webReducer = persistReducer(persistConfig, combineReducers(webReducers))
 
 export function initializeStore(
   portName: PortName = PortName.Store
-): Promise<ReturnType<typeof createStore> | undefined> {
+): Promise<ReturnType<typeof createStore>> {
   return new Promise((resolve) => {
     const store = createStore({
       reducer: webReducer,

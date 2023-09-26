@@ -13,7 +13,7 @@ import { initializeStore, WebState } from './store'
 
 // Since we are in a service worker, this is not persistent and this will be
 // reset to false, as expected, whenever the service worker wakes up from idle.
-let isInitialized = false
+let state: WebState | undefined
 
 // Track if the user is in the onboarding flow. If they are when the onConnect event fires then
 // we need to reinitialize the store for the sidepanel.
@@ -29,26 +29,11 @@ chrome.sidePanel
 
 /** Main entrypoint for intializing the app. */
 const initApp = async (): Promise<void> => {
-  if (isInitialized) {
-    notifyStoreInitialized()
-    return
-  }
-
-  isInitialized = true
-
   const store = await initializeStore()
-
-  if (!store) {
-    return
-  }
+  state = store.getState() as unknown as WebState
 
   initMessageBridge(store.dispatch)
   notifyStoreInitialized()
-
-  await maybeOpenOnboarding({
-    state: store.getState() as unknown as WebState,
-    dispatch: store.dispatch,
-  })
 }
 
 initApp().catch((error) =>
@@ -60,34 +45,35 @@ initApp().catch((error) =>
 // There is no guarantee that the initApp call at the top level will finish before this handler
 // is executed so initApp is called in both places.
 chrome.runtime.onInstalled.addListener(async () => {
-  await initApp()
+  if (!state) {
+    await initApp()
+  }
+
+  await maybeOpenOnboarding()
 })
 
 // Listen to incoming connections from content scripts or popup.
 // Triggers whenever extension "wakes up" from idle.
 // With Manifest V3, we must reinitialize the store from storage each time.
 chrome.runtime.onConnect.addListener(async (port) => {
-  if (port.name !== PortName.Popup && port.name !== PortName.ContentScript) {
+  if (port.name !== PortName.Popup) {
     // ignore requests not from known ports
     return
   }
 
   if (isInOnboarding) {
-    isInitialized = false
+    // If the user is in the onboarding flow then we need to reinitialize the store
+    // so that the sidepanel can be connected to the new store.
     isInOnboarding = false
     await initApp()
   } else {
     notifyStoreInitialized()
+    await maybeOpenOnboarding()
   }
 })
 
-async function maybeOpenOnboarding({
-  state,
-}: {
-  state: WebState
-  dispatch: Dispatch<AnyAction>
-}): Promise<void> {
-  const isOnboarded = isOnboardedSelector(state)
+async function maybeOpenOnboarding(): Promise<void> {
+  const isOnboarded = state && isOnboardedSelector(state)
 
   if (!isOnboarded) {
     isInOnboarding = true
@@ -96,6 +82,11 @@ async function maybeOpenOnboarding({
 }
 
 function initMessageBridge(dispatch: Dispatch<AnyAction>): void {
+  const isOnboarded = state && isOnboardedSelector(state)
+  if (!isOnboarded) {
+    return
+  }
+
   chrome.runtime.onMessage.addListener(
     (
       request: unknown,
