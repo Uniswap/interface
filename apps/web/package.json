@@ -45,7 +45,6 @@
     "eslint-config-custom": "workspace:^",
     "eslint-plugin-prettier": "4.2.1",
     "fs": "^0.0.1-security",
-    "image-webpack-loader": "8.1.0",
     "jest": "29.5.0",
     "jest-chrome": "0.8.0",
     "jest-environment-jsdom": "29.5.0",
