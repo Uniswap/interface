@@ -310,7 +310,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     backgroundColor: interpolateColor(
       currentScrollValue.value,
       [0, headerHeightDiff],
-      [colors.surface1.get(), colors.surface1.get()]
+      [colors.surface1.val, colors.surface1.val]
     ),
   }))
 
