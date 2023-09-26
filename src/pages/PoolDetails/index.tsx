@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import Row from 'components/Row'
@@ -66,7 +67,16 @@ export default function PoolDetailsPage() {
   const isInvalidPool = !chainName || !poolAddress || !getValidUrlChainName(chainName) || !isAddress(poolAddress)
   const poolNotFound = (!loading && !poolData) || isInvalidPool
 
-  const { chainId: walletChainId, connector } = useWeb3React()
+  const { chainId: walletChainId, connector, account } = useWeb3React()
+
+  const { positions } = useMultiChainPositions(account ?? '', chainId ? [chainId] : undefined)
+  const position = positions?.find(
+    (position) =>
+      (position?.details.token0.toLowerCase() === token0?.id ||
+        position?.details.token0.toLowerCase() === token1?.id) &&
+      (position?.details.token1.toLowerCase() === token0?.id || position?.details.token1.toLowerCase() === token1?.id)
+  )
+  const tokenId = position?.details.tokenId
   const switchChain = useSwitchChain()
   const navigate = useNavigate()
   const currency0 = useCurrency(token0?.id, chainId)
@@ -79,7 +89,9 @@ export default function PoolDetailsPage() {
           ? `/swap?inputCurrency=${currency0.isNative ? currency0.symbol : currencyId(currency0)}&outputCurrency=${
               currency1.isNative ? currency1.symbol : currencyId(currency1)
             }`
-          : `/increase/${currencyId(currency0)}/${currencyId(currency1)}/${poolData?.feeTier}`
+          : `/increase/${currencyId(currency0)}/${currencyId(currency1)}/${poolData?.feeTier}${
+              tokenId ? `/${tokenId}` : ''
+            }`
       )
     }
   }
