@@ -69,7 +69,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
   return (
     <BottomSheetModal
       fullScreen
-      backgroundColor={colors.surface1.val}
+      backgroundColor={colors.surface1.get()}
       name={ModalName.WalletConnectScan}
       onClose={onClose}>
       {currentScreenState === ScannerModalState.ScanQr && (
@@ -92,13 +92,13 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
           <Flex row alignItems="center" gap="$spacing12">
             {currentScreenState === ScannerModalState.ScanQr ? (
               <Scan
-                color={colors.neutral1.val}
+                color={colors.neutral1.get()}
                 height={iconSizes.icon24}
                 width={iconSizes.icon24}
               />
             ) : (
               <ScanQRIcon
-                color={colors.neutral1.val}
+                color={colors.neutral1.get()}
                 height={iconSizes.icon24}
                 width={iconSizes.icon24}
               />

@@ -67,7 +67,7 @@ export function CancelConfirmationView({
         borderColor="$neutral2"
         borderRadius="$rounded12"
         p="$spacing12">
-        <SlashCircleIcon color={colors.neutral2.val} height={24} strokeWidth="1" width={24} />
+        <SlashCircleIcon color={colors.neutral2.get()} height={24} strokeWidth="1" width={24} />
       </Flex>
       <Flex centered gap="$spacing8">
         <Text variant="buttonLabel2">{t('Cancel this transaction?')}</Text>

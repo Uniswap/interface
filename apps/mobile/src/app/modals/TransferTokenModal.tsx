@@ -21,7 +21,7 @@ export function TransferTokenModal(): JSX.Element {
       hideHandlebar
       hideKeyboardOnDismiss
       renderBehindInset
-      backgroundColor={colors.surface1.val}
+      backgroundColor={colors.surface1.get()}
       name={ModalName.Send}
       onClose={onClose}>
       <TransferFlow prefilledState={modalState.initialState} onClose={onClose} />

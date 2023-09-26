@@ -140,7 +140,7 @@ export function RestoreCloudBackupLoadingScreen({
           )}
           icon={
             <Icons.OSDynamicCloudIcon
-              color={colors.neutral3.val}
+              color={colors.neutral3.get()}
               height={imageSizes.image48}
               width={imageSizes.image48}
             />
@@ -171,7 +171,7 @@ export function RestoreCloudBackupLoadingScreen({
             }
             icon={
               <Icons.OSDynamicCloudIcon
-                color={colors.neutral3.val}
+                color={colors.neutral3.get()}
                 height={imageSizes.image48}
                 width={imageSizes.image48}
               />

@@ -23,10 +23,10 @@ export function Switch({ value, onValueChange, disabled, ...rest }: Props): JSX.
       <BaseSwitch
         ios_backgroundColor="transparent"
         // TODO(MOB-1226): pull colors from dark/light theme with Tamagui
-        thumbColor={value ? colors.accent1.val : colors.surface1.val}
+        thumbColor={value ? colors.accent1.get() : colors.surface1.get()}
         trackColor={{
           false: colors.surface4.val,
-          true: colors.surface3.val,
+          true: colors.surface3.get(),
         }}
         value={value}
         onValueChange={disabled ? undefined : onValueChange}

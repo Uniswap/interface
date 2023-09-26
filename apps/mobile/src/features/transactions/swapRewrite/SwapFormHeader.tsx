@@ -72,7 +72,7 @@ export function SwapFormHeader(): JSX.Element {
               onPress={(): void => onToggleFiatInput()}>
               <Flex row alignItems="center" flex={1} gap="$spacing4" px="$spacing8" py="$spacing4">
                 <DollarSign
-                  color={isFiatInput ? colors.accent1.val : colors.neutral2.val}
+                  color={isFiatInput ? colors.accent1.get() : colors.neutral2.get()}
                   height={iconSizes.icon16}
                   width={iconSizes.icon16}
                 />
@@ -93,7 +93,7 @@ export function SwapFormHeader(): JSX.Element {
               onPress={onPressViewOnlyModal}>
               <Flex row alignItems="center" gap="$spacing4">
                 <EyeIcon
-                  color={colors.neutral2.val}
+                  color={colors.neutral2.get()}
                   height={iconSizes.icon16}
                   width={iconSizes.icon16}
                 />
@@ -125,7 +125,7 @@ export function SwapFormHeader(): JSX.Element {
                   </Text>
                 )}
                 <SettingsIcon
-                  color={colors.neutral3.val}
+                  color={colors.neutral3.get()}
                   height={iconSizes.icon28}
                   width={iconSizes.icon28}
                 />

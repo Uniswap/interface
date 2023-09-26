@@ -310,7 +310,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     backgroundColor: interpolateColor(
       currentScrollValue.value,
       [0, headerHeightDiff],
-      [colors.surface1.val, colors.surface1.val]
+      [colors.surface1.get(), colors.surface1.get()]
     ),
   }))
 
@@ -327,13 +327,13 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
               {...sceneProps}
               indicatorStyle={TAB_STYLES.activeTabIndicator}
               navigationState={{ index: tabIndex, routes }}
-              pressColor={colors.surface3.val} // Android only
+              pressColor={colors.surface3.get()} // Android only
               renderLabel={renderTabLabel}
               style={[
                 TAB_STYLES.tabBar,
                 {
-                  backgroundColor: colors.surface1.val,
-                  borderBottomColor: colors.surface3.val,
+                  backgroundColor: colors.surface1.get(),
+                  borderBottomColor: colors.surface3.get(),
                   paddingLeft: spacing.spacing12,
                 },
               ]}
@@ -347,8 +347,8 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       )
     },
     [
-      colors.surface1.val,
-      colors.surface3.val,
+      colors.surface1,
+      colors.surface3,
       contentHeader,
       handleHeaderLayout,
       headerContainerStyle,
@@ -593,7 +593,7 @@ function ActionButton({
               },
             ]}>
             <Icon
-              color={colors.accent1.val}
+              color={colors.accent1.get()}
               height={iconSizes.icon20 * iconScale}
               strokeWidth={2}
               width={iconSizes.icon20 * iconScale}

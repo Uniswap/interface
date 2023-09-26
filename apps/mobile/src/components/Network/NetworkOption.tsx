@@ -30,7 +30,11 @@ export function NetworkOption({
         </Text>
         <Flex centered height={NETWORK_OPTION_ICON_SIZE} width={NETWORK_OPTION_ICON_SIZE}>
           {currentlySelected && (
-            <Check color={colors.neutral1.val} height={iconSizes.icon20} width={iconSizes.icon20} />
+            <Check
+              color={colors.neutral1.get()}
+              height={iconSizes.icon20}
+              width={iconSizes.icon20}
+            />
           )}
         </Flex>
       </Flex>

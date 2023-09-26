@@ -123,13 +123,13 @@ export function TransactionDetails({
           </Text>
           {showChildren ? (
             <AnglesMinimize
-              color={colors.neutral3.val}
+              color={colors.neutral3.get()}
               height={iconSizes.icon20}
               width={iconSizes.icon20}
             />
           ) : (
             <AnglesMaximize
-              color={colors.neutral3.val}
+              color={colors.neutral3.get()}
               height={iconSizes.icon20}
               width={iconSizes.icon20}
             />

@@ -36,7 +36,7 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props): JSX.Elem
         </Flex>
         <Flex height={ICON_SIZE} width={ICON_SIZE}>
           {activeAccount?.address === account.address && (
-            <Check color={colors.accent1.val} height={ICON_SIZE} width={ICON_SIZE} />
+            <Check color={colors.accent1.get()} height={ICON_SIZE} width={ICON_SIZE} />
           )}
         </Flex>
       </Flex>

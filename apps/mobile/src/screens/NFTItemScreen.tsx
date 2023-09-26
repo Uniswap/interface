@@ -389,7 +389,7 @@ function RightElement({
         onlyShare ? (
           <TouchableOpacity onPress={menuActions[0]?.onPress}>
             <ShareIcon
-              color={colors.neutral1.val}
+              color={colors.neutral1.get()}
               height={iconSizes.icon24}
               width={iconSizes.icon24}
             />
@@ -397,7 +397,7 @@ function RightElement({
         ) : (
           <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
             <EllipsisIcon
-              color={colors.neutral1.val}
+              color={colors.neutral1.get()}
               height={iconSizes.icon16}
               width={iconSizes.icon16}
             />

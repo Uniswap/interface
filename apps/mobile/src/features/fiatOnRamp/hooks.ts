@@ -123,7 +123,7 @@ export function useMoonpayFiatOnRamp({
     // as-is, avoids waterfalling requests => better ux
     {
       ownerAddress: activeAccountAddress,
-      colorCode: colors.accent1.val,
+      colorCode: colors.accent1.get(),
       externalTransactionId,
       amount: baseCurrencyAmount,
       currencyCode: quoteCurrencyCode,

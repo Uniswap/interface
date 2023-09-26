@@ -29,10 +29,10 @@ export function SwapArrowButton(props: SwapArrowButtonProps): JSX.Element {
         {...rest}>
         {/* hack to add 2px more padding without adjusting design system values */}
         <Flex centered p="$spacing2">
-          <Arrow color={colors.neutral2.val} direction="s" size={size} />
+          <Arrow color={colors.neutral2.get()} direction="s" size={size} />
         </Flex>
       </TouchableArea>
     ),
-    [bg, disabled, onPress, testID, rest, colors.neutral2.val, size]
+    [bg, disabled, onPress, testID, rest, colors.neutral2, size]
   )
 }

@@ -24,7 +24,7 @@ export function BlockedAddressWarning(props: FlexProps): JSX.Element {
         }}>
         <Flex gap="$spacing8" {...props}>
           <InfoCircle
-            color={colors.neutral2.val}
+            color={colors.neutral2.get()}
             height={iconSizes.icon16}
             width={iconSizes.icon16}
           />

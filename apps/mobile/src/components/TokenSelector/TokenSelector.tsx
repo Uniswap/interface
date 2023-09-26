@@ -181,7 +181,7 @@ function _TokenSelectorModal(props: TokenSelectorProps): JSX.Element {
       fullScreen
       hideKeyboardOnDismiss
       hideKeyboardOnSwipeDown
-      backgroundColor={colors.surface1.val}
+      backgroundColor={colors.surface1.get()}
       name={ModalName.TokenSelector}
       snapPoints={['65%', '100%']}
       onClose={props.onClose}>

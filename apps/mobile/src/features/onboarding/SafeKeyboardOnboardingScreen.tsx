@@ -55,7 +55,7 @@ export function SafeKeyboardOnboardingScreen({
 
   const topGradient = (
     <LinearGradient
-      colors={[colors.surface1.val, opacify(0, colors.surface1.val)]}
+      colors={[colors.surface1.get(), opacify(0, colors.surface1.get())]}
       locations={[0.6, 0.8]}
       style={[
         styles.gradient,

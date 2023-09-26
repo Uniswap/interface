@@ -51,7 +51,7 @@ export function SwapFlow({
     <BottomSheetModal
       hideKeyboardOnDismiss
       renderBehindInset
-      backgroundColor={colors.surface1.val}
+      backgroundColor={colors.surface1.get()}
       fullScreen={screen === SwapScreen.SwapForm}
       hideHandlebar={screen === SwapScreen.SwapForm}
       name={ModalName.Swap}

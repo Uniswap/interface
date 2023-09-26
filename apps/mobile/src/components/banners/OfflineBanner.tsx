@@ -32,7 +32,7 @@ export function OfflineBanner(): JSX.Element | null {
     <TabsAwareBottomBanner
       icon={
         <InfoCircle
-          color={colors.neutral1.val}
+          color={colors.neutral1.get()}
           height={iconSizes.icon24}
           width={iconSizes.icon24}
         />

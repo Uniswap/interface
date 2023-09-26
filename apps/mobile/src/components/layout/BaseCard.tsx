@@ -185,7 +185,7 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
     retryButtonLabel = t('Retry'),
     icon = (
       <AlertTriangle
-        color={colors.neutral3.val}
+        color={colors.neutral3.get()}
         height={iconSizes.icon16}
         width={iconSizes.icon16}
       />

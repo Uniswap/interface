@@ -176,8 +176,8 @@ function TokenDetails({
 
   const { tokenColor, tokenColorLoading } = useExtractedTokenColor(
     tokenLogoUrl,
-    /*background=*/ colors.surface1.val,
-    /*default=*/ colors.neutral3.val
+    /*background=*/ colors.surface1.get(),
+    /*default=*/ colors.neutral3.get()
   )
 
   const onPriceChartRetry = useCallback((): void => {
@@ -249,8 +249,8 @@ function TokenDetails({
 
   const isDarkMode = useIsDarkMode()
   // shall be the same color as heart icon in not favorited state next to it
-  const ellipsisColor = isDarkMode ? colors.neutral2.val : colors.neutral2.val
-  const loadingColor = isDarkMode ? colors.neutral3.val : colors.surface3.val
+  const ellipsisColor = isDarkMode ? colors.neutral2.get() : colors.neutral2.get()
+  const loadingColor = isDarkMode ? colors.neutral3.get() : colors.surface3.get()
 
   const ellipsisMenuVisible = menuActions.length > 0
 
@@ -287,7 +287,7 @@ function TokenDetails({
             />
             <PriceExplorer
               currencyId={_currencyId}
-              tokenColor={tokenColorLoading ? loadingColor : tokenColor ?? colors.accent1.val}
+              tokenColor={tokenColorLoading ? loadingColor : tokenColor ?? colors.accent1.get()}
               onRetry={onPriceChartRetry}
             />
           </Flex>

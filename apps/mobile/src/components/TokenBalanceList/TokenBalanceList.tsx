@@ -113,11 +113,11 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
             insets.top + (IS_ANDROID && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
           }
           refreshing={refreshing ?? false}
-          tintColor={colors.neutral3.val}
+          tintColor={colors.neutral3.get()}
           onRefresh={onRefresh}
         />
       )
-    }, [refreshing, headerHeight, onRefresh, colors.neutral3.val, insets.top])
+    }, [insets.top, headerHeight, refreshing, colors.neutral3, onRefresh])
 
     // Note: `PerformanceView` must wrap the entire return statement to properly track interactive states.
     return (

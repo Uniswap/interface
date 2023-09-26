@@ -32,7 +32,7 @@ export function TransferArrowButton({
       onPress={onPress}
       {...rest}>
       <Flex centered p="$spacing2">
-        <Arrow color={colors.neutral2.val} direction="s" size={ICON_SIZE} />
+        <Arrow color={colors.neutral2.get()} direction="s" size={ICON_SIZE} />
       </Flex>
     </TouchableArea>
   )

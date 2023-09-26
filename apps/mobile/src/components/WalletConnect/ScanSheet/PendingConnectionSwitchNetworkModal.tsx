@@ -45,7 +45,7 @@ export const PendingConnectionSwitchNetworkModal = ({
                 <Flex height={iconSizes.icon24} width={iconSizes.icon24}>
                   {chainId === selectedChainId && (
                     <Check
-                      color={colors.accent1.val}
+                      color={colors.accent1.get()}
                       height={iconSizes.icon24}
                       width={iconSizes.icon24}
                     />
@@ -56,7 +56,7 @@ export const PendingConnectionSwitchNetworkModal = ({
           ),
         }
       }),
-    [selectedChainId, onPressChain, colors.accent1.val]
+    [selectedChainId, onPressChain, colors.accent1]
   )
 
   return (

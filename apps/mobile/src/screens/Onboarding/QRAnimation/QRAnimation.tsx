@@ -161,7 +161,7 @@ export function QRAnimation({
           <UniconThemedGradient
             borderRadius="rounded16"
             gradientEndColor={uniconColors.glow}
-            gradientStartColor={colors.surface1.val}
+            gradientStartColor={colors.surface1.get()}
             opacity={isDarkMode ? 0.3 : 0.2}
           />
         </GradientBackground>

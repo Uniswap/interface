@@ -197,7 +197,7 @@ export function TransactionReview({
         {transactionDetails}
         <Flex row gap="$spacing8">
           <Button
-            icon={<Arrow color={colors.neutral1.val} direction="w" size={iconSizes.icon24} />}
+            icon={<Arrow color={colors.neutral1.get()} direction="w" size={iconSizes.icon24} />}
             size="large"
             theme="tertiary"
             onPress={onPrev}

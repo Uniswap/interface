@@ -186,7 +186,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             fontSize={fonts.body1.fontSize}
             maxFontSizeMultiplier={fonts.body1.maxFontSizeMultiplier}
             placeholder={placeholder}
-            placeholderTextColor={colors.neutral2.val}
+            placeholderTextColor={colors.neutral2.get()}
             px="none"
             py="none"
             returnKeyType="done"
@@ -235,7 +235,7 @@ function ClearButton(props: ClearButtonProps): JSX.Element {
   const {
     onPress,
     clearIcon = (
-      <X color={colors.neutral2.val} height={iconSizes.icon16} width={iconSizes.icon16} />
+      <X color={colors.neutral2.get()} height={iconSizes.icon16} width={iconSizes.icon16} />
     ),
   } = props
 

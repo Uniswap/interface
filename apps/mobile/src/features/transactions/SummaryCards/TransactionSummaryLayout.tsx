@@ -92,7 +92,7 @@ function TransactionSummaryLayout({
 
   const formattedAddedTime = useFormattedTime(transaction.addedTime)
 
-  const statusIconFill = colors.surface1.val
+  const statusIconFill = colors.surface1.get()
 
   const rightBlock = inCancelling ? (
     <SlashCircleIcon

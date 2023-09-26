@@ -18,14 +18,14 @@ export function TooltipInfoButton({ size, content, ...rest }: InfoButtonProps): 
     <>
       <TouchableArea onPress={(): void => setShowModal(true)} {...rest}>
         <InfoCircle
-          color={colors.neutral2.val}
+          color={colors.neutral2.get()}
           height={size ?? DEFAULT_ICON_SIZE}
           width={size ?? DEFAULT_ICON_SIZE}
         />
       </TouchableArea>
       {showModal && (
         <BottomSheetDetachedModal
-          backgroundColor={colors.surface2.val}
+          backgroundColor={colors.surface2.get()}
           name={ModalName.TooltipContent}
           onClose={(): void => setShowModal(false)}>
           <Text p="$spacing16" variant="body1">

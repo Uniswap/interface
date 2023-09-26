@@ -144,7 +144,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
         <TouchableArea alignItems="center" mb="$spacing12">
           <Flex row alignItems="center" gap="$spacing4">
             <EyeIcon
-              color={colors.accent1.val}
+              color={colors.accent1.get()}
               height={iconSizes.icon20}
               strokeWidth="1.5"
               width={iconSizes.icon20}

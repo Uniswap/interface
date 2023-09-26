@@ -164,14 +164,14 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
   const { t } = useTranslation()
   return (
     <BottomSheetModal
-      backgroundColor={colors.surface2.val}
+      backgroundColor={colors.surface2.get()}
       hideHandlebar={true}
       isDismissible={false}
       name={ModalName.SeedPhraseWarningModal}>
       <Flex centered gap="$spacing12" pb="$spacing48" pt="$spacing36" px="$spacing24">
         <Flex centered backgroundColor="$surface2" borderRadius="$roundedFull" p="$spacing8">
           <LockIcon
-            color={colors.neutral1.val}
+            color={colors.neutral1.get()}
             height={iconSizes.icon24}
             width={iconSizes.icon24}
           />

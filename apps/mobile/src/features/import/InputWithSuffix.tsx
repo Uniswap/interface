@@ -114,7 +114,7 @@ function Inputs({
           py="none"
           returnKeyType="done"
           scrollEnabled={false}
-          selectionColor={colors.neutral1.val}
+          selectionColor={colors.neutral1.get()}
           spellCheck={false}
           testID="import_account_form/input"
           textAlign={backgroundTextAlignment}

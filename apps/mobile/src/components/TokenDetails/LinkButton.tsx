@@ -66,14 +66,18 @@ export function LinkButton({
         onPress={onPress}>
         <Flex centered row gap="$spacing8">
           {Icon && (
-            <Icon color={colors.neutral1.val} height={iconSizes.icon16} width={iconSizes.icon16} />
+            <Icon
+              color={colors.neutral1.get()}
+              height={iconSizes.icon16}
+              width={iconSizes.icon16}
+            />
           )}
           <Text $short={{ variant: 'buttonLabel4' }} color="$neutral1" variant="buttonLabel3">
             {label}
           </Text>
           {buttonType === LinkButtonType.Copy && (
             <CopyIcon
-              color={colors.neutral2.val}
+              color={colors.neutral2.get()}
               height={iconSizes.icon16}
               width={iconSizes.icon16}
             />

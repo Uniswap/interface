@@ -140,7 +140,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
       elementName={ElementName.AddCloudBackup}
       icon={
         <Icons.OSDynamicCloudIcon
-          color={colors.accent1.val}
+          color={colors.accent1.get()}
           height={iconSizes.icon16}
           width={iconSizes.icon16}
         />
@@ -155,7 +155,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
         blurb={t('Top-notch security with no third parties. You’re in control.')}
         disabled={hasManualBackup}
         elementName={ElementName.AddManualBackup}
-        icon={<PaperIcon color={colors.accent1.val} height={iconSizes.icon16} />}
+        icon={<PaperIcon color={colors.accent1.get()} height={iconSizes.icon16} />}
         title={t('Backup with recovery phrase')}
         onPress={onPressManualBackup}
       />
@@ -174,7 +174,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
           <TouchableArea alignSelf="center" py="$none" onPress={onPressEducationButton}>
             <Flex centered row gap="$spacing4">
               <InfoCircle
-                color={colors.neutral2.val}
+                color={colors.neutral2.get()}
                 height={iconSizes.icon24}
                 width={iconSizes.icon24}
               />

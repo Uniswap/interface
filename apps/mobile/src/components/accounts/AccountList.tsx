@@ -112,7 +112,7 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
     <Flex shrink position="relative">
       {/* TODO(MOB-646): attempt to switch gradients to react-native-svg#LinearGradient and avoid new clear color */}
       <LinearGradient
-        colors={[opacify(0, colors.surface1.val), colors.surface1.val]}
+        colors={[opacify(0, colors.surface1.get()), colors.surface1.get()]}
         end={{ x: 0, y: 0 }}
         start={{ x: 0, y: 1 }}
         style={ListSheet.topGradient}
@@ -135,7 +135,7 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
         )}
       </ScrollView>
       <LinearGradient
-        colors={[opacify(0, colors.surface1.val), colors.surface1.val]}
+        colors={[opacify(0, colors.surface1.get()), colors.surface1.get()]}
         end={{ x: 0, y: 1 }}
         start={{ x: 0, y: 0 }}
         style={ListSheet.bottomGradient}

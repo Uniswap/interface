@@ -41,7 +41,7 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(functio
           fontFamily={fonts.subheading2.family}
           fontSize={fonts.subheading2.fontSize}
           placeholder={placeholder}
-          placeholderTextColor={colors.neutral3.val}
+          placeholderTextColor={colors.neutral3.get()}
           returnKeyType={returnKeyType || 'done'}
           secureTextEntry={!showPassword}
           textContentType="none"
@@ -54,13 +54,13 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(functio
           <TouchableArea p="$spacing4" onPress={onPressEyeIcon}>
             {showPassword ? (
               <EyeIcon
-                color={colors.neutral2.val}
+                color={colors.neutral2.get()}
                 height={iconSizes.icon20}
                 width={iconSizes.icon20}
               />
             ) : (
               <EyeOffIcon
-                color={colors.neutral2.val}
+                color={colors.neutral2.get()}
                 height={iconSizes.icon20}
                 width={iconSizes.icon20}
               />

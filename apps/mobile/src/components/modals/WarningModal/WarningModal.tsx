@@ -57,7 +57,7 @@ export default function WarningModal({
 
   return (
     <BottomSheetModal
-      backgroundColor={colors.surface1.val}
+      backgroundColor={colors.surface1.get()}
       hideHandlebar={hideHandlebar}
       isDismissible={isDismissible}
       name={modalName}

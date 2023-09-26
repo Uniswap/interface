@@ -536,12 +536,16 @@ export function ChangeAssetVisibilityNotification({
       icon={
         visible ? (
           <EyeOffIcon
-            color={colors.neutral1.val}
+            color={colors.neutral1.get()}
             height={iconSizes.icon24}
             width={iconSizes.icon24}
           />
         ) : (
-          <EyeIcon color={colors.neutral1.val} height={iconSizes.icon24} width={iconSizes.icon24} />
+          <EyeIcon
+            color={colors.neutral1.get()}
+            height={iconSizes.icon24}
+            width={iconSizes.icon24}
+          />
         )
       }
       title={

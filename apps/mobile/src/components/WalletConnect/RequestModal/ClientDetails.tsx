@@ -36,8 +36,8 @@ export function ClientDetails({
         <LinkButton
           backgroundColor="$surface2"
           borderRadius="$rounded16"
-          color={colors.accent1.val}
-          iconColor={colors.accent1.val}
+          color={colors.accent1.get()}
+          iconColor={colors.accent1.get()}
           label={dapp.url}
           mb="$spacing12"
           px="$spacing8"

@@ -32,7 +32,7 @@ export function FavoriteHeaderRow({
       {!isEditing ? (
         <TouchableArea hapticFeedback testID={ElementName.Edit} onPress={onPress}>
           <TripleDots
-            color={colors.neutral2.val}
+            color={colors.neutral2.get()}
             height={iconSizes.icon20}
             strokeLinecap="round"
             strokeWidth="1"

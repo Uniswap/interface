@@ -60,7 +60,7 @@ function FeeOnTransferInfoRow({
         </Text>
         <Box ml="$spacing4">
           <InfoCircleIcon
-            color={colors.neutral1.val}
+            color={colors.neutral1.get()}
             height={iconSizes.icon20}
             width={iconSizes.icon20}
           />

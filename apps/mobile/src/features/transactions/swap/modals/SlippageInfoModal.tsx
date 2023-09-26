@@ -49,13 +49,13 @@ export function SlippageInfoModal({
 
   return (
     <BottomSheetModal
-      backgroundColor={colors.surface1.val}
+      backgroundColor={colors.surface1.get()}
       name={ModalName.SlippageInfo}
       onClose={onClose}>
       <Flex centered fill gap="$spacing16" mb="$spacing12" p="$spacing24">
         <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
           <Icons.Settings
-            color={colors.neutral2.val}
+            color={colors.neutral2.get()}
             height={iconSizes.icon28}
             width={iconSizes.icon28}
           />

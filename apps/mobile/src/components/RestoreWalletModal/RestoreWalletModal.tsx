@@ -33,7 +33,7 @@ export function RestoreWalletModal(): JSX.Element | null {
 
   return (
     <BottomSheetModal
-      backgroundColor={colors.surface2.val}
+      backgroundColor={colors.surface2.get()}
       isDismissible={false}
       name={ModalName.RestoreWallet}>
       <Flex centered gap="$spacing16" height="100%" mb="$spacing24" p="$spacing24" pt="$none">
@@ -42,10 +42,10 @@ export function RestoreWalletModal(): JSX.Element | null {
           borderRadius="$roundedFull"
           p="$spacing12"
           style={{
-            backgroundColor: opacify(12, colors.neutral1.val),
+            backgroundColor: opacify(12, colors.neutral1.get()),
           }}>
           <LockIcon
-            color={colors.neutral1.val}
+            color={colors.neutral1.get()}
             height={iconSizes.icon24}
             width={iconSizes.icon24}
           />

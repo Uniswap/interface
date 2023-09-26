@@ -180,7 +180,7 @@ export function TransactionFlow({
               confirmText={t('Dismiss')}
               icon={
                 <EyeIcon
-                  color={colors.neutral2.val}
+                  color={colors.neutral2.get()}
                   height={iconSizes.icon24}
                   width={iconSizes.icon24}
                 />

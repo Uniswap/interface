@@ -84,7 +84,7 @@ export function NFTCollectionHeader({
           <Flex
             style={[
               bannerImageStyle,
-              { backgroundColor: bannerColorsFallback?.base ?? colors.surface2.val },
+              { backgroundColor: bannerColorsFallback?.base ?? colors.surface2.get() },
             ]}
           />
         )}
@@ -157,7 +157,7 @@ export function NFTCollectionHeader({
             </Text>
             {data?.isVerified ? (
               <VerifiedIcon
-                color={colors.accent1.val}
+                color={colors.accent1.get()}
                 height={iconSizes.icon16}
                 width={iconSizes.icon16}
               />
@@ -193,7 +193,7 @@ export function NFTCollectionHeader({
                   )} `}
                 </Text>
                 {collectionStats?.floorPrice?.value !== undefined ? (
-                  <Logos.Ethereum color={colors.neutral1.val} size={iconSizes.icon16} />
+                  <Logos.Ethereum color={colors.neutral1.get()} size={iconSizes.icon16} />
                 ) : null}
               </Flex>
             </Flex>
@@ -209,7 +209,7 @@ export function NFTCollectionHeader({
                   )}`}
                 </Text>
                 {collectionStats?.totalVolume?.value !== undefined ? (
-                  <Logos.Ethereum color={colors.neutral1.val} size={iconSizes.icon16} />
+                  <Logos.Ethereum color={colors.neutral1.get()} size={iconSizes.icon16} />
                 ) : null}
               </Flex>
             </Flex>

@@ -138,7 +138,7 @@ export function BottomSheetModal({
 
   const backgroundColorValue = blurredBackground
     ? colors.transparent.val
-    : backgroundColor ?? colors.surface1.val
+    : backgroundColor ?? colors.surface1.get()
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
@@ -335,7 +335,7 @@ export function BottomSheetDetachedModal({
         hideHandlebar
           ? BottomSheetStyle.modalTransparent
           : {
-              backgroundColor: backgroundColor ?? colors.surface1.val,
+              backgroundColor: backgroundColor ?? colors.surface1.get(),
             }
       }
       bottomInset={spacing.spacing48}

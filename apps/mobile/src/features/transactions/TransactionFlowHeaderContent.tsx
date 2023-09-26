@@ -69,7 +69,7 @@ export function HeaderContent({
             onPress={(): void => onToggleUSDInput(!isUSDInput)}>
             <Flex row alignItems="center" gap="$spacing4">
               <DollarSign
-                color={isUSDInput ? colors.accent1.val : colors.neutral2.val}
+                color={isUSDInput ? colors.accent1.get() : colors.neutral2.get()}
                 height={iconSizes.icon16}
                 width={iconSizes.icon16}
               />
@@ -89,7 +89,7 @@ export function HeaderContent({
             onPress={(): void => setShowViewOnlyModal(true)}>
             <Flex row alignItems="center" gap="$spacing4">
               <EyeIcon
-                color={colors.neutral2.val}
+                color={colors.neutral2.get()}
                 height={iconSizes.icon16}
                 width={iconSizes.icon16}
               />
@@ -118,7 +118,7 @@ export function HeaderContent({
                 </Text>
               ) : null}
               <SettingsIcon
-                color={colors.neutral3.val}
+                color={colors.neutral3.get()}
                 height={iconSizes.icon28}
                 width={iconSizes.icon28}
               />

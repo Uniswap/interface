@@ -30,7 +30,7 @@ export function NetworkFee({
         <Flex centered row gap="$spacing4">
           <Text variant="body3">{t('Network fee')}</Text>
           <InfoCircleIcon
-            color={colors.neutral1.val}
+            color={colors.neutral1.get()}
             height={iconSizes.icon20}
             width={iconSizes.icon20}
           />

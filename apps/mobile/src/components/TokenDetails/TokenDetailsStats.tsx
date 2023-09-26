@@ -21,7 +21,7 @@ function StatsRow({
     <Flex row justifyContent="space-between" pl="$spacing2">
       <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start">
         <StatsIcon
-          color={tokenColor ?? colors.neutral3.val}
+          color={tokenColor ?? colors.neutral3.get()}
           height={iconSizes.icon12}
           width={iconSizes.icon12}
         />
@@ -109,8 +109,8 @@ export function TokenDetailsStats({
             <LongText
               gap="$spacing2"
               initialDisplayedLines={5}
-              linkColor={tokenColor ?? colors.neutral1.val}
-              readMoreOrLessColor={tokenColor ?? colors.neutral2.val}
+              linkColor={tokenColor ?? colors.neutral1.get()}
+              readMoreOrLessColor={tokenColor ?? colors.neutral2.get()}
               text={tokenProjectData.description.trim()}
             />
           </Flex>

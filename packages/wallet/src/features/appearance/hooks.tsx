@@ -39,7 +39,6 @@ function useColorScheme(): ColorSchemeName {
 export function useSelectedColorScheme(): 'light' | 'dark' {
   const currentAppearanceSetting = useCurrentAppearanceSetting()
   const isDarkMode = useColorScheme() === 'dark'
-
   if (currentAppearanceSetting !== AppearanceSettingType.System) {
     return currentAppearanceSetting === AppearanceSettingType.Dark ? 'dark' : 'light'
   }

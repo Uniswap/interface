@@ -35,7 +35,7 @@ export function AccountSwitcherModal(): JSX.Element {
   return (
     <BottomSheetModal
       disableSwipe
-      backgroundColor={colors.surface1.val}
+      backgroundColor={colors.surface1.get()}
       name={ModalName.AccountSwitcher}
       onClose={(): Action => dispatch(closeModal({ name: ModalName.AccountSwitcher }))}>
       <Screen bg="$surface1" noInsets={true}>

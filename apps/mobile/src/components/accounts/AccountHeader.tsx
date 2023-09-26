@@ -85,7 +85,7 @@ export function AccountHeader(): JSX.Element {
       </TouchableArea>
       <TouchableArea hapticFeedback onPress={onPressSettings}>
         <Icons.Settings
-          color={colors.neutral2.val}
+          color={colors.neutral2.get()}
           height={iconSizes.icon28}
           opacity="0.8"
           width={iconSizes.icon28}

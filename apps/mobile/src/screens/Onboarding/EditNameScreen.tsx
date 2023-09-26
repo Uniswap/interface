@@ -143,7 +143,7 @@ function CustomizationSection({
             maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
             maxLength={NICKNAME_MAX_LENGTH}
             placeholder="Nickname"
-            placeholderTextColor={colors.neutral3.val}
+            placeholderTextColor={colors.neutral3.get()}
             testID="customize/name"
             textAlign="center"
             value={accountName}

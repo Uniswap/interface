@@ -48,7 +48,7 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
           <EtherscanIcon height={iconSizes.icon40} width={iconSizes.icon40} />
           <Text variant="body1">{shortenAddress(address)}</Text>
         </Flex>
-        <Arrow color={colors.neutral2.val} direction="ne" size={iconSizes.icon24} />
+        <Arrow color={colors.neutral2.get()} direction="ne" size={iconSizes.icon24} />
       </Flex>
     </TouchableArea>
   )

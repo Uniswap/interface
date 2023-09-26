@@ -61,7 +61,9 @@ export function SettingsCloudBackupPasswordCreateScreen({
         </Flex>
         <CloudBackupPasswordForm navigateToNextScreen={navigateToNextScreen} />
         {showCloudBackupInfoModal && (
-          <BottomSheetModal backgroundColor={colors.surface2.val} name={ModalName.CloudBackupInfo}>
+          <BottomSheetModal
+            backgroundColor={colors.surface2.get()}
+            name={ModalName.CloudBackupInfo}>
             <Flex mb="$spacing36" px="$spacing16" py="$spacing12">
               <Flex centered gap="$spacing16">
                 <Flex
@@ -70,7 +72,7 @@ export function SettingsCloudBackupPasswordCreateScreen({
                   borderWidth={1}
                   p="$spacing12">
                   <Icons.OSDynamicCloudIcon
-                    color={colors.accent1.val}
+                    color={colors.accent1.get()}
                     height={iconSizes.icon20}
                     width={iconSizes.icon20}
                   />

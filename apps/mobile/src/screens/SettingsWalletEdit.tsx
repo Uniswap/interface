@@ -71,7 +71,7 @@ export function SettingsWalletEdit({
                 maxLength={NICKNAME_MAX_LENGTH}
                 numberOfLines={1}
                 placeholder={shortenAddress(address)}
-                placeholderTextColor={colors.neutral3.val}
+                placeholderTextColor={colors.neutral3.get()}
                 px="none"
                 py="none"
                 returnKeyType="done"

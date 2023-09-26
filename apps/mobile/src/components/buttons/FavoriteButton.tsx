@@ -26,8 +26,8 @@ export const FavoriteButton = ({
 }: FavoriteButtonProps): JSX.Element => {
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
-  const unfilledColor = isDarkMode ? colors.neutral3.val : colors.surface3.val
-  const color = isFavorited ? colors.accent1.val : unfilledColor
+  const unfilledColor = isDarkMode ? colors.neutral3.get() : colors.surface3.get()
+  const color = isFavorited ? colors.accent1.get() : unfilledColor
 
   const scale = useSharedValue(1)
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }), [scale])

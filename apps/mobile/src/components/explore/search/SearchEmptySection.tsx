@@ -95,12 +95,12 @@ const walletKey = (wallet: WalletSearchResult): string => {
 
 export const TrendIcon = (): JSX.Element => {
   const colors = useSporeColors()
-  return <TrendArrowIcon color={colors.neutral2.val} width={iconSizes.icon20} />
+  return <TrendArrowIcon color={colors.neutral2.get()} width={iconSizes.icon20} />
 }
 
 export const RecentIcon = (): JSX.Element => {
   const colors = useSporeColors()
   return (
-    <ClockIcon color={colors.neutral2.val} height={iconSizes.icon20} width={iconSizes.icon20} />
+    <ClockIcon color={colors.neutral2.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
   )
 }

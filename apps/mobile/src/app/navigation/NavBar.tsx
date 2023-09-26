@@ -222,7 +222,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
     : {
         bg: '$surface1',
         style: {
-          borderColor: colors.surface3.val,
+          borderColor: colors.surface3.get(),
           borderWidth: 1,
         },
       }

@@ -161,7 +161,7 @@ export function SwapDetails({
             <Flex centered row gap="$spacing4">
               <Text variant="body3">{t('Swap protection')}</Text>
               <InfoCircle
-                color={colors.neutral1.val}
+                color={colors.neutral1.get()}
                 height={iconSizes.icon20}
                 width={iconSizes.icon20}
               />
@@ -169,7 +169,7 @@ export function SwapDetails({
           </TouchableArea>
           <Flex centered row gap="$spacing8">
             <Icons.ShieldCheck
-              color={colors.neutral3.val}
+              color={colors.neutral3.get()}
               height={iconSizes.icon16}
               width={iconSizes.icon16}
             />
@@ -184,7 +184,7 @@ export function SwapDetails({
           <Flex centered row gap="$spacing4">
             <Text variant="body3">{t('Max slippage')}</Text>
             <InfoCircle
-              color={colors.neutral1.val}
+              color={colors.neutral1.get()}
               height={iconSizes.icon20}
               width={iconSizes.icon20}
             />

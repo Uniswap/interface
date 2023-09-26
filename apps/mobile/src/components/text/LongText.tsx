@@ -28,11 +28,11 @@ export function LongText(props: LongTextProps): JSX.Element {
     initialDisplayedLines = 3,
     text,
     gap = '$spacing8',
-    color = colors.neutral1.val,
-    linkColor = colors.neutral2.val,
-    readMoreOrLessColor = colors.neutral2.val,
+    color = colors.neutral1.get(),
+    linkColor = colors.neutral2.get(),
+    readMoreOrLessColor = colors.neutral2.get(),
     renderAsMarkdown = false,
-    codeBackgroundColor = colors.surface3.val,
+    codeBackgroundColor = colors.surface3.get(),
     variant = 'body2',
     ...rest
   } = props

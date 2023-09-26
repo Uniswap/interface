@@ -26,7 +26,11 @@ function QRScannerIconButton({ onPress }: { onPress: () => void }): JSX.Element 
 
   return (
     <TouchableArea hapticFeedback testID={ElementName.SelectRecipient} onPress={onPress}>
-      <ScanQRIcon color={colors.neutral2.val} height={iconSizes.icon20} width={iconSizes.icon20} />
+      <ScanQRIcon
+        color={colors.neutral2.get()}
+        height={iconSizes.icon20}
+        width={iconSizes.icon20}
+      />
     </TouchableArea>
   )
 }

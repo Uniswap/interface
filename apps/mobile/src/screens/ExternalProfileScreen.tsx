@@ -105,8 +105,8 @@ export function ExternalProfileScreen({
             style={[
               TAB_STYLES.tabBar,
               {
-                backgroundColor: colors.surface1.val,
-                borderBottomColor: colors.surface3.val,
+                backgroundColor: colors.surface1.get(),
+                borderBottomColor: colors.surface3.get(),
               },
             ]}
             tabStyle={styles.tabStyle}
@@ -114,7 +114,7 @@ export function ExternalProfileScreen({
         </Flex>
       )
     },
-    [colors.surface1.val, colors.surface3.val, tabIndex, tabs]
+    [colors.surface1, colors.surface3, tabIndex, tabs]
   )
 
   const traceProperties = useMemo(

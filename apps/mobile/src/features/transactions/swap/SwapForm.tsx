@@ -416,7 +416,7 @@ function _SwapForm({
                       <SpinningLoader size={iconSizes.icon20} />
                     ) : (
                       <InfoCircle
-                        color={colors.neutral1.val}
+                        color={colors.neutral1.get()}
                         height={iconSizes.icon20}
                         width={iconSizes.icon20}
                       />

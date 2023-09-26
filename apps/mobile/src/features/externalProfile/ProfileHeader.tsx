@@ -45,20 +45,13 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
   // Wait for avatar, then render avatar extracted colors or unicon colors if no avatar
   const fixedGradientColors = useMemo(() => {
     if (loading || (hasAvatar && !avatarColors)) {
-      return [colors.surface1.val, colors.surface1.val] as [string, string]
+      return [colors.surface1.get(), colors.surface1.get()] as [string, string]
     }
     if (hasAvatar && avatarColors && avatarColors.base) {
       return [avatarColors.base, avatarColors.base]
     }
     return [uniconGradientStart, uniconGradientEnd]
-  }, [
-    avatarColors,
-    hasAvatar,
-    loading,
-    colors.surface1.val,
-    uniconGradientEnd,
-    uniconGradientStart,
-  ])
+  }, [avatarColors, hasAvatar, loading, colors.surface1, uniconGradientEnd, uniconGradientStart])
 
   const onPressFavorite = useToggleWatchedWalletCallback(address)
 

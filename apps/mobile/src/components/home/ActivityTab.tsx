@@ -123,11 +123,11 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(function _Ac
           insets.top + (IS_ANDROID && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
         }
         refreshing={refreshing ?? false}
-        tintColor={colors.neutral3.val}
+        tintColor={colors.neutral3.get()}
         onRefresh={onRefresh}
       />
     )
-  }, [refreshing, headerHeight, onRefresh, colors.neutral3.val, insets.top])
+  }, [refreshing, headerHeight, onRefresh, colors.neutral3, insets.top])
 
   if (!hasData && isError) {
     return errorCard

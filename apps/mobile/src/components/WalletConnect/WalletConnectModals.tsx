@@ -110,7 +110,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
         closeText={t('Dismiss')}
         icon={
           <EyeIcon
-            color={colors.neutral2.val}
+            color={colors.neutral2.get()}
             height={iconSizes.icon24}
             strokeWidth={1.5}
             width={iconSizes.icon24}

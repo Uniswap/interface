@@ -81,7 +81,7 @@ function AppearanceOption({
       py="$spacing12"
       onPress={(): Action => dispatch(setSelectedAppearanceSettings(option))}>
       <Icon
-        color={colors.neutral2.val}
+        color={colors.neutral2.get()}
         height={iconSizes.icon24}
         strokeWidth={1.5}
         width={iconSizes.icon24}
@@ -94,7 +94,7 @@ function AppearanceOption({
           </Text>
         </Flex>
         <Flex grow alignItems="flex-end" justifyContent="center" style={{ opacity: showCheckMark }}>
-          <Check color={colors.accent1.val} height={iconSizes.icon24} width={iconSizes.icon24} />
+          <Check color={colors.accent1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
         </Flex>
       </Flex>
     </TouchableArea>

@@ -58,7 +58,7 @@ export function SettingsScreen(): JSX.Element {
 
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
     const iconProps: SvgProps = {
-      color: colors.neutral2.val,
+      color: colors.neutral2.get(),
       height: iconSizes.icon24,
       strokeLinecap: 'round',
       strokeLinejoin: 'round',
@@ -159,7 +159,7 @@ export function SettingsScreen(): JSX.Element {
       },
     ]
   }, [
-    colors.neutral2.val,
+    colors.neutral2,
     t,
     currentAppearanceSetting,
     deviceSupportsBiometrics,

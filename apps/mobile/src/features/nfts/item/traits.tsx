@@ -16,7 +16,7 @@ export function NFTTraitCard({
     <Flex bg="$surface3" borderRadius="$rounded16" gap="$spacing4" px="$spacing16" py="$spacing12">
       <Text
         fontSize={14}
-        style={{ color: titleTextColor ?? colors.neutral2.val }}
+        style={{ color: titleTextColor ?? colors.neutral2.get() }}
         variant="buttonLabel4">
         {trait.name}
       </Text>

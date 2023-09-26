@@ -74,7 +74,7 @@ export function FiatOnRampModal(): JSX.Element {
     <BottomSheetModal
       fullScreen
       hideKeyboardOnDismiss
-      backgroundColor={colors.surface1.val}
+      backgroundColor={colors.surface1.get()}
       name={ModalName.FiatOnRamp}
       onClose={onClose}>
       <FiatOnRampContent onClose={onClose} />

@@ -36,7 +36,7 @@ function _SuggestedToken({
       <Pill
         backgroundColor="$surface3"
         borderRadius="$roundedFull"
-        foregroundColor={colors.neutral1.val}
+        foregroundColor={colors.neutral1.get()}
         icon={<TokenLogo size={iconSizes.icon28} symbol={currency.symbol} url={logoUrl} />}
         label={getSymbolDisplayText(currency.symbol)}
         mr="$spacing8"

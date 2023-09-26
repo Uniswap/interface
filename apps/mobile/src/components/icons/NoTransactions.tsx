@@ -10,9 +10,9 @@ export const NoTransactions = memo(function _NoTransactions() {
     <Flex mb="$spacing24">
       <OverlayIcon
         bottom={-23}
-        icon={<NoTransactionBgIcon color={colors.neutral3.val} />}
+        icon={<NoTransactionBgIcon color={colors.neutral3.get()} />}
         left={5}
-        overlay={<NoTransactionFgIcon color={colors.neutral3.val} />}
+        overlay={<NoTransactionFgIcon color={colors.neutral3.get()} />}
       />
     </Flex>
   )

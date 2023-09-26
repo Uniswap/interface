@@ -88,7 +88,7 @@ export function ForceUpgradeModal(): JSX.Element {
       {mnemonicId && showSeedPhrase && (
         <BottomSheetModal
           fullScreen
-          backgroundColor={colors.surface1.val}
+          backgroundColor={colors.surface1.get()}
           name={ModalName.ForceUpgradeModal}
           onClose={onDismiss}>
           <Flex fill gap="$spacing16" px="$spacing24" py="$spacing24">

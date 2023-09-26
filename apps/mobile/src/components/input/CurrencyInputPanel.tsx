@@ -243,7 +243,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
               minHeight={2 * MAX_INPUT_FONT_SIZE}
               overflow="visible"
               placeholder="0"
-              placeholderTextColor={colors.neutral3.val}
+              placeholderTextColor={colors.neutral3.get()}
               px="none"
               py="none"
               returnKeyType={showSoftInputOnFocus ? 'done' : undefined}

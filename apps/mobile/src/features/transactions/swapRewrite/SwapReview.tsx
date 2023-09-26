@@ -23,7 +23,7 @@ export function SwapReview(): JSX.Element {
 
       <Flex row gap="$spacing8" mt="$spacing24">
         <Button
-          icon={<Arrow color={colors.neutral1.val} direction="w" size={iconSizes.icon24} />}
+          icon={<Arrow color={colors.neutral1.get()} direction="w" size={iconSizes.icon24} />}
           size="large"
           theme="tertiary"
           onPress={onClose}

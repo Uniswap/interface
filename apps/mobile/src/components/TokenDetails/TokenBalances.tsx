@@ -113,7 +113,7 @@ export function CurrentChainBalance({
         </Text>
       </Flex>
       <Flex alignItems="flex-end" justifyContent="center">
-        <SendButton color={colors.neutral1.val} size={iconSizes.icon28} onPress={onPressSend} />
+        <SendButton color={colors.neutral1.get()} size={iconSizes.icon28} onPress={onPressSend} />
       </Flex>
     </Flex>
   )

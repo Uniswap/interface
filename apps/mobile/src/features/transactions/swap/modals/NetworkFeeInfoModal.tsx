@@ -18,14 +18,14 @@ export function NetworkFeeInfoModal({ onClose }: { onClose: () => void }): JSX.E
 
   return (
     <WarningModal
-      backgroundIconColor={colors.surface2.val}
+      backgroundIconColor={colors.surface2.get()}
       caption={t(
         'Network fees are paid to validators to process transactions, not to Uniswap Labs. These fees are required for all transactions on a blockchain.'
       )}
       closeText={t('Close')}
       icon={
         <Icons.Coin
-          color={colors.neutral2.val}
+          color={colors.neutral2.get()}
           height={iconSizes.icon24}
           width={iconSizes.icon24}
         />

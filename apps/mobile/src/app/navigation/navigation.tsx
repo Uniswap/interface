@@ -143,7 +143,7 @@ export function ExploreStackNavigator(): JSX.Element {
         }}>
         <ExploreStack.Screen component={ExploreScreen} name={Screens.Explore} />
         <ExploreStack.Group
-          screenOptions={{ contentStyle: { backgroundColor: colors.surface1.val } }}>
+          screenOptions={{ contentStyle: { backgroundColor: colors.surface1.get() } }}>
           <ExploreStack.Screen component={ExternalProfileScreen} name={Screens.ExternalProfile} />
           <ExploreStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
           <ExploreStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
@@ -174,7 +174,7 @@ export function OnboardingStackNavigator(): JSX.Element {
           headerBackImage: renderHeaderBackImage,
           headerStatusBarHeight: insets.top + spacing.spacing8,
           headerTransparent: true,
-          headerTintColor: colors.neutral2.val,
+          headerTintColor: colors.neutral2.get(),
           headerLeftContainerStyle: { paddingLeft: spacing.spacing16 },
           headerRightContainerStyle: { paddingRight: spacing.spacing16 },
           ...TransitionPresets.SlideFromRightIOS,

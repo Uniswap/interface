@@ -43,7 +43,7 @@ const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps): JSX.E
     <LinkButton
       backgroundColor="$surface3"
       borderRadius="$rounded12"
-      iconColor={colors.neutral1.val}
+      iconColor={colors.neutral1.get()}
       label={name || shortenAddress(address)}
       px="$spacing8"
       py="$spacing4"

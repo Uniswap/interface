@@ -31,7 +31,7 @@ function CTAButton({
         onPress={onPress}
         size="large"
         // @ts-expect-error intentional bypass of strict token types for our custom color
-        bg={tokenColor ?? colors.accent1.val}>
+        bg={tokenColor ?? colors.accent1.get()}>
         {title}
       </Button>
     </Trace>

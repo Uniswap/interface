@@ -28,7 +28,7 @@ export function SwapModal(): JSX.Element {
       hideHandlebar
       hideKeyboardOnDismiss
       renderBehindInset
-      backgroundColor={colors.surface1.val}
+      backgroundColor={colors.surface1.get()}
       name={ModalName.Swap}
       onClose={onClose}>
       <SwapFlow prefilledState={modalState.initialState} onClose={onClose} />

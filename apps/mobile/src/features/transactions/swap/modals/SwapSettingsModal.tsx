@@ -108,7 +108,7 @@ export function SwapSettingsModal({
 
   return (
     <BottomSheetModal
-      backgroundColor={colors.surface1.val}
+      backgroundColor={colors.surface1.get()}
       name={ModalName.SwapSettings}
       onClose={onClose}>
       <Flex gap="$spacing16" mb="$spacing28" px="$spacing24" py="$spacing12">
@@ -218,7 +218,7 @@ function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Eleme
                   {t('Swap protection')}
                 </Text>
                 <InfoCircle
-                  color={colors.neutral1.val}
+                  color={colors.neutral1.get()}
                   height={iconSizes.icon16}
                   width={iconSizes.icon16}
                 />
@@ -434,7 +434,7 @@ function SlippageSettings({
             <BottomSheetTextInput
               keyboardType="numeric"
               style={{
-                color: autoSlippageEnabled ? colors.neutral2.val : colors.neutral1.val,
+                color: autoSlippageEnabled ? colors.neutral2.get() : colors.neutral1.get(),
                 fontSize: fonts.subheading1.fontSize,
                 fontFamily: fonts.subheading1.family,
                 width: fonts.subheading1.fontSize * 4,

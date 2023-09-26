@@ -99,7 +99,7 @@ export function SettingsRow({
             />
           </Flex>
         ) : externalLink ? (
-          <Arrow color={colors.neutral3.val} direction="ne" size={iconSizes.icon24} />
+          <Arrow color={colors.neutral3.get()} direction="ne" size={iconSizes.icon24} />
         ) : (
           action
         )}

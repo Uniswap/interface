@@ -20,7 +20,7 @@ export function CopyTextButton({ copyText }: Props): JSX.Element {
 
   const [isCopied, setIsCopied] = useState(false)
 
-  const copyIcon = <CopySheets color={colors.neutral1.val} height={ICON_SIZE} width={ICON_SIZE} />
+  const copyIcon = <CopySheets color={colors.neutral1.get()} height={ICON_SIZE} width={ICON_SIZE} />
   const copiedIcon = (
     <CheckCircle color={colors.statusSuccess.val} height={ICON_SIZE} width={ICON_SIZE} />
   )

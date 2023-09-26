@@ -254,18 +254,18 @@ const GradientOverlay = memo(function GradientOverlay({
       <Svg height="100%" width="100%">
         <Defs>
           <LinearGradient id="scan-top-fadeout" x1="0" x2="0" y1="0" y2="1">
-            <Stop offset="0" stopColor={colors.surface1.val} stopOpacity="1" />
+            <Stop offset="0" stopColor={colors.surface1.get()} stopOpacity="1" />
             <Stop
               offset="0.4"
-              stopColor={colors.surface1.val}
+              stopColor={colors.surface1.get()}
               stopOpacity={shouldFreezeCamera ? '0.5' : '0'}
             />
           </LinearGradient>
           <LinearGradient id="scan-bottom-fadeout" x1="0" x2="0" y1="1" y2="0">
-            <Stop offset="0" stopColor={colors.surface1.val} stopOpacity="1" />
+            <Stop offset="0" stopColor={colors.surface1.get()} stopOpacity="1" />
             <Stop
               offset="0.4"
-              stopColor={colors.surface1.val}
+              stopColor={colors.surface1.get()}
               stopOpacity={shouldFreezeCamera ? '0.5' : '0'}
             />
           </LinearGradient>

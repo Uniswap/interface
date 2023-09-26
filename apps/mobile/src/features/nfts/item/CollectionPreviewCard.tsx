@@ -66,7 +66,7 @@ export function CollectionPreviewCard({
               </Flex>
               {collection?.isVerified && (
                 <VerifiedIcon
-                  color={colors.accent1.val}
+                  color={colors.accent1.get()}
                   height={iconSizes.icon16}
                   width={iconSizes.icon16}
                 />
