@@ -346,7 +346,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`}
                 width="100%"
               >
-                <Trans>Manage Liquidity in Rewards Pool</Trans>
+                <Trans>Manage liquidity in rewards pool</Trans>
               </ButtonPrimary>
             )}
           </AutoColumn>

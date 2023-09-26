@@ -104,7 +104,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             <CardSection gap="md">
               <RowBetween>
                 <ThemedText.DeprecatedWhite fontWeight={535}>
-                  <Trans>Claim UNI Token</Trans>
+                  <Trans>Claim UNI token</Trans>
                 </ThemedText.DeprecatedWhite>
                 <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
               </RowBetween>

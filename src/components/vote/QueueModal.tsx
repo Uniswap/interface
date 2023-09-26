@@ -82,7 +82,7 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
               <ThemedText.DeprecatedMediumHeader fontWeight={535}>
-                <Trans>Queue Proposal {proposalId}</Trans>
+                <Trans>Queue proposal {proposalId}</Trans>
               </ThemedText.DeprecatedMediumHeader>
               <StyledClosed onClick={wrappedOnDismiss} />
             </RowBetween>
@@ -132,7 +132,7 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
           <AutoColumn gap="100px" justify="center">
             <AutoColumn gap="md" justify="center">
               <ThemedText.DeprecatedLargeHeader>
-                <Trans>Transaction Submitted</Trans>
+                <Trans>Transaction submitted</Trans>
               </ThemedText.DeprecatedLargeHeader>
             </AutoColumn>
             {chainId && (

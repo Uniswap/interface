@@ -174,7 +174,7 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
     let inputError: ReactNode | undefined
 
     if (!account) {
-      inputError = connectionReady ? <Trans>Connect Wallet</Trans> : <Trans>Connecting Wallet...</Trans>
+      inputError = connectionReady ? <Trans>Connect wallet</Trans> : <Trans>Connecting wallet...</Trans>
     }
 
     if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {

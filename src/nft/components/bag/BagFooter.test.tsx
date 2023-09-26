@@ -301,7 +301,7 @@ describe('BagFooter.tsx', () => {
 
     renderBagFooter()
     const buyButton = getBuyButton()
-    expect(buyButton.textContent).toBe('Fetching Route')
+    expect(buyButton.textContent).toBe('Fetching route')
     expect(buyButton).toBeDisabled()
   })
 
@@ -329,7 +329,7 @@ describe('BagFooter.tsx', () => {
     renderBagFooter()
     const buyButton = getBuyButton()
 
-    expect(buyButton.textContent).toBe('Loading Allowance')
+    expect(buyButton.textContent).toBe('Loading allowance')
     expect(buyButton).toBeDisabled()
   })
 

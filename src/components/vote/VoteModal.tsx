@@ -125,7 +125,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
           <AutoColumn gap="100px" justify="center">
             <AutoColumn gap="md" justify="center">
               <ThemedText.DeprecatedLargeHeader>
-                <Trans>Submitting Vote</Trans>
+                <Trans>Submitting vote</Trans>
               </ThemedText.DeprecatedLargeHeader>
             </AutoColumn>
             <ThemedText.DeprecatedSubHeader>

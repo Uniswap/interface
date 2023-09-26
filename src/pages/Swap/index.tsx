@@ -727,7 +727,7 @@ export function Swap({
           {swapIsUnsupported ? (
             <ButtonPrimary $borderRadius="16px" disabled={true}>
               <ThemedText.DeprecatedMain mb="4px">
-                <Trans>Unsupported Asset</Trans>
+                <Trans>Unsupported asset</Trans>
               </ThemedText.DeprecatedMain>
             </ButtonPrimary>
           ) : switchingChain ? (
@@ -742,7 +742,7 @@ export function Swap({
               element={InterfaceElementName.CONNECT_WALLET_BUTTON}
             >
               <ButtonLight onClick={toggleWalletDrawer} fontWeight={535} $borderRadius="16px">
-                <Trans>Connect Wallet</Trans>
+                <Trans>Connect wallet</Trans>
               </ButtonLight>
             </TraceEvent>
           ) : chainId && chainId !== connectedChainId ? (
@@ -806,7 +806,7 @@ export function Swap({
                   ) : routeIsSyncing || routeIsLoading ? (
                     <Trans>Swap</Trans>
                   ) : priceImpactSeverity > 2 ? (
-                    <Trans>Swap Anyway</Trans>
+                    <Trans>Swap anyway</Trans>
                   ) : (
                     <Trans>Swap</Trans>
                   )}
