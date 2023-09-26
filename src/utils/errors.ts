@@ -1,7 +1,6 @@
-// You may throw an instance of this class when the user rejects a request in their wallet.
-
 import { t } from '@lingui/macro'
 
+// You may throw an instance of this class when the user rejects a request in their wallet.
 // The benefit is that you can distinguish this error from other errors using didUserReject().
 export class UserRejectedRequestError extends Error {
   constructor(message: string) {
@@ -21,5 +20,12 @@ export function toReadableError(errorText: string, error: unknown) {
 export class WrongChainError extends Error {
   constructor() {
     super(t`Your wallet is connected to the wrong network.`)
+  }
+}
+
+export class SignatureExpiredError extends Error {
+  constructor() {
+    super(t`Your signature has expired.`)
+    this.name = 'SignatureExpiredError'
   }
 }

@@ -20,7 +20,7 @@ import { SwapResult } from 'hooks/useSwapCallback'
 import useWrapCallback from 'hooks/useWrapCallback'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { Field } from 'state/swap/actions'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
@@ -28,6 +28,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import invariant from 'tiny-invariant'
 import { isL2ChainId } from 'utils/chains'
+import { SignatureExpiredError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -376,6 +377,8 @@ export default function ConfirmSwapModal({
         wrapTxHash={wrapTxHash}
         tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
         revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
+        swapError={swapError}
+        onRetry={startSwapFlow}
       />
     )
   }, [
@@ -386,13 +389,13 @@ export default function ConfirmSwapModal({
     swapResult,
     wrapTxHash,
     allowance,
+    swapError,
+    startSwapFlow,
     allowedSlippage,
     fiatValueInput,
     fiatValueOutput,
     onAcceptChanges,
     swapFailed,
-    swapError?.message,
-    startSwapFlow,
   ])
 
   const l2Badge = () => {
@@ -410,14 +413,19 @@ export default function ConfirmSwapModal({
     return undefined
   }
 
+  const errorType = useMemo(() => {
+    if (approvalError) return approvalError
+    // SignatureExpiredError is a special case. The UI is shown in the PendingModalContent component.
+    if (swapError instanceof SignatureExpiredError) return
+    if (swapError) return PendingModalError.CONFIRMATION_ERROR
+    return
+  }, [approvalError, swapError])
+
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <Modal isOpen $scrollOverlay onDismiss={onModalDismiss} maxHeight={90}>
-        {approvalError || swapFailed ? (
-          <ErrorModalContent
-            errorType={approvalError ?? PendingModalError.CONFIRMATION_ERROR}
-            onRetry={startSwapFlow}
-          />
+        {errorType ? (
+          <ErrorModalContent errorType={errorType} onRetry={startSwapFlow} />
         ) : (
           <ConfirmationModalContent
             title={confirmModalState === ConfirmModalState.REVIEWING ? <Trans>Review swap</Trans> : undefined}
