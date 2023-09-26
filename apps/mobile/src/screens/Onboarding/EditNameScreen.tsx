@@ -74,7 +74,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
         editAccountActions.trigger({
           type: EditAccountAction.Rename,
           address: pendingAccount?.address,
-          newName: newAccountName,
+          newName: newAccountName.trim(),
         })
       )
     }
@@ -147,7 +147,10 @@ function CustomizationSection({
             testID="customize/name"
             textAlign="center"
             value={accountName}
-            onBlur={(): void => setFocused(false)}
+            onBlur={(): void => {
+              setFocused(false)
+              setAccountName(accountName.trim())
+            }}
             onChangeText={setAccountName}
             onFocus={(): void => setFocused(true)}
           />
