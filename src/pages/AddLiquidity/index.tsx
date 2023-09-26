@@ -762,7 +762,7 @@ function AddLiquidity() {
                           <AutoColumn gap="2px" style={{ marginTop: '0.5rem' }}>
                             <Trans>
                               <ThemedText.DeprecatedMain fontWeight={535} fontSize={12} color="text1">
-                                Current Price:
+                                Current price:
                               </ThemedText.DeprecatedMain>
                               <ThemedText.DeprecatedBody fontWeight={535} fontSize={20} color="text1">
                                 {price && (
