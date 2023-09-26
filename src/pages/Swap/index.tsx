@@ -455,6 +455,14 @@ export function Swap({
     })
   }, [trade])
 
+  const clearSwapState = useCallback(() => {
+    setSwapState((currentState) => ({
+      ...currentState,
+      swapError: undefined,
+      swapResult: undefined,
+    }))
+  }, [])
+
   const handleSwap = useCallback(() => {
     if (!swapCallback) {
       return
@@ -462,11 +470,6 @@ export function Swap({
     if (preTaxStablecoinPriceImpact && !confirmPriceImpactWithoutFee(preTaxStablecoinPriceImpact)) {
       return
     }
-    setSwapState((currentState) => ({
-      ...currentState,
-      swapError: undefined,
-      swapResult: undefined,
-    }))
     swapCallback()
       .then((result) => {
         setSwapState((currentState) => ({
@@ -483,15 +486,6 @@ export function Swap({
         }))
       })
   }, [swapCallback, preTaxStablecoinPriceImpact])
-
-  const handleRetryUniswapXSignature = useCallback(() => {
-    swapCallback?.().catch((error) => {
-      setSwapState((currentState) => ({
-        ...currentState,
-        swapError: error,
-      }))
-    })
-  }, [swapCallback])
 
   const handleOnWrap = useCallback(async () => {
     if (!onWrap) return
@@ -620,13 +614,13 @@ export function Swap({
           onCurrencySelection={onCurrencySelection}
           swapResult={swapResult}
           allowedSlippage={allowedSlippage}
+          clearSwapState={clearSwapState}
           onConfirm={handleSwap}
           allowance={allowance}
           swapError={swapError}
           onDismiss={handleConfirmDismiss}
           fiatValueInput={fiatValueTradeInput}
           fiatValueOutput={fiatValueTradeOutput}
-          onRetryUniswapXSignature={handleRetryUniswapXSignature}
         />
       )}
       {showPriceImpactModal && showPriceImpactWarning && (
