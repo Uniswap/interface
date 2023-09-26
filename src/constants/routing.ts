@@ -12,6 +12,7 @@ import {
   DAI,
   DAI_ARBITRUM_ONE,
   DAI_AVALANCHE,
+  DAI_BASE,
   DAI_BSC,
   DAI_OPTIMISM,
   DAI_POLYGON,
@@ -89,7 +90,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   ],
   [ChainId.OPTIMISM]: [nativeOnChain(ChainId.OPTIMISM), OP, DAI_OPTIMISM, USDC_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM],
   [ChainId.OPTIMISM_GOERLI]: [nativeOnChain(ChainId.OPTIMISM_GOERLI)],
-  [ChainId.BASE]: [nativeOnChain(ChainId.BASE), WRAPPED_NATIVE_CURRENCY[ChainId.BASE] as Token, USDC_BASE],
+  [ChainId.BASE]: [nativeOnChain(ChainId.BASE), WRAPPED_NATIVE_CURRENCY[ChainId.BASE] as Token, DAI_BASE, USDC_BASE],
   [ChainId.POLYGON]: [
     nativeOnChain(ChainId.POLYGON),
     WETH_POLYGON,
