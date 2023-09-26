@@ -48,6 +48,8 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
 
   const { touchId } = useDeviceSupportsBiometricAuth()
   const authenticationTypeName = useBiometricName(touchId)
+  const capitalizedAuthTypeName =
+    authenticationTypeName.charAt(0).toUpperCase() + authenticationTypeName.slice(1)
 
   const { requiredForAppAccess, requiredForTransactions } = useBiometricAppSettings()
   const { trigger } = useBiometricPrompt<BiometricPromptTriggerArgs>(
@@ -66,8 +68,6 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
   )
 
   const options: BiometricAuthSetting[] = useMemo((): BiometricAuthSetting[] => {
-    const capitalizedAuthTypeName =
-      authenticationTypeName.charAt(0).toUpperCase() + authenticationTypeName.slice(1)
     const handleFaceIdTurnedOff = (): void => {
       IS_IOS
         ? Alert.alert(
@@ -134,7 +134,14 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
         subText: t('Require {{authenticationTypeName}} to transact', { authenticationTypeName }),
       },
     ]
-  }, [requiredForAppAccess, t, authenticationTypeName, requiredForTransactions, trigger])
+  }, [
+    requiredForAppAccess,
+    t,
+    authenticationTypeName,
+    capitalizedAuthTypeName,
+    requiredForTransactions,
+    trigger,
+  ])
 
   const renderItem = ({
     item: { text, subText, value, onValueChange },
@@ -181,7 +188,9 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
       )}
       <Screen>
         <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
-          <Text variant="body1">{t('{{authenticationTypeName}}', { authenticationTypeName })}</Text>
+          <Text variant="body1">
+            {t('{{capitalizedAuthTypeName}}', { capitalizedAuthTypeName })}
+          </Text>
         </BackHeader>
         <Flex p="$spacing24">
           <FlatList
