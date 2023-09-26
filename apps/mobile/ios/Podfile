@@ -6,7 +6,7 @@ require_relative '../../../node_modules/@react-native-community/cli-platform-ios
 platform :ios, '14.0'
 prepare_react_native_project!
 
-$FirebaseSDKVersion = '8.8.0'
+$FirebaseSDKVersion = '10.15.0'
 $RNFirebaseAnalyticsWithoutAdIdSupport=true
 
 target 'Uniswap' do
@@ -41,6 +41,8 @@ target 'Uniswap' do
   permissions_path = '../../../node_modules/react-native-permissions/ios'
   pod 'Permission-FaceID', :path => "#{permissions_path}/FaceID"
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
+  pod 'FirebaseCore', $FirebaseSDKVersion, :modular_headers => true
+  pod 'GoogleUtilities', '7.11.5', :modular_headers => true
 
   post_install do |installer|
     react_native_post_install(installer, "../../../node_modules/react-native")

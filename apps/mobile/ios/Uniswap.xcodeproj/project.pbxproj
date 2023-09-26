@@ -1209,10 +1209,10 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				0312A12D2A77D07B008CAAFD /* Upload Debug Symbols to Sentry */,
 				F35AFD4627EE49990011A725 /* Embed App Extensions */,
+				9F7898182A819D62004D5A98 /* Embed Frameworks */,
 				11ABDA19EC3508C14907F53A /* [CP] Embed Pods Frameworks */,
 				95C59BDDCB4A750ADC9CF7F1 /* [CP] Copy Pods Resources */,
 				5C77EF938EB03E5ED1947B82 /* [CP-User] [RNFB] Core Configuration */,
-				9F7898182A819D62004D5A98 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
