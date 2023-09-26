@@ -112,12 +112,10 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
 
 .c1 {
   gap: 24px;
-  margin: 0 48px 0 auto;
   padding: 20px;
   border-radius: 20px;
   background: #F9F9F9;
-  width: 22vw;
-  min-width: 360px;
+  width: 100%;
 }
 
 .c3 {
@@ -168,8 +166,6 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
 
 @media (max-width:1023px) {
   .c1 {
-    margin: 44px 0px;
-    width: 100%;
     -webkit-flex-direction: row;
     -ms-flex-direction: row;
     flex-direction: row;
@@ -182,6 +178,12 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
     -webkit-justify-content: space-between;
     -ms-flex-pack: justify;
     justify-content: space-between;
+  }
+}
+
+@media (max-width:640px) {
+  .c3 {
+    min-width: 150px;
   }
 }
 
@@ -471,12 +473,10 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
 
 .c1 {
   gap: 24px;
-  margin: 0 48px 0 auto;
   padding: 20px;
   border-radius: 20px;
   background: #F9F9F9;
-  width: 22vw;
-  min-width: 360px;
+  width: 100%;
 }
 
 .c3 {
@@ -545,8 +545,6 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
 
 @media (max-width:1023px) {
   .c1 {
-    margin: 44px 0px;
-    width: 100%;
     -webkit-flex-direction: row;
     -ms-flex-direction: row;
     flex-direction: row;
@@ -559,6 +557,12 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
     -webkit-justify-content: space-between;
     -ms-flex-pack: justify;
     justify-content: space-between;
+  }
+}
+
+@media (max-width:640px) {
+  .c3 {
+    min-width: 150px;
   }
 }
 
