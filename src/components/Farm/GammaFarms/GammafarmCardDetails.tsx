@@ -1,4 +1,3 @@
-import { Interface } from '@ethersproject/abi'
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { Token } from '@pollum-io/sdk-core'
 import { formatNumber } from '@uniswap/conedison/format'
@@ -10,22 +9,19 @@ import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useGammaHypervisorContract, useMasterChefContract } from 'hooks/useContract'
-import { useMultipleContractSingleData, useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
+import { useSingleCallResult } from 'lib/hooks/multicall'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useIsMobile } from 'nft/hooks'
 import React, { useState } from 'react'
 import { Box } from 'rebass'
-import { useCombinedActiveList } from 'state/lists/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
-import { getTokenFromAddress, useTransactionFinalizer } from 'utils/farmUtils'
+import { useTransactionFinalizer } from 'utils/farmUtils'
 
-import GammaRewarder from '../../../abis/gamma-rewarder.json'
 import { TransactionType } from '../../../state/transactions/types'
 import { FarmPoolData } from '../constants'
 import { GridItemGammaCard } from './GridItemGammaCard'
-import { useToken } from 'hooks/Tokens'
 
 // Estilo do Grid
 const Grid = styled.div<{ isMobile: boolean; hasRewards: boolean }>`
@@ -66,18 +62,9 @@ const GammaFarmCardDetails: React.FC<{
   const [attemptClaiming, setAttemptClaiming] = useState(false)
   const isMobile = useIsMobile()
   const theme = useTheme()
-
-  const tokenMap = useCombinedActiveList()
-  const rewardPerSecond = rewardData?.rewardPerSecond
   const rewardTokenAddress = rewardData?.rewardTokenAddress
   const masterChefContract = useMasterChefContract()
   const hypervisorContract = useGammaHypervisorContract(pairData.hypervisor)
-  const rewardsPerSecondBN =
-    rewardPerSecond && !rewardPerSecond.loading && rewardPerSecond.result && rewardPerSecond.result.length > 0
-      ? rewardPerSecond.result[0]
-      : undefined
-
-  const rewardsAmount = rewardsPerSecondBN ? formatUnits(rewardsPerSecondBN, 18) : '0'
   const token = useToken(rewardTokenAddress?.result?.toString())
 
   const stakedData = useSingleCallResult(masterChefContract, 'userInfo', [pairData.pid, account ?? undefined])
@@ -93,9 +80,9 @@ const GammaFarmCardDetails: React.FC<{
   const stakedUSD = Number(stakedAmount) * lpTokenUSD
 
   const rewards = useSingleCallResult(masterChefContract, 'pendingReward', [pairData.pid, account ?? undefined])
-  const rewardsBN = !rewards.loading && rewards.result  && rewards.result.length > 0? rewards.result[0] : undefined
+  const rewardsBN = !rewards.loading && rewards.result && rewards.result.length > 0 ? rewards.result[0] : undefined
   const rewardsAmount = rewardsBN ? formatUnits(rewardsBN, 18) : '0'
-  
+
   const lpToken = chainId ? new Token(chainId, pairData.hypervisor, 18) : undefined
 
   const rewardTokenContract = useSingleCallResult(masterChefContract, 'REWARD')
@@ -180,7 +167,7 @@ const GammaFarmCardDetails: React.FC<{
     addTransaction(response, {
       type: TransactionType.DEPOSIT_FARM,
       pid: pairData.pid,
-      amount: stakeAmount
+      amount: stakeAmount,
     })
     const receipt = await response.wait()
     finalizedTransaction(receipt, {
@@ -299,7 +286,7 @@ const GammaFarmCardDetails: React.FC<{
         </>
       )}
       <div style={{ padding: 1.5 }}>
-        <Grid isMobile={isMobile} hasRewards={rewards.length > 0}>
+        <Grid isMobile={isMobile} hasRewards={Number(rewardsAmount) > 0}>
           {pairData.ableToFarm && (
             <GridItemGammaCard
               titleText="Available:"
@@ -340,17 +327,17 @@ const GammaFarmCardDetails: React.FC<{
               <ClaimContainer>
                 <small style={{ color: theme.textSecondary }}>EarnedRewards</small>
                 <div style={{ marginBottom: 10, marginTop: 10 }}>
-                    <div
-                      key={rewardToken.address}
-                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                    >
-                      <CurrencyLogo currency={rewardToken} size="16px" />
-                      <div style={{ marginLeft: '6px' }}>
-                        <small>
-                          {rewardsAmount} {rewardToken.symbol}
-                        </small>
-                      </div>
+                  <div
+                    key={rewardToken.address}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    <CurrencyLogo currency={rewardToken} size="16px" />
+                    <div style={{ marginLeft: '6px' }}>
+                      <small>
+                        {formatNumber(Number(rewardsAmount))} {rewardToken.symbol}
+                      </small>
                     </div>
+                  </div>
                 </div>
                 <Box width="100%">
                   <ButtonPrimary style={{ height: '40px' }} disabled={claimButtonDisabled} onClick={claimReward}>

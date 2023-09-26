@@ -2,7 +2,6 @@ import { ChainId } from '@pollum-io/smart-order-router'
 import { useWeb3React } from '@web3-react/core'
 import LoadingGifLight from 'assets/images/lightLoading.gif'
 import LoadingGif from 'assets/images/loading.gif'
-import Divider from 'components/Divider/Divider'
 import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import SubTitleContainer from 'components/SubTitleContainer/SubTitleContainer'
 import { formatUnits } from 'ethers/lib/utils'
@@ -159,7 +158,6 @@ export default function FarmingMyFarms({ chainId }: { search: string; chainId: n
     <MyFarmsContainer>
       {allGammaFarms.length > 0 && (
         <Box>
-          <Divider />
           <Box px={2} mt={2}>
             <SubTitleContainer text="Displays to show your positions." description="Gamma Farms" />
           </Box>

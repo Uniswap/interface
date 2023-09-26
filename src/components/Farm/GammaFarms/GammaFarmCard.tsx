@@ -121,7 +121,8 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
             display: 'flex',
             justifyContent: 'space-evenly',
             alignItems: 'center',
-            marginRight: '15px',
+            marginRight: isMobile ? 'none' : '15px',
+            marginLeft: isMobile ? '15px' : 'none',
           }}
         >
           <div

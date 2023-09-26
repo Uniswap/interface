@@ -2,7 +2,6 @@ import { ChainId } from '@pollum-io/smart-order-router'
 import { useWeb3React } from '@web3-react/core'
 import CustomSelector, { SelectorItem } from 'components/CustomSelector/CustomSelector'
 import CustomSwitch from 'components/CustomSwitch/CustomSwitch'
-import CustomTabSwitch from 'components/CustomTabSwitch/CustomTabSwitch'
 import SearchInput from 'components/SearchInput/SearchInput'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import useParsedQueryString from 'hooks/useParsedQueryString'
@@ -159,17 +158,17 @@ export function Farms() {
           </div>
         </Switch>
       </Header>
-
       {selectedFarmCategory.id !== 0 && (
         <>
-          <TabSwitchLayout>
+          {/* TODO: return this component after receive new pool with differents types */}
+          {/* <TabSwitchLayout>
             <CustomTabSwitch
               items={farmFilters}
               selectedItem={farmFilter}
               handleTabChange={setFarmFilter}
               height={50}
             />
-          </TabSwitchLayout>
+          </TabSwitchLayout> */}
           {!isMobile && (
             <TabFiltersLayout>
               <SortColumns sortColumns={sortByDesktopItems} selectedSort={sortBy} sortDesc={sortDesc} />
