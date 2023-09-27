@@ -66,8 +66,8 @@ export default function FiatOnrampModal() {
   const location = useLocation()
   const pathParts = location.pathname.split('/')
   // Matches the /tokens/<network>/<tokenAddress> path.
-  const network = pathParts.length > 2 ? pathParts[1] : undefined
-  const tokenAddress = pathParts.length > 2 ? pathParts[2] : undefined
+  const network = pathParts.length > 2 ? pathParts[pathParts.length - 2] : undefined
+  const tokenAddress = pathParts.length > 2 ? pathParts[pathParts.length - 1] : undefined
 
   const [signedIframeUrl, setSignedIframeUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
