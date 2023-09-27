@@ -1,4 +1,5 @@
 import {
+  PREVIEW_EXACT_IN_TRADE,
   TEST_ALLOWED_SLIPPAGE,
   TEST_TOKEN_1,
   TEST_TOKEN_2,
@@ -167,5 +168,31 @@ describe('SwapModalFooter.tsx', () => {
       )
     ).toBeInTheDocument()
     expect(screen.getByText(`${TEST_TOKEN_2.symbol} fee`)).toBeInTheDocument()
+  })
+
+  it('renders a preview trade while disabling submission', () => {
+    const { asFragment } = render(
+      <SwapModalFooter
+        isLoading
+        trade={PREVIEW_EXACT_IN_TRADE}
+        allowedSlippage={TEST_ALLOWED_SLIPPAGE}
+        swapResult={undefined}
+        onConfirm={jest.fn()}
+        swapErrorMessage={undefined}
+        disabledConfirm
+        fiatValueInput={{
+          data: undefined,
+          isLoading: false,
+        }}
+        fiatValueOutput={{
+          data: undefined,
+          isLoading: false,
+        }}
+        showAcceptChanges={false}
+        onAcceptChanges={jest.fn()}
+      />
+    )
+    expect(asFragment()).toMatchSnapshot()
+    expect(screen.getByText('Finalizing quote...')).toBeInTheDocument()
   })
 })
