@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { ComponentProps, ReactNode } from 'react'
 import { Trans } from 'react-i18next'
 import { Pressable } from 'react-native'
 import { OnboardingStackBaseParams, useOnboardingStackNavigation } from 'src/app/navigation/types'
@@ -44,9 +44,7 @@ function Page({
             </Flex>
             <Flex flex={0.2} />
             <Flex flex={0.8} px="$spacing24">
-              <Text fontSize={28} lineHeight={34} variant="heading2">
-                {text}
-              </Text>
+              <CustomHeadingText>{text}</CustomHeadingText>
             </Flex>
           </Flex>
         </Pressable>
@@ -59,74 +57,86 @@ export const SeedPhraseEducationContent = (params: OnboardingStackBaseParams): J
   <Page
     params={params}
     text={
-      <Text fontSize={28} lineHeight={34} variant="heading2">
+      <CustomHeadingText>
         <Trans>
-          A recovery phrase (or seed phrase) is a <Text color="$accent1">set of words</Text>{' '}
-          required to access your wallet, <Text color="$accent1">like a password.</Text>
+          A recovery phrase (or seed phrase) is a{' '}
+          <CustomHeadingText color="$accent1">set of words</CustomHeadingText> required to access
+          your wallet, <CustomHeadingText color="$accent1">like a password.</CustomHeadingText>
         </Trans>
-      </Text>
+      </CustomHeadingText>
     }
   />,
   <Page
     params={params}
     text={
-      <Text fontSize={28} lineHeight={34} variant="heading2">
+      <CustomHeadingText>
         <Trans>
-          You can <Text color="$accent1">enter</Text> your recovery phrase on a new device{' '}
-          <Text color="$accent1">to restore your wallet</Text> and its contents.
+          You can <CustomHeadingText color="$accent1">enter</CustomHeadingText> your recovery phrase
+          on a new device{' '}
+          <CustomHeadingText color="$accent1">to restore your wallet</CustomHeadingText> and its
+          contents.
         </Trans>
-      </Text>
+      </CustomHeadingText>
     }
   />,
   <Page
     params={params}
     text={
-      <Text fontSize={28} lineHeight={34} variant="heading2">
+      <CustomHeadingText>
         <Trans>
-          But, if you <Text color="$accent1">lose your recovery phrase</Text>, you’ll{' '}
-          <Text color="$accent1">lose access</Text> to your wallet.
+          But, if you{' '}
+          <CustomHeadingText color="$accent1">lose your recovery phrase</CustomHeadingText>, you’ll{' '}
+          <CustomHeadingText color="$accent1">lose access</CustomHeadingText> to your wallet.
         </Trans>
-      </Text>
+      </CustomHeadingText>
     }
   />,
   <Page
     params={params}
     text={
-      <Text fontSize={28} lineHeight={34} variant="heading2">
+      <CustomHeadingText>
         {IS_ANDROID ? (
           <Trans>
             Instead of memorizing your recovery phrase, you can{' '}
-            <Text color="$accent1">back it up to Google Drive</Text> and protect it with a password.
+            <CustomHeadingText color="$accent1">back it up to Google Drive</CustomHeadingText> and
+            protect it with a password.
           </Trans>
         ) : (
           <Trans>
             Instead of memorizing your recovery phrase, you can{' '}
-            <Text color="$accent1">back it up to iCloud</Text> and protect it with a password.
+            <CustomHeadingText color="$accent1">back it up to iCloud</CustomHeadingText> and protect
+            it with a password.
           </Trans>
         )}
-      </Text>
+      </CustomHeadingText>
     }
   />,
   <Page
     params={params}
     text={
-      <Text fontSize={28} lineHeight={34} variant="heading2">
+      <CustomHeadingText>
         <Trans>
           You can also manually back up your recovery phrase by{' '}
-          <Text color="$accent1">writing it down</Text> and storing it in a safe place.
+          <CustomHeadingText color="$accent1">writing it down</CustomHeadingText> and storing it in
+          a safe place.
         </Trans>
-      </Text>
+      </CustomHeadingText>
     }
   />,
   <Page
     params={params}
     text={
-      <Text fontSize={28} lineHeight={34} variant="heading2">
+      <CustomHeadingText>
         <Trans>
-          We recommend using <Text color="$accent1">both types of backups</Text>, because if you
-          lose your recovery phrase, you won’t be able to restore your wallet.
+          We recommend using{' '}
+          <CustomHeadingText color="$accent1">both types of backups</CustomHeadingText>, because if
+          you lose your recovery phrase, you won’t be able to restore your wallet.
         </Trans>
-      </Text>
+      </CustomHeadingText>
     }
   />,
 ]
+
+function CustomHeadingText(props: ComponentProps<typeof Text>): JSX.Element {
+  return <Text fontSize={28} lineHeight={34} variant="heading2" {...props} />
+}
