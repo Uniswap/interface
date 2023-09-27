@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
-import { useHref } from 'react-router-dom'
+import { useHref, useLocation } from 'react-router-dom'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components'
@@ -10,6 +10,7 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import Modal from '../Modal'
+import { getDefaultCurrencyCode, MOONPAY_SUPPORTED_CURRENCY_CODES } from './util'
 
 const MOONPAY_DARK_BACKGROUND = '#1c1c1e'
 const Wrapper = styled.div<{ isDarkMode: boolean }>`
@@ -55,26 +56,18 @@ const StyledSpinner = styled(CustomLightSpinner)`
   top: 0;
 `
 
-const MOONPAY_SUPPORTED_CURRENCY_CODES = [
-  'eth',
-  'eth_arbitrum',
-  'eth_optimism',
-  'eth_polygon',
-  'weth',
-  'wbtc',
-  'matic_polygon',
-  'polygon',
-  'usdc_arbitrum',
-  'usdc_optimism',
-  'usdc_polygon',
-]
-
 export default function FiatOnrampModal() {
   const { account } = useWeb3React()
   const theme = useTheme()
   const isDarkMode = useIsDarkMode()
   const closeModal = useCloseModal()
   const fiatOnrampModalOpen = useModalIsOpen(ApplicationModal.FIAT_ONRAMP)
+
+  const location = useLocation()
+  const pathParts = location.pathname.split('/')
+  // Matches the /tokens/<network>/<tokenAddress> path.
+  const network = pathParts.length > 2 ? pathParts[1] : undefined
+  const tokenAddress = pathParts.length > 2 ? pathParts[2] : undefined
 
   const [signedIframeUrl, setSignedIframeUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -100,7 +93,7 @@ export default function FiatOnrampModal() {
         body: JSON.stringify({
           theme: isDarkMode ? 'dark' : 'light',
           colorCode: theme.accent1,
-          defaultCurrencyCode: 'eth',
+          defaultCurrencyCode: getDefaultCurrencyCode(tokenAddress, network),
           redirectUrl: swapUrl,
           walletAddresses: JSON.stringify(
             MOONPAY_SUPPORTED_CURRENCY_CODES.reduce(
@@ -121,7 +114,7 @@ export default function FiatOnrampModal() {
     } finally {
       setLoading(false)
     }
-  }, [account, isDarkMode, swapUrl, theme.accent1])
+  }, [account, isDarkMode, network, swapUrl, theme.accent1, tokenAddress])
 
   useEffect(() => {
     fetchSignedIframeUrl()
