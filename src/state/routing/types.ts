@@ -378,7 +378,8 @@ export class PreviewTrade {
     return this.outputAmount.multiply(new Fraction(ONE).subtract(this.totalTaxRate))
   }
 
-  // copied from router-sdk Trade
+  // below methods are copied from router-sdk
+  // Trade https://github.com/Uniswap/router-sdk/blob/main/src/entities/trade.ts#L10
   public minimumAmountOut(slippageTolerance: Percent, amountOut = this.outputAmount): CurrencyAmount<Currency> {
     if (this.tradeType === TradeType.EXACT_OUTPUT) {
       return amountOut
@@ -391,7 +392,6 @@ export class PreviewTrade {
     }
   }
 
-  // copied from router-sdk Trade
   public maximumAmountIn(slippageTolerance: Percent, amountIn = this.inputAmount): CurrencyAmount<Currency> {
     if (this.tradeType === TradeType.EXACT_INPUT) {
       return amountIn
@@ -401,7 +401,6 @@ export class PreviewTrade {
     }
   }
 
-  // copied from router-sdk Trade
   private _executionPrice: Price<Currency, Currency> | undefined
   /**
    * The price expressed in terms of output amount/input amount.
@@ -418,7 +417,6 @@ export class PreviewTrade {
     )
   }
 
-  // copied from router-sdk Trade
   public worstExecutionPrice(slippageTolerance: Percent): Price<Currency, Currency> {
     return new Price(
       this.inputAmount.currency,
