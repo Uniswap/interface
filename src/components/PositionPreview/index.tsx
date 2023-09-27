@@ -13,7 +13,7 @@ import JSBI from 'jsbi'
 import { ReactNode, useCallback, useState } from 'react'
 import { Bound } from 'state/mint/v3/actions'
 import { useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
@@ -101,7 +101,7 @@ export const PositionPreview = ({
           <Break />
           <RowBetween>
             <ThemedText.DeprecatedLabel>
-              <Trans>Fee Tier</Trans>
+              <Trans>Fee tier</Trans>
             </ThemedText.DeprecatedLabel>
             <ThemedText.DeprecatedLabel>
               <Trans>{position?.pool?.fee / 10000}%</Trans>
@@ -124,7 +124,7 @@ export const PositionPreview = ({
           <LightCard width="48%" padding="8px">
             <AutoColumn gap="4px" justify="center">
               <ThemedText.DeprecatedMain fontSize="12px">
-                <Trans>Min Price</Trans>
+                <Trans>Min price</Trans>
               </ThemedText.DeprecatedMain>
               <ThemedText.DeprecatedMediumHeader textAlign="center">
                 {formatTickPrice({
@@ -147,7 +147,7 @@ export const PositionPreview = ({
           <LightCard width="48%" padding="8px">
             <AutoColumn gap="4px" justify="center">
               <ThemedText.DeprecatedMain fontSize="12px">
-                <Trans>Max Price</Trans>
+                <Trans>Max price</Trans>
               </ThemedText.DeprecatedMain>
               <ThemedText.DeprecatedMediumHeader textAlign="center">
                 {formatTickPrice({

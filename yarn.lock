@@ -6045,10 +6045,10 @@
     "@typescript-eslint/types" "5.59.1"
     eslint-visitor-keys "^3.3.0"
 
-"@uniswap/analytics-events@^2.22.0":
-  version "2.22.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-2.22.0.tgz#25600f5f6d9df4ea3aa7328dbc6ec44af4b652d1"
-  integrity sha512-Q/H4JaxQuEBFZvMWW40J3m51/zUXr2FYkfO2+IA0EJfoZiWE8Yl0xWtNrO5RDc4Q57Q9z0cEzzDLN2L1RQSpJA==
+"@uniswap/analytics-events@^2.24.0":
+  version "2.24.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-2.24.0.tgz#c81d0c24da4f052b7f6b2663ff42bfa787be91b5"
+  integrity sha512-MhX9L95Y7i28a3KxRFJnpmNxNHAgownBVPyhT+mu4PnCXiPEuSovml+uJr277tysKSqxRYqLnCeAw4LocTBIfg==
 
 "@uniswap/analytics@^1.4.0":
   version "1.4.0"
@@ -19494,10 +19494,10 @@ terser-webpack-plugin@^5.2.5, terser-webpack-plugin@^5.3.7, terser-webpack-plugi
     serialize-javascript "^6.0.1"
     terser "^5.16.8"
 
-terser@^5.0.0, terser@^5.10.0, terser@^5.16.8:
-  version "5.19.2"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.19.2.tgz#bdb8017a9a4a8de4663a7983f45c506534f9234e"
-  integrity sha512-qC5+dmecKJA4cpYxRa5aVkKehYsQKc+AHeKl0Oe62aYjBL8ZA33tTljktDHJSaxxMnbI5ZYw+o/S2DxxLu8OfA==
+terser@^5.0.0, terser@^5.10.0, terser@^5.16.8, terser@^5.19.4:
+  version "5.19.4"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.19.4.tgz#941426fa482bf9b40a0308ab2b3cd0cf7c775ebd"
+  integrity sha512-6p1DjHeuluwxDXcuT9VR8p64klWJKo1ILiy19s6C9+0Bh2+NWTX6nD9EPppiER4ICkHDVB1RkVpin/YW2nQn/g==
   dependencies:
     "@jridgewell/source-map" "^0.3.3"
     acorn "^8.8.2"

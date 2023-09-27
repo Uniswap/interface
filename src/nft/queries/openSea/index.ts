@@ -1,3 +1,2 @@
-export * from './constants'
-export * from './OSCollectionsFetcher'
-export * from './PostOpenSeaSellOrder'
+export { OSCollectionsFetcher } from './OSCollectionsFetcher'
+export { PostOpenSeaSellOrder } from './PostOpenSeaSellOrder'

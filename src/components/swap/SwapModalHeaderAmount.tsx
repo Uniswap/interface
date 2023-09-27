@@ -8,7 +8,8 @@ import { PropsWithChildren, ReactNode } from 'react'
 import { TextProps } from 'rebass'
 import { Field } from 'state/swap/actions'
 import styled from 'styled-components'
-import { BREAKPOINTS, ThemedText } from 'theme'
+import { BREAKPOINTS } from 'theme'
+import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`

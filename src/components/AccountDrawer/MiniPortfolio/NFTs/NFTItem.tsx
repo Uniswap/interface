@@ -10,7 +10,7 @@ import { VerifiedIcon } from 'nft/components/icons'
 import { WalletAsset } from 'nft/types'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const FloorPrice = styled(Row)`

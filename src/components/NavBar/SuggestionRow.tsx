@@ -15,7 +15,7 @@ import { GenieCollection } from 'nft/types'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { DeltaArrow, DeltaText } from '../Tokens/TokenDetails/Delta'

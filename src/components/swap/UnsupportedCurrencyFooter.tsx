@@ -9,7 +9,7 @@ import Modal from 'components/Modal'
 import { AutoRow, RowBetween } from 'components/Row'
 import { useState } from 'react'
 import styled from 'styled-components'
-import { CloseIcon, ExternalLink, ThemedText } from 'theme'
+import { CloseIcon, ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 
 import { useUnsupportedTokens } from '../../hooks/Tokens'
@@ -72,7 +72,7 @@ export default function UnsupportedCurrencyFooter({
           <AutoColumn gap="lg">
             <RowBetween>
               <ThemedText.DeprecatedMediumHeader>
-                <Trans>Unsupported Assets</Trans>
+                <Trans>Unsupported assets</Trans>
               </ThemedText.DeprecatedMediumHeader>
               <CloseIcon onClick={() => setShowDetails(false)} data-testid="close-icon" />
             </RowBetween>

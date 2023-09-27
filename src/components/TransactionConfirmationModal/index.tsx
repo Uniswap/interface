@@ -9,12 +9,12 @@ import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components'
+import { ExternalLink, ThemedText } from 'theme/components'
+import { CloseIcon, CustomLightSpinner } from 'theme/components'
 import { isL2ChainId } from 'utils/chains'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import { ExternalLink, ThemedText } from '../../theme'
-import { CloseIcon, CustomLightSpinner } from '../../theme'
 import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import { ButtonLight, ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
@@ -256,7 +256,7 @@ function L2Content({
             {!hash ? (
               <Trans>Confirm transaction in wallet</Trans>
             ) : !confirmed ? (
-              <Trans>Transaction Submitted</Trans>
+              <Trans>Transaction submitted</Trans>
             ) : transactionSuccess ? (
               <Trans>Success</Trans>
             ) : (

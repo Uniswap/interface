@@ -5,7 +5,7 @@ import { useIsMobile } from 'nft/hooks'
 import { Denomination } from 'nft/types'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { NO_DECIMALS, NumberType, useFormatter } from 'utils/formatNumbers'
 
 import * as styles from './Cells.css'

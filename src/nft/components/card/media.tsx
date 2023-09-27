@@ -5,8 +5,9 @@ import { UniformAspectRatio, UniformAspectRatios } from 'nft/types'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { Pause, Play } from 'react-feather'
 import styled from 'styled-components'
-import { BREAKPOINTS, ThemedText } from 'theme'
+import { BREAKPOINTS } from 'theme'
 import { colors } from 'theme/colors'
+import { ThemedText } from 'theme/components'
 
 const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
   position: relative;

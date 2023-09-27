@@ -3,11 +3,11 @@ import { useWeb3React } from '@web3-react/core'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
+import { CustomLightSpinner, ThemedText } from 'theme/components'
+import { ExternalLink } from 'theme/components'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import { useQueueCallback } from '../../state/governance/hooks'
-import { CustomLightSpinner, ThemedText } from '../../theme'
-import { ExternalLink } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
@@ -82,7 +82,7 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
               <ThemedText.DeprecatedMediumHeader fontWeight={535}>
-                <Trans>Queue Proposal {proposalId}</Trans>
+                <Trans>Queue proposal {proposalId}</Trans>
               </ThemedText.DeprecatedMediumHeader>
               <StyledClosed onClick={wrappedOnDismiss} />
             </RowBetween>
@@ -132,7 +132,7 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
           <AutoColumn gap="100px" justify="center">
             <AutoColumn gap="md" justify="center">
               <ThemedText.DeprecatedLargeHeader>
-                <Trans>Transaction Submitted</Trans>
+                <Trans>Transaction submitted</Trans>
               </ThemedText.DeprecatedLargeHeader>
             </AutoColumn>
             {chainId && (

@@ -1,6 +1,8 @@
+import { SupportedLocale } from 'constants/locales'
 import React, { forwardRef } from 'react'
 import styled from 'styled-components'
 import { escapeRegExp } from 'utils'
+import { useFormatterLocales } from 'utils/formatNumbers'
 
 const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string; disabled?: boolean }>`
   color: ${({ error, theme }) => (error ? theme.critical : theme.neutral1)};
@@ -39,6 +41,12 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   }
 `
 
+function localeUsesComma(locale: SupportedLocale): boolean {
+  const decimalSeparator = new Intl.NumberFormat(locale).format(1.1)[1]
+
+  return decimalSeparator === ','
+}
+
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
 
 interface InputProps extends Omit<React.HTMLProps<HTMLInputElement>, 'ref' | 'onChange' | 'as'> {
@@ -52,17 +60,26 @@ interface InputProps extends Omit<React.HTMLProps<HTMLInputElement>, 'ref' | 'on
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ value, onUserInput, placeholder, prependSymbol, ...rest }: InputProps, ref) => {
+    const { formatterLocale } = useFormatterLocales()
+
     const enforcer = (nextUserInput: string) => {
       if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
         onUserInput(nextUserInput)
       }
     }
 
+    const formatValueWithLocale = (value: string | number) => {
+      const [searchValue, replaceValue] = localeUsesComma(formatterLocale) ? [/\./g, ','] : [/,/g, '.']
+      return value.toString().replace(searchValue, replaceValue)
+    }
+
+    const valueFormattedWithLocale = formatValueWithLocale(value)
+
     return (
       <StyledInput
         {...rest}
         ref={ref}
-        value={prependSymbol && value ? prependSymbol + value : value}
+        value={prependSymbol && value ? prependSymbol + valueFormattedWithLocale : valueFormattedWithLocale}
         onChange={(event) => {
           if (prependSymbol) {
             const value = event.target.value

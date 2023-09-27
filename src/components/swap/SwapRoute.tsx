@@ -6,7 +6,7 @@ import RoutingDiagram from 'components/RoutingDiagram/RoutingDiagram'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import { ClassicTrade } from 'state/routing/types'
-import { Separator, ThemedText } from 'theme'
+import { Separator, ThemedText } from 'theme/components'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 
 import RouterLabel from '../RouterLabel'

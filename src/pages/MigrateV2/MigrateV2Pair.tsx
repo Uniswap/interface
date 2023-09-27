@@ -48,7 +48,7 @@ import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useTokenBalance } from '../../state/connection/hooks'
 import { TransactionType } from '../../state/transactions/types'
-import { BackArrowLink, ExternalLink, ThemedText } from '../../theme'
+import { BackArrowLink, ExternalLink, ThemedText } from '../../theme/components'
 import { isAddress } from '../../utils'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
@@ -512,7 +512,7 @@ function V2PairMigration({
 
                 <RowBetween>
                   <ThemedText.DeprecatedBody fontSize={14} color="inherit">
-                    <Trans>Price Difference:</Trans>
+                    <Trans>Price difference:</Trans>
                   </ThemedText.DeprecatedBody>
                   <ThemedText.DeprecatedBlack fontSize={14} color="inherit">
                     <Trans>{priceDifferenceFraction?.toSignificant(4)}%</Trans>
@@ -542,7 +542,7 @@ function V2PairMigration({
 
           <RowBetween>
             <ThemedText.DeprecatedLabel>
-              <Trans>Set Price Range</Trans>
+              <Trans>Set price range</Trans>
             </ThemedText.DeprecatedLabel>
             <RateToggle
               currencyA={invertPrice ? currency1 : currency0}
@@ -737,9 +737,13 @@ export default function MigrateV2Pair() {
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrowLink to="/migrate/v2" />
           <ThemedText.DeprecatedMediumHeader>
-            <Trans>Migrate V2 Liquidity</Trans>
+            <Trans>Migrate V2 liquidity</Trans>
           </ThemedText.DeprecatedMediumHeader>
-          <SettingsTab autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} chainId={chainId} />
+          <SettingsTab
+            autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE}
+            chainId={chainId}
+            showRoutingSettings={false}
+          />
         </AutoRow>
 
         {!account ? (

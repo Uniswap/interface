@@ -52,17 +52,12 @@ describe('Token details', () => {
     cy.visit('/tokens/ethereum/0xa71d0588EAf47f12B13cF8eC750430d21DF04974')
 
     // Should have missing price chart when price unavailable (expected for this token)
-    if (cy.get('[data-cy="chart-header"]').contains('Price Unavailable')) {
+    if (cy.get('[data-cy="chart-header"]').contains('Price unavailable')) {
       cy.get('[data-cy="missing-chart"]').should('exist')
     }
-    // Stats should have: TVL, 24H Volume, 52W low, 52W high
-    cy.get(getTestSelector('token-details-stats')).should('exist')
-    cy.get(getTestSelector('token-details-stats')).within(() => {
-      cy.get('[data-cy="tvl"]').should('exist')
-      cy.get('[data-cy="volume-24h"]').should('exist')
-      cy.get('[data-cy="52w-low"]').should('exist')
-      cy.get('[data-cy="52w-high"]').should('exist')
-    })
+
+    // Stats should not exist
+    cy.get(getTestSelector('token-details-stats')).should('not.exist')
 
     // About section should have description of token
     cy.get(getTestSelector('token-details-about-section')).should('exist')

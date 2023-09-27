@@ -17,6 +17,7 @@ import { ArrowDown, Plus } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useTheme } from 'styled-components'
+import { StyledInternalLink, ThemedText } from 'theme/components'
 
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
@@ -41,7 +42,6 @@ import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../s
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { TransactionType } from '../../state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
-import { StyledInternalLink, ThemedText } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
 import { currencyId } from '../../utils/currencyId'
@@ -483,7 +483,7 @@ function RemoveLiquidity() {
               <AutoColumn gap="20px">
                 <RowBetween>
                   <Text fontWeight={535}>
-                    <Trans>Remove Amount</Trans>
+                    <Trans>Remove amount</Trans>
                   </Text>
                   <ClickableText
                     fontWeight={535}
@@ -651,7 +651,7 @@ function RemoveLiquidity() {
                   element={InterfaceElementName.CONNECT_WALLET_BUTTON}
                 >
                   <ButtonLight onClick={toggleWalletDrawer}>
-                    <Trans>Connect Wallet</Trans>
+                    <Trans>Connect wallet</Trans>
                   </ButtonLight>
                 </TraceEvent>
               ) : (

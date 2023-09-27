@@ -33,7 +33,7 @@ import { Link, useParams } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components'
-import { ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText } from 'theme'
+import { ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText } from 'theme/components'
 import { currencyId } from 'utils/currencyId'
 import { WrongChainError } from 'utils/errors'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -704,7 +704,7 @@ function PositionPageContent() {
                         $borderRadius="12px"
                         style={{ marginRight: '8px' }}
                       >
-                        <Trans>Increase Liquidity</Trans>
+                        <Trans>Increase liquidity</Trans>
                       </ButtonGray>
                     ) : null}
                     {tokenId && !removed ? (
@@ -715,7 +715,7 @@ function PositionPageContent() {
                         width="fit-content"
                         $borderRadius="12px"
                       >
-                        <Trans>Remove Liquidity</Trans>
+                        <Trans>Remove liquidity</Trans>
                       </SmallButtonPrimary>
                     ) : null}
                   </ActionButtonResponsiveRow>

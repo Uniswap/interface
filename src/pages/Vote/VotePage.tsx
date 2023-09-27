@@ -16,6 +16,7 @@ import { ArrowLeft } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
 
 import { ButtonPrimary } from '../../components/Button'
 import { GrayCard } from '../../components/Card'
@@ -50,7 +51,6 @@ import {
   useUserVotesAsOfBlock,
 } from '../../state/governance/hooks'
 import { VoteOption } from '../../state/governance/types'
-import { ExternalLink, StyledInternalLink, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
@@ -283,7 +283,7 @@ export default function VotePage() {
           <DelegateModal
             isOpen={showDelegateModal}
             onDismiss={toggleDelegateModal}
-            title={<Trans>Unlock Votes</Trans>}
+            title={<Trans>Unlock votes</Trans>}
           />
           <QueueModal isOpen={showQueueModal} onDismiss={toggleQueueModal} proposalId={proposalData?.id} />
           <ExecuteModal isOpen={showExecuteModal} onDismiss={toggleExecuteModal} proposalId={proposalData?.id} />
@@ -346,7 +346,7 @@ export default function VotePage() {
                     toggleVoteModal()
                   }}
                 >
-                  <Trans>Vote For</Trans>
+                  <Trans>Vote for</Trans>
                 </ButtonPrimary>
                 <ButtonPrimary
                   padding="8px"
@@ -356,7 +356,7 @@ export default function VotePage() {
                     toggleVoteModal()
                   }}
                 >
-                  <Trans>Vote Against</Trans>
+                  <Trans>Vote against</Trans>
                 </ButtonPrimary>
               </RowFixed>
             )}

@@ -1,0 +1,338 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`parseRemote parseRemoteActivities should parse NFT approval 1`] = `
+Object {
+  "chainId": 1,
+  "descriptor": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+  "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
+  "hash": "someHash",
+  "logos": Array [],
+  "nonce": 12345,
+  "status": "CONFIRMED",
+  "timestamp": 10000,
+  "title": "Unknown Approval",
+}
+`;
+
+exports[`parseRemote parseRemoteActivities should parse NFT approval for all 1`] = `
+Object {
+  "chainId": 1,
+  "descriptor": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+  "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
+  "hash": "someHash",
+  "logos": Array [],
+  "nonce": 12345,
+  "status": "CONFIRMED",
+  "timestamp": 10000,
+  "title": "Unknown Approval",
+}
+`;
+
+exports[`parseRemote parseRemoteActivities should parse NFT receive 1`] = `
+Object {
+  "chainId": 1,
+  "currencies": undefined,
+  "descriptor": "1 SomeCollectionName from ",
+  "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
+  "hash": "someHash",
+  "logos": Array [
+    "imageUrl",
+  ],
+  "nonce": 12345,
+  "otherAccount": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
+  "status": "CONFIRMED",
+  "timestamp": 10000,
+  "title": "Received",
+}
+`;
+
+exports[`parseRemote parseRemoteActivities should parse NFT transfer 1`] = `
+Object {
+  "chainId": 1,
+  "descriptor": "1 SomeCollectionName",
+  "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
+  "hash": "someHash",
+  "logos": Array [
+    "imageUrl",
+  ],
+  "nonce": 12345,
+  "status": "CONFIRMED",
+  "timestamp": 10000,
+  "title": "Minted",
+}
+`;
+
+exports[`parseRemote parseRemoteActivities should parse closed UniswapX order 1`] = `
+Object {
+  "chainId": 1,
+  "currencies": Array [
+    Token {
+      "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "chainId": 1,
+      "decimals": 18,
+      "isNative": false,
+      "isToken": true,
+      "name": "DAI",
+      "symbol": "DAI",
+    },
+    Token {
+      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "chainId": 1,
+      "decimals": 18,
+      "isNative": false,
+      "isToken": true,
+      "name": "Wrapped Ether",
+      "symbol": "WETH",
+    },
+  ],
+  "descriptor": "100 DAI for 200 WETH",
+  "from": "someOfferer",
+  "hash": "someHash",
+  "logos": Array [
+    "someUrl",
+    "someUrl",
+  ],
+  "offchainOrderStatus": "expired",
+  "prefixIconSrc": "bolt.svg",
+  "status": "FAILED",
+  "statusMessage": "Your swap could not be fulfilled at this time. Please try again.",
+  "timestamp": 10000,
+  "title": "Swap expired",
+}
+`;
+
+exports[`parseRemote parseRemoteActivities should parse moonpay purchase 1`] = `
+Object {
+  "chainId": 1,
+  "currencies": Array [
+    Token {
+      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "chainId": 1,
+      "decimals": 18,
+      "isNative": false,
+      "isToken": true,
+      "name": "Wrapped Ether",
+      "symbol": "WETH",
+    },
+  ],
+  "descriptor": "100 WETH for 100",
+  "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
+  "hash": "someHash",
+  "logos": Array [
+    "moonpay.svg",
+  ],
+  "nonce": 12345,
+  "status": "CONFIRMED",
+  "timestamp": 10000,
+  "title": "Purchased",
+}
+`;
+
+exports[`parseRemote parseRemoteActivities should parse nft purchase 1`] = `
+Object {
+  "chainId": 1,
+  "descriptor": "1 SomeCollectionName",
+  "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
+  "hash": "someHash",
+  "logos": Array [
+    "imageUrl",
+  ],
+  "nonce": 12345,
+  "status": "CONFIRMED",
+  "timestamp": 10000,
+  "title": "Bought",
+}
+`;
+
+exports[`parseRemote parseRemoteActivities should parse receive 1`] = `
+Object {
+  "chainId": 1,
+  "currencies": Array [
+    Token {
+      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "chainId": 1,
+      "decimals": 18,
+      "isNative": false,
+      "isToken": true,
+      "name": "Wrapped Ether",
+      "symbol": "WETH",
+    },
+  ],
+  "descriptor": "100 WETH from ",
+  "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
+  "hash": "someHash",
+  "logos": Array [
+    "logoUrl",
+  ],
+  "nonce": 12345,
+  "otherAccount": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
+  "status": "CONFIRMED",
+  "timestamp": 10000,
+  "title": "Received",
+}
+`;
+
+exports[`parseRemote parseRemoteActivities should parse remove liquidity 1`] = `
+Object {
+  "chainId": 1,
+  "currencies": Array [
+    Token {
+      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "chainId": 1,
+      "decimals": 18,
+      "isNative": false,
+      "isToken": true,
+      "name": "Wrapped Ether",
+      "symbol": "WETH",
+    },
+    Token {
+      "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "chainId": 1,
+      "decimals": 18,
+      "isNative": false,
+      "isToken": true,
+      "name": "DAI",
+      "symbol": "DAI",
+    },
+  ],
+  "descriptor": "100 WETH and 100 DAI",
+  "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
+  "hash": "someHash",
+  "logos": Array [
+    "logoUrl",
+    "logoUrl",
+  ],
+  "nonce": 12345,
+  "status": "CONFIRMED",
+  "timestamp": 10000,
+  "title": "Removed Liquidity",
+}
+`;
+
+exports[`parseRemote parseRemoteActivities should parse send 1`] = `
+Object {
+  "chainId": 1,
+  "currencies": Array [
+    Token {
+      "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "chainId": 1,
+      "decimals": 18,
+      "isNative": false,
+      "isToken": true,
+      "name": "DAI",
+      "symbol": "DAI",
+    },
+  ],
+  "descriptor": "100 DAI to ",
+  "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
+  "hash": "someHash",
+  "logos": Array [
+    "logoUrl",
+  ],
+  "nonce": 12345,
+  "otherAccount": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+  "status": "CONFIRMED",
+  "timestamp": 10000,
+  "title": "Sent",
+}
+`;
+
+exports[`parseRemote parseRemoteActivities should parse swap 1`] = `
+Object {
+  "chainId": 1,
+  "currencies": Array [
+    Token {
+      "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "chainId": 1,
+      "decimals": 18,
+      "isNative": false,
+      "isToken": true,
+      "name": "DAI",
+      "symbol": "DAI",
+    },
+    Token {
+      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "chainId": 1,
+      "decimals": 18,
+      "isNative": false,
+      "isToken": true,
+      "name": "Wrapped Ether",
+      "symbol": "WETH",
+    },
+  ],
+  "descriptor": "100 DAI for 100 WETH",
+  "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
+  "hash": "someHash",
+  "logos": Array [
+    "logoUrl",
+  ],
+  "nonce": 12345,
+  "status": "CONFIRMED",
+  "timestamp": 10000,
+  "title": "Swapped",
+}
+`;
+
+exports[`parseRemote parseRemoteActivities should parse swap order 1`] = `
+Object {
+  "chainId": 1,
+  "currencies": Array [
+    Token {
+      "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "chainId": 1,
+      "decimals": 18,
+      "isNative": false,
+      "isToken": true,
+      "name": "DAI",
+      "symbol": "DAI",
+    },
+    Token {
+      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "chainId": 1,
+      "decimals": 18,
+      "isNative": false,
+      "isToken": true,
+      "name": "Wrapped Ether",
+      "symbol": "WETH",
+    },
+  ],
+  "descriptor": "100 DAI for 100 WETH",
+  "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
+  "hash": "someHash",
+  "logos": Array [
+    "logoUrl",
+  ],
+  "nonce": 12345,
+  "prefixIconSrc": "bolt.svg",
+  "status": "CONFIRMED",
+  "timestamp": 10000,
+  "title": "Swapped",
+}
+`;
+
+exports[`parseRemote parseRemoteActivities should parse token approval 1`] = `
+Object {
+  "chainId": 1,
+  "currencies": Array [
+    Token {
+      "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "chainId": 1,
+      "decimals": 18,
+      "isNative": false,
+      "isToken": true,
+      "name": "DAI",
+      "symbol": "DAI",
+    },
+  ],
+  "descriptor": "DAI",
+  "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
+  "hash": "someHash",
+  "logos": Array [
+    "logoUrl",
+  ],
+  "nonce": 12345,
+  "status": "CONFIRMED",
+  "timestamp": 10000,
+  "title": "Approved",
+}
+`;
