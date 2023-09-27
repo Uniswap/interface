@@ -37,7 +37,7 @@ export function TimeRangeLabel({ index, label, selectedIndex, transition }: Prop
     const color = interpolateColor(
       transition.value,
       [0, 1],
-      [colors.neutral2.get(), colors.neutral1.get()]
+      [colors.neutral2.val, colors.neutral1.val]
     )
 
     return { color }
