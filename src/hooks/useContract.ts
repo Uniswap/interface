@@ -23,6 +23,7 @@ import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
   ENS_REGISTRAR_ADDRESSES,
   GAMMA_MASTERCHEF_ADDRESSES,
+  GAMMA_UNIPROXY_ADDRESSES,
   MULTICALL_ADDRESS,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
   QUOTER_ADDRESSES,
@@ -36,6 +37,7 @@ import { NonfungiblePositionManager, PegasysInterfaceMulticall, Quoter, QuoterV2
 import { V3Migrator } from 'types/v3/V3Migrator'
 
 import GammaPairABI from '../abis/gamma-hypervisor.json'
+import GammaUniProxyABI from '../abis/gamma-uniorixy.json'
 import GammaMasterChef from '../abis/gamma-masterchef.json'
 import { getContract } from '../utils'
 
@@ -180,4 +182,8 @@ export function useMasterChefContract(withSignerIfPossible?: boolean, abi?: any)
 
 export function useGammaHypervisorContract(address?: string, withSignerIfPossible?: boolean) {
   return useContract(address, GammaPairABI, withSignerIfPossible)
+}
+
+export function useGammaUniProxyContract( withSignerIfPossible?: boolean) {
+  return useContract(GAMMA_UNIPROXY_ADDRESSES[ChainId.ROLLUX], GammaUniProxyABI, withSignerIfPossible)
 }

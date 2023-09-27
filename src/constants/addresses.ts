@@ -74,6 +74,10 @@ export const GAMMA_MASTERCHEF_ADDRESSES: AddressMap = {
   ...constructSameAddressMap('0x3e4E39C4a90390B0FfA6b4DeE270371f027c7c63'),
 }
 
+export const GAMMA_UNIPROXY_ADDRESSES: AddressMap = {
+  ...constructSameAddressMap('0xFc13Ebe7FEB9595D70195E9168aA7F3acE153621'),
+}
+
 // const EMPTY: { [chainId: number]: Token } = {
 //   [ChainId.ROLLUX]: new Token(ChainId.ROLLUX, '0x0000000000000000000000000000000000000000', 0, 'EMPTY', 'EMPTY'),
 // }

@@ -3,12 +3,13 @@ import { Token } from '@pollum-io/sdk-core'
 import { formatNumber } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
+import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import Divider from 'components/Divider/Divider'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
-import { useGammaHypervisorContract, useMasterChefContract } from 'hooks/useContract'
+import { useGammaHypervisorContract, useMasterChefContract, useGammaUniProxyContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useIsMobile } from 'nft/hooks'
@@ -65,6 +66,7 @@ const GammaFarmCardDetails: React.FC<{
   const rewardTokenAddress = rewardData?.rewardTokenAddress
   const masterChefContract = useMasterChefContract()
   const hypervisorContract = useGammaHypervisorContract(pairData.hypervisor)
+  const uniProxyContract = useGammaUniProxyContract()
   const token = useToken(rewardTokenAddress?.result?.toString())
 
   const stakedData = useSingleCallResult(masterChefContract, 'userInfo', [pairData.pid, account ?? undefined])
