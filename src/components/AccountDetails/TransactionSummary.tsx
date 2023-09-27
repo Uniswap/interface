@@ -24,7 +24,9 @@ import {
   TransactionType,
   VoteTransactionInfo,
   WrapTransactionInfo,
-  ClaimFarmTransactionInfo
+  ClaimFarmTransactionInfo,
+  DepositFarmTransactionInfo,
+  WithdrawFarmTransactionInfo
 } from '../../state/transactions/types'
 
 function formatAmount(amountRaw: string, decimals: number, sigFigs: number): string {
@@ -183,18 +185,18 @@ function WithdrawLiquidityStakingSummary() {
   return <Trans>Withdraw deposited liquidity</Trans>
 }
 
-function DepositFarmSummary() {
+function DepositFarmSummary({ info }: { info: DepositFarmTransactionInfo }) {
   // not worth rendering the tokens since you can should no longer deposit liquidity in the staking contracts
   // todo: deprecate and delete the code paths that allow this, show user more information
-  return <Trans>Deposit Farm</Trans>
+  return <Trans>Deposit Farm for PoolId {info.pid}</Trans>
 }
 
-function WithdrawFarmSummary() {
-  return <Trans>Withdraw Farm</Trans>
+function WithdrawFarmSummary({ info }: { info: WithdrawFarmTransactionInfo }) {
+  return <Trans>Withdraw Farm for PoolId {info.pid}</Trans>
 }
 
-function ClaimFarmSummary({ info: { pid} }: { info: ClaimFarmTransactionInfo }) {
-  return <Trans>Claim Rewards for PoolId {pid}</Trans>
+function ClaimFarmSummary({ info }: { info: ClaimFarmTransactionInfo }) {
+  return <Trans>Claim Rewards for PoolId {info.pid}</Trans>
 }
 
 function MigrateLiquidityToV3Summary({
@@ -376,10 +378,10 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
       return <ClaimFarmSummary  info={info}/>
 
     case TransactionType.WITHDRAW_FARM:
-      return <WithdrawFarmSummary />
+      return <WithdrawFarmSummary info={info} />
 
     case TransactionType.DEPOSIT_FARM:
-      return <DepositFarmSummary />
+      return <DepositFarmSummary info={info} />
 
     default:
       return <div>Unknown Transaction Type</div>

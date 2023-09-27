@@ -188,7 +188,7 @@ function useCallsData(
   methodName?: string
 ): CallResult[] {
   const { chainId } = useWeb3React()
-  const callResults = useAppSelector((state) => state.multicallV3.callResults)
+  const callResults = useAppSelector((state) => state.multicall.callResults)
   const dispatch = useAppDispatch()
 
   const serializedCallKeys: string = useMemo(

@@ -57,17 +57,21 @@ export interface DepositFarmTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.DEPOSIT_FARM
   pid: number
   amount: string
+  tokenAddress: string
 }
 
 export interface WithdrawFarmTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.WITHDRAW_FARM
   pid: number
   amount: string
+  tokenAddress: string
 }
 
 export interface ClaimFarmTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.CLAIM_FARM
   pid: number
+  amount: string
+  tokenAddress: string
 }
 
 export interface VoteTransactionInfo extends BaseTransactionInfo {

@@ -167,7 +167,8 @@ const GammaFarmCardDetails: React.FC<{
     addTransaction(response, {
       type: TransactionType.DEPOSIT_FARM,
       pid: pairData.pid,
-      amount: stakeAmount,
+      amount: (stakeAmount === availableStakeAmount ? lpBalanceBN : parseUnits(Number(stakeAmount).toFixed(18), 18)).toString(),
+      tokenAddress: pairData.hypervisor
     })
     const receipt = await response.wait()
     finalizedTransaction(receipt, {
@@ -211,7 +212,8 @@ const GammaFarmCardDetails: React.FC<{
       addTransaction(response, {
         type: TransactionType.WITHDRAW_FARM,
         pid: pairData.pid,
-        amount: unStakeAmount,
+        amount: (unStakeAmount === stakedAmount ? stakedAmountBN : parseUnits(Number(unStakeAmount).toFixed(18), 18)).toString(),
+        tokenAddress: pairData.hypervisor
       })
       const receipt = await response.wait()
       finalizedTransaction(receipt, {
@@ -236,6 +238,8 @@ const GammaFarmCardDetails: React.FC<{
       addTransaction(response, {
         type: TransactionType.CLAIM_FARM,
         pid: pairData.pid,
+        amount: rewardsBN.toString(),
+        tokenAddress: rewardData.rewardTokenAddress
       })
       const receipt = await response.wait()
       finalizedTransaction(receipt, {

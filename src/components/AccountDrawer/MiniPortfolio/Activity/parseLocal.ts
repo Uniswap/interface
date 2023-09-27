@@ -173,6 +173,18 @@ export function parseLocalActivity(
       info.type === TransactionType.ADD_LIQUIDITY_V2_POOL
     ) {
       additionalFields = parseLP(info, chainId, tokens)
+    } else if (
+      info.type === TransactionType.CLAIM_FARM ||
+      info.type === TransactionType.DEPOSIT_FARM ||
+      info.type === TransactionType.WITHDRAW_FARM
+    ) {
+      const currency = getCurrency(info.tokenAddress, chainId, tokens)
+      const formatted = currency ? formatCurrencyAmount(CurrencyAmount.fromRawAmount(currency, info.amount)) : undefined
+      const descriptor = formatted ? (t`${formatted} ${currency?.symbol}`) : t`Unknown`
+      additionalFields = {
+      descriptor,
+      currencies: [currency],
+    }
     } else if (info.type === TransactionType.COLLECT_FEES) {
       additionalFields = parseCollectFees(info, chainId, tokens)
     } else if (info.type === TransactionType.MIGRATE_LIQUIDITY_V3 || info.type === TransactionType.CREATE_V3_POOL) {
