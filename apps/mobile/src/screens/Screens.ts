@@ -1,6 +1,4 @@
 export enum Screens {
-  Accounts = 'Accounts',
-  AccountStack = 'AccountStack',
   Dev = 'Dev',
   Education = 'Education',
   Explore = 'Explore',
@@ -34,7 +32,6 @@ export enum OnboardingScreens {
   BackupManual = 'OnboardingBackupManual',
   Landing = 'OnboardingLanding',
   EditName = 'EditName',
-  SelectColor = 'SelectColor',
   Notifications = 'OnboardingNotifications',
   QRAnimation = 'QRAnimation',
   Security = 'OnboardingSecurity',
@@ -47,10 +44,6 @@ export enum OnboardingScreens {
   RestoreCloudBackupPassword = 'RestoreCloudBackupPassword',
   SelectWallet = 'SelectWallet',
   WatchWallet = 'WatchWallet',
-}
-
-export enum Stacks {
-  AppStack = 'AppStack',
 }
 
 export type AppScreen = Screens | OnboardingScreens

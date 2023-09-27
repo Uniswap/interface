@@ -36,10 +36,6 @@ export function ImportAccounts() {
     // skip nickname
     await element(by.id(ElementName.Next)).tap()
 
-    // Choose a color
-    await element(by.id(ElementName.SelectColor + '-' + '#FC72FF')).tap()
-    await element(by.id(ElementName.Next)).tap()
-
     // skip notifs
     await element(by.id(ElementName.Skip)).tap()
 

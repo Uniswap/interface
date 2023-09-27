@@ -2,12 +2,14 @@ import { useNetInfo } from '@react-native-community/netinfo'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector } from 'src/app/hooks'
-import { TabsAwareBottomBanner } from 'src/components/banners/TabsAwareBottomBanner'
+import { BANNER_HEIGHT, BottomBanner } from 'src/components/banners/BottomBanner'
 import { selectSomeModalOpen } from 'src/features/modals/modalSlice'
 import { useSporeColors } from 'ui/src'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { iconSizes } from 'ui/src/theme'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
+
+const EXTRA_MARGIN = 5
 
 export function OfflineBanner(): JSX.Element | null {
   const { t } = useTranslation()
@@ -29,7 +31,8 @@ export function OfflineBanner(): JSX.Element | null {
   }
 
   return showBanner ? (
-    <TabsAwareBottomBanner
+    <BottomBanner
+      backgroundColor="surface2"
       icon={
         <InfoCircle
           color={colors.neutral1.get()}
@@ -38,6 +41,7 @@ export function OfflineBanner(): JSX.Element | null {
         />
       }
       text={t('You are in offline mode')}
+      translateY={BANNER_HEIGHT - EXTRA_MARGIN}
     />
   ) : null
 }

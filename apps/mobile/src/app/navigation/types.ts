@@ -36,10 +36,6 @@ export type ExploreStackParamList = {
   }
 }
 
-export type AccountStackParamList = {
-  [Screens.Accounts]: undefined
-}
-
 export type SettingsStackParamList = {
   [Screens.Settings]: undefined
   [Screens.SettingsWallet]: { address: Address }
@@ -72,7 +68,6 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.Backup]: OnboardingStackBaseParams
   [OnboardingScreens.Landing]: OnboardingStackBaseParams
   [OnboardingScreens.EditName]: OnboardingStackBaseParams
-  [OnboardingScreens.SelectColor]: OnboardingStackBaseParams
   [OnboardingScreens.Notifications]: OnboardingStackBaseParams
   [OnboardingScreens.QRAnimation]: OnboardingStackBaseParams
   [OnboardingScreens.Security]: OnboardingStackBaseParams
@@ -90,7 +85,6 @@ export type OnboardingStackParamList = {
 }
 
 export type AppStackParamList = {
-  [Screens.AccountStack]: NavigatorScreenParams<AccountStackParamList>
   [Screens.Education]: {
     type: EducationContentType
   } & OnboardingStackBaseParams
@@ -133,8 +127,7 @@ export type OnboardingStackNavigationProp = CompositeNavigationProp<
   AppStackNavigationProp
 >
 
-export type RootParamList = AccountStackParamList &
-  AppStackParamList &
+export type RootParamList = AppStackParamList &
   ExploreStackParamList &
   OnboardingStackParamList &
   SettingsStackParamList

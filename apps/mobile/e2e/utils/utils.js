@@ -8,7 +8,6 @@ export async function quickOnboarding() {
   await device.setBiometricEnrollment(true)
 
   // open app, import existing account
-  await element(by.id(ElementName.OnboardingImportWallet)).tap()
   await element(by.id(ElementName.OnboardingImportSeedPhrase)).tap()
 
   // enter address / eth
