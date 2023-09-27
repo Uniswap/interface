@@ -7,8 +7,6 @@ import { FadeInDown, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { AnimatedBox } from 'src/components/layout'
-import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
-import { BaseCard } from 'src/components/layout/BaseCard'
 import {
   TabProps,
   TAB_BAR_HEIGHT,
@@ -20,8 +18,9 @@ import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceIt
 import { IS_ANDROID } from 'src/constants/globals'
 import { useTokenBalancesGroupedByVisibility } from 'src/features/balances/hooks'
 import { Screens } from 'src/screens/Screens'
-import { Flex, useSporeColors } from 'ui/src'
+import { AnimatedFlashList, Flex, useSporeColors } from 'ui/src'
 import { dimensions, zIndices } from 'ui/src/theme'
+import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError, isNonPollingRequestInFlight, isWarmLoadingStatus } from 'wallet/src/data/utils'
 import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'

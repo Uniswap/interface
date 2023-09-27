@@ -1,5 +1,5 @@
 import { FlashList, FlashListProps } from '@shopify/flash-list'
-import React, { forwardRef } from 'react'
+import { forwardRef } from 'react'
 import { FlatListProps } from 'react-native'
 import Animated from 'react-native-reanimated'
 

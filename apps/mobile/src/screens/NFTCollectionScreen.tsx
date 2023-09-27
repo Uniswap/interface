@@ -6,8 +6,6 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { useAnimatedScrollHandler, useSharedValue, withTiming } from 'react-native-reanimated'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
-import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
-import { BaseCard } from 'src/components/layout/BaseCard'
 import { Screen } from 'src/components/layout/Screen'
 import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
 import { Loader } from 'src/components/loading'
@@ -19,12 +17,12 @@ import {
   NFTCollectionHeader,
   NFT_BANNER_HEIGHT,
 } from 'src/features/nfts/collection/NFTCollectionHeader'
-import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlashList, Flex, Text, TouchableArea } from 'ui/src'
 import { dimensions, iconSizes, spacing } from 'ui/src/theme'
 import { theme } from 'ui/src/theme/restyle'
+import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError } from 'wallet/src/data/utils'
 import {
   NftCollectionScreenQuery,
@@ -32,6 +30,7 @@ import {
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { NFTItem } from 'wallet/src/features/nfts/types'
+import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 
 const PREFETCH_ITEMS_THRESHOLD = 0.5
 const ASSET_FETCH_PAGE_SIZE = 30

@@ -4,13 +4,13 @@ import { Keyboard, LayoutChangeEvent, TextInput as NativeTextInput, ViewStyle } 
 import { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { AnimatedBox, AnimatedFlex } from 'src/components/layout'
-import { SHADOW_OFFSET_SMALL } from 'src/components/layout/BaseCard'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import X from 'ui/src/assets/icons/x.svg'
 import { dimensions, fonts, iconSizes, spacing } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
+import { SHADOW_OFFSET_SMALL } from 'wallet/src/components/BaseCard/BaseCard'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 export const springConfig = {

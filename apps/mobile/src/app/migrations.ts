@@ -5,10 +5,10 @@
 
 import dayjs from 'dayjs'
 import { AccountToNftData } from 'src/features/favorites/slice'
-import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
+import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
 import {
   ChainIdToTxIdToDetails,

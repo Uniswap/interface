@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Ether } from '@uniswap/sdk-core'
-import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { WBTC } from 'wallet/src/constants/tokens'
+import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { removeAccount } from 'wallet/src/features/wallet/slice'
 import { CurrencyId, currencyId as idFromCurrency } from 'wallet/src/utils/currencyId'
 

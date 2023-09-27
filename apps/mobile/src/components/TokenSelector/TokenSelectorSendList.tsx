@@ -1,7 +1,6 @@
 import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
-import { BaseCard } from 'src/components/layout/BaseCard'
 import { usePortfolioTokenOptions } from 'src/components/TokenSelector/hooks'
 import {
   OnSelectCurrency,
@@ -10,6 +9,7 @@ import {
   TokenSelectorList,
 } from 'src/components/TokenSelector/TokenSelectorList'
 import { getTokenOptionsSection } from 'src/components/TokenSelector/utils'
+import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { useFiatOnRampIpAddressQuery } from 'wallet/src/features/fiatOnRamp/api'
 
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'

@@ -1,8 +1,7 @@
 import { ShadowProps } from '@shopify/restyle'
-import React, { ComponentProps, ReactNode } from 'react'
+import { ComponentProps, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ColorTokens, Flex, FlexProps, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
-import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes, opacify } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
@@ -175,7 +174,6 @@ type InlineErrorStateProps = {
 } & Pick<ErrorStateProps, 'icon' | 'title' | 'onRetry' | 'retryButtonLabel'>
 
 function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
-  const colors = useSporeColors()
   const { t } = useTranslation()
   const {
     backgroundColor = '$surface2',
@@ -184,11 +182,7 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
     onRetry: retry,
     retryButtonLabel = t('Retry'),
     icon = (
-      <AlertTriangle
-        color={colors.neutral3.get()}
-        height={iconSizes.icon16}
-        width={iconSizes.icon16}
-      />
+      <Icons.AlertTriangle color="$neutral3" height={iconSizes.icon16} width={iconSizes.icon16} />
     ),
   } = props
 

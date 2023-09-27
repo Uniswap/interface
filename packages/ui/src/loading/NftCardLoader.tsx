@@ -1,5 +1,4 @@
-import React from 'react'
-import { Flex, FlexProps } from 'ui/src'
+import { Flex, FlexProps } from 'ui/src/components/layout'
 
 export function NftCardLoader({ ...props }: FlexProps): JSX.Element {
   return (

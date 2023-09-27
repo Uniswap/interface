@@ -14,7 +14,6 @@ import {
   getSearchResultId,
 } from 'src/components/explore/search/utils'
 import { AnimatedFlex } from 'src/components/layout'
-import { BaseCard } from 'src/components/layout/BaseCard'
 import {
   NFTCollectionSearchResult,
   SearchResult,
@@ -25,6 +24,7 @@ import {
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
 import { Flex, Text } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
+import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { ChainId } from 'wallet/src/constants/chains'
 import { SafetyLevel, useExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { useENS } from 'wallet/src/features/ens/useENS'

@@ -1,8 +1,8 @@
 import React, { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
-import { BaseCard } from 'src/components/layout/BaseCard'
 import { CHART_HEIGHT } from 'src/components/PriceExplorer/constants'
 import { Flex, Text } from 'ui/src'
+import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 
 export function PriceExplorerError({
   showRetry,
