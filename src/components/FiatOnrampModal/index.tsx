@@ -10,7 +10,7 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import Modal from '../Modal'
-import { getDefaultCurrencyCode, MOONPAY_SUPPORTED_CURRENCY_CODES } from './util'
+import { getDefaultCurrencyCode, MOONPAY_SUPPORTED_CURRENCY_CODES, parsePathParts } from './util'
 
 const MOONPAY_DARK_BACKGROUND = '#1c1c1e'
 const Wrapper = styled.div<{ isDarkMode: boolean }>`
@@ -64,10 +64,7 @@ export default function FiatOnrampModal() {
   const fiatOnrampModalOpen = useModalIsOpen(ApplicationModal.FIAT_ONRAMP)
 
   const location = useLocation()
-  const pathParts = location.pathname.split('/')
-  // Matches the /tokens/<network>/<tokenAddress> path.
-  const network = pathParts.length > 2 ? pathParts[pathParts.length - 2] : undefined
-  const tokenAddress = pathParts.length > 2 ? pathParts[pathParts.length - 1] : undefined
+  const { network, tokenAddress } = parsePathParts(location.pathname)
 
   const [signedIframeUrl, setSignedIframeUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)

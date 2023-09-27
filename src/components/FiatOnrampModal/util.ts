@@ -65,3 +65,11 @@ export function getDefaultCurrencyCode(
   }
   return 'eth'
 }
+
+export function parsePathParts(pathname: string): { network?: string; tokenAddress?: string } {
+  const pathParts = pathname.split('/')
+  // Matches the /tokens/<network>/<tokenAddress> path.
+  const network = pathParts.length > 2 ? pathParts[pathParts.length - 2] : undefined
+  const tokenAddress = pathParts.length > 2 ? pathParts[pathParts.length - 1] : undefined
+  return { network, tokenAddress }
+}
