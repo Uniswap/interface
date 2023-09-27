@@ -5,7 +5,7 @@ import { splitHiddenTokens } from './splitHiddenTokens'
 const tokens: TokenBalance[] = [
   // low balance
   {
-    id: 'low-balance',
+    id: 'low-balance-native',
     ownerAddress: '',
     __typename: 'TokenBalance',
     denominatedValue: {
@@ -15,6 +15,24 @@ const tokens: TokenBalance[] = [
     tokenProjectMarket: {
       id: '',
       currency: Currency.Eth,
+      tokenProject: {
+        id: '',
+        tokens: [],
+        isSpam: false,
+      },
+    },
+  },
+  {
+    id: 'low-balance-nonnative',
+    ownerAddress: '',
+    __typename: 'TokenBalance',
+    denominatedValue: {
+      id: '',
+      value: 0.5,
+    },
+    tokenProjectMarket: {
+      id: '',
+      currency: 'TUSD', // fixme: tokenProjectMarket gql should not have currency field? should have Token field??
       tokenProject: {
         id: '',
         tokens: [],
@@ -91,27 +109,30 @@ describe('splitHiddenTokens', () => {
     expect(hiddenTokens.length).toBe(1)
     expect(hiddenTokens[0].id).toBe('spam')
 
-    expect(visibleTokens.length).toBe(3)
-    expect(visibleTokens[0].id).toBe('low-balance')
-    expect(visibleTokens[1].id).toBe('valid')
+    expect(visibleTokens.length).toBe(4)
+    expect(visibleTokens[0].id).toBe('low-balance-native')
+    expect(visibleTokens[1].id).toBe('low-balance-nonnative')
+    expect(visibleTokens[2].id).toBe('valid')
   })
 
-  it('splits low balance into hidden by default', () => {
+  it('splits non-native low balance into hidden by default', () => {
     const { visibleTokens, hiddenTokens } = splitHiddenTokens(tokens)
 
     expect(hiddenTokens.length).toBe(2)
-    expect(hiddenTokens[0].id).toBe('low-balance')
+    expect(hiddenTokens[0].id).toBe('low-balance-nonnative')
     expect(hiddenTokens[1].id).toBe('spam')
 
-    expect(visibleTokens.length).toBe(2)
-    expect(visibleTokens[0].id).toBe('valid')
+    expect(visibleTokens.length).toBe(3)
+    expect(visibleTokens[0].id).toBe('low-balance-native')
+    expect(visibleTokens[1].id).toBe('valid')
   })
 
   it('splits undefined value tokens into visible', () => {
     const { visibleTokens } = splitHiddenTokens(tokens)
 
-    expect(visibleTokens.length).toBe(2)
-    expect(visibleTokens[0].id).toBe('valid')
-    expect(visibleTokens[1].id).toBe('undefined-value')
+    expect(visibleTokens.length).toBe(3)
+    expect(visibleTokens[0].id).toBe('low-balance-native')
+    expect(visibleTokens[1].id).toBe('valid')
+    expect(visibleTokens[2].id).toBe('undefined-value')
   })
 })

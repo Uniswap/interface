@@ -1,4 +1,4 @@
-import { TokenBalance, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
+import { TokenBalance, TokenProjectMarket, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
@@ -12,16 +12,21 @@ export function splitHiddenTokens(
   const hiddenTokens: TokenBalance[] = []
 
   for (const tokenBalance of tokenBalances) {
-    const isValidValue =
+    const isUndefinedValue =
       // if undefined we keep visible (see https://linear.app/uniswap/issue/WEB-1940/[mp]-update-how-we-handle-what-goes-in-hidden-token-section-of-mini)
       typeof tokenBalance.denominatedValue?.value === 'undefined'
-    const isSpamToken = tokenBalance.tokenProjectMarket?.tokenProject?.isSpam
     const shouldHideSmallBalance =
       options?.hideSmallBalances &&
       !meetsThreshold(tokenBalance) && // if below $1
-      !(tokenBalance.token?.standard == TokenStandard.Native)
+      !(tokenBalance.token?.standard == TokenStandard.Native) // do not hide native tokens regardless of small balance
+    const isSpamToken = tokenBalance.tokenProjectMarket?.tokenProject?.isSpam
 
-    if (isValidValue && !shouldHideSmallBalance && !isSpamToken) {
+    const tokenProjectMarket: TokenProjectMarket | undefined = tokenBalance.tokenProjectMarket
+    console.log(
+      `my  token currency is native ${tokenBalance.token?.standard == TokenStandard.Native}`,
+      tokenProjectMarket
+    )
+    if ((isUndefinedValue || !shouldHideSmallBalance) && !isSpamToken) {
       visibleTokens.push(tokenBalance)
     } else {
       hiddenTokens.push(tokenBalance)
