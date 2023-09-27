@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { HideContentShield } from 'src/app/components/hideContent/HideContentShield'
-import { ScreenHeader } from 'src/app/components/layout/SreenHeader'
+import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { Flex, Text } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes } from 'ui/src/theme'

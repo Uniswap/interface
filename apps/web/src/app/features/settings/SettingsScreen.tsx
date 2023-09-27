@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScreenHeader } from 'src/app/components/layout/SreenHeader'
+import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { AccountRowItem } from 'src/app/features/accounts/AccountRowItem'
 import { SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { ScreenHeader } from 'src/app/components/layout/SreenHeader'
+import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { TransferScreen, useTransferContext } from 'src/app/features/transfer/TransferContext'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { Button, Flex } from 'ui/src'

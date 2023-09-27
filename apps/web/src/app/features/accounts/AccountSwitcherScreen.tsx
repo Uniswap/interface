@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { ScreenHeader } from 'src/app/components/layout/SreenHeader'
+import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { AccountItem } from 'src/app/features/accounts/AccountItem'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { useSagaStatus } from 'src/background/utils/useSagaStatus'
