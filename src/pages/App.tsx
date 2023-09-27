@@ -234,11 +234,12 @@ export default function App() {
                       browserRouterEnabled && hash ? <Navigate to={hash.replace('#', '')} replace /> : <Landing />
                     }
                   />
-                  <Route path="tokens" element={<Tokens />}>
-                    <Route path=":chainName" />
-                  </Route>
-                  {infoExplorePageEnabled && (
+                  {infoExplorePageEnabled ? (
                     <Route path="explore" element={<Explore />}>
+                      <Route path=":chainName" />
+                    </Route>
+                  ) : (
+                    <Route path="tokens" element={<Tokens />}>
                       <Route path=":chainName" />
                     </Route>
                   )}

@@ -145,7 +145,7 @@ const Explore = () => {
             <NetworkFilter />
             {currentKey === 'tokens' && <TimeSelector />}
             {/* <SearchContainer> */}
-            <SearchBar />
+            {currentKey !== 'transactions' && <SearchBar />}
             {/* </SearchContainer> */}
           </FiltersContainer>
         </NavWrapper>

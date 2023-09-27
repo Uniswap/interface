@@ -77,9 +77,7 @@ export default function SearchBar() {
   }, [debouncedLocalFilterString, setFilterString])
 
   const handleBlur = () => {
-    if (localFilterString.trim() === '') {
-      setIsClicked(false)
-    }
+    if (localFilterString === '') setIsClicked(false)
   }
 
   return (
