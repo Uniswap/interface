@@ -5,6 +5,7 @@ import ErrorBoundary from 'components/ErrorBoundary'
 import Loader from 'components/Icons/LoadingSpinner'
 import NavBar, { PageTabs } from 'components/NavBar'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useInfoPoolPageEnabled } from 'featureFlags/flags/infoPoolPage'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
@@ -25,6 +26,7 @@ import { getDownloadAppLink } from 'utils/openDownloadApp'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
+import Explore from './Explore'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from './Landing'
 import Swap from './Swap'
@@ -119,6 +121,7 @@ export default function App() {
   const [routerPreference] = useRouterPreference()
   const [scrolledState, setScrolledState] = useState(false)
   const infoPoolPageEnabled = useInfoPoolPageEnabled()
+  const infoExplorePageEnabled = useInfoExplorePageEnabled()
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -231,10 +234,14 @@ export default function App() {
                       browserRouterEnabled && hash ? <Navigate to={hash.replace('#', '')} replace /> : <Landing />
                     }
                   />
-
                   <Route path="tokens" element={<Tokens />}>
                     <Route path=":chainName" />
                   </Route>
+                  {infoExplorePageEnabled && (
+                    <Route path="explore" element={<Explore />}>
+                      <Route path=":chainName" />
+                    </Route>
+                  )}
                   <Route path="tokens/:chainName/:tokenAddress" element={<TokenDetails />} />
                   {infoPoolPageEnabled && <Route path="pools/:chainName/:poolAddress" element={<PoolDetails />} />}
                   <Route
