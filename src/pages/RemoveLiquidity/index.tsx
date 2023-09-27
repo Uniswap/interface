@@ -483,7 +483,7 @@ function RemoveLiquidity() {
               <AutoColumn gap="20px">
                 <RowBetween>
                   <Text fontWeight={535}>
-                    <Trans>Remove Amount</Trans>
+                    <Trans>Remove amount</Trans>
                   </Text>
                   <ClickableText
                     fontWeight={535}
@@ -651,7 +651,7 @@ function RemoveLiquidity() {
                   element={InterfaceElementName.CONNECT_WALLET_BUTTON}
                 >
                   <ButtonLight onClick={toggleWalletDrawer}>
-                    <Trans>Connect Wallet</Trans>
+                    <Trans>Connect wallet</Trans>
                   </ButtonLight>
                 </TraceEvent>
               ) : (

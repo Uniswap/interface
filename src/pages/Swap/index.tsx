@@ -323,6 +323,8 @@ export function Swap({
     [independentField, parsedAmount, showWrap, trade]
   )
 
+  const showFiatValueInput = Boolean(parsedAmounts[Field.INPUT])
+  const showFiatValueOutput = Boolean(parsedAmounts[Field.OUTPUT])
   const getSingleUnitAmount = (currency?: Currency) => {
     if (!currency) return
     return CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(10 ** currency.decimals))
@@ -641,7 +643,7 @@ export function Swap({
               currency={currencies[Field.INPUT] ?? null}
               onUserInput={handleTypeInput}
               onMax={handleMaxInput}
-              fiatValue={fiatValueInput}
+              fiatValue={showFiatValueInput ? fiatValueInput : undefined}
               onCurrencySelect={handleInputSelect}
               otherCurrency={currencies[Field.OUTPUT]}
               showCommonBases
@@ -682,7 +684,7 @@ export function Swap({
                 label={<Trans>You receive</Trans>}
                 showMaxButton={false}
                 hideBalance={false}
-                fiatValue={fiatValueOutput}
+                fiatValue={showFiatValueOutput ? fiatValueOutput : undefined}
                 priceImpact={stablecoinPriceImpact}
                 currency={currencies[Field.OUTPUT] ?? null}
                 onCurrencySelect={handleOutputSelect}
@@ -727,7 +729,7 @@ export function Swap({
           {swapIsUnsupported ? (
             <ButtonPrimary $borderRadius="16px" disabled={true}>
               <ThemedText.DeprecatedMain mb="4px">
-                <Trans>Unsupported Asset</Trans>
+                <Trans>Unsupported asset</Trans>
               </ThemedText.DeprecatedMain>
             </ButtonPrimary>
           ) : switchingChain ? (
@@ -742,7 +744,7 @@ export function Swap({
               element={InterfaceElementName.CONNECT_WALLET_BUTTON}
             >
               <ButtonLight onClick={toggleWalletDrawer} fontWeight={535} $borderRadius="16px">
-                <Trans>Connect Wallet</Trans>
+                <Trans>Connect wallet</Trans>
               </ButtonLight>
             </TraceEvent>
           ) : chainId && chainId !== connectedChainId ? (
@@ -806,7 +808,7 @@ export function Swap({
                   ) : routeIsSyncing || routeIsLoading ? (
                     <Trans>Swap</Trans>
                   ) : priceImpactSeverity > 2 ? (
-                    <Trans>Swap Anyway</Trans>
+                    <Trans>Swap anyway</Trans>
                   ) : (
                     <Trans>Swap</Trans>
                   )}

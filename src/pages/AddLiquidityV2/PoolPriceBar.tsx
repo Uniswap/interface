@@ -58,7 +58,7 @@ export function PoolPriceBar({
             %
           </ThemedText.DeprecatedBlack>
           <Text fontWeight={535} fontSize={14} color={theme.neutral2} pt={1}>
-            <Trans>Share of Pool</Trans>
+            <Trans>Share of pool</Trans>
           </Text>
         </AutoColumn>
       </AutoRow>

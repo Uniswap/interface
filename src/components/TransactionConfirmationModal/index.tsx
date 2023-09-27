@@ -256,7 +256,7 @@ function L2Content({
             {!hash ? (
               <Trans>Confirm transaction in wallet</Trans>
             ) : !confirmed ? (
-              <Trans>Transaction Submitted</Trans>
+              <Trans>Transaction submitted</Trans>
             ) : transactionSuccess ? (
               <Trans>Success</Trans>
             ) : (

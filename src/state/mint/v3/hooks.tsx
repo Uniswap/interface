@@ -444,7 +444,7 @@ export function useV3DerivedMintInfo(
 
   let errorMessage: ReactNode | undefined
   if (!account) {
-    errorMessage = <Trans>Connect Wallet</Trans>
+    errorMessage = <Trans>Connect wallet</Trans>
   }
 
   if (poolState === PoolState.INVALID) {
