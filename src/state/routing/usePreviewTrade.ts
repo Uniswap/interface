@@ -30,8 +30,7 @@ function useQuickRouteArguments({
 
   return useMemo(() => {
     if (!tokenIn || !tokenOut || !amount) return skipToken
-    if (tokenIn.chainId !== ChainId.MAINNET || (tokenIn.chainId === ChainId.MAINNET && !enabledMainnet))
-      return skipToken
+    if (!enabledMainnet || tokenIn.chainId !== ChainId.MAINNET) return skipToken
 
     return {
       amount: amount.quotient.toString(),
@@ -49,12 +48,7 @@ function useQuickRouteArguments({
     }
   }, [amount, enabledMainnet, inputTax, outputTax, tokenIn, tokenOut, tradeType])
 }
-/**
- * Returns the best trade by invoking the routing api or the smart order router on the client
- * @param tradeType whether the swap is an exact in/out
- * @param amountSpecified the exact amount to swap in/out
- * @param otherCurrency the desired output/payment currency
- */
+
 export function usePreviewTrade(
   skipFetch = false,
   tradeType: TradeType,
