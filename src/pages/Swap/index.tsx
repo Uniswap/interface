@@ -323,6 +323,8 @@ export function Swap({
     [independentField, parsedAmount, showWrap, trade]
   )
 
+  const showFiatValueInput = Boolean(parsedAmounts[Field.INPUT])
+  const showFiatValueOutput = Boolean(parsedAmounts[Field.OUTPUT])
   const getSingleUnitAmount = (currency?: Currency) => {
     if (!currency) return
     return CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(10 ** currency.decimals))
@@ -641,7 +643,7 @@ export function Swap({
               currency={currencies[Field.INPUT] ?? null}
               onUserInput={handleTypeInput}
               onMax={handleMaxInput}
-              fiatValue={fiatValueInput}
+              fiatValue={showFiatValueInput ? fiatValueInput : undefined}
               onCurrencySelect={handleInputSelect}
               otherCurrency={currencies[Field.OUTPUT]}
               showCommonBases
@@ -682,7 +684,7 @@ export function Swap({
                 label={<Trans>You receive</Trans>}
                 showMaxButton={false}
                 hideBalance={false}
-                fiatValue={fiatValueOutput}
+                fiatValue={showFiatValueOutput ? fiatValueOutput : undefined}
                 priceImpact={stablecoinPriceImpact}
                 currency={currencies[Field.OUTPUT] ?? null}
                 onCurrencySelect={handleOutputSelect}
