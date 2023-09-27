@@ -13,8 +13,8 @@ import styled from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { getTokenFromAddress } from 'utils/farmUtils'
 
-import { GammaPairs, GlobalData } from '../constants'
-import { checkCondition, sortFarms, useRewardPerSecond, useRewardTokenAddress } from '../utils'
+import { GammaPairs, itemFarmToken } from '../constants'
+import { filterFarm, useRewardPerSecond, useRewardTokenAddress } from '../utils'
 import { GammaFarmCard } from './GammaFarmCard'
 
 const NoFarmsContainer = styled.div`
@@ -97,26 +97,28 @@ const GammaFarmsPage: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTime])
 
-  const filteredFarms = allGammaFarms
-    .map((item) => {
+  const filteredAndSortedFarms = useMemo(() => {
+    const allFarms = allGammaFarms.map((item) => {
       if (chainId) {
         const token0 = getTokenFromAddress(item?.token0Address, tokenMap, [])
         const token1 = getTokenFromAddress(item?.token1Address, tokenMap, [])
-        return { ...item, token0: token0 ?? null, token1: token1 ?? null }
+        return { ...item, token0: token0 ?? null, token1: token1 ?? null } as itemFarmToken
       }
-      return { ...item, token0: null, token1: null }
+      return { ...item, token0: null, token1: null } as itemFarmToken
     })
-    .filter((item: any) => checkCondition(item, search, GlobalData, farmFilter))
-    .sort((farm0, farm1) => sortFarms(farm0, farm1, gammaData, {}, sortBy, sortDesc, []))
-  // TODO: refactor method above to remove gammaRewards
+
+    const allFarmsFiltered = allFarms?.filter((item: itemFarmToken) => filterFarm(item, search))
+
+    return allFarmsFiltered
+  }, [allGammaFarms, chainId, search, tokenMap])
 
   return (
     <div style={{ padding: '2 3' }}>
-      {gammaFarmsLoading || gammaPositionsLoading ? (
+      {gammaFarmsLoading || gammaPositionsLoading || rewardTokenAddress.loading || rewardPerSecond.loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '10px', paddingBottom: '30px' }}>
           <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="3.5rem" />
         </div>
-      ) : filteredFarms.length === 0 ? (
+      ) : filteredAndSortedFarms.length === 0 ? (
         <NoFarmsContainer>
           <Frown size="2rem" stroke="white" />
           <p style={{ marginTop: 12 }}>noGammaFarms</p>
@@ -124,9 +126,9 @@ const GammaFarmsPage: React.FC<{
       ) : (
         !gammaFarmsLoading &&
         !gammaPositionsLoading &&
-        filteredFarms.length > 0 && (
+        filteredAndSortedFarms.length > 0 && (
           <div>
-            {filteredFarms.map((farm: any) => {
+            {filteredAndSortedFarms.map((farm: any) => {
               const foundData = gammaData
                 ? Object.values(gammaData).find((poolData) => poolData.poolAddress === farm.address.toLowerCase())
                 : undefined

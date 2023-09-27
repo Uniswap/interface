@@ -1,10 +1,9 @@
 import { ChainId } from '@pollum-io/smart-order-router'
 import { useWeb3React } from '@web3-react/core'
 import CustomSelector, { SelectorItem } from 'components/CustomSelector/CustomSelector'
-import CustomSwitch from 'components/CustomSwitch/CustomSwitch'
-import SearchInput from 'components/SearchInput/SearchInput'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import useParsedQueryString from 'hooks/useParsedQueryString'
+import { useAtomValue } from 'jotai'
 import { useIsMobile } from 'nft/hooks'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -14,8 +13,8 @@ import styled from 'styled-components/macro'
 import { GammaPairs, GlobalConst } from './constants'
 import GammaFarmsPage from './GammaFarms/GammaFarmsPage'
 import FarmingMyFarms from './MyFarms/FarmMyFarms'
-import SortColumns from './SortColumn'
-import { buildRedirectPath, farmFilters, sortColumns, tabsFarm, tabsFarmDefault } from './utils'
+import SearchBar from './SearchBar'
+import { buildRedirectPath, farmFilters, filterFarmStringAtom, sortColumns, tabsFarm, tabsFarmDefault } from './utils'
 
 const FarmsLayout = styled.div`
   width: 100%;
@@ -41,13 +40,13 @@ const Switch = styled.div`
   align-items: center;
 `
 
-const TabSwitchLayout = styled.div`
-  width: 100%;
-  justify-content: space-between;
-  display: flex;
-  background: ${({ theme }) => theme.backgroundModule};
-  border-radius: 16px;
-`
+// const TabSwitchLayout = styled.div`
+//   width: 100%;
+//   justify-content: space-between;
+//   display: flex;
+//   background: ${({ theme }) => theme.backgroundModule};
+//   border-radius: 16px;
+// `
 
 const TabFiltersLayout = styled.div`
   width: 100%;
@@ -65,7 +64,8 @@ export function Farms() {
   const { chainId } = useWeb3React()
   const navigate = useNavigate()
   const location = useLocation()
-  const [searchValue, setSearchValue] = useState('')
+  const filterSearch = useAtomValue(filterFarmStringAtom)
+
   const [farmFilter, setFarmFilter] = useState(farmFilters[0])
   const [sortBy, setSortBy] = useState(GlobalConst.utils.v3FarmSortBy.pool)
   const [sortDesc, setSortDesc] = useState(false)
@@ -144,16 +144,16 @@ export function Farms() {
           handleChange={onChangeFarmCategory}
         />
         <Switch>
-          {selectedFarmCategory.id !== 0 && (
+          {/* {selectedFarmCategory.id !== 0 && (
             <div style={{ marginTop: isMobile ? 2 : 0, width: isMobile ? '100%' : 160 }}>
               <ThemeToggleContainer>
                 <CustomSwitch items={farmStatusItems} />
               </ThemeToggleContainer>
             </div>
-          )}
+          )} */}
           <div style={{ marginTop: isMobile ? 2 : 0, marginLeft: isMobile ? 0 : 10, width: isMobile ? '100%' : 200 }}>
             <ThemeToggleContainer>
-              <SearchInput placeholder="Search" value={searchValue} setValue={setSearchValue} isIconAfter />
+              <SearchBar />
             </ThemeToggleContainer>
           </div>
         </Switch>
@@ -169,18 +169,18 @@ export function Farms() {
               height={50}
             />
           </TabSwitchLayout> */}
-          {!isMobile && (
+          {/* {!isMobile && (
             <TabFiltersLayout>
               <SortColumns sortColumns={sortByDesktopItems} selectedSort={sortBy} sortDesc={sortDesc} />
             </TabFiltersLayout>
-          )}
+          )} */}
         </>
       )}
 
-      {selectedFarmCategory?.id === 0 && chainId && <FarmingMyFarms search={searchValue} chainId={chainId} />}
+      {selectedFarmCategory?.id === 0 && chainId && <FarmingMyFarms search={filterSearch} chainId={chainId} />}
 
       {selectedFarmCategory?.id === 1 && (
-        <GammaFarmsPage farmFilter={farmFilter.id} search={searchValue} sortBy={sortBy} sortDesc={sortDesc} />
+        <GammaFarmsPage farmFilter={farmFilter.id} search={filterSearch} sortBy={sortBy} sortDesc={sortDesc} />
       )}
     </FarmsLayout>
   )

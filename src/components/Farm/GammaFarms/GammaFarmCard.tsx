@@ -98,14 +98,17 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
       ? Number(data.returns.allTime.feeApr)
       : 0
   const token = useToken(rewardTokenAddress?.result?.toString())
-  const rewardsPerSecondBN =
-    rewardPerSecond && !rewardPerSecond.loading && rewardPerSecond.result && rewardPerSecond.result.length > 0
-      ? rewardPerSecond.result[0]
-      : undefined
 
-  const rewardsAmount = rewardsPerSecondBN ? formatUnits(rewardsPerSecondBN, 18) : '0'
+  const rewardsAmount = poolRewardPerSecInPSYS ? formatUnits(poolRewardPerSecInPSYS, 18) : '0'
 
-  const getToken = (token: Token | { token: WrappedTokenInfo }): Token | WrappedTokenInfo => {
+  const getToken = (
+    token:
+      | Token
+      | {
+          token: WrappedTokenInfo
+          list?: TokenList
+        }
+  ): Token | WrappedTokenInfo => {
     return 'address' in token ? token : token.token
   }
 

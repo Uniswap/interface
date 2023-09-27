@@ -18,10 +18,9 @@ import styled from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { getTokenFromAddress } from 'utils/farmUtils'
 
-import { GammaPair, GammaPairs, GlobalConst } from '../constants'
+import { GammaPairs, GlobalConst, itemFarmToken } from '../constants'
 import { GammaFarmCard } from '../GammaFarms/GammaFarmCard'
-import SortColumns from '../SortColumn'
-import { getStakedAmount, sortColumnsGamma, sortFarms, useRewardPerSecond, useRewardTokenAddress } from '../utils'
+import { filterFarm, getStakedAmount, sortColumnsGamma, useRewardPerSecond, useRewardTokenAddress } from '../utils'
 
 const NoFarmsContainer = styled.div`
   display: flex;
@@ -38,23 +37,16 @@ const MyFarmsContainer = styled.div`
   width: '100%';
 `
 
-export default function FarmingMyFarms({ chainId }: { search: string; chainId: number }) {
-  const { v3FarmSortBy } = GlobalConst.utils
+export default function FarmingMyFarms({ chainId, search }: { search: string; chainId: number }) {
   const { account } = useWeb3React()
+  const { v3FarmSortBy } = GlobalConst.utils
+  const masterChefContract = useMasterChefContract()
   const isMobile = useIsMobile()
   const isDarkMode = useIsDarkMode()
   const tokenMap = useCombinedActiveList()
   const [sortByGamma, setSortByGamma] = useState(v3FarmSortBy.pool)
   const [sortDescGamma, setSortDescGamma] = useState(false)
   const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 1000))
-  const masterChefContract = useMasterChefContract()
-
-  const allGammaFarms = useMemo(() => {
-    const pairsGroups = GammaPairs[570] || {}
-    const allPairs = Object.values(pairsGroups).flat()
-
-    return allPairs.filter((item) => item?.ableToFarm)
-  }, [])
 
   const rewardPerSecond = useRewardPerSecond()
   const rewardTokenAddress = useRewardTokenAddress()
@@ -119,21 +111,25 @@ export default function FarmingMyFarms({ chainId }: { search: string; chainId: n
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTime])
 
-  const allGammaPairsToFarm = chainId ? ([] as GammaPair[]).concat(...Object.values(GammaPairs[ChainId.ROLLUX])) : []
+  const allGammaFarms = useMemo(() => {
+    const pairsGroups = GammaPairs[ChainId.ROLLUX]
+    if (!pairsGroups) {
+      return []
+    }
+    const allPairs = Object.values(pairsGroups).flat()
+    return allPairs.filter((item) => item?.ableToFarm)
+  }, [])
 
   const stakedAmountData = useSingleContractMultipleData(
     masterChefContract,
     'userInfo',
-    account
-      ? allGammaPairsToFarm.filter((pair) => (pair.masterChefIndex ?? 0) === 0).map((pair) => [pair.pid, account])
-      : []
+    account ? allGammaFarms.map((pair) => [pair.pid, account]) : []
   )
 
   const stakedAmounts = stakedAmountData.map((callState, index) => {
-    const gammaPairsFiltered = allGammaPairsToFarm.filter((pair) => (pair.masterChefIndex ?? 0) === index)
     const { loading, result } = callState
     const amount = !loading && result?.length ? formatUnits(result[0], 18) : '0'
-    const gPair = gammaPairsFiltered[index]
+    const gPair = allGammaFarms[index]
 
     return {
       amount,
@@ -142,30 +138,34 @@ export default function FarmingMyFarms({ chainId }: { search: string; chainId: n
     }
   })
 
-  const myGammaFarms = allGammaPairsToFarm
-    .reduce<{ [key: string]: any }>((acc, item) => {
+  const filteredAndSortedMyGammaFarms = useMemo(() => {
+    const allFarms = allGammaFarms.map((item) => {
       const stakedAmount = getStakedAmount(item, stakedAmounts)
       if (stakedAmount > 0) {
-        const token0 = chainId ? getTokenFromAddress(item.token0Address, tokenMap, []) : null
-        const token1 = chainId ? getTokenFromAddress(item.token1Address, tokenMap, []) : null
-        acc.push({ ...item, stakedAmount, token0, token1 })
+        const token0 = getTokenFromAddress(item?.token0Address, tokenMap, [])
+        const token1 = getTokenFromAddress(item?.token1Address, tokenMap, [])
+        return { ...item, token0: token0 ?? null, token1: token1 ?? null } as itemFarmToken
       }
-      return acc
-    }, [])
-    .sort((farm0: any, farm1: any) => sortFarms(farm0, farm1, gammaData, {}, sortByGamma, sortDescGamma, []))
+      return { ...item, token0: null, token1: null } as itemFarmToken
+    })
+
+    const allFarmsFiltered = allFarms?.filter((item: itemFarmToken) => filterFarm(item, search))
+
+    return allFarmsFiltered
+  }, [allGammaFarms, search, stakedAmounts, tokenMap])
 
   return (
     <MyFarmsContainer>
       {allGammaFarms.length > 0 && (
         <Box>
-          <Box px={2} mt={2}>
+          <Box px={2} my={2}>
             <SubTitleContainer text="Displays to show your positions." description="Gamma Farms" />
           </Box>
           {gammaFarmsLoading || gammaPositionsLoading ? (
             <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '10px', paddingBottom: '30px' }}>
               <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="3.5rem" />
             </div>
-          ) : myGammaFarms.length === 0 ? (
+          ) : filteredAndSortedMyGammaFarms.length === 0 ? (
             <NoFarmsContainer>
               <Frown size={35} stroke="white" />
               <Box mt={1}>noFarms</Box>
@@ -175,7 +175,7 @@ export default function FarmingMyFarms({ chainId }: { search: string; chainId: n
             !gammaFarmsLoading &&
             !gammaPositionsLoading && (
               <Box>
-                {!isMobile && (
+                {/* {!isMobile && (
                   <Box px={1.5}>
                     <Box>
                       <SortColumns
@@ -185,9 +185,9 @@ export default function FarmingMyFarms({ chainId }: { search: string; chainId: n
                       />
                     </Box>
                   </Box>
-                )}
+                )} */}
                 <Box pb={2}>
-                  {myGammaFarms.map((farm: any) => {
+                  {filteredAndSortedMyGammaFarms.map((farm: any) => {
                     const foundData = gammaData
                       ? Object.values(gammaData).find((poolData) => poolData.poolAddress === farm.address.toLowerCase())
                       : undefined

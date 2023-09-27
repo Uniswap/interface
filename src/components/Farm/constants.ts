@@ -8,8 +8,6 @@ import { TokenAmount } from 'graphql/utils/types'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { Presets } from 'state/mint/v3/reducer'
 
-import { USDC_ROLLUX, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
-
 interface CommonStakingInfo {
   // the address of the reward contract
   stakingRewardAddress: string
@@ -82,6 +80,18 @@ export interface GammaPair {
   masterChefIndex?: number
 }
 
+interface FarmPair {
+  type: Presets
+  title: string
+  address: string
+  token0Address: string
+  token1Address: string
+  ableToFarm: boolean
+  feerTier: number
+  pid: number
+  hypervisor: string
+}
+
 export interface GammaPairTokens {
   address: string
   title: string
@@ -104,10 +114,22 @@ export interface GammaPairTokens {
   pid?: number
 }
 
-// export interface itemGammaToken extends GammaPair {
-//   token0: Token
-//   token1: Token
-// }
+export interface itemFarmToken extends FarmPair {
+  token0:
+    | Token
+    | {
+        token: WrappedTokenInfo
+        list?: TokenList
+      }
+    | null
+  token1:
+    | Token
+    | {
+        token: WrappedTokenInfo
+        list?: TokenList
+      }
+    | null
+}
 
 interface Returns {
   daily: {
@@ -246,18 +268,6 @@ export const GlobalConst = {
   v3LiquidityRangeType: {
     MANUAL_RANGE: '0',
     GAMMA_RANGE: '1',
-  },
-}
-
-export const GlobalData = {
-  stableCoins: {
-    [ChainId.ROLLUX]: [USDC_ROLLUX],
-  },
-  blueChips: {
-    [ChainId.ROLLUX]: [WRAPPED_NATIVE_CURRENCY[ChainId.ROLLUX]],
-  },
-  stablePairs: {
-    [ChainId.ROLLUX]: [[USDC_ROLLUX]],
   },
 }
 

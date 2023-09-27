@@ -2,16 +2,15 @@ import { Trans } from '@lingui/macro'
 import searchIcon from 'assets/svg/search.svg'
 import xIcon from 'assets/svg/x.svg'
 import { MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import useDebounce from 'hooks/useDebounce'
+import { useAtomValue, useSetAtom } from 'jotai'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 
-interface SearchInputProps {
-  placeholder: string
-  value: string
-  setValue: (val: string) => void
-  isIconAfter?: boolean
-  [index: string]: any
-}
+import { filterFarmStringAtom } from './utils'
 
+// import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
+// import { filterStringAtom } from '../state'
 const ICON_SIZE = '20px'
 
 const SearchBarContainer = styled.div`
@@ -25,7 +24,7 @@ const SearchInput = styled.input`
   background-size: 20px 20px;
   background-position: 12px center;
   background-color: ${({ theme }) => theme.backgroundSurface};
-  border-radius: 16px;
+  border-radius: 12px;
   border: 1.5px solid transparent;
   height: 100%;
   width: min(200px, 100%);
@@ -63,7 +62,21 @@ const SearchInput = styled.input`
   }
 `
 
-export default function SearchInputFarm({ placeholder, value, setValue }: SearchInputProps) {
+// eslint-disable-next-line import/no-unused-modules
+export default function SearchBar() {
+  const currentString = useAtomValue(filterFarmStringAtom)
+  const [localFilterString, setLocalFilterString] = useState(currentString)
+  const setFilterString = useSetAtom(filterFarmStringAtom)
+  const debouncedLocalFilterString = useDebounce(localFilterString, 300)
+
+  useEffect(() => {
+    setLocalFilterString(currentString)
+  }, [currentString])
+
+  useEffect(() => {
+    setFilterString(debouncedLocalFilterString)
+  }, [debouncedLocalFilterString, setFilterString])
+
   return (
     <SearchBarContainer>
       <Trans
@@ -75,12 +88,12 @@ export default function SearchInputFarm({ placeholder, value, setValue }: Search
             placeholder={`${translation}`}
             id="searchBar"
             autoComplete="off"
-            value={value}
-            onChange={(evt: any) => setValue(evt.target.value)}
+            value={localFilterString}
+            onChange={({ target: { value } }) => setLocalFilterString(value)}
           />
         )}
       >
-        {placeholder}
+        Search Farms
       </Trans>
     </SearchBarContainer>
   )

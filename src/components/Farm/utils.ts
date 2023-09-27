@@ -5,12 +5,13 @@ import { BigNumber } from 'ethers/lib/ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import { useFetchedTokenData } from 'graphql/tokens/TokenData'
 import { useMasterChefContract } from 'hooks/useContract'
+import { atomWithReset } from 'jotai/utils'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { ParsedQs } from 'qs'
 import { useEffect, useMemo, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
-import { GammaPairTokens, GlobalConst, MINICHEF_ABI } from './constants'
+import { GammaPairTokens, GlobalConst, itemFarmToken, MINICHEF_ABI } from './constants'
 
 const { v3FarmSortBy } = GlobalConst.utils
 
@@ -191,7 +192,7 @@ const doesItemMatchFilter = (item: GammaPairTokens, farmFilter: string, GlobalDa
   }
 }
 
-export const gammaRewardTokenAddresses = (gammaRewards: any) =>
+const gammaRewardTokenAddresses = (gammaRewards: any) =>
   Object.values(GAMMA_MASTERCHEF_ADDRESSES).reduce<string[]>((memo, masterChef) => {
     const gammaReward =
       gammaRewards && masterChef[ChainId.ROLLUX] && gammaRewards[masterChef[ChainId.ROLLUX].toLowerCase()]
@@ -237,90 +238,70 @@ const calculateRewardUSD = (gammaReward: any, gammaRewardsWithUSDPrice: any) => 
     : 0
 }
 
-export const sortFarms = (
-  farm0: any,
-  farm1: any,
-  gammaData: any,
-  gammaRewards: any,
-  sortByGamma: string,
-  sortDescGamma: boolean,
-  gammaRewardsWithUSDPrice: any
-) => {
-  // TODO: refactior filter with new function api
-  const sortMultiplierGamma = sortDescGamma ? -1 : 1
-  const gammaData0 = gammaData ? gammaData[farm0.address.toLowerCase()] : undefined
-  const gammaData1 = gammaData ? gammaData[farm1.address.toLowerCase()] : undefined
+// export const sortFarms = (
+//   farm0: itemFarmToken,
+//   farm1: itemFarmToken,
+//   gammaData: any,
+//   gammaRewards: any,
+//   sortByGamma: string,
+//   sortDescGamma: boolean
+// ) => {
+//   console.log('log -----', farm0, farm1, gammaData, sortByGamma, sortDescGamma, gammaRewards)
 
-  const farm0MasterChefAddress = GAMMA_MASTERCHEF_ADDRESSES[ChainId.ROLLUX].toLowerCase()
-  const farm1MasterChefAddress = GAMMA_MASTERCHEF_ADDRESSES[ChainId.ROLLUX].toLowerCase()
+//   const sortMultiplierGamma = sortDescGamma ? -1 : 1
+//   console.log('sortMultiplierGamma', sortMultiplierGamma)
+//   // const gammaData0 = gammaData ? gammaData[farm0.address.toLowerCase()] : undefined
+//   // const gammaData1 = gammaData ? gammaData[farm1.address.toLowerCase()] : undefined
 
-  const gammaReward0 = gammaRewards?.[farm0MasterChefAddress]?.['pools']?.[farm0.address.toLowerCase()] ?? undefined
-  const gammaReward1 = gammaRewards?.[farm1MasterChefAddress]?.['pools']?.[farm1.address.toLowerCase()] ?? undefined
+//   // const farm0MasterChefAddress = GAMMA_MASTERCHEF_ADDRESSES[ChainId.ROLLUX].toLowerCase()
+//   // const farm1MasterChefAddress = GAMMA_MASTERCHEF_ADDRESSES[ChainId.ROLLUX].toLowerCase()
 
-  if (sortByGamma === v3FarmSortBy.pool) {
-    const farm0Title = `${farm0.token0?.symbol ?? ''}${farm0.token1?.symbol ?? ''}${farm0.title}`
-    const farm1Title = `${farm1.token0?.symbol ?? ''}${farm1.token1?.symbol ?? ''}${farm1.title}`
+//   // const gammaReward0 = gammaRewards?.[farm0MasterChefAddress]?.['pools']?.[farm0.address.toLowerCase()] ?? undefined
+//   // const gammaReward1 = gammaRewards?.[farm1MasterChefAddress]?.['pools']?.[farm1.address.toLowerCase()] ?? undefined
 
-    return farm0Title > farm1Title ? sortMultiplierGamma : -1 * sortMultiplierGamma
-  } else if (sortByGamma === v3FarmSortBy.tvl) {
-    const tvl0 = Number(gammaReward0?.['stakedAmountUSD'] ?? 0)
-    const tvl1 = Number(gammaReward1?.['stakedAmountUSD'] ?? 0)
+//   // if (sortByGamma === v3FarmSortBy.pool) {
+//   //   const farm0Title = `${farm0.token0?.symbol ?? ''}${farm0.token1?.symbol ?? ''}${farm0.title}`
+//   //   const farm1Title = `${farm1.token0?.symbol ?? ''}${farm1.token1?.symbol ?? ''}${farm1.title}`
 
-    return tvl0 > tvl1 ? sortMultiplierGamma : -1 * sortMultiplierGamma
-  } else if (sortByGamma === v3FarmSortBy.rewards) {
-    const farm0RewardUSD = calculateRewardUSD(gammaReward0, gammaRewardsWithUSDPrice)
-    const farm1RewardUSD = calculateRewardUSD(gammaReward1, gammaRewardsWithUSDPrice)
+//   //   return farm0Title > farm1Title ? sortMultiplierGamma : -1 * sortMultiplierGamma
+//   // } else if (sortByGamma === v3FarmSortBy.tvl) {
+//   //   const tvl0 = Number(gammaReward0?.['stakedAmountUSD'] ?? 0)
+//   //   const tvl1 = Number(gammaReward1?.['stakedAmountUSD'] ?? 0)
 
-    return farm0RewardUSD > farm1RewardUSD ? sortMultiplierGamma : -1 * sortMultiplierGamma
-  } else if (sortByGamma === v3FarmSortBy.apr) {
-    const poolAPR0 = Number(gammaData0?.['returns']?.['allTime']?.['feeApr'] ?? 0)
-    const poolAPR1 = Number(gammaData1?.['returns']?.['allTime']?.['feeApr'] ?? 0)
-    const farmAPR0 = Number(gammaReward0?.['apr'] ?? 0)
-    const farmAPR1 = Number(gammaReward1?.['apr'] ?? 0)
+//   //   return tvl0 > tvl1 ? sortMultiplierGamma : -1 * sortMultiplierGamma
+//   // } else if (sortByGamma === v3FarmSortBy.rewards) {
+//   //   const farm0RewardUSD = calculateRewardUSD(gammaReward0, gammaRewardsWithUSDPrice)
+//   //   const farm1RewardUSD = calculateRewardUSD(gammaReward1, gammaRewardsWithUSDPrice)
 
-    return poolAPR0 + farmAPR0 > poolAPR1 + farmAPR1 ? sortMultiplierGamma : -1 * sortMultiplierGamma
-  }
+//   //   return farm0RewardUSD > farm1RewardUSD ? sortMultiplierGamma : -1 * sortMultiplierGamma
+//   // } else if (sortByGamma === v3FarmSortBy.apr) {
+//   //   const poolAPR0 = Number(gammaData0?.['returns']?.['allTime']?.['feeApr'] ?? 0)
+//   //   const poolAPR1 = Number(gammaData1?.['returns']?.['allTime']?.['feeApr'] ?? 0)
+//   //   const farmAPR0 = Number(gammaReward0?.['apr'] ?? 0)
+//   //   const farmAPR1 = Number(gammaReward1?.['apr'] ?? 0)
 
-  return 1
-}
+//   //   return poolAPR0 + farmAPR0 > poolAPR1 + farmAPR1 ? sortMultiplierGamma : -1 * sortMultiplierGamma
+//   // }
+
+//   return 1
+// }
 
 const includesIgnoreCase = (str: string, search: string) => str?.toLowerCase().includes(search.toLowerCase())
 
-const findToken = (tokens: any, itemToken: any) => {
-  return tokens?.find((token: any) => itemToken && token?.address?.toLowerCase() === itemToken.address?.toLowerCase())
-}
+export const filterFarmStringAtom = atomWithReset<string>('')
 
-export const checkCondition = (item: any, search: string, GlobalData: any, farmFilter: string) => {
-  const searchCondition =
-    includesIgnoreCase(item.token0?.symbol, search) ||
-    includesIgnoreCase(item.token0?.address, search) ||
-    includesIgnoreCase(item.token1?.symbol, search) ||
-    includesIgnoreCase(item.token1?.address, search) ||
-    includesIgnoreCase(item.title, search)
-
-  const blueChipCondition =
-    findToken(GlobalData.blueChips[570], item.token0) && findToken(GlobalData.blueChips[570], item.token1)
-  const stableCoinCondition =
-    findToken(GlobalData.stableCoins[570], item.token0) && findToken(GlobalData.stableCoins[570], item.token1)
-
-  const stablePair0 = GlobalData.stablePairs[570].find((tokens: any) => findToken(tokens, item.token0))
-  const stablePair1 = GlobalData.stablePairs[570].find((tokens: any) => findToken(tokens, item.token1))
-  const stableLPCondition = findToken(stablePair0, item.token1) || findToken(stablePair1, item.token0)
-
-  const otherLPCondition = !blueChipCondition && !stableCoinCondition && !stableLPCondition
-  const { v3FarmFilter } = GlobalConst.utils
+export const filterFarm = (item: itemFarmToken, search: string): boolean => {
+  const token0Symbol = (item.token0 && 'token' in item.token0 ? item.token0.token.symbol : item.token0?.symbol) || ''
+  const token0Address = (item.token0 && 'token' in item.token0 ? item.token0.token.address : item.token0?.address) || ''
+  const token1Symbol = (item.token1 && 'token' in item.token1 ? item.token1.token.symbol : item.token1?.symbol) || ''
+  const token1Address = (item.token1 && 'token' in item.token1 ? item.token1.token.address : item.token1?.address) || ''
 
   return (
-    searchCondition &&
-    (farmFilter === v3FarmFilter.blueChip
-      ? blueChipCondition
-      : farmFilter === v3FarmFilter.stableCoin
-      ? stableCoinCondition
-      : farmFilter === v3FarmFilter.stableLP
-      ? stableLPCondition
-      : farmFilter === v3FarmFilter.otherLP
-      ? otherLPCondition
-      : true)
+    includesIgnoreCase(token0Symbol, search) ||
+    includesIgnoreCase(token0Address, search) ||
+    includesIgnoreCase(token1Symbol, search) ||
+    includesIgnoreCase(token1Address, search) ||
+    includesIgnoreCase(item.title, search)
   )
 }
 
