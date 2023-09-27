@@ -1,17 +1,20 @@
 import React from 'react'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { render, screen } from 'src/test/test-utils'
+import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
 import { noOpFunction } from 'wallet/src/test/utils'
 
 describe(GenericImportForm, () => {
   it('renders a placeholder when there is no value', async () => {
     const tree = render(
-      <GenericImportForm
-        errorMessage={undefined}
-        placeholderLabel="seed phrase"
-        value={undefined}
-        onChange={noOpFunction}
-      />
+      <TamaguiProvider>
+        <GenericImportForm
+          errorMessage={undefined}
+          placeholderLabel="seed phrase"
+          value={undefined}
+          onChange={noOpFunction}
+        />
+      </TamaguiProvider>
     )
 
     expect(await screen.findByText('seed phrase')).toBeDefined()
@@ -20,12 +23,14 @@ describe(GenericImportForm, () => {
 
   it('renders a value', async () => {
     render(
-      <GenericImportForm
-        errorMessage={undefined}
-        placeholderLabel="seed phrase"
-        value="hello"
-        onChange={noOpFunction}
-      />
+      <TamaguiProvider>
+        <GenericImportForm
+          errorMessage={undefined}
+          placeholderLabel="seed phrase"
+          value="hello"
+          onChange={noOpFunction}
+        />
+      </TamaguiProvider>
     )
 
     expect(await screen.queryByText('seed phrase')).toBeNull()
@@ -34,12 +39,14 @@ describe(GenericImportForm, () => {
 
   it('renders an error message', async () => {
     render(
-      <GenericImportForm
-        errorMessage="there is an error"
-        placeholderLabel="seed phrase"
-        value="wrong value"
-        onChange={noOpFunction}
-      />
+      <TamaguiProvider>
+        <GenericImportForm
+          errorMessage="there is an error"
+          placeholderLabel="seed phrase"
+          value="wrong value"
+          onChange={noOpFunction}
+        />
+      </TamaguiProvider>
     )
 
     expect(await screen.findByText('there is an error')).toBeDefined()

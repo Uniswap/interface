@@ -11,7 +11,7 @@ import {
   withSpring,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { TextInputProps } from 'src/components/input/TextInput'
@@ -31,8 +31,7 @@ import { MobileEventProperties } from 'src/features/telemetry/types'
 import { useDynamicFontSizing, useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
 import { openUri } from 'src/utils/linking'
 import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
-import InformationIcon from 'ui/src/assets/icons/i-icon.svg'
-import { dimensions, iconSizes, spacing } from 'ui/src/theme'
+import { dimensions, fonts, iconSizes, spacing } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
 import { useTimeout } from 'utilities/src/time/timing'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
@@ -84,7 +83,7 @@ export function FiatOnRampModal(): JSX.Element {
 
 function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const inputRef = useRef<TextInput>(null)
 
   const { isSheetReady } = useBottomSheetContext()
@@ -236,14 +235,14 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
                     backgroundColor="none"
                     borderWidth={0}
                     caretHidden={!showNativeKeyboard}
-                    fontFamily={theme.textVariants.heading2.fontFamily}
+                    fontFamily={fonts.heading2.family}
                     fontSize={fontSize}
-                    maxFontSizeMultiplier={theme.textVariants.heading2.maxFontSizeMultiplier}
+                    maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
                     minHeight={MAX_INPUT_FONT_SIZE}
                     mt="spacing48"
                     overflow="visible"
                     placeholder="$0"
-                    placeholderTextColor={theme.colors.neutral3}
+                    placeholderTextColor={colors.neutral3.val}
                     px="none"
                     py="none"
                     returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
@@ -357,7 +356,6 @@ function MoonpayCtaButton({
   properties,
   onPress,
 }: MoonpayCtaButtonProps): JSX.Element {
-  const theme = useAppTheme()
   const { t } = useTranslation()
   return (
     <Trace
@@ -371,7 +369,7 @@ function MoonpayCtaButton({
           isLoading ? (
             <SpinningLoader color="$sporeWhite" />
           ) : !eligible ? (
-            <InformationIcon color={theme.colors.neutral1} width={theme.iconSizes.icon20} />
+            <Icons.InformationIcon />
           ) : undefined
         }
         size="large"
@@ -396,13 +394,13 @@ function PredefinedAmount({
   currentAmount: string
   onPress: (amount: string) => void
 }): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const highlighted = currentAmount === amount
   return (
     <TouchableOpacity onPress={(): void => onPress(amount)}>
       <Pill
         backgroundColor={highlighted ? '$DEP_backgroundActionButton' : '$surface2'}
-        foregroundColor={theme.colors[highlighted ? 'accent1' : 'neutral2']}
+        foregroundColor={colors[highlighted ? 'accent1' : 'neutral2'].val}
         label={`$${amount}`}
         px="$spacing16"
         textVariant="buttonLabel2"

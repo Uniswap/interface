@@ -1,6 +1,6 @@
-import type { IconProps } from '@tamagui/helpers-icon'
 import React, { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
+import type { IconProps } from 'ui/src'
 import { Box, Icons, useTheme } from 'ui/src'
 import WalletConnectLogo from 'ui/src/assets/icons/walletconnect.svg'
 import MoonpayLogo from 'ui/src/assets/logos/svg/moonpay.svg'

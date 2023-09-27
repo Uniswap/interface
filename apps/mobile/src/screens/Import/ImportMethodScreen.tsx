@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID } from 'src/constants/globals'
@@ -16,10 +16,8 @@ import { openSettings } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
-import ImportIcon from 'ui/src/assets/icons/paper-stack.svg'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes } from 'ui/src/theme'
-import { Theme } from 'ui/src/theme/restyle'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -28,7 +26,7 @@ import {
 interface ImportMethodOption {
   title: (t: AppTFunction) => string
   blurb: (t: AppTFunction) => string
-  icon: (theme: Theme) => React.ReactNode
+  icon: React.ReactNode
   nav: OnboardingScreens
   importType: ImportType
   name: ElementName
@@ -38,9 +36,7 @@ const options: ImportMethodOption[] = [
   {
     title: (t: AppTFunction) => t('Import a wallet'),
     blurb: (t: AppTFunction) => t('Enter your recovery phrase from another crypto wallet'),
-    icon: (theme: Theme) => (
-      <ImportIcon color={theme.colors.accent1} height={18} strokeWidth="1.5" width={18} />
-    ),
+    icon: <Icons.PaperStack color="$accent1" height={18} strokeWidth={1.5} width={18} />,
     nav: OnboardingScreens.SeedPhraseInput,
     importType: ImportType.SeedPhrase,
     name: ElementName.OnboardingImportSeedPhrase,
@@ -51,13 +47,7 @@ const options: ImportMethodOption[] = [
       IS_ANDROID
         ? t(`Add wallets you’ve backed up to your Google Drive account`)
         : t(`Add wallets you’ve backed up to your iCloud account`),
-    icon: (theme: Theme) => (
-      <Icons.OSDynamicCloudIcon
-        color={theme.colors.accent1}
-        height={theme.iconSizes.icon24}
-        width={theme.iconSizes.icon24}
-      />
-    ),
+    icon: <Icons.OSDynamicCloudIcon color="$accent1" height="$icon.24" width="$icon.24" />,
     nav: OnboardingScreens.RestoreCloudBackup,
     importType: ImportType.Restore,
     name: ElementName.OnboardingImportWatchedAccount,
@@ -68,8 +58,6 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 export function ImportMethodScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
-  // TODO(MOB-1286): update this useTheme to useSporeColors. needs a small refactor because `icon(theme)` is used below
-  const theme = useAppTheme()
   const colors = useSporeColors()
   const dispatch = useAppDispatch()
   const entryPoint = params?.entryPoint
@@ -134,7 +122,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
             hapticFeedback
             blurb={blurb(t)}
             elementName={name}
-            icon={icon(theme)}
+            icon={icon}
             title={title(t)}
             onPress={(): Promise<void> => handleOnPress(nav, importType)}
           />

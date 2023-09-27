@@ -1,13 +1,12 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { getTokenSafetyHeaderText } from 'src/components/tokens/utils'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useTokenSafetyLevelColors } from 'src/features/tokens/safetyHooks'
 import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
-import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import ExternalLinkIcon from 'ui/src/assets/icons/external-link.svg'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes, imageSizes, opacify, ThemeNames } from 'ui/src/theme'
@@ -56,7 +55,7 @@ export default function TokenWarningModal({
   onAccept,
 }: Props): JSX.Element | null {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const warningColor = useTokenSafetyLevelColors(safetyLevel)
 
   const chainId = currencyIdToChain(currencyId)
@@ -88,7 +87,7 @@ export default function TokenWarningModal({
               borderRadius="$rounded12"
               p="$spacing12"
               style={{
-                backgroundColor: opacify(12, theme.colors[warningColor]),
+                backgroundColor: opacify(12, colors[warningColor].val),
               }}>
               <WarningIcon safetyLevel={safetyLevel} width={iconSizes.icon24} />
             </Flex>
@@ -125,7 +124,7 @@ export default function TokenWarningModal({
             {explorerLink}
           </Text>
           <ExternalLinkIcon
-            color={theme.colors.accent1}
+            color={colors.accent1.val}
             height={iconSizes.icon16}
             width={iconSizes.icon16}
           />

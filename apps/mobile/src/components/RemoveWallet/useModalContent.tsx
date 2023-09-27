@@ -3,7 +3,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { SvgProps } from 'react-native-svg'
 import { concatListOfAccountNames } from 'src/components/RemoveWallet/utils'
 import { IS_ANDROID } from 'src/constants/globals'
-import { Text } from 'ui/src'
+import { Text, ThemeKeys } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import TrashIcon from 'ui/src/assets/icons/trash.svg'
 import WalletIcon from 'ui/src/assets/icons/wallet-filled.svg'
@@ -28,7 +28,7 @@ interface ModalContentResult {
   title: React.ReactNode
   description: React.ReactNode
   Icon: React.ComponentType<SvgProps>
-  iconColorLabel: string
+  iconColorLabel: ThemeKeys
   actionButtonLabel?: string
   actionButtonTheme?: ThemeNames
 }

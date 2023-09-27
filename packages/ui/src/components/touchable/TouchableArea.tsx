@@ -8,7 +8,7 @@ import {
   withDelay,
   withTiming,
 } from 'react-native-reanimated'
-import { useProps } from 'tamagui'
+import { usePropsAndStyle } from 'tamagui'
 import { withAnimated } from 'ui/src/components/factories/animated'
 import { AnimatedTouchableBox, TouchableBoxProps } from 'ui/src/components/touchable/TouchableBox'
 import { TouchableAreaProps } from 'ui/src/components/touchable/types'
@@ -34,7 +34,7 @@ export function TouchableArea({
   activeOpacity = 0.75,
   ...propsIn
 }: TouchableAreaProps): JSX.Element {
-  const rest = useProps(propsIn, {
+  const [rest, style] = usePropsAndStyle(propsIn, {
     resolveValues: 'auto',
   })
 
@@ -89,7 +89,7 @@ export function TouchableArea({
     }
   }, [scale, scaleTo])
 
-  const { style, onLongPress, ...restStyles } = rest
+  const { onLongPress, ...restStyles } = rest
 
   const baseProps: TouchableBoxProps = {
     onPress: onPressHandler,

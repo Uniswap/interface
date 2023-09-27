@@ -26,5 +26,11 @@ module.exports = {
       lines: 21.5,
     },
   },
+  // we map core/web to tamaguis test bundle, this just makes setup simpler for jest
+  moduleNameMapper: {
+    ...presets.moduleNameMapper,
+    '@tamagui/core': '@tamagui/core/native-test',
+    '@tamagui/web': '@tamagui/core/native-test',
+  },
   clearMocks: true,
 }

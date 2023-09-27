@@ -6,7 +6,7 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
@@ -24,11 +24,10 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
 import { setClipboardImage } from 'src/utils/clipboard'
-import { Flex, Text, Theme, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, getTokenValue, Text, Theme, TouchableArea, useSporeColors } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import ShareIcon from 'ui/src/assets/icons/share.svg'
-import { colorsDark, iconSizes } from 'ui/src/theme'
-import { darkTheme } from 'ui/src/theme/restyle'
+import { colorsDark, fonts, iconSizes } from 'ui/src/theme'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
@@ -49,19 +48,28 @@ import {
 
 const MAX_NFT_IMAGE_HEIGHT = 375
 
-export function NFTItemScreen({
+type NFTItemScreenProps = AppStackScreenProp<Screens.NFTItem>
+
+export function NFTItemScreen(props: NFTItemScreenProps): JSX.Element {
+  return (
+    // put Theme above the Contents so our useSporeColors() gets the right colors
+    <Theme name="dark">
+      <NFTItemScreenContents {...props} />
+    </Theme>
+  )
+}
+
+function NFTItemScreenContents({
   route: {
     // ownerFromProps needed here, when nftBalances GQL query returns a user NFT,
     // but nftAssets query for this NFT returns ownerAddress === null,
     params: { owner: ownerFromProps, address, tokenId, isSpam, fallbackData },
   },
-}: AppStackScreenProp<Screens.NFTItem>): JSX.Element {
+}: NFTItemScreenProps): JSX.Element {
   const { t } = useTranslation()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const dispatch = useAppDispatch()
-
-  const appTheme = useAppTheme()
-  const theme = IS_IOS ? darkTheme : appTheme
+  const colors = useSporeColors()
   const navigation = useAppStackNavigation()
 
   const {
@@ -131,12 +139,12 @@ export function NFTItemScreen({
   const accentTextColor = useMemo(() => {
     if (
       colorLight &&
-      passesContrast(colorLight, theme.colors.surface1, MIN_COLOR_CONTRAST_THRESHOLD)
+      passesContrast(colorLight, colors.surface1.val, MIN_COLOR_CONTRAST_THRESHOLD)
     ) {
       return colorLight
     }
-    return theme.colors.neutral2
-  }, [colorLight, theme.colors.neutral2, theme.colors.surface1])
+    return colors.neutral2.val
+  }, [colorLight, colors.neutral2, colors.surface1])
 
   const onLongPressNFTImage = async (): Promise<void> => {
     await setClipboardImage(imageUrl)
@@ -155,7 +163,7 @@ export function NFTItemScreen({
   )
 
   return (
-    <Theme name="dark">
+    <>
       {IS_IOS ? (
         <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
       ) : null}
@@ -181,8 +189,8 @@ export function NFTItemScreen({
                 imageUrl ? (
                   <Flex
                     borderRadius="$rounded8"
-                    maxHeight={theme.iconSizes.icon40}
-                    maxWidth={theme.iconSizes.icon40}
+                    maxHeight={getTokenValue('$icon.40')}
+                    maxWidth={getTokenValue('$icon.40')}
                     ml="$spacing16"
                     overflow="hidden">
                     <NFTViewer autoplay uri={imageUrl} />
@@ -258,17 +266,12 @@ export function NFTItemScreen({
                 <Flex px="$spacing24">
                   {nftLoading ? (
                     <Flex mt="$spacing12">
-                      <Loader.Box
-                        height={theme.textVariants.body2.lineHeight}
-                        // TODO EXT-259 make work with shortcut props like "mb", etc
-                        marginBottom="$spacing4"
-                        repeat={3}
-                      />
+                      <Loader.Box height={fonts.body2.lineHeight} mb="$spacing4" repeat={3} />
                     </Flex>
                   ) : description ? (
                     <LongText
                       renderAsMarkdown
-                      color={theme.colors.neutral1}
+                      color={colors.neutral1.val}
                       initialDisplayedLines={3}
                       text={description || '-'}
                     />
@@ -337,7 +340,7 @@ export function NFTItemScreen({
           </>
         </ExploreModalAwareView>
       </Trace>
-    </Theme>
+    </>
   )
 }
 

@@ -268,15 +268,14 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       Type or
                     </Text>
                     <View
-                      onBlur={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onResponderGrant={[Function]}
-                      onResponderMove={[Function]}
-                      onResponderRelease={[Function]}
-                      onResponderTerminate={[Function]}
-                      onResponderTerminationRequest={[Function]}
-                      onStartShouldSetResponder={[Function]}
+                      cancelable={true}
+                      focusable={true}
+                      minPressDuration={0}
+                      onMouseEnter={[Function]}
+                      onMouseLeave={[Function]}
+                      onPress={[Function]}
+                      onPressIn={[Function]}
+                      onPressOut={[Function]}
                       style={
                         {
                           "alignItems": "center",
@@ -306,11 +305,98 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                         }
                       }
                     >
-                      <svg
-                        color="#222222"
-                        data-file-name="SvgPaste"
-                        size={12}
-                      />
+                      <RNSVGSvgView
+                        align="xMidYMid"
+                        bbHeight="12"
+                        bbWidth="12"
+                        fill="none"
+                        focusable={false}
+                        meetOrSlice={0}
+                        minX={0}
+                        minY={0}
+                        strokeWidth={8}
+                        style={
+                          [
+                            {
+                              "backgroundColor": "transparent",
+                              "borderWidth": 0,
+                            },
+                            {
+                              "height": 12,
+                              "width": 12,
+                            },
+                            {
+                              "flex": 0,
+                              "height": 12,
+                              "width": 12,
+                            },
+                          ]
+                        }
+                        vbHeight={14}
+                        vbWidth={15}
+                      >
+                        <RNSVGGroup
+                          fill={null}
+                          propList={
+                            [
+                              "fill",
+                              "strokeWidth",
+                            ]
+                          }
+                          strokeWidth="8"
+                        >
+                          <RNSVGPath
+                            d="M8.0835 1.16602H4.00016C3.69074 1.16602 3.394 1.28893 3.1752 1.50772C2.95641 1.72652 2.8335 2.02326 2.8335 2.33268V11.666C2.8335 11.9754 2.95641 12.2722 3.1752 12.491C3.394 12.7098 3.69074 12.8327 4.00016 12.8327H11.0002C11.3096 12.8327 11.6063 12.7098 11.8251 12.491C12.0439 12.2722 12.1668 11.9754 12.1668 11.666V5.24935L8.0835 1.16602Z"
+                            fill={
+                              {
+                                "payload": 4278190080,
+                                "type": 0,
+                              }
+                            }
+                            propList={
+                              [
+                                "stroke",
+                                "strokeWidth",
+                                "strokeLinecap",
+                                "strokeLinejoin",
+                              ]
+                            }
+                            stroke={
+                              {
+                                "type": 2,
+                              }
+                            }
+                            strokeLinecap={1}
+                            strokeLinejoin={1}
+                            strokeWidth="1.5"
+                          />
+                          <RNSVGPath
+                            d="M8.0835 1.16602V5.24935H12.1668"
+                            fill={
+                              {
+                                "payload": 4278190080,
+                                "type": 0,
+                              }
+                            }
+                            propList={
+                              [
+                                "stroke",
+                                "strokeWidth",
+                                "strokeLinecap",
+                                "strokeLinejoin",
+                              ]
+                            }
+                            stroke={
+                              {
+                                "type": 2,
+                              }
+                            }
+                            strokeLinecap={1}
+                            strokeLinejoin={1}
+                            strokeWidth="1.5"
+                          />
+                        </RNSVGGroup>
+                      </RNSVGSvgView>
                       <Text
                         maxFontSizeMultiplier={1.2}
                         style={

@@ -119,7 +119,8 @@ exports[`AccountList renders without error 1`] = `
             {
               "opacity": 1,
               "paddingBottom": 12,
-              "paddingHorizontal": 24,
+              "paddingLeft": 24,
+              "paddingRight": 24,
               "paddingTop": 8,
             }
           }

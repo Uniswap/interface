@@ -1,8 +1,6 @@
 // Setups and mocks can go here
 // For example: https://reactnavigation.org/docs/testing/
 
-process.env.TAMAGUI_TARGET = 'native'
-
 import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js'
 import 'core-js' // necessary so setImmediate works in tests
 

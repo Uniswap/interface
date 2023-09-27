@@ -182,12 +182,22 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               style={
                 {
                   "backgroundColor": "#F9F9F9",
-                  "borderColor": "#2222220D",
-                  "borderRadius": 20,
+                  "borderBottomColor": "#2222220D",
+                  "borderBottomLeftRadius": 20,
+                  "borderBottomRightRadius": 20,
+                  "borderLeftColor": "#2222220D",
+                  "borderRightColor": "#2222220D",
+                  "borderStyle": "solid",
+                  "borderTopColor": "#2222220D",
+                  "borderTopLeftRadius": 20,
+                  "borderTopRightRadius": 20,
                   "borderWidth": 1,
                   "disabled": undefined,
                   "opacity": 1,
-                  "padding": 16,
+                  "paddingBottom": 16,
+                  "paddingLeft": 16,
+                  "paddingRight": 16,
+                  "paddingTop": 16,
                 }
               }
               testID="add-cloud-backup"
@@ -384,12 +394,22 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               style={
                 {
                   "backgroundColor": "#F9F9F9",
-                  "borderColor": "#2222220D",
-                  "borderRadius": 20,
+                  "borderBottomColor": "#2222220D",
+                  "borderBottomLeftRadius": 20,
+                  "borderBottomRightRadius": 20,
+                  "borderLeftColor": "#2222220D",
+                  "borderRightColor": "#2222220D",
+                  "borderStyle": "solid",
+                  "borderTopColor": "#2222220D",
+                  "borderTopLeftRadius": 20,
+                  "borderTopRightRadius": 20,
                   "borderWidth": 1,
                   "disabled": undefined,
                   "opacity": 1,
-                  "padding": 16,
+                  "paddingBottom": 16,
+                  "paddingLeft": 16,
+                  "paddingRight": 16,
+                  "paddingTop": 16,
                 }
               }
               testID="add-manual-backup"
@@ -546,7 +566,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 {
                   "alignSelf": "center",
                   "opacity": 1,
-                  "paddingVertical": 0,
+                  "paddingBottom": 0,
+                  "paddingTop": 0,
                 }
               }
             >
@@ -823,12 +844,22 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               style={
                 {
                   "backgroundColor": "#F9F9F9",
-                  "borderColor": "#2222220D",
-                  "borderRadius": 20,
+                  "borderBottomColor": "#2222220D",
+                  "borderBottomLeftRadius": 20,
+                  "borderBottomRightRadius": 20,
+                  "borderLeftColor": "#2222220D",
+                  "borderRightColor": "#2222220D",
+                  "borderStyle": "solid",
+                  "borderTopColor": "#2222220D",
+                  "borderTopLeftRadius": 20,
+                  "borderTopRightRadius": 20,
                   "borderWidth": 1,
                   "disabled": true,
                   "opacity": 0.5,
-                  "padding": 16,
+                  "paddingBottom": 16,
+                  "paddingLeft": 16,
+                  "paddingRight": 16,
+                  "paddingTop": 16,
                 }
               }
               testID="add-cloud-backup"
@@ -1025,12 +1056,22 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               style={
                 {
                   "backgroundColor": "#F9F9F9",
-                  "borderColor": "#2222220D",
-                  "borderRadius": 20,
+                  "borderBottomColor": "#2222220D",
+                  "borderBottomLeftRadius": 20,
+                  "borderBottomRightRadius": 20,
+                  "borderLeftColor": "#2222220D",
+                  "borderRightColor": "#2222220D",
+                  "borderStyle": "solid",
+                  "borderTopColor": "#2222220D",
+                  "borderTopLeftRadius": 20,
+                  "borderTopRightRadius": 20,
                   "borderWidth": 1,
                   "disabled": false,
                   "opacity": 1,
-                  "padding": 16,
+                  "paddingBottom": 16,
+                  "paddingLeft": 16,
+                  "paddingRight": 16,
+                  "paddingTop": 16,
                 }
               }
               testID="add-manual-backup"
@@ -1187,7 +1228,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 {
                   "alignSelf": "center",
                   "opacity": 1,
-                  "paddingVertical": 0,
+                  "paddingBottom": 0,
+                  "paddingTop": 0,
                 }
               }
             >
@@ -1225,15 +1267,15 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               </View>
             </View>
             <View
-              onBlur={[Function]}
-              onClick={[Function]}
-              onFocus={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
+              cancelable={true}
+              disabled={false}
+              focusable={true}
+              minPressDuration={0}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+              onPress={[Function]}
+              onPressIn={[Function]}
+              onPressOut={[Function]}
               style={
                 {
                   "alignItems": "center",

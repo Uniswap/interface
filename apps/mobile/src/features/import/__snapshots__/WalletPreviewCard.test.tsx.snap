@@ -40,12 +40,21 @@ exports[`renders wallet preview card 1`] = `
   style={
     {
       "backgroundColor": "#F9F9F9",
-      "borderColor": "#FC72FF",
-      "borderRadius": 20,
+      "borderBottomColor": "#FC72FF",
+      "borderBottomLeftRadius": 20,
+      "borderBottomRightRadius": 20,
+      "borderLeftColor": "#FC72FF",
+      "borderRightColor": "#FC72FF",
+      "borderStyle": "solid",
+      "borderTopColor": "#FC72FF",
+      "borderTopLeftRadius": 20,
+      "borderTopRightRadius": 20,
       "borderWidth": 1,
       "opacity": 1,
-      "paddingHorizontal": 16,
-      "paddingVertical": 16,
+      "paddingBottom": 16,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 16,
     }
   }
 >

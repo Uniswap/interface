@@ -1,7 +1,7 @@
 import React from 'react'
 import { SvgProps } from 'react-native-svg'
-import { useAppTheme } from 'src/app/hooks'
 import { useTokenSafetyLevelColors } from 'src/features/tokens/safetyHooks'
+import { useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import XOctagon from 'ui/src/assets/icons/x-octagon.svg'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -17,10 +17,9 @@ export default function WarningIcon({
   strokeColorOverride,
   ...rest
 }: Props & SvgProps): JSX.Element | null {
-  const theme = useAppTheme()
-
+  const colors = useSporeColors()
   const colorKey = useTokenSafetyLevelColors(safetyLevel)
-  const color = theme.colors[strokeColorOverride ?? colorKey]
+  const color = colors[strokeColorOverride ?? colorKey].val
 
   if (safetyLevel === SafetyLevel.Blocked) {
     return <XOctagon color={color} {...rest} />

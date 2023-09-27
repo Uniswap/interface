@@ -7,7 +7,6 @@
 const { getMetroAndroidAssetsResolutionFix } = require('react-native-monorepo-tools')
 const androidAssetsResolutionFix = getMetroAndroidAssetsResolutionFix()
 
-process.env.TAMAGUI_TARGET = 'native'
 
 const path = require('path')
 const { getDefaultConfig } = require('metro-config')

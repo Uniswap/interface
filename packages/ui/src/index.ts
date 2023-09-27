@@ -30,11 +30,13 @@ export type {
   SpaceTokens,
   SwitchProps,
   TamaguiProviderProps,
+  ThemeKeys,
 } from 'tamagui'
 export { LinearGradient } from 'tamagui/linear-gradient'
 export { AnimatedFlashList } from './components/AnimatedFlashList/AnimatedFlashList'
 export { Button } from './components/button/Button'
 export { withAnimated } from './components/factories/animated'
+export { IconProps } from './components/factories/createIcon'
 export * as Icons from './components/icons/allIcons'
 export * from './components/input/utils'
 export { Box, Flex, FlexProps, Separator } from './components/layout'

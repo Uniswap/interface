@@ -4,7 +4,6 @@ import {
   ButtonText,
   GetProps,
   getTokenValue,
-  SizeTokens,
   spacedChildren,
   SpecificTokens,
   styled,
@@ -16,6 +15,7 @@ import {
   wrapChildrenInText,
   XStack,
 } from 'tamagui'
+import { IconProps } from 'ui/src/components/factories/createIcon'
 import { hapticFeedback } from 'ui/src/components/haptics/hapticFeedback'
 
 type ButtonSize = 'small' | 'medium' | 'large'
@@ -139,9 +139,7 @@ const CustomButtonText = styled(Text, {
 
 type CustomButtonProps = GetProps<typeof CustomButtonFrame>
 
-type ButtonIconProps = { color?: string; size?: number | SizeTokens; cursor: 'pointer' }
-
-type IconProp = JSX.Element | FunctionComponent<ButtonIconProps> | null
+type IconProp = JSX.Element | FunctionComponent<IconProps> | null
 
 export type ButtonProps = CustomButtonProps &
   TextParentStyles & {

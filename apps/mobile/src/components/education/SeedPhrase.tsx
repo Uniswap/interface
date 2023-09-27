@@ -40,7 +40,7 @@ function Page({
               <Text color="$neutral2" variant="subheading2">
                 <Trans>What’s a recovery phrase?</Trans>
               </Text>
-              <CloseButton color="neutral2" onPress={onDismiss} />
+              <CloseButton color="$neutral2" onPress={onDismiss} />
             </Flex>
             <Flex flex={0.2} />
             <Flex flex={0.8} px="$spacing24">

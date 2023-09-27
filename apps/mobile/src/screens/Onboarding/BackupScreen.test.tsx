@@ -8,6 +8,7 @@ import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { renderWithProviders } from 'src/test/render'
 import { render } from 'src/test/test-utils'
+import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
 import { mockWalletPreloadedState } from 'wallet/src/test/fixtures'
 
 const navigationProp = {} as CompositeNavigationProp<
@@ -29,7 +30,9 @@ describe(BackupScreen, () => {
 
   it('renders backup options when some are completed', async () => {
     const tree = renderWithProviders(
-      <BackupScreen navigation={navigationProp} route={routeProp} />,
+      <TamaguiProvider>
+        <BackupScreen navigation={navigationProp} route={routeProp} />
+      </TamaguiProvider>,
       {
         preloadedState: mockWalletPreloadedState,
       }

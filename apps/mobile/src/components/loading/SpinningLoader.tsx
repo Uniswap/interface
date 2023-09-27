@@ -45,6 +45,7 @@ export function SpinningLoader({
   if (disabled) {
     return <Icons.EmptySpinner color="$neutral3" height={size} width={size} />
   }
+
   return (
     <AnimatedBox sentry-label="SpinningLoader" style={[animatedStyles]}>
       <Icons.CircleSpinner color={color ?? '$neutral1'} height={size} width={size} />

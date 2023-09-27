@@ -10,8 +10,6 @@ const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 
 const NODE_ENV = process.env.NODE_ENV || 'development'
 
-// setting to web for tamagui
-process.env.TAMAGUI_TARGET = 'web'
 // if not set tamagui wont add nice data-at, data-in etc debug attributes
 process.env.NODE_ENV = NODE_ENV
 
@@ -256,7 +254,6 @@ const options = {
       '__DEV__': NODE_ENV === 'development' ? 'true' : 'false',
       'process.env.IS_STATIC': '""',
       'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
-      'process.env.TAMAGUI_TARGET': JSON.stringify('web'),
       'process.env.DEBUG': JSON.stringify(process.env.DEBUG || '0'),
     }),
     new CleanWebpackPlugin(),
