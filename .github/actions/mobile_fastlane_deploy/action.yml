@@ -106,7 +106,7 @@ runs:
     # Set up xcode version
     - uses: maxim-lobanov/setup-xcode@4aa4176a819ae7c019451acfda0bba67bffc6704
       with:
-        xcode-version: '14.2'
+        xcode-version: '15'
 
     - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
       with:

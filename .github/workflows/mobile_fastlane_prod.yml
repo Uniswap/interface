@@ -9,7 +9,7 @@ on:
 jobs:
   ios:
     name: iOS
-    runs-on: macos-latest
+    runs-on: macos-13
     timeout-minutes: 180
     steps:
       - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
