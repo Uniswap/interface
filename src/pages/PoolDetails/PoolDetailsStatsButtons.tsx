@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
-import Column from 'components/Column'
 import Row from 'components/Row'
 import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useCurrency } from 'hooks/Tokens'
@@ -12,16 +12,11 @@ import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { currencyId } from 'utils/currencyId'
 
-const RightColumn = styled(Column)`
-  gap: 24px;
-  margin: 0 48px 0 auto;
-  width: 22vw;
-  min-width: 360px;
+const PoolDetailsStatsButtonsRow = styled(Row)`
+  gap: 12px;
 
   @media (max-width: ${BREAKPOINTS.lg - 1}px) {
-    margin: 44px 0px;
-    width: 100%;
-    min-width: unset;
+    display: none;
   }
 `
 
@@ -38,15 +33,22 @@ interface PoolDetailsStatsButtonsProps {
   feeTier?: number
 }
 
-export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier }: PoolDetailsStatsButtonsProps) {
-  const { chainId: walletChainId, connector, account } = useWeb3React()
-  const { positions } = useMultiChainPositions(account ?? '', chainId ? [chainId] : undefined)
-  const position = positions?.find(
+function findMatchingPosition(positions: PositionInfo[], token0?: Token, token1?: Token, feeTier?: number) {
+  return positions?.find(
     (position) =>
       (position?.details.token0.toLowerCase() === token0?.id ||
         position?.details.token0.toLowerCase() === token1?.id) &&
-      (position?.details.token1.toLowerCase() === token0?.id || position?.details.token1.toLowerCase() === token1?.id)
+      (position?.details.token1.toLowerCase() === token0?.id ||
+        position?.details.token1.toLowerCase() === token1?.id) &&
+      position?.details.fee == feeTier &&
+      !position.closed
   )
+}
+
+export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier }: PoolDetailsStatsButtonsProps) {
+  const { chainId: walletChainId, connector, account } = useWeb3React()
+  const { positions: userOwnedPositions } = useMultiChainPositions(account ?? '', chainId ? [chainId] : undefined)
+  const position = userOwnedPositions && findMatchingPosition(userOwnedPositions, token0, token1, feeTier)
   const tokenId = position?.details.tokenId
   const switchChain = useSwitchChain()
   const navigate = useNavigate()
@@ -57,28 +59,31 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier }: Po
       if (walletChainId !== chainId && chainId) await switchChain(connector, chainId)
       navigate(
         toSwap
-          ? `/swap?inputCurrency=${currency0.isNative ? currency0.symbol : currencyId(currency0)}&outputCurrency=${
-              currency1.isNative ? currency1.symbol : currencyId(currency1)
-            }`
+          ? `/swap?inputCurrency=${currencyId(currency0)}&outputCurrency=${currencyId(currency1)}`
           : `/increase/${currencyId(currency0)}/${currencyId(currency1)}/${feeTier}${tokenId ? `/${tokenId}` : ''}`
       )
     }
   }
   if (!currency0 || !currency1) return null
   return (
-    <Row gap="12px">
+    <PoolDetailsStatsButtonsRow>
       <PoolButton
         size={ButtonSize.medium}
         emphasis={ButtonEmphasis.highSoft}
-        // TODO take into account tokenId if account logged in
         onClick={() => handleOnClick(false)}
+        data-testid="pool-details-add-liquidity-button"
       >
         <Trans>Add liquidity</Trans>
       </PoolButton>
 
-      <PoolButton size={ButtonSize.medium} emphasis={ButtonEmphasis.highSoft} onClick={() => handleOnClick(true)}>
+      <PoolButton
+        size={ButtonSize.medium}
+        emphasis={ButtonEmphasis.highSoft}
+        onClick={() => handleOnClick(true)}
+        data-testid="pool-details-swap-button"
+      >
         <Trans>Swap</Trans>
       </PoolButton>
-    </Row>
+    </PoolDetailsStatsButtonsRow>
   )
 }
