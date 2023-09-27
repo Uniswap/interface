@@ -3,9 +3,9 @@ import { ImageResponse } from '@vercel/og'
 import React from 'react'
 
 import { blocklistedCollections } from '../../../../../src/nft/utils/blocklist'
+import { getColor } from '../../../../../src/utils/getColor'
 import { CHECK_URL, WATERMARK_URL } from '../../../../constants'
 import getCollection from '../../../../utils/getCollection'
-import getColor from '../../../../utils/getColor'
 import getFont from '../../../../utils/getFont'
 import { getRequest } from '../../../../utils/getRequest'
 

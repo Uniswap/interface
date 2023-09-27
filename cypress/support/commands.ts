@@ -53,7 +53,6 @@ Cypress.Commands.overwrite(
 
             setInitialUserState(win, {
               ...initialState,
-              hideUniswapWalletBanner: true,
               ...CONNECTED_WALLET_USER_STATE,
               ...(options?.userState ?? {}),
             })

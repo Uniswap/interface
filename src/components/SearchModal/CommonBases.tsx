@@ -1,7 +1,6 @@
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { TraceEvent } from 'analytics'
-import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AutoRow } from 'components/Row'
 import { COMMON_BASES } from 'constants/routing'
@@ -10,12 +9,6 @@ import { getTokenAddress } from 'lib/utils/analytics'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { currencyId } from 'utils/currencyId'
-
-const MobileWrapper = styled(AutoColumn)`
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    display: none;
-  `};
-`
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border: 1px solid ${({ theme }) => theme.surface3};
@@ -65,37 +58,35 @@ export default function CommonBases({
   const bases = chainId !== undefined ? COMMON_BASES[chainId] ?? [] : []
 
   return bases.length > 0 ? (
-    <MobileWrapper gap="md">
-      <AutoRow gap="4px">
-        {bases.map((currency: Currency) => {
-          const isSelected = selectedCurrency?.equals(currency)
+    <AutoRow gap="4px">
+      {bases.map((currency: Currency) => {
+        const isSelected = selectedCurrency?.equals(currency)
 
-          return (
-            <TraceEvent
-              events={[BrowserEvent.onClick, BrowserEvent.onKeyPress]}
-              name={InterfaceEventName.TOKEN_SELECTED}
-              properties={formatAnalyticsEventProperties(currency, searchQuery, isAddressSearch)}
-              element={InterfaceElementName.COMMON_BASES_CURRENCY_BUTTON}
+        return (
+          <TraceEvent
+            events={[BrowserEvent.onClick, BrowserEvent.onKeyPress]}
+            name={InterfaceEventName.TOKEN_SELECTED}
+            properties={formatAnalyticsEventProperties(currency, searchQuery, isAddressSearch)}
+            element={InterfaceElementName.COMMON_BASES_CURRENCY_BUTTON}
+            key={currencyId(currency)}
+          >
+            <BaseWrapper
+              tabIndex={0}
+              onKeyPress={(e) => !isSelected && e.key === 'Enter' && onSelect(currency)}
+              onClick={() => !isSelected && onSelect(currency)}
+              disable={isSelected}
               key={currencyId(currency)}
+              data-testid={`common-base-${currency.symbol}`}
             >
-              <BaseWrapper
-                tabIndex={0}
-                onKeyPress={(e) => !isSelected && e.key === 'Enter' && onSelect(currency)}
-                onClick={() => !isSelected && onSelect(currency)}
-                disable={isSelected}
-                key={currencyId(currency)}
-                data-testid={`common-base-${currency.symbol}`}
-              >
-                <CurrencyLogoFromList currency={currency} />
-                <Text fontWeight={535} fontSize={16} lineHeight="16px">
-                  {currency.symbol}
-                </Text>
-              </BaseWrapper>
-            </TraceEvent>
-          )
-        })}
-      </AutoRow>
-    </MobileWrapper>
+              <CurrencyLogoFromList currency={currency} />
+              <Text fontWeight={535} fontSize={16} lineHeight="16px">
+                {currency.symbol}
+              </Text>
+            </BaseWrapper>
+          </TraceEvent>
+        )
+      })}
+    </AutoRow>
   ) : null
 }
 

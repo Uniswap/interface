@@ -25,7 +25,7 @@ import { SwapInfo } from 'state/swap/hooks'
 import { useRouterPreference, useUserDisabledUniswapX } from 'state/user/hooks'
 import { updateDisabledUniswapX } from 'state/user/reducer'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 export const UniswapXOptIn = (props: { swapInfo: SwapInfo; isSmall: boolean }) => {
   const {

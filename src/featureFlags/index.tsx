@@ -8,6 +8,7 @@ import { useGate } from 'statsig-react'
 export enum FeatureFlag {
   traceJsonRpc = 'traceJsonRpc',
   debounceSwapQuote = 'debounce_swap_quote',
+  fallbackProvider = 'fallback_provider',
   uniswapXSyntheticQuote = 'uniswapx_synthetic_quote',
   uniswapXEthOutputEnabled = 'uniswapx_eth_output_enabled',
   uniswapXExactOutputEnabled = 'uniswapx_exact_output_enabled',

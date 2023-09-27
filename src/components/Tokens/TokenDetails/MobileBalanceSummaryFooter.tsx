@@ -6,7 +6,7 @@ import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import styled from 'styled-components'
-import { StyledInternalLink } from 'theme'
+import { StyledInternalLink } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const Wrapper = styled.div`

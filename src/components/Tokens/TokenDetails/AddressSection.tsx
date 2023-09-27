@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
-import { CopyContractAddress, ThemedText } from 'theme'
+import { CopyContractAddress, ThemedText } from 'theme/components'
 
 const ContractAddressSection = styled.div`
   display: flex;

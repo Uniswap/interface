@@ -33,7 +33,7 @@ import { useBurnV3ActionHandlers, useBurnV3State, useDerivedV3BurnInfo } from 's
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { WrongChainError } from 'utils/errors'
 
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
@@ -300,7 +300,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         pendingText={pendingText}
       />
       <AppBody $maxWidth="unset">
-        <AddRemoveTabs creating={false} adding={false} positionID={tokenId.toString()} />
+        <AddRemoveTabs
+          creating={false}
+          adding={false}
+          positionID={tokenId.toString()}
+          autoSlippage={DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE}
+        />
         <Wrapper>
           {position ? (
             <AutoColumn gap="lg">

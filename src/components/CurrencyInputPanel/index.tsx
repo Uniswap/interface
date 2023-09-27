@@ -10,12 +10,12 @@ import { isSupportedChain } from 'constants/chains'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
+import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
-import { ThemedText } from '../../theme'
 import { ButtonGray } from '../Button'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import CurrencyLogo from '../Logo/CurrencyLogo'
@@ -161,6 +161,10 @@ const StyledNumericalInput = styled(NumericalInput)<{ $loading: boolean }>`
   text-align: left;
 `
 
+const StyledPrefetchBalancesWrapper = styled(PrefetchBalancesWrapper)<{ $fullWidth: boolean }>`
+  width: ${({ $fullWidth }) => ($fullWidth ? '100%' : 'auto')};
+`
+
 interface CurrencyInputPanelProps {
   value: string
   onUserInput: (value: string) => void
@@ -231,7 +235,7 @@ export default function CurrencyInputPanel({
                 />
               )}
 
-              <PrefetchBalancesWrapper shouldFetchOnAccountUpdate={modalOpen}>
+              <StyledPrefetchBalancesWrapper shouldFetchOnAccountUpdate={modalOpen} $fullWidth={hideInput}>
                 <CurrencySelect
                   disabled={!chainAllowed}
                   visible={currency !== undefined}
@@ -274,7 +278,7 @@ export default function CurrencyInputPanel({
                     {onCurrencySelect && <StyledDropDown selected={!!currency} />}
                   </Aligner>
                 </CurrencySelect>
-              </PrefetchBalancesWrapper>
+              </StyledPrefetchBalancesWrapper>
             </InputRow>
             {Boolean(!hideInput && !hideBalance && currency) && (
               <FiatRow>

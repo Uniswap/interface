@@ -4,7 +4,7 @@ import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
 
 const Wrapper = styled.div`

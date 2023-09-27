@@ -13,6 +13,7 @@ import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { ReactNode, useMemo } from 'react'
 import { Text } from 'rebass'
 import { useTheme } from 'styled-components'
+import { BackArrowLink, StyledInternalLink, ThemedText } from 'theme/components'
 
 import { LightCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -21,7 +22,6 @@ import { AutoRow } from '../../components/Row'
 import { Dots } from '../../components/swap/styled'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/connection/hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
-import { BackArrowLink, StyledInternalLink, ThemedText } from '../../theme'
 import { BodyWrapper } from '../AppBody'
 
 function EmptyState({ message }: { message: ReactNode }) {

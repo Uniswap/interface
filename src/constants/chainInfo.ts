@@ -23,6 +23,18 @@ import { ARBITRUM_LIST, AVALANCHE_LIST, BASE_LIST, CELO_LIST, OPTIMISM_LIST, PLA
 
 export const AVERAGE_L1_BLOCK_TIME = ms(`12s`)
 
+// The block number at which v3 was deployed on each chain, separate from the UNIVERSAL_ROUTER_CREATION_BLOCK
+export const START_BLOCKS: { [key: number]: number } = {
+  [ChainId.MAINNET]: 14292820,
+  [ChainId.POLYGON]: 25459720,
+  [ChainId.ARBITRUM_ONE]: 175,
+  [ChainId.OPTIMISM]: 10028767,
+  [ChainId.CELO]: 13916355,
+  [ChainId.BNB]: 26324014,
+  [ChainId.AVALANCHE]: 31422450,
+  [ChainId.BASE]: 1371680,
+}
+
 export enum NetworkType {
   L1,
   L2,

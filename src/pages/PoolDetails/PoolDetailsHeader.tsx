@@ -10,7 +10,7 @@ import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { ClickableStyle, ThemedText } from 'theme'
+import { ClickableStyle, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils'
 
 import { ReversedArrowsIcon } from './icons'

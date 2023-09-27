@@ -80,7 +80,7 @@ type TokenMap = { [address: string]: Token }
  * Returns null if token is loading or null was passed.
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
-export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string | null): Token | null | undefined {
+export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string | null): Token | undefined {
   const address = isAddress(tokenAddress)
   const token: Token | undefined = address ? tokens[address] : undefined
   const tokenFromNetwork = useTokenFromActiveNetwork(token ? undefined : address ? address : undefined)
@@ -106,7 +106,7 @@ export function useCurrencyFromMap(
   tokens: TokenMap,
   chainId: ChainId | undefined,
   currencyId?: string | null
-): Currency | null | undefined {
+): Currency | undefined {
   const nativeCurrency = useNativeCurrency(chainId)
   const isNative = Boolean(nativeCurrency && currencyId?.toUpperCase() === 'ETH')
   const shorthandMatchAddress = useMemo(() => {
@@ -116,7 +116,7 @@ export function useCurrencyFromMap(
 
   const token = useTokenFromMapOrNetwork(tokens, isNative ? undefined : shorthandMatchAddress ?? currencyId)
 
-  if (currencyId === null || currencyId === undefined || !isSupportedChain(chainId)) return null
+  if (currencyId === null || currencyId === undefined || !isSupportedChain(chainId)) return
 
   // this case so we use our builtin wrapped token instead of wrapped tokens on token lists
   const wrappedNative = nativeCurrency?.wrapped

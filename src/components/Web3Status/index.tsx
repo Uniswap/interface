@@ -4,17 +4,19 @@ import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import PortfolioDrawer, { useAccountDrawer } from 'components/AccountDrawer'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
-import Loader from 'components/Icons/LoadingSpinner'
+import Loader, { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { getConnection } from 'connection'
+import { useConnectionReady } from 'connection/eagerlyConnect'
+import { ConnectionMeta, getPersistedConnectionMeta, setPersistedConnectionMeta } from 'connection/meta'
 import useENSName from 'hooks/useENSName'
 import useLast from 'hooks/useLast'
 import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { darken } from 'polished'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useAppSelector } from 'state/hooks'
 import styled from 'styled-components'
 import { colors } from 'theme/colors'
@@ -94,8 +96,15 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{
   }
 `
 
-const AddressAndChevronContainer = styled.div`
+const Web3StatusConnecting = styled(Web3StatusConnected)`
+  &:disabled {
+    opacity: 1;
+  }
+`
+
+const AddressAndChevronContainer = styled.div<{ loading?: boolean }>`
   display: flex;
+  opacity: ${({ loading, theme }) => loading && theme.opacity.disabled};
 
   @media only screen and (max-width: ${navSearchInputVisibleSize}px) {
     display: none;
@@ -128,8 +137,11 @@ const StyledConnectButton = styled.button`
 function Web3StatusInner() {
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const ignoreWhileSwitchingChain = useCallback(() => !switchingChain, [switchingChain])
-  const { account, connector } = useLast(useWeb3React(), ignoreWhileSwitchingChain)
-  const { ENSName } = useENSName(account)
+  const connectionReady = useConnectionReady()
+  const activeWeb3 = useWeb3React()
+  const lastWeb3 = useLast(useWeb3React(), ignoreWhileSwitchingChain)
+  const { account, connector } = useMemo(() => (activeWeb3.account ? activeWeb3 : lastWeb3), [activeWeb3, lastWeb3])
+  const { ENSName, loading: ENSLoading } = useENSName(account)
   const connection = getConnection(connector)
 
   const [, toggleAccountDrawer] = useAccountDrawer()
@@ -140,6 +152,48 @@ function Web3StatusInner() {
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
   const { hasPendingActivity, pendingActivityCount } = usePendingActivity()
+
+  // Display a loading state while initializing the connection, based on the last session's persisted connection.
+  // The connection will go through three states:
+  // - startup:       connection is not ready
+  // - initializing:  account is available, but ENS (if preset on the persisted initialMeta) is still loading
+  // - initialized:   account and ENS are available
+  // Subsequent connections are always considered initialized, and will not display startup/initializing states.
+  const initialConnection = useRef(getPersistedConnectionMeta())
+  const isConnectionInitializing = Boolean(
+    initialConnection.current?.address === account && initialConnection.current?.ENSName && ENSLoading
+  )
+  const isConnectionInitialized = connectionReady && !isConnectionInitializing
+  // Clear the initial connection once initialized so it does not interfere with subsequent connections.
+  useEffect(() => {
+    if (isConnectionInitialized) {
+      initialConnection.current = undefined
+    }
+  }, [isConnectionInitialized])
+  // Persist the connection if it changes, so it can be used to initialize the next session's connection.
+  useEffect(() => {
+    if (account || ENSName) {
+      const meta: ConnectionMeta = {
+        type: connection.type,
+        address: account,
+        ENSName: ENSName ?? undefined,
+      }
+      setPersistedConnectionMeta(meta)
+    }
+  }, [ENSName, account, connection.type])
+
+  if (!isConnectionInitialized) {
+    return (
+      <Web3StatusConnecting disabled={!isConnectionInitializing} onClick={handleWalletDropdownClick}>
+        <IconWrapper size={24}>
+          <LoaderV3 size="24px" />
+        </IconWrapper>
+        <AddressAndChevronContainer loading={true}>
+          <Text>{initialConnection.current?.ENSName ?? shortenAddress(initialConnection.current?.address)}</Text>
+        </AddressAndChevronContainer>
+      </Web3StatusConnecting>
+    )
+  }
 
   if (account) {
     return (
@@ -167,7 +221,7 @@ function Web3StatusInner() {
             </RowBetween>
           ) : (
             <AddressAndChevronContainer>
-              <Text>{ENSName || shortenAddress(account)}</Text>
+              <Text>{ENSName ?? shortenAddress(account)}</Text>
             </AddressAndChevronContainer>
           )}
         </Web3StatusConnected>
