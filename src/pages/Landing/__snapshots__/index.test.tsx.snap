@@ -2116,7 +2116,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
                     <div
                       class="c52 c53"
                     />
-                    Connect Wallet
+                    Connect wallet
                   </button>
                 </div>
               </div>
@@ -4815,7 +4815,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
                     <div
                       class="c52 c53"
                     />
-                    Connect Wallet
+                    Connect wallet
                   </button>
                 </div>
               </div>

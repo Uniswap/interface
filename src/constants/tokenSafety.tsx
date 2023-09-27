@@ -74,7 +74,7 @@ const StrongWarning: Warning = {
 
 const BlockedWarning: Warning = {
   level: WARNING_LEVEL.BLOCKED,
-  message: <Trans>Not Available</Trans>,
+  message: <Trans>Not available</Trans>,
   canProceed: false,
 }
 

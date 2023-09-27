@@ -165,7 +165,7 @@ export default function PoolFinder() {
                 style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
               >
                 <Text textAlign="center" fontWeight={535}>
-                  <Trans>Pool Found!</Trans>
+                  <Trans>Pool found!</Trans>
                 </Text>
                 <StyledInternalLink to="pools/v2">
                   <Text textAlign="center">
