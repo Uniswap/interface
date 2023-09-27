@@ -9,7 +9,6 @@ import {
   useSharedValue,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { AnimatedFlex, Box } from 'src/components/layout'
 import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
@@ -18,7 +17,8 @@ import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID } from 'src/constants/globals'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
-import { SwapArrowButton } from 'src/features/transactions/swap/SwapArrowButton'
+import { CurrencyInputPanel } from 'src/features/transactions/swapRewrite/CurrencyInputPanel'
+import { SwapArrowButton } from 'src/features/transactions/swapRewrite/SwapArrowButton'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -31,7 +31,7 @@ import { SwapScreen, useSwapContext } from './SwapContext'
 import { SwapFormHeader } from './SwapFormHeader'
 import { TokenSelector } from './TokenSelector'
 
-const SWAP_DIRECTION_BUTTON_SIZE = iconSizes.icon20
+const SWAP_DIRECTION_BUTTON_SIZE = iconSizes.icon24
 const SWAP_DIRECTION_BUTTON_INNER_PADDING = spacing.spacing8 + spacing.spacing2
 const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
 
@@ -190,10 +190,10 @@ function SwapFormContent(): JSX.Element {
         exactAmountFiat: undefined,
         exactAmountToken: amount,
         exactCurrencyField: CurrencyField.INPUT,
-        focusOnCurrencyField: undefined,
+        focusOnCurrencyField: exactCurrencyField,
       })
     },
-    [updateSwapForm]
+    [exactCurrencyField, updateSwapForm]
   )
 
   const onSwitchCurrencies = useCallback(() => {
@@ -235,7 +235,13 @@ function SwapFormContent(): JSX.Element {
         gap="spacing2"
         onLayout={onInputPanelLayout}>
         <Trace section={SectionName.CurrencyInputPanel}>
-          <Flex backgroundColor="$surface2" borderRadius="$rounded20">
+          <Flex
+            backgroundColor={
+              focusOnCurrencyField === CurrencyField.INPUT ? '$surface1' : '$surface2'
+            }
+            borderColor="$surface3"
+            borderRadius="$rounded20"
+            borderWidth={1}>
             <CurrencyInputPanel
               currencyAmount={currencyAmounts[CurrencyField.INPUT]}
               currencyBalance={currencyBalances[CurrencyField.INPUT]}
@@ -277,7 +283,7 @@ function SwapFormContent(): JSX.Element {
               position="absolute">
               <Trace logPress element={ElementName.SwitchCurrenciesButton}>
                 <SwapArrowButton
-                  bg="$surface2"
+                  bg="$surface1"
                   size={SWAP_DIRECTION_BUTTON_SIZE}
                   onPress={onSwitchCurrencies}
                 />
@@ -289,7 +295,9 @@ function SwapFormContent(): JSX.Element {
         <Trace section={SectionName.CurrencyOutputPanel}>
           <Flex gap="$none">
             <Flex
-              backgroundColor="$surface2"
+              backgroundColor={
+                focusOnCurrencyField === CurrencyField.OUTPUT ? '$surface1' : '$surface2'
+              }
               borderBottomLeftRadius={
                 // TODO: maybe add this.
                 //swapWarning || showRate || isBlocked ? '$none' : '$rounded20'
@@ -300,8 +308,11 @@ function SwapFormContent(): JSX.Element {
                 // swapWarning || showRate || isBlocked ? '$none' : '$rounded20'
                 '$rounded20'
               }
+              borderColor="$surface3"
+              borderRadius="$rounded20"
               borderTopLeftRadius="$rounded20"
               borderTopRightRadius="$rounded20"
+              borderWidth={1}
               gap="$none"
               overflow="hidden"
               position="relative">
