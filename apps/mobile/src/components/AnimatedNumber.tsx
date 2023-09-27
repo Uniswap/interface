@@ -49,8 +49,16 @@ const RollNumber = ({
     } else {
       fontColor.value = finishColor
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [digit, nextColor, colors.neutral3.get()])
+  }, [
+    digit,
+    nextColor,
+    colors.neutral3,
+    index,
+    chars.length,
+    colors.neutral1,
+    commonPrefixLength,
+    fontColor,
+  ])
 
   const animatedFontStyle = useAnimatedStyle(() => {
     return {
