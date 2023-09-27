@@ -111,7 +111,7 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Ethereum',
     logo: ETHEREUM_LOGO,
     nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
-    rpcUrls: { [RPCType.Private]: 'https://rpc.mevblocker.io' },
+    rpcUrls: { [RPCType.Private]: 'https://rpc.mevblocker.io/?referrer=uniswapwallet' },
   },
   [ChainId.Goerli]: {
     blockWaitMsBeforeWarning: 180000, // 3 minutes
