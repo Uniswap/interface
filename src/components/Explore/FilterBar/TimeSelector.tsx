@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { filterTimeAtom } from 'components/Tokens/state'
 import { TimePeriod } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useAtom } from 'jotai'
@@ -9,7 +10,6 @@ import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components'
 
 import { MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT } from '../constants'
-import { filterTimeAtom } from '../state'
 import FilterOption from './FilterOption'
 
 export const DISPLAYS: Record<TimePeriod, string> = {
