@@ -8,14 +8,13 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { setClipboard } from 'src/utils/clipboard'
 import { isDevBuild } from 'src/utils/version'
-import { Flex, Icons, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Icons, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 export function AccountHeader(): JSX.Element {
-  const colors = useSporeColors()
   const activeAddress = useAppSelector(selectActiveAccountAddress)
   const dispatch = useAppDispatch()
 
@@ -85,9 +84,9 @@ export function AccountHeader(): JSX.Element {
       </TouchableArea>
       <TouchableArea hapticFeedback onPress={onPressSettings}>
         <Icons.Settings
-          color={colors.neutral2.get()}
+          color="$neutral2"
           height={iconSizes.icon28}
-          opacity="0.8"
+          opacity={0.8}
           width={iconSizes.icon28}
         />
       </TouchableArea>

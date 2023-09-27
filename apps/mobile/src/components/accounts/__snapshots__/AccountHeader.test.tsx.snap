@@ -468,7 +468,7 @@ exports[`AccountHeader renders without error 1`] = `
           {
             "color": "#7D7D7D",
             "height": 28,
-            "opacity": "0.8",
+            "opacity": 0.8,
             "width": 28,
           },
           {
