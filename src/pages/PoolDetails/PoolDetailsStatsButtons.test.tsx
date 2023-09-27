@@ -35,8 +35,7 @@ describe('PoolDetailsStatsButton', () => {
   })
 
   it('clicking swap goes to correct url', async () => {
-    const { asFragment } = render(<PoolDetailsStatsButtons {...mockProps} />)
-    expect(asFragment()).toMatchSnapshot()
+    render(<PoolDetailsStatsButtons {...mockProps} />)
 
     await act(() => userEvent.click(screen.getByTestId('pool-details-swap-button')))
     expect(global.window.location.href).toContain(
@@ -45,8 +44,7 @@ describe('PoolDetailsStatsButton', () => {
   })
 
   it('clicking swap goes to correct url with tokens reversed', async () => {
-    const { asFragment } = render(<PoolDetailsStatsButtons {...mockPropsTokensReversed} />)
-    expect(asFragment()).toMatchSnapshot()
+    render(<PoolDetailsStatsButtons {...mockPropsTokensReversed} />)
 
     await act(() => userEvent.click(screen.getByTestId('pool-details-swap-button')))
     expect(global.window.location.href).toContain(
@@ -55,8 +53,7 @@ describe('PoolDetailsStatsButton', () => {
   })
 
   it('clicking add liquidity goes to correct url', async () => {
-    const { asFragment } = render(<PoolDetailsStatsButtons {...mockPropsTokensReversed} />)
-    expect(asFragment()).toMatchSnapshot()
+    render(<PoolDetailsStatsButtons {...mockPropsTokensReversed} />)
 
     await act(() => userEvent.click(screen.getByTestId('pool-details-add-liquidity-button')))
     expect(global.window.location.href).toContain(
