@@ -24,7 +24,7 @@ const SearchInput = styled.input`
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.surface3};
   height: 100%;
-  width: min(200px, 100%);
+  width: 0;
   font-size: 16px;
   font-weight: 485;
   padding-left: 40px;
@@ -66,6 +66,7 @@ export default function SearchBar() {
   const [localFilterString, setLocalFilterString] = useState(currentString)
   const setFilterString = useUpdateAtom(filterStringAtom)
   const debouncedLocalFilterString = useDebounce(localFilterString, 300)
+  const [isClicked, setIsClicked] = useState(false)
 
   useEffect(() => {
     setLocalFilterString(currentString)
@@ -74,6 +75,12 @@ export default function SearchBar() {
   useEffect(() => {
     setFilterString(debouncedLocalFilterString)
   }, [debouncedLocalFilterString, setFilterString])
+
+  const handleBlur = () => {
+    if (localFilterString.trim() === '') {
+      setIsClicked(false)
+    }
+  }
 
   return (
     <SearchBarContainer>
@@ -92,6 +99,9 @@ export default function SearchBar() {
               autoComplete="off"
               value={localFilterString}
               onChange={({ target: { value } }) => setLocalFilterString(value)}
+              style={{ width: isClicked ? '200px' : '0' }}
+              onFocus={() => setIsClicked(true)}
+              onBlur={handleBlur}
             />
           </TraceEvent>
         )}
