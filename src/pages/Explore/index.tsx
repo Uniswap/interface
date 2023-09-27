@@ -1,12 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
 import { Trace, TraceEvent } from 'analytics'
+import NetworkFilter from 'components/Explore/FilterBar/NetworkFilter'
+import SearchBar from 'components/Explore/FilterBar/SearchBar'
+import TimeSelector from 'components/Explore/FilterBar/TimeSelector'
 import { AutoRow } from 'components/Row'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
-import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
-import SearchBar from 'components/Tokens/TokenTable/SearchBar'
-import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import TokenTable from 'components/Tokens/TokenTable/TokenTable'
 import { useResetAtom } from 'jotai/utils'
 import { useEffect, useState } from 'react'
@@ -80,7 +80,7 @@ const NavWrapper = styled.div`
 interface Page {
   title: React.ReactNode
   key: string
-  component: ({ account }: { account: string }) => JSX.Element
+  component: () => JSX.Element
   loggingElementName: string
 }
 
@@ -117,7 +117,7 @@ const Explore = () => {
   const { component: Page, key: currentKey } = Pages[currentPage]
 
   return (
-    // TODO: add explore-page to InterfacePageName in @uniswap/analytics-events
+    // TODO: add 'explore-page' to InterfacePageName in @uniswap/analytics-events
     <Trace page="explore-page" shouldLogImpression>
       <ExploreContainer>
         {/* TODO: add graphs */}
@@ -141,19 +141,15 @@ const Explore = () => {
               )
             })}
           </Nav>
-          {/* time selector & network: */}
           <FiltersContainer>
             <NetworkFilter />
-            <TimeSelector />
-          </FiltersContainer>
-          <SearchContainer>
+            {currentKey === 'tokens' && <TimeSelector />}
+            {/* <SearchContainer> */}
             <SearchBar />
-          </SearchContainer>
+            {/* </SearchContainer> */}
+          </FiltersContainer>
         </NavWrapper>
-        {/* if token then TokenTable elseif pool then PoolTable elseif txs then TransactionTable:.. */}
-        {/* <PageWrapper data-testid="explore-page-table"> */}
-        <Page account="00" />
-        {/* </PageWrapper> */}
+        <Page />
       </ExploreContainer>
     </Trace>
   )

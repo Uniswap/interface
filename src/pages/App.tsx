@@ -26,7 +26,6 @@ import { getDownloadAppLink } from 'utils/openDownloadApp'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
-import Explore from './Explore'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from './Landing'
 import Swap from './Swap'
@@ -37,6 +36,7 @@ const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
 const AddLiquidity = lazy(() => import('pages/AddLiquidity'))
+const Explore = lazy(() => import('pages/Explore'))
 const RedirectDuplicateTokenIds = lazy(() => import('pages/AddLiquidity/redirects'))
 const RedirectDuplicateTokenIdsV2 = lazy(() => import('pages/AddLiquidityV2/redirects'))
 const MigrateV2 = lazy(() => import('pages/MigrateV2'))
