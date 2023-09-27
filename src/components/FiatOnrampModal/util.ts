@@ -4,19 +4,19 @@ import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { validateUrlChainParam } from 'graphql/data/util'
 
 export const MOONPAY_SUPPORTED_CURRENCY_CODES = [
-  'ETH',
-  'ETH_ARBITRUM',
-  'ETH_OPTIMISM',
-  'ETH_POLYGON',
-  'WETH',
-  'WBTC',
-  'WMATIC_POLYGON',
-  'POLYGON',
-  'USDC_ARBITRUM',
-  'USDC_OPTIMISM',
-  'USDC_POLYGON',
-  'USDC',
-  'USDT',
+  'eth',
+  'eth_arbitrum',
+  'eth_optimism',
+  'eth_polygon',
+  'weth',
+  'wbtc',
+  'matic_polygon',
+  'polygon',
+  'usdc_arbitrum',
+  'usdc_optimism',
+  'usdc_polygon',
+  'usdc',
+  'usdt',
 ] as const
 
 type MoonpaySupportedCurrencyCode = (typeof MOONPAY_SUPPORTED_CURRENCY_CODES)[number]
@@ -27,40 +27,40 @@ export function getDefaultCurrencyCode(
 ): MoonpaySupportedCurrencyCode {
   const chain = validateUrlChainParam(chainName)
   if (address === 'NATIVE' && chain === Chain.Arbitrum) {
-    return 'ETH_ARBITRUM'
+    return 'eth_arbitrum'
   }
   if (address === 'NATIVE' && chain === Chain.Optimism) {
-    return 'ETH_OPTIMISM'
+    return 'eth_optimism'
   }
   if (address === '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619' && chain === Chain.Polygon) {
-    return 'ETH_POLYGON'
+    return 'eth_polygon'
   }
   if (address === WETH9[ChainId.MAINNET]?.address && chain === Chain.Ethereum) {
-    return 'WETH'
+    return 'weth'
   }
   if (address === WBTC.address && chain === Chain.Ethereum) {
-    return 'WBTC'
+    return 'wbtc'
   }
   if (address === 'NATIVE' && chain === Chain.Polygon) {
-    return 'WMATIC_POLYGON'
+    return 'matic_polygon'
   }
   if (address === MATIC.address && chain === Chain.Ethereum) {
-    return 'POLYGON'
+    return 'polygon'
   }
   if (address === USDC_MAINNET.address && chain === Chain.Ethereum) {
-    return 'USDC'
+    return 'usdc'
   }
   if (address === USDC_ARBITRUM.address && chain === Chain.Arbitrum) {
-    return 'USDC_ARBITRUM'
+    return 'usdc_arbitrum'
   }
   if (address === USDC_OPTIMISM.address && chain === Chain.Optimism) {
-    return 'USDC_OPTIMISM'
+    return 'usdc_optimism'
   }
   if (address === USDC_POLYGON.address && chain === Chain.Polygon) {
-    return 'USDC_POLYGON'
+    return 'usdc_polygon'
   }
   if (address === USDT.address && chain === Chain.Ethereum) {
-    return 'USDT'
+    return 'usdt'
   }
-  return 'ETH'
+  return 'eth'
 }
