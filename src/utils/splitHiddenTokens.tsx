@@ -1,12 +1,12 @@
-import { TokenBalance, TokenProjectMarket, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
+import { TokenBalance, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
 export function splitHiddenTokens(
   tokenBalances: TokenBalance[],
-  options?: {
+  options: {
     hideSmallBalances?: boolean
-  }
+  } = { hideSmallBalances: true }
 ) {
   const visibleTokens: TokenBalance[] = []
   const hiddenTokens: TokenBalance[] = []
@@ -20,12 +20,6 @@ export function splitHiddenTokens(
       !meetsThreshold(tokenBalance) && // if below $1
       !(tokenBalance.token?.standard == TokenStandard.Native) // do not hide native tokens regardless of small balance
     const isSpamToken = tokenBalance.tokenProjectMarket?.tokenProject?.isSpam
-
-    const tokenProjectMarket: TokenProjectMarket | undefined = tokenBalance.tokenProjectMarket
-    console.log(
-      `my  token currency is native ${tokenBalance.token?.standard == TokenStandard.Native}`,
-      tokenProjectMarket
-    )
     if ((isUndefinedValue || !shouldHideSmallBalance) && !isSpamToken) {
       visibleTokens.push(tokenBalance)
     } else {

@@ -1,6 +1,18 @@
-import { Currency, TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
+import { Chain, Currency, Token, TokenBalance, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 
 import { splitHiddenTokens } from './splitHiddenTokens'
+
+const nativeToken: Token = {
+  id: 'native-token',
+  chain: Chain.Ethereum,
+  standard: TokenStandard.Native,
+}
+
+const nonnativeToken: Token = {
+  id: 'nonnative-token',
+  chain: Chain.Ethereum,
+  standard: TokenStandard.Erc20,
+}
 
 const tokens: TokenBalance[] = [
   // low balance
@@ -17,10 +29,11 @@ const tokens: TokenBalance[] = [
       currency: Currency.Eth,
       tokenProject: {
         id: '',
-        tokens: [],
+        tokens: [nativeToken],
         isSpam: false,
       },
     },
+    token: nativeToken,
   },
   {
     id: 'low-balance-nonnative',
@@ -28,17 +41,19 @@ const tokens: TokenBalance[] = [
     __typename: 'TokenBalance',
     denominatedValue: {
       id: '',
-      value: 0.5,
+      currency: Currency.Usd,
+      value: 0.01,
     },
     tokenProjectMarket: {
       id: '',
-      currency: 'TUSD', // fixme: tokenProjectMarket gql should not have currency field? should have Token field??
+      currency: Currency.Eth,
       tokenProject: {
         id: '',
-        tokens: [],
+        tokens: [nonnativeToken],
         isSpam: false,
       },
     },
+    token: nonnativeToken,
   },
   // spam
   {
@@ -54,10 +69,11 @@ const tokens: TokenBalance[] = [
       currency: Currency.Eth,
       tokenProject: {
         id: '',
-        tokens: [],
+        tokens: [nonnativeToken],
         isSpam: true,
       },
     },
+    token: nonnativeToken,
   },
   // valid
   {
@@ -73,10 +89,11 @@ const tokens: TokenBalance[] = [
       currency: Currency.Eth,
       tokenProject: {
         id: '',
-        tokens: [],
+        tokens: [nonnativeToken],
         isSpam: false,
       },
     },
+    token: nonnativeToken,
   },
   // empty value
   {
@@ -93,10 +110,11 @@ const tokens: TokenBalance[] = [
       currency: Currency.Eth,
       tokenProject: {
         id: '',
-        tokens: [],
+        tokens: [nonnativeToken],
         isSpam: false,
       },
     },
+    token: nonnativeToken,
   },
 ]
 
@@ -113,6 +131,7 @@ describe('splitHiddenTokens', () => {
     expect(visibleTokens[0].id).toBe('low-balance-native')
     expect(visibleTokens[1].id).toBe('low-balance-nonnative')
     expect(visibleTokens[2].id).toBe('valid')
+    expect(visibleTokens[3].id).toBe('undefined-value')
   })
 
   it('splits non-native low balance into hidden by default', () => {
@@ -125,6 +144,7 @@ describe('splitHiddenTokens', () => {
     expect(visibleTokens.length).toBe(3)
     expect(visibleTokens[0].id).toBe('low-balance-native')
     expect(visibleTokens[1].id).toBe('valid')
+    expect(visibleTokens[2].id).toBe('undefined-value')
   })
 
   it('splits undefined value tokens into visible', () => {
