@@ -6,6 +6,8 @@ import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonText } from 'components/Button'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useCallback, useEffect, useState } from 'react'
+import { useAppSelector } from 'state/hooks'
+import { AppState } from 'state/reducer'
 import styled from 'styled-components'
 import { ExternalLink } from 'theme/components'
 
@@ -39,6 +41,8 @@ const StyledTextButton = styled(ButtonText)`
 export default function SwapBuyFiatButton() {
   const { account } = useWeb3React()
   const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
+  const originCountry = useAppSelector((state: AppState) => state.application.originCountry)
+  const shouldHideBuyFiatButton = originCountry == 'GB'
   const [checkFiatRegionAvailability, setCheckFiatRegionAvailability] = useState(false)
   const {
     available: fiatOnrampAvailable,
@@ -96,6 +100,10 @@ export default function SwapBuyFiatButton() {
 
   const fiatOnRampsUnavailableTooltipDisabled =
     !fiatOnrampAvailabilityChecked || (fiatOnrampAvailabilityChecked && fiatOnrampAvailable)
+
+  if (shouldHideBuyFiatButton) {
+    return null
+  }
 
   return (
     <MouseoverTooltip

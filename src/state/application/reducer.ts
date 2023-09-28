@@ -53,6 +53,7 @@ export interface ApplicationState {
   readonly fiatOnramp: { available: boolean; availabilityChecked: boolean }
   readonly openModal: ApplicationModal | null
   readonly popupList: PopupList
+  readonly originCountry?: string
 }
 
 const initialState: ApplicationState = {
@@ -60,6 +61,7 @@ const initialState: ApplicationState = {
   chainId: null,
   openModal: null,
   popupList: [],
+  originCountry: undefined,
 }
 
 const applicationSlice = createSlice({
@@ -96,9 +98,12 @@ const applicationSlice = createSlice({
         return popup
       })
     },
+    setOriginCountry(state, { payload: country }) {
+      state.originCountry = country
+    },
   },
 })
 
-export const { updateChainId, setFiatOnrampAvailability, setOpenModal, addPopup, removePopup } =
+export const { updateChainId, setFiatOnrampAvailability, setOpenModal, addPopup, removePopup, setOriginCountry } =
   applicationSlice.actions
 export default applicationSlice.reducer
