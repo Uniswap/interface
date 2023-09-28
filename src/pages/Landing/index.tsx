@@ -378,11 +378,6 @@ export default function Landing() {
   const queryParams = parse(location.search, { ignoreQueryPrefix: true })
 
   const Titles = useMemo(() => {
-    const defaultTitles = {
-      header: <Trans>Trade Crypto and NFTs with Confidence </Trans>,
-      subHeader: <Trans>Buy, sell and explore tokens and NFTs</Trans>,
-    }
-
     if (!originCountry) {
       return {
         header: null,
@@ -398,10 +393,16 @@ export default function Landing() {
     }
 
     if (shouldDisableNFTRoutes) {
-      defaultTitles.header = <Trans>Trade crypto with confidence</Trans>
+      return {
+        header: <Trans>Trade crypto with confidence</Trans>,
+        subHeader: <Trans>Buy, sell, and explore tokens</Trans>,
+      }
     }
 
-    return defaultTitles
+    return {
+      header: <Trans>Trade crypto and NFTs with confidence</Trans>,
+      subHeader: <Trans>Buy, sell, and explore tokens and NFTs</Trans>,
+    }
   }, [originCountry, renderUkSpecificText, shouldDisableNFTRoutes])
 
   if (selectedWallet && !queryParams.intro) {
