@@ -17,6 +17,16 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   width: max-content;
 }
 
+.c26 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  padding: 4px 0px;
+}
+
 .c1 {
   width: 100%;
   display: -webkit-box;
@@ -70,6 +80,26 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
+}
+
+.c27 {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 4px 0px;
 }
 
 .c6 {
@@ -177,9 +207,183 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   border-radius: 50%;
 }
 
-.c2 {
-  padding: 40px 56px;
+.c28 {
+  color: #FF5F52;
+}
+
+.c18 {
+  font-weight: 485;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+.c17 {
+  gap: 24px;
+  padding: 20px;
+  border-radius: 20px;
+  background: #F9F9F9;
   width: 100%;
+}
+
+.c19 {
+  gap: 8px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  min-width: 180px;
+}
+
+.c20 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c21 {
+  font-weight: 485;
+  font-size: 18px;
+  line-height: 24px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+.c22 {
+  height: 8px;
+  width: 40.698463777008904%;
+  background: #2172E5;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-right: 1px solid #F9F9F9;
+}
+
+.c23 {
+  height: 8px;
+  width: 59.3015362229911%;
+  background: #2172E5;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-left: 1px solid #F9F9F9;
+}
+
+.c24 {
+  gap: 4px;
+  width: 100%;
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+}
+
+.c25 {
+  color: #222222;
+  font-size: 36px;
+  font-weight: 485;
+  line-height: 44px;
+}
+
+.c2 {
+  padding: 48px;
+  width: 100%;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+}
+
+.c16 {
+  gap: 24px;
+  margin: 0 48px 0 auto;
+  width: 22vw;
+  min-width: 360px;
+}
+
+@media (max-width:1023px) {
+  .c18 {
+    width: 100%;
+  }
+}
+
+@media (max-width:1023px) {
+  .c17 {
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    background: #FFFFFF;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding: 20px 0px;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width:640px) {
+  .c19 {
+    min-width: 150px;
+  }
+}
+
+@media (max-width:1023px) {
+  .c20 {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+}
+
+@media (max-width:1023px) {
+  .c21 {
+    font-size: 20px;
+    line-height: 28px;
+    width: 100%;
+  }
+}
+
+@media (max-width:1023px) {
+  .c24 {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: 0px;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width:1023px) {
+  .c25 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+}
+
+@media (max-width:1023px) {
+  .c2 {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+}
+
+@media (max-width:639px) {
+  .c2 {
+    padding: 48px 16px;
+  }
+}
+
+@media (max-width:1023px) {
+  .c16 {
+    margin: 44px 0px;
+    width: 100%;
+    min-width: unset;
+  }
 }
 
 <div
@@ -275,6 +479,155 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
             fill="#5E5E5E"
           />
         </svg>
+      </div>
+    </div>
+    <div
+      class="c3 c16"
+    >
+      <div
+        class="c3 c17"
+      >
+        <div
+          class="c18 css-vurnku"
+        >
+          Stats
+        </div>
+        <div
+          class="c3 c19"
+        >
+          <div
+            class="c6 css-1urox24"
+          >
+            Pool balances
+          </div>
+          <div
+            class="c0 c1 c20"
+          >
+            <div
+              class="c0 c1 c21"
+            >
+              90.93M USDC
+            </div>
+            <div
+              class="c0 c1 c21"
+            >
+              82,526.49 WETH
+            </div>
+          </div>
+          <div
+            class="c0 c1"
+            data-testid="pool-balance-chart"
+          >
+            <div
+              class="c22"
+            />
+            <div
+              class="c23"
+            />
+          </div>
+        </div>
+        <div
+          class="c3 c19"
+        >
+          <div
+            class="c6 css-1urox24"
+          >
+            TVL
+          </div>
+          <div
+            class="c0 c1 c24"
+          >
+            <div
+              class="c25 css-vurnku"
+            >
+              $223.2M
+            </div>
+            <div
+              class="c26 c27"
+              width="max-content"
+            >
+              <svg
+                aria-label="down"
+                class="c28"
+                fill="none"
+                height="16"
+                viewBox="0 0 24 24"
+                width="16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <div
+                class="c6 css-1urox24"
+              >
+                0.37%
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="c3 c19"
+        >
+          <div
+            class="c6 css-1urox24"
+          >
+            24H volume
+          </div>
+          <div
+            class="c0 c1 c24"
+          >
+            <div
+              class="c25 css-vurnku"
+            >
+              $233.4M
+            </div>
+            <div
+              class="c26 c27"
+              width="max-content"
+            >
+              <svg
+                aria-label="down"
+                class="c28"
+                fill="none"
+                height="16"
+                viewBox="0 0 24 24"
+                width="16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <div
+                class="c6 css-1urox24"
+              >
+                17.75%
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="c3 c19"
+        >
+          <div
+            class="c6 css-1urox24"
+          >
+            24H fees
+          </div>
+          <div
+            class="c0 c1 c24"
+          >
+            <div
+              class="c25 css-vurnku"
+            >
+              $116.7K
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
