@@ -10,6 +10,7 @@ import { useAppSelector } from 'state/hooks'
 import { AppState } from 'state/reducer'
 import styled from 'styled-components'
 import { ExternalLink } from 'theme/components'
+import { textFadeIn } from 'theme/styles'
 
 import { useFiatOnrampAvailability, useOpenModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -27,6 +28,7 @@ enum BuyFiatFlowState {
 }
 
 const StyledTextButton = styled(ButtonText)`
+  ${textFadeIn}
   color: ${({ theme }) => theme.neutral2};
   gap: 4px;
   font-weight: 485;
@@ -42,7 +44,7 @@ export default function SwapBuyFiatButton() {
   const { account } = useWeb3React()
   const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const originCountry = useAppSelector((state: AppState) => state.application.originCountry)
-  const shouldHideBuyFiatButton = originCountry == 'GB'
+  const shouldShowBuyFiatButton = Boolean(originCountry) && originCountry !== 'US'
   const [checkFiatRegionAvailability, setCheckFiatRegionAvailability] = useState(false)
   const {
     available: fiatOnrampAvailable,
@@ -101,7 +103,7 @@ export default function SwapBuyFiatButton() {
   const fiatOnRampsUnavailableTooltipDisabled =
     !fiatOnrampAvailabilityChecked || (fiatOnrampAvailabilityChecked && fiatOnrampAvailable)
 
-  if (shouldHideBuyFiatButton) {
+  if (!shouldShowBuyFiatButton) {
     return null
   }
 
