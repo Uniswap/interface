@@ -1,0 +1,29 @@
+name: Update I18N Source
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  upload_source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: styfle/cancel-workflow-action@860d4c7374d6e4a1c482e80897cb913ae46692ac
+        with:
+          all_but_latest: true
+
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
+        with:
+          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
+          ref: ${{ github.ref }}
+
+      - name: 📥 Install
+        uses: ./.github/actions/monorepo_yarn_install
+
+      - name: Upload source files
+        run: yarn i18n:upload
+        env:
+          CROWDIN_ACCESS_TOKEN: ${{ secrets.CROWDIN_ACCESS_TOKEN }}
+
+    

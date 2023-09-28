@@ -1,5 +1,5 @@
 import 'react-i18next'
-import en from './i18n/locales/en.json'
+import en from './i18n/locales/en-US.json'
 
 const resources = {
   en: {

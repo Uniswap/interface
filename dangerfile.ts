@@ -70,7 +70,7 @@ async function checkCocoaPodsVersion() {
 }
 
 async function checkApostrophes() {
-  const updatedTranslations = danger.git.modified_files.find((file) => file.includes('en.json'))
+  const updatedTranslations = danger.git.modified_files.find((file) => file.includes('en-US.json'))
   if (updatedTranslations) {
     const structuredDiff = await danger.git.structuredDiffForFile(updatedTranslations);
     const changedLines = (structuredDiff?.chunks || []).flatMap((chunk) => {

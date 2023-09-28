@@ -1,7 +1,7 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import { AppTFunction } from 'ui/src/i18n/types'
-import en from './locales/en.json'
+import en from './locales/en-US.json'
 
 export const resources = {
   en: {

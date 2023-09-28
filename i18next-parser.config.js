@@ -42,7 +42,7 @@ module.exports = {
   lineEnding: 'auto',
 
   // An array of the locales in your applications
-  locales: ['en'],
+  locales: ['en-US'],
 
   // Namespace separator used in your translation keys
   // Disabling instead of default ':' so we can use plain english keys
