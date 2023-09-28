@@ -2,40 +2,52 @@ name: '[mobile] fastlane deploy'
 
 description: 'Deploys fastlane for the given environment and app identifiers'
 inputs:
-  branch:
-    description: 'the branch to run this deployment for'
-    required: true
-  configuration:
-    description: 'the iOS deploy configuration for this deployment'
-    required: true
-  sentry-env:
-    description: 'the sentry env for this deployment'
+  amplitude-experiments-deploy-key:
+    description: 'passed secret value'
     required: true
   apple-app-id:
     description: 'the apple app id for this deployment'
     required: true
+  apple-id:
+    description: 'passed secret value'
+    required: true
+  apple-team-id:
+    description: 'passed secret value'
+    required: true
   app-identifier:
     description: 'the apple app identifier for this deployment'
     required: true
-  onesignal-app-id:
-    description: 'the onesignal app id for this deployment'
-    required: true
-  uniswap-api-key:
+  app-store-connect-issuer-id:
     description: 'passed secret value'
     required: true
-  sentry-dsn:
+  app-store-connect-key-content:
     description: 'passed secret value'
     required: true
-  statsig-api-key:
+  app-store-connect-key-id:
     description: 'passed secret value'
     required: true
-  statsig-proxy-url:
+  appsflyer-api-key:
     description: 'passed secret value'
     required: true
-  amplitude-experiments-deploy-key:
+  appsflyer-app-id:
+    description: 'passed secret value'
+    required: true
+  branch:
+    description: 'the branch to run this deployment for'
+    required: true
+  ci-keychain-password:
+    description: 'passed secret value'
+    required: true
+  configuration:
+    description: 'the iOS deploy configuration for this deployment'
+    required: true
+  github-token:
     description: 'passed secret value'
     required: true
   infura-project-id:
+    description: 'passed secret value'
+    required: true
+  match-password:
     description: 'passed secret value'
     required: true
   moonpay-api-key:
@@ -47,38 +59,20 @@ inputs:
   moonpay-widget-api-url:
     description: 'passed secret value'
     required: true
-  walletconnect-project-id:
-    description: 'passed secret value'
+  onesignal-app-id:
+    description: 'the onesignal app id for this deployment'
     required: true
-  apple-id:
-    description: 'passed secret value'
-    required: true
-  apple-team-id:
-    description: 'passed secret value'
-    required: true
-  app-store-connect-key-id:
-    description: 'passed secret value'
-    required: true
-  app-store-connect-issuer-id:
-    description: 'passed secret value'
-    required: true
-  app-store-connect-key-content:
-    description: 'passed secret value'
-    required: true
-  match-password:
-    description: 'passed secret value'
-    required: true
-  ci-keychain-password:
-    description: 'passed secret value'
-    required: true
-  github-token:
-    description: 'passed secret value'
-    required: true
-  url-to-fastlane-certificates-repo:
+  quicknode-bnb-rpc-url:
     description: 'passed secret value'
     required: true
   sentry-auth-token:
     description: 'passed secret value'
+    required: true
+  sentry-dsn:
+    description: 'passed secret value'
+    required: true
+  sentry-env:
+    description: 'the sentry env for this deployment'
     required: true
   sentry-org:
     description: 'passed secret value'
@@ -86,13 +80,19 @@ inputs:
   sentry-project:
     description: 'passed secret value'
     required: true
-  appsflyer-api-key:
+  statsig-api-key:
     description: 'passed secret value'
     required: true
-  appsflyer-app-id:
+  statsig-proxy-url:
     description: 'passed secret value'
     required: true
-  quicknode-bnb-rpc-url:
+  uniswap-api-key:
+    description: 'passed secret value'
+    required: true
+  url-to-fastlane-certificates-repo:
+    description: 'passed secret value'
+    required: true
+  walletconnect-project-id:
     description: 'passed secret value'
     required: true
 
@@ -209,35 +209,35 @@ runs:
         ccache -s
       shell: bash
       env:
-        UNISWAP_API_KEY: ${{ inputs.uniswap-api-key }}
-        SENTRY_DSN: ${{ inputs.sentry-dsn }}
-        STATSIG_API_KEY: ${{ inputs.statsig-api-key }}
-        STATSIG_PROXY_URL: ${{ inputs.statsig-proxy-url }}
         AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY: ${{ inputs.amplitude-experiments-deploy-key }}
-        INFURA_PROJECT_ID: ${{ inputs.infura-project-id }}
-        MOONPAY_API_KEY: ${{ inputs.moonpay-api-key }}
-        MOONPAY_API_URL: ${{ inputs.moonpay-api-url }}
-        MOONPAY_WIDGET_API_URL: ${{ inputs.moonpay-widget-api-url }}
+        APP_IDENTIFIER: ${{ inputs.app-identifier }}
+        APPLE_APP_ID: ${{ inputs.apple-app-id }}
+        APPLE_ID: ${{ inputs.apple-id }}
+        APPLE_TEAM_ID: ${{ inputs.apple-team-id }}
         APPSFLYER_API_KEY: ${{ inputs.appsflyer-api-key }}
         APPSFLYER_APP_ID: ${{ inputs.appsflyer-app-id }}
-        ONESIGNAL_APP_ID: ${{ inputs.onesignal-app-id }}
-        WALLETCONNECT_PROJECT_ID: ${{ inputs.walletconnect-project-id }}
-        APP_IDENTIFIER: ${{ inputs.app-identifier }}
-        APPLE_ID: ${{ inputs.apple-id }}
-        APPLE_APP_ID: ${{ inputs.apple-app-id }}
-        APPLE_TEAM_ID: ${{ inputs.apple-team-id }}
-        APP_STORE_CONNECT_KEY_ID: ${{ inputs.app-store-connect-key-id }}
         APP_STORE_CONNECT_ISSUER_ID: ${{ inputs.app-store-connect-issuer-id }}
         APP_STORE_CONNECT_KEY_CONTENT: ${{ inputs.app-store-connect-key-content }}
-        MATCH_PASSWORD: ${{ inputs.match-password }}
+        APP_STORE_CONNECT_KEY_ID: ${{ inputs.app-store-connect-key-id }}
         CI: true
         CI_KEYCHAIN_NAME: 'CI_KEYCHAIN'
         CI_KEYCHAIN_PASSWORD: ${{ inputs.ci-keychain-password }}
         CONFIGURATION: ${{ inputs.configuration }}
         GIT_BRANCH_NAME: ${{ github.ref }}
         GITHUB_TOKEN: ${{ inputs.github-token }}
-        URL_TO_FASTLANE_CERTIFICATES_REPO: ${{ inputs.url-to-fastlane-certificates-repo }}
+        INFURA_PROJECT_ID: ${{ inputs.infura-project-id }}
+        MATCH_PASSWORD: ${{ inputs.match-password }}
+        MOONPAY_API_KEY: ${{ inputs.moonpay-api-key }}
+        MOONPAY_API_URL: ${{ inputs.moonpay-api-url }}
+        MOONPAY_WIDGET_API_URL: ${{ inputs.moonpay-widget-api-url }}
+        ONESIGNAL_APP_ID: ${{ inputs.onesignal-app-id }}
+        QUICKNODE_BNB_RPC_URL: ${{ inputs.quicknode-bnb-rpc-url }}
         SENTRY_AUTH_TOKEN: ${{ inputs.sentry-auth-token }}
+        SENTRY_DSN: ${{ inputs.sentry-dsn }}
         SENTRY_ORG: ${{ inputs.sentry-org }}
         SENTRY_PROJECT: ${{ inputs.sentry-project }}
-        QUICKNODE_BNB_RPC_URL: ${{ inputs.quicknode-bnb-rpc-url }}
+        STATSIG_API_KEY: ${{ inputs.statsig-api-key }}
+        STATSIG_PROXY_URL: ${{ inputs.statsig-proxy-url }}
+        UNISWAP_API_KEY: ${{ inputs.uniswap-api-key }}
+        URL_TO_FASTLANE_CERTIFICATES_REPO: ${{ inputs.url-to-fastlane-certificates-repo }}
+        WALLETCONNECT_PROJECT_ID: ${{ inputs.walletconnect-project-id }}

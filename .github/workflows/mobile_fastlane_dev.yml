@@ -20,34 +20,34 @@ jobs:
       - name: 📲 Fastlane Deploy Dev
         uses: ./.github/actions/mobile_fastlane_deploy
         with:
-          branch: ${{ github.ref }}
-          configuration: Dev
-          sentry-env: development
+          amplitude-experiments-deploy-key: ${{ secrets.AMPLITUDE_EXPERIMENTS_DEPLOY_KEY }}
           apple-app-id: ${{ secrets.APPLE_APP_ID_DEV }}
+          apple-id: ${{ secrets.APPLE_ID }}
+          apple-team-id: ${{ secrets.APPLE_TEAM_ID }}
           app-identifier: ${{ secrets.APP_IDENTIFIER_DEV }}
+          app-store-connect-issuer-id: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          app-store-connect-key-content: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
+          app-store-connect-key-id: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
           appsflyer-api-key: ${{ secrets.APPSFLYER_API_KEY }}
           appsflyer-app-id: ${{ secrets.APPSFLYER_APP_ID }}
-          onesignal-app-id: ${{ secrets.ONESIGNAL_APP_ID_DEV }}
-          uniswap-api-key: ${{ secrets.UNISWAP_API_KEY }}
-          sentry-dsn: ${{ secrets.SENTRY_DSN }}
-          statsig-api-key: ${{ secrets.STATSIG_API_KEY }}
-          statsig-proxy-url: ${{ secrets.STATSIG_PROXY_URL }}
-          amplitude-experiments-deploy-key: ${{ secrets.AMPLITUDE_EXPERIMENTS_DEPLOY_KEY }}
+          branch: ${{ github.ref }}
+          ci-keychain-password: ${{ secrets.CI_KEYCHAIN_PASSWORD }}
+          configuration: Dev
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           infura-project-id: ${{ secrets.INFURA_PROJECT_ID }}
+          match-password: ${{ secrets.MATCH_PASSWORD }}
           moonpay-api-key: ${{ secrets.MOONPAY_API_KEY }}
           moonpay-api-url: ${{ secrets.MOONPAY_API_URL }}
           moonpay-widget-api-url: ${{ secrets.MOONPAY_WIDGET_API_URL }}
-          walletconnect-project-id: ${{ secrets.WALLETCONNECT_PROJECT_ID }}
-          apple-id: ${{ secrets.APPLE_ID }}
-          apple-team-id: ${{ secrets.APPLE_TEAM_ID }}
-          app-store-connect-key-id: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-          app-store-connect-issuer-id: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-          app-store-connect-key-content: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
-          match-password: ${{ secrets.MATCH_PASSWORD }}
-          ci-keychain-password: ${{ secrets.CI_KEYCHAIN_PASSWORD }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          url-to-fastlane-certificates-repo: ${{ secrets.URL_TO_FASTLANE_CERTIFICATES_REPO }}
+          onesignal-app-id: ${{ secrets.ONESIGNAL_APP_ID_DEV }}
+          quicknode-bnb-rpc-url: ${{ secrets.QUICKNODE_BNB_RPC_URL }}
           sentry-auth-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          sentry-dsn: ${{ secrets.SENTRY_DSN }}
+          sentry-env: development
           sentry-org: ${{ secrets.SENTRY_ORG }}
           sentry-project: ${{ secrets.SENTRY_PROJECT }}
-          quicknode-bnb-rpc-url: ${{ secrets.QUICKNODE_BNB_RPC_URL }}
+          statsig-api-key: ${{ secrets.STATSIG_API_KEY }}
+          statsig-proxy-url: ${{ secrets.STATSIG_PROXY_URL }}
+          uniswap-api-key: ${{ secrets.UNISWAP_API_KEY }}
+          url-to-fastlane-certificates-repo: ${{ secrets.URL_TO_FASTLANE_CERTIFICATES_REPO }}
+          walletconnect-project-id: ${{ secrets.WALLETCONNECT_PROJECT_ID }}
