@@ -1,6 +1,7 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { createContext, ReactNode, useCallback, useContext } from 'react'
-import { useGate } from 'statsig-react'
+import { ConfigResult, DynamicConfig, useConfig, useGate } from 'statsig-react'
 
 /**
  * The value here must match the value in the statsig dashboard, if you plan to use statsig.
@@ -38,6 +39,15 @@ function useFeatureFlagsContext(): FeatureFlagsContextType {
   }
 }
 
+function useFeatureFlagsConfig(): ConfigResult {
+  const config = useConfig('feature_flags')
+  if (!config) {
+    throw Error('Feature flag hooks can only be used by children of FeatureFlagProvider.')
+  } else {
+    return config
+  }
+}
+
 /* update and save feature flag settings */
 export const featureFlagSettings = atomWithStorage<Record<string, string>>('featureFlags', {})
 
@@ -56,7 +66,7 @@ export function useUpdateFlag() {
 }
 
 export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
-  // TODO(vm): `isLoaded` to `true` so `App.tsx` will render. Later, this will be dependent on
+  // TODO: `isLoaded` to `true` so `App.tsx` will render. Later, this will be dependent on
   // flags loading from Amplitude, with a timeout.
   const featureFlags = useAtomValue(featureFlagSettings)
   const value = {
@@ -67,7 +77,9 @@ export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
 }
 
 export function useFeatureFlagsIsLoaded(): boolean {
-  return useFeatureFlagsContext().isLoaded
+  const contextLoaded = useFeatureFlagsContext().isLoaded
+  const configLoaded = !useFeatureFlagsConfig().isLoading
+  return contextLoaded && configLoaded
 }
 
 export enum BaseVariant {
@@ -89,4 +101,9 @@ export function useBaseFlag(flag: string, defaultValue = BaseVariant.Control): B
     default:
       return defaultValue
   }
+}
+
+export function useFeatureFlagsChains(): ChainId[] {
+  const { config }: { config: DynamicConfig } = useFeatureFlagsConfig()
+  return (config?.getValue('chains') as ChainId[]) || []
 }
