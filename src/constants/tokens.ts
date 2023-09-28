@@ -75,10 +75,10 @@ export const PORTAL_USDC_CELO = new Token(
 )
 export const USDC_BASE = new Token(
   ChainId.BASE,
-  '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA',
+  '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
   6,
-  'USD Base Coin',
-  'USDbC'
+  'USD Coin',
+  'USDC'
 )
 
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
