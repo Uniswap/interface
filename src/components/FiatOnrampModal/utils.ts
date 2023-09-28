@@ -14,8 +14,11 @@ import { validateUrlChainParam } from 'graphql/data/util'
 
 import { MoonpaySupportedCurrencyCode } from './constants'
 
+type MoonpaySupportedChain = Chain.Ethereum | Chain.Polygon | Chain.Arbitrum | Chain.Optimism
+const moonPaySupportedChains = [Chain.Ethereum, Chain.Polygon, Chain.Arbitrum, Chain.Optimism]
+
 const CURRENCY_CODES: {
-  [K in Chain]: {
+  [K in MoonpaySupportedChain]: {
     [key: string]: MoonpaySupportedCurrencyCode
     NATIVE: MoonpaySupportedCurrencyCode
   }
@@ -41,28 +44,6 @@ const CURRENCY_CODES: {
     [WETH_POLYGON.address]: 'eth_polygon',
     NATIVE: 'matic_polygon',
   },
-  // Defaults for unsupported chains, needed to satisfy type checker.
-  [Chain.Avalanche]: {
-    NATIVE: 'eth',
-  },
-  [Chain.Base]: {
-    NATIVE: 'eth',
-  },
-  [Chain.Bnb]: {
-    NATIVE: 'eth',
-  },
-  [Chain.Celo]: {
-    NATIVE: 'eth',
-  },
-  [Chain.EthereumGoerli]: {
-    NATIVE: 'eth',
-  },
-  [Chain.EthereumSepolia]: {
-    NATIVE: 'eth',
-  },
-  [Chain.UnknownChain]: {
-    NATIVE: 'eth',
-  },
 }
 
 export function getDefaultCurrencyCode(
@@ -71,6 +52,17 @@ export function getDefaultCurrencyCode(
 ): MoonpaySupportedCurrencyCode {
   const chain = validateUrlChainParam(chainName)
   if (!address || !chain) return 'eth'
-  const code: MoonpaySupportedCurrencyCode = CURRENCY_CODES[chain]?.[address]
-  return code ?? 'eth'
+  if (moonPaySupportedChains.includes(chain)) {
+    const code = CURRENCY_CODES[chain as MoonpaySupportedChain]?.[address]
+    return code ?? 'eth'
+  }
+  return 'eth'
+}
+
+export function parsePathParts(pathname: string): { network?: string; tokenAddress?: string } {
+  const pathParts = pathname.split('/')
+  // Matches the /tokens/<network>/<tokenAddress> path.
+  const network = pathParts.length > 2 ? pathParts[pathParts.length - 2] : undefined
+  const tokenAddress = pathParts.length > 2 ? pathParts[pathParts.length - 1] : undefined
+  return { network, tokenAddress }
 }

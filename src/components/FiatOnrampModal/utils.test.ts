@@ -10,7 +10,7 @@ import {
   WETH_POLYGON,
 } from 'constants/tokens'
 
-import { getDefaultCurrencyCode } from './getDefaultCurrencyCode'
+import { getDefaultCurrencyCode, parsePathParts } from './utils'
 
 describe('getDefaultCurrencyCode', () => {
   it('NATIVE/arbitrum should return the correct currency code', () => {
@@ -57,5 +57,22 @@ describe('getDefaultCurrencyCode', () => {
     expect(getDefaultCurrencyCode(USDC_OPTIMISM.address, 'ethereum')).toBe('eth')
     expect(getDefaultCurrencyCode(USDC_POLYGON.address, 'ethereum')).toBe('eth')
     expect(getDefaultCurrencyCode(MATIC.address, 'arbitrum')).toBe('eth')
+  })
+})
+
+describe('parseLocation', () => {
+  it('should parse the URL correctly', () => {
+    expect(parsePathParts('/tokens/ethereum/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599')).toEqual({
+      network: 'ethereum',
+      tokenAddress: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
+    })
+    expect(parsePathParts('tokens/ethereum/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599')).toEqual({
+      network: 'ethereum',
+      tokenAddress: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
+    })
+    expect(parsePathParts('/swap')).toEqual({
+      network: undefined,
+      tokenAddress: undefined,
+    })
   })
 })
