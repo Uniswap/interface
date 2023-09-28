@@ -1,7 +1,7 @@
 import { Connector } from '@web3-react/types'
 import { useSyncExternalStore } from 'react'
 
-import { getConnection, gnosisSafeConnection, networkConnection } from './index'
+import { deprecatedNetworkConnection, getConnection, gnosisSafeConnection } from './index'
 import { deletePersistedConnectionMeta, getPersistedConnectionMeta } from './meta'
 import { ConnectionType } from './types'
 
@@ -43,8 +43,7 @@ async function connect(connector: Connector, type: ConnectionType) {
 if (window !== window.parent) {
   connect(gnosisSafeConnection.connector, ConnectionType.GNOSIS_SAFE)
 }
-
-connect(networkConnection.connector, ConnectionType.NETWORK)
+connect(deprecatedNetworkConnection.connector, ConnectionType.DEPRECATED_NETWORK)
 
 // Get the persisted wallet type from the last session.
 const meta = getPersistedConnectionMeta()

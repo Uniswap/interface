@@ -124,7 +124,7 @@ export function useDerivedBurnInfo(
 
   let error: ReactNode | undefined
   if (!account) {
-    error = <Trans>Connect Wallet</Trans>
+    error = <Trans>Connect wallet</Trans>
   }
 
   if (!parsedAmounts[Field.LIQUIDITY] || !parsedAmounts[Field.CURRENCY_A] || !parsedAmounts[Field.CURRENCY_B]) {

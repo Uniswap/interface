@@ -72,7 +72,7 @@ export default function UnsupportedCurrencyFooter({
           <AutoColumn gap="lg">
             <RowBetween>
               <ThemedText.DeprecatedMediumHeader>
-                <Trans>Unsupported Assets</Trans>
+                <Trans>Unsupported assets</Trans>
               </ThemedText.DeprecatedMediumHeader>
               <CloseIcon onClick={() => setShowDetails(false)} data-testid="close-icon" />
             </RowBetween>

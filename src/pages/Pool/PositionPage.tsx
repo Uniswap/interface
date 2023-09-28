@@ -704,7 +704,7 @@ function PositionPageContent() {
                         $borderRadius="12px"
                         style={{ marginRight: '8px' }}
                       >
-                        <Trans>Increase Liquidity</Trans>
+                        <Trans>Increase liquidity</Trans>
                       </ButtonGray>
                     ) : null}
                     {tokenId && !removed ? (
@@ -715,7 +715,7 @@ function PositionPageContent() {
                         width="fit-content"
                         $borderRadius="12px"
                       >
-                        <Trans>Remove Liquidity</Trans>
+                        <Trans>Remove liquidity</Trans>
                       </SmallButtonPrimary>
                     ) : null}
                   </ActionButtonResponsiveRow>

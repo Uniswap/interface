@@ -82,7 +82,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
               <ThemedText.DeprecatedMediumHeader fontWeight={535}>
-                <Trans>Execute Proposal {proposalId}</Trans>
+                <Trans>Execute proposal {proposalId}</Trans>
               </ThemedText.DeprecatedMediumHeader>
               <StyledClosed onClick={wrappedOnDismiss} />
             </RowBetween>
@@ -132,7 +132,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
           <AutoColumn gap="100px" justify="center">
             <AutoColumn gap="md" justify="center">
               <ThemedText.DeprecatedLargeHeader>
-                <Trans>Execution Submitted</Trans>
+                <Trans>Execution submitted</Trans>
               </ThemedText.DeprecatedLargeHeader>
             </AutoColumn>
             {chainId && (

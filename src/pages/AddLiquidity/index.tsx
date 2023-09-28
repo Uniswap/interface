@@ -483,7 +483,7 @@ function AddLiquidity() {
         element={InterfaceElementName.CONNECT_WALLET_BUTTON}
       >
         <ButtonLight onClick={toggleWalletDrawer} $borderRadius="12px" padding="12px">
-          <Trans>Connect Wallet</Trans>
+          <Trans>Connect wallet</Trans>
         </ButtonLight>
       </TraceEvent>
     ) : (
@@ -611,7 +611,7 @@ function AddLiquidity() {
                 <MediumOnly>
                   <ButtonText onClick={clearAll}>
                     <ThemedText.DeprecatedBlue fontSize="12px">
-                      <Trans>Clear All</Trans>
+                      <Trans>Clear all</Trans>
                     </ThemedText.DeprecatedBlue>
                   </ButtonText>
                 </MediumOnly>
@@ -626,7 +626,7 @@ function AddLiquidity() {
                     <AutoColumn gap="md">
                       <RowBetween paddingBottom="20px">
                         <ThemedText.DeprecatedLabel>
-                          <Trans>Select Pair</Trans>
+                          <Trans>Select pair</Trans>
                         </ThemedText.DeprecatedLabel>
                       </RowBetween>
                       <RowBetween gap="md">
@@ -672,7 +672,7 @@ function AddLiquidity() {
                 {hasExistingPosition && existingPosition && (
                   <PositionPreview
                     position={existingPosition}
-                    title={<Trans>Selected Range</Trans>}
+                    title={<Trans>Selected range</Trans>}
                     inRange={!outOfRange}
                     ticksAtLimit={ticksAtLimit}
                   />
@@ -684,7 +684,7 @@ function AddLiquidity() {
                   <DynamicSection gap="md" disabled={!feeAmount || invalidPool}>
                     <RowBetween>
                       <ThemedText.DeprecatedLabel>
-                        <Trans>Set Price Range</Trans>
+                        <Trans>Set price range</Trans>
                       </ThemedText.DeprecatedLabel>
 
                       {Boolean(baseCurrency && quoteCurrency) && (
@@ -762,7 +762,7 @@ function AddLiquidity() {
                           <AutoColumn gap="2px" style={{ marginTop: '0.5rem' }}>
                             <Trans>
                               <ThemedText.DeprecatedMain fontWeight={535} fontSize={12} color="text1">
-                                Current Price:
+                                Current price:
                               </ThemedText.DeprecatedMain>
                               <ThemedText.DeprecatedBody fontWeight={535} fontSize={20} color="text1">
                                 {price && (
@@ -864,7 +864,7 @@ function AddLiquidity() {
                 <DynamicSection disabled={invalidPool || invalidRange || (noLiquidity && !startPriceTypedValue)}>
                   <AutoColumn gap="md">
                     <ThemedText.DeprecatedLabel>
-                      {hasExistingPosition ? <Trans>Add more liquidity</Trans> : <Trans>Deposit Amounts</Trans>}
+                      {hasExistingPosition ? <Trans>Add more liquidity</Trans> : <Trans>Deposit amounts</Trans>}
                     </ThemedText.DeprecatedLabel>
 
                     <CurrencyInputPanel

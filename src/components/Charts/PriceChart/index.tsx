@@ -248,7 +248,7 @@ function ChartBody({ chart, timePeriod }: { chart: ChartModel; timePeriod: TimeP
 const CHART_ERROR_MESSAGES: Record<ChartErrorType, ReactNode> = {
   [ChartErrorType.NO_DATA_AVAILABLE]: <Trans>Missing chart data</Trans>,
   [ChartErrorType.NO_RECENT_VOLUME]: <Trans>Missing price data due to recently low trading volume on Uniswap v3</Trans>,
-  [ChartErrorType.INVALID_CHART]: <Trans>Invalid Chart</Trans>,
+  [ChartErrorType.INVALID_CHART]: <Trans>Invalid chart</Trans>,
 }
 
 function MissingPriceChart({ chart }: { chart: ErroredChartModel }) {
@@ -259,7 +259,7 @@ function MissingPriceChart({ chart }: { chart: ErroredChartModel }) {
     <>
       <ChartHeaderWrapper data-cy="chart-header">
         <ThemedText.HeadlineLarge fontSize={24} color="neutral3">
-          Price Unavailable
+          Price unavailable
         </ThemedText.HeadlineLarge>
         <ThemedText.BodySmall color="neutral3">{CHART_ERROR_MESSAGES[chart.error]}</ThemedText.BodySmall>
       </ChartHeaderWrapper>
