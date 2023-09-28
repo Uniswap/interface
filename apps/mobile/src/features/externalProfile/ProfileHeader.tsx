@@ -1,7 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient'
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet } from 'react-native'
+import { StatusBar, StyleSheet } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
 import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
@@ -17,11 +17,12 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { useExtractedColors } from 'wallet/src/utils/colors'
+import { passesContrast, useExtractedColors } from 'wallet/src/utils/colors'
 
-const HEADER_GRADIENT_HEIGHT = 137
+const HEADER_GRADIENT_HEIGHT = 144
 const HEADER_ICON_SIZE = 72
 
 interface ProfileHeaderProps {
@@ -31,6 +32,7 @@ interface ProfileHeaderProps {
 export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Element {
   const colors = useSporeColors()
   const dispatch = useAppDispatch()
+  const isDarkMode = useIsDarkMode()
   const isFavorited = useAppSelector(selectWatchedAddressSet).has(address)
 
   // ENS avatar and avatar colors
@@ -77,8 +79,15 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
 
   const { t } = useTranslation()
 
+  const showLightStatusBar = passesContrast('white', uniconGradientStart, 2)
+
   return (
-    <Flex bg="$surface1" gap="$spacing16" pt="$spacing36" px="$spacing24">
+    <Flex bg="$surface1" gap="$spacing16" pt="$spacing60" px="$spacing24">
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle={showLightStatusBar ? 'light-content' : 'dark-content'}
+      />
       {/* fixed gradient */}
       <AnimatedBox
         bottom={0}
@@ -135,6 +144,8 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
               borderWidth={1}
               height={46}
               p="$spacing12"
+              shadowColor={isDarkMode ? '$surface2' : '$neutral3'}
+              style={styles.buttonShadow}
               testID={ElementName.Favorite}
               onPress={onPressFavorite}>
               <Favorite isFavorited={isFavorited} size={iconSizes.icon20} />
@@ -148,6 +159,8 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
               borderWidth={1}
               height={46}
               p="$spacing12"
+              shadowColor={isDarkMode ? '$surface2' : '$neutral3'}
+              style={styles.buttonShadow}
               testID={ElementName.Send}
               onPress={onPressSend}>
               <Flex row alignItems="center" gap="$spacing8">
@@ -181,5 +194,17 @@ function _HeaderRadial({ color }: { color: string }): JSX.Element {
     </Svg>
   )
 }
+
+const styles = StyleSheet.create({
+  buttonShadow: {
+    elevation: 2,
+    shadowOffset: {
+      height: 2,
+      width: 0,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+})
 
 export const HeaderRadial = memo(_HeaderRadial)
