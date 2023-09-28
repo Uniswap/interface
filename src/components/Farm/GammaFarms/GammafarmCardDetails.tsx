@@ -63,6 +63,7 @@ const GammaFarmCardDetails: React.FC<{
   const [stakeAmount, setStakeAmount] = useState('')
   const [deposit0, setDeposit0] = useState('')
   const [deposit1, setDeposit1] = useState('')
+  const [unStakeGamma, setUnStakeGamma] = useState('')
   const [unStakeAmount, setUnStakeAmount] = useState('')
   const [approveOrStaking, setApproveOrStaking] = useState(false)
   const [attemptUnstaking, setAttemptUnstaking] = useState(false)
@@ -174,7 +175,6 @@ const GammaFarmCardDetails: React.FC<{
     }
 
     try {
-      console.log(parseUnits(deposit0, 18).toString(), parseUnits(deposit1, 18).toString())
       const response = await uniProxyContract.deposit(
         parseUnits(deposit0, 18),
         parseUnits(deposit1, 18),
@@ -182,32 +182,40 @@ const GammaFarmCardDetails: React.FC<{
         pairData.hypervisor,
         [0, 0, 0, 0]
       )
-      // addTransaction(response, {
-      //   // ... appropriate transaction details
-      // });
+      addTransaction(response, {
+        type: TransactionType.ADD_LIQUIDITY_GAMMA,
+        currencyId0: token0Address,
+        currencyId1: token1Address,
+        amount0: parseUnits(deposit0, 18).toString(),
+        amount1: parseUnits(deposit1, 18).toString(),
+      })
       const receipt = await response.wait()
-      // ... handle the receipt
+      finalizedTransaction(receipt, {
+        summary: 'depositliquidity',
+      })
     } catch (e) {
       console.error('Deposit failed', e)
     }
   }
 
-  // const withdrawHypervisor = async () => {
-  //   if (!hypervisorContract || !account) return;
+  const withdrawHypervisor = async () => {
+    if (!hypervisorContract || !account) return
 
-  //   try {
-  //     const response = await hypervisorContract.withdraw(
-  //       // ... appropriate parameters
-  //     );
-  //     // addTransaction(response, {
-  //     //     // ... appropriate transaction details
-  //     // });
-  //     const receipt = await response.wait();
-  //     // ... handle the receipt
-  //   } catch (e) {
-  //     console.error("Withdraw failed", e);
-  //   }
-  // };
+    try {
+      const response = await hypervisorContract.withdraw(parseUnits(unStakeGamma, 18), account, account, [0, 0, 0, 0])
+      addTransaction(response, {
+        type: TransactionType.REMOVE_LIQUIDITY_GAMMA,
+        amount: parseUnits(unStakeGamma, 18).toString(),
+        tokenAddress: pairData.hypervisor,
+      })
+      const receipt = await response.wait()
+      finalizedTransaction(receipt, {
+        summary: 'withdrawliquidity',
+      })
+    } catch (e) {
+      console.error('Withdraw failed', e)
+    }
+  }
 
   const claimButtonDisabled = Number(rewardsAmount) == 0 || attemptClaiming
 
@@ -388,6 +396,16 @@ const GammaFarmCardDetails: React.FC<{
       </button>
 
       <button onClick={depositUniProxy}>Deposit via UniProxy</button>
+
+      <input
+        value={unStakeGamma}
+        onChange={async (e) => {
+          setUnStakeGamma(e.target.value)
+        }}
+        placeholder="Unstake Gamma"
+      />
+
+      <button onClick={withdrawHypervisor}>Withdraw Gamma Liquidity</button>
 
       <div style={{ padding: 1.5 }}>
         <Grid isMobile={isMobile} hasRewards={Number(rewardsAmount) > 0}>

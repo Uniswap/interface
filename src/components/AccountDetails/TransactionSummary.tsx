@@ -26,7 +26,9 @@ import {
   WrapTransactionInfo,
   ClaimFarmTransactionInfo,
   DepositFarmTransactionInfo,
-  WithdrawFarmTransactionInfo
+  WithdrawFarmTransactionInfo,
+  AddLiquidityGammaTransactionInfo,
+  RemoveLiquidityGammaTransactionInfo
 } from '../../state/transactions/types'
 
 function formatAmount(amountRaw: string, decimals: number, sigFigs: number): string {
@@ -183,6 +185,16 @@ function DepositLiquidityStakingSummary() {
 
 function WithdrawLiquidityStakingSummary() {
   return <Trans>Withdraw deposited liquidity</Trans>
+}
+
+function AddLiquidityGammaSummary({ info }: { info: AddLiquidityGammaTransactionInfo }) {
+  
+  return <Trans></Trans>
+}
+
+function RemoveLiquidityGammaSummary({ info }: { info: RemoveLiquidityGammaTransactionInfo }) {
+
+  return <Trans></Trans>
 }
 
 function DepositFarmSummary({ info }: { info: DepositFarmTransactionInfo }) {
@@ -382,6 +394,12 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.DEPOSIT_FARM:
       return <DepositFarmSummary info={info} />
+
+      case TransactionType.ADD_LIQUIDITY_GAMMA:
+        return <AddLiquidityGammaSummary info={info} />
+  
+      case TransactionType.REMOVE_LIQUIDITY_GAMMA:
+        return <RemoveLiquidityGammaSummary info={info} />
 
     default:
       return <div>Unknown Transaction Type</div>
