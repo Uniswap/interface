@@ -89,6 +89,7 @@ interface ExpectedUserState {
   showSurveyPopup?: boolean
   disabledUniswapX?: boolean
   optedOutOfUniswapX?: boolean
+  originCountry?: string
 }
 
 assert<Equals<UserState, ExpectedUserState>>()
@@ -120,7 +121,6 @@ interface ExpectedApplicationState {
   readonly fiatOnramp: { available: boolean; availabilityChecked: boolean }
   readonly openModal: ApplicationModal | null
   readonly popupList: PopupList
-  readonly originCountry?: string
 }
 
 assert<Equals<ApplicationState, ExpectedApplicationState>>()
