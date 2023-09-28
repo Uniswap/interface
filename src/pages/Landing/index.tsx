@@ -476,7 +476,7 @@ export default function Landing() {
               />
             ))}
           </CardGrid>
-          <CardGrid cols={3}>
+          <CardGrid cols={renderUkSpecificText ? 2 : 3}>
             {extraCards.map(({ darkIcon, lightIcon, ...card }) => (
               <Card {...card} icon={isDarkMode ? darkIcon : lightIcon} key={card.title} type={CardType.Secondary} />
             ))}

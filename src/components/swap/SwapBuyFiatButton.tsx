@@ -5,9 +5,8 @@ import { TraceEvent } from 'analytics'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonText } from 'components/Button'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { useIsNotOriginCountry } from 'hooks/useIsNotOriginCountry'
 import { useCallback, useEffect, useState } from 'react'
-import { useAppSelector } from 'state/hooks'
-import { AppState } from 'state/reducer'
 import styled from 'styled-components'
 import { ExternalLink } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
@@ -43,8 +42,7 @@ const StyledTextButton = styled(ButtonText)`
 export default function SwapBuyFiatButton() {
   const { account } = useWeb3React()
   const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
-  const originCountry = useAppSelector((state: AppState) => state.user.originCountry)
-  const shouldShowBuyFiatButton = Boolean(originCountry) && originCountry !== 'GB'
+  const shouldShowBuyFiatButton = useIsNotOriginCountry('GB')
   const [checkFiatRegionAvailability, setCheckFiatRegionAvailability] = useState(false)
   const {
     available: fiatOnrampAvailable,
