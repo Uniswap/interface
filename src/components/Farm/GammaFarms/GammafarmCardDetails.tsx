@@ -8,7 +8,12 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
-import { useGammaHypervisorContract, useMasterChefContract, useGammaUniProxyContract, useTokenContract } from 'hooks/useContract'
+import {
+  useGammaHypervisorContract,
+  useGammaUniProxyContract,
+  useMasterChefContract,
+  useTokenContract,
+} from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useIsMobile } from 'nft/hooks'
@@ -75,15 +80,23 @@ const GammaFarmCardDetails: React.FC<{
   const token0Address = useSingleCallResult(hypervisorContract, 'token0').result?.[0]
   const token1Address = useSingleCallResult(hypervisorContract, 'token1').result?.[0]
 
-  const token0BalanceRequest = useSingleCallResult(useTokenContract(token0Address, true), 'balanceOf', [account ?? undefined])
-  const token1BalanceRequest = useSingleCallResult(useTokenContract(token1Address, true), 'balanceOf', [account ?? undefined])
+  const token0BalanceRequest = useSingleCallResult(useTokenContract(token0Address, true), 'balanceOf', [
+    account ?? undefined,
+  ])
+  const token1BalanceRequest = useSingleCallResult(useTokenContract(token1Address, true), 'balanceOf', [
+    account ?? undefined,
+  ])
 
   const token0BalanceBN =
-    !token0BalanceRequest.loading && token0BalanceRequest.result && token0BalanceRequest.result.length > 0 ? token0BalanceRequest.result[0] : undefined
+    !token0BalanceRequest.loading && token0BalanceRequest.result && token0BalanceRequest.result.length > 0
+      ? token0BalanceRequest.result[0]
+      : undefined
   const token0Balance = token0BalanceBN ? formatUnits(token0BalanceBN, 18) : '0'
 
   const token1BalanceBN =
-    !token1BalanceRequest.loading && token1BalanceRequest.result && token1BalanceRequest.result.length > 0 ? token1BalanceRequest.result[0] : undefined
+    !token1BalanceRequest.loading && token1BalanceRequest.result && token1BalanceRequest.result.length > 0
+      ? token1BalanceRequest.result[0]
+      : undefined
   const token1Balance = token1BalanceBN ? formatUnits(token1BalanceBN, 18) : '0'
 
   const stakedAmountBN =
@@ -102,7 +115,7 @@ const GammaFarmCardDetails: React.FC<{
 
   const lpToken = chainId ? new Token(chainId, pairData.hypervisor, 18) : undefined
   const token0 = chainId && token0Address ? new Token(chainId, token0Address, 18) : undefined
-  const token1 = chainId &&  token1Address ? new Token(chainId, token1Address, 18) : undefined
+  const token1 = chainId && token1Address ? new Token(chainId, token1Address, 18) : undefined
 
   const rewardTokenContract = useSingleCallResult(masterChefContract, 'REWARD')
   const rewardToken = useToken(rewardTokenContract?.result?.toString())
@@ -119,7 +132,7 @@ const GammaFarmCardDetails: React.FC<{
 
   const parsedStakeAmount = tryParseCurrencyAmount(stakeAmount, lpToken)
   const parsedDeposit0 = deposit0 ? tryParseCurrencyAmount(deposit0, token0) : undefined
-  const parsedDeposit1 = deposit1 ?tryParseCurrencyAmount(deposit1, token1) : undefined
+  const parsedDeposit1 = deposit1 ? tryParseCurrencyAmount(deposit1, token1) : undefined
 
   const stakeButtonDisabled =
     Number(stakeAmount) <= 0 ||
@@ -137,56 +150,47 @@ const GammaFarmCardDetails: React.FC<{
     attemptUnstaking
 
   const [approval, approveCallback] = useApproveCallback(parsedStakeAmount, masterChefContract?.address)
-  const [approvalToken0, approveCallbackToken0] = useApproveCallback(parsedDeposit0, uniProxyContract?.address);
-  const [approvalToken1, approveCallbackToken1] = useApproveCallback(parsedDeposit1, uniProxyContract?.address);
+  const [approvalToken0, approveCallbackToken0] = useApproveCallback(parsedDeposit0, uniProxyContract?.address)
+  const [approvalToken1, approveCallbackToken1] = useApproveCallback(parsedDeposit1, uniProxyContract?.address)
 
-  const getDepositAmounts = async (tokenInput: Number) => {
-    if (!uniProxyContract) return;
+  const getDepositAmounts = async (tokenInput: number) => {
+    if (!uniProxyContract) return
 
-    let amounts;
+    let amounts
     if (tokenInput === 0 && deposit0) {
-      amounts = await uniProxyContract.getDepositAmount(
-        pairData.hypervisor,
-        token0Address,
-        parseUnits(deposit0, 18)
-      );
-      setDeposit1(formatUnits(amounts.amountEnd, 18));
+      amounts = await uniProxyContract.getDepositAmount(pairData.hypervisor, token0Address, parseUnits(deposit0, 18))
+      setDeposit1(formatUnits(amounts.amountEnd, 18))
     } else if (tokenInput === 1 && deposit1) {
-      amounts = await uniProxyContract.getDepositAmount(
-        pairData.hypervisor,
-        token1Address,
-        parseUnits(deposit1, 18)
-      );
-      setDeposit0(formatUnits(amounts.amountEnd, 18));
+      amounts = await uniProxyContract.getDepositAmount(pairData.hypervisor, token1Address, parseUnits(deposit1, 18))
+      setDeposit0(formatUnits(amounts.amountEnd, 18))
     }
-};
+  }
 
   const depositUniProxy = async () => {
-    if (!uniProxyContract || !account) return;
+    if (!uniProxyContract || !account) return
     if (approvalToken0 !== ApprovalState.APPROVED || approvalToken1 !== ApprovalState.APPROVED) {
-      console.error("Tokens not approved");
-      return;
+      console.error('Tokens not approved')
+      return
     }
 
     try {
-      console.log(parseUnits(deposit0, 18).toString(),
-      parseUnits(deposit1, 18).toString())
+      console.log(parseUnits(deposit0, 18).toString(), parseUnits(deposit1, 18).toString())
       const response = await uniProxyContract.deposit(
         parseUnits(deposit0, 18),
         parseUnits(deposit1, 18),
         account,
         pairData.hypervisor,
         [0, 0, 0, 0]
-      );
+      )
       // addTransaction(response, {
       //   // ... appropriate transaction details
       // });
-      const receipt = await response.wait();
+      const receipt = await response.wait()
       // ... handle the receipt
     } catch (e) {
-      console.error("Deposit failed", e);
+      console.error('Deposit failed', e)
     }
-  };
+  }
 
   // const withdrawHypervisor = async () => {
   //   if (!hypervisorContract || !account) return;
@@ -224,14 +228,14 @@ const GammaFarmCardDetails: React.FC<{
 
   const stakeLP = async () => {
     if (!masterChefContract || !account || !lpBalanceBN) return
-    let response: TransactionResponse
 
     const estimatedGas = await masterChefContract.estimateGas.deposit(
       pairData.pid,
       stakeAmount === availableStakeAmount ? lpBalanceBN : parseUnits(Number(stakeAmount).toFixed(18), 18),
       account
     )
-    response = await masterChefContract.deposit(
+
+    const response: TransactionResponse = await masterChefContract.deposit(
       pairData.pid,
       stakeAmount === availableStakeAmount ? lpBalanceBN : parseUnits(Number(stakeAmount).toFixed(18), 18),
       account,
@@ -243,8 +247,11 @@ const GammaFarmCardDetails: React.FC<{
     addTransaction(response, {
       type: TransactionType.DEPOSIT_FARM,
       pid: pairData.pid,
-      amount: (stakeAmount === availableStakeAmount ? lpBalanceBN : parseUnits(Number(stakeAmount).toFixed(18), 18)).toString(),
-      tokenAddress: pairData.hypervisor
+      amount: (stakeAmount === availableStakeAmount
+        ? lpBalanceBN
+        : parseUnits(Number(stakeAmount).toFixed(18), 18)
+      ).toString(),
+      tokenAddress: pairData.hypervisor,
     })
     const receipt = await response.wait()
     finalizedTransaction(receipt, {
@@ -256,14 +263,12 @@ const GammaFarmCardDetails: React.FC<{
     if (!masterChefContract || !account || !stakedAmountBN) return
     setAttemptUnstaking(true)
     try {
-      let response: TransactionResponse
-
       const estimatedGas = await masterChefContract.estimateGas.withdraw(
         pairData.pid,
         unStakeAmount === stakedAmount ? stakedAmountBN : parseUnits(Number(unStakeAmount).toFixed(18), 18),
         account
       )
-      response = await masterChefContract.withdraw(
+      const response: TransactionResponse = await masterChefContract.withdraw(
         pairData.pid,
         unStakeAmount === stakedAmount ? stakedAmountBN : parseUnits(Number(unStakeAmount).toFixed(18), 18),
         account,
@@ -275,8 +280,11 @@ const GammaFarmCardDetails: React.FC<{
       addTransaction(response, {
         type: TransactionType.WITHDRAW_FARM,
         pid: pairData.pid,
-        amount: (unStakeAmount === stakedAmount ? stakedAmountBN : parseUnits(Number(unStakeAmount).toFixed(18), 18)).toString(),
-        tokenAddress: pairData.hypervisor
+        amount: (unStakeAmount === stakedAmount
+          ? stakedAmountBN
+          : parseUnits(Number(unStakeAmount).toFixed(18), 18)
+        ).toString(),
+        tokenAddress: pairData.hypervisor,
       })
       const receipt = await response.wait()
       finalizedTransaction(receipt, {
@@ -302,7 +310,7 @@ const GammaFarmCardDetails: React.FC<{
         type: TransactionType.CLAIM_FARM,
         pid: pairData.pid,
         amount: rewardsBN.toString(),
-        tokenAddress: rewardData.rewardTokenAddress
+        tokenAddress: rewardData.rewardTokenAddress,
       })
       const receipt = await response.wait()
       finalizedTransaction(receipt, {
@@ -355,33 +363,31 @@ const GammaFarmCardDetails: React.FC<{
 
       <input
         value={deposit0}
-        onChange={async e => {
-          setDeposit0(e.target.value);
-          getDepositAmounts(0);
+        onChange={async (e) => {
+          setDeposit0(e.target.value)
+          getDepositAmounts(0)
         }}
         placeholder="Deposit 0"
       />
 
       <input
         value={deposit1}
-        onChange={async e => {
-          setDeposit1(e.target.value);
-          getDepositAmounts(1);
-        }} 
+        onChange={async (e) => {
+          setDeposit1(e.target.value)
+          getDepositAmounts(1)
+        }}
         placeholder="Deposit 1"
       />
 
       <button onClick={approveCallbackToken0} disabled={approvalToken0 === ApprovalState.APPROVED}>
-        {approvalToken0 === ApprovalState.PENDING ? "Aproving Token 0..." : "Approve Token 0"}
+        {approvalToken0 === ApprovalState.PENDING ? 'Aproving Token 0...' : 'Approve Token 0'}
       </button>
 
       <button onClick={approveCallbackToken1} disabled={approvalToken1 === ApprovalState.APPROVED}>
-        {approvalToken1 === ApprovalState.PENDING ? "Aproving Token 1..." : "Approve Token 1"}
+        {approvalToken1 === ApprovalState.PENDING ? 'Aproving Token 1...' : 'Approve Token 1'}
       </button>
 
       <button onClick={depositUniProxy}>Deposit via UniProxy</button>
-
-
 
       <div style={{ padding: 1.5 }}>
         <Grid isMobile={isMobile} hasRewards={Number(rewardsAmount) > 0}>
