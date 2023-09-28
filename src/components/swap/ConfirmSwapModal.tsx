@@ -28,6 +28,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import invariant from 'tiny-invariant'
 import { isL2ChainId } from 'utils/chains'
+import { SignatureExpiredError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -265,6 +266,7 @@ export default function ConfirmSwapModal({
   onAcceptChanges,
   allowedSlippage,
   allowance,
+  clearSwapState,
   onConfirm,
   onDismiss,
   onCurrencySelection,
@@ -280,6 +282,7 @@ export default function ConfirmSwapModal({
   allowedSlippage: Percent
   allowance: Allowance
   onAcceptChanges: () => void
+  clearSwapState: () => void
   onConfirm: () => void
   swapError?: Error
   onDismiss: () => void
@@ -293,7 +296,10 @@ export default function ConfirmSwapModal({
     useConfirmModalState({
       trade,
       allowedSlippage,
-      onSwap: onConfirm,
+      onSwap: () => {
+        clearSwapState()
+        onConfirm()
+      },
       onCurrencySelection,
       allowance,
       doesTradeDiffer: Boolean(doesTradeDiffer),
@@ -376,6 +382,8 @@ export default function ConfirmSwapModal({
         wrapTxHash={wrapTxHash}
         tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
         revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
+        swapError={swapError}
+        onRetryUniswapXSignature={onConfirm}
       />
     )
   }, [
@@ -386,13 +394,14 @@ export default function ConfirmSwapModal({
     swapResult,
     wrapTxHash,
     allowance,
+    swapError,
+    startSwapFlow,
     allowedSlippage,
     fiatValueInput,
     fiatValueOutput,
     onAcceptChanges,
     swapFailed,
-    swapError?.message,
-    startSwapFlow,
+    onConfirm,
   ])
 
   const l2Badge = () => {
@@ -410,14 +419,20 @@ export default function ConfirmSwapModal({
     return undefined
   }
 
+  const getErrorType = () => {
+    if (approvalError) return approvalError
+    // SignatureExpiredError is a special case. The UI is shown in the PendingModalContent component.
+    if (swapError instanceof SignatureExpiredError) return
+    if (swapError && !didUserReject(swapError)) return PendingModalError.CONFIRMATION_ERROR
+    return
+  }
+  const errorType = getErrorType()
+
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <Modal isOpen $scrollOverlay onDismiss={onModalDismiss} maxHeight={90}>
-        {approvalError || swapFailed ? (
-          <ErrorModalContent
-            errorType={approvalError ?? PendingModalError.CONFIRMATION_ERROR}
-            onRetry={startSwapFlow}
-          />
+        {errorType ? (
+          <ErrorModalContent errorType={errorType} onRetry={startSwapFlow} />
         ) : (
           <ConfirmationModalContent
             title={confirmModalState === ConfirmModalState.REVIEWING ? <Trans>Review swap</Trans> : undefined}
