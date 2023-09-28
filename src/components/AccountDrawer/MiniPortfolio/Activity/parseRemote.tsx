@@ -187,38 +187,12 @@ function parseSwap(changes: TransactionChanges, formatNumberOrString: FormatNumb
  * This function parses the transaction changes to determine if the transaction is a wrap/unwrap transaction.
  */
 function parseLend(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
-  const received = changes.TokenTransfer.find((t) => t.direction === 'IN')
-  const sent = changes.TokenTransfer.find((t) => t.direction === 'OUT')
-  if (!received || !sent) {
-    return {}
+  const native = changes.TokenTransfer.find((t) => t.tokenStandard === 'NATIVE')?.asset
+  const erc20 = changes.TokenTransfer.find((t) => t.tokenStandard === 'ERC20')?.asset
+  if (native && erc20 && gqlToCurrency(native)?.wrapped.address === gqlToCurrency(erc20)?.wrapped.address) {
+    return parseSwap(changes, formatNumberOrString)
   }
-  const supportedSentChain = supportedChainIdFromGQLChain(sent?.asset.chain)
-  const supportedReceivedChain = supportedChainIdFromGQLChain(received?.asset.chain)
-  if (!supportedSentChain || !supportedReceivedChain) {
-    return {}
-  }
-  const inputAmount = formatNumberOrString({ input: sent.quantity, type: NumberType.TokenNonTx })
-  const outputAmount = formatNumberOrString({ input: received.quantity, type: NumberType.TokenNonTx })
-  if (
-    sent?.tokenStandard === 'NATIVE' &&
-    isSameAddress(nativeOnChain(supportedSentChain).wrapped.address, received.asset.address)
-  ) {
-    return {
-      title: getSwapTitle(sent, received),
-      descriptor: getSwapDescriptor({ tokenIn: sent.asset, inputAmount, tokenOut: received.asset, outputAmount }),
-      currencies: [gqlToCurrency(sent.asset), gqlToCurrency(received.asset)],
-    }
-  } else if (
-    received?.tokenStandard === 'NATIVE' &&
-    isSameAddress(nativeOnChain(supportedReceivedChain).wrapped.address, received.asset.address)
-  ) {
-    return {
-      title: getSwapTitle(sent, received),
-      descriptor: getSwapDescriptor({ tokenIn: sent.asset, inputAmount, tokenOut: received.asset, outputAmount }),
-      currencies: [gqlToCurrency(sent.asset), gqlToCurrency(received.asset)],
-    }
-  }
-  return {} // Not a wrap/unwrap transaction, so don't overwrite the default "Lend" title
+  return { title: t`Unknown Lend` }
 }
 
 function parseSwapOrder(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
