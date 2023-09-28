@@ -154,12 +154,7 @@ struct TokenPriceWidgetEntryView: View {
   }
   
   func smallWidget() -> some View {
-    return ZStack {
-      if let color = entry.backgroundColor {
-        Color(color)
-      } else {
-        Color.UNI
-      }
+    let body = ZStack {
       VStack(alignment: .leading, spacing: 0) {
         widgetPriceHeader(isPlaceholder: false).padding(.bottom, 2)
         Spacer()
@@ -167,30 +162,34 @@ struct TokenPriceWidgetEntryView: View {
         timeStamp()
       }
       .withMaxFrame()
-      .padding(12)
+    }
+    
+    if #available(iOSApplicationExtension 17.0, *) {
+      return body
+    } else {
+      return body.padding(12)
     }
   }
   
   func smallWidgetPlaceholder() -> some View {
-    return ZStack {
-      Color(colorScheme == .light ? .white : UIColor(.surface1))
+    let body = ZStack {
       VStack(alignment: .leading, spacing: 0) {
         widgetPriceHeader(isPlaceholder: true).padding(.bottom, 12)
         Spacer()
         priceSection(isPlaceholder: true)
       }
       .withMaxFrame()
-      .padding(12)
+    }
+    
+    if #available(iOSApplicationExtension 17.0, *) {
+      return body
+    } else {
+      return body.padding(12)
     }
   }
   
   func mediumWidget() -> some View {
-    return ZStack {
-      if let color = entry.backgroundColor {
-        Color(color)
-      } else {
-        Color.UNI
-      }
+    let body = ZStack {
       VStack(alignment: .leading, spacing: 0) {
         widgetPriceHeader(isPlaceholder: false).padding(.bottom, 4)
         Spacer()
@@ -207,13 +206,17 @@ struct TokenPriceWidgetEntryView: View {
         timeStamp()
       }
       .withMaxFrame()
-      .padding(16)
+    }
+    
+    if #available(iOSApplicationExtension 17.0, *) {
+      return body
+    } else {
+      return body.padding(16)
     }
   }
   
   func mediumWidgetPlaceholder() -> some View {
-    return ZStack {
-      Color(colorScheme == .light ? .white : UIColor(.surface1))
+    let body = ZStack {
       VStack(alignment: .leading, spacing: 0) {
         widgetPriceHeader(isPlaceholder: true).padding(.bottom, 8)
         Spacer()
@@ -223,14 +226,31 @@ struct TokenPriceWidgetEntryView: View {
         }
       }
       .withMaxFrame()
-      .padding(16)
     }
+    
+    if #available(iOSApplicationExtension 17.0, *) {
+      return body
+    } else {
+      return body.padding(16)
+    }
+  }
+  
+  func widgetColor() -> Color {
+    if let color = entry.backgroundColor {
+      return Color(color)
+    } else {
+      return Color.UNI
+    }
+  }
+  
+  func placeholderColor() -> Color {
+    Color(colorScheme == .light ? .white : UIColor(.surface1))
   }
   
   var body: some View {
     let deeplinkURL = URL(string: "uniswap://widget/#/tokens/\(entry.configuration.selectedToken?.chain?.lowercased() ?? "")/\(entry.configuration.selectedToken?.address ?? "NATIVE")")
     let shouldRenderPlaceholder = !reasons.isEmpty
-    return ZStack {
+    let body = ZStack {
       switch family {
       case .systemMedium:
         if (!shouldRenderPlaceholder) {
@@ -246,6 +266,22 @@ struct TokenPriceWidgetEntryView: View {
         }
       }
     }.widgetURL(deeplinkURL)
+    
+    if #available(iOSApplicationExtension 17.0, *) {
+      return body.containerBackground(for: .widget) {
+        if (!shouldRenderPlaceholder) {
+          widgetColor()
+        } else {
+          placeholderColor()
+        }
+      }
+    } else {
+      if (!shouldRenderPlaceholder) {
+        return body.background(widgetColor())
+      } else {
+        return body.background(placeholderColor())
+      }
+    }
   }
 }
 
