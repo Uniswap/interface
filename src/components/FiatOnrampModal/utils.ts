@@ -24,24 +24,24 @@ const CURRENCY_CODES: {
   }
 } = {
   [Chain.Ethereum]: {
-    [WETH9[ChainId.MAINNET]?.address]: 'weth',
-    [USDC_MAINNET.address]: 'usdc',
-    [USDT.address]: 'usdt',
-    [WBTC.address]: 'wbtc',
-    [MATIC.address]: 'polygon',
+    [WETH9[ChainId.MAINNET]?.address.toLowerCase()]: 'weth',
+    [USDC_MAINNET.address.toLowerCase()]: 'usdc',
+    [USDT.address.toLowerCase()]: 'usdt',
+    [WBTC.address.toLowerCase()]: 'wbtc',
+    [MATIC.address.toLowerCase()]: 'polygon',
     NATIVE: 'eth',
   },
   [Chain.Arbitrum]: {
-    [USDC_ARBITRUM.address]: 'usdc_arbitrum',
+    [USDC_ARBITRUM.address.toLowerCase()]: 'usdc_arbitrum',
     NATIVE: 'eth_arbitrum',
   },
   [Chain.Optimism]: {
-    [USDC_OPTIMISM.address]: 'usdc_optimism',
+    [USDC_OPTIMISM.address.toLowerCase()]: 'usdc_optimism',
     NATIVE: 'eth_optimism',
   },
   [Chain.Polygon]: {
-    [USDC_POLYGON.address]: 'usdc_polygon',
-    [WETH_POLYGON.address]: 'eth_polygon',
+    [USDC_POLYGON.address.toLowerCase()]: 'usdc_polygon',
+    [WETH_POLYGON.address.toLowerCase()]: 'eth_polygon',
     NATIVE: 'matic_polygon',
   },
 }
@@ -53,7 +53,7 @@ export function getDefaultCurrencyCode(
   const chain = validateUrlChainParam(chainName)
   if (!address || !chain) return 'eth'
   if (moonPaySupportedChains.includes(chain)) {
-    const code = CURRENCY_CODES[chain as MoonpaySupportedChain]?.[address]
+    const code = CURRENCY_CODES[chain as MoonpaySupportedChain]?.[address.toLowerCase()]
     return code ?? 'eth'
   }
   return 'eth'
