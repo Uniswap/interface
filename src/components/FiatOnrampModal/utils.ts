@@ -1,5 +1,6 @@
 import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import {
+  BRIDGED_USDC_ARBITRUM,
   MATIC,
   USDC_ARBITRUM,
   USDC_MAINNET,
@@ -20,7 +21,7 @@ const moonPaySupportedChains = [Chain.Ethereum, Chain.Polygon, Chain.Arbitrum, C
 const CURRENCY_CODES: {
   [K in MoonpaySupportedChain]: {
     [key: string]: MoonpaySupportedCurrencyCode
-    NATIVE: MoonpaySupportedCurrencyCode
+    native: MoonpaySupportedCurrencyCode
   }
 } = {
   [Chain.Ethereum]: {
@@ -29,20 +30,21 @@ const CURRENCY_CODES: {
     [USDT.address.toLowerCase()]: 'usdt',
     [WBTC.address.toLowerCase()]: 'wbtc',
     [MATIC.address.toLowerCase()]: 'polygon',
-    NATIVE: 'eth',
+    native: 'eth',
   },
   [Chain.Arbitrum]: {
     [USDC_ARBITRUM.address.toLowerCase()]: 'usdc_arbitrum',
-    NATIVE: 'eth_arbitrum',
+    [BRIDGED_USDC_ARBITRUM.address.toLowerCase()]: 'usdc_arbitrum',
+    native: 'eth_arbitrum',
   },
   [Chain.Optimism]: {
     [USDC_OPTIMISM.address.toLowerCase()]: 'usdc_optimism',
-    NATIVE: 'eth_optimism',
+    native: 'eth_optimism',
   },
   [Chain.Polygon]: {
     [USDC_POLYGON.address.toLowerCase()]: 'usdc_polygon',
     [WETH_POLYGON.address.toLowerCase()]: 'eth_polygon',
-    NATIVE: 'matic_polygon',
+    native: 'matic_polygon',
   },
 }
 
