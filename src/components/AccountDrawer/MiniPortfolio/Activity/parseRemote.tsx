@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
 
 import { Activity } from './types'
+import { SupportedChainId } from '@pollum-io/sdk-core'
 
 type TransactionChanges = {
   NftTransfer: NftTransferPartsFragment[]
@@ -72,10 +73,11 @@ function isSameAddress(a?: string, b?: string) {
 }
 
 function callsPositionManagerContract(assetActivity: AssetActivityPartsFragment) {
-  return isSameAddress(
-    assetActivity.transaction.to,
-    NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[fromGraphQLChain(assetActivity.chain)]
-  )
+  // return isSameAddress(
+  //   assetActivity.transaction.to,
+  //   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[fromGraphQLChain(assetActivity.chain)]
+  // )
+  return false
 }
 
 // Gets counts for number of NFTs in each collection present
@@ -91,13 +93,13 @@ function getCollectionCounts(nftTransfers: NftTransferPartsFragment[]): { [key: 
 
 function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferPartsFragment) {
   if (
-    sent.tokenStandard === 'NATIVE' &&
-    isSameAddress(nativeOnChain(fromGraphQLChain(sent.asset.chain)).wrapped.address, received.asset.address)
+    sent.tokenStandard === 'NATIVE'
+    //  && isSameAddress(nativeOnChain(fromGraphQLChain(sent.asset.chain)).wrapped.address, received.asset.address)
   )
     return t`Wrapped`
   else if (
-    received.tokenStandard === 'NATIVE' &&
-    isSameAddress(nativeOnChain(fromGraphQLChain(received.asset.chain)).wrapped.address, received.asset.address)
+    received.tokenStandard === 'NATIVE'
+    //  && isSameAddress(nativeOnChain(fromGraphQLChain(received.asset.chain)).wrapped.address, received.asset.address)
   ) {
     return t`Unwrapped`
   } else {
@@ -246,7 +248,7 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
     )
     const defaultFields = {
       hash: assetActivity.transaction.hash,
-      chainId: fromGraphQLChain(assetActivity.chain),
+      chainId: SupportedChainId.ROLLUX, // fromGraphQLChain(assetActivity.chain),
       status: assetActivity.transaction.status,
       timestamp: assetActivity.timestamp,
       logos: getLogoSrcs(changes),
