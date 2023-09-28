@@ -333,7 +333,7 @@ export default function Landing() {
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
   const originCountry = useAppSelector((state: AppState) => state.application.originCountry)
-  const renderUkSpecificText = Boolean(originCountry) && originCountry === 'US'
+  const renderUkSpecificText = Boolean(originCountry) && originCountry === 'GB'
   const cards = useMemo(() => {
     const mainCards = MAIN_CARDS.filter(
       (card) =>
@@ -385,8 +385,8 @@ export default function Landing() {
 
     if (!originCountry) {
       return {
-        header: <></>,
-        subHeader: <></>,
+        header: null,
+        subHeader: null,
       }
     }
 

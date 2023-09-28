@@ -44,7 +44,7 @@ export default function SwapBuyFiatButton() {
   const { account } = useWeb3React()
   const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const originCountry = useAppSelector((state: AppState) => state.application.originCountry)
-  const shouldShowBuyFiatButton = Boolean(originCountry) && originCountry !== 'US'
+  const shouldShowBuyFiatButton = Boolean(originCountry) && originCountry !== 'GB'
   const [checkFiatRegionAvailability, setCheckFiatRegionAvailability] = useState(false)
   const {
     available: fiatOnrampAvailable,
