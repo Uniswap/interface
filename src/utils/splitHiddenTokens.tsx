@@ -12,13 +12,12 @@ export function splitHiddenTokens(
   const hiddenTokens: TokenBalance[] = []
 
   for (const tokenBalance of tokenBalances) {
-    const isUndefinedValue =
-      // if undefined we keep visible (see https://linear.app/uniswap/issue/WEB-1940/[mp]-update-how-we-handle-what-goes-in-hidden-token-section-of-mini)
-      typeof tokenBalance.denominatedValue?.value === 'undefined'
+    // if undefined we keep visible (see https://linear.app/uniswap/issue/WEB-1940/[mp]-update-how-we-handle-what-goes-in-hidden-token-section-of-mini)
+    const isUndefinedValue = typeof tokenBalance.denominatedValue?.value === 'undefined'
     const shouldHideSmallBalance =
       options?.hideSmallBalances &&
       !meetsThreshold(tokenBalance) && // if below $1
-      !(tokenBalance.token?.standard == TokenStandard.Native) // do not hide native tokens regardless of small balance
+      tokenBalance.token?.standard !== TokenStandard.Native // do not hide native tokens regardless of small balance
     const isSpamToken = tokenBalance.tokenProjectMarket?.tokenProject?.isSpam
     if ((isUndefinedValue || !shouldHideSmallBalance) && !isSpamToken) {
       visibleTokens.push(tokenBalance)
