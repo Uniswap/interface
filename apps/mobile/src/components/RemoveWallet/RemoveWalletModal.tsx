@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { AnimatedBox } from 'src/components/layout'
 import { Delay } from 'src/components/layout/Delayed'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -166,7 +165,7 @@ export function RemoveWalletModal(): JSX.Element | null {
         ) : (
           <Flex centered row gap={inProgress ? '$none' : '$spacing12'} pt="$spacing12">
             {inProgress ? (
-              <AnimatedBox style={animatedCancelButtonSpanStyles} />
+              <Flex style={animatedCancelButtonSpanStyles} />
             ) : (
               <Button fill disabled={inProgress} theme="tertiary" onPress={onClose}>
                 {t('Cancel')}

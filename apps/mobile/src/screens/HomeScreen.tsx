@@ -28,7 +28,6 @@ import { pulseAnimation } from 'src/components/buttons/utils'
 import { ActivityTab, ACTIVITY_TAB_DATA_DEPENDENCIES } from 'src/components/home/ActivityTab'
 import { NftsTab, NFTS_TAB_DATA_DEPENDENCIES } from 'src/components/home/NftsTab'
 import { TokensTab, TOKENS_TAB_DATA_DEPENDENCIES } from 'src/components/home/TokensTab'
-import { AnimatedBox, AnimatedFlex } from 'src/components/layout'
 import { Delay, Delayed } from 'src/components/layout/Delayed'
 import { Screen } from 'src/components/layout/Screen'
 import {
@@ -66,7 +65,6 @@ import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { dimensions, iconSizes, spacing } from 'ui/src/theme'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval, useTimeout } from 'utilities/src/time/timing'
-import { SHADOW_OFFSET_SMALL } from 'wallet/src/components/BaseCard/BaseCard'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -462,7 +460,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
         />
       </View>
       <NavBar />
-      <AnimatedBox
+      <Flex
         height={insets.top}
         position="absolute"
         style={statusBarStyle}
@@ -573,15 +571,14 @@ function ActionButton({
     <Trace logPress element={name} pressEvent={eventName}>
       <TouchableArea hapticFeedback flex={flex} onPress={onPress}>
         <TapGestureHandler onGestureEvent={onGestureEvent}>
-          <AnimatedFlex
+          <Flex
             centered
             row
-            backgroundColor="DEP_backgroundActionButton"
-            borderRadius="roundedFull"
-            gap="none"
-            px="spacing12"
-            shadowColor="sporeWhite"
-            shadowOffset={SHADOW_OFFSET_SMALL}
+            backgroundColor="$DEP_backgroundActionButton"
+            borderRadius="$roundedFull"
+            gap="$none"
+            px="$spacing12"
+            shadowColor="$sporeWhite"
             shadowOpacity={0.1}
             shadowRadius={6}
             style={[
@@ -601,7 +598,7 @@ function ActionButton({
             <Text color="$accent1" marginLeft="$spacing8" variant="buttonLabel2">
               {label}
             </Text>
-          </AnimatedFlex>
+          </Flex>
         </TapGestureHandler>
       </TouchableArea>
     </Trace>

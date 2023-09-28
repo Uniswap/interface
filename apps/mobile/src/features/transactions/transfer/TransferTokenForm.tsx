@@ -10,7 +10,6 @@ import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
 import { TextInputProps } from 'src/components/input/TextInput'
-import { AnimatedFlex } from 'src/components/layout'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
@@ -231,11 +230,7 @@ export function TransferTokenForm({
         onNext={goToNext}
       />
       <Flex grow gap="$spacing8" justifyContent="space-between">
-        <AnimatedFlex
-          entering={FadeIn}
-          exiting={FadeOut}
-          gap="spacing2"
-          onLayout={onInputPanelLayout}>
+        <Flex entering={FadeIn} exiting={FadeOut} gap="$spacing2" onLayout={onInputPanelLayout}>
           {nftIn ? (
             <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 4} />
           ) : (
@@ -368,11 +363,11 @@ export function TransferTokenForm({
               />
             ) : null}
           </Flex>
-        </AnimatedFlex>
-        <AnimatedFlex
+        </Flex>
+        <Flex
           bottom={0}
           exiting={FadeOutDown}
-          gap="spacing8"
+          gap="$spacing8"
           left={0}
           opacity={isLayoutPending ? 0 : 1}
           position="absolute"
@@ -397,7 +392,7 @@ export function TransferTokenForm({
             onPress={onPressReview}>
             {t('Review transfer')}
           </Button>
-        </AnimatedFlex>
+        </Flex>
       </Flex>
     </>
   )

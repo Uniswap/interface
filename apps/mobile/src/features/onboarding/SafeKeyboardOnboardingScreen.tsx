@@ -4,7 +4,6 @@ import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, ScrollView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { AnimatedFlex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { IS_IOS } from 'src/constants/globals'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
@@ -70,8 +69,6 @@ export function SafeKeyboardOnboardingScreen({
   // This makes sure this component behaves just like `behavior="padding"` when
   // there's enough space on the screen to show all components.
   const minHeight = compact ? keyboard.containerHeight : 0
-
-  const responsiveSpacing = media.short ? 'none' : 'spacing16'
   const responsiveBottom = media.short ? 10 : insets.bottom
 
   return (
@@ -84,17 +81,18 @@ export function SafeKeyboardOnboardingScreen({
           bounces={false}
           contentContainerStyle={flex.grow}
           keyboardShouldPersistTaps="handled">
-          <AnimatedFlex
+          <Flex
+            $short={{ gap: '$none' }}
             entering={FadeIn}
             exiting={FadeOut}
-            gap={responsiveSpacing}
+            gap="$spacing16"
             minHeight={minHeight}
-            pb="spacing16"
-            px="spacing16"
+            pb="$spacing16"
+            px="$spacing16"
             style={[containerStyle, { paddingTop: headerHeight }]}>
             {header}
             {page}
-          </AnimatedFlex>
+          </Flex>
         </ScrollView>
       </KeyboardAvoidingView>
       {topGradient}

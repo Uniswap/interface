@@ -15,7 +15,6 @@ import { useAppDispatch } from 'src/app/hooks'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { TextInputProps } from 'src/components/input/TextInput'
-import { AnimatedFlex } from 'src/components/layout'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -207,13 +206,13 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
   return (
     <>
       {!showConnectingToMoonpayScreen && (
-        <AnimatedFlex row gap="none" height="100%" style={wrapperStyle}>
-          <AnimatedFlex
+        <Flex row gap="$none" height="100%" style={wrapperStyle}>
+          <Flex
             entering={FadeIn}
             exiting={FadeOut}
-            gap="spacing16"
-            pb="spacing16"
-            px="spacing24"
+            gap="$spacing16"
+            pb="$spacing16"
+            px="$spacing24"
             style={{ marginBottom: insets.bottom }}
             width="100%">
             <Flex
@@ -222,7 +221,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
               onLayout={onInputPanelLayout}>
               <Text variant="subheading1">{t('Buy')}</Text>
               {isSheetReady && (
-                <AnimatedFlex
+                <Flex
                   grow
                   alignItems="center"
                   gap="spacing16"
@@ -273,7 +272,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
                       </Text>
                     )}
                   </Flex>
-                </AnimatedFlex>
+                </Flex>
               )}
               <Flex centered row pb="$spacing16">
                 {['100', '300', '1000'].map((amount) => (
@@ -286,15 +285,15 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
                 ))}
               </Flex>
             </Flex>
-            <AnimatedFlex
+            <Flex
               bottom={0}
               exiting={FadeOutDown}
-              gap="spacing8"
+              gap="$spacing8"
               left={0}
               opacity={isLayoutPending ? 0 : 1}
-              pb="spacing24"
+              pb="$spacing24"
               position="absolute"
-              px="spacing24"
+              px="$spacing24"
               right={0}
               onLayout={onDecimalPadLayout}>
               {!showNativeKeyboard && (
@@ -318,8 +317,8 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
                   }
                 }}
               />
-            </AnimatedFlex>
-          </AnimatedFlex>
+            </Flex>
+          </Flex>
           {showTokenSelector && (
             <FiatOnRampTokenSelector
               onBack={(): void => setShowTokenSelector(false)}
@@ -329,7 +328,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
               }}
             />
           )}
-        </AnimatedFlex>
+        </Flex>
       )}
       {showConnectingToMoonpayScreen && (
         <FiatOnRampConnectingView

@@ -6,7 +6,6 @@ import {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import { AnimatedBox } from 'src/components/layout/Box'
 import {
   BUTTON_PADDING,
   BUTTON_WIDTH,
@@ -67,7 +66,7 @@ export function TimeRangeGroup({
   return (
     <Flex row alignSelf="center" width={CHART_WIDTH}>
       <View style={StyleSheet.absoluteFill}>
-        <AnimatedBox
+        <Flex
           bg="$surface3"
           borderRadius="$rounded20"
           style={[StyleSheet.absoluteFillObject, sliderStyle]}

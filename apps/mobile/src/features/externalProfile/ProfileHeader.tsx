@@ -8,7 +8,6 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Favorite } from 'src/components/icons/Favorite'
-import { AnimatedBox } from 'src/components/layout/Box'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { ProfileContextMenu } from 'src/features/externalProfile/ProfileContextMenu'
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
@@ -89,7 +88,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
         barStyle={showLightStatusBar ? 'light-content' : 'dark-content'}
       />
       {/* fixed gradient */}
-      <AnimatedBox
+      <Flex
         bottom={0}
         entering={FadeIn}
         height={HEADER_GRADIENT_HEIGHT}
@@ -104,7 +103,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
           style={StyleSheet.absoluteFill}
         />
         {hasAvatar && avatarColors?.primary ? <HeaderRadial color={avatarColors.primary} /> : null}
-      </AnimatedBox>
+      </Flex>
 
       {/* header row */}
       <Flex row alignItems="center" justifyContent="space-between" mx="$spacing4">

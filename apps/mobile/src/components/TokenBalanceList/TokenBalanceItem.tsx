@@ -3,7 +3,6 @@ import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { FadeIn } from 'react-native-reanimated'
-import { AnimatedFlex } from 'src/components/layout'
 import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
 import { Flex, Text, TouchableArea } from 'ui/src'
@@ -66,14 +65,14 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
         px="$spacing24"
         py="$spacing8"
         onPress={onPress}>
-        <AnimatedFlex
+        <Flex
           row
           shrink
           alignItems="center"
           // use only entering animation without exiting animation as it caused
           // crashes on Android when the list was re-rendered
           entering={FadeIn}
-          gap="spacing12"
+          gap="$spacing12"
           overflow="hidden">
           <TokenLogo
             chainId={currency.chainId}
@@ -90,8 +89,8 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
               </Text>
             </Flex>
           </Flex>
-        </AnimatedFlex>
-        <AnimatedFlex
+        </Flex>
+        <Flex
           // use only entering animation without exiting animation as it caused
           // crashes on Android when the list was re-rendered
           entering={FadeIn}
@@ -116,7 +115,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
               </Flex>
             )}
           </WarmLoadingShimmer>
-        </AnimatedFlex>
+        </Flex>
       </TouchableArea>
     </ContextMenu>
   )

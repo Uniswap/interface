@@ -11,7 +11,6 @@ import {
   useSettingsStackNavigation,
 } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { AnimatedFlex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import {
   SettingsRow,
@@ -333,12 +332,12 @@ function FooterSettings(): JSX.Element {
   return (
     <Flex gap="$spacing12">
       {showSignature ? (
-        <AnimatedFlex
+        <Flex
           alignItems="center"
           entering={FadeInDown}
           exiting={FadeOutUp}
-          gap="none"
-          mt="spacing16">
+          gap="$none"
+          mt="$spacing16">
           <Flex gap="$spacing4">
             <Text color="$neutral3" textAlign="center" variant="body2">
               {t('Made with love, ')}
@@ -352,7 +351,7 @@ function FooterSettings(): JSX.Element {
           ) : (
             <Image source={AVATARS_LIGHT} style={ImageStyles.responsiveImage} />
           )}
-        </AnimatedFlex>
+        </Flex>
       ) : null}
       <Text
         color="$neutral3"

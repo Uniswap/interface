@@ -46,27 +46,18 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
         <View
           entering={BaseAnimationMock {}}
           exiting={BaseAnimationMock {}}
-          sentry-label="Flex"
           style={
-            [
-              {
-                "alignItems": "stretch",
-                "display": "flex",
-                "flexDirection": "column",
-                "justifyContent": "flex-start",
-                "minHeight": 0,
-                "paddingBottom": 16,
-                "paddingHorizontal": 16,
-              },
-              [
-                {
-                  "flexGrow": 1,
-                },
-                {
-                  "paddingTop": 200,
-                },
-              ],
-            ]
+            {
+              "alignItems": "stretch",
+              "flexDirection": "column",
+              "flexGrow": 1,
+              "gap": 16,
+              "minHeight": 0,
+              "paddingBottom": 16,
+              "paddingLeft": 16,
+              "paddingRight": 16,
+              "paddingTop": 200,
+            }
           }
         >
           <View
@@ -116,18 +107,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               Your recovery phrase will only be stored locally on your device.
             </Text>
           </View>
-          <View
-            style={
-              [
-                {
-                  "display": "flex",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "height": 16,
-                },
-              ]
-            }
-          />
           <View
             style={
               {

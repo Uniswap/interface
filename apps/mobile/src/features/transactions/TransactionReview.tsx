@@ -8,7 +8,6 @@ import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { Arrow } from 'src/components/icons/Arrow'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { RecipientPrevTransfers } from 'src/components/input/RecipientInputPanel'
-import { AnimatedFlex } from 'src/components/layout'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
@@ -101,7 +100,13 @@ export function TransactionReview({
 
   return (
     <>
-      <AnimatedFlex centered grow entering={FadeInUp} exiting={FadeOut} gap={spacingGap}>
+      <Flex
+        centered
+        grow
+        $short={{ gap: '$none' }}
+        entering={FadeInUp}
+        exiting={FadeOut}
+        gap="$spacing4">
         {currencyInInfo ? (
           <Flex centered gap={innerGap}>
             <Flex centered gap={amountAndEquivalentValueGap}>
@@ -192,8 +197,8 @@ export function TransactionReview({
             </Flex>
           </Flex>
         ) : null}
-      </AnimatedFlex>
-      <AnimatedFlex entering={FadeInUp} exiting={FadeOut} gap="spacing12" justifyContent="flex-end">
+      </Flex>
+      <Flex entering={FadeInUp} exiting={FadeOut} gap="$spacing12" justifyContent="flex-end">
         {transactionDetails}
         <Flex row gap="$spacing8">
           <Button
@@ -218,7 +223,7 @@ export function TransactionReview({
             {actionButtonProps.label}
           </Button>
         </Flex>
-      </AnimatedFlex>
+      </Flex>
     </>
   )
 }

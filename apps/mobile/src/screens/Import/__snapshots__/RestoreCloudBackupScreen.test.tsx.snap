@@ -37,19 +37,16 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
     <View
       entering={BaseAnimationMock {}}
       exiting={BaseAnimationMock {}}
-      sentry-label="Flex"
       style={
-        [
-          {
-            "alignItems": "stretch",
-            "display": "flex",
-            "flexDirection": "column",
-            "flexGrow": 1,
-            "justifyContent": "flex-start",
-            "paddingBottom": 16,
-            "paddingHorizontal": 16,
-          },
-        ]
+        {
+          "alignItems": "stretch",
+          "flexDirection": "column",
+          "flexGrow": 1,
+          "gap": "spacing16",
+          "paddingBottom": 16,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+        }
       }
     >
       <View
@@ -101,18 +98,6 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
           There are multiple recovery phrases backed up to your iCloud.
         </Text>
       </View>
-      <View
-        style={
-          [
-            {
-              "display": "flex",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "height": 16,
-            },
-          ]
-        }
-      />
       <View
         style={
           {

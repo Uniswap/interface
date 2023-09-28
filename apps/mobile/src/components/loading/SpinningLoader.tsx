@@ -7,8 +7,7 @@ import {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
-import { AnimatedBox } from 'src/components/layout'
-import { ColorTokens, Icons } from 'ui/src'
+import { ColorTokens, Flex, Icons } from 'ui/src'
 
 export function SpinningLoader({
   size = 20,
@@ -47,8 +46,8 @@ export function SpinningLoader({
   }
 
   return (
-    <AnimatedBox sentry-label="SpinningLoader" style={[animatedStyles]}>
+    <Flex sentry-label="SpinningLoader" style={[animatedStyles]}>
       <Icons.CircleSpinner color={color ?? '$neutral1'} height={size} width={size} />
-    </AnimatedBox>
+    </Flex>
   )
 }

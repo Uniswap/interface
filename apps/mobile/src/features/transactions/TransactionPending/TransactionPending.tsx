@@ -1,6 +1,5 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimatedFlex } from 'src/components/layout'
 import { ElementName } from 'src/features/telemetry/constants'
 import { StatusAnimation } from 'src/features/transactions/TransactionPending/StatusAnimation'
 import { openTransactionLink } from 'src/utils/linking'
@@ -39,7 +38,7 @@ export function TransactionPending({
   }
 
   return (
-    <AnimatedFlex grow px="spacing12">
+    <Flex grow px="$spacing12">
       <Flex grow alignItems="center" justifyContent="flex-start" pt="$spacing60">
         <Flex alignItems="center" justifyContent="flex-end" pt="$spacing16">
           <StatusAnimation status={transaction?.status} transactionType={transactionType} />
@@ -66,6 +65,6 @@ export function TransactionPending({
       <Button testID={ElementName.OK} onPress={onNext}>
         {t('Close')}
       </Button>
-    </AnimatedFlex>
+    </Flex>
   )
 }

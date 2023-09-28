@@ -1,6 +1,5 @@
 import React from 'react'
 import { Extrapolate, interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
-import { AnimatedBox } from 'src/components/layout'
 import { Flex } from 'ui/src'
 import { dimensions } from 'ui/src/theme'
 
@@ -66,7 +65,7 @@ function AnimatedIndicatorPill({
   })
 
   return (
-    <AnimatedBox
+    <Flex
       key={`indicator-${index}`}
       fill
       bg="$neutral1"

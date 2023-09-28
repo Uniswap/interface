@@ -7,7 +7,6 @@ import { SearchPopularNFTCollections } from 'src/components/explore/search/Searc
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
 import { renderSearchItem } from 'src/components/explore/search/SearchResultsSection'
 import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
-import { AnimatedFlex } from 'src/components/layout'
 import {
   clearSearchHistory,
   SearchResultType,
@@ -43,9 +42,9 @@ export function SearchEmptySection(): JSX.Element {
 
   // Show search history (if applicable), trending tokens, and wallets
   return (
-    <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="spacing12">
+    <Flex entering={FadeIn} exiting={FadeOut} gap="$spacing12">
       {searchHistory.length > 0 && (
-        <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
+        <Flex entering={FadeIn} exiting={FadeOut}>
           <FlatList
             ListHeaderComponent={
               <Flex
@@ -67,7 +66,7 @@ export function SearchEmptySection(): JSX.Element {
               renderSearchItem({ ...props, searchContext: { isHistory: true } })
             }
           />
-        </AnimatedFlex>
+        </Flex>
       )}
       <Flex gap="$spacing4">
         <SectionHeaderText icon={<TrendIcon />} title={t('Popular tokens')} />
@@ -85,7 +84,7 @@ export function SearchEmptySection(): JSX.Element {
         keyExtractor={walletKey}
         renderItem={renderSearchItem}
       />
-    </AnimatedFlex>
+    </Flex>
   )
 }
 

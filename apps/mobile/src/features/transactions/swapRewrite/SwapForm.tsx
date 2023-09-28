@@ -10,7 +10,7 @@ import {
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { DecimalPad } from 'src/components/input/DecimalPad'
-import { AnimatedFlex, Box } from 'src/components/layout'
+import { Box } from 'src/components/layout'
 import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import Trace from 'src/components/Trace/Trace'
@@ -53,7 +53,7 @@ export function SwapForm(): JSX.Element {
       <TouchableWithoutFeedback>
         <Box style={{ marginTop: insets.top }}>
           <HandleBar backgroundColor="none" />
-          <AnimatedFlex grow row gap="none" height="100%" style={wrapperStyle}>
+          <Flex grow row gap="none" height="100%" style={wrapperStyle}>
             <Flex
               gap="$spacing16"
               pb={IS_ANDROID ? '$spacing32' : '$spacing16'}
@@ -63,7 +63,7 @@ export function SwapForm(): JSX.Element {
               <SwapFormHeader />
               {isSheetReady && <SwapFormContent />}
             </Flex>
-          </AnimatedFlex>
+          </Flex>
         </Box>
       </TouchableWithoutFeedback>
 
@@ -229,11 +229,7 @@ function SwapFormContent(): JSX.Element {
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
-      <AnimatedFlex
-        entering={FadeIn}
-        exiting={FadeOut}
-        gap="spacing2"
-        onLayout={onInputPanelLayout}>
+      <Flex entering={FadeIn} exiting={FadeOut} gap="spacing2" onLayout={onInputPanelLayout}>
         <Trace section={SectionName.CurrencyInputPanel}>
           <Flex
             backgroundColor={
@@ -365,7 +361,6 @@ function SwapFormContent(): JSX.Element {
             </Flex>
 
             {/* TODO: add swap warnings */}
-
             {isBlocked && (
               <BlockedAddressWarning
                 row
@@ -384,11 +379,11 @@ function SwapFormContent(): JSX.Element {
             {/* TODO: show gas */}
           </Flex>
         </Trace>
-      </AnimatedFlex>
-      <AnimatedFlex
+      </Flex>
+      <Flex
         bottom={0}
         exiting={FadeOutDown}
-        gap="spacing8"
+        gap="$spacing8"
         left={0}
         opacity={isLayoutPending ? 0 : 1}
         position="absolute"
@@ -407,7 +402,7 @@ function SwapFormContent(): JSX.Element {
             {t('Review swap')}
           </Button>
         </Trace>
-      </AnimatedFlex>
+      </Flex>
     </Flex>
   )
 }

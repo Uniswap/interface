@@ -14,7 +14,6 @@ import {
 } from 'react-native-reanimated'
 import PlusMinusButton, { PlusMinusButtonType } from 'src/components/buttons/PlusMinusButton'
 import { Switch } from 'src/components/buttons/Switch'
-import { AnimatedFlex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { ModalName } from 'src/features/telemetry/constants'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
@@ -416,15 +415,15 @@ function SlippageSettings({
             type={PlusMinusButtonType.Minus}
             onPress={onPressPlusMinusButton}
           />
-          <AnimatedFlex
+          <Flex
             row
             alignItems="center"
-            bg={isEditingSlippage ? 'surface2' : 'surface1'}
-            borderColor="surface3"
-            borderRadius="roundedFull"
+            bg={isEditingSlippage ? '$surface2' : '$surface1'}
+            borderColor="$surface3"
+            borderRadius="$roundedFull"
             borderWidth={1}
-            gap="spacing12"
-            p="spacing16"
+            gap="$spacing12"
+            p="$spacing16"
             style={inputAnimatedStyle}>
             <TouchableArea hapticFeedback onPress={onPressAutoSlippage}>
               <Text color="$accent1" variant="buttonLabel3">
@@ -455,7 +454,7 @@ function SlippageSettings({
                 %
               </Text>
             </Flex>
-          </AnimatedFlex>
+          </Flex>
           <PlusMinusButton
             disabled={currentSlippageToleranceNum === MAX_CUSTOM_SLIPPAGE_TOLERANCE}
             type={PlusMinusButtonType.Plus}

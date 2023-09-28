@@ -6,7 +6,6 @@ import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteTokenCard, {
   FAVORITE_TOKEN_CARD_LOADER_HEIGHT,
 } from 'src/components/explore/FavoriteTokenCard'
-import { AnimatedBox } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 import { selectFavoriteTokens } from 'src/features/favorites/selectors'
 import { Flex } from 'ui/src'
@@ -30,7 +29,7 @@ export function FavoriteTokensGrid({ showLoading }: { showLoading: boolean }): J
   }, [favoriteCurrencyIds.length])
 
   return (
-    <AnimatedBox entering={FadeIn}>
+    <Flex entering={FadeIn}>
       <FavoriteHeaderRow
         editingTitle={t('Edit favorite tokens')}
         isEditing={isEditing}
@@ -52,7 +51,7 @@ export function FavoriteTokensGrid({ showLoading }: { showLoading: boolean }): J
           ))}
         </Flex>
       )}
-    </AnimatedBox>
+    </Flex>
   )
 }
 

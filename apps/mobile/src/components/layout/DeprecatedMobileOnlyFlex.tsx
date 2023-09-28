@@ -86,4 +86,4 @@ export function DeprecatedMobileOnlyFlex({
   )
 }
 
-export const AnimatedFlex = withAnimated(DeprecatedMobileOnlyFlex)
+export const DeprecatedMobileOnlyAnimatedFlex = withAnimated(DeprecatedMobileOnlyFlex)

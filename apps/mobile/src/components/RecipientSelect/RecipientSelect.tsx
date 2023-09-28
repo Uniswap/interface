@@ -2,7 +2,6 @@ import React, { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { AnimatedFlex } from 'src/components/layout'
 import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { filterRecipientByNameAndAddress } from 'src/components/RecipientSelect/filter'
 import { useRecipients } from 'src/components/RecipientSelect/hooks'
@@ -68,12 +67,12 @@ export function _RecipientSelect({
 
   return (
     <>
-      <AnimatedFlex
+      <Flex
         entering={FadeIn}
         exiting={FadeOut}
-        gap="spacing12"
-        mt="spacing16"
-        px="spacing16"
+        gap="$spacing12"
+        mt="$spacing16"
+        px="$spacing16"
         width="100%">
         <SearchBar
           autoFocus
@@ -100,7 +99,7 @@ export function _RecipientSelect({
             />
           )
         )}
-      </AnimatedFlex>
+      </Flex>
       {showQRScanner && (
         <RecipientScanModal onClose={onCloseQRScanner} onSelectRecipient={onSelectRecipient} />
       )}

@@ -5,8 +5,7 @@ import {
   withSequence,
   withTiming,
 } from 'react-native-reanimated'
-import { AnimatedFlex } from 'src/components/layout'
-import { useSporeColors } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import HeartIcon from 'ui/src/assets/icons/heart.svg'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -44,8 +43,8 @@ export const Favorite = ({ isFavorited, size }: FavoriteButtonProps): JSX.Elemen
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }), [scale])
 
   return (
-    <AnimatedFlex style={animatedStyle}>
+    <Flex style={animatedStyle}>
       <HeartIcon color={color} height={size} width={size} />
-    </AnimatedFlex>
+    </Flex>
   )
 }

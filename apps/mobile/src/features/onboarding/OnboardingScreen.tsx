@@ -3,7 +3,6 @@ import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { AnimatedFlex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { IS_IOS } from 'src/constants/globals'
 import { Flex, SpaceTokens, Text, useMedia } from 'ui/src'
@@ -36,13 +35,13 @@ export function OnboardingScreen({
         behavior={IS_IOS ? 'padding' : undefined}
         enabled={keyboardAvoidingViewEnabled}
         style={[WrapperStyle.base, { marginBottom: insets.bottom }]}>
-        <AnimatedFlex
+        <Flex
           grow
           entering={FadeIn}
           exiting={FadeOut}
           gap={gapSize}
-          pb="spacing16"
-          px="spacing16">
+          pb="$spacing16"
+          px="$spacing16">
           {/* Text content */}
           <Flex centered gap="$spacing12" m="$spacing12">
             {title && (
@@ -70,7 +69,7 @@ export function OnboardingScreen({
           <Flex fill grow justifyContent="space-between">
             {children}
           </Flex>
-        </AnimatedFlex>
+        </Flex>
       </KeyboardAvoidingView>
     </Screen>
   )

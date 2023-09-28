@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, StyleSheet, ViewStyle } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { AnimatedFlex } from 'src/components/layout'
 import { DappConnectedNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappConnectedNetworksModal'
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
@@ -22,7 +21,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
 
   return (
     <>
-      <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} pt="spacing12">
+      <Flex fill entering={FadeIn} exiting={FadeOut} pt="$spacing12">
         <Flex row alignItems="center" justifyContent="space-between" px="$spacing24">
           <Flex grow width={iconSizes.icon40}>
             {backButton ?? <BackButton />}
@@ -71,7 +70,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
             </Text>
           </Flex>
         )}
-      </AnimatedFlex>
+      </Flex>
       {selectedSession && (
         <DappConnectedNetworkModal
           session={selectedSession}

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard, LayoutChangeEvent, TextInput as NativeTextInput, ViewStyle } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
-import { AnimatedBox, AnimatedFlex } from 'src/components/layout'
+import { DeprecatedMobileOnlyAnimatedFlex } from 'src/components/layout'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -158,7 +158,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
 
     return (
       <Flex row shrink alignItems="center">
-        <AnimatedFlex
+        <DeprecatedMobileOnlyAnimatedFlex
           fill
           grow
           row
@@ -198,21 +198,19 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           />
 
           {showClearButtonJS ? (
-            <AnimatedBox style={[clearButtonStyle]}>
+            <Flex style={[clearButtonStyle]}>
               <ClearButton clearIcon={clearIcon} onPress={onClear} />
-            </AnimatedBox>
+            </Flex>
           ) : (
-            <AnimatedBox style={[endAdornmentStyle]}>{endAdornment}</AnimatedBox>
+            <Flex style={[endAdornmentStyle]}>{endAdornment}</Flex>
           )}
-        </AnimatedFlex>
+        </DeprecatedMobileOnlyAnimatedFlex>
         {showCancelButton && (
-          <AnimatedBox
-            style={[cancelButtonStyle, CancelButtonDefaultStyle]}
-            onLayout={onCancelLayout}>
+          <Flex style={[cancelButtonStyle, CancelButtonDefaultStyle]} onLayout={onCancelLayout}>
             <TouchableArea onPress={onPressCancel}>
               <Text variant="buttonLabel2">{t('Cancel')}</Text>
             </TouchableArea>
-          </AnimatedBox>
+          </Flex>
         )}
       </Flex>
     )

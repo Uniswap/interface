@@ -6,7 +6,6 @@ import { RefreshControl } from 'react-native'
 import { FadeInDown, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
-import { AnimatedBox } from 'src/components/layout'
 import {
   TabProps,
   TAB_BAR_HEIGHT,
@@ -154,12 +153,12 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
             ListFooterComponentStyle={{ zIndex: zIndices.negative }}
             ListHeaderComponent={
               isError(networkStatus, !!balancesById) ? (
-                <AnimatedBox entering={FadeInDown} exiting={FadeOut} px="$spacing24" py="$spacing8">
+                <Flex entering={FadeInDown} exiting={FadeOut} px="$spacing24" py="$spacing8">
                   <BaseCard.InlineErrorState
                     title={t('Failed to fetch token balances')}
                     onRetry={refetch}
                   />
-                </AnimatedBox>
+                </Flex>
               ) : null
             }
             data={data}

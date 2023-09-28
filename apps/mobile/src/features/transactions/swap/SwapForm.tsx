@@ -7,7 +7,6 @@ import { Keyboard, StyleSheet, TextInputProps } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
-import { AnimatedFlex } from 'src/components/layout'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
@@ -231,11 +230,7 @@ function _SwapForm({
         />
       )}
       <Flex grow gap="$spacing8" justifyContent="space-between">
-        <AnimatedFlex
-          entering={FadeIn}
-          exiting={FadeOut}
-          gap="spacing2"
-          onLayout={onInputPanelLayout}>
+        <Flex entering={FadeIn} exiting={FadeOut} gap="$spacing2" onLayout={onInputPanelLayout}>
           <Trace section={SectionName.CurrencyInputPanel}>
             <Flex backgroundColor="$surface2" borderRadius="$rounded20">
               <CurrencyInputPanel
@@ -259,7 +254,6 @@ function _SwapForm({
               />
             </Flex>
           </Trace>
-
           <Flex zIndex="$popover">
             <Flex alignItems="center" height={0} style={StyleSheet.absoluteFill}>
               <Flex
@@ -286,7 +280,6 @@ function _SwapForm({
               </Flex>
             </Flex>
           </Flex>
-
           <Trace section={SectionName.CurrencyOutputPanel}>
             <Flex>
               <Flex
@@ -441,11 +434,11 @@ function _SwapForm({
               ) : null}
             </Flex>
           </Trace>
-        </AnimatedFlex>
-        <AnimatedFlex
+        </Flex>
+        <Flex
           bottom={0}
           exiting={FadeOutDown}
-          gap="spacing8"
+          gap="$spacing8"
           left={0}
           opacity={isLayoutPending ? 0 : 1}
           position="absolute"
@@ -470,7 +463,7 @@ function _SwapForm({
               {getReviewActionName(t, wrapType)}
             </Button>
           </Trace>
-        </AnimatedFlex>
+        </Flex>
       </Flex>
     </>
   )

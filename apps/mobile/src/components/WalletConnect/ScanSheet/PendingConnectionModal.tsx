@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { LinkButton } from 'src/components/buttons/LinkButton'
-import { AnimatedFlex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { NetworkLogos } from 'src/components/WalletConnect/NetworkLogos'
@@ -232,13 +231,13 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
 
   return (
     <BottomSheetModal name={ModalName.WCPendingConnection} onClose={onClose}>
-      <AnimatedFlex
+      <Flex
         fill
-        backgroundColor="surface1"
-        borderRadius="rounded12"
+        backgroundColor="$surface1"
+        borderRadius="$rounded12"
         overflow="hidden"
-        px="spacing24"
-        py="spacing24">
+        px="$spacing24"
+        py="$spacing24">
         <Flex fill alignItems="center" gap="$spacing16" justifyContent="flex-end">
           <DappHeaderIcon dapp={pendingSession.dapp} />
           <Text
@@ -287,7 +286,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
             {t('Connect')}
           </Button>
         </Flex>
-      </AnimatedFlex>
+      </Flex>
       {modalState === PendingConnectionModalState.SwitchAccount && (
         <PendingConnectionSwitchAccountModal
           activeAccount={activeAccount}

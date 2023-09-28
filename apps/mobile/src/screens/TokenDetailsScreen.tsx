@@ -6,7 +6,6 @@ import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
-import { AnimatedBox, AnimatedFlex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { PriceExplorer } from 'src/components/PriceExplorer/PriceExplorer'
 import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
@@ -292,9 +291,9 @@ function TokenDetails({
             />
           </Flex>
           {error ? (
-            <AnimatedBox entering={FadeInDown} exiting={FadeOutDown} px="$spacing24">
+            <Flex entering={FadeInDown} exiting={FadeOutDown} px="$spacing24">
               <BaseCard.InlineErrorState onRetry={retry} />
-            </AnimatedBox>
+            </Flex>
           ) : null}
           <Flex gap="$spacing16" mb="$spacing8" px="$spacing16">
             <TokenBalances
@@ -310,8 +309,8 @@ function TokenDetails({
       </HeaderScrollScreen>
 
       {!loading && !tokenColorLoading ? (
-        <AnimatedFlex
-          backgroundColor="surface1"
+        <Flex
+          backgroundColor="$surface1"
           entering={FadeInDown}
           pb={pb}
           style={{ marginBottom: IS_ANDROID ? insets.bottom : undefined }}>
@@ -320,7 +319,7 @@ function TokenDetails({
             onPressBuy={(): void => onPressSwap(CurrencyField.OUTPUT)}
             onPressSell={(): void => onPressSwap(CurrencyField.INPUT)}
           />
-        </AnimatedFlex>
+        </Flex>
       ) : null}
 
       <TokenWarningModal

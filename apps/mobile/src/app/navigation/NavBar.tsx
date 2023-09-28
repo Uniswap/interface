@@ -16,7 +16,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch } from 'src/app/hooks'
 import { pulseAnimation } from 'src/components/buttons/utils'
-import { AnimatedBox, AnimatedFlex } from 'src/components/layout'
 import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
@@ -147,7 +146,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
   return (
     <Flex alignItems="center" bg="$transparent" pointerEvents="box-none" position="relative">
       <TapGestureHandler onGestureEvent={onGestureEvent}>
-        <AnimatedBox
+        <Flex
           centered
           height={SWAP_BUTTON_HEIGHT}
           pointerEvents="auto"
@@ -178,7 +177,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
           <Text color="$sporeWhite" variant="buttonLabel2">
             {t('Swap')}
           </Text>
-        </AnimatedBox>
+        </Flex>
       </TapGestureHandler>
     </Flex>
   )
@@ -234,7 +233,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
       style={[styles.searchBar, { borderRadius: borderRadii.roundedFull }]}
       onPress={onPress}>
       <TapGestureHandler onGestureEvent={onGestureEvent}>
-        <AnimatedFlex borderRadius="roundedFull" overflow="hidden" style={animatedStyle}>
+        <Flex borderRadius="$roundedFull" overflow="hidden" style={animatedStyle}>
           <BlurView intensity={IS_IOS ? 100 : 0}>
             <Flex
               {...contentProps}
@@ -257,7 +256,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
               </Text>
             </Flex>
           </BlurView>
-        </AnimatedFlex>
+        </Flex>
       </TapGestureHandler>
     </TouchableArea>
   )

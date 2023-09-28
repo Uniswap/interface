@@ -7,7 +7,6 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Defs, LinearGradient, Path, Rect, Stop, Svg } from 'react-native-svg'
 import PasteButton from 'src/components/buttons/PasteButton'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
-import { AnimatedFlex } from 'src/components/layout'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { openSettings } from 'src/utils/linking'
 import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
@@ -84,12 +83,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   }, [data, onScanCode])
 
   return (
-    <AnimatedFlex
-      grow
-      borderRadius="rounded12"
-      entering={FadeIn}
-      exiting={FadeOut}
-      overflow="hidden">
+    <Flex grow borderRadius="$rounded12" entering={FadeIn} exiting={FadeOut} overflow="hidden">
       <Flex justifyContent="center" style={StyleSheet.absoluteFill}>
         <Flex
           bg="$sporeBlack"
@@ -205,7 +199,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
           )}
         </Flex>
       </Flex>
-    </AnimatedFlex>
+    </Flex>
   )
 }
 

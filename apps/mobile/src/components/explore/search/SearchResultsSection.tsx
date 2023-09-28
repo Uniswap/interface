@@ -13,7 +13,6 @@ import {
   formatTokenSearchResults,
   getSearchResultId,
 } from 'src/components/explore/search/utils'
-import { AnimatedFlex } from 'src/components/layout'
 import {
   NFTCollectionSearchResult,
   SearchResult,
@@ -202,13 +201,13 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 
   if (error) {
     return (
-      <AnimatedFlex entering={FadeIn} exiting={FadeOut} pt="spacing24">
+      <Flex entering={FadeIn} exiting={FadeOut} pt="spacing24">
         <BaseCard.ErrorState
           retryButtonLabel="Retry"
           title={t('Couldn’t load search results')}
           onRetry={onRetry}
         />
-      </AnimatedFlex>
+      </Flex>
     )
   }
 
@@ -216,13 +215,13 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
     <Flex grow gap="$spacing8">
       <FlatList
         ListEmptyComponent={
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="spacing8" mx="spacing8">
+          <Flex entering={FadeIn} exiting={FadeOut} gap="$spacing8" mx="$spacing8">
             <Text color="$neutral2" variant="body1">
               <Trans t={t}>
                 No results found for <Text color="$neutral1">"{searchQuery}"</Text>
               </Trans>
             </Text>
-          </AnimatedFlex>
+          </Flex>
         }
         data={sortedSearchResults}
         keyExtractor={getSearchResultId}

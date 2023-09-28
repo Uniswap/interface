@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { AnimatedFlex } from 'src/components/layout'
 import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import { Warning, WarningSeverity } from 'src/components/modals/WarningModal/types'
@@ -134,7 +133,7 @@ export function TransactionFlow({
     <TouchableWithoutFeedback>
       <Flex style={{ marginTop: insets.top }}>
         <HandleBar backgroundColor="none" />
-        <AnimatedFlex grow row gap="none" height="100%" style={wrapperStyle}>
+        <Flex grow row gap="$none" height="100%" style={wrapperStyle}>
           <Flex
             gap="$spacing16"
             pb={IS_ANDROID ? '$spacing32' : '$spacing16'}
@@ -203,7 +202,7 @@ export function TransactionFlow({
           ) : null}
 
           {showRecipientSelector && recipientSelector ? recipientSelector : null}
-        </AnimatedFlex>
+        </Flex>
       </Flex>
     </TouchableWithoutFeedback>
   )

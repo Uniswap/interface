@@ -2,7 +2,6 @@ import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
-import { AnimatedBox } from 'src/components/layout'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
@@ -68,14 +67,14 @@ export function HiddenNftsRowRight({
           <Text color="$neutral2" variant="buttonLabel3">
             {isExpanded ? t('Hide') : t('Show')}
           </Text>
-          <AnimatedBox style={chevronAnimatedStyle}>
+          <Flex style={chevronAnimatedStyle}>
             <Icons.RotatableChevron
               color="$neutral2"
               direction="s"
               height={iconSizes.icon20}
               width={iconSizes.icon20}
             />
-          </AnimatedBox>
+          </Flex>
         </Flex>
       </Flex>
     </TouchableArea>

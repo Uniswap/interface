@@ -4,7 +4,6 @@ import { FadeIn } from 'react-native-reanimated'
 import { useAppSelector } from 'src/app/hooks'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteWalletCard from 'src/components/explore/FavoriteWalletCard'
-import { AnimatedBox } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { Flex } from 'ui/src'
@@ -29,7 +28,7 @@ export function FavoriteWalletsGrid({ showLoading }: { showLoading: boolean }): 
   }, [watchedWalletsSet.size])
 
   return (
-    <AnimatedBox entering={FadeIn}>
+    <Flex entering={FadeIn}>
       <FavoriteHeaderRow
         editingTitle={t('Edit favorite wallets')}
         isEditing={isEditing}
@@ -51,7 +50,7 @@ export function FavoriteWalletsGrid({ showLoading }: { showLoading: boolean }): 
           ))}
         </Flex>
       )}
-    </AnimatedBox>
+    </Flex>
   )
 }
 

@@ -10,7 +10,6 @@ import { ExploreSections } from 'src/components/explore/ExploreSections'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
-import { AnimatedFlex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
@@ -105,9 +104,9 @@ export function ExploreScreen(): JSX.Element {
               {debouncedSearchQuery.length === 0 ? (
                 <SearchEmptySection />
               ) : (
-                <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
+                <Flex entering={FadeIn} exiting={FadeOut}>
                   <SearchResultsSection searchQuery={debouncedSearchQuery} />
-                </AnimatedFlex>
+                </Flex>
               )}
             </VirtualizedList>
           </Flex>

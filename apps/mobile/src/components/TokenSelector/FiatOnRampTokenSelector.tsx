@@ -1,10 +1,10 @@
 import React, { memo } from 'react'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { AnimatedFlex } from 'src/components/layout'
 import { TokenFiatOnRampList } from 'src/components/TokenSelector/TokenFiatOnRampList'
 import Trace from 'src/components/Trace/Trace'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/FiatOnRampModal'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
+import { Flex } from 'ui/src'
 
 interface Props {
   onBack: () => void
@@ -17,15 +17,15 @@ function _FiatOnRampTokenSelector({ onSelectCurrency, onBack }: Props): JSX.Elem
       logImpression
       element={ElementName.FiatOnRampTokenSelector}
       section={SectionName.TokenSelector}>
-      <AnimatedFlex
+      <Flex
         entering={FadeIn}
         exiting={FadeOut}
-        gap="spacing12"
+        gap="$spacing12"
         overflow="hidden"
-        px="spacing16"
+        px="$spacing16"
         width="100%">
         <TokenFiatOnRampList onBack={onBack} onSelectCurrency={onSelectCurrency} />
-      </AnimatedFlex>
+      </Flex>
     </Trace>
   )
 }

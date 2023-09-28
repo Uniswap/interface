@@ -310,7 +310,7 @@ exports[`ActivityTab renders without error 2`] = `
   >
     <RCTScrollView
       ListEmptyComponent={
-        <ForwardRef
+        <WithAnimated(Component)
           grow={true}
         >
           <EmptyState
@@ -320,7 +320,7 @@ exports[`ActivityTab renders without error 2`] = `
             onPress={[Function]}
             title="No activity yet"
           />
-        </ForwardRef>
+        </WithAnimated(Component)>
       }
       ListFooterComponent={
         <React.Fragment>
@@ -477,7 +477,7 @@ exports[`ActivityTab renders without error 2`] = `
             "span": undefined,
           },
           "props": {
-            "ListEmptyComponent": <ForwardRef
+            "ListEmptyComponent": <WithAnimated(Component)
               grow={true}
             >
               <EmptyState
@@ -487,7 +487,7 @@ exports[`ActivityTab renders without error 2`] = `
                 onPress={[Function]}
                 title="No activity yet"
               />
-            </ForwardRef>,
+            </WithAnimated(Component)>,
             "ListFooterComponent": <React.Fragment>
               <View
                 style={
