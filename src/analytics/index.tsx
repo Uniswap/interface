@@ -54,6 +54,6 @@ export const sendAnalyticsEvent: typeof sendAnalyticsTraceEvent = (event, proper
 }
 
 // This is only used for initial page load so we can get the user's country
-export const sendAnalyticsEventIgnoreTracking: typeof sendAnalyticsTraceEvent = (event, properties) => {
+export const sendInitializationEvent: typeof sendAnalyticsTraceEvent = (event, properties) => {
   sendAnalyticsTraceEvent(event, properties)
 }

@@ -142,10 +142,11 @@ const TitleText = styled.h1<{ isDarkMode: boolean; $visible: boolean }>`
   -webkit-background-clip: text;
 
   ${({ $visible }) =>
-    $visible &&
-    css`
-      ${textFadeIn}
-    `}
+    $visible
+      ? css`
+          ${textFadeIn}
+        `
+      : 'opacity: 0;'}
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     font-size: 48px;
@@ -178,10 +179,11 @@ const SubTextContainer = styled.div<{ $visible: boolean }>`
   justify-content: center;
 
   ${({ $visible }) =>
-    $visible &&
-    css`
-      ${textFadeIn}
-    `}
+    $visible
+      ? css`
+          ${textFadeIn}
+        `
+      : 'opacity: 0;'}
 `
 
 const LandingButton = styled(BaseButton)`
@@ -377,7 +379,7 @@ export default function Landing() {
   const location = useLocation()
   const queryParams = parse(location.search, { ignoreQueryPrefix: true })
 
-  const Titles = useMemo(() => {
+  const titles = useMemo(() => {
     if (!originCountry) {
       return {
         header: null,
@@ -429,10 +431,10 @@ export default function Landing() {
         </GlowContainer>
         <ContentContainer isDarkMode={isDarkMode}>
           <TitleText isDarkMode={isDarkMode} $visible={!!originCountry}>
-            {Titles.header}
+            {titles.header}
           </TitleText>
           <SubTextContainer $visible={!!originCountry}>
-            <SubText>{Titles.subHeader}</SubText>
+            <SubText>{titles.subHeader}</SubText>
           </SubTextContainer>
           <ActionsContainer>
             <TraceEvent
