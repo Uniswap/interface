@@ -69,17 +69,6 @@ export interface DualStakingInfo extends CommonStakingInfo {
   rewardTokenBPrice: number
 }
 
-export interface GammaPair {
-  address: string
-  title: string
-  type: Presets
-  token0Address: string
-  token1Address: string
-  ableToFarm?: boolean
-  pid?: number
-  masterChefIndex?: number
-}
-
 interface FarmPair {
   type: Presets
   title: string

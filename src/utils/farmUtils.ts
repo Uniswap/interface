@@ -18,14 +18,12 @@ export function useUSDCPricesFromAddresses(addressArray: string[]) {
   const { chainId } = useWeb3React()
   const [prices, setPrices] = useState<{ address: string; price: number }[] | undefined>()
   const addressStr = addressArray.join('_')
-  // TODO: review this function USDCPRICES
   useEffect(() => {
     if (!chainId) return
     ;(async () => {
       const addresses = addressStr.split('_')
 
       const pricesV2: any[] = []
-      // TODO: review response
       const res = await fetch(
         `${process.env.REACT_APP_LEADERBOARD_APP_URL}/utils/token-prices/v3?chainId=${chainId}&addresses=${addressStr}`
       )

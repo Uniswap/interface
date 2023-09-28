@@ -3,8 +3,6 @@ import { useWeb3React } from '@web3-react/core'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
 import { useCallback, useEffect } from 'react'
-import { useModalIsOpen, useToggleAddGammaLiquidityModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
 
@@ -29,9 +27,6 @@ const Divider = styled.div`
 `
 
 export default function AddGammaLiquidityModal() {
-  const open = useModalIsOpen(ApplicationModal.ADD_GAMMA_FARM)
-  const toggle = useToggleAddGammaLiquidityModal()
-
   const { account } = useWeb3React()
   useEffect(() => {
     if (open && account) {

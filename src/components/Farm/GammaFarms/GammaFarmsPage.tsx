@@ -63,11 +63,11 @@ const GammaFarmsPage: React.FC<{
     return gammaPositions
   }
 
-  const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 1000))
+  const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 3000))
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const _currentTime = Math.floor(Date.now() / 1000)
+      const _currentTime = Math.floor(Date.now() / 3000)
       setCurrentTime(_currentTime)
     }, 3000)
     return () => clearInterval(interval)
@@ -98,66 +98,67 @@ const GammaFarmsPage: React.FC<{
   }, [currentTime])
 
   const filteredAndSortedFarms = useMemo(() => {
-    const allFarms = allGammaFarms.map((item) => {
-      if (chainId) {
+    if (!chainId) {
+      return allGammaFarms.map((item) => ({ ...item, token0: null, token1: null } as itemFarmToken))
+    }
+
+    return allGammaFarms
+      .map((item) => {
         const token0 = getTokenFromAddress(item?.token0Address, tokenMap, [])
         const token1 = getTokenFromAddress(item?.token1Address, tokenMap, [])
         return { ...item, token0: token0 ?? null, token1: token1 ?? null } as itemFarmToken
-      }
-      return { ...item, token0: null, token1: null } as itemFarmToken
-    })
-
-    const allFarmsFiltered = allFarms?.filter((item: itemFarmToken) => filterFarm(item, search))
-
-    return allFarmsFiltered
+      })
+      .filter((item) => filterFarm(item, search))
   }, [allGammaFarms, chainId, search, tokenMap])
 
   return (
-    <div style={{ padding: '2 3' }}>
-      {gammaFarmsLoading || gammaPositionsLoading || rewardTokenAddress.loading || rewardPerSecond.loading ? (
-        <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '10px', paddingBottom: '30px' }}>
-          <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="3.5rem" />
-        </div>
-      ) : filteredAndSortedFarms.length === 0 ? (
-        <NoFarmsContainer>
-          <Frown size="2rem" stroke="white" />
-          <p style={{ marginTop: 12 }}>noGammaFarms</p>
-        </NoFarmsContainer>
-      ) : (
-        !gammaFarmsLoading &&
-        !gammaPositionsLoading &&
-        filteredAndSortedFarms.length > 0 && (
-          <div>
-            {filteredAndSortedFarms.map((farm: any) => {
-              const foundData = gammaData
-                ? Object.values(gammaData).find((poolData) => poolData.poolAddress === farm.address.toLowerCase())
-                : undefined
-
-              const tvl = gammaPositions ? gammaPositions[farm.hypervisor].balanceUSD : 0
-
-              const rewardData = {
-                tvl,
-                ...rewardsData,
-              }
-
-              return (
-                <div style={{ marginBottom: '20px' }} key={farm.address}>
-                  {rewardPerSecond && rewardTokenAddress && (
-                    <GammaFarmCard
-                      token0={farm.token0}
-                      token1={farm.token1}
-                      pairData={farm}
-                      data={foundData}
-                      rewardData={rewardData}
-                    />
-                  )}
-                </div>
-              )
-            })}
+    <>
+      <div style={{ padding: '2 3' }}>
+        {gammaFarmsLoading || gammaPositionsLoading || rewardTokenAddress.loading || rewardPerSecond.loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '10px', paddingBottom: '30px' }}>
+            <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="3.5rem" />
           </div>
-        )
-      )}
-    </div>
+        ) : filteredAndSortedFarms.length === 0 ? (
+          <NoFarmsContainer>
+            <Frown size="2rem" stroke="white" />
+            <p style={{ marginTop: 12 }}>noGammaFarms</p>
+          </NoFarmsContainer>
+        ) : (
+          !gammaFarmsLoading &&
+          !gammaPositionsLoading &&
+          filteredAndSortedFarms.length > 0 && (
+            <div>
+              {filteredAndSortedFarms.map((farm: any) => {
+                const foundData = gammaData
+                  ? Object.values(gammaData).find((poolData) => poolData.poolAddress === farm.address.toLowerCase())
+                  : undefined
+
+                const tvl = gammaPositions ? gammaPositions[farm.hypervisor].balanceUSD : 0
+
+                const rewardData = {
+                  tvl,
+                  ...rewardsData,
+                }
+
+                return (
+                  <div style={{ marginBottom: '20px' }} key={farm.address}>
+                    {rewardPerSecond && rewardTokenAddress && (
+                      <GammaFarmCard
+                        token0={farm.token0}
+                        token1={farm.token1}
+                        pairData={farm}
+                        data={foundData}
+                        rewardData={rewardData}
+                      />
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          )
+        )}
+      </div>
+    </>
   )
 }
 

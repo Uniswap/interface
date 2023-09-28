@@ -1,8 +1,10 @@
+import { TransactionResponse } from '@ethersproject/abstract-provider'
+import { TransactionReceipt } from '@ethersproject/providers'
 import { Token } from '@pollum-io/sdk-core'
 import { ChainId } from '@pollum-io/smart-order-router'
 import { GAMMA_MASTERCHEF_ADDRESSES, PSYS_ADDRESS } from 'constants/addresses'
-import { BigNumber } from 'ethers/lib/ethers'
-import { formatUnits } from 'ethers/lib/utils'
+import { BigNumber, Contract } from 'ethers/lib/ethers'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { useFetchedTokenData } from 'graphql/tokens/TokenData'
 import { useMasterChefContract } from 'hooks/useContract'
 import { atomWithReset } from 'jotai/utils'
@@ -10,6 +12,7 @@ import { useSingleCallResult } from 'lib/hooks/multicall'
 import { ParsedQs } from 'qs'
 import { useEffect, useMemo, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { TransactionType } from 'state/transactions/types'
 
 import { GammaPairTokens, GlobalConst, itemFarmToken, MINICHEF_ABI } from './constants'
 
@@ -227,6 +230,7 @@ export const getStakedAmount = (item: any, stakedAmounts: any) => {
   )
   return sItem ? Number(sItem.amount) : 0
 }
+
 const calculateRewardUSD = (gammaReward: any, gammaRewardsWithUSDPrice: any) => {
   return gammaReward?.['rewarders']
     ? Object.values(gammaReward['rewarders']).reduce((total: number, rewarder: any) => {
@@ -357,4 +361,98 @@ export const useApr = (poolId: string, poolRewardPerSecInPSYS: BigNumber, tvlPoo
   }, [PSYSUSD, poolInfo?.result?.allocPoint, poolRewardPerSecInPSYS, stakedPSYS, totalAllocPoints.result, tvlPoolUSD])
 
   return stakingAPR
+}
+
+export const getDepositAmounts = async (
+  tokenInput: number,
+  uniProxyContract: Contract,
+  setDeposit1: (deposit: string) => void,
+  setDeposit0: (deposit: string) => void,
+  pairData: any,
+  token0Address: string,
+  token1Address: string,
+  deposit0: string,
+  deposit1: string
+) => {
+  if (!uniProxyContract) return
+
+  let amounts
+  if (tokenInput === 0 && deposit0) {
+    amounts = await uniProxyContract.getDepositAmount(pairData.hypervisor, token0Address, parseUnits(deposit0, 18))
+    setDeposit1(formatUnits(amounts.amountEnd, 18))
+  } else if (tokenInput === 1 && deposit1) {
+    amounts = await uniProxyContract.getDepositAmount(pairData.hypervisor, token1Address, parseUnits(deposit1, 18))
+    setDeposit0(formatUnits(amounts.amountEnd, 18))
+  }
+}
+
+// const depositUniProxy = async () => {
+//   if (!uniProxyContract || !account) return
+//   if (approvalToken0 !== ApprovalState.APPROVED || approvalToken1 !== ApprovalState.APPROVED) {
+//     console.error('Tokens not approved')
+//     return
+//   }
+
+//   try {
+//     const response = await uniProxyContract.deposit(
+//       parseUnits(deposit0, 18),
+//       parseUnits(deposit1, 18),
+//       account,
+//       pairData.hypervisor,
+//       [0, 0, 0, 0]
+//     )
+//     addTransaction(response, {
+//       type: TransactionType.ADD_LIQUIDITY_GAMMA,
+//       currencyId0: token0Address,
+//       currencyId1: token1Address,
+//       amount0: parseUnits(deposit0, 18).toString(),
+//       amount1: parseUnits(deposit1, 18).toString(),
+//     })
+//     const receipt = await response.wait()
+//     finalizedTransaction(receipt, {
+//       summary: 'depositliquidity',
+//     })
+//   } catch (e) {
+//     console.error('Deposit failed', e)
+//   }
+// }
+
+export const withdrawHypervisor = async (
+  hypervisorContract: Contract | null,
+  account: string | undefined,
+  unStakeGamma: string,
+  pairData: any,
+  finalizedTransaction: (
+    receipt: TransactionReceipt,
+    customData?:
+      | {
+          summary?: string
+          approval?: {
+            tokenAddress: string
+            spender: string
+          }
+          claim?: {
+            recipient: string
+          }
+        }
+      | undefined
+  ) => void,
+  addTransaction: (response: TransactionResponse, info: any) => void
+) => {
+  if (!hypervisorContract || !account) return
+
+  try {
+    const response = await hypervisorContract.withdraw(parseUnits(unStakeGamma, 18), account, account, [0, 0, 0, 0])
+    addTransaction(response, {
+      type: TransactionType.REMOVE_LIQUIDITY_GAMMA,
+      amount: parseUnits(unStakeGamma, 18).toString(),
+      tokenAddress: pairData.hypervisor,
+    })
+    const receipt = await response.wait()
+    finalizedTransaction(receipt, {
+      summary: 'withdrawliquidity',
+    })
+  } catch (e) {
+    console.error('Withdraw failed', e)
+  }
 }
