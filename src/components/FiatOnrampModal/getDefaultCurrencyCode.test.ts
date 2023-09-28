@@ -1,7 +1,16 @@
 import { ChainId, WETH9 } from '@uniswap/sdk-core'
-import { MATIC, USDC_ARBITRUM, USDC_MAINNET, USDC_OPTIMISM, USDC_POLYGON, USDT, WBTC } from 'constants/tokens'
+import {
+  MATIC,
+  USDC_ARBITRUM,
+  USDC_MAINNET,
+  USDC_OPTIMISM,
+  USDC_POLYGON,
+  USDT,
+  WBTC,
+  WETH_POLYGON,
+} from 'constants/tokens'
 
-import { getDefaultCurrencyCode, parsePathParts } from './util'
+import { getDefaultCurrencyCode } from './getDefaultCurrencyCode'
 
 describe('getDefaultCurrencyCode', () => {
   it('NATIVE/arbitrum should return the correct currency code', () => {
@@ -11,7 +20,7 @@ describe('getDefaultCurrencyCode', () => {
     expect(getDefaultCurrencyCode('NATIVE', 'optimism')).toBe('eth_optimism')
   })
   it('WETH/polygon should return the correct currency code', () => {
-    expect(getDefaultCurrencyCode('0x7ceb23fd6bc0add59e62ac25578270cff1b9f619', 'polygon')).toBe('eth_polygon')
+    expect(getDefaultCurrencyCode(WETH_POLYGON.address, 'polygon')).toBe('eth_polygon')
   })
   it('WETH/ethereum should return the correct currency code', () => {
     expect(getDefaultCurrencyCode(WETH9[ChainId.MAINNET].address, 'ethereum')).toBe('weth')
@@ -48,22 +57,5 @@ describe('getDefaultCurrencyCode', () => {
     expect(getDefaultCurrencyCode(USDC_OPTIMISM.address, 'ethereum')).toBe('eth')
     expect(getDefaultCurrencyCode(USDC_POLYGON.address, 'ethereum')).toBe('eth')
     expect(getDefaultCurrencyCode(MATIC.address, 'arbitrum')).toBe('eth')
-  })
-})
-
-describe('parseLocation', () => {
-  it('should parse the URL correctly', () => {
-    expect(parsePathParts('/tokens/ethereum/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599')).toEqual({
-      network: 'ethereum',
-      tokenAddress: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
-    })
-    expect(parsePathParts('tokens/ethereum/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599')).toEqual({
-      network: 'ethereum',
-      tokenAddress: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
-    })
-    expect(parsePathParts('/swap')).toEqual({
-      network: undefined,
-      tokenAddress: undefined,
-    })
   })
 })

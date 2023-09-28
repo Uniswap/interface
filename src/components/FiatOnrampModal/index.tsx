@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
-import { useHref, useLocation } from 'react-router-dom'
+import { useHref, useParams } from 'react-router-dom'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components'
@@ -10,7 +10,8 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import Modal from '../Modal'
-import { getDefaultCurrencyCode, MOONPAY_SUPPORTED_CURRENCY_CODES, parsePathParts } from './util'
+import { MOONPAY_SUPPORTED_CURRENCY_CODES } from './constants'
+import { getDefaultCurrencyCode } from './getDefaultCurrencyCode'
 
 const MOONPAY_DARK_BACKGROUND = '#1c1c1e'
 const Wrapper = styled.div<{ isDarkMode: boolean }>`
@@ -63,8 +64,10 @@ export default function FiatOnrampModal() {
   const closeModal = useCloseModal()
   const fiatOnrampModalOpen = useModalIsOpen(ApplicationModal.FIAT_ONRAMP)
 
-  const location = useLocation()
-  const { network, tokenAddress } = parsePathParts(location.pathname)
+  const { tokenAddress, chainName } = useParams<{
+    tokenAddress: string
+    chainName?: string
+  }>()
 
   const [signedIframeUrl, setSignedIframeUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -90,7 +93,7 @@ export default function FiatOnrampModal() {
         body: JSON.stringify({
           theme: isDarkMode ? 'dark' : 'light',
           colorCode: theme.accent1,
-          defaultCurrencyCode: getDefaultCurrencyCode(tokenAddress, network),
+          defaultCurrencyCode: getDefaultCurrencyCode(tokenAddress, chainName),
           redirectUrl: swapUrl,
           walletAddresses: JSON.stringify(
             MOONPAY_SUPPORTED_CURRENCY_CODES.reduce(
@@ -111,7 +114,7 @@ export default function FiatOnrampModal() {
     } finally {
       setLoading(false)
     }
-  }, [account, isDarkMode, network, swapUrl, theme.accent1, tokenAddress])
+  }, [account, isDarkMode, chainName, swapUrl, theme.accent1, tokenAddress])
 
   useEffect(() => {
     fetchSignedIframeUrl()
