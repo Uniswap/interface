@@ -51,11 +51,12 @@ export function LongText(props: LongTextProps): JSX.Element {
     (event: LayoutChangeEvent) => {
       if (!renderAsMarkdown || initialContentHeight !== undefined) return
       const textContentHeight = event.nativeEvent.layout.height
-      setTextLengthExceedsLimit(textContentHeight > maxVisibleHeight)
+      const currentLines = Math.floor(textContentHeight / textLineHeight)
+      setTextLengthExceedsLimit(currentLines > initialDisplayedLines)
       toggleExpanded()
       setInitialContentHeight(textContentHeight)
     },
-    [initialContentHeight, maxVisibleHeight, renderAsMarkdown]
+    [initialContentHeight, initialDisplayedLines, textLineHeight, renderAsMarkdown]
   )
 
   const onTextLayout = useCallback(
