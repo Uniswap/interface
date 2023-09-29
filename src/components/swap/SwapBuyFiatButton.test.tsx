@@ -1,6 +1,8 @@
 import userEvent from '@testing-library/user-event'
 import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer'
+import store from 'state'
+import { setOriginCountry } from 'state/user/reducer'
 import { mocked } from 'test-utils/mocked'
 import { act, fireEvent, render, screen } from 'test-utils/render'
 
@@ -45,6 +47,7 @@ describe('SwapBuyFiatButton.tsx', () => {
   let useOpenModal: jest.Mock<any, any>
 
   beforeAll(() => {
+    store.dispatch(setOriginCountry('US'))
     toggleWalletDrawer = jest.fn()
     useOpenModal = jest.fn()
   })

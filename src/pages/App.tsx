@@ -1,6 +1,6 @@
 import { CustomUserProperties, getBrowser, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { getDeviceId, sendAnalyticsEvent, Trace, user } from 'analytics'
+import { getDeviceId, sendAnalyticsEvent, sendInitializationEvent, Trace, user } from 'analytics'
 import ErrorBoundary from 'components/ErrorBoundary'
 import Loader from 'components/Icons/LoadingSpinner'
 import NavBar, { PageTabs } from 'components/NavBar'
@@ -149,7 +149,7 @@ export default function App() {
     const serviceWorkerProperty = isServiceWorkerInstalled ? (isServiceWorkerHit ? 'hit' : 'miss') : 'uninstalled'
 
     const pageLoadProperties = { service_worker: serviceWorkerProperty }
-    sendAnalyticsEvent(SharedEventName.APP_LOADED, pageLoadProperties)
+    sendInitializationEvent(SharedEventName.APP_LOADED, pageLoadProperties)
     const sendWebVital =
       (metric: string) =>
       ({ delta }: Metric) =>

@@ -14,6 +14,7 @@ import Tooltip from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import useENSName from 'hooks/useENSName'
+import { useIsNotOriginCountry } from 'hooks/useIsNotOriginCountry'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
@@ -159,6 +160,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
+  const shouldShowBuyFiatButton = useIsNotOriginCountry('GB')
   const { formatNumber } = useFormatter()
 
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
@@ -304,26 +306,28 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <Trans>View and sell NFTs</Trans>
           </HeaderButton>
         )}
-        <HeaderButton
-          size={ButtonSize.medium}
-          emphasis={ButtonEmphasis.highSoft}
-          onClick={handleBuyCryptoClick}
-          disabled={disableBuyCryptoButton}
-          data-testid="wallet-buy-crypto"
-        >
-          {error ? (
-            <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
-          ) : (
-            <>
-              {fiatOnrampAvailabilityLoading ? (
-                <StyledLoadingButtonSpinner />
-              ) : (
-                <CreditCard height="20px" width="20px" />
-              )}{' '}
-              <Trans>Buy crypto</Trans>
-            </>
-          )}
-        </HeaderButton>
+        {shouldShowBuyFiatButton && (
+          <HeaderButton
+            size={ButtonSize.medium}
+            emphasis={ButtonEmphasis.highSoft}
+            onClick={handleBuyCryptoClick}
+            disabled={disableBuyCryptoButton}
+            data-testid="wallet-buy-crypto"
+          >
+            {error ? (
+              <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
+            ) : (
+              <>
+                {fiatOnrampAvailabilityLoading ? (
+                  <StyledLoadingButtonSpinner />
+                ) : (
+                  <CreditCard height="20px" width="20px" />
+                )}{' '}
+                <Trans>Buy crypto</Trans>
+              </>
+            )}
+          </HeaderButton>
+        )}
         {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (
           <FiatOnrampNotAvailableText marginTop="8px">
             <Trans>Not available in your region</Trans>

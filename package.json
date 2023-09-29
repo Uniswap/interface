@@ -190,7 +190,7 @@
     "@sentry/tracing": "^7.45.0",
     "@sentry/types": "^7.45.0",
     "@types/react-window-infinite-loader": "^1.0.6",
-    "@uniswap/analytics": "^1.4.0",
+    "@uniswap/analytics": "1.5.0",
     "@uniswap/analytics-events": "^2.24.0",
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",

@@ -91,6 +91,7 @@ interface ExpectedUserState {
   showSurveyPopup?: boolean
   disabledUniswapX?: boolean
   optedOutOfUniswapX?: boolean
+  originCountry?: string
 }
 
 assert<Equals<UserState, ExpectedUserState>>()

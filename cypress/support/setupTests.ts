@@ -27,7 +27,10 @@ beforeEach(() => {
         server_upload_time: Date.now(),
         payload_size_bytes: byteSize,
         events_ingested: req.body.events.length,
-      })
+      }),
+      {
+        'origin-country': 'US',
+      }
     )
   }).intercept('https://*.sentry.io', { statusCode: 200 })
 
