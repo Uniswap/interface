@@ -38,7 +38,6 @@ let wcWeb3WalletReadyReject: (e: unknown) => void
 const wcWeb3WalletReady = new Promise<void>((resolve, reject) => {
   wcWeb3WalletReadyResolve = resolve
   wcWeb3WalletReadyReject = reject
-  resolve()
 })
 
 export const waitForWcWeb3WalletIsReady = () => wcWeb3WalletReady
