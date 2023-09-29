@@ -1,7 +1,6 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { createContext, ReactNode, useCallback, useContext } from 'react'
-import { ConfigResult, useConfig, useGate } from 'statsig-react'
+import { useGate } from 'statsig-react'
 
 /**
  * The value here must match the value in the statsig dashboard, if you plan to use statsig.
@@ -23,10 +22,6 @@ export enum FeatureFlag {
   uniswapXDefaultEnabled = 'uniswapx_default_enabled',
 }
 
-enum FeatureFlagConfig {
-  chains = 'chains',
-}
-
 interface FeatureFlagsContextType {
   isLoaded: boolean
   flags: Record<string, string>
@@ -41,10 +36,6 @@ function useFeatureFlagsContext(): FeatureFlagsContextType {
   } else {
     return context
   }
-}
-
-function useFeatureFlagsConfig(): ConfigResult {
-  return useConfig('feature_flags')
 }
 
 /* update and save feature flag settings */
@@ -97,17 +88,5 @@ export function useBaseFlag(flag: string, defaultValue = BaseVariant.Control): B
       return BaseVariant.Control
     default:
       return defaultValue
-  }
-}
-
-// eslint-disable-next-line import/no-unused-modules
-export function useFeatureFlagsChains(): ChainId[] {
-  const { config } = useFeatureFlagsConfig()
-  const chains = config.get(FeatureFlagConfig.chains, [])
-  if (chains.every((c) => Object.values(ChainId).includes(c))) {
-    return chains as ChainId[]
-  } else {
-    console.error('feature flag config chains contain invalid ChainId')
-    return []
   }
 }
