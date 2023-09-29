@@ -15,6 +15,7 @@ export interface WalletState {
   activeAccountAddress: Address | null
   finishedOnboarding?: boolean
   isUnlocked: boolean
+
   // Persisted UI configs set by the user through interaction with filters and settings
   settings: {
     nftViewType?: NFTViewType
@@ -22,6 +23,10 @@ export interface WalletState {
     tokensOrderBy?: TokensOrderBy
     swapProtection: SwapProtectionSetting
   }
+
+  // Tracks app rating
+  appRatingPromptedMs?: number
+  appRatingProvidedMs?: number
 }
 
 export const initialWalletState: WalletState = {
@@ -128,6 +133,15 @@ const slice = createSlice({
     ) => {
       state.settings.swapProtection = newSwapProtectionSetting
     },
+    setAppRating: (
+      state,
+      { payload: { remindLater } }: PayloadAction<{ remindLater: boolean }>
+    ) => {
+      state.appRatingPromptedMs = Date.now()
+      if (!remindLater) {
+        state.appRatingProvidedMs = Date.now()
+      }
+    },
     resetWallet: () => initialWalletState,
     restoreMnemonicComplete: (state) => state,
   },
@@ -149,6 +163,7 @@ export const {
   setTokensOrderBy,
   restoreMnemonicComplete,
   setSwapProtectionSetting,
+  setAppRating,
 } = slice.actions
 
 export const walletReducer = slice.reducer

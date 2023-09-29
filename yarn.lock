@@ -11279,10 +11279,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/qs@npm:*, @types/qs@npm:^6.9.5":
-  version: 6.9.7
-  resolution: "@types/qs@npm:6.9.7"
-  checksum: 7fd6f9c25053e9b5bb6bc9f9f76c1d89e6c04f7707a7ba0e44cc01f17ef5284adb82f230f542c2d5557d69407c9a40f0f3515e8319afd14e1e16b5543ac6cdba
+"@types/qs@npm:*, @types/qs@npm:^6.9.5, @types/qs@npm:^6.9.7":
+  version: 6.9.8
+  resolution: "@types/qs@npm:6.9.8"
+  checksum: c28e07d00d07970e5134c6eed184a0189b8a4649e28fdf36d9117fe671c067a44820890de6bdecef18217647a95e9c6aebdaaae69f5fe4b0bec9345db885f77e
   languageName: node
   linkType: hard
 
@@ -11897,9 +11897,11 @@ __metadata:
     expo-clipboard: 4.1.2
     expo-haptics: 12.0.1
     expo-linear-gradient: 12.3.0
+    expo-linking: ~4.0.1
     expo-local-authentication: 13.0.2
     expo-modules-core: 1.5.8
     expo-screen-capture: 4.2.0
+    expo-store-review: ~6.2.1
     expo-web-browser: 12.0.0
     firebase-functions: 4.1.0
     formik: 2.2.9
@@ -19587,7 +19589,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-constants@npm:~14.2.1":
+"expo-constants@npm:~14.2.0, expo-constants@npm:~14.2.1":
   version: 14.2.1
   resolution: "expo-constants@npm:14.2.1"
   dependencies:
@@ -19680,6 +19682,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-linking@npm:~4.0.1":
+  version: 4.0.1
+  resolution: "expo-linking@npm:4.0.1"
+  dependencies:
+    "@types/qs": ^6.9.7
+    expo-constants: ~14.2.0
+    invariant: ^2.2.4
+    qs: ^6.11.0
+    url-parse: ^1.5.9
+  checksum: 631656c9cad78c345b35b7decd8c2bc22014b867321fcbb0c740b15001a492080ee3be26d27a89587eb2736223c82a39c600950930cf44b6dd95d37acb7e1527
+  languageName: node
+  linkType: hard
+
 "expo-local-authentication@npm:13.0.2":
   version: 13.0.2
   resolution: "expo-local-authentication@npm:13.0.2"
@@ -19743,6 +19758,15 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: 6d34feb78a8c5e3087e935ef40a0877ce6ce804b0a7a6a636ea9b4994f3e8eff7f9a2ee725a2d88c057d9b42b781c3448e67250266db855a381cf89818d3c31e
+  languageName: node
+  linkType: hard
+
+"expo-store-review@npm:~6.2.1":
+  version: 6.2.1
+  resolution: "expo-store-review@npm:6.2.1"
+  peerDependencies:
+    expo: "*"
+  checksum: 54d5b0115a241003dff6d419c1ed1e9d3d8230b8b23a3a80179715ce72044820fbecde2f45ace7a50d1719470b0753bdfba69653df926430bc0e9429c630db91
   languageName: node
   linkType: hard
 

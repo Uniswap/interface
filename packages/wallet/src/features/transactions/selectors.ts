@@ -16,10 +16,17 @@ import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export const selectTransactions = (state: RootState): TransactionStateMap => state.transactions
 
-export const selectHasDoneASwap = createSelector(selectTransactions, (transactions) => {
+export const selectSwapTransactionsCount = createSelector(selectTransactions, (transactions) => {
+  let swapTransactionCount = 0
   const txs = flattenObjectOfObjects(transactions)
-  const txDetails = txs.map((txObj) => Object.values(txObj)[0])
-  return !!txDetails.find((tx) => tx?.typeInfo.type === TransactionType.Swap)
+  for (const tx of txs) {
+    for (const transaction of Object.values(tx)) {
+      if (transaction.typeInfo.type === TransactionType.Swap) {
+        swapTransactionCount++
+      }
+    }
+  }
+  return swapTransactionCount
 })
 
 export const makeSelectAddressTransactions = (

@@ -14,8 +14,8 @@ import { attemptCancelTransaction } from 'wallet/src/features/transactions/cance
 import { refetchGQLQueries } from 'wallet/src/features/transactions/refetchGQLQueriesSaga'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
 import {
-  selectHasDoneASwap,
   selectIncompleteTransactions,
+  selectSwapTransactionsCount,
 } from 'wallet/src/features/transactions/selectors'
 import {
   addTransaction,
@@ -358,7 +358,7 @@ function* finalizeTransaction({
   yield* refetchGQLQueries({ transaction, apolloClient })
 
   if (transaction.typeInfo.type === TransactionType.Swap) {
-    const hasDoneASwap = yield* select(selectHasDoneASwap)
+    const hasDoneASwap = (yield* select(selectSwapTransactionsCount)) > 0
     if (!hasDoneASwap) {
       // Only log event if it's a user's first ever swap
       yield* call([appsFlyer, appsFlyer.logEvent], 'swap_completed', {})
