@@ -74,12 +74,6 @@ jest.mock('@web3-react/core', () => {
   }
 })
 
-jest.mock('connection/eagerlyConnect', () => {
-  return {
-    useConnectionReady: () => true,
-  }
-})
-
 jest.mock('state/routing/slice', () => {
   const routingSlice = jest.requireActual('state/routing/slice')
   return {
