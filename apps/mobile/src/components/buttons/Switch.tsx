@@ -1,6 +1,7 @@
 import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React from 'react'
 import { Switch as BaseSwitch, SwitchProps, ViewProps } from 'react-native'
+import { IS_ANDROID } from 'src/constants/globals'
 import { Flex, useSporeColors } from 'ui/src'
 import { Theme } from 'ui/src/theme/restyle'
 
@@ -18,15 +19,18 @@ type Props = {
 export function Switch({ value, onValueChange, disabled, ...rest }: Props): JSX.Element {
   const colors = useSporeColors()
 
+  const falseThumbColor = IS_ANDROID ? colors.neutral3.get() : colors.surface1.get()
+  const trackColor = colors.surface3.get()
+
   return (
     <Flex>
       <BaseSwitch
         ios_backgroundColor="transparent"
         // TODO(MOB-1226): pull colors from dark/light theme with Tamagui
-        thumbColor={value ? colors.accent1.get() : colors.surface1.get()}
+        thumbColor={value ? colors.accent1.get() : falseThumbColor}
         trackColor={{
-          false: colors.surface4.val,
-          true: colors.surface3.get(),
+          false: trackColor,
+          true: trackColor,
         }}
         value={value}
         onValueChange={disabled ? undefined : onValueChange}
