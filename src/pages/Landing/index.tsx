@@ -343,7 +343,7 @@ export default function Landing() {
 
     mainCards.forEach((card) => {
       if (card.to.startsWith('/swap') && renderUkSpecificText) {
-        card.description = 'Explore tokens on Ethereum, Polygon, Optimism and more '
+        card.description = 'Explore tokens on Ethereum, Polygon, Optimism and more.'
         card.cta = 'Discover Tokens'
       }
     })
