@@ -1,7 +1,7 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { createContext, ReactNode, useCallback, useContext } from 'react'
-import { ConfigResult, DynamicConfig, useConfig, useGate } from 'statsig-react'
+import { ConfigResult, useConfig, useGate } from 'statsig-react'
 
 /**
  * The value here must match the value in the statsig dashboard, if you plan to use statsig.
@@ -101,6 +101,12 @@ export function useBaseFlag(flag: string, defaultValue = BaseVariant.Control): B
 }
 
 export function useFeatureFlagsChains(): ChainId[] {
-  const { config }: { config: DynamicConfig } = useFeatureFlagsConfig()
-  return config.get(FeatureFlagConfig.chains, []) as ChainId[] // catch in case .chains is not ChainId
+  const { config } = useFeatureFlagsConfig()
+  const chains = config.get(FeatureFlagConfig.chains, [])
+  if (chains.every((c) => Object.values(ChainId).includes(c))) {
+    return chains as ChainId[]
+  } else {
+    console.error('feature flag config chains contain invalid ChainId')
+    return []
+  }
 }
