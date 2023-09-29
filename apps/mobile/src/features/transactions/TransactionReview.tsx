@@ -86,7 +86,6 @@ export function TransactionReview({
 
   const equivalentValueTextVariant = media.short ? 'body2' : 'body1'
 
-  const spacingGap = media.short ? 'none' : 'spacing4'
   const innerGap = media.short ? '$none' : '$spacing12'
   const arrowPadding = media.short ? '$spacing4' : '$spacing8'
   const amountAndEquivalentValueGap = media.short ? '$spacing4' : '$spacing4'

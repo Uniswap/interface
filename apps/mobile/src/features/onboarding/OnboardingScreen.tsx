@@ -27,7 +27,7 @@ export function OnboardingScreen({
   const insets = useSafeAreaInsets()
   const media = useMedia()
 
-  const gapSize = media.short ? 'none' : 'spacing16'
+  const gapSize = media.short ? 'none' : '$spacing16'
 
   return (
     <Screen $short={{ pt: headerHeight * 0.88 }} edges={['right', 'left']} pt={headerHeight}>
