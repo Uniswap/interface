@@ -23,6 +23,10 @@ export enum FeatureFlag {
   uniswapXDefaultEnabled = 'uniswapx_default_enabled',
 }
 
+enum FeatureFlagConfig {
+  chains = 'chains',
+}
+
 interface FeatureFlagsContextType {
   isLoaded: boolean
   flags: Record<string, string>
@@ -40,12 +44,7 @@ function useFeatureFlagsContext(): FeatureFlagsContextType {
 }
 
 function useFeatureFlagsConfig(): ConfigResult {
-  const config = useConfig('feature_flags')
-  if (!config) {
-    throw Error('Feature flag hooks can only be used by children of FeatureFlagProvider.')
-  } else {
-    return config
-  }
+  return useConfig('feature_flags')
 }
 
 /* update and save feature flag settings */
@@ -77,9 +76,7 @@ export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
 }
 
 export function useFeatureFlagsIsLoaded(): boolean {
-  const contextLoaded = useFeatureFlagsContext().isLoaded
-  const configLoaded = !useFeatureFlagsConfig().isLoading
-  return contextLoaded && configLoaded
+  return useFeatureFlagsContext().isLoaded
 }
 
 export enum BaseVariant {
@@ -105,5 +102,5 @@ export function useBaseFlag(flag: string, defaultValue = BaseVariant.Control): B
 
 export function useFeatureFlagsChains(): ChainId[] {
   const { config }: { config: DynamicConfig } = useFeatureFlagsConfig()
-  return (config?.getValue('chains') as ChainId[]) || []
+  return config.get(FeatureFlagConfig.chains, []) as ChainId[] // catch in case .chains is not ChainId
 }
