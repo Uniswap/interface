@@ -34,12 +34,11 @@ export default function useENSName(address?: string): { ENSName: string | null; 
   const checkedName = address === fwdAddr?.address ? name : null
 
   const changed = debouncedAddress !== address
-  const loading = changed || resolverAddress.loading || nameCallRes.loading || fwdAddr.loading
   return useMemo(
     () => ({
       ENSName: changed ? null : checkedName,
-      loading,
+      loading: changed || resolverAddress.loading || nameCallRes.loading,
     }),
-    [changed, checkedName, loading]
+    [changed, nameCallRes.loading, checkedName, resolverAddress.loading]
   )
 }

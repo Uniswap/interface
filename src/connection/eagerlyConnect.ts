@@ -1,25 +1,7 @@
 import { Connector } from '@web3-react/types'
-import { useSyncExternalStore } from 'react'
 
 import { deprecatedNetworkConnection, getConnection, gnosisSafeConnection } from './index'
-import { deletePersistedConnectionMeta, getPersistedConnectionMeta } from './meta'
-import { ConnectionType } from './types'
-
-class FailedToConnect extends Error {}
-
-let connectionReady: Promise<void> | true = true
-
-export function useConnectionReady() {
-  return useSyncExternalStore(
-    (onStoreChange) => {
-      if (connectionReady instanceof Promise) {
-        connectionReady.finally(onStoreChange)
-      }
-      return () => undefined
-    },
-    () => connectionReady === true
-  )
-}
+import { ConnectionType, selectedWalletKey, toConnectionType } from './types'
 
 async function connect(connector: Connector, type: ConnectionType) {
   performance.mark(`web3:connect:${type}:start`)
@@ -45,25 +27,15 @@ if (window !== window.parent) {
 }
 connect(deprecatedNetworkConnection.connector, ConnectionType.DEPRECATED_NETWORK)
 
-// Get the persisted wallet type from the last session.
-const meta = getPersistedConnectionMeta()
-if (meta?.type) {
-  const selectedConnection = getConnection(meta.type)
+const selectedWallet = toConnectionType(localStorage.getItem(selectedWalletKey) ?? undefined)
+if (selectedWallet) {
+  const selectedConnection = getConnection(selectedWallet)
   if (selectedConnection) {
-    connectionReady = connect(selectedConnection.connector, meta.type)
-      .then((connected) => {
-        if (!connected) throw new FailedToConnect()
-      })
-      .catch((error) => {
-        // Clear the persisted wallet type if it failed to connect.
-        deletePersistedConnectionMeta()
-        // Log it if it threw an unknown error.
-        if (!(error instanceof FailedToConnect)) {
-          console.error(error)
-        }
-      })
-      .finally(() => {
-        connectionReady = true
-      })
+    connect(selectedConnection.connector, selectedWallet).then((connected) => {
+      if (!connected) {
+        // only clear the persisted wallet type if it failed to connect.
+        localStorage.removeItem(selectedWalletKey)
+      }
+    })
   }
 }

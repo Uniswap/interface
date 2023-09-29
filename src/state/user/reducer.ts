@@ -1,13 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { deletePersistedConnectionMeta, getPersistedConnectionMeta } from 'connection/meta'
 
-import { ConnectionType } from '../../connection/types'
+import { ConnectionType, selectedWalletKey, toConnectionType } from '../../connection/types'
 import { SupportedLocale } from '../../constants/locales'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { RouterPreference } from '../../state/routing/types'
 import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 
-const selectedWallet = getPersistedConnectionMeta()?.type
+const selectedWallet = toConnectionType(localStorage.getItem(selectedWalletKey) ?? undefined)
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
@@ -83,9 +82,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     updateSelectedWallet(state, { payload: { wallet } }) {
-      if (!wallet) {
-        deletePersistedConnectionMeta()
-      }
+      localStorage.setItem(selectedWalletKey, wallet)
       state.selectedWallet = wallet
     },
     updateUserLocale(state, action) {
