@@ -11,7 +11,7 @@ import { AppleLogo } from 'components/Logo/AppleLogo'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDownCircle } from 'react-feather'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
@@ -123,7 +123,7 @@ const DownloadWalletLink = styled.a`
   }
 `
 
-const TitleText = styled.h1<{ isDarkMode: boolean; $visible: boolean }>`
+const TitleText = styled.h1<{ isDarkMode: boolean; applyFadeIn: boolean; initiallyVisible: boolean }>`
   color: transparent;
   font-size: 36px;
   line-height: 44px;
@@ -140,13 +140,12 @@ const TitleText = styled.h1<{ isDarkMode: boolean; $visible: boolean }>`
         `};
   background-clip: text;
   -webkit-background-clip: text;
-
-  ${({ $visible }) =>
-    $visible
-      ? css`
-          ${textFadeIn}
-        `
-      : 'opacity: 0;'}
+  ${({ initiallyVisible }) => (initiallyVisible ? `opacity: 1.0;` : 'opacity: 0.0')}
+  ${({ applyFadeIn }) =>
+    applyFadeIn &&
+    css`
+      ${textFadeIn}
+    `}
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     font-size: 48px;
@@ -174,16 +173,15 @@ const SubText = styled.div`
   }
 `
 
-const SubTextContainer = styled.div<{ $visible: boolean }>`
+const SubTextContainer = styled.div<{ initiallyVisible: boolean; applyFadeIn: boolean }>`
   display: flex;
   justify-content: center;
-
-  ${({ $visible }) =>
-    $visible
-      ? css`
-          ${textFadeIn}
-        `
-      : 'opacity: 0;'}
+  ${({ initiallyVisible }) => (initiallyVisible ? `opacity: 1.0;` : 'opacity: 0.0')}
+  ${({ applyFadeIn }) =>
+    applyFadeIn &&
+    css`
+      ${textFadeIn}
+    `}
 `
 
 const LandingButton = styled(BaseButton)`
@@ -336,6 +334,7 @@ export default function Landing() {
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
   const originCountry = useAppSelector((state: AppState) => state.user.originCountry)
   const renderUkSpecificText = Boolean(originCountry) && originCountry === 'GB'
+  const [initiallyVisible] = useState(!!originCountry)
   const cards = useMemo(() => {
     const mainCards = MAIN_CARDS.filter(
       (card) =>
@@ -430,10 +429,14 @@ export default function Landing() {
           <Glow />
         </GlowContainer>
         <ContentContainer isDarkMode={isDarkMode}>
-          <TitleText isDarkMode={isDarkMode} $visible={!!originCountry}>
+          <TitleText
+            isDarkMode={isDarkMode}
+            initiallyVisible={initiallyVisible}
+            applyFadeIn={!initiallyVisible && !!originCountry}
+          >
             {titles.header}
           </TitleText>
-          <SubTextContainer $visible={!!originCountry}>
+          <SubTextContainer initiallyVisible={initiallyVisible} applyFadeIn={!initiallyVisible && !!originCountry}>
             <SubText>{titles.subHeader}</SubText>
           </SubTextContainer>
           <ActionsContainer>

@@ -5,9 +5,10 @@ import { TraceEvent } from 'analytics'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonText } from 'components/Button'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { useIsNotOriginCountry } from 'hooks/useIsNotOriginCountry'
 import { useCallback, useEffect, useState } from 'react'
-import styled from 'styled-components'
+import { useAppSelector } from 'state/hooks'
+import { AppState } from 'state/reducer'
+import styled, { css } from 'styled-components'
 import { ExternalLink } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 
@@ -26,8 +27,7 @@ enum BuyFiatFlowState {
   ACTIVE_NEEDS_ACCOUNT,
 }
 
-const StyledTextButton = styled(ButtonText)`
-  ${textFadeIn}
+const StyledTextButton = styled(ButtonText)<{ shouldFadeIn: boolean }>`
   color: ${({ theme }) => theme.neutral2};
   gap: 4px;
   font-weight: 485;
@@ -37,12 +37,19 @@ const StyledTextButton = styled(ButtonText)`
   &:active {
     text-decoration: none;
   }
+  ${({ shouldFadeIn }) =>
+    shouldFadeIn &&
+    css`
+      ${textFadeIn}
+    `}
 `
 
 export default function SwapBuyFiatButton() {
   const { account } = useWeb3React()
   const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
-  const shouldShowBuyFiatButton = useIsNotOriginCountry('GB')
+  const originCountry = useAppSelector((state: AppState) => state.user.originCountry)
+  const shouldShowBuyFiatButton = originCountry && originCountry !== 'GB'
+  const [shouldFadeIn] = useState(!originCountry)
   const [checkFiatRegionAvailability, setCheckFiatRegionAvailability] = useState(false)
   const {
     available: fiatOnrampAvailable,
@@ -130,7 +137,12 @@ export default function SwapBuyFiatButton() {
         element={InterfaceElementName.FIAT_ON_RAMP_BUY_BUTTON}
         properties={{ account_connected: !!account }}
       >
-        <StyledTextButton onClick={handleBuyCrypto} disabled={buyCryptoButtonDisabled} data-testid="buy-fiat-button">
+        <StyledTextButton
+          onClick={handleBuyCrypto}
+          disabled={buyCryptoButtonDisabled}
+          data-testid="buy-fiat-button"
+          shouldFadeIn={shouldFadeIn}
+        >
           <Trans>Buy</Trans>
         </StyledTextButton>
       </TraceEvent>

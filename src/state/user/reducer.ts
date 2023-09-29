@@ -5,9 +5,15 @@ import { ConnectionType } from '../../connection/types'
 import { SupportedLocale } from '../../constants/locales'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { RouterPreference } from '../../state/routing/types'
+import {
+  deletePersistedOriginCountry,
+  getPersistedOriginCountry,
+  setPersistedOriginCountry,
+} from './originCountryStorage'
 import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 
 const selectedWallet = getPersistedConnectionMeta()?.type
+const originCountry = getPersistedOriginCountry()
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
@@ -75,7 +81,7 @@ export const initialState: UserState = {
   timestamp: currentTimestamp(),
   hideBaseWalletBanner: false,
   showSurveyPopup: undefined,
-  originCountry: undefined,
+  originCountry,
 }
 
 const userSlice = createSlice({
@@ -137,6 +143,12 @@ const userSlice = createSlice({
       state.timestamp = currentTimestamp()
     },
     setOriginCountry(state, { payload: country }) {
+      if (!country) {
+        deletePersistedOriginCountry()
+      } else {
+        setPersistedOriginCountry(country)
+      }
+
       state.originCountry = country
     },
   },
