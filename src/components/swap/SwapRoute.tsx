@@ -28,7 +28,7 @@ export default function SwapRoute({ trade, syncing }: { trade: ClassicTrade; syn
 
   return (
     <Column gap="md">
-      <RouterLabel trade={trade} />
+      <RouterLabel trade={trade} color="neutral2" />
       <Separator />
       {syncing ? (
         <LoadingRows>
@@ -49,13 +49,13 @@ export default function SwapRoute({ trade, syncing }: { trade: ClassicTrade; syn
               <div style={{ width: '100%', height: '15px' }} />
             </LoadingRows>
           ) : (
-            <ThemedText.BodySmall color="neutral2">
+            <ThemedText.Caption color="neutral2">
               {gasPrice ? <Trans>Best price route costs ~{gasPrice} in gas.</Trans> : null}{' '}
               <Trans>
                 This route optimizes your total output by considering split routes, multiple hops, and the gas cost of
                 each step.
               </Trans>
-            </ThemedText.BodySmall>
+            </ThemedText.Caption>
           )}
         </>
       )}

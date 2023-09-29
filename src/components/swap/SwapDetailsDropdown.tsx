@@ -11,10 +11,11 @@ import { useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { keyframes, useTheme } from 'styled-components'
-import { ThemedText } from 'theme/components'
+import { Separator, ThemedText } from 'theme/components'
+import { useFormatter } from 'utils/formatNumbers'
 
-import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import GasEstimateTooltip from './GasEstimateTooltip'
+import SwapLineItem, { SwapLineItemTypes } from './SwapLineItem'
 import TradePrice from './TradePrice'
 
 const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean }>`
@@ -80,7 +81,7 @@ const Spinner = styled.div`
   top: -3px;
 `
 
-const SwapDetailsWrapper = styled.div`
+const SwapDetailsWrapper = styled(Column)`
   padding-top: ${({ theme }) => theme.grids.md};
 `
 
@@ -90,14 +91,23 @@ const Wrapper = styled(Column)`
   padding: 12px 16px;
 `
 
-interface SwapDetailsInlineProps {
+const PollingGlyph = () => (
+  <StyledPolling>
+    <StyledPollingDot>
+      <Spinner />
+    </StyledPollingDot>
+  </StyledPolling>
+)
+
+interface SwapDetailsProps {
   trade?: InterfaceTrade
   syncing: boolean
   loading: boolean
   allowedSlippage: Percent
 }
 
-export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSlippage }: SwapDetailsInlineProps) {
+export default function SwapDetailsDropdown(props: SwapDetailsProps) {
+  const { trade, syncing, loading, allowedSlippage } = props
   const theme = useTheme()
   const [showDetails, setShowDetails] = useState(false)
   const trace = useTrace()
@@ -121,13 +131,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
           open={showDetails}
         >
           <RowFixed>
-            {Boolean(loading || syncing) && (
-              <StyledPolling>
-                <StyledPollingDot>
-                  <Spinner />
-                </StyledPollingDot>
-              </StyledPolling>
-            )}
+            {Boolean(loading || syncing) && <PollingGlyph />}
             {trade ? (
               <LoadingOpacityContainer $loading={syncing} data-testid="trade-price-container">
                 <TradePrice price={trade.executionPrice} />
@@ -144,13 +148,33 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
           </RowFixed>
         </StyledHeaderRow>
       </TraceEvent>
-      {trade && (
-        <AnimatedDropdown open={showDetails}>
-          <SwapDetailsWrapper data-testid="advanced-swap-details">
-            <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
-          </SwapDetailsWrapper>
-        </AnimatedDropdown>
-      )}
+      <AdvancedSwapDetails {...props} open={showDetails} />
     </Wrapper>
+  )
+}
+
+export function AdvancedSwapDetails(props: SwapDetailsProps & { open: boolean }) {
+  const { open, trade, allowedSlippage, syncing = false } = props
+  const format = useFormatter()
+
+  if (!trade) return null
+
+  const lineItemProps = { trade, allowedSlippage, format, syncing }
+
+  return (
+    <AnimatedDropdown open={open}>
+      <SwapDetailsWrapper gap="md" data-testid="advanced-swap-details">
+        <Separator />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.NETWORK_FEE} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.PRICE_IMPACT} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.INPUT_TOKEN_FEE_ON_TRANSFER} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.OUTPUT_TOKEN_FEE_ON_TRANSFER} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.MAXIMUM_INPUT} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.MINIMUM_OUTPUT} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.EXPECTED_OUTPUT} />
+        <Separator />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.ROUTING_INFO} />
+      </SwapDetailsWrapper>
+    </AnimatedDropdown>
   )
 }

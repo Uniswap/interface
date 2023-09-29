@@ -128,6 +128,16 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   fill: #7D7D7D;
 }
 
+.c20 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c19 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
 .c8 {
   background-color: transparent;
   border: none;
@@ -294,15 +304,9 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
               class="c2 c3 c4"
             >
               <div
-                class="c12"
+                class="c9 c19 css-142zc9n"
               >
-                <div>
-                  <div
-                    class="c14 css-142zc9n"
-                  >
-                    Network fee
-                  </div>
-                </div>
+                Network fee
               </div>
               <div
                 class="c12"
@@ -320,68 +324,72 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
               class="c2 c3 c4"
             >
               <div
+                class="c9 c19 css-142zc9n"
+              >
+                Price impact
+              </div>
+              <div
                 class="c12"
               >
                 <div>
                   <div
-                    class="c14 css-142zc9n"
+                    class="c9 css-142zc9n"
                   >
-                    Price Impact
+                    <div
+                      class="c9 c20 css-142zc9n"
+                    >
+                      105566.373%
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                class="c9 css-142zc9n"
-              >
-                105566.373%
               </div>
             </div>
             <div
               class="c2 c3 c4"
             >
               <div
-                class="c2 c3 c6"
+                class="c9 c19 css-142zc9n"
               >
-                <div
-                  class="c12"
-                >
-                  <div>
+                Minimum output
+              </div>
+              <div
+                class="c12"
+              >
+                <div>
+                  <div
+                    class="c9 css-142zc9n"
+                  >
                     <div
-                      class="c14 css-142zc9n"
+                      class="c9 c20 css-142zc9n"
                     >
-                      Minimum output
+                      0.00000000000000098 DEF
                     </div>
                   </div>
                 </div>
-              </div>
-              <div
-                class="c9 css-142zc9n"
-              >
-                0.00000000000000098 DEF
               </div>
             </div>
             <div
               class="c2 c3 c4"
             >
               <div
-                class="c2 c3 c6"
+                class="c9 c19 css-142zc9n"
               >
-                <div
-                  class="c12"
-                >
-                  <div>
+                Expected output
+              </div>
+              <div
+                class="c12"
+              >
+                <div>
+                  <div
+                    class="c9 css-142zc9n"
+                  >
                     <div
-                      class="c14 css-142zc9n"
+                      class="c9 c20 css-142zc9n"
                     >
-                      Expected output
+                      0.000000000000001 DEF
                     </div>
                   </div>
                 </div>
-              </div>
-              <div
-                class="c9 css-142zc9n"
-              >
-                0.000000000000001 DEF
               </div>
             </div>
             <div
@@ -391,7 +399,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
               class="c2 c3 c4"
             >
               <div
-                class="c14 css-142zc9n"
+                class="c9 c19 css-142zc9n"
               >
                 Order routing
               </div>
@@ -402,7 +410,11 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                   <div
                     class="c9 css-142zc9n"
                   >
-                    Uniswap Client
+                    <div
+                      class="css-142zc9n"
+                    >
+                      Uniswap Client
+                    </div>
                   </div>
                 </div>
               </div>

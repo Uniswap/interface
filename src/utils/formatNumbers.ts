@@ -118,8 +118,7 @@ const SIX_SIG_FIGS_TWO_DECIMALS: NumberFormatOptions = {
   maximumFractionDigits: 2,
   minimumFractionDigits: 2,
 }
-
-export const SIX_SIG_FIGS_NO_COMMAS: NumberFormatOptions = {
+const SIX_SIG_FIGS_NO_COMMAS: NumberFormatOptions = {
   notation: 'standard',
   maximumSignificantDigits: 6,
   useGrouping: false,
@@ -214,6 +213,8 @@ const swapTradeAmountFormatter: FormatterRule[] = [
   { upperBound: 1, formatterOptions: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN_NO_COMMAS },
   { upperBound: Infinity, formatterOptions: SIX_SIG_FIGS_TWO_DECIMALS_NO_COMMAS },
 ]
+
+const swapDetailsAmountFormatter: FormatterRule[] = [{ upperBound: Infinity, formatterOptions: SIX_SIG_FIGS_NO_COMMAS }]
 
 const swapPriceFormatter: FormatterRule[] = [
   { exact: 0, formatterOptions: NO_DECIMALS },
@@ -322,6 +323,8 @@ export enum NumberType {
   // in the text input boxes. Output amounts on review screen should use the above TokenTx formatter
   SwapTradeAmount = 'swap-trade-amount',
 
+  SwapDetailsAmount = 'swap-details-amount',
+
   // fiat prices in any component that belongs in the Token Details flow (except for token stats)
   FiatTokenDetails = 'fiat-token-details',
 
@@ -355,7 +358,8 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.TokenNonTx]: tokenNonTxFormatter,
   [NumberType.TokenTx]: tokenTxFormatter,
   [NumberType.SwapPrice]: swapPriceFormatter,
-  [NumberType.SwapTradeAmount]: swapTradeAmountFormatter,
+  [NumberType.SwapTradeAmount]: swapDetailsAmountFormatter,
+  [NumberType.SwapDetailsAmount]: swapTradeAmountFormatter,
   [NumberType.FiatTokenQuantity]: fiatTokenQuantityFormatter,
   [NumberType.FiatTokenDetails]: fiatTokenDetailsFormatter,
   [NumberType.FiatTokenPrice]: fiatTokenPricesFormatter,

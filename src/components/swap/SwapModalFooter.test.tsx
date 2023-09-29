@@ -41,7 +41,7 @@ describe('SwapModalFooter.tsx', () => {
       )
     ).toBeInTheDocument()
     expect(
-      screen.getByText('The fee paid to miners who process your transaction. This must be paid in $ETH.')
+      screen.getByText('The fee paid to the Ethereum network to process your transaction. This must be paid in ETH.')
     ).toBeInTheDocument()
     expect(screen.getByText('The impact your trade has on the market price of this pool.')).toBeInTheDocument()
   })
@@ -101,7 +101,7 @@ describe('SwapModalFooter.tsx', () => {
       )
     ).toBeInTheDocument()
     expect(
-      screen.getByText('The fee paid to miners who process your transaction. This must be paid in $ETH.')
+      screen.getByText('The fee paid to the Ethereum network to process your transaction. This must be paid in ETH.')
     ).toBeInTheDocument()
     expect(screen.getByText('The impact your trade has on the market price of this pool.')).toBeInTheDocument()
   })
