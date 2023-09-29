@@ -225,7 +225,7 @@ function ValueWrapper({ children, lineItem, labelHovered, syncing }: ValueWrappe
   return (
     <MouseoverTooltip
       placement={isMobile ? 'auto' : 'right'}
-      forceOpen={labelHovered}
+      forceShow={labelHovered} // displays tooltip when hovering either both label or value
       size={tooltipSize}
       text={
         <ThemedText.Caption color="neutral2">

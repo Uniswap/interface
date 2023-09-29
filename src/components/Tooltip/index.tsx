@@ -77,11 +77,11 @@ type MouseoverTooltipProps = Omit<PopoverProps, 'content' | 'show'> &
     timeout?: number
     placement?: PopoverProps['placement']
     onOpen?: () => void
-    forceOpen?: boolean
+    forceShow?: boolean
   }>
 
 export function MouseoverTooltip(props: MouseoverTooltipProps) {
-  const { text, disabled, children, onOpen, forceOpen, timeout, ...rest } = props
+  const { text, disabled, children, onOpen, forceShow, timeout, ...rest } = props
   const [show, setShow] = useState(false)
   const open = () => {
     setShow(true)
@@ -108,7 +108,7 @@ export function MouseoverTooltip(props: MouseoverTooltipProps) {
       open={open}
       close={close}
       disabled={disabled}
-      show={forceOpen || show}
+      show={forceShow || show}
       text={disabled ? null : text}
     >
       <div onMouseEnter={disabled ? noop : open} onMouseLeave={disabled || timeout ? noop : close}>
