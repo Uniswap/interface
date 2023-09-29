@@ -9,6 +9,9 @@ const Button = styled(motion.button)`
   display: flex;
   padding: 12px 16px;
   border-radius: 24px;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
   border: 0;
   background-color: ${({ theme }) => theme.surface1};
   overflow: hidden;
@@ -47,7 +50,8 @@ const Opacity = styled(motion.div)<OpacityProps & MotionProps>`
 type PillButtonProps = {
   label: string
   icon: React.ReactNode
-  color?: string
+  // @ts-ignore
+  color?: any
   onClick?: () => void
 }
 
@@ -77,6 +81,7 @@ export function PillButton(props: PillButtonProps) {
       opacity: 1,
     },
   }
+
   return (
     <Button whileHover="hover" initial="initial" transition={{ delayChildren: 0 }}>
       <Slider variants={variants}>

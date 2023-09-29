@@ -6,9 +6,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  * > &::selection {
-    background-color: ${({ theme }) => theme.accent1};
-  }
+  gap: 80px;
 `
 
 export const H1 = styled.h1`
@@ -47,6 +45,7 @@ export const H3 = styled.h3`
   font-style: normal;
   font-weight: 500;
   line-height: 32px; /* 133.333% */
+  color: ${({ theme }) => theme.neutral1};
 `
 
 export const Body1 = styled.p`
@@ -73,6 +72,7 @@ export const Body2 = styled.p`
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 150% */
+  text-decoration: none;
 `
 
 export const Subheading = styled.p`
@@ -165,6 +165,11 @@ export const Button = styled.button`
   font-style: normal;
   font-weight: 535;
   line-height: 24px; /* 133.333% */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 
   color: ${({ theme }) => theme.neutral1};
 `
