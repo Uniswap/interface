@@ -14,7 +14,6 @@ describe('disable nft on landing page', () => {
   })
 
   it('renders nft information and card', () => {
-    store.dispatch(setOriginCountry('US'))
     mocked(useDisableNFTRoutes).mockReturnValue(false)
     const { container } = render(<Landing />)
     expect(container).toMatchSnapshot()
