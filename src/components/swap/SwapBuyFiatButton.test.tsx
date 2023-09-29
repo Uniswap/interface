@@ -95,4 +95,20 @@ describe('SwapBuyFiatButton.tsx', () => {
     expect(await screen.findByText(/Learn more/i)).toHaveAttribute('href', MOONPAY_REGION_AVAILABILITY_ARTICLE)
     expect(await screen.findByTestId('buy-fiat-button')).toBeDisabled()
   })
+
+  it('does not render in the uk', async () => {
+    store.dispatch(setOriginCountry('GB'))
+    mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsUnavailable)
+    mockuseAccountDrawer.mockImplementation(() => [false, toggleWalletDrawer])
+    render(<SwapBuyFiatButton />)
+    expect(screen.queryByTestId('buy-fiat-button')).toBeNull()
+  })
+
+  it('does not render when loading origin country', async () => {
+    store.dispatch(setOriginCountry(undefined))
+    mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsUnavailable)
+    mockuseAccountDrawer.mockImplementation(() => [false, toggleWalletDrawer])
+    render(<SwapBuyFiatButton />)
+    expect(screen.queryByTestId('buy-fiat-button')).toBeNull()
+  })
 })
