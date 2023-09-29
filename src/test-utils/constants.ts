@@ -7,7 +7,7 @@ import { ZERO_PERCENT } from 'constants/misc'
 import { nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import JSBI from 'jsbi'
-import { ClassicTrade, DutchOrderTrade, QuoteMethod } from 'state/routing/types'
+import { ClassicTrade, DutchOrderTrade, PreviewTrade, QuoteMethod } from 'state/routing/types'
 
 export const TEST_TOKEN_1 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC', 'Abc')
 export const TEST_TOKEN_2 = new Token(1, '0x0000000000000000000000000000000000000002', 18, 'DEF', 'Def')
@@ -159,4 +159,12 @@ export const TEST_TRADE_FEE_ON_BUY = new ClassicTrade({
   quoteMethod: QuoteMethod.ROUTING_API,
   inputTax: ZERO_PERCENT,
   outputTax: new Percent(3, 100),
+})
+
+export const PREVIEW_EXACT_IN_TRADE = new PreviewTrade({
+  inputAmount: toCurrencyAmount(TEST_TOKEN_1, 1000),
+  outputAmount: toCurrencyAmount(TEST_TOKEN_2, 1000),
+  tradeType: TradeType.EXACT_INPUT,
+  inputTax: new Percent(0, 100),
+  outputTax: new Percent(0, 100),
 })

@@ -3,7 +3,7 @@ import { AutoColumn } from 'components/Column'
 import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/UniswapXRouterLabel'
 import Row from 'components/Row'
 import { ReactNode } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { SubmittableTrade } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components'
 import { Divider, ExternalLink, ThemedText } from 'theme/components'
@@ -56,7 +56,7 @@ export function GasBreakdownTooltip({
   hideFees = false,
   hideUniswapXDescription = false,
 }: {
-  trade: InterfaceTrade
+  trade: SubmittableTrade
   hideFees?: boolean
   hideUniswapXDescription?: boolean
 }) {

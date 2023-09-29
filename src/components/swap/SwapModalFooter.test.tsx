@@ -1,4 +1,5 @@
 import {
+  PREVIEW_EXACT_IN_TRADE,
   TEST_ALLOWED_SLIPPAGE,
   TEST_TOKEN_1,
   TEST_TOKEN_2,
@@ -15,6 +16,7 @@ describe('SwapModalFooter.tsx', () => {
   it('matches base snapshot, test trade exact input', () => {
     const { asFragment } = render(
       <SwapModalFooter
+        isLoading={false}
         trade={TEST_TRADE_EXACT_INPUT}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
@@ -50,6 +52,7 @@ describe('SwapModalFooter.tsx', () => {
     const mockAcceptChanges = jest.fn()
     render(
       <SwapModalFooter
+        isLoading={false}
         trade={TEST_TRADE_EXACT_INPUT}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
@@ -77,6 +80,7 @@ describe('SwapModalFooter.tsx', () => {
   it('test trade exact output, no recipient', () => {
     render(
       <SwapModalFooter
+        isLoading={false}
         trade={TEST_TRADE_EXACT_OUTPUT}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
@@ -109,6 +113,7 @@ describe('SwapModalFooter.tsx', () => {
   it('test trade fee on input token transfer', () => {
     render(
       <SwapModalFooter
+        isLoading={false}
         trade={TEST_TRADE_FEE_ON_SELL}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
@@ -138,6 +143,7 @@ describe('SwapModalFooter.tsx', () => {
   it('test trade fee on output token transfer', () => {
     render(
       <SwapModalFooter
+        isLoading={false}
         trade={TEST_TRADE_FEE_ON_BUY}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
@@ -162,5 +168,31 @@ describe('SwapModalFooter.tsx', () => {
       )
     ).toBeInTheDocument()
     expect(screen.getByText(`${TEST_TOKEN_2.symbol} fee`)).toBeInTheDocument()
+  })
+
+  it('renders a preview trade while disabling submission', () => {
+    const { asFragment } = render(
+      <SwapModalFooter
+        isLoading
+        trade={PREVIEW_EXACT_IN_TRADE}
+        allowedSlippage={TEST_ALLOWED_SLIPPAGE}
+        swapResult={undefined}
+        onConfirm={jest.fn()}
+        swapErrorMessage={undefined}
+        disabledConfirm
+        fiatValueInput={{
+          data: undefined,
+          isLoading: false,
+        }}
+        fiatValueOutput={{
+          data: undefined,
+          isLoading: false,
+        }}
+        showAcceptChanges={false}
+        onAcceptChanges={jest.fn()}
+      />
+    )
+    expect(asFragment()).toMatchSnapshot()
+    expect(screen.getByText('Finalizing quote...')).toBeInTheDocument()
   })
 })

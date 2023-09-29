@@ -1,19 +1,20 @@
 import { MixedRouteSDK, ONE, Protocol, Trade } from '@uniswap/router-sdk'
-import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { DutchOrderInfo, DutchOrderInfoJSON, DutchOrderTrade as IDutchOrderTrade } from '@uniswap/uniswapx-sdk'
 import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
 
 export enum TradeState {
-  LOADING,
-  INVALID,
-  STALE,
-  NO_ROUTE_FOUND,
-  VALID,
+  LOADING = 'loading',
+  INVALID = 'invalid',
+  STALE = 'stale',
+  NO_ROUTE_FOUND = 'no_route_found',
+  VALID = 'valid',
 }
 
 export enum QuoteMethod {
   ROUTING_API = 'ROUTING_API',
+  QUICK_ROUTE = 'QUICK_ROUTE',
   CLIENT_SIDE = 'CLIENT_SIDE',
   CLIENT_SIDE_FALLBACK = 'CLIENT_SIDE_FALLBACK', // If client-side was used after the routing-api call failed.
 }
@@ -54,6 +55,20 @@ export interface GetQuoteArgs {
   outputTax: Percent
 }
 
+export type GetQuickQuoteArgs = {
+  amount: string
+  tokenInAddress: string
+  tokenInChainId: ChainId
+  tokenInDecimals: number
+  tokenInSymbol?: string
+  tokenOutAddress: string
+  tokenOutChainId: ChainId
+  tokenOutDecimals: number
+  tokenOutSymbol?: string
+  tradeType: TradeType
+  inputTax: Percent
+  outputTax: Percent
+}
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
 
 type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
@@ -132,6 +147,26 @@ type URAClassicQuoteResponse = {
 }
 export type URAQuoteResponse = URAClassicQuoteResponse | URADutchOrderQuoteResponse
 
+export type QuickRouteResponse = {
+  tokenIn: {
+    address: string
+    decimals: number
+    symbol: string
+    name: string
+  }
+  tokenOut: {
+    address: string
+    decimals: number
+    symbol: string
+    name: string
+  }
+  tradeType: 'EXACT_IN' | 'EXACT_OUT'
+  quote: {
+    amount: string
+    path: string
+  }
+}
+
 export function isClassicQuoteResponse(data: URAQuoteResponse): data is URAClassicQuoteResponse {
   return data.routing === URAQuoteType.CLASSIC
 }
@@ -139,6 +174,7 @@ export function isClassicQuoteResponse(data: URAQuoteResponse): data is URAClass
 export enum TradeFillType {
   Classic = 'classic', // Uniswap V1, V2, and V3 trades with on-chain routes
   UniswapX = 'uniswap_x', // off-chain trades, no routes
+  None = 'none', // for preview trades, cant be used for submission
 }
 
 export type ApproveInfo = { needsApprove: true; approveGasEstimateUSD: number } | { needsApprove: false }
@@ -302,7 +338,97 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
   }
 }
 
-export type InterfaceTrade = ClassicTrade | DutchOrderTrade
+export class PreviewTrade {
+  public readonly fillType = TradeFillType.None
+  public readonly quoteMethod = QuoteMethod.QUICK_ROUTE
+  public readonly tradeType: TradeType
+  public readonly inputAmount: CurrencyAmount<Currency>
+  public readonly outputAmount: CurrencyAmount<Currency>
+  inputTax: Percent
+  outputTax: Percent
+
+  constructor({
+    inputAmount,
+    outputAmount,
+    tradeType,
+    inputTax,
+    outputTax,
+  }: {
+    inputAmount: CurrencyAmount<Currency>
+    outputAmount: CurrencyAmount<Currency>
+    tradeType: TradeType
+    inputTax: Percent
+    outputTax: Percent
+  }) {
+    this.inputAmount = inputAmount
+    this.outputAmount = outputAmount
+    this.tradeType = tradeType
+    this.inputTax = inputTax
+    this.outputTax = outputTax
+  }
+
+  public get totalTaxRate(): Percent {
+    return this.inputTax.add(this.outputTax)
+  }
+
+  public get postTaxOutputAmount() {
+    // Ideally we should calculate the final output amount by ammending the inputAmount based on the input tax and then applying the output tax,
+    // but this isn't currently possible because V2Trade reconstructs the total inputAmount based on the swap routes
+    // TODO(WEB-2761): Amend V2Trade objects in the v2-sdk to have a separate field for post-input tax routes
+    return this.outputAmount.multiply(new Fraction(ONE).subtract(this.totalTaxRate))
+  }
+
+  // below methods are copied from router-sdk
+  // Trade https://github.com/Uniswap/router-sdk/blob/main/src/entities/trade.ts#L10
+  public minimumAmountOut(slippageTolerance: Percent, amountOut = this.outputAmount): CurrencyAmount<Currency> {
+    if (this.tradeType === TradeType.EXACT_OUTPUT) {
+      return amountOut
+    } else {
+      const slippageAdjustedAmountOut = new Fraction(ONE)
+        .add(slippageTolerance)
+        .invert()
+        .multiply(amountOut.quotient).quotient
+      return CurrencyAmount.fromRawAmount(amountOut.currency, slippageAdjustedAmountOut)
+    }
+  }
+
+  public maximumAmountIn(slippageTolerance: Percent, amountIn = this.inputAmount): CurrencyAmount<Currency> {
+    if (this.tradeType === TradeType.EXACT_INPUT) {
+      return amountIn
+    } else {
+      const slippageAdjustedAmountIn = new Fraction(ONE).add(slippageTolerance).multiply(amountIn.quotient).quotient
+      return CurrencyAmount.fromRawAmount(amountIn.currency, slippageAdjustedAmountIn)
+    }
+  }
+
+  private _executionPrice: Price<Currency, Currency> | undefined
+  /**
+   * The price expressed in terms of output amount/input amount.
+   */
+  public get executionPrice(): Price<Currency, Currency> {
+    return (
+      this._executionPrice ??
+      (this._executionPrice = new Price(
+        this.inputAmount.currency,
+        this.outputAmount.currency,
+        this.inputAmount.quotient,
+        this.outputAmount.quotient
+      ))
+    )
+  }
+
+  public worstExecutionPrice(slippageTolerance: Percent): Price<Currency, Currency> {
+    return new Price(
+      this.inputAmount.currency,
+      this.outputAmount.currency,
+      this.maximumAmountIn(slippageTolerance).quotient,
+      this.minimumAmountOut(slippageTolerance).quotient
+    )
+  }
+}
+
+export type SubmittableTrade = ClassicTrade | DutchOrderTrade
+export type InterfaceTrade = SubmittableTrade | PreviewTrade
 
 export enum QuoteState {
   SUCCESS = 'Success',
@@ -327,7 +453,19 @@ export type TradeResult =
     }
   | {
       state: QuoteState.SUCCESS
-      trade: InterfaceTrade
+      trade: SubmittableTrade
+      latencyMs?: number
+    }
+
+export type PreviewTradeResult =
+  | {
+      state: QuoteState.NOT_FOUND
+      trade?: undefined
+      latencyMs?: number
+    }
+  | {
+      state: QuoteState.SUCCESS
+      trade: PreviewTrade
       latencyMs?: number
     }
 

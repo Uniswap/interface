@@ -8,7 +8,7 @@ import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { ClassicTrade, InterfaceTrade } from 'state/routing/types'
-import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
+import { getTransactionCount, isClassicTrade, isSubmittableTrade } from 'state/routing/utils'
 import { ExternalLink, Separator, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -49,7 +49,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
   const txCount = getTransactionCount(trade)
   const { formatCurrencyAmount, formatNumber, formatPriceImpact } = useFormatter()
 
-  const supportsGasEstimate = chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
+  const supportsGasEstimate = chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) && isSubmittableTrade(trade)
 
   return (
     <Column gap="md">
@@ -150,37 +150,39 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         </TextWithLoadingPlaceholder>
       </RowBetween>
       <Separator />
-      <RowBetween>
-        <ThemedText.BodySmall color="neutral2">
-          <Trans>Order routing</Trans>
-        </ThemedText.BodySmall>
-        {isClassicTrade(trade) ? (
-          <MouseoverTooltip
-            size={TooltipSize.Large}
-            text={<SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} />}
-            onOpen={() => {
-              sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
-                element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
-              })
-            }}
-          >
-            <RouterLabel trade={trade} />
-          </MouseoverTooltip>
-        ) : (
-          <MouseoverTooltip
-            size={TooltipSize.Small}
-            text={<GasBreakdownTooltip trade={trade} hideFees />}
-            placement="right"
-            onOpen={() => {
-              sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
-                element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
-              })
-            }}
-          >
-            <RouterLabel trade={trade} />
-          </MouseoverTooltip>
-        )}
-      </RowBetween>
+      {isSubmittableTrade(trade) && (
+        <RowBetween>
+          <ThemedText.BodySmall color="neutral2">
+            <Trans>Order routing</Trans>
+          </ThemedText.BodySmall>
+          {isClassicTrade(trade) ? (
+            <MouseoverTooltip
+              size={TooltipSize.Large}
+              text={<SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} />}
+              onOpen={() => {
+                sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
+                  element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
+                })
+              }}
+            >
+              <RouterLabel trade={trade} />
+            </MouseoverTooltip>
+          ) : (
+            <MouseoverTooltip
+              size={TooltipSize.Small}
+              text={<GasBreakdownTooltip trade={trade} hideFees />}
+              placement="right"
+              onOpen={() => {
+                sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
+                  element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
+                })
+              }}
+            >
+              <RouterLabel trade={trade} />
+            </MouseoverTooltip>
+          )}
+        </RowBetween>
+      )}
     </Column>
   )
 }

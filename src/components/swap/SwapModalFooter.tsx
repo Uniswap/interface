@@ -4,6 +4,7 @@ import { Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import Column from 'components/Column'
+import SpinningLoader from 'components/Loader/SpinningLoader'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { ZERO_PERCENT } from 'constants/misc'
 import { SwapResult } from 'hooks/useSwapCallback'
@@ -11,8 +12,8 @@ import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { ClassicTrade, InterfaceTrade, RouterPreference } from 'state/routing/types'
-import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
+import { ClassicTrade, InterfaceTrade, PreviewTrade, RouterPreference } from 'state/routing/types'
+import { getTransactionCount, isClassicTrade, isPreviewTrade, isSubmittableTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { DefaultTheme, useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
@@ -60,6 +61,7 @@ export default function SwapModalFooter({
   fiatValueOutput,
   showAcceptChanges,
   onAcceptChanges,
+  isLoading,
 }: {
   trade: InterfaceTrade
   swapResult?: SwapResult
@@ -71,6 +73,7 @@ export default function SwapModalFooter({
   fiatValueOutput: { data?: number; isLoading: boolean }
   showAcceptChanges: boolean
   onAcceptChanges: () => void
+  isLoading: boolean
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
@@ -113,17 +116,23 @@ export default function SwapModalFooter({
                 <Plural value={txCount} one="Network fee" other="Network fees" />
               </Label>
             </MouseoverTooltip>
-            <MouseoverTooltip placement="right" size={TooltipSize.Small} text={<GasBreakdownTooltip trade={trade} />}>
+            <MouseoverTooltip
+              placement="right"
+              size={TooltipSize.Small}
+              text={isSubmittableTrade(trade) ? <GasBreakdownTooltip trade={trade} /> : undefined}
+            >
               <DetailRowValue>
-                {formatNumber({
-                  input: trade.totalGasUseEstimateUSD,
-                  type: NumberType.FiatGasPrice,
-                })}
+                {isSubmittableTrade(trade)
+                  ? formatNumber({
+                      input: trade.totalGasUseEstimateUSD,
+                      type: NumberType.FiatGasPrice,
+                    })
+                  : '-'}
               </DetailRowValue>
             </MouseoverTooltip>
           </Row>
         </ThemedText.BodySmall>
-        {isClassicTrade(trade) && (
+        {(isClassicTrade(trade) || isPreviewTrade(trade)) && (
           <>
             <TokenTaxLineItem trade={trade} type="input" />
             <TokenTaxLineItem trade={trade} type="output" />
@@ -134,8 +143,10 @@ export default function SwapModalFooter({
                     <Trans>Price impact</Trans>
                   </Label>
                 </MouseoverTooltip>
-                <DetailRowValue warningColor={getPriceImpactColor(trade.priceImpact)}>
-                  {trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-'}
+                <DetailRowValue
+                  warningColor={isClassicTrade(trade) ? getPriceImpactColor(trade.priceImpact) : undefined}
+                >
+                  {isClassicTrade(trade) && trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-'}
                 </DetailRowValue>
               </Row>
             </ThemedText.BodySmall>
@@ -219,9 +230,18 @@ export default function SwapModalFooter({
               $borderRadius="12px"
               id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
             >
-              <ThemedText.HeadlineSmall color="deprecated_accentTextLightPrimary">
-                <Trans>Confirm swap</Trans>
-              </ThemedText.HeadlineSmall>
+              {isLoading ? (
+                <ThemedText.HeadlineSmall color="neutral2">
+                  <Row>
+                    <SpinningLoader />
+                    <Trans>Finalizing quote...</Trans>
+                  </Row>
+                </ThemedText.HeadlineSmall>
+              ) : (
+                <ThemedText.HeadlineSmall color="deprecated_accentTextLightPrimary">
+                  <Trans>Confirm swap</Trans>
+                </ThemedText.HeadlineSmall>
+              )}
             </ConfirmButton>
           </TraceEvent>
 
@@ -232,7 +252,7 @@ export default function SwapModalFooter({
   )
 }
 
-function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' | 'output' }) {
+function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade | PreviewTrade; type: 'input' | 'output' }) {
   const { formatPriceImpact } = useFormatter()
 
   const [currency, percentage] =

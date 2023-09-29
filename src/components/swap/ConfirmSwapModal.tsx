@@ -22,6 +22,7 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
+import { isPreviewTrade } from 'state/routing/utils'
 import { Field } from 'state/swap/actions'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled from 'styled-components'
@@ -363,7 +364,8 @@ export default function ConfirmSwapModal({
           trade={trade}
           swapResult={swapResult}
           allowedSlippage={allowedSlippage}
-          disabledConfirm={showAcceptChanges}
+          isLoading={isPreviewTrade(trade)}
+          disabledConfirm={showAcceptChanges || isPreviewTrade(trade) || allowance.state === AllowanceState.LOADING}
           fiatValueInput={fiatValueInput}
           fiatValueOutput={fiatValueOutput}
           showAcceptChanges={showAcceptChanges}

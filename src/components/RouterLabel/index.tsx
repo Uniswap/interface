@@ -1,10 +1,10 @@
-import { InterfaceTrade, QuoteMethod } from 'state/routing/types'
+import { QuoteMethod, SubmittableTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import { ThemedText } from 'theme/components'
 
 import UniswapXRouterLabel from './UniswapXRouterLabel'
 
-export default function RouterLabel({ trade }: { trade: InterfaceTrade }) {
+export default function RouterLabel({ trade }: { trade: SubmittableTrade }) {
   if (isUniswapXTrade(trade)) {
     return (
       <UniswapXRouterLabel>
