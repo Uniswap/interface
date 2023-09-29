@@ -43,7 +43,7 @@ const StyledDialogContent = styled(AnimatedDialogContent)<StyledDialogProps>`
     background-color: ${({ theme }) => theme.backgroundSurface};
     box-shadow: ${({ theme }) => theme.deepShadow};
     padding: 0px;
-    width: auto;
+    width: 50vw;
     overflow-y: auto;
     overflow-x: hidden;
     max-width: ${({ $maxWidth }) => $maxWidth}px;
@@ -86,12 +86,12 @@ interface ModalProps {
   hideBorder?: boolean
 }
 
-export default function ModalAddLiquidity({
+export default function Modal({
   isOpen,
   onDismiss,
   minHeight = false,
-  maxHeight = 150,
-  maxWidth = 1000,
+  maxHeight = 90,
+  maxWidth = 420,
   initialFocusRef,
   children,
   onSwipe = onDismiss,

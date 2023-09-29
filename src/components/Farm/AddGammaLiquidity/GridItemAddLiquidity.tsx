@@ -5,8 +5,9 @@ import styled, { useTheme } from 'styled-components/macro'
 
 import { Input as NumericalInput } from '../../NumericalInput'
 
-const GridItem = styled.div`
-  padding: 20px;
+const GridItem = styled.div<{ isApproved: boolean }>`
+  width: 100%;
+  padding: ${(props) => (props.isApproved ? '0px 20px 0px 20px' : '20px')};
   text-align: center;
   font-size: 18px;
 `
@@ -36,6 +37,7 @@ interface GridItemGammaCardProps {
   depositValue: string
   textButton: string
   disabledButton: boolean
+  isApproved: boolean
   setDepositAmount: (amount: string) => void
   approveOrStakeLPOrWithdraw: () => void
 }
@@ -47,19 +49,19 @@ export function GridItemAddLiquidity({
   titleText,
   textButton,
   disabledButton,
+  isApproved,
   setDepositAmount,
   approveOrStakeLPOrWithdraw,
 }: GridItemGammaCardProps) {
   const theme = useTheme()
 
   return (
-    <GridItem>
+    <GridItem isApproved={isApproved}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <small style={{ color: theme.textSecondary }}>{titleText}</small>
-        {availableStakeAmount && tokenSymbol && tokenSymbol !== 'LP' && (
+        {availableStakeAmount && tokenSymbol && (
           <small>{`${formatNumber(Number(availableStakeAmount))}  ${tokenSymbol}`}</small>
         )}
-        {tokenSymbol === 'LP' && <small>{` ${tokenSymbol}`}</small>}
       </div>
 
       {availableStakeAmount && (
@@ -69,17 +71,19 @@ export function GridItemAddLiquidity({
         </Container>
       )}
 
-      <div style={{ marginTop: 5 }}>
-        {approveOrStakeLPOrWithdraw && (
-          <ButtonPrimary
-            style={{ height: '40px', fontSize: '16px' }}
-            disabled={disabledButton}
-            onClick={approveOrStakeLPOrWithdraw}
-          >
-            {textButton}
-          </ButtonPrimary>
-        )}
-      </div>
+      {!isApproved && (
+        <div style={{ marginTop: 5 }}>
+          {approveOrStakeLPOrWithdraw && (
+            <ButtonPrimary
+              style={{ height: '40px', fontSize: '16px' }}
+              disabled={disabledButton}
+              onClick={approveOrStakeLPOrWithdraw}
+            >
+              {textButton}
+            </ButtonPrimary>
+          )}
+        </div>
+      )}
     </GridItem>
   )
 }

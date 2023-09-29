@@ -129,10 +129,11 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
   const lpTokenBalance = tryParseCurrencyAmount(availableStakeAmount, lpToken)
 
   const parsedStakeAmount = tryParseCurrencyAmount(stakeAmount, lpToken)
+  const [approval, approveCallback] = useApproveCallback(parsedStakeAmount, masterChefContract?.address)
+
   const parsedDeposit0 = deposit0 && tokenStake0 ? tryParseCurrencyAmount(deposit0, tokenStake0) : undefined
   const parsedDeposit1 = deposit1 && tokenStake1 ? tryParseCurrencyAmount(deposit1, tokenStake1) : undefined
 
-  const [approval, approveCallback] = useApproveCallback(parsedStakeAmount, masterChefContract?.address)
   const [approvalToken0, approveCallbackToken0] = useApproveCallback(parsedDeposit0, uniProxyContract?.address)
   const [approvalToken1, approveCallbackToken1] = useApproveCallback(parsedDeposit1, uniProxyContract?.address)
 
@@ -195,6 +196,8 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
 
   const handleDismiss = useCallback(() => {
     setModalOpen(false)
+    setDeposit0('')
+    setDeposit1('')
   }, [setModalOpen])
 
   const dataDetails = {
@@ -218,7 +221,6 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
       <ModalAddGammaLiquidity
         modalOpen={modalOpen}
         handleDismiss={handleDismiss}
-        rewardsAmount={rewardsAmount}
         token0Balance={token0Balance}
         approvalToken0={approvalToken0}
         approvalToken1={approvalToken1}
@@ -238,6 +240,7 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
         unStakeGamma={unStakeGamma}
         setUnStakeGamma={setUnStakeGamma}
         hypervisorContract={hypervisorContract}
+        lpTokenBalance={availableStakeAmount}
       />
       <CardContainer showDetails={showDetails}>
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center', height: '60px', alignItems: 'center' }}>
@@ -314,7 +317,7 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
           </div>
         </div>
         {showDetails && data && (
-          <GammaFarmCardDetails data={data} pairData={pairData} rewardData={rewardData} dataDetails={dataDetails} />
+          <GammaFarmCardDetails pairData={pairData} rewardData={rewardData} dataDetails={dataDetails} />
         )}
       </CardContainer>
     </>

@@ -19,7 +19,6 @@ import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { useTransactionFinalizer } from 'utils/farmUtils'
 
 import { TransactionType } from '../../../state/transactions/types'
-import { FarmPoolData } from '../constants'
 import { GridItemGammaCard } from './GridItemGammaCard'
 
 // Estilo do Grid
@@ -47,7 +46,6 @@ const ClaimContainer = styled.div`
   flex-direction: column;
 `
 const GammaFarmCardDetails: React.FC<{
-  data: FarmPoolData
   pairData: any
   rewardData: any
   dataDetails: {
@@ -65,7 +63,7 @@ const GammaFarmCardDetails: React.FC<{
     availableStakeUSD: number
     setStakeAmount: React.Dispatch<React.SetStateAction<string>>
   }
-}> = ({ pairData, rewardData, data, dataDetails }) => {
+}> = ({ pairData, rewardData, dataDetails }) => {
   const { account } = useWeb3React()
   const addTransaction = useTransactionAdder()
   const finalizedTransaction = useTransactionFinalizer()
@@ -102,69 +100,6 @@ const GammaFarmCardDetails: React.FC<{
     !dataDetails.masterChefContract ||
     !account ||
     attemptUnstaking
-
-  // const getDepositAmounts = async (tokenInput: number) => {
-  //   if (!uniProxyContract) return
-
-  //   let amounts
-  //   if (tokenInput === 0 && deposit0) {
-  //     amounts = await uniProxyContract.getDepositAmount(pairData.hypervisor, token0Address, parseUnits(deposit0, 18))
-  //     setDeposit1(formatUnits(amounts.amountEnd, 18))
-  //   } else if (tokenInput === 1 && deposit1) {
-  //     amounts = await uniProxyContract.getDepositAmount(pairData.hypervisor, token1Address, parseUnits(deposit1, 18))
-  //     setDeposit0(formatUnits(amounts.amountEnd, 18))
-  //   }
-  // }
-
-  // const depositUniProxy = async () => {
-  //   if (!uniProxyContract || !account) return
-  //   if (approvalToken0 !== ApprovalState.APPROVED || approvalToken1 !== ApprovalState.APPROVED) {
-  //     console.error('Tokens not approved')
-  //     return
-  //   }
-
-  //   try {
-  //     const response = await uniProxyContract.deposit(
-  //       parseUnits(deposit0, 18),
-  //       parseUnits(deposit1, 18),
-  //       account,
-  //       pairData.hypervisor,
-  //       [0, 0, 0, 0]
-  //     )
-  //     addTransaction(response, {
-  //       type: TransactionType.ADD_LIQUIDITY_GAMMA,
-  //       currencyId0: token0Address,
-  //       currencyId1: token1Address,
-  //       amount0: parseUnits(deposit0, 18).toString(),
-  //       amount1: parseUnits(deposit1, 18).toString(),
-  //     })
-  //     const receipt = await response.wait()
-  //     finalizedTransaction(receipt, {
-  //       summary: 'depositliquidity',
-  //     })
-  //   } catch (e) {
-  //     console.error('Deposit failed', e)
-  //   }
-  // }
-
-  // const withdrawHypervisor = async () => {
-  //   if (!hypervisorContract || !account) return
-
-  //   try {
-  //     const response = await hypervisorContract.withdraw(parseUnits(unStakeGamma, 18), account, account, [0, 0, 0, 0])
-  //     addTransaction(response, {
-  //       type: TransactionType.REMOVE_LIQUIDITY_GAMMA,
-  //       amount: parseUnits(unStakeGamma, 18).toString(),
-  //       tokenAddress: pairData.hypervisor,
-  //     })
-  //     const receipt = await response.wait()
-  //     finalizedTransaction(receipt, {
-  //       summary: 'withdrawliquidity',
-  //     })
-  //   } catch (e) {
-  //     console.error('Withdraw failed', e)
-  //   }
-  // }
 
   const claimButtonDisabled = Number(rewardsAmount) == 0 || attemptClaiming
 
@@ -325,44 +260,6 @@ const GammaFarmCardDetails: React.FC<{
           <Divider margin="none" />
         </>
       )}
-
-      {/* <input
-        value={deposit0}
-        onChange={async (e) => {
-          setDeposit0(e.target.value)
-          getDepositAmounts(0)
-        }}
-        placeholder="Deposit 0"
-      />
-
-      <input
-        value={deposit1}
-        onChange={async (e) => {
-          setDeposit1(e.target.value)
-          getDepositAmounts(1)
-        }}
-        placeholder="Deposit 1"
-      />
-
-      <button onClick={approveCallbackToken0} disabled={approvalToken0 === ApprovalState.APPROVED}>
-        {approvalToken0 === ApprovalState.PENDING ? 'Aproving Token 0...' : 'Approve Token 0'}
-      </button> */}
-
-      {/* <button onClick={approveCallbackToken1} disabled={approvalToken1 === ApprovalState.APPROVED}>
-        {approvalToken1 === ApprovalState.PENDING ? 'Aproving Token 1...' : 'Approve Token 1'}
-      </button>
-
-      <button onClick={depositUniProxy}>Deposit via UniProxy</button>
-
-      <input
-        value={unStakeGamma}
-        onChange={async (e) => {
-          setUnStakeGamma(e.target.value)
-        }}
-        placeholder="Unstake Gamma"
-      /> */}
-
-      {/* <button onClick={withdrawHypervisor}>Withdraw Gamma Liquidity</button> */}
 
       <div style={{ padding: 1.5 }}>
         <Grid isMobile={isMobile} hasRewards={Number(rewardsAmount) > 0}>

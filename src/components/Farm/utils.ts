@@ -1,20 +1,18 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { TransactionReceipt } from '@ethersproject/providers'
-import { Token } from '@pollum-io/sdk-core'
-import { ChainId } from '@pollum-io/smart-order-router'
-import { GAMMA_MASTERCHEF_ADDRESSES, PSYS_ADDRESS } from 'constants/addresses'
+import { PSYS_ADDRESS } from 'constants/addresses'
 import { BigNumber, Contract } from 'ethers/lib/ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { useFetchedTokenData } from 'graphql/tokens/TokenData'
+import { ApprovalState } from 'hooks/useApproveCallback'
 import { useMasterChefContract } from 'hooks/useContract'
 import { atomWithReset } from 'jotai/utils'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { ParsedQs } from 'qs'
 import { useEffect, useMemo, useState } from 'react'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { TransactionType } from 'state/transactions/types'
 
-import { GammaPairTokens, GlobalConst, itemFarmToken, MINICHEF_ABI } from './constants'
+import { GlobalConst, itemFarmToken, MINICHEF_ABI } from './constants'
 
 const { v3FarmSortBy } = GlobalConst.utils
 
@@ -125,121 +123,12 @@ export const buildRedirectPath = (currentPath: string, parsedQuery: ParsedQs, st
   return `${currentPath}${queryDelimiter}farmStatus=${status}`
 }
 
-interface Global {
-  stableCoins: {
-    570: Token[]
-  }
-  blueChips: {
-    570: (Token | undefined)[]
-  }
-  stablePairs: {
-    570: Token[][]
-  }
-}
-
-const doesItemMatchSearch = (item: GammaPairTokens, search: string) => {
-  const getAddress = (token: Token | { token: WrappedTokenInfo }): string => {
-    return token instanceof Token ? token.address : token.token.address
-  }
-
-  const getSymbol = (token: Token | { token: WrappedTokenInfo }): string => {
-    return token instanceof Token ? token.symbol ?? '' : token.token.symbol ?? ''
-  }
-
-  return (
-    item.title.toLowerCase().includes(search.toLowerCase()) ||
-    (getSymbol(item.token0).toLowerCase().includes(search.toLowerCase()) ?? false) ||
-    (getAddress(item.token0).toLowerCase().includes(search.toLowerCase()) ?? false) ||
-    (getSymbol(item.token1).toLowerCase().includes(search.toLowerCase()) ?? false) ||
-    (getAddress(item.token1).toLowerCase().includes(search.toLowerCase()) ?? false)
-  )
-}
-
-const doesItemMatchFilter = (item: GammaPairTokens, farmFilter: string, GlobalData: Global) => {
-  const { blueChips, stableCoins, stablePairs } = GlobalData
-  const { v3FarmFilter } = GlobalConst.utils
-
-  const getAddress = (token: Token | { token: WrappedTokenInfo }): string => {
-    return token instanceof Token ? token.address : token.token.address
-  }
-
-  const token0Address = getAddress(item.token0).toLowerCase()
-  const token1Address = getAddress(item.token1).toLowerCase()
-
-  const isAddressInList = (address: string, list?: Token[]): boolean => {
-    return list?.some((token) => address === token.address.toLowerCase()) ?? false
-  }
-
-  const filteredTokens0: Token[] = blueChips[ChainId.ROLLUX].filter((token): token is Token => token !== undefined)
-
-  const blueChipCondition =
-    isAddressInList(token0Address, filteredTokens0) && isAddressInList(token1Address, filteredTokens0)
-  const stableCoinCondition =
-    isAddressInList(token0Address, stableCoins[ChainId.ROLLUX]) &&
-    isAddressInList(token1Address, stableCoins[ChainId.ROLLUX])
-  const stableLPCondition = stablePairs[ChainId.ROLLUX].some(
-    (tokens) => isAddressInList(token0Address, tokens) && isAddressInList(token1Address, tokens)
-  )
-
-  switch (farmFilter) {
-    case v3FarmFilter.blueChip:
-      return blueChipCondition
-    case v3FarmFilter.stableCoin:
-      return stableCoinCondition
-    case v3FarmFilter.stableLP:
-      return stableLPCondition
-    case v3FarmFilter.otherLP:
-      return !blueChipCondition && !stableCoinCondition && !stableLPCondition
-    default:
-      return true
-  }
-}
-
-const gammaRewardTokenAddresses = (gammaRewards: any) =>
-  Object.values(GAMMA_MASTERCHEF_ADDRESSES).reduce<string[]>((memo, masterChef) => {
-    const gammaReward =
-      gammaRewards && masterChef[ChainId.ROLLUX] && gammaRewards[masterChef[ChainId.ROLLUX].toLowerCase()]
-        ? gammaRewards[masterChef[ChainId.ROLLUX].toLowerCase()]['pools']
-        : undefined
-    if (gammaReward) {
-      const gammaRewardArr: any[] = Object.values(gammaReward)
-      for (const item of gammaRewardArr) {
-        if (item && item['rewarders']) {
-          const rewarders: any[] = Object.values(item['rewarders'])
-          for (const rewarder of rewarders) {
-            if (
-              rewarder &&
-              rewarder['rewardPerSecond'] &&
-              Number(rewarder['rewardPerSecond']) > 0 &&
-              rewarder.rewardToken &&
-              !memo.includes(rewarder.rewardToken)
-            ) {
-              memo.push(rewarder.rewardToken)
-            }
-          }
-        }
-      }
-    }
-    return memo
-  }, [])
-
 export const getStakedAmount = (item: any, stakedAmounts: any) => {
   const masterChefIndex = item.masterChefIndex ?? 0
   const sItem = stakedAmounts?.find(
     (sAmount: any) => sAmount.pid === item.pid && sAmount.masterChefIndex === masterChefIndex
   )
   return sItem ? Number(sItem.amount) : 0
-}
-
-const calculateRewardUSD = (gammaReward: any, gammaRewardsWithUSDPrice: any) => {
-  return gammaReward?.['rewarders']
-    ? Object.values(gammaReward['rewarders']).reduce((total: number, rewarder: any) => {
-        const rewardUSD = gammaRewardsWithUSDPrice?.find(
-          (item: any) => item.address.toLowerCase() === rewarder.rewardToken.toLowerCase()
-        )
-        return total + (rewardUSD?.price ?? 0) * rewarder.rewardPerSecond
-      }, 0)
-    : 0
 }
 
 // export const sortFarms = (
@@ -386,36 +275,61 @@ export const getDepositAmounts = async (
   }
 }
 
-// const depositUniProxy = async () => {
-//   if (!uniProxyContract || !account) return
-//   if (approvalToken0 !== ApprovalState.APPROVED || approvalToken1 !== ApprovalState.APPROVED) {
-//     console.error('Tokens not approved')
-//     return
-//   }
-
-//   try {
-//     const response = await uniProxyContract.deposit(
-//       parseUnits(deposit0, 18),
-//       parseUnits(deposit1, 18),
-//       account,
-//       pairData.hypervisor,
-//       [0, 0, 0, 0]
-//     )
-//     addTransaction(response, {
-//       type: TransactionType.ADD_LIQUIDITY_GAMMA,
-//       currencyId0: token0Address,
-//       currencyId1: token1Address,
-//       amount0: parseUnits(deposit0, 18).toString(),
-//       amount1: parseUnits(deposit1, 18).toString(),
-//     })
-//     const receipt = await response.wait()
-//     finalizedTransaction(receipt, {
-//       summary: 'depositliquidity',
-//     })
-//   } catch (e) {
-//     console.error('Deposit failed', e)
-//   }
-// }
+export const depositUniProxy = async (
+  uniProxyContract: Contract,
+  account: string | undefined,
+  approvalToken0: ApprovalState,
+  approvalToken1: ApprovalState,
+  pairData: any,
+  addTransaction: (response: TransactionResponse, info: any) => void,
+  token0Address: string,
+  token1Address: string,
+  deposit0: string,
+  deposit1: string,
+  finalizedTransaction: (
+    receipt: TransactionReceipt,
+    customData?:
+      | {
+          summary?: string
+          approval?: {
+            tokenAddress: string
+            spender: string
+          }
+          claim?: {
+            recipient: string
+          }
+        }
+      | undefined
+  ) => void
+) => {
+  if (!uniProxyContract || !account) return
+  if (approvalToken0 !== ApprovalState.APPROVED || approvalToken1 !== ApprovalState.APPROVED) {
+    console.error('Tokens not approved')
+    return
+  }
+  try {
+    const response = await uniProxyContract.deposit(
+      parseUnits(deposit0, 18),
+      parseUnits(deposit1, 18),
+      account,
+      pairData.hypervisor,
+      [0, 0, 0, 0]
+    )
+    addTransaction(response, {
+      type: TransactionType.ADD_LIQUIDITY_GAMMA,
+      currencyId0: token0Address,
+      currencyId1: token1Address,
+      amount0: parseUnits(deposit0, 18).toString(),
+      amount1: parseUnits(deposit1, 18).toString(),
+    })
+    const receipt = await response.wait()
+    finalizedTransaction(receipt, {
+      summary: 'depositliquidity',
+    })
+  } catch (e) {
+    console.error('Deposit failed', e)
+  }
+}
 
 export const withdrawHypervisor = async (
   hypervisorContract: Contract | null,
@@ -454,5 +368,15 @@ export const withdrawHypervisor = async (
     })
   } catch (e) {
     console.error('Withdraw failed', e)
+  }
+}
+
+export const getValidationText = (approvalToken: ApprovalState, tokenStake: any) => {
+  if (approvalToken === ApprovalState.APPROVED) {
+    return 'Approved'
+  } else if (approvalToken === ApprovalState.PENDING) {
+    return `Approving ${tokenStake?.symbol}`
+  } else {
+    return `Approve ${tokenStake?.symbol}`
   }
 }
