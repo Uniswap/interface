@@ -100,6 +100,7 @@ export function useBaseFlag(flag: string, defaultValue = BaseVariant.Control): B
   }
 }
 
+// eslint-disable-next-line import/no-unused-modules
 export function useFeatureFlagsChains(): ChainId[] {
   const { config } = useFeatureFlagsConfig()
   const chains = config.get(FeatureFlagConfig.chains, [])
