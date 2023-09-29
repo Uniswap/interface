@@ -25,12 +25,12 @@ export enum FeatureFlag {
 
 interface FeatureFlagsContextType {
   isLoaded: boolean
-  flags: Record<string, string>
+  flags: Record<string, any> // includes flags & configs
 }
 
 const FeatureFlagContext = createContext<FeatureFlagsContextType>({ isLoaded: false, flags: {} })
 
-function useFeatureFlagsContext(): FeatureFlagsContextType {
+export function useFeatureFlagsContext(): FeatureFlagsContextType {
   const context = useContext(FeatureFlagContext)
   if (!context) {
     throw Error('Feature flag hooks can only be used by children of FeatureFlagProvider.')
@@ -40,7 +40,7 @@ function useFeatureFlagsContext(): FeatureFlagsContextType {
 }
 
 /* update and save feature flag settings */
-export const featureFlagSettings = atomWithStorage<Record<string, string>>('featureFlags', {})
+export const featureFlagSettings = atomWithStorage<Record<string, any>>('featureFlags', {})
 
 export function useUpdateFlag() {
   const setFeatureFlags = useUpdateAtom(featureFlagSettings)
@@ -50,6 +50,20 @@ export function useUpdateFlag() {
       setFeatureFlags((featureFlags) => ({
         ...featureFlags,
         [featureFlag]: option,
+      }))
+    },
+    [setFeatureFlags]
+  )
+}
+
+export function useUpdateConfig() {
+  const setFeatureFlags = useUpdateAtom(featureFlagSettings)
+
+  return useCallback(
+    (configName: string, option: any) => {
+      setFeatureFlags((featureFlags) => ({
+        ...featureFlags,
+        [configName]: option,
       }))
     },
     [setFeatureFlags]

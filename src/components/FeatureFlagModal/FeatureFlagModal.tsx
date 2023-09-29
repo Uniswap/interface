@@ -1,5 +1,8 @@
+import { ChainId } from '@uniswap/sdk-core'
 import Column from 'components/Column'
-import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateConfig, useUpdateFlag } from 'featureFlags'
+import { DynamicConfigName } from 'featureFlags/dynamicConfig'
+import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
 import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
 import { useFallbackProviderEnabledFlag } from 'featureFlags/flags/fallbackProvider'
 import { useFotAdjustmentsFlag } from 'featureFlags/flags/fotAdjustments'
@@ -218,16 +221,48 @@ function FeatureFlagOption({ value, variant, featureFlag, label }: FeatureFlagPr
   )
 }
 
+interface DynamicConfigDropdownProps {
+  configName: DynamicConfigName
+  options: string[]
+  label: string
+  selected: ChainId[]
+}
+
+function DynamicConfigDropdown({ options, configName, label, selected }: DynamicConfigDropdownProps) {
+  const updateConfig = useUpdateConfig()
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValues = Array.from(e.target.selectedOptions, (opt) => Number.parseInt(opt.value))
+    updateConfig(configName, selectedValues)
+  }
+
+  return (
+    <Row key={configName}>
+      <FlagInfo>
+        <FlagName>{configName}</FlagName>
+        <FlagDescription>{label}</FlagDescription>
+      </FlagInfo>
+      <select multiple onChange={handleSelectChange}>
+        {options.map((opt) => (
+          <option key={opt} value={opt} selected={selected.includes(Number.parseInt(opt))}>
+            {opt}
+          </option>
+        ))}
+      </select>
+    </Row>
+  )
+}
+
 export default function FeatureFlagModal() {
   const open = useModalIsOpen(ApplicationModal.FEATURE_FLAGS)
-  const toggle = useToggleFeatureFlags()
+  const toggleModal = useToggleFeatureFlags()
 
   return (
     <Modal open={open}>
       <FlagsColumn>
         <Header>
           Feature Flag Settings
-          <CloseButton onClick={toggle}>
+          <CloseButton onClick={toggleModal}>
             <X size={24} />
           </CloseButton>
         </Header>
@@ -261,6 +296,12 @@ export default function FeatureFlagModal() {
             value={useQuickRouteMainnetFlag()}
             featureFlag={FeatureFlag.quickRouteMainnet}
             label="Enable quick routes for Mainnet"
+          />
+          <DynamicConfigDropdown
+            selected={useQuickRouteChains()}
+            options={Object.keys(ChainId).filter((v) => !isNaN(Number(v))) as string[]}
+            configName={DynamicConfigName.quickRouteChains}
+            label="Enable quick routes for these chains"
           />
         </FeatureFlagGroup>
         <FeatureFlagGroup name="UniswapX Flags">
