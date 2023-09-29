@@ -3,6 +3,7 @@ import { Token } from '@pollum-io/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { GridItemAddLiquidity } from 'components/Farm/AddGammaLiquidity/GridItemAddLiquidity'
 import { getDepositAmounts, withdrawHypervisor } from 'components/Farm/utils'
+import ModalAddLiquidity from 'components/ModalAddLiquidity'
 import { RowBetween } from 'components/Row'
 import { Contract } from 'ethers/lib/ethers'
 import { ApprovalState } from 'hooks/useApproveCallback'
@@ -30,14 +31,6 @@ const Grid = styled.div<{ isMobile: boolean; hasRewards: boolean }>`
   gap: 16px;
 `
 
-type StyledDialogProps = {
-  $minHeight?: number | false
-  $maxHeight?: number
-  $scrollOverlay?: boolean
-  $hideBorder?: boolean
-  $maxWidth: number
-}
-
 interface ModalProps {
   modalOpen: boolean
   handleDismiss: () => void
@@ -61,7 +54,6 @@ interface ModalProps {
   unStakeGamma: string
   setUnStakeGamma: React.Dispatch<React.SetStateAction<string>>
   hypervisorContract: Contract | null
-  account: string
 }
 
 export default function ModalAddGammaLiquidity({
@@ -95,7 +87,7 @@ export default function ModalAddGammaLiquidity({
 
   return (
     <>
-      <ModalAddGammaLiquidity isOpen={modalOpen} onDismiss={handleDismiss}>
+      <ModalAddLiquidity isOpen={modalOpen} onDismiss={handleDismiss}>
         <Wrapper>
           <HeaderRow>
             <ThemedText.SubHeader>
@@ -196,7 +188,7 @@ export default function ModalAddGammaLiquidity({
             </Grid>
           </div>
         </Wrapper>
-      </ModalAddGammaLiquidity>
+      </ModalAddLiquidity>
     </>
   )
 }

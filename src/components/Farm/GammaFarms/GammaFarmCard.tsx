@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { Token } from '@pollum-io/sdk-core'
 import { formatNumber } from '@uniswap/conedison/format'
 import { CallState } from '@uniswap/redux-multicall'
@@ -6,12 +5,11 @@ import { TokenList } from '@uniswap/token-lists'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonEmpty } from 'components/Button'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import ModalAddGammaLiquidity from 'components/ModalAddGammaLiquidity'
-import { RowBetween } from 'components/Row'
+import ModalAddGammaLiquidity from 'components/Farm/AddGammaLiquidity/ModalAddGammaLiquidity'
 import TotalAPRTooltip from 'components/TotalAPRTooltip/TotalAPRTooltip'
 import { formatUnits } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
-import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import { useApproveCallback } from 'hooks/useApproveCallback'
 import {
   useGammaHypervisorContract,
   useGammaUniProxyContract,
@@ -25,14 +23,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertCircle, ChevronDown, ChevronUp } from 'react-feather'
 import { Box } from 'rebass'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
-import { useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
-import { CloseIcon, ThemedText } from 'theme'
-import { useTransactionFinalizer } from 'utils/farmUtils'
 
-import { GridItemAddLiquidity } from '../AddGammaLiquidity/GridItemAddLiquidity'
 import { FarmPoolData, ONE_TOKEN, ZERO } from '../constants'
-import { getDepositAmounts, useApr, usePoolInfo, useTotalAllocationPoints, withdrawHypervisor } from '../utils'
+import { useApr, usePoolInfo, useTotalAllocationPoints } from '../utils'
 import GammaFarmCardDetails from './GammafarmCardDetails'
 
 const CardContainer = styled.div<{ showDetails: boolean }>`
@@ -44,23 +38,6 @@ const CardContainer = styled.div<{ showDetails: boolean }>`
   border-radius: 16px;
   background: ${({ theme }) => theme.backgroundSurface};
   border: 1px solid ${({ showDetails, theme }) => (showDetails ? theme.userThemeColor : 'none')};
-`
-const Grid = styled.div<{ isMobile: boolean; hasRewards: boolean }>`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-columns: ${(props) => (props.isMobile ? 'none' : 'repeat(3, 1fr)')};
-  grid-template-rows: ${(props) =>
-    props.isMobile ? (props.hasRewards ? 'repeat(3, 1fr)' : 'repeat(2, 1fr)') : 'none'};
-  gap: 16px;
-`
-
-const Wrapper = styled(RowBetween)`
-  display: flex;
-  flex-direction: column;
-  padding: 20px 16px 16px;
-`
-const HeaderRow = styled(RowBetween)`
-  display: flex;
 `
 
 interface GammaFarmProps {
@@ -99,8 +76,6 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
   const [deposit0, setDeposit0] = useState('')
   const [deposit1, setDeposit1] = useState('')
   const [unStakeGamma, setUnStakeGamma] = useState('')
-  const finalizedTransaction = useTransactionFinalizer()
-  const addTransaction = useTransactionAdder()
 
   const hypervisorContract = useGammaHypervisorContract(pairData.hypervisor)
   const uniProxyContract = useGammaUniProxyContract()
@@ -240,108 +215,30 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
 
   return (
     <>
-      <ModalAddGammaLiquidity isOpen={modalOpen} onDismiss={handleDismiss}>
-        <Wrapper>
-          <HeaderRow>
-            <ThemedText.SubHeader>
-              <Trans>Add Gamma Liquidity</Trans>
-            </ThemedText.SubHeader>
-            <CloseIcon onClick={handleDismiss} />
-          </HeaderRow>
-          <div
-            style={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'space-evenly',
-              alignItems: 'center',
-              marginRight: isMobile ? 'none' : '15px',
-              marginLeft: isMobile ? '15px' : 'none',
-            }}
-          >
-            <Grid isMobile={isMobile} hasRewards={Number(rewardsAmount) > 0}>
-              <GridItemAddLiquidity
-                titleText="Deposit: "
-                availableStakeAmount={token0Balance}
-                textButton={
-                  approvalToken0 === ApprovalState.PENDING
-                    ? `Aproving Token ${tokenStake0?.symbol}`
-                    : `Approve Token ${tokenStake0?.symbol}`
-                }
-                tokenSymbol={tokenStake0?.symbol || ''}
-                depositValue={deposit0}
-                disabledButton={approvalToken0 === ApprovalState.APPROVED}
-                setDepositAmount={(amount: string) => {
-                  setDeposit0(amount)
-                  if (uniProxyContract)
-                    getDepositAmounts(
-                      0,
-                      uniProxyContract,
-                      setDeposit1,
-                      setDeposit0,
-                      pairData,
-                      token0Address,
-                      token1Address,
-                      deposit0,
-                      deposit1
-                    )
-                }}
-                approveOrStakeLPOrWithdraw={approveCallbackToken0}
-              />
-
-              <GridItemAddLiquidity
-                titleText="Deposit: "
-                availableStakeAmount={token1Balance}
-                textButton={
-                  approvalToken0 === ApprovalState.PENDING
-                    ? `Aproving Token ${tokenStake1?.symbol}`
-                    : `Approve Token ${tokenStake1?.symbol}`
-                }
-                tokenSymbol={tokenStake1?.symbol || ''}
-                depositValue={deposit1}
-                disabledButton={approvalToken1 === ApprovalState.APPROVED}
-                setDepositAmount={(amount: string) => {
-                  setDeposit1(amount)
-                  if (uniProxyContract)
-                    getDepositAmounts(
-                      1,
-                      uniProxyContract,
-                      setDeposit1,
-                      setDeposit0,
-                      pairData,
-                      token0Address,
-                      token1Address,
-                      deposit0,
-                      deposit1
-                    )
-                }}
-                approveOrStakeLPOrWithdraw={approveCallbackToken1}
-              />
-
-              <GridItemAddLiquidity
-                titleText="Unstake Gamma: "
-                availableStakeAmount="0"
-                textButton="Withdraw Gamma Liquidity"
-                tokenSymbol="LP"
-                depositValue={unStakeGamma}
-                disabledButton={false}
-                setDepositAmount={(amount: string) => {
-                  setUnStakeGamma(amount)
-                }}
-                approveOrStakeLPOrWithdraw={() =>
-                  withdrawHypervisor(
-                    hypervisorContract,
-                    account,
-                    unStakeGamma,
-                    pairData,
-                    finalizedTransaction,
-                    addTransaction
-                  )
-                }
-              />
-            </Grid>
-          </div>
-        </Wrapper>
-      </ModalAddGammaLiquidity>
+      <ModalAddGammaLiquidity
+        modalOpen={modalOpen}
+        handleDismiss={handleDismiss}
+        rewardsAmount={rewardsAmount}
+        token0Balance={token0Balance}
+        approvalToken0={approvalToken0}
+        approvalToken1={approvalToken1}
+        tokenStake0={tokenStake0}
+        tokenStake1={tokenStake1}
+        uniProxyContract={uniProxyContract}
+        deposit0={deposit0}
+        deposit1={deposit1}
+        setDeposit0={setDeposit0}
+        setDeposit1={setDeposit1}
+        pairData={pairData}
+        approveCallbackToken0={approveCallbackToken0}
+        token0Address={token0Address}
+        token1Address={token1Address}
+        token1Balance={token1Balance}
+        approveCallbackToken1={approveCallbackToken1}
+        unStakeGamma={unStakeGamma}
+        setUnStakeGamma={setUnStakeGamma}
+        hypervisorContract={hypervisorContract}
+      />
       <CardContainer showDetails={showDetails}>
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center', height: '60px', alignItems: 'center' }}>
           <div
