@@ -10,7 +10,7 @@ import { AlertTriangle } from 'react-feather'
 import { InterfaceTrade, RouterPreference } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
-import styled, { DefaultTheme, useTheme } from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
@@ -33,12 +33,6 @@ const StyledAlertTriangle = styled(AlertTriangle)`
 const ConfirmButton = styled(ButtonError)`
   height: 56px;
   margin-top: 10px;
-`
-
-const DetailRowValue = styled(ThemedText.BodySmall)<{ warningColor?: keyof DefaultTheme }>`
-  text-align: right;
-  overflow-wrap: break-word;
-  ${({ warningColor, theme }) => warningColor && `color: ${theme[warningColor]};`};
 `
 
 export default function SwapModalFooter({

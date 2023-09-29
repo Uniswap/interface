@@ -177,7 +177,7 @@ type FormatterBaseRule = { formatterOptions: NumberFormatOptions }
 type FormatterExactRule = { upperBound?: undefined; exact: number } & FormatterBaseRule
 type FormatterUpperBoundRule = { upperBound: number; exact?: undefined } & FormatterBaseRule
 
-export type FormatterRule = (FormatterExactRule | FormatterUpperBoundRule) & { hardCodedInput?: HardCodedInputFormat }
+type FormatterRule = (FormatterExactRule | FormatterUpperBoundRule) & { hardCodedInput?: HardCodedInputFormat }
 
 // these formatter objects dictate which formatter rule to use based on the interval that
 // the number falls into. for example, based on the rule set below, if your number
@@ -358,8 +358,8 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.TokenNonTx]: tokenNonTxFormatter,
   [NumberType.TokenTx]: tokenTxFormatter,
   [NumberType.SwapPrice]: swapPriceFormatter,
-  [NumberType.SwapTradeAmount]: swapDetailsAmountFormatter,
-  [NumberType.SwapDetailsAmount]: swapTradeAmountFormatter,
+  [NumberType.SwapTradeAmount]: swapTradeAmountFormatter,
+  [NumberType.SwapDetailsAmount]: swapDetailsAmountFormatter,
   [NumberType.FiatTokenQuantity]: fiatTokenQuantityFormatter,
   [NumberType.FiatTokenDetails]: fiatTokenDetailsFormatter,
   [NumberType.FiatTokenPrice]: fiatTokenPricesFormatter,

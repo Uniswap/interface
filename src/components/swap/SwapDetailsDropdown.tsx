@@ -153,7 +153,7 @@ export default function SwapDetailsDropdown(props: SwapDetailsProps) {
   )
 }
 
-export function AdvancedSwapDetails(props: SwapDetailsProps & { open: boolean }) {
+function AdvancedSwapDetails(props: SwapDetailsProps & { open: boolean }) {
   const { open, trade, allowedSlippage, syncing = false } = props
   const format = useFormatter()
 
