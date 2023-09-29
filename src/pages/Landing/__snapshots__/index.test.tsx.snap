@@ -1152,8 +1152,6 @@ exports[`disable nft on landing page does not render nft information and card 1`
 }
 
 .c18 {
-  -webkit-animation: iAjNNh 125ms ease-in;
-  animation: iAjNNh 125ms ease-in;
   color: #7D7D7D;
   gap: 4px;
   font-weight: 485;
@@ -1377,8 +1375,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
   background: linear-gradient(10deg,rgba(255,79,184,1) 0%,rgba(255,159,251,1) 100%);
   background-clip: text;
   -webkit-background-clip: text;
-  -webkit-animation: iAjNNh 125ms ease-in;
-  animation: iAjNNh 125ms ease-in;
+  opacity: 1.0;
 }
 
 .c57 {
@@ -1400,8 +1397,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  -webkit-animation: iAjNNh 125ms ease-in;
-  animation: iAjNNh 125ms ease-in;
+  opacity: 1.0;
 }
 
 .c59 {
@@ -3786,8 +3782,6 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
 }
 
 .c18 {
-  -webkit-animation: iAjNNh 125ms ease-in;
-  animation: iAjNNh 125ms ease-in;
   color: #7D7D7D;
   gap: 4px;
   font-weight: 485;
@@ -4011,8 +4005,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   background: linear-gradient(10deg,rgba(255,79,184,1) 0%,rgba(255,159,251,1) 100%);
   background-clip: text;
   -webkit-background-clip: text;
-  -webkit-animation: iAjNNh 125ms ease-in;
-  animation: iAjNNh 125ms ease-in;
+  opacity: 1.0;
 }
 
 .c57 {
@@ -4034,8 +4027,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  -webkit-animation: iAjNNh 125ms ease-in;
-  animation: iAjNNh 125ms ease-in;
+  opacity: 1.0;
 }
 
 .c59 {

@@ -13,7 +13,6 @@ export function getPersistedOriginCountry(): string | undefined {
 }
 
 export function setPersistedOriginCountry(country: string) {
-  console.log('we are setting')
   localStorage.setItem(originCountryKey, country)
 }
 
