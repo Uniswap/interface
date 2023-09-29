@@ -20,13 +20,8 @@ async function connect(connector: Connector, type: ConnectionType) {
   }
 }
 
-// The Safe connector will only work from safe.global, which iframes;
-// it is only necessary to try (and to load all the deps) if we are in an iframe.
-if (window !== window.parent) {
-  connect(gnosisSafeConnection.connector, ConnectionType.GNOSIS_SAFE)
-}
+connect(gnosisSafeConnection.connector, ConnectionType.GNOSIS_SAFE)
 connect(deprecatedNetworkConnection.connector, ConnectionType.DEPRECATED_NETWORK)
-
 const selectedWallet = toConnectionType(localStorage.getItem(selectedWalletKey) ?? undefined)
 if (selectedWallet) {
   const selectedConnection = getConnection(selectedWallet)
