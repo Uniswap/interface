@@ -1,12 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { ConnectionType, selectedWalletKey, toConnectionType } from '../../connection/types'
+import { ConnectionType } from '../../connection/types'
 import { SupportedLocale } from '../../constants/locales'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { RouterPreference } from '../../state/routing/types'
 import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 
-const selectedWallet = toConnectionType(localStorage.getItem(selectedWalletKey) ?? undefined)
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
@@ -60,7 +59,7 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  selectedWallet,
+  selectedWallet: undefined,
   userLocale: null,
   userRouterPreference: RouterPreference.API,
   userHideClosedPositions: false,
@@ -79,7 +78,6 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     updateSelectedWallet(state, { payload: { wallet } }) {
-      localStorage.setItem(selectedWalletKey, wallet)
       state.selectedWallet = wallet
     },
     updateUserLocale(state, action) {
