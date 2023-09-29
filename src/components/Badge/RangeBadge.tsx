@@ -55,7 +55,7 @@ export default function RangeBadge({ removed, inRange }: { removed?: boolean; in
         >
           <LabelText color={theme.success}>
             <BadgeText>
-              <Trans>In Range</Trans>
+              <Trans>In range</Trans>
             </BadgeText>
             <ActiveDot />
           </LabelText>

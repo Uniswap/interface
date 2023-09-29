@@ -41,7 +41,7 @@ export const LoadingRow = styled.div<{ height: number; width: number }>`
 
 export const loadingOpacityMixin = css<{ $loading: boolean }>`
   filter: ${({ $loading }) => ($loading ? 'grayscale(1)' : 'none')};
-  opacity: ${({ $loading }) => ($loading ? '0.4' : '1')};
+  opacity: ${({ $loading }) => ($loading ? '0.6' : '1')};
   transition: ${({ $loading, theme }) =>
     $loading ? 'none' : `opacity ${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
 `

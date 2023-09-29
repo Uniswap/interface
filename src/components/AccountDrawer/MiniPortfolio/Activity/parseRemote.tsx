@@ -182,6 +182,19 @@ function parseSwap(changes: TransactionChanges, formatNumberOrString: FormatNumb
   return { title: t`Unknown Swap` }
 }
 
+/**
+ * Wrap/unwrap transactions are labelled as lend transactions on the backend.
+ * This function parses the transaction changes to determine if the transaction is a wrap/unwrap transaction.
+ */
+function parseLend(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
+  const native = changes.TokenTransfer.find((t) => t.tokenStandard === 'NATIVE')?.asset
+  const erc20 = changes.TokenTransfer.find((t) => t.tokenStandard === 'ERC20')?.asset
+  if (native && erc20 && gqlToCurrency(native)?.wrapped.address === gqlToCurrency(erc20)?.wrapped.address) {
+    return parseSwap(changes, formatNumberOrString)
+  }
+  return { title: t`Unknown Lend` }
+}
+
 function parseSwapOrder(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
   return { ...parseSwap(changes, formatNumberOrString), prefixIconSrc: UniswapXBolt }
 }
@@ -305,6 +318,7 @@ type ActivityTypeParser = (
 ) => Partial<Activity>
 const ActivityParserByType: { [key: string]: ActivityTypeParser | undefined } = {
   [ActivityType.Swap]: parseSwap,
+  [ActivityType.Lend]: parseLend,
   [ActivityType.SwapOrder]: parseSwapOrder,
   [ActivityType.Approve]: parseApprove,
   [ActivityType.Send]: parseSendReceive,
@@ -395,6 +409,7 @@ function parseRemoteActivity(
       })
       return undefined
     }
+
     const defaultFields = {
       hash: assetActivity.details.hash,
       chainId: supportedChain,

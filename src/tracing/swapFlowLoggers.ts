@@ -34,7 +34,8 @@ export function maybeLogFirstSwapAction(analyticsContext: ITraceContext) {
 
 export function logSwapQuoteRequest(
   chainId: number,
-  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
+  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE,
+  isQuickRoute?: boolean
 ) {
   let performanceMetrics = {}
   if (routerPreference !== INTERNAL_ROUTER_PREFERENCE_PRICE) {
@@ -50,6 +51,7 @@ export function logSwapQuoteRequest(
   }
   sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_FETCH, {
     chainId,
+    isQuickRoute: isQuickRoute ?? false,
     ...performanceMetrics,
   })
 }

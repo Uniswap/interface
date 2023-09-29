@@ -122,7 +122,7 @@ export const routingApi = createApi({
       },
       async queryFn(args, _api, _extraOptions, fetch) {
         let fellBack = false
-        logSwapQuoteRequest(args.tokenInChainId, args.routerPreference)
+        logSwapQuoteRequest(args.tokenInChainId, args.routerPreference, false)
         const quoteStartMark = performance.mark(`quote-fetch-start-${Date.now()}`)
         if (shouldUseAPIRouter(args)) {
           fellBack = true
@@ -150,7 +150,7 @@ export const routingApi = createApi({
             if (response.error) {
               try {
                 // cast as any here because we do a runtime check on it being an object before indexing into .errorCode
-                const errorData = response.error.data as any
+                const errorData = response.error.data as { errorCode?: string; detail?: string }
                 // NO_ROUTE should be treated as a valid response to prevent retries.
                 if (
                   typeof errorData === 'object' &&

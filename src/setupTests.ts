@@ -94,6 +94,20 @@ jest.mock('state/routing/slice', () => {
   }
 })
 
+jest.mock('state/routing/quickRouteSlice', () => {
+  const quickRouteSlice = jest.requireActual('state/routing/quickRouteSlice')
+  return {
+    ...quickRouteSlice,
+    // Prevents unit tests from logging errors from failed getQuote queries
+    useGetQuickRouteQuery: () => ({
+      isError: false,
+      data: undefined,
+      error: undefined,
+      currentData: undefined,
+    }),
+  }
+})
+
 // Mocks are configured to reset between tests (by CRA), so they must be set in a beforeEach.
 beforeEach(() => {
   // Mock window.getComputedStyle, because it is otherwise too computationally expensive to unit test.

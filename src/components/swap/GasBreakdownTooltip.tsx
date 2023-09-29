@@ -5,7 +5,7 @@ import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/Un
 import Row from 'components/Row'
 import { nativeOnChain } from 'constants/tokens'
 import { ReactNode } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { SubmittableTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components'
 import { Divider, ExternalLink, ThemedText } from 'theme/components'
@@ -33,7 +33,7 @@ const GasCostItem = ({ title, amount, itemValue }: GasCostItemProps) => {
 
 const GasslessSwapLabel = () => <UniswapXRouterLabel>$0</UniswapXRouterLabel>
 
-type GasBreakdownTooltipProps = { trade: InterfaceTrade; hideUniswapXDescription?: boolean }
+type GasBreakdownTooltipProps = { trade: SubmittableTrade; hideUniswapXDescription?: boolean }
 
 export function GasBreakdownTooltip({ trade, hideUniswapXDescription }: GasBreakdownTooltipProps) {
   const isUniswapX = isUniswapXTrade(trade)

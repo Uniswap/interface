@@ -3,6 +3,7 @@ import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/anal
 import { Percent } from '@uniswap/sdk-core'
 import { TraceEvent } from 'analytics'
 import Column from 'components/Column'
+import SpinningLoader from 'components/Loader/SpinningLoader'
 import { SwapResult } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { ReactNode } from 'react'
@@ -16,7 +17,7 @@ import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
 
 import { ButtonError, SmallButtonPrimary } from '../Button'
-import { AutoRow, RowBetween, RowFixed } from '../Row'
+import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
 import { SwapCallbackError, SwapShowAcceptChanges } from './styled'
 import { SwapLineItemTypes } from './SwapLineItem'
 import SwapLineItem from './SwapLineItem'
@@ -46,6 +47,7 @@ export default function SwapModalFooter({
   fiatValueOutput,
   showAcceptChanges,
   onAcceptChanges,
+  isLoading,
 }: {
   trade: InterfaceTrade
   swapResult?: SwapResult
@@ -57,6 +59,7 @@ export default function SwapModalFooter({
   fiatValueOutput: { data?: number; isLoading: boolean }
   showAcceptChanges: boolean
   onAcceptChanges: () => void
+  isLoading: boolean
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
@@ -116,9 +119,18 @@ export default function SwapModalFooter({
               $borderRadius="12px"
               id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
             >
-              <ThemedText.HeadlineSmall color="deprecated_accentTextLightPrimary">
-                <Trans>Confirm swap</Trans>
-              </ThemedText.HeadlineSmall>
+              {isLoading ? (
+                <ThemedText.HeadlineSmall color="neutral2">
+                  <Row>
+                    <SpinningLoader />
+                    <Trans>Finalizing quote...</Trans>
+                  </Row>
+                </ThemedText.HeadlineSmall>
+              ) : (
+                <ThemedText.HeadlineSmall color="deprecated_accentTextLightPrimary">
+                  <Trans>Confirm swap</Trans>
+                </ThemedText.HeadlineSmall>
+              )}
             </ConfirmButton>
           </TraceEvent>
 

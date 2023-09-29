@@ -9,7 +9,7 @@ import useHoverProps from 'hooks/useHoverProps'
 import { useIsMobile } from 'nft/hooks'
 import React, { PropsWithChildren } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import { getTransactionCount, isUniswapXTrade } from 'state/routing/utils'
+import { getTransactionCount, isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
 import styled, { DefaultTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -67,6 +67,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData {
   const format = useFormatter()
 
   const { trade, syncing, allowedSlippage, type } = props
+
   const { formatNumber, formatPriceImpact, formatCurrencyAmount } = format
   const currencyIn = trade.inputAmount.currency
   const currencyOut = trade.outputAmount.currency
@@ -86,29 +87,43 @@ function useLineItem(props: SwapLineItemProps): LineItemData {
         ),
         loaderWidth: 50,
       }
-    case SwapLineItemTypes.NETWORK_FEE:
-      return {
-        hide: SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) && getTransactionCount(trade) < 1,
-        Label: () => <Plural value={getTransactionCount(trade)} one="Network fee" other="Network fees" />,
-        TooltipBody: () => <GasBreakdownTooltip {...props} hideUniswapXDescription />,
-        Value: () => <>~{formatNumber({ input: trade.totalGasUseEstimateUSD, type: NumberType.FiatGasPrice })}</>,
+    case SwapLineItemTypes.NETWORK_FEE: {
+      const previewItem = {
+        hide: !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId),
+        Label: () => <Plural value={getTransactionCount(trade) || 1} one="Network fee" other="Network fees" />,
+        Value: () => <LoadingRow height={15} width={50} />,
         loaderWidth: 50,
       }
-    case SwapLineItemTypes.PRICE_IMPACT:
+      if (isPreviewTrade(trade)) return previewItem
       return {
+        ...previewItem,
+        TooltipBody: () => <GasBreakdownTooltip trade={trade} hideUniswapXDescription />,
+        Value: () => (
+          <DetailRowValue>
+            {formatNumber({ input: trade.totalGasUseEstimateUSD, type: NumberType.FiatGasPrice })}
+          </DetailRowValue>
+        ),
+      }
+    }
+    case SwapLineItemTypes.PRICE_IMPACT: {
+      const previewItem = {
         hide: isUniswapXTrade(trade),
         Label: () => <Trans>Price impact</Trans>,
-        TooltipBody: () => <Trans>The impact your trade has on the market price of this pool.</Trans>,
-        Value: () => {
-          if (isUniswapXTrade(trade)) return null
-          return (
-            <DetailRowValue warningColor={getPriceImpactColor(trade.priceImpact)}>
-              {formatPriceImpact(trade.priceImpact)}
-            </DetailRowValue>
-          )
-        },
+        Value: () => <LoadingRow height={15} width={50} />,
         loaderWidth: 50,
       }
+      if (isPreviewTrade(trade) || isUniswapXTrade(trade)) return previewItem
+      return {
+        ...previewItem,
+        TooltipBody: () => <Trans>The impact your trade has on the market price of this pool.</Trans>,
+        Value: () => (
+          <DetailRowValue warningColor={getPriceImpactColor(trade.priceImpact)}>
+            {formatPriceImpact(trade.priceImpact)}
+          </DetailRowValue>
+        ),
+        loaderWidth: 50,
+      }
+    }
     case SwapLineItemTypes.INPUT_TOKEN_FEE_ON_TRANSFER:
       return {
         hide: syncing || trade.inputTax.equalTo(0),
@@ -195,14 +210,16 @@ function useLineItem(props: SwapLineItemProps): LineItemData {
     case SwapLineItemTypes.ROUTING_INFO:
       return {
         Label: () => <Trans>Order routing</Trans>,
-        TooltipBody: () =>
-          isUniswapXTrade(trade) ? (
-            <UniswapXDescription />
-          ) : (
-            <SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} />
-          ),
+        TooltipBody: () => {
+          if (isPreviewTrade(trade)) return null
+          if (isUniswapXTrade(trade)) return <UniswapXDescription />
+          return <SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} />
+        },
         tooltipSize: isUniswapXTrade(trade) ? undefined : TooltipSize.Large,
-        Value: () => <RouterLabel trade={trade} />,
+        Value: () => {
+          if (isPreviewTrade(trade)) return <LoadingRow height={15} width={50} />
+          return <RouterLabel trade={trade} />
+        },
         loaderWidth: 50,
       }
   }

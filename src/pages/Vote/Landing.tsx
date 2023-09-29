@@ -150,7 +150,7 @@ export default function Landing() {
           <DelegateModal
             isOpen={showDelegateModal}
             onDismiss={toggleDelegateModal}
-            title={showUnlockVoting ? <Trans>Unlock Votes</Trans> : <Trans>Update Delegation</Trans>}
+            title={showUnlockVoting ? <Trans>Unlock votes</Trans> : <Trans>Update delegation</Trans>}
           />
           <TopSection gap="md">
             <VoteCard>
@@ -160,7 +160,7 @@ export default function Landing() {
                 <AutoColumn gap="md">
                   <RowBetween>
                     <ThemedText.DeprecatedWhite fontWeight={535}>
-                      <Trans>Uniswap Governance</Trans>
+                      <Trans>Uniswap governance</Trans>
                     </ThemedText.DeprecatedWhite>
                   </RowBetween>
                   <RowBetween>
@@ -203,7 +203,7 @@ export default function Landing() {
                     $borderRadius="8px"
                     onClick={toggleDelegateModal}
                   >
-                    <Trans>Unlock Voting</Trans>
+                    <Trans>Unlock voting</Trans>
                   </ButtonPrimary>
                 ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
                   <ThemedText.DeprecatedBody fontWeight={535} mr="6px">
@@ -229,7 +229,7 @@ export default function Landing() {
                   style={{ width: 'fit-content', borderRadius: '8px', height: '40px' }}
                   padding="8px"
                 >
-                  <Trans>Create Proposal</Trans>
+                  <Trans>Create proposal</Trans>
                 </ButtonPrimary>
               </AutoRow>
             </WrapSmall>
@@ -266,7 +266,7 @@ export default function Landing() {
                 <RowBetween></RowBetween>
                 <RowBetween>
                   <ThemedText.DeprecatedMain>
-                    <Trans>Show Cancelled</Trans>
+                    <Trans>Show cancelled</Trans>
                   </ThemedText.DeprecatedMain>
                   <Toggle
                     isActive={!hideCancelled}

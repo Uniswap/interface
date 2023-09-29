@@ -2,8 +2,10 @@ import * as Sentry from '@sentry/react'
 import { BrowserTracing } from '@sentry/tracing'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { initializeAnalytics, OriginApplication } from 'analytics'
-import { isDevelopmentEnv, isSentryEnabled } from 'utils/env'
-import { getEnvName, isProductionEnv } from 'utils/env'
+import store from 'state'
+import { setOriginCountry } from 'state/user/reducer'
+import { isDevelopmentEnv, isProductionEnv, isSentryEnabled } from 'utils/env'
+import { getEnvName } from 'utils/env'
 import { v4 as uuidv4 } from 'uuid'
 
 import { beforeSend } from './errors'
@@ -45,4 +47,5 @@ initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {
   commitHash: process.env.REACT_APP_GIT_COMMIT_HASH,
   isProductionEnv: isProductionEnv(),
   debug: isDevelopmentEnv(),
+  reportOriginCountry: (country: string) => store.dispatch(setOriginCountry(country)),
 })

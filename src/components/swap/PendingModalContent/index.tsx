@@ -14,13 +14,15 @@ import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { useOrder } from 'state/signatures/hooks'
 import { UniswapXOrderDetails } from 'state/signatures/types'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
-import styled, { css, keyframes } from 'styled-components'
+import styled, { css } from 'styled-components'
 import { ExternalLink } from 'theme/components'
 import { ThemedText } from 'theme/components/text'
+import { SignatureExpiredError } from 'utils/errors'
 import { getExplorerLink } from 'utils/getExplorerLink'
 import { ExplorerDataType } from 'utils/getExplorerLink'
 
 import { ConfirmModalState } from '../ConfirmSwapModal'
+import { slideInAnimation, slideOutAnimation } from './animations'
 import {
   AnimatedEntranceConfirmationIcon,
   AnimatedEntranceSubmittedIcon,
@@ -31,6 +33,7 @@ import {
   PaperIcon,
 } from './Logos'
 import { TradeSummary } from './TradeSummary'
+import { TransitionText } from './TransitionText'
 
 export const PendingModalContainer = styled(ColumnCenter)`
   margin: 48px 0 8px;
@@ -51,21 +54,6 @@ const StepCircle = styled.div<{ active: boolean }>`
   transition: background-color ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
 `
 
-const slideIn = keyframes`
-  from { opacity: 0; transform: translateX(40px) }
-  to { opacity: 1; transform: translateX(0px) }
-`
-const slideInAnimation = css`
-  animation: ${slideIn} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
-`
-const slideOut = keyframes`
-  from { opacity: 1; transform: translateX(0px) }
-  to { opacity: 0; transform: translateX(-40px) }
-`
-const slideOutAnimation = css`
-  animation: ${slideOut} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
-`
-
 const AnimationWrapper = styled.div`
   position: relative;
   width: 100%;
@@ -77,7 +65,10 @@ const AnimationWrapper = styled.div`
 const StepTitleAnimationContainer = styled(Column)<{ disableEntranceAnimation?: boolean }>`
   position: absolute;
   width: 100%;
+  height: 100%;
   align-items: center;
+  display: flex;
+  flex-direction: column;
   transition: display ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
   ${({ disableEntranceAnimation }) =>
     !disableEntranceAnimation &&
@@ -117,6 +108,8 @@ interface PendingModalContentProps {
   hideStepIndicators?: boolean
   tokenApprovalPending?: boolean
   revocationPending?: boolean
+  swapError?: Error | string
+  onRetryUniswapXSignature?: () => void
 }
 
 interface ContentArgs {
@@ -130,6 +123,8 @@ interface ContentArgs {
   swapResult?: SwapResult
   chainId?: number
   order?: UniswapXOrderDetails
+  swapError?: Error | string
+  onRetryUniswapXSignature?: () => void
 }
 
 function getPendingConfirmationContent({
@@ -138,7 +133,12 @@ function getPendingConfirmationContent({
   trade,
   chainId,
   swapResult,
-}: Pick<ContentArgs, 'swapConfirmed' | 'swapPending' | 'trade' | 'chainId' | 'swapResult'>): PendingModalStep {
+  swapError,
+  onRetryUniswapXSignature,
+}: Pick<
+  ContentArgs,
+  'swapConfirmed' | 'swapPending' | 'trade' | 'chainId' | 'swapResult' | 'swapError' | 'onRetryUniswapXSignature'
+>): PendingModalStep {
   const title = swapPending ? t`Swap submitted` : swapConfirmed ? t`Swap success!` : t`Confirm Swap`
   const tradeSummary = trade ? <TradeSummary trade={trade} /> : null
   if (swapPending && trade?.fillType === TradeFillType.UniswapX) {
@@ -174,6 +174,19 @@ function getPendingConfirmationContent({
         bottomLabel: null,
       }
     }
+  } else if (swapError instanceof SignatureExpiredError) {
+    return {
+      title: (
+        <TransitionText
+          key={swapError.id}
+          initialText={<Trans>Time expired</Trans>}
+          transitionText={<Trans>Retry confirmation</Trans>}
+          onTransition={onRetryUniswapXSignature}
+        />
+      ),
+      subtitle: tradeSummary,
+      bottomLabel: t`Proceed in your wallet`,
+    }
   } else {
     return {
       title,
@@ -194,6 +207,8 @@ function useStepContents(args: ContentArgs): Record<PendingConfirmModalState, Pe
     trade,
     swapResult,
     chainId,
+    swapError,
+    onRetryUniswapXSignature,
   } = args
 
   return useMemo(
@@ -236,6 +251,8 @@ function useStepContents(args: ContentArgs): Record<PendingConfirmModalState, Pe
         swapPending,
         swapResult,
         trade,
+        swapError,
+        onRetryUniswapXSignature,
       }),
     }),
     [
@@ -248,6 +265,8 @@ function useStepContents(args: ContentArgs): Record<PendingConfirmModalState, Pe
       tokenApprovalPending,
       trade,
       wrapPending,
+      swapError,
+      onRetryUniswapXSignature,
     ]
   )
 }
@@ -261,6 +280,8 @@ export function PendingModalContent({
   hideStepIndicators,
   tokenApprovalPending = false,
   revocationPending = false,
+  swapError,
+  onRetryUniswapXSignature,
 }: PendingModalContentProps) {
   const { chainId } = useWeb3React()
 
@@ -283,6 +304,8 @@ export function PendingModalContent({
     swapResult,
     trade,
     chainId,
+    swapError,
+    onRetryUniswapXSignature,
   })
 
   const currentStepContainerRef = useRef<HTMLDivElement>(null)
@@ -341,7 +364,7 @@ export function PendingModalContent({
                   key={step}
                   ref={step === currentStep ? currentStepContainerRef : undefined}
                 >
-                  <ThemedText.SubHeaderLarge textAlign="center" data-testid="pending-modal-content-title">
+                  <ThemedText.SubHeaderLarge width="100%" textAlign="center" data-testid="pending-modal-content-title">
                     {stepContents[step].title}
                   </ThemedText.SubHeaderLarge>
                   <ThemedText.LabelSmall textAlign="center">{stepContents[step].subtitle}</ThemedText.LabelSmall>

@@ -16,10 +16,11 @@ import { ArrowDownCircle } from 'react-feather'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
 import { useAppSelector } from 'state/hooks'
+import { AppState } from 'state/reducer'
 import styled, { css } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { TRANSITION_DURATIONS } from 'theme/styles'
+import { textFadeIn, TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { getDownloadAppLinkProps } from 'utils/openDownloadApp'
 
@@ -106,7 +107,23 @@ const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   }
 `
 
-const TitleText = styled.h1<{ isDarkMode: boolean }>`
+const DownloadWalletLink = styled.a`
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 24px;
+  color: ${({ theme }) => theme.neutral2};
+  text-decoration: none;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+
+  :hover {
+    color: ${({ theme }) => theme.neutral3};
+  }
+`
+
+const TitleText = styled.h1<{ isDarkMode: boolean; $visible: boolean }>`
   color: transparent;
   font-size: 36px;
   line-height: 44px;
@@ -123,6 +140,13 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
         `};
   background-clip: text;
   -webkit-background-clip: text;
+
+  ${({ $visible }) =>
+    $visible
+      ? css`
+          ${textFadeIn}
+        `
+      : 'opacity: 0;'}
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     font-size: 48px;
@@ -150,9 +174,16 @@ const SubText = styled.div`
   }
 `
 
-const SubTextContainer = styled.div`
+const SubTextContainer = styled.div<{ $visible: boolean }>`
   display: flex;
   justify-content: center;
+
+  ${({ $visible }) =>
+    $visible
+      ? css`
+          ${textFadeIn}
+        `
+      : 'opacity: 0;'}
 `
 
 const LandingButton = styled(BaseButton)`
@@ -303,9 +334,36 @@ export default function Landing() {
   const cardsRef = useRef<HTMLDivElement>(null)
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
-  const cards = useMemo(
-    () => MAIN_CARDS.filter((card) => !(shouldDisableNFTRoutes && card.to.startsWith('/nft'))),
-    [shouldDisableNFTRoutes]
+  const originCountry = useAppSelector((state: AppState) => state.user.originCountry)
+  const renderUkSpecificText = Boolean(originCountry) && originCountry === 'GB'
+  const cards = useMemo(() => {
+    const mainCards = MAIN_CARDS.filter(
+      (card) =>
+        !(shouldDisableNFTRoutes && card.to.startsWith('/nft')) && !(card.to.startsWith('/swap') && !originCountry)
+    )
+
+    mainCards.forEach((card) => {
+      if (card.to.startsWith('/swap') && renderUkSpecificText) {
+        card.description = 'Explore tokens on Ethereum, Polygon, Optimism and more '
+        card.cta = 'Discover Tokens'
+      }
+    })
+
+    return mainCards
+  }, [originCountry, renderUkSpecificText, shouldDisableNFTRoutes])
+
+  const extraCards = useMemo(
+    () =>
+      MORE_CARDS.filter(
+        (card) =>
+          !(
+            card.to.startsWith(
+              'https://support.uniswap.org/hc/en-us/articles/11306574799117-How-to-use-Moon-Pay-on-the-Uniswap-web-app-'
+            ) &&
+            (!originCountry || renderUkSpecificText)
+          )
+      ),
+    [originCountry, renderUkSpecificText]
   )
 
   const [accountDrawerOpen] = useAccountDrawer()
@@ -320,6 +378,35 @@ export default function Landing() {
 
   const location = useLocation()
   const queryParams = parse(location.search, { ignoreQueryPrefix: true })
+
+  const titles = useMemo(() => {
+    if (!originCountry) {
+      return {
+        header: null,
+        subHeader: null,
+      }
+    }
+
+    if (renderUkSpecificText) {
+      return {
+        header: <Trans>Go direct to DeFi with Uniswap</Trans>,
+        subHeader: <Trans>Swap and explore tokens and NFTs</Trans>,
+      }
+    }
+
+    if (shouldDisableNFTRoutes) {
+      return {
+        header: <Trans>Trade crypto with confidence</Trans>,
+        subHeader: <Trans>Buy, sell, and explore tokens</Trans>,
+      }
+    }
+
+    return {
+      header: <Trans>Trade crypto and NFTs with confidence</Trans>,
+      subHeader: <Trans>Buy, sell, and explore tokens and NFTs</Trans>,
+    }
+  }, [originCountry, renderUkSpecificText, shouldDisableNFTRoutes])
+
   if (selectedWallet && !queryParams.intro) {
     return <Navigate to={{ ...location, pathname: '/swap' }} replace />
   }
@@ -343,21 +430,11 @@ export default function Landing() {
           <Glow />
         </GlowContainer>
         <ContentContainer isDarkMode={isDarkMode}>
-          <TitleText isDarkMode={isDarkMode}>
-            {shouldDisableNFTRoutes ? (
-              <Trans>Trade crypto with confidence</Trans>
-            ) : (
-              <Trans>Trade crypto and NFTs with confidence</Trans>
-            )}
+          <TitleText isDarkMode={isDarkMode} $visible={!!originCountry}>
+            {titles.header}
           </TitleText>
-          <SubTextContainer>
-            <SubText>
-              {shouldDisableNFTRoutes ? (
-                <Trans>Buy, sell, and explore tokens</Trans>
-              ) : (
-                <Trans>Buy, sell, and explore tokens and NFTs</Trans>
-              )}
-            </SubText>
+          <SubTextContainer $visible={!!originCountry}>
+            <SubText>{titles.subHeader}</SubText>
           </SubTextContainer>
           <ActionsContainer>
             <TraceEvent
@@ -402,8 +479,8 @@ export default function Landing() {
               />
             ))}
           </CardGrid>
-          <CardGrid cols={3}>
-            {MORE_CARDS.map(({ darkIcon, lightIcon, ...card }) => (
+          <CardGrid cols={extraCards.length}>
+            {extraCards.map(({ darkIcon, lightIcon, ...card }) => (
               <Card {...card} icon={isDarkMode ? darkIcon : lightIcon} key={card.title} type={CardType.Secondary} />
             ))}
           </CardGrid>
@@ -414,19 +491,3 @@ export default function Landing() {
     </Trace>
   )
 }
-
-const DownloadWalletLink = styled.a`
-  display: inline-flex;
-  gap: 8px;
-  margin-top: 24px;
-  color: ${({ theme }) => theme.neutral2};
-  text-decoration: none;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 535;
-  text-align: center;
-
-  :hover {
-    color: ${({ theme }) => theme.neutral3};
-  }
-`

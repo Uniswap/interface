@@ -1,4 +1,4 @@
-import { TEST_ALLOWED_SLIPPAGE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
+import { PREVIEW_EXACT_IN_TRADE, TEST_ALLOWED_SLIPPAGE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { render, screen, within } from 'test-utils/render'
 
 import SwapModalFooter from './SwapModalFooter'
@@ -7,6 +7,7 @@ describe('SwapModalFooter.tsx', () => {
   it('matches base snapshot, test trade exact input', () => {
     const { asFragment } = render(
       <SwapModalFooter
+        isLoading={false}
         trade={TEST_TRADE_EXACT_INPUT}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
@@ -42,6 +43,7 @@ describe('SwapModalFooter.tsx', () => {
     const mockAcceptChanges = jest.fn()
     render(
       <SwapModalFooter
+        isLoading={false}
         trade={TEST_TRADE_EXACT_INPUT}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
@@ -64,5 +66,31 @@ describe('SwapModalFooter.tsx', () => {
     expect(showAcceptChanges).toBeInTheDocument()
     expect(within(showAcceptChanges).getByText('Price updated')).toBeVisible()
     expect(within(showAcceptChanges).getByText('Accept')).toBeVisible()
+  })
+
+  it('renders a preview trade while disabling submission', () => {
+    const { asFragment } = render(
+      <SwapModalFooter
+        isLoading
+        trade={PREVIEW_EXACT_IN_TRADE}
+        allowedSlippage={TEST_ALLOWED_SLIPPAGE}
+        swapResult={undefined}
+        onConfirm={jest.fn()}
+        swapErrorMessage={undefined}
+        disabledConfirm
+        fiatValueInput={{
+          data: undefined,
+          isLoading: false,
+        }}
+        fiatValueOutput={{
+          data: undefined,
+          isLoading: false,
+        }}
+        showAcceptChanges={false}
+        onAcceptChanges={jest.fn()}
+      />
+    )
+    expect(asFragment()).toMatchSnapshot()
+    expect(screen.getByText('Finalizing quote...')).toBeInTheDocument()
   })
 })
