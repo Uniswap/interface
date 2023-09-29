@@ -1,5 +1,5 @@
 import { Connector } from '@web3-react/types'
-import { gnosisSafeConnection, deprecatedNetworkConnection } from 'connection'
+import { deprecatedNetworkConnection, gnosisSafeConnection } from 'connection'
 import { getConnection } from 'connection'
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
