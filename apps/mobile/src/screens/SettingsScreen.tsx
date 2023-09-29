@@ -23,7 +23,7 @@ import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricName, useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { Screens } from 'src/screens/Screens'
 import { getFullAppVersion } from 'src/utils/version'
-import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AVATARS_DARK, AVATARS_LIGHT } from 'ui/src/assets'
 import BookOpenIcon from 'ui/src/assets/icons/book-open.svg'
 import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
@@ -332,7 +332,7 @@ function FooterSettings(): JSX.Element {
   return (
     <Flex gap="$spacing12">
       {showSignature ? (
-        <Flex
+        <AnimatedFlex
           alignItems="center"
           entering={FadeInDown}
           exiting={FadeOutUp}
@@ -351,7 +351,7 @@ function FooterSettings(): JSX.Element {
           ) : (
             <Image source={AVATARS_LIGHT} style={ImageStyles.responsiveImage} />
           )}
-        </Flex>
+        </AnimatedFlex>
       ) : null}
       <Text
         color="$neutral3"

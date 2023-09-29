@@ -13,11 +13,6 @@ exports[`renders a relative change 1`] = `
     }
   >
     <div
-      animatedStyle={
-        {
-          "value": {},
-        }
-      }
       className="  _dsp-flex _fd-row _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-0 _ai-center _gap-1481558338 _jc-flex-start "
       style={{}}
     >
@@ -84,11 +79,6 @@ exports[`renders a relative change 1`] = `
         </RNSVGGroup>
       </RNSVGSvgView>
       <div
-        animatedStyle={
-          {
-            "value": {},
-          }
-        }
         className="  _ai-stretch _dsp-flex _fd-column _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-0 "
         style={{}}
       >
@@ -117,11 +107,6 @@ exports[`renders placeholders with absolute change 1`] = `
     }
   >
     <div
-      animatedStyle={
-        {
-          "value": {},
-        }
-      }
       className="  _dsp-flex _fd-row _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-0 _ai-center _gap-1481558338 _jc-flex-start "
       style={{}}
     >
@@ -188,11 +173,6 @@ exports[`renders placeholders with absolute change 1`] = `
         </RNSVGGroup>
       </RNSVGSvgView>
       <div
-        animatedStyle={
-          {
-            "value": {},
-          }
-        }
         className="  _ai-stretch _dsp-flex _fd-column _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-0 "
         style={{}}
       >
@@ -221,20 +201,10 @@ exports[`renders placeholders without a change 1`] = `
     }
   >
     <div
-      animatedStyle={
-        {
-          "value": {},
-        }
-      }
       className="  _dsp-flex _fd-row _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-0 _ai-center _gap-1481558338 _jc-flex-start "
       style={{}}
     >
       <div
-        animatedStyle={
-          {
-            "value": {},
-          }
-        }
         className="  _ai-stretch _dsp-flex _fd-column _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-0 "
         style={{}}
       >

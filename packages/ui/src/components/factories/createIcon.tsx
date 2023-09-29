@@ -2,7 +2,6 @@ import type { IconProps as TamaguiIconProps } from '@tamagui/helpers-icon'
 import { createElement, forwardRef } from 'react'
 import { Svg, SvgProps } from 'react-native-svg'
 import { ColorTokens, isWeb, Stack, styled, ThemeKeys, usePropsAndStyle } from 'tamagui'
-
 import { withAnimated } from './animated'
 
 type SvgPropsWithRef = SvgProps & { ref: React.ForwardedRef<Svg>; style?: { color?: string } }
@@ -78,7 +77,8 @@ export function createIcon({
   const AnimatedIconPlain = withAnimated(IconPlain)
 
   const AnimatedIcon = forwardRef<Svg, IconProps>((props: IconProps, ref) => (
-    <Icon ref={ref} {...props} Component={AnimatedIconPlain} />
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    <Icon ref={ref} {...props} Component={AnimatedIconPlain as any} />
   ))
 
   AnimatedIcon.displayName = `Animated${name}`

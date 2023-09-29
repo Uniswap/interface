@@ -8,7 +8,7 @@ import {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import { Flex, useSporeColors } from 'ui/src'
+import { AnimatedFlex, useSporeColors } from 'ui/src'
 import HeartIcon from 'ui/src/assets/icons/heart.svg'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -45,9 +45,9 @@ export const FavoriteButton = ({
 
   return (
     <TapGestureHandler onGestureEvent={onGestureEvent}>
-      <Flex style={animatedStyle}>
+      <AnimatedFlex style={animatedStyle}>
         <HeartIcon color={color} height={size} width={size} />
-      </Flex>
+      </AnimatedFlex>
     </TapGestureHandler>
   )
 }

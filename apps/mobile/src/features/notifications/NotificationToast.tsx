@@ -9,7 +9,7 @@ import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-n
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlex, Flex, Text, TouchableArea } from 'ui/src'
 import { useTimeout } from 'utilities/src/time/timing'
 import { popNotification } from 'wallet/src/features/notifications/slice'
 
@@ -101,7 +101,7 @@ export function NotificationToast({
 
   return (
     <FlingGestureHandler direction={Directions.UP} onHandlerStateChange={onFling}>
-      <Flex
+      <AnimatedFlex
         borderColor={useSmallDisplay ? '$transparent' : '$surface2'}
         borderRadius="$rounded16"
         borderWidth={1}
@@ -130,7 +130,7 @@ export function NotificationToast({
             onPressIn={onPressIn}
           />
         )}
-      </Flex>
+      </AnimatedFlex>
     </FlingGestureHandler>
   )
 }

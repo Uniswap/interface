@@ -21,7 +21,7 @@ import { CurrencyInputPanel } from 'src/features/transactions/swapRewrite/Curren
 import { SwapArrowButton } from 'src/features/transactions/swapRewrite/SwapArrowButton'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -53,7 +53,7 @@ export function SwapForm(): JSX.Element {
       <TouchableWithoutFeedback>
         <Box style={{ marginTop: insets.top }}>
           <HandleBar backgroundColor="none" />
-          <Flex grow row gap="none" height="100%" style={wrapperStyle}>
+          <AnimatedFlex grow row height="100%" style={wrapperStyle}>
             <Flex
               gap="$spacing16"
               pb={IS_ANDROID ? '$spacing32' : '$spacing16'}
@@ -63,7 +63,7 @@ export function SwapForm(): JSX.Element {
               <SwapFormHeader />
               {isSheetReady && <SwapFormContent />}
             </Flex>
-          </Flex>
+          </AnimatedFlex>
         </Box>
       </TouchableWithoutFeedback>
 
@@ -229,7 +229,11 @@ function SwapFormContent(): JSX.Element {
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
-      <Flex entering={FadeIn} exiting={FadeOut} gap="spacing2" onLayout={onInputPanelLayout}>
+      <AnimatedFlex
+        entering={FadeIn}
+        exiting={FadeOut}
+        gap="$spacing2"
+        onLayout={onInputPanelLayout}>
         <Trace section={SectionName.CurrencyInputPanel}>
           <Flex
             backgroundColor={
@@ -260,8 +264,8 @@ function SwapFormContent(): JSX.Element {
           </Flex>
         </Trace>
 
-        <Flex gap="$none" zIndex="$popover">
-          <Flex alignItems="center" gap="$none" height={0} style={StyleSheet.absoluteFill}>
+        <Flex zIndex="$popover">
+          <Flex alignItems="center" height={0} style={StyleSheet.absoluteFill}>
             <Flex
               alignItems="center"
               bottom={
@@ -275,7 +279,6 @@ function SwapFormContent(): JSX.Element {
                   )
                 ) / 2
               }
-              gap="$none"
               position="absolute">
               <Trace logPress element={ElementName.SwitchCurrenciesButton}>
                 <SwapArrowButton
@@ -289,7 +292,7 @@ function SwapFormContent(): JSX.Element {
         </Flex>
 
         <Trace section={SectionName.CurrencyOutputPanel}>
-          <Flex gap="$none">
+          <Flex>
             <Flex
               backgroundColor={
                 focusOnCurrencyField === CurrencyField.OUTPUT ? '$surface1' : '$surface2'
@@ -309,7 +312,6 @@ function SwapFormContent(): JSX.Element {
               borderTopLeftRadius="$rounded20"
               borderTopRightRadius="$rounded20"
               borderWidth={1}
-              gap="$none"
               overflow="hidden"
               position="relative">
               <CurrencyInputPanel
@@ -379,8 +381,8 @@ function SwapFormContent(): JSX.Element {
             {/* TODO: show gas */}
           </Flex>
         </Trace>
-      </Flex>
-      <Flex
+      </AnimatedFlex>
+      <AnimatedFlex
         bottom={0}
         exiting={FadeOutDown}
         gap="$spacing8"
@@ -402,7 +404,7 @@ function SwapFormContent(): JSX.Element {
             {t('Review swap')}
           </Button>
         </Trace>
-      </Flex>
+      </AnimatedFlex>
     </Flex>
   )
 }

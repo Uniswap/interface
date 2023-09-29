@@ -2,7 +2,7 @@ import { BlurView } from 'expo-blur'
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
-import { Flex } from 'ui/src'
+import { AnimatedFlex, Flex } from 'ui/src'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 
 /**
@@ -18,14 +18,14 @@ export const BlurredImageBackground = ({
   return (
     <View style={StyleSheet.absoluteFill}>
       {imageUri ? (
-        <Flex
+        <AnimatedFlex
           alignItems="center"
           entering={FadeIn}
           justifyContent="center"
           overflow="hidden"
           style={StyleSheet.absoluteFill}>
           <NFTViewer squareGridView uri={imageUri} />
-        </Flex>
+        </AnimatedFlex>
       ) : null}
       <BlurView intensity={99} style={StyleSheet.absoluteFill} />
       <Flex opacity={0.8} style={[StyleSheet.absoluteFill, { backgroundColor }]} />

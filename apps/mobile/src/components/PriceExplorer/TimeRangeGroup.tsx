@@ -15,7 +15,7 @@ import {
 } from 'src/components/PriceExplorer/constants'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
-import { Flex, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, TouchableArea, useSporeColors } from 'ui/src'
 import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
 
 interface Props {
@@ -66,7 +66,7 @@ export function TimeRangeGroup({
   return (
     <Flex row alignSelf="center" width={CHART_WIDTH}>
       <View style={StyleSheet.absoluteFill}>
-        <Flex
+        <AnimatedFlex
           bg="$surface3"
           borderRadius="$rounded20"
           style={[StyleSheet.absoluteFillObject, sliderStyle]}

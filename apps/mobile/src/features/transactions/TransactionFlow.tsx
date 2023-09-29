@@ -23,7 +23,7 @@ import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { TransferReview } from 'src/features/transactions/transfer/TransferReview'
 import { TransferStatus } from 'src/features/transactions/transfer/TransferStatus'
 import { TransferTokenForm } from 'src/features/transactions/transfer/TransferTokenForm'
-import { Flex, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { dimensions, iconSizes } from 'ui/src/theme'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
@@ -133,7 +133,7 @@ export function TransactionFlow({
     <TouchableWithoutFeedback>
       <Flex style={{ marginTop: insets.top }}>
         <HandleBar backgroundColor="none" />
-        <Flex grow row gap="$none" height="100%" style={wrapperStyle}>
+        <AnimatedFlex grow row height="100%" style={wrapperStyle}>
           <Flex
             gap="$spacing16"
             pb={IS_ANDROID ? '$spacing32' : '$spacing16'}
@@ -202,7 +202,7 @@ export function TransactionFlow({
           ) : null}
 
           {showRecipientSelector && recipientSelector ? recipientSelector : null}
-        </Flex>
+        </AnimatedFlex>
       </Flex>
     </TouchableWithoutFeedback>
   )

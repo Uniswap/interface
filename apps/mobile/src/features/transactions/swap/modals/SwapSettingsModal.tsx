@@ -20,7 +20,7 @@ import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { SwapProtectionInfoModal } from 'src/features/transactions/swap/modals/SwapProtectionModal'
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
 import { openUri } from 'src/utils/linking'
-import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
@@ -415,7 +415,7 @@ function SlippageSettings({
             type={PlusMinusButtonType.Minus}
             onPress={onPressPlusMinusButton}
           />
-          <Flex
+          <AnimatedFlex
             row
             alignItems="center"
             bg={isEditingSlippage ? '$surface2' : '$surface1'}
@@ -454,7 +454,7 @@ function SlippageSettings({
                 %
               </Text>
             </Flex>
-          </Flex>
+          </AnimatedFlex>
           <PlusMinusButton
             disabled={currentSlippageToleranceNum === MAX_CUSTOM_SLIPPAGE_TOLERANCE}
             type={PlusMinusButtonType.Plus}

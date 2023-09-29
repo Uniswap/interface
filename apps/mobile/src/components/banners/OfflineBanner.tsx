@@ -32,7 +32,7 @@ export function OfflineBanner(): JSX.Element | null {
 
   return showBanner ? (
     <BottomBanner
-      backgroundColor="surface2"
+      backgroundColor="$surface2"
       icon={
         <InfoCircle
           color={colors.neutral1.get()}

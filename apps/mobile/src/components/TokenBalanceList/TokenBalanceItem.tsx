@@ -5,7 +5,7 @@ import ContextMenu from 'react-native-context-menu-view'
 import { FadeIn } from 'react-native-reanimated'
 import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlex, Flex, Text, TouchableArea } from 'ui/src'
 import { borderRadii } from 'ui/src/theme'
 import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
@@ -65,7 +65,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
         px="$spacing24"
         py="$spacing8"
         onPress={onPress}>
-        <Flex
+        <AnimatedFlex
           row
           shrink
           alignItems="center"
@@ -89,8 +89,8 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
               </Text>
             </Flex>
           </Flex>
-        </Flex>
-        <Flex
+        </AnimatedFlex>
+        <AnimatedFlex
           // use only entering animation without exiting animation as it caused
           // crashes on Android when the list was re-rendered
           entering={FadeIn}
@@ -115,7 +115,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
               </Flex>
             )}
           </WarmLoadingShimmer>
-        </Flex>
+        </AnimatedFlex>
       </TouchableArea>
     </ContextMenu>
   )

@@ -1,12 +1,12 @@
-import React from 'react'
-import Animated from 'react-native-reanimated'
+import React, { ComponentClass } from 'react'
+import Animated, { AnimateProps } from 'react-native-reanimated'
 
-// TODO: [MOB-202] find a way keep WrappedComponent props in return type
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function withAnimated(WrappedComponent: React.ComponentType<any>): any {
+export function withAnimated<Props extends object>(
+  WrappedComponent: React.ComponentType<Props>
+): ComponentClass<AnimateProps<Props>> {
   const displayName = WrappedComponent.displayName || WrappedComponent.name || 'Component'
 
-  class WithAnimated extends React.Component {
+  class WithAnimated extends React.Component<Props> {
     static displayName = `WithAnimated(${displayName})`
 
     render(): React.ReactNode {

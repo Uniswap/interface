@@ -26,7 +26,15 @@ import { useNavigateToSwap } from 'src/features/swap/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
 import { Screens } from 'src/screens/Screens'
-import { Flex, Separator, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
+import {
+  AnimatedFlex,
+  Flex,
+  Separator,
+  Text,
+  TouchableArea,
+  useMedia,
+  useSporeColors,
+} from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
@@ -234,7 +242,7 @@ function TokenDetails({
     navigateToSwap,
   ])
 
-  const pb = IS_IOS && !media.short ? 'spacing16' : 'none'
+  const pb = IS_IOS && !media.short ? '$spacing16' : '$none'
 
   const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen
 
@@ -291,9 +299,9 @@ function TokenDetails({
             />
           </Flex>
           {error ? (
-            <Flex entering={FadeInDown} exiting={FadeOutDown} px="$spacing24">
+            <AnimatedFlex entering={FadeInDown} exiting={FadeOutDown} px="$spacing24">
               <BaseCard.InlineErrorState onRetry={retry} />
-            </Flex>
+            </AnimatedFlex>
           ) : null}
           <Flex gap="$spacing16" mb="$spacing8" px="$spacing16">
             <TokenBalances
@@ -309,7 +317,7 @@ function TokenDetails({
       </HeaderScrollScreen>
 
       {!loading && !tokenColorLoading ? (
-        <Flex
+        <AnimatedFlex
           backgroundColor="$surface1"
           entering={FadeInDown}
           pb={pb}
@@ -319,7 +327,7 @@ function TokenDetails({
             onPressBuy={(): void => onPressSwap(CurrencyField.OUTPUT)}
             onPressSell={(): void => onPressSwap(CurrencyField.INPUT)}
           />
-        </Flex>
+        </AnimatedFlex>
       ) : null}
 
       <TokenWarningModal

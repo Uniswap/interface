@@ -4,7 +4,7 @@ import { TokenFiatOnRampList } from 'src/components/TokenSelector/TokenFiatOnRam
 import Trace from 'src/components/Trace/Trace'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/FiatOnRampModal'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
-import { Flex } from 'ui/src'
+import { AnimatedFlex } from 'ui/src'
 
 interface Props {
   onBack: () => void
@@ -17,7 +17,7 @@ function _FiatOnRampTokenSelector({ onSelectCurrency, onBack }: Props): JSX.Elem
       logImpression
       element={ElementName.FiatOnRampTokenSelector}
       section={SectionName.TokenSelector}>
-      <Flex
+      <AnimatedFlex
         entering={FadeIn}
         exiting={FadeOut}
         gap="$spacing12"
@@ -25,7 +25,7 @@ function _FiatOnRampTokenSelector({ onSelectCurrency, onBack }: Props): JSX.Elem
         px="$spacing16"
         width="100%">
         <TokenFiatOnRampList onBack={onBack} onSelectCurrency={onSelectCurrency} />
-      </Flex>
+      </AnimatedFlex>
     </Trace>
   )
 }

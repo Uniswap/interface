@@ -8,7 +8,7 @@ import FavoriteTokenCard, {
 } from 'src/components/explore/FavoriteTokenCard'
 import { Loader } from 'src/components/loading'
 import { selectFavoriteTokens } from 'src/features/favorites/selectors'
-import { Flex } from 'ui/src'
+import { AnimatedFlex, Flex } from 'ui/src'
 
 const NUM_COLUMNS = 2
 const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }
@@ -29,7 +29,7 @@ export function FavoriteTokensGrid({ showLoading }: { showLoading: boolean }): J
   }, [favoriteCurrencyIds.length])
 
   return (
-    <Flex entering={FadeIn}>
+    <AnimatedFlex entering={FadeIn}>
       <FavoriteHeaderRow
         editingTitle={t('Edit favorite tokens')}
         isEditing={isEditing}
@@ -51,7 +51,7 @@ export function FavoriteTokensGrid({ showLoading }: { showLoading: boolean }): J
           ))}
         </Flex>
       )}
-    </Flex>
+    </AnimatedFlex>
   )
 }
 

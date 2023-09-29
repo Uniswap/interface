@@ -9,41 +9,41 @@ export type FlexProps = StackProps & {
   centered?: boolean
 }
 
-export const Flex = withAnimated(
-  styled(Stack, {
-    flexDirection: 'column',
+export const Flex = styled(Stack, {
+  flexDirection: 'column',
 
-    variants: {
-      row: {
-        true: {
-          flexDirection: 'row',
-        },
+  variants: {
+    row: {
+      true: {
+        flexDirection: 'row',
       },
+    },
 
-      shrink: {
-        true: {
-          flexShrink: 1,
-        },
+    shrink: {
+      true: {
+        flexShrink: 1,
       },
+    },
 
-      grow: {
-        true: {
-          flexGrow: 1,
-        },
+    grow: {
+      true: {
+        flexGrow: 1,
       },
+    },
 
-      fill: {
-        true: {
-          flex: 1,
-        },
+    fill: {
+      true: {
+        flex: 1,
       },
+    },
 
-      centered: {
-        true: {
-          alignItems: 'center',
-          justifyContent: 'center',
-        },
+    centered: {
+      true: {
+        alignItems: 'center',
+        justifyContent: 'center',
       },
-    } as const,
-  })
-)
+    },
+  } as const,
+})
+
+export const AnimatedFlex = withAnimated(Flex)

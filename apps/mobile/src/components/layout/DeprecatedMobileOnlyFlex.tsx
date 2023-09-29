@@ -41,7 +41,7 @@ export type FlexProps = BoxProps &
 /**
  * Layout component to place child items with spacing between them
  */
-export function DeprecatedMobileOnlyFlex({
+function DeprecatedMobileOnlyFlex({
   alignItems = 'stretch',
   centered = false,
   children,

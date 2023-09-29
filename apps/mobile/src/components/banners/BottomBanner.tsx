@@ -1,14 +1,13 @@
 import React from 'react'
 import { FadeIn, FadeOut, useAnimatedStyle, withTiming } from 'react-native-reanimated'
-import { Flex, Text } from 'ui/src'
-import { Theme } from 'ui/src/theme/restyle'
+import { AnimatedFlex, ColorTokens, Text } from 'ui/src'
 
 export const BANNER_HEIGHT = 45
 
 export type BottomBannerProps = {
   text: string
   icon?: JSX.Element
-  backgroundColor?: keyof Theme['colors']
+  backgroundColor?: ColorTokens
   translateY?: number
 }
 
@@ -30,30 +29,30 @@ export function BottomBanner({
   }))
 
   return (
-    <Flex
+    <AnimatedFlex
       row
       alignContent="center"
       alignItems="center"
       alignSelf="stretch"
-      backgroundColor={backgroundColor ? backgroundColor : 'accent1'}
-      borderColor="surface3"
-      borderRadius="rounded8"
+      backgroundColor={backgroundColor ? backgroundColor : '$accent1'}
+      borderColor="$surface3"
+      borderRadius="$rounded8"
       borderWidth={1}
       bottom={0}
       entering={FadeIn}
       exiting={FadeOut}
-      gap="spacing12"
+      gap="$spacing12"
       height={BANNER_HEIGHT}
       justifyContent="flex-start"
       left={0}
-      mx="spacing12"
-      p="spacing8"
+      mx="$spacing12"
+      p="$spacing8"
       position="absolute"
       right={0}
       style={animatedStyle}
-      zIndex="modal">
+      zIndex="$modal">
       {icon}
       <Text variant="body2">{text}</Text>
-    </Flex>
+    </AnimatedFlex>
   )
 }

@@ -6,7 +6,7 @@ import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { DeprecatedMobileOnlyAnimatedFlex } from 'src/components/layout'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import X from 'ui/src/assets/icons/x.svg'
 import { dimensions, fonts, iconSizes, spacing } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
@@ -149,7 +149,6 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
 
     const shadowProps = showShadow
       ? {
-          shadowColor: isDarkMode ? 'sporeBlack' : 'DEP_brandedAccentSoft',
           shadowOffset: SHADOW_OFFSET_SMALL,
           shadowOpacity: 0.25,
           shadowRadius: 6,
@@ -169,6 +168,9 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           minHeight={48}
           px="spacing16"
           py={py}
+          shadowColor={
+            showShadow ? (isDarkMode ? 'sporeBlack' : 'DEP_brandedAccentSoft') : undefined
+          }
           style={textInputStyle}
           {...shadowProps}>
           <Flex py="$spacing4">
@@ -198,19 +200,21 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           />
 
           {showClearButtonJS ? (
-            <Flex style={[clearButtonStyle]}>
+            <AnimatedFlex style={[clearButtonStyle]}>
               <ClearButton clearIcon={clearIcon} onPress={onClear} />
-            </Flex>
+            </AnimatedFlex>
           ) : (
-            <Flex style={[endAdornmentStyle]}>{endAdornment}</Flex>
+            <AnimatedFlex style={[endAdornmentStyle]}>{endAdornment}</AnimatedFlex>
           )}
         </DeprecatedMobileOnlyAnimatedFlex>
         {showCancelButton && (
-          <Flex style={[cancelButtonStyle, CancelButtonDefaultStyle]} onLayout={onCancelLayout}>
+          <AnimatedFlex
+            style={[cancelButtonStyle, CancelButtonDefaultStyle]}
+            onLayout={onCancelLayout}>
             <TouchableArea onPress={onPressCancel}>
               <Text variant="buttonLabel2">{t('Cancel')}</Text>
             </TouchableArea>
-          </Flex>
+          </AnimatedFlex>
         )}
       </Flex>
     )

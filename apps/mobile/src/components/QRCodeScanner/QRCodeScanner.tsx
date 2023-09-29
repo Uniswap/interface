@@ -9,7 +9,7 @@ import PasteButton from 'src/components/buttons/PasteButton'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { openSettings } from 'src/utils/linking'
-import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import { dimensions, iconSizes, spacing } from 'ui/src/theme'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
@@ -83,7 +83,12 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   }, [data, onScanCode])
 
   return (
-    <Flex grow borderRadius="$rounded12" entering={FadeIn} exiting={FadeOut} overflow="hidden">
+    <AnimatedFlex
+      grow
+      borderRadius="$rounded12"
+      entering={FadeIn}
+      exiting={FadeOut}
+      overflow="hidden">
       <Flex justifyContent="center" style={StyleSheet.absoluteFill}>
         <Flex
           bg="$sporeBlack"
@@ -199,7 +204,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
           )}
         </Flex>
       </Flex>
-    </Flex>
+    </AnimatedFlex>
   )
 }
 

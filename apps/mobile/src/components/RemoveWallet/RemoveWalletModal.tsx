@@ -15,7 +15,7 @@ import { closeModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
-import { Button, ColorTokens, Flex, Text, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Button, ColorTokens, Flex, Text, useSporeColors } from 'ui/src'
 import { iconSizes, opacify } from 'ui/src/theme'
 import {
   EditAccountAction,
@@ -165,7 +165,7 @@ export function RemoveWalletModal(): JSX.Element | null {
         ) : (
           <Flex centered row gap={inProgress ? '$none' : '$spacing12'} pt="$spacing12">
             {inProgress ? (
-              <Flex style={animatedCancelButtonSpanStyles} />
+              <AnimatedFlex style={animatedCancelButtonSpanStyles} />
             ) : (
               <Button fill disabled={inProgress} theme="tertiary" onPress={onClose}>
                 {t('Cancel')}

@@ -7,7 +7,7 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, SectionName } from 'src/features/telemetry/constants'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlex, Flex, Text, TouchableArea } from 'ui/src'
 import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
@@ -100,7 +100,7 @@ export const TokenItem = memo(function _TokenItem({
         hapticStyle={ImpactFeedbackStyle.Light}
         testID={`token-item-${name}`}
         onPress={onPress}>
-        <Flex grow row gap="$spacing12" px="$spacing24" py="$spacing8">
+        <AnimatedFlex grow row gap="$spacing12" px="$spacing24" py="$spacing8">
           <Flex centered row gap="$spacing4" overflow="hidden">
             {index !== undefined && (
               <Flex minWidth={16}>
@@ -127,7 +127,7 @@ export const TokenItem = memo(function _TokenItem({
               <RelativeChange change={pricePercentChange24h} variant="body2" />
             </TokenMetadata>
           </Flex>
-        </Flex>
+        </AnimatedFlex>
       </TouchableArea>
     </ContextMenu>
   )

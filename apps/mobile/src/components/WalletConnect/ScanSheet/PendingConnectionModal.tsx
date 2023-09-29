@@ -20,7 +20,7 @@ import {
   removePendingSession,
   WalletConnectPendingSession,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { Button, Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Button, Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/check.svg'
 import X from 'ui/src/assets/icons/x.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -231,7 +231,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
 
   return (
     <BottomSheetModal name={ModalName.WCPendingConnection} onClose={onClose}>
-      <Flex
+      <AnimatedFlex
         fill
         backgroundColor="$surface1"
         borderRadius="$rounded12"
@@ -286,7 +286,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
             {t('Connect')}
           </Button>
         </Flex>
-      </Flex>
+      </AnimatedFlex>
       {modalState === PendingConnectionModalState.SwitchAccount && (
         <PendingConnectionSwitchAccountModal
           activeAccount={activeAccount}

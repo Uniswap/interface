@@ -14,7 +14,7 @@ import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
@@ -88,7 +88,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
         barStyle={showLightStatusBar ? 'light-content' : 'dark-content'}
       />
       {/* fixed gradient */}
-      <Flex
+      <AnimatedFlex
         bottom={0}
         entering={FadeIn}
         height={HEADER_GRADIENT_HEIGHT}
@@ -103,7 +103,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
           style={StyleSheet.absoluteFill}
         />
         {hasAvatar && avatarColors?.primary ? <HeaderRadial color={avatarColors.primary} /> : null}
-      </Flex>
+      </AnimatedFlex>
 
       {/* header row */}
       <Flex row alignItems="center" justifyContent="space-between" mx="$spacing4">

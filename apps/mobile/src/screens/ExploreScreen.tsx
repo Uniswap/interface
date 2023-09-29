@@ -19,7 +19,7 @@ import { selectModalState } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ModalName, SectionName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import { Flex } from 'ui/src'
+import { AnimatedFlex, Flex } from 'ui/src'
 import { flex, Theme } from 'ui/src/theme/restyle'
 import { useDebounce } from 'utilities/src/time/timing'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
@@ -104,9 +104,9 @@ export function ExploreScreen(): JSX.Element {
               {debouncedSearchQuery.length === 0 ? (
                 <SearchEmptySection />
               ) : (
-                <Flex entering={FadeIn} exiting={FadeOut}>
+                <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
                   <SearchResultsSection searchQuery={debouncedSearchQuery} />
-                </Flex>
+                </AnimatedFlex>
               )}
             </VirtualizedList>
           </Flex>

@@ -12,7 +12,7 @@ import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import { dimensions, fonts, iconSizes } from 'ui/src/theme'
 import { formatNumberOrString, NumberType } from 'utilities/src/format/format'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
@@ -99,7 +99,7 @@ export function TransactionReview({
 
   return (
     <>
-      <Flex
+      <AnimatedFlex
         centered
         grow
         $short={{ gap: '$none' }}
@@ -196,8 +196,12 @@ export function TransactionReview({
             </Flex>
           </Flex>
         ) : null}
-      </Flex>
-      <Flex entering={FadeInUp} exiting={FadeOut} gap="$spacing12" justifyContent="flex-end">
+      </AnimatedFlex>
+      <AnimatedFlex
+        entering={FadeInUp}
+        exiting={FadeOut}
+        gap="$spacing12"
+        justifyContent="flex-end">
         {transactionDetails}
         <Flex row gap="$spacing8">
           <Button
@@ -222,7 +226,7 @@ export function TransactionReview({
             {actionButtonProps.label}
           </Button>
         </Flex>
-      </Flex>
+      </AnimatedFlex>
     </>
   )
 }

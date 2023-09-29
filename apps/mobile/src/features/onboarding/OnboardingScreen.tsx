@@ -5,7 +5,7 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Screen } from 'src/components/layout/Screen'
 import { IS_IOS } from 'src/constants/globals'
-import { Flex, SpaceTokens, Text, useMedia } from 'ui/src'
+import { AnimatedFlex, Flex, SpaceTokens, Text, useMedia } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 
 type OnboardingScreenProps = {
@@ -27,7 +27,7 @@ export function OnboardingScreen({
   const insets = useSafeAreaInsets()
   const media = useMedia()
 
-  const gapSize = media.short ? 'none' : '$spacing16'
+  const gapSize = media.short ? '$none' : '$spacing16'
 
   return (
     <Screen $short={{ pt: headerHeight * 0.88 }} edges={['right', 'left']} pt={headerHeight}>
@@ -35,7 +35,7 @@ export function OnboardingScreen({
         behavior={IS_IOS ? 'padding' : undefined}
         enabled={keyboardAvoidingViewEnabled}
         style={[WrapperStyle.base, { marginBottom: insets.bottom }]}>
-        <Flex
+        <AnimatedFlex
           grow
           entering={FadeIn}
           exiting={FadeOut}
@@ -69,7 +69,7 @@ export function OnboardingScreen({
           <Flex fill grow justifyContent="space-between">
             {children}
           </Flex>
-        </Flex>
+        </AnimatedFlex>
       </KeyboardAvoidingView>
     </Screen>
   )

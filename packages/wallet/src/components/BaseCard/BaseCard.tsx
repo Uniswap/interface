@@ -1,14 +1,11 @@
-import { ShadowProps } from '@shopify/restyle'
 import { ComponentProps, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ColorTokens, Flex, FlexProps, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes, opacify } from 'ui/src/theme'
-import { Theme } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 // TODO(MOB-1211): figure out shadow offset in Tamagui
-// const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 4, height: 8 }
-export const SHADOW_OFFSET_SMALL: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }
+export const SHADOW_OFFSET_SMALL = { width: 0, height: 2 }
 
 export function Shadow({ children, ...rest }: FlexProps): JSX.Element {
   const isDarkMode = useIsDarkMode()

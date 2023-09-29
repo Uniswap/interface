@@ -29,7 +29,7 @@ import { ElementName, MobileEventName, ModalName } from 'src/features/telemetry/
 import { MobileEventProperties } from 'src/features/telemetry/types'
 import { useDynamicFontSizing, useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
 import { openUri } from 'src/utils/linking'
-import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { dimensions, fonts, iconSizes, spacing } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
 import { useTimeout } from 'utilities/src/time/timing'
@@ -206,8 +206,8 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
   return (
     <>
       {!showConnectingToMoonpayScreen && (
-        <Flex row gap="$none" height="100%" style={wrapperStyle}>
-          <Flex
+        <AnimatedFlex row height="100%" style={wrapperStyle}>
+          <AnimatedFlex
             entering={FadeIn}
             exiting={FadeOut}
             gap="$spacing16"
@@ -224,7 +224,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
                 <Flex
                   grow
                   alignItems="center"
-                  gap="spacing16"
+                  gap="$spacing16"
                   justifyContent="center"
                   onLayout={onInputLayout}>
                   <AmountInput
@@ -285,7 +285,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
                 ))}
               </Flex>
             </Flex>
-            <Flex
+            <AnimatedFlex
               bottom={0}
               exiting={FadeOutDown}
               gap="$spacing8"
@@ -317,8 +317,8 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
                   }
                 }}
               />
-            </Flex>
-          </Flex>
+            </AnimatedFlex>
+          </AnimatedFlex>
           {showTokenSelector && (
             <FiatOnRampTokenSelector
               onBack={(): void => setShowTokenSelector(false)}
@@ -328,7 +328,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
               }}
             />
           )}
-        </Flex>
+        </AnimatedFlex>
       )}
       {showConnectingToMoonpayScreen && (
         <FiatOnRampConnectingView

@@ -29,7 +29,7 @@ import {
 import { TransferFormSpeedbumps } from 'src/features/transactions/transfer/TransferFormWarnings'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import { dimensions, iconSizes, spacing } from 'ui/src/theme'
@@ -230,7 +230,11 @@ export function TransferTokenForm({
         onNext={goToNext}
       />
       <Flex grow gap="$spacing8" justifyContent="space-between">
-        <Flex entering={FadeIn} exiting={FadeOut} gap="$spacing2" onLayout={onInputPanelLayout}>
+        <AnimatedFlex
+          entering={FadeIn}
+          exiting={FadeOut}
+          gap="$spacing2"
+          onLayout={onInputPanelLayout}>
           {nftIn ? (
             <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 4} />
           ) : (
@@ -363,8 +367,8 @@ export function TransferTokenForm({
               />
             ) : null}
           </Flex>
-        </Flex>
-        <Flex
+        </AnimatedFlex>
+        <AnimatedFlex
           bottom={0}
           exiting={FadeOutDown}
           gap="$spacing8"
@@ -392,7 +396,7 @@ export function TransferTokenForm({
             onPress={onPressReview}>
             {t('Review transfer')}
           </Button>
-        </Flex>
+        </AnimatedFlex>
       </Flex>
     </>
   )

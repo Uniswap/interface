@@ -7,7 +7,7 @@ import { UniconThemedGradient } from 'src/components/gradients/UniconThemedGradi
 import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { openUri } from 'src/utils/linking'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -41,7 +41,7 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
           opacity={isDarkMode ? 0.24 : 0.2}
         />
       </GradientBackground>
-      <Flex
+      <AnimatedFlex
         centered
         grow
         entering={FadeIn}
@@ -79,7 +79,7 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
             {t('Learn more')}
           </Text>
         </TouchableArea>
-      </Flex>
+      </AnimatedFlex>
     </>
   )
 }

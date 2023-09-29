@@ -58,7 +58,7 @@ import { useWalletRestore } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { hideSplashScreen } from 'src/utils/splashScreen'
-import { Flex, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
 import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-receive.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
@@ -460,7 +460,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
         />
       </View>
       <NavBar />
-      <Flex
+      <AnimatedFlex
         height={insets.top}
         position="absolute"
         style={statusBarStyle}
@@ -571,7 +571,7 @@ function ActionButton({
     <Trace logPress element={name} pressEvent={eventName}>
       <TouchableArea hapticFeedback flex={flex} onPress={onPress}>
         <TapGestureHandler onGestureEvent={onGestureEvent}>
-          <Flex
+          <AnimatedFlex
             centered
             row
             backgroundColor="$DEP_backgroundActionButton"
@@ -598,7 +598,7 @@ function ActionButton({
             <Text color="$accent1" marginLeft="$spacing8" variant="buttonLabel2">
               {label}
             </Text>
-          </Flex>
+          </AnimatedFlex>
         </TapGestureHandler>
       </TouchableArea>
     </Trace>

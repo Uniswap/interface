@@ -10,7 +10,7 @@ import { RecipientScanModal } from 'src/components/RecipientSelect/RecipientScan
 import { filterSections } from 'src/components/RecipientSelect/utils'
 import { SearchBar } from 'src/components/TokenSelector/SearchBar'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
 
@@ -67,7 +67,7 @@ export function _RecipientSelect({
 
   return (
     <>
-      <Flex
+      <AnimatedFlex
         entering={FadeIn}
         exiting={FadeOut}
         gap="$spacing12"
@@ -99,7 +99,7 @@ export function _RecipientSelect({
             />
           )
         )}
-      </Flex>
+      </AnimatedFlex>
       {showQRScanner && (
         <RecipientScanModal onClose={onCloseQRScanner} onSelectRecipient={onSelectRecipient} />
       )}

@@ -6,7 +6,7 @@ import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteWalletCard from 'src/components/explore/FavoriteWalletCard'
 import { Loader } from 'src/components/loading'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
-import { Flex } from 'ui/src'
+import { AnimatedFlex, Flex } from 'ui/src'
 
 const NUM_COLUMNS = 2
 const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }
@@ -28,7 +28,7 @@ export function FavoriteWalletsGrid({ showLoading }: { showLoading: boolean }): 
   }, [watchedWalletsSet.size])
 
   return (
-    <Flex entering={FadeIn}>
+    <AnimatedFlex entering={FadeIn}>
       <FavoriteHeaderRow
         editingTitle={t('Edit favorite wallets')}
         isEditing={isEditing}
@@ -50,7 +50,7 @@ export function FavoriteWalletsGrid({ showLoading }: { showLoading: boolean }): 
           ))}
         </Flex>
       )}
-    </Flex>
+    </AnimatedFlex>
   )
 }
 

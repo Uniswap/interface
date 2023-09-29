@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Image, ImageBackground, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Flex, Text } from 'ui/src'
+import { AnimatedFlex, Flex, Text } from 'ui/src'
 import {
   FOR_CONNECTING_BACKGROUND_DARK,
   FOR_CONNECTING_BACKGROUND_LIGHT,
@@ -31,7 +31,7 @@ export function FiatOnRampConnectingView({
       resizeMode="cover"
       source={isDarkMode ? FOR_CONNECTING_BACKGROUND_DARK : FOR_CONNECTING_BACKGROUND_LIGHT}
       style={styles.background}>
-      <Flex
+      <AnimatedFlex
         centered
         grow
         entering={FadeIn}
@@ -56,7 +56,7 @@ export function FiatOnRampConnectingView({
             </Text>
           )}
         </Flex>
-      </Flex>
+      </AnimatedFlex>
     </ImageBackground>
   )
 }

@@ -4,7 +4,7 @@ import { ListRenderItemInfo, SectionListData } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Inset } from 'src/components/layout'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlex, Text, TouchableArea } from 'ui/src'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
 
 interface RecipientListProps {
@@ -15,9 +15,9 @@ interface RecipientListProps {
 export function RecipientList({ onPress, sections }: RecipientListProps): JSX.Element {
   const renderItem = function ({ item }: ListRenderItemInfo<SearchableRecipient>): JSX.Element {
     return (
-      <Flex entering={FadeIn} exiting={FadeOut} py="spacing12">
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut} py="$spacing12">
         <RecipientRow recipient={item} onPress={onPress} />
-      </Flex>
+      </AnimatedFlex>
     )
   }
 
@@ -36,11 +36,11 @@ export function RecipientList({ onPress, sections }: RecipientListProps): JSX.El
 
 function SectionHeader(info: { section: SectionListData<SearchableRecipient> }): JSX.Element {
   return (
-    <Flex backgroundColor="$surface1" entering={FadeIn} exiting={FadeOut} py="$spacing8">
+    <AnimatedFlex backgroundColor="$surface1" entering={FadeIn} exiting={FadeOut} py="$spacing8">
       <Text color="$neutral2" variant="subheading2">
         {info.section.title}
       </Text>
-    </Flex>
+    </AnimatedFlex>
   )
 }
 

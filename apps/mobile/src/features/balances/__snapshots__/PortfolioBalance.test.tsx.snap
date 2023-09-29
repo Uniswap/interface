@@ -2,16 +2,12 @@
 
 exports[`PortfolioBalance renders without error 1`] = `
 <View
-  sentry-label="Flex"
   style={
-    [
-      {
-        "alignItems": "stretch",
-        "display": "flex",
-        "flexDirection": "column",
-        "justifyContent": "flex-start",
-      },
-    ]
+    {
+      "alignItems": "stretch",
+      "flexDirection": "column",
+      "gap": 4,
+    }
   }
 >
   <View
@@ -1926,18 +1922,6 @@ exports[`PortfolioBalance renders without error 1`] = `
       </View>
     </View>
   </View>
-  <View
-    style={
-      [
-        {
-          "display": "flex",
-          "flexGrow": 0,
-          "flexShrink": 0,
-          "height": 4,
-        },
-      ]
-    }
-  />
   <View
     style={
       {

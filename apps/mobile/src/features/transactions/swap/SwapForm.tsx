@@ -32,7 +32,7 @@ import {
 } from 'src/features/transactions/swap/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -230,7 +230,11 @@ function _SwapForm({
         />
       )}
       <Flex grow gap="$spacing8" justifyContent="space-between">
-        <Flex entering={FadeIn} exiting={FadeOut} gap="$spacing2" onLayout={onInputPanelLayout}>
+        <AnimatedFlex
+          entering={FadeIn}
+          exiting={FadeOut}
+          gap="$spacing2"
+          onLayout={onInputPanelLayout}>
           <Trace section={SectionName.CurrencyInputPanel}>
             <Flex backgroundColor="$surface2" borderRadius="$rounded20">
               <CurrencyInputPanel
@@ -434,8 +438,8 @@ function _SwapForm({
               ) : null}
             </Flex>
           </Trace>
-        </Flex>
-        <Flex
+        </AnimatedFlex>
+        <AnimatedFlex
           bottom={0}
           exiting={FadeOutDown}
           gap="$spacing8"
@@ -463,7 +467,7 @@ function _SwapForm({
               {getReviewActionName(t, wrapType)}
             </Button>
           </Trace>
-        </Flex>
+        </AnimatedFlex>
       </Flex>
     </>
   )

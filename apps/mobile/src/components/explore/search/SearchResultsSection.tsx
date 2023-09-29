@@ -21,7 +21,7 @@ import {
   WalletSearchResult,
 } from 'src/features/explore/searchHistorySlice'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
-import { Flex, Text } from 'ui/src'
+import { AnimatedFlex, Flex, Text } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -201,13 +201,13 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 
   if (error) {
     return (
-      <Flex entering={FadeIn} exiting={FadeOut} pt="spacing24">
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut} pt="$spacing24">
         <BaseCard.ErrorState
           retryButtonLabel="Retry"
           title={t('Couldn’t load search results')}
           onRetry={onRetry}
         />
-      </Flex>
+      </AnimatedFlex>
     )
   }
 
@@ -215,13 +215,13 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
     <Flex grow gap="$spacing8">
       <FlatList
         ListEmptyComponent={
-          <Flex entering={FadeIn} exiting={FadeOut} gap="$spacing8" mx="$spacing8">
+          <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing8" mx="$spacing8">
             <Text color="$neutral2" variant="body1">
               <Trans t={t}>
                 No results found for <Text color="$neutral1">"{searchQuery}"</Text>
               </Trans>
             </Text>
-          </Flex>
+          </AnimatedFlex>
         }
         data={sortedSearchResults}
         keyExtractor={getSearchResultId}

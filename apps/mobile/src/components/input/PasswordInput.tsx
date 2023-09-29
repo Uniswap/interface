@@ -1,7 +1,7 @@
 import React, { forwardRef, useState } from 'react'
 import { TextInput as NativeTextInput } from 'react-native'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
-import { Flex, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, TouchableArea, useSporeColors } from 'ui/src'
 import EyeOffIcon from 'ui/src/assets/icons/eye-off.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { fonts, iconSizes } from 'ui/src/theme'
@@ -27,7 +27,7 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(functio
       borderColor="$surface3"
       borderRadius="$rounded12"
       borderWidth={1}>
-      <Flex fill grow row alignItems="center" minHeight={48}>
+      <AnimatedFlex fill grow row alignItems="center" minHeight={48}>
         <TextInput
           ref={ref}
           autoCapitalize="none"
@@ -49,7 +49,7 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(functio
           onSubmitEditing={onSubmitEditing}
           {...rest} // apply any textinputprops
         />
-        <Flex mx="$spacing12">
+        <AnimatedFlex mx="$spacing12">
           <TouchableArea p="$spacing4" onPress={onPressEyeIcon}>
             {showPassword ? (
               <EyeIcon
@@ -65,8 +65,8 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(functio
               />
             )}
           </TouchableArea>
-        </Flex>
-      </Flex>
+        </AnimatedFlex>
+      </AnimatedFlex>
     </Flex>
   )
 })

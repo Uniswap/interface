@@ -13,7 +13,7 @@ import {
   selectSearchHistory,
   WalletSearchResult,
 } from 'src/features/explore/searchHistorySlice'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import ClockIcon from 'ui/src/assets/icons/clock.svg'
 import TrendArrowIcon from 'ui/src/assets/icons/trend-up.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -42,9 +42,9 @@ export function SearchEmptySection(): JSX.Element {
 
   // Show search history (if applicable), trending tokens, and wallets
   return (
-    <Flex entering={FadeIn} exiting={FadeOut} gap="$spacing12">
+    <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing12">
       {searchHistory.length > 0 && (
-        <Flex entering={FadeIn} exiting={FadeOut}>
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
           <FlatList
             ListHeaderComponent={
               <Flex
@@ -66,7 +66,7 @@ export function SearchEmptySection(): JSX.Element {
               renderSearchItem({ ...props, searchContext: { isHistory: true } })
             }
           />
-        </Flex>
+        </AnimatedFlex>
       )}
       <Flex gap="$spacing4">
         <SectionHeaderText icon={<TrendIcon />} title={t('Popular tokens')} />
@@ -84,7 +84,7 @@ export function SearchEmptySection(): JSX.Element {
         keyExtractor={walletKey}
         renderItem={renderSearchItem}
       />
-    </Flex>
+    </AnimatedFlex>
   )
 }
 

@@ -17,7 +17,7 @@ import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceIt
 import { IS_ANDROID } from 'src/constants/globals'
 import { useTokenBalancesGroupedByVisibility } from 'src/features/balances/hooks'
 import { Screens } from 'src/screens/Screens'
-import { AnimatedFlashList, Flex, useSporeColors } from 'ui/src'
+import { AnimatedFlashList, AnimatedFlex, Flex, useSporeColors } from 'ui/src'
 import { dimensions, zIndices } from 'ui/src/theme'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError, isNonPollingRequestInFlight, isWarmLoadingStatus } from 'wallet/src/data/utils'
@@ -153,12 +153,16 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
             ListFooterComponentStyle={{ zIndex: zIndices.negative }}
             ListHeaderComponent={
               isError(networkStatus, !!balancesById) ? (
-                <Flex entering={FadeInDown} exiting={FadeOut} px="$spacing24" py="$spacing8">
+                <AnimatedFlex
+                  entering={FadeInDown}
+                  exiting={FadeOut}
+                  px="$spacing24"
+                  py="$spacing8">
                   <BaseCard.InlineErrorState
                     title={t('Failed to fetch token balances')}
                     onRetry={refetch}
                   />
-                </Flex>
+                </AnimatedFlex>
               ) : null
             }
             data={data}

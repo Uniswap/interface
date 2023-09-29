@@ -23,6 +23,7 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { prepareSwapFormState } from 'src/features/transactions/swap/utils'
 import { Screens } from 'src/screens/Screens'
 import {
+  AnimatedFlex,
   Flex,
   FlexProps,
   Icons,
@@ -146,7 +147,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
   return (
     <Flex alignItems="center" bg="$transparent" pointerEvents="box-none" position="relative">
       <TapGestureHandler onGestureEvent={onGestureEvent}>
-        <Flex
+        <AnimatedFlex
           centered
           height={SWAP_BUTTON_HEIGHT}
           pointerEvents="auto"
@@ -177,7 +178,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
           <Text color="$sporeWhite" variant="buttonLabel2">
             {t('Swap')}
           </Text>
-        </Flex>
+        </AnimatedFlex>
       </TapGestureHandler>
     </Flex>
   )
@@ -233,7 +234,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
       style={[styles.searchBar, { borderRadius: borderRadii.roundedFull }]}
       onPress={onPress}>
       <TapGestureHandler onGestureEvent={onGestureEvent}>
-        <Flex borderRadius="$roundedFull" overflow="hidden" style={animatedStyle}>
+        <AnimatedFlex borderRadius="$roundedFull" overflow="hidden" style={animatedStyle}>
           <BlurView intensity={IS_IOS ? 100 : 0}>
             <Flex
               {...contentProps}
@@ -256,7 +257,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
               </Text>
             </Flex>
           </BlurView>
-        </Flex>
+        </AnimatedFlex>
       </TapGestureHandler>
     </TouchableArea>
   )
