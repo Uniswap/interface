@@ -223,14 +223,13 @@ function FeatureFlagOption({ value, variant, featureFlag, label }: FeatureFlagPr
 
 interface DynamicConfigDropdownProps {
   configName: DynamicConfigName
-  options: string[]
   label: string
-  selected: ChainId[]
+  options: any[]
+  selected: any[]
 }
 
-function DynamicConfigDropdown({ options, configName, label, selected }: DynamicConfigDropdownProps) {
+function DynamicConfigDropdown({ configName, label, options, selected }: DynamicConfigDropdownProps) {
   const updateConfig = useUpdateConfig()
-
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValues = Array.from(e.target.selectedOptions, (opt) => Number.parseInt(opt.value))
     updateConfig(configName, selectedValues)
@@ -244,7 +243,7 @@ function DynamicConfigDropdown({ options, configName, label, selected }: Dynamic
       </FlagInfo>
       <select multiple onChange={handleSelectChange}>
         {options.map((opt) => (
-          <option key={opt} value={opt} selected={selected.includes(Number.parseInt(opt))}>
+          <option key={opt} value={opt} selected={selected.includes(opt)}>
             {opt}
           </option>
         ))}
@@ -299,7 +298,7 @@ export default function FeatureFlagModal() {
           />
           <DynamicConfigDropdown
             selected={useQuickRouteChains()}
-            options={Object.keys(ChainId).filter((v) => !isNaN(Number(v))) as string[]}
+            options={Object.values(ChainId).filter((v) => !isNaN(Number(v))) as ChainId[]}
             configName={DynamicConfigName.quickRouteChains}
             label="Enable quick routes for these chains"
           />
