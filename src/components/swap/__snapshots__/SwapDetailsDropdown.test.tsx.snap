@@ -310,9 +310,9 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
             >
               <div>
                 <div
-                  class="c9 css-142zc9n"
+                  class="c9 c20 css-142zc9n"
                 >
-                  ~$1.00
+                  $1.00
                 </div>
               </div>
             </div>
@@ -330,11 +330,9 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
             >
               <div>
                 <div
-                  class="c9 css-142zc9n"
+                  class="c9 c20 css-142zc9n"
                 >
-                  <div
-                    class="c9 c20 css-142zc9n"
-                  >
+                  <div>
                     105566.373%
                   </div>
                 </div>
@@ -354,13 +352,9 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
             >
               <div>
                 <div
-                  class="c9 css-142zc9n"
+                  class="c9 c20 css-142zc9n"
                 >
-                  <div
-                    class="c9 c20 css-142zc9n"
-                  >
-                    0.00000000000000098 DEF
-                  </div>
+                  0.00000000000000098 DEF
                 </div>
               </div>
             </div>
@@ -378,13 +372,9 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
             >
               <div>
                 <div
-                  class="c9 css-142zc9n"
+                  class="c9 c20 css-142zc9n"
                 >
-                  <div
-                    class="c9 c20 css-142zc9n"
-                  >
-                    0.000000000000001 DEF
-                  </div>
+                  0.000000000000001 DEF
                 </div>
               </div>
             </div>
@@ -405,7 +395,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
             >
               <div>
                 <div
-                  class="c9 css-142zc9n"
+                  class="c9 c20 css-142zc9n"
                 >
                   <div
                     class="css-142zc9n"

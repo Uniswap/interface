@@ -12,4 +12,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `[Function]`;
 
 exports[`SwapLineItem.tsx fee on sell 1`] = `[Function]`;
 
+exports[`SwapLineItem.tsx preview exact in 1`] = `[Function]`;
+
 exports[`SwapLineItem.tsx syncing 1`] = `[Function]`;
