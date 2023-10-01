@@ -30,13 +30,16 @@ export enum SwapLineItemTypes {
   ROUTING_INFO,
 }
 
-const DetailRowValue = styled(ThemedText.BodySmall)<{ warningColor?: keyof DefaultTheme }>`
+const DetailRowValue = styled(ThemedText.BodySmall)`
   text-align: right;
   overflow-wrap: break-word;
 `
 const LabelText = styled(ThemedText.BodySmall)<{ hasTooltip?: boolean }>`
   cursor: ${({ hasTooltip }) => (hasTooltip ? 'help' : 'auto')};
   color: ${({ theme }) => theme.neutral2};
+`
+const ColorWrapper = styled.span<{ textColor?: keyof DefaultTheme }>`
+  ${({ textColor, theme }) => textColor && `color: ${theme[textColor]};`}
 `
 
 function FOTTooltipContent() {
@@ -68,7 +71,7 @@ function ExchangeRateRow({ trade }: { trade: InterfaceTrade }) {
 
 function ColoredPercentRow({ percent }: { percent: Percent }) {
   const { formatPriceImpact } = useFormatter()
-  return <div style={{ color: getPriceImpactColor(percent) }}>{formatPriceImpact(percent)}</div>
+  return <ColorWrapper textColor={getPriceImpactColor(percent)}>{formatPriceImpact(percent)}</ColorWrapper>
 }
 
 function CurrencyAmountRow({ amount }: { amount: CurrencyAmount<Currency> }) {
