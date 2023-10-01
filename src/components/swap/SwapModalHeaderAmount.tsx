@@ -12,7 +12,7 @@ import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-export const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
+const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
   cursor: ${({ cursor }) => cursor};
   color: ${({ theme }) => theme.neutral2};
   margin-right: 8px;

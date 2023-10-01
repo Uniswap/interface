@@ -82,9 +82,9 @@ function CurrencyAmountRow({ amount }: { amount: CurrencyAmount<Currency> }) {
 
 type LineItemData = {
   Label: React.FC
+  Value: React.FC
   TooltipBody?: React.FC
   tooltipSize?: TooltipSize
-  Value: React.FC
   loaderWidth?: number
 }
 
