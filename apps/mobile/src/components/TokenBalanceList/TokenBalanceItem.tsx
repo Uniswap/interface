@@ -2,10 +2,9 @@ import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
-import { FadeIn } from 'react-native-reanimated'
 import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
-import { AnimatedFlex, Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { borderRadii } from 'ui/src/theme'
 import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
@@ -65,15 +64,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
         px="$spacing24"
         py="$spacing8"
         onPress={onPress}>
-        <AnimatedFlex
-          row
-          shrink
-          alignItems="center"
-          // use only entering animation without exiting animation as it caused
-          // crashes on Android when the list was re-rendered
-          entering={FadeIn}
-          gap="$spacing12"
-          overflow="hidden">
+        <Flex row shrink alignItems="center" gap="$spacing12" overflow="hidden">
           <TokenLogo
             chainId={currency.chainId}
             symbol={currency.symbol}
@@ -89,12 +80,8 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
               </Text>
             </Flex>
           </Flex>
-        </AnimatedFlex>
-        <AnimatedFlex
-          // use only entering animation without exiting animation as it caused
-          // crashes on Android when the list was re-rendered
-          entering={FadeIn}
-          justifyContent="space-between">
+        </Flex>
+        <Flex justifyContent="space-between">
           <WarmLoadingShimmer isWarmLoading={isWarmLoading}>
             {!portfolioBalance.balanceUSD ? (
               <Flex centered fill>
@@ -115,7 +102,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
               </Flex>
             )}
           </WarmLoadingShimmer>
-        </AnimatedFlex>
+        </Flex>
       </TouchableArea>
     </ContextMenu>
   )

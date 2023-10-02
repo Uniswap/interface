@@ -4,7 +4,7 @@ import { FlashList } from '@shopify/flash-list'
 import { impactAsync } from 'expo-haptics'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleProp, View, ViewProps, ViewStyle } from 'react-native'
+import { FlatList, StyleProp, View, ViewProps, ViewStyle } from 'react-native'
 import { TapGestureHandler, TapGestureHandlerGestureEvent } from 'react-native-gesture-handler'
 import Animated, {
   cancelAnimation,
@@ -149,7 +149,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   )
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const tokensTabScrollRef = useAnimatedRef<FlashList<any>>()
+  const tokensTabScrollRef = useAnimatedRef<FlatList<any>>()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const nftsTabScrollRef = useAnimatedRef<FlashList<any>>()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
