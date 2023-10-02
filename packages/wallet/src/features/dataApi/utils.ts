@@ -77,7 +77,7 @@ export function gqlTokenToCurrencyInfo(
   const { chain, address, decimals, symbol, project } = token
   const chainId = fromGraphQLChain(chain)
 
-  if (!chainId || !decimals) return null
+  if (!chainId || decimals == null) return null
   if (chainFilter && chainFilter !== chainId) return null
 
   const currency = isNonNativeAddress(chainId, address)
