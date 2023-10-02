@@ -160,6 +160,7 @@ function AppOuter(): JSX.Element | null {
                           <AppInner />
                         </PerformanceProfiler>
                       </BottomSheetModalProvider>
+                      <NotificationToastWrapper />
                     </Sentry.TouchEventBoundary>
                   </LockScreenContextProvider>
                 </BiometricContextProvider>
@@ -228,7 +229,6 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }): JSX.Element {
         backgroundColor="transparent"
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
       />
-      <NotificationToastWrapper />
     </NavigationContainer>
   )
 }
