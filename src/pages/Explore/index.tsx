@@ -112,7 +112,7 @@ const Pages: Array<TabbedNav> = [
   },
 ]
 
-const Tokens = () => {
+const Explore = () => {
   const resetFilterString = useResetAtom(filterStringAtom)
   const location = useLocation()
   const [currentTab, setCurrentTab] = useState(0)
@@ -193,4 +193,4 @@ const Tokens = () => {
   )
 }
 
-export default Tokens
+export default Explore

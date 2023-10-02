@@ -36,6 +36,7 @@ const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
 const AddLiquidity = lazy(() => import('pages/AddLiquidity'))
+const Explore = lazy(() => import('pages/Explore'))
 const RedirectDuplicateTokenIds = lazy(() => import('pages/AddLiquidity/redirects'))
 const RedirectDuplicateTokenIdsV2 = lazy(() => import('pages/AddLiquidityV2/redirects'))
 const MigrateV2 = lazy(() => import('pages/MigrateV2'))
@@ -49,7 +50,6 @@ const PoolFinder = lazy(() => import('pages/PoolFinder'))
 const RemoveLiquidity = lazy(() => import('pages/RemoveLiquidity'))
 const RemoveLiquidityV3 = lazy(() => import('pages/RemoveLiquidity/V3'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
-const Tokens = lazy(() => import('pages/Tokens'))
 const Vote = lazy(() => import('pages/Vote'))
 
 const BodyWrapper = styled.div`
@@ -233,13 +233,12 @@ export default function App() {
                       browserRouterEnabled && hash ? <Navigate to={hash.replace('#', '')} replace /> : <Landing />
                     }
                   />
-                  {/* todo: rename Tokens component to Explore */}
                   {infoExplorePageEnabled ? (
-                    <Route path="explore" element={<Tokens />}>
+                    <Route path="explore" element={<Explore />}>
                       <Route path=":chainName" />
                     </Route>
                   ) : (
-                    <Route path="tokens" element={<Tokens />}>
+                    <Route path="tokens" element={<Explore />}>
                       <Route path=":chainName" />
                     </Route>
                   )}
