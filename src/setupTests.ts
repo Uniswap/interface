@@ -3,10 +3,12 @@ import '@vanilla-extract/css/disableRuntimeStyles' // https://vanilla-extract.st
 import 'polyfills'
 import 'jest-styled-components' // adds style diffs to snapshot tests
 import 'polyfills'
+import 'jest-offline'
 
 import type { createPopper } from '@popperjs/core'
 import { useWeb3React } from '@web3-react/core'
 import failOnConsole from 'jest-fail-on-console'
+import { disableNetConnect } from 'nock'
 import { Readable } from 'stream'
 import { toBeVisible } from 'test-utils/matchers'
 import { mocked } from 'test-utils/mocked'
@@ -14,6 +16,8 @@ import { TextDecoder, TextEncoder } from 'util'
 
 window.open = jest.fn()
 window.getComputedStyle = jest.fn()
+
+disableNetConnect()
 
 if (typeof global.TextEncoder === 'undefined') {
   global.ReadableStream = Readable as unknown as typeof globalThis.ReadableStream
