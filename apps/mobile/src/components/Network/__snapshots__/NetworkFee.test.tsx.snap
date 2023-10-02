@@ -64,6 +64,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
     >
       <Text
         allowFontScaling={true}
+        maxFontSizeMultiplier={1.4}
         style={
           {
             "color": "#222222",
@@ -125,6 +126,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
     >
       <Text
         allowFontScaling={true}
+        maxFontSizeMultiplier={1.2}
         style={
           {
             "color": "#393939",
@@ -142,6 +144,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
     </View>
     <Text
       allowFontScaling={true}
+      maxFontSizeMultiplier={1.4}
       style={
         {
           "color": "#222222",
@@ -322,6 +325,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
     >
       <Text
         allowFontScaling={true}
+        maxFontSizeMultiplier={1.4}
         style={
           {
             "color": "#222222",
@@ -383,6 +387,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
     >
       <Text
         allowFontScaling={true}
+        maxFontSizeMultiplier={1.2}
         style={
           {
             "color": "#393939",
@@ -400,6 +405,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
     </View>
     <Text
       allowFontScaling={true}
+      maxFontSizeMultiplier={1.4}
       style={
         {
           "color": "#222222",
@@ -424,6 +430,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
     >
       <Text
         allowFontScaling={true}
+        maxFontSizeMultiplier={1.4}
         style={
           {
             "color": "#7D7D7D",
@@ -506,6 +513,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     >
       <Text
         allowFontScaling={true}
+        maxFontSizeMultiplier={1.4}
         style={
           {
             "color": "#222222",
@@ -567,6 +575,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     >
       <Text
         allowFontScaling={true}
+        maxFontSizeMultiplier={1.2}
         style={
           {
             "color": "#393939",
@@ -584,6 +593,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     </View>
     <Text
       allowFontScaling={true}
+      maxFontSizeMultiplier={1.4}
       style={
         {
           "color": "#222222",
@@ -608,6 +618,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     >
       <Text
         allowFontScaling={true}
+        maxFontSizeMultiplier={1.4}
         style={
           {
             "color": "#222222",

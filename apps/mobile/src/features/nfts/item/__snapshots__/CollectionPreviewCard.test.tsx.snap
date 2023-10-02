@@ -104,6 +104,7 @@ exports[`renders collection preview card 1`] = `
         >
           <Text
             allowFontScaling={true}
+            maxFontSizeMultiplier={1.4}
             style={
               {
                 "color": "#7D7D7D",
@@ -150,6 +151,7 @@ exports[`renders collection preview card 1`] = `
           >
             <Text
               allowFontScaling={true}
+              maxFontSizeMultiplier={1.4}
               numberOfLines={1}
               style={
                 {

@@ -65,6 +65,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
       >
         <Text
           allowFontScaling={false}
+          maxFontSizeMultiplier={1.2}
           style={
             {
               "color": "#222222",
@@ -307,6 +308,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     >
                       <Text
                         allowFontScaling={false}
+                        maxFontSizeMultiplier={1.4}
                         style={
                           {
                             "color": "#222222",
@@ -323,6 +325,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     </View>
                     <Text
                       allowFontScaling={false}
+                      maxFontSizeMultiplier={1.4}
                       style={
                         {
                           "color": "#7D7D7D",
@@ -467,6 +470,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     >
                       <Text
                         allowFontScaling={false}
+                        maxFontSizeMultiplier={1.4}
                         style={
                           {
                             "color": "#222222",
@@ -483,6 +487,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     </View>
                     <Text
                       allowFontScaling={false}
+                      maxFontSizeMultiplier={1.4}
                       style={
                         {
                           "color": "#7D7D7D",
@@ -574,6 +579,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 />
                 <Text
                   allowFontScaling={true}
+                  maxFontSizeMultiplier={1.4}
                   style={
                     {
                       "color": "#222222",
@@ -713,6 +719,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
       >
         <Text
           allowFontScaling={false}
+          maxFontSizeMultiplier={1.2}
           style={
             {
               "color": "#222222",
@@ -955,6 +962,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     >
                       <Text
                         allowFontScaling={false}
+                        maxFontSizeMultiplier={1.4}
                         style={
                           {
                             "color": "#222222",
@@ -971,6 +979,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     </View>
                     <Text
                       allowFontScaling={false}
+                      maxFontSizeMultiplier={1.4}
                       style={
                         {
                           "color": "#7D7D7D",
@@ -1115,6 +1124,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     >
                       <Text
                         allowFontScaling={false}
+                        maxFontSizeMultiplier={1.4}
                         style={
                           {
                             "color": "#222222",
@@ -1131,6 +1141,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     </View>
                     <Text
                       allowFontScaling={false}
+                      maxFontSizeMultiplier={1.4}
                       style={
                         {
                           "color": "#7D7D7D",
@@ -1222,6 +1233,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 />
                 <Text
                   allowFontScaling={true}
+                  maxFontSizeMultiplier={1.4}
                   style={
                     {
                       "color": "#222222",

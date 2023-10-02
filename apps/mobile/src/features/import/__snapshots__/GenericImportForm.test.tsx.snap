@@ -271,6 +271,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
       <Text
         adjustsFontSizeToFit={true}
         allowFontScaling={true}
+        maxFontSizeMultiplier={1.4}
         numberOfLines={1}
         style={
           {

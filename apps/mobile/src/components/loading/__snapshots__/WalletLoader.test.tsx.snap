@@ -97,6 +97,7 @@ exports[`renders wallet loader 1`] = `
             >
               <Text
                 allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
                 style={
                   {
                     "color": "transparent",
@@ -166,6 +167,7 @@ exports[`renders wallet loader 1`] = `
             >
               <Text
                 allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
                 style={
                   {
                     "color": "transparent",

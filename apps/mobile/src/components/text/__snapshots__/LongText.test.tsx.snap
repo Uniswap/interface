@@ -21,6 +21,7 @@ exports[`renders a LongText 1`] = `
   >
     <Text
       allowFontScaling={true}
+      maxFontSizeMultiplier={1.4}
       numberOfLines={3}
       onTextLayout={[Function]}
       style={

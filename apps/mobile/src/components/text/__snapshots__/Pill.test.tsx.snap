@@ -30,6 +30,7 @@ exports[`renders a Pill with border 1`] = `
 >
   <Text
     allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
     style={
       {
         "color": "#222222",
@@ -45,6 +46,7 @@ exports[`renders a Pill with border 1`] = `
   </Text>
   <Text
     allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
     style={
       {
         "color": undefined,
@@ -93,6 +95,7 @@ exports[`renders a Pill without image 1`] = `
 >
   <Text
     allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
     style={
       {
         "color": "#000",

@@ -236,6 +236,7 @@ exports[`renders wallet preview card 1`] = `
       >
         <Text
           allowFontScaling={true}
+          maxFontSizeMultiplier={1.4}
           style={
             {
               "color": "#222222",

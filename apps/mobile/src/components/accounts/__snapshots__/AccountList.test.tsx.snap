@@ -45,6 +45,7 @@ exports[`AccountList renders without error 1`] = `
       >
         <Text
           allowFontScaling={true}
+          maxFontSizeMultiplier={1.4}
           style={
             {
               "color": "#7D7D7D",
@@ -358,6 +359,7 @@ exports[`AccountList renders without error 1`] = `
                   >
                     <Text
                       allowFontScaling={true}
+                      maxFontSizeMultiplier={1.4}
                       numberOfLines={1}
                       style={
                         {
@@ -379,6 +381,7 @@ exports[`AccountList renders without error 1`] = `
             </View>
             <Text
               allowFontScaling={true}
+              maxFontSizeMultiplier={1.4}
               style={
                 {
                   "color": "#7D7D7D",

@@ -84,6 +84,7 @@ exports[`renders a relative change 1`] = `
       >
         <span
           className=" font_subHeading _dsp-inline _bxs-border-box _ww-break-word _mt-0px _mr-0px _mb-0px _ml-0px _ff-299667014 _col-843135005 _fos-17px _lh-24px _fow-400 "
+          maxFontSizeMultiplier={1.4}
           style={{}}
         >
           12%
@@ -178,6 +179,7 @@ exports[`renders placeholders with absolute change 1`] = `
       >
         <span
           className=" font_subHeading _dsp-inline _bxs-border-box _ww-break-word _mt-0px _mr-0px _mb-0px _ml-0px _ff-299667014 _col-843135005 _fos-17px _lh-24px _fow-400 "
+          maxFontSizeMultiplier={1.4}
           style={{}}
         >
           $100.00 (12%)
@@ -210,6 +212,7 @@ exports[`renders placeholders without a change 1`] = `
       >
         <span
           className=" font_subHeading _dsp-inline _bxs-border-box _ww-break-word _mt-0px _mr-0px _mb-0px _ml-0px _ff-299667014 _col-843135005 _fos-17px _lh-24px _fow-400 "
+          maxFontSizeMultiplier={1.4}
           style={{}}
         >
           -
