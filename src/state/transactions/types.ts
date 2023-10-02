@@ -48,7 +48,7 @@ export enum TransactionType {
   WITHDRAW_FARM,
   CLAIM_FARM,
   REMOVE_LIQUIDITY_GAMMA,
-  ADD_LIQUIDITY_GAMMA
+  ADD_LIQUIDITY_GAMMA,
 }
 
 interface BaseTransactionInfo {

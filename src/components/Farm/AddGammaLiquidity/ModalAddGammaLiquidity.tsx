@@ -6,6 +6,7 @@ import { AutoColumn } from 'components/Column'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import ModalAddLiquidity from 'components/ModalAddLiquidity'
 import Row, { RowBetween } from 'components/Row'
+import SubTitleContainer from 'components/SubTitleContainer/SubTitleContainer'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { Contract } from 'ethers/lib/ethers'
 import { ApprovalState } from 'hooks/useApproveCallback'
@@ -144,15 +145,6 @@ export default function ModalAddGammaLiquidity({
     }
   }, [attemptingTxn, finalStateTransactionDismiss, transactionErrorMessage, txHash])
 
-  const handleDismissConfirmation = useCallback(() => {
-    setTransactionModal({ showTransactionModal: false, attemptingTxn, transactionErrorMessage, txHash })
-    // if there was a tx hash, we want to clear the input
-    if (txHash) {
-      finalStateTransactionDismiss()
-    }
-  }, [attemptingTxn, finalStateTransactionDismiss, transactionErrorMessage, txHash])
-
-
   // text to show while loading
   const pendingText = `Depositing ${tokenStake0 && Number(deposit0) > 0 ? deposit0 : ''} ${tokenStake0?.symbol} and 
     ${tokenStake1 && Number(deposit1) > 0 ? deposit1 : ''} ${tokenStake1?.symbol}`
@@ -214,7 +206,7 @@ export default function ModalAddGammaLiquidity({
         content={() => (
           <ConfirmationModalContent
             title={<Trans>Deposit</Trans>}
-            onDismiss={handleDismissConfirmation}
+            onDismiss={handleDismissTransaction}
             topContent={modalHeader}
             bottomContent={() => (
               <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onDeposit}>
@@ -230,14 +222,31 @@ export default function ModalAddGammaLiquidity({
         <Wrapper>
           <HeaderRow>
             <ThemedText.SubHeader>
-              <Trans>Manage Gamma Liquidity</Trans>
+              <SubTitleContainer
+                text={`
+                The benefits of Gamma’s active liquidity management include automatic rebalancing of your liquidity to keep it in range and auto-compounding of generated swap fees to maximize capital efficiency`}
+                description="Manage Gamma Liquidity"
+              />
             </ThemedText.SubHeader>
             <CloseIcon onClick={handleDismiss} />
           </HeaderRow>
-          <Trans>Pegasys V3 liquidity positions can now leverage Gamma’s tech to actively manage their liquidity through our UI, making the entire process more seamless and efficient. </Trans>
-          {/* <Trans>The benefits of Gamma’s active liquidity management include automatic rebalancing of your liquidity to keep it in range and auto-compounding of generated swap fees to maximize capital efficiency</Trans> */}
-          <Trans>It’s never been easier to LP and farm! Sit back, relax, and let Gamma do the work while you enjoy the yield.</Trans>
-          <Trans>Get started now by providing liquidity then deposit your LP tokens in our Gamma farms!</Trans>
+          <div
+            style={{
+              padding: '10px',
+              textAlign: 'left',
+              display: 'flex',
+              width: '100%',
+            }}
+          >
+            <ThemedText.BodySmall>
+              <Trans>
+                It’s never been easier to LP and farm! Sit back, relax, and let Gamma do the work while you enjoy the
+                yield.
+                <br />
+                Get started now by providing liquidity then deposit your LP tokens in our Gamma farms!
+              </Trans>
+            </ThemedText.BodySmall>
+          </div>
           <Body>
             <Container isMobile={isMobile}>
               <ApprovedArea>

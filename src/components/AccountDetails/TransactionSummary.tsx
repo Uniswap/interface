@@ -7,28 +7,28 @@ import { useCurrency, useToken } from '../../hooks/Tokens'
 import useENSName from '../../hooks/useENSName'
 import { VoteOption } from '../../state/governance/types'
 import {
+  AddLiquidityGammaTransactionInfo,
   AddLiquidityV2PoolTransactionInfo,
   AddLiquidityV3PoolTransactionInfo,
   ApproveTransactionInfo,
+  ClaimFarmTransactionInfo,
   ClaimTransactionInfo,
   CollectFeesTransactionInfo,
   CreateV3PoolTransactionInfo,
   DelegateTransactionInfo,
+  DepositFarmTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   ExecuteTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
   QueueTransactionInfo,
+  RemoveLiquidityGammaTransactionInfo,
   RemoveLiquidityV3TransactionInfo,
   TransactionInfo,
   TransactionType,
   VoteTransactionInfo,
-  WrapTransactionInfo,
-  ClaimFarmTransactionInfo,
-  DepositFarmTransactionInfo,
   WithdrawFarmTransactionInfo,
-  AddLiquidityGammaTransactionInfo,
-  RemoveLiquidityGammaTransactionInfo
+  WrapTransactionInfo,
 } from '../../state/transactions/types'
 
 function formatAmount(amountRaw: string, decimals: number, sigFigs: number): string {
@@ -188,13 +188,15 @@ function WithdrawLiquidityStakingSummary() {
 }
 
 function AddLiquidityGammaSummary({ info }: { info: AddLiquidityGammaTransactionInfo }) {
-  
-  return <Trans></Trans>
+  return (
+    <Trans>
+      Add Liquidity with {info.amount0}/ {info.amount1}
+    </Trans>
+  )
 }
 
 function RemoveLiquidityGammaSummary({ info }: { info: RemoveLiquidityGammaTransactionInfo }) {
-
-  return <Trans></Trans>
+  return <Trans>Remove {info.amount} Gamma liquidity</Trans>
 }
 
 function DepositFarmSummary({ info }: { info: DepositFarmTransactionInfo }) {
@@ -387,7 +389,7 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
       return <SubmitProposalTransactionSummary />
 
     case TransactionType.CLAIM_FARM:
-      return <ClaimFarmSummary  info={info}/>
+      return <ClaimFarmSummary info={info} />
 
     case TransactionType.WITHDRAW_FARM:
       return <WithdrawFarmSummary info={info} />
@@ -395,11 +397,11 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
     case TransactionType.DEPOSIT_FARM:
       return <DepositFarmSummary info={info} />
 
-      case TransactionType.ADD_LIQUIDITY_GAMMA:
-        return <AddLiquidityGammaSummary info={info} />
-  
-      case TransactionType.REMOVE_LIQUIDITY_GAMMA:
-        return <RemoveLiquidityGammaSummary info={info} />
+    case TransactionType.ADD_LIQUIDITY_GAMMA:
+      return <AddLiquidityGammaSummary info={info} />
+
+    case TransactionType.REMOVE_LIQUIDITY_GAMMA:
+      return <RemoveLiquidityGammaSummary info={info} />
 
     default:
       return <div>Unknown Transaction Type</div>

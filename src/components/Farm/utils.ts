@@ -357,9 +357,9 @@ export const depositUniProxy = async (
     finalizedTransaction(receipt, {
       summary: 'depositliquidity',
     })
-    stateTransaction(false, true, receipt.transactionHash, undefined)
+    stateTransaction(false, true, undefined, receipt.transactionHash)
   } catch (e) {
-    stateTransaction(false, true, undefined, e.message)
+    stateTransaction(false, true, e.message, undefined)
     console.error('Deposit failed', e)
   }
 }
