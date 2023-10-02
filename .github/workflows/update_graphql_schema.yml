@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5
         with:
           fetch-depth: 1
 
@@ -25,7 +25,7 @@ jobs:
         run: yarn graphql:schema
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@18f7dc018cc2cd597073088f7c7591b9d1c02672
         with:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
           commit-message: '[bot] Update GraphQL Schema'

@@ -9,13 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744
 
       - name: 📥 Install
         uses: ./.github/actions/monorepo_yarn_install
 
       - name: Build dev folder
-        uses: borales/actions-yarn@v4
+        uses: borales/actions-yarn@97ba8bebfe5b549bb7999261698a52a81fd62f1b
         with:
           cmd: webpack # will run `yarn webpack` command
           dir: monorepo/apps/web
@@ -26,7 +26,7 @@ jobs:
           zip -r chrome-extension-${{ github.sha }}.zip dev
 
       - name: 🦴 Archive chrome-extension artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2
         with:
           name: chrome-extension-${{ github.sha }}
           path: monorepo/apps/web/chrome-extension-${{ github.sha }}.zip
@@ -39,12 +39,12 @@ jobs:
       EXTENSION_ID: foeaklbjdmadblekkdafmeopjpikfbjh
 
     steps:
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/setup-node@7c12f8017d5436eb855f1ed4399f037a36fbd9e8
         with:
           node-version: "18.12.1"
 
       - name: Download bundle artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a
         with:
           name: chrome-extension-${{ github.sha }}
 
