@@ -79,6 +79,7 @@ export function LongText(props: LongTextProps): JSX.Element {
             style={{
               body: {
                 color,
+                fontFamily: fonts[variant].family,
                 height: !textLengthExceedsLimit || expanded ? 'auto' : maxVisibleHeight,
                 overflow: 'hidden',
               },
