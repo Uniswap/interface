@@ -19,10 +19,6 @@ function URIForEthToken(address: string) {
  * @returns {Promise< | null>} A promise that resolves to a color string or null if color cannot be determined.
  */
 async function getColorFromToken(token: Token, primarySrc?: string): Promise<string | null> {
-  if (!(token instanceof WrappedTokenInfo)) {
-    return null
-  }
-
   const wrappedToken = token as WrappedTokenInfo
   let color: string | null = null
 
@@ -32,7 +28,7 @@ async function getColorFromToken(token: Token, primarySrc?: string): Promise<str
       color = colorArray === DEFAULT_COLOR ? null : convertColorArrayToString(colorArray)
     }
 
-    if (!color && wrappedToken.logoURI) {
+    if (!color && wrappedToken?.logoURI) {
       const colorArray = await getColor(wrappedToken.logoURI)
       color = colorArray === DEFAULT_COLOR ? null : convertColorArrayToString(colorArray)
     }
