@@ -14,8 +14,9 @@ const ICON_SIZE = '20px'
 const SearchBarContainer = styled.div`
   display: flex;
   flex: 1;
+  justify-content: flex-end;
 `
-const SearchInput = styled.input`
+const SearchInput = styled.input<{ isClicked: boolean }>`
   background: no-repeat scroll 7px 7px;
   background-image: url(${searchIcon});
   background-size: 20px 20px;
@@ -24,12 +25,13 @@ const SearchInput = styled.input`
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.surface3};
   height: 100%;
-  width: 0;
+  width: ${({ isClicked }) => (isClicked ? '200px' : '0')};
   font-size: 16px;
   font-weight: 485;
   padding-left: 40px;
   color: ${({ theme }) => theme.neutral2};
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
+  text-overflow: ellipsis;
 
   :hover {
     background-color: ${({ theme }) => theme.surface1};
@@ -57,11 +59,11 @@ const SearchInput = styled.input`
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    width: 100%;
+    width: ${({ isClicked }) => (isClicked ? 'min(100%, 200px)' : '0')};
   }
 `
 
-export default function SearchBar() {
+export default function SearchBar({ tab }: { tab: string }) {
   const currentString = useAtomValue(filterStringAtom)
   const [localFilterString, setLocalFilterString] = useState(currentString)
   const setFilterString = useUpdateAtom(filterStringAtom)
@@ -75,6 +77,10 @@ export default function SearchBar() {
   useEffect(() => {
     setFilterString(debouncedLocalFilterString)
   }, [debouncedLocalFilterString, setFilterString])
+
+  const handleFocus = () => {
+    setIsClicked(true)
+  }
 
   const handleBlur = () => {
     if (localFilterString === '') setIsClicked(false)
@@ -90,21 +96,21 @@ export default function SearchBar() {
             element={InterfaceElementName.EXPLORE_SEARCH_INPUT}
           >
             <SearchInput
-              data-cy="explore-tokens-search-input"
+              data-cy="explore-search-input"
               type="search"
               placeholder={`${translation}`}
               id="searchBar"
               autoComplete="off"
               value={localFilterString}
+              isClicked={isClicked}
               onChange={({ target: { value } }) => setLocalFilterString(value)}
-              style={{ width: isClicked ? '200px' : '0' }}
-              onFocus={() => setIsClicked(true)}
+              onFocus={handleFocus}
               onBlur={handleBlur}
             />
           </TraceEvent>
         )}
       >
-        Filter tokens
+        Search {tab}
       </Trans>
     </SearchBarContainer>
   )

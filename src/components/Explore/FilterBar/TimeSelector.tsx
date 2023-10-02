@@ -9,7 +9,7 @@ import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components'
 
-import { MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT } from '../constants'
+import { SMALL_MEDIA_BREAKPOINT } from '../constants'
 import FilterOption from './FilterOption'
 
 export const DISPLAYS: Record<TimePeriod, string> = {
@@ -82,10 +82,6 @@ const StyledMenu = styled.div`
   position: relative;
   border: none;
   text-align: left;
-
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    width: 72px;
-  }
 `
 const StyledMenuContent = styled.div`
   display: flex;

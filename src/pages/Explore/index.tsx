@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
 import { Trace, TraceEvent } from 'analytics'
+import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Explore/constants'
 import NetworkFilter from 'components/Explore/FilterBar/NetworkFilter'
 import SearchBar from 'components/Explore/FilterBar/SearchBar'
 import TimeSelector from 'components/Explore/FilterBar/TimeSelector'
 import { AutoRow } from 'components/Row'
-import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
 import TokenTable from 'components/Tokens/TokenTable/TokenTable'
 import { useResetAtom } from 'jotai/utils'
@@ -50,16 +50,20 @@ const FiltersContainer = styled.div`
   height: 40px;
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    order: 2;
+    justify-content: space-between;
   }
 `
-const SearchContainer = styled(FiltersContainer)`
-  margin-left: 8px;
-  width: 100%;
 
+const DropdownFilterContainer = styled(FiltersContainer)`
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    margin: 0px;
-    order: 1;
+    justify-content: flex-start;
+  }
+`
+
+const SearchContainer = styled(FiltersContainer)`
+  width: 100%;
+  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
+    justify-content: flex-end;
   }
 `
 const NavWrapper = styled.div`
@@ -87,7 +91,7 @@ interface Page {
 const Pages: Array<Page> = [
   {
     title: <Trans>Tokens</Trans>,
-    key: 'tokens',
+    key: 'tokens', // todo: put this into an enum??
     component: TokenTable,
     loggingElementName: 'explore-tokens-tab', // todo: add to InterfaceSectionName @uniswap/analytics-events
   },
@@ -142,11 +146,11 @@ const Explore = () => {
             })}
           </Nav>
           <FiltersContainer>
-            <NetworkFilter />
-            {currentKey === 'tokens' && <TimeSelector />}
-            {/* <SearchContainer> */}
-            {currentKey !== 'transactions' && <SearchBar />}
-            {/* </SearchContainer> */}
+            <DropdownFilterContainer>
+              <NetworkFilter />
+              {currentKey === 'tokens' && <TimeSelector />}
+            </DropdownFilterContainer>
+            <SearchContainer>{currentKey !== 'transactions' && <SearchBar tab={currentKey} />}</SearchContainer>
           </FiltersContainer>
         </NavWrapper>
         <Page />
