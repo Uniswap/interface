@@ -145,6 +145,7 @@ const TitleText = styled.h1<{ isDarkMode: boolean; applyFadeIn: boolean; initial
     applyFadeIn &&
     css`
       ${textFadeIn}
+      opacity: 1.0;
     `}
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
@@ -181,6 +182,7 @@ const SubTextContainer = styled.div<{ initiallyVisible: boolean; applyFadeIn: bo
     applyFadeIn &&
     css`
       ${textFadeIn}
+      opacity: 1.0;
     `}
 `
 
@@ -432,13 +434,13 @@ export default function Landing() {
           <TitleText
             isDarkMode={isDarkMode}
             initiallyVisible={initiallyVisible.current}
-            applyFadeIn={!initiallyVisible && !!originCountry}
+            applyFadeIn={!initiallyVisible.current && !!originCountry}
           >
             {titles.header}
           </TitleText>
           <SubTextContainer
             initiallyVisible={initiallyVisible.current}
-            applyFadeIn={!initiallyVisible && !!originCountry}
+            applyFadeIn={!initiallyVisible.current && !!originCountry}
           >
             <SubText>{titles.subHeader}</SubText>
           </SubTextContainer>

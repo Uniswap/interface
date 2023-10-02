@@ -1,10 +1,19 @@
+import ms from 'ms'
+
 const originCountryKey = 'origin-country'
+
+interface OriginCountryMeta {
+  country: string
+  timestamp: number
+}
 
 export function getPersistedOriginCountry(): string | undefined {
   try {
     const value = localStorage.getItem(originCountryKey)
-    if (typeof value === 'string') {
-      return value
+    if (value) {
+      const originCountryMeta = JSON.parse(value) as OriginCountryMeta
+      const diffFromNow = Date.now() - originCountryMeta.timestamp
+      return diffFromNow > ms(`1d`) ? undefined : originCountryMeta.country
     }
   } catch (e) {
     console.warn(e)
@@ -13,7 +22,11 @@ export function getPersistedOriginCountry(): string | undefined {
 }
 
 export function setPersistedOriginCountry(country: string) {
-  localStorage.setItem(originCountryKey, country)
+  const meta: OriginCountryMeta = {
+    country,
+    timestamp: Date.now(),
+  }
+  localStorage.setItem(originCountryKey, JSON.stringify(meta))
 }
 
 export function deletePersistedOriginCountry() {
