@@ -195,7 +195,7 @@ function PoolDetailsTokenInfo({ token, chainId = ChainId.MAINNET }: { token: Tok
         <ExternalLink href={explorerUrl}>
           <PoolDetailsButton tokenColor={color}>
             <EtherscanLogo width="18px" height="18px" fill={color} />
-            <Trans>Etherscan</Trans>
+            {chainId === ChainId.MAINNET ? <Trans>Etherscan</Trans> : <Trans>Explorer</Trans>}
           </PoolDetailsButton>
         </ExternalLink>
         {tokenQuery?.token?.project?.homepageUrl && (
