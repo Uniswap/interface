@@ -3,6 +3,7 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap
 import { TraceEvent } from 'analytics'
 import searchIcon from 'assets/svg/search.svg'
 import xIcon from 'assets/svg/x.svg'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import useDebounce from 'hooks/useDebounce'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useEffect, useState } from 'react'
@@ -12,11 +13,12 @@ import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { filterStringAtom } from '../state'
 const ICON_SIZE = '20px'
 
-const SearchBarContainer = styled.div`
+const SearchBarContainer = styled.div<{ isExplore: boolean }>`
   display: flex;
   flex: 1;
+  ${({ isExplore }) => isExplore && 'justify-content: flex-end;'}
 `
-const SearchInput = styled.input`
+const SearchInput = styled.input<{ isExplore: boolean; isClicked?: boolean }>`
   background: no-repeat scroll 7px 7px;
   background-image: url(${searchIcon});
   background-size: 20px 20px;
@@ -25,12 +27,13 @@ const SearchInput = styled.input`
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.surface3};
   height: 100%;
-  width: min(200px, 100%);
+  width: ${({ isExplore, isClicked }) => (isExplore ? (isClicked ? '200px' : '0') : 'min(200px, 100%)')};
   font-size: 16px;
   font-weight: 485;
   padding-left: 40px;
   color: ${({ theme }) => theme.neutral2};
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
+  ${({ isExplore }) => isExplore && 'text-overflow: ellipsis;'}
 
   :hover {
     background-color: ${({ theme }) => theme.surface1};
@@ -58,15 +61,17 @@ const SearchInput = styled.input`
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    width: 100%;
+    width: ${({ isExplore, isClicked }) => (isExplore ? (isClicked ? 'min(100%, 200px)' : '0') : '100%')};
   }
 `
 
-export default function SearchBar() {
+export default function SearchBar({ tab }: { tab?: string }) {
   const currentString = useAtomValue(filterStringAtom)
   const [localFilterString, setLocalFilterString] = useState(currentString)
   const setFilterString = useUpdateAtom(filterStringAtom)
   const debouncedLocalFilterString = useDebounce(localFilterString, 300)
+  const isExplore = useInfoExplorePageEnabled()
+  const [isClicked, setIsClicked] = useState(false)
 
   useEffect(() => {
     setLocalFilterString(currentString)
@@ -76,8 +81,16 @@ export default function SearchBar() {
     setFilterString(debouncedLocalFilterString)
   }, [debouncedLocalFilterString, setFilterString])
 
+  const handleFocus = () => {
+    setIsClicked(true)
+  }
+
+  const handleBlur = () => {
+    if (localFilterString === '') setIsClicked(false)
+  }
+
   return (
-    <SearchBarContainer>
+    <SearchBarContainer isExplore={isExplore}>
       <Trans
         render={({ translation }) => (
           <TraceEvent
@@ -85,19 +98,36 @@ export default function SearchBar() {
             name={InterfaceEventName.EXPLORE_SEARCH_SELECTED}
             element={InterfaceElementName.EXPLORE_SEARCH_INPUT}
           >
-            <SearchInput
-              data-cy="explore-tokens-search-input"
-              type="search"
-              placeholder={`${translation}`}
-              id="searchBar"
-              autoComplete="off"
-              value={localFilterString}
-              onChange={({ target: { value } }) => setLocalFilterString(value)}
-            />
+            {isExplore ? (
+              <SearchInput
+                isExplore={isExplore}
+                data-cy="explore-search-input"
+                type="search"
+                placeholder={`${translation}`}
+                id="searchBar"
+                autoComplete="off"
+                value={localFilterString}
+                isClicked={isClicked}
+                onChange={({ target: { value } }) => setLocalFilterString(value)}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+            ) : (
+              <SearchInput
+                isExplore={isExplore}
+                data-cy="explore-tokens-search-input"
+                type="search"
+                placeholder={`${translation}`}
+                id="searchBar"
+                autoComplete="off"
+                value={localFilterString}
+                onChange={({ target: { value } }) => setLocalFilterString(value)}
+              />
+            )}
           </TraceEvent>
         )}
       >
-        Filter tokens
+        {isExplore ? `Search ${tab}` : 'Filter tokens'}
       </Trans>
     </SearchBarContainer>
   )

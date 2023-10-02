@@ -1,3 +1,5 @@
+import { Trans } from '@lingui/macro'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { TimePeriod } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useAtom } from 'jotai'
@@ -74,7 +76,7 @@ const MenuTimeFlyout = styled.span`
     left: unset;
   }
 `
-const StyledMenu = styled.div`
+const StyledMenu = styled.div<{ isExplore: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -83,10 +85,10 @@ const StyledMenu = styled.div`
   text-align: left;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    width: 72px;
+    ${({ isExplore }) => !isExplore && 'width: 72px;'}
   }
 `
-const StyledMenuContent = styled.div`
+const StyledMenuContent = styled.div<{ isExplore: boolean }>`
   display: flex;
   justify-content: space-between;
   gap: 8px;
@@ -94,6 +96,7 @@ const StyledMenuContent = styled.div`
   border: none;
   width: 100%;
   vertical-align: middle;
+  ${({ isExplore }) => isExplore && 'white-space: nowrap;'}
 `
 const Chevron = styled.span<{ open: boolean }>`
   padding-top: 1px;
@@ -109,11 +112,13 @@ export default function TimeSelector() {
   useOnClickOutside(node, open ? toggleMenu : undefined)
   const [activeTime, setTime] = useAtom(filterTimeAtom)
 
+  const isExplore = useInfoExplorePageEnabled()
+
   return (
-    <StyledMenu ref={node}>
+    <StyledMenu ref={node} isExplore={isExplore}>
       <FilterOption onClick={toggleMenu} aria-label="timeSelector" active={open} data-testid="time-selector">
-        <StyledMenuContent>
-          {DISPLAYS[activeTime]}
+        <StyledMenuContent isExplore={isExplore}>
+          {isExplore ? <Trans>{DISPLAYS[activeTime]} volume</Trans> : DISPLAYS[activeTime]}
           <Chevron open={open}>
             {open ? (
               <ChevronUp width={20} height={15} viewBox="0 0 24 20" />

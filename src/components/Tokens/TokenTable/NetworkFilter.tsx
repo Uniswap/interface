@@ -1,5 +1,6 @@
 import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import {
   BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS,
   BACKEND_SUPPORTED_CHAINS,
@@ -99,8 +100,8 @@ const CheckContainer = styled.div`
   display: flex;
   flex-direction: flex-end;
 `
-const NetworkFilterOption = styled(FilterOption)`
-  min-width: 156px;
+const NetworkFilterOption = styled(FilterOption)<{ isExplore: boolean }>`
+  ${({ isExplore }) => !isExplore && 'min-width: 156px;'}
 `
 const Tag = styled(Badge)`
   background-color: ${({ theme }) => theme.surface2};
@@ -118,6 +119,8 @@ export default function NetworkFilter() {
   useOnClickOutside(node, open ? toggleMenu : undefined)
   const navigate = useNavigate()
 
+  const isExplore = useInfoExplorePageEnabled()
+
   const { chainName } = useParams<{ chainName?: string }>()
   const currentChainName = validateUrlChainParam(chainName)
 
@@ -126,6 +129,7 @@ export default function NetworkFilter() {
   return (
     <StyledMenu ref={node}>
       <NetworkFilterOption
+        isExplore={isExplore}
         onClick={toggleMenu}
         aria-label="networkFilter"
         active={open}
@@ -133,7 +137,7 @@ export default function NetworkFilter() {
       >
         <StyledMenuContent>
           <NetworkLabel>
-            <Logo src={chainInfo.logoUrl} /> {chainInfo.label}
+            <Logo src={chainInfo.logoUrl} /> {!isExplore && chainInfo.label}
           </NetworkLabel>
           <Chevron open={open}>
             {open ? (
@@ -153,7 +157,9 @@ export default function NetworkFilter() {
                 key={network}
                 data-testid={`tokens-network-filter-option-${network.toLowerCase()}`}
                 onClick={() => {
-                  navigate(`/tokens/${network.toLowerCase()}`)
+                  isExplore
+                    ? navigate(`/explore/${network.toLowerCase()}`)
+                    : navigate(`/tokens/${network.toLowerCase()}`)
                   toggleMenu()
                 }}
               >
