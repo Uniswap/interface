@@ -176,7 +176,7 @@ const SubText = styled.div`
 const SubTextContainer = styled.div<{ initiallyVisible: boolean; applyFadeIn: boolean }>`
   display: flex;
   justify-content: center;
-  ${({ initiallyVisible }) => (initiallyVisible ? `opacity: 1.0;` : 'opacity: 0.0')}
+  ${({ initiallyVisible }) => (initiallyVisible ? `opacity: 1.0;` : 'opacity: 0.0;')}
   ${({ applyFadeIn }) =>
     applyFadeIn &&
     css`
