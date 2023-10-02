@@ -21,7 +21,7 @@ import { opacify } from 'theme/utils'
 import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
-const PoolDetailsTokenSection = styled(Column)`
+const TokenInfoSection = styled(Column)`
   gap: 12px;
   width: 100%;
 
@@ -30,7 +30,7 @@ const PoolDetailsTokenSection = styled(Column)`
   }
 `
 
-const PoolDetailsNameRow = styled(Row)`
+const TokenNameRow = styled(Row)`
   gap: 8px;
   width: 100%;
 `
@@ -39,11 +39,11 @@ const TokenName = styled(ThemedText.BodyPrimary)`
   ${EllipsisStyle}
 `
 
-const PoolDetailsButtonRow = styled(PoolDetailsNameRow)`
+const TokenButtonRow = styled(TokenNameRow)`
   flex-wrap: wrap;
 `
 
-const PoolDetailsButton = styled(Row)<{ tokenColor: string }>`
+const TokenInfoButton = styled(Row)<{ tokenColor: string }>`
   gap: 8px;
   padding: 8px 12px;
   border-radius: 20px;
@@ -85,8 +85,10 @@ export function TokenDescription({
     },
     errorPolicy: 'all',
   })
-  const description = tokenQuery?.token?.project?.description
+  const tokenProject = tokenQuery?.token?.project
+  const description = tokenProject?.description
   const explorerUrl = getExplorerLink(chainId, tokenAddress, ExplorerDataType.TOKEN)
+
   const [, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
     setCopied(tokenAddress)
@@ -94,47 +96,46 @@ export function TokenDescription({
 
   const [isDescriptionTruncated, toggleIsDescriptionTruncated] = useReducer((x) => !x, true)
   const shouldTruncate = !!description && description.length > TRUNCATE_CHARACTER_COUNT
-
   const tokenDescription =
     shouldTruncate && isDescriptionTruncated ? truncateDescription(description, TRUNCATE_CHARACTER_COUNT) : description
 
   return (
-    <PoolDetailsTokenSection>
-      <PoolDetailsNameRow>
+    <TokenInfoSection>
+      <TokenNameRow>
         <CurrencyLogo currency={currency} size="20px" />
         <TokenName>{currency?.name}</TokenName>
         <ThemedText.BodySecondary>{currency?.symbol}</ThemedText.BodySecondary>
-      </PoolDetailsNameRow>
-      <PoolDetailsButtonRow>
+      </TokenNameRow>
+      <TokenButtonRow>
         {showCopy && (
-          <PoolDetailsButton tokenColor={color} onClick={copy}>
+          <TokenInfoButton tokenColor={color} onClick={copy}>
             <Copy width="18px" height="18px" color={color} />
             {shortenAddress(tokenAddress)}
-          </PoolDetailsButton>
+          </TokenInfoButton>
         )}
         <ExternalLink href={explorerUrl}>
-          <PoolDetailsButton tokenColor={color}>
+          <TokenInfoButton tokenColor={color}>
             <EtherscanLogo width="18px" height="18px" fill={color} />
             {chainId === ChainId.MAINNET ? <Trans>Etherscan</Trans> : <Trans>Explorer</Trans>}
-          </PoolDetailsButton>
+          </TokenInfoButton>
         </ExternalLink>
-        {tokenQuery?.token?.project?.homepageUrl && (
-          <ExternalLink href={tokenQuery.token.project.homepageUrl}>
-            <PoolDetailsButton tokenColor={color}>
+        {!!tokenProject?.homepageUrl && (
+          <ExternalLink href={tokenProject.homepageUrl}>
+            <TokenInfoButton tokenColor={color}>
               <Globe width="18px" height="18px" fill={color} />
               <Trans>Website</Trans>
-            </PoolDetailsButton>
+            </TokenInfoButton>
           </ExternalLink>
         )}
-        {tokenQuery?.token?.project?.twitterName && (
-          <ExternalLink href={`https://x.com/${tokenQuery.token.project.twitterName}`}>
-            <PoolDetailsButton tokenColor={color}>
+        {!!tokenProject?.twitterName && (
+          <ExternalLink href={`https://x.com/${tokenProject.twitterName}`}>
+            <TokenInfoButton tokenColor={color}>
               <TwitterXLogo width="18px" height="18px" fill={color} />
               <Trans>Twitter</Trans>
-            </PoolDetailsButton>
+            </TokenInfoButton>
           </ExternalLink>
         )}
-      </PoolDetailsButtonRow>
+      </TokenButtonRow>
       <TokenDescriptionContainer>
         {!description && (
           <NoInfoAvailable>
@@ -143,11 +144,14 @@ export function TokenDescription({
         )}
         {tokenDescription}
         {shouldTruncate && (
-          <TruncateDescriptionButton onClick={toggleIsDescriptionTruncated}>
+          <TruncateDescriptionButton
+            onClick={toggleIsDescriptionTruncated}
+            data-testid="token-description-show-more-button"
+          >
             {isDescriptionTruncated ? <Trans>Show more</Trans> : <Trans>Hide</Trans>}
           </TruncateDescriptionButton>
         )}
       </TokenDescriptionContainer>
-    </PoolDetailsTokenSection>
+    </TokenInfoSection>
   )
 }
