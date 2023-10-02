@@ -69,7 +69,7 @@ jobs:
           path: node_modules/.cache
           key: ${{ runner.os }}-jest-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-jest-
-      - run: yarn test --coverage --maxWorkers=100% -o
+      - run: yarn test --coverage --maxWorkers=100%
       - uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
