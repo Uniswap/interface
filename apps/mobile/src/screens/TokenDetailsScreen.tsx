@@ -55,20 +55,6 @@ import { CurrencyField } from 'wallet/src/features/transactions/transactionState
 import { useExtractedTokenColor } from 'wallet/src/utils/colors'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
-type Price = NonNullable<
-  NonNullable<NonNullable<NonNullable<TokenDetailsScreenQuery['token']>['project']>['markets']>[0]
->['price']
-
-function HeaderPriceLabel({ price }: { price: Price }): JSX.Element {
-  const { t } = useTranslation()
-
-  return (
-    <Text color="$neutral1" variant="body1">
-      {formatUSDPrice(price?.value) ?? t('Unknown token')}
-    </Text>
-  )
-}
-
 function HeaderTitleElement({
   data,
   ellipsisMenuVisible,
@@ -78,24 +64,31 @@ function HeaderTitleElement({
 }): JSX.Element {
   const { t } = useTranslation()
 
-  const token = data?.token
-  const tokenProject = token?.project
+  const onChainData = data?.token
+  const offChainData = onChainData?.project
+
+  const price = offChainData?.markets?.[0]?.price?.value ?? onChainData?.market?.price?.value
+  const logo = offChainData?.logoUrl ?? undefined
+  const symbol = onChainData?.symbol
+  const chain = onChainData?.chain
 
   return (
     <Flex
       alignItems="center"
       justifyContent="space-between"
       ml={ellipsisMenuVisible ? '$spacing32' : '$none'}>
-      <HeaderPriceLabel price={tokenProject?.markets?.[0]?.price} />
+      <Text color="$neutral1" variant="body1">
+        {formatUSDPrice(price)}
+      </Text>
       <Flex centered row gap="$spacing4">
         <TokenLogo
-          chainId={fromGraphQLChain(token?.chain) ?? undefined}
+          chainId={fromGraphQLChain(chain) ?? undefined}
           size={iconSizes.icon16}
-          symbol={token?.symbol ?? undefined}
-          url={tokenProject?.logoUrl ?? undefined}
+          symbol={symbol ?? undefined}
+          url={logo}
         />
         <Text color="$neutral2" numberOfLines={1} variant="buttonLabel4">
-          {token?.symbol ?? t('Unknown token')}
+          {symbol ?? t('Unknown token')}
         </Text>
       </Flex>
     </Flex>

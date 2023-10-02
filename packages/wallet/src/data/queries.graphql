@@ -468,9 +468,22 @@ query TokenDetailsScreen($chain: Chain!, $address: String) {
     address
     chain
     symbol
+    name
     market(currency: USD) {
       id
       volume(duration: DAY) {
+        id
+        value
+      }
+      price {
+        id
+        value
+      }
+      priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
+        id
+        value
+      }
+      priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
         id
         value
       }

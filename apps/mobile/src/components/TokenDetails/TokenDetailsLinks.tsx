@@ -22,9 +22,7 @@ export function TokenDetailsLinks({
 }): JSX.Element {
   const { t } = useTranslation()
 
-  const tokenData = data?.token
-  const tokenProjectData = tokenData?.project
-
+  const { homepageUrl, twitterName } = data?.token?.project ?? {}
   const chainId = currencyIdToChain(currencyId)
   const address = currencyIdToAddress(currencyId)
   const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
@@ -38,31 +36,29 @@ export function TokenDetailsLinks({
         </Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <Flex row gap="$spacing8" px="$spacing16">
-            {tokenData?.address && (
-              <LinkButton
-                Icon={AddressIcon}
-                buttonType={LinkButtonType.Copy}
-                element={ElementName.TokenAddress}
-                label={sanitizeAddressText(shortenAddress(tokenData?.address)) ?? ''}
-                value={tokenData?.address}
-              />
-            )}
-            {tokenProjectData?.homepageUrl && (
+            <LinkButton
+              Icon={AddressIcon}
+              buttonType={LinkButtonType.Copy}
+              element={ElementName.TokenAddress}
+              label={sanitizeAddressText(shortenAddress(address)) ?? ''}
+              value={address}
+            />
+            {homepageUrl && (
               <LinkButton
                 Icon={GlobeIcon}
                 buttonType={LinkButtonType.Link}
                 element={ElementName.TokenLinkWebsite}
                 label={t('Website')}
-                value={tokenProjectData.homepageUrl}
+                value={homepageUrl}
               />
             )}
-            {tokenProjectData?.twitterName && (
+            {twitterName && (
               <LinkButton
                 Icon={TwitterIcon}
                 buttonType={LinkButtonType.Link}
                 element={ElementName.TokenLinkTwitter}
                 label={t('Twitter')}
-                value={getTwitterLink(tokenProjectData.twitterName)}
+                value={getTwitterLink(twitterName)}
               />
             )}
             <LinkButton

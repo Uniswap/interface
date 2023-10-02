@@ -27,6 +27,22 @@ query TokenPriceHistory(
       address
       symbol
       decimals
+      market(currency: USD) {
+        id
+        price {
+          id
+          value
+        }
+        pricePercentChange24h: pricePercentChange(duration: DAY) {
+          id
+          value
+        }
+        priceHistory(duration: $duration) {
+          id
+          timestamp
+          value
+        }
+      }
     }
   }
 }

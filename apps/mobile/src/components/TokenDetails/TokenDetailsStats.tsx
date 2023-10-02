@@ -91,18 +91,25 @@ export function TokenDetailsStats({
   const { t } = useTranslation()
   const colors = useSporeColors()
 
-  const tokenData = data?.token
-  const tokenProjectData = tokenData?.project
+  const onChainData = data?.token
+  const offChainData = data?.token?.project
 
-  const marketData = tokenProjectData?.markets ? tokenProjectData.markets[0] : null
+  const description = offChainData?.description
+  const name = offChainData?.name ?? onChainData?.name
+  const marketCap = offChainData?.markets?.[0]?.marketCap?.value
+  const volume = onChainData?.market?.volume?.value
+  const priceHight52W =
+    offChainData?.markets?.[0]?.priceHigh52W?.value ?? onChainData?.market?.priceHigh52W?.value
+  const priceLow52W =
+    offChainData?.markets?.[0]?.priceLow52W?.value ?? onChainData?.market?.priceLow52W?.value
 
   return (
     <Flex gap="$spacing24">
-      {tokenProjectData?.description && (
+      {description && (
         <Flex gap="$spacing4">
-          {tokenProjectData?.name && (
+          {name && (
             <Text color="$neutral2" variant="subheading2">
-              {t('About {{ token }}', { token: tokenProjectData.name })}
+              {t('About {{ token }}', { token: name })}
             </Text>
           )}
           <Flex gap="$spacing16">
@@ -111,7 +118,7 @@ export function TokenDetailsStats({
               initialDisplayedLines={5}
               linkColor={tokenColor ?? colors.neutral1.get()}
               readMoreOrLessColor={tokenColor ?? colors.neutral2.get()}
-              text={tokenProjectData.description.trim()}
+              text={description.trim()}
             />
           </Flex>
         </Flex>
@@ -121,11 +128,11 @@ export function TokenDetailsStats({
           {t('Stats')}
         </Text>
         <TokenDetailsMarketData
-          marketCap={marketData?.marketCap?.value}
-          priceHight52W={marketData?.priceHigh52W?.value}
-          priceLow52W={marketData?.priceLow52W?.value}
+          marketCap={marketCap}
+          priceHight52W={priceHight52W}
+          priceLow52W={priceLow52W}
           tokenColor={tokenColor}
-          volume={tokenData?.market?.volume?.value}
+          volume={volume}
         />
       </Flex>
     </Flex>
