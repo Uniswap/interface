@@ -1,6 +1,7 @@
 import { useTheme } from '@tamagui/web'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import ImageColors from 'react-native-image-colors'
+import { useSporeColors } from 'ui/src'
 import { ColorKeys, colors as GlobalColors, colorsLight, GlobalPalette } from 'ui/src/theme'
 import { assert } from 'utilities/src/errors'
 import { isSVGUri } from 'utilities/src/format/urls'
@@ -37,15 +38,17 @@ export function opacify(amount: number, hexColor: string): string {
   return `${hexColor.slice(0, 7)}${opacifySuffix}`
 }
 
-export function getNetworkColorKey(chainId: ChainId): ColorKeys {
+export function getNetworkColorKey(chainId: ChainId): `chain_${ChainId}` {
   return `chain_${chainId}`
 }
 
 /** Helper to retrieve foreground and background colors for a given chain */
-export function useNetworkColors(chainId: ChainId): { foreground: string; background: string } {
-  const theme = useTheme()
-  const networkColor = getNetworkColorKey(chainId)
-  const color = networkColor === 'none' ? 'transparent' : theme[networkColor].val
+export function useNetworkColors(chainId: ChainId): {
+  foreground: string
+  background: string
+} {
+  const colors = useSporeColors()
+  const color = colors[getNetworkColorKey(chainId)].get()
 
   const foreground = color
   assert(foreground, 'Network color is not defined in Theme')
