@@ -4,8 +4,7 @@ import { ColorTokens, Flex, FlexProps, Icons, Text, TouchableArea, useSporeColor
 import { iconSizes, opacify } from 'ui/src/theme'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
-// TODO(MOB-1211): figure out shadow offset in Tamagui
-export const SHADOW_OFFSET_SMALL = { width: 0, height: 2 }
+export const SHADOW_OFFSET_SMALL = { width: 0, height: 2 } as const
 
 export function Shadow({ children, ...rest }: FlexProps): JSX.Element {
   const isDarkMode = useIsDarkMode()
@@ -16,8 +15,7 @@ export function Shadow({ children, ...rest }: FlexProps): JSX.Element {
       borderRadius="$rounded16"
       p="$spacing12"
       shadowColor={isDarkMode ? '$sporeBlack' : '$transparent'}
-      // TODO(MOB-1211): figure out shadow offset in Tamagui
-      // shadowOffset={SHADOW_OFFSET_SMALL}
+      shadowOffset={SHADOW_OFFSET_SMALL}
       shadowOpacity={0.0075}
       shadowRadius={10}
       style={{ backgroundColor: opacify(isDarkMode ? 10 : 100, colors.sporeWhite.val) }}

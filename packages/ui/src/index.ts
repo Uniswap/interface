@@ -31,6 +31,7 @@ export type {
   SwitchProps,
   TamaguiProviderProps,
   ThemeKeys,
+  Tokens,
 } from 'tamagui'
 export { LinearGradient } from 'tamagui/linear-gradient'
 export { AnimatedFlashList } from './components/AnimatedFlashList/AnimatedFlashList'

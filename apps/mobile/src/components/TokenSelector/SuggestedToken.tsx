@@ -4,8 +4,8 @@ import { Pill } from 'src/components/text/Pill'
 import {
   OnSelectCurrency,
   SuggestedTokenSection,
-} from 'src/components/TokenSelector/TokenSelectorList'
-import { TokenOption } from 'src/components/TokenSelector/types'
+  TokenOption,
+} from 'src/components/TokenSelector/types'
 import { TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'

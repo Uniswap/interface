@@ -5,7 +5,7 @@ import { Text } from 'ui/src'
 
 it('renders a Pill without image', () => {
   const tree = render(
-    <Pill backgroundColor="$surface2" foregroundColor="$accent1" label="My Pill Label" />
+    <Pill backgroundColor="$surface2" foregroundColor="#000" label="My Pill Label" />
   )
   expect(tree).toMatchSnapshot()
 })

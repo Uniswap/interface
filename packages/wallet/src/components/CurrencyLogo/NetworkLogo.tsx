@@ -1,12 +1,8 @@
 import React from 'react'
-import { Image, StyleSheet } from 'react-native'
+import { Image, ImageResizeMode, StyleSheet } from 'react-native'
 import { Box, BoxProps } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
-
-import { ShadowProps } from '@shopify/restyle'
-import { ImageResizeMode } from 'react-native'
-import { Theme } from 'ui/src/theme/restyle'
 
 type NetworkLogoProps = BoxProps & {
   chainId: ChainId
@@ -61,6 +57,6 @@ export const style = StyleSheet.create({
   },
 })
 
-export const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }
+export const SHADOW_OFFSET = { width: 0, height: 2 }
 
 export const THIN_BORDER = 0.5

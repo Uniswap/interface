@@ -2,7 +2,7 @@ import { call, put } from '@redux-saga/core/effects'
 import { expectSaga } from 'redux-saga-test-plan'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { handleMoonpayReturnLink } from 'src/features/deepLinking/handleMoonpayReturnLinkSaga'
-import { TabIndex } from 'src/screens/HomeScreen'
+import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { Screens } from 'src/screens/Screens'
 import { dismissInAppBrowser } from 'src/utils/linking'
 import { forceFetchFiatOnRampTransactions } from 'wallet/src/features/transactions/slice'
@@ -12,7 +12,7 @@ describe(handleMoonpayReturnLink, () => {
     return expectSaga(handleMoonpayReturnLink)
       .provide([
         [put(forceFetchFiatOnRampTransactions), undefined],
-        [call(navigate, Screens.Home, { tab: TabIndex.Activity }), undefined],
+        [call(navigate, Screens.Home, { tab: HomeScreenTabIndex.Activity }), undefined],
         [call(dismissInAppBrowser), undefined],
       ])
       .silentRun()

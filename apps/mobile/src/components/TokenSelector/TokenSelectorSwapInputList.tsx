@@ -4,11 +4,12 @@ import {
   usePopularTokensOptions,
   usePortfolioTokenOptions,
 } from 'src/components/TokenSelector/hooks'
+import { TokenSelectorList } from 'src/components/TokenSelector/TokenSelectorList'
 import {
   OnSelectCurrency,
-  TokenSelectorList,
+  TokenSection,
   TokenSelectorListSections,
-} from 'src/components/TokenSelector/TokenSelectorList'
+} from 'src/components/TokenSelector/types'
 import { getTokenOptionsSection, tokenOptionDifference } from 'src/components/TokenSelector/utils'
 import { ChainId } from 'wallet/src/constants/chains'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
@@ -53,10 +54,11 @@ function useTokenSectionsForSwapInput(
       popularTokenOptions,
       portfolioTokenOptions
     )
+
     return [
       ...(getTokenOptionsSection(t('Your tokens'), portfolioTokenOptions) ?? []),
       ...(getTokenOptionsSection(t('Popular tokens'), popularMinusPortfolioTokens) ?? []),
-    ]
+    ] satisfies TokenSection[]
   }, [loading, popularTokenOptions, portfolioTokenOptions, t])
 
   return useMemo(

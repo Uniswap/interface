@@ -68,14 +68,9 @@ import { useInterval, useTimeout } from 'utilities/src/time/timing'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { HomeScreenTabIndex } from './HomeScreenTabIndex'
 
 const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
-
-export enum TabIndex {
-  Tokens = 0,
-  NFTs = 1,
-  Activity = 2,
-}
 
 /**
  * Home Screen hosts both Tokens and NFTs Tab
@@ -99,7 +94,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const listBottomPadding = media.short ? spacing.spacing36 : spacing.spacing12
 
-  const [tabIndex, setTabIndex] = useState(props?.route?.params?.tab ?? TabIndex.Tokens)
+  const [tabIndex, setTabIndex] = useState(props?.route?.params?.tab ?? HomeScreenTabIndex.Tokens)
   const routes = useMemo(
     () => [
       { key: SectionName.HomeTokensTab, title: t('Tokens') },
@@ -156,9 +151,9 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const activityTabScrollRef = useAnimatedRef<FlashList<any>>()
 
   const currentScrollValue = useDerivedValue(() => {
-    if (tabIndex === TabIndex.Tokens) {
+    if (tabIndex === HomeScreenTabIndex.Tokens) {
       return tokensTabScrollValue.value
-    } else if (tabIndex === TabIndex.NFTs) {
+    } else if (tabIndex === HomeScreenTabIndex.NFTs) {
       return nftsTabScrollValue.value
     }
     return activityTabScrollValue.value
@@ -198,13 +193,16 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   useScrollToTop(
     useRef({
       scrollToTop: () => {
-        if (currentTabIndex.value === TabIndex.NFTs && isNftTabsAtTop.value) {
-          setTabIndex(TabIndex.Tokens)
-        } else if (currentTabIndex.value === TabIndex.NFTs) {
+        if (currentTabIndex.value === HomeScreenTabIndex.NFTs && isNftTabsAtTop.value) {
+          setTabIndex(HomeScreenTabIndex.Tokens)
+        } else if (currentTabIndex.value === HomeScreenTabIndex.NFTs) {
           nftsTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
-        } else if (currentTabIndex.value === TabIndex.Activity && isActivityTabAtTop.value) {
-          setTabIndex(TabIndex.NFTs)
-        } else if (currentTabIndex.value === TabIndex.Activity) {
+        } else if (
+          currentTabIndex.value === HomeScreenTabIndex.Activity &&
+          isActivityTabAtTop.value
+        ) {
+          setTabIndex(HomeScreenTabIndex.NFTs)
+        } else if (currentTabIndex.value === HomeScreenTabIndex.Activity) {
           activityTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
         } else {
           tokensTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })

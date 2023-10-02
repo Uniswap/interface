@@ -44,7 +44,9 @@ const PREFETCH_ITEMS_THRESHOLD = 0.5
 const LOADING_ITEM = 'loading'
 
 const keyExtractor = (item: NFTItem | string): string =>
-  typeof item === 'string' ? item : getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')
+  `${
+    typeof item === 'string' ? item : getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')
+  }`
 
 function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Element {
   const navigation = useAppStackNavigation()

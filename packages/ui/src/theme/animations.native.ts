@@ -5,6 +5,14 @@ export const animations = createAnimations({
     type: 'timing',
     duration: 100,
   },
+  '200ms': {
+    type: 'timing',
+    duration: 200,
+  },
+  '300ms': {
+    type: 'timing',
+    duration: 300,
+  },
   bouncy: {
     type: 'spring',
     damping: 10,

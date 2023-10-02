@@ -159,7 +159,7 @@ export function QRAnimation({
       <Animated.View entering={realQrTopGlowFadeIn}>
         <GradientBackground>
           <UniconThemedGradient
-            borderRadius="rounded16"
+            borderRadius="$rounded16"
             gradientEndColor={uniconColors.glow}
             gradientStartColor={colors.surface1.get()}
             opacity={isDarkMode ? 0.3 : 0.2}

@@ -1,8 +1,7 @@
 import { useTheme } from '@tamagui/web'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import ImageColors from 'react-native-image-colors'
-import { colors as GlobalColors, GlobalPalette } from 'ui/src/theme'
-import { theme as FixedTheme, theme as restyleTheme, Theme } from 'ui/src/theme/restyle'
+import { ColorKeys, colors as GlobalColors, colorsLight, GlobalPalette } from 'ui/src/theme'
 import { assert } from 'utilities/src/errors'
 import { isSVGUri } from 'utilities/src/format/urls'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -38,14 +37,15 @@ export function opacify(amount: number, hexColor: string): string {
   return `${hexColor.slice(0, 7)}${opacifySuffix}`
 }
 
-export function getNetworkColorKey(chainId: ChainId): keyof Theme['colors'] {
+export function getNetworkColorKey(chainId: ChainId): ColorKeys {
   return `chain_${chainId}`
 }
 
 /** Helper to retrieve foreground and background colors for a given chain */
 export function useNetworkColors(chainId: ChainId): { foreground: string; background: string } {
-  // TODO (MOB-1336): fix only returning light mode version of colors
-  const color = restyleTheme.colors[getNetworkColorKey(chainId)]
+  const theme = useTheme()
+  const networkColor = getNetworkColorKey(chainId)
+  const color = networkColor === 'none' ? 'transparent' : theme[networkColor].val
 
   const foreground = color
   assert(foreground, 'Network color is not defined in Theme')
@@ -152,7 +152,7 @@ const blackAndWhiteSpecialCase: Set<string> = new Set([
 
 export function useExtractedColors(
   imageUrl: Maybe<string>,
-  fallback: keyof Theme['colors'] = 'accent1',
+  fallback: ColorKeys = 'accent1',
   cache = true
 ): { colors?: ExtractedColors; colorsLoading: boolean } {
   const getImageColors = useCallback(async () => {
@@ -265,8 +265,7 @@ export function useExtractedTokenColor(
 export function getContrastPassingTextColor(
   backgroundColor: string
 ): '$sporeWhite' | '$sporeBlack' {
-  const lightText = FixedTheme.colors.sporeWhite
-
+  const lightText = colorsLight.sporeWhite
   if (hex(lightText, backgroundColor) >= MIN_COLOR_CONTRAST_THRESHOLD) {
     return '$sporeWhite'
   }
@@ -319,7 +318,8 @@ function pickContrastPassingColor(extractedColors: ExtractedColors, backgroundHe
       return c
     }
   }
-  return FixedTheme.colors.accent1
+
+  return colorsLight.accent1
 }
 
 /**

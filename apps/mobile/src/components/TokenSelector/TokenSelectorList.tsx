@@ -1,5 +1,4 @@
 import { BottomSheetSectionList } from '@gorhom/bottom-sheet'
-import { Currency } from '@uniswap/sdk-core'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionList } from 'react-native'
@@ -8,33 +7,19 @@ import { Loader } from 'src/components/loading'
 import { useBottomSheetFocusHook } from 'src/components/modals/hooks'
 import { TokenOptionItem } from 'src/components/TokenSelector/TokenOptionItem'
 import {
-  renderSuggestedTokenItem,
-  suggestedTokensKeyExtractor,
-} from 'src/components/TokenSelector/TokenSelectorSwapOutputList'
-import { TokenOption } from 'src/components/TokenSelector/types'
+  OnSelectCurrency,
+  SuggestedTokenSection,
+  TokenOption,
+  TokenSection,
+  TokenSelectorListSections,
+} from 'src/components/TokenSelector/types'
 import { Flex, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
-
-export type OnSelectCurrency = (
-  currency: Currency,
-  section: SuggestedTokenSection | TokenSection,
-  index: number
-) => void
-
-export type TokenSection = {
-  title: string
-  data: TokenOption[]
-}
-
-export type SuggestedTokenSection = {
-  title: string
-  data: TokenOption[][]
-}
-
-export type TokenSelectorListSections = Array<SuggestedTokenSection | TokenSection>
+import { renderSuggestedTokenItem } from './renderSuggestedTokenItem'
+import { suggestedTokensKeyExtractor } from './suggestedTokensKeyExtractor'
 
 function isSuggestedTokenItem(data: TokenOption | TokenOption[]): data is TokenOption[] {
   return Array.isArray(data)

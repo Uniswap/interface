@@ -1,7 +1,6 @@
 import React, { memo } from 'react'
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
-import { borderRadii } from 'ui/src/theme'
-import { Theme } from 'ui/src/theme/restyle'
+import { getTokenValue, Tokens } from 'ui/src'
 
 function _UniconThemedGradient({
   gradientStartColor,
@@ -12,7 +11,8 @@ function _UniconThemedGradient({
 }: {
   gradientStartColor: string
   gradientEndColor: string
-  borderRadius: keyof Theme['borderRadii']
+  // TODO(MOB-1518): use RadiusTokens after upgrading tamagui that exports it for us nicely
+  borderRadius: `$${keyof Tokens['radius']}`
   middleOut?: boolean
   opacity?: number
 }): JSX.Element {
@@ -41,7 +41,7 @@ function _UniconThemedGradient({
         fill={`url(#${id})`}
         height="100%"
         opacity={opacity}
-        rx={borderRadii[borderRadius]}
+        rx={getTokenValue(borderRadius)}
         width="100%"
         x="0"
         y="0"

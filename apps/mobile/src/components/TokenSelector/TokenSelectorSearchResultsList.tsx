@@ -4,12 +4,8 @@ import {
   usePortfolioBalancesForAddressById,
   usePortfolioTokenOptions,
 } from 'src/components/TokenSelector/hooks'
-import {
-  OnSelectCurrency,
-  SectionHeader,
-  TokenSection,
-  TokenSelectorList,
-} from 'src/components/TokenSelector/TokenSelectorList'
+import { SectionHeader, TokenSelectorList } from 'src/components/TokenSelector/TokenSelectorList'
+import { OnSelectCurrency, TokenSection } from 'src/components/TokenSelector/types'
 import { formatSearchResults, getTokenOptionsSection } from 'src/components/TokenSelector/utils'
 import { useSearchTokens } from 'src/features/dataApi/searchTokens'
 import { Flex, Text } from 'ui/src'

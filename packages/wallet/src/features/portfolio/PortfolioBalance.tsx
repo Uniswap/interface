@@ -1,5 +1,4 @@
-import { Flex, getTokenValue, Icons, Text } from 'ui/src'
-import { theme } from 'ui/src/theme/restyle'
+import { Flex, getTokenValue, Icons, Text, useSporeColors } from 'ui/src'
 import { usePortfolioUSDBalance } from 'wallet/src/features/portfolio/hooks'
 
 type WalletBalanceProps = {
@@ -13,7 +12,8 @@ export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
   const change = portfolioChange ?? 0
 
   const isPositiveChange = change !== undefined ? change >= 0 : undefined
-  const arrowColor = isPositiveChange ? theme.colors.statusSuccess : theme.colors.statusCritical
+  const colors = useSporeColors()
+  const arrowColor = isPositiveChange ? colors.statusSuccess : colors.statusCritical
 
   const formattedChange = change !== undefined ? `${Math.abs(change).toFixed(2)}%` : '-'
   return (
@@ -37,7 +37,7 @@ export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
             <Text variant="heading1">${portfolioBalanceUSD?.toFixed(2)}</Text>
             <Flex row alignItems="center">
               <Icons.ArrowChange
-                color={arrowColor}
+                color={arrowColor.get()}
                 rotation={isPositiveChange ? 180 : 0}
                 size={getTokenValue('$icon.20')}
               />

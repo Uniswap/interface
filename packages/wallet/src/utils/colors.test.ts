@@ -1,4 +1,4 @@
-import { theme } from 'ui/src/theme/restyle'
+import { colorsLight } from 'ui/src/theme'
 import {
   adjustColorVariant,
   AdjustmentType,
@@ -46,7 +46,7 @@ describe('adjustColorVariant', () => {
 
 describe('findNearestThemeColor', () => {
   it('Finds correct theme color for color in theme', () => {
-    expect(findNearestThemeColor(theme.colors.accent1)).toEqual('magentaVibrant')
+    expect(findNearestThemeColor(colorsLight.accent1)).toEqual('magentaVibrant')
   })
 })
 

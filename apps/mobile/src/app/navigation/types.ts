@@ -7,7 +7,7 @@ import {
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { EducationContentType } from 'src/components/education'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
-import { TabIndex } from 'src/screens/HomeScreen'
+import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 
@@ -88,7 +88,7 @@ export type AppStackParamList = {
   [Screens.Education]: {
     type: EducationContentType
   } & OnboardingStackBaseParams
-  [Screens.Home]?: { tab?: TabIndex }
+  [Screens.Home]?: { tab?: HomeScreenTabIndex }
   [Screens.OnboardingStack]: NavigatorScreenParams<OnboardingStackParamList>
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [Screens.TokenDetails]: {

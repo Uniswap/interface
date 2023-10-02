@@ -1,7 +1,6 @@
 import { memo } from 'react'
-import { Flex, getTokenValue, Icons, Text } from 'ui/src'
+import { Flex, getTokenValue, Icons, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { theme } from 'ui/src/theme/restyle'
 import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
@@ -24,6 +23,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
 }: TokenBalanceItemProps) {
   const { quantity, relativeChange24, balanceUSD, currencyInfo } = portfolioBalance
   const { currency } = currencyInfo
+  const colors = useSporeColors()
 
   const onPress = (): void => {
     onPressToken?.(currencyInfo.currencyId)
@@ -33,7 +33,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   const change = relativeChange24 ?? 0
 
   const isPositiveChange = change !== undefined ? change >= 0 : undefined
-  const arrowColor = isPositiveChange ? theme.colors.statusSuccess : theme.colors.statusCritical
+  const arrowColor = isPositiveChange ? colors.statusSuccess : colors.statusCritical
 
   const formattedChange = change !== undefined ? `${Math.abs(change).toFixed(2)}%` : '-'
 
@@ -80,7 +80,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
             </Text>
             <Flex row alignItems="center" gap="$spacing4">
               <Icons.ArrowChange
-                color={arrowColor}
+                color={arrowColor.get()}
                 rotation={isPositiveChange ? 180 : 0}
                 size={getTokenValue('$icon.20')}
               />

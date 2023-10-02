@@ -95,7 +95,7 @@ exports[`renders a Pill without image 1`] = `
     allowFontScaling={true}
     style={
       {
-        "color": "$accent1",
+        "color": "#000",
         "display": "flex",
         "fontFamily": "Basel-Book",
         "fontSize": 17,

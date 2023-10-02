@@ -3,7 +3,7 @@ import { expectSaga } from 'redux-saga-test-plan'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
 import { closeAllModals } from 'src/features/modals/modalSlice'
-import { TabIndex } from 'src/screens/HomeScreen'
+import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { Screens } from 'src/screens/Screens'
 
 describe(handleTransactionLink, () => {
@@ -11,7 +11,7 @@ describe(handleTransactionLink, () => {
     return expectSaga(handleTransactionLink)
       .provide([
         [put(closeAllModals()), undefined],
-        [call(navigate, Screens.Home, { tab: TabIndex.Activity }), undefined],
+        [call(navigate, Screens.Home, { tab: HomeScreenTabIndex.Activity }), undefined],
       ])
       .silentRun()
   })

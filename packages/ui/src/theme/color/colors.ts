@@ -277,6 +277,8 @@ export const colorsLight = {
   chain_56: colors.networkBnb,
 }
 
+export type ColorKeys = keyof typeof colorsLight
+
 export const colorsDark = {
   none: 'transparent',
 

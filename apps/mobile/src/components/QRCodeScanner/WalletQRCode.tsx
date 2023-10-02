@@ -35,7 +35,7 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
       <GradientBackground>
         <UniconThemedGradient
           middleOut
-          borderRadius="rounded16"
+          borderRadius="$rounded16"
           gradientEndColor={colors.surface1.get()}
           gradientStartColor={gradientData.glow}
           opacity={isDarkMode ? 0.24 : 0.2}

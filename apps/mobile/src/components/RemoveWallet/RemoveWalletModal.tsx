@@ -25,10 +25,6 @@ import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { selectSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 
-export interface RemoveWalletModalState {
-  address?: Address
-}
-
 export function RemoveWalletModal(): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()

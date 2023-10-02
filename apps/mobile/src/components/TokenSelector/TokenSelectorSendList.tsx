@@ -2,18 +2,14 @@ import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { usePortfolioTokenOptions } from 'src/components/TokenSelector/hooks'
-import {
-  OnSelectCurrency,
-  SectionHeader,
-  TokenSection,
-  TokenSelectorList,
-} from 'src/components/TokenSelector/TokenSelectorList'
+import { SectionHeader, TokenSelectorList } from 'src/components/TokenSelector/TokenSelectorList'
 import { getTokenOptionsSection } from 'src/components/TokenSelector/utils'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { useFiatOnRampIpAddressQuery } from 'wallet/src/features/fiatOnRamp/api'
 
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
+import { OnSelectCurrency, TokenSection } from 'src/components/TokenSelector/types'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Flex } from 'ui/src'
