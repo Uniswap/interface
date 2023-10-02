@@ -59,7 +59,7 @@ const SitePermissions = (): JSX.Element => {
   const shortInfoTextSize = 'body3'
 
   return (
-    <Flex gap="$spacing12" px="$spacing16" py="$spacing8">
+    <Flex gap="$spacing12" py="$spacing8">
       <Text $short={{ variant: 'body3' }} color="$neutral2" variant="subheading2">
         {t('App permissions')}
       </Text>
@@ -118,13 +118,11 @@ const NetworksRow = ({ chains }: { chains: ChainId[] }): JSX.Element => {
   const { t } = useTranslation()
 
   return (
-    <Flex row shrink alignItems="center" justifyContent="space-between" px="$spacing12">
-      <Flex grow row justifyContent="space-between">
-        <Text color="$neutral1" variant="subheading2">
-          {t('Networks')}
-        </Text>
-        <NetworkLogos chains={chains} />
-      </Flex>
+    <Flex row shrink alignItems="center" justifyContent="space-between">
+      <Text color="$neutral2" variant="subheading2">
+        {t('Networks')}
+      </Text>
+      <NetworkLogos chains={chains} />
     </Flex>
   )
 }
@@ -146,7 +144,7 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps):
     <TouchableArea
       disabled={!accountIsSwitchable}
       m="$none"
-      p="$spacing12"
+      py="$spacing12"
       testID={ElementName.WCDappSwitchAccount}
       onPress={onPress}>
       <AccountDetails address={activeAddress} chevron={accountIsSwitchable} />
@@ -235,9 +233,10 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         fill
         backgroundColor="$surface1"
         borderRadius="$rounded12"
+        gap="$spacing16"
         overflow="hidden"
         px="$spacing24"
-        py="$spacing24">
+        py="$spacing32">
         <Flex fill alignItems="center" gap="$spacing16" justifyContent="flex-end">
           <DappHeaderIcon dapp={pendingSession.dapp} />
           <Text
@@ -263,7 +262,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
             url={pendingSession.dapp.url}
           />
         </Flex>
-        <Flex bg="$surface2" borderRadius="$rounded16" gap="$spacing2">
+        <Flex bg="$surface2" borderRadius="$rounded16" gap="$spacing4" px="$spacing16">
           <SitePermissions />
           <Separator borderColor="$surface1" width={1} />
           <NetworksRow chains={pendingSession.chains} />
