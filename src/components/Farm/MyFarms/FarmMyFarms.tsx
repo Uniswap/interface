@@ -18,7 +18,7 @@ import styled from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { getTokenFromAddress } from 'utils/farmUtils'
 
-import { GammaPairs, GlobalConst, itemFarmToken } from '../constants'
+import { FarmPair, GammaPairs, GlobalConst, itemFarmToken } from '../constants'
 import { GammaFarmCard } from '../GammaFarms/GammaFarmCard'
 import { filterFarm, getStakedAmount, sortColumnsGamma, useRewardPerSecond, useRewardTokenAddress } from '../utils'
 
@@ -129,7 +129,7 @@ export default function FarmingMyFarms({ chainId, search }: { search: string; ch
   const stakedAmounts = stakedAmountData.map((callState, index) => {
     const { loading, result } = callState
     const amount = !loading && result?.length ? formatUnits(result[0], 18) : '0'
-    const gPair = allGammaFarms[index]
+    const gPair = allGammaFarms[index] as FarmPair
 
     return {
       amount,
@@ -161,7 +161,7 @@ export default function FarmingMyFarms({ chainId, search }: { search: string; ch
           <Box px={2} my={2}>
             <SubTitleContainer text="Displays to show your positions." description="Gamma Farms" />
           </Box>
-          {gammaFarmsLoading || gammaPositionsLoading ? (
+          {gammaFarmsLoading || gammaPositionsLoading || rewardTokenAddress.loading || rewardPerSecond.loading ? (
             <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '10px', paddingBottom: '30px' }}>
               <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="3.5rem" />
             </div>

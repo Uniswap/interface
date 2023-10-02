@@ -77,6 +77,20 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
   const [deposit1, setDeposit1] = useState('')
   const [unStakeGamma, setUnStakeGamma] = useState('')
 
+  const handleTypeInput0 = useCallback(
+    (value: string) => {
+      setDeposit0(value)
+    },
+    [setDeposit0]
+  )
+
+  const handleTypeInput1 = useCallback(
+    (value: string) => {
+      setDeposit1(value)
+    },
+    [setDeposit1]
+  )
+
   const hypervisorContract = useGammaHypervisorContract(pairData.hypervisor)
   const uniProxyContract = useGammaUniProxyContract()
   const masterChefContract = useMasterChefContract()
@@ -196,9 +210,14 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
 
   const handleDismiss = useCallback(() => {
     setModalOpen(false)
-    setDeposit0('')
-    setDeposit1('')
-  }, [setModalOpen])
+    handleTypeInput0('')
+    handleTypeInput1('')
+  }, [handleTypeInput0, handleTypeInput1])
+
+  const finalStateTransactionDismiss = useCallback(() => {
+    handleTypeInput0('')
+    handleTypeInput1('')
+  }, [handleTypeInput0, handleTypeInput1])
 
   const dataDetails = {
     stakeAmount,
@@ -221,6 +240,7 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
       <ModalAddGammaLiquidity
         modalOpen={modalOpen}
         handleDismiss={handleDismiss}
+        finalStateTransactionDismiss={finalStateTransactionDismiss}
         token0Balance={token0Balance}
         approvalToken0={approvalToken0}
         approvalToken1={approvalToken1}
@@ -229,8 +249,8 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
         uniProxyContract={uniProxyContract}
         deposit0={deposit0}
         deposit1={deposit1}
-        setDeposit0={setDeposit0}
-        setDeposit1={setDeposit1}
+        setDeposit0={handleTypeInput0}
+        setDeposit1={handleTypeInput1}
         pairData={pairData}
         approveCallbackToken0={approveCallbackToken0}
         token0Address={token0Address}

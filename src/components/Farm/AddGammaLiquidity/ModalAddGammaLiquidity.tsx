@@ -2,12 +2,16 @@ import { Trans } from '@lingui/macro'
 import { Token } from '@pollum-io/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
+import { AutoColumn } from 'components/Column'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
 import ModalAddLiquidity from 'components/ModalAddLiquidity'
-import { RowBetween } from 'components/Row'
+import Row, { RowBetween } from 'components/Row'
+import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { Contract } from 'ethers/lib/ethers'
 import { ApprovalState } from 'hooks/useApproveCallback'
 import { useIsMobile } from 'nft/hooks'
-import React from 'react'
+import React, { useCallback, useState } from 'react'
+import { Text } from 'rebass'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import styled from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
@@ -64,6 +68,7 @@ const Withdraw = styled.div`
 interface ModalProps {
   modalOpen: boolean
   handleDismiss: () => void
+  finalStateTransactionDismiss: () => void
   token0Balance: string
   approvalToken0: ApprovalState
   approvalToken1: ApprovalState
@@ -89,6 +94,7 @@ interface ModalProps {
 export default function ModalAddGammaLiquidity({
   modalOpen,
   handleDismiss,
+  finalStateTransactionDismiss,
   token0Balance,
   approvalToken0,
   approvalToken1,
@@ -117,8 +123,100 @@ export default function ModalAddGammaLiquidity({
   const validationTextButton0 = getValidationText(approvalToken0, tokenStake0)
   const validationTextButton1 = getValidationText(approvalToken1, tokenStake1)
 
+  // modal and loading
+  const [{ showTransactionModal, transactionErrorMessage, attemptingTxn, txHash }, setTransactionModal] = useState<{
+    showTransactionModal: boolean
+    attemptingTxn: boolean
+    transactionErrorMessage?: string
+    txHash?: string
+  }>({
+    showTransactionModal: false,
+    attemptingTxn: false,
+    transactionErrorMessage: undefined,
+    txHash: undefined,
+  })
+
+  const handleDismissConfirmation = useCallback(() => {
+    setTransactionModal({ showTransactionModal: false, attemptingTxn, transactionErrorMessage, txHash })
+    // if there was a tx hash, we want to clear the input
+    if (txHash) {
+      finalStateTransactionDismiss()
+    }
+  }, [attemptingTxn, finalStateTransactionDismiss, transactionErrorMessage, txHash])
+
+  // text to show while loading
+  const pendingText = `Depositing ${tokenStake0 && Number(deposit0) > 0 ? deposit0 : ''} ${tokenStake0?.symbol} and 
+    ${tokenStake1 && Number(deposit1) > 0 ? deposit1 : ''} ${tokenStake1?.symbol}`
+
+  const modalHeader = () => {
+    return (
+      <AutoColumn>
+        <Row style={{ padding: '20px', gap: '10px' }}>
+          {tokenStake0 && tokenStake1 && (
+            <DoubleCurrencyLogo currency0={tokenStake0} currency1={tokenStake1} size={30} />
+          )}
+          <Text fontSize="20px">{tokenStake0?.symbol + '/' + tokenStake1?.symbol + ' for  Liquidity Pool'}</Text>
+        </Row>
+      </AutoColumn>
+    )
+  }
+
+  async function onDeposit() {
+    if (uniProxyContract) {
+      depositUniProxy(
+        uniProxyContract,
+        account,
+        approvalToken0,
+        approvalToken1,
+        pairData,
+        addTransaction,
+        token0Address,
+        token1Address,
+        deposit0,
+        deposit1,
+        finalizedTransaction,
+        stateTransaction
+      )
+    }
+  }
+
+  const stateTransaction = (
+    attemptingTxn: boolean,
+    showTransactionModal: boolean,
+    transactionErrorMessage: string | undefined,
+    txHash: string | undefined
+  ) => {
+    setTransactionModal({
+      attemptingTxn,
+      showTransactionModal,
+      transactionErrorMessage,
+      txHash,
+    })
+  }
+
   return (
     <>
+      <TransactionConfirmationModal
+        isOpen={showTransactionModal}
+        onDismiss={handleDismissConfirmation}
+        attemptingTxn={attemptingTxn}
+        pendingText={pendingText}
+        hash={txHash}
+        content={() => (
+          <ConfirmationModalContent
+            title={<Trans>Deposit</Trans>}
+            onDismiss={handleDismissConfirmation}
+            topContent={modalHeader}
+            bottomContent={() => (
+              <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onDeposit}>
+                <Text fontWeight={500} fontSize={20}>
+                  <Trans>Deposit via UniProxy</Trans>
+                </Text>
+              </ButtonPrimary>
+            )}
+          />
+        )}
+      />
       <ModalAddLiquidity isOpen={modalOpen} onDismiss={handleDismiss}>
         <Wrapper>
           <HeaderRow>
@@ -155,7 +253,7 @@ export default function ModalAddGammaLiquidity({
                             pairData,
                             token0Address,
                             token1Address,
-                            deposit0,
+                            amount,
                             deposit1
                           )
                       }}
@@ -170,7 +268,9 @@ export default function ModalAddGammaLiquidity({
                       textButton={validationTextButton1}
                       tokenSymbol={tokenStake1?.symbol || ''}
                       depositValue={deposit1}
-                      disabledButton={approvalToken1 === ApprovalState.UNKNOWN}
+                      disabledButton={
+                        approvalToken1 === ApprovalState.APPROVED || approvalToken1 === ApprovalState.UNKNOWN
+                      }
                       isApproved={
                         approvalToken0 === ApprovalState.APPROVED && approvalToken1 === ApprovalState.APPROVED
                       }
@@ -186,7 +286,7 @@ export default function ModalAddGammaLiquidity({
                             token0Address,
                             token1Address,
                             deposit0,
-                            deposit1
+                            amount
                           )
                       }}
                       approveOrStakeLPOrWithdraw={approveCallbackToken1}
@@ -200,23 +300,15 @@ export default function ModalAddGammaLiquidity({
                       style={{ height: '40px', fontSize: '16px' }}
                       disabled={false}
                       onClick={() => {
-                        if (uniProxyContract)
-                          depositUniProxy(
-                            uniProxyContract,
-                            account,
-                            approvalToken0,
-                            approvalToken1,
-                            pairData,
-                            addTransaction,
-                            token0Address,
-                            token1Address,
-                            deposit0,
-                            deposit1,
-                            finalizedTransaction
-                          )
+                        setTransactionModal({
+                          attemptingTxn: false,
+                          showTransactionModal: true,
+                          transactionErrorMessage: undefined,
+                          txHash: undefined,
+                        })
                       }}
                     >
-                      Deposit via UniProxy
+                      Confirm Deposit
                     </ButtonPrimary>
                   </DepositButton>
                 )}

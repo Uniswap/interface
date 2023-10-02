@@ -264,14 +264,34 @@ export const getDepositAmounts = async (
   deposit1: string
 ) => {
   if (!uniProxyContract) return
-
   let amounts
-  if (tokenInput === 0 && deposit0) {
-    amounts = await uniProxyContract.getDepositAmount(pairData.hypervisor, token0Address, parseUnits(deposit0, 18))
-    setDeposit1(formatUnits(amounts.amountEnd, 18))
-  } else if (tokenInput === 1 && deposit1) {
-    amounts = await uniProxyContract.getDepositAmount(pairData.hypervisor, token1Address, parseUnits(deposit1, 18))
-    setDeposit0(formatUnits(amounts.amountEnd, 18))
+  try {
+    if (isNaN(parseFloat(deposit0))) {
+      setDeposit0('0')
+      setDeposit1('0')
+    }
+
+    if (tokenInput === 0 && deposit0 && parseFloat(deposit0) > 0) {
+      if (parseFloat(deposit0) > 0) {
+        amounts = await uniProxyContract.getDepositAmount(pairData.hypervisor, token0Address, parseUnits(deposit0, 18))
+        setDeposit1(formatUnits(amounts.amountEnd, 18))
+        setDeposit0(deposit0)
+      } else {
+        setDeposit1('0')
+        setDeposit0(deposit0)
+      }
+    } else if (tokenInput === 1 && deposit1) {
+      if (parseFloat(deposit1) > 0) {
+        amounts = await uniProxyContract.getDepositAmount(pairData.hypervisor, token1Address, parseUnits(deposit1, 18))
+        setDeposit0(formatUnits(amounts.amountEnd, 18))
+        setDeposit1(deposit1)
+      } else {
+        setDeposit0('0')
+        setDeposit1(deposit1)
+      }
+    }
+  } catch (e) {
+    return
   }
 }
 
@@ -300,6 +320,12 @@ export const depositUniProxy = async (
           }
         }
       | undefined
+  ) => void,
+  stateTransaction: (
+    attemptingTxn: boolean,
+    showTransactionModal: boolean,
+    transactionErrorMessage: string | undefined,
+    txHash: string | undefined
   ) => void
 ) => {
   if (!uniProxyContract || !account) return
@@ -307,14 +333,17 @@ export const depositUniProxy = async (
     console.error('Tokens not approved')
     return
   }
+
   try {
-    const response = await uniProxyContract.deposit(
+    stateTransaction(false, true, undefined, undefined)
+    const response = (await uniProxyContract.deposit(
       parseUnits(deposit0, 18),
       parseUnits(deposit1, 18),
       account,
       pairData.hypervisor,
       [0, 0, 0, 0]
-    )
+    )) as TransactionResponse
+
     addTransaction(response, {
       type: TransactionType.ADD_LIQUIDITY_GAMMA,
       currencyId0: token0Address,
@@ -322,11 +351,15 @@ export const depositUniProxy = async (
       amount0: parseUnits(deposit0, 18).toString(),
       amount1: parseUnits(deposit1, 18).toString(),
     })
+
     const receipt = await response.wait()
+
+    stateTransaction(false, true, receipt.transactionHash, undefined)
     finalizedTransaction(receipt, {
       summary: 'depositliquidity',
     })
   } catch (e) {
+    stateTransaction(false, true, undefined, e.message)
     console.error('Deposit failed', e)
   }
 }

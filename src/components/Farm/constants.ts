@@ -69,7 +69,7 @@ export interface DualStakingInfo extends CommonStakingInfo {
   rewardTokenBPrice: number
 }
 
-interface FarmPair {
+export interface FarmPair {
   type: Presets
   title: string
   address: string
@@ -81,7 +81,7 @@ interface FarmPair {
   hypervisor: string
 }
 
-export interface GammaPairTokens {
+interface GammaPairTokens {
   address: string
   title: string
   type: Presets
