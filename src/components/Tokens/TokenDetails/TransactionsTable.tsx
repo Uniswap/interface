@@ -49,7 +49,7 @@ export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAdd
         Cell: ({ value }: { value: { input: SwapInOut } }) => {
           const swapType = getSwapType(value.input.contractAddress, referenceTokenAddress)
           return (
-            <Cell>
+            <Cell justifyContent="left">
               <Text color={getColor(swapType)}>{swapType}</Text>
             </Cell>
           )

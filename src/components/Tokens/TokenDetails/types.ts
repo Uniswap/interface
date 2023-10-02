@@ -14,6 +14,6 @@ export interface SwapInOut {
 }
 
 export enum SwapAction {
-  Buy = 'Bought',
-  Sell = 'Sold',
+  Buy = 'Buy',
+  Sell = 'Sell',
 }
