@@ -75,7 +75,6 @@ export function TokenDescription({
   chainId?: number
   showCopy?: boolean
 }) {
-  // TODO add tests
   const currency = useCurrency(tokenAddress, chainId)
   const color = useColor(currency?.wrapped)
   const { data: tokenQuery } = useTokenProjectQuery({
