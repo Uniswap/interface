@@ -9143,11 +9143,7 @@ exports[`disable nft on landing page renders the correct information when gettin
   background: linear-gradient(10deg,rgba(255,79,184,1) 0%,rgba(255,159,251,1) 100%);
   background-clip: text;
   -webkit-background-clip: text;
-}
-
-.c53 opacity:0.0  @media screen and (min-width:640px) {
-  font-size: 48px;
-  line-height: 56px;
+  opacity: 0.0;
 }
 
 .c55 {
@@ -9458,6 +9454,13 @@ exports[`disable nft on landing page renders the correct information when gettin
 @media screen and (min-width:768px) {
   .c50 {
     height: 100vh;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c53 {
+    font-size: 48px;
+    line-height: 56px;
   }
 }
 
