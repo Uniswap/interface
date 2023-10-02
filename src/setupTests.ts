@@ -123,6 +123,8 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+  // Without this, nock causes a memory leak and the tests will fail on CI.
+  // https://github.com/nock/nock/issues/1817
   restoreNetConnect()
 })
 
