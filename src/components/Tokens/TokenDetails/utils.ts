@@ -48,5 +48,5 @@ export function getLocaleTimeString(timestamp: number, locale = 'en-US') {
  * @returns {SwapAction} Swap action type indicating whether the swap was a Buy or Sell of the TDP token.
  */
 export function getSwapType(inputTokenAddress: string, referenceTokenAddress: string) {
-  return inputTokenAddress === referenceTokenAddress ? SwapAction.Sell : SwapAction.Buy
+  return inputTokenAddress.toLowerCase() === referenceTokenAddress.toLowerCase() ? SwapAction.Sell : SwapAction.Buy
 }

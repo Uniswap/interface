@@ -4,12 +4,18 @@ import { render } from 'test-utils/render'
 import { TransactionsTable } from './TransactionsTable'
 
 describe('TransactionsTable', () => {
-  const BITCOIN_ADDRESS = '0x72e4f9f808c49a2a61de9c5896298920dc4eeea9'
+  const mockTokenInfo = {
+    chainId: 1,
+    address: '0x72e4f9f808c49a2a61de9c5896298920dc4eeea9',
+    name: 'HarryPotterObamaSonic10Inu',
+    decimals: 18,
+    symbol: 'BITCOIN',
+  }
 
   it('shows all columns for extra large breakpoint', () => {
     window.innerWidth = 1280
 
-    render(<TransactionsTable referenceTokenAddress={BITCOIN_ADDRESS} />)
+    render(<TransactionsTable referenceToken={mockTokenInfo} />)
 
     expect(screen.getByText('Time')).toBeInTheDocument()
     expect(screen.getByText('Type')).toBeInTheDocument()
@@ -22,7 +28,7 @@ describe('TransactionsTable', () => {
   it('shows all columns for large breakpoint', () => {
     window.innerWidth = 1024
 
-    render(<TransactionsTable referenceTokenAddress={BITCOIN_ADDRESS} />)
+    render(<TransactionsTable referenceToken={mockTokenInfo} />)
 
     expect(screen.getByText('Time')).toBeInTheDocument()
     expect(screen.getByText('Type')).toBeInTheDocument()
@@ -34,7 +40,7 @@ describe('TransactionsTable', () => {
   it('hides some columns at medium breakpoint', () => {
     window.innerWidth = 768
 
-    render(<TransactionsTable referenceTokenAddress={BITCOIN_ADDRESS} />)
+    render(<TransactionsTable referenceToken={mockTokenInfo} />)
 
     expect(screen.getByText('Time')).toBeInTheDocument()
     expect(screen.getByText('Type')).toBeInTheDocument()
@@ -45,7 +51,7 @@ describe('TransactionsTable', () => {
   it('hides some columns at small breakpoint', () => {
     window.innerWidth = 640
 
-    render(<TransactionsTable referenceTokenAddress={BITCOIN_ADDRESS} />)
+    render(<TransactionsTable referenceToken={mockTokenInfo} />)
 
     expect(screen.getByText('Time')).toBeInTheDocument()
     expect(screen.getByText('Type')).toBeInTheDocument()
@@ -57,7 +63,7 @@ describe('TransactionsTable', () => {
     const txHash = '0xc3e8878f48b4c5048fef4988136b1cad4401b77f36f0e034e4e97929df85fb5e'
     const userAddress = '0xbac29b775eff5fe0abe0b2f1a71bad90888415cc'
 
-    render(<TransactionsTable referenceTokenAddress={BITCOIN_ADDRESS} />)
+    render(<TransactionsTable referenceToken={mockTokenInfo} />)
 
     expect(screen.getByText('09/06, 05:09pm')).toBeInTheDocument()
     expect(screen.getAllByText('Bought')[0]).toBeInTheDocument()

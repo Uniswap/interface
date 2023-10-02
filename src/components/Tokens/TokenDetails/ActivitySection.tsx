@@ -42,7 +42,7 @@ export function ActivitySection({ tokenInfo }: { tokenInfo: TokenInfo }) {
         )}
       </Row>
       {activityInView === ActivityTab.Transactions ? (
-        <TransactionsTable referenceTokenAddress={tokenInfo.address.toLowerCase()} />
+        <TransactionsTable referenceToken={tokenInfo} />
       ) : (
         <>Pools Table</>
       )}

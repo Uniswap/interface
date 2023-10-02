@@ -1,3 +1,4 @@
+import { TokenInfo } from '@uniswap/token-lists'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cells'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -22,7 +23,7 @@ enum ColumnHeader {
   Maker = 'Maker',
 }
 
-export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAddress: string }) {
+export function TransactionsTable({ referenceToken }: { referenceToken: TokenInfo }) {
   const locale = useActiveLocale()
   const { formatNumber } = useFormatter()
   const theme = useTheme()
@@ -47,7 +48,7 @@ export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAdd
         Header: ColumnHeader.Type,
         accessor: (swap) => swap,
         Cell: ({ value }: { value: { input: SwapInOut } }) => {
-          const swapType = getSwapType(value.input.contractAddress, referenceTokenAddress)
+          const swapType = getSwapType(value.input.contractAddress, referenceToken.address)
           return (
             <Cell justifyContent="left">
               <Text color={getColor(swapType)}>{swapType}</Text>
@@ -58,15 +59,15 @@ export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAdd
         id: ColumnHeader.Type,
       },
       {
-        Header: ColumnHeader.Amount,
+        Header: `$${referenceToken.symbol}`,
         accessor: (swap) => swap,
         Cell: ({ value }: { value: { input: SwapInOut; output: SwapInOut } }) => {
-          const swapType = getSwapType(value.input.contractAddress, referenceTokenAddress)
+          const swapType = getSwapType(value.input.contractAddress, referenceToken.address)
           const token = swapType === SwapAction.Buy ? value.output : value.input
           return (
             <Cell>
               <Text color={getColor(swapType)}>
-                {`${formatNumber({ input: token.amount, type: NumberType.TokenTx })} ${token.symbol}`}
+                {`${formatNumber({ input: token.amount, type: NumberType.TokenTx })}`}
               </Text>
             </Cell>
           )
@@ -78,13 +79,13 @@ export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAdd
         Header: ColumnHeader.For,
         accessor: (swap) => swap,
         Cell: ({ value }: { value: { input: SwapInOut; output: SwapInOut } }) => {
-          const swapType = getSwapType(value.input.contractAddress, referenceTokenAddress)
+          const swapType = getSwapType(value.input.contractAddress, referenceToken.address)
           const token = swapType === SwapAction.Buy ? value.input : value.output
           return (
             <Cell>
-              <Text color={getColor(swapType)}>{`${formatNumber({ input: token.amount, type: NumberType.TokenTx })} ${
-                token.symbol
-              }`}</Text>
+              <Text color={getColor(swapType)}>
+                {`${formatNumber({ input: token.amount, type: NumberType.TokenTx })} ${token.symbol}`}
+              </Text>
             </Cell>
           )
         },
@@ -95,7 +96,7 @@ export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAdd
         Header: ColumnHeader.USD,
         accessor: (swap) => swap,
         Cell: ({ value }: { value: { input: SwapInOut; usdValue: number } }) => {
-          const swapType = getSwapType(value.input.contractAddress, referenceTokenAddress)
+          const swapType = getSwapType(value.input.contractAddress, referenceToken.address)
           return (
             <Cell>
               <Text color={getColor(swapType)}>
@@ -117,7 +118,7 @@ export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAdd
         id: ColumnHeader.Maker,
       },
     ]
-  }, [theme.success, theme.critical, locale, referenceTokenAddress, formatNumber])
+  }, [theme.success, theme.critical, locale, referenceToken.address, formatNumber])
   return (
     <Table
       columns={columns}
