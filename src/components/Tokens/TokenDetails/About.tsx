@@ -1,54 +1,19 @@
 import { Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { getChainInfo } from 'constants/chainInfo'
-import { darken } from 'polished'
 import { useState } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 
 import Resource from './Resource'
-
-const NoInfoAvailable = styled.span`
-  color: ${({ theme }) => theme.neutral3};
-  font-weight: 485;
-  font-size: 16px;
-`
-const TokenDescriptionContainer = styled.div`
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  max-height: fit-content;
-  padding-top: 16px;
-  line-height: 24px;
-  white-space: pre-wrap;
-`
-
-const TruncateDescriptionButton = styled.div`
-  color: ${({ theme }) => theme.neutral2};
-  font-weight: 485;
-  font-size: 0.85em;
-  padding-top: 0.5em;
-
-  &:hover,
-  &:focus {
-    color: ${({ theme }) => darken(0.1, theme.neutral2)};
-    cursor: pointer;
-  }
-`
-
-const truncateDescription = (desc: string) => {
-  //trim the string to the maximum length
-  let tokenDescriptionTruncated = desc.slice(0, TRUNCATE_CHARACTER_COUNT)
-  //re-trim if we are in the middle of a word
-  tokenDescriptionTruncated = `${tokenDescriptionTruncated.slice(
-    0,
-    Math.min(tokenDescriptionTruncated.length, tokenDescriptionTruncated.lastIndexOf(' '))
-  )}...`
-  return tokenDescriptionTruncated
-}
-
-const TRUNCATE_CHARACTER_COUNT = 400
+import {
+  NoInfoAvailable,
+  TokenDescriptionContainer,
+  TRUNCATE_CHARACTER_COUNT,
+  truncateDescription,
+  TruncateDescriptionButton,
+} from './shared'
 
 export const AboutContainer = styled.div`
   gap: 16px;
