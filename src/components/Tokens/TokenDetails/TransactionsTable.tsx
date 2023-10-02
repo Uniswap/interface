@@ -1,9 +1,11 @@
 import { Table } from 'components/Table'
-import { LinkCell, TextCell } from 'components/Table/Cells'
+import { Cell } from 'components/Table/Cells'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useMemo } from 'react'
 import { Column } from 'react-table'
+import { Text } from 'rebass'
 import { useTheme } from 'styled-components'
+import { ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -32,9 +34,11 @@ export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAdd
         Header: ColumnHeader.Time,
         accessor: (swap) => swap,
         Cell: ({ value }: { value: { timestamp: number; transactionHash: string } }) => (
-          <TextCell justifyContent="left" color={theme.neutral2}>
-            {getLocaleTimeString(value.timestamp, locale ?? 'en-US')}
-          </TextCell>
+          <Cell justifyContent="left">
+            <ThemedText.BodySecondary>
+              {getLocaleTimeString(value.timestamp, locale ?? 'en-US')}
+            </ThemedText.BodySecondary>
+          </Cell>
         ),
         disableSortBy: true,
         id: ColumnHeader.Time,
@@ -44,7 +48,11 @@ export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAdd
         accessor: (swap) => swap,
         Cell: ({ value }: { value: { input: SwapInOut } }) => {
           const swapType = getSwapType(value.input.contractAddress, referenceTokenAddress)
-          return <TextCell color={getColor(swapType)}>{swapType}</TextCell>
+          return (
+            <Cell>
+              <Text color={getColor(swapType)}>{swapType}</Text>
+            </Cell>
+          )
         },
         disableSortBy: true,
         id: ColumnHeader.Type,
@@ -56,9 +64,11 @@ export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAdd
           const swapType = getSwapType(value.input.contractAddress, referenceTokenAddress)
           const token = swapType === SwapAction.Buy ? value.output : value.input
           return (
-            <TextCell color={getColor(swapType)}>{`${formatNumber({ input: token.amount, type: NumberType.TokenTx })} ${
-              token.symbol
-            }`}</TextCell>
+            <Cell>
+              <Text color={getColor(swapType)}>
+                {`${formatNumber({ input: token.amount, type: NumberType.TokenTx })} ${token.symbol}`}
+              </Text>
+            </Cell>
           )
         },
         disableSortBy: true,
@@ -71,9 +81,11 @@ export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAdd
           const swapType = getSwapType(value.input.contractAddress, referenceTokenAddress)
           const token = swapType === SwapAction.Buy ? value.input : value.output
           return (
-            <TextCell color={getColor(swapType)}>{`${formatNumber({ input: token.amount, type: NumberType.TokenTx })} ${
-              token.symbol
-            }`}</TextCell>
+            <Cell>
+              <Text color={getColor(swapType)}>{`${formatNumber({ input: token.amount, type: NumberType.TokenTx })} ${
+                token.symbol
+              }`}</Text>
+            </Cell>
           )
         },
         disableSortBy: true,
@@ -85,9 +97,11 @@ export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAdd
         Cell: ({ value }: { value: { input: SwapInOut; usdValue: number } }) => {
           const swapType = getSwapType(value.input.contractAddress, referenceTokenAddress)
           return (
-            <TextCell color={getColor(swapType)}>
-              {formatNumber({ input: value.usdValue, type: NumberType.PortfolioBalance })}
-            </TextCell>
+            <Cell>
+              <Text color={getColor(swapType)}>
+                {formatNumber({ input: value.usdValue, type: NumberType.PortfolioBalance })}
+              </Text>
+            </Cell>
           )
         },
         disableSortBy: true,
@@ -97,7 +111,7 @@ export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAdd
         Header: ColumnHeader.Maker,
         accessor: 'maker',
         Cell: ({ value }: { value: string }) => (
-          <TextCell color={theme.neutral2}>{shortenAddress(value, 0)}</TextCell>
+          <ThemedText.BodySecondary>{shortenAddress(value, 0)}</ThemedText.BodySecondary>
         ),
         disableSortBy: true,
         id: ColumnHeader.Maker,
