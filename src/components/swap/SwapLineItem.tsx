@@ -204,7 +204,7 @@ function ValueWrapper({ children, lineItem, labelHovered, syncing }: ValueWrappe
 
   if (syncing) return <Loading width={loaderWidth} />
 
-  if (!TooltipBody) return <ThemedText.BodySmall>{children}</ThemedText.BodySmall>
+  if (!TooltipBody) return <DetailRowValue>{children}</DetailRowValue>
 
   return (
     <MouseoverTooltip
