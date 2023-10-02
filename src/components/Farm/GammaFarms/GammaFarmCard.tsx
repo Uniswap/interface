@@ -148,8 +148,8 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
   const parsedDeposit0 = deposit0 && tokenStake0 ? tryParseCurrencyAmount(deposit0, tokenStake0) : undefined
   const parsedDeposit1 = deposit1 && tokenStake1 ? tryParseCurrencyAmount(deposit1, tokenStake1) : undefined
 
-  const [approvalToken0, approveCallbackToken0] = useApproveCallback(parsedDeposit0, uniProxyContract?.address)
-  const [approvalToken1, approveCallbackToken1] = useApproveCallback(parsedDeposit1, uniProxyContract?.address)
+  const [approvalToken0, approveCallbackToken0] = useApproveCallback(parsedDeposit0, hypervisorContract?.address)
+  const [approvalToken1, approveCallbackToken1] = useApproveCallback(parsedDeposit1, hypervisorContract?.address)
 
   const rewardPerSecondResult = useMemo(() => {
     if (!rewardPerSecond.loading && rewardPerSecond?.result) {
