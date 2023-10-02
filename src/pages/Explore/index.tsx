@@ -77,17 +77,17 @@ const SearchContainer = styled(FiltersContainer)<{ isExplore: boolean }>`
     ${({ isExplore }) => isExplore && 'justify-content: flex-end;'}
   }
 `
-const NavWrapper = styled.div`
+const NavWrapper = styled.div<{ isExplore: boolean }>`
   display: flex;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   margin: 0 auto;
-  margin-bottom: 20px;
+  margin-bottom: ${({ isExplore }) => (isExplore ? '16px' : '20px')};
   color: ${({ theme }) => theme.neutral3};
   flex-direction: row;
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     flex-direction: column;
-    gap: 8px;
+    gap: ${({ isExplore }) => (isExplore ? '16px' : '8px')};
   }
 `
 
@@ -143,7 +143,7 @@ const Explore = () => {
             </MouseoverTooltip>
           </TitleContainer>
         )}
-        <NavWrapper>
+        <NavWrapper isExplore={isExplore}>
           {isExplore && (
             <Nav data-testid="explore-navbar">
               {Pages.map(({ title, loggingElementName, key }, index) => {
