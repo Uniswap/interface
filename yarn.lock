@@ -37082,6 +37082,7 @@ __metadata:
     react-native: 0.71.11
     react-native-dotenv: 3.2.0
     react-native-fast-image: 8.6.3
+    react-native-reanimated: 3.3.0
     react-native-svg: 13.9.0
     react-native-webview: 11.23.1
     react-redux: 8.0.5

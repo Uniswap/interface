@@ -17,7 +17,10 @@ export function usePrevious<T>(value: T): T | undefined {
 
 // adapted from https://usehooks.com/useAsync/ but simplified
 // above link contains example on how to add delayed execution if ever needed
-export function useAsyncData<T>(asyncCallback: () => Promise<T> | undefined): {
+export function useAsyncData<T>(
+  asyncCallback: () => Promise<T> | undefined,
+  cancel?: () => void
+): {
   isLoading: boolean
   data: T | undefined
 } {
@@ -29,13 +32,25 @@ export function useAsyncData<T>(asyncCallback: () => Promise<T> | undefined): {
     input: asyncCallback,
   })
   const [isLoading, setIsLoading] = useState(true)
+  const isMountedRef = useRef(true)
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false
+    }
+  }, [])
 
   useEffect(() => {
     setIsLoading(true)
+    let isCancelled = false
 
     async function runCallback(): Promise<void> {
       const res = await asyncCallback()
+      // Prevent setting state if the component has unmounted (prevents memory leaks)
+      if (!isMountedRef.current) return
       setIsLoading(false)
+      // Prevent setting data if the request was cancelled
+      if (isCancelled) return
       setData({
         res,
         input: asyncCallback,
@@ -43,6 +58,12 @@ export function useAsyncData<T>(asyncCallback: () => Promise<T> | undefined): {
     }
 
     runCallback().catch(() => undefined)
+
+    return () => {
+      isCancelled = true
+      cancel?.()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asyncCallback])
 
   return useMemo(() => {

@@ -160,10 +160,13 @@ export function NFTCollectionScreen({
             onPress={(): void => onPressItem(item)}>
             <NFTViewer
               autoplay
+              showSvgPreview
               squareGridView
+              contractAddress={item.contractAddress}
               imageDimensions={item.imageDimensions}
               limitGIFSize={ESTIMATED_ITEM_SIZE}
               placeholderContent={item.name || item.collectionName}
+              tokenId={item.tokenId}
               uri={item.imageUrl}
             />
             {item.listPrice && (

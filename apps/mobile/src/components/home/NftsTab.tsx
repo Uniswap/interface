@@ -87,12 +87,16 @@ function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Elemen
             overflow="hidden"
             width="100%">
             <NFTViewer
+              autoplay
+              showSvgPreview
+              contractAddress={item.contractAddress}
               imageDimensions={item.imageDimensions}
               limitGIFSize={ESTIMATED_ITEM_SIZE}
               maxHeight={MAX_NFT_IMAGE_SIZE}
               placeholderContent={item.name || item.collectionName}
               squareGridView={true}
-              uri={item.imageUrl ?? ''}
+              tokenId={item.tokenId}
+              uri={item.imageUrl}
             />
           </Flex>
         </TouchableArea>

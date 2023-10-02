@@ -46,6 +46,8 @@ jobs:
           sentry-env: development
           sentry-org: ${{ secrets.SENTRY_ORG }}
           sentry-project: ${{ secrets.SENTRY_PROJECT }}
+          simplehash-api-key: ${{ secrets.SIMPLEHASH_API_KEY }}
+          simplehash-api-url: ${{ secrets.SIMPLEHASH_API_URL }}
           statsig-api-key: ${{ secrets.STATSIG_API_KEY }}
           statsig-proxy-url: ${{ secrets.STATSIG_PROXY_URL }}
           uniswap-api-key: ${{ secrets.UNISWAP_API_KEY }}

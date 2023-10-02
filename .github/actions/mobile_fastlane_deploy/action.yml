@@ -238,6 +238,8 @@ runs:
         SENTRY_PROJECT: ${{ inputs.sentry-project }}
         STATSIG_API_KEY: ${{ inputs.statsig-api-key }}
         STATSIG_PROXY_URL: ${{ inputs.statsig-proxy-url }}
+        SIMPLEHASH_API_KEY: ${{ inputs.simplehash-api-key }}
+        SIMPLEHASH_API_URL: ${{ inputs.simplehash-api-url }}
         UNISWAP_API_KEY: ${{ inputs.uniswap-api-key }}
         URL_TO_FASTLANE_CERTIFICATES_REPO: ${{ inputs.url-to-fastlane-certificates-repo }}
         WALLETCONNECT_PROJECT_ID: ${{ inputs.walletconnect-project-id }}

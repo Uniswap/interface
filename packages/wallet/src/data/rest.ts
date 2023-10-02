@@ -1,4 +1,12 @@
-import { gql, NetworkStatus, OperationVariables, QueryHookOptions, useQuery } from '@apollo/client'
+import {
+  ApolloClient,
+  gql,
+  NetworkStatus,
+  OperationVariables,
+  QueryHookOptions,
+  useApolloClient,
+  useQuery,
+} from '@apollo/client'
 import { useEffect, useMemo } from 'react'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { ROUTING_API_PATH } from 'wallet/src/features/routing/api'
@@ -21,7 +29,9 @@ export function useRestQuery<
   > & {
     ttlMs: number
   },
-  method: 'GET' | 'POST' = 'POST'
+  method: 'GET' | 'POST' = 'POST',
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  client?: ApolloClient<any>
 ): GqlResult<TData> {
   const document = gql`
     query Query($input: REST!) {
@@ -32,10 +42,13 @@ export function useRestQuery<
     }
   `
 
+  const defaultClient = useApolloClient()
+
   const queryOptions: QueryHookOptions<{ data: TData }, { input: TVariables }> = {
     variables: { input: variables },
     fetchPolicy: 'cache-first',
     ...options,
+    client: client ?? defaultClient,
   }
 
   const queryResult = useQuery(document, queryOptions)

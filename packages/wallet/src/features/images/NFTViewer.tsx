@@ -3,8 +3,23 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { Box, Text } from 'ui/src'
 import { isSVGUri, uriToHttp } from 'utilities/src/format/urls'
+import { NFTPreviewImage } from 'wallet/src/features/images/NFTPreviewImage'
+import { WebSvgUri } from 'wallet/src/features/images/WebSvgUri'
 import { ImageUri, ImageUriProps } from './ImageUri'
-import { WebSvgUri } from './WebSvgUri'
+
+type PreviewProps =
+  // Don't show preview if showSvgPreview is not provided or is false
+  | {
+      showSvgPreview?: false
+    }
+  // Show preview if showSvgPreview is true and contractAddress and tokenId
+  // are provided (can be undefined if the backend does not return them in
+  // the response - the fallback will be shown in this case)
+  | {
+      showSvgPreview: true
+      contractAddress: string | undefined
+      tokenId: string | undefined
+    }
 
 type Props = {
   uri: string | undefined
@@ -14,20 +29,21 @@ type Props = {
   limitGIFSize?: number // for certain Opensea assets, reduce the GIF size to boost animation grid layout performance
   placeholderContent?: string
   imageDimensions?: { width: number; height: number } | undefined
-}
+} & PreviewProps
 
 /**
  * Renders a remote NFT image or SVG and automatically expands to fill parent container
  */
-export function NFTViewer({
-  uri,
-  autoplay = false,
-  squareGridView = false,
-  maxHeight,
-  limitGIFSize,
-  placeholderContent,
-  imageDimensions,
-}: Props): JSX.Element {
+export function NFTViewer(props: Props): JSX.Element {
+  const {
+    uri,
+    autoplay = false,
+    squareGridView = false,
+    maxHeight,
+    limitGIFSize,
+    placeholderContent,
+    imageDimensions,
+  } = props
   const { t } = useTranslation()
   const imageHttpUri = uri ? uriToHttp(uri)[0] : undefined
 
@@ -51,14 +67,6 @@ export function NFTViewer({
   if (!imageHttpUri) {
     // Sometimes Opensea does not return any asset, show placeholder
     return fallback
-  }
-
-  if (isSVGUri(imageHttpUri)) {
-    return squareGridView ? (
-      <WebSvgUri autoplay={autoplay} uri={imageHttpUri} />
-    ) : (
-      <WebSvgUri autoplay={autoplay} maxHeight={maxHeight} uri={imageHttpUri} />
-    )
   }
 
   /**
@@ -85,10 +93,41 @@ export function NFTViewer({
 
   if (squareGridView) {
     imageProps.imageStyle = style.squareImageStyle
-    imageProps.resizeMode = 'cover'
+    imageProps.resizeMode = 'contain'
+  } else if (imageDimensions) {
+    imageProps.loadingContainerStyle = {
+      aspectRatio: imageDimensions.width / imageDimensions.height,
+    }
   }
 
-  return <ImageUri {...imageProps} />
+  const isSvg = isSVGUri(imageHttpUri)
+
+  if (!isSvg) {
+    return <ImageUri {...imageProps} />
+  }
+
+  if (!props.showSvgPreview) {
+    return (
+      <WebSvgUri
+        autoplay={autoplay}
+        maxHeight={squareGridView ? undefined : maxHeight}
+        uri={imageHttpUri}
+      />
+    )
+  }
+
+  // Display fallback if preview data is not provided
+  if (!props.contractAddress || !props.tokenId) {
+    return fallback
+  }
+
+  return (
+    <NFTPreviewImage
+      contractAddress={props.contractAddress}
+      imageProps={imageProps}
+      tokenId={props.tokenId}
+    />
+  )
 }
 
 const style = StyleSheet.create({

@@ -106,7 +106,13 @@ function NFTItemScreenContents({
     () => asset?.image?.url ?? fallbackData?.imageUrl,
     [asset?.image?.url, fallbackData?.imageUrl]
   )
-
+  const imageHeight = asset?.image?.dimensions?.height
+  const imageWidth = asset?.image?.dimensions?.width
+  const imageDimensionsExist = imageHeight && imageWidth
+  const imageDimensions = imageDimensionsExist
+    ? { height: imageHeight, width: imageWidth }
+    : undefined
+  const imageAspectRatio = imageDimensions ? imageDimensions.width / imageDimensions.height : 1
   const onPressCollection = (): void => {
     const collectionAddress = asset?.nftContract?.address ?? fallbackData?.contractAddress
     if (collectionAddress) {
@@ -196,7 +202,7 @@ function NFTItemScreenContents({
                     maxWidth={getTokenValue('$icon.40')}
                     ml="$spacing16"
                     overflow="hidden">
-                    <NFTViewer autoplay uri={imageUrl} />
+                    <NFTViewer autoplay imageDimensions={imageDimensions} uri={imageUrl} />
                   </Flex>
                 ) : (
                   <Text color="$neutral1" numberOfLines={1} variant="body1">
@@ -222,12 +228,17 @@ function NFTItemScreenContents({
                   shadowRadius={16}>
                   <Flex centered borderRadius="$rounded16" overflow="hidden">
                     {nftLoading ? (
-                      <Flex aspectRatio={1} width="100%">
+                      <Flex aspectRatio={imageAspectRatio} width="100%">
                         <Loader.Image />
                       </Flex>
                     ) : imageUrl ? (
                       <TouchableArea onPress={onLongPressNFTImage}>
-                        <NFTViewer autoplay maxHeight={MAX_NFT_IMAGE_HEIGHT} uri={imageUrl} />
+                        <NFTViewer
+                          autoplay
+                          imageDimensions={imageDimensions}
+                          maxHeight={MAX_NFT_IMAGE_HEIGHT}
+                          uri={imageUrl}
+                        />
                       </TouchableArea>
                     ) : (
                       <Flex

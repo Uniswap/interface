@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Image, StyleSheet } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import { StyleSheet } from 'react-native'
+import FastImage, { OnLoadEvent } from 'react-native-fast-image'
+import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { Box } from 'ui/src'
 import { Loader } from 'ui/src/loading'
 import { ImageUriProps } from 'wallet/src/features/images/ImageUri'
@@ -12,34 +13,41 @@ export function ImageUri({
   imageStyle,
   resizeMode,
   loadingContainerStyle,
+  loadedImageContainerStyle,
   imageDimensions,
   ...rest
 }: ImageUriProps): JSX.Element | null {
-  const [height, setHeight] = useState<number | null>(imageDimensions?.height ?? null)
-  const [width, setWidth] = useState<number | null>(imageDimensions?.width ?? null)
+  const inputImageAspectRatio = imageDimensions
+    ? imageDimensions?.width / imageDimensions?.height
+    : 1
   const [isError, setIsError] = useState(false)
 
+  const isLoaded = useSharedValue(false)
+  const [aspectRatio, setAspectRatio] = useState(inputImageAspectRatio)
+
+  // Ensure that the image is displayed together with styles applied
+  // to the container only after it has been loaded (e.g. to prevent
+  // displaying the background color of the container before the image
+  // is visible)
+  const animatedImageContainerStyle = useAnimatedStyle(() => ({
+    opacity: +isLoaded.value,
+    ...(isLoaded.value ? loadedImageContainerStyle : {}),
+  }))
+
   useEffect(() => {
-    // If we know dimension, skip this effect
-    if (!uri || Boolean(imageDimensions)) return
-    Image.getSize(
-      uri,
-      (calculatedWidth: number, calculatedHeight: number) => {
-        setWidth(calculatedWidth)
-        setHeight(calculatedHeight)
-        setIsError(!calculatedHeight || !calculatedWidth)
-      },
-      () => {
-        setIsError(true)
-      }
-    )
-  }, [imageDimensions, uri])
+    isLoaded.value = false
+    setIsError(false)
+  }, [isLoaded, uri])
+
+  useEffect(() => {
+    setAspectRatio(inputImageAspectRatio)
+  }, [aspectRatio, inputImageAspectRatio])
 
   if (isError) {
     return fallback ?? null
   }
 
-  if (!width || !height || !uri) {
+  if (!uri) {
     if (loadingContainerStyle) {
       return (
         <Box style={loadingContainerStyle}>
@@ -51,21 +59,23 @@ export function ImageUri({
   }
 
   return (
-    <FastImage
-      resizeMode={resizeMode ?? FastImage.resizeMode.contain}
-      source={{ uri }}
-      style={
-        imageStyle ?? [
-          {
-            aspectRatio: width / height,
-            maxHeight: maxHeight ?? '100%',
-          },
-          styles.fullWidth,
-        ]
-      }
-      onError={(): void => setIsError(true)}
-      {...rest}
-    />
+    <Animated.View style={[styles.fullWidth, animatedImageContainerStyle]}>
+      <FastImage
+        resizeMode={resizeMode ?? FastImage.resizeMode.contain}
+        source={{ uri }}
+        style={[
+          styles.image,
+          imageStyle ?? [styles.fullWidth, { maxHeight: maxHeight ?? '100%' }],
+          { aspectRatio },
+        ]}
+        onError={(): void => setIsError(true)}
+        onLoad={({ nativeEvent: { width, height } }: OnLoadEvent): void => {
+          isLoaded.value = true
+          setAspectRatio(width / height)
+        }}
+        {...rest}
+      />
+    </Animated.View>
   )
 }
 
@@ -73,5 +83,12 @@ const styles = StyleSheet.create({
   fullWidth: {
     height: undefined,
     width: '100%',
+  },
+  image: {
+    alignSelf: 'center',
+    // Fix for a tiny gap on the right side of the image container
+    // resulting in the background color showing through when the image
+    // has the same dimensions as the container
+    transform: [{ scale: 1.01 }],
   },
 })

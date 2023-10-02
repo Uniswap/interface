@@ -9,6 +9,7 @@ export type ImageUriProps = {
   imageStyle?: ImageStyle
   resizeMode?: ResizeMode
   loadingContainerStyle?: BoxProps['style']
+  loadedImageContainerStyle?: ImageStyle
   /**
    * Can optimize performance by prefetching dimensions in api request on Image field,
    * which allows us to avoid setting state in this component

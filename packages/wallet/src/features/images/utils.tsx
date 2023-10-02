@@ -5,11 +5,16 @@ const FALLBACK_ASPECT_RATIO = 1
 // TODO: [MOB-205] return a nicer SVG asset with an error message
 const INVALID_SVG = { content: 'Invalid SVG', aspectRatio: FALLBACK_ASPECT_RATIO }
 
+export type SvgData = {
+  content: string
+  aspectRatio: number
+}
+
 export async function fetchSVG(
   uri: string,
   autoplay: boolean,
   signal?: AbortSignal
-): Promise<{ content: string; aspectRatio: number }> {
+): Promise<SvgData> {
   const res = await fetch(uri, { signal })
   const text = await res.text()
 
