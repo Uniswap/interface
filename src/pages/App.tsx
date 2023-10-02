@@ -233,15 +233,9 @@ export default function App() {
                       browserRouterEnabled && hash ? <Navigate to={hash.replace('#', '')} replace /> : <Landing />
                     }
                   />
-                  {infoExplorePageEnabled ? (
-                    <Route path="explore" element={<Explore />}>
-                      <Route path=":chainName" />
-                    </Route>
-                  ) : (
-                    <Route path="tokens" element={<Explore />}>
-                      <Route path=":chainName" />
-                    </Route>
-                  )}
+                  <Route path={infoExplorePageEnabled ? 'explore' : 'tokens'} element={<Explore />}>
+                    <Route path=":chainName" />
+                  </Route>
                   <Route path="tokens/:chainName/:tokenAddress" element={<TokenDetails />} />
                   {infoPoolPageEnabled && <Route path="pools/:chainName/:poolAddress" element={<PoolDetails />} />}
                   <Route
