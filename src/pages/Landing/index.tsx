@@ -140,7 +140,7 @@ const TitleText = styled.h1<{ isDarkMode: boolean; applyFadeIn: boolean; initial
         `};
   background-clip: text;
   -webkit-background-clip: text;
-  ${({ initiallyVisible }) => (initiallyVisible ? `opacity: 1.0;` : 'opacity: 0.0')}
+  ${({ initiallyVisible }) => (initiallyVisible ? `opacity: 1.0;` : 'opacity: 0.0;')}
   ${({ applyFadeIn }) =>
     applyFadeIn &&
     css`
