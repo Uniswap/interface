@@ -4,7 +4,7 @@ import { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
 import { useState } from 'react'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components/text'
 
 import { TransactionsTable } from './TransactionsTable'
 

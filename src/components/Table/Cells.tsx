@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react'
 import styled from 'styled-components'
-import { ClickableStyle, LinkStyle, ThemedText } from 'theme'
+import { ClickableStyle } from 'theme/components'
+import { ThemedText } from 'theme/components/text'
 
 const StyledCell = styled.div<{ justifyContent?: string; color?: string }>`
   justify-content: ${({ justifyContent }) => justifyContent ?? 'right'};
@@ -18,7 +19,6 @@ const Link = styled.a`
   display: flex;
   gap: 4px;
   ${ClickableStyle}
-  ${LinkStyle}
 `
 
 function Cell({ children, ...props }: PropsWithChildren) {
