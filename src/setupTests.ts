@@ -7,6 +7,7 @@ import 'polyfills'
 import type { createPopper } from '@popperjs/core'
 import { useWeb3React } from '@web3-react/core'
 import failOnConsole from 'jest-fail-on-console'
+import { disableNetConnect, restore as restoreNetConnect } from 'nock'
 import { Readable } from 'stream'
 import { toBeVisible } from 'test-utils/matchers'
 import { mocked } from 'test-utils/mocked'
@@ -116,6 +117,13 @@ beforeEach(() => {
 
   // Mock useWeb3React to return a chainId of 1 by default.
   mocked(useWeb3React).mockReturnValue({ chainId: 1 } as ReturnType<typeof useWeb3React>)
+
+  // Disable network connections by default.
+  disableNetConnect()
+})
+
+afterEach(() => {
+  restoreNetConnect()
 })
 
 /**
