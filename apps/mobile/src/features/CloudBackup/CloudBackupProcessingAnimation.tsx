@@ -1,14 +1,17 @@
+import { useFocusEffect } from '@react-navigation/core'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React, { useCallback, useEffect, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Alert } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
+import { OnboardingStackParamList, SettingsStackParamList } from 'src/app/navigation/types'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
 import { IS_ANDROID } from 'src/constants/globals'
 import { backupMnemonicToCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
+import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
-import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { promiseMinDelay } from 'utilities/src/time/timing'
 import {
@@ -23,6 +26,9 @@ type Props = {
   password: string
   onBackupComplete: () => void
   onErrorPress: () => void
+  navigation:
+    | NativeStackNavigationProp<OnboardingStackParamList, OnboardingScreens.BackupCloudProcessing>
+    | NativeStackNavigationProp<SettingsStackParamList, Screens.SettingsCloudBackupProcessing>
 }
 
 /** Screen to perform secure recovery phrase backup to Cloud  */
@@ -31,6 +37,7 @@ export function CloudBackupProcessingAnimation({
   onBackupComplete,
   onErrorPress,
   password,
+  navigation,
 }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
@@ -87,7 +94,16 @@ export function CloudBackupProcessingAnimation({
     }
   }, [accountAddress, dispatch, onErrorPress, password, t])
 
-  useAsyncData(backup)
+  /**
+   * Delays cloud backup to avoid android oauth consent screen blocking navigation transition
+   */
+  useFocusEffect(
+    useCallback(() => {
+      return navigation.addListener('transitionEnd', async () => {
+        await backup()
+      })
+    }, [backup, navigation])
+  )
 
   return processing ? (
     <Flex centered grow gap="$spacing24">

@@ -25,6 +25,7 @@ export function SettingsCloudBackupProcessingScreen({
     <Screen>
       <CloudBackupProcessingAnimation
         accountAddress={address}
+        navigation={navigation}
         password={password}
         onBackupComplete={onBackupComplete}
         onErrorPress={onErrorPress}
