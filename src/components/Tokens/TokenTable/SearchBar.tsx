@@ -81,9 +81,7 @@ export default function SearchBar({ tab }: { tab?: string }) {
     setFilterString(debouncedLocalFilterString)
   }, [debouncedLocalFilterString, setFilterString])
 
-  const handleFocus = () => {
-    setIsClicked(true)
-  }
+  const handleFocus = () => setIsClicked(true)
 
   const handleBlur = () => {
     if (localFilterString === '') setIsClicked(false)
