@@ -97,7 +97,7 @@ export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAdd
         Header: ColumnHeader.Maker,
         accessor: 'maker',
         Cell: ({ value }: { value: string }) => (
-          <LinkCell url={`https://etherscan.io/address/${value}`}>{shortenAddress(value)}</LinkCell>
+          <TextCell color={theme.neutral2}>{shortenAddress(value, 0)}</TextCell>
         ),
         disableSortBy: true,
         id: ColumnHeader.Maker,
