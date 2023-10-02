@@ -384,11 +384,18 @@ export const withdrawHypervisor = async (
         }
       | undefined
   ) => void,
-  addTransaction: (response: TransactionResponse, info: any) => void
+  addTransaction: (response: TransactionResponse, info: any) => void,
+  stateTransaction: (
+    attemptingTxn: boolean,
+    showTransactionModal: boolean,
+    transactionErrorMessage: string | undefined,
+    txHash: string | undefined
+  ) => void
 ) => {
   if (!hypervisorContract || !account) return
 
   try {
+    stateTransaction(true, true, undefined, undefined)
     const response = await hypervisorContract.withdraw(parseUnits(unStakeGamma, 18), account, account, [0, 0, 0, 0])
     addTransaction(response, {
       type: TransactionType.REMOVE_LIQUIDITY_GAMMA,
@@ -399,7 +406,9 @@ export const withdrawHypervisor = async (
     finalizedTransaction(receipt, {
       summary: 'withdrawliquidity',
     })
+    stateTransaction(false, true, undefined, receipt.transactionHash)
   } catch (e) {
+    stateTransaction(false, true, e.message, undefined)
     console.error('Withdraw failed', e)
   }
 }

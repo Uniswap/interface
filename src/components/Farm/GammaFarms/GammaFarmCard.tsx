@@ -212,11 +212,13 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
     setModalOpen(false)
     handleTypeInput0('')
     handleTypeInput1('')
+    setUnStakeGamma('')
   }, [handleTypeInput0, handleTypeInput1])
 
   const finalStateTransactionDismiss = useCallback(() => {
     handleTypeInput0('')
     handleTypeInput1('')
+    setUnStakeGamma('')
   }, [handleTypeInput0, handleTypeInput1])
 
   const dataDetails = {

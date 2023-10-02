@@ -123,7 +123,7 @@ export default function ModalAddGammaLiquidity({
   const { account } = useWeb3React()
   const validationTextButton0 = getValidationText(approvalToken0, tokenStake0)
   const validationTextButton1 = getValidationText(approvalToken1, tokenStake1)
-
+  const [isWithdraw, setWithdraw] = useState(false)
   // modal and loading
   const [{ showTransactionModal, transactionErrorMessage, attemptingTxn, txHash }, setTransactionModal] = useState<{
     showTransactionModal: boolean
@@ -137,6 +137,21 @@ export default function ModalAddGammaLiquidity({
     txHash: undefined,
   })
 
+  const [
+    { showTransactionWithdrawModal, transactionWithdrawErrorMessage, attemptingWithdrawTxn, txHashWithdraw },
+    setTransactionWithdrawModal,
+  ] = useState<{
+    showTransactionWithdrawModal: boolean
+    attemptingWithdrawTxn: boolean
+    transactionWithdrawErrorMessage?: string
+    txHashWithdraw?: string
+  }>({
+    showTransactionWithdrawModal: false,
+    attemptingWithdrawTxn: false,
+    transactionWithdrawErrorMessage: undefined,
+    txHashWithdraw: undefined,
+  })
+
   const handleDismissTransaction = useCallback(() => {
     setTransactionModal({ showTransactionModal: false, attemptingTxn, transactionErrorMessage, txHash })
     // if there was a tx hash, we want to clear the input
@@ -145,9 +160,24 @@ export default function ModalAddGammaLiquidity({
     }
   }, [attemptingTxn, finalStateTransactionDismiss, transactionErrorMessage, txHash])
 
+  const handleDismissTransactionWithdraw = useCallback(() => {
+    setTransactionWithdrawModal({
+      showTransactionWithdrawModal: false,
+      attemptingWithdrawTxn,
+      transactionWithdrawErrorMessage,
+      txHashWithdraw,
+    })
+    // if there was a tx hash, we want to clear the input
+    if (txHashWithdraw) {
+      finalStateTransactionDismiss()
+    }
+  }, [attemptingWithdrawTxn, finalStateTransactionDismiss, transactionWithdrawErrorMessage, txHashWithdraw])
+
   // text to show while loading
   const pendingText = `Depositing ${tokenStake0 && Number(deposit0) > 0 ? deposit0 : ''} ${tokenStake0?.symbol} and 
     ${tokenStake1 && Number(deposit1) > 0 ? deposit1 : ''} ${tokenStake1?.symbol}`
+
+  const pendingTextWithdraw = `Withdraw  ${unStakeGamma && Number(unStakeGamma) > 0 ? unStakeGamma : ''} LP`
 
   const modalHeader = () => {
     return (
@@ -181,6 +211,18 @@ export default function ModalAddGammaLiquidity({
     }
   }
 
+  async function onWithdraw() {
+    withdrawHypervisor(
+      hypervisorContract,
+      account,
+      unStakeGamma,
+      pairData,
+      finalizedTransaction,
+      addTransaction,
+      stateTransactionWithdraw
+    )
+  }
+
   const stateTransaction = (
     attemptingTxn: boolean,
     showTransactionModal: boolean,
@@ -192,6 +234,20 @@ export default function ModalAddGammaLiquidity({
       showTransactionModal,
       transactionErrorMessage,
       txHash,
+    })
+  }
+
+  const stateTransactionWithdraw = (
+    attemptingTxn: boolean,
+    showTransactionModal: boolean,
+    transactionErrorMessage: string | undefined,
+    txHash: string | undefined
+  ) => {
+    setTransactionWithdrawModal({
+      attemptingWithdrawTxn: attemptingTxn,
+      showTransactionWithdrawModal: showTransactionModal,
+      transactionWithdrawErrorMessage: transactionErrorMessage,
+      txHashWithdraw: txHash,
     })
   }
 
@@ -218,6 +274,29 @@ export default function ModalAddGammaLiquidity({
           />
         )}
       />
+
+      <TransactionConfirmationModal
+        isOpen={showTransactionWithdrawModal}
+        onDismiss={handleDismissTransactionWithdraw}
+        attemptingTxn={attemptingWithdrawTxn}
+        pendingText={pendingTextWithdraw}
+        hash={txHashWithdraw}
+        content={() => (
+          <ConfirmationModalContent
+            title={<Trans>Withdraw</Trans>}
+            onDismiss={handleDismissTransactionWithdraw}
+            topContent={modalHeader}
+            bottomContent={() => (
+              <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onWithdraw}>
+                <Text fontWeight={500} fontSize={20}>
+                  <Trans>Withdraw Gamma Liquidity</Trans>
+                </Text>
+              </ButtonPrimary>
+            )}
+          />
+        )}
+      />
+
       <ModalAddLiquidity isOpen={modalOpen} onDismiss={handleDismiss}>
         <Wrapper>
           <HeaderRow>
@@ -344,21 +423,19 @@ export default function ModalAddGammaLiquidity({
                     textButton="Withdraw Gamma Liquidity"
                     tokenSymbol="LP"
                     depositValue={unStakeGamma}
-                    disabledButton={false}
+                    disabledButton={!(Number(unStakeGamma) > 0)}
                     isApproved={false}
                     setDepositAmount={(amount: string) => {
                       setUnStakeGamma(amount)
                     }}
-                    approveOrStakeLPOrWithdraw={() =>
-                      withdrawHypervisor(
-                        hypervisorContract,
-                        account,
-                        unStakeGamma,
-                        pairData,
-                        finalizedTransaction,
-                        addTransaction
-                      )
-                    }
+                    approveOrStakeLPOrWithdraw={() => {
+                      setTransactionWithdrawModal({
+                        attemptingWithdrawTxn: false,
+                        showTransactionWithdrawModal: true,
+                        transactionWithdrawErrorMessage: undefined,
+                        txHashWithdraw: undefined,
+                      })
+                    }}
                   />
                 </Withdraw>
               )}
