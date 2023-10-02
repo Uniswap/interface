@@ -259,6 +259,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
               "display": "flex",
               "fontFamily": "Basel-Medium",
               "fontSize": 17,
+              "fontWeight": "500",
               "lineHeight": 24,
             }
           }

@@ -79,7 +79,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                 {
                   "color": "#222222",
                   "display": "flex",
-                  "fontFamily": "Basel-Medium",
+                  "fontFamily": "Basel-Book",
                   "fontSize": 25,
                   "lineHeight": 32,
                   "paddingTop": 0,
@@ -384,6 +384,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                             "display": "flex",
                             "fontFamily": "Basel-Medium",
                             "fontSize": 17,
+                            "fontWeight": "500",
                             "lineHeight": 24,
                           }
                         }
@@ -533,6 +534,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                     "display": "flex",
                     "fontFamily": "Basel-Medium",
                     "fontSize": 19,
+                    "fontWeight": "500",
                     "lineHeight": 24,
                   }
                 }

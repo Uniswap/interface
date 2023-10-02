@@ -137,7 +137,7 @@ const baselBook = isWeb
   : 'Basel-Book'
 
 export const headingFont = createFont({
-  family: baselMedium,
+  family: baselBook,
   face: {},
   size: {
     small: fonts.heading3.fontSize,
