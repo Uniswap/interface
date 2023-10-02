@@ -32,9 +32,9 @@ export function TransactionsTable({ referenceTokenAddress }: { referenceTokenAdd
         Header: ColumnHeader.Time,
         accessor: (swap) => swap,
         Cell: ({ value }: { value: { timestamp: number; transactionHash: string } }) => (
-          <LinkCell url={`https://etherscan.io/tx/${value.transactionHash}`} justifyContent="left">
+          <TextCell justifyContent="left" color={theme.neutral2}>
             {getLocaleTimeString(value.timestamp, locale ?? 'en-US')}
-          </LinkCell>
+          </TextCell>
         ),
         disableSortBy: true,
         id: ColumnHeader.Time,
