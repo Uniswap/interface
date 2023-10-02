@@ -13,7 +13,7 @@ import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollSc
 import { Loader } from 'src/components/loading'
 import { LongText } from 'src/components/text/LongText'
 import Trace from 'src/components/Trace/Trace'
-import { IS_IOS } from 'src/constants/globals'
+import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
 import { selectModalState } from 'src/features/modals/modalSlice'
 import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
 import { GQLNftAsset, useNFTMenu } from 'src/features/nfts/hooks'
@@ -51,7 +51,10 @@ const MAX_NFT_IMAGE_HEIGHT = 375
 type NFTItemScreenProps = AppStackScreenProp<Screens.NFTItem>
 
 export function NFTItemScreen(props: NFTItemScreenProps): JSX.Element {
-  return (
+  return IS_ANDROID ? (
+    // display screen with theme dependent colors on Android
+    <NFTItemScreenContents {...props} />
+  ) : (
     // put Theme above the Contents so our useSporeColors() gets the right colors
     <Theme name="dark">
       <NFTItemScreenContents {...props} />
