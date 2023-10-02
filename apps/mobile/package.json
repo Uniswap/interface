@@ -64,7 +64,7 @@
     "@formatjs/intl-numberformat": "7.4.1",
     "@formatjs/intl-pluralrules": "4.3.1",
     "@formatjs/intl-relativetimeformat": "11.1.2",
-    "@gorhom/bottom-sheet": "4.4.8",
+    "@gorhom/bottom-sheet": "4.5.1",
     "@react-native-async-storage/async-storage": "1.17.10",
     "@react-native-community/netinfo": "9.3.0",
     "@react-native-firebase/app": "18.4.0",

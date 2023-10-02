@@ -75,12 +75,7 @@ export function AccountCardItem({
 
   const onPressRemoveWallet = (): void => {
     dispatch(closeModal({ name: ModalName.AccountSwitcher }))
-    dispatch(
-      openModal({
-        name: ModalName.RemoveWallet,
-        initialState: { address },
-      })
-    )
+    dispatch(openModal({ name: ModalName.RemoveWallet, initialState: { address } }))
   }
 
   const menuActions = useMemo(() => {

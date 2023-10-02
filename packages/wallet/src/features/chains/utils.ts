@@ -1,4 +1,5 @@
 import { BigNumberish } from 'ethers'
+import { logger } from 'utilities/src/logger/logger'
 import {
   ALL_SUPPORTED_CHAINS,
   ChainId,
@@ -83,7 +84,7 @@ export function getPollingIntervalByBlocktime(chainId?: ChainId): PollingInterva
   return isL2Chain(chainId) ? PollingInterval.LightningMcQueen : PollingInterval.Fast
 }
 
-export function fromMoonpayNetwork(moonpayNetwork: string | undefined): ChainId {
+export function fromMoonpayNetwork(moonpayNetwork: string | undefined): ChainId | undefined {
   switch (moonpayNetwork) {
     case Chain.Arbitrum.toLowerCase():
       return ChainId.ArbitrumOne
@@ -91,10 +92,18 @@ export function fromMoonpayNetwork(moonpayNetwork: string | undefined): ChainId 
       return ChainId.Optimism
     case Chain.Polygon.toLowerCase():
       return ChainId.Polygon
+    case Chain.Bnb.toLowerCase():
+      return ChainId.Bnb
+    // Moonpay still refers to BNB chain as BSC so including both BNB and BSC cases
+    case 'bsc':
+      return ChainId.Bnb
     case undefined:
       return ChainId.Mainnet
     default:
-      throw new Error(`Moonpay network "${moonpayNetwork}" can not be mapped`)
+      logger.error(`Moonpay network "${moonpayNetwork}" can not be mapped`, {
+        tags: { file: 'chains/utils', function: 'fromMoonpayNetwork' },
+      })
+      return undefined
   }
 }
 

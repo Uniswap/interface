@@ -124,11 +124,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
 
     const onPressImportWallet = (): void => {
       if (hasImportedSeedPhrase && activeAccountAddress) {
-        dispatch(
-          openModal({
-            name: ModalName.RemoveWallet,
-          })
-        )
+        dispatch(openModal({ name: ModalName.RemoveWallet }))
       } else {
         navigate(Screens.OnboardingStack, {
           screen: OnboardingScreens.SeedPhraseInput,

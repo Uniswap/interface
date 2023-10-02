@@ -71,9 +71,7 @@ describe(fromMoonpayNetwork, () => {
   })
 
   it('handle unsupported chain', () => {
-    expect(() => fromMoonpayNetwork('unkwnown')).toThrow(
-      'Moonpay network "unkwnown" can not be mapped'
-    )
+    expect(fromMoonpayNetwork('unknown')).toBeUndefined()
   })
 })
 
