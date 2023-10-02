@@ -101,7 +101,7 @@ export default function SearchBar({ tab }: { tab?: string }) {
             {isExplore ? (
               <SearchInput
                 isExplore={isExplore}
-                data-cy="explore-search-input"
+                data-cy="explore-tokens-search-input"
                 type="search"
                 placeholder={`${translation}`}
                 id="searchBar"

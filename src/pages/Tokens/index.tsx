@@ -68,7 +68,7 @@ const DropdownFilterContainer = styled(FiltersContainer)`
   }
 `
 const SearchContainer = styled(FiltersContainer)<{ isExplore: boolean }>`
-  ${({ isExplore }) => !isExplore && 'margin: 8px;'}
+  ${({ isExplore }) => !isExplore && 'margin-left: 8px;'}
   width: 100%;
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {

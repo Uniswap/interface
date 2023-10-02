@@ -54,7 +54,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
     text-decoration: none;
   }
 `
-const MenuTimeFlyout = styled.span`
+const MenuTimeFlyout = styled.span<{ isExplore: boolean }>`
   min-width: 240px;
   max-height: 300px;
   overflow: auto;
@@ -73,7 +73,7 @@ const MenuTimeFlyout = styled.span`
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     right: 0px;
-    left: unset;
+    ${({ isExplore }) => !isExplore && 'left: unset;'}
   }
 `
 const StyledMenu = styled.div<{ isExplore: boolean }>`
@@ -129,7 +129,7 @@ export default function TimeSelector() {
         </StyledMenuContent>
       </FilterOption>
       {open && (
-        <MenuTimeFlyout>
+        <MenuTimeFlyout isExplore={isExplore}>
           {ORDERED_TIMES.map((time) => (
             <InternalLinkMenuItem
               key={DISPLAYS[time]}
