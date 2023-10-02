@@ -74,6 +74,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
               "backgroundColor": "transparent",
               "borderRadius": 12,
               "color": "#222222",
+              "fontFamily": "Basel-Book",
               "fontSize": 19,
               "justifyContent": "center",
               "lineHeight": 19,

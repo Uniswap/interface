@@ -1,11 +1,12 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, TextInput as NativeTextInput } from 'react-native'
+import { ActivityIndicator, StyleSheet, TextInput as NativeTextInput } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { TextInput } from 'src/components/input/TextInput'
 import Trace from 'src/components/Trace/Trace'
+import { IS_ANDROID } from 'src/constants/globals'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -138,12 +139,12 @@ function CustomizationSection({
           <TextInput
             ref={textInputRef}
             autoFocus
-            backgroundColor="none"
             fontSize={inputSize}
             maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
             maxLength={NICKNAME_MAX_LENGTH}
             placeholder="Nickname"
             placeholderTextColor={colors.neutral3.get()}
+            style={IS_ANDROID ? styles.noHorizontalPadding : {}}
             testID="customize/name"
             textAlign="center"
             value={accountName}
@@ -180,3 +181,9 @@ function CustomizationSection({
     </Flex>
   )
 }
+
+const styles = StyleSheet.create({
+  noHorizontalPadding: {
+    paddingHorizontal: 0,
+  },
+})

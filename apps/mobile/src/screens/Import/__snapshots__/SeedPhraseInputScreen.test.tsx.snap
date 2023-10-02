@@ -201,6 +201,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                             "backgroundColor": "transparent",
                             "borderRadius": 12,
                             "color": "#222222",
+                            "fontFamily": "Basel-Book",
                             "fontSize": 19,
                             "justifyContent": "center",
                             "lineHeight": 19,

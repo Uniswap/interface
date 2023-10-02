@@ -19,6 +19,7 @@ import {
 } from '@shopify/restyle'
 import React, { forwardRef } from 'react'
 import { TextInput as TextInputBase, TextInputProps as BaseTextInputProps } from 'react-native'
+import { fonts } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 
 const restyleFunctions = [
@@ -53,6 +54,7 @@ export const TextInput = forwardRef<TextInputBase, TextInputProps>(function _Tex
   rest.py ??= 'spacing12'
   rest.color ??= 'neutral1'
   rest.borderRadius ??= 'rounded12'
+  rest.fontFamily ??= fonts.body1.family
 
   // restyle doesn't parse placeholderTextColorCorrectly
   rest.placeholderTextColor ??= theme.colors.neutral3
