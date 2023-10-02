@@ -31,7 +31,7 @@ const GasCostItem = ({ title, amount, itemValue }: GasCostItemProps) => {
   )
 }
 
-const GasslessSwapLabel = () => <UniswapXRouterLabel>$0</UniswapXRouterLabel>
+const GaslessSwapLabel = () => <UniswapXRouterLabel>$0</UniswapXRouterLabel>
 
 type GasBreakdownTooltipProps = { trade: InterfaceTrade; hideUniswapXDescription?: boolean }
 
@@ -58,7 +58,7 @@ export function GasBreakdownTooltip({ trade, hideUniswapXDescription }: GasBreak
         <GasCostItem title={<Trans>Wrap {native.symbol}</Trans>} amount={wrapEstimate} />
         <GasCostItem title={<Trans>Allow {inputCurrency.symbol} (one time)</Trans>} amount={approvalEstimate} />
         <GasCostItem title={<Trans>Swap</Trans>} amount={swapEstimate} />
-        {isUniswapX && <GasCostItem title={<Trans>Swap</Trans>} itemValue={<GasslessSwapLabel />} />}
+        {isUniswapX && <GasCostItem title={<Trans>Swap</Trans>} itemValue={<GaslessSwapLabel />} />}
       </AutoColumn>
       <Divider />
       {description}

@@ -118,6 +118,7 @@ const SIX_SIG_FIGS_TWO_DECIMALS: NumberFormatOptions = {
   maximumFractionDigits: 2,
   minimumFractionDigits: 2,
 }
+
 const SIX_SIG_FIGS_NO_COMMAS: NumberFormatOptions = {
   notation: 'standard',
   maximumSignificantDigits: 6,

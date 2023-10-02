@@ -96,9 +96,11 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   const isPreview = isPreviewTrade(trade)
   const chainId = trade.inputAmount.currency.chainId
 
-  // Used to hide price impact row if last trade was UniswapX
-  const [wasUniswapX, setWasUniswapX] = useState<boolean>(isUniswapX)
-  useEffect(() => setWasUniswapX((prev) => (!isPreview ? isUniswapX : prev)), [isUniswapX, isPreview])
+  // Tracks whether we expect a preview trade to be followed by a UniswapX or a Classic quote
+  const [expectUniswapX, setExpectUniswapX] = useState(isUniswapX)
+  useEffect(() => {
+    if (!isPreview) setExpectUniswapX(isUniswapX)
+  }, [isUniswapX, isPreview])
 
   switch (type) {
     case SwapLineItemTypes.EXCHANGE_RATE:
@@ -117,8 +119,8 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
         },
       }
     case SwapLineItemTypes.PRICE_IMPACT:
-      // Hides price impact row if the current trade is UniswapX or if we're previewing a trade when the last trade was UniswapX
-      if (isUniswapX || (wasUniswapX && isPreview)) return
+      // Hides price impact row if the current trade is UniswapX or we're expecting a preview trade to result in UniswapX
+      if (isUniswapX || expectUniswapX) return
       return {
         Label: () => <Trans>Price impact</Trans>,
         TooltipBody: () => <Trans>The impact your trade has on the market price of this pool.</Trans>,
@@ -179,10 +181,10 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   }
 }
 
-function getFOTLineItem(props: SwapLineItemProps): LineItemData | undefined {
-  const isInput = props.type === SwapLineItemTypes.INPUT_TOKEN_FEE_ON_TRANSFER
-  const currency = isInput ? props.trade.inputAmount.currency : props.trade.outputAmount.currency
-  const tax = isInput ? props.trade.inputTax : props.trade.outputTax
+function getFOTLineItem({ type, trade }: SwapLineItemProps): LineItemData | undefined {
+  const isInput = type === SwapLineItemTypes.INPUT_TOKEN_FEE_ON_TRANSFER
+  const currency = isInput ? trade.inputAmount.currency : trade.outputAmount.currency
+  const tax = isInput ? trade.inputTax : trade.outputTax
   if (tax.equalTo(0)) return
 
   return {
