@@ -136,6 +136,14 @@ export default function ModalAddGammaLiquidity({
     txHash: undefined,
   })
 
+  const handleDismissTransaction = useCallback(() => {
+    setTransactionModal({ showTransactionModal: false, attemptingTxn, transactionErrorMessage, txHash })
+    // if there was a tx hash, we want to clear the input
+    if (txHash) {
+      finalStateTransactionDismiss()
+    }
+  }, [attemptingTxn, finalStateTransactionDismiss, transactionErrorMessage, txHash])
+
   const handleDismissConfirmation = useCallback(() => {
     setTransactionModal({ showTransactionModal: false, attemptingTxn, transactionErrorMessage, txHash })
     // if there was a tx hash, we want to clear the input
@@ -143,6 +151,7 @@ export default function ModalAddGammaLiquidity({
       finalStateTransactionDismiss()
     }
   }, [attemptingTxn, finalStateTransactionDismiss, transactionErrorMessage, txHash])
+
 
   // text to show while loading
   const pendingText = `Depositing ${tokenStake0 && Number(deposit0) > 0 ? deposit0 : ''} ${tokenStake0?.symbol} and 
@@ -198,7 +207,7 @@ export default function ModalAddGammaLiquidity({
     <>
       <TransactionConfirmationModal
         isOpen={showTransactionModal}
-        onDismiss={handleDismissConfirmation}
+        onDismiss={handleDismissTransaction}
         attemptingTxn={attemptingTxn}
         pendingText={pendingText}
         hash={txHash}
@@ -221,10 +230,14 @@ export default function ModalAddGammaLiquidity({
         <Wrapper>
           <HeaderRow>
             <ThemedText.SubHeader>
-              <Trans>Add Gamma Liquidity</Trans>
+              <Trans>Manage Gamma Liquidity</Trans>
             </ThemedText.SubHeader>
             <CloseIcon onClick={handleDismiss} />
           </HeaderRow>
+          <Trans>Pegasys V3 liquidity positions can now leverage Gamma’s tech to actively manage their liquidity through our UI, making the entire process more seamless and efficient. </Trans>
+          {/* <Trans>The benefits of Gamma’s active liquidity management include automatic rebalancing of your liquidity to keep it in range and auto-compounding of generated swap fees to maximize capital efficiency</Trans> */}
+          <Trans>It’s never been easier to LP and farm! Sit back, relax, and let Gamma do the work while you enjoy the yield.</Trans>
+          <Trans>Get started now by providing liquidity then deposit your LP tokens in our Gamma farms!</Trans>
           <Body>
             <Container isMobile={isMobile}>
               <ApprovedArea>
