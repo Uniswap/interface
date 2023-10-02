@@ -11,7 +11,7 @@ import { AppleLogo } from 'components/Logo/AppleLogo'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { ArrowDownCircle } from 'react-feather'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
@@ -334,7 +334,7 @@ export default function Landing() {
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
   const originCountry = useAppSelector((state: AppState) => state.user.originCountry)
   const renderUkSpecificText = Boolean(originCountry) && originCountry === 'GB'
-  const [initiallyVisible] = useState(!!originCountry)
+  const initiallyVisible = useRef(!!originCountry)
   const cards = useMemo(() => {
     const mainCards = MAIN_CARDS.filter(
       (card) =>
@@ -431,12 +431,15 @@ export default function Landing() {
         <ContentContainer isDarkMode={isDarkMode}>
           <TitleText
             isDarkMode={isDarkMode}
-            initiallyVisible={initiallyVisible}
+            initiallyVisible={initiallyVisible.current}
             applyFadeIn={!initiallyVisible && !!originCountry}
           >
             {titles.header}
           </TitleText>
-          <SubTextContainer initiallyVisible={initiallyVisible} applyFadeIn={!initiallyVisible && !!originCountry}>
+          <SubTextContainer
+            initiallyVisible={initiallyVisible.current}
+            applyFadeIn={!initiallyVisible && !!originCountry}
+          >
             <SubText>{titles.subHeader}</SubText>
           </SubTextContainer>
           <ActionsContainer>

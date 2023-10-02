@@ -5,7 +5,7 @@ import { TraceEvent } from 'analytics'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonText } from 'components/Button'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { AppState } from 'state/reducer'
 import styled, { css } from 'styled-components'
@@ -49,7 +49,7 @@ export default function SwapBuyFiatButton() {
   const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const originCountry = useAppSelector((state: AppState) => state.user.originCountry)
   const shouldShowBuyFiatButton = originCountry && originCountry !== 'GB'
-  const [shouldFadeIn] = useState(!originCountry)
+  const shouldFadeIn = useRef(!originCountry)
   const [checkFiatRegionAvailability, setCheckFiatRegionAvailability] = useState(false)
   const {
     available: fiatOnrampAvailable,
@@ -141,7 +141,7 @@ export default function SwapBuyFiatButton() {
           onClick={handleBuyCrypto}
           disabled={buyCryptoButtonDisabled}
           data-testid="buy-fiat-button"
-          shouldFadeIn={shouldFadeIn}
+          shouldFadeIn={shouldFadeIn.current}
         >
           <Trans>Buy</Trans>
         </StyledTextButton>
