@@ -3,6 +3,7 @@ import { BrowserEvent, InterfacePageName, SharedEventName } from '@uniswap/analy
 import { TraceEvent } from 'analytics'
 import { Trace } from 'analytics'
 import { AutoRow } from 'components/Row'
+import { TabbedNav } from 'components/TabbedNav'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
@@ -90,20 +91,12 @@ const NavWrapper = styled.div`
   }
 `
 
-// todo: copied from MiniPortfolio/index.tsx,, DRY?
-interface Page {
-  title: React.ReactNode
-  key: string
-  component: () => JSX.Element
-  loggingElementName: string
-}
-
-const Pages: Array<Page> = [
+const Pages: Array<TabbedNav> = [
   {
     title: <Trans>Tokens</Trans>,
-    key: 'tokens', // todo: put this into an enum??
+    key: 'tokens',
     component: TokenTable,
-    loggingElementName: 'explore-tokens-tab', // todo: add to InterfaceSectionName @uniswap/analytics-events
+    loggingElementName: 'explore-tokens-tab', // todo: add to InterfaceElementName @uniswap/analytics-events
   },
   {
     title: <Trans>Pools</Trans>,
