@@ -224,7 +224,7 @@ export function SettingsWallet({
           text: IS_ANDROID ? t('Google Drive Backup') : t('iCloud backup'),
           icon: (
             <Icons.OSDynamicCloudIcon
-              color={colors.neutral3.get()}
+              color={colors.neutral2.get()}
               height={iconSizes.icon24}
               width={iconSizes.icon24}
             />
