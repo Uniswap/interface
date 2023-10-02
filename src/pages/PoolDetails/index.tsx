@@ -6,12 +6,7 @@ import { Globe } from 'components/Icons/Globe'
 import { TwitterXLogo } from 'components/Icons/TwitterX'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
-import {
-  NoInfoAvailable,
-  TokenDescriptionContainer,
-  truncateDescription,
-  TruncateDescriptionButton,
-} from 'components/Tokens/TokenDetails/shared'
+import { NoInfoAvailable, truncateDescription, TruncateDescriptionButton } from 'components/Tokens/TokenDetails/shared'
 import { useTokenQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName, getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
@@ -160,9 +155,18 @@ const PoolDetailsButton = styled(Row)<{ tokenColor: string }>`
   ${ClickableStyle}
 `
 
+const TokenDescriptionContainer = styled(ThemedText.BodyPrimary)`
+  ${EllipsisStyle}
+  max-width: 100%;
+  max-height: fit-content;
+  line-height: 24px;
+  white-space: pre-wrap;
+`
+
 const TRUNCATE_CHARACTER_COUNT = 75
 
 function PoolDetailsTokenInfo({ token, chainId = ChainId.MAINNET }: { token: Token; chainId?: number }) {
+  // TODO simplify token query, move to its own file, add tests
   const currency = useCurrency(token.id, chainId)
   const color = useColor(currency?.wrapped)
   const { data: tokenQuery } = useTokenQuery({
@@ -206,7 +210,7 @@ function PoolDetailsTokenInfo({ token, chainId = ChainId.MAINNET }: { token: Tok
           <ExternalLink href={`https://x.com/${tokenQuery.token.project.twitterName}`}>
             <PoolDetailsButton tokenColor={color}>
               <TwitterXLogo width="18px" height="18px" fill={color} />
-              <Trans>Twitter/X</Trans>
+              <Trans>Twitter</Trans>
             </PoolDetailsButton>
           </ExternalLink>
         )}

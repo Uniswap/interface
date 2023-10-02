@@ -6,15 +6,6 @@ export const NoInfoAvailable = styled.span`
   font-weight: 485;
   font-size: 16px;
 `
-export const TokenDescriptionContainer = styled.div`
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  max-height: fit-content;
-  padding-top: 16px;
-  line-height: 24px;
-  white-space: pre-wrap;
-`
 
 export const TruncateDescriptionButton = styled.div`
   color: ${({ theme }) => theme.neutral2};
