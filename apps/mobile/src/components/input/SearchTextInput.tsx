@@ -1,17 +1,27 @@
 import React, { forwardRef, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, LayoutChangeEvent, TextInput as NativeTextInput, ViewStyle } from 'react-native'
-import { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
-import { TextInput, TextInputProps } from 'src/components/input/TextInput'
-import { DeprecatedMobileOnlyAnimatedFlex } from 'src/components/layout'
+import {
+  Keyboard,
+  LayoutChangeEvent,
+  NativeSyntheticEvent,
+  TextInput as NativeTextInput,
+  TextInputFocusEventData,
+} from 'react-native'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
-import X from 'ui/src/assets/icons/x.svg'
+import {
+  AnimatePresence,
+  Button,
+  Flex,
+  Icons,
+  Input,
+  InputProps,
+  SpaceTokens,
+  Text,
+  TouchableArea,
+} from 'ui/src'
 import { dimensions, fonts, iconSizes, spacing } from 'ui/src/theme'
-import { Theme } from 'ui/src/theme/restyle'
 import { SHADOW_OFFSET_SMALL } from 'wallet/src/components/BaseCard/BaseCard'
-import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 export const springConfig = {
   stiffness: 1000,
@@ -22,22 +32,18 @@ export const springConfig = {
   restSpeedThreshold: 0.01,
 }
 
-export type SearchTextInputProps = TextInputProps & {
-  value: string
-  onFocus?: () => void
+export type SearchTextInputProps = InputProps & {
   onCancel?: () => void
   clearIcon?: JSX.Element
   disableClearable?: boolean
   endAdornment?: JSX.Element | null
   showCancelButton?: boolean
   showShadow?: boolean
-  py?: keyof Theme['spacing']
+  py?: SpaceTokens
 }
 
 export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>(
   function _SearchTextInput(props, ref) {
-    const colors = useSporeColors()
-    const isDarkMode = useIsDarkMode()
     const { t } = useTranslation()
     const {
       autoFocus,
@@ -49,47 +55,37 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       onChangeText,
       onFocus,
       placeholder,
-      py = 'spacing12',
+      py = '$spacing12',
       showCancelButton,
       showShadow,
-      value,
+      value = '',
     } = props
 
-    const isFocus = useSharedValue(false)
-    const cancelButtonWidth = useSharedValue(showCancelButton ? 40 : 0)
-    const showClearButton = useSharedValue(value.length > 0 && !disableClearable)
-    // Required to update React view hierarchy when show/hiding the clear button
-    const [showClearButtonJS, setShowClearButtonJS] = useState(
-      value.length > 0 && !disableClearable
-    )
+    const [isFocus, setIsFocus] = useState(false)
+    const [cancelButtonWidth, setCancelButtonWidth] = useState(showCancelButton ? 40 : 0)
+    const [showClearButton, setShowClearButton] = useState(value.length > 0 && !disableClearable)
 
     const onPressCancel = (): void => {
-      isFocus.value = false
-      showClearButton.value = false
+      setIsFocus(false)
+      setShowClearButton(false)
       Keyboard.dismiss()
       sendMobileAnalyticsEvent(MobileEventName.ExploreSearchCancel, { query: value })
       onChangeText?.('')
       onCancel?.()
     }
 
-    const backgroundColorValue = backgroundColor ?? 'surface2'
-
-    const onCancelLayout = useCallback(
-      (event: LayoutChangeEvent) => {
-        cancelButtonWidth.value = event.nativeEvent.layout.width
-      },
-      [cancelButtonWidth]
-    )
+    const onCancelButtonLayout = useCallback((event: LayoutChangeEvent) => {
+      setCancelButtonWidth(event.nativeEvent.layout.width)
+    }, [])
 
     const onClear = (): void => {
       onChangeText?.('')
-      showClearButton.value = false
-      setShowClearButtonJS(false)
+      setShowClearButton(false)
     }
 
-    const onTextInputFocus = (): void => {
-      onFocus?.()
-      isFocus.value = true
+    const onTextInputFocus = (e: NativeSyntheticEvent<TextInputFocusEventData>): void => {
+      onFocus?.(e)
+      setIsFocus(true)
     }
 
     const onTextInputSubmitEditing = (): void => {
@@ -99,98 +95,58 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     const onChangeTextInput = useCallback(
       (text: string) => {
         onChangeText?.(text)
-        if (text.length > 0) {
-          showClearButton.value = true
-          setShowClearButtonJS(true)
-        } else {
-          showClearButton.value = false
-          setShowClearButtonJS(false)
-        }
+        setShowClearButton(text.length > 0)
       },
-      [showClearButton, onChangeText]
+      [onChangeText]
     )
-
-    const textInputStyle = useAnimatedStyle(() => {
-      return {
-        marginRight: withSpring(
-          showCancelButton && isFocus.value ? cancelButtonWidth.value + spacing.spacing12 : 0,
-          springConfig
-        ),
-      }
-    })
-
-    const clearButtonStyle = useAnimatedStyle(() => {
-      return {
-        opacity: withTiming(showClearButton.value ? 1 : 0),
-        transform: [{ scale: withTiming(showClearButton.value ? 1 : 0) }],
-      }
-    })
-
-    const endAdornmentStyle = useAnimatedStyle(() => {
-      return {
-        opacity: withTiming(isFocus.value && showClearButton.value ? 0 : 1),
-        transform: [{ scale: withTiming(isFocus.value && showClearButton.value ? 0 : 1) }],
-      }
-    })
-
-    const cancelButtonStyle = useAnimatedStyle(() => {
-      return {
-        opacity: withTiming(isFocus.value ? 1 : 0),
-        transform: [
-          { scale: withTiming(isFocus.value ? 1 : 0) },
-          {
-            translateX: isFocus.value
-              ? withTiming(0, { duration: 0 })
-              : withTiming(dimensions.fullWidth, { duration: 650 }),
-          },
-        ],
-      }
-    })
-
-    const shadowProps = showShadow
-      ? {
-          shadowOffset: SHADOW_OFFSET_SMALL,
-          shadowOpacity: 0.25,
-          shadowRadius: 6,
-        }
-      : null
 
     return (
       <Flex row shrink alignItems="center">
-        <DeprecatedMobileOnlyAnimatedFlex
+        <Flex
           fill
           grow
           row
           alignItems="center"
-          backgroundColor={backgroundColorValue}
-          borderRadius="roundedFull"
-          gap="spacing8"
+          animateOnly={['marginRight']}
+          animation="quick"
+          backgroundColor={backgroundColor ?? '$surface2'}
+          borderRadius="$roundedFull"
+          gap="$spacing8"
+          marginRight={showCancelButton && isFocus ? cancelButtonWidth + spacing.spacing12 : 0}
           minHeight={48}
-          px="spacing16"
+          px="$spacing16"
           py={py}
-          shadowColor={
-            showShadow ? (isDarkMode ? 'sporeBlack' : 'DEP_brandedAccentSoft') : undefined
-          }
-          style={textInputStyle}
-          {...shadowProps}>
+          {...(showShadow && {
+            shadowColor: '$DEP_accentCriticalSoft',
+            shadowOffset: SHADOW_OFFSET_SMALL,
+            shadowOpacity: 0.25,
+            shadowRadius: 6,
+
+            '$theme-dark': {
+              shadowColor: '$sporeBlack',
+            },
+          })}>
           <Flex py="$spacing4">
             <Icons.Search color="$neutral2" height={iconSizes.icon20} width={iconSizes.icon20} />
           </Flex>
-          <TextInput
+
+          <Input
             ref={ref}
+            ellipse
             autoCapitalize="none"
             autoCorrect={false}
             autoFocus={autoFocus}
-            backgroundColor="none"
+            backgroundColor="$transparent"
             borderWidth={0}
-            flex={1}
-            fontFamily={fonts.body1.family}
-            fontSize={fonts.body1.fontSize}
+            f={1}
+            fontFamily="$body"
+            height="100%"
             maxFontSizeMultiplier={fonts.body1.maxFontSizeMultiplier}
+            pl="$none"
             placeholder={placeholder}
-            placeholderTextColor={colors.neutral2.get()}
-            px="none"
-            py="none"
+            placeholderTextColor="$neutral2"
+            pr="$spacing8"
+            py="$none"
             returnKeyType="done"
             textContentType="none"
             value={value}
@@ -199,55 +155,47 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             onSubmitEditing={onTextInputSubmitEditing}
           />
 
-          {showClearButtonJS ? (
-            <AnimatedFlex style={[clearButtonStyle]}>
-              <ClearButton clearIcon={clearIcon} onPress={onClear} />
-            </AnimatedFlex>
-          ) : (
-            <AnimatedFlex style={[endAdornmentStyle]}>{endAdornment}</AnimatedFlex>
-          )}
-        </DeprecatedMobileOnlyAnimatedFlex>
+          <AnimatePresence>
+            {showClearButton ? (
+              <Button
+                animation="quick"
+                backgroundColor="$surface3"
+                borderRadius="$roundedFull"
+                // eslint-disable-next-line react-native/no-inline-styles
+                enterStyle={{ o: 0, scale: 0 }}
+                // eslint-disable-next-line react-native/no-inline-styles
+                exitStyle={{ o: 0, scale: 0 }}
+                icon={clearIcon ?? <Icons.X color="$neutral2" size="$spacing16" />}
+                p="$spacing4"
+                theme="secondary"
+                onPress={onClear}
+              />
+            ) : endAdornment ? (
+              <Flex
+                animation="quick"
+                opacity={isFocus && showClearButton ? 0 : 1}
+                scale={isFocus && showClearButton ? 0 : 1}>
+                {endAdornment}
+              </Flex>
+            ) : null}
+          </AnimatePresence>
+        </Flex>
+
         {showCancelButton && (
-          <AnimatedFlex
-            style={[cancelButtonStyle, CancelButtonDefaultStyle]}
-            onLayout={onCancelLayout}>
+          <Flex
+            animation="200ms"
+            o={isFocus ? 1 : 0}
+            pos="absolute"
+            r={0}
+            scale={isFocus ? 1 : 0}
+            x={isFocus ? 0 : dimensions.fullWidth}
+            onLayout={onCancelButtonLayout}>
             <TouchableArea onPress={onPressCancel}>
               <Text variant="buttonLabel2">{t('Cancel')}</Text>
             </TouchableArea>
-          </AnimatedFlex>
+          </Flex>
         )}
       </Flex>
     )
   }
 )
-
-const CancelButtonDefaultStyle: ViewStyle = {
-  position: 'absolute',
-  right: 0,
-}
-
-interface ClearButtonProps {
-  clearIcon: SearchTextInputProps['clearIcon']
-  onPress: () => void
-}
-
-function ClearButton(props: ClearButtonProps): JSX.Element {
-  const colors = useSporeColors()
-
-  const {
-    onPress,
-    clearIcon = (
-      <X color={colors.neutral2.get()} height={iconSizes.icon16} width={iconSizes.icon16} />
-    ),
-  } = props
-
-  return (
-    <TouchableArea
-      backgroundColor="$surface3"
-      borderRadius="$roundedFull"
-      p="$spacing4"
-      onPress={onPress}>
-      {clearIcon}
-    </TouchableArea>
-  )
-}

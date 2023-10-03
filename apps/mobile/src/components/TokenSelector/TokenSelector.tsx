@@ -124,10 +124,10 @@ function TokenSelectorContent({
     <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
       <Flex grow gap="$spacing16" pb={IS_IOS ? '$spacing16' : '$none'} px="$spacing16">
         <SearchTextInput
-          backgroundColor="surface2"
+          backgroundColor="$surface2"
           endAdornment={hasClipboardString ? <PasteButton inline onPress={handlePaste} /> : null}
           placeholder={t('Search tokens')}
-          py="spacing8"
+          py="$spacing8"
           value={searchFilter ?? ''}
           onChangeText={onChangeText}
         />

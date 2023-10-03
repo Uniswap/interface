@@ -76,7 +76,7 @@ export function _RecipientSelect({
         width="100%">
         <SearchBar
           autoFocus
-          backgroundColor="surface2"
+          backgroundColor="$surface2"
           endAdornment={<QRScannerIconButton onPress={onPressQRScanner} />}
           placeholder={t('Search ENS or address')}
           value={pattern ?? ''}
