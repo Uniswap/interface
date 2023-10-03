@@ -63,6 +63,8 @@ const TokenTitle = styled.div`
   }
 `
 const DividerLine = styled(Hr)`
+  margin-top: 40px;
+  margin-bottom: 40px;
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
     display: none;
   }
