@@ -3,6 +3,7 @@ import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token, Tra
 import { DutchOrderInfo, DutchOrderInfoJSON, DutchOrderTrade as IDutchOrderTrade } from '@uniswap/uniswapx-sdk'
 import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
+import { ZERO_PERCENT } from 'constants/misc'
 
 export enum TradeState {
   LOADING = 'loading',
@@ -279,6 +280,9 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
   startTimeBufferSecs: number
   deadlineBufferSecs: number
   slippageTolerance: Percent
+
+  inputTax = ZERO_PERCENT
+  outputTax = ZERO_PERCENT
 
   constructor({
     currencyIn,

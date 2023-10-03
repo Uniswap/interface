@@ -2,31 +2,37 @@
 
 exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] = `
 <DocumentFragment>
-  .c3 {
+  .c2 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c4 {
+.c3 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: flex-start;
-  -webkit-box-align: flex-start;
-  -ms-flex-align: flex-start;
-  align-items: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c4 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  gap: 8px;
 }
 
-.c2 {
+.c5 {
   color: #222222;
 }
 
@@ -45,130 +51,112 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
   gap: 12px;
 }
 
-.c7 {
+.c9 {
   display: inline-block;
   height: inherit;
 }
 
-.c5 {
+.c7 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c6 {
+  cursor: auto;
   color: #7D7D7D;
-  margin-right: 8px;
 }
 
 .c8 {
   cursor: help;
   color: #7D7D7D;
-  margin-right: 8px;
 }
 
 .c1 {
   padding: 0 8px;
 }
 
-.c6 {
-  text-align: right;
-  overflow-wrap: break-word;
-}
-
 <div
     class="c0 c1"
   >
     <div
-      class="c2 css-142zc9n"
+      class="c2 c3 c4"
     >
       <div
-        class="c3 c4"
+        class="c5 c6 css-142zc9n"
+        data-testid="swap-li-label"
       >
-        <div
-          class="c2 c5 css-142zc9n"
-        >
-          Exchange rate
-        </div>
-        <div
-          class="c2 c6 css-142zc9n"
-        >
-          1 DEF = 1.00 ABC 
-        </div>
+        Exchange rate
+      </div>
+      <div
+        class="c5 c7 css-142zc9n"
+      >
+        1 DEF = 1.00 ABC
       </div>
     </div>
     <div
-      class="c2 css-142zc9n"
+      class="c2 c3 c4"
     >
       <div
-        class="c3 c4"
+        class="c5 c8 css-142zc9n"
+        data-testid="swap-li-label"
       >
-        <div
-          class="c7"
-        >
-          <div>
-            <div
-              class="c2 c8 css-142zc9n"
-              cursor="help"
-            >
-              Network fee
-            </div>
-          </div>
-        </div>
-        <div
-          class="c7"
-        >
-          <div>
-            <div
-              class="c2 c6 css-142zc9n"
-            >
-              $1.00
-            </div>
+        Network fee
+      </div>
+      <div
+        class="c9"
+      >
+        <div>
+          <div
+            class="c5 c7 css-142zc9n"
+          >
+            $1.00
           </div>
         </div>
       </div>
     </div>
     <div
-      class="c2 css-142zc9n"
+      class="c2 c3 c4"
     >
       <div
-        class="c3 c4"
+        class="c5 c8 css-142zc9n"
+        data-testid="swap-li-label"
       >
-        <div
-          class="c7"
-        >
-          <div>
-            <div
-              class="c2 c8 css-142zc9n"
-              cursor="help"
+        Price impact
+      </div>
+      <div
+        class="c9"
+      >
+        <div>
+          <div
+            class="c5 c7 css-142zc9n"
+          >
+            <span
+              class=""
             >
-              Price impact
-            </div>
+              105566.373%
+            </span>
           </div>
-        </div>
-        <div
-          class="c2 c6 css-142zc9n"
-        >
-          105566.373%
         </div>
       </div>
     </div>
     <div
-      class="c2 css-142zc9n"
+      class="c2 c3 c4"
     >
       <div
-        class="c3 c4"
+        class="c5 c8 css-142zc9n"
+        data-testid="swap-li-label"
       >
-        <div
-          class="c7"
-        >
-          <div>
-            <div
-              class="c2 c8 css-142zc9n"
-              cursor="help"
-            >
-              Minimum received
-            </div>
+        Minimum output
+      </div>
+      <div
+        class="c9"
+      >
+        <div>
+          <div
+            class="c5 c7 css-142zc9n"
+          >
+            0.00000000000000098 DEF
           </div>
-        </div>
-        <div
-          class="c2 c6 css-142zc9n"
-        >
-          0.00000000000000098 DEF
         </div>
       </div>
     </div>
@@ -346,31 +334,37 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
 
 exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 1`] = `
 <DocumentFragment>
-  .c3 {
+  .c2 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c4 {
+.c3 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: flex-start;
-  -webkit-box-align: flex-start;
-  -ms-flex-align: flex-start;
-  align-items: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c4 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  gap: 8px;
 }
 
-.c2 {
+.c5 {
   color: #222222;
 }
 
@@ -389,29 +383,41 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
   gap: 12px;
 }
 
-.c7 {
+.c10 {
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
+  background-size: 400%;
+  will-change: background-position;
+  border-radius: 12px;
+  height: 15px;
+  width: 50px;
+}
+
+.c9 {
   display: inline-block;
   height: inherit;
 }
 
-.c5 {
+.c7 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c6 {
+  cursor: auto;
   color: #7D7D7D;
-  margin-right: 8px;
 }
 
 .c8 {
   cursor: help;
   color: #7D7D7D;
-  margin-right: 8px;
 }
 
 .c1 {
   padding: 0 8px;
-}
-
-.c6 {
-  text-align: right;
-  overflow-wrap: break-word;
 }
 
 @media (max-width:960px) {
@@ -422,101 +428,90 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
     class="c0 c1"
   >
     <div
-      class="c2 css-142zc9n"
+      class="c2 c3 c4"
     >
       <div
-        class="c3 c4"
+        class="c5 c6 css-142zc9n"
+        data-testid="swap-li-label"
       >
-        <div
-          class="c2 c5 css-142zc9n"
-        >
-          Exchange rate
-        </div>
-        <div
-          class="c2 c6 css-142zc9n"
-        >
-          1 DEF = 1.00 ABC 
-        </div>
+        Exchange rate
+      </div>
+      <div
+        class="c5 c7 css-142zc9n"
+      >
+        1 DEF = 1.00 ABC
       </div>
     </div>
     <div
-      class="c2 css-142zc9n"
+      class="c2 c3 c4"
     >
       <div
-        class="c3 c4"
+        class="c5 c8 css-142zc9n"
+        data-testid="swap-li-label"
       >
-        <div
-          class="c7"
-        >
-          <div>
+        Network fee
+      </div>
+      <div
+        class="c9"
+      >
+        <div>
+          <div
+            class="c5 c7 css-142zc9n"
+          >
             <div
-              class="c2 c8 css-142zc9n"
-              cursor="help"
-            >
-              Network fees
-            </div>
-          </div>
-        </div>
-        <div
-          class="c7"
-        >
-          <div>
-            <div
-              class="c2 c6 css-142zc9n"
-            >
-              -
-            </div>
+              class="c10"
+              data-testid="loading-row"
+              height="15"
+              width="50"
+            />
           </div>
         </div>
       </div>
     </div>
     <div
-      class="c2 css-142zc9n"
+      class="c2 c3 c4"
     >
       <div
-        class="c3 c4"
+        class="c5 c8 css-142zc9n"
+        data-testid="swap-li-label"
       >
-        <div
-          class="c7"
-        >
-          <div>
+        Price impact
+      </div>
+      <div
+        class="c9"
+      >
+        <div>
+          <div
+            class="c5 c7 css-142zc9n"
+          >
             <div
-              class="c2 c8 css-142zc9n"
-              cursor="help"
-            >
-              Price impact
-            </div>
+              class="c10"
+              data-testid="loading-row"
+              height="15"
+              width="50"
+            />
           </div>
-        </div>
-        <div
-          class="c2 c6 css-142zc9n"
-        >
-          -
         </div>
       </div>
     </div>
     <div
-      class="c2 css-142zc9n"
+      class="c2 c3 c4"
     >
       <div
-        class="c3 c4"
+        class="c5 c8 css-142zc9n"
+        data-testid="swap-li-label"
       >
-        <div
-          class="c7"
-        >
-          <div>
-            <div
-              class="c2 c8 css-142zc9n"
-              cursor="help"
-            >
-              Minimum received
-            </div>
+        Minimum output
+      </div>
+      <div
+        class="c9"
+      >
+        <div>
+          <div
+            class="c5 c7 css-142zc9n"
+          >
+            0.00000000000000098 DEF
           </div>
-        </div>
-        <div
-          class="c2 c6 css-142zc9n"
-        >
-          0.00000000000000098 DEF
         </div>
       </div>
     </div>
