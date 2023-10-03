@@ -4,7 +4,6 @@ import { Trace, TraceEvent } from 'analytics'
 import Column from 'components/Column'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import { AutoRow } from 'components/Row'
-import { TabbedNav } from 'components/TabbedNav'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useEffect, useState } from 'react'
@@ -61,8 +60,14 @@ const PageWrapper = styled.div`
   width: calc(100% + 32px);
   flex: 1;
 `
+interface Page {
+  title: React.ReactNode
+  key: string
+  component: ({ account }: { account: string }) => JSX.Element
+  loggingElementName: string
+}
 
-const Pages: Array<TabbedNav> = [
+const Pages: Array<Page> = [
   {
     title: <Trans>Tokens</Trans>,
     key: 'tokens',

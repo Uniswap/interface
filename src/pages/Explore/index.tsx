@@ -3,7 +3,6 @@ import { BrowserEvent, InterfacePageName, SharedEventName } from '@uniswap/analy
 import { TraceEvent } from 'analytics'
 import { Trace } from 'analytics'
 import { AutoRow } from 'components/Row'
-import { TabbedNav } from 'components/TabbedNav'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
@@ -38,9 +37,6 @@ const TitleContainer = styled.div`
   margin-right: auto;
   display: flex;
 `
-const Nav = styled(AutoRow)`
-  gap: 20px;
-`
 
 const NavItem = styled(ThemedText.MediumHeader)<{ active?: boolean }>`
   align-items: center;
@@ -49,9 +45,6 @@ const NavItem = styled(ThemedText.MediumHeader)<{ active?: boolean }>`
   display: flex;
   justify-content: space-between;
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} color`};
-  &:hover {
-    ${({ theme, active }) => !active && `color: ${theme.neutral2}`};
-  }
 `
 const FiltersContainer = styled.div<{ isExplore: boolean }>`
   display: flex;
@@ -90,13 +83,18 @@ const NavWrapper = styled.div<{ isExplore: boolean }>`
     gap: ${({ isExplore }) => (isExplore ? '16px' : '8px')};
   }
 `
-
-const Pages: Array<TabbedNav> = [
+interface Page {
+  title: React.ReactNode
+  key: string
+  component: () => JSX.Element
+  loggingElementName: string
+}
+const Pages: Array<Page> = [
   {
     title: <Trans>Tokens</Trans>,
     key: 'tokens',
     component: TokenTable,
-    loggingElementName: 'explore-tokens-tab', // todo: add to InterfaceElementName @uniswap/analytics-events
+    loggingElementName: 'explore-tokens-tab', // todo(WEB-2933): add to InterfaceElementName @uniswap/analytics-events
   },
   {
     title: <Trans>Pools</Trans>,
@@ -125,13 +123,11 @@ const Explore = () => {
   const { component: Page, key: currentKey } = Pages[currentTab]
 
   return (
-    // TODO: add 'explore-page' to InterfacePageName in @uniswap/analytics-events
+    // TODO(WEB-2933): add 'explore-page' to InterfacePageName in @uniswap/analytics-events
     <Trace page={isExplore ? 'explore-page' : InterfacePageName.TOKENS_PAGE} shouldLogImpression>
       <ExploreContainer>
-        {/* TODO: add graphs to explore page */}
-        {isExplore ? (
-          <div></div>
-        ) : (
+        {/* TODO(WEB-2749 & WEB-2750): add graphs to explore page */}
+        {!isExplore && (
           <TitleContainer>
             <MouseoverTooltip
               text={<Trans>This table contains the top tokens by Uniswap volume, sorted based on your input.</Trans>}
@@ -145,7 +141,7 @@ const Explore = () => {
         )}
         <NavWrapper isExplore={isExplore}>
           {isExplore && (
-            <Nav data-testid="explore-navbar">
+            <AutoRow gap="20px" data-testid="explore-navbar">
               {Pages.map(({ title, loggingElementName, key }, index) => {
                 const handleNavItemClick = () => {
                   setCurrentTab(index)
@@ -163,7 +159,7 @@ const Explore = () => {
                   </TraceEvent>
                 )
               })}
-            </Nav>
+            </AutoRow>
           )}
           {isExplore ? (
             <FiltersContainer isExplore>

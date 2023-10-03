@@ -118,7 +118,13 @@ export default function TimeSelector() {
     <StyledMenu ref={node} isExplore={isExplore}>
       <FilterOption onClick={toggleMenu} aria-label="timeSelector" active={open} data-testid="time-selector">
         <StyledMenuContent isExplore={isExplore}>
-          {isExplore ? <Trans>{DISPLAYS[activeTime]} volume</Trans> : DISPLAYS[activeTime]}
+          {isExplore ? (
+            <>
+              {DISPLAYS[activeTime]} <Trans>volume</Trans>
+            </>
+          ) : (
+            DISPLAYS[activeTime]
+          )}
           <Chevron open={open}>
             {open ? (
               <ChevronUp width={20} height={15} viewBox="0 0 24 20" />

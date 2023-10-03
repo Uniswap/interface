@@ -18,7 +18,7 @@ const SearchBarContainer = styled.div<{ isExplore: boolean }>`
   flex: 1;
   ${({ isExplore }) => isExplore && 'justify-content: flex-end;'}
 `
-const SearchInput = styled.input<{ isExplore: boolean; isClicked?: boolean }>`
+const SearchInput = styled.input<{ isExplore: boolean; isOpen?: boolean }>`
   background: no-repeat scroll 7px 7px;
   background-image: url(${searchIcon});
   background-size: 20px 20px;
@@ -27,7 +27,7 @@ const SearchInput = styled.input<{ isExplore: boolean; isClicked?: boolean }>`
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.surface3};
   height: 100%;
-  width: ${({ isExplore, isClicked }) => (isExplore ? (isClicked ? '200px' : '0') : 'min(200px, 100%)')};
+  width: ${({ isExplore, isOpen }) => (isExplore ? (isOpen ? '200px' : '0') : 'min(200px, 100%)')};
   font-size: 16px;
   font-weight: 485;
   padding-left: 40px;
@@ -61,7 +61,7 @@ const SearchInput = styled.input<{ isExplore: boolean; isClicked?: boolean }>`
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    width: ${({ isExplore, isClicked }) => (isExplore ? (isClicked ? 'min(100%, 200px)' : '0') : '100%')};
+    width: ${({ isExplore, isOpen }) => (isExplore ? (isOpen ? 'min(100%, 200px)' : '0') : '100%')};
   }
 `
 
@@ -71,7 +71,7 @@ export default function SearchBar({ tab }: { tab?: string }) {
   const setFilterString = useUpdateAtom(filterStringAtom)
   const debouncedLocalFilterString = useDebounce(localFilterString, 300)
   const isExplore = useInfoExplorePageEnabled()
-  const [isClicked, setIsClicked] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
     setLocalFilterString(currentString)
@@ -81,10 +81,10 @@ export default function SearchBar({ tab }: { tab?: string }) {
     setFilterString(debouncedLocalFilterString)
   }, [debouncedLocalFilterString, setFilterString])
 
-  const handleFocus = () => setIsClicked(true)
+  const handleFocus = () => setIsOpen(true)
 
   const handleBlur = () => {
-    if (localFilterString === '') setIsClicked(false)
+    if (localFilterString === '') setIsOpen(false)
   }
 
   return (
@@ -105,7 +105,7 @@ export default function SearchBar({ tab }: { tab?: string }) {
                 id="searchBar"
                 autoComplete="off"
                 value={localFilterString}
-                isClicked={isClicked}
+                isOpen={isOpen}
                 onChange={({ target: { value } }) => setLocalFilterString(value)}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
@@ -125,7 +125,7 @@ export default function SearchBar({ tab }: { tab?: string }) {
           </TraceEvent>
         )}
       >
-        {isExplore ? `Search ${tab}` : 'Filter tokens'}
+        {isExplore ? (tab === 'tokens' ? 'Search tokens' : 'Search pools') : 'Filter tokens'}
       </Trans>
     </SearchBarContainer>
   )
