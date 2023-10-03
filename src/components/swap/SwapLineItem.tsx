@@ -239,7 +239,7 @@ function SwapLineItem(props: SwapLineItemProps) {
 
   return (
     <RowBetween>
-      <LabelText {...hoverProps} hasTooltip={!!LineItem.TooltipBody}>
+      <LabelText {...hoverProps} hasTooltip={!!LineItem.TooltipBody} data-testid="swap-li-label">
         <LineItem.Label />
       </LabelText>
       <ValueWrapper lineItem={LineItem} labelHovered={labelHovered} syncing={props.syncing}>

@@ -51,12 +51,12 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
   gap: 12px;
 }
 
-.c8 {
+.c9 {
   display: inline-block;
   height: inherit;
 }
 
-.c9 {
+.c7 {
   text-align: right;
   overflow-wrap: break-word;
 }
@@ -66,7 +66,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
   color: #7D7D7D;
 }
 
-.c7 {
+.c8 {
   cursor: help;
   color: #7D7D7D;
 }
@@ -83,11 +83,12 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
     >
       <div
         class="c5 c6 css-142zc9n"
+        data-testid="swap-li-label"
       >
         Exchange rate
       </div>
       <div
-        class="c5 css-142zc9n"
+        class="c5 c7 css-142zc9n"
       >
         1 DEF = 1.00 ABC
       </div>
@@ -96,16 +97,17 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
       class="c2 c3 c4"
     >
       <div
-        class="c5 c7 css-142zc9n"
+        class="c5 c8 css-142zc9n"
+        data-testid="swap-li-label"
       >
         Network fee
       </div>
       <div
-        class="c8"
+        class="c9"
       >
         <div>
           <div
-            class="c5 c9 css-142zc9n"
+            class="c5 c7 css-142zc9n"
           >
             $1.00
           </div>
@@ -116,16 +118,17 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
       class="c2 c3 c4"
     >
       <div
-        class="c5 c7 css-142zc9n"
+        class="c5 c8 css-142zc9n"
+        data-testid="swap-li-label"
       >
         Price impact
       </div>
       <div
-        class="c8"
+        class="c9"
       >
         <div>
           <div
-            class="c5 c9 css-142zc9n"
+            class="c5 c7 css-142zc9n"
           >
             <span
               class=""
@@ -140,16 +143,17 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
       class="c2 c3 c4"
     >
       <div
-        class="c5 c7 css-142zc9n"
+        class="c5 c8 css-142zc9n"
+        data-testid="swap-li-label"
       >
         Minimum output
       </div>
       <div
-        class="c8"
+        class="c9"
       >
         <div>
           <div
-            class="c5 c9 css-142zc9n"
+            class="c5 c7 css-142zc9n"
           >
             0.00000000000000098 DEF
           </div>
@@ -392,12 +396,12 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
   width: 50px;
 }
 
-.c8 {
+.c9 {
   display: inline-block;
   height: inherit;
 }
 
-.c9 {
+.c7 {
   text-align: right;
   overflow-wrap: break-word;
 }
@@ -407,7 +411,7 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
   color: #7D7D7D;
 }
 
-.c7 {
+.c8 {
   cursor: help;
   color: #7D7D7D;
 }
@@ -428,11 +432,12 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
     >
       <div
         class="c5 c6 css-142zc9n"
+        data-testid="swap-li-label"
       >
         Exchange rate
       </div>
       <div
-        class="c5 css-142zc9n"
+        class="c5 c7 css-142zc9n"
       >
         1 DEF = 1.00 ABC
       </div>
@@ -441,16 +446,17 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
       class="c2 c3 c4"
     >
       <div
-        class="c5 c7 css-142zc9n"
+        class="c5 c8 css-142zc9n"
+        data-testid="swap-li-label"
       >
         Network fee
       </div>
       <div
-        class="c8"
+        class="c9"
       >
         <div>
           <div
-            class="c5 c9 css-142zc9n"
+            class="c5 c7 css-142zc9n"
           >
             <div
               class="c10"
@@ -466,16 +472,17 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
       class="c2 c3 c4"
     >
       <div
-        class="c5 c7 css-142zc9n"
+        class="c5 c8 css-142zc9n"
+        data-testid="swap-li-label"
       >
         Price impact
       </div>
       <div
-        class="c8"
+        class="c9"
       >
         <div>
           <div
-            class="c5 c9 css-142zc9n"
+            class="c5 c7 css-142zc9n"
           >
             <div
               class="c10"
@@ -491,16 +498,17 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
       class="c2 c3 c4"
     >
       <div
-        class="c5 c7 css-142zc9n"
+        class="c5 c8 css-142zc9n"
+        data-testid="swap-li-label"
       >
         Minimum output
       </div>
       <div
-        class="c8"
+        class="c9"
       >
         <div>
           <div
-            class="c5 c9 css-142zc9n"
+            class="c5 c7 css-142zc9n"
           >
             0.00000000000000098 DEF
           </div>

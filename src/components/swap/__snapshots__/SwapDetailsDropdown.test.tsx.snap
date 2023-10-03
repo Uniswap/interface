@@ -302,6 +302,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
           >
             <div
               class="c9 c19 css-142zc9n"
+              data-testid="swap-li-label"
             >
               Network fee
             </div>
@@ -322,6 +323,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
           >
             <div
               class="c9 c19 css-142zc9n"
+              data-testid="swap-li-label"
             >
               Price impact
             </div>
@@ -346,6 +348,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
           >
             <div
               class="c9 c19 css-142zc9n"
+              data-testid="swap-li-label"
             >
               Minimum output
             </div>
@@ -366,6 +369,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
           >
             <div
               class="c9 c19 css-142zc9n"
+              data-testid="swap-li-label"
             >
               Expected output
             </div>
@@ -389,6 +393,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
           >
             <div
               class="c9 c19 css-142zc9n"
+              data-testid="swap-li-label"
             >
               Order routing
             </div>

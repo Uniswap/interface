@@ -11,6 +11,20 @@ import {
 } from 'test-utils/constants'
 import { render } from 'test-utils/render'
 
+// Forces tooltips to render in snapshots
+jest.mock('react-dom', () => {
+  const original = jest.requireActual('react-dom')
+  return {
+    ...original,
+    createPortal: (node: any) => node,
+  }
+})
+
+// Prevents uuid from generating unpredictable values in snapshots
+jest.mock('uuid', () => ({
+  v4: () => 'fixed-uuid-value',
+}))
+
 import SwapLineItem, { SwapLineItemTypes } from './SwapLineItem'
 
 const AllLineItemsTypes = Object.keys(SwapLineItemTypes).map(Number).filter(Boolean)
@@ -27,14 +41,11 @@ function testTradeLineItems(trade: InterfaceTrade, props: Partial<typeof lineIte
       ))}
     </>
   )
-  expect(asFragment).toMatchSnapshot()
+  expect(asFragment()).toMatchSnapshot()
 }
 
 /* eslint-disable jest/expect-expect */ // allow expect inside testTradeLineItems
 describe('SwapLineItem.tsx', () => {
-  beforeEach(() => {
-    jest.useFakeTimers()
-  })
   it('exact input', () => {
     testTradeLineItems(TEST_TRADE_EXACT_INPUT)
   })
