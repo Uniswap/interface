@@ -25,6 +25,7 @@ import {
   usePoolIdByAddress,
   useStakeBalance,
 } from '../../state/governance/hooks'
+import { useFreeStakeBalance } from '../../state/stake/hooks'
 import { ThemedText } from '../../theme'
 import AddressInputPanel from '../AddressInputPanel'
 import { /*ButtonConfirmed,*/ ButtonPrimary } from '../Button'
@@ -80,6 +81,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
     isDeactivate ? poolId : fromPoolId,
     isPoolMoving ? poolInfo?.pool?.address : undefined
   )
+  const freeStakeBalance = useFreeStakeBalance(true)
   const poolContract = usePoolExtendedContract(poolInfo?.pool?.address)
 
   // boilerplate for the slider
@@ -89,7 +91,11 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
     currencyValue,
     JSBI.divide(
       JSBI.multiply(
-        fromPoolStakeBalance ? fromPoolStakeBalance.quotient : JSBI.BigInt(0),
+        fromPoolStakeBalance
+          ? fromPoolStakeBalance.quotient
+          : freeStakeBalance
+          ? freeStakeBalance.quotient
+          : JSBI.BigInt(0),
         JSBI.BigInt(percentForSlider)
       ),
       JSBI.BigInt(100)
@@ -106,7 +112,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
   const moveStakeData: StakeData = {
     amount: parsedAmount?.quotient.toString(),
     pool: poolInfo.pool?.address,
-    fromPoolId,
+    fromPoolId: fromPoolId ?? poolId,
     poolId: poolId ?? '',
     poolContract: isPoolMoving ? poolContract : null,
     stakingPoolExists,
@@ -137,7 +143,13 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
     setStakeAmount(parsedAmount)
 
     // if callback not returned properly ignore
-    if (!moveStakeCallback || !deactivateStakeCallback || !fromPoolStakeBalance || !currencyValue.isToken) return
+    if (
+      !moveStakeCallback ||
+      !deactivateStakeCallback ||
+      (!fromPoolStakeBalance && !freeStakeBalance) ||
+      !currencyValue.isToken
+    )
+      return
 
     const moveCallback = !isDeactivate ? moveStakeCallback : deactivateStakeCallback
 
@@ -167,7 +179,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
                   <Trans>Move stake to the pools that maximize your APR, Your voting power will be unaffected.</Trans>
                 </ThemedText.DeprecatedBody>
                 <ThemedText.DeprecatedBody>
-                  <Trans>Please input the pool you want to move your stake from.</Trans>
+                  <Trans>Input the pool you want to move your stake from, or leave blank to activate free stake.</Trans>
                 </ThemedText.DeprecatedBody>
                 <AddressInputPanel value={typed} onChange={handleFromPoolType} />
               </>

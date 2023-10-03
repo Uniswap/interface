@@ -233,14 +233,14 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
   ])
 }
 
-export function useFreeStakeBalance(): CurrencyAmount<Token> | undefined {
+export function useFreeStakeBalance(isDelegateFreeStake?: boolean): CurrencyAmount<Token> | undefined {
   const { account, chainId } = useWeb3React()
   const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
   const stakingContract = useStakingContract()
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
   // TODO: check if can improve as whenever there is an address in the url the pool's balance will be checked
   const freeStake = useSingleCallResult(stakingContract ?? undefined, 'getOwnerStakeByStatus', [
-    poolAddressFromUrl ?? account,
+    isDelegateFreeStake ? account : poolAddressFromUrl ?? account,
     StakeStatus.UNDELEGATED,
   ])?.result?.[0]
 
