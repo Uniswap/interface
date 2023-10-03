@@ -1,5 +1,5 @@
 import { validPoolDataResponse } from 'test-utils/pools/fixtures'
-import { render, screen } from 'test-utils/render'
+import { act, render, screen } from 'test-utils/render'
 import { BREAKPOINTS } from 'theme'
 
 import { PoolDetailsStats } from './PoolDetailsStats'
@@ -11,8 +11,11 @@ describe('PoolDetailsStats', () => {
     chainId: 1,
   }
 
-  it('renders stats text correctly', () => {
+  it('renders stats text correctly', async () => {
     const { asFragment } = render(<PoolDetailsStats {...mockProps} />)
+    await act(async () => {
+      await asFragment
+    })
     expect(asFragment()).toMatchSnapshot()
 
     expect(screen.getByText(/Stats/i)).toBeInTheDocument()
@@ -23,13 +26,16 @@ describe('PoolDetailsStats', () => {
     expect(screen.getByTestId('pool-balance-chart')).toBeInTheDocument()
   })
 
-  it('pool balance chart not visible on mobile', () => {
+  it('pool balance chart not visible on mobile', async () => {
     Object.defineProperty(window, 'innerWidth', {
       writable: true,
       configurable: true,
       value: BREAKPOINTS.md,
     })
     const { asFragment } = render(<PoolDetailsStats {...mockProps} />)
+    await act(async () => {
+      await asFragment
+    })
     expect(asFragment()).toMatchSnapshot()
 
     expect(screen.queryByTestId('pool-balance-chart')).toBeNull()

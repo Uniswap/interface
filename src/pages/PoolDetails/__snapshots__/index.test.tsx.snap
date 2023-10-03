@@ -986,57 +986,29 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
                 class="c39"
               >
                 <img
-                  alt="UNKNOWN logo"
+                  alt="WETH logo"
                   class="c40"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
                 />
               </div>
             </div>
             <div
               class="c7 c41 css-1urox24"
             >
-              Unknown Token
+              Wrapped Ether
             </div>
             <div
               class="c6 css-1urox24"
             >
-              UNKNOWN
+              WETH
             </div>
           </div>
           <div
             class="c0 c1 c37 c42"
           >
-            <div
-              class="c0 c1 c44"
-            >
-              <svg
-                fill="none"
-                height="18px"
-                stroke="#2172E5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                width="18px"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect
-                  height="13"
-                  rx="2"
-                  ry="2"
-                  width="13"
-                  x="9"
-                  y="9"
-                />
-                <path
-                  d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-                />
-              </svg>
-              0xA0b8...eB48
-            </div>
             <a
               class="c43"
-              href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+              href="https://etherscan.io/token/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
               rel="noopener noreferrer"
               target="_blank"
             >
