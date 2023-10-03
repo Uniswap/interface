@@ -32,11 +32,7 @@ export default function PasteButton({
     return (
       <TouchableArea p="$spacing8" onPress={onPressButton} onPressIn={beforePress}>
         <Flex centered row gap="$spacing4">
-          <Icons.ClipboardPaste
-            color="$neutral2"
-            height={iconSizes.icon16}
-            width={iconSizes.icon16}
-          />
+          <Icons.ClipboardPaste color="$neutral2" size={iconSizes.icon16} />
           <Text color="$neutral2" variant="buttonLabel4">
             {label}
           </Text>
@@ -47,7 +43,7 @@ export default function PasteButton({
 
   return (
     <Button
-      icon={<Icons.Paste color="$neutral1" />}
+      icon={<Icons.Paste color="$neutral1" size={iconSizes.icon16} />}
       size="small"
       theme="tertiary"
       onPress={onPressButton}

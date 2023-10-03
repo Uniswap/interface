@@ -162,8 +162,8 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
       >
         <RNSVGSvgView
           align="xMidYMid"
-          bbHeight="12"
-          bbWidth="12"
+          bbHeight="16"
+          bbWidth="16"
           fill="none"
           focusable={false}
           meetOrSlice={0}
@@ -178,13 +178,13 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
               },
               {
                 "color": "#222222",
-                "height": 12,
-                "width": 12,
+                "height": 16,
+                "width": 16,
               },
               {
                 "flex": 0,
-                "height": 12,
-                "width": 12,
+                "height": 16,
+                "width": 16,
               },
             ]
           }
