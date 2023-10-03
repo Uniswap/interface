@@ -157,13 +157,16 @@ export function TransactionsTable({ referenceToken }: { referenceToken: TokenInf
           </Cell>
         ),
         accessor: 'transactionHash',
-        Cell: ({ value }: { value: string }) => (
-          <Cell>
-            <StyledExternalLink href={`https://etherscan.io/tx/${value}`} color={theme.neutral2}>
-              <ExternalLinkIcon size="16px" />
-            </StyledExternalLink>
-          </Cell>
-        ),
+        Cell: ({ value }: { value: string }) => {
+          const href = `https://etherscan.io/tx/${value}`
+          return (
+            <Cell>
+              <StyledExternalLink href={href} data-testid={href} color={theme.neutral2}>
+                <ExternalLinkIcon size="16px" />
+              </StyledExternalLink>
+            </Cell>
+          )
+        },
         disableSortBy: true,
         id: ColumnHeader.Txn,
       },

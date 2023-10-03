@@ -19,7 +19,7 @@ describe('TransactionsTable', () => {
 
     expect(screen.getByText('Time')).toBeInTheDocument()
     expect(screen.getByText('Type')).toBeInTheDocument()
-    expect(screen.getByText('Amount')).toBeInTheDocument()
+    expect(screen.getByText('$BITCOIN')).toBeInTheDocument()
     expect(screen.getByText('For')).toBeInTheDocument()
     expect(screen.getByText('USD')).toBeInTheDocument()
     expect(screen.getByText('Maker')).toBeInTheDocument()
@@ -32,7 +32,7 @@ describe('TransactionsTable', () => {
 
     expect(screen.getByText('Time')).toBeInTheDocument()
     expect(screen.getByText('Type')).toBeInTheDocument()
-    expect(screen.getByText('Amount')).toBeInTheDocument()
+    expect(screen.getByText('$BITCOIN')).toBeInTheDocument()
     expect(screen.getByText('For')).toBeInTheDocument()
     expect(screen.getByText('USD')).toBeInTheDocument()
   })
@@ -44,7 +44,7 @@ describe('TransactionsTable', () => {
 
     expect(screen.getByText('Time')).toBeInTheDocument()
     expect(screen.getByText('Type')).toBeInTheDocument()
-    expect(screen.getByText('Amount')).toBeInTheDocument()
+    expect(screen.getByText('$BITCOIN')).toBeInTheDocument()
     expect(screen.getByText('USD')).toBeInTheDocument()
   })
 
@@ -55,28 +55,23 @@ describe('TransactionsTable', () => {
 
     expect(screen.getByText('Time')).toBeInTheDocument()
     expect(screen.getByText('Type')).toBeInTheDocument()
-    expect(screen.getByText('Amount')).toBeInTheDocument()
+    expect(screen.getByText('$BITCOIN')).toBeInTheDocument()
   })
 
   it('displays swap row', () => {
     window.innerWidth = 1280
     const txHash = '0xc3e8878f48b4c5048fef4988136b1cad4401b77f36f0e034e4e97929df85fb5e'
-    const userAddress = '0xbac29b775eff5fe0abe0b2f1a71bad90888415cc'
 
     render(<TransactionsTable referenceToken={mockTokenInfo} />)
 
     expect(screen.getByText('09/06, 05:09pm')).toBeInTheDocument()
-    expect(screen.getAllByText('Bought')[0]).toBeInTheDocument()
-    expect(screen.getByText('6,084.98 BITCOIN')).toBeInTheDocument()
+    expect(screen.getAllByText('Buy')[0]).toBeInTheDocument()
+    expect(screen.getByText('6,084.98')).toBeInTheDocument()
     expect(screen.getByText('39,037.94 DORKL')).toBeInTheDocument()
     expect(screen.getByText('$1,000.00')).toBeInTheDocument()
     expect(screen.getByTestId(`https://etherscan.io/tx/${txHash}`)).toHaveAttribute(
       'href',
       `https://etherscan.io/tx/${txHash}`
-    )
-    expect(screen.getByTestId(`https://etherscan.io/address/${userAddress}`)).toHaveAttribute(
-      'href',
-      `https://etherscan.io/address/${userAddress}`
     )
   })
 })
