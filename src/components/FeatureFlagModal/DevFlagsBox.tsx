@@ -1,7 +1,6 @@
 import { BaseVariant, featureFlagSettings } from 'featureFlags'
 import { useAtomValue } from 'jotai/utils'
 import { useState } from 'react'
-import { ChevronDown, ChevronUp } from 'react-feather'
 import { useGate } from 'statsig-react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
@@ -31,7 +30,7 @@ export default function DevFlagsBox() {
     }
   }
 
-  const [isCollapsed, setIsCollapsed] = useState(true)
+  const [isCollapsed, setIsCollapsed] = useState(false)
   const toggleCollapse = () => setIsCollapsed(!isCollapsed)
 
   if (shouldShow) {
@@ -46,16 +45,16 @@ export default function DevFlagsBox() {
           onClick={toggleCollapse}
         >
           <ThemedText.SubHeader>Feature flag setting overrides</ThemedText.SubHeader>
-          {isCollapsed ? <ChevronUp /> : <ChevronDown />}
+          {isCollapsed ? '😿☝️' : '😺👇'}
         </div>
         {!isCollapsed &&
+          overrides.length &&
           overrides.map(([flag, setting]) => (
-            <div key={flag}>
-              <ThemedText.LabelSmall>
-                {flag}: {setting}
-              </ThemedText.LabelSmall>
-            </div>
+            <ThemedText.LabelSmall key={flag}>
+              {flag}: {setting}
+            </ThemedText.LabelSmall>
           ))}
+        {overrides.length === 0 && <ThemedText.LabelSmall>No overrides</ThemedText.LabelSmall>}
       </Box>
     )
   } else {
