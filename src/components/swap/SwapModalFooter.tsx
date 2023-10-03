@@ -19,7 +19,7 @@ import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
 import { ButtonError, SmallButtonPrimary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
 import { SwapCallbackError, SwapShowAcceptChanges } from './styled'
-import { SwapLineItemTypes } from './SwapLineItem'
+import { SwapLineItemType } from './SwapLineItem'
 import SwapLineItem from './SwapLineItem'
 
 const DetailsContainer = styled(Column)`
@@ -72,13 +72,13 @@ export default function SwapModalFooter({
   return (
     <>
       <DetailsContainer gap="md">
-        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.EXCHANGE_RATE} />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.NETWORK_FEE} />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.PRICE_IMPACT} />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.INPUT_TOKEN_FEE_ON_TRANSFER} />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.OUTPUT_TOKEN_FEE_ON_TRANSFER} />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.MAXIMUM_INPUT} />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.MINIMUM_OUTPUT} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.EXCHANGE_RATE} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.NETWORK_FEE} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.PRICE_IMPACT} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.OUTPUT_TOKEN_FEE_ON_TRANSFER} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.MAXIMUM_INPUT} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.MINIMUM_OUTPUT} />
       </DetailsContainer>
       {showAcceptChanges ? (
         <SwapShowAcceptChanges data-testid="show-accept-changes">

@@ -25,9 +25,9 @@ jest.mock('uuid', () => ({
   v4: () => 'fixed-uuid-value',
 }))
 
-import SwapLineItem, { SwapLineItemTypes } from './SwapLineItem'
+import SwapLineItem, { SwapLineItemType } from './SwapLineItem'
 
-const AllLineItemsTypes = Object.keys(SwapLineItemTypes).map(Number).filter(Boolean)
+const AllLineItemsTypes = Object.keys(SwapLineItemType).map(Number).filter(Boolean)
 const lineItemProps = {
   syncing: false,
   allowedSlippage: TEST_ALLOWED_SLIPPAGE,

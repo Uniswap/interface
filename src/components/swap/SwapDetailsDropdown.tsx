@@ -16,7 +16,7 @@ import { Separator, ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
 
 import GasEstimateTooltip from './GasEstimateTooltip'
-import SwapLineItem, { SwapLineItemTypes } from './SwapLineItem'
+import SwapLineItem, { SwapLineItemType } from './SwapLineItem'
 import TradePrice from './TradePrice'
 
 const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean }>`
@@ -107,15 +107,15 @@ function AdvancedSwapDetails(props: SwapDetailsProps & { open: boolean }) {
     <AnimatedDropdown open={open}>
       <SwapDetailsWrapper gap="md" data-testid="advanced-swap-details">
         <Separator />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.NETWORK_FEE} />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.PRICE_IMPACT} />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.INPUT_TOKEN_FEE_ON_TRANSFER} />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.OUTPUT_TOKEN_FEE_ON_TRANSFER} />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.MAXIMUM_INPUT} />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.MINIMUM_OUTPUT} />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.EXPECTED_OUTPUT} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.NETWORK_FEE} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.PRICE_IMPACT} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.OUTPUT_TOKEN_FEE_ON_TRANSFER} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.MAXIMUM_INPUT} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.MINIMUM_OUTPUT} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.EXPECTED_OUTPUT} />
         <Separator />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemTypes.ROUTING_INFO} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.ROUTING_INFO} />
       </SwapDetailsWrapper>
     </AnimatedDropdown>
   )

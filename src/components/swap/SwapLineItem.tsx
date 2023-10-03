@@ -8,7 +8,7 @@ import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useHoverProps from 'hooks/useHoverProps'
 import { useIsMobile } from 'nft/hooks'
 import React, { PropsWithChildren, useEffect, useState } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { getTransactionCount, isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
 import styled, { DefaultTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
@@ -18,7 +18,7 @@ import { getPriceImpactColor } from 'utils/prices'
 import { GasBreakdownTooltip, UniswapXDescription } from './GasBreakdownTooltip'
 import SwapRoute from './SwapRoute'
 
-export enum SwapLineItemTypes {
+export enum SwapLineItemType {
   EXCHANGE_RATE,
   NETWORK_FEE,
   INPUT_TOKEN_FEE_ON_TRANSFER,
@@ -96,19 +96,19 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   const isPreview = isPreviewTrade(trade)
   const chainId = trade.inputAmount.currency.chainId
 
-  // Tracks whether we expect a preview trade to be followed by a UniswapX or a Classic quote
-  const [expectUniswapX, setExpectUniswapX] = useState(isUniswapX)
+  // Tracks the latest submittable trade's fill type, used to 'guess' whether or not to show price impact during preview
+  const [lastSubmittableFillType, setLastSubmittableFillType] = useState<TradeFillType>()
   useEffect(() => {
-    if (!isPreview) setExpectUniswapX(isUniswapX)
-  }, [isUniswapX, isPreview])
+    if (!isPreview) setLastSubmittableFillType(trade.fillType)
+  }, [isUniswapX, isPreview, trade.fillType])
 
   switch (type) {
-    case SwapLineItemTypes.EXCHANGE_RATE:
+    case SwapLineItemType.EXCHANGE_RATE:
       return {
         Label: () => <Trans>Exchange rate</Trans>,
         Value: () => <ExchangeRateRow trade={trade} />,
       }
-    case SwapLineItemTypes.NETWORK_FEE:
+    case SwapLineItemType.NETWORK_FEE:
       if (!SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) return
       return {
         Label: () => <Plural value={getTransactionCount(trade) || 1} one="Network fee" other="Network fees" />,
@@ -118,15 +118,15 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
           return <>{formatNumber({ input: trade.totalGasUseEstimateUSD, type: NumberType.FiatGasPrice })}</>
         },
       }
-    case SwapLineItemTypes.PRICE_IMPACT:
+    case SwapLineItemType.PRICE_IMPACT:
       // Hides price impact row if the current trade is UniswapX or we're expecting a preview trade to result in UniswapX
-      if (isUniswapX || expectUniswapX) return
+      if (isUniswapX || (isPreview && lastSubmittableFillType === TradeFillType.UniswapX)) return
       return {
         Label: () => <Trans>Price impact</Trans>,
         TooltipBody: () => <Trans>The impact your trade has on the market price of this pool.</Trans>,
         Value: () => (isPreview ? <Loading /> : <ColoredPercentRow percent={trade.priceImpact} />),
       }
-    case SwapLineItemTypes.MAXIMUM_INPUT:
+    case SwapLineItemType.MAXIMUM_INPUT:
       if (trade.tradeType === TradeType.EXACT_INPUT) return
       return {
         Label: () => <Trans>Maximum input</Trans>,
@@ -139,7 +139,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
         Value: () => <CurrencyAmountRow amount={trade.maximumAmountIn(allowedSlippage)} />,
         loaderWidth: 70,
       }
-    case SwapLineItemTypes.MINIMUM_OUTPUT:
+    case SwapLineItemType.MINIMUM_OUTPUT:
       if (trade.tradeType === TradeType.EXACT_OUTPUT) return
       return {
         Label: () => <Trans>Minimum output</Trans>,
@@ -152,7 +152,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
         Value: () => <CurrencyAmountRow amount={trade.minimumAmountOut(allowedSlippage)} />,
         loaderWidth: 70,
       }
-    case SwapLineItemTypes.EXPECTED_OUTPUT:
+    case SwapLineItemType.EXPECTED_OUTPUT:
       return {
         Label: () => <Trans>Expected output</Trans>,
         TooltipBody: () => (
@@ -164,7 +164,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
         Value: () => <CurrencyAmountRow amount={trade.postTaxOutputAmount} />,
         loaderWidth: 65,
       }
-    case SwapLineItemTypes.ROUTING_INFO:
+    case SwapLineItemType.ROUTING_INFO:
       if (isPreview) return { Label: () => <Trans>Order routing</Trans>, Value: () => <Loading /> }
       return {
         Label: () => <Trans>Order routing</Trans>,
@@ -175,14 +175,14 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
         tooltipSize: isUniswapX ? TooltipSize.Small : TooltipSize.Large,
         Value: () => <RouterLabel trade={trade} />,
       }
-    case SwapLineItemTypes.INPUT_TOKEN_FEE_ON_TRANSFER:
-    case SwapLineItemTypes.OUTPUT_TOKEN_FEE_ON_TRANSFER:
+    case SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER:
+    case SwapLineItemType.OUTPUT_TOKEN_FEE_ON_TRANSFER:
       return getFOTLineItem(props)
   }
 }
 
 function getFOTLineItem({ type, trade }: SwapLineItemProps): LineItemData | undefined {
-  const isInput = type === SwapLineItemTypes.INPUT_TOKEN_FEE_ON_TRANSFER
+  const isInput = type === SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER
   const currency = isInput ? trade.inputAmount.currency : trade.outputAmount.currency
   const tax = isInput ? trade.inputTax : trade.outputTax
   if (tax.equalTo(0)) return
@@ -228,7 +228,7 @@ interface SwapLineItemProps {
   trade: InterfaceTrade
   syncing: boolean
   allowedSlippage: Percent
-  type: SwapLineItemTypes
+  type: SwapLineItemType
 }
 
 function SwapLineItem(props: SwapLineItemProps) {
