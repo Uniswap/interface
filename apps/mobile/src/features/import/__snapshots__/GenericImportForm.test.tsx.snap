@@ -177,6 +177,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
                 "borderWidth": 0,
               },
               {
+                "color": "#222222",
                 "height": 12,
                 "width": 12,
               },
@@ -187,6 +188,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
               },
             ]
           }
+          tintColor="#222222"
           vbHeight={14}
           vbWidth={15}
         >

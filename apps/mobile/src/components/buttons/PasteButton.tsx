@@ -47,7 +47,7 @@ export default function PasteButton({
 
   return (
     <Button
-      icon={Icons.Paste}
+      icon={<Icons.Paste color="$neutral1" />}
       size="small"
       theme="tertiary"
       onPress={onPressButton}
