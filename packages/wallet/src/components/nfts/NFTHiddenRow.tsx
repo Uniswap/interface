@@ -1,5 +1,5 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { AnimatedFlex, Flex, Icons, Text, TouchableArea } from 'ui/src'

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { PortfolioActionButtons } from 'src/app/features/home/PortfolioActionButtons'
 import { PortfolioHeader } from 'src/app/features/home/PortfolioHeader'
+import { NftsTab } from 'src/app/features/nfts/NftsTab'
 import { TransactionActivity } from 'src/app/features/transactions/TransactionActivity'
 import { Tabs } from 'tamagui'
 import { Flex, Text } from 'ui/src'
@@ -10,6 +11,7 @@ import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hoo
 
 enum HomeTabs {
   Tokens = 'Tokens',
+  NFTs = 'NFTs',
   Activity = 'Activity',
 }
 
@@ -39,6 +41,13 @@ export function HomeScreen(): JSX.Element {
                       Tokens
                     </Text>
                   </Tabs.Tab>
+                  <Tabs.Tab unstyled height="auto" p="$none" value={HomeTabs.NFTs}>
+                    <Text
+                      color={selectedTab === HomeTabs.NFTs ? '$neutral1' : '$neutral2'}
+                      variant="subheading1">
+                      NFTs
+                    </Text>
+                  </Tabs.Tab>
                   <Tabs.Tab unstyled height="auto" p="$none" value={HomeTabs.Activity}>
                     <Text
                       color={selectedTab === HomeTabs.Activity ? '$neutral1' : '$neutral2'}
@@ -50,6 +59,9 @@ export function HomeScreen(): JSX.Element {
 
                 <Tabs.Content value={HomeTabs.Tokens}>
                   <TokenBalanceList owner={address} />
+                </Tabs.Content>
+                <Tabs.Content value={HomeTabs.NFTs}>
+                  <NftsTab owner={address} />
                 </Tabs.Content>
                 <Tabs.Content value={HomeTabs.Activity}>
                   <TransactionActivity address={address} />

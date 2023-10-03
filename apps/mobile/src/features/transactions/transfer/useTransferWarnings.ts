@@ -8,11 +8,11 @@ import {
   WarningLabel,
   WarningSeverity,
 } from 'src/components/modals/WarningModal/types'
-import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
+import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { isOffline } from 'wallet/src/features/transactions/utils'
 import { currencyAddress } from 'wallet/src/utils/currencyId'

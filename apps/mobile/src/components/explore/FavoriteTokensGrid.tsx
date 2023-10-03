@@ -7,8 +7,8 @@ import FavoriteTokenCard, {
   FAVORITE_TOKEN_CARD_LOADER_HEIGHT,
 } from 'src/components/explore/FavoriteTokenCard'
 import { Loader } from 'src/components/loading'
-import { selectFavoriteTokens } from 'src/features/favorites/selectors'
 import { AnimatedFlex, Flex } from 'ui/src'
+import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
 
 const NUM_COLUMNS = 2
 const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }

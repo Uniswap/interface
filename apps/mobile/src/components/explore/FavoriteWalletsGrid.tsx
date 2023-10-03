@@ -5,8 +5,8 @@ import { useAppSelector } from 'src/app/hooks'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteWalletCard from 'src/components/explore/FavoriteWalletCard'
 import { Loader } from 'src/components/loading'
-import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { AnimatedFlex, Flex } from 'ui/src'
+import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 
 const NUM_COLUMNS = 2
 const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }

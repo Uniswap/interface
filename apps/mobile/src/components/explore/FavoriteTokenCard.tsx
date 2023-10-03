@@ -9,7 +9,6 @@ import { useAppDispatch } from 'src/app/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { Loader } from 'src/components/loading'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
-import { removeFavoriteToken } from 'src/features/favorites/slice'
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
@@ -26,6 +25,7 @@ import { useFavoriteTokenCardQuery } from 'wallet/src/data/__generated__/types-a
 import { AssetType } from 'wallet/src/entities/assets'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
+import { removeFavoriteToken } from 'wallet/src/features/favorites/slice'
 import {
   CurrencyField,
   TransactionState,

@@ -8,7 +8,6 @@ import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { store } from 'src/app/store'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { closeAllModals, closeModal, openModal } from 'src/features/modals/modalSlice'
-import { useNFT } from 'src/features/nfts/hooks'
 import { NotificationToast } from 'src/features/notifications/NotificationToast'
 import {
   formApproveNotificationTitle,
@@ -36,6 +35,7 @@ import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { useENS } from 'wallet/src/features/ens/useENS'
+import { useNFT } from 'wallet/src/features/nfts/hooks'
 import {
   AppErrorNotification,
   AppNotificationDefault,

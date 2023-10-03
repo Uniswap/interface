@@ -2,7 +2,6 @@ import { AnyAction } from '@reduxjs/toolkit'
 import { providers } from 'ethers'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
-import { GQLNftAsset, useNFT } from 'src/features/nfts/hooks'
 import {
   selectRecipient,
   toggleShowRecipientSelector,
@@ -12,6 +11,7 @@ import { useAsyncData } from 'utilities/src/react/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
+import { GQLNftAsset, useNFT } from 'wallet/src/features/nfts/hooks'
 import {
   useOnChainCurrencyBalance,
   useOnChainNativeCurrencyBalance,

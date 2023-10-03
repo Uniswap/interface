@@ -1,17 +1,17 @@
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import {
   makeSelectHasTokenFavorited,
   selectWatchedAddressSet,
-} from 'src/features/favorites/selectors'
+} from 'wallet/src/features/favorites/selectors'
 import {
   addFavoriteToken,
   addWatchedAddress,
   removeFavoriteToken,
   removeWatchedAddress,
-} from 'src/features/favorites/slice'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName } from 'src/features/telemetry/constants'
+} from 'wallet/src/features/favorites/slice'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { CurrencyId, currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'

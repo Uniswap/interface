@@ -7,11 +7,11 @@ import { useAppDispatch } from 'src/app/hooks'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { AccountIcon } from 'src/components/AccountIcon'
 import RemoveButton from 'src/components/explore/RemoveButton'
-import { removeWatchedAddress } from 'src/features/favorites/slice'
 import { Flex, flexStyles, Text, TouchableArea } from 'ui/src'
 import { theme } from 'ui/src/theme/restyle'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
+import { removeWatchedAddress } from 'wallet/src/features/favorites/slice'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 type FavoriteWalletCardProps = {

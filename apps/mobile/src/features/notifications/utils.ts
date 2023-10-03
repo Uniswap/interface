@@ -1,7 +1,7 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
+import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
 import {
   AppNotificationType,
   ReceiveCurrencyTxNotification,

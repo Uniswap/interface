@@ -4,7 +4,7 @@ import {
   favoritesReducer,
   FavoritesState,
   removeFavoriteToken,
-} from 'src/features/favorites/slice'
+} from 'wallet/src/features/favorites/slice'
 
 describe(favoritesReducer, () => {
   let store: Store<FavoritesState>
