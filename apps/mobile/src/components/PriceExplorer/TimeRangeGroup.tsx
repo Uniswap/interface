@@ -13,9 +13,8 @@ import {
   LABEL_WIDTH,
   TIME_RANGES,
 } from 'src/components/PriceExplorer/constants'
-import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
-import { AnimatedFlex, Flex, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, AnimatedText, Flex, TouchableArea, useSporeColors } from 'ui/src'
 import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
 
 interface Props {
@@ -43,9 +42,9 @@ export function TimeRangeLabel({ index, label, selectedIndex, transition }: Prop
   })
 
   return (
-    <Text animated allowFontScaling={false} style={style} textAlign="center" variant="buttonLabel3">
+    <AnimatedText allowFontScaling={false} style={style} textAlign="center" variant="buttonLabel3">
       {label}
-    </Text>
+    </AnimatedText>
   )
 }
 

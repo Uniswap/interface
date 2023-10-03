@@ -1,7 +1,8 @@
 import type { IconProps } from '@tamagui/helpers-icon'
 import { forwardRef, memo } from 'react'
 import { Path, Svg } from 'react-native-svg'
-import { getTokenValue, useTheme } from 'tamagui'
+import { getTokenValue } from 'tamagui'
+import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 
 const Icon = forwardRef<Svg, IconProps>((props, ref) => {
   // isWeb currentColor to maintain backwards compat a bit better, on native uses theme color
@@ -11,7 +12,7 @@ const Icon = forwardRef<Svg, IconProps>((props, ref) => {
     strokeWidth: strokeWidthProp,
     ...restProps
   } = props
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   const size =
     getTokenValue(
@@ -29,7 +30,7 @@ const Icon = forwardRef<Svg, IconProps>((props, ref) => {
 
   const color =
     // @ts-expect-error its fine to access colorProp undefined
-    theme[colorProp]?.get() ?? colorProp ?? theme.color.get()
+    colors[colorProp]?.get() ?? colorProp ?? colors.color.get()
 
   const svgProps = {
     ...restProps,

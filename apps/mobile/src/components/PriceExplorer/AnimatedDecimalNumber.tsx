@@ -1,19 +1,18 @@
 import React, { useMemo } from 'react'
 import { useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
-import { Box } from 'src/components/layout'
-import { TextProps } from 'src/components/Text'
 import { AnimatedText } from 'src/components/text/AnimatedText'
-import { useSporeColors } from 'ui/src'
-import { Theme } from 'ui/src/theme/restyle'
+import { Flex, useSporeColors } from 'ui/src'
+import { TextVariantTokens } from 'ui/src/theme'
 import { ValueAndFormatted } from './usePrice'
 
-type AnimatedDecimalNumberProps = TextProps & {
+type AnimatedDecimalNumberProps = {
   number: ValueAndFormatted
   separator?: string
-  variant: keyof Theme['textVariants']
+  variant: TextVariantTokens
   wholePartColor?: string
   decimalPartColor?: string
   decimalThreshold?: number // below this value (not including) decimal part would have wholePartColor too
+  testID?: string
 }
 
 // Utility component to display decimal numbers where the decimal part
@@ -28,7 +27,7 @@ export function AnimatedDecimalNumber(props: AnimatedDecimalNumberProps): JSX.El
     wholePartColor = colors.neutral1.get(),
     decimalPartColor = colors.neutral3.get(),
     decimalThreshold = 1,
-    ...rest
+    testID,
   } = props
 
   const wholePart = useDerivedValue(
@@ -53,7 +52,7 @@ export function AnimatedDecimalNumber(props: AnimatedDecimalNumberProps): JSX.El
   }, [decimalThreshold, wholePartColor, decimalPartColor])
 
   return (
-    <Box flexDirection="row" {...rest}>
+    <Flex row testID={testID}>
       <AnimatedText style={wholeStyle} testID="wholePart" text={wholePart} variant={variant} />
       <AnimatedText
         style={decimalStyle}
@@ -61,6 +60,6 @@ export function AnimatedDecimalNumber(props: AnimatedDecimalNumberProps): JSX.El
         text={decimalPart}
         variant={variant}
       />
-    </Box>
+    </Flex>
   )
 }

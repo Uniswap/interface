@@ -44,8 +44,8 @@ import {
 import { Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'ui/src/assets'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
+import { flexStyles } from 'ui/src/components/layout'
 import { fonts, iconSizes, opacify } from 'ui/src/theme'
-import { flex } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 export function QRAnimation({
@@ -172,7 +172,7 @@ export function QRAnimation({
             <Animated.View entering={qrSlideUpAndFadeIn}>
               <Animated.View entering={qrSlideUpAtEnd}>
                 <Animated.View entering={flashWipeAnimation} style={styles.behindQrBlur}>
-                  <Canvas style={flex.fill}>
+                  <Canvas style={flexStyles.fill}>
                     <Group transform={[{ translateX: 50 }, { translateY: 50 }]}>
                       <RoundedRect
                         color={uniconColors.glow}
@@ -222,7 +222,7 @@ export function QRAnimation({
                     </View>
                   </Animated.View>
                   <Animated.View entering={videoFadeOut} style={[styles.glow]}>
-                    <Canvas style={flex.fill}>
+                    <Canvas style={flexStyles.fill}>
                       <Group
                         transform={[
                           { translateX: QR_CONTAINER_SIZE / 2 - 40 },

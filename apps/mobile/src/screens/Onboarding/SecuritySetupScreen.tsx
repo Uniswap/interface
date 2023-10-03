@@ -29,8 +29,7 @@ import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { SECURITY_SCREEN_BACKGROUND_DARK, SECURITY_SCREEN_BACKGROUND_LIGHT } from 'ui/src/assets'
 import FaceIcon from 'ui/src/assets/icons/faceid-thin.svg'
 import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
-import { imageSizes } from 'ui/src/theme'
-import { theme as FixedTheme } from 'ui/src/theme/restyle'
+import { borderRadii, imageSizes } from 'ui/src/theme'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { opacify } from 'wallet/src/utils/colors'
 
@@ -193,7 +192,7 @@ const SecurityBackgroundImage = (): JSX.Element => {
 const styles = StyleSheet.create({
   blurView: {
     ...StyleSheet.absoluteFillObject,
-    borderRadius: FixedTheme.borderRadii.rounded16,
+    borderRadius: borderRadii.rounded16,
   },
   image: {
     height: '100%',

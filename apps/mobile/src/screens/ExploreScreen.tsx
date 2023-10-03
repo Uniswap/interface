@@ -19,8 +19,8 @@ import { selectModalState } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ModalName, SectionName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import { AnimatedFlex, Flex } from 'ui/src'
-import { flex, Theme } from 'ui/src/theme/restyle'
+import { AnimatedFlex, Flex, flexStyles } from 'ui/src'
+import { Theme } from 'ui/src/theme/restyle'
 import { useDebounce } from 'utilities/src/time/timing'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -97,7 +97,7 @@ export function ExploreScreen(): JSX.Element {
         />
       </Flex>
       {isSearchMode ? (
-        <KeyboardAvoidingView behavior="height" style={flex.fill}>
+        <KeyboardAvoidingView behavior="height" style={flexStyles.fill}>
           <Flex grow mx="$spacing16">
             <VirtualizedList onScroll={onScroll}>
               <Flex p="$spacing4" />

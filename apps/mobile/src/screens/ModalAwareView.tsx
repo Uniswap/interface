@@ -7,8 +7,7 @@ import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeG
 import { HandleBar } from 'src/components/modals/HandleBar'
 import { selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-import { Flex, useSporeColors } from 'ui/src'
-import { flex } from 'ui/src/theme/restyle'
+import { Flex, flexStyles, useSporeColors } from 'ui/src'
 /**
  * Wrapper view to correctly render screens within BottomSheetModal as needed. This is required
  * to enable both full screen, and bottom sheet drag gestures on a screen within a modal.
@@ -25,15 +24,15 @@ export function ExploreModalAwareView({ children }: { children: JSX.Element }): 
 
   if (inModal) {
     return (
-      <View style={flex.fill}>
+      <View style={flexStyles.fill}>
         <Flex left={0} position="absolute" right={0} top={insets.top} zIndex="$fixed">
           <HandleBar backgroundColor={colors.transparent.val} />
         </Flex>
-        <BottomSheetDraggableView style={flex.fill}>{children}</BottomSheetDraggableView>
+        <BottomSheetDraggableView style={flexStyles.fill}>{children}</BottomSheetDraggableView>
         <HorizontalEdgeGestureTarget />
       </View>
     )
   }
 
-  return <View style={flex.fill}>{children}</View>
+  return <View style={flexStyles.fill}>{children}</View>
 }

@@ -38,7 +38,7 @@ import { DynamicThemeProvider } from 'src/theme/DynamicThemeProvider'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
 import { StatsigProvider } from 'statsig-react-native'
-import { flex } from 'ui/src/theme/restyle'
+import { flexStyles } from 'ui/src'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
@@ -148,7 +148,7 @@ function AppOuter(): JSX.Element | null {
       <PersistGate loading={null} persistor={persistor}>
         <DynamicThemeProvider>
           <ErrorBoundary>
-            <GestureHandlerRootView style={flex.fill}>
+            <GestureHandlerRootView style={flexStyles.fill}>
               <WalletContextProvider>
                 <BiometricContextProvider>
                   <LockScreenContextProvider>

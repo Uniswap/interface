@@ -161,12 +161,10 @@ exports[`PriceText renders loading state 1`] = `
 exports[`PriceText renders without error 1`] = `
 <View
   style={
-    [
-      {
-        "display": "flex",
-        "flexDirection": "row",
-      },
-    ]
+    {
+      "alignItems": "stretch",
+      "flexDirection": "row",
+    }
   }
   testID="price-text"
 >
@@ -244,12 +242,10 @@ exports[`PriceText renders without error 1`] = `
 exports[`PriceText renders without error less than a dollar 1`] = `
 <View
   style={
-    [
-      {
-        "display": "flex",
-        "flexDirection": "row",
-      },
-    ]
+    {
+      "alignItems": "stretch",
+      "flexDirection": "row",
+    }
   }
   testID="price-text"
 >

@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react'
 import { useWindowDimensions } from 'react-native'
 import { GetProps, styled, Text as TamaguiText } from 'tamagui'
+import { withAnimated } from 'ui/src/components/factories/animated'
 import { Box } from 'ui/src/components/layout/Box'
 import { HiddenFromScreenReaders } from 'ui/src/components/text/HiddenFromScreenReaders'
 import { Shimmer } from 'ui/src/loading/Shimmer'
@@ -176,17 +177,6 @@ export const Text = ({
   const { fontScale } = useWindowDimensions()
   const enableFontScaling = allowFontScaling ?? fontScale > DEFAULT_FONT_SCALE
 
-  // TODO implement
-  // if (animated) {
-  //   return (
-  //     <ThemedAnimatedText
-  //       allowFontScaling={enableFontScaling}
-  //       maxFontSizeMultiplier={multiplier}
-  //       {...rest}
-  //     />
-  //   )
-  // }
-
   if (loading) {
     return (
       <TextLoaderWrapper loadingShimmer={loading !== 'no-shimmer'}>
@@ -200,3 +190,6 @@ export const Text = ({
 
   return <TextFrame allowFontScaling={enableFontScaling} color="$neutral1" {...rest} />
 }
+
+// TODO(MOB-1529): make Text able to take animated styles
+export const AnimatedText = withAnimated(TextFrame)

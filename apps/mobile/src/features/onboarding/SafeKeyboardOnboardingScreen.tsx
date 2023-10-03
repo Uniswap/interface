@@ -7,9 +7,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Screen } from 'src/components/layout/Screen'
 import { IS_IOS } from 'src/constants/globals'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
-import { AnimatedFlex, Flex, SpaceTokens, Text, useMedia, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, flexStyles, SpaceTokens, Text, useMedia, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
-import { flex } from 'ui/src/theme/restyle'
 
 type OnboardingScreenProps = {
   subtitle?: string
@@ -79,7 +78,7 @@ export function SafeKeyboardOnboardingScreen({
         style={[styles.base, { marginBottom: responsiveBottom }]}>
         <ScrollView
           bounces={false}
-          contentContainerStyle={flex.grow}
+          contentContainerStyle={flexStyles.grow}
           keyboardShouldPersistTaps="handled">
           <AnimatedFlex
             $short={{ gap: '$none' }}

@@ -7,9 +7,8 @@ import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeG
 import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { HandleBar } from 'src/components/modals/HandleBar'
-import { ColorTokens, Flex, useSporeColors } from 'ui/src'
+import { ColorTokens, Flex, flexStyles, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { flex } from 'ui/src/theme/restyle'
 
 // Distance to scroll to show scrolled state header elements
 const SHOW_HEADER_SCROLL_Y_DISTANCE = 50
@@ -73,12 +72,12 @@ export function HeaderScrollScreen({
       />
       <VirtualizedList
         ref={listRef}
-        contentContainerStyle={flex.grow}
+        contentContainerStyle={flexStyles.grow}
         renderedInModal={renderedInModal}
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        style={flex.fill}
+        style={flexStyles.fill}
         onScroll={scrollHandler}>
         {children}
       </VirtualizedList>

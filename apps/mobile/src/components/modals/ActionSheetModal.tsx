@@ -3,9 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { BottomSheetDetachedModal } from 'src/components/modals/BottomSheetModal'
 import { ModalName } from 'src/features/telemetry/constants'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, flexStyles, Text, TouchableArea } from 'ui/src'
 import { dimensions } from 'ui/src/theme'
-import { flex } from 'ui/src/theme/restyle'
 
 export interface MenuItemProp {
   key: string
@@ -37,7 +36,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps): JS
         )}
 
         <Flex maxHeight={dimensions.fullHeight * 0.5} width="100%">
-          <ScrollView bounces={false} style={flex.grow}>
+          <ScrollView bounces={false} style={flexStyles.grow}>
             {options.map(({ key, onPress, render }) => {
               return (
                 <TouchableArea key={key} hapticFeedback testID={key} onPress={onPress}>

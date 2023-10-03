@@ -23,8 +23,7 @@ import {
   getUniconAttributeData,
   isEthAddress,
 } from 'src/components/unicons/utils'
-import { Flex } from 'ui/src'
-import { flex } from 'ui/src/theme/restyle'
+import { Flex, flexStyles } from 'ui/src'
 import { useSelectedColorScheme } from 'wallet/src/features/appearance/hooks'
 
 // HACK: Add 1 to effectively increase margin between svg and surrounding box, otherwise get a cropping issue
@@ -177,7 +176,7 @@ function UniconSvg({
   if (!blurColor) return null
 
   return (
-    <Canvas style={flex.fill}>
+    <Canvas style={flexStyles.fill}>
       <Mask
         clip={true}
         mask={<UniconMask attributeData={attributeData} showBorder={showBorder} size={size} />}>
@@ -220,7 +219,7 @@ function UniconBG({
   if (!blurColor) return null
 
   return (
-    <Canvas style={flex.fill}>
+    <Canvas style={flexStyles.fill}>
       <Mask
         clip={true}
         mask={<UniconMaskBG attributeData={attributeData} showBorder={showBorder} size={size} />}>

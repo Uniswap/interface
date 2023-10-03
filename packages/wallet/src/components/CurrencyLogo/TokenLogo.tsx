@@ -1,6 +1,5 @@
 import { Image } from 'react-native'
-import { useTheme } from 'tamagui'
-import { Box, Text } from 'ui/src'
+import { Box, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { isSVGUri, uriToHttp } from 'utilities/src/format/urls'
 import { STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
@@ -24,7 +23,7 @@ export function TokenLogo({
   size = iconSizes.icon40,
   hideNetworkLogo,
 }: TokenLogoProps): JSX.Element {
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   const showNetworkLogo = !hideNetworkLogo && chainId && chainId !== ChainId.Mainnet
   const httpUri = url ? uriToHttp(url)[0] : null
@@ -36,7 +35,7 @@ export function TokenLogo({
       tokenImage = (
         <Box borderRadius={size / 2} overflow="hidden">
           <RemoteSvg
-            backgroundColor={theme.surface3.get()}
+            backgroundColor={colors.surface3.get()}
             borderRadius={size / 2}
             height={size}
             imageHttpUrl={httpUri}
@@ -51,11 +50,11 @@ export function TokenLogo({
           style={[
             style.image,
             {
-              backgroundColor: theme.surface3.get(),
+              backgroundColor: colors.surface3.get(),
               width: size,
               height: size,
               borderRadius: size / 2,
-              borderColor: theme.surface3.get(),
+              borderColor: colors.surface3.get(),
               borderWidth: THIN_BORDER,
             },
           ]}

@@ -1,5 +1,5 @@
 import { createElement, useMemo } from 'react'
-import { Icons, useTheme } from 'ui/src'
+import { Icons, useSporeColors } from 'ui/src'
 import {
   SummaryItemProps,
   TransactionSummaryLayoutProps,
@@ -14,7 +14,7 @@ export function UnknownSummaryItem({
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: UnknownTransactionInfo }
 }): JSX.Element {
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   const caption = useMemo(() => {
     return transaction.typeInfo.tokenAddress && getValidAddress(transaction.typeInfo.tokenAddress)
@@ -27,7 +27,7 @@ export function UnknownSummaryItem({
     icon: (
       <Icons.ContractInteraction
         color="$neutral2"
-        fill={theme.surface1.get()}
+        fill={colors.surface1.get()}
         height={TXN_HISTORY_ICON_SIZE}
         width={TXN_HISTORY_ICON_SIZE}
       />

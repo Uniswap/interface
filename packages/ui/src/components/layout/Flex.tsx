@@ -1,6 +1,12 @@
 import { Stack, StackProps, styled } from 'tamagui'
 import { withAnimated } from 'ui/src/components/factories/animated'
 
+export const flexStyles = {
+  fill: { flex: 1 },
+  grow: { flexGrow: 1 },
+  shrink: { flexShrink: 1 },
+}
+
 export type FlexProps = StackProps & {
   row?: boolean
   shrink?: boolean

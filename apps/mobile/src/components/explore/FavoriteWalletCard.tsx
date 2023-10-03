@@ -8,8 +8,8 @@ import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { AccountIcon } from 'src/components/AccountIcon'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { removeWatchedAddress } from 'src/features/favorites/slice'
-import { Flex, Text, TouchableArea } from 'ui/src'
-import { flex, theme } from 'ui/src/theme/restyle'
+import { Flex, flexStyles, Text, TouchableArea } from 'ui/src'
+import { theme } from 'ui/src/theme/restyle'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -85,7 +85,7 @@ export default function FavoriteWalletCard({
                 adjustsFontSizeToFit={displayName?.type === 'address'}
                 color="$neutral1"
                 numberOfLines={1}
-                style={flex.shrink}
+                style={flexStyles.shrink}
                 variant="body1">
                 {displayName?.name}
               </Text>

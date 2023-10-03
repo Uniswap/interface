@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 import type { IconProps } from 'ui/src'
-import { Box, Icons, useTheme } from 'ui/src'
+import { Box, Icons, useSporeColors } from 'ui/src'
 import WalletConnectLogo from 'ui/src/assets/icons/walletconnect.svg'
 import MoonpayLogo from 'ui/src/assets/logos/svg/moonpay.svg'
 import { borderRadii } from 'ui/src/theme'
@@ -51,7 +51,7 @@ interface NFTStatusProps extends LogoWithTxStatusProps {
 
 export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): JSX.Element {
   const { assetType, txType, txStatus, size, chainId } = props
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   const statusSize = size / 2
 
@@ -73,8 +73,8 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): J
       </Box>
     )
 
-  const fill = txStatus === TransactionStatus.Success ? theme.statusSuccess : theme.neutral2
-  const color = theme.surface2
+  const fill = txStatus === TransactionStatus.Success ? colors.statusSuccess : colors.neutral2
+  const color = colors.surface2
 
   let icon: JSX.Element | undefined
   if (chainId && chainId !== ChainId.Mainnet) {
@@ -143,10 +143,10 @@ export function DappLogoWithTxStatus({
   size,
   chainId,
 }: DappLogoWithTxStatusProps): JSX.Element | null {
-  const theme = useTheme()
-  const green = theme.statusSuccess.get()
-  const yellow = theme.DEP_accentWarning.get()
-  const fill = theme.surface1.get()
+  const colors = useSporeColors()
+  const green = colors.statusSuccess.get()
+  const yellow = colors.DEP_accentWarning.get()
+  const fill = colors.surface1.get()
 
   const dappImageSize = size
   const statusSize = dappImageSize * (1 / 2)

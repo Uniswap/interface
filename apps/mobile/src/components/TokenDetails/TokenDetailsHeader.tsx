@@ -1,7 +1,7 @@
 import React from 'react'
 import WarningIcon from 'src/components/tokens/WarningIcon'
-import { Flex, Text, TouchableArea } from 'ui/src'
-import { flex, theme } from 'ui/src/theme/restyle'
+import { Flex, flexStyles, Text, TouchableArea } from 'ui/src'
+import { theme } from 'ui/src/theme/restyle'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { SafetyLevel, TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
@@ -32,7 +32,7 @@ export function TokenDetailsHeader({
           color="$neutral1"
           loading={loading}
           numberOfLines={1}
-          style={flex.shrink}
+          style={flexStyles.shrink}
           variant="subheading1">
           {tokenProject?.name ?? '—'}
         </Text>
