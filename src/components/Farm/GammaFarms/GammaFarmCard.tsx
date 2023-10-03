@@ -123,6 +123,7 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
   const stakedAmount = stakedAmountBN ? formatUnits(stakedAmountBN, 18) : '0'
 
   const lpToken = chainId ? new Token(chainId, pairData.hypervisor, 18) : undefined
+
   const lpTokenUSD =
     data && data.totalSupply && Number(data.totalSupply) > 0
       ? (Number(data.tvlUSD) / Number(data.totalSupply)) * 10 ** 18
@@ -141,6 +142,10 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
 
   const availableStakeUSD = Number(availableStakeAmount) * lpTokenUSD
   const lpTokenBalance = tryParseCurrencyAmount(availableStakeAmount, lpToken)
+
+  const lpSymbolRequest = useSingleCallResult(hypervisorContract, 'symbol')
+
+  const lpSymbol = lpSymbolRequest?.result?.[0] ?? undefined
 
   const parsedStakeAmount = tryParseCurrencyAmount(stakeAmount, lpToken)
   const [approval, approveCallback] = useApproveCallback(parsedStakeAmount, masterChefContract?.address)
@@ -235,6 +240,7 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
     stakedUSD,
     availableStakeUSD,
     setStakeAmount,
+    lpSymbol,
   }
 
   return (
@@ -263,6 +269,7 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
         setUnStakeGamma={setUnStakeGamma}
         hypervisorContract={hypervisorContract}
         lpTokenBalance={availableStakeAmount}
+        lpTokenSymbol={lpSymbol}
       />
       <CardContainer showDetails={showDetails}>
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center', height: '60px', alignItems: 'center' }}>

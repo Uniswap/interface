@@ -38,7 +38,7 @@ const PolyLine = styled.polyline`
   animation: ${dashCheck} 0.9s 0.35s ease-in-out forwards;
 `
 
-export default function AnimatedConfirmation() {
+function AnimatedConfirmation() {
   const theme = useTheme()
 
   return (

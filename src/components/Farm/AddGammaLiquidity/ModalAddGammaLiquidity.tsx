@@ -14,10 +14,13 @@ import { useIsMobile } from 'nft/hooks'
 import React, { useCallback, useState } from 'react'
 import { Text } from 'rebass'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { useTransactionFinalizer } from 'utils/farmUtils'
 
+import gammaLogo from '../../../assets/svg/gamma_logo.svg'
+import gammaLogoWhite from '../../../assets/svg/gamma_logo_white.svg'
 import { depositUniProxy, getDepositAmounts, getValidationText, withdrawHypervisor } from '../utils'
 import { GridItemAddLiquidity } from './GridItemAddLiquidity'
 
@@ -66,6 +69,7 @@ const DepositButton = styled.div`
 const Withdraw = styled.div`
   width: 300px;
 `
+
 interface ModalProps {
   modalOpen: boolean
   handleDismiss: () => void
@@ -90,6 +94,7 @@ interface ModalProps {
   setUnStakeGamma: React.Dispatch<React.SetStateAction<string>>
   hypervisorContract: Contract | null
   lpTokenBalance: string
+  lpTokenSymbol: string
 }
 
 export default function ModalAddGammaLiquidity({
@@ -116,6 +121,7 @@ export default function ModalAddGammaLiquidity({
   setUnStakeGamma,
   hypervisorContract,
   lpTokenBalance,
+  lpTokenSymbol = 'LP',
 }: ModalProps) {
   const finalizedTransaction = useTransactionFinalizer()
   const addTransaction = useTransactionAdder()
@@ -123,7 +129,8 @@ export default function ModalAddGammaLiquidity({
   const { account } = useWeb3React()
   const validationTextButton0 = getValidationText(approvalToken0, tokenStake0)
   const validationTextButton1 = getValidationText(approvalToken1, tokenStake1)
-  const [isWithdraw, setWithdraw] = useState(false)
+  const isDarkMode = useIsDarkMode()
+  const theme = useTheme()
   // modal and loading
   const [{ showTransactionModal, transactionErrorMessage, attemptingTxn, txHash }, setTransactionModal] = useState<{
     showTransactionModal: boolean
@@ -177,16 +184,39 @@ export default function ModalAddGammaLiquidity({
   const pendingText = `Depositing ${tokenStake0 && Number(deposit0) > 0 ? deposit0 : ''} ${tokenStake0?.symbol} and 
     ${tokenStake1 && Number(deposit1) > 0 ? deposit1 : ''} ${tokenStake1?.symbol}`
 
-  const pendingTextWithdraw = `Withdraw  ${unStakeGamma && Number(unStakeGamma) > 0 ? unStakeGamma : ''} LP`
+  const pendingTextWithdraw = `Withdraw  ${
+    unStakeGamma && Number(unStakeGamma) > 0 ? unStakeGamma : ''
+  } ${lpTokenSymbol}`
 
   const modalHeader = () => {
     return (
       <AutoColumn>
-        <Row style={{ padding: '20px', gap: '10px' }}>
+        <Row style={{ padding: '20px', gap: '10px', display: 'flex', justifyContent: 'center' }}>
           {tokenStake0 && tokenStake1 && (
             <DoubleCurrencyLogo currency0={tokenStake0} currency1={tokenStake1} size={30} />
           )}
-          <Text fontSize="20px">{tokenStake0?.symbol + '/' + tokenStake1?.symbol + ' for  Liquidity Pool'}</Text>
+          <Text fontSize="18px">
+            Deposit
+            <Text as="span" color={theme.accentActive}>
+              {' ' + lpTokenSymbol}
+            </Text>
+          </Text>
+        </Row>
+      </AutoColumn>
+    )
+  }
+
+  const modalHeaderWithdraw = () => {
+    return (
+      <AutoColumn>
+        <Row style={{ padding: '20px', display: 'flex', justifyContent: 'center' }}>
+          <Text fontSize="18px">
+            {'Withdraw' + ' '}
+            {unStakeGamma + ' '}
+            <Text as="span" color={theme.accentActive}>
+              {lpTokenSymbol}
+            </Text>
+          </Text>
         </Row>
       </AutoColumn>
     )
@@ -261,13 +291,13 @@ export default function ModalAddGammaLiquidity({
         hash={txHash}
         content={() => (
           <ConfirmationModalContent
-            title={<Trans>Deposit</Trans>}
+            title={<Trans>Transaction summary</Trans>}
             onDismiss={handleDismissTransaction}
             topContent={modalHeader}
             bottomContent={() => (
-              <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onDeposit}>
+              <ButtonPrimary style={{ marginTop: '0.5rem' }} onClick={onDeposit}>
                 <Text fontWeight={500} fontSize={20}>
-                  <Trans>Deposit via UniProxy</Trans>
+                  <Trans>Deposit</Trans>
                 </Text>
               </ButtonPrimary>
             )}
@@ -283,13 +313,13 @@ export default function ModalAddGammaLiquidity({
         hash={txHashWithdraw}
         content={() => (
           <ConfirmationModalContent
-            title={<Trans>Withdraw</Trans>}
+            title={<Trans>Transaction summary</Trans>}
             onDismiss={handleDismissTransactionWithdraw}
-            topContent={modalHeader}
+            topContent={modalHeaderWithdraw}
             bottomContent={() => (
-              <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onWithdraw}>
+              <ButtonPrimary style={{ marginTop: '0.5rem' }} onClick={onWithdraw}>
                 <Text fontWeight={500} fontSize={20}>
-                  <Trans>Withdraw Gamma Liquidity</Trans>
+                  <Trans>Withdraw</Trans>
                 </Text>
               </ButtonPrimary>
             )}
@@ -314,9 +344,21 @@ export default function ModalAddGammaLiquidity({
               padding: '10px',
               textAlign: 'left',
               display: 'flex',
+              flexDirection: 'column',
               width: '100%',
             }}
           >
+            <div
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingBottom: '10px',
+              }}
+            >
+              <img src={isDarkMode ? gammaLogo : gammaLogoWhite} width={300} />
+            </div>
             <ThemedText.BodySmall>
               <Trans>
                 It’s never been easier to LP and farm! Sit back, relax, and let Gamma do the work while you enjoy the
@@ -418,10 +460,10 @@ export default function ModalAddGammaLiquidity({
               {Number(lpTokenBalance) > 0 && (
                 <Withdraw>
                   <GridItemAddLiquidity
-                    titleText="Unstake Gamma: "
+                    titleText="Withdraw: "
                     availableStakeAmount={lpTokenBalance}
-                    textButton="Withdraw Gamma Liquidity"
-                    tokenSymbol="LP"
+                    textButton="Withdraw"
+                    tokenSymbol={lpTokenSymbol}
                     depositValue={unStakeGamma}
                     disabledButton={!(Number(unStakeGamma) > 0)}
                     isApproved={false}

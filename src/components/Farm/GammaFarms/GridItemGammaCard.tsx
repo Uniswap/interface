@@ -44,6 +44,7 @@ interface GridItemGammaCardProps {
   unStakeLP?: () => void
   stakeButtonDisabled?: boolean
   unStakeButtonDisabled?: boolean
+  tokenLPSymbol: string
 }
 
 export function GridItemGammaCard({
@@ -61,6 +62,7 @@ export function GridItemGammaCard({
   unStakeAmount = '',
   unStakeLP,
   unStakeButtonDisabled,
+  tokenLPSymbol = 'LP',
 }: GridItemGammaCardProps) {
   const theme = useTheme()
 
@@ -69,11 +71,13 @@ export function GridItemGammaCard({
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <small style={{ color: theme.textSecondary }}>{titleText}</small>
         {availableStakeAmount && availableStakeUSD && (
-          <small>{`${formatNumber(Number(availableStakeAmount))} LP ${formatNumber(availableStakeUSD)}`}</small>
+          <small>{`${formatNumber(Number(availableStakeAmount))} ${tokenLPSymbol} $${formatNumber(
+            availableStakeUSD
+          )}`}</small>
         )}
 
         {stakedAmount && stakedUSD && (
-          <small>{`${formatNumber(Number(stakedAmount))} LP ${formatNumber(stakedUSD)}`}</small>
+          <small>{`${formatNumber(Number(stakedAmount))} ${tokenLPSymbol} $${formatNumber(stakedUSD)}`}</small>
         )}
       </div>
 

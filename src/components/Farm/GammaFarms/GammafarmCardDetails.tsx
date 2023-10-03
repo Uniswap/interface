@@ -62,6 +62,7 @@ const GammaFarmCardDetails: React.FC<{
     stakedUSD: number
     availableStakeUSD: number
     setStakeAmount: React.Dispatch<React.SetStateAction<string>>
+    lpSymbol: string
   }
 }> = ({ pairData, rewardData, dataDetails }) => {
   const { account } = useWeb3React()
@@ -275,13 +276,14 @@ const GammaFarmCardDetails: React.FC<{
               textButton={
                 dataDetails.approval === ApprovalState.APPROVED
                   ? approveOrStaking
-                    ? 'stakingLPTokens'
-                    : 'stakeLPTokens'
+                    ? 'Depositing LP'
+                    : 'Deposit LP'
                   : approveOrStaking
-                  ? 'approving'
-                  : 'approve'
+                  ? 'Approving'
+                  : 'Approve'
               }
               setUnStakeAmount={setUnStakeAmount}
+              tokenLPSymbol={dataDetails.lpSymbol}
             />
           )}
 
@@ -292,10 +294,11 @@ const GammaFarmCardDetails: React.FC<{
             stakedAmount={dataDetails.stakedAmount}
             unStakeAmount={unStakeAmount}
             unStakeButtonDisabled={unStakeButtonDisabled}
-            textButton={attemptUnstaking ? 'unstakingLPTokens' : 'unstakeLPTokens'}
+            textButton={attemptUnstaking ? 'Withdrawing' : 'Withdraw'}
             setStakeAmount={dataDetails.setStakeAmount}
             stakeAmount={dataDetails.stakeAmount}
             unStakeLP={unStakeLP}
+            tokenLPSymbol={dataDetails.lpSymbol}
           />
 
           {rewardToken && Number(rewardsAmount) !== 0 && (
@@ -317,7 +320,7 @@ const GammaFarmCardDetails: React.FC<{
                 </div>
                 <Box width="100%">
                   <ButtonPrimary style={{ height: '40px' }} disabled={claimButtonDisabled} onClick={claimReward}>
-                    {attemptClaiming ? 'claiming' : 'claim'}
+                    {attemptClaiming ? 'Claiming' : 'Claim'}
                   </ButtonPrimary>
                 </Box>
               </ClaimContainer>
