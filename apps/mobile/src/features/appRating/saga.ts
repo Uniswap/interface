@@ -1,19 +1,21 @@
 import * as StoreReview from 'expo-store-review'
 import { Alert } from 'react-native'
 import { APP_FEEDBACK_LINK } from 'src/constants/urls'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { openUri } from 'src/utils/linking'
 import { call, delay, put, select, takeLatest } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { selectSwapTransactionsCount } from 'wallet/src/features/transactions/selectors'
 import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
-import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
+import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { setAppRating } from 'wallet/src/features/wallet/slice'
 import { appSelect } from 'wallet/src/state'
 
 // at most once per reminder period
-const MIN_PROMPT_REMINDER_MS = 30 * ONE_SECOND_MS
+const MIN_PROMPT_REMINDER_MS = 30 * ONE_DAY_MS
 // small delay to help ux
 const SWAP_FINALIZED_PROMPT_DELAY_MS = 1 * ONE_SECOND_MS
 
@@ -34,8 +36,7 @@ export function* appRatingWatcherSaga() {
 
 function* maybeRequestAppRating() {
   try {
-    const activeAccount = yield* select(selectActiveAccount)
-    const activeAddress = activeAccount?.address
+    const activeAddress = yield* select(selectActiveAccountAddress)
     if (!activeAddress) return
 
     // Conditions
@@ -77,14 +78,35 @@ function* maybeRequestAppRating() {
       // expo-review does not return whether a rating was actually provided.
       // assume it was and mark rating as provided.
       yield* put(setAppRating({ remindLater: false }))
+
+      sendMobileAnalyticsEvent(MobileEventName.AppRating, {
+        type: 'store-review',
+        appRatingPromptedMs,
+        appRatingProvidedMs,
+        numSwapsCompleted,
+      })
     } else {
       // show feedback form
       const feedbackSent = yield* call(openFeedbackRequestAlert)
 
       if (feedbackSent) {
         yield* put(setAppRating({ remindLater: false }))
+
+        sendMobileAnalyticsEvent(MobileEventName.AppRating, {
+          type: 'feedback-form',
+          appRatingPromptedMs,
+          appRatingProvidedMs,
+          numSwapsCompleted,
+        })
       } else {
         yield* put(setAppRating({ remindLater: true }))
+
+        sendMobileAnalyticsEvent(MobileEventName.AppRating, {
+          type: 'remind',
+          appRatingPromptedMs,
+          appRatingProvidedMs,
+          numSwapsCompleted,
+        })
       }
     }
   } catch (e) {

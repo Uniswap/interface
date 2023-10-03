@@ -42,6 +42,12 @@ type OnboardingCompletedProps = {
 }
 
 export type MobileEventProperties = {
+  [MobileEventName.AppRating]: {
+    type: 'store-review' | 'feedback-form' | 'remind'
+    appRatingPromptedMs?: number
+    appRatingProvidedMs?: number
+    numSwapsCompleted: number
+  }
   [MobileEventName.BalancesReport]: {
     total_balances_usd: number
     wallets: string[]

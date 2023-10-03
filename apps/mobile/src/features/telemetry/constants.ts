@@ -37,6 +37,7 @@ export function getEventParams(
  * Event names that occur in this specific application
  */
 export enum MobileEventName {
+  AppRating = 'App Rating',
   BalancesReport = 'Balances Report',
   DeepLinkOpened = 'Deep Link Opened',
   ExploreFilterSelected = 'Explore Filter Selected',

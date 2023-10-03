@@ -11897,7 +11897,7 @@ __metadata:
     expo-clipboard: 4.1.2
     expo-haptics: 12.0.1
     expo-linear-gradient: 12.3.0
-    expo-linking: ~4.0.1
+    expo-linking: 4.0.1
     expo-local-authentication: 13.0.2
     expo-modules-core: 1.5.8
     expo-screen-capture: 4.2.0
@@ -19682,7 +19682,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-linking@npm:~4.0.1":
+"expo-linking@npm:4.0.1":
   version: 4.0.1
   resolution: "expo-linking@npm:4.0.1"
   dependencies:

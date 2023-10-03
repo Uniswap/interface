@@ -15,7 +15,6 @@ export interface WalletState {
   activeAccountAddress: Address | null
   finishedOnboarding?: boolean
   isUnlocked: boolean
-
   // Persisted UI configs set by the user through interaction with filters and settings
   settings: {
     nftViewType?: NFTViewType
