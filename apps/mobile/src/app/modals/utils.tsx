@@ -1,5 +1,6 @@
 import { useAppSelector } from 'src/app/hooks'
-import { ModalsState, selectModalState } from 'src/features/modals/modalSlice'
+import { ModalsState } from 'src/features/modals/ModalsState'
+import { selectModalState } from 'src/features/modals/selectModalState'
 
 /**
  * Delays evaluating `children` until modal is open

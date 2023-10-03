@@ -3,7 +3,7 @@ import { hasStringAsync } from 'expo-clipboard'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import PasteButton from 'src/components/buttons/PasteButton'
-import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
+import { SearchContext } from 'src/components/explore/search/SearchContext'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -13,7 +13,11 @@ import { TokenSelectorSearchResultsList } from 'src/components/TokenSelector/Tok
 import { TokenSelectorSendList } from 'src/components/TokenSelector/TokenSelectorSendList'
 import { TokenSelectorSwapInputList } from 'src/components/TokenSelector/TokenSelectorSwapInputList'
 import { TokenSelectorSwapOutputList } from 'src/components/TokenSelector/TokenSelectorSwapOutputList'
-import { SuggestedTokenSection, TokenSection } from 'src/components/TokenSelector/types'
+import {
+  SuggestedTokenSection,
+  TokenSection,
+  TokenSelectorFlow,
+} from 'src/components/TokenSelector/types'
 import Trace from 'src/components/Trace/Trace'
 import { IS_IOS } from 'src/constants/globals'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
@@ -31,22 +35,6 @@ export enum TokenSelectorVariation {
 
   // used for Swap output. suggested (common bases), favorites + popular (top tokens)
   SuggestedAndFavoritesAndPopular = 'suggested-and-favorites-and-popular',
-}
-
-export enum TokenSelectorFlow {
-  Swap,
-  Transfer,
-}
-
-export function flowToModalName(flow: TokenSelectorFlow): ModalName | undefined {
-  switch (flow) {
-    case TokenSelectorFlow.Swap:
-      return ModalName.Swap
-    case TokenSelectorFlow.Transfer:
-      return ModalName.Send
-    default:
-      return undefined
-  }
 }
 
 interface TokenSelectorProps {

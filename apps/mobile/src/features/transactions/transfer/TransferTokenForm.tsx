@@ -13,7 +13,7 @@ import { TextInputProps } from 'src/components/input/TextInput'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
-import { TokenSelectorFlow } from 'src/components/TokenSelector/TokenSelector'
+import { TokenSelectorFlow } from 'src/components/TokenSelector/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import {
   useShouldShowNativeKeyboard,
@@ -38,6 +38,7 @@ import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
+import { TransferSpeedbump } from './types'
 
 interface TransferTokenProps {
   dispatch: React.Dispatch<AnyAction>
@@ -45,11 +46,6 @@ interface TransferTokenProps {
   onNext: () => void
   warnings: Warning[]
   showingSelectorScreen: boolean
-}
-
-export interface TransferSpeedbump {
-  hasWarning: boolean
-  loading: boolean
 }
 
 export function TransferTokenForm({

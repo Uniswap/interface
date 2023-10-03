@@ -1,15 +1,13 @@
-import {
-  SearchResultOrHeader,
-  SEARCH_RESULT_HEADER_KEY,
-} from 'src/components/explore/search/SearchResultsSection'
+import { searchResultId } from 'src/features/explore/searchHistorySlice'
 import {
   NFTCollectionSearchResult,
-  searchResultId,
   SearchResultType,
   TokenSearchResult,
-} from 'src/features/explore/searchHistorySlice'
+} from 'src/features/explore/SearchResult'
 import { Chain, ExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import { SEARCH_RESULT_HEADER_KEY } from './constants'
+import { SearchResultOrHeader } from './types'
 
 const MAX_TOKEN_RESULTS_COUNT = 4
 

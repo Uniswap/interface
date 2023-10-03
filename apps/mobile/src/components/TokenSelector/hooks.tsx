@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { filter } from 'src/components/TokenSelector/filter'
-import { flowToModalName, TokenSelectorFlow } from 'src/components/TokenSelector/TokenSelector'
-import { TokenOption } from 'src/components/TokenSelector/types'
+import { TokenOption, TokenSelectorFlow } from 'src/components/TokenSelector/types'
 import { createEmptyBalanceOption } from 'src/components/TokenSelector/utils'
 import { useTokenBalancesGroupedByVisibility } from 'src/features/balances/hooks'
 import { useTokenProjects } from 'src/features/dataApi/tokenProjects'
@@ -22,6 +21,7 @@ import {
   buildWrappedNativeCurrencyId,
   currencyId,
 } from 'wallet/src/utils/currencyId'
+import { flowToModalName } from './flowToModalName'
 
 // Use Mainnet base token addresses since TokenProjects query returns each token
 // on each network

@@ -37,16 +37,11 @@ import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
-import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { ANIMATE_SPRING_CONFIG } from 'wallet/src/features/transactions/utils'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
-
-export type FiatOnRampCurrency = {
-  currencyInfo: Maybe<CurrencyInfo>
-  moonpayCurrency: MoonpayCurrency
-}
+import { FiatOnRampCurrency } from './types'
 
 const MOONPAY_UNSUPPORTED_REGION_HELP_URL =
   'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-'

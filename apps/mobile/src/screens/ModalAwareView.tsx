@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector } from 'src/app/hooks'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { HandleBar } from 'src/components/modals/HandleBar'
-import { selectModalState } from 'src/features/modals/modalSlice'
+import { selectModalState } from 'src/features/modals/selectModalState'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Flex, flexStyles, useSporeColors } from 'ui/src'
 /**

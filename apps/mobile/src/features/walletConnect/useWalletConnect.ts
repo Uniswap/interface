@@ -1,6 +1,7 @@
 import { useAppSelector } from 'src/app/hooks'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import { AppModalState, selectModalState } from 'src/features/modals/modalSlice'
+import { AppModalState } from 'src/features/modals/ModalsState'
+import { selectModalState } from 'src/features/modals/selectModalState'
 import { ModalName } from 'src/features/telemetry/constants'
 import {
   makeSelectSessions,

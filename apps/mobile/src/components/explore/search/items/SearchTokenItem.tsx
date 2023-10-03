@@ -3,14 +3,11 @@ import { default as React } from 'react'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
-import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
+import { SearchContext } from 'src/components/explore/search/SearchContext'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import WarningIcon from 'src/components/tokens/WarningIcon'
-import {
-  addToSearchHistory,
-  SearchResultType,
-  TokenSearchResult,
-} from 'src/features/explore/searchHistorySlice'
+import { addToSearchHistory } from 'src/features/explore/searchHistorySlice'
+import { SearchResultType, TokenSearchResult } from 'src/features/explore/SearchResult'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName, SectionName } from 'src/features/telemetry/constants'
 import { Flex, Text, TouchableArea } from 'ui/src'

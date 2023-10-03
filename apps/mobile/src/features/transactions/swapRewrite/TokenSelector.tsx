@@ -1,12 +1,12 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback } from 'react'
-import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
+import { SearchContext } from 'src/components/explore/search/SearchContext'
+import { flowToModalName } from 'src/components/TokenSelector/flowToModalName'
 import {
-  flowToModalName,
-  TokenSelectorFlow,
   TokenSelectorModal,
   TokenSelectorVariation,
 } from 'src/components/TokenSelector/TokenSelector'
+import { TokenSelectorFlow } from 'src/components/TokenSelector/types'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { AssetType } from 'wallet/src/entities/assets'

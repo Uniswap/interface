@@ -1,6 +1,5 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { WarningLabel } from 'src/components/modals/WarningModal/types'
-import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { getSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -15,6 +14,7 @@ import {
   networkUnknown,
   networkUp,
 } from 'wallet/src/test/fixtures'
+import { DerivedSwapInfo } from './types'
 
 const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 

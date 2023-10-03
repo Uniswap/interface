@@ -24,3 +24,8 @@ export type SuggestedTokenSection = {
 }
 
 export type TokenSelectorListSections = Array<SuggestedTokenSection | TokenSection>
+
+export enum TokenSelectorFlow {
+  Swap,
+  Transfer,
+}

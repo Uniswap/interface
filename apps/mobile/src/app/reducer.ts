@@ -24,6 +24,7 @@ const reducers = {
   tweaks: tweaksReducer,
   walletConnect: walletConnectReducer,
 } as const
+
 export const mobileReducer = combineReducers(reducers)
 
 export type MobileState = ReturnType<typeof mobileReducer>

@@ -1,6 +1,6 @@
 // allow long constants file
 /* eslint-disable max-lines */
-import { PathProps } from 'src/components/unicons/types'
+import { PathProps } from './svgTypes'
 export const svgPaths: PathProps[][] = [
   [
     {

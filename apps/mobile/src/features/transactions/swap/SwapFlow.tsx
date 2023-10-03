@@ -2,18 +2,19 @@ import React, { useEffect, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WarningAction } from 'src/components/modals/WarningModal/types'
 import {
-  TokenSelectorFlow,
   TokenSelectorModal,
   TokenSelectorVariation,
 } from 'src/components/TokenSelector/TokenSelector'
+import { TokenSelectorFlow } from 'src/components/TokenSelector/types'
 import { useTokenSelectorActionHandlers } from 'src/features/transactions/hooks'
 import { useDerivedSwapInfo, useSwapTxAndGasInfo } from 'src/features/transactions/swap/hooks'
 import { useSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
-import { TransactionFlow, TransactionStep } from 'src/features/transactions/TransactionFlow'
+import { TransactionFlow } from 'src/features/transactions/TransactionFlow'
 import {
   initialState as emptyState,
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
+import { TransactionStep } from 'src/features/transactions/types'
 import { useTransactionGasWarning } from 'src/features/transactions/useTransactionGasWarning'
 import {
   CurrencyField,

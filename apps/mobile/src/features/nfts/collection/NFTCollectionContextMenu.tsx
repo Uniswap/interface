@@ -3,13 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, Share } from 'react-native'
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { TripleDot } from 'src/components/icons/TripleDot'
-import { NFTCollectionData } from 'src/features/nfts/collection/NFTCollectionHeader'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { getNftCollectionUrl, getTwitterLink, openUri } from 'src/utils/linking'
 import { ColorTokens, Flex, TouchableArea } from 'ui/src'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { logger } from 'utilities/src/logger/logger'
+import { NFTCollectionData } from './types'
 
 type MenuOption = {
   title: string

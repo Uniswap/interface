@@ -10,7 +10,7 @@ import { DecimalPad } from 'src/components/input/DecimalPad'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
-import { TokenSelectorFlow } from 'src/components/TokenSelector/TokenSelector'
+import { TokenSelectorFlow } from 'src/components/TokenSelector/types'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import {
@@ -19,10 +19,7 @@ import {
   useTokenSelectorActionHandlers,
 } from 'src/features/transactions/hooks'
 import { useSwapAnalytics } from 'src/features/transactions/swap/analytics'
-import {
-  DerivedSwapInfo,
-  useShowSwapNetworkNotification,
-} from 'src/features/transactions/swap/hooks'
+import { useShowSwapNetworkNotification } from 'src/features/transactions/swap/hooks'
 import { SwapArrowButton } from 'src/features/transactions/swap/SwapArrowButton'
 import { isPriceImpactWarning } from 'src/features/transactions/swap/useSwapWarnings'
 import {
@@ -41,6 +38,7 @@ import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
+import { DerivedSwapInfo } from './types'
 
 interface SwapFormProps {
   dispatch: Dispatch<AnyAction>

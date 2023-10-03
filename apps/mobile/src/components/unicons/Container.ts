@@ -1,4 +1,4 @@
-import { PathProps } from 'src/components/unicons/types'
+import { PathProps } from './svgTypes'
 export const svgPaths: PathProps[][] = [
   [
     {

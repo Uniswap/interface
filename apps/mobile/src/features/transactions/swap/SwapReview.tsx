@@ -7,7 +7,6 @@ import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import Trace from 'src/components/Trace/Trace'
 import { ModalName, SectionName } from 'src/features/telemetry/constants'
 import {
-  DerivedSwapInfo,
   useAcceptedTrade,
   useSwapCallback,
   useWrapCallback,
@@ -29,6 +28,7 @@ import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { DerivedSwapInfo } from './types'
 
 interface SwapFormProps {
   onNext: () => void

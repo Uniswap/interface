@@ -1,16 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ExploreModalState } from 'src/app/modals/ExploreModalState'
-import { MobileState } from 'src/app/reducer'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
 import { ModalName } from 'src/features/telemetry/constants'
 import { getKeys } from 'utilities/src/primitives/objects'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
-
-export interface AppModalState<T> {
-  isOpen: boolean
-  initialState?: T
-}
+import { ModalsState } from './ModalsState'
 
 type AccountSwitcherModalParams = { name: ModalName.AccountSwitcher; initialState?: undefined }
 
@@ -49,18 +44,6 @@ export type OpenModalParams =
   | SwapModalParams
   | WalletConnectModalParams
   | RestoreWalletModalParams
-
-export interface ModalsState {
-  [ModalName.AccountSwitcher]: AppModalState<undefined>
-  [ModalName.Experiments]: AppModalState<undefined>
-  [ModalName.Explore]: AppModalState<ExploreModalState>
-  [ModalName.FiatOnRamp]: AppModalState<undefined>
-  [ModalName.RemoveWallet]: AppModalState<RemoveWalletModalState>
-  [ModalName.RestoreWallet]: AppModalState<undefined>
-  [ModalName.Send]: AppModalState<TransactionState>
-  [ModalName.Swap]: AppModalState<TransactionState>
-  [ModalName.WalletConnectScan]: AppModalState<ScannerModalState>
-}
 
 export const initialModalState: ModalsState = {
   [ModalName.FiatOnRamp]: {
@@ -123,16 +106,6 @@ const slice = createSlice({
     },
   },
 })
-
-export function selectModalState<T extends keyof ModalsState>(
-  name: T
-): (state: MobileState) => ModalsState[T] {
-  return (state) => state.modals[name]
-}
-
-export function selectSomeModalOpen(state: MobileState): boolean {
-  return Object.values(state.modals).some((modalState) => modalState.isOpen)
-}
 
 export const { openModal, closeModal, closeAllModals } = slice.actions
 export const { reducer: modalsReducer } = slice

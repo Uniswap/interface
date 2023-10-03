@@ -7,12 +7,9 @@ import { SearchPopularNFTCollections } from 'src/components/explore/search/Searc
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
 import { renderSearchItem } from 'src/components/explore/search/SearchResultsSection'
 import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
-import {
-  clearSearchHistory,
-  SearchResultType,
-  selectSearchHistory,
-  WalletSearchResult,
-} from 'src/features/explore/searchHistorySlice'
+import { clearSearchHistory } from 'src/features/explore/searchHistorySlice'
+import { SearchResultType, WalletSearchResult } from 'src/features/explore/SearchResult'
+import { selectSearchHistory } from 'src/features/explore/selectSearchHistory'
 import { AnimatedFlex, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import ClockIcon from 'ui/src/assets/icons/clock.svg'
 import TrendArrowIcon from 'ui/src/assets/icons/trend-up.svg'

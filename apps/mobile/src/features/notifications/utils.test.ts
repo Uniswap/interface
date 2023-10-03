@@ -1,9 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { createFinalizedTxAction } from 'src/features/notifications/notificationWatcherSaga.test'
-import {
-  buildReceiveNotification,
-  formSwapNotificationTitle,
-} from 'src/features/notifications/utils'
+import { formSwapNotificationTitle } from 'src/features/notifications/utils'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, USDC } from 'wallet/src/constants/tokens'
 import { AssetType } from 'wallet/src/entities/assets'
@@ -15,6 +12,7 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { initializeTranslation } from 'wallet/src/i18n/i18n'
 import { account, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
+import { buildReceiveNotification } from './buildReceiveNotification'
 
 describe(formSwapNotificationTitle, () => {
   beforeAll(() => {

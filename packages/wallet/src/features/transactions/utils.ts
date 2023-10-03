@@ -1,11 +1,9 @@
 import { NetInfoState } from '@react-native-community/netinfo'
-import { CurrencyAmount, NativeCurrency, TradeType } from '@uniswap/sdk-core'
+import { CurrencyAmount, NativeCurrency } from '@uniswap/sdk-core'
 import { BigNumber, providers } from 'ethers'
 import { v4 as uuid } from 'uuid'
 import { ChainId } from 'wallet/src/constants/chains'
 import {
-  ExactInputSwapTransactionInfo,
-  ExactOutputSwapTransactionInfo,
   FinalizedTransactionStatus,
   TransactionStatus,
 } from 'wallet/src/features/transactions/types'
@@ -65,22 +63,6 @@ export function hasSufficientFundsIncludingGas(params: {
 
 export function createTransactionId(): string {
   return uuid()
-}
-
-export function getInputAmountFromTrade(
-  typeInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
-): string {
-  return typeInfo.tradeType === TradeType.EXACT_INPUT
-    ? typeInfo.inputCurrencyAmountRaw
-    : typeInfo.expectedInputCurrencyAmountRaw
-}
-
-export function getOutputAmountFromTrade(
-  typeInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
-): string {
-  return typeInfo.tradeType === TradeType.EXACT_OUTPUT
-    ? typeInfo.outputCurrencyAmountRaw
-    : typeInfo.expectedOutputCurrencyAmountRaw
 }
 
 export const ANIMATE_SPRING_CONFIG = {

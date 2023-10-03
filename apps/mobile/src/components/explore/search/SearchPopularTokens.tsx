@@ -4,7 +4,7 @@ import { SearchTokenItem } from 'src/components/explore/search/items/SearchToken
 import { getSearchResultId } from 'src/components/explore/search/utils'
 import { Inset } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
-import { SearchResultType, TokenSearchResult } from 'src/features/explore/searchHistorySlice'
+import { SearchResultType, TokenSearchResult } from 'src/features/explore/SearchResult'
 import { WRAPPED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import {

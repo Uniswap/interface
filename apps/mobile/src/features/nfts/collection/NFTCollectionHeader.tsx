@@ -11,18 +11,14 @@ import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { formatNumber, NumberType } from 'utilities/src/format/format'
-import { NftCollectionScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { useExtractedColors } from 'wallet/src/utils/colors'
+import { NFTCollectionData } from './types'
 
 const PROFILE_IMAGE_SIZE = 72
 const PROFILE_IMAGE_WRAPPER_SIZE = PROFILE_IMAGE_SIZE + FixedTheme.spacing.spacing4
 export const NFT_BANNER_HEIGHT = 102
-
-export type NFTCollectionData = Maybe<
-  NonNullable<NonNullable<NftCollectionScreenQuery['nftCollections']>['edges']>[0]['node']
->
 
 export function NFTCollectionHeader({
   loading = false,

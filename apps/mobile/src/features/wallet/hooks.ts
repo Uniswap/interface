@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useAppSelector } from 'src/app/hooks'
-import { openModal, selectModalState } from 'src/features/modals/modalSlice'
+import { openModal } from 'src/features/modals/modalSlice'
+import { selectModalState } from 'src/features/modals/selectModalState'
 import { ModalName } from 'src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'

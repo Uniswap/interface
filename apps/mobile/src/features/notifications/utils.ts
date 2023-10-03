@@ -1,18 +1,8 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
-import { AssetType } from 'wallet/src/entities/assets'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
-import {
-  AppNotificationType,
-  ReceiveCurrencyTxNotification,
-  ReceiveNFTNotification,
-  WalletConnectNotification,
-} from 'wallet/src/features/notifications/types'
-import {
-  TransactionDetails,
-  TransactionStatus,
-  TransactionType,
-} from 'wallet/src/features/transactions/types'
+import { WalletConnectNotification } from 'wallet/src/features/notifications/types'
+import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 import i18n from 'wallet/src/i18n/i18n'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
@@ -234,66 +224,4 @@ const formTransferTxTitle = (
 
 const getShortenedAddressOrEns = (addressOrENS: string): string => {
   return getValidAddress(addressOrENS) ? shortenAddress(addressOrENS) : addressOrENS
-}
-
-/**
- * Based on notification type info, returns an AppNotification object for either NFT or Currency receive.
- * Must be a 'Receive' type transaction.
- *
- * Returns undefined if not all data is found for either Currency or NFT case, or if transaction is not
- * the correct type.
- */
-export function buildReceiveNotification(
-  transactionDetails: TransactionDetails,
-  receivingAddress: Address // not included in transactionDetails
-): ReceiveNFTNotification | ReceiveCurrencyTxNotification | undefined {
-  const { typeInfo, status, chainId, hash, id } = transactionDetails
-
-  // Only build notification object on successful receive transactions.
-  if (status !== TransactionStatus.Success || typeInfo.type !== TransactionType.Receive) {
-    return undefined
-  }
-
-  const baseNotificationData = {
-    txStatus: status,
-    chainId,
-    txHash: hash,
-    address: receivingAddress,
-    txId: id,
-  }
-
-  // Currency receive txn.
-  if (
-    typeInfo?.assetType === AssetType.Currency &&
-    typeInfo?.currencyAmountRaw &&
-    typeInfo?.sender
-  ) {
-    return {
-      ...baseNotificationData,
-      type: AppNotificationType.Transaction,
-      txType: TransactionType.Receive,
-      assetType: typeInfo.assetType,
-      tokenAddress: typeInfo.tokenAddress,
-      currencyAmountRaw: typeInfo.currencyAmountRaw,
-      sender: typeInfo.sender,
-    }
-  }
-
-  // NFT receive txn.
-  if (
-    (typeInfo?.assetType === AssetType.ERC1155 || typeInfo?.assetType === AssetType.ERC721) &&
-    typeInfo?.tokenId
-  ) {
-    return {
-      ...baseNotificationData,
-      type: AppNotificationType.Transaction,
-      txType: TransactionType.Receive,
-      assetType: typeInfo.assetType,
-      tokenAddress: typeInfo.tokenAddress,
-      tokenId: typeInfo.tokenId,
-      sender: typeInfo.sender,
-    }
-  }
-
-  return undefined
 }

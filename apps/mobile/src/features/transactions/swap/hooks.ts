@@ -9,7 +9,6 @@ import { providers } from 'ethers'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { CurrencyInfo } from 'src/features/dataApi/types'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import {
   getBaseTradeAnalyticsProperties,
@@ -32,7 +31,6 @@ import {
   updateExactAmountToken,
   updateExactAmountUSD,
 } from 'src/features/transactions/transactionState/transactionState'
-import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import { toStringish } from 'src/utils/number'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { logger } from 'utilities/src/logger/logger'
@@ -76,35 +74,9 @@ import {
 } from 'wallet/src/features/wallet/hooks'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
+import { DerivedSwapInfo } from './types'
 
 const NUM_USD_DECIMALS_DISPLAY = 2
-
-export type DerivedSwapInfo<
-  TInput = CurrencyInfo,
-  TOutput extends CurrencyInfo = CurrencyInfo
-> = BaseDerivedInfo<TInput> & {
-  chainId: ChainId
-  currencies: BaseDerivedInfo<TInput>['currencies'] & {
-    [CurrencyField.OUTPUT]: Maybe<TOutput>
-  }
-  currencyAmounts: BaseDerivedInfo<TInput>['currencyAmounts'] & {
-    [CurrencyField.OUTPUT]: Maybe<CurrencyAmount<Currency>>
-  }
-  currencyAmountsUSDValue: {
-    [CurrencyField.INPUT]: Maybe<CurrencyAmount<Currency>>
-    [CurrencyField.OUTPUT]: Maybe<CurrencyAmount<Currency>>
-  }
-  currencyBalances: BaseDerivedInfo<TInput>['currencyBalances'] & {
-    [CurrencyField.OUTPUT]: Maybe<CurrencyAmount<Currency>>
-  }
-  focusOnCurrencyField: CurrencyField | null
-  trade: ReturnType<typeof useTrade>
-  wrapType: WrapType
-  selectingCurrencyField?: CurrencyField
-  txId?: string
-  autoSlippageTolerance?: number
-  customSlippageTolerance?: number
-}
 
 /** Returns information derived from the current swap state */
 export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {

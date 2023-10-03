@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useTokenFormActionHandlers } from 'src/features/transactions/hooks'
-import { TransactionFlowProps, TransactionStep } from 'src/features/transactions/TransactionFlow'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import DollarSign from 'ui/src/assets/icons/dollar.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
@@ -12,6 +11,7 @@ import { iconSizes } from 'ui/src/theme'
 import { formatPercent } from 'utilities/src/format/format'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { TransactionFlowProps, TransactionStep } from './types'
 
 type HeaderContentProps = Pick<
   TransactionFlowProps,

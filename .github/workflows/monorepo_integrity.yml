@@ -27,6 +27,9 @@ jobs:
       - name: 👬🏽 Check for conflicting versions across the monorepo
         run: yarn g:check:deps
 
+      - name: 👬🏽 Check for circular imports across the monorepo
+        run: yarn g:check:circular
+
       - name: 👬🏽 Check for duplicate dependencies in lock file
         run: yarn dedupe --check
 

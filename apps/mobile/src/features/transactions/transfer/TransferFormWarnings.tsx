@@ -5,7 +5,6 @@ import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useAllTransactionsBetweenAddresses } from 'src/features/transactions/hooks'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
-import { TransferSpeedbump } from 'src/features/transactions/transfer/TransferTokenForm'
 import { Flex, Text } from 'ui/src'
 import { ChainId } from 'wallet/src/constants/chains'
 import {
@@ -13,6 +12,7 @@ import {
   useDisplayName,
   useSignerAccounts,
 } from 'wallet/src/features/wallet/hooks'
+import { TransferSpeedbump } from './types'
 
 interface TransferFormWarningProps {
   recipient?: string

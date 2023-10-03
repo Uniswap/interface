@@ -7,10 +7,7 @@ import {
 } from 'src/components/explore/search/utils'
 import { Inset } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
-import {
-  NFTCollectionSearchResult,
-  SearchResultType,
-} from 'src/features/explore/searchHistorySlice'
+import { NFTCollectionSearchResult, SearchResultType } from 'src/features/explore/SearchResult'
 import { useSearchPopularNftCollectionsQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 
 function isNFTCollectionSearchResult(

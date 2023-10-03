@@ -4,16 +4,17 @@ import { useTranslation } from 'react-i18next'
 import { WarningAction } from 'src/components/modals/WarningModal/types'
 import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
 import {
-  TokenSelectorFlow,
   TokenSelectorModal,
   TokenSelectorVariation,
 } from 'src/components/TokenSelector/TokenSelector'
+import { TokenSelectorFlow } from 'src/components/TokenSelector/types'
 import { useTokenSelectorActionHandlers } from 'src/features/transactions/hooks'
-import { TransactionFlow, TransactionStep } from 'src/features/transactions/TransactionFlow'
+import { TransactionFlow } from 'src/features/transactions/TransactionFlow'
 import {
   initialState as emptyState,
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
+import { TransactionStep } from 'src/features/transactions/types'
 import { useTransactionGasWarning } from 'src/features/transactions/useTransactionGasWarning'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasSpeed } from 'wallet/src/features/gas/types'

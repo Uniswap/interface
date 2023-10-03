@@ -4,10 +4,10 @@ import {
   closeModal,
   initialModalState,
   modalsReducer,
-  ModalsState,
   openModal,
 } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
+import { ModalsState } from './ModalsState'
 
 const initialState = { ...initialModalState }
 const modalName = ModalName.WalletConnectScan

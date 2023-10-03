@@ -1,6 +1,7 @@
-import { Color, FillType, PathDef, SkEnum } from '@shopify/react-native-skia'
+import { Color } from '@shopify/react-native-skia'
 import { svgPaths as containerPaths } from 'src/components/unicons/Container'
 import { svgPaths as emblemPaths } from 'src/components/unicons/Emblem'
+import { PathProps } from './svgTypes'
 
 export enum UniconAttributes {
   GradientStart = 0,
@@ -68,11 +69,6 @@ export const gradientEnds = [
   '#F5A1F5',
   '#B8C3B7',
 ]
-
-export interface PathProps {
-  path: PathDef
-  fillType?: SkEnum<typeof FillType>
-}
 
 export const UniconNumOptions = {
   [UniconAttributes.GradientStart]: gradientStarts.length,

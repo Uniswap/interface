@@ -7,6 +7,7 @@
       ],
       "outputs": []
     },
+    "check:circular": {},
     "lint": {},
     "lint:fix": {},
     "//#staged:lint:fix": {
