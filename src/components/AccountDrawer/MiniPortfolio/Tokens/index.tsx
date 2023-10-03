@@ -3,6 +3,7 @@ import { TraceEvent } from 'analytics'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import Row from 'components/Row'
 import { DeltaArrow, formatDelta } from 'components/Tokens/TokenDetails/Delta'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
 import { getTokenDetailsURL, gqlToCurrency, logSentryErrorForUnsupportedChain } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
@@ -75,10 +76,12 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
 
   const navigate = useNavigate()
   const toggleWalletDrawer = useToggleAccountDrawer()
+  const isExplore = useInfoExplorePageEnabled()
+
   const navigateToTokenDetails = useCallback(async () => {
-    navigate(getTokenDetailsURL(token))
+    navigate(getTokenDetailsURL({ ...token, isExploreFlagEnabled: isExplore }))
     toggleWalletDrawer()
-  }, [navigate, token, toggleWalletDrawer])
+  }, [navigate, token, isExplore, toggleWalletDrawer])
   const { formatNumber } = useFormatter()
 
   const currency = gqlToCurrency(token)

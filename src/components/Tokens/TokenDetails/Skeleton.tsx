@@ -1,4 +1,5 @@
 import { SwapSkeleton } from 'components/swap/SwapSkeleton'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { ArrowLeft } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
@@ -220,9 +221,20 @@ function LoadingStats() {
 /* Loading State: row component with loading bubbles */
 export default function TokenDetailsSkeleton() {
   const { chainName } = useParams<{ chainName?: string }>()
+  const isExplore = useInfoExplorePageEnabled()
   return (
     <LeftPanel>
-      <BreadcrumbNavLink to={chainName ? `/tokens/${chainName}` : `/explore`}>
+      <BreadcrumbNavLink
+        to={
+          isExplore
+            ? chainName
+              ? `/explore/tokens/${chainName}`
+              : `/explore/tokens`
+            : chainName
+            ? `/tokens/${chainName}`
+            : `/tokens`
+        }
+      >
         <ArrowLeft size={14} /> Tokens
       </BreadcrumbNavLink>
       <TokenInfoContainer>

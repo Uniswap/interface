@@ -119,6 +119,7 @@ export default function App() {
   const isDarkMode = useIsDarkMode()
   const [routerPreference] = useRouterPreference()
   const [scrolledState, setScrolledState] = useState(false)
+
   const infoPoolPageEnabled = useInfoPoolPageEnabled()
   const infoExplorePageEnabled = useInfoExplorePageEnabled()
 
@@ -236,7 +237,10 @@ export default function App() {
                   <Route path={infoExplorePageEnabled ? 'explore' : 'tokens'} element={<Explore />}>
                     <Route path=":chainName" />
                   </Route>
-                  <Route path="tokens/:chainName/:tokenAddress" element={<TokenDetails />} />
+                  <Route
+                    path={`${infoExplorePageEnabled ? 'explore/' : ''}tokens/:chainName/:tokenAddress`}
+                    element={<TokenDetails />}
+                  />
                   {infoPoolPageEnabled && <Route path="pools/:chainName/:poolAddress" element={<PoolDetails />} />}
                   <Route
                     path="vote/*"
