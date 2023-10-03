@@ -100,7 +100,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   const [lastSubmittableFillType, setLastSubmittableFillType] = useState<TradeFillType>()
   useEffect(() => {
     if (!isPreview) setLastSubmittableFillType(trade.fillType)
-  }, [isUniswapX, isPreview, trade.fillType])
+  }, [isPreview, trade.fillType])
 
   switch (type) {
     case SwapLineItemType.EXCHANGE_RATE:
