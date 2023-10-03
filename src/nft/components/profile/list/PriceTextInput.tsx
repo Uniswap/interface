@@ -104,7 +104,7 @@ export const PriceTextInput = ({
   globalOverride,
   asset,
 }: PriceTextInputProps) => {
-  const { formatNumberOrString } = useFormatter()
+  const { formatNumberOrString, formatPercent } = useFormatter()
   const [warningType, setWarningType] = useState(WarningType.NONE)
   const removeSellAsset = useSellAsset((state) => state.removeSellAsset)
   const showResolveIssues = useSellAsset((state) => state.showResolveIssues)
@@ -160,7 +160,7 @@ export const PriceTextInput = ({
           <WarningRow>
             <AlertTriangle height={16} width={16} color={warningColor} />
             <span>
-              {warningType === WarningType.BELOW_FLOOR && `${percentBelowFloor.toFixed(0)}% `}
+              {warningType === WarningType.BELOW_FLOOR && `${formatPercent(percentBelowFloor)} `}
               {getWarningMessage(warningType)}
               &nbsp;
               {warningType === WarningType.ALREADY_LISTED &&

@@ -10,6 +10,7 @@ import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+import { useFormatter } from 'utils/formatNumbers'
 
 const ModalWrapper = styled(Column)`
   position: fixed;
@@ -82,6 +83,7 @@ export const BelowFloorWarningModal = ({
   startListing: () => void
 }) => {
   const theme = useTheme()
+  const { formatPercent } = useFormatter()
   const clickContinue = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -103,10 +105,9 @@ export const BelowFloorWarningModal = ({
         <ThemedText.BodyPrimary textAlign="center">
           <Plural
             value={listingsBelowFloor.length !== 1 ? 2 : 1}
-            _1={t`One NFT is listed ${(
-              (1 - (listingsBelowFloor[0][1].price ?? 0) / (listingsBelowFloor[0][0].floorPrice ?? 0)) *
-              100
-            ).toFixed(0)}% `}
+            _1={t`One NFT is listed ${formatPercent(
+              (1 - (listingsBelowFloor[0][1].price ?? 0) / (listingsBelowFloor[0][0].floorPrice ?? 0)) * 100
+            )} `}
             other={t`${listingsBelowFloor.length} NFTs are listed significantly `}
           />
           &nbsp;
