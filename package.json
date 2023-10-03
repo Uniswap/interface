@@ -89,6 +89,7 @@
     "g:rm:nodemodules": "rm -rf node_modules",
     "g:run-all-checks": "turbo run typecheck lint test build --parallel",
     "g:test": "turbo run test --parallel",
+    "g:snapshots": "turbo run snapshots --parallel",
     "g:typecheck": "turbo run typecheck --parallel",
     "graphql:generate": "graphql-codegen --config codegen.ts",
     "graphql:schema": "get-graphql-schema https://api.uniswap.org/v1/graphql -h Origin=https://app.uniswap.org > ./packages/wallet/src/data/__generated__/schema.graphql",

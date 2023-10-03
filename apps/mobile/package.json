@@ -43,6 +43,7 @@
     "storybook:build": "storybook build",
     "storybook:chromatic": "chromatic --build-script-name=storybook:build",
     "test": "jest --forceExit",
+    "snapshots": "jest -u",
     "test:e2e:build": "RN_SRC_EXT=e2e.js detox build -c ios.sim.debug",
     "test:e2e:packager": "RN_SRC_EXT=e2e.js,e2e.ts yarn start:production --no-interactive",
     "test:e2e:run": "RN_SRC_EXT=e2e.js detox test -c ios.sim.debug",

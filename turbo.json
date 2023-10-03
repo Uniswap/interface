@@ -21,6 +21,12 @@
         "lint"
       ]
     },
+    "snapshots": {
+      "dependsOn": [
+        "typecheck",
+        "lint"
+      ]
+    },
     "build": {
       "inputs": [
         "yarn.lock",

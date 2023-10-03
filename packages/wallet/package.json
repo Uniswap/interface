@@ -60,6 +60,7 @@
     "lint": "eslint . --ext ts,tsx",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "test": "jest",
+    "snapshots": "jest -u",
     "typecheck": "tsc -b"
   },
   "sideEffects": [
