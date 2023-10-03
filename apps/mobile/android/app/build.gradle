@@ -65,10 +65,9 @@ def reactNativeArchitectures() {
 android {
     ndkVersion rootProject.ext.ndkVersion
 
-
     namespace "com.uniswap"
     defaultConfig {
-        applicationId "com.uniswap"
+        applicationId "com.uniswap.mobile"
         compileSdk rootProject.ext.compileSdkVersion
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
