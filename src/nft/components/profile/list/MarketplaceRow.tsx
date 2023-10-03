@@ -126,6 +126,7 @@ export const MarketplaceRow = ({
   toggleExpandMarketplaceRows,
   rowHovered,
 }: MarketplaceRowProps) => {
+  const { formatNumberOrString, formatPercent } = useFormatter()
   const setAssetListPrice = useSellAsset((state) => state.setAssetListPrice)
   const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)
   const [marketIconHovered, toggleMarketIconHovered] = useReducer((s) => !s, false)
@@ -184,12 +185,17 @@ export const MarketplaceRow = ({
     <Row onMouseEnter={toggleMarketRowHovered} onMouseLeave={toggleMarketRowHovered}>
       <FloorPriceInfo>
         <ThemedText.BodyPrimary color="neutral2" lineHeight="24px">
-          {asset.floorPrice ? `${asset.floorPrice.toFixed(3)} ETH` : '-'}
+          {asset.floorPrice
+            ? `${formatNumberOrString({
+                input: asset.floorPrice,
+                type: NumberType.NFTToken,
+              })} ETH`
+            : '-'}
         </ThemedText.BodyPrimary>
       </FloorPriceInfo>
       <LastPriceInfo>
         <ThemedText.BodyPrimary color="neutral2" lineHeight="24px">
-          {asset.lastPrice ? `${asset.lastPrice.toFixed(3)} ETH` : '-'}
+          {asset.lastPrice ? `${formatNumberOrString({ input: asset.lastPrice, type: NumberType.NFTToken })} ETH` : '-'}
         </ThemedText.BodyPrimary>
       </LastPriceInfo>
 
@@ -235,7 +241,7 @@ export const MarketplaceRow = ({
         >
           <FeeWrapper>
             <ThemedText.BodyPrimary color="neutral2">
-              {fees > 0 ? `${fees.toFixed(2)}${selectedMarkets.length > 1 ? t`% max` : '%'}` : '--%'}
+              {fees > 0 ? `${formatPercent(fees)}${selectedMarkets.length > 1 ? t`max` : ''}` : '--%'}
             </ThemedText.BodyPrimary>
           </FeeWrapper>
         </MouseoverTooltip>
