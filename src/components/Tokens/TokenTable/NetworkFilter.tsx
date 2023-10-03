@@ -16,6 +16,7 @@ import { ApplicationModal } from 'state/application/reducer'
 import styled, { css, useTheme } from 'styled-components'
 import { EllipsisStyle } from 'theme/components'
 
+import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import FilterOption from './FilterOption'
 
 const InternalMenuItem = styled.div`
@@ -48,7 +49,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)<{ disabled?: boolean }>`
       pointer-events: none;
     `}
 `
-const MenuTimeFlyout = styled.span`
+const MenuTimeFlyout = styled.span<{ isExplore: boolean }>`
   min-width: 240px;
   max-height: 350px;
   overflow: auto;
@@ -63,7 +64,11 @@ const MenuTimeFlyout = styled.span`
   position: absolute;
   top: 48px;
   z-index: 100;
-  left: 0px;
+  ${({ isExplore }) => (isExplore ? 'right: 0px;' : 'left: 0px;')}
+
+  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
+    ${({ isExplore }) => isExplore && 'left: 0px;'}
+  }
 `
 const StyledMenu = styled.div`
   display: flex;
@@ -149,7 +154,7 @@ export default function NetworkFilter() {
         </StyledMenuContent>
       </NetworkFilterOption>
       {open && (
-        <MenuTimeFlyout>
+        <MenuTimeFlyout isExplore={isExplore}>
           {BACKEND_SUPPORTED_CHAINS.map((network) => {
             const chainInfo = getChainInfo(supportedChainIdFromGQLChain(network))
             return (

@@ -9,7 +9,7 @@ import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components'
 
-import { MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT } from '../constants'
+import { MEDIUM_MEDIA_BREAKPOINT, MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT } from '../constants'
 import { filterTimeAtom } from '../state'
 import FilterOption from './FilterOption'
 
@@ -69,11 +69,13 @@ const MenuTimeFlyout = styled.span<{ isExplore: boolean }>`
   position: absolute;
   top: 48px;
   z-index: 100;
-  left: 0px;
+  ${({ isExplore }) => (isExplore ? 'right: 0px;' : 'left: 0px;')}
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    right: 0px;
-    ${({ isExplore }) => !isExplore && 'left: unset;'}
+    ${({ isExplore }) => !isExplore && 'left: unset; right: 0px;'}
+  }
+  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
+    ${({ isExplore }) => isExplore && 'left: 0px;'}
   }
 `
 const StyledMenu = styled.div<{ isExplore: boolean }>`
