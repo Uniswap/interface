@@ -467,10 +467,10 @@ describe('formatPercent', () => {
     mocked(useCurrencyConversionFlagEnabled).mockReturnValue(true)
   })
 
-  it('should correctly format undefined', () => {
+  it.each([[null], [undefined], [Infinity], [NaN]])('should correctly format %p', (value) => {
     const { formatPercent } = renderHook(() => useFormatter()).result.current
 
-    expect(formatPercent(undefined)).toBe('-')
+    expect(formatPercent(value)).toBe('-')
   })
 
   it('correctly formats a percent with 2 decimal places', () => {
