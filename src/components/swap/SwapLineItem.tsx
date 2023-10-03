@@ -99,8 +99,8 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   // Tracks the latest submittable trade's fill type, used to 'guess' whether or not to show price impact during preview
   const [lastSubmittableFillType, setLastSubmittableFillType] = useState<TradeFillType>()
   useEffect(() => {
-    if (!isPreview) setLastSubmittableFillType(trade.fillType)
-  }, [isPreview, trade.fillType])
+    if (trade.fillType !== TradeFillType.None) setLastSubmittableFillType(trade.fillType)
+  }, [trade.fillType])
 
   switch (type) {
     case SwapLineItemType.EXCHANGE_RATE:
