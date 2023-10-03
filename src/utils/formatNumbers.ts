@@ -479,9 +479,9 @@ function formatSlippage(slippage: Percent | undefined, locale: SupportedLocale =
 }
 
 function formatPercent(percent: Nullish<number>, locale: SupportedLocale = DEFAULT_LOCALE) {
-  const validPercent = percent !== null && percent !== undefined && percent !== Infinity && !isNaN(percent)
-
-  if (!validPercent) return '-'
+  if (percent === null || percent === undefined || percent === Infinity || isNaN(percent)) {
+    return '-'
+  }
 
   return `${Number(Math.abs(percent).toFixed(2)).toLocaleString(locale, {
     minimumFractionDigits: 2,
