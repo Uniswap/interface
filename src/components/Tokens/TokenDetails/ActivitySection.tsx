@@ -3,20 +3,23 @@ import { TokenInfo } from '@uniswap/token-lists'
 import { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
 import { useState } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
+import { ClickableStyle } from 'theme/components'
 import { ThemedText } from 'theme/components/text'
 
 import { TransactionsTable } from './TransactionsTable'
 
-const ActiveTab = styled(ThemedText.BodyPrimary)`
+const TabStyle = css`
   cursor: pointer;
   font-size: 24px !important;
   line-height: 32px !important;
+  ${ClickableStyle}
+`
+const ActiveTab = styled(ThemedText.BodyPrimary)`
+  ${TabStyle}
 `
 const InactiveTab = styled(ThemedText.BodySecondary)`
-  cursor: pointer;
-  font-size: 24px !important;
-  line-height: 32px !important;
+  ${TabStyle}
 `
 
 enum ActivityTab {
