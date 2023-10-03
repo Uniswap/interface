@@ -35,7 +35,7 @@ import {
 } from 'src/features/widgets/widgets'
 import { DynamicThemeProvider } from 'src/theme/DynamicThemeProvider'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
-import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
+import { getSentryEnvironment, getStatsigEnvironmentTier, isDevBuild } from 'src/utils/version'
 import { StatsigProvider } from 'statsig-react-native'
 import { flexStyles } from 'ui/src'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
@@ -81,6 +81,10 @@ if (!__DEV__) {
         routingInstrumentation,
       }),
     ],
+    // By default, the Sentry SDK normalizes any context to a depth of 3.
+    // We're increasing this to be able to see the full depth of the Redux state.
+    // We're testing this in the Dev build first to see if it causes any performance issues.
+    normalizeDepth: isDevBuild() ? 10 : 3,
   })
 }
 
