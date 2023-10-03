@@ -5,6 +5,7 @@ import AirdropModal from 'components/AirdropModal'
 import BaseAnnouncementBanner from 'components/Banner/BaseAnnouncementBanner'
 import AddressClaimModal from 'components/claim/AddressClaimModal'
 import ConnectedAccountBlocked from 'components/ConnectedAccountBlocked'
+import DevFlagsBox from 'components/FeatureFlagModal/DevFlagsBox'
 import FiatOnrampModal from 'components/FiatOnrampModal'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import Bag from 'nft/components/bag/Bag'
@@ -31,6 +32,7 @@ export default function TopLevelModals() {
       <TransactionCompleteModal />
       <AirdropModal />
       <FiatOnrampModal />
+      <DevFlagsBox />
     </>
   )
 }
