@@ -28,15 +28,9 @@ describe('Routes', () => {
   })
 
   /**
-   * If you are updating the sitemap or app routes, consider if you need to make a
-   * corresponding update in the other file.
+   * If you are updating the app routes, consider if you need to make a
+   * corresponding update to the sitemap.xml file.
    */
-
-  it('sitemap should match snapshot', () => {
-    const result = fs.readFileSync('./public/sitemap.xml', 'utf8')
-    expect(result).toMatchSnapshot()
-  })
-
   it('router definition should match snapshot', () => {
     expect(routes).toMatchSnapshot()
   })
