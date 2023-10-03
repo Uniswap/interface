@@ -17,13 +17,15 @@ import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID } from 'src/constants/globals'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
+import { useSwapTxAndGasInfo } from 'src/features/transactions/swap/hooks'
 import { CurrencyInputPanel } from 'src/features/transactions/swapRewrite/CurrencyInputPanel'
 import { SwapArrowButton } from 'src/features/transactions/swapRewrite/SwapArrowButton'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
+import { formatCurrencyAmount, formatUSDPrice, NumberType } from 'utilities/src/format/format'
+import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
@@ -88,7 +90,15 @@ function SwapFormContent(): JSX.Element {
     updateSwapForm,
   } = useSwapContext()
 
-  const { currencyAmounts, currencyBalances, currencies, currencyAmountsUSDValue } = derivedSwapInfo
+  const { currencyAmounts, currencyBalances, currencies, currencyAmountsUSDValue, chainId } =
+    derivedSwapInfo
+
+  const { gasFee } = useSwapTxAndGasInfo(
+    derivedSwapInfo,
+    // TODO: skip this query when we implement review screen
+    false
+  )
+  const gasFeeUSD = useUSDValue(chainId, gasFee.value ?? undefined)
 
   const { isBlocked } = useIsBlockedActiveAddress()
 
@@ -309,8 +319,6 @@ function SwapFormContent(): JSX.Element {
               }
               borderColor="$surface3"
               borderRadius="$rounded20"
-              borderTopLeftRadius="$rounded20"
-              borderTopRightRadius="$rounded20"
               borderWidth={1}
               overflow="hidden"
               position="relative">
@@ -377,10 +385,20 @@ function SwapFormContent(): JSX.Element {
                 py="$spacing12"
               />
             )}
-
-            {/* TODO: show gas */}
           </Flex>
         </Trace>
+        {gasFeeUSD && (
+          <Flex centered row gap="$spacing4" padding="$spacing16">
+            <Icons.Gas
+              color={colors.neutral2.val}
+              height={iconSizes.icon20}
+              width={iconSizes.icon20}
+            />
+            <Text color="$neutral2" variant="body3">
+              {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
+            </Text>
+          </Flex>
+        )}
       </AnimatedFlex>
       <AnimatedFlex
         bottom={0}
