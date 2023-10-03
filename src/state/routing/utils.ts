@@ -343,20 +343,3 @@ export function isUniswapXTrade(trade?: InterfaceTrade): trade is DutchOrderTrad
 export function shouldUseAPIRouter(args: GetQuoteArgs): boolean {
   return args.routerPreference !== RouterPreference.CLIENT
 }
-
-export function getTransactionCount(trade: InterfaceTrade): number {
-  if (!isSubmittableTrade(trade)) return 0
-
-  let count = 0
-  if (trade.approveInfo.needsApprove) {
-    count++ // approval step, which can happen in both classic and uniswapx
-  }
-  if (isUniswapXTrade(trade)) {
-    if (trade.wrapInfo.needsWrap) {
-      count++ // wrapping step for uniswapx
-    }
-  } else {
-    count++ // classic onchain swap
-  }
-  return count
-}
