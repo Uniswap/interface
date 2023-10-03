@@ -23,6 +23,7 @@ describe('TransactionsTable', () => {
     expect(screen.getByText('For')).toBeInTheDocument()
     expect(screen.getByText('USD')).toBeInTheDocument()
     expect(screen.getByText('Maker')).toBeInTheDocument()
+    expect(screen.getByText('Txn')).toBeInTheDocument()
   })
 
   it('shows all columns for large breakpoint', () => {
@@ -33,8 +34,9 @@ describe('TransactionsTable', () => {
     expect(screen.getByText('Time')).toBeInTheDocument()
     expect(screen.getByText('Type')).toBeInTheDocument()
     expect(screen.getByText('$BITCOIN')).toBeInTheDocument()
-    expect(screen.getByText('For')).toBeInTheDocument()
     expect(screen.getByText('USD')).toBeInTheDocument()
+    expect(screen.getByText('Maker')).toBeInTheDocument()
+    expect(screen.getByText('Txn')).toBeInTheDocument()
   })
 
   it('hides some columns at medium breakpoint', () => {
@@ -46,6 +48,7 @@ describe('TransactionsTable', () => {
     expect(screen.getByText('Type')).toBeInTheDocument()
     expect(screen.getByText('$BITCOIN')).toBeInTheDocument()
     expect(screen.getByText('USD')).toBeInTheDocument()
+    expect(screen.getByText('Maker')).toBeInTheDocument()
   })
 
   it('hides some columns at small breakpoint', () => {
@@ -56,6 +59,7 @@ describe('TransactionsTable', () => {
     expect(screen.getByText('Time')).toBeInTheDocument()
     expect(screen.getByText('Type')).toBeInTheDocument()
     expect(screen.getByText('$BITCOIN')).toBeInTheDocument()
+    expect(screen.getByText('Maker')).toBeInTheDocument()
   })
 
   it('displays swap row', () => {

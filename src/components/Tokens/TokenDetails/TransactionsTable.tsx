@@ -184,9 +184,9 @@ export function TransactionsTable({ referenceToken }: { referenceToken: TokenInf
     <Table
       columns={columns}
       data={mockSwapData}
-      smallHiddenColumns={[ColumnHeader.For, ColumnHeader.USD, ColumnHeader.Maker]}
-      mediumHiddenColumns={[ColumnHeader.For, ColumnHeader.Maker]}
-      largeHiddenColumns={[ColumnHeader.Maker]}
+      smallHiddenColumns={[ColumnHeader.For, ColumnHeader.Txn, ColumnHeader.USD]}
+      mediumHiddenColumns={[ColumnHeader.For, ColumnHeader.Txn]}
+      largeHiddenColumns={[ColumnHeader.For]}
       extraLargeHiddenColumns={[]}
       dataTestId="transactions-table"
     />
