@@ -1,10 +1,9 @@
 import styled from 'styled-components'
 
 export const Cell = styled.div<{ justifyContent?: string }>`
-  justify-content: ${({ justifyContent }) => justifyContent ?? 'right'};
-  padding: 14px 6px 14px 6px;
+  width: 100%;
   display: flex;
-  flex-direction: row;
+  justify-content: ${({ justifyContent }) => justifyContent ?? 'flex-end'};
   align-items: center;
-  height: 64px;
+  position: relative;
 `

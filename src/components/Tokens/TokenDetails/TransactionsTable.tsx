@@ -3,16 +3,22 @@ import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cells'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useMemo } from 'react'
+import { ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Column } from 'react-table'
 import { Text } from 'rebass'
-import { useTheme } from 'styled-components'
-import { ThemedText } from 'theme/components'
+import styled, { useTheme } from 'styled-components'
+import { ExternalLink, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { mockSwapData } from './mockData'
 import { Swap, SwapAction, SwapInOut } from './types'
 import { getLocaleTimeString, getSwapType } from './utils'
+
+const StyledExternalLink = styled(ExternalLink)`
+  color: ${({ theme }) => theme.neutral2};
+  stroke: ${({ theme }) => theme.neutral2};
+`
 
 enum ColumnHeader {
   Time = 'Time',
@@ -21,6 +27,7 @@ enum ColumnHeader {
   For = 'For',
   USD = 'USD',
   Maker = 'Maker',
+  Txn = 'Txn',
 }
 
 export function TransactionsTable({ referenceToken }: { referenceToken: TokenInfo }) {
@@ -32,10 +39,14 @@ export function TransactionsTable({ referenceToken }: { referenceToken: TokenInf
     const getColor = (action: SwapAction) => (action === SwapAction.Buy ? theme.success : theme.critical)
     return [
       {
-        Header: ColumnHeader.Time,
+        Header: (
+          <Cell justifyContent="flex-start">
+            <ThemedText.BodySecondary>{ColumnHeader.Time}</ThemedText.BodySecondary>
+          </Cell>
+        ),
         accessor: (swap) => swap,
         Cell: ({ value }: { value: { timestamp: number; transactionHash: string } }) => (
-          <Cell justifyContent="left">
+          <Cell justifyContent="flex-start">
             <ThemedText.BodySecondary>
               {getLocaleTimeString(value.timestamp, locale ?? 'en-US')}
             </ThemedText.BodySecondary>
@@ -45,12 +56,16 @@ export function TransactionsTable({ referenceToken }: { referenceToken: TokenInf
         id: ColumnHeader.Time,
       },
       {
-        Header: ColumnHeader.Type,
+        Header: (
+          <Cell justifyContent="flex-start">
+            <ThemedText.BodySecondary>{ColumnHeader.Type}</ThemedText.BodySecondary>
+          </Cell>
+        ),
         accessor: (swap) => swap,
         Cell: ({ value }: { value: { input: SwapInOut } }) => {
           const swapType = getSwapType(value.input.contractAddress, referenceToken.address)
           return (
-            <Cell justifyContent="left">
+            <Cell justifyContent="flex-start">
               <Text color={getColor(swapType)}>{swapType}</Text>
             </Cell>
           )
@@ -59,7 +74,11 @@ export function TransactionsTable({ referenceToken }: { referenceToken: TokenInf
         id: ColumnHeader.Type,
       },
       {
-        Header: `$${referenceToken.symbol}`,
+        Header: (
+          <Cell>
+            <ThemedText.BodySecondary>{`$${referenceToken.symbol}`}</ThemedText.BodySecondary>
+          </Cell>
+        ),
         accessor: (swap) => swap,
         Cell: ({ value }: { value: { input: SwapInOut; output: SwapInOut } }) => {
           const swapType = getSwapType(value.input.contractAddress, referenceToken.address)
@@ -76,7 +95,11 @@ export function TransactionsTable({ referenceToken }: { referenceToken: TokenInf
         id: ColumnHeader.Amount,
       },
       {
-        Header: ColumnHeader.For,
+        Header: (
+          <Cell>
+            <ThemedText.BodySecondary>{ColumnHeader.For}</ThemedText.BodySecondary>
+          </Cell>
+        ),
         accessor: (swap) => swap,
         Cell: ({ value }: { value: { input: SwapInOut; output: SwapInOut } }) => {
           const swapType = getSwapType(value.input.contractAddress, referenceToken.address)
@@ -93,7 +116,11 @@ export function TransactionsTable({ referenceToken }: { referenceToken: TokenInf
         id: ColumnHeader.For,
       },
       {
-        Header: ColumnHeader.USD,
+        Header: (
+          <Cell>
+            <ThemedText.BodySecondary>{ColumnHeader.USD}</ThemedText.BodySecondary>
+          </Cell>
+        ),
         accessor: (swap) => swap,
         Cell: ({ value }: { value: { input: SwapInOut; usdValue: number } }) => {
           const swapType = getSwapType(value.input.contractAddress, referenceToken.address)
@@ -109,16 +136,47 @@ export function TransactionsTable({ referenceToken }: { referenceToken: TokenInf
         id: ColumnHeader.USD,
       },
       {
-        Header: ColumnHeader.Maker,
+        Header: (
+          <Cell>
+            <ThemedText.BodySecondary>{ColumnHeader.Maker}</ThemedText.BodySecondary>
+          </Cell>
+        ),
         accessor: 'maker',
         Cell: ({ value }: { value: string }) => (
-          <ThemedText.BodySecondary>{shortenAddress(value, 0)}</ThemedText.BodySecondary>
+          <Cell>
+            <ThemedText.BodySecondary>{shortenAddress(value, 0)}</ThemedText.BodySecondary>
+          </Cell>
         ),
         disableSortBy: true,
         id: ColumnHeader.Maker,
       },
+      {
+        Header: (
+          <Cell>
+            <ThemedText.BodySecondary>{ColumnHeader.Txn}</ThemedText.BodySecondary>
+          </Cell>
+        ),
+        accessor: 'transactionHash',
+        Cell: ({ value }: { value: string }) => (
+          <Cell>
+            <StyledExternalLink href={`https://etherscan.io/tx/${value}`} color={theme.neutral2}>
+              <ExternalLinkIcon size="16px" />
+            </StyledExternalLink>
+          </Cell>
+        ),
+        disableSortBy: true,
+        id: ColumnHeader.Txn,
+      },
     ]
-  }, [theme.success, theme.critical, locale, referenceToken.address, formatNumber])
+  }, [
+    referenceToken.symbol,
+    referenceToken.address,
+    theme.success,
+    theme.critical,
+    theme.neutral2,
+    locale,
+    formatNumber,
+  ])
   return (
     <Table
       columns={columns}

@@ -1,7 +1,4 @@
-import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
-import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
 import { useWindowSize } from 'hooks/useWindowSize'
-import { Box } from 'nft/components/Box'
 import { useEffect } from 'react'
 import { Column, IdType, useSortBy, useTable } from 'react-table'
 import styled, { useTheme } from 'styled-components'
@@ -22,33 +19,23 @@ const StyledTable = styled.table`
   width: 100%;
   border-collapse: collapse;
 `
-const StyledHeaderContent = styled.div<{ leftMost: boolean; disabled?: boolean }>`
-  padding: 14px 12px 14px 12px;
-  text-align: ${({ leftMost }) => (leftMost ? 'left' : 'right')};
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 20px;
-
-  color: ${({ theme }) => theme.neutral2};
-  ${({ disabled }) => !disabled && `cursor: pointer;`}
-  :hover {
-    ${({ theme, disabled }) => !disabled && `opacity: ${theme.opacity.hover};`}
-  }
-  :active {
-    ${({ theme, disabled }) => !disabled && `opacity: ${theme.opacity.click};`}
-  }
-`
 const StyledRow = styled.tr`
   :hover {
     background: ${({ theme }) => theme.surface3};
   }
 `
-const StyledData = styled.td`
-  max-width: 160px;
-  padding: 2px 6px 2px 6px;
-  text-align: right;
-  position: relative;
-  width: fit-content;
+const Box = styled.div<{
+  height?: string
+  leftMost?: boolean
+  rightMost?: boolean
+}>`
+  maxwidth: 160px;
+  height: ${({ height }) => height ?? '64px'};
+  padding: 12px;
+  padding-left: ${({ leftMost }) => (leftMost ? '20px' : '8px')};
+  padding-right: ${({ rightMost }) => (rightMost ? '20px' : '8px')};
+  display: flex;
+  justify-content: center;
 `
 
 interface TableProps<Data extends object> {
@@ -64,10 +51,10 @@ interface TableProps<Data extends object> {
 export function Table<Data extends object>({
   columns,
   data,
-  smallHiddenColumns,
-  mediumHiddenColumns,
-  largeHiddenColumns,
-  extraLargeHiddenColumns,
+  smallHiddenColumns = [],
+  mediumHiddenColumns = [],
+  largeHiddenColumns = [],
+  extraLargeHiddenColumns = [],
   dataTestId,
   ...props
 }: TableProps<Data>) {
@@ -122,22 +109,9 @@ export function Table<Data extends object>({
               {headerGroup.headers.map((column, index) => {
                 return (
                   <th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id}>
-                    <StyledHeaderContent leftMost={index === 0} disabled={column.disableSortBy}>
-                      <Box as="span" color="neutral2" position="relative">
-                        {column.isSorted ? (
-                          column.isSortedDesc ? (
-                            <ArrowChangeUp width="16px" height="16px" style={{ position: 'absolute', top: 3 }} />
-                          ) : (
-                            <ArrowChangeDown width="16px" height="16px" style={{ position: 'absolute', top: 3 }} />
-                          )
-                        ) : (
-                          ''
-                        )}
-                      </Box>
-                      <Box as="span" paddingLeft={column.isSorted ? '18' : '0'}>
-                        {column.render('Header')}
-                      </Box>
-                    </StyledHeaderContent>
+                    <Box height="52px" leftMost={index === 0} rightMost={index === headerGroup.headers.length - 1}>
+                      {column.render('Header')}
+                    </Box>
                   </th>
                 )
               })}
@@ -150,11 +124,13 @@ export function Table<Data extends object>({
 
             return (
               <StyledRow {...row.getRowProps()} key={row.id}>
-                {row.cells.map((cell) => {
+                {row.cells.map((cell, index) => {
                   return (
-                    <StyledData {...cell.getCellProps()} key={`${row.id}-${cell.column.id}`}>
-                      {cell.render('Cell')}
-                    </StyledData>
+                    <td {...cell.getCellProps()} key={`${row.id}-${cell.column.id}`}>
+                      <Box leftMost={index === 0} rightMost={index === row.cells.length - 1}>
+                        {cell.render('Cell')}
+                      </Box>
+                    </td>
                   )
                 })}
               </StyledRow>
