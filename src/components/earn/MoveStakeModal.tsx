@@ -142,7 +142,6 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
     setAttempting(true)
     setStakeAmount(parsedAmount)
 
-    console.log(fromPoolStakeBalance)
     // if callback not returned properly ignore
     if (
       !moveStakeCallback ||
