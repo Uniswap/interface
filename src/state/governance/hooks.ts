@@ -584,8 +584,12 @@ export function useMoveStakeCallback(): (stakeData: StakeData | undefined) => un
       //const args = [delegatee]
       // if the staking pool does not exist, user creates it and becomes staking pal
       const args = !stakeData.stakingPoolExists
-        ? [[createPoolCall, deactivateCall, activateCall]]
-        : [[deactivateCall, activateCall]]
+        ? stakeData.fromPoolId !== stakeData.poolId
+          ? [[createPoolCall, deactivateCall, activateCall]]
+          : [[createPoolCall, activateCall]]
+        : stakeData.fromPoolId !== stakeData.poolId
+        ? [[deactivateCall, activateCall]]
+        : [[activateCall]]
       if (!stakingProxy) throw new Error('No Staking Contract!')
       return stakingProxy.estimateGas.batchExecute(...args, {}).then((estimatedGasLimit) => {
         return stakingProxy
