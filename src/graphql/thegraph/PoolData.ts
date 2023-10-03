@@ -51,7 +51,7 @@ gql`
   }
 `
 
-interface PoolData {
+export interface PoolData {
   // basic token info
   address: string
   feeTier: number

@@ -4,6 +4,7 @@ import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { DebounceSwapQuoteVariant, useDebounceSwapQuoteFlag } from 'featureFlags/flags/debounceSwapQuote'
 import { useMemo } from 'react'
 import { ClassicTrade, InterfaceTrade, QuoteMethod, RouterPreference, TradeState } from 'state/routing/types'
+import { usePreviewTrade } from 'state/routing/usePreviewTrade'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRouterPreference } from 'state/user/hooks'
 
@@ -13,6 +14,7 @@ import useIsWindowVisible from './useIsWindowVisible'
 
 // Prevents excessive quote requests between keystrokes.
 const DEBOUNCE_TIME = 350
+const DEBOUNCE_TIME_QUICKROUTE = 50
 
 // Temporary until we remove the feature flag.
 const DEBOUNCE_TIME_INCREASED = 650
@@ -79,26 +81,44 @@ export function useDebouncedTrade(
   const isDebouncing =
     useDebounce(inputs, debouncedSwapQuoteFlagEnabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME) !== inputs
 
+  const isPreviewTradeDebouncing = useDebounce(inputs, DEBOUNCE_TIME_QUICKROUTE) !== inputs
+
   const isWrap = useMemo(() => {
     if (!chainId || !amountSpecified || !otherCurrency) return false
     const weth = WRAPPED_NATIVE_CURRENCY[chainId]
-    return (
+    return Boolean(
       (amountSpecified.currency.isNative && weth?.equals(otherCurrency)) ||
-      (otherCurrency.isNative && weth?.equals(amountSpecified.currency))
+        (otherCurrency.isNative && weth?.equals(amountSpecified.currency))
     )
   }, [amountSpecified, chainId, otherCurrency])
 
-  const skipFetch = isDebouncing || !autoRouterSupported || !isWindowVisible || isWrap
-
   const [routerPreference] = useRouterPreference()
-  return useRoutingAPITrade(
+
+  const skipBothFetches = !autoRouterSupported || !isWindowVisible || isWrap
+  const skipRoutingFetch = skipBothFetches || isDebouncing
+  const skipPreviewTradeFetch =
+    skipBothFetches || routerPreference === RouterPreference.CLIENT || isPreviewTradeDebouncing
+
+  const previewTradeResult = usePreviewTrade(
+    skipPreviewTradeFetch,
+    tradeType,
+    amountSpecified,
+    otherCurrency,
+    inputTax,
+    outputTax
+  )
+  const routingApiTradeResult = useRoutingAPITrade(
+    skipRoutingFetch,
     tradeType,
     amountSpecified,
     otherCurrency,
     routerPreferenceOverride ?? routerPreference,
-    skipFetch,
     account,
     inputTax,
     outputTax
   )
+
+  return previewTradeResult.currentTrade && !routingApiTradeResult.currentTrade
+    ? previewTradeResult
+    : routingApiTradeResult
 }

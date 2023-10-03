@@ -1,0 +1,9031 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SwapLineItem.tsx dutch order eth input 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c10 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c10:hover {
+  opacity: 0.6;
+}
+
+.c10:active {
+  opacity: 0.4;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c11 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c11::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c11.arrow-top {
+  bottom: -4px;
+}
+
+.c11.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c11.arrow-bottom {
+  top: -4px;
+}
+
+.c11.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c11.arrow-left {
+  right: -4px;
+}
+
+.c11.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c11.arrow-right {
+  left: -4px;
+}
+
+.c11.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+@supports (-webkit-background-clip:text) and (-webkit-text-fill-color:transparent) {
+
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Network fee
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          $0.00
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          <div
+            class="c9 css-1m65e73"
+          >
+            The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+            <a
+              class="c10"
+              href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c11 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+@supports (-webkit-background-clip:text) and (-webkit-text-fill-color:transparent) {
+
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Minimum output
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          0.0000000000000009 DEF
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+@supports (-webkit-background-clip:text) and (-webkit-text-fill-color:transparent) {
+
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Expected output
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          0.000000000000001 DEF
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c7 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: auto;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c8 {
+  width: auto;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c12 {
+  color: #7D7D7D;
+}
+
+.c14 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c14:hover {
+  opacity: 0.6;
+}
+
+.c14:active {
+  opacity: 0.4;
+}
+
+.c9 {
+  color: #4673fa;
+}
+
+.c10 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c15 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c15::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c15.arrow-top {
+  bottom: -4px;
+}
+
+.c15.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c15.arrow-bottom {
+  top: -4px;
+}
+
+.c15.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c15.arrow-left {
+  right: -4px;
+}
+
+.c15.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c15.arrow-right {
+  left: -4px;
+}
+
+.c15.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c11 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c13 {
+  display: inline;
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+@supports (-webkit-background-clip:text) and (-webkit-text-fill-color:transparent) {
+  .c9 {
+    background-image: linear-gradient(91.39deg,#4673fa -101.76%,#9646fa 101.76%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Order routing
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          <div
+            class="c7 c8"
+            style="display: inline-flex;"
+            width="auto"
+          >
+            <svg
+              fill="none"
+              height="14"
+              viewBox="0 0 10 14"
+              width="10"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <lineargradient
+                  gradientUnits="userSpaceOnUse"
+                  id="AutoRouterIconGradientfixed-uuid-value"
+                  x1="-10.1807"
+                  x2="10.6573"
+                  y1="-12.0006"
+                  y2="-11.6017"
+                >
+                  <stop
+                    stop-color="#4673FA"
+                  />
+                  <stop
+                    offset="1"
+                    stop-color="#9646FA"
+                  />
+                </lineargradient>
+              </defs>
+              <path
+                d="M9.97131 6.19803C9.91798 6.07737 9.79866 6.00003 9.66666 6.00003H6.66666V1.00003C6.66666 0.862034 6.58201 0.738037 6.45267 0.688704C6.32267 0.638704 6.17799 0.674696 6.08532 0.776696L0.0853237 7.44336C-0.00267631 7.54136 -0.0253169 7.68137 0.0286831 7.80204C0.0820164 7.9227 0.20133 8.00003 0.33333 8.00003H3.33333V13C3.33333 13.138 3.41799 13.262 3.54732 13.3114C3.58665 13.326 3.62666 13.3334 3.66666 13.3334C3.75933 13.3334 3.85 13.2947 3.91467 13.2227L9.91467 6.55603C10.0027 6.4587 10.0246 6.31803 9.97131 6.19803Z"
+                fill="url(#AutoRouterIconGradientfixed-uuid-value)"
+              />
+            </svg>
+            <div
+              class="c9"
+            >
+              <div
+                class="c3 css-142zc9n"
+              >
+                Uniswap X
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c10"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c11"
+      >
+        <div
+          class="c12 css-obwv3p"
+        >
+          <div
+            class="c12 css-obwv3p"
+          >
+            <div
+              class="c9 c13"
+            >
+              UniswapX
+            </div>
+             aggregates liquidity sources for better prices and gas free swaps. 
+            <a
+              class="c14"
+              href="https://support.uniswap.org/hc/en-us/articles/17515415311501"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c15 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`SwapLineItem.tsx exact input 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c10 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c10:hover {
+  opacity: 0.6;
+}
+
+.c10:active {
+  opacity: 0.4;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c11 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c11::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c11.arrow-top {
+  bottom: -4px;
+}
+
+.c11.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c11.arrow-bottom {
+  top: -4px;
+}
+
+.c11.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c11.arrow-left {
+  right: -4px;
+}
+
+.c11.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c11.arrow-right {
+  left: -4px;
+}
+
+.c11.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Network fee
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          $1.00
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          <div
+            class="c9 css-1m65e73"
+          >
+            The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+            <a
+              class="c10"
+              href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c11 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Price impact
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          <span
+            class=""
+          >
+            105566.373%
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The impact your trade has on the market price of this pool.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Minimum output
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          0.00000000000000098 DEF
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Expected output
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          0.000000000000001 DEF
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c24 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c25 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 1px;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c26 {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin: -1px;
+}
+
+.c26 > * {
+  margin: 1px !important;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c11 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c32 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c32::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c32.arrow-top {
+  bottom: -4px;
+}
+
+.c32.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c32.arrow-bottom {
+  top: -4px;
+}
+
+.c32.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c32.arrow-left {
+  right: -4px;
+}
+
+.c32.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c32.arrow-right {
+  left: -4px;
+}
+
+.c32.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c31 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c8 {
+  max-width: 400px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 16px 20px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c20 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #F9F9F9;
+  border: unset;
+  border-radius: 0.5rem;
+  color: #000;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  padding: 4px 6px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-weight: 535;
+}
+
+.c16 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c15 {
+  width: 20px;
+  height: 20px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
+}
+
+.c14 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c28 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+.c29 {
+  z-index: 1;
+}
+
+.c30 {
+  position: absolute;
+  left: -10px !important;
+}
+
+.c12 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 100%;
+}
+
+.c13 {
+  display: grid;
+  grid-template-columns: 24px 1fr 24px;
+}
+
+.c17 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  padding: 0.1rem 0.5rem;
+  position: relative;
+}
+
+.c27 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 4px 4px;
+}
+
+.c18 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: absolute;
+  width: calc(100%);
+  z-index: 1;
+  opacity: 0.5;
+}
+
+.c19 path {
+  stroke: #22222212;
+}
+
+.c21 {
+  background-color: #F9F9F9;
+  border-radius: 8px;
+  display: grid;
+  grid-gap: 4px;
+  grid-auto-flow: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: start;
+  -ms-flex-pack: start;
+  justify-content: start;
+  padding: 4px 6px;
+  z-index: 1020;
+}
+
+.c22 {
+  background-color: #F9F9F9;
+  border-radius: 4px;
+  color: #7D7D7D;
+  font-size: 10px;
+  padding: 2px 4px;
+  z-index: 1021;
+}
+
+.c23 {
+  word-break: normal;
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Order routing
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          <div
+            class="css-142zc9n"
+          >
+            Uniswap Client
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          <div
+            class="c10"
+          >
+            <div
+              class="c9 css-142zc9n"
+            >
+              Uniswap Client
+            </div>
+            <div
+              class="c11"
+            />
+            <div
+              class="c12 css-vurnku"
+            >
+              <div
+                class="c0 c1 c13"
+              >
+                <div
+                  class="c14"
+                  style="height: 20px; width: 20px;"
+                >
+                  <div
+                    class="c15"
+                  >
+                    <img
+                      alt="ABC logo"
+                      class="c16"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c17"
+                >
+                  <div
+                    class="c18"
+                  >
+                    <svg
+                      class="c19"
+                    >
+                      dot_line.svg
+                    </svg>
+                  </div>
+                  <div
+                    class="c20 c21"
+                  >
+                    <div
+                      class="c20 c22"
+                    >
+                      <div
+                        class="c3 c23 css-1m65e73"
+                      >
+                        V3
+                      </div>
+                    </div>
+                    <div
+                      class="c9 c23 css-1m65e73"
+                      style="min-width: auto;"
+                    >
+                      100%
+                    </div>
+                  </div>
+                  <div
+                    class="c24 c25 c26"
+                    style="justify-content: space-evenly; z-index: 2;"
+                    width="100%"
+                  >
+                    <div
+                      class="c5"
+                    >
+                      <div>
+                        <div
+                          class="c20 c27"
+                        >
+                          <div
+                            class="css-mbnpt3"
+                          >
+                            <div
+                              class="c28"
+                            >
+                              <div
+                                class="c29"
+                              >
+                                <div
+                                  class="c14"
+                                  style="height: 20px; width: 20px;"
+                                >
+                                  <div
+                                    class="c15"
+                                  >
+                                    <img
+                                      alt="DEF logo"
+                                      class="c16"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                              <div
+                                class="c30"
+                              >
+                                <div
+                                  class="c14"
+                                  style="height: 20px; width: 20px;"
+                                >
+                                  <div
+                                    class="c15"
+                                  >
+                                    <img
+                                      alt="ABC logo"
+                                      class="c16"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="c9 c23 css-1m65e73"
+                          >
+                            1%
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="c7"
+                      style="position: fixed; left: 0px; top: 0px;"
+                    >
+                      <div
+                        class="c31"
+                      >
+                        ABC/DEF 1% pool
+                      </div>
+                      <div
+                        class="c32 arrow-"
+                        style="position: absolute;"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c14"
+                  style="height: 20px; width: 20px;"
+                >
+                  <div
+                    class="c15"
+                  >
+                    <img
+                      alt="DEF logo"
+                      class="c16"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="c11"
+            />
+            <div
+              class="c9 css-obwv3p"
+            >
+              Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c32 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`SwapLineItem.tsx exact input api 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c10 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c10:hover {
+  opacity: 0.6;
+}
+
+.c10:active {
+  opacity: 0.4;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c11 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c11::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c11.arrow-top {
+  bottom: -4px;
+}
+
+.c11.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c11.arrow-bottom {
+  top: -4px;
+}
+
+.c11.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c11.arrow-left {
+  right: -4px;
+}
+
+.c11.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c11.arrow-right {
+  left: -4px;
+}
+
+.c11.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Network fee
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          $1.00
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          <div
+            class="c9 css-1m65e73"
+          >
+            The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+            <a
+              class="c10"
+              href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c11 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Price impact
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          <span
+            class=""
+          >
+            105566.373%
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The impact your trade has on the market price of this pool.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Minimum output
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          0.00000000000000098 DEF
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Expected output
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          0.000000000000001 DEF
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c24 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c25 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 1px;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c26 {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin: -1px;
+}
+
+.c26 > * {
+  margin: 1px !important;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c11 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c32 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c32::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c32.arrow-top {
+  bottom: -4px;
+}
+
+.c32.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c32.arrow-bottom {
+  top: -4px;
+}
+
+.c32.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c32.arrow-left {
+  right: -4px;
+}
+
+.c32.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c32.arrow-right {
+  left: -4px;
+}
+
+.c32.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c31 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c8 {
+  max-width: 400px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 16px 20px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c20 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #F9F9F9;
+  border: unset;
+  border-radius: 0.5rem;
+  color: #000;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  padding: 4px 6px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-weight: 535;
+}
+
+.c16 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c15 {
+  width: 20px;
+  height: 20px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
+}
+
+.c14 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c28 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+.c29 {
+  z-index: 1;
+}
+
+.c30 {
+  position: absolute;
+  left: -10px !important;
+}
+
+.c12 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 100%;
+}
+
+.c13 {
+  display: grid;
+  grid-template-columns: 24px 1fr 24px;
+}
+
+.c17 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  padding: 0.1rem 0.5rem;
+  position: relative;
+}
+
+.c27 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 4px 4px;
+}
+
+.c18 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: absolute;
+  width: calc(100%);
+  z-index: 1;
+  opacity: 0.5;
+}
+
+.c19 path {
+  stroke: #22222212;
+}
+
+.c21 {
+  background-color: #F9F9F9;
+  border-radius: 8px;
+  display: grid;
+  grid-gap: 4px;
+  grid-auto-flow: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: start;
+  -ms-flex-pack: start;
+  justify-content: start;
+  padding: 4px 6px;
+  z-index: 1020;
+}
+
+.c22 {
+  background-color: #F9F9F9;
+  border-radius: 4px;
+  color: #7D7D7D;
+  font-size: 10px;
+  padding: 2px 4px;
+  z-index: 1021;
+}
+
+.c23 {
+  word-break: normal;
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Order routing
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          <div
+            class="css-142zc9n"
+          >
+            Uniswap API
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          <div
+            class="c10"
+          >
+            <div
+              class="c9 css-142zc9n"
+            >
+              Uniswap API
+            </div>
+            <div
+              class="c11"
+            />
+            <div
+              class="c12 css-vurnku"
+            >
+              <div
+                class="c0 c1 c13"
+              >
+                <div
+                  class="c14"
+                  style="height: 20px; width: 20px;"
+                >
+                  <div
+                    class="c15"
+                  >
+                    <img
+                      alt="ABC logo"
+                      class="c16"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c17"
+                >
+                  <div
+                    class="c18"
+                  >
+                    <svg
+                      class="c19"
+                    >
+                      dot_line.svg
+                    </svg>
+                  </div>
+                  <div
+                    class="c20 c21"
+                  >
+                    <div
+                      class="c20 c22"
+                    >
+                      <div
+                        class="c3 c23 css-1m65e73"
+                      >
+                        V3
+                      </div>
+                    </div>
+                    <div
+                      class="c9 c23 css-1m65e73"
+                      style="min-width: auto;"
+                    >
+                      100%
+                    </div>
+                  </div>
+                  <div
+                    class="c24 c25 c26"
+                    style="justify-content: space-evenly; z-index: 2;"
+                    width="100%"
+                  >
+                    <div
+                      class="c5"
+                    >
+                      <div>
+                        <div
+                          class="c20 c27"
+                        >
+                          <div
+                            class="css-mbnpt3"
+                          >
+                            <div
+                              class="c28"
+                            >
+                              <div
+                                class="c29"
+                              >
+                                <div
+                                  class="c14"
+                                  style="height: 20px; width: 20px;"
+                                >
+                                  <div
+                                    class="c15"
+                                  >
+                                    <img
+                                      alt="DEF logo"
+                                      class="c16"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                              <div
+                                class="c30"
+                              >
+                                <div
+                                  class="c14"
+                                  style="height: 20px; width: 20px;"
+                                >
+                                  <div
+                                    class="c15"
+                                  >
+                                    <img
+                                      alt="ABC logo"
+                                      class="c16"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="c9 c23 css-1m65e73"
+                          >
+                            1%
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="c7"
+                      style="position: fixed; left: 0px; top: 0px;"
+                    >
+                      <div
+                        class="c31"
+                      >
+                        ABC/DEF 1% pool
+                      </div>
+                      <div
+                        class="c32 arrow-"
+                        style="position: absolute;"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c14"
+                  style="height: 20px; width: 20px;"
+                >
+                  <div
+                    class="c15"
+                  >
+                    <img
+                      alt="DEF logo"
+                      class="c16"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="c11"
+            />
+            <div
+              class="c9 css-obwv3p"
+            >
+              Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c32 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`SwapLineItem.tsx exact output 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c10 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c10:hover {
+  opacity: 0.6;
+}
+
+.c10:active {
+  opacity: 0.4;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c11 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c11::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c11.arrow-top {
+  bottom: -4px;
+}
+
+.c11.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c11.arrow-bottom {
+  top: -4px;
+}
+
+.c11.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c11.arrow-left {
+  right: -4px;
+}
+
+.c11.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c11.arrow-right {
+  left: -4px;
+}
+
+.c11.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Network fee
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          -
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          <div
+            class="c9 css-1m65e73"
+          >
+            The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+            <a
+              class="c10"
+              href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c11 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Price impact
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          <span
+            class=""
+          >
+            105566.373%
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The impact your trade has on the market price of this pool.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Maximum input
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          0.00000000000000102 ABC
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The maximum amount you are guaranteed to spend. If the price slips any further, your transaction will revert.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Expected output
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          0.000000000000001 GHI
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c24 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c25 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 1px;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c26 {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin: -1px;
+}
+
+.c26 > * {
+  margin: 1px !important;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c11 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c32 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c32::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c32.arrow-top {
+  bottom: -4px;
+}
+
+.c32.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c32.arrow-bottom {
+  top: -4px;
+}
+
+.c32.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c32.arrow-left {
+  right: -4px;
+}
+
+.c32.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c32.arrow-right {
+  left: -4px;
+}
+
+.c32.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c31 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c8 {
+  max-width: 400px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 16px 20px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c20 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #F9F9F9;
+  border: unset;
+  border-radius: 0.5rem;
+  color: #000;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  padding: 4px 6px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-weight: 535;
+}
+
+.c16 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c15 {
+  width: 20px;
+  height: 20px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
+}
+
+.c14 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c28 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+.c29 {
+  z-index: 1;
+}
+
+.c30 {
+  position: absolute;
+  left: -10px !important;
+}
+
+.c12 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 100%;
+}
+
+.c13 {
+  display: grid;
+  grid-template-columns: 24px 1fr 24px;
+}
+
+.c17 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  padding: 0.1rem 0.5rem;
+  position: relative;
+}
+
+.c27 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 4px 4px;
+}
+
+.c18 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: absolute;
+  width: calc(100%);
+  z-index: 1;
+  opacity: 0.5;
+}
+
+.c19 path {
+  stroke: #22222212;
+}
+
+.c21 {
+  background-color: #F9F9F9;
+  border-radius: 8px;
+  display: grid;
+  grid-gap: 4px;
+  grid-auto-flow: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: start;
+  -ms-flex-pack: start;
+  justify-content: start;
+  padding: 4px 6px;
+  z-index: 1020;
+}
+
+.c22 {
+  background-color: #F9F9F9;
+  border-radius: 4px;
+  color: #7D7D7D;
+  font-size: 10px;
+  padding: 2px 4px;
+  z-index: 1021;
+}
+
+.c23 {
+  word-break: normal;
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Order routing
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          <div
+            class="css-142zc9n"
+          >
+            Uniswap Client
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          <div
+            class="c10"
+          >
+            <div
+              class="c9 css-142zc9n"
+            >
+              Uniswap Client
+            </div>
+            <div
+              class="c11"
+            />
+            <div
+              class="c12 css-vurnku"
+            >
+              <div
+                class="c0 c1 c13"
+              >
+                <div
+                  class="c14"
+                  style="height: 20px; width: 20px;"
+                >
+                  <div
+                    class="c15"
+                  >
+                    <img
+                      alt="ABC logo"
+                      class="c16"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c17"
+                >
+                  <div
+                    class="c18"
+                  >
+                    <svg
+                      class="c19"
+                    >
+                      dot_line.svg
+                    </svg>
+                  </div>
+                  <div
+                    class="c20 c21"
+                  >
+                    <div
+                      class="c20 c22"
+                    >
+                      <div
+                        class="c3 c23 css-1m65e73"
+                      >
+                        V3
+                      </div>
+                    </div>
+                    <div
+                      class="c9 c23 css-1m65e73"
+                      style="min-width: auto;"
+                    >
+                      100%
+                    </div>
+                  </div>
+                  <div
+                    class="c24 c25 c26"
+                    style="justify-content: space-evenly; z-index: 2;"
+                    width="100%"
+                  >
+                    <div
+                      class="c5"
+                    >
+                      <div>
+                        <div
+                          class="c20 c27"
+                        >
+                          <div
+                            class="css-mbnpt3"
+                          >
+                            <div
+                              class="c28"
+                            >
+                              <div
+                                class="c29"
+                              >
+                                <div
+                                  class="c14"
+                                  style="height: 20px; width: 20px;"
+                                >
+                                  <div
+                                    class="c15"
+                                  >
+                                    <img
+                                      alt="GHI logo"
+                                      class="c16"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                              <div
+                                class="c30"
+                              >
+                                <div
+                                  class="c14"
+                                  style="height: 20px; width: 20px;"
+                                >
+                                  <div
+                                    class="c15"
+                                  >
+                                    <img
+                                      alt="ABC logo"
+                                      class="c16"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="c9 c23 css-1m65e73"
+                          >
+                            0.3%
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="c7"
+                      style="position: fixed; left: 0px; top: 0px;"
+                    >
+                      <div
+                        class="c31"
+                      >
+                        ABC/GHI 0.3% pool
+                      </div>
+                      <div
+                        class="c32 arrow-"
+                        style="position: absolute;"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c14"
+                  style="height: 20px; width: 20px;"
+                >
+                  <div
+                    class="c15"
+                  >
+                    <img
+                      alt="GHI logo"
+                      class="c16"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="c11"
+            />
+            <div
+              class="c9 css-obwv3p"
+            >
+               This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c32 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`SwapLineItem.tsx fee on buy 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c10 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c10:hover {
+  opacity: 0.6;
+}
+
+.c10:active {
+  opacity: 0.4;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c11 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c11::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c11.arrow-top {
+  bottom: -4px;
+}
+
+.c11.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c11.arrow-bottom {
+  top: -4px;
+}
+
+.c11.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c11.arrow-left {
+  right: -4px;
+}
+
+.c11.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c11.arrow-right {
+  left: -4px;
+}
+
+.c11.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Network fee
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          $1.00
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          <div
+            class="c9 css-1m65e73"
+          >
+            The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+            <a
+              class="c10"
+              href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c11 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c10 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c10:hover {
+  opacity: 0.6;
+}
+
+.c10:active {
+  opacity: 0.4;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c11 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c11::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c11.arrow-top {
+  bottom: -4px;
+}
+
+.c11.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c11.arrow-bottom {
+  top: -4px;
+}
+
+.c11.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c11.arrow-left {
+  right: -4px;
+}
+
+.c11.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c11.arrow-right {
+  left: -4px;
+}
+
+.c11.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      DEF fee
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          <span
+            class=""
+          >
+            -3.000%
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees. 
+          <a
+            class="c10"
+            href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+      </div>
+      <div
+        class="c11 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Price impact
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          <span
+            class=""
+          >
+            105566.373%
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The impact your trade has on the market price of this pool.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Minimum output
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          0.000000000000000952 DEF
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Expected output
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          0.00000000000000097 DEF
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c24 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c25 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 1px;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c26 {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin: -1px;
+}
+
+.c26 > * {
+  margin: 1px !important;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c11 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c32 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c32::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c32.arrow-top {
+  bottom: -4px;
+}
+
+.c32.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c32.arrow-bottom {
+  top: -4px;
+}
+
+.c32.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c32.arrow-left {
+  right: -4px;
+}
+
+.c32.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c32.arrow-right {
+  left: -4px;
+}
+
+.c32.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c31 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c8 {
+  max-width: 400px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 16px 20px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c20 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #F9F9F9;
+  border: unset;
+  border-radius: 0.5rem;
+  color: #000;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  padding: 4px 6px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-weight: 535;
+}
+
+.c16 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c15 {
+  width: 20px;
+  height: 20px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
+}
+
+.c14 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c28 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+.c29 {
+  z-index: 1;
+}
+
+.c30 {
+  position: absolute;
+  left: -10px !important;
+}
+
+.c12 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 100%;
+}
+
+.c13 {
+  display: grid;
+  grid-template-columns: 24px 1fr 24px;
+}
+
+.c17 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  padding: 0.1rem 0.5rem;
+  position: relative;
+}
+
+.c27 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 4px 4px;
+}
+
+.c18 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: absolute;
+  width: calc(100%);
+  z-index: 1;
+  opacity: 0.5;
+}
+
+.c19 path {
+  stroke: #22222212;
+}
+
+.c21 {
+  background-color: #F9F9F9;
+  border-radius: 8px;
+  display: grid;
+  grid-gap: 4px;
+  grid-auto-flow: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: start;
+  -ms-flex-pack: start;
+  justify-content: start;
+  padding: 4px 6px;
+  z-index: 1020;
+}
+
+.c22 {
+  background-color: #F9F9F9;
+  border-radius: 4px;
+  color: #7D7D7D;
+  font-size: 10px;
+  padding: 2px 4px;
+  z-index: 1021;
+}
+
+.c23 {
+  word-break: normal;
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Order routing
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          <div
+            class="css-142zc9n"
+          >
+            Uniswap API
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          <div
+            class="c10"
+          >
+            <div
+              class="c9 css-142zc9n"
+            >
+              Uniswap API
+            </div>
+            <div
+              class="c11"
+            />
+            <div
+              class="c12 css-vurnku"
+            >
+              <div
+                class="c0 c1 c13"
+              >
+                <div
+                  class="c14"
+                  style="height: 20px; width: 20px;"
+                >
+                  <div
+                    class="c15"
+                  >
+                    <img
+                      alt="ABC logo"
+                      class="c16"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c17"
+                >
+                  <div
+                    class="c18"
+                  >
+                    <svg
+                      class="c19"
+                    >
+                      dot_line.svg
+                    </svg>
+                  </div>
+                  <div
+                    class="c20 c21"
+                  >
+                    <div
+                      class="c20 c22"
+                    >
+                      <div
+                        class="c3 c23 css-1m65e73"
+                      >
+                        V3
+                      </div>
+                    </div>
+                    <div
+                      class="c9 c23 css-1m65e73"
+                      style="min-width: auto;"
+                    >
+                      100%
+                    </div>
+                  </div>
+                  <div
+                    class="c24 c25 c26"
+                    style="justify-content: space-evenly; z-index: 2;"
+                    width="100%"
+                  >
+                    <div
+                      class="c5"
+                    >
+                      <div>
+                        <div
+                          class="c20 c27"
+                        >
+                          <div
+                            class="css-mbnpt3"
+                          >
+                            <div
+                              class="c28"
+                            >
+                              <div
+                                class="c29"
+                              >
+                                <div
+                                  class="c14"
+                                  style="height: 20px; width: 20px;"
+                                >
+                                  <div
+                                    class="c15"
+                                  >
+                                    <img
+                                      alt="DEF logo"
+                                      class="c16"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                              <div
+                                class="c30"
+                              >
+                                <div
+                                  class="c14"
+                                  style="height: 20px; width: 20px;"
+                                >
+                                  <div
+                                    class="c15"
+                                  >
+                                    <img
+                                      alt="ABC logo"
+                                      class="c16"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="c9 c23 css-1m65e73"
+                          >
+                            1%
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="c7"
+                      style="position: fixed; left: 0px; top: 0px;"
+                    >
+                      <div
+                        class="c31"
+                      >
+                        ABC/DEF 1% pool
+                      </div>
+                      <div
+                        class="c32 arrow-"
+                        style="position: absolute;"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c14"
+                  style="height: 20px; width: 20px;"
+                >
+                  <div
+                    class="c15"
+                  >
+                    <img
+                      alt="DEF logo"
+                      class="c16"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="c11"
+            />
+            <div
+              class="c9 css-obwv3p"
+            >
+              Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c32 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`SwapLineItem.tsx fee on sell 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c10 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c10:hover {
+  opacity: 0.6;
+}
+
+.c10:active {
+  opacity: 0.4;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c11 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c11::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c11.arrow-top {
+  bottom: -4px;
+}
+
+.c11.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c11.arrow-bottom {
+  top: -4px;
+}
+
+.c11.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c11.arrow-left {
+  right: -4px;
+}
+
+.c11.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c11.arrow-right {
+  left: -4px;
+}
+
+.c11.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Network fee
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          $1.00
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          <div
+            class="c9 css-1m65e73"
+          >
+            The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+            <a
+              class="c10"
+              href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c11 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c10 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c10:hover {
+  opacity: 0.6;
+}
+
+.c10:active {
+  opacity: 0.4;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c11 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c11::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c11.arrow-top {
+  bottom: -4px;
+}
+
+.c11.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c11.arrow-bottom {
+  top: -4px;
+}
+
+.c11.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c11.arrow-left {
+  right: -4px;
+}
+
+.c11.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c11.arrow-right {
+  left: -4px;
+}
+
+.c11.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      ABC fee
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          <span
+            class=""
+          >
+            -3.000%
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees. 
+          <a
+            class="c10"
+            href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Learn more
+          </a>
+        </div>
+      </div>
+      <div
+        class="c11 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Price impact
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          <span
+            class=""
+          >
+            105566.373%
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The impact your trade has on the market price of this pool.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Minimum output
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          0.000000000000000952 DEF
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Expected output
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          0.00000000000000097 DEF
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c24 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c25 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 1px;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c26 {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin: -1px;
+}
+
+.c26 > * {
+  margin: 1px !important;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c11 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c32 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c32::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c32.arrow-top {
+  bottom: -4px;
+}
+
+.c32.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c32.arrow-bottom {
+  top: -4px;
+}
+
+.c32.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c32.arrow-left {
+  right: -4px;
+}
+
+.c32.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c32.arrow-right {
+  left: -4px;
+}
+
+.c32.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c31 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c8 {
+  max-width: 400px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 16px 20px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c20 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #F9F9F9;
+  border: unset;
+  border-radius: 0.5rem;
+  color: #000;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  padding: 4px 6px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-weight: 535;
+}
+
+.c16 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c15 {
+  width: 20px;
+  height: 20px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
+}
+
+.c14 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c28 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+.c29 {
+  z-index: 1;
+}
+
+.c30 {
+  position: absolute;
+  left: -10px !important;
+}
+
+.c12 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 100%;
+}
+
+.c13 {
+  display: grid;
+  grid-template-columns: 24px 1fr 24px;
+}
+
+.c17 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  padding: 0.1rem 0.5rem;
+  position: relative;
+}
+
+.c27 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 4px 4px;
+}
+
+.c18 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: absolute;
+  width: calc(100%);
+  z-index: 1;
+  opacity: 0.5;
+}
+
+.c19 path {
+  stroke: #22222212;
+}
+
+.c21 {
+  background-color: #F9F9F9;
+  border-radius: 8px;
+  display: grid;
+  grid-gap: 4px;
+  grid-auto-flow: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: start;
+  -ms-flex-pack: start;
+  justify-content: start;
+  padding: 4px 6px;
+  z-index: 1020;
+}
+
+.c22 {
+  background-color: #F9F9F9;
+  border-radius: 4px;
+  color: #7D7D7D;
+  font-size: 10px;
+  padding: 2px 4px;
+  z-index: 1021;
+}
+
+.c23 {
+  word-break: normal;
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Order routing
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          <div
+            class="css-142zc9n"
+          >
+            Uniswap API
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          <div
+            class="c10"
+          >
+            <div
+              class="c9 css-142zc9n"
+            >
+              Uniswap API
+            </div>
+            <div
+              class="c11"
+            />
+            <div
+              class="c12 css-vurnku"
+            >
+              <div
+                class="c0 c1 c13"
+              >
+                <div
+                  class="c14"
+                  style="height: 20px; width: 20px;"
+                >
+                  <div
+                    class="c15"
+                  >
+                    <img
+                      alt="ABC logo"
+                      class="c16"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c17"
+                >
+                  <div
+                    class="c18"
+                  >
+                    <svg
+                      class="c19"
+                    >
+                      dot_line.svg
+                    </svg>
+                  </div>
+                  <div
+                    class="c20 c21"
+                  >
+                    <div
+                      class="c20 c22"
+                    >
+                      <div
+                        class="c3 c23 css-1m65e73"
+                      >
+                        V3
+                      </div>
+                    </div>
+                    <div
+                      class="c9 c23 css-1m65e73"
+                      style="min-width: auto;"
+                    >
+                      100%
+                    </div>
+                  </div>
+                  <div
+                    class="c24 c25 c26"
+                    style="justify-content: space-evenly; z-index: 2;"
+                    width="100%"
+                  >
+                    <div
+                      class="c5"
+                    >
+                      <div>
+                        <div
+                          class="c20 c27"
+                        >
+                          <div
+                            class="css-mbnpt3"
+                          >
+                            <div
+                              class="c28"
+                            >
+                              <div
+                                class="c29"
+                              >
+                                <div
+                                  class="c14"
+                                  style="height: 20px; width: 20px;"
+                                >
+                                  <div
+                                    class="c15"
+                                  >
+                                    <img
+                                      alt="DEF logo"
+                                      class="c16"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                              <div
+                                class="c30"
+                              >
+                                <div
+                                  class="c14"
+                                  style="height: 20px; width: 20px;"
+                                >
+                                  <div
+                                    class="c15"
+                                  >
+                                    <img
+                                      alt="ABC logo"
+                                      class="c16"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="c9 c23 css-1m65e73"
+                          >
+                            1%
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="c7"
+                      style="position: fixed; left: 0px; top: 0px;"
+                    >
+                      <div
+                        class="c31"
+                      >
+                        ABC/DEF 1% pool
+                      </div>
+                      <div
+                        class="c32 arrow-"
+                        style="position: absolute;"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c14"
+                  style="height: 20px; width: 20px;"
+                >
+                  <div
+                    class="c15"
+                  >
+                    <img
+                      alt="DEF logo"
+                      class="c16"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="c11"
+            />
+            <div
+              class="c9 css-obwv3p"
+            >
+              Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c32 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`SwapLineItem.tsx preview exact in 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c10 {
+  color: #7D7D7D;
+}
+
+.c11 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c11:hover {
+  opacity: 0.6;
+}
+
+.c11:active {
+  opacity: 0.4;
+}
+
+.c7 {
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
+  background-size: 400%;
+  will-change: background-position;
+  border-radius: 12px;
+  height: 15px;
+  width: 50px;
+}
+
+.c8 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c12 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c12::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c12.arrow-top {
+  bottom: -4px;
+}
+
+.c12.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c12.arrow-bottom {
+  top: -4px;
+}
+
+.c12.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c12.arrow-left {
+  right: -4px;
+}
+
+.c12.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c12.arrow-right {
+  left: -4px;
+}
+
+.c12.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c9 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Network fee
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          <div
+            class="c7"
+            data-testid="loading-row"
+            height="15"
+            width="50"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="c8"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c9"
+      >
+        <div
+          class="c10 css-obwv3p"
+        >
+          <div
+            class="c10 css-1m65e73"
+          >
+            The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+            <a
+              class="c11"
+              href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c12 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c10 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
+  background-size: 400%;
+  will-change: background-position;
+  border-radius: 12px;
+  height: 15px;
+  width: 50px;
+}
+
+.c8 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c11 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c11::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c11.arrow-top {
+  bottom: -4px;
+}
+
+.c11.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c11.arrow-bottom {
+  top: -4px;
+}
+
+.c11.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c11.arrow-left {
+  right: -4px;
+}
+
+.c11.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c11.arrow-right {
+  left: -4px;
+}
+
+.c11.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c9 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Price impact
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          <div
+            class="c7"
+            data-testid="loading-row"
+            height="15"
+            width="50"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="c8"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c9"
+      >
+        <div
+          class="c10 css-obwv3p"
+        >
+          The impact your trade has on the market price of this pool.
+        </div>
+      </div>
+      <div
+        class="c11 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Minimum output
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          0.00000000000000098 DEF
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c10 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c10::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c10.arrow-top {
+  bottom: -4px;
+}
+
+.c10.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c10.arrow-bottom {
+  top: -4px;
+}
+
+.c10.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c10.arrow-left {
+  right: -4px;
+}
+
+.c10.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c10.arrow-right {
+  left: -4px;
+}
+
+.c10.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Expected output
+    </div>
+    <div
+      class="c5"
+    >
+      <div>
+        <div
+          class="c3 c6 css-142zc9n"
+        >
+          0.000000000000001 DEF
+        </div>
+      </div>
+    </div>
+    <div
+      class="c7"
+      style="position: fixed; left: 0px; top: 0px;"
+    >
+      <div
+        class="c8"
+      >
+        <div
+          class="c9 css-obwv3p"
+        >
+          The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.
+        </div>
+      </div>
+      <div
+        class="c10 arrow-"
+        style="position: absolute;"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c6 {
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
+  background-size: 400%;
+  will-change: background-position;
+  border-radius: 12px;
+  height: 15px;
+  width: 50px;
+}
+
+.c5 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: auto;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Order routing
+    </div>
+    <div
+      class="c3 c5 css-142zc9n"
+    >
+      <div
+        class="c6"
+        data-testid="loading-row"
+        height="15"
+        width="50"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`SwapLineItem.tsx syncing 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c5 {
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
+  background-size: 400%;
+  will-change: background-position;
+  border-radius: 12px;
+  height: 15px;
+  width: 50px;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Network fee
+    </div>
+    <div
+      class="c5"
+      data-testid="loading-row"
+      height="15"
+      width="50"
+    />
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c5 {
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
+  background-size: 400%;
+  will-change: background-position;
+  border-radius: 12px;
+  height: 15px;
+  width: 50px;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Price impact
+    </div>
+    <div
+      class="c5"
+      data-testid="loading-row"
+      height="15"
+      width="50"
+    />
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c5 {
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
+  background-size: 400%;
+  will-change: background-position;
+  border-radius: 12px;
+  height: 15px;
+  width: 70px;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Minimum output
+    </div>
+    <div
+      class="c5"
+      data-testid="loading-row"
+      height="15"
+      width="70"
+    />
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c5 {
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
+  background-size: 400%;
+  will-change: background-position;
+  border-radius: 12px;
+  height: 15px;
+  width: 65px;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Expected output
+    </div>
+    <div
+      class="c5"
+      data-testid="loading-row"
+      height="15"
+      width="65"
+    />
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c5 {
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
+  background-size: 400%;
+  will-change: background-position;
+  border-radius: 12px;
+  height: 15px;
+  width: 50px;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4 css-142zc9n"
+      data-testid="swap-li-label"
+    >
+      Order routing
+    </div>
+    <div
+      class="c5"
+      data-testid="loading-row"
+      height="15"
+      width="50"
+    />
+  </div>
+</DocumentFragment>
+`;
