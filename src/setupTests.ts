@@ -3,7 +3,6 @@ import '@vanilla-extract/css/disableRuntimeStyles' // https://vanilla-extract.st
 import 'polyfills'
 import 'jest-styled-components' // adds style diffs to snapshot tests
 import 'polyfills'
-import 'jest-offline'
 
 import type { createPopper } from '@popperjs/core'
 import { useWeb3React } from '@web3-react/core'
