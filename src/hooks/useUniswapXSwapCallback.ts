@@ -9,7 +9,7 @@ import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { DutchOrderTrade, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
-import { UserRejectedRequestError } from 'utils/errors'
+import { SignatureExpiredError, UserRejectedRequestError } from 'utils/errors'
 import { signTypedData } from 'utils/signing'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
@@ -91,10 +91,13 @@ export function useUniswapXSwapCallback({
 
             const signature = await signTypedData(provider.getSigner(account), domain, types, values)
             if (deadline < Math.floor(Date.now() / 1000)) {
-              return signDutchOrder()
+              throw new SignatureExpiredError()
             }
             return { signature, updatedOrder }
           } catch (swapError) {
+            if (swapError instanceof SignatureExpiredError) {
+              throw swapError
+            }
             if (didUserReject(swapError)) {
               setTraceStatus('cancelled')
               throw new UserRejectedRequestError(swapErrorToUserReadableMessage(swapError))

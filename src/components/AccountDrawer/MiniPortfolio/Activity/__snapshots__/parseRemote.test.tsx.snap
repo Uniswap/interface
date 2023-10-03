@@ -101,6 +101,42 @@ Object {
 }
 `;
 
+exports[`parseRemote parseRemoteActivities should parse eth wrap 1`] = `
+Object {
+  "chainId": 1,
+  "currencies": Array [
+    ExtendedEther {
+      "chainId": 1,
+      "decimals": 18,
+      "isNative": true,
+      "isToken": false,
+      "name": "Ether",
+      "symbol": "ETH",
+    },
+    Token {
+      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "chainId": 1,
+      "decimals": 18,
+      "isNative": false,
+      "isToken": true,
+      "name": "Wrapped Ether",
+      "symbol": "WETH",
+    },
+  ],
+  "descriptor": "100 ETH for 100 WETH",
+  "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
+  "hash": "someHash",
+  "logos": Array [
+    "https://token-icons.s3.amazonaws.com/eth.png",
+    "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
+  ],
+  "nonce": 12345,
+  "status": "CONFIRMED",
+  "timestamp": 10000,
+  "title": "Wrapped",
+}
+`;
+
 exports[`parseRemote parseRemoteActivities should parse moonpay purchase 1`] = `
 Object {
   "chainId": 1,

@@ -67,6 +67,7 @@ function useTryActivation() {
           result: WalletConnectionResult.FAILED,
           wallet_type: connection.getName(),
           page: currentPage,
+          error: error.message,
         })
         setActivationState({ status: ActivationStatus.ERROR, connection, error })
       }

@@ -222,6 +222,78 @@ const mockTokenTransferOutPartsFragment = {
   },
 }
 
+const mockNativeTokenTransferOutPartsFragment = {
+  __typename: 'TokenTransfer',
+  id: 'tokenTransferId',
+  asset: {
+    __typename: 'Token',
+    id: 'ETH',
+    name: 'Ether',
+    symbol: 'ETH',
+    address: null,
+    decimals: 18,
+    chain: 'ETHEREUM',
+    standard: null,
+    project: {
+      __typename: 'TokenProject',
+      id: 'Ethereum',
+      isSpam: false,
+      logo: {
+        __typename: 'Image',
+        id: 'ETH_logo',
+        url: 'https://token-icons.s3.amazonaws.com/eth.png',
+      },
+    },
+  },
+  tokenStandard: 'NATIVE',
+  quantity: '0.25',
+  sender: MockSenderAddress,
+  recipient: MockRecipientAddress,
+  direction: 'OUT',
+  transactedValue: {
+    __typename: 'Amount',
+    id: 'ETH_amount',
+    currency: 'USD',
+    value: 399.0225,
+  },
+}
+
+const mockWrappedEthTransferInPartsFragment = {
+  __typename: 'TokenTransfer',
+  id: 'tokenTransferId',
+  asset: {
+    __typename: 'Token',
+    id: 'WETH',
+    name: 'Wrapped Ether',
+    symbol: 'WETH',
+    address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+    decimals: 18,
+    chain: 'ETHEREUM',
+    standard: 'ERC20',
+    project: {
+      __typename: 'TokenProject',
+      id: 'weth_project_id',
+      isSpam: false,
+      logo: {
+        __typename: 'Image',
+        id: 'weth_image',
+        url: 'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
+      },
+    },
+  },
+  tokenStandard: 'ERC20',
+  quantity: '0.25',
+  sender: MockSenderAddress,
+  recipient: MockRecipientAddress,
+  direction: 'IN',
+  transactedValue: {
+    __typename: 'Amount',
+    id: 'mockWethAmountId',
+    currency: 'USD',
+    value: 399.1334007875,
+  },
+}
+
 const mockTokenTransferInPartsFragment = {
   __typename: 'TokenTransfer',
   id: 'tokenTransferId',
@@ -437,5 +509,14 @@ export const MockNFTPurchase = {
         direction: TransactionDirection.In,
       },
     ],
+  },
+} as AssetActivityPartsFragment
+
+export const MockWrap = {
+  ...mockAssetActivityPartsFragment,
+  details: {
+    ...commonTransactionDetailsFields,
+    type: TransactionType.Lend,
+    assetChanges: [mockNativeTokenTransferOutPartsFragment, mockWrappedEthTransferInPartsFragment],
   },
 } as AssetActivityPartsFragment

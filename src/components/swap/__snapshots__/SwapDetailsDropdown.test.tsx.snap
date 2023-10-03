@@ -91,7 +91,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   justify-content: flex-start;
 }
 
-.c17 {
+.c16 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -126,6 +126,16 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
 
 .c13 > * {
   fill: #7D7D7D;
+}
+
+.c20 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c19 {
+  cursor: help;
+  color: #7D7D7D;
 }
 
 .c8 {
@@ -178,7 +188,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   transition: transform 0.1s linear;
 }
 
-.c16 {
+.c17 {
   padding-top: 12px;
 }
 
@@ -281,126 +291,121 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
     >
       <div>
         <div
-          class="c16"
+          class="c16 c17"
           data-testid="advanced-swap-details"
         >
           <div
-            class="c17"
+            class="c18"
+          />
+          <div
+            class="c2 c3 c4"
           >
             <div
-              class="c18"
-            />
-            <div
-              class="c2 c3 c4"
+              class="c9 c19 css-142zc9n"
+              data-testid="swap-li-label"
             >
-              <div
-                class="c12"
-              >
-                <div>
-                  <div
-                    class="c14 css-142zc9n"
-                  >
-                    Network fee
-                  </div>
-                </div>
-              </div>
-              <div
-                class="c12"
-              >
-                <div>
-                  <div
-                    class="c9 css-142zc9n"
-                  >
-                    ~$1.00
-                  </div>
-                </div>
-              </div>
+              Network fee
             </div>
             <div
-              class="c2 c3 c4"
+              class="c12"
             >
-              <div
-                class="c12"
-              >
-                <div>
-                  <div
-                    class="c14 css-142zc9n"
-                  >
-                    Price Impact
-                  </div>
-                </div>
-              </div>
-              <div
-                class="c9 css-142zc9n"
-              >
-                105566.373%
-              </div>
-            </div>
-            <div
-              class="c2 c3 c4"
-            >
-              <div
-                class="c2 c3 c6"
-              >
+              <div>
                 <div
-                  class="c12"
+                  class="c9 c20 css-142zc9n"
                 >
-                  <div>
-                    <div
-                      class="c14 css-142zc9n"
-                    >
-                      Minimum output
-                    </div>
-                  </div>
+                  $1.00
                 </div>
               </div>
-              <div
-                class="c9 css-142zc9n"
-              >
-                0.00000000000000098 DEF
-              </div>
+            </div>
+          </div>
+          <div
+            class="c2 c3 c4"
+          >
+            <div
+              class="c9 c19 css-142zc9n"
+              data-testid="swap-li-label"
+            >
+              Price impact
             </div>
             <div
-              class="c2 c3 c4"
+              class="c12"
             >
-              <div
-                class="c2 c3 c6"
-              >
+              <div>
                 <div
-                  class="c12"
+                  class="c9 c20 css-142zc9n"
                 >
-                  <div>
-                    <div
-                      class="c14 css-142zc9n"
-                    >
-                      Expected output
-                    </div>
-                  </div>
+                  <span
+                    class=""
+                  >
+                    105566.373%
+                  </span>
                 </div>
               </div>
-              <div
-                class="c9 css-142zc9n"
-              >
-                0.000000000000001 DEF
-              </div>
+            </div>
+          </div>
+          <div
+            class="c2 c3 c4"
+          >
+            <div
+              class="c9 c19 css-142zc9n"
+              data-testid="swap-li-label"
+            >
+              Minimum output
             </div>
             <div
-              class="c18"
-            />
-            <div
-              class="c2 c3 c4"
+              class="c12"
             >
-              <div
-                class="c14 css-142zc9n"
-              >
-                Order routing
+              <div>
+                <div
+                  class="c9 c20 css-142zc9n"
+                >
+                  0.00000000000000098 DEF
+                </div>
               </div>
-              <div
-                class="c12"
-              >
-                <div>
+            </div>
+          </div>
+          <div
+            class="c2 c3 c4"
+          >
+            <div
+              class="c9 c19 css-142zc9n"
+              data-testid="swap-li-label"
+            >
+              Expected output
+            </div>
+            <div
+              class="c12"
+            >
+              <div>
+                <div
+                  class="c9 c20 css-142zc9n"
+                >
+                  0.000000000000001 DEF
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c18"
+          />
+          <div
+            class="c2 c3 c4"
+          >
+            <div
+              class="c9 c19 css-142zc9n"
+              data-testid="swap-li-label"
+            >
+              Order routing
+            </div>
+            <div
+              class="c12"
+            >
+              <div>
+                <div
+                  class="c9 c20 css-142zc9n"
+                >
                   <div
-                    class="c9 css-142zc9n"
+                    class="css-142zc9n"
                   >
                     Uniswap Client
                   </div>

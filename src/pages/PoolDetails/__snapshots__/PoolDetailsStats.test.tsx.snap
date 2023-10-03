@@ -1,0 +1,751 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
+<DocumentFragment>
+  .c5 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c14 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  padding: 4px 0px;
+}
+
+.c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c15 {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 4px 0px;
+}
+
+.c4 {
+  color: #7D7D7D;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c11 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c10 {
+  width: 20px;
+  height: 20px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
+}
+
+.c9 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c16 {
+  color: #FF5F52;
+}
+
+.c2 {
+  font-weight: 485;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+.c1 {
+  gap: 24px;
+  padding: 20px;
+  border-radius: 20px;
+  background: #F9F9F9;
+  width: 100%;
+}
+
+.c3 {
+  gap: 8px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  min-width: 180px;
+}
+
+.c7 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c8 {
+  font-weight: 485;
+  font-size: 18px;
+  line-height: 24px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+.c12 {
+  gap: 4px;
+  width: 100%;
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+}
+
+.c13 {
+  color: #222222;
+  font-size: 36px;
+  font-weight: 485;
+  line-height: 44px;
+}
+
+@media (max-width:1023px) {
+  .c2 {
+    width: 100%;
+  }
+}
+
+@media (max-width:1023px) {
+  .c1 {
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    background: #FFFFFF;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding: 20px 0px;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width:640px) {
+  .c3 {
+    min-width: 150px;
+  }
+}
+
+@media (max-width:1023px) {
+  .c7 {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+}
+
+@media (max-width:1023px) {
+  .c8 {
+    font-size: 20px;
+    line-height: 28px;
+    width: 100%;
+  }
+}
+
+@media (max-width:1023px) {
+  .c12 {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: 0px;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width:1023px) {
+  .c13 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+}
+
+<div
+    class="c0 c1"
+  >
+    <div
+      class="c2 css-vurnku"
+    >
+      Stats
+    </div>
+    <div
+      class="c0 c3"
+    >
+      <div
+        class="c4 css-1urox24"
+      >
+        Pool balances
+      </div>
+      <div
+        class="c5 c6 c7"
+      >
+        <div
+          class="c5 c6 c8"
+        >
+          <div
+            class="c9"
+            style="height: 20px; width: 20px; margin-right: 8px;"
+          >
+            <div
+              class="c10"
+            >
+              <img
+                alt="UNKNOWN logo"
+                class="c11"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+              />
+            </div>
+          </div>
+          90.93M USDC
+        </div>
+        <div
+          class="c5 c6 c8"
+        >
+          <div
+            class="c9"
+            style="height: 20px; width: 20px; margin-right: 8px;"
+          >
+            <div
+              class="c10"
+            >
+              <img
+                alt="WETH logo"
+                class="c11"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+              />
+            </div>
+          </div>
+          82,526.49 WETH
+        </div>
+      </div>
+    </div>
+    <div
+      class="c0 c3"
+    >
+      <div
+        class="c4 css-1urox24"
+      >
+        TVL
+      </div>
+      <div
+        class="c5 c6 c12"
+      >
+        <div
+          class="c13 css-vurnku"
+        >
+          $223.2M
+        </div>
+        <div
+          class="c14 c15"
+          width="max-content"
+        >
+          <svg
+            aria-label="down"
+            class="c16"
+            fill="none"
+            height="16"
+            viewBox="0 0 24 24"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+              fill="currentColor"
+            />
+          </svg>
+          <div
+            class="c4 css-1urox24"
+          >
+            0.37%
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c0 c3"
+    >
+      <div
+        class="c4 css-1urox24"
+      >
+        24H volume
+      </div>
+      <div
+        class="c5 c6 c12"
+      >
+        <div
+          class="c13 css-vurnku"
+        >
+          $233.4M
+        </div>
+        <div
+          class="c14 c15"
+          width="max-content"
+        >
+          <svg
+            aria-label="down"
+            class="c16"
+            fill="none"
+            height="16"
+            viewBox="0 0 24 24"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+              fill="currentColor"
+            />
+          </svg>
+          <div
+            class="c4 css-1urox24"
+          >
+            17.75%
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c0 c3"
+    >
+      <div
+        class="c4 css-1urox24"
+      >
+        24H fees
+      </div>
+      <div
+        class="c5 c6 c12"
+      >
+        <div
+          class="c13 css-vurnku"
+        >
+          $116.7K
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`PoolDetailsStats renders stats text correctly 1`] = `
+<DocumentFragment>
+  .c5 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c13 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  padding: 4px 0px;
+}
+
+.c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c14 {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 4px 0px;
+}
+
+.c4 {
+  color: #7D7D7D;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c15 {
+  color: #FF5F52;
+}
+
+.c2 {
+  font-weight: 485;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+.c1 {
+  gap: 24px;
+  padding: 20px;
+  border-radius: 20px;
+  background: #F9F9F9;
+  width: 100%;
+}
+
+.c3 {
+  gap: 8px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  min-width: 180px;
+}
+
+.c7 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c8 {
+  font-weight: 485;
+  font-size: 18px;
+  line-height: 24px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+.c9 {
+  height: 8px;
+  width: 40.698463777008904%;
+  background: #2172E5;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-right: 1px solid #F9F9F9;
+}
+
+.c10 {
+  height: 8px;
+  width: 59.3015362229911%;
+  background: #2172E5;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-left: 1px solid #F9F9F9;
+}
+
+.c11 {
+  gap: 4px;
+  width: 100%;
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+}
+
+.c12 {
+  color: #222222;
+  font-size: 36px;
+  font-weight: 485;
+  line-height: 44px;
+}
+
+@media (max-width:1023px) {
+  .c2 {
+    width: 100%;
+  }
+}
+
+@media (max-width:1023px) {
+  .c1 {
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    background: #FFFFFF;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding: 20px 0px;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width:640px) {
+  .c3 {
+    min-width: 150px;
+  }
+}
+
+@media (max-width:1023px) {
+  .c7 {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+}
+
+@media (max-width:1023px) {
+  .c8 {
+    font-size: 20px;
+    line-height: 28px;
+    width: 100%;
+  }
+}
+
+@media (max-width:1023px) {
+  .c11 {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: 0px;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width:1023px) {
+  .c12 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+}
+
+<div
+    class="c0 c1"
+  >
+    <div
+      class="c2 css-vurnku"
+    >
+      Stats
+    </div>
+    <div
+      class="c0 c3"
+    >
+      <div
+        class="c4 css-1urox24"
+      >
+        Pool balances
+      </div>
+      <div
+        class="c5 c6 c7"
+      >
+        <div
+          class="c5 c6 c8"
+        >
+          90.93M USDC
+        </div>
+        <div
+          class="c5 c6 c8"
+        >
+          82,526.49 WETH
+        </div>
+      </div>
+      <div
+        class="c5 c6"
+        data-testid="pool-balance-chart"
+      >
+        <div
+          class="c9"
+        />
+        <div
+          class="c10"
+        />
+      </div>
+    </div>
+    <div
+      class="c0 c3"
+    >
+      <div
+        class="c4 css-1urox24"
+      >
+        TVL
+      </div>
+      <div
+        class="c5 c6 c11"
+      >
+        <div
+          class="c12 css-vurnku"
+        >
+          $223.2M
+        </div>
+        <div
+          class="c13 c14"
+          width="max-content"
+        >
+          <svg
+            aria-label="down"
+            class="c15"
+            fill="none"
+            height="16"
+            viewBox="0 0 24 24"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+              fill="currentColor"
+            />
+          </svg>
+          <div
+            class="c4 css-1urox24"
+          >
+            0.37%
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c0 c3"
+    >
+      <div
+        class="c4 css-1urox24"
+      >
+        24H volume
+      </div>
+      <div
+        class="c5 c6 c11"
+      >
+        <div
+          class="c12 css-vurnku"
+        >
+          $233.4M
+        </div>
+        <div
+          class="c13 c14"
+          width="max-content"
+        >
+          <svg
+            aria-label="down"
+            class="c15"
+            fill="none"
+            height="16"
+            viewBox="0 0 24 24"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+              fill="currentColor"
+            />
+          </svg>
+          <div
+            class="c4 css-1urox24"
+          >
+            17.75%
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c0 c3"
+    >
+      <div
+        class="c4 css-1urox24"
+      >
+        24H fees
+      </div>
+      <div
+        class="c5 c6 c11"
+      >
+        <div
+          class="c12 css-vurnku"
+        >
+          $116.7K
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

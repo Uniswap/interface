@@ -12,7 +12,7 @@ import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-export const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
+const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
   cursor: ${({ cursor }) => cursor};
   color: ${({ theme }) => theme.neutral2};
   margin-right: 8px;
@@ -33,6 +33,7 @@ const ResponsiveHeadline = ({ children, ...textProps }: PropsWithChildren<TextPr
 }
 
 interface AmountProps {
+  isLoading: boolean
   field: Field
   tooltipText?: ReactNode
   label: ReactNode
@@ -44,7 +45,15 @@ interface AmountProps {
   currency: Currency
 }
 
-export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, field, currency }: AmountProps) {
+export function SwapModalHeaderAmount({
+  tooltipText,
+  label,
+  amount,
+  usdAmount,
+  field,
+  currency,
+  isLoading,
+}: AmountProps) {
   const { formatNumber, formatReviewSwapCurrencyAmount } = useFormatter()
 
   return (
@@ -56,7 +65,7 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
           </MouseoverTooltip>
         </ThemedText.BodySecondary>
         <Column gap="xs">
-          <ResponsiveHeadline data-testid={`${field}-amount`}>
+          <ResponsiveHeadline data-testid={`${field}-amount`} color={isLoading ? 'neutral2' : undefined}>
             {formatReviewSwapCurrencyAmount(amount)} {currency?.symbol}
           </ResponsiveHeadline>
           {usdAmount && (

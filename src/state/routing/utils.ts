@@ -12,13 +12,17 @@ import {
   ClassicQuoteData,
   ClassicTrade,
   DutchOrderTrade,
+  GetQuickQuoteArgs,
   GetQuoteArgs,
   InterfaceTrade,
   isClassicQuoteResponse,
   PoolType,
+  PreviewTrade,
+  QuickRouteResponse,
   QuoteMethod,
   QuoteState,
   RouterPreference,
+  SubmittableTrade,
   SwapRouterNativeAssets,
   TradeFillType,
   TradeResult,
@@ -114,7 +118,7 @@ function toDutchOrderInfo(orderInfoJSON: DutchOrderInfoJSON): DutchOrderInfo {
 // Prepares the currencies used for the actual Swap (either UniswapX or Universal Router)
 // May not match `currencyIn` that the user selected because for ETH inputs in UniswapX, the actual
 // swap will use WETH.
-function getTradeCurrencies(args: GetQuoteArgs, isUniswapXTrade: boolean): [Currency, Currency] {
+function getTradeCurrencies(args: GetQuoteArgs | GetQuickQuoteArgs, isUniswapXTrade: boolean): [Currency, Currency] {
   const {
     tokenInAddress,
     tokenInChainId,
@@ -166,6 +170,17 @@ function getClassicTradeDetails(
     blockNumber: classicQuote?.blockNumber,
     routes: classicQuote ? computeRoutes(currencyIn, currencyOut, classicQuote.route) : undefined,
   }
+}
+
+export function transformQuickRouteToTrade(args: GetQuickQuoteArgs, data: QuickRouteResponse): PreviewTrade {
+  const { amount, tradeType, inputTax, outputTax } = args
+  const [currencyIn, currencyOut] = getTradeCurrencies(args, false)
+  const [rawAmountIn, rawAmountOut] =
+    data.tradeType === 'EXACT_IN' ? [amount, data.quote.amount] : [data.quote.amount, amount]
+  const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn)
+  const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut)
+
+  return new PreviewTrade({ inputAmount, outputAmount, tradeType, inputTax, outputTax })
 }
 
 export async function transformRoutesToTrade(
@@ -313,6 +328,14 @@ export function isClassicTrade(trade?: InterfaceTrade): trade is ClassicTrade {
   return trade?.fillType === TradeFillType.Classic
 }
 
+export function isPreviewTrade(trade?: InterfaceTrade): trade is PreviewTrade {
+  return trade?.fillType === TradeFillType.None
+}
+
+export function isSubmittableTrade(trade?: InterfaceTrade): trade is SubmittableTrade {
+  return trade?.fillType === TradeFillType.Classic || trade?.fillType === TradeFillType.UniswapX
+}
+
 export function isUniswapXTrade(trade?: InterfaceTrade): trade is DutchOrderTrade {
   return trade?.fillType === TradeFillType.UniswapX
 }
@@ -322,6 +345,8 @@ export function shouldUseAPIRouter(args: GetQuoteArgs): boolean {
 }
 
 export function getTransactionCount(trade: InterfaceTrade): number {
+  if (!isSubmittableTrade(trade)) return 0
+
   let count = 0
   if (trade.approveInfo.needsApprove) {
     count++ // approval step, which can happen in both classic and uniswapx

@@ -1,0 +1,141 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c6 {
+  background-color: transparent;
+  bottom: 0;
+  border-radius: inherit;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  -webkit-transition: 150ms ease background-color;
+  transition: 150ms ease background-color;
+  width: 100%;
+}
+
+.c3 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #FFEFFF;
+  border-radius: 16px;
+  border: 0;
+  color: #FC72FF;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  font-size: 16px;
+  font-weight: 535;
+  gap: 12px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  line-height: 20px;
+  padding: 10px 12px;
+  position: relative;
+  -webkit-transition: 150ms ease opacity;
+  transition: 150ms ease opacity;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c3:active .c5 {
+  background-color: #B8C0DC3d;
+}
+
+.c3:focus .c5 {
+  background-color: #B8C0DC3d;
+}
+
+.c3:hover .c5 {
+  background-color: #98A1C014;
+}
+
+.c3:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.c3:disabled:active .c5,
+.c3:disabled:focus .c5,
+.c3:disabled:hover .c5 {
+  background-color: transparent;
+}
+
+.c2 {
+  gap: 12px;
+}
+
+.c4 {
+  padding: 12px 16px 12px 12px;
+  border-radius: 900px;
+  width: 50%;
+}
+
+@media (max-width:1023px) {
+  .c2 {
+    display: none;
+  }
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <button
+      class="c3 c4"
+      data-testid="pool-details-add-liquidity-button"
+      size="1"
+    >
+      <div
+        class="c5 c6"
+      />
+      Add liquidity
+    </button>
+    <button
+      class="c3 c4"
+      data-testid="pool-details-swap-button"
+      size="1"
+    >
+      <div
+        class="c5 c6"
+      />
+      Swap
+    </button>
+  </div>
+</DocumentFragment>
+`;
