@@ -63,7 +63,7 @@ describe('Token details', () => {
     cy.get(getTestSelector('token-details-about-section')).should('exist')
     cy.contains('No token information available').should('exist')
 
-    // Links section should link out to Etherscan, More analytics, Website, Twitter
+    // Links section should link out to Etherscan, More analytics
     cy.get('[data-cy="resources-container"]').within(() => {
       cy.contains('Etherscan')
         .should('have.attr', 'href')
