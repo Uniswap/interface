@@ -60,6 +60,7 @@ const PageWrapper = styled.div`
   width: calc(100% + 32px);
   flex: 1;
 `
+
 interface Page {
   title: React.ReactNode
   key: string

@@ -225,15 +225,7 @@ export default function TokenDetailsSkeleton() {
   return (
     <LeftPanel>
       <BreadcrumbNavLink
-        to={
-          isInfoExplorePageEnabled
-            ? chainName
-              ? `/explore/tokens/${chainName}`
-              : `/explore/tokens`
-            : chainName
-            ? `/tokens/${chainName}`
-            : `/tokens`
-        }
+        to={(isInfoExplorePageEnabled ? '/explore' : '') + (chainName ? `/tokens/${chainName}` : `/tokens`)}
       >
         <ArrowLeft size={14} /> Tokens
       </BreadcrumbNavLink>
