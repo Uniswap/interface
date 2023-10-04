@@ -48,7 +48,7 @@ describe('Token details', () => {
   })
 
   it('token with warning and low trading volume should have all information populated', () => {
-    // Shiba predator token, low trading volume and also has warning modal
+    // Null token created for this test, 0 trading volume and has warning modal
     cy.visit('/tokens/ethereum/0x1efbb78c8b917f67986bce54ce575069c0143681')
 
     // Should have missing price chart when price unavailable (expected for this token)
