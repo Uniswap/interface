@@ -3,7 +3,6 @@ type MetaTagInjectorInput = {
   image?: string
   url: string
   description?: string
-  country: string | null
 }
 
 /**
@@ -11,7 +10,11 @@ type MetaTagInjectorInput = {
  * to inject meta tags into the <head> of an HTML document.
  */
 export class MetaTagInjector implements HTMLRewriterElementContentHandlers {
-  constructor(private input: MetaTagInjectorInput) {}
+  blockedPathsList: string | null
+
+  constructor(private input: MetaTagInjectorInput, request: Request) {
+    this.blockedPathsList = request.headers.get('cf-blocked-paths-list')
+  }
 
   append(element: Element, property: string, content: string) {
     element.append(`<meta property="${property}" content="${content}"/>`, { html: true })
@@ -40,8 +43,8 @@ export class MetaTagInjector implements HTMLRewriterElementContentHandlers {
       this.append(element, 'twitter:image:alt', this.input.title)
     }
 
-    if (this.input.country) {
-      this.append(element, 'cf:country', this.input.country)
+    if (this.blockedPathsList) {
+      this.append(element, 'cf:blockedpaths', this.blockedPathsList)
     }
   }
 }

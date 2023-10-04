@@ -200,6 +200,12 @@ export default function App() {
     return null
   }
 
+  // redirect from blocked pages if needed
+  const blockedPathsList = document.querySelector('meta[name="cf:blockedpaths"]')?.getAttribute('content')?.split(',')
+  if (blockedPathsList && blockedPathsList?.includes(pathname)) {
+    return <Navigate to="/swap" replace />
+  }
+
   return (
     <ErrorBoundary>
       <DarkModeQueryParamReader />

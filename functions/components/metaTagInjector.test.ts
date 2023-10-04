@@ -6,12 +6,15 @@ test('should append meta tag to element', () => {
   } as unknown as Element
   const property = 'property'
   const content = 'content'
-  const injector = new MetaTagInjector({
-    title: 'test',
-    url: 'testUrl',
-    image: 'testImage',
-    description: 'testDescription',
-  })
+  const injector = new MetaTagInjector(
+    {
+      title: 'test',
+      url: 'testUrl',
+      image: 'testImage',
+      description: 'testDescription',
+    },
+    new Request('http://localhost')
+  )
   injector.append(element, property, content)
   expect(element.append).toHaveBeenCalledWith(`<meta property="${property}" content="${content}"/>`, { html: true })
 

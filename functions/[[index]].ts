@@ -8,11 +8,10 @@ export const onRequest: PagesFunction = async ({ request, next }) => {
     image: imageUri,
     url: request.url,
     description: 'Swap or provide liquidity on the Uniswap Protocol',
-    country: request.headers.get('cf-ipcountry'),
   }
   const res = next()
   try {
-    return new HTMLRewriter().on('head', new MetaTagInjector(data)).transform(await res)
+    return new HTMLRewriter().on('head', new MetaTagInjector(data, request)).transform(await res)
   } catch (e) {
     return res
   }
