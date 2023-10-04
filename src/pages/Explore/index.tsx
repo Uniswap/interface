@@ -57,6 +57,7 @@ const NavWrapper = styled.div<{ isInfoExplorePageEnabled: boolean }>`
   ${({ isInfoExplorePageEnabled }) =>
     isInfoExplorePageEnabled &&
     css`
+      /* Use large media breakpoint so expanded search bar doesn't push tabs to next line */
       @media screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
         flex-direction: column;
         gap: 16px;
