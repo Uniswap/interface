@@ -25,6 +25,7 @@
     "type": "module"
   },
   "permissions": [
+    "alarms",
     "notifications",
     "sidePanel",
     "storage",

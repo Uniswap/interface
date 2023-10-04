@@ -16,7 +16,7 @@ logger.debug('content_window', 'init', 'initial load')
 
 const App = lazy(() => import('src/app/SidebarApp'))
 
-chrome.runtime.connect({ name: PortName.Popup })
+chrome.runtime.connect({ name: PortName.Sidebar })
 chrome.runtime.onMessage.addListener(async (req) => {
   if (req.type === 'STORE_INITIALIZED') {
     await initContentWindow()

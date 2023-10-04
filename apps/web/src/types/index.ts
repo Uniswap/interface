@@ -1,5 +1,5 @@
 export enum PortName {
   ContentScript = 'contentScript',
-  Popup = 'popup',
+  Sidebar = 'sidebar',
   Store = 'store',
 }
