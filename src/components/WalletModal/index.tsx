@@ -47,7 +47,7 @@ const PrivacyPolicyWrapper = styled.div`
 function didUserReject(connection: Connection, error: any): boolean {
   return (
     error?.code === ErrorCode.USER_REJECTED_REQUEST ||
-    (connection.type === ConnectionType.WALLET_CONNECT && error?.toString?.() === ErrorCode.WC_MODAL_CLOSED) ||
+    (connection.type === ConnectionType.WALLET_CONNECT_V2 && error?.toString?.() === ErrorCode.WC_MODAL_CLOSED) ||
     (connection.type === ConnectionType.COINBASE_WALLET && error?.toString?.() === ErrorCode.CB_REJECTED_REQUEST)
   )
 }
@@ -158,7 +158,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
           <OptionGrid data-testid="option-grid">
             {connections.map((connection) =>
               // Hides Uniswap Wallet if mgtm is disabled
-              connection.shouldDisplay() && !(connection.type === ConnectionType.UNIWALLET && !mgtmEnabled) ? (
+              connection.shouldDisplay() && !mgtmEnabled ? (
                 <Option
                   key={connection.getName()}
                   connection={connection}

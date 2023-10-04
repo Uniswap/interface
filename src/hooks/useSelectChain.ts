@@ -1,6 +1,6 @@
+import { ChainId } from '@pollum-io/smart-order-router'
 import { useWeb3React } from '@web3-react/core'
 import { useGetConnection } from 'connection'
-import { SupportedChainId } from 'constants/chains'
 import { useCallback } from 'react'
 import { addPopup } from 'state/application/reducer'
 import { updateConnectionError } from 'state/connection/reducer'
@@ -13,19 +13,21 @@ export default function useSelectChain() {
   const getConnection = useGetConnection()
 
   return useCallback(
-    async (targetChain: SupportedChainId) => {
+    async (targetChain: ChainId) => {
       if (!connector) return
 
-      const connectionType = getConnection(connector).type
+      const connectionType = getConnection(connector)?.type
 
-      try {
-        dispatch(updateConnectionError({ connectionType, error: undefined }))
-        await switchChain(connector, targetChain)
-      } catch (error) {
-        console.error('Failed to switch networks', error)
+      if (connectionType) {
+        try {
+          dispatch(updateConnectionError({ connectionType, error: undefined }))
+          await switchChain(connector, targetChain)
+        } catch (error) {
+          console.error('Failed to switch networks', error)
 
-        dispatch(updateConnectionError({ connectionType, error: error.message }))
-        dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: 'failed-network-switch' }))
+          dispatch(updateConnectionError({ connectionType, error: error.message }))
+          dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: 'failed-network-switch' }))
+        }
       }
     },
     [connector, dispatch, getConnection]

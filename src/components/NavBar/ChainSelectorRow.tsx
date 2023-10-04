@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
+import { ChainId } from '@pollum-io/smart-order-router'
 import { useWeb3React } from '@web3-react/core'
 import LoadingGifLight from 'assets/images/lightLoading.gif'
 import LoadingGif from 'assets/images/loading.gif'
 import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import { CheckMarkIcon } from 'nft/components/icons'
 import styled, { useTheme } from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -66,7 +66,7 @@ const Logo = styled.img`
 `
 interface ChainSelectorRowProps {
   disabled?: boolean
-  targetChain: SupportedChainId
+  targetChain: ChainId
   onSelectChain: (targetChain: number) => void
   isPending: boolean
 }

@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { ChainId } from '@pollum-io/smart-order-router'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { SupportedChainId } from 'constants/chains'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -58,7 +58,7 @@ function Stat({
   description?: ReactNode
 }) {
   return (
-    <StatWrapper data-cy={`${dataCy}`}>
+    <StatWrapper data-cy={dataCy}>
       <MouseoverTooltip text={description}>{title}</MouseoverTooltip>
       <StatPrice>{formatNumber(value, NumberType.FiatTokenStats)}</StatPrice>
     </StatWrapper>
@@ -66,7 +66,7 @@ function Stat({
 }
 
 type StatsSectionProps = {
-  chainId: SupportedChainId
+  chainId: ChainId
   address: string
   priceLow52W?: NumericStat
   priceHigh52W?: NumericStat
