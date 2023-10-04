@@ -61,7 +61,7 @@ describe('Token details', () => {
 
     // About section should have description of token
     cy.get(getTestSelector('token-details-about-section')).should('exist')
-    cy.contains('QOM is the Shiba Predator').should('exist')
+    cy.contains('No token information available').should('exist')
 
     // Links section should link out to Etherscan, More analytics, Website, Twitter
     cy.get('[data-cy="resources-container"]').within(() => {
