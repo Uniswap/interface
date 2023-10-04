@@ -384,13 +384,22 @@ const PositionLabelRow = styled(RowFixed)({
   gap: 8,
 })
 
+function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
+  if (!tokenId) return
+  try {
+    return BigNumber.from(tokenId)
+  } catch (error) {
+    return
+  }
+}
+
 function PositionPageContent() {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const { chainId, account, provider } = useWeb3React()
   const theme = useTheme()
   const { formatTickPrice } = useFormatter()
 
-  const parsedTokenId = tokenIdFromUrl ? BigNumber.from(tokenIdFromUrl) : undefined
+  const parsedTokenId = parseTokenId(tokenIdFromUrl)
   const { loading, position: positionDetails } = useV3PositionFromTokenId(parsedTokenId)
 
   const {
