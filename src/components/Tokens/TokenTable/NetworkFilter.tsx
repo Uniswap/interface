@@ -49,7 +49,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)<{ disabled?: boolean }>`
       pointer-events: none;
     `}
 `
-const MenuTimeFlyout = styled.span<{ isExplore: boolean }>`
+const MenuTimeFlyout = styled.span<{ isInfoExplorePageEnabled: boolean }>`
   min-width: 240px;
   max-height: 350px;
   overflow: auto;
@@ -64,10 +64,10 @@ const MenuTimeFlyout = styled.span<{ isExplore: boolean }>`
   position: absolute;
   top: 48px;
   z-index: 100;
-  ${({ isExplore }) => (isExplore ? 'right: 0px;' : 'left: 0px;')}
+  ${({ isInfoExplorePageEnabled }) => (isInfoExplorePageEnabled ? 'right: 0px;' : 'left: 0px;')}
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    ${({ isExplore }) => isExplore && 'left: 0px;'}
+    ${({ isInfoExplorePageEnabled }) => isInfoExplorePageEnabled && 'left: 0px;'}
   }
 `
 const StyledMenu = styled.div`
@@ -105,8 +105,8 @@ const CheckContainer = styled.div`
   display: flex;
   flex-direction: flex-end;
 `
-const NetworkFilterOption = styled(FilterOption)<{ isExplore: boolean }>`
-  ${({ isExplore }) => !isExplore && 'min-width: 156px;'}
+const NetworkFilterOption = styled(FilterOption)<{ isInfoExplorePageEnabled: boolean }>`
+  ${({ isInfoExplorePageEnabled }) => !isInfoExplorePageEnabled && 'min-width: 156px;'}
 `
 const Tag = styled(Badge)`
   background-color: ${({ theme }) => theme.surface2};
@@ -124,7 +124,7 @@ export default function NetworkFilter() {
   useOnClickOutside(node, open ? toggleMenu : undefined)
   const navigate = useNavigate()
 
-  const isExplore = useInfoExplorePageEnabled()
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
   const { chainName } = useParams<{ chainName?: string }>()
   const currentChainName = validateUrlChainParam(chainName)
@@ -134,7 +134,7 @@ export default function NetworkFilter() {
   return (
     <StyledMenu ref={node}>
       <NetworkFilterOption
-        isExplore={isExplore}
+        isInfoExplorePageEnabled={isInfoExplorePageEnabled}
         onClick={toggleMenu}
         aria-label="networkFilter"
         active={open}
@@ -142,7 +142,7 @@ export default function NetworkFilter() {
       >
         <StyledMenuContent>
           <NetworkLabel>
-            <Logo src={chainInfo.logoUrl} /> {!isExplore && chainInfo.label}
+            <Logo src={chainInfo.logoUrl} /> {!isInfoExplorePageEnabled && chainInfo.label}
           </NetworkLabel>
           <Chevron open={open}>
             {open ? (
@@ -154,7 +154,7 @@ export default function NetworkFilter() {
         </StyledMenuContent>
       </NetworkFilterOption>
       {open && (
-        <MenuTimeFlyout isExplore={isExplore}>
+        <MenuTimeFlyout isInfoExplorePageEnabled={isInfoExplorePageEnabled}>
           {BACKEND_SUPPORTED_CHAINS.map((network) => {
             const chainInfo = getChainInfo(supportedChainIdFromGQLChain(network))
             return (
@@ -162,7 +162,7 @@ export default function NetworkFilter() {
                 key={network}
                 data-testid={`tokens-network-filter-option-${network.toLowerCase()}`}
                 onClick={() => {
-                  isExplore
+                  isInfoExplorePageEnabled
                     ? navigate(`/explore/${network.toLowerCase()}`)
                     : navigate(`/tokens/${network.toLowerCase()}`)
                   toggleMenu()

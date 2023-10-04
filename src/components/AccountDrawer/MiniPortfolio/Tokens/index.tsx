@@ -76,12 +76,12 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
 
   const navigate = useNavigate()
   const toggleWalletDrawer = useToggleAccountDrawer()
-  const isExplore = useInfoExplorePageEnabled()
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
   const navigateToTokenDetails = useCallback(async () => {
-    navigate(getTokenDetailsURL({ ...token, isExploreFlagEnabled: isExplore }))
+    navigate(getTokenDetailsURL({ ...token, isInfoExplorePageEnabled }))
     toggleWalletDrawer()
-  }, [navigate, token, isExplore, toggleWalletDrawer])
+  }, [navigate, token, isInfoExplorePageEnabled, toggleWalletDrawer])
   const { formatNumber } = useFormatter()
 
   const currency = gqlToCurrency(token)

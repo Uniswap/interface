@@ -136,7 +136,7 @@ export default function TokenDetails({
   const isBlockedToken = tokenWarning?.canProceed === false
   const navigate = useNavigate()
 
-  const isExplore = useInfoExplorePageEnabled()
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
   // Wrapping navigate in a transition prevents Suspense from unnecessarily showing fallbacks again.
   const [isPending, startTokenTransition] = useTransition()
@@ -146,15 +146,19 @@ export default function TokenDetails({
       const bridgedAddress = crossChainMap[update]
       if (bridgedAddress) {
         startTokenTransition(() =>
-          navigate(getTokenDetailsURL({ address: bridgedAddress, chain: update, isExploreFlagEnabled: isExplore }))
+          navigate(
+            getTokenDetailsURL({
+              address: bridgedAddress,
+              chain: update,
+              isInfoExplorePageEnabled,
+            })
+          )
         )
       } else if (didFetchFromChain || detailedToken?.isNative) {
-        startTokenTransition(() =>
-          navigate(getTokenDetailsURL({ address, chain: update, isExploreFlagEnabled: isExplore }))
-        )
+        startTokenTransition(() => navigate(getTokenDetailsURL({ address, chain: update, isInfoExplorePageEnabled })))
       }
     },
-    [address, crossChainMap, didFetchFromChain, detailedToken?.isNative, navigate, isExplore]
+    [address, crossChainMap, didFetchFromChain, detailedToken?.isNative, navigate, isInfoExplorePageEnabled]
   )
   useOnGlobalChainSwitch(navigateToTokenForChain)
 
@@ -180,12 +184,12 @@ export default function TokenDetails({
               tokens[Field.INPUT] && tokens[Field.INPUT]?.currencyId !== newDefaultTokenID
                 ? tokens[Field.INPUT]?.currencyId
                 : null,
-            isExploreFlagEnabled: isExplore,
+            isInfoExplorePageEnabled,
           })
         )
       )
     },
-    [address, chain, isExplore, navigate]
+    [address, chain, isInfoExplorePageEnabled, navigate]
   )
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
@@ -213,7 +217,9 @@ export default function TokenDetails({
       <TokenDetailsLayout>
         {detailedToken && !isPending ? (
           <LeftPanel>
-            <BreadcrumbNavLink to={isExplore ? `/explore/${chain.toLowerCase()}` : `/tokens/${chain.toLowerCase()}`}>
+            <BreadcrumbNavLink
+              to={isInfoExplorePageEnabled ? `/explore/${chain.toLowerCase()}` : `/tokens/${chain.toLowerCase()}`}
+            >
               <ArrowLeft data-testid="token-details-return-button" size={14} /> Tokens
             </BreadcrumbNavLink>
             <TokenInfoContainer data-testid="token-info-container">

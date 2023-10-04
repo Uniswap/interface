@@ -206,17 +206,17 @@ export function getTokenDetailsURL({
   address,
   chain,
   inputAddress,
-  isExploreFlagEnabled,
+  isInfoExplorePageEnabled,
 }: {
   address?: string | null
   chain: Chain
   inputAddress?: string | null
-  isExploreFlagEnabled: boolean
+  isInfoExplorePageEnabled: boolean
 }) {
   const chainName = chain.toLowerCase()
   const tokenAddress = address ?? NATIVE_CHAIN_ID
   const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
-  return (isExploreFlagEnabled ? '/explore' : '') + `/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
+  return (isInfoExplorePageEnabled ? '/explore' : '') + `/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
 }
 
 export function unwrapToken<

@@ -221,12 +221,12 @@ function LoadingStats() {
 /* Loading State: row component with loading bubbles */
 export default function TokenDetailsSkeleton() {
   const { chainName } = useParams<{ chainName?: string }>()
-  const isExplore = useInfoExplorePageEnabled()
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
   return (
     <LeftPanel>
       <BreadcrumbNavLink
         to={
-          isExplore
+          isInfoExplorePageEnabled
             ? chainName
               ? `/explore/tokens/${chainName}`
               : `/explore/tokens`

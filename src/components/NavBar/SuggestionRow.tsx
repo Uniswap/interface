@@ -139,9 +139,9 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
 
-  const isExplore = useInfoExplorePageEnabled()
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
-  const tokenDetailsPath = getTokenDetailsURL({ ...token, isExploreFlagEnabled: isExplore })
+  const tokenDetailsPath = getTokenDetailsURL({ ...token, isInfoExplorePageEnabled })
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {

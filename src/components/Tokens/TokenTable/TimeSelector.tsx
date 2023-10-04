@@ -54,7 +54,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
     text-decoration: none;
   }
 `
-const MenuTimeFlyout = styled.span<{ isExplore: boolean }>`
+const MenuTimeFlyout = styled.span<{ isInfoExplorePageEnabled: boolean }>`
   min-width: 240px;
   max-height: 300px;
   overflow: auto;
@@ -69,16 +69,16 @@ const MenuTimeFlyout = styled.span<{ isExplore: boolean }>`
   position: absolute;
   top: 48px;
   z-index: 100;
-  ${({ isExplore }) => (isExplore ? 'right: 0px;' : 'left: 0px;')}
+  ${({ isInfoExplorePageEnabled }) => (isInfoExplorePageEnabled ? 'right: 0px;' : 'left: 0px;')}
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    ${({ isExplore }) => !isExplore && 'left: unset; right: 0px;'}
+    ${({ isInfoExplorePageEnabled }) => !isInfoExplorePageEnabled && 'left: unset; right: 0px;'}
   }
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    ${({ isExplore }) => isExplore && 'left: 0px;'}
+    ${({ isInfoExplorePageEnabled }) => isInfoExplorePageEnabled && 'left: 0px;'}
   }
 `
-const StyledMenu = styled.div<{ isExplore: boolean }>`
+const StyledMenu = styled.div<{ isInfoExplorePageEnabled: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -87,10 +87,10 @@ const StyledMenu = styled.div<{ isExplore: boolean }>`
   text-align: left;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    ${({ isExplore }) => !isExplore && 'width: 72px;'}
+    ${({ isInfoExplorePageEnabled }) => !isInfoExplorePageEnabled && 'width: 72px;'}
   }
 `
-const StyledMenuContent = styled.div<{ isExplore: boolean }>`
+const StyledMenuContent = styled.div<{ isInfoExplorePageEnabled: boolean }>`
   display: flex;
   justify-content: space-between;
   gap: 8px;
@@ -98,7 +98,7 @@ const StyledMenuContent = styled.div<{ isExplore: boolean }>`
   border: none;
   width: 100%;
   vertical-align: middle;
-  ${({ isExplore }) => isExplore && 'white-space: nowrap;'}
+  ${({ isInfoExplorePageEnabled }) => isInfoExplorePageEnabled && 'white-space: nowrap;'}
 `
 const Chevron = styled.span<{ open: boolean }>`
   padding-top: 1px;
@@ -114,13 +114,13 @@ export default function TimeSelector() {
   useOnClickOutside(node, open ? toggleMenu : undefined)
   const [activeTime, setTime] = useAtom(filterTimeAtom)
 
-  const isExplore = useInfoExplorePageEnabled()
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
   return (
-    <StyledMenu ref={node} isExplore={isExplore}>
+    <StyledMenu ref={node} isInfoExplorePageEnabled={isInfoExplorePageEnabled}>
       <FilterOption onClick={toggleMenu} aria-label="timeSelector" active={open} data-testid="time-selector">
-        <StyledMenuContent isExplore={isExplore}>
-          {isExplore ? (
+        <StyledMenuContent isInfoExplorePageEnabled={isInfoExplorePageEnabled}>
+          {isInfoExplorePageEnabled ? (
             <>
               {DISPLAYS[activeTime]} <Trans>volume</Trans>
             </>
@@ -137,7 +137,7 @@ export default function TimeSelector() {
         </StyledMenuContent>
       </FilterOption>
       {open && (
-        <MenuTimeFlyout isExplore={isExplore}>
+        <MenuTimeFlyout isInfoExplorePageEnabled={isInfoExplorePageEnabled}>
           {ORDERED_TIMES.map((time) => (
             <InternalLinkMenuItem
               key={DISPLAYS[time]}
