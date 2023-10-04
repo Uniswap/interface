@@ -19,7 +19,7 @@ describe('disconnect wallet', () => {
     // Verify wallet has disconnected
     cy.contains('Connect a wallet').should('exist')
     cy.get(getTestSelector('navbar-connect-wallet')).contains('Connect')
-    cy.contains('Connect Wallet')
+    cy.contains('Connect wallet')
 
     // Verify swap input is cleared
     cy.get('#swap-currency-input .token-amount-input').should('have.value', '1')

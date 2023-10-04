@@ -26,7 +26,7 @@ export default function PrivacyPolicyNotice() {
       </StyledLink>
       <LastUpdatedText>
         {' ('}
-        <Trans>Last Updated</Trans>
+        <Trans>Last updated</Trans>
         {` ${LAST_UPDATED_DATE})`}
       </LastUpdatedText>
     </ThemedText.BodySmall>

@@ -107,7 +107,7 @@ export default function usePermit2Allowance(
   const shouldRequestApproval = !(isApproved || isApprovalLoading)
 
   // UniswapX trades do not need a permit signature step in between because the swap step _is_ the permit signature
-  const shouldRequestSignature = tradeFillType !== TradeFillType.UniswapX && !(isPermitted || isSigned)
+  const shouldRequestSignature = tradeFillType === TradeFillType.Classic && !(isPermitted || isSigned)
 
   const addTransaction = useTransactionAdder()
   const approveAndPermit = useCallback(async () => {

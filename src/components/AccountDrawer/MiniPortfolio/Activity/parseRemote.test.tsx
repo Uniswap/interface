@@ -16,6 +16,7 @@ import {
   MockTokenReceive,
   MockTokenSend,
   MockTokenTransfer,
+  MockWrap,
 } from './fixtures/activity'
 import { parseRemoteActivities, useTimeSince } from './parseRemote'
 
@@ -78,6 +79,10 @@ describe('parseRemote', () => {
     })
     it('should parse swap order', () => {
       const result = parseRemoteActivities(jest.fn().mockReturnValue('100'), [MockSwapOrder])
+      expect(result?.['someHash']).toMatchSnapshot()
+    })
+    it('should parse eth wrap', () => {
+      const result = parseRemoteActivities(jest.fn().mockReturnValue('100'), [MockWrap])
       expect(result?.['someHash']).toMatchSnapshot()
     })
   })

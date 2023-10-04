@@ -20,6 +20,7 @@ export enum FeatureFlag {
   infoPoolPage = 'info_pool_page',
   infoLiveViews = 'info_live_views',
   uniswapXDefaultEnabled = 'uniswapx_default_enabled',
+  quickRouteMainnet = 'enable_quick_route_mainnet',
 }
 
 interface FeatureFlagsContextType {
@@ -56,7 +57,7 @@ export function useUpdateFlag() {
 }
 
 export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
-  // TODO(vm): `isLoaded` to `true` so `App.tsx` will render. Later, this will be dependent on
+  // TODO: `isLoaded` to `true` so `App.tsx` will render. Later, this will be dependent on
   // flags loading from Amplitude, with a timeout.
   const featureFlags = useAtomValue(featureFlagSettings)
   const value = {

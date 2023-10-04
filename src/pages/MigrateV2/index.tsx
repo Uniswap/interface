@@ -122,7 +122,7 @@ export default function MigrateV2() {
           <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
             <BackArrowLink to="/pools" />
             <ThemedText.DeprecatedMediumHeader>
-              <Trans>Migrate V2 Liquidity</Trans>
+              <Trans>Migrate V2 liquidity</Trans>
             </ThemedText.DeprecatedMediumHeader>
             <div>
               <QuestionHelper text={<Trans>Migrate your liquidity tokens from Uniswap V2 to Uniswap V3.</Trans>} />
@@ -170,7 +170,7 @@ export default function MigrateV2() {
               })}
             </>
           ) : (
-            <EmptyState message={<Trans>No V2 Liquidity found.</Trans>} />
+            <EmptyState message={<Trans>No V2 liquidity found.</Trans>} />
           )}
 
           <AutoColumn justify="center" gap="md">

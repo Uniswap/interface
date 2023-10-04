@@ -63,6 +63,7 @@ describe('swapFlowLoggers', () => {
 
     expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SWAP_QUOTE_FETCH, {
       chainId: mockChainId,
+      isQuickRoute: false,
       time_to_first_quote_request: 100,
       time_to_first_quote_request_since_first_input: 100,
     })
@@ -75,6 +76,7 @@ describe('swapFlowLoggers', () => {
 
     expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SWAP_QUOTE_FETCH, {
       chainId: mockChainId,
+      isQuickRoute: false,
     })
   })
 })

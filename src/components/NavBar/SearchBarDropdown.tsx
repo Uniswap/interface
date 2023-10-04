@@ -284,7 +284,7 @@ function SearchBarDropdownContents({
           suggestion_type: NavBarSearchTypes.COLLECTION_SUGGESTION,
           ...eventProperties,
         }}
-        header={<Trans>NFT Collections</Trans>}
+        header={<Trans>NFT collections</Trans>}
       />
     ) : (
       <Box className={styles.notFoundContainer}>No NFT collections found.</Box>

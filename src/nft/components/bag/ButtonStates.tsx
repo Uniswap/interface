@@ -86,7 +86,7 @@ export function getBuyButtonStateData(
     },
     [BuyButtonStates.FETCHING_TOKEN_ROUTE]: {
       ...defaultBuyButtonState,
-      buttonText: <Trans>Fetching Route</Trans>,
+      buttonText: <Trans>Fetching route</Trans>,
     },
     [BuyButtonStates.INVALID_TOKEN_ROUTE]: {
       ...defaultBuyButtonState,
@@ -101,7 +101,7 @@ export function getBuyButtonStateData(
     },
     [BuyButtonStates.LOADING_ALLOWANCE]: {
       ...defaultBuyButtonState,
-      buttonText: <Trans>Loading Allowance</Trans>,
+      buttonText: <Trans>Loading allowance</Trans>,
     },
     [BuyButtonStates.IN_WALLET_ALLOWANCE_APPROVAL]: {
       ...defaultBuyButtonState,

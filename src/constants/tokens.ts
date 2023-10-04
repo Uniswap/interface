@@ -96,6 +96,13 @@ export const DAI_OPTIMISM = new Token(
   'DAI',
   'Dai stable coin'
 )
+export const MATIC = new Token(
+  ChainId.MAINNET,
+  '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0',
+  18,
+  'MATIC',
+  'Polygon Matic'
+)
 export const DAI_POLYGON = new Token(
   ChainId.POLYGON,
   '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',

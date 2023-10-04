@@ -26,7 +26,7 @@ export const ProposalSubmissionModal = ({
         <LoadingView onDismiss={onDismiss}>
           <AutoColumn gap="md" justify="center">
             <ThemedText.DeprecatedLargeHeader>
-              <Trans>Submitting Proposal</Trans>
+              <Trans>Submitting proposal</Trans>
             </ThemedText.DeprecatedLargeHeader>
           </AutoColumn>
         </LoadingView>
@@ -34,7 +34,7 @@ export const ProposalSubmissionModal = ({
         <SubmittedView onDismiss={onDismiss} hash={hash}>
           <AutoColumn gap="md" justify="center">
             <Text fontWeight={535} fontSize={20} textAlign="center">
-              <Trans>Proposal Submitted</Trans>
+              <Trans>Proposal submitted</Trans>
             </Text>
             {hash && (
               <ExternalLink href={getExplorerLink(1, hash, ExplorerDataType.TRANSACTION)}>
