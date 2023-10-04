@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Token } from '@pollum-io/sdk-core'
+import { formatNumber } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
@@ -181,11 +182,13 @@ export default function ModalAddGammaLiquidity({
   }, [attemptingWithdrawTxn, finalStateTransactionDismiss, transactionWithdrawErrorMessage, txHashWithdraw])
 
   // text to show while loading
-  const pendingText = `Depositing ${tokenStake0 && Number(deposit0) > 0 ? deposit0 : ''} ${tokenStake0?.symbol} and 
-    ${tokenStake1 && Number(deposit1) > 0 ? deposit1 : ''} ${tokenStake1?.symbol}`
+  const pendingText = `Depositing ${tokenStake0 && Number(deposit0) > 0 ? formatNumber(Number(deposit0)) : ''} ${
+    tokenStake0?.symbol
+  } and 
+    ${tokenStake1 && Number(deposit1) > 0 ? formatNumber(Number(deposit1)) : ''} ${tokenStake1?.symbol}`
 
   const pendingTextWithdraw = `Withdraw  ${
-    unStakeGamma && Number(unStakeGamma) > 0 ? unStakeGamma : ''
+    unStakeGamma && Number(unStakeGamma) > 0 ? formatNumber(Number(unStakeGamma)) : ''
   } ${lpTokenSymbol}`
 
   const modalHeader = () => {
@@ -196,9 +199,13 @@ export default function ModalAddGammaLiquidity({
             <DoubleCurrencyLogo currency0={tokenStake0} currency1={tokenStake1} size={30} />
           )}
           <Text fontSize="18px">
-            Deposit
+            Deposit {tokenStake0 && Number(deposit0) > 0 ? formatNumber(Number(deposit0)) : ''}
             <Text as="span" color={theme.accentActive}>
-              {' ' + lpTokenSymbol}
+              {' ' + tokenStake0?.symbol + ' '}
+            </Text>
+            and {tokenStake1 && Number(deposit1) > 0 ? formatNumber(Number(deposit1)) : ''}
+            <Text as="span" color={theme.accentActive}>
+              {' ' + tokenStake1?.symbol}
             </Text>
           </Text>
         </Row>
@@ -212,7 +219,7 @@ export default function ModalAddGammaLiquidity({
         <Row style={{ padding: '20px', display: 'flex', justifyContent: 'center' }}>
           <Text fontSize="18px">
             {'Withdraw' + ' '}
-            {unStakeGamma + ' '}
+            {formatNumber(Number(unStakeGamma)) + ' '}
             <Text as="span" color={theme.accentActive}>
               {lpTokenSymbol}
             </Text>
@@ -342,7 +349,7 @@ export default function ModalAddGammaLiquidity({
           <div
             style={{
               padding: '10px',
-              textAlign: 'left',
+              textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',
               width: '100%',
@@ -354,7 +361,7 @@ export default function ModalAddGammaLiquidity({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                paddingBottom: '10px',
+                padding: '15px 0 15px 0',
               }}
             >
               <img src={isDarkMode ? gammaLogo : gammaLogoWhite} width={300} />
@@ -457,30 +464,28 @@ export default function ModalAddGammaLiquidity({
                 )}
               </ApprovedArea>
 
-              {Number(lpTokenBalance) > 0 && (
-                <Withdraw>
-                  <GridItemAddLiquidity
-                    titleText="Withdraw: "
-                    availableStakeAmount={lpTokenBalance}
-                    textButton="Withdraw"
-                    tokenSymbol={lpTokenSymbol}
-                    depositValue={unStakeGamma}
-                    disabledButton={!(Number(unStakeGamma) > 0)}
-                    isApproved={false}
-                    setDepositAmount={(amount: string) => {
-                      setUnStakeGamma(amount)
-                    }}
-                    approveOrStakeLPOrWithdraw={() => {
-                      setTransactionWithdrawModal({
-                        attemptingWithdrawTxn: false,
-                        showTransactionWithdrawModal: true,
-                        transactionWithdrawErrorMessage: undefined,
-                        txHashWithdraw: undefined,
-                      })
-                    }}
-                  />
-                </Withdraw>
-              )}
+              <Withdraw>
+                <GridItemAddLiquidity
+                  titleText="Withdraw: "
+                  availableStakeAmount={lpTokenBalance}
+                  textButton="Withdraw"
+                  tokenSymbol={lpTokenSymbol}
+                  depositValue={unStakeGamma}
+                  disabledButton={!(Number(unStakeGamma) > 0)}
+                  isApproved={false}
+                  setDepositAmount={(amount: string) => {
+                    setUnStakeGamma(amount)
+                  }}
+                  approveOrStakeLPOrWithdraw={() => {
+                    setTransactionWithdrawModal({
+                      attemptingWithdrawTxn: false,
+                      showTransactionWithdrawModal: true,
+                      transactionWithdrawErrorMessage: undefined,
+                      txHashWithdraw: undefined,
+                    })
+                  }}
+                />
+              </Withdraw>
             </Container>
           </Body>
         </Wrapper>

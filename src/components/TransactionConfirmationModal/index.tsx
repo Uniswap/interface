@@ -89,6 +89,7 @@ function ConfirmationPendingContent({
     </Wrapper>
   )
 }
+
 function TransactionSubmittedContent({
   onDismiss,
   chainId,

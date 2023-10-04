@@ -131,6 +131,14 @@ export const getStakedAmount = (item: any, stakedAmounts: any) => {
   return sItem ? Number(sItem.amount) : 0
 }
 
+export const getRewardsAmount = (item: any, rewardsAmount: any) => {
+  const masterChefIndex = item.masterChefIndex ?? 0
+  const sItem = rewardsAmount?.find(
+    (sAmount: any) => sAmount.pid === item.pid && sAmount.masterChefIndex === masterChefIndex
+  )
+  return sItem ? Number(sItem.amount) : 0
+}
+
 // export const sortFarms = (
 //   farm0: itemFarmToken,
 //   farm1: itemFarmToken,

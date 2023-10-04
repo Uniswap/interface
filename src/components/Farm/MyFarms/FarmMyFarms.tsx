@@ -20,7 +20,14 @@ import { getTokenFromAddress } from 'utils/farmUtils'
 
 import { FarmPair, GammaPairs, GlobalConst, itemFarmToken } from '../constants'
 import { GammaFarmCard } from '../GammaFarms/GammaFarmCard'
-import { filterFarm, getStakedAmount, sortColumnsGamma, useRewardPerSecond, useRewardTokenAddress } from '../utils'
+import {
+  filterFarm,
+  getRewardsAmount,
+  getStakedAmount,
+  sortColumnsGamma,
+  useRewardPerSecond,
+  useRewardTokenAddress,
+} from '../utils'
 
 const NoFarmsContainer = styled.div`
   display: flex;
@@ -126,8 +133,28 @@ export default function FarmingMyFarms({ chainId, search }: { search: string; ch
     account ? allGammaFarms.map((pair) => [pair.pid, account]) : []
   )
 
+  const rewardsAmountData = useSingleContractMultipleData(
+    masterChefContract,
+    'pendingReward',
+    account ? allGammaFarms.map((pair) => [pair.pid, account]) : []
+  )
+
+  const rewardsAmounts = rewardsAmountData.map((callState, index) => {
+    const { loading, result } = callState
+
+    const amount = !loading && result?.length ? formatUnits(result[0], 18) : '0'
+    const gPair = allGammaFarms[index] as FarmPair
+
+    return {
+      amount,
+      pid: gPair?.pid,
+      masterChefIndex: index,
+    }
+  })
+
   const stakedAmounts = stakedAmountData.map((callState, index) => {
     const { loading, result } = callState
+
     const amount = !loading && result?.length ? formatUnits(result[0], 18) : '0'
     const gPair = allGammaFarms[index] as FarmPair
 
@@ -140,19 +167,19 @@ export default function FarmingMyFarms({ chainId, search }: { search: string; ch
 
   const filteredAndSortedMyGammaFarms = useMemo(() => {
     const allFarms = allGammaFarms.map((item) => {
-      const stakedAmount = getStakedAmount(item, stakedAmounts)
-      if (stakedAmount > 0) {
-        const token0 = getTokenFromAddress(item?.token0Address, tokenMap, [])
-        const token1 = getTokenFromAddress(item?.token1Address, tokenMap, [])
-        return { ...item, token0: token0 ?? null, token1: token1 ?? null } as itemFarmToken
-      }
-      return { ...item, token0: null, token1: null } as itemFarmToken
+      const token0 = getTokenFromAddress(item?.token0Address, tokenMap, [])
+      const token1 = getTokenFromAddress(item?.token1Address, tokenMap, [])
+      return { ...item, token0: token0 ?? null, token1: token1 ?? null } as itemFarmToken
     })
 
-    const allFarmsFiltered = allFarms?.filter((item: itemFarmToken) => filterFarm(item, search))
+    const allFarmsFiltered = allFarms?.filter((item: itemFarmToken) => {
+      const stakedAmount = getStakedAmount(item, stakedAmounts)
+      const rewardsAmount = getRewardsAmount(item, rewardsAmounts)
+      return filterFarm(item, search) && (stakedAmount > 0 || rewardsAmount > 0)
+    })
 
     return allFarmsFiltered
-  }, [allGammaFarms, search, stakedAmounts, tokenMap])
+  }, [allGammaFarms, rewardsAmounts, search, stakedAmounts, tokenMap])
 
   return (
     <MyFarmsContainer>
@@ -168,7 +195,7 @@ export default function FarmingMyFarms({ chainId, search }: { search: string; ch
           ) : filteredAndSortedMyGammaFarms.length === 0 ? (
             <NoFarmsContainer>
               <Frown size={35} stroke="white" />
-              <Box mt={1}>noFarms</Box>
+              <Box mt={1}>{`You don't have any farms`} </Box>
             </NoFarmsContainer>
           ) : (
             chainId &&

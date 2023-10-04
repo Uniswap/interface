@@ -264,28 +264,26 @@ const GammaFarmCardDetails: React.FC<{
 
       <div style={{ padding: 1.5 }}>
         <Grid isMobile={isMobile} hasRewards={Number(rewardsAmount) > 0}>
-          {pairData.ableToFarm && (
-            <GridItemGammaCard
-              titleText="Available:"
-              approveOrStakeLP={approveOrStakeLP}
-              availableStakeAmount={dataDetails.availableStakeAmount}
-              availableStakeUSD={dataDetails.availableStakeUSD}
-              stakeAmount={dataDetails.stakeAmount}
-              setStakeAmount={dataDetails.setStakeAmount}
-              stakeButtonDisabled={stakeButtonDisabled}
-              textButton={
-                dataDetails.approval === ApprovalState.APPROVED
-                  ? approveOrStaking
-                    ? 'Depositing LP'
-                    : 'Deposit LP'
-                  : approveOrStaking
-                  ? 'Approving'
-                  : 'Approve'
-              }
-              setUnStakeAmount={setUnStakeAmount}
-              tokenLPSymbol={dataDetails.lpSymbol}
-            />
-          )}
+          <GridItemGammaCard
+            titleText="Available:"
+            approveOrStakeLP={approveOrStakeLP}
+            availableStakeAmount={dataDetails.availableStakeAmount}
+            availableStakeUSD={dataDetails.availableStakeUSD}
+            stakeAmount={dataDetails.stakeAmount}
+            setStakeAmount={dataDetails.setStakeAmount}
+            stakeButtonDisabled={stakeButtonDisabled}
+            textButton={
+              dataDetails.approval === ApprovalState.APPROVED
+                ? approveOrStaking
+                  ? 'Depositing'
+                  : 'Deposit'
+                : approveOrStaking
+                ? 'Approving'
+                : 'Approve'
+            }
+            setUnStakeAmount={setUnStakeAmount}
+            tokenLPSymbol={dataDetails.lpSymbol}
+          />
 
           <GridItemGammaCard
             titleText="Deposited:"
@@ -301,10 +299,10 @@ const GammaFarmCardDetails: React.FC<{
             tokenLPSymbol={dataDetails.lpSymbol}
           />
 
-          {rewardToken && Number(rewardsAmount) !== 0 && (
+          {rewardToken && (
             <GridItem>
               <ClaimContainer>
-                <small style={{ color: theme.textSecondary }}>EarnedRewards</small>
+                <small style={{ color: theme.textSecondary }}>Earned Rewards: </small>
                 <div style={{ marginBottom: 10, marginTop: 10 }}>
                   <div
                     key={rewardToken.address}
