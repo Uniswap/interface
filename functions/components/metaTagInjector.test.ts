@@ -45,7 +45,7 @@ test('should pass through header blocked paths', () => {
     append: jest.fn(),
   } as unknown as Element
   const request = new Request('http://localhost')
-  request.headers.set('cf-blocked-paths-list', '/')
+  request.headers.set('x-blocked-paths', '/')
   const injector = new MetaTagInjector(
     {
       title: 'test',
@@ -56,5 +56,5 @@ test('should pass through header blocked paths', () => {
     request
   )
   injector.element(element)
-  expect(element.append).toHaveBeenCalledWith(`<meta property="cf:blockedpaths" content="/"/>`, { html: true })
+  expect(element.append).toHaveBeenCalledWith(`<meta property="x:blocked-paths" content="/"/>`, { html: true })
 })

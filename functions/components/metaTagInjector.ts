@@ -39,7 +39,7 @@ export class MetaTagInjector implements HTMLRewriterElementContentHandlers {
       this.append(element, 'twitter:image:alt', this.input.title)
     }
 
-    const blockedPaths = request.headers.get('x-blocked-paths-list')
+    const blockedPaths = this.request.headers.get('x-blocked-paths')
     if (blockedPaths) {
       this.append(element, 'x:blocked-paths', blockedPaths)
     }

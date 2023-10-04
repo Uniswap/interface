@@ -202,6 +202,10 @@ export default function App() {
 
   const blockedPaths = document.querySelector('meta[name="x:blocked-paths"]')?.getAttribute('content')?.split(',')
   const shouldBlockPath = blockedPaths?.includes(pathname) ?? false
+  if (shouldBlockPath && pathname !== '/swap') {
+    return <Navigate to="/swap" replace />
+  }
+
   return (
     <ErrorBoundary>
       <DarkModeQueryParamReader />
