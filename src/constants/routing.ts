@@ -11,12 +11,9 @@ import {
   CUSD_CELO,
   CUSD_CELO_ALFAJORES,
   DAI,
-  DAI_ARBITRUM_ONE,
   DAI_AVALANCHE,
-  DAI_BSC,
-  DAI_OPTIMISM,
-  DAI_POLYGON,
   ETH_BSC,
+  GRG,
   nativeOnChain,
   OP,
   PORTAL_ETH_CELO,
@@ -65,7 +62,7 @@ const WRAPPED_NATIVE_CURRENCIES_ONLY: ChainTokenList = Object.fromEntries(
 export const COMMON_BASES: ChainCurrencyList = {
   [ChainId.MAINNET]: [
     nativeOnChain(ChainId.MAINNET),
-    DAI,
+    GRG[ChainId.MAINNET],
     USDC_MAINNET,
     USDT,
     WBTC,
@@ -76,7 +73,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   [ChainId.ARBITRUM_ONE]: [
     nativeOnChain(ChainId.ARBITRUM_ONE),
     ARB,
-    DAI_ARBITRUM_ONE,
+    GRG[ChainId.ARBITRUM_ONE],
     USDC_ARBITRUM,
     USDT_ARBITRUM_ONE,
     WBTC_ARBITRUM_ONE,
@@ -87,15 +84,27 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_NATIVE_CURRENCY[ChainId.ARBITRUM_GOERLI] as Token,
     USDC_ARBITRUM_GOERLI,
   ],
-  [ChainId.OPTIMISM]: [nativeOnChain(ChainId.OPTIMISM), OP, DAI_OPTIMISM, USDC_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM],
+  [ChainId.OPTIMISM]: [
+    nativeOnChain(ChainId.OPTIMISM),
+    OP,
+    GRG[ChainId.OPTIMISM],
+    USDC_OPTIMISM,
+    USDT_OPTIMISM,
+    WBTC_OPTIMISM,
+  ],
   [ChainId.OPTIMISM_GOERLI]: [nativeOnChain(ChainId.OPTIMISM_GOERLI)],
-  [ChainId.BASE]: [nativeOnChain(ChainId.BASE), WRAPPED_NATIVE_CURRENCY[ChainId.BASE] as Token, USDC_BASE],
+  [ChainId.BASE]: [
+    nativeOnChain(ChainId.BASE),
+    WRAPPED_NATIVE_CURRENCY[ChainId.BASE] as Token,
+    USDC_BASE,
+    GRG[ChainId.BASE],
+  ],
   [ChainId.BASE_GOERLI]: [nativeOnChain(ChainId.BASE_GOERLI), WRAPPED_NATIVE_CURRENCY[ChainId.BASE_GOERLI] as Token],
   [ChainId.POLYGON]: [
     nativeOnChain(ChainId.POLYGON),
     WETH_POLYGON,
     USDC_POLYGON,
-    DAI_POLYGON,
+    GRG[ChainId.POLYGON],
     USDT_POLYGON,
     WBTC_POLYGON,
   ],
@@ -108,7 +117,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   [ChainId.CELO]: [nativeOnChain(ChainId.CELO), CEUR_CELO, CUSD_CELO, PORTAL_ETH_CELO, PORTAL_USDC_CELO, CMC02_CELO],
   [ChainId.CELO_ALFAJORES]: [nativeOnChain(ChainId.CELO_ALFAJORES), CUSD_CELO_ALFAJORES, CEUR_CELO_ALFAJORES],
 
-  [ChainId.BNB]: [nativeOnChain(ChainId.BNB), DAI_BSC, USDC_BSC, USDT_BSC, ETH_BSC, BTC_BSC, BUSD_BSC],
+  [ChainId.BNB]: [nativeOnChain(ChainId.BNB), GRG[ChainId.BNB], USDC_BSC, USDT_BSC, ETH_BSC, BTC_BSC, BUSD_BSC],
   [ChainId.AVALANCHE]: [
     nativeOnChain(ChainId.AVALANCHE),
     DAI_AVALANCHE,
@@ -121,10 +130,16 @@ export const COMMON_BASES: ChainCurrencyList = {
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WRAPPED_NATIVE_CURRENCIES_ONLY,
-  [ChainId.MAINNET]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.MAINNET], DAI, USDC_MAINNET, USDT, WBTC],
+  [ChainId.MAINNET]: [
+    ...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.MAINNET],
+    GRG[ChainId.MAINNET],
+    USDC_MAINNET,
+    USDT,
+    WBTC,
+  ],
   [ChainId.BNB]: [
     ...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.BNB],
-    DAI_BSC,
+    GRG[ChainId.BNB],
     USDC_BSC,
     USDT_BSC,
     BTC_BSC,
