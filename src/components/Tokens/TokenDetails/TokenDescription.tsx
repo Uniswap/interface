@@ -64,8 +64,8 @@ const TokenDescriptionContainer = styled(ThemedText.BodyPrimary)`
   white-space: pre-wrap;
 `
 
-const DescriptionVisibilityWrapper = styled.span<{ isVisible: boolean }>`
-  display: ${({ isVisible }) => (isVisible ? 'inline' : 'none')};
+const DescriptionVisibilityWrapper = styled.span<{ $visible: boolean }>`
+  display: ${({ $visible }) => ($visible ? 'inline' : 'none')};
 `
 
 const TRUNCATE_CHARACTER_COUNT = 75
@@ -147,10 +147,10 @@ export function TokenDescription({
         )}
         {description && (
           <>
-            <DescriptionVisibilityWrapper data-testid="desc-long-wrapper" isVisible={!showTruncatedDescription}>
+            <DescriptionVisibilityWrapper data-testid="desc-long-wrapper" $visible={!showTruncatedDescription}>
               {description}
             </DescriptionVisibilityWrapper>
-            <DescriptionVisibilityWrapper data-testid="desc-short-wrapper" isVisible={showTruncatedDescription}>
+            <DescriptionVisibilityWrapper data-testid="desc-short-wrapper" $visible={showTruncatedDescription}>
               {truncatedDescription}
             </DescriptionVisibilityWrapper>
           </>
