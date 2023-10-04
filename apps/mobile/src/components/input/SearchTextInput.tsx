@@ -117,11 +117,11 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           px="$spacing16"
           py={py}
           {...(showShadow && {
-            shadowColor: '$DEP_accentCriticalSoft',
+            shadowColor: '$DEP_brandedAccentSoft',
             shadowOffset: SHADOW_OFFSET_SMALL,
             shadowOpacity: 0.25,
             shadowRadius: 6,
-
+            elevation: 6,
             '$theme-dark': {
               shadowColor: '$sporeBlack',
             },
