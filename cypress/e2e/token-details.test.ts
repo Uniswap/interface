@@ -49,7 +49,7 @@ describe('Token details', () => {
 
   it('token with warning and low trading volume should have all information populated', () => {
     // Null token created for this test, 0 trading volume and has warning modal
-    cy.visit('/tokens/ethereum/0x1efbb78c8b917f67986bce54ce575069c0143681')
+    cy.visit('/tokens/ethereum/0x1eFBB78C8b917f67986BcE54cE575069c0143681')
 
     // Should have missing price chart when price unavailable (expected for this token)
     if (cy.get('[data-cy="chart-header"]').contains('Price unavailable')) {
@@ -67,14 +67,14 @@ describe('Token details', () => {
     cy.get('[data-cy="resources-container"]').within(() => {
       cy.contains('Etherscan')
         .should('have.attr', 'href')
-        .and('include', 'etherscan.io/address/0x1efbb78c8b917f67986bce54ce575069c0143681')
+        .and('include', 'etherscan.io/address/0x1eFBB78C8b917f67986BcE54cE575069c0143681')
       cy.contains('More analytics')
         .should('have.attr', 'href')
-        .and('include', 'info.uniswap.org/#/tokens/0x1efbb78c8b917f67986bce54ce575069c0143681')
+        .and('include', 'info.uniswap.org/#/tokens/0x1eFBB78C8b917f67986BcE54cE575069c0143681')
     })
 
     // Contract address should be displayed
-    cy.contains('0x1efbb78c8b917f67986bce54ce575069c0143681').should('exist')
+    cy.contains('0x1eFBB78C8b917f67986BcE54cE575069c0143681').should('exist')
 
     // Warning label should show if relevant ([spec](https://www.notion.so/3f7fce6f93694be08a94a6984d50298e))
     cy.get('[data-cy="token-safety-message"]')
