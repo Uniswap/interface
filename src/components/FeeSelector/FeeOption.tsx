@@ -7,6 +7,7 @@ import { PoolState } from 'hooks/usePools'
 import React from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { useFormatter } from 'utils/formatNumbers'
 
 import { FeeTierPercentageBadge } from './FeeTierPercentageBadge'
 import { FEE_AMOUNT_DETAIL } from './shared'
@@ -30,12 +31,14 @@ interface FeeOptionProps {
 }
 
 export function FeeOption({ feeAmount, active, poolState, distributions, onClick }: FeeOptionProps) {
+  const { formatPercent } = useFormatter()
+
   return (
     <ButtonRadioChecked active={active} onClick={onClick}>
       <AutoColumn gap="sm" justify="flex-start">
         <AutoColumn justify="flex-start" gap="6px">
           <ResponsiveText>
-            <Trans>{FEE_AMOUNT_DETAIL[feeAmount].label}%</Trans>
+            <Trans>{formatPercent(parseFloat(FEE_AMOUNT_DETAIL[feeAmount].label))}</Trans>
           </ResponsiveText>
           <ThemedText.DeprecatedMain fontWeight={485} fontSize="12px" textAlign="left">
             {FEE_AMOUNT_DETAIL[feeAmount].description}
