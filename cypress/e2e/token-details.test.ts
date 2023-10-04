@@ -49,7 +49,7 @@ describe('Token details', () => {
 
   it('token with warning and low trading volume should have all information populated', () => {
     // Shiba predator token, low trading volume and also has warning modal
-    cy.visit('/tokens/ethereum/0xa71d0588EAf47f12B13cF8eC750430d21DF04974')
+    cy.visit('/tokens/ethereum/0xbea0000029ad1c77d3d5d23ba2d8893db9d1efab')
 
     // Should have missing price chart when price unavailable (expected for this token)
     if (cy.get('[data-cy="chart-header"]').contains('Price unavailable')) {
@@ -67,16 +67,16 @@ describe('Token details', () => {
     cy.get('[data-cy="resources-container"]').within(() => {
       cy.contains('Etherscan')
         .should('have.attr', 'href')
-        .and('include', 'etherscan.io/address/0xa71d0588EAf47f12B13cF8eC750430d21DF04974')
+        .and('include', 'etherscan.io/address/0xbea0000029ad1c77d3d5d23ba2d8893db9d1efab')
       cy.contains('More analytics')
         .should('have.attr', 'href')
-        .and('include', 'info.uniswap.org/#/tokens/0xa71d0588EAf47f12B13cF8eC750430d21DF04974')
+        .and('include', 'info.uniswap.org/#/tokens/0xbea0000029ad1c77d3d5d23ba2d8893db9d1efab')
       cy.contains('Website').should('have.attr', 'href').and('include', 'qom')
       cy.contains('Twitter').should('have.attr', 'href').and('include', 'twitter.com/ShibaPredator1')
     })
 
     // Contract address should be displayed
-    cy.contains('0xa71d0588EAf47f12B13cF8eC750430d21DF04974').should('exist')
+    cy.contains('0xbea0000029ad1c77d3d5d23ba2d8893db9d1efab').should('exist')
 
     // Warning label should show if relevant ([spec](https://www.notion.so/3f7fce6f93694be08a94a6984d50298e))
     cy.get('[data-cy="token-safety-message"]')
