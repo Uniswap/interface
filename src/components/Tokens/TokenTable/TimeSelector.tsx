@@ -9,7 +9,7 @@ import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components'
 
-import { MEDIUM_MEDIA_BREAKPOINT, MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT } from '../constants'
+import { LARGE_MEDIA_BREAKPOINT, MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT } from '../constants'
 import { filterTimeAtom } from '../state'
 import FilterOption from './FilterOption'
 
@@ -74,7 +74,7 @@ const MenuTimeFlyout = styled.span<{ isInfoExplorePageEnabled: boolean }>`
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     ${({ isInfoExplorePageEnabled }) => !isInfoExplorePageEnabled && 'left: unset; right: 0px;'}
   }
-  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
+  @media screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     ${({ isInfoExplorePageEnabled }) => isInfoExplorePageEnabled && 'left: 0px;'}
   }
 `
@@ -147,7 +147,9 @@ export default function TimeSelector() {
                 toggleMenu()
               }}
             >
-              <div>{DISPLAYS[time]}</div>
+              <div>
+                {DISPLAYS[time]} <Trans>volume</Trans>
+              </div>
               {time === activeTime && <Check color={theme.accent1} size={16} />}
             </InternalLinkMenuItem>
           ))}

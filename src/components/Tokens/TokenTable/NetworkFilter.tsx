@@ -16,7 +16,7 @@ import { ApplicationModal } from 'state/application/reducer'
 import styled, { css, useTheme } from 'styled-components'
 import { EllipsisStyle } from 'theme/components'
 
-import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
+import { LARGE_MEDIA_BREAKPOINT } from '../constants'
 import FilterOption from './FilterOption'
 
 const InternalMenuItem = styled.div`
@@ -66,7 +66,7 @@ const MenuTimeFlyout = styled.span<{ isInfoExplorePageEnabled: boolean }>`
   z-index: 100;
   ${({ isInfoExplorePageEnabled }) => (isInfoExplorePageEnabled ? 'right: 0px;' : 'left: 0px;')}
 
-  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
+  @media screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     ${({ isInfoExplorePageEnabled }) => isInfoExplorePageEnabled && 'left: 0px;'}
   }
 `
