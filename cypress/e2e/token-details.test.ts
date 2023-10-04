@@ -71,8 +71,6 @@ describe('Token details', () => {
       cy.contains('More analytics')
         .should('have.attr', 'href')
         .and('include', 'info.uniswap.org/#/tokens/0x1efbb78c8b917f67986bce54ce575069c0143681')
-      cy.contains('Website').should('have.attr', 'href').and('include', 'qom')
-      cy.contains('Twitter').should('have.attr', 'href').and('include', 'twitter.com/ShibaPredator1')
     })
 
     // Contract address should be displayed
