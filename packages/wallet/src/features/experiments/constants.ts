@@ -15,6 +15,7 @@ export enum FEATURE_FLAGS {
  */
 export enum EXPERIMENT_NAMES {
   OnboardingNewCreateImportFlow = 'onboarding-ab-1',
+  SkeletonLoading = 'skeleton_loading_1',
 }
 
 /**

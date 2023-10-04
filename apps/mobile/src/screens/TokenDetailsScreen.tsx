@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
+import { Loader } from 'src/components/loading'
 import { PriceExplorer } from 'src/components/PriceExplorer/PriceExplorer'
 import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { useCrossChainBalances } from 'src/components/TokenDetails/hooks'
@@ -26,6 +27,7 @@ import { useNavigateToSwap } from 'src/features/swap/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
 import { Screens } from 'src/screens/Screens'
+import { useSkeletonLoading } from 'src/utils/useSkeletonLoading'
 import {
   AnimatedFlex,
   Flex,
@@ -36,7 +38,7 @@ import {
   useSporeColors,
 } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
-import { iconSizes, spacing } from 'ui/src/theme'
+import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
@@ -97,8 +99,11 @@ function HeaderTitleElement({
 
 export function TokenDetailsScreen({
   route,
+  navigation,
 }: AppStackScreenProp<Screens.TokenDetails>): JSX.Element {
   const { currencyId: _currencyId } = route.params
+  // Potentially delays loading of perf-heavy content to speed up navigation
+  const showSkeleton = useSkeletonLoading(navigation)
 
   // Token details screen query
   const { data, refetch, networkStatus } = useTokenDetailsScreenQuery({
@@ -139,6 +144,7 @@ export function TokenDetailsScreen({
           error={isError(networkStatus, !!data) || !!tokenPriceHistoryError}
           loading={isLoading}
           retry={retry}
+          showSkeleton={showSkeleton}
         />
       </Trace>
     </ReactNavigationPerformanceView>
@@ -151,12 +157,14 @@ function TokenDetails({
   error,
   retry,
   loading,
+  showSkeleton,
 }: {
   _currencyId: string
   data: TokenDetailsScreenQuery | undefined
   error: boolean
   retry: () => void
   loading: boolean
+  showSkeleton: boolean
 }): JSX.Element {
   const colors = useSporeColors()
   const media = useMedia()
@@ -287,6 +295,7 @@ function TokenDetails({
             />
             <PriceExplorer
               currencyId={_currencyId}
+              forcePlaceholder={showSkeleton}
               tokenColor={tokenColorLoading ? loadingColor : tokenColor ?? colors.accent1.get()}
               onRetry={onPriceChartRetry}
             />
@@ -303,8 +312,14 @@ function TokenDetails({
               onPressSend={onPressSend}
             />
             <Separator />
-            <TokenDetailsStats data={data} tokenColor={tokenColor} />
-            <TokenDetailsLinks currencyId={_currencyId} data={data} />
+            {showSkeleton ? (
+              <TokenDetailsTextPlaceholders />
+            ) : (
+              <>
+                <TokenDetailsStats data={data} tokenColor={tokenColor} />
+                <TokenDetailsLinks currencyId={_currencyId} data={data} />
+              </>
+            )}
           </Flex>
         </Flex>
       </HeaderScrollScreen>
@@ -336,5 +351,23 @@ function TokenDetails({
         }}
       />
     </Trace>
+  )
+}
+
+function TokenDetailsTextPlaceholders(): JSX.Element {
+  return (
+    <>
+      <Flex>
+        <Loader.Box height={fonts.subheading2.lineHeight} pb="$spacing4" width="100%" />
+        <Loader.Box height={fonts.body2.lineHeight} width="100%" />
+      </Flex>
+
+      <Flex>
+        <Loader.Box height={fonts.subheading2.lineHeight} pb="$spacing4" />
+        <Flex gap="$spacing8">
+          <Loader.Box height={fonts.body2.lineHeight} repeat={4} width="100%" />
+        </Flex>
+      </Flex>
+    </>
   )
 }

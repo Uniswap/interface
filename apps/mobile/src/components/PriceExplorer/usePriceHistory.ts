@@ -11,6 +11,11 @@ import {
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 
+export type TokenSpotData = {
+  value: SharedValue<number>
+  relativeChange: SharedValue<number>
+}
+
 /**
  * @returns Token price history for requested duration
  */
@@ -20,10 +25,7 @@ export function useTokenPriceHistory(
 ): Omit<
   GqlResult<{
     priceHistory?: TLineChartData
-    spot?: {
-      value: SharedValue<number>
-      relativeChange: SharedValue<number>
-    }
+    spot?: TokenSpotData
   }>,
   'error'
 > & {

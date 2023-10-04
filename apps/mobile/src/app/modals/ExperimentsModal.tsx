@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { ScrollView } from 'react-native-gesture-handler'
 import { Action } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { Switch } from 'src/components/buttons/Switch'
@@ -9,8 +10,9 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import { setCustomEndpoint } from 'src/features/tweaks/slice'
 import { Statsig } from 'statsig-react'
+import { useExperiment } from 'statsig-react-native'
 import { Button, Flex, Text } from 'ui/src'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { EXPERIMENT_NAMES, FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 
 export function ExperimentsModal(): JSX.Element {
@@ -40,43 +42,53 @@ export function ExperimentsModal(): JSX.Element {
 
   return (
     <BottomSheetModal
+      fullScreen
       name={ModalName.Experiments}
       onClose={(): Action => dispatch(closeModal({ name: ModalName.Experiments }))}>
-      <Flex
-        gap="$spacing16"
-        justifyContent="flex-start"
-        pb="$spacing36"
-        pt="$spacing12"
-        px="$spacing24">
-        <Flex gap="$spacing8">
-          <Flex gap="$spacing16" my="$spacing16">
-            <Text variant="subheading1">⚙️ Custom GraphQL Endpoint</Text>
+      <ScrollView>
+        <Flex
+          gap="$spacing16"
+          justifyContent="flex-start"
+          pb="$spacing36"
+          pt="$spacing12"
+          px="$spacing24">
+          <Flex gap="$spacing8">
+            <Flex gap="$spacing16" my="$spacing16">
+              <Text variant="subheading1">⚙️ Custom GraphQL Endpoint</Text>
+              <Text variant="body2">
+                You will need to restart the application to pick up any changes in this section.
+                Beware of client side caching!
+              </Text>
+              <Flex row alignItems="center" gap="$spacing16">
+                <Text variant="body2">URL</Text>
+                <TextInput flex={1} value={url} onChangeText={setUrl} />
+              </Flex>
+              <Flex row alignItems="center" gap="$spacing16">
+                <Text variant="body2">Key</Text>
+                <TextInput flex={1} value={key} onChangeText={setKey} />
+              </Flex>
+              <Button size="small" onPress={setEndpoint}>
+                Set
+              </Button>
+              <Button size="small" onPress={clearEndpoint}>
+                Clear
+              </Button>
+            </Flex>
+            <Text variant="subheading1">⛳️ Feature Flags</Text>
             <Text variant="body2">
-              You will need to restart the application to pick up any changes in this section.
-              Beware of client side caching!
+              Overridden feature flags are reset when the app is restarted
             </Text>
-            <Flex row alignItems="center" gap="$spacing16">
-              <Text variant="body2">URL</Text>
-              <TextInput flex={1} value={url} onChangeText={setUrl} />
-            </Flex>
-            <Flex row alignItems="center" gap="$spacing16">
-              <Text variant="body2">Key</Text>
-              <TextInput flex={1} value={key} onChangeText={setKey} />
-            </Flex>
-            <Button size="small" onPress={setEndpoint}>
-              Set
-            </Button>
-            <Button size="small" onPress={clearEndpoint}>
-              Clear
-            </Button>
           </Flex>
-          <Text variant="subheading1">⛳️ Feature Flags</Text>
-          <Text variant="body2">Overridden feature flags are reset when the app is restarted</Text>
+          {Object.values(FEATURE_FLAGS).map((featureFlag) => {
+            return <FeatureFlagRow key={featureFlag} featureFlag={featureFlag} />
+          })}
+          <Text variant="subheading1">🔬 Experiments</Text>
+          <Text variant="body2">Overridden experiments are reset when the app is restarted</Text>
+          {Object.values(EXPERIMENT_NAMES).map((experiment) => {
+            return <ExperimentRow key={experiment} name={experiment} />
+          })}
         </Flex>
-        {Object.values(FEATURE_FLAGS).map((featureFlag) => {
-          return <FeatureFlagRow key={featureFlag} featureFlag={featureFlag} />
-        })}
-      </Flex>
+      </ScrollView>
     </BottomSheetModal>
   )
 }
@@ -93,6 +105,39 @@ function FeatureFlagRow({ featureFlag }: { featureFlag: FEATURE_FLAGS }): JSX.El
           Statsig.overrideGate(featureFlag, newValue)
         }}
       />
+    </Flex>
+  )
+}
+
+function ExperimentRow({ name }: { name: string }): JSX.Element {
+  const experiment = useExperiment(name)
+  // console.log('garydebug experiment row ' + JSON.stringify(experiment.config))
+  // const layer = useLayer(name)
+  // console.log('garydebug experiment row ' + JSON.stringify(layer))
+
+  const params = Object.entries(experiment.config.value).map(([key, value]) => (
+    <Flex
+      row
+      alignItems="center"
+      gap="$spacing16"
+      justifyContent="space-between"
+      paddingStart="$spacing16">
+      <Text variant="body1">{key}</Text>
+      {typeof value === 'boolean' && (
+        <Switch
+          value={value}
+          onValueChange={(newValue: boolean): void => {
+            Statsig.overrideConfig(name, { ...experiment.config.value, [key]: newValue })
+          }}
+        />
+      )}
+    </Flex>
+  ))
+
+  return (
+    <Flex>
+      <Text variant="body1">{name}</Text>
+      <Flex gap="$spacing4">{params}</Flex>
     </Flex>
   )
 }
