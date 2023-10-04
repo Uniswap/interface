@@ -39,3 +39,22 @@ test('should append meta tag to element', () => {
 
   expect(element.append).toHaveBeenCalledTimes(13)
 })
+
+test('should pass through header blocked paths', () => {
+  const element = {
+    append: jest.fn(),
+  } as unknown as Element
+  const request = new Request('http://localhost')
+  request.headers.set('cf-blocked-paths-list', '/')
+  const injector = new MetaTagInjector(
+    {
+      title: 'test',
+      url: 'testUrl',
+      image: 'testImage',
+      description: 'testDescription',
+    },
+    request
+  )
+  injector.element(element)
+  expect(element.append).toHaveBeenCalledWith(`<meta property="cf:blockedpaths" content="/"/>`, { html: true })
+})
