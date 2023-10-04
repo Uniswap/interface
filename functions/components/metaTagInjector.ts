@@ -10,11 +10,7 @@ type MetaTagInjectorInput = {
  * to inject meta tags into the <head> of an HTML document.
  */
 export class MetaTagInjector implements HTMLRewriterElementContentHandlers {
-  blockedPathsList: string | null
-
-  constructor(private input: MetaTagInjectorInput, request: Request) {
-    this.blockedPathsList = request.headers.get('cf-blocked-paths-list')
-  }
+  constructor(private input: MetaTagInjectorInput, private request: Request) {}
 
   append(element: Element, property: string, content: string) {
     element.append(`<meta property="${property}" content="${content}"/>`, { html: true })
