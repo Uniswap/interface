@@ -1,16 +1,20 @@
 import fs from 'fs'
-import parser from 'xml2json'
+import { parseStringPromise } from 'xml2js'
 
 import { routes } from './RouteDefinitions'
 
 describe('Routes', () => {
   it('sitemap URLs should exist as Router paths', async () => {
     const pathNames: string[] = routes.map((routeDef) => routeDef.path)
-    await new Promise<boolean>((resolve) => {
-      fs.readFile('./public/sitemap.xml', 'utf8', (err, data) => {
-        try {
-          const sitemap = parser.toJson(data)
-          const sitemapPaths = JSON.parse(sitemap).urlset.url.map((url: any) => new URL(url.loc).pathname)
+    await new Promise<boolean>((resolve, reject) => {
+      try {
+        fs.readFile('./public/sitemap.xml', 'utf8', async (err, data) => {
+          if (err) {
+            reject(err)
+          }
+          const sitemap = await parseStringPromise(data)
+
+          const sitemapPaths = sitemap.urlset.url.map((url: any) => new URL(url['$'].loc).pathname)
 
           sitemapPaths.forEach((path: string) => {
             expect(pathNames).toContain(path)
@@ -20,10 +24,10 @@ describe('Routes', () => {
           })
 
           resolve(true)
-        } catch {
-          throw new Error('Error parsing sitemap.xml')
-        }
-      })
+        })
+      } catch (err) {
+        reject(err)
+      }
     })
   })
 

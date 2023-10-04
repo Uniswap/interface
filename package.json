@@ -115,7 +115,7 @@
     "@types/ua-parser-js": "^0.7.36",
     "@types/uuid": "^8.3.4",
     "@types/wcag-contrast": "^3.0.0",
-    "@types/xml2json": "^0.11.4",
+    "@types/xml2js": "^0.4.12",
     "@uniswap/default-token-list": "^11.2.0",
     "@uniswap/eslint-config": "^1.2.0",
     "@vanilla-extract/jest-transform": "^1.1.1",
@@ -294,7 +294,7 @@
     "workbox-navigation-preload": "^6.1.0",
     "workbox-precaching": "^6.1.0",
     "workbox-routing": "^6.1.0",
-    "xml2json": "^0.12.0",
+    "xml2js": "^0.6.2",
     "zustand": "^4.3.6"
   },
   "engines": {
