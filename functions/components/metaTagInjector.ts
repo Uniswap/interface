@@ -3,6 +3,7 @@ type MetaTagInjectorInput = {
   image?: string
   url: string
   description?: string
+  country: string | null
 }
 
 /**
@@ -37,6 +38,10 @@ export class MetaTagInjector implements HTMLRewriterElementContentHandlers {
     if (this.input.image) {
       this.append(element, 'twitter:image', this.input.image)
       this.append(element, 'twitter:image:alt', this.input.title)
+    }
+
+    if (this.input.country) {
+      this.append(element, 'cf:country', this.input.country)
     }
   }
 }
