@@ -80,6 +80,12 @@ inputs:
   sentry-project:
     description: 'passed secret value'
     required: true
+  simplehash-api-key:
+    description: 'passed secret value'
+    required: true
+  simplehash-api-url:
+    description: 'passed secret value'
+    required: true
   statsig-api-key:
     description: 'passed secret value'
     required: true
