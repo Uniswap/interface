@@ -110,7 +110,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
       header={
         <Row width="auto">
           <ThemedText.BodySecondary>
-            <Trans>Max slippage</Trans>
+            <Trans>Max. slippage</Trans>
           </ThemedText.BodySecondary>
           <QuestionHelper
             text={
