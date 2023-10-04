@@ -98,32 +98,19 @@ export default function SearchBar({ tab }: { tab?: string }) {
             name={InterfaceEventName.EXPLORE_SEARCH_SELECTED}
             element={InterfaceElementName.EXPLORE_SEARCH_INPUT}
           >
-            {isInfoExplorePageEnabled ? (
-              <SearchInput
-                isInfoExplorePageEnabled={isInfoExplorePageEnabled}
-                data-cy="explore-tokens-search-input"
-                type="search"
-                placeholder={`${translation}`}
-                id="searchBar"
-                autoComplete="off"
-                value={localFilterString}
-                isOpen={isOpen}
-                onChange={({ target: { value } }) => setLocalFilterString(value)}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-              />
-            ) : (
-              <SearchInput
-                isInfoExplorePageEnabled={isInfoExplorePageEnabled}
-                data-cy="explore-tokens-search-input"
-                type="search"
-                placeholder={`${translation}`}
-                id="searchBar"
-                autoComplete="off"
-                value={localFilterString}
-                onChange={({ target: { value } }) => setLocalFilterString(value)}
-              />
-            )}
+            <SearchInput
+              isInfoExplorePageEnabled={isInfoExplorePageEnabled}
+              data-cy="explore-tokens-search-input"
+              type="search"
+              placeholder={`${translation}`}
+              id="searchBar"
+              autoComplete="off"
+              value={localFilterString}
+              onChange={({ target: { value } }) => setLocalFilterString(value)}
+              isOpen={isOpen}
+              onFocus={isInfoExplorePageEnabled ? handleFocus : undefined}
+              onBlur={isInfoExplorePageEnabled ? handleBlur : undefined}
+            />
           </TraceEvent>
         )}
       >
