@@ -29,11 +29,11 @@ function useETHPrice(currency?: Currency): {
 
   const amountOut = isSupported ? ETH_AMOUNT_OUT[chainId] : undefined
   const { trade, state } = useRoutingAPITrade(
+    !isSupported /* skip */,
     TradeType.EXACT_OUTPUT,
     amountOut,
     currency,
-    INTERNAL_ROUTER_PREFERENCE_PRICE,
-    !isSupported
+    INTERNAL_ROUTER_PREFERENCE_PRICE
   )
 
   return useMemo(() => {

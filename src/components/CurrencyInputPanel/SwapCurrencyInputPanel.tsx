@@ -4,10 +4,10 @@ import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
-import PrefetchBalancesWrapper from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import Tooltip from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
 import ms from 'ms'
@@ -15,12 +15,12 @@ import { darken } from 'polished'
 import { forwardRef, ReactNode, useCallback, useEffect, useState } from 'react'
 import { Lock } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
+import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
-import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
-import { ThemedText } from '../../theme'
 import { ButtonGray } from '../Button'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { Input as NumericalInput } from '../NumericalInput'
@@ -67,8 +67,8 @@ const CurrencySelect = styled(ButtonGray)<{
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   color: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.white)};
   cursor: pointer;
-  height: unset;
-  border-radius: 16px;
+  height: 36px;
+  border-radius: 18px;
   outline: none;
   user-select: none;
   border: 1px solid ${({ selected, theme }) => (selected ? theme.surface3 : theme.accent1)};
@@ -277,6 +277,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
     const { account, chainId } = useWeb3React()
     const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
     const theme = useTheme()
+    const { formatCurrencyAmount } = useFormatter()
 
     const handleDismissSearch = useCallback(() => {
       setModalOpen(false)
@@ -396,7 +397,13 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                         renderBalance ? (
                           renderBalance(selectedCurrencyBalance)
                         ) : (
-                          <Trans>Balance: {formatCurrencyAmount(selectedCurrencyBalance, NumberType.TokenNonTx)}</Trans>
+                          <Trans>
+                            Balance:{' '}
+                            {formatCurrencyAmount({
+                              amount: selectedCurrencyBalance,
+                              type: NumberType.TokenNonTx,
+                            })}
+                          </Trans>
                         )
                       ) : null}
                     </ThemedText.DeprecatedBody>

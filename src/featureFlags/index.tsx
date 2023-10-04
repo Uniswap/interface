@@ -8,17 +8,19 @@ import { useGate } from 'statsig-react'
 export enum FeatureFlag {
   traceJsonRpc = 'traceJsonRpc',
   debounceSwapQuote = 'debounce_swap_quote',
+  fallbackProvider = 'fallback_provider',
   uniswapXSyntheticQuote = 'uniswapx_synthetic_quote',
   uniswapXEthOutputEnabled = 'uniswapx_eth_output_enabled',
   uniswapXExactOutputEnabled = 'uniswapx_exact_output_enabled',
   multichainUX = 'multichain_ux',
   currencyConversion = 'currency_conversion',
-  fotAdjustedmentsEnabled = 'fot_adjustments_enabled',
+  fotAdjustedmentsEnabled = 'fot_dynamic_adjustments_enabled',
   infoExplore = 'info_explore',
   infoTDP = 'info_tdp',
   infoPoolPage = 'info_pool_page',
   infoLiveViews = 'info_live_views',
   uniswapXDefaultEnabled = 'uniswapx_default_enabled',
+  quickRouteMainnet = 'enable_quick_route_mainnet',
 }
 
 interface FeatureFlagsContextType {
@@ -55,7 +57,7 @@ export function useUpdateFlag() {
 }
 
 export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
-  // TODO(vm): `isLoaded` to `true` so `App.tsx` will render. Later, this will be dependent on
+  // TODO: `isLoaded` to `true` so `App.tsx` will render. Later, this will be dependent on
   // flags loading from Amplitude, with a timeout.
   const featureFlags = useAtomValue(featureFlagSettings)
   const value = {

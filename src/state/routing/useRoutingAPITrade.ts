@@ -1,7 +1,5 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
-import { sendTiming } from 'components/analytics'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { ZERO_PERCENT } from 'constants/misc'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
@@ -11,44 +9,46 @@ import { useMemo } from 'react'
 import { useGetQuoteQuery, useGetQuoteQueryState } from './slice'
 import {
   ClassicTrade,
-  InterfaceTrade,
   INTERNAL_ROUTER_PREFERENCE_PRICE,
   QuoteMethod,
   QuoteState,
   RouterPreference,
+  SubmittableTrade,
   TradeState,
 } from './types'
 
-const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
-const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined } as const
+const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined, currentData: undefined } as const
+const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined, currentData: undefined } as const
 
 export function useRoutingAPITrade<TTradeType extends TradeType>(
+  skipFetch: boolean,
   tradeType: TTradeType,
   amountSpecified: CurrencyAmount<Currency> | undefined,
   otherCurrency: Currency | undefined,
   routerPreference: typeof INTERNAL_ROUTER_PREFERENCE_PRICE,
-  skipFetch?: boolean,
   account?: string,
   inputTax?: Percent,
   outputTax?: Percent
 ): {
   state: TradeState
   trade?: ClassicTrade
+  currentTrade?: ClassicTrade
   swapQuoteLatency?: number
 }
 
 export function useRoutingAPITrade<TTradeType extends TradeType>(
+  skipFetch: boolean,
   tradeType: TTradeType,
   amountSpecified: CurrencyAmount<Currency> | undefined,
   otherCurrency: Currency | undefined,
   routerPreference: RouterPreference,
-  skipFetch?: boolean,
   account?: string,
   inputTax?: Percent,
   outputTax?: Percent
 ): {
   state: TradeState
-  trade?: InterfaceTrade
+  trade?: SubmittableTrade
+  currentTrade?: SubmittableTrade
   swapQuoteLatency?: number
 }
 
@@ -59,17 +59,18 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
  * @param otherCurrency the desired output/payment currency
  */
 export function useRoutingAPITrade<TTradeType extends TradeType>(
+  skipFetch = false,
   tradeType: TTradeType,
   amountSpecified: CurrencyAmount<Currency> | undefined,
   otherCurrency: Currency | undefined,
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE,
-  skipFetch = false,
   account?: string,
   inputTax = ZERO_PERCENT,
   outputTax = ZERO_PERCENT
 ): {
   state: TradeState
-  trade?: InterfaceTrade
+  trade?: SubmittableTrade
+  currentTrade?: SubmittableTrade
   method?: QuoteMethod
   swapQuoteLatency?: number
 } {
@@ -99,19 +100,22 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
     refetchOnMountOrArgChange: 2 * 60,
   })
+
   const isFetching = currentData !== tradeResult || !currentData
 
   return useMemo(() => {
-    if (amountSpecified && queryArgs === skipToken) {
+    if (amountSpecified && otherCurrency && queryArgs === skipToken) {
       return {
         state: TradeState.STALE,
         trade: tradeResult?.trade,
+        currentTrade: currentData?.trade,
         swapQuoteLatency: tradeResult?.latencyMs,
       }
     } else if (!amountSpecified || isError || queryArgs === skipToken) {
       return {
         state: TradeState.INVALID,
         trade: undefined,
+        currentTrade: currentData?.trade,
         error: JSON.stringify(error),
       }
     } else if (tradeResult?.state === QuoteState.NOT_FOUND && !isFetching) {
@@ -122,6 +126,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       return {
         state: isFetching ? TradeState.LOADING : TradeState.VALID,
         trade: tradeResult?.trade,
+        currentTrade: currentData?.trade,
         swapQuoteLatency: tradeResult?.latencyMs,
       }
     }
@@ -134,22 +139,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     tradeResult?.latencyMs,
     tradeResult?.state,
     tradeResult?.trade,
+    currentData?.trade,
+    otherCurrency,
   ])
 }
-
-// only want to enable this when app hook called
-class GAMetric extends IMetric {
-  putDimensions() {
-    return
-  }
-
-  putMetric(key: string, value: number, unit?: MetricLoggerUnit) {
-    sendTiming('Routing API', `${key} | ${unit}`, value, 'client')
-  }
-
-  setProperty() {
-    return
-  }
-}
-
-setGlobalMetric(new GAMetric())

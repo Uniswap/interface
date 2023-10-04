@@ -1,10 +1,11 @@
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 import { CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { sendEvent } from 'components/analytics'
+import { sendAnalyticsEvent, useTrace } from 'analytics'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { ButtonConfirmed } from 'components/Button'
 import { BlueCard, DarkGrayCard, LightCard, YellowCard } from 'components/Card'
@@ -47,7 +48,7 @@ import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useTokenBalance } from '../../state/connection/hooks'
 import { TransactionType } from '../../state/transactions/types'
-import { BackArrowLink, ExternalLink, ThemedText } from '../../theme'
+import { BackArrowLink, ExternalLink, ThemedText } from '../../theme/components'
 import { isAddress } from '../../utils'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
@@ -128,6 +129,7 @@ function V2PairMigration({
   const { chainId, account } = useWeb3React()
   const theme = useTheme()
   const v2FactoryAddress = chainId ? V2_FACTORY_ADDRESSES[chainId] : undefined
+  const trace = useTrace()
 
   const pairFactory = useSingleCallResult(pair, 'factory')
   const isNotUniswap = pairFactory.result?.[0] && pairFactory.result[0] !== v2FactoryAddress
@@ -340,10 +342,10 @@ function V2PairMigration({
         return migrator
           .multicall(data, { gasLimit: calculateGasMargin(gasEstimate) })
           .then((response: TransactionResponse) => {
-            sendEvent({
-              category: 'Migrate',
-              action: `${isNotUniswap ? 'SushiSwap' : 'V2'}->V3`,
+            sendAnalyticsEvent(LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED, {
+              action: `${isNotUniswap ? LiquiditySource.SUSHISWAP : LiquiditySource.V2}->${LiquiditySource.V3}`,
               label: `${currency0.symbol}/${currency1.symbol}`,
+              ...trace,
             })
 
             addTransaction(response, {
@@ -380,6 +382,7 @@ function V2PairMigration({
     isNotUniswap,
     currency0,
     currency1,
+    trace,
     addTransaction,
   ])
 
@@ -509,7 +512,7 @@ function V2PairMigration({
 
                 <RowBetween>
                   <ThemedText.DeprecatedBody fontSize={14} color="inherit">
-                    <Trans>Price Difference:</Trans>
+                    <Trans>Price difference:</Trans>
                   </ThemedText.DeprecatedBody>
                   <ThemedText.DeprecatedBlack fontSize={14} color="inherit">
                     <Trans>{priceDifferenceFraction?.toSignificant(4)}%</Trans>
@@ -539,7 +542,7 @@ function V2PairMigration({
 
           <RowBetween>
             <ThemedText.DeprecatedLabel>
-              <Trans>Set Price Range</Trans>
+              <Trans>Set price range</Trans>
             </ThemedText.DeprecatedLabel>
             <RateToggle
               currencyA={invertPrice ? currency1 : currency0}
@@ -734,9 +737,13 @@ export default function MigrateV2Pair() {
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrowLink to="/migrate/v2" />
           <ThemedText.DeprecatedMediumHeader>
-            <Trans>Migrate V2 Liquidity</Trans>
+            <Trans>Migrate V2 liquidity</Trans>
           </ThemedText.DeprecatedMediumHeader>
-          <SettingsTab autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} chainId={chainId} />
+          <SettingsTab
+            autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE}
+            chainId={chainId}
+            showRoutingSettings={false}
+          />
         </AutoRow>
 
         {!account ? (

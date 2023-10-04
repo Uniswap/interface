@@ -2,10 +2,10 @@ import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { OutlineCard } from 'components/Card'
 import styled, { useTheme } from 'styled-components'
+import { ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
-import formatPriceImpact from 'utils/formatPriceImpact'
+import { useFormatter } from 'utils/formatNumbers'
 
-import { ThemedText } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 import { MouseoverTooltip } from '../Tooltip'
@@ -20,6 +20,7 @@ interface PriceImpactWarningProps {
 }
 
 export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningProps) {
+  const { formatPriceImpact } = useFormatter()
   const theme = useTheme()
 
   return (

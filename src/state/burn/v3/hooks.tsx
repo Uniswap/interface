@@ -76,7 +76,7 @@ export function useDerivedV3BurnInfo(
 
   let error: ReactNode | undefined
   if (!account) {
-    error = <Trans>Connect Wallet</Trans>
+    error = <Trans>Connect wallet</Trans>
   }
   if (percent === 0) {
     error = error ?? <Trans>Enter a percent</Trans>

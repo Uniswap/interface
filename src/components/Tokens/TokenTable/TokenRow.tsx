@@ -15,8 +15,9 @@ import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
-import { BREAKPOINTS, ClickableStyle } from 'theme'
-import { formatNumber, formatUSDPrice, NumberType } from 'utils/formatNumbers'
+import { BREAKPOINTS } from 'theme'
+import { ClickableStyle } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -33,7 +34,7 @@ import {
   TokenSortMethod,
   useSetSortMethod,
 } from '../state'
-import { ArrowCell, DeltaText, formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
+import { DeltaArrow, DeltaText } from '../TokenDetails/Delta'
 
 const Cell = styled.div`
   display: flex;
@@ -103,8 +104,9 @@ const StyledTokenRow = styled.div<{
   }
 `
 
-const ClickableContent = styled.div`
+const ClickableContent = styled.div<{ gap?: number }>`
   display: flex;
+  ${({ gap }) => gap && `gap: ${gap}px`};
   text-decoration: none;
   color: ${({ theme }) => theme.neutral1};
   align-items: center;
@@ -184,6 +186,7 @@ const PercentChangeInfoCell = styled(Cell)`
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: flex;
+    gap: 3px;
     justify-content: flex-end;
     color: ${({ theme }) => theme.neutral2};
     font-size: 12px;
@@ -438,6 +441,8 @@ interface LoadedRowProps {
 
 /* Loaded State: row component with token information */
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
+  const { formatFiatPrice, formatNumber, formatPercent } = useFormatter()
+
   const { tokenListIndex, tokenListLength, token, sortRank } = props
   const filterString = useAtomValue(filterStringAtom)
 
@@ -445,9 +450,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const chainId = supportedChainIdFromGQLChain(filterNetwork)
   const timePeriod = useAtomValue(filterTimeAtom)
   const delta = token.market?.pricePercentChange?.value
-  const arrow = getDeltaArrow(delta)
-  const smallArrow = getDeltaArrow(delta, 14)
-  const formattedDelta = formatDelta(delta)
+  const formattedDelta = formatPercent(delta)
 
   const exploreTokenSelectedEventProperties = {
     chain_id: chainId,
@@ -461,7 +464,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   }
 
   // A simple 0 price indicates the price is not currently available from the api
-  const price = token.market?.price?.value === 0 ? '-' : formatUSDPrice(token.market?.price?.value)
+  const price = token.market?.price?.value === 0 ? '-' : formatFiatPrice({ price: token.market?.price?.value })
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
@@ -489,15 +492,15 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <PriceInfoCell>
                 {price}
                 <PercentChangeInfoCell>
-                  <ArrowCell>{smallArrow}</ArrowCell>
+                  <DeltaArrow delta={delta} size={14} />
                   <DeltaText delta={delta}>{formattedDelta}</DeltaText>
                 </PercentChangeInfoCell>
               </PriceInfoCell>
             </ClickableContent>
           }
           percentChange={
-            <ClickableContent>
-              <ArrowCell>{arrow}</ArrowCell>
+            <ClickableContent gap={3}>
+              <DeltaArrow delta={delta} />
               <DeltaText delta={delta}>{formattedDelta}</DeltaText>
             </ClickableContent>
           }

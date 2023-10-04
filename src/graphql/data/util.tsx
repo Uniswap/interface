@@ -118,7 +118,7 @@ export function gqlToCurrency(token: {
   const chainId = supportedChainIdFromGQLChain(token.chain)
   if (!chainId) return undefined
   if (token.standard === TokenStandard.Native || !token.address) return nativeOnChain(chainId)
-  else return new Token(chainId, token.address, token.decimals ?? 18, token.name, token.symbol)
+  else return new Token(chainId, token.address, token.decimals ?? 18, token.symbol, token.name)
 }
 
 const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
@@ -130,6 +130,15 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
   bnb: Chain.Bnb,
   avalanche: Chain.Avalanche,
   base: Chain.Base,
+}
+
+/**
+ * @param chainName parsed in chain name from url query parameter
+ * @returns if chainName is a valid chain name, returns the backend chain name, otherwise returns undefined
+ */
+export function getValidUrlChainName(chainName: string | undefined): Chain | undefined {
+  const validChainName = chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
+  return validChainName ? validChainName : undefined
 }
 
 /**

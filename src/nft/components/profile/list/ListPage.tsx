@@ -16,17 +16,17 @@ import {
 } from 'nft/components/profile/list/utils'
 import { useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from 'nft/pages/profile/shared'
-import { looksRareNonceFetcher } from 'nft/queries'
+import { looksRareNonceFetcher } from 'nft/queries/looksRare'
 import { ProfilePageStateType } from 'nft/types'
 import { formatEth } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import styled from 'styled-components'
-import { BREAKPOINTS, ThemedText } from 'theme'
+import { BREAKPOINTS } from 'theme'
+import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
-import { shallow } from 'zustand/shallow'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { ListModal } from './Modal/ListModal'
 import { NFTListingsGrid } from './NFTListingsGrid'
@@ -140,6 +140,7 @@ const FloatingConfirmationBar = styled(Row)<{ issues: boolean }>`
 const Overlay = styled.div`
   position: fixed;
   bottom: 0px;
+  left: 0px;
   height: 158px;
   width: 100vw;
   background: ${({ theme }) => `linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, ${theme.surface2} 100%)`};
@@ -186,13 +187,13 @@ export const ListPage = () => {
   const { provider, chainId } = useWeb3React()
   const isMobile = useIsMobile()
   const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
+  const { formatCurrencyAmount } = useFormatter()
   const { setGlobalMarketplaces, sellAssets, issues } = useSellAsset(
     ({ setGlobalMarketplaces, sellAssets, issues }) => ({
       setGlobalMarketplaces,
       sellAssets,
       issues,
-    }),
-    shallow
+    })
   )
   const { listings, collectionsRequiringApproval, setLooksRareNonce, setCollectionStatusAndCallback } = useNFTList(
     ({ listings, collectionsRequiringApproval, setLooksRareNonce, setCollectionStatusAndCallback }) => ({
@@ -200,15 +201,17 @@ export const ListPage = () => {
       collectionsRequiringApproval,
       setLooksRareNonce,
       setCollectionStatusAndCallback,
-    }),
-    shallow
+    })
   )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const nativeCurrency = useNativeCurrency(chainId)
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
   const usdcValue = useStablecoinValue(parsedAmount)
-  const usdcAmount = formatCurrencyAmount(usdcValue, NumberType.FiatTokenPrice)
+  const usdcAmount = formatCurrencyAmount({
+    amount: usdcValue,
+    type: NumberType.FiatTokenPrice,
+  })
   const [showListModal, toggleShowListModal] = useReducer((s) => !s, false)
   const [selectedMarkets, setSelectedMarkets] = useState([ListingMarkets[0]]) // default marketplace: x2y2
   const signer = provider?.getSigner()

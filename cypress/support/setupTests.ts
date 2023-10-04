@@ -9,8 +9,9 @@ beforeEach(() => {
     req.headers['origin'] = 'https://app.uniswap.org'
   })
 
-  // Infura is disabled for cypress tests - calls should be routed through the connected wallet instead.
+  // Network RPCs are disabled for cypress tests - calls should be routed through the connected wallet instead.
   cy.intercept(/infura.io/, { statusCode: 404 })
+  cy.intercept(/quiknode.pro/, { statusCode: 404 })
 
   // Log requests to hardhat.
   cy.intercept(/:8545/, logJsonRpc)
@@ -26,7 +27,10 @@ beforeEach(() => {
         server_upload_time: Date.now(),
         payload_size_bytes: byteSize,
         events_ingested: req.body.events.length,
-      })
+      }),
+      {
+        'origin-country': 'US',
+      }
     )
   }).intercept('https://*.sentry.io', { statusCode: 200 })
 

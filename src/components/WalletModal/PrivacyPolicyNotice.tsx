@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme'
+import { ExternalLink, ThemedText } from 'theme/components'
 
 const StyledLink = styled(ExternalLink)`
   font-weight: 535;
@@ -26,7 +26,7 @@ export default function PrivacyPolicyNotice() {
       </StyledLink>
       <LastUpdatedText>
         {' ('}
-        <Trans>Last Updated</Trans>
+        <Trans>Last updated</Trans>
         {` ${LAST_UPDATED_DATE})`}
       </LastUpdatedText>
     </ThemedText.BodySmall>

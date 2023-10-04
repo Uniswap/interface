@@ -12,7 +12,6 @@ import Badge from 'components/Badge'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { RowFixed } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
-import { USDT as USDT_MAINNET } from 'constants/tokens'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
@@ -23,18 +22,21 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
+import { isPreviewTrade } from 'state/routing/utils'
 import { Field } from 'state/swap/actions'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import invariant from 'tiny-invariant'
 import { isL2ChainId } from 'utils/chains'
-import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
+import { SignatureExpiredError } from 'utils/errors'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import { ConfirmationModalContent } from '../TransactionConfirmationModal'
+import { RESET_APPROVAL_TOKENS } from './constants'
 import { PendingConfirmModalState, PendingModalContent } from './PendingModalContent'
 import { ErrorModalContent, PendingModalError } from './PendingModalContent/ErrorModalContent'
 import SwapModalFooter from './SwapModalFooter'
@@ -43,7 +45,7 @@ import SwapModalHeader from './SwapModalHeader'
 export enum ConfirmModalState {
   REVIEWING,
   WRAPPING,
-  RESETTING_USDT,
+  RESETTING_TOKEN_ALLOWANCE,
   APPROVING_TOKEN,
   PERMITTING,
   PENDING_CONFIRMATION,
@@ -60,7 +62,7 @@ const StyledL2Logo = styled.img`
 
 function isInApprovalPhase(confirmModalState: ConfirmModalState) {
   return (
-    confirmModalState === ConfirmModalState.RESETTING_USDT ||
+    confirmModalState === ConfirmModalState.RESETTING_TOKEN_ALLOWANCE ||
     confirmModalState === ConfirmModalState.APPROVING_TOKEN ||
     confirmModalState === ConfirmModalState.PERMITTING
   )
@@ -84,6 +86,7 @@ function useConfirmModalState({
   const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.REVIEWING)
   const [approvalError, setApprovalError] = useState<PendingModalError>()
   const [pendingModalSteps, setPendingModalSteps] = useState<PendingConfirmModalState[]>([])
+  const { formatCurrencyAmount } = useFormatter()
 
   // This is a function instead of a memoized value because we do _not_ want it to update as the allowance changes.
   // For example, if the user needs to complete 3 steps initially, we should always show 3 step indicators
@@ -93,15 +96,13 @@ function useConfirmModalState({
     if (trade.fillType === TradeFillType.UniswapX && trade.wrapInfo.needsWrap) {
       steps.push(ConfirmModalState.WRAPPING)
     }
-    // Any existing USDT allowance needs to be reset before we can approve the new amount (mainnet only).
-    // See the `approve` function here: https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7#code
     if (
       allowance.state === AllowanceState.REQUIRED &&
       allowance.needsSetupApproval &&
-      allowance.token.equals(USDT_MAINNET) &&
+      RESET_APPROVAL_TOKENS.some((token) => token.equals(allowance.token)) &&
       allowance.allowedAmount.greaterThan(0)
     ) {
-      steps.push(ConfirmModalState.RESETTING_USDT)
+      steps.push(ConfirmModalState.RESETTING_TOKEN_ALLOWANCE)
     }
     if (allowance.state === AllowanceState.REQUIRED && allowance.needsSetupApproval) {
       steps.push(ConfirmModalState.APPROVING_TOKEN)
@@ -123,7 +124,10 @@ function useConfirmModalState({
   const { execute: onWrap } = useWrapCallback(
     nativeCurrency,
     trade.inputAmount.currency,
-    formatCurrencyAmount(trade.inputAmount, NumberType.SwapTradeAmount)
+    formatCurrencyAmount({
+      amount: trade.inputAmount,
+      type: NumberType.SwapTradeAmount,
+    })
   )
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
   const prevWrapConfirmed = usePrevious(wrapConfirmed)
@@ -155,8 +159,8 @@ function useConfirmModalState({
             })
             .catch((e) => catchUserReject(e, PendingModalError.WRAP_ERROR))
           break
-        case ConfirmModalState.RESETTING_USDT:
-          setConfirmModalState(ConfirmModalState.RESETTING_USDT)
+        case ConfirmModalState.RESETTING_TOKEN_ALLOWANCE:
+          setConfirmModalState(ConfirmModalState.RESETTING_TOKEN_ALLOWANCE)
           invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
           allowance.revoke().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
           break
@@ -263,6 +267,7 @@ export default function ConfirmSwapModal({
   onAcceptChanges,
   allowedSlippage,
   allowance,
+  clearSwapState,
   onConfirm,
   onDismiss,
   onCurrencySelection,
@@ -278,6 +283,7 @@ export default function ConfirmSwapModal({
   allowedSlippage: Percent
   allowance: Allowance
   onAcceptChanges: () => void
+  clearSwapState: () => void
   onConfirm: () => void
   swapError?: Error
   onDismiss: () => void
@@ -291,7 +297,10 @@ export default function ConfirmSwapModal({
     useConfirmModalState({
       trade,
       allowedSlippage,
-      onSwap: onConfirm,
+      onSwap: () => {
+        clearSwapState()
+        onConfirm()
+      },
       onCurrencySelection,
       allowance,
       doesTradeDiffer: Boolean(doesTradeDiffer),
@@ -355,7 +364,8 @@ export default function ConfirmSwapModal({
           trade={trade}
           swapResult={swapResult}
           allowedSlippage={allowedSlippage}
-          disabledConfirm={showAcceptChanges}
+          isLoading={isPreviewTrade(trade)}
+          disabledConfirm={showAcceptChanges || isPreviewTrade(trade) || allowance.state === AllowanceState.LOADING}
           fiatValueInput={fiatValueInput}
           fiatValueOutput={fiatValueOutput}
           showAcceptChanges={showAcceptChanges}
@@ -374,6 +384,8 @@ export default function ConfirmSwapModal({
         wrapTxHash={wrapTxHash}
         tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
         revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
+        swapError={swapError}
+        onRetryUniswapXSignature={onConfirm}
       />
     )
   }, [
@@ -384,13 +396,14 @@ export default function ConfirmSwapModal({
     swapResult,
     wrapTxHash,
     allowance,
+    swapError,
+    startSwapFlow,
     allowedSlippage,
     fiatValueInput,
     fiatValueOutput,
     onAcceptChanges,
     swapFailed,
-    swapError?.message,
-    startSwapFlow,
+    onConfirm,
   ])
 
   const l2Badge = () => {
@@ -408,14 +421,20 @@ export default function ConfirmSwapModal({
     return undefined
   }
 
+  const getErrorType = () => {
+    if (approvalError) return approvalError
+    // SignatureExpiredError is a special case. The UI is shown in the PendingModalContent component.
+    if (swapError instanceof SignatureExpiredError) return
+    if (swapError && !didUserReject(swapError)) return PendingModalError.CONFIRMATION_ERROR
+    return
+  }
+  const errorType = getErrorType()
+
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <Modal isOpen $scrollOverlay onDismiss={onModalDismiss} maxHeight={90}>
-        {approvalError || swapFailed ? (
-          <ErrorModalContent
-            errorType={approvalError ?? PendingModalError.CONFIRMATION_ERROR}
-            onRetry={startSwapFlow}
-          />
+        {errorType ? (
+          <ErrorModalContent errorType={errorType} onRetry={startSwapFlow} />
         ) : (
           <ConfirmationModalContent
             title={confirmModalState === ConfirmModalState.REVIEWING ? <Trans>Review swap</Trans> : undefined}

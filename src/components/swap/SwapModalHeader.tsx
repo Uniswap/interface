@@ -1,11 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import Column, { AutoColumn } from 'components/Column'
-import { useLocalCurrencyPrice } from 'hooks/useLocalCurrencyPrice'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import { InterfaceTrade } from 'state/routing/types'
+import { isPreviewTrade } from 'state/routing/utils'
 import { Field } from 'state/swap/actions'
 import styled from 'styled-components'
-import { Divider, ThemedText } from 'theme'
+import { Divider, ThemedText } from 'theme/components'
 
 import { SwapModalHeaderAmount } from './SwapModalHeaderAmount'
 
@@ -26,8 +27,8 @@ export default function SwapModalHeader({
   inputCurrency?: Currency
   allowedSlippage: Percent
 }) {
-  const fiatValueInput = useLocalCurrencyPrice(trade.inputAmount)
-  const fiatValueOutput = useLocalCurrencyPrice(trade.postTaxOutputAmount)
+  const fiatValueInput = useUSDPrice(trade.inputAmount)
+  const fiatValueOutput = useUSDPrice(trade.postTaxOutputAmount)
 
   return (
     <HeaderContainer gap="sm">
@@ -38,6 +39,7 @@ export default function SwapModalHeader({
           amount={trade.inputAmount}
           currency={inputCurrency ?? trade.inputAmount.currency}
           usdAmount={fiatValueInput.data}
+          isLoading={isPreviewTrade(trade) && trade.tradeType === TradeType.EXACT_OUTPUT}
         />
         <SwapModalHeaderAmount
           field={Field.OUTPUT}
@@ -45,6 +47,7 @@ export default function SwapModalHeader({
           amount={trade.postTaxOutputAmount}
           currency={trade.outputAmount.currency}
           usdAmount={fiatValueOutput.data}
+          isLoading={isPreviewTrade(trade) && trade.tradeType === TradeType.EXACT_INPUT}
           tooltipText={
             trade.tradeType === TradeType.EXACT_INPUT ? (
               <ThemedText.BodySmall>

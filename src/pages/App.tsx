@@ -1,56 +1,55 @@
 import { CustomUserProperties, getBrowser, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { getDeviceId, sendAnalyticsEvent, Trace, user } from 'analytics'
+import { getDeviceId, sendAnalyticsEvent, sendInitializationEvent, Trace, user } from 'analytics'
+import ErrorBoundary from 'components/ErrorBoundary'
 import Loader from 'components/Icons/LoadingSpinner'
-import TopLevelModals from 'components/TopLevelModals'
+import NavBar, { PageTabs } from 'components/NavBar'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
+import { useInfoPoolPageEnabled } from 'featureFlags/flags/infoPoolPage'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useRouterPreference } from 'state/user/hooks'
 import { StatsigProvider, StatsigUser } from 'statsig-react'
 import styled from 'styled-components'
 import { SpinnerSVG } from 'theme/components'
+import DarkModeQueryParamReader from 'theme/components/DarkModeQueryParamReader'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { STATSIG_DUMMY_KEY } from 'tracing'
-import { getEnvName } from 'utils/env'
+import { getEnvName, isBrowserRouterEnabled } from 'utils/env'
+import { getDownloadAppLink } from 'utils/openDownloadApp'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
-import { useAnalyticsReporter } from '../components/analytics'
-import ErrorBoundary from '../components/ErrorBoundary'
-import { PageTabs } from '../components/NavBar'
-import NavBar from '../components/NavBar'
-import Polling from '../components/Polling'
-import Popups from '../components/Popups'
-import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamReader'
-import AddLiquidity from './AddLiquidity'
-import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
-import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
+// High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from './Landing'
-import MigrateV2 from './MigrateV2'
-import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
-import NotFound from './NotFound'
-import Pool from './Pool'
-import PositionPage from './Pool/PositionPage'
-import PoolV2 from './Pool/v2'
-import PoolFinder from './PoolFinder'
-import RemoveLiquidity from './RemoveLiquidity'
-import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
-import { RedirectPathToSwapOnly } from './Swap/redirects'
-import Tokens from './Tokens'
 
-const TokenDetails = lazy(() => import('./TokenDetails'))
-const Vote = lazy(() => import('./Vote'))
+const AppChrome = lazy(() => import('./AppChrome'))
 const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
-const Profile = lazy(() => import('nft/pages/profile/profile'))
+const Profile = lazy(() => import('nft/pages/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
+const AddLiquidity = lazy(() => import('pages/AddLiquidity'))
+const RedirectDuplicateTokenIds = lazy(() => import('pages/AddLiquidity/redirects'))
+const RedirectDuplicateTokenIdsV2 = lazy(() => import('pages/AddLiquidityV2/redirects'))
+const MigrateV2 = lazy(() => import('pages/MigrateV2'))
+const MigrateV2Pair = lazy(() => import('pages/MigrateV2/MigrateV2Pair'))
+const NotFound = lazy(() => import('pages/NotFound'))
+const Pool = lazy(() => import('pages/Pool'))
+const PositionPage = lazy(() => import('pages/Pool/PositionPage'))
+const PoolV2 = lazy(() => import('pages/Pool/v2'))
+const PoolDetails = lazy(() => import('pages/PoolDetails'))
+const PoolFinder = lazy(() => import('pages/PoolFinder'))
+const RemoveLiquidity = lazy(() => import('pages/RemoveLiquidity'))
+const RemoveLiquidityV3 = lazy(() => import('pages/RemoveLiquidity/V3'))
+const TokenDetails = lazy(() => import('pages/TokenDetails'))
+const Tokens = lazy(() => import('pages/Tokens'))
+const Vote = lazy(() => import('pages/Vote'))
 
 const BodyWrapper = styled.div`
   display: flex;
@@ -112,13 +111,14 @@ export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
   const [shouldDisableNFTRoutes, setShouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
 
-  const { pathname } = useLocation()
+  const browserRouterEnabled = isBrowserRouterEnabled()
+  const location = useLocation()
+  const { hash, pathname } = location
   const currentPage = getCurrentPageFromLocation(pathname)
   const isDarkMode = useIsDarkMode()
   const [routerPreference] = useRouterPreference()
   const [scrolledState, setScrolledState] = useState(false)
-
-  useAnalyticsReporter()
+  const infoPoolPageEnabled = useInfoPoolPageEnabled()
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -141,6 +141,7 @@ export default function App() {
     user.set(CustomUserProperties.BROWSER, getBrowser())
     user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
     user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
+    user.set(CustomUserProperties.GIT_COMMIT_HASH, process.env.REACT_APP_GIT_COMMIT_HASH ?? 'unknown')
 
     // Service Worker analytics
     const isServiceWorkerInstalled = Boolean(window.navigator.serviceWorker?.controller)
@@ -148,7 +149,7 @@ export default function App() {
     const serviceWorkerProperty = isServiceWorkerInstalled ? (isServiceWorkerHit ? 'hit' : 'miss') : 'uninstalled'
 
     const pageLoadProperties = { service_worker: serviceWorkerProperty }
-    sendAnalyticsEvent(SharedEventName.APP_LOADED, pageLoadProperties)
+    sendInitializationEvent(SharedEventName.APP_LOADED, pageLoadProperties)
     const sendWebVital =
       (metric: string) =>
       ({ delta }: Metric) =>
@@ -187,6 +188,18 @@ export default function App() {
     [account]
   )
 
+  // redirect address to landing pages until implemented
+  const shouldRedirectToAppInstall = pathname?.startsWith('/address/')
+  useLayoutEffect(() => {
+    if (shouldRedirectToAppInstall) {
+      window.location.href = getDownloadAppLink()
+    }
+  }, [shouldRedirectToAppInstall])
+
+  if (shouldRedirectToAppInstall) {
+    return null
+  }
+
   return (
     <ErrorBoundary>
       <DarkModeQueryParamReader />
@@ -205,18 +218,25 @@ export default function App() {
             <NavBar blur={isHeaderTransparent} />
           </HeaderWrapper>
           <BodyWrapper>
-            <Popups />
-            <Polling />
-            <TopLevelModals />
+            <Suspense>
+              <AppChrome />
+            </Suspense>
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  <Route path="/" element={<Landing />} />
+                  <Route
+                    path="/"
+                    element={
+                      // If we match "/" and # is defined, we are using BrowserRouter and need to redirect.
+                      browserRouterEnabled && hash ? <Navigate to={hash.replace('#', '')} replace /> : <Landing />
+                    }
+                  />
 
                   <Route path="tokens" element={<Tokens />}>
                     <Route path=":chainName" />
                   </Route>
                   <Route path="tokens/:chainName/:tokenAddress" element={<TokenDetails />} />
+                  {infoPoolPageEnabled && <Route path="pools/:chainName/:poolAddress" element={<PoolDetails />} />}
                   <Route
                     path="vote/*"
                     element={
@@ -226,7 +246,7 @@ export default function App() {
                     }
                   />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
-                  <Route path="send" element={<RedirectPathToSwapOnly />} />
+                  <Route path="send" element={<Navigate to={{ ...location, pathname: '/swap' }} replace />} />
                   <Route path="swap" element={<Swap />} />
 
                   <Route path="pool/v2/find" element={<PoolFinder />} />

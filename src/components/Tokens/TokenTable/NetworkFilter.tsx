@@ -13,7 +13,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { css, useTheme } from 'styled-components'
-import { EllipsisStyle } from 'theme'
+import { EllipsisStyle } from 'theme/components'
 
 import FilterOption from './FilterOption'
 
@@ -83,7 +83,7 @@ const StyledMenuContent = styled.div`
 `
 const Chevron = styled.span<{ open: boolean }>`
   padding-top: 1px;
-  color: ${({ open, theme }) => (open ? theme.accent1 : theme.neutral2)};
+  color: ${({ open, theme }) => (open ? theme.neutral1 : theme.neutral2)};
 `
 const NetworkLabel = styled.div`
   ${EllipsisStyle}

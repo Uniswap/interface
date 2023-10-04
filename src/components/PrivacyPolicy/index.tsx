@@ -1,11 +1,12 @@
 import { Trans } from '@lingui/macro'
-import { sendEvent } from 'components/analytics'
+import { SharedEventName } from '@uniswap/analytics-events'
+import { sendAnalyticsEvent } from 'analytics'
 import Card, { DarkGrayCard } from 'components/Card'
 import Row, { AutoRow, RowBetween } from 'components/Row'
 import { useEffect, useRef } from 'react'
 import { ArrowDown, Info, X } from 'react-feather'
 import styled from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme'
+import { ExternalLink, ThemedText } from 'theme/components'
 import { isMobile } from 'utils/userAgent'
 
 import { useModalIsOpen, useTogglePrivacyPolicy } from '../../state/application/hooks'
@@ -87,7 +88,7 @@ export function PrivacyPolicyModal() {
   useEffect(() => {
     if (!open) return
 
-    sendEvent({
+    sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
       category: 'Modal',
       action: 'Show Legal',
     })

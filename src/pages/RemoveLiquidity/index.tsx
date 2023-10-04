@@ -2,12 +2,11 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { TraceEvent } from 'analytics'
+import { sendAnalyticsEvent, TraceEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
-import { sendEvent } from 'components/analytics'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { isSupportedChain } from 'constants/chains'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
@@ -18,6 +17,7 @@ import { ArrowDown, Plus } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useTheme } from 'styled-components'
+import { StyledInternalLink, ThemedText } from 'theme/components'
 
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
@@ -42,7 +42,6 @@ import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../s
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { TransactionType } from '../../state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
-import { StyledInternalLink, ThemedText } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
 import { currencyId } from '../../utils/currencyId'
@@ -53,7 +52,9 @@ const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
 export default function RemoveLiquidityWrapper() {
   const { chainId } = useWeb3React()
-  if (isSupportedChain(chainId)) {
+  const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
+  const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
+  if (isSupportedChain(chainId) && currencyA !== currencyB) {
     return <RemoveLiquidity />
   } else {
     return <PositionPageUnsupportedContent />
@@ -68,6 +69,7 @@ function RemoveLiquidity() {
   const [tokenA, tokenB] = useMemo(() => [currencyA?.wrapped, currencyB?.wrapped], [currencyA, currencyB])
 
   const theme = useTheme()
+  const trace = useTrace()
 
   // toggle wallet when disconnected
   const toggleWalletDrawer = useToggleAccountDrawer()
@@ -291,10 +293,9 @@ function RemoveLiquidity() {
 
           setTxHash(response.hash)
 
-          sendEvent({
-            category: 'Liquidity',
-            action: 'Remove',
+          sendAnalyticsEvent(LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED, {
             label: [currencyA.symbol, currencyB.symbol].join('/'),
+            ...trace,
           })
         })
         .catch((error: Error) => {
@@ -482,7 +483,7 @@ function RemoveLiquidity() {
               <AutoColumn gap="20px">
                 <RowBetween>
                   <Text fontWeight={535}>
-                    <Trans>Remove Amount</Trans>
+                    <Trans>Remove amount</Trans>
                   </Text>
                   <ClickableText
                     fontWeight={535}
@@ -650,7 +651,7 @@ function RemoveLiquidity() {
                   element={InterfaceElementName.CONNECT_WALLET_BUTTON}
                 >
                   <ButtonLight onClick={toggleWalletDrawer}>
-                    <Trans>Connect Wallet</Trans>
+                    <Trans>Connect wallet</Trans>
                   </ButtonLight>
                 </TraceEvent>
               ) : (

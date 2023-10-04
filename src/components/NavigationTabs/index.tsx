@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import SettingsTab from 'components/Settings'
 import { ReactNode } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Link, useLocation } from 'react-router-dom'
@@ -9,11 +10,10 @@ import { useAppDispatch } from 'state/hooks'
 import { resetMintState } from 'state/mint/actions'
 import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
 import styled, { useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { flexRowNoWrap } from 'theme/styles'
 
 import { RowBetween } from '../Row'
-import SettingsTab from '../Settings'
 
 const Tabs = styled.div`
   ${flexRowNoWrap};
@@ -24,6 +24,8 @@ const Tabs = styled.div`
 
 const StyledLink = styled(Link)<{ flex?: string }>`
   flex: ${({ flex }) => flex ?? 'none'};
+  display: flex;
+  align-items: center;
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     flex: none;
@@ -49,7 +51,7 @@ export function FindPoolTabs({ origin }: { origin: string }) {
           <StyledArrowLeft />
         </Link>
         <FindPoolTabsText>
-          <Trans>Import V2 Pool</Trans>
+          <Trans>Import V2 pool</Trans>
         </FindPoolTabsText>
       </RowBetween>
     </Tabs>
@@ -88,7 +90,7 @@ export function AddRemoveTabs({
 
   return (
     <Tabs>
-      <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
+      <RowBetween style={{ padding: '1rem 1rem 0 1rem' }} align="center">
         <StyledLink
           to={poolLink}
           onClick={() => {
@@ -106,13 +108,13 @@ export function AddRemoveTabs({
           {creating ? (
             <Trans>Create a pair</Trans>
           ) : adding ? (
-            <Trans>Add Liquidity</Trans>
+            <Trans>Add liquidity</Trans>
           ) : (
-            <Trans>Remove Liquidity</Trans>
+            <Trans>Remove liquidity</Trans>
           )}
         </AddRemoveTitleText>
         {children && <Box style={{ marginRight: '.5rem' }}>{children}</Box>}
-        <SettingsTab autoSlippage={autoSlippage} chainId={chainId} />
+        <SettingsTab autoSlippage={autoSlippage} chainId={chainId} showRoutingSettings={false} />
       </RowBetween>
     </Tabs>
   )

@@ -9,11 +9,9 @@ import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { DutchOrderTrade, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
-import { UserRejectedRequestError } from 'utils/errors'
+import { SignatureExpiredError, UserRejectedRequestError } from 'utils/errors'
 import { signTypedData } from 'utils/signing'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
-
-const DEFAULT_START_TIME_PADDING_SECONDS = 30
 
 type DutchAuctionOrderError = { errorCode?: number; detail?: string }
 type DutchAuctionOrderSuccess = { hash: string }
@@ -69,7 +67,7 @@ export function useUniswapXSwapCallback({
           try {
             const updatedNonce = await getUpdatedNonce(account, trade.order.chainId)
 
-            const startTime = Math.floor(Date.now() / 1000) + DEFAULT_START_TIME_PADDING_SECONDS
+            const startTime = Math.floor(Date.now() / 1000) + trade.startTimeBufferSecs
             setTraceData('startTime', startTime)
 
             const endTime = startTime + trade.auctionPeriodSecs
@@ -93,10 +91,13 @@ export function useUniswapXSwapCallback({
 
             const signature = await signTypedData(provider.getSigner(account), domain, types, values)
             if (deadline < Math.floor(Date.now() / 1000)) {
-              return signDutchOrder()
+              throw new SignatureExpiredError()
             }
             return { signature, updatedOrder }
           } catch (swapError) {
+            if (swapError instanceof SignatureExpiredError) {
+              throw swapError
+            }
             if (didUserReject(swapError)) {
               setTraceStatus('cancelled')
               throw new UserRejectedRequestError(swapErrorToUserReadableMessage(swapError))

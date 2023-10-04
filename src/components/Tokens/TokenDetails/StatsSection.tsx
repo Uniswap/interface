@@ -4,9 +4,9 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { getChainInfo } from 'constants/chainInfo'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme'
+import { ExternalLink, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
-import { formatNumber, NumberType } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { UNSUPPORTED_METADATA_CHAINS } from '../constants'
 import { TokenSortMethod } from '../state'
@@ -59,6 +59,8 @@ function Stat({
   title: ReactNode
   description?: ReactNode
 }) {
+  const { formatNumber } = useFormatter()
+
   return (
     <StatWrapper data-cy={`${dataCy}`}>
       <MouseoverTooltip text={description}>{title}</MouseoverTooltip>

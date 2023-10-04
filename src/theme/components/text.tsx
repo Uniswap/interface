@@ -46,6 +46,9 @@ export const ThemedText = {
   LabelMicro(props: TextProps) {
     return <TextWrapper fontWeight={485} fontSize={12} color="neutral2" {...props} />
   },
+  Caption(props: TextProps) {
+    return <TextWrapper fontWeight={485} fontSize={12} lineHeight="16px" color="neutral1" {...props} />
+  },
   Link(props: TextProps) {
     return <TextWrapper fontWeight={485} fontSize={14} color="accent1" {...props} />
   },

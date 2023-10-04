@@ -11,6 +11,7 @@ import { ChevronsRight } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
+import { ExternalLink, HideSmall, ThemedText } from 'theme/components'
 
 import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import Card from '../../components/Card'
@@ -25,7 +26,6 @@ import { useV2Pairs } from '../../hooks/useV2Pairs'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/connection/hooks'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
-import { ExternalLink, HideSmall, ThemedText } from '../../theme'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -193,12 +193,12 @@ export default function Pool() {
                     </ResponsiveButtonSecondary>
                     <ResponsiveButtonPrimary id="find-pool-button" as={Link} to="/pools/v2/find" padding="6px 8px">
                       <Text fontWeight={535} fontSize={16}>
-                        <Trans>Import Pool</Trans>
+                        <Trans>Import pool</Trans>
                       </Text>
                     </ResponsiveButtonPrimary>
                     <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/v2/ETH" padding="6px 8px">
                       <Text fontWeight={535} fontSize={16}>
-                        <Trans>Add V2 Liquidity</Trans>
+                        <Trans>Add V2 liquidity</Trans>
                       </Text>
                     </ResponsiveButtonPrimary>
                   </ButtonRow>
@@ -257,7 +257,7 @@ export default function Pool() {
                         }}
                       >
                         <ChevronsRight size={16} style={{ marginRight: '8px' }} />
-                        <Trans>Migrate Liquidity to V3</Trans>
+                        <Trans>Migrate liquidity to V3</Trans>
                       </ButtonOutlined>
                     </RowFixed>
                   </>

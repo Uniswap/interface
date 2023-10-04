@@ -1,12 +1,4 @@
-import {
-  TEST_ALLOWED_SLIPPAGE,
-  TEST_TOKEN_1,
-  TEST_TOKEN_2,
-  TEST_TRADE_EXACT_INPUT,
-  TEST_TRADE_EXACT_OUTPUT,
-  TEST_TRADE_FEE_ON_BUY,
-  TEST_TRADE_FEE_ON_SELL,
-} from 'test-utils/constants'
+import { PREVIEW_EXACT_IN_TRADE, TEST_ALLOWED_SLIPPAGE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { render, screen, within } from 'test-utils/render'
 
 import SwapModalFooter from './SwapModalFooter'
@@ -15,6 +7,7 @@ describe('SwapModalFooter.tsx', () => {
   it('matches base snapshot, test trade exact input', () => {
     const { asFragment } = render(
       <SwapModalFooter
+        isLoading={false}
         trade={TEST_TRADE_EXACT_INPUT}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
@@ -41,7 +34,7 @@ describe('SwapModalFooter.tsx', () => {
       )
     ).toBeInTheDocument()
     expect(
-      screen.getByText('The fee paid to miners who process your transaction. This must be paid in $ETH.')
+      screen.getByText('The fee paid to the Ethereum network to process your transaction. This must be paid in ETH.')
     ).toBeInTheDocument()
     expect(screen.getByText('The impact your trade has on the market price of this pool.')).toBeInTheDocument()
   })
@@ -50,6 +43,7 @@ describe('SwapModalFooter.tsx', () => {
     const mockAcceptChanges = jest.fn()
     render(
       <SwapModalFooter
+        isLoading={false}
         trade={TEST_TRADE_EXACT_INPUT}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
@@ -74,15 +68,16 @@ describe('SwapModalFooter.tsx', () => {
     expect(within(showAcceptChanges).getByText('Accept')).toBeVisible()
   })
 
-  it('test trade exact output, no recipient', () => {
-    render(
+  it('renders a preview trade while disabling submission', () => {
+    const { asFragment } = render(
       <SwapModalFooter
-        trade={TEST_TRADE_EXACT_OUTPUT}
+        isLoading
+        trade={PREVIEW_EXACT_IN_TRADE}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
         onConfirm={jest.fn()}
         swapErrorMessage={undefined}
-        disabledConfirm={false}
+        disabledConfirm
         fiatValueInput={{
           data: undefined,
           isLoading: false,
@@ -91,76 +86,11 @@ describe('SwapModalFooter.tsx', () => {
           data: undefined,
           isLoading: false,
         }}
-        showAcceptChanges={true}
+        showAcceptChanges={false}
         onAcceptChanges={jest.fn()}
       />
     )
-    expect(
-      screen.getByText(
-        'The maximum amount you are guaranteed to spend. If the price slips any further, your transaction will revert.'
-      )
-    ).toBeInTheDocument()
-    expect(
-      screen.getByText('The fee paid to miners who process your transaction. This must be paid in $ETH.')
-    ).toBeInTheDocument()
-    expect(screen.getByText('The impact your trade has on the market price of this pool.')).toBeInTheDocument()
-  })
-
-  it('test trade fee on input token transfer', () => {
-    render(
-      <SwapModalFooter
-        trade={TEST_TRADE_FEE_ON_SELL}
-        allowedSlippage={TEST_ALLOWED_SLIPPAGE}
-        swapResult={undefined}
-        onConfirm={jest.fn()}
-        swapErrorMessage={undefined}
-        disabledConfirm={false}
-        fiatValueInput={{
-          data: undefined,
-          isLoading: false,
-        }}
-        fiatValueOutput={{
-          data: undefined,
-          isLoading: false,
-        }}
-        showAcceptChanges={true}
-        onAcceptChanges={jest.fn()}
-      />
-    )
-    expect(
-      screen.getByText(
-        'Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees.'
-      )
-    ).toBeInTheDocument()
-    expect(screen.getByText(`${TEST_TOKEN_1.symbol} fee`)).toBeInTheDocument()
-  })
-
-  it('test trade fee on output token transfer', () => {
-    render(
-      <SwapModalFooter
-        trade={TEST_TRADE_FEE_ON_BUY}
-        allowedSlippage={TEST_ALLOWED_SLIPPAGE}
-        swapResult={undefined}
-        onConfirm={jest.fn()}
-        swapErrorMessage={undefined}
-        disabledConfirm={false}
-        fiatValueInput={{
-          data: undefined,
-          isLoading: false,
-        }}
-        fiatValueOutput={{
-          data: undefined,
-          isLoading: false,
-        }}
-        showAcceptChanges={true}
-        onAcceptChanges={jest.fn()}
-      />
-    )
-    expect(
-      screen.getByText(
-        'Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees.'
-      )
-    ).toBeInTheDocument()
-    expect(screen.getByText(`${TEST_TOKEN_2.symbol} fee`)).toBeInTheDocument()
+    expect(asFragment()).toMatchSnapshot()
+    expect(screen.getByText('Finalizing quote...')).toBeInTheDocument()
   })
 })

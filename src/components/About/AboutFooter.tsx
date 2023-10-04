@@ -2,7 +2,8 @@ import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/an
 import { TraceEvent } from 'analytics'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import styled from 'styled-components'
-import { BREAKPOINTS, ExternalLink, StyledRouterLink } from 'theme'
+import { BREAKPOINTS } from 'theme'
+import { ExternalLink, StyledRouterLink } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import { DiscordIcon, GithubIcon, TwitterIcon } from './Icons'

@@ -26,6 +26,7 @@ const TableHeader = styled.div`
   font-size: 14px;
   font-weight: normal;
   line-height: 20px;
+  border-radius: 12px;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     padding-left: 48px;
@@ -198,10 +199,10 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
       prompt = <Trans>Floor price</Trans>
       break
     case SetPriceMethod.LAST_PRICE:
-      prompt = <Trans>Last Price</Trans>
+      prompt = <Trans>Last price</Trans>
       break
     case SetPriceMethod.SAME_PRICE:
-      prompt = <Trans>Same Price</Trans>
+      prompt = <Trans>Same price</Trans>
       break
     default:
       break

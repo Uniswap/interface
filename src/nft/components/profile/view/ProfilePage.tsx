@@ -17,14 +17,13 @@ import {
   useWalletCollections,
 } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
-import { OSCollectionsFetcher } from 'nft/queries'
+import { OSCollectionsFetcher } from 'nft/queries/openSea'
 import { WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { easings, useSpring } from 'react-spring'
 import styled from 'styled-components'
-import { shallow } from 'zustand/shallow'
 
 import { EmptyWalletModule } from './EmptyWalletContent'
 import * as styles from './ProfilePage.css'
@@ -63,12 +62,9 @@ export const ProfilePage = () => {
   const { address } = useWalletBalance()
   const walletCollections = useWalletCollections((state) => state.walletCollections)
   const setWalletCollections = useWalletCollections((state) => state.setWalletCollections)
-  const { resetSellAssets } = useSellAsset(
-    ({ reset }) => ({
-      resetSellAssets: reset,
-    }),
-    shallow
-  )
+  const { resetSellAssets } = useSellAsset(({ reset }) => ({
+    resetSellAssets: reset,
+  }))
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const toggleBag = useBag((state) => state.toggleBag)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()

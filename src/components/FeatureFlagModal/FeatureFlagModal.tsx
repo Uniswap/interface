@@ -1,12 +1,14 @@
 import Column from 'components/Column'
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
+import { useFallbackProviderEnabledFlag } from 'featureFlags/flags/fallbackProvider'
 import { useFotAdjustmentsFlag } from 'featureFlags/flags/fotAdjustments'
 import { useInfoExploreFlag } from 'featureFlags/flags/infoExplore'
 import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
 import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
 import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
+import { useQuickRouteMainnetFlag } from 'featureFlags/flags/quickRouteMainnet'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useUniswapXDefaultEnabledFlag } from 'featureFlags/flags/uniswapXDefault'
 import { useUniswapXEthOutputFlag } from 'featureFlags/flags/uniswapXEthOutput'
@@ -231,6 +233,12 @@ export default function FeatureFlagModal() {
         </Header>
         <FeatureFlagOption
           variant={BaseVariant}
+          value={useFallbackProviderEnabledFlag()}
+          featureFlag={FeatureFlag.fallbackProvider}
+          label="Enable fallback provider"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
           value={useCurrencyConversionFlag()}
           featureFlag={FeatureFlag.currencyConversion}
           label="Enable currency conversion"
@@ -247,6 +255,14 @@ export default function FeatureFlagModal() {
           featureFlag={FeatureFlag.fotAdjustedmentsEnabled}
           label="Enable fee-on-transfer UI and slippage adjustments"
         />
+        <FeatureFlagGroup name="Quick routes">
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useQuickRouteMainnetFlag()}
+            featureFlag={FeatureFlag.quickRouteMainnet}
+            label="Enable quick routes for Mainnet"
+          />
+        </FeatureFlagGroup>
         <FeatureFlagGroup name="UniswapX Flags">
           <FeatureFlagOption
             variant={BaseVariant}

@@ -27,7 +27,7 @@ export const newX2Y2Order = async (payload: OrderPayload): Promise<boolean> => {
   }
 }
 
-export const getOrderId = async (collectionAddress: string, tokenId: string): Promise<number | undefined> => {
+export const getX2Y2OrderId = async (collectionAddress: string, tokenId: string): Promise<number | undefined> => {
   const url = `${process.env.REACT_APP_TEMP_API_URL}/nft/getX2Y2OrderId?collectionAddress=${collectionAddress}&tokenId=${tokenId}`
   const r = await fetch(url, {
     method: 'GET',

@@ -17,21 +17,18 @@ import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
-import { formatUSDPrice } from 'utils/formatNumbers'
+import { ThemedText } from 'theme/components'
+import { useFormatter } from 'utils/formatNumbers'
 
-import { DeltaText, getDeltaArrow } from '../Tokens/TokenDetails/PriceChart'
+import { DeltaArrow, DeltaText } from '../Tokens/TokenDetails/Delta'
 import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 
 const PriceChangeContainer = styled.div`
   display: flex;
   align-items: center;
-`
-
-const ArrowCell = styled.span`
   padding-top: 4px;
-  padding-right: 2px;
+  gap: 2px;
 `
 
 interface CollectionRowProps {
@@ -131,6 +128,7 @@ interface TokenRowProps {
 export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
   const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
   const navigate = useNavigate()
+  const { formatFiatPrice, formatPercent } = useFormatter()
 
   const handleClick = useCallback(() => {
     const address = !token.address && token.standard === TokenStandard.Native ? 'NATIVE' : token.address
@@ -155,8 +153,6 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
       document.removeEventListener('keydown', keyDownHandler)
     }
   }, [toggleOpen, isHovered, token, navigate, handleClick, tokenDetailsPath])
-
-  const arrow = getDeltaArrow(token.market?.pricePercentChange?.value, 16)
 
   return (
     <Link
@@ -189,13 +185,13 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
         {!!token.market?.price?.value && (
           <>
             <Row gap="4">
-              <Box className={styles.primaryText}>{formatUSDPrice(token.market.price.value)}</Box>
+              <Box className={styles.primaryText}>{formatFiatPrice({ price: token.market.price.value })}</Box>
             </Row>
             <PriceChangeContainer>
-              <ArrowCell>{arrow}</ArrowCell>
+              <DeltaArrow delta={token.market?.pricePercentChange?.value} />
               <ThemedText.BodySmall>
                 <DeltaText delta={token.market?.pricePercentChange?.value}>
-                  {Math.abs(token.market?.pricePercentChange?.value ?? 0).toFixed(2)}%
+                  {formatPercent(Math.abs(token.market?.pricePercentChange?.value ?? 0))}
                 </DeltaText>
               </ThemedText.BodySmall>
             </PriceChangeContainer>

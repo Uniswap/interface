@@ -112,7 +112,7 @@ export default function Popover({
     [placement, offsetX, offsetY, arrowElement]
   )
 
-  const { styles, update, attributes } = usePopper(referenceElement, popperElement, options)
+  const { styles, update, attributes } = usePopper(referenceElement, show ? popperElement : null, options)
 
   const updateCallback = useCallback(() => {
     update && update()

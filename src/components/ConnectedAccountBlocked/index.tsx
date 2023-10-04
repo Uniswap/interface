@@ -2,9 +2,9 @@ import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import { BlockedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import styled, { useTheme } from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme'
+import { ExternalLink, ThemedText } from 'theme/components'
+import { CopyHelper } from 'theme/components'
 
-import { CopyHelper } from '../../theme'
 import Modal from '../Modal'
 
 const ContentWrapper = styled(Column)`
@@ -25,7 +25,7 @@ export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedPr
       <ContentWrapper>
         <BlockedIcon size="22px" />
         <ThemedText.DeprecatedLargeHeader lineHeight={2} marginBottom={1} marginTop={1}>
-          <Trans>Blocked Address</Trans>
+          <Trans>Blocked address</Trans>
         </ThemedText.DeprecatedLargeHeader>
         <ThemedText.DeprecatedDarkGray fontSize={12} marginBottom={12}>
           {props.account}

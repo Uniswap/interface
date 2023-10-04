@@ -1,14 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { TraceEvent } from 'analytics'
+import { sendAnalyticsEvent, TraceEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
-import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { isSupportedChain } from 'constants/chains'
 import usePrevious from 'hooks/usePrevious'
@@ -26,7 +25,9 @@ import {
   useV3MintState,
 } from 'state/mint/v3/hooks'
 import styled, { useTheme } from 'styled-components'
+import { ThemedText } from 'theme/components'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
+import { WrongChainError } from 'utils/errors'
 
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
 import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
@@ -56,24 +57,15 @@ import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
 import { Bound, Field } from '../../state/mint/v3/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { TransactionType } from '../../state/transactions/types'
+import { TransactionInfo, TransactionType } from '../../state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
-import { ThemedText } from '../../theme'
 import approveAmountCalldata from '../../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { Dots } from '../Pool/styled'
 import { Review } from './Review'
-import {
-  CurrencyDropdown,
-  DynamicSection,
-  MediumOnly,
-  ResponsiveTwoColumns,
-  ScrollablePage,
-  StyledInput,
-  Wrapper,
-} from './styled'
+import { DynamicSection, MediumOnly, ResponsiveTwoColumns, ScrollablePage, StyledInput, Wrapper } from './styled'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -106,6 +98,7 @@ function AddLiquidity() {
   }>()
   const { account, chainId, provider } = useWeb3React()
   const theme = useTheme()
+  const trace = useTrace()
 
   const toggleWalletDrawer = useToggleAccountDrawer() // toggle wallet when disconnected
   const addTransaction = useTransactionAdder()
@@ -278,6 +271,9 @@ function AddLiquidity() {
         }
       }
 
+      const connectedChainId = await provider.getSigner().getChainId()
+      if (chainId !== connectedChainId) throw new WrongChainError()
+
       setAttemptingTxn(true)
 
       provider
@@ -294,7 +290,7 @@ function AddLiquidity() {
             .sendTransaction(newTxn)
             .then((response: TransactionResponse) => {
               setAttemptingTxn(false)
-              addTransaction(response, {
+              const transactionInfo: TransactionInfo = {
                 type: TransactionType.ADD_LIQUIDITY_V3_POOL,
                 baseCurrencyId: currencyId(baseCurrency),
                 quoteCurrencyId: currencyId(quoteCurrency),
@@ -302,12 +298,13 @@ function AddLiquidity() {
                 expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0',
                 expectedAmountQuoteRaw: parsedAmounts[Field.CURRENCY_B]?.quotient?.toString() ?? '0',
                 feeAmount: position.pool.fee,
-              })
+              }
+              addTransaction(response, transactionInfo)
               setTxHash(response.hash)
-              sendEvent({
-                category: 'Liquidity',
-                action: 'Add',
+              sendAnalyticsEvent(LiquidityEventName.ADD_LIQUIDITY_SUBMITTED, {
                 label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
+                ...trace,
+                ...transactionInfo,
               })
             })
         })
@@ -434,11 +431,6 @@ function AddLiquidity() {
     const maxPrice = pricesAtLimit[Bound.UPPER]
     if (maxPrice) searchParams.set('maxPrice', maxPrice.toSignificant(5))
     setSearchParams(searchParams)
-
-    sendEvent({
-      category: 'Liquidity',
-      action: 'Full Range Clicked',
-    })
   }, [getSetFullRange, pricesAtLimit, searchParams, setSearchParams])
 
   // START: sync values with query string
@@ -491,7 +483,7 @@ function AddLiquidity() {
         element={InterfaceElementName.CONNECT_WALLET_BUTTON}
       >
         <ButtonLight onClick={toggleWalletDrawer} $borderRadius="12px" padding="12px">
-          <Trans>Connect Wallet</Trans>
+          <Trans>Connect wallet</Trans>
         </ButtonLight>
       </TraceEvent>
     ) : (
@@ -619,7 +611,7 @@ function AddLiquidity() {
                 <MediumOnly>
                   <ButtonText onClick={clearAll}>
                     <ThemedText.DeprecatedBlue fontSize="12px">
-                      <Trans>Clear All</Trans>
+                      <Trans>Clear all</Trans>
                     </ThemedText.DeprecatedBlue>
                   </ButtonText>
                 </MediumOnly>
@@ -634,14 +626,14 @@ function AddLiquidity() {
                     <AutoColumn gap="md">
                       <RowBetween paddingBottom="20px">
                         <ThemedText.DeprecatedLabel>
-                          <Trans>Select Pair</Trans>
+                          <Trans>Select pair</Trans>
                         </ThemedText.DeprecatedLabel>
                       </RowBetween>
-                      <RowBetween>
-                        <CurrencyDropdown
+                      <RowBetween gap="md">
+                        <CurrencyInputPanel
                           value={formattedAmounts[Field.CURRENCY_A]}
                           onUserInput={onFieldAInput}
-                          hideInput={true}
+                          hideInput
                           onMax={() => {
                             onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
                           }}
@@ -652,11 +644,9 @@ function AddLiquidity() {
                           showCommonBases
                         />
 
-                        <div style={{ width: '12px' }} />
-
-                        <CurrencyDropdown
+                        <CurrencyInputPanel
                           value={formattedAmounts[Field.CURRENCY_B]}
-                          hideInput={true}
+                          hideInput
                           onUserInput={onFieldBInput}
                           onCurrencySelect={handleCurrencyBSelect}
                           onMax={() => {
@@ -682,7 +672,7 @@ function AddLiquidity() {
                 {hasExistingPosition && existingPosition && (
                   <PositionPreview
                     position={existingPosition}
-                    title={<Trans>Selected Range</Trans>}
+                    title={<Trans>Selected range</Trans>}
                     inRange={!outOfRange}
                     ticksAtLimit={ticksAtLimit}
                   />
@@ -694,7 +684,7 @@ function AddLiquidity() {
                   <DynamicSection gap="md" disabled={!feeAmount || invalidPool}>
                     <RowBetween>
                       <ThemedText.DeprecatedLabel>
-                        <Trans>Set Price Range</Trans>
+                        <Trans>Set price range</Trans>
                       </ThemedText.DeprecatedLabel>
 
                       {Boolean(baseCurrency && quoteCurrency) && (
@@ -772,7 +762,7 @@ function AddLiquidity() {
                           <AutoColumn gap="2px" style={{ marginTop: '0.5rem' }}>
                             <Trans>
                               <ThemedText.DeprecatedMain fontWeight={535} fontSize={12} color="text1">
-                                Current Price:
+                                Current price:
                               </ThemedText.DeprecatedMain>
                               <ThemedText.DeprecatedBody fontWeight={535} fontSize={20} color="text1">
                                 {price && (
@@ -874,7 +864,7 @@ function AddLiquidity() {
                 <DynamicSection disabled={invalidPool || invalidRange || (noLiquidity && !startPriceTypedValue)}>
                   <AutoColumn gap="md">
                     <ThemedText.DeprecatedLabel>
-                      {hasExistingPosition ? <Trans>Add more liquidity</Trans> : <Trans>Deposit Amounts</Trans>}
+                      {hasExistingPosition ? <Trans>Add more liquidity</Trans> : <Trans>Deposit amounts</Trans>}
                     </ThemedText.DeprecatedLabel>
 
                     <CurrencyInputPanel
