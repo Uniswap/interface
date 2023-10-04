@@ -24,8 +24,9 @@ export interface WalletState {
   }
 
   // Tracks app rating
-  appRatingPromptedMs?: number
-  appRatingProvidedMs?: number
+  appRatingPromptedMs?: number // last time user as prompted to provide rating/feedback
+  appRatingProvidedMs?: number // last time user provided rating (through native modal)
+  appRatingFeedbackProvidedMs?: number // last time user provided feedback (form)
 }
 
 export const initialWalletState: WalletState = {
@@ -134,12 +135,14 @@ const slice = createSlice({
     },
     setAppRating: (
       state,
-      { payload: { remindLater } }: PayloadAction<{ remindLater: boolean }>
+      {
+        payload: { ratingProvided, feedbackProvided },
+      }: PayloadAction<{ ratingProvided?: boolean; feedbackProvided?: boolean }>
     ) => {
       state.appRatingPromptedMs = Date.now()
-      if (!remindLater) {
-        state.appRatingProvidedMs = Date.now()
-      }
+
+      if (ratingProvided) state.appRatingProvidedMs = Date.now()
+      if (feedbackProvided) state.appRatingFeedbackProvidedMs = Date.now()
     },
     resetWallet: () => initialWalletState,
     restoreMnemonicComplete: (state) => state,

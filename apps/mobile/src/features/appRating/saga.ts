@@ -1,13 +1,13 @@
 import * as StoreReview from 'expo-store-review'
 import { Alert } from 'react-native'
 import { APP_FEEDBACK_LINK } from 'src/constants/urls'
+import { hasConsecutiveSuccessfulSwapsSelector } from 'src/features/appRating/selectors'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { openUri } from 'src/utils/linking'
 import { call, delay, put, select, takeLatest } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
-import { selectSwapTransactionsCount } from 'wallet/src/features/transactions/selectors'
 import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
@@ -16,6 +16,8 @@ import { appSelect } from 'wallet/src/state'
 
 // at most once per reminder period
 const MIN_PROMPT_REMINDER_MS = 30 * ONE_DAY_MS
+// remind after a longer delay when user filled the feedback form (180 days)
+const MIN_FEEDBACK_REMINDER_MS = 180 * ONE_DAY_MS
 // small delay to help ux
 const SWAP_FINALIZED_PROMPT_DELAY_MS = 1 * ONE_SECOND_MS
 
@@ -43,22 +45,24 @@ function* maybeRequestAppRating() {
     const appRatingProvidedMs = yield* appSelect((state) => state.wallet.appRatingProvidedMs)
     if (appRatingProvidedMs) return // avoids prompting again
 
-    const appRatingPromptedMs = yield* appSelect((state) => state.wallet.appRatingPromptedMs)
-    const numSwapsCompleted = yield* appSelect(selectSwapTransactionsCount)
+    const appRatingPromptedMs = yield* appSelect((state) => state.wallet.appRatingPromptedMs ?? 0)
+    const appRatingFeedbackProvidedMs = yield* appSelect(
+      (state) => state.wallet.appRatingFeedbackProvidedMs ?? 0
+    )
+    const consecutiveSwapsCondition = yield* appSelect(hasConsecutiveSuccessfulSwapsSelector)
 
-    // prompt at most every other swap
-    const transactionCountCondition = numSwapsCompleted % 2 === 0
-    // prompt if never prompted, or reminder delay has elapsed
+    // prompt if enough time has passed since last prompt or last feedback provided
     const reminderCondition =
-      !appRatingPromptedMs || Date.now() - appRatingPromptedMs > MIN_PROMPT_REMINDER_MS
+      Date.now() - appRatingPromptedMs > MIN_PROMPT_REMINDER_MS ||
+      Date.now() - appRatingFeedbackProvidedMs > MIN_FEEDBACK_REMINDER_MS
 
-    const shouldPrompt = transactionCountCondition && reminderCondition
+    const shouldPrompt = consecutiveSwapsCondition && reminderCondition
 
     if (!shouldPrompt) {
       logger.debug(
         'appRating',
         'maybeRequestAppRating',
-        `Skipping app rating (lastPrompt: ${appRatingPromptedMs}, lastProvided: ${appRatingProvidedMs}, tx completed: ${numSwapsCompleted})`
+        `Skipping app rating (lastPrompt: ${appRatingPromptedMs}, lastProvided: ${appRatingProvidedMs}, consecutiveSwapsCondition: ${consecutiveSwapsCondition})`
       )
       return
     }
@@ -66,7 +70,7 @@ function* maybeRequestAppRating() {
     logger.info(
       'appRating',
       'maybeRequestAppRating',
-      `Requesting app rating (lastPrompt: ${appRatingPromptedMs}, lastProvided: ${appRatingProvidedMs}, tx completed: ${numSwapsCompleted})`
+      `Requesting app rating (lastPrompt: ${appRatingPromptedMs}, lastProvided: ${appRatingProvidedMs}, consecutiveSwapsCondition: ${consecutiveSwapsCondition})`
     )
 
     // Alerts
@@ -77,35 +81,32 @@ function* maybeRequestAppRating() {
 
       // expo-review does not return whether a rating was actually provided.
       // assume it was and mark rating as provided.
-      yield* put(setAppRating({ remindLater: false }))
+      yield* put(setAppRating({ ratingProvided: true }))
 
       sendMobileAnalyticsEvent(MobileEventName.AppRating, {
         type: 'store-review',
         appRatingPromptedMs,
         appRatingProvidedMs,
-        numSwapsCompleted,
       })
     } else {
       // show feedback form
       const feedbackSent = yield* call(openFeedbackRequestAlert)
 
       if (feedbackSent) {
-        yield* put(setAppRating({ remindLater: false }))
+        yield* put(setAppRating({ feedbackProvided: true }))
 
         sendMobileAnalyticsEvent(MobileEventName.AppRating, {
           type: 'feedback-form',
           appRatingPromptedMs,
           appRatingProvidedMs,
-          numSwapsCompleted,
         })
       } else {
-        yield* put(setAppRating({ remindLater: true }))
+        yield* put(setAppRating({ feedbackProvided: false }))
 
         sendMobileAnalyticsEvent(MobileEventName.AppRating, {
           type: 'remind',
           appRatingPromptedMs,
           appRatingProvidedMs,
-          numSwapsCompleted,
         })
       }
     }

@@ -46,7 +46,6 @@ export type MobileEventProperties = {
     type: 'store-review' | 'feedback-form' | 'remind'
     appRatingPromptedMs?: number
     appRatingProvidedMs?: number
-    numSwapsCompleted: number
   }
   [MobileEventName.BalancesReport]: {
     total_balances_usd: number
