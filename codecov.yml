@@ -9,7 +9,7 @@ ignore:
   - "**/styled.tsx"
   - "**/constants/**/*"
   - "constants/**/*"
-  - "src/components/FeatureFlagModal/DevFlagsBox.tsx"
+  - "src/dev/*"
 
 coverage:
   status:

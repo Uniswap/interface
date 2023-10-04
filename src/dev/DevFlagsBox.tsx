@@ -14,23 +14,20 @@ const Box = styled.div`
   padding: 10px;
   border: 1px solid ${({ theme }) => theme.accent1};
   z-index: 1000;
-  width: 300px;
 `
 const TopBar = styled.div`
-  margin-bottom: 8px;
   display: flex;
   justify-content: space-between;
 `
-const Gate = ({ flagSetting }: { flagSetting: [string, string] }) => {
-  const [flagName, setting] = flagSetting
+const Gate = ([flagName, flagSetting]: [string, string]) => {
   const gateResult = useGate(flagName)
   if (gateResult) {
     const { value: statsigValue } = gateResult
-    const settingValue = setting === BaseVariant.Enabled
+    const settingValue = flagSetting === BaseVariant.Enabled
     if (statsigValue !== settingValue) {
       return (
         <ThemedText.LabelSmall key={flagName}>
-          {flagName}: {setting}
+          {flagName}: {flagSetting}
         </ThemedText.LabelSmall>
       )
     }
@@ -42,23 +39,24 @@ export default function DevFlagsBox() {
   const featureFlagsAtom = useAtomValue(featureFlagSettings)
   const featureFlags = useMemo(() => Object.entries(featureFlagsAtom), [featureFlagsAtom])
 
-  const [isCollapsed, setIsCollapsed] = useState(false)
-  const toggleCollapse = () => setIsCollapsed(!isCollapsed)
+  const [isOpen, setIsOpen] = useState(true)
+  const toggleOpen = () => setIsOpen((open) => !open)
 
-  const overrides = featureFlags.map((flag) => Gate({ flagSetting: flag }))
-  const hasNoOverrides = useMemo(() => overrides.every((g) => g === null), [overrides])
+  const overrides = featureFlags.map((flag) => Gate(flag))
+  const hasOverrides = useMemo(() => overrides.some((g) => g !== null), [overrides])
 
   return (
     <Box>
-      <TopBar onClick={toggleCollapse}>
-        <ThemedText.SubHeader>
-          {isStagingEnv() && 'Staging build overrides'}
-          {isDevelopmentEnv() && 'Development build overrides'}
-        </ThemedText.SubHeader>
-        {isCollapsed ? '😿☝️' : '😺👇'}
+      <TopBar onClick={toggleOpen}>
+        {!isOpen ? '😿☝️' : '😺👇'}
+        {isOpen && (
+          <ThemedText.SubHeader>
+            {isStagingEnv() && 'Staging build overrides'}
+            {isDevelopmentEnv() && 'Development build overrides'}
+          </ThemedText.SubHeader>
+        )}
       </TopBar>
-      {!isCollapsed && overrides}
-      {!isCollapsed && hasNoOverrides && <ThemedText.LabelSmall>No overrides</ThemedText.LabelSmall>}
+      {isOpen && (hasOverrides ? overrides : <ThemedText.LabelSmall>No overrides</ThemedText.LabelSmall>)}
     </Box>
   )
 }
