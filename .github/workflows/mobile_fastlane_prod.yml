@@ -1,4 +1,4 @@
-name: '3 | [mobile] Fastlane deploy prod (iOS)'
+name: '3 | [mobile] Fastlane deploy prod'
 
 on:
   push:
@@ -16,9 +16,14 @@ jobs:
         with:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
           ref: ${{ github.ref }}
-
-      - name: 📲 Fastlane Deploy Prod
-        uses: ./.github/actions/mobile_fastlane_deploy
+          
+      - name: 📲 Setup for Fastlane Deploy
+        uses: ./.github/actions/mobile_fastlane_deploy/setup
+        with:
+          branch: ${{ github.ref }}
+            
+      - name: 📲 Fastlane Deploy iOS Prod 🍎
+        uses: ./.github/actions/mobile_fastlane_deploy/ios
         with:
           amplitude-experiments-deploy-key: ${{ secrets.AMPLITUDE_EXPERIMENTS_DEPLOY_KEY }}
           apple-app-id: ${{ secrets.APPLE_APP_ID_PROD }}
@@ -52,4 +57,45 @@ jobs:
           statsig-proxy-url: ${{ secrets.STATSIG_PROXY_URL }}
           uniswap-api-key: ${{ secrets.UNISWAP_API_KEY }}
           url-to-fastlane-certificates-repo: ${{ secrets.URL_TO_FASTLANE_CERTIFICATES_REPO }}
+          walletconnect-project-id: ${{ secrets.WALLETCONNECT_PROJECT_ID }}
+  
+  android:
+    name: Android
+    runs-on: macos-13
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
+        with:
+          ref: ${{ github.ref }}
+          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
+
+      - name: 📲 Fastlane Deploy Android Prod 🤖
+        uses: ./.github/actions/mobile_fastlane_deploy/android
+        with:
+          amplitude-experiments-deploy-key: ${{ secrets.AMPLITUDE_EXPERIMENTS_DEPLOY_KEY }}
+          android-flavor: prod
+          android-json-key-data: ${{ secrets.ANDROID_JSON_KEY_DATA }}
+          android-keystore: ${{ secrets.ANDROID_PROD_KEYSTORE }}
+          android-package-name: ${{ secrets.ANDROID_PROD_PACKAGE_NAME }}
+          appsflyer-api-key: ${{ secrets.APPSFLYER_API_KEY }}
+          appsflyer-app-id: ${{ secrets.APPSFLYER_APP_ID }}
+          branch: ${{ github.ref }}
+          ci-keychain-password: ${{ secrets.CI_KEYCHAIN_PASSWORD }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          infura-project-id: ${{ secrets.INFURA_PROJECT_ID }}
+          moonpay-api-key: ${{ secrets.MOONPAY_API_KEY }}
+          moonpay-api-url: ${{ secrets.MOONPAY_API_URL }}
+          moonpay-widget-api-url: ${{ secrets.MOONPAY_WIDGET_API_URL }}
+          onesignal-app-id: ${{ secrets.ONESIGNAL_APP_ID }}
+          quicknode-bnb-rpc-url: ${{ secrets.QUICKNODE_BNB_RPC_URL }}
+          sentry-auth-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          sentry-dsn: ${{ secrets.SENTRY_DSN }}
+          sentry-env: production
+          sentry-org: ${{ secrets.SENTRY_ORG }}
+          sentry-project: ${{ secrets.SENTRY_PROJECT }}
+          simplehash-api-key: ${{ secrets.SIMPLEHASH_API_KEY }}
+          simplehash-api-url: ${{ secrets.SIMPLEHASH_API_URL }}
+          statsig-api-key: ${{ secrets.STATSIG_API_KEY }}
+          statsig-proxy-url: ${{ secrets.STATSIG_PROXY_URL }}
+          uniswap-api-key: ${{ secrets.UNISWAP_API_KEY }}
           walletconnect-project-id: ${{ secrets.WALLETCONNECT_PROJECT_ID }}

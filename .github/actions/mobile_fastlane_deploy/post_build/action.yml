@@ -1,0 +1,68 @@
+name: '[mobile] fastlane deploy post build steps'
+
+description: 'Completes post build steps for the given environment and app identifiers'
+inputs:
+  app-identifier:
+    description: 'the apple app identifier for this deployment'
+    required: true
+  branch:
+    description: 'the branch to run this deployment for'
+    required: true
+  sentry-auth-token:
+    description: 'passed secret value'
+    required: true
+  sentry-dsn:
+    description: 'passed secret value'
+    required: true
+  sentry-env:
+    description: 'the sentry env for this deployment'
+    required: true
+  sentry-org:
+    description: 'passed secret value'
+    required: true
+  sentry-project:
+    description: 'passed secret value'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Download ios-vars artifact
+      uses: actions/download-artifact@v2
+      continue-on-error: true
+      with:
+        name: ios-vars
+
+    - name: Download android-vars artifact
+      uses: actions/download-artifact@v2
+      continue-on-error: true
+      with:
+        name: android-vars
+        
+    - name: Set environment variables
+      shell: bash
+      run: |
+        echo "IOS_VERSION_NUMBER=$(cat ios_version_number)" >> $GITHUB_ENV
+        echo "IOS_BUILD_NUMBER=$(cat ios_build_number)" >> $GITHUB_ENV
+        echo "ANDROID_VERSION_CODE=$(cat android_version_code || echo '')" >> $GITHUB_ENV
+
+    - name: 🐞 Create Sentry release
+      working-directory: ./apps/mobile
+      env:
+        APP_IDENTIFIER: ${{ inputs.app-identifier }}
+        SENTRY_AUTH_TOKEN: ${{ inputs.sentry-auth-token }}
+        SENTRY_ORG: ${{ inputs.sentry-org }}
+        SENTRY_PROJECT: ${{ inputs.sentry-project }}
+
+      shell: bash
+      run: |
+        # Install Sentry CLI
+        curl -sL https://sentry.io/get-cli/ | bash
+
+        # Create new Sentry release
+        export SENTRY_RELEASE="$APP_IDENTIFIER@$IOS_VERSION_NUMBER+$IOS_BUILD_NUMBER-$ANDROID_VERSION_CODE"
+        sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE --log-level=info
+        sentry-cli releases set-commits $SENTRY_RELEASE --auto --ignore-missing --log-level=info
+
+        # Create new deploy for this Sentry release
+        sentry-cli releases deploys $SENTRY_RELEASE new -e ${{ inputs.sentry-env }}

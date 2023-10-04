@@ -1,0 +1,161 @@
+name: '[mobile] fastlane deploy android'
+
+description: 'Deploys Android app using fastlane for the given flavor and package name'
+inputs:
+  amplitude-experiments-deploy-key:
+    description: 'passed secret value'
+    required: true
+  android-flavor:
+    description: 'the Android build flavor for this deployment'
+    required: true
+  android-json-key-data:
+    description: 'passed secret value'
+    required: true
+  android-keystore:
+    description: 'passed secret value'
+    required: true
+  android-keystore-alias:
+    description: 'passed secret value'
+    required: true
+  android-keystore-file:
+    description: 'passed secret value'
+    required: true
+  android-key-password:
+    description: 'passed secret value'
+    required: true
+  android-package-name:
+    description: 'passed secret value'
+    required: true
+  android-store-password:
+    description: 'passed secret value'
+    required: true
+  appsflyer-api-key:
+    description: 'passed secret value'
+    required: true
+  appsflyer-app-id:
+    description: 'passed secret value'
+    required: true
+  branch:
+    description: 'the branch to run this deployment for'
+    required: true
+  ci-keychain-password:
+    description: 'passed secret value'
+    required: true
+  github-token:
+    description: 'passed secret value'
+    required: true
+  infura-project-id:
+    description: 'passed secret value'
+    required: true
+  moonpay-api-key:
+    description: 'passed secret value'
+    required: true
+  moonpay-api-url:
+    description: 'passed secret value'
+    required: true
+  moonpay-widget-api-url:
+    description: 'passed secret value'
+    required: true
+  onesignal-app-id:
+    description: 'the onesignal app id for this deployment'
+    required: true
+  quicknode-bnb-rpc-url:
+    description: 'passed secret value'
+    required: true
+  sentry-auth-token:
+    description: 'passed secret value'
+    required: true
+  sentry-dsn:
+    description: 'passed secret value'
+    required: true
+  sentry-env:
+    description: 'the sentry env for this deployment'
+    required: true
+  sentry-org:
+    description: 'passed secret value'
+    required: true
+  sentry-project:
+    description: 'passed secret value'
+    required: true
+  simplehash-api-key:
+    description: 'passed secret value'
+    required: true
+  simplehash-api-url:
+    description: 'passed secret value'
+    required: true
+  statsig-api-key:
+    description: 'passed secret value'
+    required: true
+  statsig-proxy-url:
+    description: 'passed secret value'
+    required: true
+  uniswap-api-key:
+    description: 'passed secret value'
+    required: true
+  walletconnect-project-id:
+    description: 'passed secret value'
+    required: true
+
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu' # See 'Supported distributions' for available options
+        java-version: '11'
+
+    # Convert from base64 representation to keystore file
+    - name: Create Keystore
+      working-directory: ./apps/mobile/android/app
+      shell: bash
+      run: |
+        echo ${{ inputs.android-keystore }} | base64 -d > keystore.jks
+
+    - name: 📲 Build + deploy Android app 🤖
+      working-directory: ./apps/mobile
+      run: |
+        fastlane android buildAndUpload
+      shell: bash
+      env:
+        AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY: ${{ inputs.amplitude-experiments-deploy-key }}
+        ANDROID_FLAVOR: ${{ inputs.android-flavor }}
+        ANDROID_JSON_KEY_DATA: ${{ inputs.android-json-key-data }}
+        ANDROID_KEYSTORE_ALIAS: ${{ inputs.android-keystore-alias }}
+        ANDROID_KEYSTORE_FILE: ${{ inputs.android-keystore-file }}
+        ANDROID_KEY_PASSWORD: ${{ inputs.android-key-password }}
+        ANDROID_PACKAGE_NAME: ${{ inputs.android-package-name }}
+        ANDROID_STORE_PASSWORD: ${{ inputs.android-store-password }}
+        APPSFLYER_API_KEY: ${{ inputs.appsflyer-api-key }}
+        APPSFLYER_APP_ID: ${{ inputs.appsflyer-app-id }}
+        CI: true
+        GIT_BRANCH_NAME: ${{ github.ref }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        INFURA_PROJECT_ID: ${{ inputs.infura-project-id }}
+        MOONPAY_API_KEY: ${{ inputs.moonpay-api-key }}
+        MOONPAY_API_URL: ${{ inputs.moonpay-api-url }}
+        MOONPAY_WIDGET_API_URL: ${{ inputs.moonpay-widget-api-url }}
+        ONESIGNAL_APP_ID: ${{ inputs.onesignal-app-id }}
+        QUICKNODE_BNB_RPC_URL: ${{ inputs.quicknode-bnb-rpc-url }}
+        SENTRY_DSN: ${{ inputs.sentry-dsn }}
+        SENTRY_ORG: ${{ inputs.sentry-org }}
+        SENTRY_PROJECT: ${{ inputs.sentry-project }}
+        SIMPLEHASH_API_KEY: ${{ inputs.simplehash-api-key }}
+        SIMPLEHASH_API_URL: ${{ inputs.simplehash-api-url }}
+        STATSIG_API_KEY: ${{ inputs.statsig-api-key }}
+        STATSIG_PROXY_URL: ${{ inputs.statsig-proxy-url }}
+        UNISWAP_API_KEY: ${{ inputs.uniswap-api-key }}
+        WALLETCONNECT_PROJECT_ID: ${{ inputs.walletconnect-project-id }}
+
+    - name: Write env variables to text files
+      shell: bash
+      run: |
+        echo "${{ env.ANDROID_VERSION_CODE }}" > ./apps/mobile/android_version_code.txt
+
+    - name: 📦 Save Android version and build number as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: android-vars
+        path: |
+          ./apps/mobile/android_version_code.txt

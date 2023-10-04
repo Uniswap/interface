@@ -105,19 +105,10 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - uses: styfle/cancel-workflow-action@860d4c7374d6e4a1c482e80897cb913ae46692ac
-      with:
-        all_but_latest: true
-
     # Set up xcode version
     - uses: maxim-lobanov/setup-xcode@4aa4176a819ae7c019451acfda0bba67bffc6704
       with:
         xcode-version: '15'
-
-    - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
-      with:
-        fetch-depth: 0
-        ref: ${{ inputs.branch }}
 
     # Set path variables needed for caches
     - name: 𝒳 Set workflow variables
@@ -132,9 +123,6 @@ runs:
       with:
         key: ${{ runner.os }}-v2 # makes a unique key w/related restore key internally
         max-size: 400M
-
-    - name: 📥 Install
-      uses: ./.github/actions/monorepo_yarn_install
 
     - name: Update Ruby build tools
       uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
@@ -177,29 +165,6 @@ runs:
         retry_wait_seconds: 20
         max_attempts: 3
         command: yarn mobile graphql:generate:swift
-
-    - name: Check Sensitive File Changes
-      uses: ./.github/actions/sensitive_files_changed
-
-    - name: 🐞 Create Sentry release
-      working-directory: ./apps/mobile
-      env:
-        SENTRY_AUTH_TOKEN: ${{ inputs.sentry-auth-token }}
-        SENTRY_ORG: ${{ inputs.sentry-org }}
-        SENTRY_PROJECT: ${{ inputs.sentry-project }}
-        APP_IDENTIFIER: ${{ inputs.app-identifier }}
-      shell: bash
-      run: |
-        # Install Sentry CLI
-        curl -sL https://sentry.io/get-cli/ | bash
-
-        # Create new Sentry release
-        export SENTRY_RELEASE="$APP_IDENTIFIER@$IOS_VERSION_NUMBER+$IOS_BUILD_NUMBER"
-        sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE --log-level=info
-        sentry-cli releases set-commits $SENTRY_RELEASE --auto --ignore-missing --log-level=info
-
-        # Create new deploy for this Sentry release
-        sentry-cli releases deploys $SENTRY_RELEASE new -e ${{ inputs.sentry-env }}
 
     - name: 📲 Build + deploy iOS app
       working-directory: ./apps/mobile
@@ -249,3 +214,17 @@ runs:
         UNISWAP_API_KEY: ${{ inputs.uniswap-api-key }}
         URL_TO_FASTLANE_CERTIFICATES_REPO: ${{ inputs.url-to-fastlane-certificates-repo }}
         WALLETCONNECT_PROJECT_ID: ${{ inputs.walletconnect-project-id }}
+
+    - name: Write env variables to text files
+      shell: bash
+      run: |
+        echo "${{ env.IOS_VERSION }}" > ./apps/mobile/ios_version_number.txt
+        echo "${{ env.IOS_BUILD }}" > ./apps/mobile/ios_build_number.txt
+
+    - name: 📦 Save iOS version and build number as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ios-vars
+        path: |
+          ./apps/mobile/ios_version_number.txt
+          ./apps/mobile/ios_build_number.txt

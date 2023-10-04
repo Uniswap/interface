@@ -91,10 +91,10 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile file(System.getenv("KEYSTORE_FILE") ?: 'keystore.jks')
-            storePassword System.getenv("STORE_PASSWORD") ?: keystoreProperties.getProperty("STORE_PASSWORD")
-            keyAlias System.getenv("KEYSTORE_ALIAS") ?: keystoreProperties.getProperty("KEYSTORE_ALIAS")
-            keyPassword System.getenv("KEY_PASSWORD") ?: keystoreProperties.getProperty("KEY_PASSWORD")
+            storeFile file(System.getenv("ANDROID_KEYSTORE_FILE") ?: 'keystore.jks')
+            storePassword System.getenv("ANDROID_STORE_PASSWORD") ?: keystoreProperties.getProperty("STORE_PASSWORD")
+            keyAlias System.getenv("ANDROID_KEYSTORE_ALIAS") ?: keystoreProperties.getProperty("KEYSTORE_ALIAS")
+            keyPassword System.getenv("ANDROID_KEY_PASSWORD") ?: keystoreProperties.getProperty("KEY_PASSWORD")
         }
     }
 

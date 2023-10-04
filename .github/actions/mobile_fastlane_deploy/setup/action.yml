@@ -1,0 +1,25 @@
+name: '[mobile] Fastlane deploy common setup steps'
+
+description: 'Common steps for mobile fastlane deploys between iOS and Android'
+inputs:
+  branch:
+    description: 'the branch to run this deployment for'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: styfle/cancel-workflow-action@860d4c7374d6e4a1c482e80897cb913ae46692ac
+      with:
+        all_but_latest: true
+
+    - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
+      with:
+        fetch-depth: 0
+        ref: ${{ inputs.branch }}
+
+    - name: 📥 Install
+      uses: ./.github/actions/monorepo_yarn_install
+
+    - name: Check Sensitive File Changes
+      uses: ./.github/actions/sensitive_files_changed

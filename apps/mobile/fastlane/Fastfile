@@ -14,6 +14,8 @@ BUILD_ONLY = false
 platform :android do
 
   lane :buildAndUpload do
+
+    running_on_ci = ENV["CI"] || false
     # Ensure flavor, package name, and json key data are set
     if ENV["ANDROID_FLAVOR"].nil? || ENV["ANDROID_PACKAGE_NAME"].nil? || ENV["ANDROID_JSON_KEY_DATA"].nil?
       UI.user_error!("Flavor, package name, and json key data must be set")
@@ -58,6 +60,10 @@ platform :android do
       version_code: next_version_code.to_i
     )
 
+    if running_on_ci
+      sh "echo ANDROID_VERSION_CODE=#{next_version_code} >> $GITHUB_ENV"
+    end
+    
     gradle(
       task: 'bundle',
       build_type: 'Release',
