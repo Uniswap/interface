@@ -123,6 +123,11 @@ const DownloadWalletLink = styled.a`
   }
 `
 
+const TitleFadeIn = css`
+  ${textFadeIn}
+  opacity: 1.0;
+`
+
 const TitleText = styled.h1<{ isDarkMode: boolean; applyFadeIn: boolean; initiallyVisible: boolean }>`
   color: transparent;
   font-size: 36px;
@@ -141,12 +146,7 @@ const TitleText = styled.h1<{ isDarkMode: boolean; applyFadeIn: boolean; initial
   background-clip: text;
   -webkit-background-clip: text;
   ${({ initiallyVisible }) => (initiallyVisible ? `opacity: 1.0;` : 'opacity: 0.0;')}
-  ${({ applyFadeIn }) =>
-    applyFadeIn &&
-    css`
-      ${textFadeIn}
-      opacity: 1.0;
-    `}
+  ${({ applyFadeIn }) => applyFadeIn && TitleFadeIn}
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     font-size: 48px;
@@ -178,12 +178,7 @@ const SubTextContainer = styled.div<{ initiallyVisible: boolean; applyFadeIn: bo
   display: flex;
   justify-content: center;
   ${({ initiallyVisible }) => (initiallyVisible ? `opacity: 1.0;` : 'opacity: 0.0;')}
-  ${({ applyFadeIn }) =>
-    applyFadeIn &&
-    css`
-      ${textFadeIn}
-      opacity: 1.0;
-    `}
+  ${({ applyFadeIn }) => applyFadeIn && TitleFadeIn}
 `
 
 const LandingButton = styled(BaseButton)`
