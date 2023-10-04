@@ -9,7 +9,7 @@ import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components'
 
-import { LARGE_MEDIA_BREAKPOINT, MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT } from '../constants'
+import { MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT } from '../constants'
 import { filterTimeAtom } from '../state'
 import FilterOption from './FilterOption'
 
@@ -55,7 +55,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   }
 `
 const MenuTimeFlyout = styled.span<{ isInfoExplorePageEnabled: boolean }>`
-  min-width: 240px;
+  min-width: 150px;
   max-height: 300px;
   overflow: auto;
   background-color: ${({ theme }) => theme.surface1};
@@ -69,13 +69,10 @@ const MenuTimeFlyout = styled.span<{ isInfoExplorePageEnabled: boolean }>`
   position: absolute;
   top: 48px;
   z-index: 100;
-  ${({ isInfoExplorePageEnabled }) => (isInfoExplorePageEnabled ? 'right: 0px;' : 'left: 0px;')}
+  left: 0px;
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     ${({ isInfoExplorePageEnabled }) => !isInfoExplorePageEnabled && 'left: unset; right: 0px;'}
-  }
-  @media screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
-    ${({ isInfoExplorePageEnabled }) => isInfoExplorePageEnabled && 'left: 0px;'}
   }
 `
 const StyledMenu = styled.div<{ isInfoExplorePageEnabled: boolean }>`

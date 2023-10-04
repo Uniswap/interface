@@ -50,7 +50,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)<{ disabled?: boolean }>`
     `}
 `
 const MenuTimeFlyout = styled.span<{ isInfoExplorePageEnabled: boolean }>`
-  min-width: 240px;
+  min-width: 150px;
   max-height: 350px;
   overflow: auto;
   background-color: ${({ theme }) => theme.surface1};
