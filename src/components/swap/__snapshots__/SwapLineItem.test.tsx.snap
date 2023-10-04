@@ -25,6 +25,24 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -36,11 +54,11 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c10 {
   color: #7D7D7D;
 }
 
-.c10 {
+.c11 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -51,15 +69,15 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   font-weight: 500;
 }
 
-.c10:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c7 {
+.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -74,13 +92,13 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   height: inherit;
 }
 
-.c11 {
+.c12 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c11::before {
+.c12::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -94,43 +112,43 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   background: #FFFFFF;
 }
 
-.c11.arrow-top {
+.c12.arrow-top {
   bottom: -4px;
 }
 
-.c11.arrow-top::before {
+.c12.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c11.arrow-bottom {
+.c12.arrow-bottom {
   top: -4px;
 }
 
-.c11.arrow-bottom::before {
+.c12.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c11.arrow-left {
+.c12.arrow-left {
   right: -4px;
 }
 
-.c11.arrow-left::before {
+.c12.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c11.arrow-right {
+.c12.arrow-right {
   left: -4px;
 }
 
-.c11.arrow-right::before {
+.c12.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c9 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -168,7 +186,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Network fee
+      Network cost
     </div>
     <div
       class="c5"
@@ -177,26 +195,36 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          $0.00
+          <div
+            class="c0 c7"
+          >
+            <img
+              alt="gas cost icon"
+              height="16"
+              src="ethereum-logo.png"
+              width="16"
+            />
+            $0.00
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c8"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c9"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c10 css-obwv3p"
         >
           <div
-            class="c9 css-1m65e73"
+            class="c10 css-1m65e73"
           >
             The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
             <a
-              class="c10"
+              class="c11"
               href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
               rel="noopener noreferrer"
               target="_blank"
@@ -207,7 +235,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
         </div>
       </div>
       <div
-        class="c11 arrow-"
+        class="c12 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -291,21 +319,6 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   width: 100%;
   height: 1px;
   background-color: #22222212;
-}
-
-.c12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
 }
 
 .c10 {
@@ -394,6 +407,21 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   border-radius: 12px;
   border: 1px solid #22222212;
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
 }
 
 .c6 {
@@ -1002,6 +1030,24 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -1013,11 +1059,11 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c10 {
   color: #7D7D7D;
 }
 
-.c10 {
+.c11 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -1028,15 +1074,15 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   font-weight: 500;
 }
 
-.c10:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c7 {
+.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -1051,13 +1097,13 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   height: inherit;
 }
 
-.c11 {
+.c12 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c11::before {
+.c12::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -1071,43 +1117,43 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   background: #FFFFFF;
 }
 
-.c11.arrow-top {
+.c12.arrow-top {
   bottom: -4px;
 }
 
-.c11.arrow-top::before {
+.c12.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c11.arrow-bottom {
+.c12.arrow-bottom {
   top: -4px;
 }
 
-.c11.arrow-bottom::before {
+.c12.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c11.arrow-left {
+.c12.arrow-left {
   right: -4px;
 }
 
-.c11.arrow-left::before {
+.c12.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c11.arrow-right {
+.c12.arrow-right {
   left: -4px;
 }
 
-.c11.arrow-right::before {
+.c12.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c9 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -1141,7 +1187,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Network fee
+      Network cost
     </div>
     <div
       class="c5"
@@ -1150,26 +1196,36 @@ exports[`SwapLineItem.tsx exact input 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          $1.00
+          <div
+            class="c0 c7"
+          >
+            <img
+              alt="gas cost icon"
+              height="16"
+              src="ethereum-logo.png"
+              width="16"
+            />
+            $1.00
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c8"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c9"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c10 css-obwv3p"
         >
           <div
-            class="c9 css-1m65e73"
+            class="c10 css-1m65e73"
           >
             The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
             <a
-              class="c10"
+              class="c11"
               href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
               rel="noopener noreferrer"
               target="_blank"
@@ -1180,7 +1236,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
         </div>
       </div>
       <div
-        class="c11 arrow-"
+        class="c12 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -1445,21 +1501,6 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   background-color: #22222212;
 }
 
-.c12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
 .c10 {
   z-index: 1070;
   pointer-events: none;
@@ -1546,6 +1587,21 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   border-radius: 12px;
   border: 1px solid #22222212;
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
 }
 
 .c6 {
@@ -1828,7 +1884,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   min-width: 0;
 }
 
-.c23 {
+.c24 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -1852,7 +1908,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   justify-content: flex-start;
 }
 
-.c24 {
+.c25 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -1877,14 +1933,14 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   justify-content: space-between;
 }
 
-.c25 {
+.c26 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c25 > * {
+.c26 > * {
   margin: 1px !important;
 }
 
@@ -1896,19 +1952,10 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   color: #7D7D7D;
 }
 
-.c10 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
+.c11 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
 }
 
 .c7 {
@@ -1926,13 +1973,13 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   height: inherit;
 }
 
-.c31 {
+.c32 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c31::before {
+.c32::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -1946,40 +1993,57 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   background: #FFFFFF;
 }
 
-.c31.arrow-top {
+.c32.arrow-top {
   bottom: -4px;
 }
 
-.c31.arrow-top::before {
+.c32.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c31.arrow-bottom {
+.c32.arrow-bottom {
   top: -4px;
 }
 
-.c31.arrow-bottom::before {
+.c32.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c31.arrow-left {
+.c32.arrow-left {
   right: -4px;
 }
 
-.c31.arrow-left::before {
+.c32.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c31.arrow-right {
+.c32.arrow-right {
   left: -4px;
 }
 
-.c31.arrow-right::before {
+.c32.arrow-right::before {
   border-right: none;
   border-top: none;
+}
+
+.c31 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
 .c8 {
@@ -1999,24 +2063,22 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c30 {
-  max-width: 200px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 8px;
-  pointer-events: auto;
-  color: #222222;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid #22222212;
-  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
 }
 
-.c19 {
+.c20 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -2037,7 +2099,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   font-weight: 535;
 }
 
-.c15 {
+.c16 {
   opacity: 0;
   -webkit-transition: opacity 250ms ease-in;
   transition: opacity 250ms ease-in;
@@ -2046,7 +2108,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   border-radius: 50%;
 }
 
-.c14 {
+.c15 {
   width: 20px;
   height: 20px;
   background: #22222212;
@@ -2056,7 +2118,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   border-radius: 50%;
 }
 
-.c13 {
+.c14 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -2064,7 +2126,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   display: flex;
 }
 
-.c27 {
+.c28 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -2075,16 +2137,16 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   flex-direction: row;
 }
 
-.c28 {
+.c29 {
   z-index: 1;
 }
 
-.c29 {
+.c30 {
   position: absolute;
   left: -10px !important;
 }
 
-.c11 {
+.c12 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -2092,12 +2154,12 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   width: 100%;
 }
 
-.c12 {
+.c13 {
   display: grid;
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c16 {
+.c17 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -2114,7 +2176,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   position: relative;
 }
 
-.c26 {
+.c27 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2122,7 +2184,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   padding: 4px 4px;
 }
 
-.c17 {
+.c18 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2137,11 +2199,11 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   opacity: 0.5;
 }
 
-.c18 path {
+.c19 path {
   stroke: #22222212;
 }
 
-.c20 {
+.c21 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -2155,7 +2217,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   z-index: 1020;
 }
 
-.c21 {
+.c22 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -2164,7 +2226,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   z-index: 1021;
 }
 
-.c22 {
+.c23 {
   word-break: normal;
 }
 
@@ -2216,58 +2278,66 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             class="c10"
           >
             <div
-              class="c11 css-vurnku"
+              class="c9 css-142zc9n"
+            >
+              Uniswap Client
+            </div>
+            <div
+              class="c11"
+            />
+            <div
+              class="c12 css-vurnku"
             >
               <div
-                class="c0 c1 c12"
+                class="c0 c1 c13"
               >
                 <div
-                  class="c13"
+                  class="c14"
                   style="height: 20px; width: 20px;"
                 >
                   <div
-                    class="c14"
+                    class="c15"
                   >
                     <img
                       alt="ABC logo"
-                      class="c15"
+                      class="c16"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                     />
                   </div>
                 </div>
                 <div
-                  class="c0 c1 c16"
+                  class="c0 c1 c17"
                 >
                   <div
-                    class="c17"
+                    class="c18"
                   >
                     <svg
-                      class="c18"
+                      class="c19"
                     >
                       dot_line.svg
                     </svg>
                   </div>
                   <div
-                    class="c19 c20"
+                    class="c20 c21"
                   >
                     <div
-                      class="c19 c21"
+                      class="c20 c22"
                     >
                       <div
-                        class="c3 c22 css-1m65e73"
+                        class="c3 c23 css-1m65e73"
                       >
                         V3
                       </div>
                     </div>
                     <div
-                      class="c9 c22 css-1m65e73"
+                      class="c9 c23 css-1m65e73"
                       style="min-width: auto;"
                     >
                       100%
                     </div>
                   </div>
                   <div
-                    class="c23 c24 c25"
+                    class="c24 c25 c26"
                     style="justify-content: space-evenly; z-index: 2;"
                     width="100%"
                   >
@@ -2276,45 +2346,45 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                     >
                       <div>
                         <div
-                          class="c19 c26"
+                          class="c20 c27"
                         >
                           <div
                             class="css-mbnpt3"
                           >
                             <div
-                              class="c27"
+                              class="c28"
                             >
                               <div
-                                class="c28"
+                                class="c29"
                               >
                                 <div
-                                  class="c13"
+                                  class="c14"
                                   style="height: 20px; width: 20px;"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c15"
                                   >
                                     <img
                                       alt="DEF logo"
-                                      class="c15"
+                                      class="c16"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                     />
                                   </div>
                                 </div>
                               </div>
                               <div
-                                class="c29"
+                                class="c30"
                               >
                                 <div
-                                  class="c13"
+                                  class="c14"
                                   style="height: 20px; width: 20px;"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c15"
                                   >
                                     <img
                                       alt="ABC logo"
-                                      class="c15"
+                                      class="c16"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                     />
                                   </div>
@@ -2323,7 +2393,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                             </div>
                           </div>
                           <div
-                            class="c9 c22 css-1m65e73"
+                            class="c9 c23 css-1m65e73"
                           >
                             1%
                           </div>
@@ -2335,33 +2405,36 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                       style="position: fixed; left: 0px; top: 0px;"
                     >
                       <div
-                        class="c30"
+                        class="c31"
                       >
                         ABC/DEF 1% pool
                       </div>
                       <div
-                        class="c31 arrow-"
+                        class="c32 arrow-"
                         style="position: absolute;"
                       />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c13"
+                  class="c14"
                   style="height: 20px; width: 20px;"
                 >
                   <div
-                    class="c14"
+                    class="c15"
                   >
                     <img
                       alt="DEF logo"
-                      class="c15"
+                      class="c16"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                     />
                   </div>
                 </div>
               </div>
             </div>
+            <div
+              class="c11"
+            />
             <div
               class="c9 css-obwv3p"
             >
@@ -2371,7 +2444,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
         </div>
       </div>
       <div
-        class="c31 arrow-"
+        class="c32 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -2404,6 +2477,24 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -2415,11 +2506,11 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c10 {
   color: #7D7D7D;
 }
 
-.c10 {
+.c11 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -2430,15 +2521,15 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   font-weight: 500;
 }
 
-.c10:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c7 {
+.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -2453,13 +2544,13 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   height: inherit;
 }
 
-.c11 {
+.c12 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c11::before {
+.c12::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -2473,43 +2564,43 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   background: #FFFFFF;
 }
 
-.c11.arrow-top {
+.c12.arrow-top {
   bottom: -4px;
 }
 
-.c11.arrow-top::before {
+.c12.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c11.arrow-bottom {
+.c12.arrow-bottom {
   top: -4px;
 }
 
-.c11.arrow-bottom::before {
+.c12.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c11.arrow-left {
+.c12.arrow-left {
   right: -4px;
 }
 
-.c11.arrow-left::before {
+.c12.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c11.arrow-right {
+.c12.arrow-right {
   left: -4px;
 }
 
-.c11.arrow-right::before {
+.c12.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c9 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -2543,7 +2634,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Network fee
+      Network cost
     </div>
     <div
       class="c5"
@@ -2552,26 +2643,36 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          $1.00
+          <div
+            class="c0 c7"
+          >
+            <img
+              alt="gas cost icon"
+              height="16"
+              src="ethereum-logo.png"
+              width="16"
+            />
+            $1.00
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c8"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c9"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c10 css-obwv3p"
         >
           <div
-            class="c9 css-1m65e73"
+            class="c10 css-1m65e73"
           >
             The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
             <a
-              class="c10"
+              class="c11"
               href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
               rel="noopener noreferrer"
               target="_blank"
@@ -2582,7 +2683,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
         </div>
       </div>
       <div
-        class="c11 arrow-"
+        class="c12 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -2847,21 +2948,6 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   background-color: #22222212;
 }
 
-.c12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
 .c10 {
   z-index: 1070;
   pointer-events: none;
@@ -2948,6 +3034,21 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   border-radius: 12px;
   border: 1px solid #22222212;
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
 }
 
 .c6 {
@@ -3230,7 +3331,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   min-width: 0;
 }
 
-.c23 {
+.c24 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -3254,7 +3355,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   justify-content: flex-start;
 }
 
-.c24 {
+.c25 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -3279,14 +3380,14 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   justify-content: space-between;
 }
 
-.c25 {
+.c26 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c25 > * {
+.c26 > * {
   margin: 1px !important;
 }
 
@@ -3298,19 +3399,10 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   color: #7D7D7D;
 }
 
-.c10 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
+.c11 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
 }
 
 .c7 {
@@ -3328,13 +3420,13 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   height: inherit;
 }
 
-.c31 {
+.c32 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c31::before {
+.c32::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -3348,40 +3440,57 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   background: #FFFFFF;
 }
 
-.c31.arrow-top {
+.c32.arrow-top {
   bottom: -4px;
 }
 
-.c31.arrow-top::before {
+.c32.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c31.arrow-bottom {
+.c32.arrow-bottom {
   top: -4px;
 }
 
-.c31.arrow-bottom::before {
+.c32.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c31.arrow-left {
+.c32.arrow-left {
   right: -4px;
 }
 
-.c31.arrow-left::before {
+.c32.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c31.arrow-right {
+.c32.arrow-right {
   left: -4px;
 }
 
-.c31.arrow-right::before {
+.c32.arrow-right::before {
   border-right: none;
   border-top: none;
+}
+
+.c31 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
 .c8 {
@@ -3401,24 +3510,22 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c30 {
-  max-width: 200px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 8px;
-  pointer-events: auto;
-  color: #222222;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid #22222212;
-  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
 }
 
-.c19 {
+.c20 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -3439,7 +3546,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   font-weight: 535;
 }
 
-.c15 {
+.c16 {
   opacity: 0;
   -webkit-transition: opacity 250ms ease-in;
   transition: opacity 250ms ease-in;
@@ -3448,7 +3555,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   border-radius: 50%;
 }
 
-.c14 {
+.c15 {
   width: 20px;
   height: 20px;
   background: #22222212;
@@ -3458,7 +3565,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   border-radius: 50%;
 }
 
-.c13 {
+.c14 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -3466,7 +3573,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   display: flex;
 }
 
-.c27 {
+.c28 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -3477,16 +3584,16 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   flex-direction: row;
 }
 
-.c28 {
+.c29 {
   z-index: 1;
 }
 
-.c29 {
+.c30 {
   position: absolute;
   left: -10px !important;
 }
 
-.c11 {
+.c12 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -3494,12 +3601,12 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   width: 100%;
 }
 
-.c12 {
+.c13 {
   display: grid;
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c16 {
+.c17 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -3516,7 +3623,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   position: relative;
 }
 
-.c26 {
+.c27 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -3524,7 +3631,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   padding: 4px 4px;
 }
 
-.c17 {
+.c18 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -3539,11 +3646,11 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   opacity: 0.5;
 }
 
-.c18 path {
+.c19 path {
   stroke: #22222212;
 }
 
-.c20 {
+.c21 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -3557,7 +3664,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   z-index: 1020;
 }
 
-.c21 {
+.c22 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -3566,7 +3673,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   z-index: 1021;
 }
 
-.c22 {
+.c23 {
   word-break: normal;
 }
 
@@ -3618,58 +3725,66 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             class="c10"
           >
             <div
-              class="c11 css-vurnku"
+              class="c9 css-142zc9n"
+            >
+              Uniswap API
+            </div>
+            <div
+              class="c11"
+            />
+            <div
+              class="c12 css-vurnku"
             >
               <div
-                class="c0 c1 c12"
+                class="c0 c1 c13"
               >
                 <div
-                  class="c13"
+                  class="c14"
                   style="height: 20px; width: 20px;"
                 >
                   <div
-                    class="c14"
+                    class="c15"
                   >
                     <img
                       alt="ABC logo"
-                      class="c15"
+                      class="c16"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                     />
                   </div>
                 </div>
                 <div
-                  class="c0 c1 c16"
+                  class="c0 c1 c17"
                 >
                   <div
-                    class="c17"
+                    class="c18"
                   >
                     <svg
-                      class="c18"
+                      class="c19"
                     >
                       dot_line.svg
                     </svg>
                   </div>
                   <div
-                    class="c19 c20"
+                    class="c20 c21"
                   >
                     <div
-                      class="c19 c21"
+                      class="c20 c22"
                     >
                       <div
-                        class="c3 c22 css-1m65e73"
+                        class="c3 c23 css-1m65e73"
                       >
                         V3
                       </div>
                     </div>
                     <div
-                      class="c9 c22 css-1m65e73"
+                      class="c9 c23 css-1m65e73"
                       style="min-width: auto;"
                     >
                       100%
                     </div>
                   </div>
                   <div
-                    class="c23 c24 c25"
+                    class="c24 c25 c26"
                     style="justify-content: space-evenly; z-index: 2;"
                     width="100%"
                   >
@@ -3678,45 +3793,45 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                     >
                       <div>
                         <div
-                          class="c19 c26"
+                          class="c20 c27"
                         >
                           <div
                             class="css-mbnpt3"
                           >
                             <div
-                              class="c27"
+                              class="c28"
                             >
                               <div
-                                class="c28"
+                                class="c29"
                               >
                                 <div
-                                  class="c13"
+                                  class="c14"
                                   style="height: 20px; width: 20px;"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c15"
                                   >
                                     <img
                                       alt="DEF logo"
-                                      class="c15"
+                                      class="c16"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                     />
                                   </div>
                                 </div>
                               </div>
                               <div
-                                class="c29"
+                                class="c30"
                               >
                                 <div
-                                  class="c13"
+                                  class="c14"
                                   style="height: 20px; width: 20px;"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c15"
                                   >
                                     <img
                                       alt="ABC logo"
-                                      class="c15"
+                                      class="c16"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                     />
                                   </div>
@@ -3725,7 +3840,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                             </div>
                           </div>
                           <div
-                            class="c9 c22 css-1m65e73"
+                            class="c9 c23 css-1m65e73"
                           >
                             1%
                           </div>
@@ -3737,33 +3852,36 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                       style="position: fixed; left: 0px; top: 0px;"
                     >
                       <div
-                        class="c30"
+                        class="c31"
                       >
                         ABC/DEF 1% pool
                       </div>
                       <div
-                        class="c31 arrow-"
+                        class="c32 arrow-"
                         style="position: absolute;"
                       />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c13"
+                  class="c14"
                   style="height: 20px; width: 20px;"
                 >
                   <div
-                    class="c14"
+                    class="c15"
                   >
                     <img
                       alt="DEF logo"
-                      class="c15"
+                      class="c16"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                     />
                   </div>
                 </div>
               </div>
             </div>
+            <div
+              class="c11"
+            />
             <div
               class="c9 css-obwv3p"
             >
@@ -3773,7 +3891,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
         </div>
       </div>
       <div
-        class="c31 arrow-"
+        class="c32 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -3806,6 +3924,24 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -3817,11 +3953,11 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c10 {
   color: #7D7D7D;
 }
 
-.c10 {
+.c11 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -3832,15 +3968,15 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   font-weight: 500;
 }
 
-.c10:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c7 {
+.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -3855,13 +3991,13 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   height: inherit;
 }
 
-.c11 {
+.c12 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c11::before {
+.c12::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -3875,43 +4011,43 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   background: #FFFFFF;
 }
 
-.c11.arrow-top {
+.c12.arrow-top {
   bottom: -4px;
 }
 
-.c11.arrow-top::before {
+.c12.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c11.arrow-bottom {
+.c12.arrow-bottom {
   top: -4px;
 }
 
-.c11.arrow-bottom::before {
+.c12.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c11.arrow-left {
+.c12.arrow-left {
   right: -4px;
 }
 
-.c11.arrow-left::before {
+.c12.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c11.arrow-right {
+.c12.arrow-right {
   left: -4px;
 }
 
-.c11.arrow-right::before {
+.c12.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c9 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -3945,7 +4081,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Network fee
+      Network cost
     </div>
     <div
       class="c5"
@@ -3954,26 +4090,36 @@ exports[`SwapLineItem.tsx exact output 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          -
+          <div
+            class="c0 c7"
+          >
+            <img
+              alt="gas cost icon"
+              height="16"
+              src="ethereum-logo.png"
+              width="16"
+            />
+            -
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c8"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c9"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c10 css-obwv3p"
         >
           <div
-            class="c9 css-1m65e73"
+            class="c10 css-1m65e73"
           >
             The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
             <a
-              class="c10"
+              class="c11"
               href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
               rel="noopener noreferrer"
               target="_blank"
@@ -3984,7 +4130,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
         </div>
       </div>
       <div
-        class="c11 arrow-"
+        class="c12 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -4249,21 +4395,6 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   background-color: #22222212;
 }
 
-.c12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
 .c10 {
   z-index: 1070;
   pointer-events: none;
@@ -4350,6 +4481,21 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   border-radius: 12px;
   border: 1px solid #22222212;
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
 }
 
 .c6 {
@@ -4632,7 +4778,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   min-width: 0;
 }
 
-.c23 {
+.c24 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -4656,7 +4802,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   justify-content: flex-start;
 }
 
-.c24 {
+.c25 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -4681,14 +4827,14 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   justify-content: space-between;
 }
 
-.c25 {
+.c26 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c25 > * {
+.c26 > * {
   margin: 1px !important;
 }
 
@@ -4700,19 +4846,10 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   color: #7D7D7D;
 }
 
-.c10 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
+.c11 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
 }
 
 .c7 {
@@ -4730,13 +4867,13 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   height: inherit;
 }
 
-.c31 {
+.c32 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c31::before {
+.c32::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -4750,40 +4887,57 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   background: #FFFFFF;
 }
 
-.c31.arrow-top {
+.c32.arrow-top {
   bottom: -4px;
 }
 
-.c31.arrow-top::before {
+.c32.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c31.arrow-bottom {
+.c32.arrow-bottom {
   top: -4px;
 }
 
-.c31.arrow-bottom::before {
+.c32.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c31.arrow-left {
+.c32.arrow-left {
   right: -4px;
 }
 
-.c31.arrow-left::before {
+.c32.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c31.arrow-right {
+.c32.arrow-right {
   left: -4px;
 }
 
-.c31.arrow-right::before {
+.c32.arrow-right::before {
   border-right: none;
   border-top: none;
+}
+
+.c31 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
 .c8 {
@@ -4803,24 +4957,22 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c30 {
-  max-width: 200px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 8px;
-  pointer-events: auto;
-  color: #222222;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid #22222212;
-  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
 }
 
-.c19 {
+.c20 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -4841,7 +4993,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   font-weight: 535;
 }
 
-.c15 {
+.c16 {
   opacity: 0;
   -webkit-transition: opacity 250ms ease-in;
   transition: opacity 250ms ease-in;
@@ -4850,7 +5002,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   border-radius: 50%;
 }
 
-.c14 {
+.c15 {
   width: 20px;
   height: 20px;
   background: #22222212;
@@ -4860,7 +5012,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   border-radius: 50%;
 }
 
-.c13 {
+.c14 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -4868,7 +5020,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   display: flex;
 }
 
-.c27 {
+.c28 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -4879,16 +5031,16 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   flex-direction: row;
 }
 
-.c28 {
+.c29 {
   z-index: 1;
 }
 
-.c29 {
+.c30 {
   position: absolute;
   left: -10px !important;
 }
 
-.c11 {
+.c12 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -4896,12 +5048,12 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   width: 100%;
 }
 
-.c12 {
+.c13 {
   display: grid;
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c16 {
+.c17 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -4918,7 +5070,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   position: relative;
 }
 
-.c26 {
+.c27 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -4926,7 +5078,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   padding: 4px 4px;
 }
 
-.c17 {
+.c18 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -4941,11 +5093,11 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   opacity: 0.5;
 }
 
-.c18 path {
+.c19 path {
   stroke: #22222212;
 }
 
-.c20 {
+.c21 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -4959,7 +5111,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   z-index: 1020;
 }
 
-.c21 {
+.c22 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -4968,7 +5120,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   z-index: 1021;
 }
 
-.c22 {
+.c23 {
   word-break: normal;
 }
 
@@ -5020,58 +5172,66 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             class="c10"
           >
             <div
-              class="c11 css-vurnku"
+              class="c9 css-142zc9n"
+            >
+              Uniswap Client
+            </div>
+            <div
+              class="c11"
+            />
+            <div
+              class="c12 css-vurnku"
             >
               <div
-                class="c0 c1 c12"
+                class="c0 c1 c13"
               >
                 <div
-                  class="c13"
+                  class="c14"
                   style="height: 20px; width: 20px;"
                 >
                   <div
-                    class="c14"
+                    class="c15"
                   >
                     <img
                       alt="ABC logo"
-                      class="c15"
+                      class="c16"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                     />
                   </div>
                 </div>
                 <div
-                  class="c0 c1 c16"
+                  class="c0 c1 c17"
                 >
                   <div
-                    class="c17"
+                    class="c18"
                   >
                     <svg
-                      class="c18"
+                      class="c19"
                     >
                       dot_line.svg
                     </svg>
                   </div>
                   <div
-                    class="c19 c20"
+                    class="c20 c21"
                   >
                     <div
-                      class="c19 c21"
+                      class="c20 c22"
                     >
                       <div
-                        class="c3 c22 css-1m65e73"
+                        class="c3 c23 css-1m65e73"
                       >
                         V3
                       </div>
                     </div>
                     <div
-                      class="c9 c22 css-1m65e73"
+                      class="c9 c23 css-1m65e73"
                       style="min-width: auto;"
                     >
                       100%
                     </div>
                   </div>
                   <div
-                    class="c23 c24 c25"
+                    class="c24 c25 c26"
                     style="justify-content: space-evenly; z-index: 2;"
                     width="100%"
                   >
@@ -5080,45 +5240,45 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                     >
                       <div>
                         <div
-                          class="c19 c26"
+                          class="c20 c27"
                         >
                           <div
                             class="css-mbnpt3"
                           >
                             <div
-                              class="c27"
+                              class="c28"
                             >
                               <div
-                                class="c28"
+                                class="c29"
                               >
                                 <div
-                                  class="c13"
+                                  class="c14"
                                   style="height: 20px; width: 20px;"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c15"
                                   >
                                     <img
                                       alt="GHI logo"
-                                      class="c15"
+                                      class="c16"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
                                     />
                                   </div>
                                 </div>
                               </div>
                               <div
-                                class="c29"
+                                class="c30"
                               >
                                 <div
-                                  class="c13"
+                                  class="c14"
                                   style="height: 20px; width: 20px;"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c15"
                                   >
                                     <img
                                       alt="ABC logo"
-                                      class="c15"
+                                      class="c16"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                     />
                                   </div>
@@ -5127,7 +5287,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                             </div>
                           </div>
                           <div
-                            class="c9 c22 css-1m65e73"
+                            class="c9 c23 css-1m65e73"
                           >
                             0.3%
                           </div>
@@ -5139,33 +5299,36 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                       style="position: fixed; left: 0px; top: 0px;"
                     >
                       <div
-                        class="c30"
+                        class="c31"
                       >
                         ABC/GHI 0.3% pool
                       </div>
                       <div
-                        class="c31 arrow-"
+                        class="c32 arrow-"
                         style="position: absolute;"
                       />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c13"
+                  class="c14"
                   style="height: 20px; width: 20px;"
                 >
                   <div
-                    class="c14"
+                    class="c15"
                   >
                     <img
                       alt="GHI logo"
-                      class="c15"
+                      class="c16"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
                     />
                   </div>
                 </div>
               </div>
             </div>
+            <div
+              class="c11"
+            />
             <div
               class="c9 css-obwv3p"
             >
@@ -5175,7 +5338,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
         </div>
       </div>
       <div
-        class="c31 arrow-"
+        class="c32 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -5208,6 +5371,24 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -5219,11 +5400,11 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c10 {
   color: #7D7D7D;
 }
 
-.c10 {
+.c11 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -5234,15 +5415,15 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   font-weight: 500;
 }
 
-.c10:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c7 {
+.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -5257,13 +5438,13 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   height: inherit;
 }
 
-.c11 {
+.c12 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c11::before {
+.c12::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -5277,43 +5458,43 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   background: #FFFFFF;
 }
 
-.c11.arrow-top {
+.c12.arrow-top {
   bottom: -4px;
 }
 
-.c11.arrow-top::before {
+.c12.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c11.arrow-bottom {
+.c12.arrow-bottom {
   top: -4px;
 }
 
-.c11.arrow-bottom::before {
+.c12.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c11.arrow-left {
+.c12.arrow-left {
   right: -4px;
 }
 
-.c11.arrow-left::before {
+.c12.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c11.arrow-right {
+.c12.arrow-right {
   left: -4px;
 }
 
-.c11.arrow-right::before {
+.c12.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c9 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -5347,7 +5528,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Network fee
+      Network cost
     </div>
     <div
       class="c5"
@@ -5356,26 +5537,36 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          $1.00
+          <div
+            class="c0 c7"
+          >
+            <img
+              alt="gas cost icon"
+              height="16"
+              src="ethereum-logo.png"
+              width="16"
+            />
+            $1.00
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c8"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c9"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c10 css-obwv3p"
         >
           <div
-            class="c9 css-1m65e73"
+            class="c10 css-1m65e73"
           >
             The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
             <a
-              class="c10"
+              class="c11"
               href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
               rel="noopener noreferrer"
               target="_blank"
@@ -5386,7 +5577,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
         </div>
       </div>
       <div
-        class="c11 arrow-"
+        class="c12 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -5857,21 +6048,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   background-color: #22222212;
 }
 
-.c12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
 .c10 {
   z-index: 1070;
   pointer-events: none;
@@ -5958,6 +6134,21 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   border-radius: 12px;
   border: 1px solid #22222212;
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
 }
 
 .c6 {
@@ -6240,7 +6431,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   min-width: 0;
 }
 
-.c23 {
+.c24 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -6264,7 +6455,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   justify-content: flex-start;
 }
 
-.c24 {
+.c25 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -6289,14 +6480,14 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   justify-content: space-between;
 }
 
-.c25 {
+.c26 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c25 > * {
+.c26 > * {
   margin: 1px !important;
 }
 
@@ -6308,19 +6499,10 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   color: #7D7D7D;
 }
 
-.c10 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
+.c11 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
 }
 
 .c7 {
@@ -6338,13 +6520,13 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   height: inherit;
 }
 
-.c31 {
+.c32 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c31::before {
+.c32::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -6358,40 +6540,57 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   background: #FFFFFF;
 }
 
-.c31.arrow-top {
+.c32.arrow-top {
   bottom: -4px;
 }
 
-.c31.arrow-top::before {
+.c32.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c31.arrow-bottom {
+.c32.arrow-bottom {
   top: -4px;
 }
 
-.c31.arrow-bottom::before {
+.c32.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c31.arrow-left {
+.c32.arrow-left {
   right: -4px;
 }
 
-.c31.arrow-left::before {
+.c32.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c31.arrow-right {
+.c32.arrow-right {
   left: -4px;
 }
 
-.c31.arrow-right::before {
+.c32.arrow-right::before {
   border-right: none;
   border-top: none;
+}
+
+.c31 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
 .c8 {
@@ -6411,24 +6610,22 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c30 {
-  max-width: 200px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 8px;
-  pointer-events: auto;
-  color: #222222;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid #22222212;
-  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
 }
 
-.c19 {
+.c20 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -6449,7 +6646,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   font-weight: 535;
 }
 
-.c15 {
+.c16 {
   opacity: 0;
   -webkit-transition: opacity 250ms ease-in;
   transition: opacity 250ms ease-in;
@@ -6458,7 +6655,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   border-radius: 50%;
 }
 
-.c14 {
+.c15 {
   width: 20px;
   height: 20px;
   background: #22222212;
@@ -6468,7 +6665,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   border-radius: 50%;
 }
 
-.c13 {
+.c14 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -6476,7 +6673,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   display: flex;
 }
 
-.c27 {
+.c28 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -6487,16 +6684,16 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   flex-direction: row;
 }
 
-.c28 {
+.c29 {
   z-index: 1;
 }
 
-.c29 {
+.c30 {
   position: absolute;
   left: -10px !important;
 }
 
-.c11 {
+.c12 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -6504,12 +6701,12 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   width: 100%;
 }
 
-.c12 {
+.c13 {
   display: grid;
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c16 {
+.c17 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -6526,7 +6723,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   position: relative;
 }
 
-.c26 {
+.c27 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -6534,7 +6731,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   padding: 4px 4px;
 }
 
-.c17 {
+.c18 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -6549,11 +6746,11 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   opacity: 0.5;
 }
 
-.c18 path {
+.c19 path {
   stroke: #22222212;
 }
 
-.c20 {
+.c21 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -6567,7 +6764,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   z-index: 1020;
 }
 
-.c21 {
+.c22 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -6576,7 +6773,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   z-index: 1021;
 }
 
-.c22 {
+.c23 {
   word-break: normal;
 }
 
@@ -6628,58 +6825,66 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             class="c10"
           >
             <div
-              class="c11 css-vurnku"
+              class="c9 css-142zc9n"
+            >
+              Uniswap API
+            </div>
+            <div
+              class="c11"
+            />
+            <div
+              class="c12 css-vurnku"
             >
               <div
-                class="c0 c1 c12"
+                class="c0 c1 c13"
               >
                 <div
-                  class="c13"
+                  class="c14"
                   style="height: 20px; width: 20px;"
                 >
                   <div
-                    class="c14"
+                    class="c15"
                   >
                     <img
                       alt="ABC logo"
-                      class="c15"
+                      class="c16"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                     />
                   </div>
                 </div>
                 <div
-                  class="c0 c1 c16"
+                  class="c0 c1 c17"
                 >
                   <div
-                    class="c17"
+                    class="c18"
                   >
                     <svg
-                      class="c18"
+                      class="c19"
                     >
                       dot_line.svg
                     </svg>
                   </div>
                   <div
-                    class="c19 c20"
+                    class="c20 c21"
                   >
                     <div
-                      class="c19 c21"
+                      class="c20 c22"
                     >
                       <div
-                        class="c3 c22 css-1m65e73"
+                        class="c3 c23 css-1m65e73"
                       >
                         V3
                       </div>
                     </div>
                     <div
-                      class="c9 c22 css-1m65e73"
+                      class="c9 c23 css-1m65e73"
                       style="min-width: auto;"
                     >
                       100%
                     </div>
                   </div>
                   <div
-                    class="c23 c24 c25"
+                    class="c24 c25 c26"
                     style="justify-content: space-evenly; z-index: 2;"
                     width="100%"
                   >
@@ -6688,45 +6893,45 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                     >
                       <div>
                         <div
-                          class="c19 c26"
+                          class="c20 c27"
                         >
                           <div
                             class="css-mbnpt3"
                           >
                             <div
-                              class="c27"
+                              class="c28"
                             >
                               <div
-                                class="c28"
+                                class="c29"
                               >
                                 <div
-                                  class="c13"
+                                  class="c14"
                                   style="height: 20px; width: 20px;"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c15"
                                   >
                                     <img
                                       alt="DEF logo"
-                                      class="c15"
+                                      class="c16"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                     />
                                   </div>
                                 </div>
                               </div>
                               <div
-                                class="c29"
+                                class="c30"
                               >
                                 <div
-                                  class="c13"
+                                  class="c14"
                                   style="height: 20px; width: 20px;"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c15"
                                   >
                                     <img
                                       alt="ABC logo"
-                                      class="c15"
+                                      class="c16"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                     />
                                   </div>
@@ -6735,7 +6940,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                             </div>
                           </div>
                           <div
-                            class="c9 c22 css-1m65e73"
+                            class="c9 c23 css-1m65e73"
                           >
                             1%
                           </div>
@@ -6747,33 +6952,36 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                       style="position: fixed; left: 0px; top: 0px;"
                     >
                       <div
-                        class="c30"
+                        class="c31"
                       >
                         ABC/DEF 1% pool
                       </div>
                       <div
-                        class="c31 arrow-"
+                        class="c32 arrow-"
                         style="position: absolute;"
                       />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c13"
+                  class="c14"
                   style="height: 20px; width: 20px;"
                 >
                   <div
-                    class="c14"
+                    class="c15"
                   >
                     <img
                       alt="DEF logo"
-                      class="c15"
+                      class="c16"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                     />
                   </div>
                 </div>
               </div>
             </div>
+            <div
+              class="c11"
+            />
             <div
               class="c9 css-obwv3p"
             >
@@ -6783,7 +6991,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
         </div>
       </div>
       <div
-        class="c31 arrow-"
+        class="c32 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -6816,6 +7024,24 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -6827,11 +7053,11 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c10 {
   color: #7D7D7D;
 }
 
-.c10 {
+.c11 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -6842,15 +7068,15 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   font-weight: 500;
 }
 
-.c10:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c7 {
+.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -6865,13 +7091,13 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   height: inherit;
 }
 
-.c11 {
+.c12 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c11::before {
+.c12::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -6885,43 +7111,43 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   background: #FFFFFF;
 }
 
-.c11.arrow-top {
+.c12.arrow-top {
   bottom: -4px;
 }
 
-.c11.arrow-top::before {
+.c12.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c11.arrow-bottom {
+.c12.arrow-bottom {
   top: -4px;
 }
 
-.c11.arrow-bottom::before {
+.c12.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c11.arrow-left {
+.c12.arrow-left {
   right: -4px;
 }
 
-.c11.arrow-left::before {
+.c12.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c11.arrow-right {
+.c12.arrow-right {
   left: -4px;
 }
 
-.c11.arrow-right::before {
+.c12.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c9 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -6955,7 +7181,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Network fee
+      Network cost
     </div>
     <div
       class="c5"
@@ -6964,26 +7190,36 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          $1.00
+          <div
+            class="c0 c7"
+          >
+            <img
+              alt="gas cost icon"
+              height="16"
+              src="ethereum-logo.png"
+              width="16"
+            />
+            $1.00
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c8"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c9"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c10 css-obwv3p"
         >
           <div
-            class="c9 css-1m65e73"
+            class="c10 css-1m65e73"
           >
             The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
             <a
-              class="c10"
+              class="c11"
               href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
               rel="noopener noreferrer"
               target="_blank"
@@ -6994,7 +7230,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
         </div>
       </div>
       <div
-        class="c11 arrow-"
+        class="c12 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -7465,21 +7701,6 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   background-color: #22222212;
 }
 
-.c12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
 .c10 {
   z-index: 1070;
   pointer-events: none;
@@ -7566,6 +7787,21 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   border-radius: 12px;
   border: 1px solid #22222212;
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
 }
 
 .c6 {
@@ -7848,7 +8084,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   min-width: 0;
 }
 
-.c23 {
+.c24 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -7872,7 +8108,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   justify-content: flex-start;
 }
 
-.c24 {
+.c25 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -7897,14 +8133,14 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   justify-content: space-between;
 }
 
-.c25 {
+.c26 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c25 > * {
+.c26 > * {
   margin: 1px !important;
 }
 
@@ -7916,19 +8152,10 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   color: #7D7D7D;
 }
 
-.c10 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
+.c11 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
 }
 
 .c7 {
@@ -7946,13 +8173,13 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   height: inherit;
 }
 
-.c31 {
+.c32 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c31::before {
+.c32::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -7966,40 +8193,57 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   background: #FFFFFF;
 }
 
-.c31.arrow-top {
+.c32.arrow-top {
   bottom: -4px;
 }
 
-.c31.arrow-top::before {
+.c32.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c31.arrow-bottom {
+.c32.arrow-bottom {
   top: -4px;
 }
 
-.c31.arrow-bottom::before {
+.c32.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c31.arrow-left {
+.c32.arrow-left {
   right: -4px;
 }
 
-.c31.arrow-left::before {
+.c32.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c31.arrow-right {
+.c32.arrow-right {
   left: -4px;
 }
 
-.c31.arrow-right::before {
+.c32.arrow-right::before {
   border-right: none;
   border-top: none;
+}
+
+.c31 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
 .c8 {
@@ -8019,24 +8263,22 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c30 {
-  max-width: 200px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 8px;
-  pointer-events: auto;
-  color: #222222;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid #22222212;
-  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
 }
 
-.c19 {
+.c20 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -8057,7 +8299,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   font-weight: 535;
 }
 
-.c15 {
+.c16 {
   opacity: 0;
   -webkit-transition: opacity 250ms ease-in;
   transition: opacity 250ms ease-in;
@@ -8066,7 +8308,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   border-radius: 50%;
 }
 
-.c14 {
+.c15 {
   width: 20px;
   height: 20px;
   background: #22222212;
@@ -8076,7 +8318,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   border-radius: 50%;
 }
 
-.c13 {
+.c14 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -8084,7 +8326,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   display: flex;
 }
 
-.c27 {
+.c28 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -8095,16 +8337,16 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   flex-direction: row;
 }
 
-.c28 {
+.c29 {
   z-index: 1;
 }
 
-.c29 {
+.c30 {
   position: absolute;
   left: -10px !important;
 }
 
-.c11 {
+.c12 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -8112,12 +8354,12 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   width: 100%;
 }
 
-.c12 {
+.c13 {
   display: grid;
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c16 {
+.c17 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -8134,7 +8376,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   position: relative;
 }
 
-.c26 {
+.c27 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -8142,7 +8384,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   padding: 4px 4px;
 }
 
-.c17 {
+.c18 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -8157,11 +8399,11 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   opacity: 0.5;
 }
 
-.c18 path {
+.c19 path {
   stroke: #22222212;
 }
 
-.c20 {
+.c21 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -8175,7 +8417,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   z-index: 1020;
 }
 
-.c21 {
+.c22 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -8184,7 +8426,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   z-index: 1021;
 }
 
-.c22 {
+.c23 {
   word-break: normal;
 }
 
@@ -8236,58 +8478,66 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             class="c10"
           >
             <div
-              class="c11 css-vurnku"
+              class="c9 css-142zc9n"
+            >
+              Uniswap API
+            </div>
+            <div
+              class="c11"
+            />
+            <div
+              class="c12 css-vurnku"
             >
               <div
-                class="c0 c1 c12"
+                class="c0 c1 c13"
               >
                 <div
-                  class="c13"
+                  class="c14"
                   style="height: 20px; width: 20px;"
                 >
                   <div
-                    class="c14"
+                    class="c15"
                   >
                     <img
                       alt="ABC logo"
-                      class="c15"
+                      class="c16"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                     />
                   </div>
                 </div>
                 <div
-                  class="c0 c1 c16"
+                  class="c0 c1 c17"
                 >
                   <div
-                    class="c17"
+                    class="c18"
                   >
                     <svg
-                      class="c18"
+                      class="c19"
                     >
                       dot_line.svg
                     </svg>
                   </div>
                   <div
-                    class="c19 c20"
+                    class="c20 c21"
                   >
                     <div
-                      class="c19 c21"
+                      class="c20 c22"
                     >
                       <div
-                        class="c3 c22 css-1m65e73"
+                        class="c3 c23 css-1m65e73"
                       >
                         V3
                       </div>
                     </div>
                     <div
-                      class="c9 c22 css-1m65e73"
+                      class="c9 c23 css-1m65e73"
                       style="min-width: auto;"
                     >
                       100%
                     </div>
                   </div>
                   <div
-                    class="c23 c24 c25"
+                    class="c24 c25 c26"
                     style="justify-content: space-evenly; z-index: 2;"
                     width="100%"
                   >
@@ -8296,45 +8546,45 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                     >
                       <div>
                         <div
-                          class="c19 c26"
+                          class="c20 c27"
                         >
                           <div
                             class="css-mbnpt3"
                           >
                             <div
-                              class="c27"
+                              class="c28"
                             >
                               <div
-                                class="c28"
+                                class="c29"
                               >
                                 <div
-                                  class="c13"
+                                  class="c14"
                                   style="height: 20px; width: 20px;"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c15"
                                   >
                                     <img
                                       alt="DEF logo"
-                                      class="c15"
+                                      class="c16"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                     />
                                   </div>
                                 </div>
                               </div>
                               <div
-                                class="c29"
+                                class="c30"
                               >
                                 <div
-                                  class="c13"
+                                  class="c14"
                                   style="height: 20px; width: 20px;"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c15"
                                   >
                                     <img
                                       alt="ABC logo"
-                                      class="c15"
+                                      class="c16"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                     />
                                   </div>
@@ -8343,7 +8593,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                             </div>
                           </div>
                           <div
-                            class="c9 c22 css-1m65e73"
+                            class="c9 c23 css-1m65e73"
                           >
                             1%
                           </div>
@@ -8355,33 +8605,36 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                       style="position: fixed; left: 0px; top: 0px;"
                     >
                       <div
-                        class="c30"
+                        class="c31"
                       >
                         ABC/DEF 1% pool
                       </div>
                       <div
-                        class="c31 arrow-"
+                        class="c32 arrow-"
                         style="position: absolute;"
                       />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c13"
+                  class="c14"
                   style="height: 20px; width: 20px;"
                 >
                   <div
-                    class="c14"
+                    class="c15"
                   >
                     <img
                       alt="DEF logo"
-                      class="c15"
+                      class="c16"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                     />
                   </div>
                 </div>
               </div>
             </div>
+            <div
+              class="c11"
+            />
             <div
               class="c9 css-obwv3p"
             >
@@ -8391,7 +8644,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
         </div>
       </div>
       <div
-        class="c31 arrow-"
+        class="c32 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -8576,7 +8829,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Network fee
+      Network cost
     </div>
     <div
       class="c5"
@@ -8899,21 +9152,6 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   background-color: #22222212;
 }
 
-.c12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
 .c10 {
   z-index: 1070;
   pointer-events: none;
@@ -9000,6 +9238,21 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   border-radius: 12px;
   border: 1px solid #22222212;
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
 }
 
 .c6 {
@@ -9417,7 +9670,7 @@ exports[`SwapLineItem.tsx syncing 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Network fee
+      Network cost
     </div>
     <div
       class="c5"

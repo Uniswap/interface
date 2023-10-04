@@ -88,7 +88,7 @@ export function usePreviewTrade(
   const isFetching = currentData !== tradeResult || !currentData
 
   return useMemo(() => {
-    if (amountSpecified && queryArgs === skipToken) {
+    if (amountSpecified && otherCurrency && queryArgs === skipToken) {
       return {
         state: TradeState.STALE,
         trade: tradeResult?.trade,
@@ -124,5 +124,6 @@ export function usePreviewTrade(
     tradeResult?.state,
     tradeResult?.trade,
     currentData?.trade,
+    otherCurrency,
   ])
 }

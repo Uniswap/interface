@@ -107,11 +107,11 @@ function AdvancedSwapDetails(props: SwapDetailsProps & { open: boolean }) {
     <AnimatedDropdown open={open}>
       <SwapDetailsWrapper gap="md" data-testid="advanced-swap-details">
         <Separator />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemType.NETWORK_FEE} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.PRICE_IMPACT} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.MAX_SLIPPAGE} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.OUTPUT_TOKEN_FEE_ON_TRANSFER} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.NETWORK_COST} />
         <Separator />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.ROUTING_INFO} />
       </SwapDetailsWrapper>

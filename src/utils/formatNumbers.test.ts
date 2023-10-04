@@ -460,3 +460,37 @@ describe('formatReviewSwapCurrencyAmount', () => {
     expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2000000')
   })
 })
+
+describe('formatPercent', () => {
+  beforeEach(() => {
+    mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
+    mocked(useCurrencyConversionFlagEnabled).mockReturnValue(true)
+  })
+
+  it.each([[null], [undefined], [Infinity], [NaN]])('should correctly format %p', (value) => {
+    const { formatPercent } = renderHook(() => useFormatter()).result.current
+
+    expect(formatPercent(value)).toBe('-')
+  })
+
+  it('correctly formats a percent with 2 decimal places', () => {
+    const { formatPercent } = renderHook(() => useFormatter()).result.current
+
+    expect(formatPercent(0)).toBe('0.00%')
+    expect(formatPercent(0.1)).toBe('0.10%')
+    expect(formatPercent(1)).toBe('1.00%')
+    expect(formatPercent(10)).toBe('10.00%')
+    expect(formatPercent(100)).toBe('100.00%')
+  })
+
+  it('correctly formats a percent with 2 decimal places in french locale', () => {
+    mocked(useActiveLocale).mockReturnValue('fr-FR')
+    const { formatPercent } = renderHook(() => useFormatter()).result.current
+
+    expect(formatPercent(0)).toBe('0,00%')
+    expect(formatPercent(0.1)).toBe('0,10%')
+    expect(formatPercent(1)).toBe('1,00%')
+    expect(formatPercent(10)).toBe('10,00%')
+    expect(formatPercent(100)).toBe('100,00%')
+  })
+})
