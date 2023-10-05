@@ -83,13 +83,8 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
 
   const [showConnectingToMoonpayScreen, setShowConnectingToMoonpayScreen] = useState(false)
 
-  const {
-    showNativeKeyboard,
-    onDecimalPadLayout,
-    isLayoutPending,
-    onInputPanelLayout,
-    maxContentHeight,
-  } = useShouldShowNativeKeyboard()
+  const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
+    useShouldShowNativeKeyboard()
 
   const [selection, setSelection] = useState<TextInputProps['selection']>()
 
@@ -203,20 +198,17 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
     <>
       {!showConnectingToMoonpayScreen && (
         <AnimatedFlex row height="100%" style={wrapperStyle}>
-          <AnimatedFlex
-            entering={FadeIn}
-            exiting={FadeOut}
-            gap="$spacing16"
-            pb="$spacing16"
-            px="$spacing24"
-            style={{ marginBottom: insets.bottom }}
-            width="100%">
-            <Flex
+          {isSheetReady && (
+            <AnimatedFlex
+              entering={FadeIn}
+              exiting={FadeOut}
               gap="$spacing16"
-              style={{ height: maxContentHeight }}
-              onLayout={onInputPanelLayout}>
+              pb="$spacing16"
+              px="$spacing24"
+              style={{ marginBottom: insets.bottom }}
+              width="100%">
               <Text variant="subheading1">{t('Buy')}</Text>
-              {isSheetReady && (
+              <Flex gap="$spacing16" onLayout={onInputPanelLayout}>
                 <Flex
                   grow
                   alignItems="center"
@@ -267,53 +259,53 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
                       </Text>
                     )}
                   </Flex>
+                  <Flex centered row gap="$spacing12" pb="$spacing16">
+                    {['100', '300', '1000'].map((amount) => (
+                      <PredefinedAmount
+                        key={amount}
+                        amount={amount}
+                        currentAmount={value}
+                        onPress={onChangeValue('chip')}
+                      />
+                    ))}
+                  </Flex>
                 </Flex>
-              )}
-              <Flex centered row gap="$spacing12" pb="$spacing16">
-                {['100', '300', '1000'].map((amount) => (
-                  <PredefinedAmount
-                    key={amount}
-                    amount={amount}
-                    currentAmount={value}
-                    onPress={onChangeValue('chip')}
-                  />
-                ))}
               </Flex>
-            </Flex>
-            <AnimatedFlex
-              bottom={0}
-              exiting={FadeOutDown}
-              gap="$spacing8"
-              left={0}
-              opacity={isLayoutPending ? 0 : 1}
-              pb="$spacing24"
-              position="absolute"
-              px="$spacing24"
-              right={0}
-              onLayout={onDecimalPadLayout}>
-              {!showNativeKeyboard && (
-                <DecimalPad
-                  resetSelection={resetSelection}
-                  selection={selection}
-                  setValue={onChangeValue('textInput')}
-                  value={value}
+              <AnimatedFlex
+                bottom={0}
+                exiting={FadeOutDown}
+                gap="$spacing8"
+                left={0}
+                opacity={isLayoutPending ? 0 : 1}
+                pb="$spacing24"
+                position="absolute"
+                px="$spacing24"
+                right={0}
+                onLayout={onDecimalPadLayout}>
+                {!showNativeKeyboard && (
+                  <DecimalPad
+                    resetSelection={resetSelection}
+                    selection={selection}
+                    setValue={onChangeValue('textInput')}
+                    value={value}
+                  />
+                )}
+                <MoonpayCtaButton
+                  disabled={!buttonEnabled}
+                  eligible={eligible}
+                  isLoading={isLoading}
+                  properties={{ externalTransactionId }}
+                  onPress={async (): Promise<void> => {
+                    if (eligible) {
+                      setShowConnectingToMoonpayScreen(true)
+                    } else {
+                      await openUri(MOONPAY_UNSUPPORTED_REGION_HELP_URL)
+                    }
+                  }}
                 />
-              )}
-              <MoonpayCtaButton
-                disabled={!buttonEnabled}
-                eligible={eligible}
-                isLoading={isLoading}
-                properties={{ externalTransactionId }}
-                onPress={async (): Promise<void> => {
-                  if (eligible) {
-                    setShowConnectingToMoonpayScreen(true)
-                  } else {
-                    await openUri(MOONPAY_UNSUPPORTED_REGION_HELP_URL)
-                  }
-                }}
-              />
+              </AnimatedFlex>
             </AnimatedFlex>
-          </AnimatedFlex>
+          )}
           {showTokenSelector && (
             <FiatOnRampTokenSelector
               onBack={(): void => setShowTokenSelector(false)}
