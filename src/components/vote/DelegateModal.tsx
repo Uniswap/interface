@@ -180,7 +180,6 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
 
     await approveCallback()
   }
-  console.log(newIrr)
 
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
