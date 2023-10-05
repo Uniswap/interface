@@ -233,6 +233,14 @@ export default function App() {
                   <Route path="smart-pool/:poolAddress/:returnPage" element={<PoolPositionPage />} />
                   <Route path="smart-pool/:poolAddress/:returnPage/:poolStake" element={<PoolPositionPage />} />
                   <Route path="smart-pool/:poolAddress/:returnPage/:poolStake/:apr" element={<PoolPositionPage />} />
+                  <Route
+                    path="smart-pool/:poolAddress/:returnPage/:poolStake/:apr/:poolOwnStake"
+                    element={<PoolPositionPage />}
+                  />
+                  <Route
+                    path="smart-pool/:poolAddress/:returnPage/:poolStake/:apr/:poolOwnStake/:irr"
+                    element={<PoolPositionPage />}
+                  />
 
                   <Route path="stake" element={<Stake />} />
 

@@ -233,11 +233,15 @@ export function PoolPositionPage() {
     returnPage: originFromUrl,
     poolStake: poolStakeFromUrl,
     apr: aprFromUrl,
+    poolOwnStake: poolOwnStakeFromUrl,
+    irr: irrFromUrl,
   } = useParams<{
     poolAddress: string
     returnPage: string
     poolStake: string
     apr: string
+    poolOwnStake: string
+    irr: string
   }>()
   const { chainId, account } = useWeb3React()
   //const theme = useTheme()
@@ -301,6 +305,8 @@ export function PoolPositionPage() {
     spread,
     poolStake: Number(poolStakeFromUrl),
     apr: Number(aprFromUrl),
+    poolOwnStake: Number(poolOwnStakeFromUrl),
+    irr: Number(irrFromUrl),
   } as PoolInfo
   const userBaseTokenBalance = useCurrencyBalance(account ?? undefined, base ?? undefined)
 

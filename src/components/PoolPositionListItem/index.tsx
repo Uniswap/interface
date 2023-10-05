@@ -113,7 +113,8 @@ interface PoolPositionListItemProps {
 
 export default function PoolPositionListItem({ positionDetails, returnPage }: PoolPositionListItemProps) {
   const theme = useTheme()
-  const { name, symbol, apr, irr, userHasStake, poolDelegatedStake, userBalance, userIsOwner } = positionDetails
+  const { name, symbol, apr, irr, userHasStake, poolDelegatedStake, poolOwnStake, userBalance, userIsOwner } =
+    positionDetails
 
   //const position = useMemo(() => {
   //  return new PoolPosition({ name, symbol, pool, id })
@@ -123,7 +124,11 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
   // TODO: also add poolOwnStake to url and che if adding ''/'' to mint page is ok
   const poolStake = poolDelegatedStake ? (Number(poolDelegatedStake) / 1e18).toFixed(0) : ''
   const aprToString = apr ? (Number(apr) * 100).toFixed(2) : ''
-  const positionSummaryLink = `/smart-pool/${positionDetails.address}/${returnPage}/${poolStake}/${aprToString}` ///${positionDetails.id}
+  const poolOwnStakeString = poolOwnStake ? (Number(poolOwnStake) / 1e18).toFixed(0) : ''
+  const irrToString = irr ? (Number(irr) * 100).toFixed(2) : ''
+  const positionSummaryLink = poolStake
+    ? `/smart-pool/${positionDetails.address}/${returnPage}/${poolStake}/${aprToString}/${poolOwnStakeString}/${irrToString}`
+    : `/smart-pool/${positionDetails.address}/${returnPage}` ///${positionDetails.id}
 
   return (
     <LinkRow to={positionSummaryLink}>

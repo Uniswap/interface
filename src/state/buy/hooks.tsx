@@ -19,6 +19,8 @@ export interface PoolInfo {
   spread: number
   poolStake?: number
   apr?: number
+  poolOwnStake?: number
+  irr?: number
 }
 
 // based on typed value
