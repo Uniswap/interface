@@ -229,7 +229,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const fullScreenContentHeight = 0.89 * dimensions.fullHeight
 
   return (
-    <Flex fill maxHeight={fullScreenContentHeight} mb="$spacing12">
+    <Flex fill $short={{ mb: '$none' }} maxHeight={fullScreenContentHeight} mb="$spacing12">
       <Flex gap="$spacing16" pb="$spacing16" pt="$spacing12">
         <AddressDisplay
           showCopy
@@ -254,7 +254,12 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         isVisible={modalState.isOpen}
         onPress={onPressAccount}
       />
-      <TouchableArea hapticFeedback mb="$spacing48" mt="$spacing16" onPress={onPressAddWallet}>
+      <TouchableArea
+        hapticFeedback
+        $short={{ mb: '$spacing24' }}
+        mb="$spacing36"
+        mt="$spacing16"
+        onPress={onPressAddWallet}>
         <Flex row alignItems="center" gap="$spacing16" ml="$spacing24">
           <Flex borderColor="$surface3" borderRadius="$roundedFull" borderWidth={1} p="$spacing8">
             <Icons.Plus
