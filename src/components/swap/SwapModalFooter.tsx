@@ -73,12 +73,12 @@ export default function SwapModalFooter({
     <>
       <DetailsContainer gap="md">
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.EXCHANGE_RATE} />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemType.NETWORK_FEE} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.PRICE_IMPACT} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.OUTPUT_TOKEN_FEE_ON_TRANSFER} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.MAXIMUM_INPUT} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.MINIMUM_OUTPUT} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.NETWORK_COST} />
       </DetailsContainer>
       {showAcceptChanges ? (
         <SwapShowAcceptChanges data-testid="show-accept-changes">

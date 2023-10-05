@@ -1,15 +1,16 @@
-import { Plural, t, Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { LoadingRow } from 'components/Loader/styled'
 import RouterLabel from 'components/RouterLabel'
-import { RowBetween } from 'components/Row'
+import Row, { RowBetween } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { getChainInfo } from 'constants/chainInfo'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useHoverProps from 'hooks/useHoverProps'
 import { useIsMobile } from 'nft/hooks'
 import React, { PropsWithChildren, useEffect, useState } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
-import { getTransactionCount, isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
+import { isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
 import styled, { DefaultTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -20,7 +21,7 @@ import SwapRoute from './SwapRoute'
 
 export enum SwapLineItemType {
   EXCHANGE_RATE,
-  NETWORK_FEE,
+  NETWORK_COST,
   INPUT_TOKEN_FEE_ON_TRANSFER,
   OUTPUT_TOKEN_FEE_ON_TRANSFER,
   PRICE_IMPACT,
@@ -108,14 +109,19 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
         Label: () => <Trans>Exchange rate</Trans>,
         Value: () => <ExchangeRateRow trade={trade} />,
       }
-    case SwapLineItemType.NETWORK_FEE:
+    case SwapLineItemType.NETWORK_COST:
       if (!SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) return
       return {
-        Label: () => <Plural value={getTransactionCount(trade) || 1} one="Network fee" other="Network fees" />,
+        Label: () => <Trans>Network cost</Trans>,
         TooltipBody: () => <GasBreakdownTooltip trade={trade} hideUniswapXDescription />,
         Value: () => {
           if (isPreview) return <Loading />
-          return <>{formatNumber({ input: trade.totalGasUseEstimateUSD, type: NumberType.FiatGasPrice })}</>
+          return (
+            <Row gap="4px">
+              <img src={getChainInfo(chainId)?.logoUrl} alt="gas cost icon" width={16} height={16} />
+              {formatNumber({ input: trade.totalGasUseEstimateUSD, type: NumberType.FiatGasPrice })}
+            </Row>
+          )
         },
       }
     case SwapLineItemType.PRICE_IMPACT:
