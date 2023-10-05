@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import Row from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain } from 'constants/chains'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
@@ -84,6 +85,14 @@ export default function BalanceSummary({ token }: { token: Currency }) {
     amount: useStablecoinValue(balance),
     type: NumberType.FiatTokenStats,
   })
+  const costBasis = <ThemedText.LabelSmall>$ dolla</ThemedText.LabelSmall>
+  const gain = <ThemedText.LabelSmall>$ dolla</ThemedText.LabelSmall>
+  const twentyFourHourReturn = (
+    <Row>
+      <ThemedText.LabelSmall>$ dolla</ThemedText.LabelSmall>
+      <ThemedText.LabelSmall>$ dolla</ThemedText.LabelSmall>
+    </Row>
+  )
 
   const isInfoTDPEnabled = useInfoTDPEnabled()
 
@@ -98,7 +107,7 @@ export default function BalanceSummary({ token }: { token: Currency }) {
           {isInfoTDPEnabled ? <Trans>Your {token.symbol}</Trans> : <Trans>Your balance on {label}</Trans>}
         </ThemedText.SubHeaderSmall>
         <BalanceRow>
-          <CurrencyLogo currency={token} size="2rem" hideL2Icon={false} />
+          <CurrencyLogo currency={token} size={isInfoTDPEnabled ? '24px' : '2rem'} hideL2Icon={false} />
           <BalanceContainer>
             <BalanceAmountsContainer>
               <BalanceItem>
@@ -122,15 +131,15 @@ export default function BalanceSummary({ token }: { token: Currency }) {
           <>
             <PerformanceContainer>
               <ThemedText.BodySmall>Cost basis</ThemedText.BodySmall>
-              <ThemedText.LabelSmall>$ dolla</ThemedText.LabelSmall>
+              <ThemedText.LabelSmall>{costBasis}</ThemedText.LabelSmall>
             </PerformanceContainer>
             <PerformanceContainer>
               <ThemedText.BodySmall>Gain</ThemedText.BodySmall>
-              <ThemedText.LabelSmall>$ dolla</ThemedText.LabelSmall>
+              <ThemedText.LabelSmall>{gain}</ThemedText.LabelSmall>
             </PerformanceContainer>
             <PerformanceContainer>
               <ThemedText.BodySmall>24H return</ThemedText.BodySmall>
-              <ThemedText.LabelSmall>$ dolla</ThemedText.LabelSmall>
+              <ThemedText.LabelSmall>{twentyFourHourReturn}</ThemedText.LabelSmall>
             </PerformanceContainer>
           </>
         )}
