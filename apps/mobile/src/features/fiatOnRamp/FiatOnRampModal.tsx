@@ -269,7 +269,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
                   </Flex>
                 </Flex>
               )}
-              <Flex centered row pb="$spacing16">
+              <Flex centered row gap="$spacing12" pb="$spacing16">
                 {['100', '300', '1000'].map((amount) => (
                   <PredefinedAmount
                     key={amount}
@@ -397,7 +397,7 @@ function PredefinedAmount({
         foregroundColor={colors[highlighted ? 'accent1' : 'neutral2'].val}
         label={`$${amount}`}
         px="$spacing16"
-        textVariant="buttonLabel2"
+        textVariant="buttonLabel3"
       />
     </TouchableOpacity>
   )
