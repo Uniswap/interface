@@ -118,6 +118,7 @@ export function DappConnectionItem({
           testID={ElementName.WCDappNetworks}
           onPress={(): void => onPressChangeNetwork(session)}>
           <NetworkLogos
+            negativeGap
             showFirstChainLabel
             backgroundColor="$surface2"
             borderRadius="$roundedFull"

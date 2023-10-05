@@ -1,13 +1,18 @@
 import React from 'react'
 import 'react-native-reanimated'
 import { Flex, FlexProps, Text } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
+import { iconSizes, spacing } from 'ui/src/theme'
 import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 
-export type NetworkLogosProps = { chains: ChainId[]; showFirstChainLabel?: boolean } & FlexProps
+export type NetworkLogosProps = {
+  chains: ChainId[]
+  showFirstChainLabel?: boolean
+  negativeGap?: boolean
+} & FlexProps
 
 export function NetworkLogos({
+  negativeGap,
   chains,
   showFirstChainLabel,
   ...rest
@@ -25,9 +30,11 @@ export function NetworkLogos({
           <Flex width={iconSizes.icon20} />
         </Flex>
       ) : (
-        <Flex centered row gap="$spacing4">
+        <Flex centered row gap={negativeGap ? -spacing.spacing8 : '$spacing4'}>
           {chains.map((chainId) => (
-            <NetworkLogo key={chainId} chainId={chainId} size={iconSizes.icon20} />
+            <Flex bg="$surface2" borderRadius="$rounded8" p={negativeGap ? '$spacing2' : '$none'}>
+              <NetworkLogo key={chainId} chainId={chainId} size={iconSizes.icon20} />
+            </Flex>
           ))}
         </Flex>
       )}

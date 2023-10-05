@@ -22,7 +22,12 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
   return (
     <>
       <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} pt="$spacing12">
-        <Flex row alignItems="center" justifyContent="space-between" px="$spacing24">
+        <Flex
+          row
+          alignItems="center"
+          justifyContent="space-between"
+          pb="$spacing12"
+          px="$spacing16">
           <Flex grow width={iconSizes.icon40}>
             {backButton ?? <BackButton />}
           </Flex>
@@ -48,7 +53,10 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
         {sessions.length > 0 ? (
           <FlatList
             columnWrapperStyle={ColumnStyle.base}
-            contentContainerStyle={{ paddingHorizontal: spacing.spacing24 }}
+            contentContainerStyle={{
+              paddingHorizontal: spacing.spacing16,
+              paddingTop: spacing.spacing12,
+            }}
             data={sessions}
             keyExtractor={(item): string => item.id}
             numColumns={2}
