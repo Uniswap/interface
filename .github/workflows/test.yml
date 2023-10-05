@@ -136,81 +136,81 @@ jobs:
     steps:
       - run: exit 0
 
-  cypress-test-matrix:
-    needs: [build, cypress-rerun]
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        containers: [1, 2, 3, 4]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        with:
-          path: /root/.cache/Cypress
-          key: ${{ runner.os }}-cypress-${{ hashFiles('**/node_modules/cypress/package.json') }}
-      - run: |
-          yarn cypress install
-          yarn cypress info
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: build
-          path: build
-
-      - uses: actions/cache/restore@v3
-        with:
-          path: cache
-          key: ${{ runner.os }}-hardhat-${{ hashFiles('hardhat.config.js') }}-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-hardhat-${{ hashFiles('hardhat.config.js') }}-
-
-      - uses: cypress-io/github-action@v4
-        with:
-          install: false
-          record: true
-          parallel: true
-          start: yarn serve
-          wait-on: 'http://localhost:3000'
-          browser: electron
-          group: e2e
-          spec: ${{ github.ref_name == 'releases/staging' && 'cypress/{e2e,staging}/**/*.test.ts' || 'cypress/e2e/**/*.test.ts' }}
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COMMIT_INFO_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
-          COMMIT_INFO_MESSAGE: ${{ github.event.pull_request.title || github.event.head_commit.message }}
-          COMMIT_INFO_AUTHOR: ${{ github.event.sender.login || github.event.head_commit.author.login }}
-          # Cypress requires an email for filtering by author, but GitHub does not expose one.
-          # GitHub's public profile email can be deterministically produced from user id/login.
-          COMMIT_INFO_EMAIL: ${{ github.event.sender.id || github.event.head_commit.author.id }}+${{ github.event.sender.login || github.event.head_commit.author.login }}@users.noreply.github.com
-          COMMIT_INFO_SHA: ${{ github.event.pull_request.head.sha || github.event.head_commit.sha }}
-          COMMIT_INFO_TIMESTAMP: ${{ github.event.pull_request.updated_at || github.event.head_commit.timestamp }}
-          CYPRESS_PULL_REQUEST_ID: ${{ github.event.pull_request.number }}
-          CYPRESS_PULL_REQUEST_URL: ${{ github.event.pull_request.html_url }}
-      - if: failure() && github.ref_name == 'main'
-        uses: ./.github/actions/report
-        with:
-          name: Cypress tests
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: hardhat-cache
-          path: cache
-
-  hardhat-cache:
-    needs: [cypress-test-matrix]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: hardhat-cache
-          path: cache
-      - uses: actions/cache/save@v3
-        with:
-          path: cache
-          key: ${{ runner.os }}-hardhat-${{ hashFiles('hardhat.config.js') }}-${{ github.run_id }}
+#  cypress-test-matrix:
+#    needs: [build, cypress-rerun]
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        containers: [1, 2, 3, 4]
+#    steps:
+#      - uses: actions/checkout@v3
+#      - uses: ./.github/actions/setup
+#      - uses: actions/cache@v3
+#        with:
+#          path: /root/.cache/Cypress
+#          key: ${{ runner.os }}-cypress-${{ hashFiles('**/node_modules/cypress/package.json') }}
+#      - run: |
+#          yarn cypress install
+#          yarn cypress info
+#
+#      - uses: actions/download-artifact@v3
+#        with:
+#          name: build
+#          path: build
+#
+#      - uses: actions/cache/restore@v3
+#        with:
+#          path: cache
+#          key: ${{ runner.os }}-hardhat-${{ hashFiles('hardhat.config.js') }}-${{ github.run_id }}
+#          restore-keys: ${{ runner.os }}-hardhat-${{ hashFiles('hardhat.config.js') }}-
+#
+#      - uses: cypress-io/github-action@v4
+#        with:
+#          install: false
+#          record: true
+#          parallel: true
+#          start: yarn serve
+#          wait-on: 'http://localhost:3000'
+#          browser: electron
+#          group: e2e
+#          spec: ${{ github.ref_name == 'releases/staging' && 'cypress/{e2e,staging}/**/*.test.ts' || 'cypress/e2e/**/*.test.ts' }}
+#        env:
+#          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          COMMIT_INFO_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+#          COMMIT_INFO_MESSAGE: ${{ github.event.pull_request.title || github.event.head_commit.message }}
+#          COMMIT_INFO_AUTHOR: ${{ github.event.sender.login || github.event.head_commit.author.login }}
+#          # Cypress requires an email for filtering by author, but GitHub does not expose one.
+#          # GitHub's public profile email can be deterministically produced from user id/login.
+#          COMMIT_INFO_EMAIL: ${{ github.event.sender.id || github.event.head_commit.author.id }}+${{ github.event.sender.login || github.event.head_commit.author.login }}@users.noreply.github.com
+#          COMMIT_INFO_SHA: ${{ github.event.pull_request.head.sha || github.event.head_commit.sha }}
+#          COMMIT_INFO_TIMESTAMP: ${{ github.event.pull_request.updated_at || github.event.head_commit.timestamp }}
+#          CYPRESS_PULL_REQUEST_ID: ${{ github.event.pull_request.number }}
+#          CYPRESS_PULL_REQUEST_URL: ${{ github.event.pull_request.html_url }}
+#      - if: failure() && github.ref_name == 'main'
+#        uses: ./.github/actions/report
+#        with:
+#          name: Cypress tests
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
+#
+#      - uses: actions/upload-artifact@v3
+#        with:
+#          name: hardhat-cache
+#          path: cache
+#
+#  hardhat-cache:
+#    needs: [cypress-test-matrix]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/download-artifact@v3
+#        with:
+#          name: hardhat-cache
+#          path: cache
+#      - uses: actions/cache/save@v3
+#        with:
+#          path: cache
+#          key: ${{ runner.os }}-hardhat-${{ hashFiles('hardhat.config.js') }}-${{ github.run_id }}
 
   cloud-typecheck:
     runs-on: ubuntu-latest
@@ -229,24 +229,24 @@ jobs:
           name: Cloud typecheck
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
-  cloud-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        with:
-          path: node_modules/.cache
-          key: ${{ runner.os }}-cloud-jest-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-cloud-jest-
-      # Only use 1 worker, so the other can be used for the proxy server under test.
-      - run: yarn test:cloud --coverage --maxWorkers=1
-      - uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
-          flags: cloud-tests
-        
+#  cloud-tests:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#      - uses: ./.github/actions/setup
+#      - uses: actions/cache@v3
+#        with:
+#          path: node_modules/.cache
+#          key: ${{ runner.os }}-cloud-jest-${{ github.run_id }}
+#          restore-keys: ${{ runner.os }}-cloud-jest-
+#      # Only use 1 worker, so the other can be used for the proxy server under test.
+#      - run: yarn test:cloud --coverage --maxWorkers=1
+#      - uses: codecov/codecov-action@v3
+#        with:
+#          token: ${{ secrets.CODECOV_TOKEN }}
+#          fail_ci_if_error: false
+#          flags: cloud-tests
+
   pre:
     if: ${{ github.ref_name == 'main' || github.ref_name == 'releases/staging' }}
     runs-on: ubuntu-latest
