@@ -22,6 +22,7 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
 }
 
 .c11 {
+  display: inline-block;
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
