@@ -5,10 +5,12 @@ import { shortenAddress } from 'wallet/src/utils/addresses'
 
 export function AccountDetails({
   address,
+  allowFontScaling = true,
   iconSize = 20,
   chevron = false,
 }: {
   address: string
+  allowFontScaling?: boolean
   iconSize?: number
   chevron?: boolean
 }): JSX.Element {
@@ -18,13 +20,14 @@ export function AccountDetails({
         <AddressDisplay
           hideAddressInSubtitle
           address={address}
+          allowFontScaling={allowFontScaling}
           horizontalGap="$spacing8"
           size={iconSize}
           variant="body3"
         />
       </Flex>
       <Flex fill row shrink alignItems="center" gap="$spacing4" justifyContent="flex-end">
-        <Text color="$neutral2" variant="body3">
+        <Text allowFontScaling={allowFontScaling} color="$neutral2" variant="body3">
           {shortenAddress(address)}
         </Text>
         {chevron && (

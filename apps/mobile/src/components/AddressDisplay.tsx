@@ -16,6 +16,7 @@ import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 type AddressDisplayProps = {
   address: string
+  allowFontScaling?: boolean
   hideAddressInSubtitle?: boolean
   size?: number
   variant?: keyof typeof fonts
@@ -56,6 +57,7 @@ function CopyButtonWrapper({
 
 /** Helper component to display identicon and formatted address */
 export function AddressDisplay({
+  allowFontScaling = true,
   address,
   size = 24,
   variant = 'body1',
@@ -118,6 +120,7 @@ export function AddressDisplay({
           onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
           <Flex centered row gap="$spacing12">
             <Text
+              allowFontScaling={allowFontScaling}
               color={textColor}
               ellipsizeMode="tail"
               numberOfLines={1}
