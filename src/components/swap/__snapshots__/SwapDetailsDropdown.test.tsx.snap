@@ -304,27 +304,6 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
               class="c9 c19 css-142zc9n"
               data-testid="swap-li-label"
             >
-              Network fee
-            </div>
-            <div
-              class="c12"
-            >
-              <div>
-                <div
-                  class="c9 c20 css-142zc9n"
-                >
-                  $1.00
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c2 c3 c4"
-          >
-            <div
-              class="c9 c19 css-142zc9n"
-              data-testid="swap-li-label"
-            >
               Price impact
             </div>
             <div
@@ -381,6 +360,37 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                   class="c9 c20 css-142zc9n"
                 >
                   0.000000000000001 DEF
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c2 c3 c4"
+          >
+            <div
+              class="c9 c19 css-142zc9n"
+              data-testid="swap-li-label"
+            >
+              Network cost
+            </div>
+            <div
+              class="c12"
+            >
+              <div>
+                <div
+                  class="c9 c20 css-142zc9n"
+                >
+                  <div
+                    class="c2 c10"
+                  >
+                    <img
+                      alt="gas cost icon"
+                      height="16"
+                      src="ethereum-logo.png"
+                      width="16"
+                    />
+                    $1.00
+                  </div>
                 </div>
               </div>
             </div>
