@@ -44,11 +44,7 @@ function useFeatureFlagsContext(): FeatureFlagsContextType {
 }
 
 /* update and save feature flag settings */
-const initialAtomValue: { [flag: string]: BaseVariant } = {}
-Object.values(FeatureFlag).forEach((value) => {
-  initialAtomValue[value] = BaseVariant.Control
-})
-export const featureFlagSettings = atomWithStorage<Record<string, string>>('featureFlags', initialAtomValue)
+export const featureFlagSettings = atomWithStorage<Record<string, string>>('featureFlags', {})
 
 export function useUpdateFlag() {
   const setFeatureFlags = useUpdateAtom(featureFlagSettings)

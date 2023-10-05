@@ -1,4 +1,4 @@
-import { BaseVariant, featureFlagSettings } from 'featureFlags'
+import { BaseVariant, FeatureFlag, featureFlagSettings as featureFlagSettingsAtom } from 'featureFlags'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo, useState } from 'react'
 import { useGate } from 'statsig-react'
@@ -23,12 +23,13 @@ const TopBar = styled.div`
   display: flex;
   justify-content: space-between;
 `
-const Gate = ([flagName, flagSetting]: [string, string]) => {
+const Gate = (flagName: string, featureFlagSettings: Record<string, string>) => {
   const gateResult = useGate(flagName)
   if (gateResult) {
-    const { value: statsigValue } = gateResult
-    const settingValue = flagSetting === BaseVariant.Enabled
-    if (statsigValue !== settingValue) {
+    const { value: statsigValue }: { value: boolean } = gateResult
+    const flagSetting = featureFlagSettings[flagName]
+    const settingValue: boolean = flagSetting === BaseVariant.Enabled
+    if (flagSetting && statsigValue !== settingValue) {
       return (
         <ThemedText.LabelSmall key={flagName}>
           {flagName}: {flagSetting}
@@ -40,14 +41,14 @@ const Gate = ([flagName, flagSetting]: [string, string]) => {
 }
 
 export default function DevFlagsBox() {
-  const featureFlagsAtom = useAtomValue(featureFlagSettings)
-  const featureFlags = useMemo(() => Object.entries(featureFlagsAtom), [featureFlagsAtom])
+  const featureFlagsAtom = useAtomValue(featureFlagSettingsAtom)
+  const featureFlags = useMemo(() => Object.values(FeatureFlag), [])
+
+  const overrides = featureFlags.map((flagName) => Gate(flagName, featureFlagsAtom))
+  const hasOverrides = overrides.some((g) => g !== null)
 
   const [isOpen, setIsOpen] = useState(true)
   const toggleOpen = () => setIsOpen((open) => !open)
-
-  const overrides = featureFlags.map((flag) => Gate(flag))
-  const hasOverrides = useMemo(() => overrides.some((g) => g !== null), [overrides])
 
   return (
     <Box>
