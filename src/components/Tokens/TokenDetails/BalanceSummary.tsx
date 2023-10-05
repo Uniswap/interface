@@ -4,19 +4,21 @@ import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain } from 'constants/chains'
+import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-const BalancesCard = styled.div`
+const BalancesCard = styled.div<{ isInfoTDPEnabled: boolean }>`
   border-radius: 16px;
-  color: ${({ theme }) => theme.neutral1};
+  ${({ isInfoTDPEnabled, theme }) => `color: ${isInfoTDPEnabled ? theme.neutral2 : theme.neutral1};`};
   display: none;
   height: fit-content;
   padding: 16px;
   width: 100%;
+  ${({ isInfoTDPEnabled, theme }) => isInfoTDPEnabled && `background-color: ${theme.surface2};`};
 
   // 768 hardcoded to match NFT-redesign navbar breakpoints
   // src/nft/css/sprinkles.css.ts
@@ -54,6 +56,14 @@ const BalanceAmountsContainer = styled.div`
   align-items: center;
 `
 
+const PerformanceContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+`
+
 const StyledNetworkLabel = styled.div`
   color: ${({ color }) => color};
   font-size: 12px;
@@ -75,14 +85,17 @@ export default function BalanceSummary({ token }: { token: Currency }) {
     type: NumberType.FiatTokenStats,
   })
 
+  const isInfoTDPEnabled = useInfoTDPEnabled()
+
   if (!account || !balance) {
     return null
   }
   return (
-    <BalancesCard>
+    <BalancesCard isInfoTDPEnabled={isInfoTDPEnabled}>
       <BalanceSection>
-        <ThemedText.SubHeaderSmall color={theme.neutral1}>
-          <Trans>Your balance on {label}</Trans>
+        <ThemedText.SubHeaderSmall>
+          {/* // question: hmm it looks like Trans does handle variables? */}
+          {isInfoTDPEnabled ? <Trans>Your {token.symbol}</Trans> : <Trans>Your balance on {label}</Trans>}
         </ThemedText.SubHeaderSmall>
         <BalanceRow>
           <CurrencyLogo currency={token} size="2rem" hideL2Icon={false} />
@@ -90,16 +103,37 @@ export default function BalanceSummary({ token }: { token: Currency }) {
             <BalanceAmountsContainer>
               <BalanceItem>
                 <ThemedText.SubHeader>
-                  {formattedBalance} {token.symbol}
+                  {formattedBalance} {!isInfoTDPEnabled && token.symbol}
                 </ThemedText.SubHeader>
               </BalanceItem>
               <BalanceItem>
-                <ThemedText.BodyPrimary>{formattedUsdValue}</ThemedText.BodyPrimary>
+                {/* figma says this text should be 18px */}
+                {isInfoTDPEnabled ? (
+                  <ThemedText.BodySecondary>{formattedUsdValue}</ThemedText.BodySecondary>
+                ) : (
+                  <ThemedText.BodyPrimary>{formattedUsdValue}</ThemedText.BodyPrimary>
+                )}
               </BalanceItem>
             </BalanceAmountsContainer>
-            <StyledNetworkLabel color={color}>{label}</StyledNetworkLabel>
+            {!isInfoTDPEnabled && <StyledNetworkLabel color={color}>{label}</StyledNetworkLabel>}
           </BalanceContainer>
         </BalanceRow>
+        {isInfoTDPEnabled && (
+          <>
+            <PerformanceContainer>
+              <ThemedText.BodySmall>Cost basis</ThemedText.BodySmall>
+              <ThemedText.LabelSmall>$ dolla</ThemedText.LabelSmall>
+            </PerformanceContainer>
+            <PerformanceContainer>
+              <ThemedText.BodySmall>Gain</ThemedText.BodySmall>
+              <ThemedText.LabelSmall>$ dolla</ThemedText.LabelSmall>
+            </PerformanceContainer>
+            <PerformanceContainer>
+              <ThemedText.BodySmall>24H return</ThemedText.BodySmall>
+              <ThemedText.LabelSmall>$ dolla</ThemedText.LabelSmall>
+            </PerformanceContainer>
+          </>
+        )}
       </BalanceSection>
     </BalancesCard>
   )
