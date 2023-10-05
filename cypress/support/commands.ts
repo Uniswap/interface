@@ -24,7 +24,7 @@ declare global {
     }
     interface VisitOptions {
       serviceWorker?: true
-      featureFlags?: Array<FeatureFlag>
+      featureFlags?: Array<{ name: FeatureFlag; value: boolean }>
       /**
        * Initial user state.
        * @default {@type import('../utils/user-state').CONNECTED_WALLET_USER_STATE}
@@ -59,7 +59,10 @@ Cypress.Commands.overwrite(
 
             // Set feature flags, if configured.
             if (options?.featureFlags) {
-              const featureFlags = options.featureFlags.reduce((flags, flag) => ({ ...flags, [flag]: 'enabled' }), {})
+              const featureFlags = options.featureFlags.reduce(
+                (flags, flag) => ({ ...flags, [flag.name]: flag.value ? 'enabled' : 'control' }),
+                {}
+              )
               win.localStorage.setItem('featureFlags', JSON.stringify(featureFlags))
             }
 
