@@ -18,6 +18,7 @@ import { processWidgetEvents } from 'src/features/widgets/widgets'
 import { AppScreen } from 'src/screens/Screens'
 import { useSporeColors } from 'ui/src'
 import { useAsyncData } from 'utilities/src/react/hooks'
+import { sleep } from 'utilities/src/time/timing'
 
 interface Props {
   onReady: (navigationRef: NavigationContainerRefWithCurrent<ReactNavigation.RootParamList>) => void
@@ -88,13 +89,15 @@ export const useManageDeepLinks = (): void => {
     const url = await Linking.getInitialURL()
     if (url) {
       dispatch(openDeepLink({ url, coldStart: true }))
-    } else {
-      const urlListener = Linking.addEventListener('url', (event: { url: string }) =>
-        dispatch(openDeepLink({ url: event.url, coldStart: false }))
-      )
-
-      return urlListener.remove
     }
+    // we need to set an event listener for deep links, but we don't want to do it immediately on cold start,
+    // as then there is a change we dispatch `openDeepLink` action twice if app was lauched by a deep link
+    await sleep(2000) // 2000 was chosen imperically
+    const urlListener = Linking.addEventListener('url', (event: { url: string }) =>
+      dispatch(openDeepLink({ url: event.url, coldStart: false }))
+    )
+
+    return urlListener.remove
   }, [dispatch])
 
   useAsyncData(manageDeepLinks)
