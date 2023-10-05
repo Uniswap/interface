@@ -5756,7 +5756,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
           <span
             class=""
           >
-            3.000%
+            3%
           </span>
         </div>
       </div>
@@ -7409,7 +7409,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
           <span
             class=""
           >
-            3.000%
+            3%
           </span>
         </div>
       </div>
