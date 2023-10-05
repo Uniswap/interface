@@ -53,7 +53,7 @@ describe('Wallet Dropdown', () => {
 
   describe('should change locale with feature flag', () => {
     beforeEach(() => {
-      cy.visit('/', { featureFlags: [FeatureFlag.currencyConversion] })
+      cy.visit('/', { featureFlags: [{ name: FeatureFlag.currencyConversion, value: true }] })
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
     })
@@ -147,19 +147,19 @@ describe('Wallet Dropdown', () => {
 
   describe('local currency', () => {
     it('loads local currency from the query param', () => {
-      cy.visit('/', { featureFlags: [FeatureFlag.currencyConversion] })
+      cy.visit('/', { featureFlags: [{ name: FeatureFlag.currencyConversion, value: true }] })
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
       cy.contains('USD')
 
-      cy.visit('/?cur=AUD', { featureFlags: [FeatureFlag.currencyConversion] })
+      cy.visit('/?cur=AUD', { featureFlags: [{ name: FeatureFlag.currencyConversion, value: true }] })
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
       cy.contains('AUD')
     })
 
     it('loads local currency from menu', () => {
-      cy.visit('/', { featureFlags: [FeatureFlag.currencyConversion] })
+      cy.visit('/', { featureFlags: [{ name: FeatureFlag.currencyConversion, value: true }] })
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
       cy.contains('USD')
