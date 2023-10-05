@@ -10,6 +10,7 @@ import {
   WarningSeverity,
 } from 'src/components/modals/WarningModal/types'
 import { formatPriceImpact } from 'utilities/src/format/format'
+import { logger } from 'utilities/src/logger/logger'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 import {
   API_RATE_LIMIT_ERROR,
@@ -18,6 +19,7 @@ import {
 } from 'wallet/src/features/routing/api'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { isOffline } from 'wallet/src/features/transactions/utils'
+import { currencyId } from 'wallet/src/utils/currencyId'
 import { DerivedSwapInfo } from './types'
 
 const PRICE_IMPACT_THRESHOLD_MEDIUM = new Percent(3, 100) // 3%
@@ -35,8 +37,6 @@ export function getSwapWarnings(
   }
 
   const { currencyBalances, currencyAmounts, currencies, trade } = derivedSwapInfo
-
-  const priceImpact = trade.trade?.priceImpact
 
   // insufficient balance for swap
   const currencyBalanceIn = currencyBalances[CurrencyField.INPUT]
@@ -102,15 +102,51 @@ export function getSwapWarnings(
   }
 
   // price impact warning
-  if (priceImpact?.greaterThan(PRICE_IMPACT_THRESHOLD_MEDIUM)) {
-    const highImpact = !priceImpact.lessThan(PRICE_IMPACT_THRESHOLD_HIGH)
+  try {
+    const priceImpact = trade.trade?.priceImpact
+    if (priceImpact?.greaterThan(PRICE_IMPACT_THRESHOLD_MEDIUM)) {
+      const highImpact = !priceImpact.lessThan(PRICE_IMPACT_THRESHOLD_HIGH)
+      warnings.push({
+        type: highImpact ? WarningLabel.PriceImpactHigh : WarningLabel.PriceImpactMedium,
+        severity: highImpact ? WarningSeverity.High : WarningSeverity.Medium,
+        action: WarningAction.WarnBeforeSubmit,
+        title: t('Rate impacted by swap size ({{ swapSize }})', {
+          swapSize: formatPriceImpact(priceImpact),
+        }),
+        message: t(
+          'Due to the amount of {{ currencyOut }} liquidity currently available, the more {{ currencyIn }} you try to swap, the less {{ currencyOut }} you will receive.',
+          {
+            currencyIn: currencies[CurrencyField.INPUT]?.currency.symbol,
+            currencyOut: currencies[CurrencyField.OUTPUT]?.currency.symbol,
+          }
+        ),
+      })
+    }
+  } catch (error) {
+    // TODO: MOB-1569: evaluate if extra works and switching off tags
+    const errorContextData = {
+      inputToken: currencies[CurrencyField.INPUT]?.currency
+        ? currencyId(currencies[CurrencyField.INPUT]?.currency)
+        : 'None',
+      inputAmount: currencyAmounts[CurrencyField.INPUT]?.toSignificant(),
+      outputToken: currencies[CurrencyField.OUTPUT]?.currency
+        ? currencyId(currencies[CurrencyField.OUTPUT]?.currency)
+        : 'None',
+      outputAmount: currencyAmounts[CurrencyField.OUTPUT]?.toSignificant(),
+    }
+    logger.error(error, {
+      tags: {
+        file: 'useSwapWarnings',
+        function: 'getSwapWarnings',
+        ...errorContextData,
+      },
+      extra: errorContextData,
+    })
     warnings.push({
-      type: highImpact ? WarningLabel.PriceImpactHigh : WarningLabel.PriceImpactMedium,
-      severity: highImpact ? WarningSeverity.High : WarningSeverity.Medium,
+      type: WarningLabel.PriceImpactMedium,
+      severity: WarningSeverity.Medium,
       action: WarningAction.WarnBeforeSubmit,
-      title: t('Rate impacted by swap size ({{ swapSize }})', {
-        swapSize: formatPriceImpact(priceImpact),
-      }),
+      title: t('Rate might be impacted by swap size'),
       message: t(
         'Due to the amount of {{ currencyOut }} liquidity currently available, the more {{ currencyIn }} you try to swap, the less {{ currencyOut }} you will receive.',
         {

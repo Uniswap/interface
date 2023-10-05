@@ -63,8 +63,7 @@ export function useSvgData(uri: string, autoplay = false): SvgData | undefined {
     const fetchData = async (): Promise<SvgData | undefined> => {
       try {
         return await fetchSVG(uri, autoplay, controller.signal)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
+      } catch (error) {
         logger.error(error, { tags: { file: 'WebSvgUri', function: 'fetchSvg', uri } })
       }
     }
