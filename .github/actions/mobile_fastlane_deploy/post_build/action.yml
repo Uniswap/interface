@@ -42,9 +42,9 @@ runs:
     - name: Set environment variables
       shell: bash
       run: |
-        echo "IOS_VERSION_NUMBER=$(cat ios_version_number)" >> $GITHUB_ENV
-        echo "IOS_BUILD_NUMBER=$(cat ios_build_number)" >> $GITHUB_ENV
-        echo "ANDROID_VERSION_CODE=$(cat android_version_code || echo '')" >> $GITHUB_ENV
+        echo "IOS_VERSION_NUMBER=$(cat ./ios-vars/ios_version_number.txt)" >> $GITHUB_ENV
+        echo "IOS_BUILD_NUMBER=$(cat ./ios-vars/ios_build_number.txt)" >> $GITHUB_ENV
+        echo "ANDROID_VERSION_CODE=$(cat ./android-vars/android_version_code.txt || echo '')" >> $GITHUB_ENV
 
     - name: 🐞 Create Sentry release
       working-directory: ./apps/mobile
