@@ -46,7 +46,6 @@ describe('Landing Page', () => {
   })
 
   it('renders uk compliance banner in uk', () => {
-    cy.visit('/swap')
     cy.intercept('https://api.uniswap.org/v1/amplitude-proxy', (req) => {
       const requestBody = JSON.stringify(req.body)
       const byteSize = new Blob([requestBody]).size
@@ -63,7 +62,7 @@ describe('Landing Page', () => {
         }
       )
     })
-
+    cy.visit('/swap')
     cy.contains('UK disclaimer')
   })
 })
