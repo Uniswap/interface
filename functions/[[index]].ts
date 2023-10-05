@@ -11,7 +11,7 @@ export const onRequest: PagesFunction = async ({ request, next }) => {
   }
   const res = next()
   try {
-    return new HTMLRewriter().on('head', new MetaTagInjector(data)).transform(await res)
+    return new HTMLRewriter().on('head', new MetaTagInjector(data, request)).transform(await res)
   } catch (e) {
     return res
   }

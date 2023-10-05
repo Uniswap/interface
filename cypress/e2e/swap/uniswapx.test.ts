@@ -1,4 +1,5 @@
 import { ChainId, CurrencyAmount } from '@uniswap/sdk-core'
+import { FeatureFlag } from 'featureFlags'
 
 import { DAI, nativeOnChain, USDC_MAINNET } from '../../../src/constants/tokens'
 import { getTestSelector } from '../../utils'
@@ -26,7 +27,9 @@ function stubSwapTxReceipt() {
 describe('UniswapX Toggle', () => {
   beforeEach(() => {
     cy.intercept(QuoteEndpoint, { fixture: QuoteWhereUniswapXIsBetter })
-    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
+    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
+      featureFlags: [{ name: FeatureFlag.uniswapXDefaultEnabled, value: false }],
+    })
   })
 
   it('only displays uniswapx ui when setting is on', () => {
@@ -76,7 +79,9 @@ describe('UniswapX Orders', () => {
     stubSwapTxReceipt()
 
     cy.hardhat().then((hardhat) => hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 3e8)))
-    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
+    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
+      featureFlags: [{ name: FeatureFlag.uniswapXDefaultEnabled, value: false }],
+    })
   })
 
   it('can swap exact-in trades using uniswapX', () => {
@@ -164,7 +169,9 @@ describe('UniswapX Eth Input', () => {
 
     stubSwapTxReceipt()
 
-    cy.visit(`/swap/?inputCurrency=ETH&outputCurrency=${DAI.address}`)
+    cy.visit(`/swap/?inputCurrency=ETH&outputCurrency=${DAI.address}`, {
+      featureFlags: [{ name: FeatureFlag.uniswapXDefaultEnabled, value: false }],
+    })
   })
 
   it('can swap using uniswapX with ETH as input', () => {
@@ -249,7 +256,9 @@ describe('UniswapX activity history', () => {
     cy.hardhat().then(async (hardhat) => {
       await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 3e8))
     })
-    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
+    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
+      featureFlags: [{ name: FeatureFlag.uniswapXDefaultEnabled, value: false }],
+    })
   })
 
   it('can view UniswapX order status progress in activity', () => {

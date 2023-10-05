@@ -263,6 +263,24 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -274,11 +292,36 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c8 {
   color: #7D7D7D;
 }
 
-.c7 {
+.c14 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c14:hover {
+  opacity: 0.6;
+}
+
+.c14:active {
+  opacity: 0.4;
+}
+
+.c13 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
+}
+
+.c10 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -293,13 +336,13 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   height: inherit;
 }
 
-.c10 {
+.c15 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c10::before {
+.c15::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -313,43 +356,43 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   background: #FFFFFF;
 }
 
-.c10.arrow-top {
+.c15.arrow-top {
   bottom: -4px;
 }
 
-.c10.arrow-top::before {
+.c15.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c10.arrow-bottom {
+.c15.arrow-bottom {
   top: -4px;
 }
 
-.c10.arrow-bottom::before {
+.c15.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c10.arrow-left {
+.c15.arrow-left {
   right: -4px;
 }
 
-.c10.arrow-left::before {
+.c15.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c10.arrow-right {
+.c15.arrow-right {
   left: -4px;
 }
 
-.c10.arrow-right::before {
+.c15.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c11 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -366,6 +409,21 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c6 {
   text-align: right;
   overflow-wrap: break-word;
@@ -374,6 +432,18 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
 .c4 {
   cursor: help;
   color: #7D7D7D;
+}
+
+.c9 {
+  background: #22222212;
+  border-radius: 8px;
+  color: #7D7D7D;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.c9::after {
+  content: 'Auto';
 }
 
 @supports (-webkit-background-clip:text) and (-webkit-text-fill-color:transparent) {
@@ -387,7 +457,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Minimum output
+      Max. slippage
     </div>
     <div
       class="c5"
@@ -396,25 +466,63 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          0.0000000000000009 DEF
+          <div
+            class="c0 c7"
+          >
+            <div
+              class="c8 c9 css-1lgneq0"
+            />
+             2%
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c10"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c11"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8 css-obwv3p"
         >
-          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+          <div
+            class="c12"
+          >
+            <div
+              class="c0 c1 c2"
+            >
+              <div
+                class="c3 css-obwv3p"
+              >
+                Receive at least
+              </div>
+              <div
+                class="c3 css-obwv3p"
+              >
+                0.0000000000000009 DEF
+              </div>
+            </div>
+            <div
+              class="c13"
+            />
+            <div>
+              If the price moves so that you will receive less than 0.0000000000000009 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+              <a
+                class="c14"
+                href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn more
+              </a>
+            </div>
+          </div>
         </div>
       </div>
       <div
-        class="c10 arrow-"
+        class="c15 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -566,7 +674,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Expected output
+      Receive at least
     </div>
     <div
       class="c5"
@@ -575,7 +683,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          0.000000000000001 DEF
+          0.0000000000000009 DEF
         </div>
       </div>
     </div>
@@ -589,7 +697,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
         <div
           class="c9 css-obwv3p"
         >
-          The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.
+          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
         </div>
       </div>
       <div
@@ -1288,7 +1396,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
           <span
             class=""
           >
-            105566.373%
+            -105566.373%
           </span>
         </div>
       </div>
@@ -1335,6 +1443,24 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -1346,11 +1472,36 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c8 {
   color: #7D7D7D;
 }
 
-.c7 {
+.c14 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c14:hover {
+  opacity: 0.6;
+}
+
+.c14:active {
+  opacity: 0.4;
+}
+
+.c13 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
+}
+
+.c10 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -1365,13 +1516,13 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   height: inherit;
 }
 
-.c10 {
+.c15 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c10::before {
+.c15::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -1385,43 +1536,43 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   background: #FFFFFF;
 }
 
-.c10.arrow-top {
+.c15.arrow-top {
   bottom: -4px;
 }
 
-.c10.arrow-top::before {
+.c15.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c10.arrow-bottom {
+.c15.arrow-bottom {
   top: -4px;
 }
 
-.c10.arrow-bottom::before {
+.c15.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c10.arrow-left {
+.c15.arrow-left {
   right: -4px;
 }
 
-.c10.arrow-left::before {
+.c15.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c10.arrow-right {
+.c15.arrow-right {
   left: -4px;
 }
 
-.c10.arrow-right::before {
+.c15.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c11 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -1438,6 +1589,21 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c6 {
   text-align: right;
   overflow-wrap: break-word;
@@ -1448,6 +1614,18 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   color: #7D7D7D;
 }
 
+.c9 {
+  background: #22222212;
+  border-radius: 8px;
+  color: #7D7D7D;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.c9::after {
+  content: 'Auto';
+}
+
 <div
     class="c0 c1 c2"
   >
@@ -1455,7 +1633,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Minimum output
+      Max. slippage
     </div>
     <div
       class="c5"
@@ -1464,25 +1642,63 @@ exports[`SwapLineItem.tsx exact input 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          0.00000000000000098 DEF
+          <div
+            class="c0 c7"
+          >
+            <div
+              class="c8 c9 css-1lgneq0"
+            />
+             2%
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c10"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c11"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8 css-obwv3p"
         >
-          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+          <div
+            class="c12"
+          >
+            <div
+              class="c0 c1 c2"
+            >
+              <div
+                class="c3 css-obwv3p"
+              >
+                Receive at least
+              </div>
+              <div
+                class="c3 css-obwv3p"
+              >
+                0.00000000000000098 DEF
+              </div>
+            </div>
+            <div
+              class="c13"
+            />
+            <div>
+              If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+              <a
+                class="c14"
+                href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn more
+              </a>
+            </div>
+          </div>
         </div>
       </div>
       <div
-        class="c10 arrow-"
+        class="c15 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -1630,7 +1846,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Expected output
+      Receive at least
     </div>
     <div
       class="c5"
@@ -1639,7 +1855,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          0.000000000000001 DEF
+          0.00000000000000098 DEF
         </div>
       </div>
     </div>
@@ -1653,7 +1869,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
         <div
           class="c9 css-obwv3p"
         >
-          The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.
+          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
         </div>
       </div>
       <div
@@ -2610,7 +2826,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
           <span
             class=""
           >
-            105566.373%
+            -105566.373%
           </span>
         </div>
       </div>
@@ -2657,6 +2873,24 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -2668,11 +2902,36 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c8 {
   color: #7D7D7D;
 }
 
-.c7 {
+.c14 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c14:hover {
+  opacity: 0.6;
+}
+
+.c14:active {
+  opacity: 0.4;
+}
+
+.c13 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
+}
+
+.c10 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -2687,13 +2946,13 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   height: inherit;
 }
 
-.c10 {
+.c15 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c10::before {
+.c15::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -2707,43 +2966,43 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   background: #FFFFFF;
 }
 
-.c10.arrow-top {
+.c15.arrow-top {
   bottom: -4px;
 }
 
-.c10.arrow-top::before {
+.c15.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c10.arrow-bottom {
+.c15.arrow-bottom {
   top: -4px;
 }
 
-.c10.arrow-bottom::before {
+.c15.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c10.arrow-left {
+.c15.arrow-left {
   right: -4px;
 }
 
-.c10.arrow-left::before {
+.c15.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c10.arrow-right {
+.c15.arrow-right {
   left: -4px;
 }
 
-.c10.arrow-right::before {
+.c15.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c11 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -2760,6 +3019,21 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c6 {
   text-align: right;
   overflow-wrap: break-word;
@@ -2770,6 +3044,18 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   color: #7D7D7D;
 }
 
+.c9 {
+  background: #22222212;
+  border-radius: 8px;
+  color: #7D7D7D;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.c9::after {
+  content: 'Auto';
+}
+
 <div
     class="c0 c1 c2"
   >
@@ -2777,7 +3063,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Minimum output
+      Max. slippage
     </div>
     <div
       class="c5"
@@ -2786,25 +3072,63 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          0.00000000000000098 DEF
+          <div
+            class="c0 c7"
+          >
+            <div
+              class="c8 c9 css-1lgneq0"
+            />
+             2%
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c10"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c11"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8 css-obwv3p"
         >
-          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+          <div
+            class="c12"
+          >
+            <div
+              class="c0 c1 c2"
+            >
+              <div
+                class="c3 css-obwv3p"
+              >
+                Receive at least
+              </div>
+              <div
+                class="c3 css-obwv3p"
+              >
+                0.00000000000000098 DEF
+              </div>
+            </div>
+            <div
+              class="c13"
+            />
+            <div>
+              If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+              <a
+                class="c14"
+                href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn more
+              </a>
+            </div>
+          </div>
         </div>
       </div>
       <div
-        class="c10 arrow-"
+        class="c15 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -2952,7 +3276,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Expected output
+      Receive at least
     </div>
     <div
       class="c5"
@@ -2961,7 +3285,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          0.000000000000001 DEF
+          0.00000000000000098 DEF
         </div>
       </div>
     </div>
@@ -2975,7 +3299,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
         <div
           class="c9 css-obwv3p"
         >
-          The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.
+          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
         </div>
       </div>
       <div
@@ -3932,7 +4256,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
           <span
             class=""
           >
-            105566.373%
+            -105566.373%
           </span>
         </div>
       </div>
@@ -3979,6 +4303,24 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -3990,11 +4332,36 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c8 {
   color: #7D7D7D;
 }
 
-.c7 {
+.c14 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c14:hover {
+  opacity: 0.6;
+}
+
+.c14:active {
+  opacity: 0.4;
+}
+
+.c13 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
+}
+
+.c10 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -4009,13 +4376,13 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   height: inherit;
 }
 
-.c10 {
+.c15 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c10::before {
+.c15::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -4029,43 +4396,43 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   background: #FFFFFF;
 }
 
-.c10.arrow-top {
+.c15.arrow-top {
   bottom: -4px;
 }
 
-.c10.arrow-top::before {
+.c15.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c10.arrow-bottom {
+.c15.arrow-bottom {
   top: -4px;
 }
 
-.c10.arrow-bottom::before {
+.c15.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c10.arrow-left {
+.c15.arrow-left {
   right: -4px;
 }
 
-.c10.arrow-left::before {
+.c15.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c10.arrow-right {
+.c15.arrow-right {
   left: -4px;
 }
 
-.c10.arrow-right::before {
+.c15.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c11 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -4082,6 +4449,21 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c6 {
   text-align: right;
   overflow-wrap: break-word;
@@ -4092,6 +4474,18 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   color: #7D7D7D;
 }
 
+.c9 {
+  background: #22222212;
+  border-radius: 8px;
+  color: #7D7D7D;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.c9::after {
+  content: 'Auto';
+}
+
 <div
     class="c0 c1 c2"
   >
@@ -4099,7 +4493,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Maximum input
+      Max. slippage
     </div>
     <div
       class="c5"
@@ -4108,25 +4502,63 @@ exports[`SwapLineItem.tsx exact output 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          0.00000000000000102 ABC
+          <div
+            class="c0 c7"
+          >
+            <div
+              class="c8 c9 css-1lgneq0"
+            />
+             2%
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c10"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c11"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8 css-obwv3p"
         >
-          The maximum amount you are guaranteed to spend. If the price slips any further, your transaction will revert.
+          <div
+            class="c12"
+          >
+            <div
+              class="c0 c1 c2"
+            >
+              <div
+                class="c3 css-obwv3p"
+              >
+                Pay at most
+              </div>
+              <div
+                class="c3 css-obwv3p"
+              >
+                0.00000000000000102 ABC
+              </div>
+            </div>
+            <div
+              class="c13"
+            />
+            <div>
+              If the price moves so that you will pay more than 0.00000000000000102 ABC, your transaction will be reverted. This is the maximum amount you are guaranteed to pay. 
+              <a
+                class="c14"
+                href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn more
+              </a>
+            </div>
+          </div>
         </div>
       </div>
       <div
-        class="c10 arrow-"
+        class="c15 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -4274,7 +4706,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Expected output
+      Pay at most
     </div>
     <div
       class="c5"
@@ -4283,7 +4715,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          0.000000000000001 GHI
+          0.00000000000000102 ABC
         </div>
       </div>
     </div>
@@ -4297,7 +4729,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
         <div
           class="c9 css-obwv3p"
         >
-          The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.
+          The maximum amount you are guaranteed to spend. If the price slips any further, your transaction will revert.
         </div>
       </div>
       <div
@@ -5273,7 +5705,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
           <span
             class=""
           >
-            -3.000%
+            3%
           </span>
         </div>
       </div>
@@ -5460,7 +5892,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
           <span
             class=""
           >
-            105566.373%
+            -105566.373%
           </span>
         </div>
       </div>
@@ -5507,6 +5939,24 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -5518,11 +5968,36 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c8 {
   color: #7D7D7D;
 }
 
-.c7 {
+.c14 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c14:hover {
+  opacity: 0.6;
+}
+
+.c14:active {
+  opacity: 0.4;
+}
+
+.c13 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
+}
+
+.c10 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -5537,13 +6012,13 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   height: inherit;
 }
 
-.c10 {
+.c15 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c10::before {
+.c15::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -5557,43 +6032,43 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   background: #FFFFFF;
 }
 
-.c10.arrow-top {
+.c15.arrow-top {
   bottom: -4px;
 }
 
-.c10.arrow-top::before {
+.c15.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c10.arrow-bottom {
+.c15.arrow-bottom {
   top: -4px;
 }
 
-.c10.arrow-bottom::before {
+.c15.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c10.arrow-left {
+.c15.arrow-left {
   right: -4px;
 }
 
-.c10.arrow-left::before {
+.c15.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c10.arrow-right {
+.c15.arrow-right {
   left: -4px;
 }
 
-.c10.arrow-right::before {
+.c15.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c11 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -5610,6 +6085,21 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c6 {
   text-align: right;
   overflow-wrap: break-word;
@@ -5620,6 +6110,18 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   color: #7D7D7D;
 }
 
+.c9 {
+  background: #22222212;
+  border-radius: 8px;
+  color: #7D7D7D;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.c9::after {
+  content: 'Auto';
+}
+
 <div
     class="c0 c1 c2"
   >
@@ -5627,7 +6129,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Minimum output
+      Max. slippage
     </div>
     <div
       class="c5"
@@ -5636,25 +6138,63 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          0.000000000000000952 DEF
+          <div
+            class="c0 c7"
+          >
+            <div
+              class="c8 c9 css-1lgneq0"
+            />
+             2%
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c10"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c11"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8 css-obwv3p"
         >
-          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+          <div
+            class="c12"
+          >
+            <div
+              class="c0 c1 c2"
+            >
+              <div
+                class="c3 css-obwv3p"
+              >
+                Receive at least
+              </div>
+              <div
+                class="c3 css-obwv3p"
+              >
+                0.000000000000000952 DEF
+              </div>
+            </div>
+            <div
+              class="c13"
+            />
+            <div>
+              If the price moves so that you will receive less than 0.000000000000000952 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+              <a
+                class="c14"
+                href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn more
+              </a>
+            </div>
+          </div>
         </div>
       </div>
       <div
-        class="c10 arrow-"
+        class="c15 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -5802,7 +6342,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Expected output
+      Receive at least
     </div>
     <div
       class="c5"
@@ -5811,7 +6351,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          0.00000000000000097 DEF
+          0.000000000000000952 DEF
         </div>
       </div>
     </div>
@@ -5825,7 +6365,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
         <div
           class="c9 css-obwv3p"
         >
-          The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.
+          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
         </div>
       </div>
       <div
@@ -6801,7 +7341,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
           <span
             class=""
           >
-            -3.000%
+            3%
           </span>
         </div>
       </div>
@@ -6988,7 +7528,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
           <span
             class=""
           >
-            105566.373%
+            -105566.373%
           </span>
         </div>
       </div>
@@ -7035,6 +7575,24 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -7046,11 +7604,36 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c8 {
   color: #7D7D7D;
 }
 
-.c7 {
+.c14 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c14:hover {
+  opacity: 0.6;
+}
+
+.c14:active {
+  opacity: 0.4;
+}
+
+.c13 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
+}
+
+.c10 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -7065,13 +7648,13 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   height: inherit;
 }
 
-.c10 {
+.c15 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c10::before {
+.c15::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -7085,43 +7668,43 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   background: #FFFFFF;
 }
 
-.c10.arrow-top {
+.c15.arrow-top {
   bottom: -4px;
 }
 
-.c10.arrow-top::before {
+.c15.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c10.arrow-bottom {
+.c15.arrow-bottom {
   top: -4px;
 }
 
-.c10.arrow-bottom::before {
+.c15.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c10.arrow-left {
+.c15.arrow-left {
   right: -4px;
 }
 
-.c10.arrow-left::before {
+.c15.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c10.arrow-right {
+.c15.arrow-right {
   left: -4px;
 }
 
-.c10.arrow-right::before {
+.c15.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c11 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -7138,6 +7721,21 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c6 {
   text-align: right;
   overflow-wrap: break-word;
@@ -7148,6 +7746,18 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   color: #7D7D7D;
 }
 
+.c9 {
+  background: #22222212;
+  border-radius: 8px;
+  color: #7D7D7D;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.c9::after {
+  content: 'Auto';
+}
+
 <div
     class="c0 c1 c2"
   >
@@ -7155,7 +7765,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Minimum output
+      Max. slippage
     </div>
     <div
       class="c5"
@@ -7164,25 +7774,63 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          0.000000000000000952 DEF
+          <div
+            class="c0 c7"
+          >
+            <div
+              class="c8 c9 css-1lgneq0"
+            />
+             2%
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c10"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c11"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8 css-obwv3p"
         >
-          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+          <div
+            class="c12"
+          >
+            <div
+              class="c0 c1 c2"
+            >
+              <div
+                class="c3 css-obwv3p"
+              >
+                Receive at least
+              </div>
+              <div
+                class="c3 css-obwv3p"
+              >
+                0.000000000000000952 DEF
+              </div>
+            </div>
+            <div
+              class="c13"
+            />
+            <div>
+              If the price moves so that you will receive less than 0.000000000000000952 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+              <a
+                class="c14"
+                href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn more
+              </a>
+            </div>
+          </div>
         </div>
       </div>
       <div
-        class="c10 arrow-"
+        class="c15 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -7330,7 +7978,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Expected output
+      Receive at least
     </div>
     <div
       class="c5"
@@ -7339,7 +7987,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          0.00000000000000097 DEF
+          0.000000000000000952 DEF
         </div>
       </div>
     </div>
@@ -7353,7 +8001,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
         <div
           class="c9 css-obwv3p"
         >
-          The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.
+          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
         </div>
       </div>
       <div
@@ -8361,6 +9009,24 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -8372,11 +9038,36 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c8 {
   color: #7D7D7D;
 }
 
-.c7 {
+.c14 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c14:hover {
+  opacity: 0.6;
+}
+
+.c14:active {
+  opacity: 0.4;
+}
+
+.c13 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
+}
+
+.c10 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -8391,13 +9082,13 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   height: inherit;
 }
 
-.c10 {
+.c15 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c10::before {
+.c15::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -8411,43 +9102,43 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   background: #FFFFFF;
 }
 
-.c10.arrow-top {
+.c15.arrow-top {
   bottom: -4px;
 }
 
-.c10.arrow-top::before {
+.c15.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c10.arrow-bottom {
+.c15.arrow-bottom {
   top: -4px;
 }
 
-.c10.arrow-bottom::before {
+.c15.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c10.arrow-left {
+.c15.arrow-left {
   right: -4px;
 }
 
-.c10.arrow-left::before {
+.c15.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c10.arrow-right {
+.c15.arrow-right {
   left: -4px;
 }
 
-.c10.arrow-right::before {
+.c15.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c11 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -8464,6 +9155,21 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c6 {
   text-align: right;
   overflow-wrap: break-word;
@@ -8474,6 +9180,18 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   color: #7D7D7D;
 }
 
+.c9 {
+  background: #22222212;
+  border-radius: 8px;
+  color: #7D7D7D;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.c9::after {
+  content: 'Auto';
+}
+
 <div
     class="c0 c1 c2"
   >
@@ -8481,7 +9199,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Minimum output
+      Max. slippage
     </div>
     <div
       class="c5"
@@ -8490,25 +9208,63 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          0.00000000000000098 DEF
+          <div
+            class="c0 c7"
+          >
+            <div
+              class="c8 c9 css-1lgneq0"
+            />
+             2%
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c10"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c11"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8 css-obwv3p"
         >
-          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+          <div
+            class="c12"
+          >
+            <div
+              class="c0 c1 c2"
+            >
+              <div
+                class="c3 css-obwv3p"
+              >
+                Receive at least
+              </div>
+              <div
+                class="c3 css-obwv3p"
+              >
+                0.00000000000000098 DEF
+              </div>
+            </div>
+            <div
+              class="c13"
+            />
+            <div>
+              If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+              <a
+                class="c14"
+                href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn more
+              </a>
+            </div>
+          </div>
         </div>
       </div>
       <div
-        class="c10 arrow-"
+        class="c15 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -8656,7 +9412,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Expected output
+      Receive at least
     </div>
     <div
       class="c5"
@@ -8665,7 +9421,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          0.000000000000001 DEF
+          0.00000000000000098 DEF
         </div>
       </div>
     </div>
@@ -8679,7 +9435,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
         <div
           class="c9 css-obwv3p"
         >
-          The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.
+          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
         </div>
       </div>
       <div
@@ -8950,7 +9706,7 @@ exports[`SwapLineItem.tsx syncing 1`] = `
   will-change: background-position;
   border-radius: 12px;
   height: 15px;
-  width: 70px;
+  width: 50px;
 }
 
 .c4 {
@@ -8965,13 +9721,13 @@ exports[`SwapLineItem.tsx syncing 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Minimum output
+      Max. slippage
     </div>
     <div
       class="c5"
       data-testid="loading-row"
       height="15"
-      width="70"
+      width="50"
     />
   </div>
   .c0 {
@@ -9018,7 +9774,7 @@ exports[`SwapLineItem.tsx syncing 1`] = `
   will-change: background-position;
   border-radius: 12px;
   height: 15px;
-  width: 65px;
+  width: 70px;
 }
 
 .c4 {
@@ -9033,13 +9789,13 @@ exports[`SwapLineItem.tsx syncing 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Expected output
+      Receive at least
     </div>
     <div
       class="c5"
       data-testid="loading-row"
       height="15"
-      width="65"
+      width="70"
     />
   </div>
   .c0 {
