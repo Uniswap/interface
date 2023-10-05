@@ -115,7 +115,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             top={0}
             width="100%"
             onLayout={(event: LayoutChangeEvent): void => setInfoLayout(event.nativeEvent.layout)}>
-            <Text color="$neutral1" variant="subheading1">
+            <Text color="$neutral1" variant="heading3">
               {t('Scan a QR code')}
             </Text>
           </Flex>
@@ -186,7 +186,11 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
               onLayout={(event: LayoutChangeEvent): void =>
                 setConnectionLayout(event.nativeEvent.layout)
               }>
-              <Button icon={Icons.Global} theme="secondary" onPress={props.onPressConnections}>
+              <Button
+                fontFamily="$body"
+                icon={<Icons.Global color="$neutral2" />}
+                theme="secondary"
+                onPress={props.onPressConnections}>
                 {props.numConnections === 1
                   ? t('1 app connected')
                   : t('{{numConnections}} apps connected', {

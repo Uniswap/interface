@@ -88,8 +88,8 @@ export function SettingsWalletEdit({
                 {!ensName && (
                   <Flex ml="$spacing12">
                     <Button
-                      icon={Icons.Pencil}
-                      size="small"
+                      icon={<Icons.Pencil color="$neutral2" />}
+                      size="medium"
                       theme="secondary"
                       onPress={onPressShowEditInput}
                     />

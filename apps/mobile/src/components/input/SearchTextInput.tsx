@@ -20,7 +20,7 @@ import {
   Text,
   TouchableArea,
 } from 'ui/src'
-import { dimensions, fonts, iconSizes, spacing } from 'ui/src/theme'
+import { dimensions, fonts, spacing } from 'ui/src/theme'
 import { SHADOW_OFFSET_SMALL } from 'wallet/src/components/BaseCard/BaseCard'
 
 export const springConfig = {
@@ -127,7 +127,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             },
           })}>
           <Flex py="$spacing4">
-            <Icons.Search color="$neutral2" height={iconSizes.icon20} width={iconSizes.icon20} />
+            <Icons.Search color="$neutral2" size="$icon.20" />
           </Flex>
 
           <Input
@@ -165,7 +165,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                 enterStyle={{ o: 0, scale: 0 }}
                 // eslint-disable-next-line react-native/no-inline-styles
                 exitStyle={{ o: 0, scale: 0 }}
-                icon={clearIcon ?? <Icons.X color="$neutral2" size="$spacing16" />}
+                icon={clearIcon ?? <Icons.X color="$neutral2" size="$icon.16" />}
                 p="$spacing4"
                 theme="secondary"
                 onPress={onClear}

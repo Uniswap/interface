@@ -14,7 +14,7 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { AnimatedTouchableArea, Flex, Text } from 'ui/src'
-import { borderRadii, iconSizes, imageSizes } from 'ui/src/theme'
+import { borderRadii, imageSizes } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
@@ -164,7 +164,7 @@ function FavoriteTokenCard({
                 {formatUSDPrice(usdPrice)}
               </Text>
               <RelativeChange
-                arrowSize={iconSizes.icon16}
+                arrowSize="$icon.16"
                 change={pricePercentChange ?? undefined}
                 semanticColor={true}
                 variant="subheading2"

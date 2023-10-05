@@ -1,14 +1,14 @@
 import React from 'react'
 import { SvgProps } from 'react-native-svg'
-import { Logos } from 'ui/src'
+import { IconProps, Logos } from 'ui/src'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
-export function EtherscanIcon({ width, height }: SvgProps): JSX.Element {
+export function EtherscanIcon({ size }: SvgProps & { size?: IconProps['size'] }): JSX.Element {
   const isDarkMode = useIsDarkMode()
 
   return isDarkMode ? (
-    <Logos.EtherscanLogoDark height={height} width={width} />
+    <Logos.EtherscanLogoDark size={size} />
   ) : (
-    <Logos.EtherscanLogoLight height={height} width={width} />
+    <Logos.EtherscanLogoLight size={size} />
   )
 }

@@ -17,7 +17,7 @@ export function Switch({ value, onValueChange, disabled, ...rest }: Props): JSX.
   const colors = useSporeColors()
 
   const falseThumbColor = IS_ANDROID ? colors.neutral3.get() : colors.surface1.get()
-  const trackColor = colors.surface3.get()
+  const trackColor = colors.accentSoft.get()
 
   return (
     <Flex>

@@ -58,6 +58,7 @@ export function PriceAmount({
   return (
     <Flex centered row gap={gap} overflow="hidden">
       {!isUSD && (
+        // @ts-expect-error TODO(MOB-1566) convert to specific icon size token, avoiding doing too big of a change in this PR
         <Logos.Ethereum color={iconColor || '$neutral1'} height={iconSize} width={iconSize} />
       )}
       <Text color={textColor} variant={textVariant}>

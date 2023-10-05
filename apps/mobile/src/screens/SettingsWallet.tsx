@@ -222,13 +222,7 @@ export function SettingsWallet({
               }
             : { address },
           text: IS_ANDROID ? t('Google Drive Backup') : t('iCloud backup'),
-          icon: (
-            <Icons.OSDynamicCloudIcon
-              color={colors.neutral2.get()}
-              height={iconSizes.icon24}
-              width={iconSizes.icon24}
-            />
-          ),
+          icon: <Icons.OSDynamicCloudIcon color="$neutral2" size="$icon.24" />,
           isHidden: readonly,
         },
       ],

@@ -4,7 +4,6 @@ import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { LearnMoreLink } from 'src/components/text/LearnMoreLink'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Icons, useSporeColors } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 
 export function SwapProtectionInfoModal({ onClose }: { onClose: () => void }): JSX.Element {
@@ -18,13 +17,7 @@ export function SwapProtectionInfoModal({ onClose }: { onClose: () => void }): J
         'With swap protection on, your Ethereum transactions will be protected from sandwich attacks, with reduced chances of failure.'
       )}
       closeText={t('Close')}
-      icon={
-        <Icons.ShieldCheck
-          color="$statusSuccess"
-          height={iconSizes.icon24}
-          width={iconSizes.icon24}
-        />
-      }
+      icon={<Icons.ShieldCheck color="$statusSuccess" size="$icon.24" />}
       modalName={ModalName.SwapProtection}
       title={t('Swap Protection')}
       onClose={onClose}>

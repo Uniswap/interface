@@ -33,12 +33,7 @@ function Top(): JSX.Element {
   return (
     <Flex grow gap="$spacing16">
       <Flex centered backgroundColor="$accent2" borderRadius={12} height={48} width={48}>
-        <Icons.SendAction
-          color="$accent1"
-          fillOpacity={1}
-          height={iconSizes.icon24}
-          width={iconSizes.icon24}
-        />
+        <Icons.SendAction color="$accent1" fillOpacity={1} size="$icon.24" />
       </Flex>
 
       <Flex

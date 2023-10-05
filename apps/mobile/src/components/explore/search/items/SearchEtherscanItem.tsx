@@ -46,7 +46,7 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
         px="$spacing8"
         py="$spacing12">
         <Flex centered row gap="$spacing12">
-          <EtherscanIcon height={iconSizes.icon40} width={iconSizes.icon40} />
+          <EtherscanIcon size="$icon.40" />
           <Text variant="body1">{shortenAddress(address)}</Text>
         </Flex>
         <Arrow color={colors.neutral2.get()} direction="ne" size={iconSizes.icon24} />

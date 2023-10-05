@@ -33,7 +33,7 @@ import {
   useMedia,
   useSporeColors,
 } from 'ui/src'
-import { borderRadii, iconSizes, spacing } from 'ui/src/theme'
+import { borderRadii, spacing } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { useHighestBalanceNativeCurrencyId } from 'wallet/src/features/dataApi/balances'
@@ -251,7 +251,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
               // shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
               shadowOpacity={isDarkMode ? 0.6 : 0.4}
               shadowRadius={borderRadii.rounded20}>
-              <Icons.Search color="$neutral2" size={iconSizes.icon24} />
+              <Icons.Search color="$neutral2" size="$icon.24" />
               <Text color="$neutral1" variant="body1">
                 {t('Search web3')}
               </Text>

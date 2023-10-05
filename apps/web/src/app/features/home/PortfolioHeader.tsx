@@ -51,7 +51,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
           <Popover stayInFrame>
             <Popover.Trigger
               onTouchEnd={(): void => setUpdateConnectionStatus(!updateConnectionStatus)}>
-              <Icons.Globe color="$neutral2" height={iconSizes.icon20} width={iconSizes.icon20} />
+              <Icons.Globe color="$neutral2" size="$icon.20" />
             </Popover.Trigger>
             <Popover.Content
               borderColor="$surface2"
@@ -65,7 +65,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
           </Popover>
         ) : null}
         <TouchableArea onPress={(): void => navigate('/settings')}>
-          <Icons.Settings color="$neutral2" height={iconSizes.icon24} width={iconSizes.icon24} />
+          <Icons.Settings color="$neutral2" size="$icon.24" />
         </TouchableArea>
       </Flex>
     </Flex>

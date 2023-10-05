@@ -21,6 +21,7 @@ export function FeeOnTransferInfoModal({ onClose }: { onClose: () => void }): JS
       icon={
         <Icons.MoneyBillSend
           color="$magentaVibrant"
+          // @ts-expect-error TODO(MOB-1571): this token is the only one that doesn't use same width/height, overriding type here as it will pass through and work
           height={iconSizes.icon20}
           width={iconSizes.icon24}
         />

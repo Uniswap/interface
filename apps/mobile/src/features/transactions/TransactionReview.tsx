@@ -74,14 +74,14 @@ export function TransactionReview({
   const textProps: TextInputProps = media.short
     ? {
         fontFamily: '$heading',
-        fontSize: '$small',
-        lineHeight: '$small',
-        maxFontSizeMultiplier: fonts.body2.maxFontSizeMultiplier,
+        fontSize: fonts.heading3.fontSize,
+        lineHeight: fonts.heading3.lineHeight * 0.9,
+        maxFontSizeMultiplier: fonts.heading3.maxFontSizeMultiplier,
       }
     : {
         fontFamily: '$heading',
-        fontSize: '$medium',
-        lineHeight: '$medium',
+        fontSize: fonts.heading2.fontSize,
+        lineHeight: fonts.heading2.lineHeight * 0.9,
         maxFontSizeMultiplier: fonts.heading2.maxFontSizeMultiplier,
       }
 
@@ -89,7 +89,7 @@ export function TransactionReview({
 
   const innerGap = media.short ? '$none' : '$spacing12'
   const arrowPadding = media.short ? '$spacing4' : '$spacing8'
-  const amountAndEquivalentValueGap = media.short ? '$spacing4' : '$spacing4'
+  const amountAndEquivalentValueGap = media.short ? '$spacing4' : '$spacing8'
 
   const formattedInputUsdValue = inputCurrencyUSDValue
     ? formatNumberOrString(inputCurrencyUSDValue?.toExact(), NumberType.FiatTokenQuantity)

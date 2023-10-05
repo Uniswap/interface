@@ -80,7 +80,7 @@ export function AccountIcon({
           shadowOpacity={0.2}
           shadowRadius={10}
           width={iconEyeContainerSize}>
-          <Icons.Eye color="$neutral1" height={iconEyeSize} width={iconEyeSize} />
+          <Icons.Eye color="$neutral1" size={iconEyeSize} />
         </Flex>
       )}
     </Flex>

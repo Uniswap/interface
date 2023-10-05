@@ -18,7 +18,7 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
 import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { dimensions, iconSizes, spacing } from 'ui/src/theme'
+import { dimensions, spacing } from 'ui/src/theme'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
 import {
@@ -262,12 +262,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         onPress={onPressAddWallet}>
         <Flex row alignItems="center" gap="$spacing16" ml="$spacing24">
           <Flex borderColor="$surface3" borderRadius="$roundedFull" borderWidth={1} p="$spacing8">
-            <Icons.Plus
-              color="$neutral2"
-              height={iconSizes.icon12}
-              strokeWidth={2}
-              width={iconSizes.icon12}
-            />
+            <Icons.Plus color="$neutral2" size="$icon.12" strokeWidth={2} />
           </Flex>
           <Text color="$neutral2" variant="buttonLabel3">
             {t('Add wallet')}

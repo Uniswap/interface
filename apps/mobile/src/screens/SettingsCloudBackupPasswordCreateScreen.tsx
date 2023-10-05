@@ -11,7 +11,6 @@ import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPas
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
 
 type Props = NativeStackScreenProps<
   SettingsStackParamList,
@@ -71,11 +70,7 @@ export function SettingsCloudBackupPasswordCreateScreen({
                   borderRadius="$rounded12"
                   borderWidth={1}
                   p="$spacing12">
-                  <Icons.OSDynamicCloudIcon
-                    color={colors.accent1.get()}
-                    height={iconSizes.icon20}
-                    width={iconSizes.icon20}
-                  />
+                  <Icons.OSDynamicCloudIcon color="$accent1" size="$icon.20" />
                 </Flex>
                 <Text textAlign="center" variant="buttonLabel2">
                   {IS_ANDROID

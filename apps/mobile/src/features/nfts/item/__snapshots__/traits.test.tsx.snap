@@ -26,8 +26,9 @@ exports[`renders trait card 1`] = `
       {
         "color": "#7D7D7D",
         "display": "flex",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel-Medium",
         "fontSize": 13,
+        "fontWeight": "500",
         "lineHeight": 16,
       }
     }

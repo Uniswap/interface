@@ -2,7 +2,6 @@ import React from 'react'
 import { SearchTextInput, SearchTextInputProps } from 'src/components/input/SearchTextInput'
 import { ElementName } from 'src/features/telemetry/constants'
 import { Flex, Icons, TouchableArea } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
 
 interface SearchBarProps extends SearchTextInputProps {
   onBack?: () => void
@@ -14,7 +13,7 @@ export function SearchBar({ onBack, ...rest }: SearchBarProps): JSX.Element {
     <Flex centered row gap="$spacing12">
       {onBack && (
         <TouchableArea testID={ElementName.Back} onPress={onBack}>
-          <Icons.Chevron color="$neutral1" size={iconSizes.icon24} />
+          <Icons.Chevron color="$neutral1" size="$icon.24" />
         </TouchableArea>
       )}
       <SearchTextInput {...rest} />

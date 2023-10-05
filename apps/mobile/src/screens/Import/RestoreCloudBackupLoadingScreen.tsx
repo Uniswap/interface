@@ -138,13 +138,7 @@ export function RestoreCloudBackupLoadingScreen({
           description={t(
             `Failed to import backups due to lack of permissions, interruption of authorization, or due to a cloud error`
           )}
-          icon={
-            <Icons.OSDynamicCloudIcon
-              color={colors.neutral3.get()}
-              height={imageSizes.image48}
-              width={imageSizes.image48}
-            />
-          }
+          icon={<Icons.OSDynamicCloudIcon color="$neutral3" size={imageSizes.image48} />}
           retryButtonLabel={t('Retry')}
           title={t('Error while importing backups')}
           onRetry={fetchCloudStorageBackups}
@@ -169,13 +163,7 @@ export function RestoreCloudBackupLoadingScreen({
                 ? t(`It looks like you haven’t backed up any of your seed phrases to Google Drive.`)
                 : t(`It looks like you haven’t backed up any of your seed phrases to iCloud.`)
             }
-            icon={
-              <Icons.OSDynamicCloudIcon
-                color={colors.neutral3.get()}
-                height={imageSizes.image48}
-                width={imageSizes.image48}
-              />
-            }
+            icon={<Icons.OSDynamicCloudIcon color="$neutral3" size={imageSizes.image48} />}
             retryButtonLabel={t('Retry')}
             title={t('0 backups found')}
             onRetry={fetchCloudStorageBackups}

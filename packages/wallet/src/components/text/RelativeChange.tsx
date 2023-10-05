@@ -1,5 +1,5 @@
 import { ColorTokens, Flex, Icons, Text } from 'ui/src'
-import { fonts, iconSizes } from 'ui/src/theme'
+import { fonts, IconSizeTokens } from 'ui/src/theme'
 import { formatNumber, formatPercent, NumberType } from 'utilities/src/format/format'
 
 interface RelativeChangeProps {
@@ -9,7 +9,7 @@ interface RelativeChangeProps {
   semanticColor?: boolean // If true, entire % change text will render green or red
   positiveChangeColor?: ColorTokens
   negativeChangeColor?: ColorTokens
-  arrowSize?: number
+  arrowSize?: IconSizeTokens
   loading?: boolean
   alignRight?: boolean
 }
@@ -22,7 +22,7 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
     semanticColor,
     positiveChangeColor = '$statusSuccess',
     negativeChangeColor = '$statusCritical',
-    arrowSize = iconSizes.icon16,
+    arrowSize = '$icon.16',
     loading = false,
     alignRight = false,
   } = props

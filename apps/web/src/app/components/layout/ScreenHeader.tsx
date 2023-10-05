@@ -16,7 +16,7 @@ export function ScreenHeader({
   return (
     <Flex row alignItems="center" width="100%">
       <TouchableArea onPress={onBackClick ?? navigateBack}>
-        <Icons.BackArrow color="$neutral2" height={iconSizes.icon24} width={iconSizes.icon24} />
+        <Icons.BackArrow color="$neutral2" size="$icon.24" />
       </TouchableArea>
 
       {/* When there's no right column, we adjust the margin to match the icon width. This is so that the title is centered on the screen. */}

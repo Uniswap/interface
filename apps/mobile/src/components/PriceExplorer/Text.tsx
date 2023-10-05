@@ -4,7 +4,6 @@ import { useLineChartDatetime } from 'react-native-wagmi-charts'
 import { AnimatedText } from 'src/components/text/AnimatedText'
 import { IS_ANDROID } from 'src/constants/globals'
 import { Flex, Icons, useSporeColors } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
 import { AnimatedDecimalNumber } from './AnimatedDecimalNumber'
 import { useLineChartPrice, useLineChartRelativeChange } from './usePrice'
 
@@ -52,7 +51,7 @@ export function RelativeChangeText({
       gap="$spacing2"
       mt={IS_ANDROID ? '$none' : '$spacing2'}>
       <Icons.AnimatedCaretChange
-        height={iconSizes.icon16}
+        size="$icon.16"
         strokeWidth={2}
         style={[
           caretStyle,
@@ -60,7 +59,6 @@ export function RelativeChangeText({
           // eslint-disable-next-line react-native/no-inline-styles
           { translateY: relativeChange.value.value > 0 ? -1 : 1 },
         ]}
-        width={iconSizes.icon16}
       />
       <AnimatedText
         style={styles}

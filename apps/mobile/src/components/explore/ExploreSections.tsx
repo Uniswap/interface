@@ -141,7 +141,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
       ref={listRef}
       ListEmptyComponent={
         <Flex mx="$spacing24" my="$spacing12">
-          <Loader.Token contrast repeat={5} />
+          <Loader.Token repeat={5} />
         </Flex>
       }
       ListFooterComponent={<Inset all="$spacing12" />}

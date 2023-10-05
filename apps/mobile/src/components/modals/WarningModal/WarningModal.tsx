@@ -5,7 +5,7 @@ import { WarningColor, WarningSeverity } from 'src/components/modals/WarningModa
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Button, Flex, Icons, Text, ThemeKeys, useSporeColors } from 'ui/src'
-import { iconSizes, opacify } from 'ui/src/theme'
+import { opacify } from 'ui/src/theme'
 
 export type WarningModalProps = {
   onClose?: () => void
@@ -81,13 +81,7 @@ export default function WarningModal({
               ),
           }}
           width={WARNING_MODAL_BG_SIZE}>
-          {icon ?? (
-            <Icons.AlertTriangle
-              color={alertColor.text}
-              height={iconSizes.icon24}
-              width={iconSizes.icon24}
-            />
-          )}
+          {icon ?? <Icons.AlertTriangle color={alertColor.text} size="$icon.24" />}
         </Flex>
         <Text textAlign="center" variant="body1">
           {title}

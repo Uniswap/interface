@@ -109,7 +109,7 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): J
         break
     }
     if (Icon) {
-      icon = <Icon color={color.get()} fill={fill.get()} height={statusSize} width={statusSize} />
+      icon = <Icon color={color.get()} fill={fill.get()} size={statusSize} />
     }
   }
 
@@ -159,11 +159,9 @@ export function DappLogoWithTxStatus({
           <TransactionSummaryNetworkLogo chainId={chainId} size={statusSize} />
         ) : undefined
       case WalletConnectEvent.TransactionConfirmed:
-        return <Icons.Approve color={green} fill={fill} height={statusSize} width={statusSize} />
+        return <Icons.Approve color={green} fill={fill} size={statusSize} />
       case WalletConnectEvent.TransactionFailed:
-        return (
-          <Icons.AlertTriangle color={yellow} fill={fill} height={statusSize} width={statusSize} />
-        )
+        return <Icons.AlertTriangle color={yellow} fill={fill} size={statusSize} />
     }
   }
 

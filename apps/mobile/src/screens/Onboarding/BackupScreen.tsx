@@ -138,13 +138,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
       blurb={t('Safe, simple, and all you need to save is your password.')}
       disabled={hasCloudBackup}
       elementName={ElementName.AddCloudBackup}
-      icon={
-        <Icons.OSDynamicCloudIcon
-          color={colors.accent1.get()}
-          height={iconSizes.icon16}
-          width={iconSizes.icon16}
-        />
-      }
+      icon={<Icons.OSDynamicCloudIcon color="$accent1" size="$icon.16" />}
       title={IS_ANDROID ? t('Backup with Google Drive') : t('Backup with iCloud')}
       onPress={onPressCloudBackup}
     />,

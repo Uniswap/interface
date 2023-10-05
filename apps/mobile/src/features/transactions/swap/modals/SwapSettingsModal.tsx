@@ -115,8 +115,7 @@ export function SwapSettingsModal({
           <TouchableArea onPress={(): void => setView(SwapSettingsModalView.Options)}>
             <Icons.Chevron
               color={view === SwapSettingsModalView.Options ? '$transparent' : '$neutral3'}
-              height={iconSizes.icon24}
-              width={iconSizes.icon24}
+              size="$icon.24"
             />
           </TouchableArea>
           <Text textAlign="center" variant="body1">
@@ -169,9 +168,8 @@ function SwapSettingsOptions({
             </Text>
             <Icons.Chevron
               color="$neutral3"
-              height={iconSizes.icon24}
+              size="$icon.24"
               style={{ transform: [{ rotate: '180deg' }] }}
-              width={iconSizes.icon24}
             />
           </Flex>
         </TouchableArea>

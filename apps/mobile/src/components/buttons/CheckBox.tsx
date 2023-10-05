@@ -31,11 +31,7 @@ export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.
           p="$spacing2"
           width={iconSizes.icon24}>
           {checked ? (
-            <Icons.Check
-              color={isDarkMode ? '$sporeBlack' : '$sporeWhite'}
-              height={iconSizes.icon16}
-              width={iconSizes.icon16}
-            />
+            <Icons.Check color={isDarkMode ? '$sporeBlack' : '$sporeWhite'} size="$icon.16" />
           ) : null}
         </Flex>
         <Flex shrink>

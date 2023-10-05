@@ -357,11 +357,7 @@ function SwapFormContent(): JSX.Element {
                     gap="$spacing8"
                     px="$spacing12"
                     py="$spacing12">
-                    <Icons.InfoCircleFilled
-                      color={colors.DEP_accentWarning.val}
-                      height={iconSizes.icon20}
-                      width={iconSizes.icon20}
-                    />
+                    <Icons.InfoCircleFilled color={colors.DEP_accentWarning.val} size="$icon.20" />
                     <Text color="$DEP_accentWarning" variant="subheading2">
                       {t('Restore your wallet to swap')}
                     </Text>
@@ -389,11 +385,7 @@ function SwapFormContent(): JSX.Element {
         </Trace>
         {gasFeeUSD && (
           <Flex centered row gap="$spacing4" padding="$spacing16">
-            <Icons.Gas
-              color={colors.neutral2.val}
-              height={iconSizes.icon20}
-              width={iconSizes.icon20}
-            />
+            <Icons.Gas color={colors.neutral2.val} size="$icon.20" />
             <Text color="$neutral2" variant="body3">
               {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
             </Text>

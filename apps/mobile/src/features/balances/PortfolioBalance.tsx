@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import AnimatedNumber from 'src/components/AnimatedNumber'
 import { Flex } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { PollingInterval } from 'wallet/src/constants/misc'
@@ -50,7 +49,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
       />
       <RelativeChange
         absoluteChange={portfolioChange?.absolute?.value}
-        arrowSize={iconSizes.icon20}
+        arrowSize="$icon.20"
         change={portfolioChange?.percentage?.value}
         loading={isWarmLoading || isLoading}
         negativeChangeColor={isWarmLoading ? '$neutral2' : '$statusCritical'}

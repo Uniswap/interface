@@ -78,12 +78,63 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
       >
         Network fee
       </Text>
-      <svg
-        color="#222222"
-        data-file-name="SvgInfoCircle"
-        height={20}
-        width={20}
-      />
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight="16"
+        bbWidth="16"
+        fill="none"
+        focusable={false}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        strokeWidth={8}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "color": "#CECECE",
+              "height": 16,
+              "width": 16,
+            },
+            {
+              "flex": 0,
+              "height": 16,
+              "width": 16,
+            },
+          ]
+        }
+        tintColor="#CECECE"
+        vbHeight={16}
+        vbWidth={16}
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
+            [
+              "fill",
+              "strokeWidth",
+            ]
+          }
+          strokeWidth="8"
+        >
+          <RNSVGPath
+            d="M8.00001 1.33334C4.31801 1.33334 1.33334 4.318 1.33334 8C1.33334 11.682 4.31801 14.6667 8.00001 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33334 8.00001 1.33334ZM8.50001 11C8.50001 11.276 8.27601 11.5 8.00001 11.5C7.72401 11.5 7.50001 11.276 7.50001 11V7.95264C7.50001 7.67664 7.72401 7.45264 8.00001 7.45264C8.27601 7.45264 8.50001 7.67664 8.50001 7.95264V11ZM8.01336 6.33334C7.64536 6.33334 7.34327 6.03467 7.34327 5.66667C7.34327 5.29867 7.63868 5 8.00668 5H8.01336C8.38202 5 8.68002 5.29867 8.68002 5.66667C8.68002 6.03467 8.38136 6.33334 8.01336 6.33334Z"
+            fill={
+              {
+                "type": 2,
+              }
+            }
+            propList={
+              [
+                "fill",
+              ]
+            }
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
     </View>
   </View>
   <View
@@ -131,8 +182,9 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
           {
             "color": "#393939",
             "display": "flex",
-            "fontFamily": "Basel-Book",
+            "fontFamily": "Basel-Medium",
             "fontSize": 13,
+            "fontWeight": "500",
             "lineHeight": 16,
             "paddingTop": 1,
           }
@@ -339,12 +391,63 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
       >
         Network fee
       </Text>
-      <svg
-        color="#222222"
-        data-file-name="SvgInfoCircle"
-        height={20}
-        width={20}
-      />
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight="16"
+        bbWidth="16"
+        fill="none"
+        focusable={false}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        strokeWidth={8}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "color": "#CECECE",
+              "height": 16,
+              "width": 16,
+            },
+            {
+              "flex": 0,
+              "height": 16,
+              "width": 16,
+            },
+          ]
+        }
+        tintColor="#CECECE"
+        vbHeight={16}
+        vbWidth={16}
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
+            [
+              "fill",
+              "strokeWidth",
+            ]
+          }
+          strokeWidth="8"
+        >
+          <RNSVGPath
+            d="M8.00001 1.33334C4.31801 1.33334 1.33334 4.318 1.33334 8C1.33334 11.682 4.31801 14.6667 8.00001 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33334 8.00001 1.33334ZM8.50001 11C8.50001 11.276 8.27601 11.5 8.00001 11.5C7.72401 11.5 7.50001 11.276 7.50001 11V7.95264C7.50001 7.67664 7.72401 7.45264 8.00001 7.45264C8.27601 7.45264 8.50001 7.67664 8.50001 7.95264V11ZM8.01336 6.33334C7.64536 6.33334 7.34327 6.03467 7.34327 5.66667C7.34327 5.29867 7.63868 5 8.00668 5H8.01336C8.38202 5 8.68002 5.29867 8.68002 5.66667C8.68002 6.03467 8.38136 6.33334 8.01336 6.33334Z"
+            fill={
+              {
+                "type": 2,
+              }
+            }
+            propList={
+              [
+                "fill",
+              ]
+            }
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
     </View>
   </View>
   <View
@@ -392,8 +495,9 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
           {
             "color": "#393939",
             "display": "flex",
-            "fontFamily": "Basel-Book",
+            "fontFamily": "Basel-Medium",
             "fontSize": 13,
+            "fontWeight": "500",
             "lineHeight": 16,
             "paddingTop": 1,
           }
@@ -527,12 +631,63 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
       >
         Network fee
       </Text>
-      <svg
-        color="#222222"
-        data-file-name="SvgInfoCircle"
-        height={20}
-        width={20}
-      />
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight="16"
+        bbWidth="16"
+        fill="none"
+        focusable={false}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        strokeWidth={8}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "color": "#CECECE",
+              "height": 16,
+              "width": 16,
+            },
+            {
+              "flex": 0,
+              "height": 16,
+              "width": 16,
+            },
+          ]
+        }
+        tintColor="#CECECE"
+        vbHeight={16}
+        vbWidth={16}
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
+            [
+              "fill",
+              "strokeWidth",
+            ]
+          }
+          strokeWidth="8"
+        >
+          <RNSVGPath
+            d="M8.00001 1.33334C4.31801 1.33334 1.33334 4.318 1.33334 8C1.33334 11.682 4.31801 14.6667 8.00001 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33334 8.00001 1.33334ZM8.50001 11C8.50001 11.276 8.27601 11.5 8.00001 11.5C7.72401 11.5 7.50001 11.276 7.50001 11V7.95264C7.50001 7.67664 7.72401 7.45264 8.00001 7.45264C8.27601 7.45264 8.50001 7.67664 8.50001 7.95264V11ZM8.01336 6.33334C7.64536 6.33334 7.34327 6.03467 7.34327 5.66667C7.34327 5.29867 7.63868 5 8.00668 5H8.01336C8.38202 5 8.68002 5.29867 8.68002 5.66667C8.68002 6.03467 8.38136 6.33334 8.01336 6.33334Z"
+            fill={
+              {
+                "type": 2,
+              }
+            }
+            propList={
+              [
+                "fill",
+              ]
+            }
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
     </View>
   </View>
   <View
@@ -580,8 +735,9 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
           {
             "color": "#393939",
             "display": "flex",
-            "fontFamily": "Basel-Book",
+            "fontFamily": "Basel-Medium",
             "fontSize": 13,
+            "fontWeight": "500",
             "lineHeight": 16,
             "paddingTop": 1,
           }

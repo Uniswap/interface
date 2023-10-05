@@ -157,11 +157,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
               testID={ElementName.Send}
               onPress={onPressSend}>
               <Flex row alignItems="center" gap="$spacing8">
-                <Icons.SendAction
-                  color="$neutral2"
-                  height={iconSizes.icon20}
-                  width={iconSizes.icon20}
-                />
+                <Icons.SendAction color="$neutral2" size="$icon.20" />
                 <Text color="$neutral2" lineHeight={20} variant="buttonLabel2">
                   {t('Send')}
                 </Text>

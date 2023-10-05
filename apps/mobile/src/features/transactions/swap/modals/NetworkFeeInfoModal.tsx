@@ -5,7 +5,6 @@ import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { LearnMoreLink } from 'src/components/text/LearnMoreLink'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Icons, useSporeColors } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 
 export function NetworkFeeInfoModal({ onClose }: { onClose: () => void }): JSX.Element {
@@ -19,13 +18,7 @@ export function NetworkFeeInfoModal({ onClose }: { onClose: () => void }): JSX.E
         'Network fees are paid to validators to process transactions, not to Uniswap Labs. These fees are required for all transactions on a blockchain.'
       )}
       closeText={t('Close')}
-      icon={
-        <Icons.Coin
-          color={colors.neutral2.get()}
-          height={iconSizes.icon24}
-          width={iconSizes.icon24}
-        />
-      }
+      icon={<Icons.Coin color="$neutral2" size="$icon.24" />}
       modalName={ModalName.NetworkFeeInfo}
       severity={WarningSeverity.None}
       title={t('Network Fees')}

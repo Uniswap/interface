@@ -147,13 +147,7 @@ export function AddressDisplay({
               <Text color={captionTextColor} variant={captionVariant}>
                 {sanitizeAddressText(shortenAddress(address))}
               </Text>
-              {showCopy && (
-                <Icons.CopySheets
-                  color={captionTextColor}
-                  height={captionSize}
-                  width={captionSize}
-                />
-              )}
+              {showCopy && <Icons.CopySheets color={captionTextColor} size={captionSize} />}
             </Flex>
           </CopyButtonWrapper>
         )}

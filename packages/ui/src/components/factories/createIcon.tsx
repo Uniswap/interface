@@ -1,26 +1,38 @@
 import type { IconProps as TamaguiIconProps } from '@tamagui/helpers-icon'
 import { createElement, forwardRef } from 'react'
 import { Svg, SvgProps } from 'react-native-svg'
-import { ColorTokens, isWeb, Stack, styled, ThemeKeys, usePropsAndStyle } from 'tamagui'
+import {
+  ColorTokens,
+  isWeb,
+  SpecificTokens,
+  Stack,
+  styled,
+  ThemeKeys,
+  usePropsAndStyle,
+} from 'tamagui'
+import { IconSizeTokens } from 'ui/src/theme'
 import { withAnimated } from './animated'
 
 type SvgPropsWithRef = SvgProps & { ref: React.ForwardedRef<Svg>; style?: { color?: string } }
 
-export type IconProps = Omit<TamaguiIconProps, 'color'> & {
+export type IconProps = Omit<Omit<TamaguiIconProps, 'size' | 'width' | 'height'>, 'color'> & {
+  size?: IconSizeTokens | number
   // we need the string & {} to allow strings but not lose the intellisense autocomplete
   // eslint-disable-next-line @typescript-eslint/ban-types
   color?: (ColorTokens | ThemeKeys | (string & {})) | null
   Component?: React.FunctionComponent<SvgPropsWithRef>
 }
 
+const getSize = <Val extends SpecificTokens | number>(val: Val): { width: Val; height: Val } => ({
+  width: val,
+  height: val,
+})
+
 // used by our usePropsAndStyle to resolve a variant
 const IconFrame = styled(Stack, {
   variants: {
     size: {
-      '...size': (val) => ({
-        width: val,
-        height: val,
-      }),
+      '...': getSize,
     },
   },
 })
@@ -39,7 +51,7 @@ export function createIcon({
     const [props, style] = usePropsAndStyle(
       {
         color: defaultFill ?? (isWeb ? 'currentColor' : undefined),
-        size: '$true',
+        size: '$icon.8',
         strokeWidth: 8,
         ...propsIn,
       },
@@ -67,7 +79,7 @@ export function createIcon({
 
   const IconPlain = forwardRef<Svg, IconProps>((props, ref) => {
     return getIcon({
-      ...(props as SvgPropsWithRef),
+      ...(props as any as SvgPropsWithRef),
       ref,
     })
   })

@@ -28,12 +28,7 @@ export default function PlusMinusButton({
       width={iconSizes.icon28}
       onPress={(): void => onPress(type)}>
       {type === PlusMinusButtonType.Plus ? (
-        <Icons.Plus
-          color="$surface1"
-          height={iconSizes.icon12}
-          strokeWidth={2.5}
-          width={iconSizes.icon12}
-        />
+        <Icons.Plus color="$surface1" size="$icon.12" strokeWidth={2.5} />
       ) : (
         <Flex backgroundColor="$surface1" borderRadius="$rounded12" height={2} width={10} />
       )}

@@ -15,8 +15,6 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
-const ALERT_ICONS_SIZE = iconSizes.icon16
-
 interface TransactionDetailsProps {
   banner?: ReactNode
   chainId: ChainId
@@ -68,11 +66,7 @@ export function TransactionDetails({
             gap="$spacing8"
             px="$spacing16"
             py="$spacing8">
-            <Icons.AlertTriangle
-              color={warningColor?.text}
-              height={ALERT_ICONS_SIZE}
-              width={ALERT_ICONS_SIZE}
-            />
+            <Icons.AlertTriangle color={warningColor?.text} size="$icon.16" />
             <Flex grow py="$spacing2">
               <Text color={warningColor.text} variant="body3">
                 {warning.title}
@@ -94,10 +88,10 @@ export function TransactionDetails({
         {!showWarning && (
           <>
             {banner}
-            <Separator borderColor="$surface2" width={1} />
+            <Separator />
           </>
         )}
-        <Flex gap="$spacing12" pt={banner ? '$none' : '$spacing8'} px="$spacing12">
+        <Flex gap="$spacing12" pb="$spacing12" pt={banner ? '$none' : '$spacing12'} px="$spacing12">
           {showChildren ? <Flex gap="$spacing12">{children}</Flex> : null}
           {feeOnTransferInfo && <FeeOnTransferInfo {...feeOnTransferInfo} />}
           <NetworkFee
@@ -106,7 +100,7 @@ export function TransactionDetails({
             onShowNetworkFeeInfo={onShowNetworkFeeInfo}
           />
         </Flex>
-        <Separator borderColor="$surface2" width={1} />
+        <Separator />
         <Flex px="$spacing12" py="$spacing12">
           <AccountDetails address={userAddress} iconSize={iconSizes.icon20} />
         </Flex>

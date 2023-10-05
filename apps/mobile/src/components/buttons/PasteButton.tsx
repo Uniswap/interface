@@ -2,7 +2,6 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { getClipboard } from 'src/utils/clipboard'
 import { Button, Flex, Icons, Text, TouchableArea } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
 
 export default function PasteButton({
   inline,
@@ -32,7 +31,7 @@ export default function PasteButton({
     return (
       <TouchableArea p="$spacing8" onPress={onPressButton} onPressIn={beforePress}>
         <Flex centered row gap="$spacing4">
-          <Icons.ClipboardPaste color="$neutral2" size={iconSizes.icon16} />
+          <Icons.ClipboardPaste color="$neutral2" size="$icon.16" />
           <Text color="$neutral2" variant="buttonLabel4">
             {label}
           </Text>
@@ -43,7 +42,7 @@ export default function PasteButton({
 
   return (
     <Button
-      icon={<Icons.Paste color="$neutral1" size={iconSizes.icon16} />}
+      icon={<Icons.Paste color="$neutral1" size="$icon.16" />}
       size="small"
       theme="tertiary"
       onPress={onPressButton}

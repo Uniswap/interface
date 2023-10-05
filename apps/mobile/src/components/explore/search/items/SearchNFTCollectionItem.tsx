@@ -91,9 +91,7 @@ export function SearchNFTCollectionItem({
           </Text>
         </Flex>
         <Flex grow alignItems="flex-start" width="$spacing36">
-          {isVerified ? (
-            <Icons.Verified color="$accent1" height={iconSizes.icon16} width={iconSizes.icon16} />
-          ) : null}
+          {isVerified ? <Icons.Verified color="$accent1" size="$icon.16" /> : null}
         </Flex>
       </Flex>
     </TouchableArea>

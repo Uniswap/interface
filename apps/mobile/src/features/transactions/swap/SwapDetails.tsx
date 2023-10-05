@@ -9,8 +9,7 @@ import { FeeOnTransferInfo } from 'src/features/transactions/swap/FeeOnTransferI
 import { getRateToDisplay } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
-import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
-import { iconSizes } from 'ui/src/theme'
+import { InfoCircleFilled } from 'ui/src/components/icons'
 import { formatPercent, formatPrice, NumberType } from 'utilities/src/format/format'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
@@ -160,19 +159,11 @@ export function SwapDetails({
           <TouchableArea onPress={onShowSwapProtectionModal}>
             <Flex centered row gap="$spacing4">
               <Text variant="body3">{t('Swap protection')}</Text>
-              <InfoCircle
-                color={colors.neutral1.get()}
-                height={iconSizes.icon20}
-                width={iconSizes.icon20}
-              />
+              <InfoCircleFilled color="$neutral3" size="$icon.16" />
             </Flex>
           </TouchableArea>
           <Flex centered row gap="$spacing8">
-            <Icons.ShieldCheck
-              color={colors.neutral3.get()}
-              height={iconSizes.icon16}
-              width={iconSizes.icon16}
-            />
+            <Icons.ShieldCheck color="$neutral3" size="$icon.16" />
             <Text color="$neutral1" variant="body3">
               {t('On')}
             </Text>
@@ -183,11 +174,7 @@ export function SwapDetails({
         <TouchableArea onPress={onShowSlippageModal}>
           <Flex centered row gap="$spacing4">
             <Text variant="body3">{t('Max slippage')}</Text>
-            <InfoCircle
-              color={colors.neutral1.get()}
-              height={iconSizes.icon20}
-              width={iconSizes.icon20}
-            />
+            <InfoCircleFilled color="$neutral3" size="$icon.16" />
           </Flex>
         </TouchableArea>
         <Flex row gap="$spacing8">

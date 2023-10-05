@@ -2,8 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import InfoCircleIcon from 'ui/src/assets/icons/info-circle.svg'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -20,7 +19,6 @@ export function NetworkFee({
   onShowNetworkFeeInfo?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
 
   const gasFeeUSD = useUSDValue(chainId, gasFee.value ?? undefined)
 
@@ -29,11 +27,7 @@ export function NetworkFee({
       <TouchableArea onPress={onShowNetworkFeeInfo}>
         <Flex centered row gap="$spacing4">
           <Text variant="body3">{t('Network fee')}</Text>
-          <InfoCircleIcon
-            color={colors.neutral1.get()}
-            height={iconSizes.icon20}
-            width={iconSizes.icon20}
-          />
+          <Icons.InfoCircleFilled color="$neutral3" size="$icon.16" />
         </Flex>
       </TouchableArea>
       <Flex row alignItems="center" gap="$spacing8">

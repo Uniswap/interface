@@ -36,7 +36,7 @@ const options: ImportMethodOption[] = [
   {
     title: (t: AppTFunction) => t('Import a wallet'),
     blurb: (t: AppTFunction) => t('Enter your recovery phrase from another crypto wallet'),
-    icon: <Icons.PaperStack color="$accent1" height={18} strokeWidth={1.5} width={18} />,
+    icon: <Icons.PaperStack color="$accent1" size={18} strokeWidth={1.5} />,
     nav: OnboardingScreens.SeedPhraseInput,
     importType: ImportType.SeedPhrase,
     name: ElementName.OnboardingImportSeedPhrase,
@@ -47,7 +47,7 @@ const options: ImportMethodOption[] = [
       IS_ANDROID
         ? t(`Add wallets you’ve backed up to your Google Drive account`)
         : t(`Add wallets you’ve backed up to your iCloud account`),
-    icon: <Icons.OSDynamicCloudIcon color="$accent1" height="$icon.24" width="$icon.24" />,
+    icon: <Icons.OSDynamicCloudIcon color="$accent1" size="$icon.24" />,
     nav: OnboardingScreens.RestoreCloudBackup,
     importType: ImportType.Restore,
     name: ElementName.OnboardingImportWatchedAccount,

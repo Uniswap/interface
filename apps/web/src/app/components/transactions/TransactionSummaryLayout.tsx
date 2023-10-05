@@ -34,17 +34,11 @@ function TransactionSummaryLayout({
       color="statusCritical"
       fill="statusIconFill"
       fillOpacity={1}
-      height={TXN_STATUS_ICON_SIZE}
-      width={TXN_STATUS_ICON_SIZE}
+      size={TXN_STATUS_ICON_SIZE}
     />
   ) : status === TransactionStatus.Failed ? (
     <Flex grow alignItems="flex-end" justifyContent="space-between">
-      <Icons.AlertTriangle
-        color="DEP_accentWarning"
-        fill="surface1"
-        height={TXN_STATUS_ICON_SIZE}
-        width={TXN_STATUS_ICON_SIZE}
-      />
+      <Icons.AlertTriangle color="DEP_accentWarning" fill="surface1" size={TXN_STATUS_ICON_SIZE} />
     </Flex>
   ) : (
     <Text color="$neutral3" variant="body3">

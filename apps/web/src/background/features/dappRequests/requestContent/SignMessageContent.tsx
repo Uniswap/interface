@@ -4,7 +4,6 @@ import { DappRequestStoreItem } from 'src/background/features/dappRequests/slice
 import { Flex, Icons, Text } from 'ui/src'
 import { colors } from 'ui/src/theme/color'
 import { opacify } from 'ui/src/theme/color/utils'
-import { iconSizes } from 'ui/src/theme/iconSizes'
 
 // TODO(EXT-315): revisit these colors and potentially codify them in Spore
 const EDUCATION_BLUE = colors.networkArbitrum
@@ -15,11 +14,7 @@ function SignatureEducationBox(): JSX.Element {
   return (
     <Flex gap="$spacing8" p="$spacing16" style={{ backgroundColor: EDUCATION_BLUE_SOFT }}>
       <Flex row gap="$spacing8">
-        <Icons.GraduationCap
-          color={EDUCATION_BLUE}
-          height={iconSizes.icon20}
-          width={iconSizes.icon20}
-        />
+        <Icons.GraduationCap color={EDUCATION_BLUE} size="$icon.20" />
         <Text style={{ color: EDUCATION_BLUE }} variant="body2">
           {t('What‘s a signature request?')}
         </Text>

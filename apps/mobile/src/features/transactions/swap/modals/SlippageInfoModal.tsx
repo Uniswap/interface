@@ -50,11 +50,7 @@ export function SlippageInfoModal({
       onClose={onClose}>
       <Flex centered fill gap="$spacing16" mb="$spacing12" p="$spacing24">
         <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
-          <Icons.Settings
-            color={colors.neutral2.get()}
-            height={iconSizes.icon28}
-            width={iconSizes.icon28}
-          />
+          <Icons.Settings color="$neutral2" size="$icon.28" />
         </Flex>
         <Text textAlign="center" variant="body1">
           {t('Maximum slippage')}

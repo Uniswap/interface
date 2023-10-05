@@ -160,8 +160,7 @@ function CustomizationSection({
                 fadeIn
                 fadeOut
                 animation="lazy"
-                icon={<Icons.Pencil fill="$color" />}
-                size="small"
+                icon={<Icons.Pencil color="$neutral2" />}
                 theme="secondary"
                 onPress={focusInputWithKeyboard}
               />

@@ -137,8 +137,9 @@ exports[`NetworkPill renders an InlineNetworkPill 1`] = `
       {
         "color": "#209853",
         "display": "flex",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel-Medium",
         "fontSize": 13,
+        "fontWeight": "500",
         "lineHeight": 16,
         "paddingTop": 1,
       }

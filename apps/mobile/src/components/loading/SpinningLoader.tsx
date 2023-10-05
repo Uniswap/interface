@@ -42,12 +42,12 @@ export function SpinningLoader({
   }, [rotation])
 
   if (disabled) {
-    return <Icons.EmptySpinner color="$neutral3" height={size} width={size} />
+    return <Icons.EmptySpinner color="$neutral3" size={size} />
   }
 
   return (
     <AnimatedFlex sentry-label="SpinningLoader" style={[animatedStyles]}>
-      <Icons.CircleSpinner color={color ?? '$neutral1'} height={size} width={size} />
+      <Icons.CircleSpinner color={color ?? '$neutral1'} size={size} />
     </AnimatedFlex>
   )
 }

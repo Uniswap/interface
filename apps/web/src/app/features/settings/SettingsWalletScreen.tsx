@@ -5,7 +5,6 @@ import { SettingsWalletRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { useAppDispatch } from 'src/background/store'
 import { Button, Flex, Icons, Switch, Text } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
 import {
   EditAccountAction,
   editAccountActions,
@@ -61,7 +60,7 @@ function WalletScreenContent({ address }: { address: Address }): JSX.Element {
               <Text variant="body3">{displayName}</Text>
             </Flex>
             <Button onPress={(): void => navigate(SettingsWalletRoutes.EditNickname.valueOf())}>
-              <Icons.Pencil color="$neutral2" height={iconSizes.icon24} width={iconSizes.icon24} />
+              <Icons.Pencil color="$neutral2" size="$icon.24" />
             </Button>
           </Flex>
           <Flex grow row justifyContent="space-between" py="$spacing12">

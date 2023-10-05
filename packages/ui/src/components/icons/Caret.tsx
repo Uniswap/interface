@@ -1,14 +1,15 @@
 import { memo } from 'react'
 import { withAnimated } from 'ui/src/components/factories/animated'
+import { IconSizeTokens } from 'ui/src/theme'
 import { ArrowChange } from './ArrowChange'
 
 type Props = {
-  size?: number
+  size?: IconSizeTokens
   direction?: 'n' | 's'
   color?: string
 }
 
-export function _Caret({ size = 24, color, direction = 'n' }: Props): JSX.Element {
+export function _Caret({ size = '$icon.24', color, direction = 'n' }: Props): JSX.Element {
   let degree: string
   switch (direction) {
     case 's':
@@ -24,10 +25,9 @@ export function _Caret({ size = 24, color, direction = 'n' }: Props): JSX.Elemen
   return (
     <ArrowChange
       color={color ?? '$sporeBlack'}
-      height={size}
+      size={size}
       strokeWidth={2}
       style={{ transform: [{ rotate: degree }] }}
-      width={size}
     />
   )
 }

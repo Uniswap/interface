@@ -6,7 +6,6 @@ import { SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { Button, Flex, Icons, ListItem, ScrollView, Text, TouchableArea, YGroup } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
 import { authActions } from 'wallet/src/features/auth/saga'
 import { AuthActionType } from 'wallet/src/features/auth/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
@@ -62,13 +61,7 @@ export function SettingsScreen(): JSX.Element {
             <ListItem
               hoverTheme
               flexShrink={1}
-              iconAfter={
-                <Icons.FileListLock
-                  color="$neutral2"
-                  height={iconSizes.icon20}
-                  width={iconSizes.icon20}
-                />
-              }
+              iconAfter={<Icons.FileListLock color="$neutral2" size="$icon.20" />}
               p="$none"
               size={48}
               title={<Text variant="subheading2">{t('View recovery phrase')}</Text>}
@@ -79,13 +72,7 @@ export function SettingsScreen(): JSX.Element {
             <ListItem
               hoverTheme
               flexShrink={1}
-              iconAfter={
-                <Icons.HelpCenter
-                  color="$neutral2"
-                  height={iconSizes.icon20}
-                  width={iconSizes.icon20}
-                />
-              }
+              iconAfter={<Icons.HelpCenter color="$neutral2" size="$icon.20" />}
               p="$none"
               size={48}
               title={<Text variant="subheading2">{t('Help center')}</Text>}

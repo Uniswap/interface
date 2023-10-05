@@ -1,7 +1,7 @@
 import { ComponentProps, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ColorTokens, Flex, FlexProps, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { iconSizes, opacify } from 'ui/src/theme'
+import { opacify } from 'ui/src/theme'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 export const SHADOW_OFFSET_SMALL = { width: 0, height: 2 } as const
@@ -176,9 +176,7 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
     title = t('Oops! Something went wrong.'),
     onRetry: retry,
     retryButtonLabel = t('Retry'),
-    icon = (
-      <Icons.AlertTriangle color="$neutral3" height={iconSizes.icon16} width={iconSizes.icon16} />
-    ),
+    icon = <Icons.AlertTriangle color="$neutral3" size="$icon.16" />,
   } = props
 
   return (
