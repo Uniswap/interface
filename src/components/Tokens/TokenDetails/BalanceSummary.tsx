@@ -85,8 +85,6 @@ export default function BalanceSummary({ token }: { token: Currency }) {
     amount: useStablecoinValue(balance),
     type: NumberType.FiatTokenStats,
   })
-  const costBasis = <ThemedText.LabelSmall>$ dolla</ThemedText.LabelSmall>
-  const gain = <ThemedText.LabelSmall>$ dolla</ThemedText.LabelSmall>
   const twentyFourHourReturn = (
     <Row>
       <ThemedText.LabelSmall>$ dolla</ThemedText.LabelSmall>
@@ -128,20 +126,10 @@ export default function BalanceSummary({ token }: { token: Currency }) {
           </BalanceContainer>
         </BalanceRow>
         {isInfoTDPEnabled && (
-          <>
-            <PerformanceContainer>
-              <ThemedText.BodySmall>Cost basis</ThemedText.BodySmall>
-              <ThemedText.LabelSmall>{costBasis}</ThemedText.LabelSmall>
-            </PerformanceContainer>
-            <PerformanceContainer>
-              <ThemedText.BodySmall>Gain</ThemedText.BodySmall>
-              <ThemedText.LabelSmall>{gain}</ThemedText.LabelSmall>
-            </PerformanceContainer>
-            <PerformanceContainer>
-              <ThemedText.BodySmall>24H return</ThemedText.BodySmall>
-              <ThemedText.LabelSmall>{twentyFourHourReturn}</ThemedText.LabelSmall>
-            </PerformanceContainer>
-          </>
+          <PerformanceContainer>
+            <ThemedText.BodySmall>24H return</ThemedText.BodySmall>
+            <ThemedText.LabelSmall>{twentyFourHourReturn}</ThemedText.LabelSmall>
+          </PerformanceContainer>
         )}
       </BalanceSection>
     </BalancesCard>
