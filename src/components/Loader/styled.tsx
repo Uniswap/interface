@@ -32,6 +32,13 @@ export const LoadingRows = styled.div`
   }
 `
 
+export const LoadingRow = styled.div<{ height: number; width: number }>`
+  ${shimmerMixin}
+  border-radius: 12px;
+  height: ${({ height }) => height}px;
+  width: ${({ width }) => width}px;
+`
+
 export const loadingOpacityMixin = css<{ $loading: boolean }>`
   filter: ${({ $loading }) => ($loading ? 'grayscale(1)' : 'none')};
   opacity: ${({ $loading }) => ($loading ? '0.6' : '1')};
