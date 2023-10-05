@@ -64,6 +64,10 @@ const TokenDescriptionContainer = styled(ThemedText.BodyPrimary)`
   white-space: pre-wrap;
 `
 
+const DescriptionVisibilityWrapper = styled.span<{ $visible: boolean }>`
+  display: ${({ $visible }) => ($visible ? 'inline' : 'none')};
+`
+
 const TRUNCATE_CHARACTER_COUNT = 75
 
 export function TokenDescription({
@@ -94,9 +98,9 @@ export function TokenDescription({
   }, [tokenAddress, setCopied])
 
   const [isDescriptionTruncated, toggleIsDescriptionTruncated] = useReducer((x) => !x, true)
+  const truncatedDescription = truncateDescription(description ?? '', TRUNCATE_CHARACTER_COUNT)
   const shouldTruncate = !!description && description.length > TRUNCATE_CHARACTER_COUNT
-  const tokenDescription =
-    shouldTruncate && isDescriptionTruncated ? truncateDescription(description, TRUNCATE_CHARACTER_COUNT) : description
+  const showTruncatedDescription = shouldTruncate && isDescriptionTruncated
 
   return (
     <TokenInfoSection>
@@ -141,7 +145,16 @@ export function TokenDescription({
             <Trans>No token information available</Trans>
           </NoInfoAvailable>
         )}
-        {tokenDescription}
+        {description && (
+          <>
+            <DescriptionVisibilityWrapper data-testid="token-description-full" $visible={!showTruncatedDescription}>
+              {description}
+            </DescriptionVisibilityWrapper>
+            <DescriptionVisibilityWrapper data-testid="token-description-truncated" $visible={showTruncatedDescription}>
+              {truncatedDescription}
+            </DescriptionVisibilityWrapper>
+          </>
+        )}
         {shouldTruncate && (
           <TruncateDescriptionButton
             onClick={toggleIsDescriptionTruncated}

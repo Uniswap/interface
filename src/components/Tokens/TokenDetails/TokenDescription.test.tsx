@@ -46,18 +46,18 @@ describe('TokenDescription', () => {
   })
 
   it('truncates description and shows more', async () => {
-    const shortDescription = 'USDC is a fully collateralized US dollar stablecoin. USDC is the bridge...'
-    const longDescription =
-      'USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges.'
-    render(<TokenDescription tokenAddress={tokenAddress} />)
-    const descriptionContainer = screen.getByText(shortDescription)
+    const { asFragment } = render(<TokenDescription tokenAddress={tokenAddress} />)
 
-    expect(descriptionContainer).toHaveTextContent(shortDescription)
-    expect(descriptionContainer).not.toHaveTextContent(longDescription)
+    expect(asFragment()).toMatchSnapshot()
+    const truncatedDescription = screen.getByTestId('token-description-truncated')
+    const fullDescription = screen.getByTestId('token-description-full')
+
+    expect(truncatedDescription).toHaveStyleRule('display', 'inline')
+    expect(fullDescription).toHaveStyleRule('display', 'none')
 
     await act(() => userEvent.click(screen.getByText('Show more')))
-    expect(descriptionContainer).toHaveTextContent(longDescription)
-    expect(descriptionContainer).not.toHaveTextContent(shortDescription)
+    expect(truncatedDescription).toHaveStyleRule('display', 'none')
+    expect(fullDescription).toHaveStyleRule('display', 'inline')
     expect(screen.getByText('Hide')).toBeVisible()
   })
 
