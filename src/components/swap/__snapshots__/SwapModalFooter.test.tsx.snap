@@ -130,7 +130,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
             <span
               class=""
             >
-              105566.373%
+              -105566.373%
             </span>
           </div>
         </div>
