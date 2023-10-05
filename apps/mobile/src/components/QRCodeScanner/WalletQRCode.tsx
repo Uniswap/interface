@@ -5,9 +5,9 @@ import { AddressDisplay } from 'src/components/AddressDisplay'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { UniconThemedGradient } from 'src/components/gradients/UniconThemedGradient'
 import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
+import { LearnMoreLink } from 'src/components/text/LearnMoreLink'
 import { useUniconColors } from 'src/components/unicons/utils'
-import { openUri } from 'src/utils/linking'
-import { AnimatedFlex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Text, useSporeColors } from 'ui/src'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -23,10 +23,6 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
   const isDarkMode = useIsDarkMode()
   const gradientData = useUniconColors(address)
   const { t } = useTranslation()
-
-  const onPressLearnMore = async (): Promise<void> => {
-    await openUri(uniswapUrls.helpArticleUrls.supportedNetworks)
-  }
 
   if (!address) return null
 
@@ -74,11 +70,7 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
             'Only send tokens on Ethereum, Arbitrum, Optimism, Polygon, Base, BNB networks to this address.'
           )}{' '}
         </Text>
-        <TouchableArea height={18} onPress={onPressLearnMore}>
-          <Text color="$accent1" variant="buttonLabel3">
-            {t('Learn more')}
-          </Text>
-        </TouchableArea>
+        <LearnMoreLink url={uniswapUrls.helpArticleUrls.supportedNetworks} />
       </AnimatedFlex>
     </>
   )

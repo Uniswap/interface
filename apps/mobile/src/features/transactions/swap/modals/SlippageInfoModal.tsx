@@ -2,12 +2,12 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
+import { LearnMoreLink } from 'src/components/text/LearnMoreLink'
 import { ModalName } from 'src/features/telemetry/constants'
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
-import { openUri } from 'src/utils/linking'
-import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
-import { fonts, iconSizes } from 'ui/src/theme'
+import { iconSizes } from 'ui/src/theme'
 import { formatCurrencyAmount, formatPercent, NumberType } from 'utilities/src/format/format'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
@@ -28,10 +28,6 @@ export function SlippageInfoModal({
 }: SlippageInfoModalProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-
-  const onPressLearnMore = async (): Promise<void> => {
-    await openUri(uniswapUrls.helpArticleUrls.swapSlippage)
-  }
 
   const { slippageTolerance, tradeType } = trade
   const showSlippageWarning = autoSlippageTolerance && slippageTolerance > autoSlippageTolerance
@@ -71,13 +67,16 @@ export function SlippageInfoModal({
             : t(
                 'If the price slips any further, your transaction will revert. Below is the maximum amount you would need to spend.'
               )}{' '}
-          <TouchableArea onPress={onPressLearnMore}>
-            <Text color="$accent1" lineHeight={fonts.body2.fontSize - 1} variant="buttonLabel3">
-              {t('Learn more')}
-            </Text>
-          </TouchableArea>
         </Text>
-        <Flex fill bg="$surface2" borderRadius="$rounded20" p="$spacing12" width="100%">
+        <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapSlippage} />
+        <Flex
+          fill
+          bg="$surface2"
+          borderRadius="$rounded20"
+          gap="$spacing8"
+          px="$spacing16"
+          py="$spacing12"
+          width="100%">
           <Flex fill row justifyContent="space-between">
             <Text color="$neutral2" variant="body2">
               {t('Max slippage')}

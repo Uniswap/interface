@@ -1,6 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
+import { LearnMoreLink } from 'src/components/text/LearnMoreLink'
 import { getTokenSafetyHeaderText } from 'src/components/tokens/utils'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -68,10 +69,6 @@ export default function TokenWarningModal({
 
   const closeButtonText = hideAcceptButton ? t('Close') : t('Back')
 
-  const onPressLearnMore = async (): Promise<void> => {
-    await openUri(uniswapUrls.helpArticleUrls.tokenWarning)
-  }
-
   const showWarningIcon =
     safetyLevel === SafetyLevel.StrongWarning || safetyLevel === SafetyLevel.Blocked
 
@@ -96,15 +93,11 @@ export default function TokenWarningModal({
         ) : (
           <TokenLogo size={imageSizes.image48} url={tokenLogoUrl} />
         )}
-        <Flex centered gap="$spacing4" width="90%">
+        <Flex centered gap="$spacing12" width="90%">
           <Text color="$neutral2" textAlign="center" variant="body2">
             {getTokenSafetyBodyText(safetyLevel, t)}{' '}
-            <TouchableArea height={18} onPress={onPressLearnMore}>
-              <Text color="$accent1" variant="buttonLabel3">
-                {t('Learn more')}
-              </Text>
-            </TouchableArea>
           </Text>
+          <LearnMoreLink url={uniswapUrls.helpArticleUrls.tokenWarning} />
         </Flex>
         <TouchableArea
           alignItems="center"

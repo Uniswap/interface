@@ -1,19 +1,15 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
+import { LearnMoreLink } from 'src/components/text/LearnMoreLink'
 import { ModalName } from 'src/features/telemetry/constants'
-import { openUri } from 'src/utils/linking'
-import { Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Icons, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 
 export function FeeOnTransferInfoModal({ onClose }: { onClose: () => void }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-
-  const onPressFOTLearnMore = async (): Promise<void> => {
-    await openUri(uniswapUrls.helpArticleUrls.feeOnTransferHelp)
-  }
 
   return (
     <WarningModal
@@ -32,11 +28,7 @@ export function FeeOnTransferInfoModal({ onClose }: { onClose: () => void }): JS
       modalName={ModalName.FOTInfo}
       title={t('Why is there an additional fee?')}
       onClose={onClose}>
-      <TouchableArea onPress={onPressFOTLearnMore}>
-        <Text color="$magentaVibrant" variant="body1">
-          {t('Learn more')}
-        </Text>
-      </TouchableArea>
+      <LearnMoreLink url={uniswapUrls.helpArticleUrls.feeOnTransferHelp} />
     </WarningModal>
   )
 }

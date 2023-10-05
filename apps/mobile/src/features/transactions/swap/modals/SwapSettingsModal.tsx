@@ -15,11 +15,11 @@ import {
 import PlusMinusButton, { PlusMinusButtonType } from 'src/components/buttons/PlusMinusButton'
 import { Switch } from 'src/components/buttons/Switch'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
+import { LearnMoreLink } from 'src/components/text/LearnMoreLink'
 import { ModalName } from 'src/features/telemetry/constants'
 import { SwapProtectionInfoModal } from 'src/features/transactions/swap/modals/SwapProtectionModal'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/types'
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
-import { openUri } from 'src/utils/linking'
 import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
@@ -278,10 +278,6 @@ function SlippageSettings({
     transform: [{ translateX: inputShakeX.value }],
   }))
 
-  const onPressLearnMore = async (): Promise<void> => {
-    await openUri(uniswapUrls.helpArticleUrls.swapSlippage)
-  }
-
   const onPressAutoSlippage = (): void => {
     setAutoSlippageEnabled(true)
     setInputWarning(undefined)
@@ -399,15 +395,11 @@ function SlippageSettings({
   )
 
   return (
-    <Flex gap="$spacing16">
+    <Flex centered gap="$spacing16">
       <Text color="$neutral2" textAlign="center" variant="body2">
         {t('Your transaction will revert if the price changes more than the slippage percentage.')}{' '}
-        <TouchableArea height={18} onPress={onPressLearnMore}>
-          <Text color="$accent1" variant="buttonLabel3">
-            {t('Learn more')}
-          </Text>
-        </TouchableArea>
       </Text>
+      <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapSlippage} />
       <Flex gap="$spacing12">
         <Flex centered row gap="$spacing16" mt="$spacing12">
           <PlusMinusButton
