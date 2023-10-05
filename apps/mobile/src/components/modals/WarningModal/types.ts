@@ -1,6 +1,7 @@
 import { FunctionComponent } from 'react'
 import { SvgProps } from 'react-native-svg'
 import { ColorTokens } from 'ui/src'
+import { ThemeNames } from 'ui/src/theme'
 
 export enum WarningSeverity {
   None = 0,
@@ -12,7 +13,7 @@ export enum WarningSeverity {
 export type WarningColor = {
   text: ColorTokens
   background: ColorTokens
-  buttonTheme: 'primary' | 'secondary' | 'tertiary' | 'detrimental' | 'warning'
+  buttonTheme: ThemeNames
 }
 
 export enum WarningAction {

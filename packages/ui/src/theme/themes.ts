@@ -4,7 +4,13 @@ import { colorsDark, colorsLight } from 'ui/src/theme/color/colors'
 import { opacify } from 'ui/src/theme/color/utils'
 
 // this is just a helper for things that want to accept theme names as props
-export type ThemeNames = 'primary' | 'secondary' | 'tertiary' | 'warning' | 'detrimental'
+export type ThemeNames =
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  | 'outline'
+  | 'warning'
+  | 'detrimental'
 
 // TODO: systematize hover and focus states. requires consolidating mobile and web design systems (they have different button styles right now)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -104,6 +110,12 @@ const light_tertiary: BaseTheme = {
 const dark_tertiary: BaseTheme = {
   ...dark,
 }
+const light_outline: BaseTheme = {
+  ...light,
+}
+const dark_outline: BaseTheme = {
+  ...dark,
+}
 const light_detrimental: BaseTheme = {
   ...light,
 }
@@ -177,6 +189,27 @@ const dark_tertiary_Button: BaseTheme = {
   color: colorsDark.neutral1,
 }
 
+// outline
+// theme: light
+const light_outline_Button: BaseTheme = {
+  ...light,
+  background: colorsLight.none,
+  backgroundHover: colorsLight.none,
+  backgroundPress: colorsLight.none,
+  borderColor: colorsLight.surface3,
+  color: colorsLight.neutral1,
+}
+
+// theme: dark
+const dark_outline_Button: BaseTheme = {
+  ...dark,
+  background: colorsDark.none,
+  backgroundHover: colorsDark.none,
+  backgroundPress: colorsDark.none,
+  borderColor: colorsDark.surface3,
+  color: colorsDark.neutral1,
+}
+
 // detrimental
 // theme: light
 const light_detrimental_Button: BaseTheme = {
@@ -237,6 +270,10 @@ const allThemes = {
   dark_secondary_Button,
   light_tertiary_Button,
   dark_tertiary_Button,
+  light_outline,
+  dark_outline,
+  light_outline_Button,
+  dark_outline_Button,
   light_detrimental_Button,
   dark_detrimental_Button,
   light_warning_Button,

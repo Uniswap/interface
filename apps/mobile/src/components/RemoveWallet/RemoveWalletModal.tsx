@@ -144,7 +144,7 @@ export function RemoveWalletModal(): JSX.Element | null {
           borderRadius="$rounded12"
           p="$spacing12"
           style={{
-            backgroundColor: opacify(12, colors[labelColor].val),
+            backgroundColor: opacify(12, colors[labelColor].get()),
           }}>
           <Icon color={colors[labelColor].val} height={iconSizes.icon24} width={iconSizes.icon24} />
         </Flex>
@@ -164,18 +164,17 @@ export function RemoveWalletModal(): JSX.Element | null {
             {inProgress ? (
               <AnimatedFlex style={animatedCancelButtonSpanStyles} />
             ) : (
-              <Button fill disabled={inProgress} theme="tertiary" onPress={onClose}>
+              <Button fill disabled={inProgress} theme="outline" onPress={onClose}>
                 {t('Cancel')}
               </Button>
             )}
-
             <Button
               fill
               icon={
                 inProgress ? (
                   <SpinningLoader
                     // TODO(MOB-1420): clean up types (as ColorTokens)
-                    color={labelColor as ColorTokens}
+                    color={`${labelColor}` as ColorTokens}
                   />
                 ) : undefined
               }
