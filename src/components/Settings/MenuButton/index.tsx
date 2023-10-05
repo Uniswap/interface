@@ -5,6 +5,7 @@ import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { useFormatter } from 'utils/formatNumbers'
 import validateUserSlippageTolerance, { SlippageValidationResult } from 'utils/validateUserSlippageTolerance'
 
 const Icon = styled(Settings)`
@@ -46,6 +47,7 @@ const IconContainerWithSlippage = styled(IconContainer)<{ displayWarning?: boole
 
 const ButtonContent = () => {
   const [userSlippageTolerance] = useUserSlippageTolerance()
+  const { formatSlippage } = useFormatter()
 
   if (userSlippageTolerance === SlippageTolerance.Auto) {
     return (
@@ -60,7 +62,7 @@ const ButtonContent = () => {
   return (
     <IconContainerWithSlippage data-testid="settings-icon-with-slippage" gap="sm" displayWarning={isInvalidSlippage}>
       <ThemedText.BodySmall>
-        <Trans>{userSlippageTolerance.toFixed(2)}% slippage</Trans>
+        <Trans>{formatSlippage(userSlippageTolerance)} slippage</Trans>
       </ThemedText.BodySmall>
       <Icon />
     </IconContainerWithSlippage>

@@ -11,12 +11,15 @@ import { useIsMobile } from 'nft/hooks'
 import React, { PropsWithChildren, useEffect, useState } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
+import { useUserSlippageTolerance } from 'state/user/hooks'
+import { SlippageTolerance } from 'state/user/types'
 import styled, { DefaultTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { getPriceImpactColor } from 'utils/prices'
 
 import { GasBreakdownTooltip, UniswapXDescription } from './GasBreakdownTooltip'
+import { MaxSlippageTooltip } from './MaxSlippageTooltip'
 import SwapRoute from './SwapRoute'
 
 export enum SwapLineItemType {
@@ -25,9 +28,9 @@ export enum SwapLineItemType {
   INPUT_TOKEN_FEE_ON_TRANSFER,
   OUTPUT_TOKEN_FEE_ON_TRANSFER,
   PRICE_IMPACT,
+  MAX_SLIPPAGE,
   MAXIMUM_INPUT,
   MINIMUM_OUTPUT,
-  EXPECTED_OUTPUT,
   ROUTING_INFO,
 }
 
@@ -41,6 +44,18 @@ const LabelText = styled(ThemedText.BodySmall)<{ hasTooltip?: boolean }>`
 `
 const ColorWrapper = styled.span<{ textColor?: keyof DefaultTheme }>`
   ${({ textColor, theme }) => textColor && `color: ${theme[textColor]};`}
+`
+
+const AutoBadge = styled(ThemedText.LabelMicro).attrs({ fontWeight: 535 })`
+  background: ${({ theme }) => theme.surface3};
+  border-radius: 8px;
+  color: ${({ theme }) => theme.neutral2};
+  height: 20px;
+  padding: 0 6px;
+
+  ::after {
+    content: '${t`Auto`}';
+  }
 `
 
 function FOTTooltipContent() {
@@ -91,7 +106,8 @@ type LineItemData = {
 
 function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   const { trade, syncing, allowedSlippage, type } = props
-  const { formatNumber } = useFormatter()
+  const { formatNumber, formatSlippage } = useFormatter()
+  const isAutoSlippage = useUserSlippageTolerance()[0] === SlippageTolerance.Auto
 
   const isUniswapX = isUniswapXTrade(trade)
   const isPreview = isPreviewTrade(trade)
@@ -132,10 +148,20 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
         TooltipBody: () => <Trans>The impact your trade has on the market price of this pool.</Trans>,
         Value: () => (isPreview ? <Loading /> : <ColoredPercentRow percent={trade.priceImpact} />),
       }
+    case SwapLineItemType.MAX_SLIPPAGE:
+      return {
+        Label: () => <Trans>Max. slippage</Trans>,
+        TooltipBody: () => <MaxSlippageTooltip {...props} />,
+        Value: () => (
+          <Row gap="8px">
+            {isAutoSlippage && <AutoBadge />} {formatSlippage(allowedSlippage)}
+          </Row>
+        ),
+      }
     case SwapLineItemType.MAXIMUM_INPUT:
       if (trade.tradeType === TradeType.EXACT_INPUT) return
       return {
-        Label: () => <Trans>Maximum input</Trans>,
+        Label: () => <Trans>Pay at most</Trans>,
         TooltipBody: () => (
           <Trans>
             The maximum amount you are guaranteed to spend. If the price slips any further, your transaction will
@@ -148,7 +174,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
     case SwapLineItemType.MINIMUM_OUTPUT:
       if (trade.tradeType === TradeType.EXACT_OUTPUT) return
       return {
-        Label: () => <Trans>Minimum output</Trans>,
+        Label: () => <Trans>Receive at least</Trans>,
         TooltipBody: () => (
           <Trans>
             The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will
@@ -157,18 +183,6 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
         ),
         Value: () => <CurrencyAmountRow amount={trade.minimumAmountOut(allowedSlippage)} />,
         loaderWidth: 70,
-      }
-    case SwapLineItemType.EXPECTED_OUTPUT:
-      return {
-        Label: () => <Trans>Expected output</Trans>,
-        TooltipBody: () => (
-          <Trans>
-            The amount you expect to receive at the current market price. You may receive less or more if the market
-            price changes while your transaction is pending.
-          </Trans>
-        ),
-        Value: () => <CurrencyAmountRow amount={trade.postTaxOutputAmount} />,
-        loaderWidth: 65,
       }
     case SwapLineItemType.ROUTING_INFO:
       if (isPreview) return { Label: () => <Trans>Order routing</Trans>, Value: () => <Loading /> }

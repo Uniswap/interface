@@ -43,6 +43,24 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   gap: 4px;
 }
 
+.c21 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c4 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -136,6 +154,18 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
 .c19 {
   cursor: help;
   color: #7D7D7D;
+}
+
+.c22 {
+  background: #22222212;
+  border-radius: 8px;
+  color: #7D7D7D;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.c22::after {
+  content: 'Auto';
 }
 
 .c8 {
@@ -329,7 +359,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
               class="c9 c19 css-142zc9n"
               data-testid="swap-li-label"
             >
-              Minimum output
+              Max. slippage
             </div>
             <div
               class="c12"
@@ -338,28 +368,14 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                 <div
                   class="c9 c20 css-142zc9n"
                 >
-                  0.00000000000000098 DEF
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c2 c3 c4"
-          >
-            <div
-              class="c9 c19 css-142zc9n"
-              data-testid="swap-li-label"
-            >
-              Expected output
-            </div>
-            <div
-              class="c12"
-            >
-              <div>
-                <div
-                  class="c9 c20 css-142zc9n"
-                >
-                  0.000000000000001 DEF
+                  <div
+                    class="c2 c21"
+                  >
+                    <div
+                      class="c14 c22 css-1lgneq0"
+                    />
+                     2%
+                  </div>
                 </div>
               </div>
             </div>

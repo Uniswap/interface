@@ -40,6 +40,24 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+  gap: 8px;
+}
+
+.c13 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
   gap: 4px;
 }
 
@@ -52,6 +70,10 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
 
 .c5 {
   color: #222222;
+}
+
+.c11 {
+  color: #7D7D7D;
 }
 
 .c0 {
@@ -87,6 +109,18 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
 .c8 {
   cursor: help;
   color: #7D7D7D;
+}
+
+.c12 {
+  background: #22222212;
+  border-radius: 8px;
+  color: #7D7D7D;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.c12::after {
+  content: 'Auto';
 }
 
 .c1 {
@@ -143,7 +177,35 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
         class="c5 c8 css-142zc9n"
         data-testid="swap-li-label"
       >
-        Minimum output
+        Max. slippage
+      </div>
+      <div
+        class="c9"
+      >
+        <div>
+          <div
+            class="c5 c7 css-142zc9n"
+          >
+            <div
+              class="c2 c10"
+            >
+              <div
+                class="c11 c12 css-1lgneq0"
+              />
+               2%
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c2 c3 c4"
+    >
+      <div
+        class="c5 c8 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Receive at least
       </div>
       <div
         class="c9"
@@ -174,7 +236,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
             class="c5 c7 css-142zc9n"
           >
             <div
-              class="c2 c10"
+              class="c2 c13"
             >
               <img
                 alt="gas cost icon"
@@ -385,6 +447,24 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
   justify-content: flex-start;
 }
 
+.c11 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c4 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -394,6 +474,10 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
 
 .c5 {
   color: #222222;
+}
+
+.c12 {
+  color: #7D7D7D;
 }
 
 .c0 {
@@ -442,6 +526,18 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
 .c8 {
   cursor: help;
   color: #7D7D7D;
+}
+
+.c13 {
+  background: #22222212;
+  border-radius: 8px;
+  color: #7D7D7D;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.c13::after {
+  content: 'Auto';
 }
 
 .c1 {
@@ -503,7 +599,35 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
         class="c5 c8 css-142zc9n"
         data-testid="swap-li-label"
       >
-        Minimum output
+        Max. slippage
+      </div>
+      <div
+        class="c9"
+      >
+        <div>
+          <div
+            class="c5 c7 css-142zc9n"
+          >
+            <div
+              class="c2 c11"
+            >
+              <div
+                class="c12 c13 css-1lgneq0"
+              />
+               2%
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c2 c3 c4"
+    >
+      <div
+        class="c5 c8 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Receive at least
       </div>
       <div
         class="c9"
