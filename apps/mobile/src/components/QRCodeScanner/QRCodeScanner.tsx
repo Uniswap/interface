@@ -1,6 +1,6 @@
 import { BarCodeScanner, BarCodeScannerResult } from 'expo-barcode-scanner'
 import { PermissionStatus } from 'expo-modules-core'
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, LayoutChangeEvent, LayoutRectangle, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -44,15 +44,13 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   const [permissionResponse, requestPermissionResponse] = BarCodeScanner.usePermissions()
   const permissionStatus = permissionResponse?.status
 
-  // QR codes are a "type" of Barcode in the scanning library
-  const [barcodes, setBarcodes] = useState<BarCodeScannerResult[]>([])
-  const data = barcodes[0]?.data
-
   const [infoLayout, setInfoLayout] = useState<LayoutRectangle | null>()
   const [connectionLayout, setConnectionLayout] = useState<LayoutRectangle | null>()
 
   const handleBarCodeScanned = (result: BarCodeScannerResult): void => {
-    setBarcodes([result])
+    if (shouldFreezeCamera) return
+    const data = result?.data
+    onScanCode(data)
   }
 
   // Check for camera permissions, handle cases where not granted or undetermined
@@ -77,11 +75,6 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
 
   useAsyncData(getPermissionStatuses)
 
-  useEffect(() => {
-    if (!data) return
-    onScanCode(data)
-  }, [data, onScanCode])
-
   return (
     <AnimatedFlex
       grow
@@ -99,7 +92,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
               barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
               style={StyleSheet.absoluteFillObject}
               type={BarCodeScanner.Constants.Type.back}
-              onBarCodeScanned={handleBarCodeScanned}
+              onBarCodeScanned={shouldFreezeCamera ? undefined : handleBarCodeScanned}
             />
           )}
           <GradientOverlay shouldFreezeCamera={shouldFreezeCamera} />
