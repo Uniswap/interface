@@ -146,28 +146,6 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   fill: #7D7D7D;
 }
 
-.c20 {
-  text-align: right;
-  overflow-wrap: break-word;
-}
-
-.c19 {
-  cursor: help;
-  color: #7D7D7D;
-}
-
-.c22 {
-  background: #22222212;
-  border-radius: 8px;
-  color: #7D7D7D;
-  height: 20px;
-  padding: 0 6px;
-}
-
-.c22::after {
-  content: 'Auto';
-}
-
 .c8 {
   background-color: transparent;
   border: none;
@@ -198,6 +176,28 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   -moz-user-select: text;
   -ms-user-select: text;
   user-select: text;
+}
+
+.c20 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c19 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+.c22 {
+  background: #22222212;
+  border-radius: 8px;
+  color: #7D7D7D;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.c22::after {
+  content: 'Auto';
 }
 
 .c5 {

@@ -20,7 +20,8 @@ import { getPriceImpactColor } from 'utils/prices'
 
 import { GasBreakdownTooltip, UniswapXDescription } from './GasBreakdownTooltip'
 import { MaxSlippageTooltip } from './MaxSlippageTooltip'
-import SwapRoute from './SwapRoute'
+import { RoutingTooltip, SwapRoute } from './SwapRoute'
+import TradePrice from './TradePrice'
 
 export enum SwapLineItemType {
   EXCHANGE_RATE,
@@ -76,15 +77,6 @@ function Loading({ width = 50 }: { width?: number }) {
   return <LoadingRow data-testid="loading-row" height={15} width={width} />
 }
 
-function ExchangeRateRow({ trade }: { trade: InterfaceTrade }) {
-  const { formatNumber } = useFormatter()
-  const rate = `1 ${trade.executionPrice.quoteCurrency.symbol} = ${formatNumber({
-    input: parseFloat(trade.executionPrice.toFixed(9)),
-    type: NumberType.TokenTx,
-  })} ${trade.executionPrice.baseCurrency.symbol}`
-  return <>{rate}</>
-}
-
 function ColoredPercentRow({ percent }: { percent: Percent }) {
   const { formatSlippage } = useFormatter()
   return <ColorWrapper textColor={getPriceImpactColor(percent)}>{formatSlippage(percent)}</ColorWrapper>
@@ -122,8 +114,10 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   switch (type) {
     case SwapLineItemType.EXCHANGE_RATE:
       return {
-        Label: () => <Trans>Exchange rate</Trans>,
-        Value: () => <ExchangeRateRow trade={trade} />,
+        Label: () => <Trans>Rate</Trans>,
+        Value: () => <TradePrice price={trade.executionPrice} />,
+        TooltipBody: !isPreview ? () => <RoutingTooltip trade={trade} /> : undefined,
+        tooltipSize: isUniswapX ? TooltipSize.Small : TooltipSize.Large,
       }
     case SwapLineItemType.NETWORK_COST:
       if (!SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) return
@@ -185,12 +179,12 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
         loaderWidth: 70,
       }
     case SwapLineItemType.ROUTING_INFO:
-      if (isPreview) return { Label: () => <Trans>Order routing</Trans>, Value: () => <Loading /> }
+      if (isPreview || syncing) return { Label: () => <Trans>Order routing</Trans>, Value: () => <Loading /> }
       return {
         Label: () => <Trans>Order routing</Trans>,
         TooltipBody: () => {
           if (isUniswapX) return <UniswapXDescription />
-          return <SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} />
+          return <SwapRoute data-testid="swap-route-info" trade={trade} />
         },
         tooltipSize: isUniswapX ? TooltipSize.Small : TooltipSize.Large,
         Value: () => <RouterLabel trade={trade} />,
