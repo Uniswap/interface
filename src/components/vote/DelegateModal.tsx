@@ -107,6 +107,15 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
     } else return undefined
   }, [poolInfo, parsedAmount])
 
+  const newIrr = useMemo(() => {
+    if (poolInfo?.irr?.toString() !== 'NaN') {
+      const irrImpact =
+        Number(poolInfo?.poolOwnStake) /
+        (Number(poolInfo?.poolOwnStake) + Number(parsedAmount?.quotient.toString()) / 1e18)
+      return (Number(poolInfo?.irr) * irrImpact).toFixed(2)
+    } else return undefined
+  }, [poolInfo, parsedAmount])
+
   const stakeData = useMemo(() => {
     if (!poolId) return
     return {
@@ -171,6 +180,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
 
     await approveCallback()
   }
+  console.log(newIrr)
 
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
@@ -226,9 +236,14 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
                   <ThemedText.DeprecatedBody fontSize={16} fontWeight={500}>
                     <Trans>Staking {formatCurrencyAmount(parsedAmount, 4)} GRG</Trans>
                   </ThemedText.DeprecatedBody>
-                  {Boolean(newApr && !usingDelegate && title === 'Stake') && (
+                  {Boolean(newApr && newApr?.toString() !== 'NaN' && !usingDelegate) && (
                     <ThemedText.DeprecatedBody fontSize={16} fontWeight={500}>
                       <Trans>APR {newApr}%</Trans>
+                    </ThemedText.DeprecatedBody>
+                  )}
+                  {Boolean(newIrr && newIrr?.toString() !== 'NaN' && usingDelegate) && (
+                    <ThemedText.DeprecatedBody fontSize={16} fontWeight={500}>
+                      <Trans>IRR {newIrr}%</Trans>
                     </ThemedText.DeprecatedBody>
                   )}
                 </RowBetween>
@@ -260,13 +275,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="md" justify="center">
             <ThemedText.DeprecatedLargeHeader>
-              {usingDelegate ? (
-                <Trans>Staking From Pool</Trans>
-              ) : title === 'Stake' ? (
-                <Trans>Staking</Trans>
-              ) : (
-                <Trans>Unlocking Votes</Trans>
-              )}
+              {usingDelegate ? <Trans>Staking From Pool</Trans> : <Trans>Staking</Trans>}
             </ThemedText.DeprecatedLargeHeader>
             <ThemedText.DeprecatedMain fontSize={36}>
               {formatCurrencyAmount(parsedAmount, 4)} GRG
