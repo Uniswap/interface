@@ -25,6 +25,24 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -36,11 +54,11 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c10 {
   color: #7D7D7D;
 }
 
-.c10 {
+.c11 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -51,15 +69,15 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   font-weight: 500;
 }
 
-.c10:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c7 {
+.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -74,13 +92,13 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   height: inherit;
 }
 
-.c11 {
+.c12 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c11::before {
+.c12::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -94,43 +112,43 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   background: #FFFFFF;
 }
 
-.c11.arrow-top {
+.c12.arrow-top {
   bottom: -4px;
 }
 
-.c11.arrow-top::before {
+.c12.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c11.arrow-bottom {
+.c12.arrow-bottom {
   top: -4px;
 }
 
-.c11.arrow-bottom::before {
+.c12.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c11.arrow-left {
+.c12.arrow-left {
   right: -4px;
 }
 
-.c11.arrow-left::before {
+.c12.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c11.arrow-right {
+.c12.arrow-right {
   left: -4px;
 }
 
-.c11.arrow-right::before {
+.c12.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c9 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -168,7 +186,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Network fee
+      Network cost
     </div>
     <div
       class="c5"
@@ -177,26 +195,36 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          $0.00
+          <div
+            class="c0 c7"
+          >
+            <img
+              alt="gas cost icon"
+              height="16"
+              src="ethereum-logo.png"
+              width="16"
+            />
+            $0.00
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c8"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c9"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c10 css-obwv3p"
         >
           <div
-            class="c9 css-1m65e73"
+            class="c10 css-1m65e73"
           >
             The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
             <a
-              class="c10"
+              class="c11"
               href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
               rel="noopener noreferrer"
               target="_blank"
@@ -207,7 +235,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
         </div>
       </div>
       <div
-        class="c11 arrow-"
+        class="c12 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -894,6 +922,24 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -905,11 +951,11 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c10 {
   color: #7D7D7D;
 }
 
-.c10 {
+.c11 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -920,15 +966,15 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   font-weight: 500;
 }
 
-.c10:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c7 {
+.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -943,13 +989,13 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   height: inherit;
 }
 
-.c11 {
+.c12 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c11::before {
+.c12::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -963,43 +1009,43 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   background: #FFFFFF;
 }
 
-.c11.arrow-top {
+.c12.arrow-top {
   bottom: -4px;
 }
 
-.c11.arrow-top::before {
+.c12.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c11.arrow-bottom {
+.c12.arrow-bottom {
   top: -4px;
 }
 
-.c11.arrow-bottom::before {
+.c12.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c11.arrow-left {
+.c12.arrow-left {
   right: -4px;
 }
 
-.c11.arrow-left::before {
+.c12.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c11.arrow-right {
+.c12.arrow-right {
   left: -4px;
 }
 
-.c11.arrow-right::before {
+.c12.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c9 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -1033,7 +1079,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Network fee
+      Network cost
     </div>
     <div
       class="c5"
@@ -1042,26 +1088,36 @@ exports[`SwapLineItem.tsx exact input 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          $1.00
+          <div
+            class="c0 c7"
+          >
+            <img
+              alt="gas cost icon"
+              height="16"
+              src="ethereum-logo.png"
+              width="16"
+            />
+            $1.00
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c8"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c9"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c10 css-obwv3p"
         >
           <div
-            class="c9 css-1m65e73"
+            class="c10 css-1m65e73"
           >
             The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
             <a
-              class="c10"
+              class="c11"
               href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
               rel="noopener noreferrer"
               target="_blank"
@@ -1072,7 +1128,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
         </div>
       </div>
       <div
-        class="c11 arrow-"
+        class="c12 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -2188,6 +2244,24 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -2199,11 +2273,11 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c10 {
   color: #7D7D7D;
 }
 
-.c10 {
+.c11 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -2214,15 +2288,15 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   font-weight: 500;
 }
 
-.c10:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c7 {
+.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -2237,13 +2311,13 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   height: inherit;
 }
 
-.c11 {
+.c12 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c11::before {
+.c12::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -2257,43 +2331,43 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   background: #FFFFFF;
 }
 
-.c11.arrow-top {
+.c12.arrow-top {
   bottom: -4px;
 }
 
-.c11.arrow-top::before {
+.c12.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c11.arrow-bottom {
+.c12.arrow-bottom {
   top: -4px;
 }
 
-.c11.arrow-bottom::before {
+.c12.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c11.arrow-left {
+.c12.arrow-left {
   right: -4px;
 }
 
-.c11.arrow-left::before {
+.c12.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c11.arrow-right {
+.c12.arrow-right {
   left: -4px;
 }
 
-.c11.arrow-right::before {
+.c12.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c9 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -2327,7 +2401,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Network fee
+      Network cost
     </div>
     <div
       class="c5"
@@ -2336,26 +2410,36 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          $1.00
+          <div
+            class="c0 c7"
+          >
+            <img
+              alt="gas cost icon"
+              height="16"
+              src="ethereum-logo.png"
+              width="16"
+            />
+            $1.00
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c8"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c9"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c10 css-obwv3p"
         >
           <div
-            class="c9 css-1m65e73"
+            class="c10 css-1m65e73"
           >
             The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
             <a
-              class="c10"
+              class="c11"
               href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
               rel="noopener noreferrer"
               target="_blank"
@@ -2366,7 +2450,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
         </div>
       </div>
       <div
-        class="c11 arrow-"
+        class="c12 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -3482,6 +3566,24 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -3493,11 +3595,11 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c10 {
   color: #7D7D7D;
 }
 
-.c10 {
+.c11 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -3508,15 +3610,15 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   font-weight: 500;
 }
 
-.c10:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c7 {
+.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -3531,13 +3633,13 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   height: inherit;
 }
 
-.c11 {
+.c12 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c11::before {
+.c12::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -3551,43 +3653,43 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   background: #FFFFFF;
 }
 
-.c11.arrow-top {
+.c12.arrow-top {
   bottom: -4px;
 }
 
-.c11.arrow-top::before {
+.c12.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c11.arrow-bottom {
+.c12.arrow-bottom {
   top: -4px;
 }
 
-.c11.arrow-bottom::before {
+.c12.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c11.arrow-left {
+.c12.arrow-left {
   right: -4px;
 }
 
-.c11.arrow-left::before {
+.c12.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c11.arrow-right {
+.c12.arrow-right {
   left: -4px;
 }
 
-.c11.arrow-right::before {
+.c12.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c9 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -3621,7 +3723,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Network fee
+      Network cost
     </div>
     <div
       class="c5"
@@ -3630,26 +3732,36 @@ exports[`SwapLineItem.tsx exact output 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          -
+          <div
+            class="c0 c7"
+          >
+            <img
+              alt="gas cost icon"
+              height="16"
+              src="ethereum-logo.png"
+              width="16"
+            />
+            -
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c8"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c9"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c10 css-obwv3p"
         >
           <div
-            class="c9 css-1m65e73"
+            class="c10 css-1m65e73"
           >
             The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
             <a
-              class="c10"
+              class="c11"
               href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
               rel="noopener noreferrer"
               target="_blank"
@@ -3660,7 +3772,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
         </div>
       </div>
       <div
-        class="c11 arrow-"
+        class="c12 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -4776,6 +4888,24 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -4787,11 +4917,11 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c10 {
   color: #7D7D7D;
 }
 
-.c10 {
+.c11 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -4802,15 +4932,15 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   font-weight: 500;
 }
 
-.c10:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c7 {
+.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -4825,13 +4955,13 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   height: inherit;
 }
 
-.c11 {
+.c12 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c11::before {
+.c12::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -4845,43 +4975,43 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   background: #FFFFFF;
 }
 
-.c11.arrow-top {
+.c12.arrow-top {
   bottom: -4px;
 }
 
-.c11.arrow-top::before {
+.c12.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c11.arrow-bottom {
+.c12.arrow-bottom {
   top: -4px;
 }
 
-.c11.arrow-bottom::before {
+.c12.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c11.arrow-left {
+.c12.arrow-left {
   right: -4px;
 }
 
-.c11.arrow-left::before {
+.c12.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c11.arrow-right {
+.c12.arrow-right {
   left: -4px;
 }
 
-.c11.arrow-right::before {
+.c12.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c9 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -4915,7 +5045,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Network fee
+      Network cost
     </div>
     <div
       class="c5"
@@ -4924,26 +5054,36 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          $1.00
+          <div
+            class="c0 c7"
+          >
+            <img
+              alt="gas cost icon"
+              height="16"
+              src="ethereum-logo.png"
+              width="16"
+            />
+            $1.00
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c8"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c9"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c10 css-obwv3p"
         >
           <div
-            class="c9 css-1m65e73"
+            class="c10 css-1m65e73"
           >
             The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
             <a
-              class="c10"
+              class="c11"
               href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
               rel="noopener noreferrer"
               target="_blank"
@@ -4954,7 +5094,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
         </div>
       </div>
       <div
-        class="c11 arrow-"
+        class="c12 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -6276,6 +6416,24 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   justify-content: flex-start;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -6287,11 +6445,11 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   color: #222222;
 }
 
-.c9 {
+.c10 {
   color: #7D7D7D;
 }
 
-.c10 {
+.c11 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -6302,15 +6460,15 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   font-weight: 500;
 }
 
-.c10:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c7 {
+.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -6325,13 +6483,13 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   height: inherit;
 }
 
-.c11 {
+.c12 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c11::before {
+.c12::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -6345,43 +6503,43 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   background: #FFFFFF;
 }
 
-.c11.arrow-top {
+.c12.arrow-top {
   bottom: -4px;
 }
 
-.c11.arrow-top::before {
+.c12.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c11.arrow-bottom {
+.c12.arrow-bottom {
   top: -4px;
 }
 
-.c11.arrow-bottom::before {
+.c12.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c11.arrow-left {
+.c12.arrow-left {
   right: -4px;
 }
 
-.c11.arrow-left::before {
+.c12.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c11.arrow-right {
+.c12.arrow-right {
   left: -4px;
 }
 
-.c11.arrow-right::before {
+.c12.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c8 {
+.c9 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -6415,7 +6573,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Network fee
+      Network cost
     </div>
     <div
       class="c5"
@@ -6424,26 +6582,36 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
         <div
           class="c3 c6 css-142zc9n"
         >
-          $1.00
+          <div
+            class="c0 c7"
+          >
+            <img
+              alt="gas cost icon"
+              height="16"
+              src="ethereum-logo.png"
+              width="16"
+            />
+            $1.00
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="c7"
+      class="c8"
       style="position: fixed; left: 0px; top: 0px;"
     >
       <div
-        class="c8"
+        class="c9"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c10 css-obwv3p"
         >
           <div
-            class="c9 css-1m65e73"
+            class="c10 css-1m65e73"
           >
             The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
             <a
-              class="c10"
+              class="c11"
               href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
               rel="noopener noreferrer"
               target="_blank"
@@ -6454,7 +6622,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
         </div>
       </div>
       <div
-        class="c11 arrow-"
+        class="c12 arrow-"
         style="position: absolute;"
       />
     </div>
@@ -7928,7 +8096,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Network fee
+      Network cost
     </div>
     <div
       class="c5"
@@ -8661,7 +8829,7 @@ exports[`SwapLineItem.tsx syncing 1`] = `
       class="c3 c4 css-142zc9n"
       data-testid="swap-li-label"
     >
-      Network fee
+      Network cost
     </div>
     <div
       class="c5"
