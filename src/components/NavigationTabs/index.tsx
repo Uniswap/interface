@@ -51,7 +51,7 @@ export function FindPoolTabs({ origin }: { origin: string }) {
           <StyledArrowLeft />
         </Link>
         <FindPoolTabsText>
-          <Trans>Import V2 Pool</Trans>
+          <Trans>Import V2 pool</Trans>
         </FindPoolTabsText>
       </RowBetween>
     </Tabs>
@@ -108,9 +108,9 @@ export function AddRemoveTabs({
           {creating ? (
             <Trans>Create a pair</Trans>
           ) : adding ? (
-            <Trans>Add Liquidity</Trans>
+            <Trans>Add liquidity</Trans>
           ) : (
-            <Trans>Remove Liquidity</Trans>
+            <Trans>Remove liquidity</Trans>
           )}
         </AddRemoveTitleText>
         {children && <Box style={{ marginRight: '.5rem' }}>{children}</Box>}

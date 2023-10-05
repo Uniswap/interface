@@ -59,7 +59,7 @@ export function ChainConnectivityWarning() {
       <TitleRow>
         <CautionTriangle />
         <TitleText>
-          <Trans>Network Warning</Trans>
+          <Trans>Network warning</Trans>
         </TitleText>
       </TitleRow>
       <BodyRow>

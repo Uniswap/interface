@@ -366,7 +366,7 @@ exports[`PriceChart renders correctly with empty price array 1`] = `
     <div
       class="c1 css-slqfkh"
     >
-      Price Unavailable
+      Price unavailable
     </div>
     <div
       class="c1 css-142zc9n"
@@ -799,7 +799,7 @@ exports[`PriceChart renders correctly with undefined prices 1`] = `
     <div
       class="c1 css-slqfkh"
     >
-      Price Unavailable
+      Price unavailable
     </div>
     <div
       class="c1 css-142zc9n"

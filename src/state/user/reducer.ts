@@ -54,6 +54,8 @@ export interface UserState {
   optedOutOfUniswapX?: boolean
   // undefined means has not gone through A/B split yet
   showSurveyPopup?: boolean
+
+  originCountry?: string
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -73,6 +75,7 @@ export const initialState: UserState = {
   timestamp: currentTimestamp(),
   hideBaseWalletBanner: false,
   showSurveyPopup: undefined,
+  originCountry: undefined,
 }
 
 const userSlice = createSlice({
@@ -133,12 +136,16 @@ const userSlice = createSlice({
       }
       state.timestamp = currentTimestamp()
     },
+    setOriginCountry(state, { payload: country }) {
+      state.originCountry = country
+    },
   },
 })
 
 export const {
   addSerializedPair,
   addSerializedToken,
+  setOriginCountry,
   updateSelectedWallet,
   updateHideClosedPositions,
   updateUserRouterPreference,

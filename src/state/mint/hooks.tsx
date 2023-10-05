@@ -178,7 +178,7 @@ export function useDerivedMintInfo(
 
   let error: ReactNode | undefined
   if (!account) {
-    error = <Trans>Connect Wallet</Trans>
+    error = <Trans>Connect wallet</Trans>
   }
 
   if (pairState === PairState.INVALID) {

@@ -94,7 +94,7 @@ export default function Profile() {
             </ThemedText.HeadlineMedium>
             <ConnectWalletButton onClick={toggleWalletDrawer}>
               <ThemedText.SubHeader color="white" lineHeight="20px">
-                <Trans>Connect Wallet</Trans>
+                <Trans>Connect wallet</Trans>
               </ThemedText.SubHeader>
             </ConnectWalletButton>
           </Center>

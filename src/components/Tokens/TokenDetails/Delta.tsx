@@ -24,13 +24,6 @@ interface DeltaArrowProps {
   size?: number
 }
 
-export function formatDelta(delta: number | null | undefined) {
-  if (!isValidDelta(delta)) return '-'
-
-  const formattedDelta = Math.abs(delta).toFixed(2) + '%'
-  return formattedDelta
-}
-
 export function DeltaArrow({ delta, noColor = false, size = 16 }: DeltaArrowProps) {
   if (!isValidDelta(delta)) return null
 
