@@ -56,7 +56,7 @@ describe('Token details', () => {
       cy.get('[data-cy="missing-chart"]').should('exist')
     }
 
-    // Stats should not exist - need to find another token with no stats
+    // Stats should not exist
     cy.get(getTestSelector('token-details-stats')).should('not.exist')
 
     // About section should have description of token
