@@ -116,7 +116,7 @@
     "@types/uuid": "^8.3.4",
     "@types/wcag-contrast": "^3.0.0",
     "@types/xml2js": "^0.4.12",
-    "@uniswap/default-token-list": "^11.2.0",
+    "@uniswap/default-token-list": "^11.6.0",
     "@uniswap/eslint-config": "^1.2.0",
     "@vanilla-extract/jest-transform": "^1.1.1",
     "@vanilla-extract/webpack-plugin": "^2.2.0",
