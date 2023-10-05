@@ -13,7 +13,7 @@ export default function RouterLabel({ trade }: { trade: InterfaceTrade }) {
     )
   }
   if (trade.quoteMethod === QuoteMethod.CLIENT_SIDE || trade.quoteMethod === QuoteMethod.CLIENT_SIDE_FALLBACK) {
-    return <ThemedText.BodySmall>Uniswap Client</ThemedText.BodySmall>
+    return <ThemedText.BodySmall>Rigoblock Client</ThemedText.BodySmall>
   }
   return <ThemedText.BodySmall>Uniswap API</ThemedText.BodySmall>
 }
