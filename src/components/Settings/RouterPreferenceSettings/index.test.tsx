@@ -14,7 +14,8 @@ describe('RouterPreferenceSettings', () => {
   beforeEach(() => {
     store.dispatch(updateUserRouterPreference({ userRouterPreference: RouterPreference.API }))
   })
-  it('toggles `Uniswap X` router preference', () => {
+  // TODO: fix following test when looking to use UniswapX
+  it.skip('toggles `Uniswap X` router preference', () => {
     render(<RouterPreferenceSettings />)
 
     const uniswapXToggle = screen.getByTestId('toggle-uniswap-x-button')

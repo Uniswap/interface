@@ -170,7 +170,7 @@ exports[`disable nft on searchbar should render text without nfts 1`] = `
       <input
         class="reset_base__1klryar0 reset_input__1klryar8 reset_field__1klryar5 reset_appearance__1klryar4 sprinkles_width_full_sm__rgw6ez16v SearchBar_searchBarInput__1fbf9szb SearchBar__1fbf9sza sprinkles_padding_0_sm__rgw6ez2t7 sprinkles_fontWeight_normal_sm__rgw6ezcp sprinkles_fontSize_16_sm__rgw6ezb1 sprinkles_color_textPrimary_default__rgw6ez4ej sprinkles_color_textSecondary_placeholder__rgw6ez4eu sprinkles_border_none_default__rgw6ez7iz sprinkles_background_none_default__rgw6ez4sj sprinkles_lineHeight_24_sm__rgw6ezed sprinkles_height_full_sm__rgw6ez1dv SearchBar_searchContentLeftAlign__1fbf9sz10"
         data-cy="search-bar-input"
-        placeholder="Search tokens"
+        placeholder="Search smart pools"
         value=""
       />
       <div

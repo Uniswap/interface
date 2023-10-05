@@ -290,7 +290,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
 }
 
 .c5 {
-  background-color: #FB118E;
+  background-color: #FEB239;
   font-size: 20px;
   font-weight: 600;
   padding: 16px;
@@ -298,17 +298,17 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
 }
 
 .c5:focus {
-  box-shadow: 0 0 0 1pt #ee0481;
-  background-color: #ee0481;
+  box-shadow: 0 0 0 1pt #fea820;
+  background-color: #fea820;
 }
 
 .c5:hover {
-  background-color: #ee0481;
+  background-color: #fea820;
 }
 
 .c5:active {
-  box-shadow: 0 0 0 1pt #d50474;
-  background-color: #d50474;
+  box-shadow: 0 0 0 1pt #fe9e06;
+  background-color: #fe9e06;
 }
 
 .c5:disabled {
