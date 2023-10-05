@@ -8,6 +8,7 @@ import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { Arrow } from 'src/components/icons/Arrow'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { RecipientPrevTransfers } from 'src/components/input/RecipientInputPanel'
+import { TextInputProps } from 'src/components/input/TextInput'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -70,17 +71,17 @@ export function TransactionReview({
   const { trigger: actionButtonTrigger } = useBiometricPrompt(actionButtonProps.onPress)
   const { requiredForTransactions } = useBiometricAppSettings()
 
-  const textProps = media.short
+  const textProps: TextInputProps = media.short
     ? {
-        fontFamily: fonts.heading3.family,
-        fontSize: fonts.heading3.fontSize,
-        lineHeight: fonts.heading3.lineHeight,
+        fontFamily: '$heading',
+        fontSize: '$small',
+        lineHeight: '$small',
         maxFontSizeMultiplier: fonts.body2.maxFontSizeMultiplier,
       }
     : {
-        fontFamily: fonts.heading2.family,
-        fontSize: fonts.heading2.fontSize,
-        lineHeight: fonts.heading3.lineHeight,
+        fontFamily: '$heading',
+        fontSize: '$medium',
+        lineHeight: '$medium',
         maxFontSizeMultiplier: fonts.heading2.maxFontSizeMultiplier,
       }
 
@@ -117,12 +118,12 @@ export function TransactionReview({
               <AmountInput
                 {...textProps}
                 alignSelf="stretch"
-                backgroundColor="none"
+                backgroundColor="$transparent"
                 borderWidth={0}
                 editable={false}
-                my="none"
-                px="spacing16"
-                py="none"
+                my="$none"
+                px="$spacing16"
+                py="$none"
                 // on review screen, number formatter will already include $ sign
                 showCurrencySign={false}
                 showSoftInputOnFocus={false}
@@ -158,11 +159,11 @@ export function TransactionReview({
         {currencyOutInfo && formattedAmountOut ? (
           <Flex centered $short={{ pb: '$spacing4' }} gap={innerGap} pb="$none">
             <Flex centered gap={amountAndEquivalentValueGap}>
-              <Flex height={textProps.lineHeight} justifyContent="center" overflow="hidden">
+              <Flex height={fonts.heading3.lineHeight} justifyContent="center" overflow="hidden">
                 <AmountInput
                   {...textProps}
                   alignSelf="stretch"
-                  backgroundColor="none"
+                  backgroundColor="$transparent"
                   borderWidth={0}
                   editable={false}
                   showCurrencySign={isUSDInput}

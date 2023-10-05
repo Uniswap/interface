@@ -160,12 +160,12 @@ function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
           <AmountInput
             ref={inputRef}
             autoFocus={autoFocus ?? focus}
-            backgroundColor="none"
+            backgroundColor="$transparent"
             borderWidth={0}
             dimTextColor={dimTextColor}
             flex={1}
             focusable={Boolean(currencyInfo)}
-            fontFamily={fonts.heading2.family}
+            fontFamily="$heading"
             fontSize={focus ? fontSize : MIN_INPUT_FONT_SIZE}
             maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
             // This is a hacky workaround for Android to prevent text from being cut off
@@ -175,8 +175,8 @@ function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
             overflow="visible"
             placeholder={currencyInfo ? '0' : placeholderText}
             placeholderTextColor={colors.neutral3.val}
-            px="none"
-            py="none"
+            px="$none"
+            py="$none"
             returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
             showCurrencySign={isUSDInput}
             showSoftInputOnFocus={showSoftInputOnFocus}

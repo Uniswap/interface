@@ -184,35 +184,53 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       autoCorrect={true}
                       autoFocus={true}
                       blurOnSubmit={true}
+                      editable={true}
+                      focusable={true}
+                      fontFamily="Basel-Book"
+                      fontSize={19}
+                      lineHeight={19}
                       maxFontSizeMultiplier={1.4}
                       multiline={true}
                       onBlur={[Function]}
                       onChangeText={[Function]}
                       onFocus={[Function]}
                       onSubmitEditing={[Function]}
+                      outlineWidth={0}
                       placeholderTextColor="#CECECE"
                       returnKeyType="done"
                       scrollEnabled={false}
                       selectionColor="#222222"
                       spellCheck={false}
                       style={
-                        [
-                          {
-                            "backgroundColor": "transparent",
-                            "borderRadius": 12,
-                            "color": "#222222",
-                            "fontFamily": "Basel-Book",
-                            "fontSize": 19,
-                            "justifyContent": "center",
-                            "lineHeight": 19,
-                            "paddingHorizontal": 0,
-                            "paddingVertical": 0,
-                            "textAlign": "center",
-                            "width": 8,
-                          },
-                        ]
+                        {
+                          "backgroundColor": "transparent",
+                          "borderBottomColor": "transparent",
+                          "borderBottomLeftRadius": 12,
+                          "borderBottomRightRadius": 12,
+                          "borderBottomWidth": 1,
+                          "borderLeftColor": "transparent",
+                          "borderLeftWidth": 1,
+                          "borderRightColor": "transparent",
+                          "borderRightWidth": 1,
+                          "borderStyle": "solid",
+                          "borderTopColor": "transparent",
+                          "borderTopLeftRadius": 12,
+                          "borderTopRightRadius": 12,
+                          "borderTopWidth": 1,
+                          "color": "#222222",
+                          "fontWeight": "400",
+                          "height": "auto",
+                          "justifyContent": "center",
+                          "minWidth": 0,
+                          "paddingBottom": 0,
+                          "paddingLeft": 0,
+                          "paddingRight": 0,
+                          "paddingTop": 0,
+                          "width": 8,
+                        }
                       }
                       testID="import_account_form/input"
+                      textAlign="center"
                       textAlignVertical="bottom"
                     />
                   </View>

@@ -77,7 +77,6 @@ export function FiatOnRampModal(): JSX.Element {
 
 function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const inputRef = useRef<TextInput>(null)
 
   const { isSheetReady } = useBottomSheetContext()
@@ -165,7 +164,9 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
   const onChangeValue =
     (source: MobileEventProperties[MobileEventName.FiatOnRampAmountEntered]['source']) =>
     (newAmount: string): void => {
-      sendMobileAnalyticsEvent(MobileEventName.FiatOnRampAmountEntered, { source })
+      sendMobileAnalyticsEvent(MobileEventName.FiatOnRampAmountEntered, {
+        source,
+      })
       onSetFontSize(newAmount)
       setValue(newAmount)
     }
@@ -226,19 +227,18 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
                     ref={inputRef}
                     autoFocus
                     alignSelf="stretch"
-                    backgroundColor="none"
+                    backgroundColor="$transparent"
                     borderWidth={0}
                     caretHidden={!showNativeKeyboard}
-                    fontFamily={fonts.heading2.family}
+                    fontFamily="$heading"
                     fontSize={fontSize}
                     maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
                     minHeight={MAX_INPUT_FONT_SIZE}
-                    mt="spacing48"
-                    overflow="visible"
+                    mt="$spacing48"
                     placeholder="$0"
-                    placeholderTextColor={colors.neutral3.val}
-                    px="none"
-                    py="none"
+                    placeholderTextColor="$neutral3"
+                    px="$none"
+                    py="$none"
                     returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
                     showCurrencySign={value !== ''}
                     showSoftInputOnFocus={showSoftInputOnFocus}

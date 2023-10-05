@@ -7,8 +7,7 @@ import { SettingsStackParamList } from 'src/app/navigation/types'
 import { TextInput } from 'src/components/input/TextInput'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
-import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
-import { fonts } from 'ui/src/theme'
+import { Button, Flex, Icons, Text } from 'ui/src'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
@@ -29,7 +28,6 @@ export function SettingsWalletEdit({
 }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const colors = useSporeColors()
   const activeAccount = useAccounts()[address]
   const ensName = useENS(ChainId.Mainnet, address)?.name
   const [nickname, setNickname] = useState(ensName || activeAccount?.name)
@@ -64,16 +62,16 @@ export function SettingsWalletEdit({
               <TextInput
                 autoFocus
                 autoCapitalize="none"
-                color={nickname === activeAccount?.name ? 'neutral3' : 'neutral1'}
-                fontFamily={fonts.heading2.family}
-                fontSize={fonts.heading2.fontSize}
-                margin="none"
+                color={nickname === activeAccount?.name ? '$neutral3' : '$neutral1'}
+                fontFamily="$heading"
+                fontSize="$medium"
+                margin="$none"
                 maxLength={NICKNAME_MAX_LENGTH}
                 numberOfLines={1}
                 placeholder={shortenAddress(address)}
-                placeholderTextColor={colors.neutral3.get()}
-                px="none"
-                py="none"
+                placeholderTextColor="$neutral3"
+                px="$none"
+                py="$none"
                 returnKeyType="done"
                 value={nickname}
                 width="100%"

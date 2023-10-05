@@ -4,7 +4,7 @@ import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { AnimatedFlex, Flex, TouchableArea, useSporeColors } from 'ui/src'
 import EyeOffIcon from 'ui/src/assets/icons/eye-off.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
-import { fonts, iconSizes } from 'ui/src/theme'
+import { iconSizes } from 'ui/src/theme'
 
 export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(function _PasswordInput(
   props,
@@ -32,15 +32,15 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(functio
           ref={ref}
           autoCapitalize="none"
           autoCorrect={false}
-          backgroundColor="none"
+          backgroundColor="$transparent"
           blurOnSubmit={false}
           borderWidth={0}
           clearTextOnFocus={false}
           flex={1}
-          fontFamily={fonts.subheading2.family}
-          fontSize={fonts.subheading2.fontSize}
+          fontFamily="$subHeading"
+          fontSize="$small"
           placeholder={placeholder}
-          placeholderTextColor={colors.neutral3.get()}
+          placeholderTextColor="$neutral3"
           returnKeyType={returnKeyType || 'done'}
           secureTextEntry={!showPassword}
           textContentType="none"

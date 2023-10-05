@@ -14,7 +14,7 @@ import { MaxAmountButton } from 'src/components/input/MaxAmountButton'
 import { Warning, WarningLabel } from 'src/components/modals/WarningModal/types'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
 import { useDynamicFontSizing } from 'src/features/transactions/hooks'
-import { Flex, SpaceTokens, Text, useSporeColors } from 'ui/src'
+import { Flex, SpaceTokens, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'utilities/src/format/format'
@@ -118,7 +118,6 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
     ...rest
   } = props
 
-  const colors = useSporeColors()
   const { t } = useTranslation()
   const transformedProps = useRestyle(
     restyleFunctions,
@@ -230,11 +229,11 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
             <AmountInput
               ref={inputRef}
               autoFocus={autoFocus ?? focus}
-              backgroundColor="none"
+              backgroundColor="$transparent"
               borderWidth={0}
               dimTextColor={dimTextColor}
               flex={1}
-              fontFamily={fonts.heading2.family}
+              fontFamily="$heading"
               fontSize={fontSize}
               maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
               // This is a hacky workaround for Android to prevent text from being cut off
@@ -243,9 +242,9 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
               minHeight={2 * MAX_INPUT_FONT_SIZE}
               overflow="visible"
               placeholder="0"
-              placeholderTextColor={colors.neutral3.get()}
-              px="none"
-              py="none"
+              placeholderTextColor="$neutral3"
+              px="$none"
+              py="$none"
               returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
               showCurrencySign={isUSDInput}
               showSoftInputOnFocus={showSoftInputOnFocus}

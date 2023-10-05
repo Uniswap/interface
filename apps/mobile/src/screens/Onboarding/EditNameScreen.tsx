@@ -12,7 +12,7 @@ import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { AnimatePresence, Button, Flex, Icons, Text, useMedia, useSporeColors } from 'ui/src'
+import { AnimatePresence, Button, Flex, Icons, Text, useMedia } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import {
@@ -113,7 +113,6 @@ function CustomizationSection({
   setAccountName: Dispatch<SetStateAction<string>>
 }): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const media = useMedia()
   const textInputRef = useRef<NativeTextInput>(null)
 
@@ -143,7 +142,7 @@ function CustomizationSection({
             maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
             maxLength={NICKNAME_MAX_LENGTH}
             placeholder="Nickname"
-            placeholderTextColor={colors.neutral3.get()}
+            placeholderTextColor="$neutral3"
             style={IS_ANDROID ? styles.noHorizontalPadding : {}}
             testID="customize/name"
             textAlign="center"
