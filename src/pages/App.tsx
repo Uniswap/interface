@@ -6,12 +6,14 @@ import Loader from 'components/Icons/LoadingSpinner'
 import NavBar, { PageTabs } from 'components/NavBar'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { useInfoPoolPageEnabled } from 'featureFlags/flags/infoPoolPage'
+import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
 import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
-import { useRouterPreference } from 'state/user/hooks'
+import { RouterPreference } from 'state/routing/types'
+import { useRouterPreference, useUserOptedOutOfUniswapX } from 'state/user/hooks'
 import { StatsigProvider, StatsigUser } from 'statsig-react'
 import styled from 'styled-components'
 import { SpinnerSVG } from 'theme/components'
@@ -119,6 +121,8 @@ export default function App() {
   const [routerPreference] = useRouterPreference()
   const [scrolledState, setScrolledState] = useState(false)
   const infoPoolPageEnabled = useInfoPoolPageEnabled()
+  const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
+  const userOptedOutOfUniswapX = useUserOptedOutOfUniswapX()
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -165,8 +169,21 @@ export default function App() {
   }, [isDarkMode])
 
   useEffect(() => {
+    // If we're not in the transition period to UniswapX opt-out, set the router preference to whatever is specified.
+    if (!isUniswapXDefaultEnabled) {
+      user.set(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
+      return
+    }
+
+    // In the transition period, override the stored API preference to UniswapX if the user hasn't opted out.
+    if (routerPreference === RouterPreference.API && !userOptedOutOfUniswapX) {
+      user.set(CustomUserProperties.ROUTER_PREFERENCE, RouterPreference.X)
+      return
+    }
+
+    // Otherwise, the user has opted out or their preference is UniswapX/client, so set the preference to whatever is specified.
     user.set(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
-  }, [routerPreference])
+  }, [routerPreference, isUniswapXDefaultEnabled, userOptedOutOfUniswapX])
 
   useEffect(() => {
     const scrollListener = () => {
