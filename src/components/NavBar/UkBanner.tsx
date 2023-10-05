@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components'
@@ -52,6 +52,18 @@ const BannerTextWrapper = styled(ThemedText.BodySecondary)`
 const ReadMoreWrapper = styled(ButtonText)`
   flex-shrink: 0;
   width: max-content;
+
+  :focus {
+    text-decoration: none;
+  }
+`
+
+export const bannerText = t`
+  UK disclaimer: This web application is provided as a tool for users to interact with the Uniswap Protocol on
+  their own initiative, with no endorsement or recommendation of cryptocurrency trading activities. In doing so,
+  Uniswap is not recommending that users or potential users engage in cryptoasset trading activity, and users or
+  potential users of the web application should not regard this webpage or its contents as involving any form of
+  recommendation, invitation or inducement to deal in cryptoassets.
 `
 
 export function UkBanner() {
@@ -60,13 +72,7 @@ export function UkBanner() {
   return (
     <BannerWrapper>
       <BannerTextWrapper fontWeight={500} lineHeight="24px">
-        <Trans>
-          UK disclaimer: This web application is provided as a tool for users to interact with the Uniswap Protocol on
-          their own initiative, with no endorsement or recommendation of cryptocurrency trading activities. In doing so,
-          Uniswap is not recommending that users or potential users engage in cryptoasset trading activity, and users or
-          potential users of the web application should not regard this webpage or its contents as involving any form of
-          recommendation, invitation or inducement to deal in cryptoassets.
-        </Trans>
+        {bannerText}
       </BannerTextWrapper>
       <ReadMoreWrapper>
         <ThemedText.BodySecondary fontWeight={500} lineHeight="24px" color="accent1" onClick={openDisclaimer}>

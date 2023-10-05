@@ -95,7 +95,7 @@ export default function App() {
   const routerConfig = useRouterConfig()
 
   const originCountry = useAppSelector((state: AppState) => state.user.originCountry)
-  const renderUkBannner = Boolean(originCountry) && originCountry === 'GB'
+  const renderUkBannner = Boolean(originCountry) && originCountry === 'US'
 
   useEffect(() => {
     window.scrollTo(0, 0)
