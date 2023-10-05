@@ -302,13 +302,13 @@ exports[`TokenDescription copy address button hidden when flagged 1`] = `
     >
       <span
         class="c14"
-        data-testid="desc-long-wrapper"
+        data-testid="token-description-full"
       >
         USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value between people, businesses and financial institutions just like email between mail services and texts between SMS providers. We believe by removing artificial economic borders, we can create a more inclusive global economy.
       </span>
       <span
         class="c15"
-        data-testid="desc-short-wrapper"
+        data-testid="token-description-truncated"
       >
         USDC is a fully collateralized US dollar stablecoin. USDC is the bridge...
       </span>
@@ -926,13 +926,13 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
     >
       <span
         class="c14"
-        data-testid="desc-long-wrapper"
+        data-testid="token-description-full"
       >
         USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value between people, businesses and financial institutions just like email between mail services and texts between SMS providers. We believe by removing artificial economic borders, we can create a more inclusive global economy.
       </span>
       <span
         class="c15"
-        data-testid="desc-short-wrapper"
+        data-testid="token-description-truncated"
       >
         USDC is a fully collateralized US dollar stablecoin. USDC is the bridge...
       </span>
@@ -1277,13 +1277,13 @@ exports[`TokenDescription truncates description and shows more 1`] = `
     >
       <span
         class="c14"
-        data-testid="desc-long-wrapper"
+        data-testid="token-description-full"
       >
         USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value between people, businesses and financial institutions just like email between mail services and texts between SMS providers. We believe by removing artificial economic borders, we can create a more inclusive global economy.
       </span>
       <span
         class="c15"
-        data-testid="desc-short-wrapper"
+        data-testid="token-description-truncated"
       >
         USDC is a fully collateralized US dollar stablecoin. USDC is the bridge...
       </span>

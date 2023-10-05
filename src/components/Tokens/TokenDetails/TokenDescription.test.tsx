@@ -49,13 +49,15 @@ describe('TokenDescription', () => {
     const { asFragment } = render(<TokenDescription tokenAddress={tokenAddress} />)
 
     expect(asFragment()).toMatchSnapshot()
-    const shortWrapper = screen.getByTestId('desc-short-wrapper')
-    const longWrapper = screen.getByTestId('desc-long-wrapper')
-    // verify that both descriptions are in the DOM for SEO crawling
-    expect(shortWrapper).toBeVisible()
-    expect(longWrapper).toBeVisible()
+    const truncatedDescription = screen.getByTestId('token-description-truncated')
+    const fullDescription = screen.getByTestId('token-description-full')
+
+    expect(truncatedDescription).toHaveStyleRule('display', 'inline')
+    expect(fullDescription).toHaveStyleRule('display', 'none')
 
     await act(() => userEvent.click(screen.getByText('Show more')))
+    expect(truncatedDescription).toHaveStyleRule('display', 'none')
+    expect(fullDescription).toHaveStyleRule('display', 'inline')
     expect(screen.getByText('Hide')).toBeVisible()
   })
 
