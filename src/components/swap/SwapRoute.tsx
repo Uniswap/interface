@@ -7,7 +7,7 @@ import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import { ClassicTrade, SubmittableTrade } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
 import { Separator, ThemedText } from 'theme/components'
-import { useFormatter } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 
 import RouterLabel from '../RouterLabel'
@@ -15,11 +15,11 @@ import { UniswapXDescription } from './GasBreakdownTooltip'
 
 // TODO(WEB-2022)
 // Can `trade.gasUseEstimateUSD` be defined when `chainId` is not in `SUPPORTED_GAS_ESTIMATE_CHAIN_IDS`?
-function getGasPrice(trade: ClassicTrade) {
-  const chainId = trade.inputAmount.currency.chainId
-  if (!trade.gasUseEstimateUSD || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) return undefined
+function useGasPrice({ gasUseEstimateUSD, inputAmount }: ClassicTrade) {
+  const { formatNumber } = useFormatter()
+  if (!gasUseEstimateUSD || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(inputAmount.currency.chainId)) return undefined
 
-  return trade.gasUseEstimateUSD === 0 ? '<$0.01' : '$' + trade.gasUseEstimateUSD.toFixed(2)
+  return gasUseEstimateUSD === 0 ? '<$0.01' : formatNumber({ input: gasUseEstimateUSD, type: NumberType.FiatGasPrice })
 }
 
 function RouteLabel({ trade }: { trade: SubmittableTrade }) {
@@ -63,7 +63,7 @@ export function RoutingTooltip({ trade }: { trade: SubmittableTrade }) {
 export function SwapRoute({ trade }: { trade: ClassicTrade }) {
   const { inputAmount, outputAmount } = trade
   const routes = getRoutingDiagramEntries(trade)
-  const gasPrice = getGasPrice(trade)
+  const gasPrice = useGasPrice(trade)
 
   return useAutoRouterSupported() ? (
     <Column gap="md">
