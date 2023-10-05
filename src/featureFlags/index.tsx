@@ -23,6 +23,10 @@ export enum FeatureFlag {
   quickRouteMainnet = 'enable_quick_route_mainnet',
 }
 
+export enum BaseVariant {
+  Control = 'control',
+  Enabled = 'enabled',
+}
 interface FeatureFlagsContextType {
   isLoaded: boolean
   flags: Record<string, string>
@@ -40,7 +44,11 @@ function useFeatureFlagsContext(): FeatureFlagsContextType {
 }
 
 /* update and save feature flag settings */
-export const featureFlagSettings = atomWithStorage<Record<string, string>>('featureFlags', {})
+const initialAtomValue: { [flag: string]: BaseVariant } = {}
+for (const flag in FeatureFlag) {
+  initialAtomValue[flag] = BaseVariant.Control
+}
+export const featureFlagSettings = atomWithStorage<Record<string, string>>('featureFlags', initialAtomValue)
 
 export function useUpdateFlag() {
   const setFeatureFlags = useUpdateAtom(featureFlagSettings)
@@ -69,11 +77,6 @@ export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
 
 export function useFeatureFlagsIsLoaded(): boolean {
   return useFeatureFlagsContext().isLoaded
-}
-
-export enum BaseVariant {
-  Control = 'control',
-  Enabled = 'enabled',
 }
 
 export function useBaseFlag(flag: string, defaultValue = BaseVariant.Control): BaseVariant {
