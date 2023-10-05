@@ -1,0 +1,13 @@
+diff --git a/node_modules/cypress-hardhat/lib/plugin/setup.js b/node_modules/cypress-hardhat/lib/plugin/setup.js
+index 6fd2b23..030319c 100644
+--- a/node_modules/cypress-hardhat/lib/plugin/setup.js
++++ b/node_modules/cypress-hardhat/lib/plugin/setup.js
+@@ -109,7 +109,7 @@ function setup() {
+         // Initializes the servers.
+         const forwardingServer = node_http_1.default.createServer((req, res) => {
+             // Forward responses to the active server.
+-            req.pipe(node_http_1.default.request(Object.assign(Object.assign({}, req), { hostname: server.address, port: server.port }), (response) => {
++            req.pipe(node_http_1.default.request(Object.assign(Object.assign({}, req), { hostname: server.address, port: server.port, joinDuplicateHeaders: true }), (response) => {
+                 for (const header in response.headers) {
+                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                     res.setHeader(header, response.headers[header]);
