@@ -71,8 +71,8 @@ function ExchangeRateRow({ trade }: { trade: InterfaceTrade }) {
 }
 
 function ColoredPercentRow({ percent }: { percent: Percent }) {
-  const { formatPriceImpact } = useFormatter()
-  return <ColorWrapper textColor={getPriceImpactColor(percent)}>{formatPriceImpact(percent)}</ColorWrapper>
+  const { formatSlippage } = useFormatter()
+  return <ColorWrapper textColor={getPriceImpactColor(percent)}>{formatSlippage(percent)}</ColorWrapper>
 }
 
 function CurrencyAmountRow({ amount }: { amount: CurrencyAmount<Currency> }) {

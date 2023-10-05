@@ -316,7 +316,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                   <span
                     class=""
                   >
-                    105566.373%
+                    -105566.373%
                   </span>
                 </div>
               </div>
