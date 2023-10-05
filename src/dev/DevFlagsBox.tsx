@@ -1,6 +1,6 @@
 import { BaseVariant, featureFlagSettings } from 'featureFlags'
 import { useAtomValue } from 'jotai/utils'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useGate } from 'statsig-react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
@@ -41,13 +41,20 @@ const Gate = ([flagName, flagSetting]: [string, string]) => {
 
 export default function DevFlagsBox() {
   const featureFlagsAtom = useAtomValue(featureFlagSettings)
-  const featureFlags = useMemo(() => Object.entries(featureFlagsAtom), [featureFlagsAtom])
+  const featureFlags = Object.entries(featureFlagsAtom)
+
+  // const featureFlags = useMemo(() => Object.entries(featureFlagsAtom), [featureFlagsAtom])
 
   const [isOpen, setIsOpen] = useState(true)
   const toggleOpen = () => setIsOpen((open) => !open)
 
+  console.log('NUMBER OF FEATURE FLAGS', featureFlags.length)
+  console.log('NUMBER ', featureFlags)
+
   const overrides = featureFlags.map((flag) => Gate(flag))
-  const hasOverrides = useMemo(() => overrides.some((g) => g !== null), [overrides])
+  const hasOverrides = overrides.some((g) => g !== null)
+
+  // const hasOverrides = useMemo(() => overrides.some((g) => g !== null), [overrides])
 
   return (
     <Box>
