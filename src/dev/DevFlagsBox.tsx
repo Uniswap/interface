@@ -14,6 +14,10 @@ const Box = styled.div`
   padding: 10px;
   border: 1px solid ${({ theme }) => theme.accent1};
   z-index: 1000;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    bottom: 70px;
+  }
 `
 const TopBar = styled.div`
   display: flex;
