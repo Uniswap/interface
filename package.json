@@ -13,10 +13,11 @@
     "graphql:generate:thegraph": "graphql-codegen --config graphql.thegraph.codegen.config.ts",
     "graphql:generate": "yarn graphql:generate:data && yarn graphql:generate:thegraph",
     "graphql": "yarn graphql:fetch && yarn graphql:generate",
+    "sitemap:generate": "node scripts/generate-sitemap.js",
     "i18n:extract": "lingui extract --locale en-US",
     "i18n:compile": "lingui compile",
     "i18n": "yarn i18n:extract --clean && yarn i18n:compile",
-    "prepare": "concurrently \"npm:ajv\" \"npm:contracts\" \"npm:graphql\" \"npm:i18n\"",
+    "prepare": "concurrently \"npm:ajv\" \"npm:contracts\" \"npm:graphql\" \"npm:i18n\" \"npm:sitemap:generate\"",
     "start": "craco start",
     "start:cloud": "NODE_OPTIONS=--dns-result-order=ipv4first PORT=3001 npx wrangler pages dev --compatibility-flags=nodejs_compat --compatibility-date=2023-08-01 --proxy=3001 --port=3000 -- yarn start",
     "build": "craco build",
@@ -114,6 +115,7 @@
     "@types/ua-parser-js": "^0.7.36",
     "@types/uuid": "^8.3.4",
     "@types/wcag-contrast": "^3.0.0",
+    "@types/xml2js": "^0.4.12",
     "@uniswap/default-token-list": "^11.2.0",
     "@uniswap/eslint-config": "^1.2.0",
     "@vanilla-extract/jest-transform": "^1.1.1",
@@ -293,6 +295,7 @@
     "workbox-navigation-preload": "^6.1.0",
     "workbox-precaching": "^6.1.0",
     "workbox-routing": "^6.1.0",
+    "xml2js": "^0.6.2",
     "zustand": "^4.3.6"
   },
   "engines": {
