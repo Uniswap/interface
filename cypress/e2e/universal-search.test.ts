@@ -65,7 +65,7 @@ describe('Universal search bar', () => {
       cy.get(getTestSelector('searchbar-token-row-ETHEREUM-NATIVE'))
 
       // Validate that we go to the searched/selected result.
-      getSearchBar().type('{enter}')
+      cy.get(getTestSelector('searchbar-token-row-ETHEREUM-NATIVE')).click()
       cy.url().should('contain', 'tokens/ethereum/NATIVE')
     }
   )
