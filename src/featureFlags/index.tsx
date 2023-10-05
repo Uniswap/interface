@@ -23,10 +23,6 @@ export enum FeatureFlag {
   quickRouteMainnet = 'enable_quick_route_mainnet',
 }
 
-export enum BaseVariant {
-  Control = 'control',
-  Enabled = 'enabled',
-}
 interface FeatureFlagsContextType {
   isLoaded: boolean
   flags: Record<string, string>
@@ -73,6 +69,11 @@ export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
 
 export function useFeatureFlagsIsLoaded(): boolean {
   return useFeatureFlagsContext().isLoaded
+}
+
+export enum BaseVariant {
+  Control = 'control',
+  Enabled = 'enabled',
 }
 
 export function useBaseFlag(flag: string, defaultValue = BaseVariant.Control): BaseVariant {
