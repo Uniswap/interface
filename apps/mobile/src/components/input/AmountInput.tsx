@@ -1,5 +1,5 @@
-import React, { forwardRef, useCallback, useMemo } from 'react'
-import { KeyboardTypeOptions, TextInput as NativeTextInput } from 'react-native'
+import React, { forwardRef, useCallback, useEffect, useMemo } from 'react'
+import { AppState, Keyboard, KeyboardTypeOptions, TextInput as NativeTextInput } from 'react-native'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { escapeRegExp } from 'utilities/src/primitives/string'
 
@@ -90,6 +90,19 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
     }),
     [dimTextColor, formattedValue, handleChange, rest, value, ref]
   )
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (showSoftInputOnFocus || nextAppState !== 'active') return
+      // Dismiss keyboard when app is foregrounded (showSoftInputOnFocus doesn't
+      // wotk when the app activates from the background)
+      Keyboard.dismiss()
+    })
+
+    return (): void => {
+      subscription.remove()
+    }
+  }, [showSoftInputOnFocus])
 
   // break down into two different components depending on value of showSoftInputOnFocus
   // when showSoftInputOnFocus value changes from false to true, React does not remount the component
