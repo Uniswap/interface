@@ -52,7 +52,7 @@ export default function DevFlagsBox() {
   return (
     <Box>
       <TopBar onClick={toggleOpen}>
-        {!isOpen ? '😿☝️' : '😺👇'}
+        {isOpen ? '😺👇' : '😿☝️'}
         {isOpen && (
           <ThemedText.SubHeader>
             {isStagingEnv() && 'Staging build overrides'}
