@@ -326,7 +326,10 @@ function NFTItemScreenContents({
                     <AssetMetadata
                       title={t('Owned by')}
                       valueComponent={
-                        <TouchableArea disabled={disableProfileNavigation} onPress={onPressOwner}>
+                        <TouchableArea
+                          disabled={disableProfileNavigation}
+                          hitSlop={16}
+                          onPress={onPressOwner}>
                           <AddressDisplay
                             address={owner}
                             hideAddressInSubtitle={true}

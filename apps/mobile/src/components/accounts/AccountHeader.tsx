@@ -52,6 +52,7 @@ export function AccountHeader(): JSX.Element {
         flex={1}
         flexDirection="row"
         hapticStyle={ImpactFeedbackStyle.Medium}
+        hitSlop={20}
         mr="$spacing12"
         testID={ElementName.Manage}
         onLongPress={async (): Promise<void> => {
@@ -82,7 +83,7 @@ export function AccountHeader(): JSX.Element {
           </Flex>
         )}
       </TouchableArea>
-      <TouchableArea hapticFeedback onPress={onPressSettings}>
+      <TouchableArea hapticFeedback hitSlop={20} onPress={onPressSettings}>
         <Icons.Settings
           color="$neutral2"
           height={iconSizes.icon28}

@@ -71,7 +71,11 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
             </Button>
           </Trace>
           <Trace logPress element={ElementName.ImportAccount}>
-            <TouchableArea hapticFeedback alignItems="center" onPress={onPressImportWallet}>
+            <TouchableArea
+              hapticFeedback
+              alignItems="center"
+              hitSlop={16}
+              onPress={onPressImportWallet}>
               <Text $short={{ variant: 'buttonLabel2' }} color="$accent1" variant="buttonLabel1">
                 {t('Add an existing wallet')}
               </Text>

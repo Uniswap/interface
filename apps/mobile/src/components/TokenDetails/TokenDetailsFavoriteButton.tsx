@@ -11,7 +11,10 @@ export function TokenDetailsFavoriteButton({ currencyId }: { currencyId: string 
   const isFavoriteToken = useAppSelector(selectFavoriteTokens).indexOf(id) !== -1
   const onFavoritePress = useToggleFavoriteCallback(id, isFavoriteToken)
   return (
-    <TouchableArea hapticFeedback onPress={onFavoritePress}>
+    <TouchableArea
+      hapticFeedback
+      hitSlop={{ right: 20, left: 5, top: 20, bottom: 20 }}
+      onPress={onFavoritePress}>
       <Favorite isFavorited={isFavoriteToken} size={iconSizes.icon24} />
     </TouchableArea>
   )

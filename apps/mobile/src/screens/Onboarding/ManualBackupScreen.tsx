@@ -184,7 +184,7 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
             'Your recovery phrase is what grants you (and anyone who has it) access to your funds. Be sure to store it in a memorable, safe space.'
           )}
         </Text>
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity hitSlop={24} onPress={onPress}>
           <Text color="$accent1" pt="$spacing24" variant="buttonLabel2">
             {t('I’m ready')}
           </Text>

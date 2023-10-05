@@ -30,7 +30,7 @@ export function FavoriteHeaderRow({
         {isEditing ? editingTitle : title}
       </Text>
       {!isEditing ? (
-        <TouchableArea hapticFeedback testID={ElementName.Edit} onPress={onPress}>
+        <TouchableArea hapticFeedback hitSlop={16} testID={ElementName.Edit} onPress={onPress}>
           <TripleDots
             color={colors.neutral2.get()}
             height={iconSizes.icon20}
@@ -40,7 +40,7 @@ export function FavoriteHeaderRow({
           />
         </TouchableArea>
       ) : (
-        <TouchableArea height={iconSizes.icon20} onPress={onPress}>
+        <TouchableArea height={iconSizes.icon20} hitSlop={16} onPress={onPress}>
           <Text color="$accent1" variant="buttonLabel3">
             {t('Done')}
           </Text>

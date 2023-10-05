@@ -107,15 +107,9 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
 
       {/* header row */}
       <Flex row alignItems="center" justifyContent="space-between" mx="$spacing4">
-        <TouchableArea
-          backgroundColor="$sporeBlack"
-          borderRadius="$roundedFull"
-          opacity={0.8}
-          p="$spacing8">
-          <Flex centered grow height={iconSizes.icon16} width={iconSizes.icon16}>
-            <BackButton color="$sporeWhite" size={iconSizes.icon24} />
-          </Flex>
-        </TouchableArea>
+        <Flex height={iconSizes.icon16} width={iconSizes.icon16}>
+          <BackButton color="$sporeWhite" size={iconSizes.icon24} />
+        </Flex>
         <ProfileContextMenu address={address} />
       </Flex>
 

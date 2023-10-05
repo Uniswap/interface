@@ -32,6 +32,7 @@ export function TouchableArea({
   children,
   testID,
   activeOpacity = 0.75,
+  hitSlop,
   ...propsIn
 }: TouchableAreaProps): JSX.Element {
   const [rest, style] = usePropsAndStyle(propsIn, {
@@ -97,7 +98,7 @@ export function TouchableArea({
     onPressOut: onPressOutHandler,
     onLongPress,
     activeOpacity,
-    hitSlop: defaultHitslopInset,
+    hitSlop: hitSlop || defaultHitslopInset,
     testID,
   }
 

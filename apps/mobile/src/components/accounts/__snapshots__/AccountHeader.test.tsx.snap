@@ -33,14 +33,7 @@ exports[`AccountHeader renders without error 1`] = `
     accessible={true}
     collapsable={false}
     focusable={true}
-    hitSlop={
-      {
-        "bottom": 5,
-        "left": 5,
-        "right": 5,
-        "top": 5,
-      }
-    }
+    hitSlop={20}
     onClick={[Function]}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
@@ -429,14 +422,7 @@ exports[`AccountHeader renders without error 1`] = `
     accessible={true}
     collapsable={false}
     focusable={true}
-    hitSlop={
-      {
-        "bottom": 5,
-        "left": 5,
-        "right": 5,
-        "top": 5,
-      }
-    }
+    hitSlop={20}
     onClick={[Function]}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
