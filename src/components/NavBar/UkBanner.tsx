@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components'
-import { ThemedText } from 'theme/components'
+import { ButtonText, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 
 export const UK_BANNER_HEIGHT = 64
@@ -49,9 +49,9 @@ const BannerTextWrapper = styled(ThemedText.BodySecondary)`
   }
 `
 
-const ReadMoreWrapper = styled(ThemedText.BodySecondary)`
+const ReadMoreWrapper = styled(ButtonText)`
   flex-shrink: 0;
-  cursor: pointer;
+  width: max-content;
 `
 
 export function UkBanner() {
@@ -68,8 +68,10 @@ export function UkBanner() {
           recommendation, invitation or inducement to deal in cryptoassets.
         </Trans>
       </BannerTextWrapper>
-      <ReadMoreWrapper fontWeight={500} lineHeight="24px" color="accent1" onClick={openDisclaimer}>
-        <Trans>Read more</Trans>
+      <ReadMoreWrapper>
+        <ThemedText.BodySecondary fontWeight={500} lineHeight="24px" color="accent1" onClick={openDisclaimer}>
+          <Trans>Read more</Trans>
+        </ThemedText.BodySecondary>
       </ReadMoreWrapper>
     </BannerWrapper>
   )
