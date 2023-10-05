@@ -147,10 +147,10 @@ export function TokenDescription({
         )}
         {description && (
           <>
-            <DescriptionVisibilityWrapper data-testid="desc-long-wrapper" $visible={!showTruncatedDescription}>
+            <DescriptionVisibilityWrapper data-testid="token-description-full" $visible={!showTruncatedDescription}>
               {description}
             </DescriptionVisibilityWrapper>
-            <DescriptionVisibilityWrapper data-testid="desc-short-wrapper" $visible={showTruncatedDescription}>
+            <DescriptionVisibilityWrapper data-testid="token-description-truncated" $visible={showTruncatedDescription}>
               {truncatedDescription}
             </DescriptionVisibilityWrapper>
           </>
