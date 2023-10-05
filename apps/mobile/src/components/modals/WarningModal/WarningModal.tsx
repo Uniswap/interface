@@ -4,7 +4,7 @@ import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { WarningColor, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Icons, Text, ThemeKeys, useSporeColors } from 'ui/src'
 import { iconSizes, opacify } from 'ui/src/theme'
 
 export type WarningModalProps = {
@@ -23,6 +23,8 @@ export type WarningModalProps = {
   icon?: ReactNode
   backgroundIconColor?: ColorValue
 }
+
+const WARNING_MODAL_BG_SIZE = 48
 
 export default function WarningModal({
   onClose,
@@ -54,6 +56,7 @@ export default function WarningModal({
 
   const colors = useSporeColors()
   const alertColor = getAlertColor(severity)
+  const alertColorValue = alertColor.text as keyof typeof colors
 
   return (
     <BottomSheetModal
@@ -66,11 +69,18 @@ export default function WarningModal({
         <Flex
           centered
           borderRadius="$rounded12"
+          height={WARNING_MODAL_BG_SIZE}
           mb="$spacing8"
-          p="$spacing8"
           style={{
-            backgroundColor: backgroundIconColor ?? opacify(12, alertColor.text),
-          }}>
+            backgroundColor:
+              backgroundIconColor ??
+              opacify(
+                12,
+                // TODO(MOB-1420): clean up types
+                colors[alertColorValue as ThemeKeys].get()
+              ),
+          }}
+          width={WARNING_MODAL_BG_SIZE}>
           {icon ?? (
             <Icons.AlertTriangle
               color={alertColor.text}
