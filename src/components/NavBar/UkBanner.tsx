@@ -5,9 +5,9 @@ import styled from 'styled-components'
 import { ButtonText, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 
-export const UK_BANNER_HEIGHT = 64
-export const UK_BANNER_HEIGHT_MD = 112
-export const UK_BANNER_HEIGHT_SM = 136
+export const UK_BANNER_HEIGHT = 65
+export const UK_BANNER_HEIGHT_MD = 113
+export const UK_BANNER_HEIGHT_SM = 137
 
 const BannerWrapper = styled.div`
   position: relative;
