@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import { ButtonText, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 
-const UK_IS_CODES = ['GB', 'GG', 'IM', 'JE']
 export const UK_BANNER_HEIGHT = 64
 export const UK_BANNER_HEIGHT_MD = 112
 export const UK_BANNER_HEIGHT_SM = 136
