@@ -14,7 +14,7 @@ import {
 } from 'wallet/src/constants/transactions'
 import { isL2Chain } from 'wallet/src/features/chains/utils'
 import { useRouterQuote } from 'wallet/src/features/routing/hooks'
-import { QuoteResult } from 'wallet/src/features/routing/types'
+import { QuoteResult, SwapFeeInfo } from 'wallet/src/features/routing/types'
 import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
 import { transformQuoteToTrade } from 'wallet/src/features/transactions/swap/routeUtils'
 import { clearStaleTrades } from 'wallet/src/features/transactions/swap/utils'
@@ -28,14 +28,17 @@ export class Trade<
   readonly quote?: QuoteResult
   readonly deadline?: number
   readonly slippageTolerance: number
+  readonly swapFee?: SwapFeeInfo
 
   constructor({
     quote,
     deadline,
     slippageTolerance,
+    swapFee,
     ...routes
   }: {
     readonly quote?: QuoteResult
+    readonly swapFee?: SwapFeeInfo
     readonly deadline?: number
     readonly slippageTolerance: number
     readonly v2Routes: {
@@ -59,6 +62,7 @@ export class Trade<
     this.quote = quote
     this.deadline = deadline
     this.slippageTolerance = slippageTolerance
+    this.swapFee = swapFee
   }
 }
 
@@ -76,6 +80,7 @@ interface UseTradeArgs {
   pollingInterval?: PollingInterval
   customSlippageTolerance?: number
   isUSDQuote?: boolean
+  sendPortionEnabled?: boolean
 }
 
 export function useTrade(args: UseTradeArgs): TradeWithStatus {
@@ -86,6 +91,7 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
     pollingInterval,
     customSlippageTolerance,
     isUSDQuote,
+    sendPortionEnabled,
   } = args
   const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified)
 
@@ -108,6 +114,7 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
     pollingInterval,
     customSlippageTolerance,
     isUSDQuote,
+    sendPortionEnabled,
   })
 
   return useMemo(() => {

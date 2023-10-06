@@ -2,28 +2,36 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
-import { LearnMoreLink } from 'src/components/text/LearnMoreLink'
 import { ModalName } from 'src/features/telemetry/constants'
-import { Icons, useSporeColors } from 'ui/src'
+import { openUri } from 'src/utils/linking'
+import { Text, TouchableArea, useSporeColors } from 'ui/src'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 
-export function NetworkFeeInfoModal({ onClose }: { onClose: () => void }): JSX.Element {
+export function SwapFeeInfoModal({ onClose }: { onClose: () => void }): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
 
+  const onPressLearnMore = async (): Promise<void> => {
+    await openUri(uniswapUrls.helpArticleUrls.swapFeeInfo)
+  }
+
   return (
     <WarningModal
+      hideIcon
       backgroundIconColor={colors.surface2.get()}
       caption={t(
-        'This is the cost to process your transaction on the blockchain. Uniswap does not receive any share of these fees.'
+        'Fees are applied on a few select tokens to ensure the best experience with Uniswap, and have already been factored into this quote.'
       )}
       closeText={t('Close')}
-      icon={<Icons.Gas color="$neutral2" size="$icon.24" />}
       modalName={ModalName.NetworkFeeInfo}
       severity={WarningSeverity.None}
-      title={t('Network cost')}
+      title={t('Swap fee')}
       onClose={onClose}>
-      <LearnMoreLink url={uniswapUrls.helpArticleUrls.networkFeeInfo} />
+      <TouchableArea onPress={onPressLearnMore}>
+        <Text color="$magentaVibrant" variant="body1">
+          {t('Learn more')}
+        </Text>
+      </TouchableArea>
     </WarningModal>
   )
 }

@@ -26,13 +26,14 @@ export function NetworkFee({
     <Flex row alignItems="center" justifyContent="space-between">
       <TouchableArea onPress={onShowNetworkFeeInfo}>
         <Flex centered row gap="$spacing4">
-          <Text variant="body3">{t('Network fee')}</Text>
+          <Text color="$neutral2" variant="body3">
+            {t('Network cost')}
+          </Text>
           <Icons.InfoCircleFilled color="$neutral3" size="$icon.16" />
         </Flex>
       </TouchableArea>
       <Flex row alignItems="center" gap="$spacing8">
         <InlineNetworkPill chainId={chainId} />
-        <Text variant="body3">•</Text>
         {gasFee.loading ? (
           <SpinningLoader size={iconSizes.icon20} />
         ) : (

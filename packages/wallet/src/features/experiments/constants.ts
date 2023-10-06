@@ -7,6 +7,7 @@ export enum FEATURE_FLAGS {
   RestoreWallet = 'restore-wallet',
   MevBlocker = 'mev-blocker',
   SwapRewrite = 'swap-rewrite',
+  PortionFields = 'portion-fields',
 }
 
 /**

@@ -67,7 +67,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
         maxFontSizeMultiplier={1.4}
         style={
           {
-            "color": "#222222",
+            "color": "#7D7D7D",
             "display": "flex",
             "fontFamily": "Basel-Book",
             "fontSize": 15,
@@ -76,7 +76,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
         }
         suppressHighlighting={true}
       >
-        Network fee
+        Network cost
       </Text>
       <RNSVGSvgView
         align="xMidYMid"
@@ -194,22 +194,6 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
         Ethereum
       </Text>
     </View>
-    <Text
-      allowFontScaling={true}
-      maxFontSizeMultiplier={1.4}
-      style={
-        {
-          "color": "#222222",
-          "display": "flex",
-          "fontFamily": "Basel-Book",
-          "fontSize": 15,
-          "lineHeight": 16,
-        }
-      }
-      suppressHighlighting={true}
-    >
-      •
-    </Text>
     <View
       sentry-label="SpinningLoader"
       style={
@@ -380,7 +364,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
         maxFontSizeMultiplier={1.4}
         style={
           {
-            "color": "#222222",
+            "color": "#7D7D7D",
             "display": "flex",
             "fontFamily": "Basel-Book",
             "fontSize": 15,
@@ -389,7 +373,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
         }
         suppressHighlighting={true}
       >
-        Network fee
+        Network cost
       </Text>
       <RNSVGSvgView
         align="xMidYMid"
@@ -507,22 +491,6 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
         Ethereum
       </Text>
     </View>
-    <Text
-      allowFontScaling={true}
-      maxFontSizeMultiplier={1.4}
-      style={
-        {
-          "color": "#222222",
-          "display": "flex",
-          "fontFamily": "Basel-Book",
-          "fontSize": 15,
-          "lineHeight": 16,
-        }
-      }
-      suppressHighlighting={true}
-    >
-      •
-    </Text>
     <View
       style={
         {
@@ -620,7 +588,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
         maxFontSizeMultiplier={1.4}
         style={
           {
-            "color": "#222222",
+            "color": "#7D7D7D",
             "display": "flex",
             "fontFamily": "Basel-Book",
             "fontSize": 15,
@@ -629,7 +597,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
         }
         suppressHighlighting={true}
       >
-        Network fee
+        Network cost
       </Text>
       <RNSVGSvgView
         align="xMidYMid"
@@ -747,22 +715,6 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
         Ethereum
       </Text>
     </View>
-    <Text
-      allowFontScaling={true}
-      maxFontSizeMultiplier={1.4}
-      style={
-        {
-          "color": "#222222",
-          "display": "flex",
-          "fontFamily": "Basel-Book",
-          "fontSize": 15,
-          "lineHeight": 16,
-        }
-      }
-      suppressHighlighting={true}
-    >
-      •
-    </Text>
     <View
       style={
         {

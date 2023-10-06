@@ -11942,7 +11942,7 @@ __metadata:
     "@uniswap/permit2-sdk": 1.2.0
     "@uniswap/router-sdk": 1.7.0
     "@uniswap/sdk-core": 4.0.7
-    "@uniswap/universal-router-sdk": 1.5.7
+    "@uniswap/universal-router-sdk": 2.0.0
     "@uniswap/v2-sdk": 3.2.1
     "@uniswap/v3-sdk": 3.10.0
     "@walletconnect/react-native-compat": 2.10.1
@@ -12111,30 +12111,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/universal-router-sdk@npm:1.5.7":
-  version: 1.5.7
-  resolution: "@uniswap/universal-router-sdk@npm:1.5.7"
+"@uniswap/universal-router-sdk@npm:2.0.0":
+  version: 2.0.0
+  resolution: "@uniswap/universal-router-sdk@npm:2.0.0"
   dependencies:
     "@uniswap/permit2-sdk": ^1.2.0
     "@uniswap/router-sdk": ^1.6.0
     "@uniswap/sdk-core": ^4.0.0
-    "@uniswap/universal-router": 1.4.3
+    "@uniswap/universal-router": 1.5.1
     "@uniswap/v2-sdk": ^3.2.0
     "@uniswap/v3-sdk": ^3.10.0
     bignumber.js: ^9.0.2
     ethers: ^5.3.1
-  checksum: fce87c0d1498aedc159a05c2c91c278ab24c770d37686715b2bb9d2a8c7c33b817d378137849836b06898b8579ef70a48af0390d449fbbdfbf7c8d5aeff6f3f6
+  checksum: 0adb8da6f215ce2251d61a318348f36f7f2a60b70bbdb6a3d821bd1fd549dad8cf3564d7c01675f223176301b4666c9ffadd1dc235b483e3f2e22976d8c00de0
   languageName: node
   linkType: hard
 
-"@uniswap/universal-router@npm:1.4.3":
-  version: 1.4.3
-  resolution: "@uniswap/universal-router@npm:1.4.3"
+"@uniswap/universal-router@npm:1.5.1":
+  version: 1.5.1
+  resolution: "@uniswap/universal-router@npm:1.5.1"
   dependencies:
     "@openzeppelin/contracts": 4.7.0
     "@uniswap/v2-core": 1.0.1
     "@uniswap/v3-core": 1.0.0
-  checksum: f5b86a1c7c083f28ff7d64770437a3a9474c2b923b78652c2b43e1ee8f5514c40479ce0d210ce31338e8d4fdc4c9c728c7e2d1a1959a24deb31e8649b3df0a37
+  checksum: e5b05c7b8d544fce33b8b944aee2e6638b52b3b31b83205bf648109a24bc84cf2f3ac43b8e0416463a22c8d9c587bc285bf04712012e7d1a14f2bd803fd71e1c
   languageName: node
   linkType: hard
 
@@ -37773,7 +37773,7 @@ __metadata:
     "@uniswap/permit2-sdk": 1.2.0
     "@uniswap/router-sdk": 1.7.0
     "@uniswap/sdk-core": 4.0.7
-    "@uniswap/universal-router-sdk": 1.5.7
+    "@uniswap/universal-router-sdk": 2.0.0
     "@uniswap/v2-sdk": 3.2.1
     "@uniswap/v3-sdk": 3.10.0
     apollo-link-rest: 0.9.0

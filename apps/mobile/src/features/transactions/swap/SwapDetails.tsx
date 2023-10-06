@@ -27,6 +27,7 @@ interface SwapDetailsProps {
   gasFee: GasFeeResult
   onAcceptTrade: () => void
   onShowNetworkFeeInfo: () => void
+  onShowSwapFeeInfo?: () => void
   onShowWarning?: () => void
   onShowSlippageModal: () => void
   onShowSwapProtectionModal: () => void
@@ -43,6 +44,7 @@ export function SwapDetails({
   gasFee,
   onAcceptTrade,
   onShowNetworkFeeInfo,
+  onShowSwapFeeInfo,
   onShowWarning,
   onShowSlippageModal,
   onShowSwapProtectionModal,
@@ -56,6 +58,9 @@ export function SwapDetails({
   const usdcPrice = useUSDCPrice(showInverseRate ? price.quoteCurrency : price.baseCurrency)
   const acceptedRate = getRateToDisplay(acceptedTrade, showInverseRate)
   const rate = getRateToDisplay(trade, showInverseRate)
+  const swapFee = trade.swapFee
+    ? { ...trade.swapFee, currency: trade.outputAmount.currency }
+    : undefined
 
   // Make text the warning color if user is setting custom slippage higher than auto slippage value
   const showSlippageWarning = autoSlippageTolerance
@@ -87,20 +92,23 @@ export function SwapDetails({
 
   return (
     <TransactionDetails
+      isSwap
       banner={
         newTradeRequiresAcceptance ? (
           <Flex
             row
             shrink
             alignItems="center"
-            backgroundColor="$surface2"
+            borderColor="$surface3"
             borderRadius="$rounded16"
+            borderWidth={1}
             gap="$spacing12"
             justifyContent="space-between"
-            px="$spacing12"
-            py="$spacing12">
+            pl="$spacing12"
+            pr="$spacing8"
+            py="$spacing8">
             <Flex centered row>
-              <Text color="$accent1" variant="body3">
+              <Text color="$neutral2" variant="body3">
                 {t('New rate')}
               </Text>
             </Flex>
@@ -108,7 +116,7 @@ export function SwapDetails({
               <TouchableOpacity onPress={(): void => setShowInverseRate(!showInverseRate)}>
                 <Text
                   adjustsFontSizeToFit
-                  color="$accent1"
+                  color="$neutral1"
                   numberOfLines={1}
                   textAlign="center"
                   variant="body3">
@@ -119,12 +127,12 @@ export function SwapDetails({
             <Flex centered row>
               <Trace logPress element={ElementName.AcceptNewRate}>
                 <TouchableArea
-                  backgroundColor="$accent1"
-                  borderRadius="$rounded8"
+                  bg="$accentSoft"
+                  borderRadius="$rounded12"
                   px="$spacing8"
                   py="$spacing4"
                   onPress={onAcceptTrade}>
-                  <Text color="$sporeWhite" variant="buttonLabel3">
+                  <Text color="$accent1" variant="buttonLabel3">
                     {t('Accept')}
                   </Text>
                 </TouchableArea>
@@ -138,11 +146,15 @@ export function SwapDetails({
       gasFee={gasFee}
       showExpandedChildren={!!customSlippageTolerance}
       showWarning={warning && !newTradeRequiresAcceptance}
+      swapFee={swapFee}
       warning={warning}
       onShowNetworkFeeInfo={onShowNetworkFeeInfo}
+      onShowSwapFeeInfo={onShowSwapFeeInfo}
       onShowWarning={onShowWarning}>
       <Flex row alignItems="center" justifyContent="space-between">
-        <Text variant="body3">{t('Rate')}</Text>
+        <Text color="$neutral2" variant="body3">
+          {t('Rate')}
+        </Text>
         <Flex row shrink justifyContent="flex-end">
           <TouchableOpacity onPress={(): void => setShowInverseRate(!showInverseRate)}>
             <Text adjustsFontSizeToFit numberOfLines={1} variant="body3">
@@ -158,7 +170,9 @@ export function SwapDetails({
         <Flex row alignItems="center" justifyContent="space-between">
           <TouchableArea onPress={onShowSwapProtectionModal}>
             <Flex centered row gap="$spacing4">
-              <Text variant="body3">{t('Swap protection')}</Text>
+              <Text color="$neutral2" variant="body3">
+                {t('Swap protection')}
+              </Text>
               <InfoCircleFilled color="$neutral3" size="$icon.16" />
             </Flex>
           </TouchableArea>
@@ -173,7 +187,9 @@ export function SwapDetails({
       <Flex row alignItems="center" justifyContent="space-between">
         <TouchableArea onPress={onShowSlippageModal}>
           <Flex centered row gap="$spacing4">
-            <Text variant="body3">{t('Max slippage')}</Text>
+            <Text color="$neutral2" variant="body3">
+              {t('Max slippage')}
+            </Text>
             <InfoCircleFilled color="$neutral3" size="$icon.16" />
           </Flex>
         </TouchableArea>

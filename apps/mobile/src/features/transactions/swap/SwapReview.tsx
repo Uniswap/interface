@@ -14,6 +14,7 @@ import {
 import { FeeOnTransferInfoModal } from 'src/features/transactions/swap/modals/FeeOnTransferInfoModal'
 import { NetworkFeeInfoModal } from 'src/features/transactions/swap/modals/NetworkFeeInfoModal'
 import { SlippageInfoModal } from 'src/features/transactions/swap/modals/SlippageInfoModal'
+import { SwapFeeInfoModal } from 'src/features/transactions/swap/modals/SwapFeeInfoModal'
 import { SwapProtectionInfoModal } from 'src/features/transactions/swap/modals/SwapProtectionModal'
 import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
 import {
@@ -55,6 +56,7 @@ export function SwapReview({
   const account = useActiveAccountWithThrow()
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [showNetworkFeeInfoModal, setShowNetworkFeeInfoModal] = useState(false)
+  const [showSwapFeeInfoModal, setShowSwapFeeInfoModal] = useState(false)
   const [showSlippageModal, setShowSlippageModal] = useState(false)
   const [showFOTInfoModal, setShowFOTInfoModal] = useState(false)
   const [warningAcknowledged, setWarningAcknowledged] = useState(false)
@@ -166,8 +168,16 @@ export function SwapReview({
     setShowNetworkFeeInfoModal(true)
   }, [])
 
+  const onShowSwapFeeInfo = useCallback(() => {
+    setShowSwapFeeInfoModal(true)
+  }, [])
+
   const onCloseNetworkFeeInfo = useCallback(() => {
     setShowNetworkFeeInfoModal(false)
+  }, [])
+
+  const onCloseSwapFeeInfo = useCallback(() => {
+    setShowSwapFeeInfoModal(false)
   }, [])
 
   const actionButtonDisabled =
@@ -194,6 +204,7 @@ export function SwapReview({
           gasFee={gasFee}
           warning={swapWarning}
           onShowNetworkFeeInfo={onShowNetworkFeeInfo}
+          onShowSwapFeeInfo={onShowSwapFeeInfo}
           onShowWarning={onShowWarning}
         />
       )
@@ -214,6 +225,7 @@ export function SwapReview({
         onShowFOTInfo={onShowFOTInfo}
         onShowNetworkFeeInfo={onShowNetworkFeeInfo}
         onShowSlippageModal={onShowSlippageModal}
+        onShowSwapFeeInfo={onShowSwapFeeInfo}
         onShowSwapProtectionModal={onShowSwapProtectionModal}
         onShowWarning={onShowWarning}
       />
@@ -270,6 +282,7 @@ export function SwapReview({
       {showSwapProtectionModal && <SwapProtectionInfoModal onClose={onCloseSwapProtectionModal} />}
       {showFOTInfoModal && <FeeOnTransferInfoModal onClose={onCloseFOTInfo} />}
       {showNetworkFeeInfoModal && <NetworkFeeInfoModal onClose={onCloseNetworkFeeInfo} />}
+      {showSwapFeeInfoModal && <SwapFeeInfoModal onClose={onCloseSwapFeeInfo} />}
       <Trace logImpression section={SectionName.SwapReview}>
         <TransactionReview
           actionButtonProps={actionButtonProps}

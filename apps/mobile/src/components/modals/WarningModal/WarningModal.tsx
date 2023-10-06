@@ -22,6 +22,8 @@ export type WarningModalProps = {
   isDismissible?: boolean
   hideHandlebar?: boolean
   icon?: ReactNode
+  // when icon is undefined we default it to triangle, this allows us to hide it
+  hideIcon?: boolean
   backgroundIconColor?: ColorValue
 }
 
@@ -42,6 +44,7 @@ export default function WarningModal({
   isDismissible = true,
   hideHandlebar = false,
   icon,
+  hideIcon,
   backgroundIconColor,
 }: PropsWithChildren<WarningModalProps>): JSX.Element {
   const { requiredForTransactions } = useBiometricAppSettings()
@@ -74,23 +77,25 @@ export default function WarningModal({
         pb={insets.bottom === 0 ? '$spacing24' : insets.bottom + spacing.spacing12}
         pt="$spacing24"
         px="$spacing24">
-        <Flex
-          centered
-          borderRadius="$rounded12"
-          height={WARNING_MODAL_BG_SIZE}
-          mb="$spacing8"
-          style={{
-            backgroundColor:
-              backgroundIconColor ??
-              opacify(
-                12,
-                // TODO(MOB-1420): clean up types
-                colors[alertColorValue as ThemeKeys].get()
-              ),
-          }}
-          width={WARNING_MODAL_BG_SIZE}>
-          {icon ?? <Icons.AlertTriangle color={alertColor.text} size="$icon.24" />}
-        </Flex>
+        {!hideIcon && (
+          <Flex
+            centered
+            borderRadius="$rounded12"
+            height={WARNING_MODAL_BG_SIZE}
+            mb="$spacing8"
+            style={{
+              backgroundColor:
+                backgroundIconColor ??
+                opacify(
+                  12,
+                  // TODO(MOB-1420): clean up types
+                  colors[alertColorValue as ThemeKeys].get()
+                ),
+            }}
+            width={WARNING_MODAL_BG_SIZE}>
+            {icon ?? <Icons.AlertTriangle color={alertColor.text} size="$icon.24" />}
+          </Flex>
+        )}
         <Text textAlign="center" variant="body1">
           {title}
         </Text>

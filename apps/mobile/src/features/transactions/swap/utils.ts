@@ -1,9 +1,11 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import {
+  FlatFeeOptions,
   SwapOptions as UniversalRouterSwapOptions,
   SwapRouter as UniversalSwapRouter,
 } from '@uniswap/universal-router-sdk'
+import { FeeOptions } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
 import { ElementName } from 'src/features/telemetry/constants'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
@@ -193,17 +195,23 @@ interface MethodParameterArgs {
   permit2Signature?: PermitSignatureInfo
   trade: Trade
   address: string
+  feeOptions?: FeeOptions
+  flatFeeOptions?: FlatFeeOptions
 }
 
 export const getSwapMethodParameters = ({
   permit2Signature,
   trade,
   address,
+  feeOptions,
+  flatFeeOptions,
 }: MethodParameterArgs): { calldata: string; value: string } => {
   const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance)
   const baseOptions = {
     slippageTolerance: slippageTolerancePercent,
     recipient: address,
+    fee: feeOptions,
+    flatFee: flatFeeOptions,
   }
 
   const universalRouterSwapOptions: UniversalRouterSwapOptions = permit2Signature

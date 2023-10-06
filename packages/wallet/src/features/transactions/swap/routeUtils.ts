@@ -1,5 +1,5 @@
 import { MixedRouteSDK } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
@@ -7,6 +7,7 @@ import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import {
   PoolType,
   QuoteResult,
+  SwapFeeInfo,
   V2PoolInRoute,
   V3PoolInRoute,
 } from 'wallet/src/features/routing/types'
@@ -27,6 +28,15 @@ export function transformQuoteToTrade(
   if (!routes) {
     return null
   }
+
+  const swapFee: SwapFeeInfo | undefined =
+    quoteResult?.portionAmount !== undefined && quoteResult?.portionBips !== undefined
+      ? {
+          recipient: quoteResult.portionRecipient,
+          percent: new Percent(quoteResult.portionBips, '10000'),
+          amount: quoteResult.portionAmount,
+        }
+      : undefined
 
   return new Trade({
     quote: quoteResult,
@@ -63,6 +73,7 @@ export function transformQuoteToTrade(
           outputAmount,
         })) ?? [],
     tradeType,
+    swapFee,
   })
 }
 

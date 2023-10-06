@@ -24,6 +24,7 @@ export interface UseQuoteProps {
   permitSignatureInfo?: PermitSignatureInfo | null
   customSlippageTolerance?: number
   isUSDQuote?: boolean
+  sendPortionEnabled?: boolean
 }
 
 // Fetches quote from Routing API
@@ -40,6 +41,7 @@ export function useRouterQuote(params: UseQuoteProps): GqlResult<TradeQuoteResul
     permitSignatureInfo,
     customSlippageTolerance,
     isUSDQuote,
+    sendPortionEnabled,
   } = params
 
   const currencyIn = tradeType === TradeType.EXACT_INPUT ? amountSpecified?.currency : otherCurrency
@@ -85,6 +87,7 @@ export function useRouterQuote(params: UseQuoteProps): GqlResult<TradeQuoteResul
       loggingProperties: {
         isUSDQuote,
       },
+      sendPortionEnabled,
     }
   }, [
     amountSpecified?.quotient,
@@ -99,6 +102,7 @@ export function useRouterQuote(params: UseQuoteProps): GqlResult<TradeQuoteResul
     tokenOutAddress,
     tokenOutChainId,
     tradeType,
+    sendPortionEnabled,
   ])
 
   const result = useQuoteQuery(request, {

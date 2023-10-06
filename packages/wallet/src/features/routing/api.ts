@@ -43,6 +43,7 @@ export interface TradeQuoteRequest {
   loggingProperties: {
     isUSDQuote?: boolean
   }
+  sendPortionEnabled?: boolean
 }
 
 export function useQuoteQuery(
@@ -65,6 +66,7 @@ export function useQuoteQuery(
       tokenOutAddress,
       tokenOutChainId,
       type,
+      sendPortionEnabled,
     } = request
 
     const recipientParams = recipient
@@ -116,6 +118,9 @@ export function useQuoteQuery(
           ...permit2Params,
         },
       ],
+      // We want to either send `true` or nothing,
+      // because we do not want to expose this field until it's enabled
+      ...(sendPortionEnabled ? { sendPortionEnabled: true } : {}),
     }
   }, [request])
 

@@ -84,7 +84,7 @@ export function CancelConfirmationView({
         borderRadius="$rounded16"
         width="100%">
         <Flex grow row justifyContent="space-between" p="$spacing12">
-          <Text variant="subheading2">{t('Network fee')}</Text>
+          <Text variant="subheading2">{t('Network cost')}</Text>
           {!gasFeeUSD ? <ActivityIndicator /> : <Text variant="subheading2">{gasFeeUSD}</Text>}
         </Flex>
         {accountAddress && (

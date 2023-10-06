@@ -13,7 +13,7 @@ export function NetworkAndWalletSummary(): JSX.Element {
       <Flex grow row justifyContent="space-between">
         <Flex>
           <Text color="$neutral2" variant="body2">
-            {t('Network fee')}
+            {t('Network cost')}
           </Text>
         </Flex>
 

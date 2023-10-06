@@ -4,7 +4,8 @@ import { MaxUint256 } from '@ethersproject/constants'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
+import { FlatFeeOptions, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
+import { FeeOptions } from '@uniswap/v3-sdk'
 import { providers } from 'ethers'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnyAction } from 'redux'
@@ -40,6 +41,8 @@ import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import { Erc20 } from 'wallet/src/abis/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult, GasSpeed, SimulatedGasEstimationInfo } from 'wallet/src/features/gas/types'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -139,12 +142,15 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
 
   const shouldGetQuote = !isWrapAction(wrapType)
 
+  const sendPortionEnabled = useFeatureFlag(FEATURE_FLAGS.PortionFields)
+
   // Fetch the trade quote. If customSlippageTolerance is undefined, then the quote is fetched with MAX_AUTO_SLIPPAGE_TOLERANCE
   const tradeWithoutSlippage = useTrade({
     amountSpecified: shouldGetQuote ? amountSpecified : null,
     otherCurrency,
     tradeType: isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     customSlippageTolerance,
+    sendPortionEnabled,
   })
 
   // Calculate auto slippage tolerance for trade. If customSlippageTolerance is undefined, then the Trade slippage is set to the calculated value.
@@ -450,6 +456,23 @@ const getTokenPermit2ApprovalInfo = async (
   }
 }
 
+type Fee = { feeOptions: FeeOptions } | { flatFeeOptions: FlatFeeOptions }
+
+function getFees(trade: Trade<Currency, Currency, TradeType> | undefined): Fee | undefined {
+  if (!trade?.swapFee?.recipient) return undefined
+
+  if (trade.tradeType === TradeType.EXACT_INPUT) {
+    return { feeOptions: { fee: trade.swapFee.percent, recipient: trade.swapFee.recipient } }
+  }
+
+  return {
+    flatFeeOptions: {
+      amount: trade.swapFee.amount,
+      recipient: trade.swapFee.recipient,
+    },
+  }
+}
+
 function useSwapTransactionRequest(
   derivedSwapInfo: DerivedSwapInfo,
   tokenApprovalInfo: TokenApprovalInfo | undefined,
@@ -495,6 +518,7 @@ function useSwapTransactionRequest(
       permit2Signature,
       trade,
       address,
+      ...getFees(trade),
     })
 
     const transactionRequest = {
