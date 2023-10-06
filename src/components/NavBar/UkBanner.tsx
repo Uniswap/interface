@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { ButtonText, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 
+const UK_IS_CODES = ['GB', 'GG', 'IM', 'JE']
 export const UK_BANNER_HEIGHT = 64
 export const UK_BANNER_HEIGHT_MD = 112
 export const UK_BANNER_HEIGHT_SM = 136
@@ -59,7 +60,7 @@ const ReadMoreWrapper = styled(ButtonText)`
 `
 
 export const bannerText = t`
-  UK disclaimer: This web application is provided as a tool for users to interact with the Uniswap Protocol on
+  This web application is provided as a tool for users to interact with the Uniswap Protocol on
   their own initiative, with no endorsement or recommendation of cryptocurrency trading activities. In doing so,
   Uniswap is not recommending that users or potential users engage in cryptoasset trading activity, and users or
   potential users of the web application should not regard this webpage or its contents as involving any form of
@@ -71,7 +72,7 @@ export function UkBanner() {
 
   return (
     <BannerWrapper>
-      <BannerTextWrapper lineHeight="24px">{bannerText}</BannerTextWrapper>
+      <BannerTextWrapper lineHeight="24px">{t`UK disclaimer:` + ' ' + bannerText}</BannerTextWrapper>
       <ReadMoreWrapper>
         <ThemedText.BodySecondary lineHeight="24px" color="accent1" onClick={openDisclaimer}>
           <Trans>Read more</Trans>
