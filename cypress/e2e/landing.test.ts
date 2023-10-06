@@ -39,4 +39,30 @@ describe('Landing Page', () => {
     cy.get(getTestSelector('pool-nav-link')).last().click()
     cy.url().should('include', '/pools')
   })
+
+  it('does not render uk compliance banner in US', () => {
+    cy.visit('/swap')
+    cy.contains('UK disclaimer').should('not.exist')
+  })
+
+  it('renders uk compliance banner in uk', () => {
+    cy.intercept('https://api.uniswap.org/v1/amplitude-proxy', (req) => {
+      const requestBody = JSON.stringify(req.body)
+      const byteSize = new Blob([requestBody]).size
+      req.alias = 'amplitude'
+      req.reply(
+        JSON.stringify({
+          code: 200,
+          server_upload_time: Date.now(),
+          payload_size_bytes: byteSize,
+          events_ingested: req.body.events.length,
+        }),
+        {
+          'origin-country': 'GB',
+        }
+      )
+    })
+    cy.visit('/swap')
+    cy.contains('UK disclaimer')
+  })
 })
