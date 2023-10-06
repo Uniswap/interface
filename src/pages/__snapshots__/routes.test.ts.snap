@@ -14,7 +14,7 @@ Array [
     "nestedPaths": Array [
       ":chainName",
     ],
-    "path": "/tokens",
+    "path": "/explore",
   },
   Object {
     "enabled": [Function],
@@ -22,19 +22,19 @@ Array [
     "nestedPaths": Array [
       ":chainName",
     ],
-    "path": "/explore",
-  },
-  Object {
-    "enabled": [Function],
-    "getElement": [Function],
-    "nestedPaths": Array [],
-    "path": "/tokens/:chainName/:tokenAddress",
+    "path": "/tokens",
   },
   Object {
     "enabled": [Function],
     "getElement": [Function],
     "nestedPaths": Array [],
     "path": "/explore/tokens/:chainName/:tokenAddress",
+  },
+  Object {
+    "enabled": [Function],
+    "getElement": [Function],
+    "nestedPaths": Array [],
+    "path": "/tokens/:chainName/:tokenAddress",
   },
   Object {
     "enabled": [Function],
