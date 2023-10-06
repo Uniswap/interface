@@ -96,6 +96,7 @@ export function useDebouncedTrade(
 
   const skipBothFetches = !autoRouterSupported || !isWindowVisible || isWrap
   const skipRoutingFetch = skipBothFetches || isDebouncing
+
   const skipPreviewTradeFetch =
     skipBothFetches || routerPreference === RouterPreference.CLIENT || isPreviewTradeDebouncing
 

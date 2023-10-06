@@ -6,7 +6,7 @@ describe('Swap settings', () => {
     cy.contains('Settings').should('not.exist')
     cy.get(getTestSelector('open-settings-dialog-button')).click()
     cy.get(getTestSelector('mobile-settings-menu')).should('not.exist')
-    cy.contains('Max slippage').should('exist')
+    cy.contains('Max. slippage').should('exist')
     cy.contains('Transaction deadline').should('exist')
     cy.contains('UniswapX').should('exist')
     cy.contains('Local routing').should('exist')
@@ -26,7 +26,7 @@ describe('Swap settings', () => {
     cy.get(getTestSelector('mobile-settings-menu'))
       .should('exist')
       .within(() => {
-        cy.contains('Max slippage').should('exist')
+        cy.contains('Max. slippage').should('exist')
         cy.contains('UniswapX').should('exist')
         cy.contains('Local routing').should('exist')
         cy.contains('Transaction deadline').should('exist')

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  <url loc="https://app.uniswap.org/" lastmod="2023-10-05T17:48:32.538Z" changefreq="weekly" priority="1"/>
+  <url loc="https://app.uniswap.org/tokens" lastmod="2023-10-05T17:48:32.538Z" changefreq="weekly" priority="0.8"/>
+  <url loc="https://app.uniswap.org/send" lastmod="2023-10-05T17:48:32.538Z" changefreq="weekly" priority="0.6"/>
+  <url loc="https://app.uniswap.org/swap" lastmod="2023-10-05T17:48:32.538Z" changefreq="weekly" priority="0.9"/>
+  <url loc="https://app.uniswap.org/pool/v2/find" lastmod="2023-10-05T17:48:32.538Z" changefreq="weekly" priority="0.6"/>
+  <url loc="https://app.uniswap.org/pool/v2" lastmod="2023-10-05T17:48:32.538Z" changefreq="weekly" priority="0.6"/>
+  <url loc="https://app.uniswap.org/pool" lastmod="2023-10-05T17:48:32.538Z" changefreq="weekly" priority="0.6"/>
+  <url loc="https://app.uniswap.org/pools/v2/find" lastmod="2023-10-05T17:48:32.538Z" changefreq="weekly" priority="0.6"/>
+  <url loc="https://app.uniswap.org/pools/v2" lastmod="2023-10-05T17:48:32.538Z" changefreq="weekly" priority="0.6"/>
+  <url loc="https://app.uniswap.org/pools" lastmod="2023-10-05T17:48:32.538Z" changefreq="weekly" priority="0.7"/>
+  <url loc="https://app.uniswap.org/add/v2" lastmod="2023-10-05T17:48:32.538Z" changefreq="weekly" priority="0.6"/>
+  <url loc="https://app.uniswap.org/add" lastmod="2023-10-05T17:48:32.538Z" changefreq="weekly" priority="0.6"/>
+  <url loc="https://app.uniswap.org/increase" lastmod="2023-10-05T17:48:32.538Z" changefreq="weekly" priority="0.6"/>
+  <url loc="https://app.uniswap.org/migrate/v2" lastmod="2023-10-05T17:48:32.538Z" changefreq="weekly" priority="0.6"/>
+  <url loc="https://app.uniswap.org/nfts" lastmod="2023-10-05T17:48:32.538Z" changefreq="weekly" priority="0.6"/>
+  <url loc="https://app.uniswap.org/nfts/profile" lastmod="2023-10-05T17:48:32.538Z" changefreq="weekly" priority="0.6"/>
+</urlset>
