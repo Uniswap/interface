@@ -1,10 +1,25 @@
 import { ChainId, Token } from '@uniswap/sdk-core'
 import { DEFAULT_COLOR } from 'constants/tokenColors'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
-import { rgb } from 'polished'
+import { darken, lighten, rgb } from 'polished'
 import { useEffect, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { getColor } from 'utils/getColor'
+import { hex } from 'wcag-contrast'
+
+// The WCAG AA standard color contrast threshold
+const MIN_COLOR_CONTRAST_THRESHOLD = 3
+
+/**
+ * Compares a given color against the background color to determine if it passes the minimum contrast threshold.
+ * @param color The hex value of the extracted color
+ * @param backgroundColor The hex value of the background color to check contrast against
+ * @returns either 'sporeWhite' or 'sporeBlack'
+ */
+function passesContrast(color: string, backgroundColor: string): boolean {
+  const contrast = hex(color, backgroundColor)
+  return contrast >= MIN_COLOR_CONTRAST_THRESHOLD
+}
 
 function URIForEthToken(address: string) {
   return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
@@ -49,7 +64,7 @@ function convertColorArrayToString([red, green, blue]: number[]): string {
   return rgb({ red, green, blue })
 }
 
-export function useColor(token?: Token) {
+export function useColor(token?: Token, backgroundColor?: string, makeLighter?: boolean) {
   const [color, setColor] = useState('#2172E5')
   const [src] = useTokenLogoSource(token?.address, token?.chainId, token?.isNative)
 
@@ -59,6 +74,13 @@ export function useColor(token?: Token) {
     if (token) {
       getColorFromToken(token, src).then((tokenColor) => {
         if (!stale && tokenColor !== null) {
+          if (backgroundColor) {
+            let increment = 0.1
+            while (!passesContrast(tokenColor, backgroundColor)) {
+              tokenColor = makeLighter ? lighten(increment, tokenColor) : darken(increment, tokenColor)
+              increment += 0.1
+            }
+          }
           setColor(tokenColor)
         }
       })
@@ -68,7 +90,7 @@ export function useColor(token?: Token) {
       stale = true
       setColor('#2172E5')
     }
-  }, [src, token])
+  }, [backgroundColor, makeLighter, src, token])
 
   return color
 }

@@ -14,7 +14,7 @@ import { useColor } from 'hooks/useColor'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useCallback, useReducer } from 'react'
 import { Copy } from 'react-feather'
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
@@ -80,7 +80,8 @@ export function TokenDescription({
   showCopy?: boolean
 }) {
   const currency = useCurrency(tokenAddress, chainId)
-  const color = useColor(currency?.wrapped)
+  const theme = useTheme()
+  const color = useColor(currency?.wrapped, theme.surface1, theme.darkMode)
   const { data: tokenQuery } = useTokenProjectQuery({
     variables: {
       address: tokenAddress,
