@@ -55,7 +55,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   }
 `
 const MenuTimeFlyout = styled.span<{ isInfoExplorePageEnabled: boolean }>`
-  min-width: 150px;
+  min-width: ${({ isInfoExplorePageEnabled }) => (isInfoExplorePageEnabled ? '150px' : '240px')};
   max-height: 300px;
   overflow: auto;
   background-color: ${({ theme }) => theme.surface1};
@@ -144,9 +144,16 @@ export default function TimeSelector() {
                 toggleMenu()
               }}
             >
-              <div>
+              {/* <div>
                 {DISPLAYS[time]} <Trans>volume</Trans>
-              </div>
+              </div> */}
+              {isInfoExplorePageEnabled ? (
+                <div>
+                  {DISPLAYS[activeTime]} <Trans>volume</Trans>
+                </div>
+              ) : (
+                <div>DISPLAYS[activeTime]</div>
+              )}
               {time === activeTime && <Check color={theme.accent1} size={16} />}
             </InternalLinkMenuItem>
           ))}

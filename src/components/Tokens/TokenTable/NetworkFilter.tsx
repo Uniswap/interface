@@ -67,7 +67,7 @@ const MenuTimeFlyout = styled.span<{ isInfoExplorePageEnabled: boolean }>`
   ${({ isInfoExplorePageEnabled }) => (isInfoExplorePageEnabled ? 'right: 0px;' : 'left: 0px;')}
 
   @media screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
-    ${({ isInfoExplorePageEnabled }) => isInfoExplorePageEnabled && 'left: 0px;'}
+    left: 0px;
   }
 `
 const StyledMenu = styled.div`
