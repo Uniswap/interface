@@ -44,10 +44,10 @@ export function UkDisclaimerModal() {
           <X size={24} />
         </CloseIconWrapper>
         <Column gap="sm">
-          <ThemedText.HeadlineLarge padding="0px 8px" fontSize="24px" lineHeight="32px" fontWeight={500}>
+          <ThemedText.HeadlineLarge padding="0px 8px" fontSize="24px" lineHeight="32px">
             <Trans>Disclaimer for UK residents</Trans>
           </ThemedText.HeadlineLarge>
-          <ThemedText.BodyPrimary padding="8px 8px 12px" lineHeight="24px" fontWeight={500}>
+          <ThemedText.BodyPrimary padding="8px 8px 12px" lineHeight="24px">
             {bannerText}
           </ThemedText.BodyPrimary>
         </Column>

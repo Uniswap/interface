@@ -71,11 +71,9 @@ export function UkBanner() {
 
   return (
     <BannerWrapper>
-      <BannerTextWrapper fontWeight={500} lineHeight="24px">
-        {bannerText}
-      </BannerTextWrapper>
+      <BannerTextWrapper lineHeight="24px">{bannerText}</BannerTextWrapper>
       <ReadMoreWrapper>
-        <ThemedText.BodySecondary fontWeight={500} lineHeight="24px" color="accent1" onClick={openDisclaimer}>
+        <ThemedText.BodySecondary lineHeight="24px" color="accent1" onClick={openDisclaimer}>
           <Trans>Read more</Trans>
         </ThemedText.BodySecondary>
       </ReadMoreWrapper>
