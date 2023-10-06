@@ -1,5 +1,4 @@
 /* eslint-disable max-lines */
-import { TradeType } from '@uniswap/sdk-core'
 import { NATIVE_ADDRESS, WRAPPED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI } from 'wallet/src/constants/tokens'
@@ -435,25 +434,21 @@ describe(parseTradeTransaction, () => {
   it('Swap: parse token swap', () => {
     expect(parseTradeTransaction(MOCK_ERC20_SWAP)).toEqual({
       type: TransactionType.Swap,
-      tradeType: TradeType.EXACT_INPUT,
       inputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       outputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       transactedUSDValue: 1,
       inputCurrencyAmountRaw: '1000000000000000000',
-      expectedOutputCurrencyAmountRaw: '1000000000000000000',
-      minimumOutputCurrencyAmountRaw: '1000000000000000000',
+      outputCurrencyAmountRaw: '1000000000000000000',
     })
   })
   it('Swap: parse native swap', () => {
     expect(parseTradeTransaction(MOCK_NATIVE_SWAP)).toEqual({
       type: TransactionType.Swap,
-      tradeType: TradeType.EXACT_INPUT,
       inputCurrencyId: `1-${NATIVE_ADDRESS}`,
       outputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       transactedUSDValue: 1,
       inputCurrencyAmountRaw: '1000000000000000000',
-      expectedOutputCurrencyAmountRaw: '1000000000000000000',
-      minimumOutputCurrencyAmountRaw: '1000000000000000000',
+      outputCurrencyAmountRaw: '1000000000000000000',
     })
   })
   it('Swap: parse wrap', () => {

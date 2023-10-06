@@ -61,13 +61,13 @@ export const formApproveNotificationTitle = (
 
 export const formSwapNotificationTitle = (
   txStatus: TransactionStatus,
-  tradeType: TradeType,
   inputCurrency: Maybe<Currency>,
   outputCurrency: Maybe<Currency>,
   inputCurrencyId: string,
   outputCurrencyId: string,
   inputCurrencyAmountRaw: string,
-  outputCurrencyAmountRaw: string
+  outputCurrencyAmountRaw: string,
+  tradeType?: TradeType
 ): string => {
   const inputCurrencySymbol = getCurrencyDisplayText(
     inputCurrency,

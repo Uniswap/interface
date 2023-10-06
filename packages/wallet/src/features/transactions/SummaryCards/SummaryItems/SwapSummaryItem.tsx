@@ -3,6 +3,7 @@ import { createElement, useMemo } from 'react'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
+import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 import {
   SummaryItemProps,
   TransactionSummaryLayoutProps,
@@ -11,6 +12,7 @@ import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryC
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  isConfirmedSwapTypeInfo,
   TransactionDetails,
 } from 'wallet/src/features/transactions/types'
 import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'wallet/src/utils/currency'
@@ -26,33 +28,34 @@ export function SwapSummaryItem({
     typeInfo: ExactOutputSwapTransactionInfo | ExactInputSwapTransactionInfo
   }
 }): JSX.Element {
-  const inputCurrencyInfo = useCurrencyInfo(transaction.typeInfo.inputCurrencyId)
-  const outputCurrencyInfo = useCurrencyInfo(transaction.typeInfo.outputCurrencyId)
+  const { typeInfo } = transaction
+  const inputCurrencyInfo = useCurrencyInfo(typeInfo.inputCurrencyId)
+  const outputCurrencyInfo = useCurrencyInfo(typeInfo.outputCurrencyId)
 
   const caption = useMemo(() => {
     if (!inputCurrencyInfo || !outputCurrencyInfo) {
       return ''
     }
 
-    const [inputAmountRaw, outputAmountRaw] =
-      transaction.typeInfo.tradeType === TradeType.EXACT_INPUT
-        ? [
-            transaction.typeInfo.inputCurrencyAmountRaw,
-            transaction.typeInfo.expectedOutputCurrencyAmountRaw,
-          ]
-        : [
-            transaction.typeInfo.expectedInputCurrencyAmountRaw,
-            transaction.typeInfo.outputCurrencyAmountRaw,
-          ]
-
+    const { inputCurrencyAmountRaw, outputCurrencyAmountRaw } = getAmountsFromTrade(typeInfo)
     const { currency: inputCurrency } = inputCurrencyInfo
     const { currency: outputCurrency } = outputCurrencyInfo
-    const currencyAmount = getFormattedCurrencyAmount(inputCurrency, inputAmountRaw)
-    const otherCurrencyAmount = getFormattedCurrencyAmount(outputCurrency, outputAmountRaw)
+    const currencyAmount = getFormattedCurrencyAmount(
+      inputCurrency,
+      inputCurrencyAmountRaw,
+      //** isApproximateAmount - input value and confirmed amount are both exact so this should be false **//
+      isConfirmedSwapTypeInfo(typeInfo) ? false : typeInfo.tradeType === TradeType.EXACT_OUTPUT
+    )
+    const otherCurrencyAmount = getFormattedCurrencyAmount(
+      outputCurrency,
+      outputCurrencyAmountRaw,
+      //** isApproximateAmount - input value and confirmed amount are both exact so this should be false **//
+      isConfirmedSwapTypeInfo(typeInfo) ? false : typeInfo.tradeType === TradeType.EXACT_INPUT
+    )
     return `${currencyAmount}${getSymbolDisplayText(
       inputCurrency.symbol
     )} → ${otherCurrencyAmount}${getSymbolDisplayText(outputCurrency.symbol)}`
-  }, [inputCurrencyInfo, outputCurrencyInfo, transaction.typeInfo])
+  }, [inputCurrencyInfo, outputCurrencyInfo, typeInfo])
 
   // For retrying failed, locally submitted swaps
   const swapFormState = swapCallbacks?.getSwapFormTransactionState(

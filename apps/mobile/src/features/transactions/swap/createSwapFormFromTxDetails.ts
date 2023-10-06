@@ -1,6 +1,7 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { logger } from 'utilities/src/logger/logger'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
+import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 import {
   CurrencyField,
   TransactionState,
@@ -37,15 +38,7 @@ export function createSwapFormFromTxDetails({
       )
     }
 
-    const inputCurrencyAmountRaw =
-      typeInfo.tradeType === TradeType.EXACT_INPUT
-        ? typeInfo.inputCurrencyAmountRaw
-        : typeInfo.expectedInputCurrencyAmountRaw
-    const outputCurrencyAmountRaw =
-      typeInfo.tradeType === TradeType.EXACT_OUTPUT
-        ? typeInfo.outputCurrencyAmountRaw
-        : typeInfo.expectedOutputCurrencyAmountRaw
-
+    const { inputCurrencyAmountRaw, outputCurrencyAmountRaw } = getAmountsFromTrade(typeInfo)
     const inputAddress = currencyIdToAddress(typeInfo.inputCurrencyId)
     const outputAddress = currencyIdToAddress(typeInfo.outputCurrencyId)
 
@@ -62,7 +55,7 @@ export function createSwapFormFromTxDetails({
     }
 
     const exactCurrencyField =
-      typeInfo.tradeType === TradeType.EXACT_INPUT ? CurrencyField.INPUT : CurrencyField.OUTPUT
+      typeInfo.tradeType === TradeType.EXACT_OUTPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
 
     const { value, currency } =
       exactCurrencyField === CurrencyField.INPUT

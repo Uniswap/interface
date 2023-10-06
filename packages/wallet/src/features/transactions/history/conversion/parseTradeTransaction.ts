@@ -1,6 +1,5 @@
 // TODO(MOB-203): reduce component complexity
 /* eslint-disable complexity */
-import { TradeType } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
 import { TokenStandard, TransactionDirection } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
@@ -9,7 +8,7 @@ import {
   parseUSDValueFromAssetChange,
 } from 'wallet/src/features/transactions/history/utils'
 import {
-  ExactInputSwapTransactionInfo,
+  ConfirmedSwapTransactionInfo,
   NFTTradeTransactionInfo,
   NFTTradeType,
   TransactionListQueryResponse,
@@ -34,7 +33,7 @@ type TransferAssetChange = Extract<
 
 export default function parseTradeTransaction(
   transaction: NonNullable<TransactionListQueryResponse>
-): ExactInputSwapTransactionInfo | NFTTradeTransactionInfo | WrapTransactionInfo | undefined {
+): ConfirmedSwapTransactionInfo | NFTTradeTransactionInfo | WrapTransactionInfo | undefined {
   // ignore UniswapX transactions for now
   if (transaction?.details?.__typename !== 'TransactionDetails') return undefined
 
@@ -127,7 +126,7 @@ export default function parseTradeTransaction(
         .toString()
     }
 
-    const expectedOutputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
+    const outputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       received.tokenStandard,
       received.asset.chain,
       received.asset.address,
@@ -155,13 +154,11 @@ export default function parseTradeTransaction(
 
     return {
       type: TransactionType.Swap,
-      tradeType: TradeType.EXACT_INPUT,
       inputCurrencyId,
       outputCurrencyId,
       transactedUSDValue,
       inputCurrencyAmountRaw,
-      expectedOutputCurrencyAmountRaw,
-      minimumOutputCurrencyAmountRaw: expectedOutputCurrencyAmountRaw,
+      outputCurrencyAmountRaw,
     }
   }
 

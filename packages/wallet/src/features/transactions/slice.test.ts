@@ -243,7 +243,7 @@ describe('transaction reducer', () => {
         )
       } catch (error) {
         expect(error).toEqual(
-          Error(`replaceTransaction: Attempted to replace a tx that doesnt exist with id ${id}`)
+          Error(`replaceTransaction: Attempted to replace a tx that doesn't exist with id ${id}`)
         )
       }
       expect(store.getState()).toEqual({})

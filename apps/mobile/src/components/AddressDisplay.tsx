@@ -70,7 +70,7 @@ export function AddressDisplay({
   showCopyWrapperButton = false,
   showAccountIcon = true,
   textAlign,
-  contentAlign = 'center', // vertical aligment of all items
+  contentAlign = 'center', // vertical alignment of all items
   showIconBackground,
   horizontalGap = '$spacing12',
   showViewOnlyBadge = false,

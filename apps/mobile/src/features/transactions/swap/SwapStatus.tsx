@@ -7,10 +7,11 @@ import { TransactionPending } from 'src/features/transactions/TransactionPending
 import { AppTFunction } from 'ui/src/i18n/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
-import { getInputAmountFromTrade } from 'wallet/src/features/transactions/getInputAmountFromTrade'
-import { getOutputAmountFromTrade } from 'wallet/src/features/transactions/getOutputAmountFromTrade'
+
+import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import {
+  isConfirmedSwapTypeInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
@@ -145,9 +146,7 @@ const getTextFromSwapStatus = (
   if (status === TransactionStatus.Success) {
     const { typeInfo } = transactionDetails
     const { currencies } = derivedSwapInfo
-
-    const inputCurrencyAmountRaw = getInputAmountFromTrade(typeInfo)
-    const outputCurrencyAmountRaw = getOutputAmountFromTrade(typeInfo)
+    const { inputCurrencyAmountRaw, outputCurrencyAmountRaw } = getAmountsFromTrade(typeInfo)
 
     const inputCurrency = currencies[CurrencyField.INPUT]
     const outputCurrency = currencies[CurrencyField.OUTPUT]
@@ -155,13 +154,13 @@ const getTextFromSwapStatus = (
     const inputAmount = getFormattedCurrencyAmount(
       inputCurrency?.currency,
       inputCurrencyAmountRaw,
-      typeInfo.tradeType === TradeType.EXACT_OUTPUT
+      isConfirmedSwapTypeInfo(typeInfo) ? false : typeInfo.tradeType === TradeType.EXACT_OUTPUT
     )
 
     const outputAmount = getFormattedCurrencyAmount(
       outputCurrency?.currency,
       outputCurrencyAmountRaw,
-      typeInfo.tradeType === TradeType.EXACT_INPUT
+      isConfirmedSwapTypeInfo(typeInfo) ? false : typeInfo.tradeType === TradeType.EXACT_INPUT
     )
 
     return {

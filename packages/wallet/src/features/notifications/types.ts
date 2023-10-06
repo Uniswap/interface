@@ -61,7 +61,7 @@ export interface SwapTxNotification extends TransactionNotificationBase {
   outputCurrencyId: string
   inputCurrencyAmountRaw: string
   outputCurrencyAmountRaw: string
-  tradeType: TradeType
+  tradeType?: TradeType
 }
 
 export interface WrapTxNotification extends TransactionNotificationBase {

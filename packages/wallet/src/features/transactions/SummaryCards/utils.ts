@@ -150,6 +150,7 @@ export function getTransactionSummaryTitle(
   t: AppTFunction
 ): string | undefined {
   const [completed, inProgress, action] = getTransactionTypeVerbs(tx.typeInfo, t)
+  const externalDappName = tx.typeInfo.externalDappInfo?.name
   switch (tx.status) {
     case TransactionStatus.Pending:
       return inProgress
@@ -160,6 +161,9 @@ export function getTransactionSummaryTitle(
     case TransactionStatus.Failed:
       return t('Failed to {{action}}', { action })
     case TransactionStatus.Success:
+      if (externalDappName) {
+        return t('{{completed}} on {{externalDappName}}', { completed, externalDappName })
+      }
       return completed
     default:
       return undefined

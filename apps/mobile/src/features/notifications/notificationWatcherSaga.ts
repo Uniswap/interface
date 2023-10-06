@@ -4,8 +4,7 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { getInputAmountFromTrade } from 'wallet/src/features/transactions/getInputAmountFromTrade'
-import { getOutputAmountFromTrade } from 'wallet/src/features/transactions/getOutputAmountFromTrade'
+import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 import { selectTransactions } from 'wallet/src/features/transactions/selectors'
 import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
 import { TransactionType } from 'wallet/src/features/transactions/types'
@@ -47,8 +46,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
       )
     }
   } else if (typeInfo.type === TransactionType.Swap) {
-    const inputCurrencyAmountRaw = getInputAmountFromTrade(typeInfo)
-    const outputCurrencyAmountRaw = getOutputAmountFromTrade(typeInfo)
+    const { inputCurrencyAmountRaw, outputCurrencyAmountRaw } = getAmountsFromTrade(typeInfo)
     yield* put(
       pushNotification({
         ...baseNotificationData,
@@ -112,7 +110,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         event: WalletConnectEvent.TransactionConfirmed,
         dappName: typeInfo.dapp.name,
         imageUrl: typeInfo.dapp.icon,
-        chainId: typeInfo.chainId,
+        chainId,
       })
     )
   } else if (typeInfo.type === TransactionType.Unknown) {

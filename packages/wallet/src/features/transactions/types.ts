@@ -129,6 +129,7 @@ export interface BaseTransactionInfo {
   type: TransactionType
   transactedUSDValue?: number
   isSpam?: boolean
+  externalDappInfo?: DappInfo
 }
 
 export interface ApproveTransactionInfo extends BaseTransactionInfo {
@@ -140,7 +141,7 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
 
 export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Swap
-  tradeType: TradeType
+  tradeType?: TradeType
   inputCurrencyId: string
   outputCurrencyId: string
   slippageTolerance?: number
@@ -162,6 +163,11 @@ export interface ExactOutputSwapTransactionInfo extends BaseSwapTransactionInfo 
   outputCurrencyAmountRaw: string
   expectedInputCurrencyAmountRaw: string
   maximumInputCurrencyAmountRaw: string
+}
+
+export interface ConfirmedSwapTransactionInfo extends BaseSwapTransactionInfo {
+  inputCurrencyAmountRaw: string
+  outputCurrencyAmountRaw: string
 }
 
 export interface WrapTransactionInfo extends BaseTransactionInfo {
@@ -230,7 +236,6 @@ export interface NFTApproveTransactionInfo extends BaseTransactionInfo {
 export interface WCConfirmInfo extends BaseTransactionInfo {
   type: TransactionType.WCConfirm
   dapp: DappInfo
-  chainId: ChainId
 }
 
 export interface UnknownTransactionInfo extends BaseTransactionInfo {
@@ -243,6 +248,7 @@ export type TransactionTypeInfo =
   | FiatPurchaseTransactionInfo
   | ExactOutputSwapTransactionInfo
   | ExactInputSwapTransactionInfo
+  | ConfirmedSwapTransactionInfo
   | WrapTransactionInfo
   | SendTokenTransactionInfo
   | ReceiveTokenTransactionInfo
@@ -251,3 +257,12 @@ export type TransactionTypeInfo =
   | NFTMintTransactionInfo
   | WCConfirmInfo
   | UnknownTransactionInfo
+
+export function isConfirmedSwapTypeInfo(
+  typeInfo: TransactionTypeInfo
+): typeInfo is ConfirmedSwapTransactionInfo {
+  return Boolean(
+    (typeInfo as ConfirmedSwapTransactionInfo).inputCurrencyAmountRaw &&
+      (typeInfo as ConfirmedSwapTransactionInfo).outputCurrencyAmountRaw
+  )
+}

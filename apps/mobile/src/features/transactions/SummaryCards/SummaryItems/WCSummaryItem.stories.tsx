@@ -25,7 +25,6 @@ const baseUnknownItem: Omit<TransactionDetails, 'status'> & { typeInfo: WCConfir
   chainId: 1,
   typeInfo: {
     type: TransactionType.WCConfirm,
-    chainId: 1,
     dapp: {
       icon: 'https://synapseprotocol.com/favicon.ico',
       name: 'Synapse',

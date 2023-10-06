@@ -194,13 +194,13 @@ export function SwapNotification({
   const outputCurrencyInfo = useCurrencyInfo(outputCurrencyId)
   const title = formSwapNotificationTitle(
     txStatus,
-    tradeType,
     inputCurrencyInfo?.currency,
     outputCurrencyInfo?.currency,
     inputCurrencyId,
     outputCurrencyId,
     inputCurrencyAmountRaw,
-    outputCurrencyAmountRaw
+    outputCurrencyAmountRaw,
+    tradeType
   )
 
   const swapFormState = useCreateSwapFormState(address, chainId, txId)

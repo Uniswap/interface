@@ -12,6 +12,7 @@
   "{{capitalizedAuthTypeName}} is currently turned off for Uniswap Wallet—you can turn it on in your system settings.": "{{capitalizedAuthTypeName}} is currently turned off for Uniswap Wallet—you can turn it on in your system settings.",
   "{{capitalizedAuthTypeName}} is not set up on your device. To use {{authenticationTypeName}}, set up it first in settings.": "{{capitalizedAuthTypeName}} is not set up on your device. To use {{authenticationTypeName}}, set up it first in settings.",
   "{{chainName}} Network": "{{chainName}} Network",
+  "{{completed}} on {{externalDappName}}": "{{completed}} on {{externalDappName}}",
   "{{cryptoAmount}} for {{fiatAmount}}": "{{cryptoAmount}} for {{fiatAmount}}",
   "{{num}} MCap": "{{num}} MCap",
   "{{num}} TVL": "{{num}} TVL",

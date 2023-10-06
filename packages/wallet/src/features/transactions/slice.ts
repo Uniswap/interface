@@ -89,7 +89,7 @@ const slice = createSlice({
     ) => {
       assert(
         state?.[address]?.[chainId]?.[id],
-        `replaceTransaction: Attempted to replace a tx that doesnt exist with id ${id}`
+        `replaceTransaction: Attempted to replace a tx that doesn't exist with id ${id}`
       )
       state[address]![chainId]![id]!.status = TransactionStatus.Replacing
     },

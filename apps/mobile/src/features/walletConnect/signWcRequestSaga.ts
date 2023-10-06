@@ -59,7 +59,6 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
         },
         typeInfo: {
           type: TransactionType.WCConfirm,
-          chainId,
           dapp: params.dapp,
         },
       }

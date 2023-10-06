@@ -19,32 +19,46 @@ describe(formSwapNotificationTitle, () => {
     initializeTranslation()
   })
 
-  it('formats successful swap title', () => {
+  it('formats successful local swap title', () => {
     expect(
       formSwapNotificationTitle(
         TransactionStatus.Success,
-        TradeType.EXACT_INPUT,
         DAI,
         USDC,
         '1-DAI',
         '1-USDC',
         '1000000000000000000',
-        '1000000'
+        '1000000',
+        TradeType.EXACT_INPUT
       )
     ).toEqual('Swapped 1.00 DAI for ~1.00 USDC.')
+  })
+
+  it('formats successful remote swap title', () => {
+    expect(
+      formSwapNotificationTitle(
+        TransactionStatus.Success,
+        DAI,
+        USDC,
+        '1-DAI',
+        '1-USDC',
+        '1000000000000000000',
+        '1200000'
+      )
+    ).toEqual('Swapped 1.00 DAI for 1.20 USDC.')
   })
 
   it('formats canceled swap title', () => {
     expect(
       formSwapNotificationTitle(
         TransactionStatus.Cancelled,
-        TradeType.EXACT_INPUT,
         DAI,
         USDC,
         '1-DAI',
         '1-USDC',
         '1000000000000000000',
-        '1000000'
+        '1000000',
+        TradeType.EXACT_INPUT
       )
     ).toEqual('Canceled DAI-USDC swap.')
   })
@@ -53,13 +67,13 @@ describe(formSwapNotificationTitle, () => {
     expect(
       formSwapNotificationTitle(
         TransactionStatus.Failed,
-        TradeType.EXACT_INPUT,
         DAI,
         USDC,
         '1-DAI',
         '1-USDC',
         '1000000000000000000',
-        '1000000'
+        '1000000',
+        TradeType.EXACT_INPUT
       )
     ).toEqual('Failed to swap 1.00 DAI for ~1.00 USDC.')
   })
