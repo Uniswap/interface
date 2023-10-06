@@ -12032,7 +12032,7 @@ __metadata:
     react-native-splash-screen: 3.3.0
     react-native-svg: 13.9.0
     react-native-svg-transformer: 1.0.0
-    react-native-tab-view: 3.1.1
+    react-native-tab-view: 3.5.2
     react-native-url-polyfill: 1.3.0
     react-native-wagmi-charts: 2.3.0
     react-native-web: 0.18.12
@@ -31856,14 +31856,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-tab-view@npm:3.1.1":
-  version: 3.1.1
-  resolution: "react-native-tab-view@npm:3.1.1"
+"react-native-tab-view@npm:3.5.2":
+  version: 3.5.2
+  resolution: "react-native-tab-view@npm:3.5.2"
+  dependencies:
+    use-latest-callback: ^0.1.5
   peerDependencies:
     react: "*"
     react-native: "*"
     react-native-pager-view: "*"
-  checksum: 8866e746f989b02243bcf1e5259698c3db50446d2b3a2c717873376734526be7fbeac520014adbe28cc0da116a7b5cd37508a6f56b90f992724be5f6222e0b71
+  checksum: bd287e5543881aa662ee55418a3bd5dacb25033425a9fcb0fff21c3a3b96f956af1a77cd9bab4e7a8e94590080a5d8e3cb99cfa8613b19bf6da24bfc9b4942d4
   languageName: node
   linkType: hard
 
@@ -37299,6 +37301,15 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 7913df383a5a6fcb399212eedefaac2e0c6f843555202d4e3010bac3848afe38ecaa3d0d6500ad1d936fbeffd637e6c517e68edb024af5e6beca7f27f3ce7b21
+  languageName: node
+  linkType: hard
+
+"use-latest-callback@npm:^0.1.5":
+  version: 0.1.6
+  resolution: "use-latest-callback@npm:0.1.6"
+  peerDependencies:
+    react: ">=16.8"
+  checksum: d94bea5cc5910d5967b12c766355c11812c1f57b5993d4b429dd6e580ac5904087ce732891d4fb3a855e0e56e6a7900b9af2084ede1d86df8e381afe47c2947a
   languageName: node
   linkType: hard
 

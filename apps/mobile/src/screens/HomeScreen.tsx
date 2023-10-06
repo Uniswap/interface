@@ -28,7 +28,6 @@ import { pulseAnimation } from 'src/components/buttons/utils'
 import { ActivityTab, ACTIVITY_TAB_DATA_DEPENDENCIES } from 'src/components/home/ActivityTab'
 import { NftsTab, NFTS_TAB_DATA_DEPENDENCIES } from 'src/components/home/NftsTab'
 import { TokensTab, TOKENS_TAB_DATA_DEPENDENCIES } from 'src/components/home/TokensTab'
-import { Delay, Delayed } from 'src/components/layout/Delayed'
 import { Screen } from 'src/components/layout/Screen'
 import {
   HeaderConfig,
@@ -395,31 +394,27 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
           )
         case SectionName.HomeNFTsTab:
           return (
-            <Delayed waitBeforeShow={Delay.Normal}>
-              <NftsTab
-                ref={nftsTabScrollRef}
-                containerProps={sharedProps}
-                headerHeight={headerHeight}
-                owner={activeAccount?.address}
-                refreshing={refreshing}
-                scrollHandler={nftsTabScrollHandler}
-                onRefresh={onRefreshHomeData}
-              />
-            </Delayed>
+            <NftsTab
+              ref={nftsTabScrollRef}
+              containerProps={sharedProps}
+              headerHeight={headerHeight}
+              owner={activeAccount?.address}
+              refreshing={refreshing}
+              scrollHandler={nftsTabScrollHandler}
+              onRefresh={onRefreshHomeData}
+            />
           )
         case SectionName.HomeActivityTab:
           return (
-            <Delayed waitBeforeShow={Delay.Normal}>
-              <ActivityTab
-                ref={activityTabScrollRef}
-                containerProps={sharedProps}
-                headerHeight={headerHeight}
-                owner={activeAccount?.address}
-                refreshing={refreshing}
-                scrollHandler={activityTabScrollHandler}
-                onRefresh={onRefreshHomeData}
-              />
-            </Delayed>
+            <ActivityTab
+              ref={activityTabScrollRef}
+              containerProps={sharedProps}
+              headerHeight={headerHeight}
+              owner={activeAccount?.address}
+              refreshing={refreshing}
+              scrollHandler={activityTabScrollHandler}
+              onRefresh={onRefreshHomeData}
+            />
           )
       }
       return null
@@ -446,6 +441,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     <Screen edges={['left', 'right']}>
       <View style={TAB_STYLES.container}>
         <TraceTabView
+          lazy
           initialLayout={{
             height: dimensions.fullHeight,
             width: dimensions.fullWidth,

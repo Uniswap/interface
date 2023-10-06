@@ -11,7 +11,7 @@ import {
   ViewStyle,
 } from 'react-native'
 import Animated from 'react-native-reanimated'
-import { Route } from 'react-native-tab-view/lib/typescript/types'
+import { Route } from 'react-native-tab-view'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { Flex, Text } from 'ui/src'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'

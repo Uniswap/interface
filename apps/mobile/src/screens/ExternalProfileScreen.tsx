@@ -133,6 +133,7 @@ export function ExternalProfileScreen({
           <Flex grow gap="$spacing16">
             <ProfileHeader address={address} />
             <TraceTabView
+              lazy
               navigationState={{ index: tabIndex, routes: tabs }}
               renderScene={renderTab}
               renderTabBar={renderTabBar}
