@@ -174,12 +174,13 @@ export function RemoveWalletModal(): JSX.Element | null {
                 inProgress ? (
                   <SpinningLoader
                     // TODO(MOB-1420): clean up types (as ColorTokens)
-                    color={`${labelColor}` as ColorTokens}
+                    color={`$${labelColor}` as ColorTokens}
                   />
                 ) : undefined
               }
               testID={isRemovingRecoveryPhrase ? ElementName.Continue : ElementName.Remove}
               theme={actionButtonTheme}
+              width="100%"
               onPress={onPress}>
               {inProgress ? undefined : actionButtonLabel}
             </Button>
