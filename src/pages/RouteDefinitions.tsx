@@ -102,26 +102,32 @@ export const routes: RouteDefinition[] = [
     },
   }),
   createRouteDefinition({
-    path: '/tokens',
-    nestedPaths: [':chainName'],
-    getElement: () => <Explore />,
-    enabled: (args) => !args.infoExplorePageEnabled,
-  }),
-  createRouteDefinition({
     path: '/explore',
     nestedPaths: [':chainName'],
     getElement: () => <Explore />,
     enabled: (args) => Boolean(args.infoExplorePageEnabled),
   }),
   createRouteDefinition({
-    path: '/tokens/:chainName/:tokenAddress',
-    getElement: () => <TokenDetails />,
-    enabled: (args) => !args.infoExplorePageEnabled,
+    path: '/tokens',
+    nestedPaths: [':chainName'],
+    getElement: (args) => {
+      return args.infoExplorePageEnabled ? <Navigate to="/explore" replace /> : <Explore />
+    },
   }),
   createRouteDefinition({
     path: '/explore/tokens/:chainName/:tokenAddress',
     getElement: () => <TokenDetails />,
     enabled: (args) => Boolean(args.infoExplorePageEnabled),
+  }),
+  createRouteDefinition({
+    path: '/tokens/:chainName/:tokenAddress',
+    getElement: (args) => {
+      return args.infoExplorePageEnabled ? (
+        <Navigate to="/explore/tokens/:chainName/:tokenAddress" replace />
+      ) : (
+        <TokenDetails />
+      )
+    },
   }),
   createRouteDefinition({
     path: '/pools/:chainName/:poolAddress',
