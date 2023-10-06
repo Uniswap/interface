@@ -121,7 +121,6 @@ export function TransactionReview({
                 backgroundColor="$transparent"
                 borderWidth={0}
                 editable={false}
-                my="$none"
                 px="$spacing16"
                 py="$none"
                 // on review screen, number formatter will already include $ sign
@@ -166,6 +165,8 @@ export function TransactionReview({
                   backgroundColor="$transparent"
                   borderWidth={0}
                   editable={false}
+                  px="$spacing16"
+                  py="$none"
                   showCurrencySign={isUSDInput}
                   showSoftInputOnFocus={false}
                   testID="amount-input-out"
