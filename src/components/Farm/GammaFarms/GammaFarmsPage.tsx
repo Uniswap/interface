@@ -133,7 +133,7 @@ const GammaFarmsPage: React.FC<{
                   ? Object.values(gammaData).find((poolData) => poolData.poolAddress === farm.address.toLowerCase())
                   : undefined
 
-                const tvl = gammaPositions ? gammaPositions[farm.hypervisor].balanceUSD : 0
+                const tvl = gammaPositions ? gammaPositions[farm.hypervisor]?.balanceUSD : 0
 
                 const rewardData = {
                   tvl,

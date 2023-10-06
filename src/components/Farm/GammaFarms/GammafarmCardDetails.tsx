@@ -1,18 +1,22 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
+import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@pollum-io/sdk-core'
 import { formatNumber } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
+import { AutoColumn } from 'components/Column'
 import Divider from 'components/Divider/Divider'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import Row from 'components/Row'
+import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { Contract } from 'ethers/lib/ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
 import { ApprovalState } from 'hooks/useApproveCallback'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useIsMobile } from 'nft/hooks'
-import React, { useState } from 'react'
-import { Box } from 'rebass'
+import React, { useCallback, useMemo, useState } from 'react'
+import { Box, Text } from 'rebass'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -106,6 +110,7 @@ const GammaFarmCardDetails: React.FC<{
 
   const approveOrStakeLP = async () => {
     setApproveOrStaking(true)
+    stateTransactionDeposit(true, true, undefined, undefined)
     try {
       if (dataDetails.approval === ApprovalState.APPROVED) {
         await stakeLP()
@@ -114,6 +119,7 @@ const GammaFarmCardDetails: React.FC<{
       }
       setApproveOrStaking(false)
     } catch (e) {
+      stateTransactionDeposit(false, true, e.message, undefined)
       console.log('Err:', e)
       setApproveOrStaking(false)
     }
@@ -154,11 +160,13 @@ const GammaFarmCardDetails: React.FC<{
     finalizedTransaction(receipt, {
       summary: 'depositliquidity',
     })
+    stateTransactionDeposit(false, true, undefined, receipt.transactionHash)
   }
 
   const unStakeLP = async () => {
     if (!dataDetails.masterChefContract || !account || !dataDetails.stakedAmountBN) return
     setAttemptUnstaking(true)
+    stateTransactionWithdraw(true, true, undefined, undefined)
     try {
       const estimatedGas = await dataDetails.masterChefContract.estimateGas.withdraw(
         pairData.pid,
@@ -191,9 +199,11 @@ const GammaFarmCardDetails: React.FC<{
       finalizedTransaction(receipt, {
         summary: 'withdrawliquidity',
       })
+      stateTransactionWithdraw(false, true, undefined, receipt.transactionHash)
       setAttemptUnstaking(false)
     } catch (e) {
       setAttemptUnstaking(false)
+      stateTransactionWithdraw(false, true, e.message, undefined)
       console.log('err: ', e)
     }
   }
@@ -201,6 +211,7 @@ const GammaFarmCardDetails: React.FC<{
   const claimReward = async () => {
     if (!dataDetails.masterChefContract || !account) return
     setAttemptClaiming(true)
+    stateTransaction(true, true, undefined, undefined)
     try {
       const estimatedGas = await dataDetails.masterChefContract.estimateGas.harvest(pairData.pid, account)
       const response: TransactionResponse = await dataDetails.masterChefContract.harvest(pairData.pid, account, {
@@ -217,116 +228,390 @@ const GammaFarmCardDetails: React.FC<{
       finalizedTransaction(receipt, {
         summary: 'claimrewards',
       })
+      stateTransaction(false, true, undefined, receipt.transactionHash)
       setAttemptClaiming(false)
     } catch (e) {
+      stateTransaction(false, true, e.message, undefined)
       setAttemptClaiming(false)
       console.log('err: ', e)
     }
   }
 
+  const [{ showTransactionClaimModal, transactionErrorMessage, attemptingTxn, txHash }, setTransactionClaimModal] =
+    useState<{
+      showTransactionClaimModal: boolean
+      attemptingTxn: boolean
+      transactionErrorMessage?: string
+      txHash?: string
+    }>({
+      showTransactionClaimModal: false,
+      attemptingTxn: false,
+      transactionErrorMessage: undefined,
+      txHash: undefined,
+    })
+
+  const [
+    { showTransactionDepositModal, transactionDepositErrorMessage, attemptingDepositTxn, txHashDeposit },
+    setTransactionDepositModal,
+  ] = useState<{
+    showTransactionDepositModal: boolean
+    attemptingDepositTxn: boolean
+    transactionDepositErrorMessage?: string
+    txHashDeposit?: string
+  }>({
+    showTransactionDepositModal: false,
+    attemptingDepositTxn: false,
+    transactionDepositErrorMessage: undefined,
+    txHashDeposit: undefined,
+  })
+
+  const [
+    { showTransactionWithdrawModal, transactionWithdrawErrorMessage, attemptingWithdrawTxn, txHashWithdraw },
+    setTransactionWithdrawModal,
+  ] = useState<{
+    showTransactionWithdrawModal: boolean
+    attemptingWithdrawTxn: boolean
+    transactionWithdrawErrorMessage?: string
+    txHashWithdraw?: string
+  }>({
+    showTransactionWithdrawModal: false,
+    attemptingWithdrawTxn: false,
+    transactionWithdrawErrorMessage: undefined,
+    txHashWithdraw: undefined,
+  })
+
+  const handleDismissTransaction = useCallback(() => {
+    setTransactionClaimModal({ showTransactionClaimModal: false, attemptingTxn, transactionErrorMessage, txHash })
+    // if there was a tx hash, we want to clear the input
+    if (txHash) {
+      setUnStakeAmount('')
+    }
+  }, [attemptingTxn, transactionErrorMessage, txHash])
+
+  const handleDismissTransactionDeposit = useCallback(() => {
+    setTransactionDepositModal({
+      showTransactionDepositModal: false,
+      attemptingDepositTxn,
+      transactionDepositErrorMessage,
+      txHashDeposit,
+    })
+    // if there was a tx hash, we want to clear the input
+    if (txHashDeposit) {
+      setUnStakeAmount('')
+    }
+  }, [attemptingDepositTxn, transactionDepositErrorMessage, txHashDeposit])
+
+  const handleDismissTransactionWithdraw = useCallback(() => {
+    setTransactionWithdrawModal({
+      showTransactionWithdrawModal: false,
+      attemptingWithdrawTxn,
+      transactionWithdrawErrorMessage,
+      txHashWithdraw,
+    })
+    // if there was a tx hash, we want to clear the input
+    if (txHashDeposit) {
+      setUnStakeAmount('')
+    }
+  }, [attemptingWithdrawTxn, transactionWithdrawErrorMessage, txHashDeposit, txHashWithdraw])
+
+  // text to show while loading
+  const pendingTextClaim = useMemo(
+    () => `Claiming ${formatNumber(Number(rewardsAmount))} ${rewardToken?.symbol}`,
+    [rewardToken?.symbol, rewardsAmount]
+  )
+
+  const pendingTextDeposit = `Depositing ${formatNumber(Number(dataDetails.stakeAmount))} ${dataDetails.lpSymbol}`
+
+  const pendingTextWithdraw = `Withdraw ${formatNumber(Number(unStakeAmount))} ${dataDetails.lpSymbol}`
+
+  const modalHeader = () => {
+    return (
+      <AutoColumn>
+        <Row style={{ padding: '20px', gap: '10px', display: 'flex', justifyContent: 'center' }}>
+          {rewardToken && <CurrencyLogo currency={rewardToken} size="24px" />}
+          <Text fontSize="18px">
+            {'Claim' + ' '}
+            {formatNumber(Number(rewardsAmount))}
+            <Text as="span" color={theme.accentActive}>
+              {rewardToken?.symbol}
+            </Text>
+          </Text>
+        </Row>
+      </AutoColumn>
+    )
+  }
+
+  const modalHeaderDeposit = () => {
+    return (
+      <AutoColumn>
+        <Row style={{ padding: '20px', display: 'flex', justifyContent: 'center' }}>
+          <Text fontSize="18px">
+            {'Deposit' + ' '}
+            {formatNumber(Number(dataDetails.stakeAmount)) + ' '}
+            <Text as="span" color={theme.accentActive}>
+              {dataDetails.lpSymbol}
+            </Text>
+          </Text>
+        </Row>
+      </AutoColumn>
+    )
+  }
+
+  const modalHeaderWithdraw = () => {
+    return (
+      <AutoColumn>
+        <Row style={{ padding: '20px', display: 'flex', justifyContent: 'center' }}>
+          <Text fontSize="18px">
+            {'Withdraw' + ' '}
+            {formatNumber(Number(unStakeAmount)) + ' '}
+            <Text as="span" color={theme.accentActive}>
+              {dataDetails.lpSymbol}
+            </Text>
+          </Text>
+        </Row>
+      </AutoColumn>
+    )
+  }
+
+  const stateTransaction = (
+    attemptingTxn: boolean,
+    showTransactionClaimModal: boolean,
+    transactionErrorMessage: string | undefined,
+    txHash: string | undefined
+  ) => {
+    setTransactionClaimModal({
+      attemptingTxn,
+      showTransactionClaimModal,
+      transactionErrorMessage,
+      txHash,
+    })
+  }
+
+  const stateTransactionDeposit = (
+    attemptingDepositTxn: boolean,
+    showTransactionDepositModal: boolean,
+    transactionDepositErrorMessage: string | undefined,
+    txHashDeposit: string | undefined
+  ) => {
+    setTransactionDepositModal({
+      attemptingDepositTxn,
+      showTransactionDepositModal,
+      transactionDepositErrorMessage,
+      txHashDeposit,
+    })
+  }
+
+  const stateTransactionWithdraw = (
+    attemptingWithdrawTxn: boolean,
+    showTransactionWithdrawModal: boolean,
+    transactionWithdrawErrorMessage: string | undefined,
+    txHashWithdraw: string | undefined
+  ) => {
+    setTransactionWithdrawModal({
+      attemptingWithdrawTxn,
+      showTransactionWithdrawModal,
+      transactionWithdrawErrorMessage,
+      txHashWithdraw,
+    })
+  }
+
   return (
-    <Box width="100%">
-      {!isMobile && <Divider margin="none" />}
-      {isMobile && (
-        <>
-          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                flexDirection: 'column',
-                fontWeight: 600,
-              }}
-            >
-              <small style={{ color: theme.accentActive }}>TVL</small>
-              {rewardData?.tvl && <small style={{ fontWeight: 600 }}> ${formatNumber(rewardData.tvl)}</small>}
-            </div>
-            <div
-              style={{
-                fontWeight: 600,
-                display: 'flex',
-                justifyContent: 'space-between',
-                flexDirection: 'column',
-              }}
-            >
-              <small style={{ color: theme.accentActive }}>Rewards</small>
-              <small style={{ display: 'flex', justifyContent: 'space-between' }}>
-                {rewardsAmount &&
-                  Number(rewardsAmount) > 0 &&
-                  token &&
-                  `${formatNumber(Number(rewardsAmount) * 3600 * 24)} ${token.symbol} / day`}
-              </small>
-            </div>
-          </div>
-          <Divider margin="none" />
-        </>
-      )}
-
-      <div style={{ padding: 1.5 }}>
-        <Grid isMobile={isMobile} hasRewards={Number(rewardsAmount) > 0}>
-          <GridItemGammaCard
-            titleText="Available:"
-            approveOrStakeLP={approveOrStakeLP}
-            availableStakeAmount={dataDetails.availableStakeAmount}
-            availableStakeUSD={dataDetails.availableStakeUSD}
-            stakeAmount={dataDetails.stakeAmount}
-            setStakeAmount={dataDetails.setStakeAmount}
-            stakeButtonDisabled={stakeButtonDisabled}
-            textButton={
-              dataDetails.approval === ApprovalState.APPROVED
-                ? approveOrStaking
-                  ? 'Depositing'
-                  : 'Deposit'
-                : approveOrStaking
-                ? 'Approving'
-                : 'Approve'
-            }
-            setUnStakeAmount={setUnStakeAmount}
-            tokenLPSymbol={dataDetails.lpSymbol}
+    <>
+      <TransactionConfirmationModal
+        isOpen={showTransactionClaimModal}
+        onDismiss={handleDismissTransaction}
+        attemptingTxn={attemptingTxn}
+        pendingText={pendingTextClaim}
+        hash={txHash}
+        content={() => (
+          <ConfirmationModalContent
+            title={<Trans>Transaction summary</Trans>}
+            onDismiss={handleDismissTransaction}
+            topContent={modalHeader}
+            bottomContent={() => (
+              <ButtonPrimary style={{ marginTop: '0.5rem' }} onClick={claimReward}>
+                <Text fontWeight={500} fontSize={20}>
+                  <Trans>Claim Token</Trans>
+                </Text>
+              </ButtonPrimary>
+            )}
           />
+        )}
+      />
 
-          <GridItemGammaCard
-            titleText="Deposited:"
-            stakedUSD={dataDetails.stakedUSD}
-            setUnStakeAmount={setUnStakeAmount}
-            stakedAmount={dataDetails.stakedAmount}
-            unStakeAmount={unStakeAmount}
-            unStakeButtonDisabled={unStakeButtonDisabled}
-            textButton={attemptUnstaking ? 'Withdrawing' : 'Withdraw'}
-            setStakeAmount={dataDetails.setStakeAmount}
-            stakeAmount={dataDetails.stakeAmount}
-            unStakeLP={unStakeLP}
-            tokenLPSymbol={dataDetails.lpSymbol}
+      <TransactionConfirmationModal
+        isOpen={showTransactionDepositModal}
+        onDismiss={handleDismissTransactionDeposit}
+        attemptingTxn={attemptingDepositTxn}
+        pendingText={pendingTextDeposit}
+        hash={txHashDeposit}
+        content={() => (
+          <ConfirmationModalContent
+            title={<Trans>Transaction summary</Trans>}
+            onDismiss={handleDismissTransactionDeposit}
+            topContent={modalHeaderDeposit}
+            bottomContent={() => (
+              <ButtonPrimary style={{ marginTop: '0.5rem' }} onClick={approveOrStakeLP}>
+                <Text fontWeight={500} fontSize={20}>
+                  <Trans>Deposit Tokens</Trans>
+                </Text>
+              </ButtonPrimary>
+            )}
           />
+        )}
+      />
 
-          {rewardToken && (
-            <GridItem>
-              <ClaimContainer>
-                <small style={{ color: theme.textSecondary }}>Earned Rewards: </small>
-                <div style={{ marginBottom: 10, marginTop: 10 }}>
-                  <div
-                    key={rewardToken.address}
-                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                  >
-                    <CurrencyLogo currency={rewardToken} size="16px" />
-                    <div style={{ marginLeft: '6px' }}>
-                      <small>
-                        {formatNumber(Number(rewardsAmount))} {rewardToken.symbol}
-                      </small>
+      <TransactionConfirmationModal
+        isOpen={showTransactionWithdrawModal}
+        onDismiss={handleDismissTransactionWithdraw}
+        attemptingTxn={attemptingWithdrawTxn}
+        pendingText={pendingTextWithdraw}
+        hash={txHashWithdraw}
+        content={() => (
+          <ConfirmationModalContent
+            title={<Trans>Transaction summary</Trans>}
+            onDismiss={handleDismissTransactionWithdraw}
+            topContent={modalHeaderWithdraw}
+            bottomContent={() => (
+              <ButtonPrimary style={{ marginTop: '0.5rem' }} onClick={unStakeLP}>
+                <Text fontWeight={500} fontSize={20}>
+                  <Trans>Withdraw Tokens</Trans>
+                </Text>
+              </ButtonPrimary>
+            )}
+          />
+        )}
+      />
+
+      <Box width="100%">
+        {!isMobile && <Divider margin="none" />}
+        {isMobile && (
+          <>
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  flexDirection: 'column',
+                  fontWeight: 600,
+                }}
+              >
+                <small style={{ color: theme.accentActive }}>TVL</small>
+                {rewardData?.tvl && <small style={{ fontWeight: 600 }}> ${formatNumber(rewardData.tvl)}</small>}
+              </div>
+              <div
+                style={{
+                  fontWeight: 600,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  flexDirection: 'column',
+                }}
+              >
+                <small style={{ color: theme.accentActive }}>Rewards</small>
+                <small style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  {rewardsAmount &&
+                    Number(rewardsAmount) > 0 &&
+                    token &&
+                    `${formatNumber(Number(rewardsAmount) * 3600 * 24)} ${token.symbol} / day`}
+                </small>
+              </div>
+            </div>
+            <Divider margin="none" />
+          </>
+        )}
+
+        <div style={{ padding: 1.5 }}>
+          <Grid isMobile={isMobile} hasRewards={Number(rewardsAmount) > 0}>
+            <GridItemGammaCard
+              titleText="Available:"
+              approveOrStakeLP={() =>
+                setTransactionDepositModal({
+                  attemptingDepositTxn: false,
+                  showTransactionDepositModal: true,
+                  transactionDepositErrorMessage: undefined,
+                  txHashDeposit: undefined,
+                })
+              }
+              availableStakeAmount={dataDetails.availableStakeAmount}
+              availableStakeUSD={dataDetails.availableStakeUSD}
+              stakeAmount={dataDetails.stakeAmount}
+              setStakeAmount={dataDetails.setStakeAmount}
+              stakeButtonDisabled={stakeButtonDisabled}
+              textButton={
+                dataDetails.approval === ApprovalState.APPROVED
+                  ? approveOrStaking
+                    ? 'Depositing'
+                    : 'Deposit'
+                  : approveOrStaking
+                  ? 'Approving'
+                  : 'Approve'
+              }
+              setUnStakeAmount={setUnStakeAmount}
+              tokenLPSymbol={dataDetails.lpSymbol}
+            />
+
+            <GridItemGammaCard
+              titleText="Deposited:"
+              stakedUSD={dataDetails.stakedUSD}
+              setUnStakeAmount={setUnStakeAmount}
+              stakedAmount={dataDetails.stakedAmount}
+              unStakeAmount={unStakeAmount}
+              unStakeButtonDisabled={unStakeButtonDisabled}
+              textButton={attemptUnstaking ? 'Withdrawing' : 'Withdraw'}
+              setStakeAmount={dataDetails.setStakeAmount}
+              stakeAmount={dataDetails.stakeAmount}
+              unStakeLP={() =>
+                setTransactionWithdrawModal({
+                  attemptingWithdrawTxn: false,
+                  showTransactionWithdrawModal: true,
+                  transactionWithdrawErrorMessage: undefined,
+                  txHashWithdraw: undefined,
+                })
+              }
+              tokenLPSymbol={dataDetails.lpSymbol}
+            />
+
+            {rewardToken && (
+              <GridItem>
+                <ClaimContainer>
+                  <small style={{ color: theme.textSecondary }}>Earned Rewards: </small>
+                  <div style={{ marginBottom: 10, marginTop: 10 }}>
+                    <div
+                      key={rewardToken.address}
+                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    >
+                      <CurrencyLogo currency={rewardToken} size="16px" />
+                      <div style={{ marginLeft: '6px' }}>
+                        <small>
+                          {formatNumber(Number(rewardsAmount))} {rewardToken.symbol}
+                        </small>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <Box width="100%">
-                  <ButtonPrimary style={{ height: '40px' }} disabled={claimButtonDisabled} onClick={claimReward}>
-                    {attemptClaiming ? 'Claiming' : 'Claim'}
-                  </ButtonPrimary>
-                </Box>
-              </ClaimContainer>
-            </GridItem>
-          )}
-        </Grid>
-      </div>
-    </Box>
+                  <Box width="100%">
+                    <ButtonPrimary
+                      style={{ height: '40px' }}
+                      disabled={false}
+                      // disabled={claimButtonDisabled}
+                      onClick={() =>
+                        setTransactionClaimModal({
+                          attemptingTxn: false,
+                          showTransactionClaimModal: true,
+                          transactionErrorMessage: undefined,
+                          txHash: undefined,
+                        })
+                      }
+                    >
+                      {attemptClaiming ? 'Claiming' : 'Claim'}
+                    </ButtonPrimary>
+                  </Box>
+                </ClaimContainer>
+              </GridItem>
+            )}
+          </Grid>
+        </div>
+      </Box>
+    </>
   )
 }
 
