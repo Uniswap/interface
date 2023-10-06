@@ -27,7 +27,6 @@ exports[`renders a LongText 1`] = `
       style={
         {
           "color": "#222222",
-          "display": "flex",
           "fontFamily": "Basel-Book",
           "fontSize": 17,
           "lineHeight": 24,

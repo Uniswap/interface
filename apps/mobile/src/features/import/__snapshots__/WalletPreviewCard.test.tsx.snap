@@ -240,7 +240,6 @@ exports[`renders wallet preview card 1`] = `
           style={
             {
               "color": "#222222",
-              "display": "flex",
               "fontFamily": "Basel-Book",
               "fontSize": 19,
               "lineHeight": 24,

@@ -241,7 +241,6 @@ exports[`AccountDetails renders without error 1`] = `
             style={
               {
                 "color": "#222222",
-                "display": "flex",
                 "fontFamily": "Basel-Book",
                 "fontSize": 15,
                 "lineHeight": 16,
@@ -274,7 +273,6 @@ exports[`AccountDetails renders without error 1`] = `
       style={
         {
           "color": "#7D7D7D",
-          "display": "flex",
           "fontFamily": "Basel-Book",
           "fontSize": 15,
           "lineHeight": 16,
@@ -529,7 +527,6 @@ exports[`AccountDetails renders without error with chevron 1`] = `
             style={
               {
                 "color": "#222222",
-                "display": "flex",
                 "fontFamily": "Basel-Book",
                 "fontSize": 15,
                 "lineHeight": 16,
@@ -562,7 +559,6 @@ exports[`AccountDetails renders without error with chevron 1`] = `
       style={
         {
           "color": "#7D7D7D",
-          "display": "flex",
           "fontFamily": "Basel-Book",
           "fontSize": 15,
           "lineHeight": 16,

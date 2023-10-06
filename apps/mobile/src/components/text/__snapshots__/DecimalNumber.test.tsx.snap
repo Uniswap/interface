@@ -7,7 +7,6 @@ exports[`renders a DecimalNumber 1`] = `
   style={
     {
       "color": "#222222",
-      "display": "flex",
       "fontFamily": "Basel-Book",
       "fontSize": 19,
       "lineHeight": 24,
@@ -22,7 +21,6 @@ exports[`renders a DecimalNumber 1`] = `
     style={
       {
         "color": "#CECECE",
-        "display": "flex",
         "fontFamily": "Basel-Book",
         "fontSize": 19,
         "lineHeight": 24,
@@ -43,7 +41,6 @@ exports[`renders a DecimalNumber without a comma separator 1`] = `
   style={
     {
       "color": "#222222",
-      "display": "flex",
       "fontFamily": "Basel-Book",
       "fontSize": 19,
       "lineHeight": 24,
@@ -58,7 +55,6 @@ exports[`renders a DecimalNumber without a comma separator 1`] = `
     style={
       {
         "color": "#CECECE",
-        "display": "flex",
         "fontFamily": "Basel-Book",
         "fontSize": 19,
         "lineHeight": 24,
@@ -79,7 +75,6 @@ exports[`renders a DecimalNumber without a decimal part 1`] = `
   style={
     {
       "color": "#222222",
-      "display": "flex",
       "fontFamily": "Basel-Book",
       "fontSize": 19,
       "lineHeight": 24,

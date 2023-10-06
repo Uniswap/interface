@@ -109,7 +109,6 @@ exports[`SearchPopularTokens renders without error 1`] = `
                     style={
                       {
                         "color": "transparent",
-                        "display": "flex",
                         "fontFamily": "Basel-Book",
                         "fontSize": 19,
                         "lineHeight": 24,
@@ -179,7 +178,6 @@ exports[`SearchPopularTokens renders without error 1`] = `
                       style={
                         {
                           "color": "transparent",
-                          "display": "flex",
                           "fontFamily": "Basel-Book",
                           "fontSize": 17,
                           "lineHeight": 24,
@@ -291,7 +289,6 @@ exports[`SearchPopularTokens renders without error 1`] = `
                     style={
                       {
                         "color": "transparent",
-                        "display": "flex",
                         "fontFamily": "Basel-Book",
                         "fontSize": 19,
                         "lineHeight": 24,
@@ -361,7 +358,6 @@ exports[`SearchPopularTokens renders without error 1`] = `
                       style={
                         {
                           "color": "transparent",
-                          "display": "flex",
                           "fontFamily": "Basel-Book",
                           "fontSize": 17,
                           "lineHeight": 24,
@@ -593,7 +589,6 @@ exports[`SearchPopularTokens renders without error 2`] = `
                     style={
                       {
                         "color": "#222222",
-                        "display": "flex",
                         "fontFamily": "Basel-Book",
                         "fontSize": 19,
                         "lineHeight": 24,
@@ -622,7 +617,6 @@ exports[`SearchPopularTokens renders without error 2`] = `
                   style={
                     {
                       "color": "#7D7D7D",
-                      "display": "flex",
                       "fontFamily": "Basel-Book",
                       "fontSize": 17,
                       "lineHeight": 24,
@@ -790,7 +784,6 @@ exports[`SearchPopularTokens renders without error 2`] = `
                     style={
                       {
                         "color": "#222222",
-                        "display": "flex",
                         "fontFamily": "Basel-Book",
                         "fontSize": 19,
                         "lineHeight": 24,
@@ -819,7 +812,6 @@ exports[`SearchPopularTokens renders without error 2`] = `
                   style={
                     {
                       "color": "#7D7D7D",
-                      "display": "flex",
                       "fontFamily": "Basel-Book",
                       "fontSize": 17,
                       "lineHeight": 24,
@@ -845,7 +837,6 @@ exports[`SearchPopularTokens renders without error 2`] = `
                     style={
                       {
                         "color": "#CECECE",
-                        "display": "flex",
                         "fontFamily": "Basel-Book",
                         "fontSize": 17,
                         "lineHeight": 24,

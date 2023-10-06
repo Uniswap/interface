@@ -242,7 +242,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
             style={
               {
                 "color": "#222222",
-                "display": "flex",
                 "fontFamily": "Basel-Book",
                 "fontSize": 19,
                 "lineHeight": 24,
@@ -316,7 +315,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
               style={
                 {
                   "color": "#7D7D7D",
-                  "display": "flex",
                   "fontFamily": "Basel-Book",
                   "fontSize": 17,
                   "lineHeight": 24,
@@ -441,7 +439,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
           style={
             {
               "color": "#000000",
-              "display": "flex",
               "fontFamily": "Basel-Medium",
               "fontSize": 17,
               "fontWeight": "500",
@@ -663,7 +660,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
         style={
           {
             "color": "#7D7D7D",
-            "display": "flex",
             "fontFamily": "Basel-Medium",
             "fontSize": 17,
             "fontWeight": "500",

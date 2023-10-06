@@ -79,7 +79,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               style={
                 {
                   "color": "#222222",
-                  "display": "flex",
                   "fontFamily": "Basel-Book",
                   "fontSize": 25,
                   "lineHeight": 32,
@@ -97,7 +96,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               style={
                 {
                   "color": "#7D7D7D",
-                  "display": "flex",
                   "fontFamily": "Basel-Book",
                   "fontSize": 17,
                   "lineHeight": 24,
@@ -184,12 +182,11 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       autoCorrect={true}
                       autoFocus={true}
                       blurOnSubmit={true}
+                      cancelable={true}
                       editable={true}
                       focusable={true}
-                      fontFamily="Basel-Book"
-                      fontSize={19}
-                      lineHeight={19}
                       maxFontSizeMultiplier={1.4}
+                      minPressDuration={0}
                       multiline={true}
                       onBlur={[Function]}
                       onChangeText={[Function]}
@@ -218,19 +215,21 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                           "borderTopRightRadius": 12,
                           "borderTopWidth": 1,
                           "color": "#222222",
-                          "fontWeight": "400",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 19,
                           "height": "auto",
                           "justifyContent": "center",
+                          "lineHeight": 19,
                           "minWidth": 0,
                           "paddingBottom": 0,
                           "paddingLeft": 0,
                           "paddingRight": 0,
                           "paddingTop": 0,
+                          "textAlign": "center",
                           "width": 8,
                         }
                       }
                       testID="import_account_form/input"
-                      textAlign="center"
                       textAlignVertical="bottom"
                     />
                   </View>
@@ -256,7 +255,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       style={
                         {
                           "color": "#7D7D7D",
-                          "display": "flex",
                           "flexShrink": 1,
                           "fontFamily": "Basel-Book",
                           "fontSize": 19,
@@ -404,7 +402,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                         style={
                           {
                             "color": "#222222",
-                            "display": "flex",
                             "fontFamily": "Basel-Medium",
                             "fontSize": 17,
                             "fontWeight": "500",
@@ -424,7 +421,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       style={
                         {
                           "color": "#7D7D7D",
-                          "display": "flex",
                           "flexShrink": 1,
                           "fontFamily": "Basel-Book",
                           "fontSize": 19,
@@ -503,7 +499,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                     style={
                       {
                         "color": "#FC72FF",
-                        "display": "flex",
                         "fontFamily": "Basel-Book",
                         "fontSize": 17,
                         "lineHeight": 24,
@@ -556,7 +551,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                 style={
                   {
                     "color": "#FFFFFF",
-                    "display": "flex",
                     "fontFamily": "Basel-Medium",
                     "fontSize": 19,
                     "fontWeight": "500",

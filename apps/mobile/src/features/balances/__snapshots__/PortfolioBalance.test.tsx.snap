@@ -1977,7 +1977,6 @@ exports[`PortfolioBalance renders without error 1`] = `
                 style={
                   {
                     "color": "#7D7D7D",
-                    "display": "flex",
                     "fontFamily": "Basel-Book",
                     "fontSize": 19,
                     "lineHeight": 24,

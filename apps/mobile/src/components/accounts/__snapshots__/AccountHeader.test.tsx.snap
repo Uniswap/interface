@@ -289,7 +289,6 @@ exports[`AccountHeader renders without error 1`] = `
                 style={
                   {
                     "color": "#222222",
-                    "display": "flex",
                     "fontFamily": "Basel-Book",
                     "fontSize": 19,
                     "lineHeight": 24,

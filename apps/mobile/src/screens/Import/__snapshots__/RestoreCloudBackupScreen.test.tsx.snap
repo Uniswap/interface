@@ -69,7 +69,6 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
           style={
             {
               "color": "#222222",
-              "display": "flex",
               "fontFamily": "Basel-Book",
               "fontSize": 25,
               "lineHeight": 32,
@@ -87,7 +86,6 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
           style={
             {
               "color": "#7D7D7D",
-              "display": "flex",
               "fontFamily": "Basel-Book",
               "fontSize": 17,
               "lineHeight": 24,

@@ -1,224 +1,308 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders a relative change 1`] = `
-<span
-  className="t_light _dsp_contents "
+<div
+  className="   "
+  style={
+    {
+      "alignItems": "center",
+      "boxSizing": "border-box",
+      "display": "flex",
+      "flexBasis": "auto",
+      "flexDirection": "row",
+      "flexShrink": 0,
+      "gap": "",
+      "justifyContent": "flex-start",
+      "minHeight": 0,
+      "minWidth": 0,
+      "position": "relative",
+    }
+  }
 >
-  <span
-    className=" t_light _dsp_contents is_Theme"
+  <RNSVGSvgView
+    align="xMidYMid"
+    bbHeight="16"
+    bbWidth="16"
+    fill="none"
+    focusable={false}
+    meetOrSlice={0}
+    minX={0}
+    minY={0}
+    strokeWidth={2}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        {
+          "color": "#40B66B",
+          "height": 16,
+          "transform": [
+            {
+              "rotate": "180deg",
+            },
+          ],
+          "width": 16,
+        },
+        {
+          "flex": 0,
+          "height": 16,
+          "width": 16,
+        },
+      ]
+    }
+    tintColor="#40B66B"
+    vbHeight={24}
+    vbWidth={24}
+  >
+    <RNSVGGroup
+      fill={null}
+      propList={
+        [
+          "fill",
+          "strokeWidth",
+        ]
+      }
+      strokeWidth="2"
+    >
+      <RNSVGPath
+        d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+        fill={
+          {
+            "type": 2,
+          }
+        }
+        propList={
+          [
+            "fill",
+          ]
+        }
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+  <div
+    className="   "
     style={
       {
-        "color": "var(--color)",
+        "alignItems": "stretch",
+        "boxSizing": "border-box",
+        "display": "flex",
+        "flexBasis": "auto",
+        "flexDirection": "column",
+        "flexShrink": 0,
+        "minHeight": 0,
+        "minWidth": 0,
+        "position": "relative",
       }
     }
   >
-    <div
-      className="  _dsp-flex _fd-row _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-0 _ai-center _gap-1481558338 _jc-flex-start "
-      style={{}}
-    >
-      <RNSVGSvgView
-        align="xMidYMid"
-        bbHeight="16px"
-        bbWidth="16px"
-        fill="none"
-        focusable={false}
-        meetOrSlice={0}
-        minX={0}
-        minY={0}
-        strokeWidth={2}
-        style={
-          [
-            {
-              "backgroundColor": "transparent",
-              "borderWidth": 0,
-            },
-            {
-              "color": "#40B66B",
-              "height": "16px",
-              "transform": [
-                {
-                  "rotate": "180deg",
-                },
-              ],
-              "width": "16px",
-            },
-            {
-              "flex": 0,
-              "height": 16,
-              "width": 16,
-            },
-          ]
+    <span
+      className=" font_subHeading  "
+      maxFontSizeMultiplier={1.4}
+      style={
+        {
+          "boxSizing": "border-box",
+          "color": "#7D7D7D",
+          "display": "inline",
+          "fontFamily": "",
+          "fontSize": 17,
+          "fontWeight": "400",
+          "lineHeight": 24,
+          "marginBottom": 0,
+          "marginLeft": 0,
+          "marginRight": 0,
+          "marginTop": 0,
+          "wordWrap": "break-word",
         }
-        tintColor="#40B66B"
-        vbHeight={24}
-        vbWidth={24}
-      >
-        <RNSVGGroup
-          fill={null}
-          propList={
-            [
-              "fill",
-              "strokeWidth",
-            ]
-          }
-          strokeWidth="2"
-        >
-          <RNSVGPath
-            d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
-            fill={
-              {
-                "type": 2,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-          />
-        </RNSVGGroup>
-      </RNSVGSvgView>
-      <div
-        className="  _ai-stretch _dsp-flex _fd-column _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-0 "
-        style={{}}
-      >
-        <span
-          className=" font_subHeading _dsp-inline _bxs-border-box _ww-break-word _mt-0px _mr-0px _mb-0px _ml-0px _ff-299667014 _col-843135005 _fos-17px _lh-24px _fow-400 "
-          maxFontSizeMultiplier={1.4}
-          style={{}}
-        >
-          12%
-        </span>
-      </div>
-    </div>
-  </span>
-</span>
+      }
+    >
+      12%
+    </span>
+  </div>
+</div>
 `;
 
 exports[`renders placeholders with absolute change 1`] = `
-<span
-  className="t_light _dsp_contents "
+<div
+  className="   "
+  style={
+    {
+      "alignItems": "center",
+      "boxSizing": "border-box",
+      "display": "flex",
+      "flexBasis": "auto",
+      "flexDirection": "row",
+      "flexShrink": 0,
+      "gap": "",
+      "justifyContent": "flex-start",
+      "minHeight": 0,
+      "minWidth": 0,
+      "position": "relative",
+    }
+  }
 >
-  <span
-    className=" t_light _dsp_contents is_Theme"
+  <RNSVGSvgView
+    align="xMidYMid"
+    bbHeight="16"
+    bbWidth="16"
+    fill="none"
+    focusable={false}
+    meetOrSlice={0}
+    minX={0}
+    minY={0}
+    strokeWidth={2}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        {
+          "color": "#40B66B",
+          "height": 16,
+          "transform": [
+            {
+              "rotate": "180deg",
+            },
+          ],
+          "width": 16,
+        },
+        {
+          "flex": 0,
+          "height": 16,
+          "width": 16,
+        },
+      ]
+    }
+    tintColor="#40B66B"
+    vbHeight={24}
+    vbWidth={24}
+  >
+    <RNSVGGroup
+      fill={null}
+      propList={
+        [
+          "fill",
+          "strokeWidth",
+        ]
+      }
+      strokeWidth="2"
+    >
+      <RNSVGPath
+        d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+        fill={
+          {
+            "type": 2,
+          }
+        }
+        propList={
+          [
+            "fill",
+          ]
+        }
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+  <div
+    className="   "
     style={
       {
-        "color": "var(--color)",
+        "alignItems": "stretch",
+        "boxSizing": "border-box",
+        "display": "flex",
+        "flexBasis": "auto",
+        "flexDirection": "column",
+        "flexShrink": 0,
+        "minHeight": 0,
+        "minWidth": 0,
+        "position": "relative",
       }
     }
   >
-    <div
-      className="  _dsp-flex _fd-row _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-0 _ai-center _gap-1481558338 _jc-flex-start "
-      style={{}}
-    >
-      <RNSVGSvgView
-        align="xMidYMid"
-        bbHeight="16px"
-        bbWidth="16px"
-        fill="none"
-        focusable={false}
-        meetOrSlice={0}
-        minX={0}
-        minY={0}
-        strokeWidth={2}
-        style={
-          [
-            {
-              "backgroundColor": "transparent",
-              "borderWidth": 0,
-            },
-            {
-              "color": "#40B66B",
-              "height": "16px",
-              "transform": [
-                {
-                  "rotate": "180deg",
-                },
-              ],
-              "width": "16px",
-            },
-            {
-              "flex": 0,
-              "height": 16,
-              "width": 16,
-            },
-          ]
+    <span
+      className=" font_subHeading  "
+      maxFontSizeMultiplier={1.4}
+      style={
+        {
+          "boxSizing": "border-box",
+          "color": "#7D7D7D",
+          "display": "inline",
+          "fontFamily": "",
+          "fontSize": 17,
+          "fontWeight": "400",
+          "lineHeight": 24,
+          "marginBottom": 0,
+          "marginLeft": 0,
+          "marginRight": 0,
+          "marginTop": 0,
+          "wordWrap": "break-word",
         }
-        tintColor="#40B66B"
-        vbHeight={24}
-        vbWidth={24}
-      >
-        <RNSVGGroup
-          fill={null}
-          propList={
-            [
-              "fill",
-              "strokeWidth",
-            ]
-          }
-          strokeWidth="2"
-        >
-          <RNSVGPath
-            d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
-            fill={
-              {
-                "type": 2,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-          />
-        </RNSVGGroup>
-      </RNSVGSvgView>
-      <div
-        className="  _ai-stretch _dsp-flex _fd-column _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-0 "
-        style={{}}
-      >
-        <span
-          className=" font_subHeading _dsp-inline _bxs-border-box _ww-break-word _mt-0px _mr-0px _mb-0px _ml-0px _ff-299667014 _col-843135005 _fos-17px _lh-24px _fow-400 "
-          maxFontSizeMultiplier={1.4}
-          style={{}}
-        >
-          $100.00 (12%)
-        </span>
-      </div>
-    </div>
-  </span>
-</span>
+      }
+    >
+      $100.00 (12%)
+    </span>
+  </div>
+</div>
 `;
 
 exports[`renders placeholders without a change 1`] = `
-<span
-  className="t_light _dsp_contents "
+<div
+  className="   "
+  style={
+    {
+      "alignItems": "center",
+      "boxSizing": "border-box",
+      "display": "flex",
+      "flexBasis": "auto",
+      "flexDirection": "row",
+      "flexShrink": 0,
+      "gap": "",
+      "justifyContent": "flex-start",
+      "minHeight": 0,
+      "minWidth": 0,
+      "position": "relative",
+    }
+  }
 >
-  <span
-    className=" t_light _dsp_contents is_Theme"
+  <div
+    className="   "
     style={
       {
-        "color": "var(--color)",
+        "alignItems": "stretch",
+        "boxSizing": "border-box",
+        "display": "flex",
+        "flexBasis": "auto",
+        "flexDirection": "column",
+        "flexShrink": 0,
+        "minHeight": 0,
+        "minWidth": 0,
+        "position": "relative",
       }
     }
   >
-    <div
-      className="  _dsp-flex _fd-row _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-0 _ai-center _gap-1481558338 _jc-flex-start "
-      style={{}}
+    <span
+      className=" font_subHeading  "
+      maxFontSizeMultiplier={1.4}
+      style={
+        {
+          "boxSizing": "border-box",
+          "color": "#7D7D7D",
+          "display": "inline",
+          "fontFamily": "",
+          "fontSize": 17,
+          "fontWeight": "400",
+          "lineHeight": 24,
+          "marginBottom": 0,
+          "marginLeft": 0,
+          "marginRight": 0,
+          "marginTop": 0,
+          "wordWrap": "break-word",
+        }
+      }
     >
-      <div
-        className="  _ai-stretch _dsp-flex _fd-column _fb-auto _bxs-border-box _pos-relative _mih-0px _miw-0px _fs-0 "
-        style={{}}
-      >
-        <span
-          className=" font_subHeading _dsp-inline _bxs-border-box _ww-break-word _mt-0px _mr-0px _mb-0px _ml-0px _ff-299667014 _col-843135005 _fos-17px _lh-24px _fow-400 "
-          maxFontSizeMultiplier={1.4}
-          style={{}}
-        >
-          -
-        </span>
-      </div>
-    </div>
-  </span>
-</span>
+      -
+    </span>
+  </div>
+</div>
 `;

@@ -101,7 +101,6 @@ exports[`renders wallet loader 1`] = `
                 style={
                   {
                     "color": "transparent",
-                    "display": "flex",
                     "fontFamily": "Basel-Book",
                     "fontSize": 19,
                     "lineHeight": 24,
@@ -171,7 +170,6 @@ exports[`renders wallet loader 1`] = `
                 style={
                   {
                     "color": "transparent",
-                    "display": "flex",
                     "fontFamily": "Basel-Book",
                     "fontSize": 17,
                     "lineHeight": 24,

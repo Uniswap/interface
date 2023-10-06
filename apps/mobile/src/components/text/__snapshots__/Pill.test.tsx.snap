@@ -34,7 +34,6 @@ exports[`renders a Pill with border 1`] = `
     style={
       {
         "color": "#222222",
-        "display": "flex",
         "fontFamily": "Basel-Book",
         "fontSize": 17,
         "lineHeight": 24,
@@ -50,7 +49,6 @@ exports[`renders a Pill with border 1`] = `
     style={
       {
         "color": undefined,
-        "display": "flex",
         "fontFamily": "Basel-Book",
         "fontSize": 17,
         "lineHeight": 24,
@@ -99,7 +97,6 @@ exports[`renders a Pill without image 1`] = `
     style={
       {
         "color": "#000",
-        "display": "flex",
         "fontFamily": "Basel-Book",
         "fontSize": 17,
         "lineHeight": 24,
