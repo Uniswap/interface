@@ -62,13 +62,13 @@ export function useColor(token?: Token) {
   useEffect(() => {
     let stale = false
 
-    // if (token) {
-    //   getColorFromToken(token, src).then((tokenColor) => {
-    //     if (!stale && tokenColor !== null) {
-    //       setColor(tokenColor)
-    //     }
-    //   })
-    // }
+    if (token) {
+      getColorFromToken(token, src).then((tokenColor) => {
+        if (!stale && tokenColor !== null) {
+          setColor(tokenColor)
+        }
+      })
+    }
 
     return () => {
       stale = true
