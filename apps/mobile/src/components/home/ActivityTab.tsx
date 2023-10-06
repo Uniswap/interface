@@ -1,5 +1,5 @@
 import { FlashList } from '@shopify/flash-list'
-import React, { forwardRef, useMemo } from 'react'
+import { default as React, forwardRef, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { RefreshControl } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -44,151 +44,154 @@ const SectionTitle = ({ title }: { title: string }): JSX.Element => (
   </Flex>
 )
 
-export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(function _ActivityTab(
-  {
-    owner,
-    containerProps,
-    scrollHandler,
-    headerHeight,
-    isExternalProfile = false,
-    refreshing,
-    onRefresh,
-  },
-  ref
-) {
-  const { t } = useTranslation()
-  const dispatch = useAppDispatch()
-  const colors = useSporeColors()
-  const insets = useSafeAreaInsets()
-
-  const { onContentSizeChange, adaptiveFooter } = useAdaptiveFooter(
-    containerProps?.contentContainerStyle
-  )
-
-  // Hide all spam transactions if active wallet has enabled setting.
-  const activeAccount = useActiveAccountWithThrow()
-  const hideSpamTokens = useSelectAccountHideSpamTokens(activeAccount.address)
-
-  const swapCallbacks: SwapSummaryCallbacks = useMemo(() => {
-    return {
-      getLatestSwapTransaction: useMostRecentSwapTx,
-      getSwapFormTransactionState: useCreateSwapFormState,
-      onRetryGenerator: (swapFormState: TransactionState | undefined) => {
-        return () => {
-          dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
-        }
-      },
-    }
-  }, [dispatch])
-
-  const renderActivityItem = useMemo(() => {
-    return generateActivityItemRenderer(
-      TransactionSummaryLayout,
-      <Loader.Transaction />,
-      SectionTitle,
-      swapCallbacks
-    )
-  }, [swapCallbacks])
-
-  const { onRetry, hasData, isLoading, isError, sectionData, keyExtractor } =
-    useFormattedTransactionDataForActivity(
+export const ActivityTab = memo(
+  forwardRef<FlashList<unknown>, TabProps>(function _ActivityTab(
+    {
       owner,
-      hideSpamTokens,
-      useMergeLocalAndRemoteTransactions
+      containerProps,
+      scrollHandler,
+      headerHeight,
+      isExternalProfile = false,
+      refreshing,
+      onRefresh,
+    },
+    ref
+  ) {
+    const { t } = useTranslation()
+    const dispatch = useAppDispatch()
+    const colors = useSporeColors()
+    const insets = useSafeAreaInsets()
+
+    const { onContentSizeChange, adaptiveFooter } = useAdaptiveFooter(
+      containerProps?.contentContainerStyle
     )
 
-  const onPressReceive = (): void => {
-    // in case we received a pending session from a previous scan after closing modal
-    dispatch(removePendingSession())
-    dispatch(
-      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
+    // Hide all spam transactions if active wallet has enabled setting.
+    const activeAccount = useActiveAccountWithThrow()
+    const hideSpamTokens = useSelectAccountHideSpamTokens(activeAccount.address)
+
+    const swapCallbacks: SwapSummaryCallbacks = useMemo(() => {
+      return {
+        getLatestSwapTransaction: useMostRecentSwapTx,
+        getSwapFormTransactionState: useCreateSwapFormState,
+        onRetryGenerator: (swapFormState: TransactionState | undefined) => {
+          return () => {
+            dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
+          }
+        },
+      }
+    }, [dispatch])
+
+    const renderActivityItem = useMemo(() => {
+      return generateActivityItemRenderer(
+        TransactionSummaryLayout,
+        <Loader.Transaction />,
+        SectionTitle,
+        swapCallbacks
+      )
+    }, [swapCallbacks])
+
+    const { onRetry, hasData, isLoading, isError, sectionData, keyExtractor } =
+      useFormattedTransactionDataForActivity(
+        owner,
+        hideSpamTokens,
+        useMergeLocalAndRemoteTransactions
+      )
+
+    const onPressReceive = (): void => {
+      // in case we received a pending session from a previous scan after closing modal
+      dispatch(removePendingSession())
+      dispatch(
+        openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
+      )
+    }
+
+    const errorCard = (
+      <Flex grow style={containerProps?.emptyContainerStyle}>
+        <BaseCard.ErrorState
+          retryButtonLabel={t('Retry')}
+          title={t('Couldn’t load activity')}
+          onRetry={onRetry}
+        />
+      </Flex>
     )
-  }
 
-  const errorCard = (
-    <Flex grow style={containerProps?.emptyContainerStyle}>
-      <BaseCard.ErrorState
-        retryButtonLabel={t('Retry')}
-        title={t('Couldn’t load activity')}
-        onRetry={onRetry}
-      />
-    </Flex>
-  )
+    const emptyListView = (
+      <Flex grow style={containerProps?.emptyContainerStyle}>
+        <BaseCard.EmptyState
+          buttonLabel={isExternalProfile ? undefined : 'Receive tokens or NFTs'}
+          description={
+            isExternalProfile
+              ? t('When this wallet makes transactions, they’ll appear here.')
+              : t(
+                  'When you approve, trade, or transfer tokens or NFTs, your transactions will appear here.'
+                )
+          }
+          icon={<NoTransactions />}
+          title={t('No activity yet')}
+          onPress={onPressReceive}
+        />
+      </Flex>
+    )
 
-  const refreshControl = useMemo(() => {
+    let emptyComponent = null
+    if (!hasData && isError) {
+      emptyComponent = errorCard
+    } else if (!isLoading && emptyListView) {
+      emptyComponent = emptyListView
+    }
+
+    const refreshControl = useMemo(() => {
+      return (
+        <RefreshControl
+          progressViewOffset={
+            insets.top + (IS_ANDROID && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
+          }
+          refreshing={refreshing ?? false}
+          tintColor={colors.neutral3.get()}
+          onRefresh={onRefresh}
+        />
+      )
+    }, [refreshing, headerHeight, onRefresh, colors.neutral3, insets.top])
+
+    if (!hasData && isError) {
+      return errorCard
+    }
+
+    // We want to display the loading shimmer in the footer only when the data haven't been fetched yet
+    // (list items use their own loading shimmer so there is no need to display it in the footer)
+    const isLoadingInitially = isLoading && !sectionData
+
     return (
-      <RefreshControl
-        progressViewOffset={
-          insets.top + (IS_ANDROID && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
-        }
-        refreshing={refreshing ?? false}
-        tintColor={colors.neutral3.get()}
-        onRefresh={onRefresh}
-      />
+      <Flex grow px="$spacing24">
+        <AnimatedFlashList
+          ref={ref}
+          ListEmptyComponent={emptyComponent}
+          // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
+          ListFooterComponent={
+            <>
+              {isLoadingInitially && <Loader.Transaction repeat={4} />}
+              {adaptiveFooter}
+            </>
+          }
+          data={sectionData}
+          estimatedItemSize={ESTIMATED_ITEM_SIZE}
+          // To achieve better performance, specify the type based on the item
+          // https://shopify.github.io/flash-list/docs/fundamentals/performant-components#getitemtype
+          getItemType={getActivityItemType}
+          keyExtractor={keyExtractor}
+          maxToRenderPerBatch={20}
+          numColumns={1}
+          refreshControl={refreshControl}
+          refreshing={refreshing}
+          renderItem={renderActivityItem}
+          showsVerticalScrollIndicator={false}
+          onContentSizeChange={onContentSizeChange}
+          onRefresh={onRefresh}
+          onScroll={scrollHandler}
+          {...containerProps}
+        />
+      </Flex>
     )
-  }, [refreshing, headerHeight, onRefresh, colors.neutral3, insets.top])
-
-  if (!hasData && isError) {
-    return errorCard
-  }
-
-  // We want to display the loading shimmer in the footer only when the data haven't been fetched yet
-  // (list items use their own loading shimmer so there is no need to display it in the footer)
-  const isLoadingInitially = isLoading && !sectionData
-
-  return (
-    <Flex grow px="$spacing24">
-      <AnimatedFlashList
-        ref={ref}
-        ListEmptyComponent={
-          // error view
-          !hasData && isError
-            ? errorCard
-            : // empty view
-              (!isLoading && (
-                <Flex grow style={containerProps?.emptyContainerStyle}>
-                  <BaseCard.EmptyState
-                    buttonLabel={isExternalProfile ? undefined : 'Receive tokens or NFTs'}
-                    description={
-                      isExternalProfile
-                        ? t('When this wallet makes transactions, they’ll appear here.')
-                        : t(
-                            'When you approve, trade, or transfer tokens or NFTs, your transactions will appear here.'
-                          )
-                    }
-                    icon={<NoTransactions />}
-                    title={t('No activity yet')}
-                    onPress={onPressReceive}
-                  />
-                </Flex>
-              )) ||
-              null
-          // initial loading is implemented inside sectionData
-        }
-        // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
-        ListFooterComponent={
-          <>
-            {isLoadingInitially && <Loader.Transaction repeat={4} />}
-            {adaptiveFooter}
-          </>
-        }
-        data={sectionData}
-        estimatedItemSize={ESTIMATED_ITEM_SIZE}
-        // To achieve better performance, specify the type based on the item
-        // https://shopify.github.io/flash-list/docs/fundamentals/performant-components#getitemtype
-        getItemType={getActivityItemType}
-        keyExtractor={keyExtractor}
-        maxToRenderPerBatch={20}
-        numColumns={1}
-        refreshControl={refreshControl}
-        refreshing={refreshing}
-        renderItem={renderActivityItem}
-        showsVerticalScrollIndicator={false}
-        onContentSizeChange={onContentSizeChange}
-        onRefresh={onRefresh}
-        onScroll={scrollHandler}
-        {...containerProps}
-      />
-    </Flex>
-  )
-})
+  })
+)

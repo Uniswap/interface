@@ -12,7 +12,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { renderTabLabel, TabContentProps, TAB_STYLES } from 'src/components/layout/TabHelpers'
 import Trace from 'src/components/Trace/Trace'
 import TraceTabView from 'src/components/Trace/TraceTabView'
-import ProfileHeader from 'src/features/externalProfile/ProfileHeader'
+import { ProfileHeader } from 'src/features/externalProfile/ProfileHeader'
 import { SectionName } from 'src/features/telemetry/constants'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
@@ -94,24 +94,24 @@ export function ExternalProfileScreen({
   const renderTabBar = useCallback(
     (sceneProps: SceneRendererProps) => {
       return (
-        <Flex bg="$surface1" pl="$spacing12">
-          <TabBar
-            {...sceneProps}
-            indicatorStyle={TAB_STYLES.activeTabIndicator}
-            navigationState={{ index: tabIndex, routes: tabs }}
-            renderLabel={({ route, focused }): JSX.Element =>
-              renderTabLabel({ route, focused, isExternalProfile: true })
-            }
-            style={[
-              TAB_STYLES.tabBar,
-              {
-                backgroundColor: colors.surface1.get(),
-                borderBottomColor: colors.surface3.get(),
-              },
-            ]}
-            tabStyle={styles.tabStyle}
-          />
-        </Flex>
+        <TabBar
+          {...sceneProps}
+          indicatorStyle={TAB_STYLES.activeTabIndicator}
+          navigationState={{ index: tabIndex, routes: tabs }}
+          pressColor={colors.surface3.get()} // Android only
+          renderLabel={({ route, focused }): JSX.Element =>
+            renderTabLabel({ route, focused, isExternalProfile: true })
+          }
+          style={[
+            TAB_STYLES.tabBar,
+            {
+              backgroundColor: colors.surface1.get(),
+              borderBottomColor: colors.surface3.get(),
+              paddingLeft: spacing.spacing12,
+            },
+          ]}
+          tabStyle={styles.tabStyle}
+        />
       )
     },
     [colors.surface1, colors.surface3, tabIndex, tabs]

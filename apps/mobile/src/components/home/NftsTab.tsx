@@ -1,6 +1,6 @@
 import { FlashList } from '@shopify/flash-list'
 import { ImpactFeedbackStyle } from 'expo-haptics'
-import React, { forwardRef, useCallback, useMemo } from 'react'
+import React, { forwardRef, memo, useCallback, useMemo } from 'react'
 import { RefreshControl } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -85,72 +85,74 @@ function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Elemen
   )
 }
 
-export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(function _NftsTab(
-  {
-    owner,
-    containerProps,
-    scrollHandler,
-    isExternalProfile = false,
-    refreshing,
-    onRefresh,
-    headerHeight = 0,
-  },
-  ref
-) {
-  const colors = useSporeColors()
-  const dispatch = useAppDispatch()
-  const insets = useSafeAreaInsets()
+export const NftsTab = memo(
+  forwardRef<FlashList<unknown>, TabProps>(function _NftsTab(
+    {
+      owner,
+      containerProps,
+      scrollHandler,
+      isExternalProfile = false,
+      refreshing,
+      onRefresh,
+      headerHeight = 0,
+    },
+    ref
+  ) {
+    const colors = useSporeColors()
+    const dispatch = useAppDispatch()
+    const insets = useSafeAreaInsets()
 
-  const { onContentSizeChange, footerHeight, adaptiveFooter } = useAdaptiveFooter(
-    containerProps?.contentContainerStyle
-  )
-
-  const onPressScan = (): void => {
-    // in case we received a pending session from a previous scan after closing modal
-    dispatch(removePendingSession())
-    dispatch(
-      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
+    const { onContentSizeChange, footerHeight, adaptiveFooter } = useAdaptiveFooter(
+      containerProps?.contentContainerStyle
     )
-  }
 
-  const renderNFTItem = useCallback(
-    (item: NFTItem) => <NftView item={item} owner={owner} />,
-    [owner]
-  )
+    const onPressScan = (): void => {
+      // in case we received a pending session from a previous scan after closing modal
+      dispatch(removePendingSession())
+      dispatch(
+        openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
+      )
+    }
 
-  const refreshControl = useMemo(() => {
+    const renderNFTItem = useCallback(
+      (item: NFTItem) => <NftView item={item} owner={owner} />,
+      [owner]
+    )
+
+    const refreshControl = useMemo(() => {
+      return (
+        <RefreshControl
+          progressViewOffset={
+            insets.top + (IS_ANDROID && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
+          }
+          refreshing={refreshing ?? false}
+          tintColor={colors.neutral3.get()}
+          onRefresh={onRefresh}
+        />
+      )
+    }, [refreshing, headerHeight, onRefresh, colors.neutral3, insets.top])
+
     return (
-      <RefreshControl
-        progressViewOffset={
-          insets.top + (IS_ANDROID && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
-        }
-        refreshing={refreshing ?? false}
-        tintColor={colors.neutral3.get()}
-        onRefresh={onRefresh}
-      />
+      <Flex grow px="$spacing12">
+        <NftsList
+          ref={ref}
+          ListFooterComponent={adaptiveFooter}
+          emptyStateStyle={{ paddingHorizontal: spacing.spacing12 }}
+          errorStateStyle={containerProps?.emptyContainerStyle}
+          footerHeight={footerHeight}
+          isExternalProfile={isExternalProfile}
+          loadingStateStyle={containerProps?.emptyContainerStyle}
+          owner={owner}
+          refreshControl={refreshControl}
+          refreshing={refreshing}
+          renderNFTItem={renderNFTItem}
+          onContentSizeChange={onContentSizeChange}
+          onPressEmptyState={onPressScan}
+          onRefresh={onRefresh}
+          onScroll={scrollHandler}
+          {...containerProps}
+        />
+      </Flex>
     )
-  }, [refreshing, headerHeight, onRefresh, colors.neutral3, insets.top])
-
-  return (
-    <Flex grow px="$spacing12">
-      <NftsList
-        ref={ref}
-        ListFooterComponent={adaptiveFooter}
-        emptyStateStyle={{ paddingHorizontal: spacing.spacing12 }}
-        errorStateStyle={containerProps?.emptyContainerStyle}
-        footerHeight={footerHeight}
-        isExternalProfile={isExternalProfile}
-        loadingStateStyle={containerProps?.emptyContainerStyle}
-        owner={owner}
-        refreshControl={refreshControl}
-        refreshing={refreshing}
-        renderNFTItem={renderNFTItem}
-        onContentSizeChange={onContentSizeChange}
-        onPressEmptyState={onPressScan}
-        onRefresh={onRefresh}
-        onScroll={scrollHandler}
-        {...containerProps}
-      />
-    </Flex>
-  )
-})
+  })
+)

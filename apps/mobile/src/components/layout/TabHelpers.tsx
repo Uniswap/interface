@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-unused-styles */
 import { FlashList, FlashListProps } from '@shopify/flash-list'
-import React, { RefObject } from 'react'
+import React, { RefObject, useCallback, useMemo } from 'react'
 import {
   FlatList,
   FlatListProps,
@@ -10,7 +10,7 @@ import {
   StyleSheet,
   ViewStyle,
 } from 'react-native'
-import Animated from 'react-native-reanimated'
+import Animated, { SharedValue } from 'react-native-reanimated'
 import { Route } from 'react-native-tab-view'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { Flex, Text } from 'ui/src'
@@ -123,34 +123,37 @@ export const renderTabLabel = ({
  * Keeps tab content in sync, by scrolling content in case collapsing header height has changed between tabs
  */
 export const useScrollSync = (
-  currentTabIndex: number,
+  currentTabIndex: SharedValue<number>,
   scrollPairs: ScrollPair[],
   headerConfig: HeaderConfig
 ): { sync: (event: NativeSyntheticEvent<NativeScrollEvent>) => void } => {
   const sync:
     | FlatListProps<unknown>['onMomentumScrollEnd']
-    | FlashListProps<unknown>['onMomentumScrollEnd'] = (event) => {
-    const { y } = event.nativeEvent.contentOffset
+    | FlashListProps<unknown>['onMomentumScrollEnd'] = useCallback(
+    (event: { nativeEvent: NativeScrollEvent }) => {
+      const { y } = event.nativeEvent.contentOffset
 
-    const { heightCollapsed, heightExpanded } = headerConfig
+      const { heightCollapsed, heightExpanded } = headerConfig
 
-    const headerDiff = heightExpanded - heightCollapsed
+      const headerDiff = heightExpanded - heightCollapsed
 
-    for (const { list, position, index } of scrollPairs) {
-      const scrollPosition = position.value
+      for (const { list, position, index } of scrollPairs) {
+        const scrollPosition = position.value
 
-      if (scrollPosition > headerDiff && y > headerDiff) {
-        continue
+        if (scrollPosition > headerDiff && y > headerDiff) {
+          continue
+        }
+
+        if (index !== currentTabIndex.value) {
+          list.current?.scrollToOffset({
+            offset: Math.min(y, headerDiff),
+            animated: false,
+          })
+        }
       }
+    },
+    [currentTabIndex, scrollPairs, headerConfig]
+  )
 
-      if (index !== currentTabIndex) {
-        list.current?.scrollToOffset({
-          offset: Math.min(y, headerDiff),
-          animated: false,
-        })
-      }
-    }
-  }
-
-  return { sync }
+  return useMemo(() => ({ sync }), [sync])
 }

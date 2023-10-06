@@ -28,7 +28,9 @@ interface ProfileHeaderProps {
   address: Address
 }
 
-export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Element {
+export const ProfileHeader = memo(function ProfileHeader({
+  address,
+}: ProfileHeaderProps): JSX.Element {
   const colors = useSporeColors()
   const dispatch = useAppDispatch()
   const isDarkMode = useIsDarkMode()
@@ -168,9 +170,9 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
       </Flex>
     </Flex>
   )
-}
+})
 
-function _HeaderRadial({ color }: { color: string }): JSX.Element {
+export const HeaderRadial = memo(function HeaderRadial({ color }: { color: string }): JSX.Element {
   return (
     <Svg height="100%" width="100%">
       <Defs>
@@ -182,7 +184,7 @@ function _HeaderRadial({ color }: { color: string }): JSX.Element {
       <Rect fill="url(#background)" height="100%" opacity={0.6} width="100%" x="0" y="0" />
     </Svg>
   )
-}
+})
 
 const styles = StyleSheet.create({
   buttonShadow: {
@@ -195,5 +197,3 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
 })
-
-export const HeaderRadial = memo(_HeaderRadial)

@@ -235,7 +235,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     ]
   )
 
-  const { sync } = useScrollSync(tabIndex, scrollPairs, headerConfig)
+  const { sync } = useScrollSync(currentTabIndex, scrollPairs, headerConfig)
 
   const contentHeader = useMemo(() => {
     return (
