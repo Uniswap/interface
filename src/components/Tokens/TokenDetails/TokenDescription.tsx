@@ -73,7 +73,7 @@ const TRUNCATE_CHARACTER_COUNT = 75
 export function TokenDescription({
   tokenAddress,
   chainId = ChainId.MAINNET,
-  showCopy = true,
+  showCopy = false,
 }: {
   tokenAddress: string
   chainId?: number

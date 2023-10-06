@@ -100,8 +100,8 @@ export default function PoolDetailsPage() {
             <TokenDetailsHeader>
               <Trans>Info</Trans>
             </TokenDetailsHeader>
-            {token0 && <TokenDescription tokenAddress={token0.id} chainId={chainId} showCopy={false} />}
-            {token1 && <TokenDescription tokenAddress={token1.id} chainId={chainId} showCopy={false} />}
+            {token0 && <TokenDescription tokenAddress={token0.id} chainId={chainId} />}
+            {token1 && <TokenDescription tokenAddress={token1.id} chainId={chainId} />}
           </TokenDetailsWrapper>
         )}
       </RightColumn>

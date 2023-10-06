@@ -34,7 +34,7 @@ describe('TokenDescription', () => {
   })
 
   it('renders token information correctly with defaults', () => {
-    const { asFragment } = render(<TokenDescription tokenAddress={tokenAddress} />)
+    const { asFragment } = render(<TokenDescription tokenAddress={tokenAddress} showCopy />)
     expect(asFragment()).toMatchSnapshot()
 
     expect(screen.getByText('USDC')).toBeVisible()
@@ -46,7 +46,7 @@ describe('TokenDescription', () => {
   })
 
   it('truncates description and shows more', async () => {
-    const { asFragment } = render(<TokenDescription tokenAddress={tokenAddress} />)
+    const { asFragment } = render(<TokenDescription tokenAddress={tokenAddress} showCopy />)
 
     expect(asFragment()).toMatchSnapshot()
     const truncatedDescription = screen.getByTestId('token-description-truncated')
@@ -62,7 +62,7 @@ describe('TokenDescription', () => {
   })
 
   it('copy address button hidden when flagged', async () => {
-    const { asFragment } = render(<TokenDescription tokenAddress={tokenAddress} showCopy={false} />)
+    const { asFragment } = render(<TokenDescription tokenAddress={tokenAddress} />)
     expect(asFragment()).toMatchSnapshot()
 
     expect(screen.queryByText('0xA0b8...eB48')).toBeNull()
@@ -73,7 +73,7 @@ describe('TokenDescription', () => {
       TokenProjectQuery,
       Exact<{ chain: Chain; address?: string }>
     >)
-    const { asFragment } = render(<TokenDescription tokenAddress={tokenAddress} />)
+    const { asFragment } = render(<TokenDescription tokenAddress={tokenAddress} showCopy />)
     expect(asFragment()).toMatchSnapshot()
 
     expect(screen.getByText('No token information available')).toBeVisible()
