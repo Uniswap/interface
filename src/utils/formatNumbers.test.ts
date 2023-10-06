@@ -402,25 +402,25 @@ describe('formatSlippage', () => {
     expect(formatSlippage(undefined)).toBe('-')
   })
 
-  it('correctly formats a percent with 3 significant digits', () => {
+  it('correctly formats a percent with no trailing digits', () => {
     const { formatSlippage } = renderHook(() => useFormatter()).result.current
 
     expect(formatSlippage(new Percent(1, 100000))).toBe('0.001%')
-    expect(formatSlippage(new Percent(1, 1000))).toBe('0.100%')
-    expect(formatSlippage(new Percent(1, 100))).toBe('1.000%')
-    expect(formatSlippage(new Percent(1, 10))).toBe('10.000%')
-    expect(formatSlippage(new Percent(1, 1))).toBe('100.000%')
+    expect(formatSlippage(new Percent(1, 1000))).toBe('0.1%')
+    expect(formatSlippage(new Percent(1, 100))).toBe('1%')
+    expect(formatSlippage(new Percent(1, 10))).toBe('10%')
+    expect(formatSlippage(new Percent(1, 1))).toBe('100%')
   })
 
-  it('correctly formats a percent with 3 significant digits with french locale', () => {
+  it('correctly formats a percent with french locale', () => {
     mocked(useActiveLocale).mockReturnValue('fr-FR')
     const { formatSlippage } = renderHook(() => useFormatter()).result.current
 
     expect(formatSlippage(new Percent(1, 100000))).toBe('0,001%')
-    expect(formatSlippage(new Percent(1, 1000))).toBe('0,100%')
-    expect(formatSlippage(new Percent(1, 100))).toBe('1,000%')
-    expect(formatSlippage(new Percent(1, 10))).toBe('10,000%')
-    expect(formatSlippage(new Percent(1, 1))).toBe('100,000%')
+    expect(formatSlippage(new Percent(1, 1000))).toBe('0,1%')
+    expect(formatSlippage(new Percent(1, 100))).toBe('1%')
+    expect(formatSlippage(new Percent(1, 10))).toBe('10%')
+    expect(formatSlippage(new Percent(1, 1))).toBe('100%')
   })
 })
 

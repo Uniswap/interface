@@ -472,7 +472,6 @@ function formatSlippage(slippage: Percent | undefined, locale: SupportedLocale =
   if (!slippage) return '-'
 
   return `${Number(slippage.toFixed(3)).toLocaleString(locale, {
-    minimumFractionDigits: 3,
     maximumFractionDigits: 3,
     useGrouping: false,
   })}%`
