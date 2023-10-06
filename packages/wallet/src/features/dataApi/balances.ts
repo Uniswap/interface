@@ -1,12 +1,10 @@
 import { NetworkStatus, WatchQueryFetchPolicy } from '@apollo/client'
-import { Token } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { usePortfolioBalancesQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { CurrencyInfo, GqlResult, PortfolioBalance } from 'wallet/src/features/dataApi/types'
-import { usePersistedError } from 'wallet/src/features/dataApi/utils'
-import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { buildCurrency, usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'wallet/src/features/wallet/slice'
 import { CurrencyId, currencyId } from 'wallet/src/utils/currencyId'
 
@@ -72,18 +70,17 @@ export function usePortfolioBalances({
       const chainId = fromGraphQLChain(chain)
 
       // require all of these fields to be defined
-      if (!chainId || !balance || !quantity || !token || !decimals || !symbol) return
+      if (!balance || !quantity || !token) return
 
-      const currency = tokenAddress
-        ? new Token(
-            chainId,
-            tokenAddress,
-            decimals,
-            symbol,
-            name ?? undefined,
-            /* bypassChecksum:*/ true
-          )
-        : NativeCurrency.onChain(chainId)
+      const currency = buildCurrency({
+        chainId,
+        address: tokenAddress,
+        decimals,
+        symbol,
+        name,
+      })
+
+      if (!currency) return
 
       const id = currencyId(currency)
 

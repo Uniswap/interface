@@ -20,6 +20,15 @@ import {
 } from 'wallet/src/utils/currencyId'
 import { CurrencyInfo } from './types'
 
+type BuildCurrencyParams = {
+  chainId?: Nullable<ChainId>
+  address?: Nullable<string>
+  decimals?: Nullable<number>
+  symbol?: Nullable<string>
+  name?: Nullable<string>
+  bypassChecksum?: boolean
+}
+
 // Converts CurrencyId to ContractInput format for GQL token queries
 export function currencyIdToContractInput(id: CurrencyId): ContractInput {
   return {
@@ -38,19 +47,18 @@ export function tokenProjectToCurrencyInfos(
         const { logoUrl, safetyLevel, name } = project ?? {}
         const { chain, address, decimals, symbol } = token ?? {}
         const chainId = fromGraphQLChain(chain)
-        if (!chainId || !decimals || !symbol) return null
 
         if (chainFilter && chainFilter !== chainId) return null
-        const currency = isNonNativeAddress(chainId, address)
-          ? new Token(
-              chainId,
-              address,
-              decimals,
-              symbol,
-              name ?? undefined,
-              /* bypassChecksum:*/ true
-            )
-          : NativeCurrency.onChain(chainId)
+
+        const currency = buildCurrency({
+          chainId,
+          address,
+          decimals,
+          symbol,
+          name,
+        })
+
+        if (!currency) return null
 
         const currencyInfo: CurrencyInfo = {
           currency,
@@ -70,6 +78,33 @@ function isNonNativeAddress(chainId: ChainId, address: Maybe<string>): address i
   return !isNativeCurrencyAddress(chainId, address)
 }
 
+/**
+ * Creates a new instance of Token or NativeCurrency.
+ *
+ * @param params The parameters for building the currency.
+ * @param params.chainId The ID of the chain where the token resides. If not provided, the function will return undefined.
+ * @param params.address The token's address. If not provided, an instance of NativeCurrency is returned.
+ * @param params.decimals The decimal count used by the token. If not provided, the function will return undefined.
+ * @param params.symbol The token's symbol. This parameter is optional.
+ * @param params.name The token's name. This parameter is optional.
+ * @param params.bypassChecksum If true, bypasses the EIP-55 checksum on the token address. This parameter is optional and defaults to true.
+ * @returns A new instance of Token or NativeCurrency if the parameters are valid, otherwise returns undefined.
+ */
+export function buildCurrency({
+  chainId,
+  address,
+  decimals,
+  symbol,
+  name,
+  bypassChecksum = true,
+}: BuildCurrencyParams): Token | NativeCurrency | undefined {
+  if (!chainId || decimals === undefined || decimals === null) return undefined
+
+  return isNonNativeAddress(chainId, address)
+    ? new Token(chainId, address, decimals, symbol ?? undefined, name ?? undefined, bypassChecksum)
+    : NativeCurrency.onChain(chainId)
+}
+
 export function gqlTokenToCurrencyInfo(
   token: NonNullable<NonNullable<TopTokensQuery['topTokens']>[0]>,
   chainFilter?: ChainId | null
@@ -77,19 +112,17 @@ export function gqlTokenToCurrencyInfo(
   const { chain, address, decimals, symbol, project } = token
   const chainId = fromGraphQLChain(chain)
 
-  if (!chainId || decimals == null) return null
   if (chainFilter && chainFilter !== chainId) return null
 
-  const currency = isNonNativeAddress(chainId, address)
-    ? new Token(
-        chainId,
-        address,
-        decimals,
-        symbol ?? undefined,
-        project?.name ?? undefined,
-        /* bypassChecksum:*/ true
-      )
-    : NativeCurrency.onChain(chainId)
+  const currency = buildCurrency({
+    chainId,
+    address,
+    decimals,
+    symbol,
+    name: project?.name,
+  })
+
+  if (!currency) return null
 
   const currencyInfo: CurrencyInfo = {
     currency,
