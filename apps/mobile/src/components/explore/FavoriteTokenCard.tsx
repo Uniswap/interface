@@ -1,17 +1,14 @@
-import { SharedEventName } from '@uniswap/analytics-events'
 import { ImpactFeedbackStyle } from 'expo-haptics'
-import React, { memo, useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
+import React, { memo, useCallback } from 'react'
 import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
+import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { Loader } from 'src/components/loading'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
-import { openModal } from 'src/features/modals/modalSlice'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
+import { SectionName } from 'src/features/telemetry/constants'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { AnimatedTouchableArea, Flex, Text } from 'ui/src'
 import { borderRadii, imageSizes } from 'ui/src/theme'
@@ -19,17 +16,13 @@ import { formatUSDPrice } from 'utilities/src/format/format'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
+import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { useFavoriteTokenCardQuery } from 'wallet/src/data/__generated__/types-and-hooks'
-import { AssetType } from 'wallet/src/entities/assets'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { removeFavoriteToken } from 'wallet/src/features/favorites/slice'
-import {
-  CurrencyField,
-  TransactionState,
-} from 'wallet/src/features/transactions/transactionState/types'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 114
@@ -46,7 +39,6 @@ function FavoriteTokenCard({
   setIsEditing,
   ...rest
 }: FavoriteTokenCardProps): JSX.Element {
-  const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
@@ -62,7 +54,7 @@ function FavoriteTokenCard({
   const token = data?.token
 
   // Mirror behavior in top tokens list, use first chain the token is on for the symbol
-  const chainId = fromGraphQLChain(token?.chain)
+  const chainId = fromGraphQLChain(token?.chain) ?? ChainId.Mainnet
 
   const usdPrice = token?.project?.markets?.[0]?.price?.value
   const pricePercentChange = token?.project?.markets?.[0]?.pricePercentChange24h?.value
@@ -73,29 +65,16 @@ function FavoriteTokenCard({
     }
   }, [currencyId, dispatch])
 
-  const navigateToSwapSell = useCallback(() => {
-    if (!token?.address || !chainId) return
+  const onEditFavorites = useCallback(() => {
+    setIsEditing(true)
+  }, [setIsEditing])
 
-    const swapFormState: TransactionState = {
-      exactCurrencyField: CurrencyField.INPUT,
-      exactAmountToken: '0',
-      [CurrencyField.INPUT]: {
-        address: token.address,
-        chainId,
-        type: AssetType.Currency,
-      },
-      [CurrencyField.OUTPUT]: null,
-    }
-    dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
-  }, [chainId, dispatch, token?.address])
-
-  const menuActions = useMemo(() => {
-    return [
-      { title: t('Remove favorite'), systemIcon: 'heart.fill' },
-      { title: t('Edit favorites'), systemIcon: 'square.and.pencil' },
-      { title: t('Swap'), systemIcon: 'arrow.2.squarepath' },
-    ]
-  }, [t])
+  const { menuActions, onContextMenuPress } = useExploreTokenContextMenu({
+    chainId,
+    currencyId,
+    analyticsSection: SectionName.ExploreFavoriteTokensSection,
+    onEditFavorites,
+  })
 
   const onPress = (): void => {
     if (isEditing || !currencyId) return
@@ -112,25 +91,7 @@ function FavoriteTokenCard({
       actions={menuActions}
       disabled={isEditing}
       style={{ borderRadius: borderRadii.rounded16 }}
-      onPress={(e): void => {
-        // Emitted index based on order of menu action array
-        // remove favorite action
-        if (e.nativeEvent.index === 0) {
-          onRemove()
-        }
-        // Edit mode toggle action
-        if (e.nativeEvent.index === 1) {
-          setIsEditing(true)
-        }
-        // Swap token action
-        if (e.nativeEvent.index === 2) {
-          navigateToSwapSell()
-          sendMobileAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-            element: ElementName.Swap,
-            section: SectionName.ExploreFavoriteTokensSection,
-          })
-        }
-      }}
+      onPress={onContextMenuPress}
       {...rest}>
       <AnimatedTouchableArea
         hapticFeedback
