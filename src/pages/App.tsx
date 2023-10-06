@@ -6,6 +6,7 @@ import Loader from 'components/Icons/LoadingSpinner'
 import NavBar, { PageTabs } from 'components/NavBar'
 import { UK_BANNER_HEIGHT, UK_BANNER_HEIGHT_MD, UK_BANNER_HEIGHT_SM, UkBanner } from 'components/NavBar/UkBanner'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
+import { useInfoPoolPageEnabled } from 'featureFlags/flags/infoPoolPage'
 import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
@@ -129,6 +130,7 @@ export default function App() {
   const currentPage = getCurrentPageFromLocation(pathname)
   const isDarkMode = useIsDarkMode()
   const [routerPreference] = useRouterPreference()
+  const infoPoolPageEnabled = useInfoPoolPageEnabled()
   const [scrollY, setScrollY] = useState(0)
   const scrolledState = scrollY > 0
   const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
