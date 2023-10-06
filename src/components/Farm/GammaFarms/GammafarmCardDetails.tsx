@@ -68,7 +68,8 @@ const GammaFarmCardDetails: React.FC<{
     setStakeAmount: React.Dispatch<React.SetStateAction<string>>
     lpSymbol: string
   }
-}> = ({ pairData, rewardData, dataDetails }) => {
+  forceUpdate: () => void
+}> = ({ pairData, rewardData, dataDetails, forceUpdate }) => {
   const { account } = useWeb3React()
   const addTransaction = useTransactionAdder()
   const finalizedTransaction = useTransactionFinalizer()
@@ -285,8 +286,9 @@ const GammaFarmCardDetails: React.FC<{
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       setUnStakeAmount('')
+      forceUpdate()
     }
-  }, [attemptingTxn, transactionErrorMessage, txHash])
+  }, [attemptingTxn, forceUpdate, transactionErrorMessage, txHash])
 
   const handleDismissTransactionDeposit = useCallback(() => {
     setTransactionDepositModal({
@@ -298,8 +300,9 @@ const GammaFarmCardDetails: React.FC<{
     // if there was a tx hash, we want to clear the input
     if (txHashDeposit) {
       setUnStakeAmount('')
+      forceUpdate()
     }
-  }, [attemptingDepositTxn, transactionDepositErrorMessage, txHashDeposit])
+  }, [attemptingDepositTxn, forceUpdate, transactionDepositErrorMessage, txHashDeposit])
 
   const handleDismissTransactionWithdraw = useCallback(() => {
     setTransactionWithdrawModal({
@@ -311,8 +314,9 @@ const GammaFarmCardDetails: React.FC<{
     // if there was a tx hash, we want to clear the input
     if (txHashDeposit) {
       setUnStakeAmount('')
+      forceUpdate()
     }
-  }, [attemptingWithdrawTxn, transactionWithdrawErrorMessage, txHashDeposit, txHashWithdraw])
+  }, [attemptingWithdrawTxn, forceUpdate, transactionWithdrawErrorMessage, txHashDeposit, txHashWithdraw])
 
   // text to show while loading
   const pendingTextClaim = useMemo(

@@ -94,6 +94,8 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
   const hypervisorContract = useGammaHypervisorContract(pairData.hypervisor)
   const uniProxyContract = useGammaUniProxyContract()
   const masterChefContract = useMasterChefContract()
+  const [, updateState] = useState<object | null>(null)
+  const forceUpdate = useCallback(() => updateState({}), [])
 
   const token0Address = useSingleCallResult(hypervisorContract, 'token0').result?.[0]
   const token1Address = useSingleCallResult(hypervisorContract, 'token1').result?.[0]
@@ -218,13 +220,15 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
     handleTypeInput0('')
     handleTypeInput1('')
     setUnStakeGamma('')
-  }, [handleTypeInput0, handleTypeInput1])
+    forceUpdate()
+  }, [forceUpdate, handleTypeInput0, handleTypeInput1])
 
   const finalStateTransactionDismiss = useCallback(() => {
     handleTypeInput0('')
     handleTypeInput1('')
     setUnStakeGamma('')
-  }, [handleTypeInput0, handleTypeInput1])
+    forceUpdate()
+  }, [forceUpdate, handleTypeInput0, handleTypeInput1])
 
   const dataDetails = {
     stakeAmount,
@@ -346,7 +350,12 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
           </div>
         </div>
         {showDetails && data && (
-          <GammaFarmCardDetails pairData={pairData} rewardData={rewardData} dataDetails={dataDetails} />
+          <GammaFarmCardDetails
+            pairData={pairData}
+            rewardData={rewardData}
+            dataDetails={dataDetails}
+            forceUpdate={forceUpdate}
+          />
         )}
       </CardContainer>
     </>
