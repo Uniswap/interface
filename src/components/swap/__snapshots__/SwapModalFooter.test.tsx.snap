@@ -91,22 +91,49 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
   gap: 12px;
 }
 
-.c9 {
+.c7 {
   display: inline-block;
   height: inherit;
 }
 
-.c7 {
+.c9 {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 0;
+  grid-template-columns: 1fr auto;
+  grid-gap: 0.25rem;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  text-align: left;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+.c8 {
   text-align: right;
   overflow-wrap: break-word;
 }
 
 .c6 {
-  cursor: auto;
-  color: #7D7D7D;
-}
-
-.c8 {
   cursor: help;
   color: #7D7D7D;
 }
@@ -137,29 +164,45 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
         class="c5 c6 css-142zc9n"
         data-testid="swap-li-label"
       >
-        Exchange rate
+        Rate
       </div>
       <div
-        class="c5 c7 css-142zc9n"
+        class="c7"
       >
-        1 DEF = 1.00 ABC
+        <div>
+          <div
+            class="c5 c8 css-142zc9n"
+          >
+            <button
+              class="c9"
+              title="1 DEF = 1.00 ABC "
+            >
+              <div
+                class="c5 css-142zc9n"
+              >
+                1 DEF = 1.00 ABC 
+              </div>
+               
+            </button>
+          </div>
+        </div>
       </div>
     </div>
     <div
       class="c2 c3 c4"
     >
       <div
-        class="c5 c8 css-142zc9n"
+        class="c5 c6 css-142zc9n"
         data-testid="swap-li-label"
       >
         Price impact
       </div>
       <div
-        class="c9"
+        class="c7"
       >
         <div>
           <div
-            class="c5 c7 css-142zc9n"
+            class="c5 c8 css-142zc9n"
           >
             <span
               class=""
@@ -174,17 +217,17 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
       class="c2 c3 c4"
     >
       <div
-        class="c5 c8 css-142zc9n"
+        class="c5 c6 css-142zc9n"
         data-testid="swap-li-label"
       >
         Max. slippage
       </div>
       <div
-        class="c9"
+        class="c7"
       >
         <div>
           <div
-            class="c5 c7 css-142zc9n"
+            class="c5 c8 css-142zc9n"
           >
             <div
               class="c2 c10"
@@ -202,17 +245,17 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
       class="c2 c3 c4"
     >
       <div
-        class="c5 c8 css-142zc9n"
+        class="c5 c6 css-142zc9n"
         data-testid="swap-li-label"
       >
         Receive at least
       </div>
       <div
-        class="c9"
+        class="c7"
       >
         <div>
           <div
-            class="c5 c7 css-142zc9n"
+            class="c5 c8 css-142zc9n"
           >
             0.00000000000000098 DEF
           </div>
@@ -223,17 +266,17 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
       class="c2 c3 c4"
     >
       <div
-        class="c5 c8 css-142zc9n"
+        class="c5 c6 css-142zc9n"
         data-testid="swap-li-label"
       >
         Network cost
       </div>
       <div
-        class="c9"
+        class="c7"
       >
         <div>
           <div
-            class="c5 c7 css-142zc9n"
+            class="c5 c8 css-142zc9n"
           >
             <div
               class="c2 c13"
@@ -447,7 +490,7 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
   justify-content: flex-start;
 }
 
-.c11 {
+.c12 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -476,7 +519,7 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
   color: #222222;
 }
 
-.c12 {
+.c13 {
   color: #7D7D7D;
 }
 
@@ -495,7 +538,7 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
   gap: 12px;
 }
 
-.c10 {
+.c11 {
   -webkit-animation: fAQEyV 1.5s infinite;
   animation: fAQEyV 1.5s infinite;
   -webkit-animation-fill-mode: both;
@@ -508,9 +551,41 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
   width: 50px;
 }
 
-.c9 {
+.c10 {
   display: inline-block;
   height: inherit;
+}
+
+.c8 {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 0;
+  grid-template-columns: 1fr auto;
+  grid-gap: 0.25rem;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  text-align: left;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 .c7 {
@@ -523,12 +598,12 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
   color: #7D7D7D;
 }
 
-.c8 {
+.c9 {
   cursor: help;
   color: #7D7D7D;
 }
 
-.c13 {
+.c14 {
   background: #22222212;
   border-radius: 8px;
   color: #7D7D7D;
@@ -536,7 +611,7 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
   padding: 0 6px;
 }
 
-.c13::after {
+.c14::after {
   content: 'Auto';
 }
 
@@ -558,32 +633,42 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
         class="c5 c6 css-142zc9n"
         data-testid="swap-li-label"
       >
-        Exchange rate
+        Rate
       </div>
       <div
         class="c5 c7 css-142zc9n"
       >
-        1 DEF = 1.00 ABC
+        <button
+          class="c8"
+          title="1 DEF = 1.00 ABC "
+        >
+          <div
+            class="c5 css-142zc9n"
+          >
+            1 DEF = 1.00 ABC 
+          </div>
+           
+        </button>
       </div>
     </div>
     <div
       class="c2 c3 c4"
     >
       <div
-        class="c5 c8 css-142zc9n"
+        class="c5 c9 css-142zc9n"
         data-testid="swap-li-label"
       >
         Price impact
       </div>
       <div
-        class="c9"
+        class="c10"
       >
         <div>
           <div
             class="c5 c7 css-142zc9n"
           >
             <div
-              class="c10"
+              class="c11"
               data-testid="loading-row"
               height="15"
               width="50"
@@ -596,23 +681,23 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
       class="c2 c3 c4"
     >
       <div
-        class="c5 c8 css-142zc9n"
+        class="c5 c9 css-142zc9n"
         data-testid="swap-li-label"
       >
         Max. slippage
       </div>
       <div
-        class="c9"
+        class="c10"
       >
         <div>
           <div
             class="c5 c7 css-142zc9n"
           >
             <div
-              class="c2 c11"
+              class="c2 c12"
             >
               <div
-                class="c12 c13 css-1lgneq0"
+                class="c13 c14 css-1lgneq0"
               />
                2%
             </div>
@@ -624,13 +709,13 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
       class="c2 c3 c4"
     >
       <div
-        class="c5 c8 css-142zc9n"
+        class="c5 c9 css-142zc9n"
         data-testid="swap-li-label"
       >
         Receive at least
       </div>
       <div
-        class="c9"
+        class="c10"
       >
         <div>
           <div
@@ -645,20 +730,20 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
       class="c2 c3 c4"
     >
       <div
-        class="c5 c8 css-142zc9n"
+        class="c5 c9 css-142zc9n"
         data-testid="swap-li-label"
       >
         Network cost
       </div>
       <div
-        class="c9"
+        class="c10"
       >
         <div>
           <div
             class="c5 c7 css-142zc9n"
           >
             <div
-              class="c10"
+              class="c11"
               data-testid="loading-row"
               height="15"
               width="50"
