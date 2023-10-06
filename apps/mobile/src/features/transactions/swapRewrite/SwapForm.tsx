@@ -17,7 +17,10 @@ import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID } from 'src/constants/globals'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
-import { useSwapTxAndGasInfo } from 'src/features/transactions/swap/hooks'
+import {
+  useShowSwapNetworkNotification,
+  useSwapTxAndGasInfo,
+} from 'src/features/transactions/swap/hooks'
 import { CurrencyInputPanel } from 'src/features/transactions/swapRewrite/CurrencyInputPanel'
 import { SwapArrowButton } from 'src/features/transactions/swapRewrite/SwapArrowButton'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
@@ -92,6 +95,8 @@ function SwapFormContent(): JSX.Element {
 
   const { currencyAmounts, currencyBalances, currencies, currencyAmountsUSDValue, chainId } =
     derivedSwapInfo
+
+  useShowSwapNetworkNotification(chainId)
 
   const { gasFee } = useSwapTxAndGasInfo(
     derivedSwapInfo,

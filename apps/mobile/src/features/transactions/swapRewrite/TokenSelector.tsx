@@ -1,5 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback } from 'react'
+import { shallowEqual } from 'react-redux'
 import { SearchContext } from 'src/components/explore/search/SearchContext'
 import { flowToModalName } from 'src/components/TokenSelector/flowToModalName'
 import {
@@ -9,13 +10,14 @@ import {
 import { TokenSelectorFlow } from 'src/components/TokenSelector/types'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { AssetType } from 'wallet/src/entities/assets'
+import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { currencyAddress } from 'wallet/src/utils/currencyId'
-import { useSwapContext } from './SwapContext'
+import { SwapFormState, useSwapContext } from './SwapContext'
 
 export function TokenSelector(): JSX.Element {
-  const { updateSwapForm, selectingCurrencyField, output, input } = useSwapContext()
+  const swapContext = useSwapContext()
+  const { updateSwapForm, selectingCurrencyField, output, input } = swapContext
 
   if (!selectingCurrencyField) {
     throw new Error('TokenSelector rendered without `selectingCurrencyField`')
@@ -27,13 +29,31 @@ export function TokenSelector(): JSX.Element {
 
   const onSelectCurrency = useCallback(
     (currency: Currency, field: CurrencyField, context: SearchContext) => {
-      updateSwapForm({
-        [field]: {
-          address: currencyAddress(currency),
-          chainId: currency.chainId,
-          type: AssetType.Currency,
-        },
-      })
+      const tradeableAsset: TradeableAsset = {
+        address: currencyAddress(currency),
+        chainId: currency.chainId,
+        type: AssetType.Currency,
+      }
+
+      const newState: Partial<SwapFormState> = {}
+
+      const otherField = field === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
+
+      // swap order if tokens are the same
+      if (shallowEqual(currency, swapContext[otherField])) {
+        newState.exactCurrencyField = field
+        newState[otherField] = swapContext[field]
+      }
+
+      // reset the other field if network changed
+      if (currency.chainId !== swapContext[otherField]?.chainId) {
+        newState.exactCurrencyField = field
+        newState[otherField] = undefined
+      }
+
+      newState[field] = tradeableAsset
+
+      updateSwapForm(newState)
 
       sendMobileAnalyticsEvent(MobileEventName.TokenSelected, {
         name: currency.name,
@@ -50,7 +70,7 @@ export function TokenSelector(): JSX.Element {
       // Hide screen when done selecting.
       onHideTokenSelector()
     },
-    [onHideTokenSelector, updateSwapForm]
+    [onHideTokenSelector, swapContext, updateSwapForm]
   )
 
   return (
