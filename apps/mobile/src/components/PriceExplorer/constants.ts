@@ -4,7 +4,7 @@ import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
 
 // TODO (MOB-1387): account for height in a more dynamic way to ensure
 // that "Your balance" section will always show above the fold
-export const CHART_HEIGHT = dimensions.fullHeight < heightBreakpoints.short ? 180 : 280
+export const CHART_HEIGHT = dimensions.fullHeight < heightBreakpoints.short ? 130 : 215
 export const CHART_WIDTH = dimensions.fullWidth
 
 export const NUM_GRAPHS = 5

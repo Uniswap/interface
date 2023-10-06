@@ -13,7 +13,7 @@ export function SearchBar({ onBack, ...rest }: SearchBarProps): JSX.Element {
     <Flex centered row gap="$spacing12">
       {onBack && (
         <TouchableArea testID={ElementName.Back} onPress={onBack}>
-          <Icons.Chevron color="$neutral1" size="$icon.24" />
+          <Icons.Chevron color="$neutral2" size="$icon.24" />
         </TouchableArea>
       )}
       <SearchTextInput {...rest} />
