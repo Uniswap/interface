@@ -331,7 +331,7 @@ const GammaFarmCardDetails: React.FC<{
           {rewardToken && <CurrencyLogo currency={rewardToken} size="24px" />}
           <Text fontSize="18px">
             {'Claim' + ' '}
-            {formatNumber(Number(rewardsAmount))}
+            {formatNumber(Number(rewardsAmount)) + ' '}
             <Text as="span" color={theme.accentActive}>
               {rewardToken?.symbol}
             </Text>
@@ -591,8 +591,7 @@ const GammaFarmCardDetails: React.FC<{
                   <Box width="100%">
                     <ButtonPrimary
                       style={{ height: '40px' }}
-                      disabled={false}
-                      // disabled={claimButtonDisabled}
+                      disabled={claimButtonDisabled}
                       onClick={() =>
                         setTransactionClaimModal({
                           attemptingTxn: false,
