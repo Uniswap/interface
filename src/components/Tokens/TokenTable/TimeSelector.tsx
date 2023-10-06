@@ -152,7 +152,7 @@ export default function TimeSelector() {
                   {DISPLAYS[activeTime]} <Trans>volume</Trans>
                 </div>
               ) : (
-                <div>DISPLAYS[activeTime]</div>
+                <div>{DISPLAYS[activeTime]}</div>
               )}
               {time === activeTime && <Check color={theme.accent1} size={16} />}
             </InternalLinkMenuItem>
