@@ -79,7 +79,7 @@ export function TokenLogo({
           <Text
             adjustsFontSizeToFit
             color="$neutral1"
-            lineHeight={10}
+            lineHeight={size * 0.5}
             minimumFontScale={0.5}
             numberOfLines={1}
             textAlign="center">
