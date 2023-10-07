@@ -2,13 +2,13 @@ import { isWeb, Stack, styled } from 'tamagui'
 
 export const Separator = styled(Stack, {
   name: 'Separator',
-  borderColor: '$neutral3',
+  borderColor: '$surface3',
   flexShrink: 0,
   borderWidth: 0,
   flex: 1,
   height: 0,
   maxHeight: 0,
-  borderBottomWidth: 0.25,
+  borderBottomWidth: 1,
 
   variants: {
     test: {

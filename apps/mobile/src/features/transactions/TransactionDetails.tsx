@@ -95,7 +95,7 @@ export function TransactionDetails({
       {!showWarning && banner && <Box py="$spacing16">{banner}</Box>}
       {children ? (
         <Flex centered row pb="$spacing16">
-          <Separator borderBottomWidth={1} borderColor="$surface3" mr="$spacing16" />
+          <Separator mr="$spacing16" />
           <TouchableArea
             alignContent="center"
             flexDirection="row"
@@ -120,7 +120,7 @@ export function TransactionDetails({
               />
             )}
           </TouchableArea>
-          <Separator borderBottomWidth={1} borderColor="$surface3" ml="$spacing16" />
+          <Separator ml="$spacing16" />
         </Flex>
       ) : null}
       <Flex gap="$spacing12" pb="$spacing8" px="$spacing12">
