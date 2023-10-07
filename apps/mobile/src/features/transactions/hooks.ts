@@ -297,10 +297,20 @@ export function useMergeLocalAndRemoteTransactions(
     const remoteTxMap: Map<string, TransactionDetails> = new Map()
     remoteTransactions.forEach((tx) => remoteTxMap.set(tx.hash, tx))
 
+    const localTxMap: Map<string, TransactionDetails> = new Map()
+    localTransactions.forEach((tx) => localTxMap.set(tx.hash, tx))
+
     const deDupedTxs: TransactionDetails[] = []
 
-    for (const localTx of localTransactions) {
-      const remoteTx = remoteTxMap.get(localTx.hash)
+    for (const tx of [...localTransactions, ...remoteTransactions]) {
+      const remoteTx = remoteTxMap.get(tx.hash)
+      const localTx = localTxMap.get(tx.hash)
+
+      if (!localTx) {
+        if (!remoteTx) throw new Error('No local or remote tx, which is not possible')
+        deDupedTxs.push(remoteTx)
+        continue
+      }
 
       // If the BE hasn't detected the tx, then use local data
       if (!remoteTx) {
