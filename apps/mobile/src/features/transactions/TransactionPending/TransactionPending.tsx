@@ -1,6 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ElementName } from 'src/features/telemetry/constants'
+import { isFinalizedTx } from 'src/features/transactions/hooks'
 import { StatusAnimation } from 'src/features/transactions/TransactionPending/StatusAnimation'
 import { openTransactionLink } from 'src/utils/linking'
 import { AnimatedFlex, Button, Flex, Text, TouchableArea } from 'ui/src'
@@ -15,10 +16,6 @@ type TransactionStatusProps = {
   onNext: () => void
   onTryAgain: () => void
   transactionType: 'swap' | 'send'
-}
-
-function isFinalizedState(status: TransactionStatus): boolean {
-  return status === TransactionStatus.Success || status === TransactionStatus.Failed
 }
 
 export function TransactionPending({
@@ -57,14 +54,19 @@ export function TransactionPending({
           ) : null}
         </Flex>
       </Flex>
-      {transaction && isFinalizedState(transaction.status) ? (
-        <Button testID="transaction-pending-view" theme="tertiary" onPress={onPressViewTransaction}>
-          {t('View transaction')}
+      <Flex gap="$spacing8">
+        {transaction && isFinalizedTx(transaction) ? (
+          <Button
+            testID="transaction-pending-view"
+            theme="tertiary"
+            onPress={onPressViewTransaction}>
+            {t('View transaction')}
+          </Button>
+        ) : null}
+        <Button testID={ElementName.OK} onPress={onNext}>
+          {t('Close')}
         </Button>
-      ) : null}
-      <Button testID={ElementName.OK} onPress={onNext}>
-        {t('Close')}
-      </Button>
+      </Flex>
     </AnimatedFlex>
   )
 }

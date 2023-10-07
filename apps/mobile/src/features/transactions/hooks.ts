@@ -38,7 +38,7 @@ import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hoo
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
 import { currencyAddress } from 'wallet/src/utils/currencyId'
 
-function isFinalizedTx(
+export function isFinalizedTx(
   tx: TransactionDetails | FinalizedTransactionDetails
 ): tx is FinalizedTransactionDetails {
   return (
