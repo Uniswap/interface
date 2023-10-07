@@ -11,9 +11,11 @@ describe('Routes', () => {
 
     const sitemapPaths = sitemap.urlset.url.map((url: any) => new URL(url['$'].loc).pathname)
 
-    sitemapPaths.forEach((path: string) => {
-      expect(pathNames).toContain(path)
-    })
+    pathNames
+      .filter((p) => !p.includes(':') && !p.includes('*') && !p.includes('not-found'))
+      .forEach((path: string) => {
+        expect(sitemapPaths).toContain(path)
+      })
   })
 
   /**
