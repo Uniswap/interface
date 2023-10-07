@@ -93,7 +93,7 @@
     "@uniswap/permit2-sdk": "1.2.0",
     "@uniswap/router-sdk": "1.7.0",
     "@uniswap/sdk-core": "4.0.7",
-    "@uniswap/universal-router-sdk": "2.0.0",
+    "@uniswap/universal-router-sdk": "1.5.8",
     "@uniswap/v2-sdk": "3.2.1",
     "@uniswap/v3-sdk": "3.10.0",
     "@walletconnect/react-native-compat": "2.10.1",
