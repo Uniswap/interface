@@ -66,6 +66,7 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { Dots } from '../Pool/styled'
 import { Review } from './Review'
 import { DynamicSection, MediumOnly, ResponsiveTwoColumns, ScrollablePage, StyledInput, Wrapper } from './styled'
+import { WrappedCurrencyToggle } from './WrappedCurrencyToggle'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -86,8 +87,8 @@ export default function AddLiquidityWrapper() {
 function AddLiquidity() {
   const navigate = useNavigate()
   const {
-    currencyIdA,
-    currencyIdB,
+    currencyIdA: currencyIdAParam,
+    currencyIdB: currencyIdBParam,
     feeAmount: feeAmountFromUrl,
     tokenId,
   } = useParams<{
@@ -116,6 +117,8 @@ function AddLiquidity() {
     feeAmountFromUrl && Object.values(FeeAmount).includes(parseFloat(feeAmountFromUrl))
       ? parseFloat(feeAmountFromUrl)
       : undefined
+  const [currencyIdA, setCurrencyIdA] = useState<string | undefined>(currencyIdAParam)
+  const [currencyIdB, setCurrencyIdB] = useState<string | undefined>(currencyIdBParam)
 
   const baseCurrency = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
@@ -564,6 +567,11 @@ function AddLiquidity() {
     addressesAreEquivalent(owner, account) || addressesAreEquivalent(existingPositionDetails?.operator, account)
   const showOwnershipWarning = Boolean(hasExistingPosition && account && !ownsNFT)
 
+  const handleChangeCurrencies = (currencyA?: string, currencyB?: string) => {
+    setCurrencyIdA(currencyA)
+    setCurrencyIdB(currencyB)
+  }
+
   return (
     <>
       <ScrollablePage>
@@ -863,9 +871,17 @@ function AddLiquidity() {
               <div>
                 <DynamicSection disabled={invalidPool || invalidRange || (noLiquidity && !startPriceTypedValue)}>
                   <AutoColumn gap="md">
-                    <ThemedText.DeprecatedLabel>
-                      {hasExistingPosition ? <Trans>Add more liquidity</Trans> : <Trans>Deposit amounts</Trans>}
-                    </ThemedText.DeprecatedLabel>
+                    <Row justify="space-between">
+                      <ThemedText.DeprecatedLabel>
+                        {hasExistingPosition ? <Trans>Add more liquidity</Trans> : <Trans>Deposit amounts</Trans>}
+                      </ThemedText.DeprecatedLabel>
+
+                      <WrappedCurrencyToggle
+                        currencyIdA={currencyIdA}
+                        currencyIdB={currencyIdB}
+                        onChangeCurrencies={handleChangeCurrencies}
+                      />
+                    </Row>
 
                     <CurrencyInputPanel
                       value={formattedAmounts[Field.CURRENCY_A]}
