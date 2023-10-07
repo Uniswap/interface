@@ -7,7 +7,6 @@ import {
 } from 'react-native-reanimated'
 import { AnimatedFlex, useSporeColors } from 'ui/src'
 import HeartIcon from 'ui/src/assets/icons/heart.svg'
-import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 interface FavoriteButtonProps {
   isFavorited: boolean
@@ -19,8 +18,7 @@ const ANIMATION_CONFIG = { duration: DELAY }
 
 export const Favorite = ({ isFavorited, size }: FavoriteButtonProps): JSX.Element => {
   const colors = useSporeColors()
-  const isDarkMode = useIsDarkMode()
-  const unfilledColor = isDarkMode ? colors.neutral2.get() : colors.surface3.get()
+  const unfilledColor = colors.neutral2.get()
 
   const getColor = useCallback(
     () => (isFavorited ? colors.accent1.get() : unfilledColor) as string,
