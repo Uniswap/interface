@@ -294,17 +294,27 @@ export function useMergeLocalAndRemoteTransactions(
     if (!remoteTransactions?.length) return localTransactions
     if (!localTransactions?.length) return remoteTransactions
 
+    const txHashes = new Set<string>()
+
     const remoteTxMap: Map<string, TransactionDetails> = new Map()
-    remoteTransactions.forEach((tx) => remoteTxMap.set(tx.hash, tx))
+    remoteTransactions.forEach((tx) => {
+      const txHash = tx.hash.toLowerCase()
+      remoteTxMap.set(txHash, tx)
+      txHashes.add(txHash)
+    })
 
     const localTxMap: Map<string, TransactionDetails> = new Map()
-    localTransactions.forEach((tx) => localTxMap.set(tx.hash, tx))
+    localTransactions.forEach((tx) => {
+      const txHash = tx.hash.toLowerCase()
+      localTxMap.set(txHash, tx)
+      txHashes.add(txHash)
+    })
 
     const deDupedTxs: TransactionDetails[] = []
 
-    for (const tx of [...localTransactions, ...remoteTransactions]) {
-      const remoteTx = remoteTxMap.get(tx.hash)
-      const localTx = localTxMap.get(tx.hash)
+    for (const txHash of [...txHashes]) {
+      const remoteTx = remoteTxMap.get(txHash)
+      const localTx = localTxMap.get(txHash)
 
       if (!localTx) {
         if (!remoteTx) throw new Error('No local or remote tx, which is not possible')
