@@ -59,12 +59,15 @@ export interface RemoveLiquidityGammaTransactionInfo {
   type: TransactionType.REMOVE_LIQUIDITY_GAMMA
   amount: string
   tokenAddress: string
+  symbol: string
 }
 
 export interface AddLiquidityGammaTransactionInfo {
   type: TransactionType.ADD_LIQUIDITY_GAMMA
   currencyId0: string
   currencyId1: string
+  symbol0: string
+  symbol1: string
   amount0: string
   amount1: string
 }

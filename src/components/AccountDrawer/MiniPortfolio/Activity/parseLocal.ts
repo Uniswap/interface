@@ -181,22 +181,27 @@ export function parseLocalActivity(
     ) {
       const currency = getCurrency(info.tokenAddress, chainId, tokens)
       const formatted = currency ? formatCurrencyAmount(CurrencyAmount.fromRawAmount(currency, info.amount)) : undefined
-      const descriptor = formatted ? (t`${formatted} ${currency?.symbol}`) : t`Unknown`
+      const descriptor = formatted ? t`${formatted} ${currency?.symbol}` : t`Unknown`
       additionalFields = {
-      descriptor,
-      currencies: [currency],
+        descriptor,
+        currencies: [currency],
       }
-    } else if (
-      info.type === TransactionType.ADD_LIQUIDITY_GAMMA
-    ) {
+    } else if (info.type === TransactionType.ADD_LIQUIDITY_GAMMA) {
       const currency0 = getCurrency(info.currencyId0, chainId, tokens)
       const currency1 = getCurrency(info.currencyId1, chainId, tokens)
-      const formatted0 = currency0 ? formatCurrencyAmount(CurrencyAmount.fromRawAmount(currency0, info.amount0)) : undefined
-      const formatted1 = currency1 ? formatCurrencyAmount(CurrencyAmount.fromRawAmount(currency1, info.amount1)) : undefined
-      const descriptor = formatted0 && formatted1 ? (t`${formatted0} ${currency0?.symbol} and ${formatted1} ${currency1?.symbol}`) : t`Unknown`
+      const formatted0 = currency0
+        ? formatCurrencyAmount(CurrencyAmount.fromRawAmount(currency0, info.amount0))
+        : undefined
+      const formatted1 = currency1
+        ? formatCurrencyAmount(CurrencyAmount.fromRawAmount(currency1, info.amount1))
+        : undefined
+      const descriptor =
+        formatted0 && formatted1
+          ? t`${formatted0} ${currency0?.symbol} and ${formatted1} ${currency1?.symbol}`
+          : t`Unknown`
       additionalFields = {
-      descriptor,
-      currencies: [currency0,currency1],
+        descriptor,
+        currencies: [currency0, currency1],
       }
     } else if (info.type === TransactionType.COLLECT_FEES) {
       additionalFields = parseCollectFees(info, chainId, tokens)

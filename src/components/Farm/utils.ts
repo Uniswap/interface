@@ -1,5 +1,6 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { TransactionReceipt } from '@ethersproject/providers'
+import { formatNumber } from '@uniswap/conedison/format'
 import { PSYS_ADDRESS } from 'constants/addresses'
 import { BigNumber, Contract } from 'ethers/lib/ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
@@ -312,6 +313,8 @@ export const depositUniProxy = async (
   addTransaction: (response: TransactionResponse, info: any) => void,
   token0Address: string,
   token1Address: string,
+  symbol0: string,
+  symbol1: string,
   deposit0: string,
   deposit1: string,
   finalizedTransaction: (
@@ -356,8 +359,10 @@ export const depositUniProxy = async (
       type: TransactionType.ADD_LIQUIDITY_GAMMA,
       currencyId0: token0Address,
       currencyId1: token1Address,
-      amount0: parseUnits(deposit0, 18).toString(),
-      amount1: parseUnits(deposit1, 18).toString(),
+      symbol0,
+      symbol1,
+      amount0: formatNumber(Number(deposit0)),
+      amount1: formatNumber(Number(deposit1)),
     })
 
     const receipt = await response.wait()
@@ -398,7 +403,8 @@ export const withdrawHypervisor = async (
     showTransactionModal: boolean,
     transactionErrorMessage: string | undefined,
     txHash: string | undefined
-  ) => void
+  ) => void,
+  lpTokenSymbol: string
 ) => {
   if (!hypervisorContract || !account) return
 
@@ -407,8 +413,9 @@ export const withdrawHypervisor = async (
     const response = await hypervisorContract.withdraw(parseUnits(unStakeGamma, 18), account, account, [0, 0, 0, 0])
     addTransaction(response, {
       type: TransactionType.REMOVE_LIQUIDITY_GAMMA,
-      amount: parseUnits(unStakeGamma, 18).toString(),
+      amount: formatNumber(Number(unStakeGamma)),
       tokenAddress: pairData.hypervisor,
+      symbol: lpTokenSymbol,
     })
     const receipt = await response.wait()
     finalizedTransaction(receipt, {

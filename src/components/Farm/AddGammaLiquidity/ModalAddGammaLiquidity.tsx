@@ -230,7 +230,7 @@ export default function ModalAddGammaLiquidity({
   }
 
   async function onDeposit() {
-    if (uniProxyContract) {
+    if (uniProxyContract && tokenStake0?.symbol && tokenStake1?.symbol) {
       depositUniProxy(
         uniProxyContract,
         account,
@@ -240,6 +240,8 @@ export default function ModalAddGammaLiquidity({
         addTransaction,
         token0Address,
         token1Address,
+        tokenStake0?.symbol,
+        tokenStake1?.symbol,
         deposit0,
         deposit1,
         finalizedTransaction,
@@ -256,7 +258,8 @@ export default function ModalAddGammaLiquidity({
       pairData,
       finalizedTransaction,
       addTransaction,
-      stateTransactionWithdraw
+      stateTransactionWithdraw,
+      lpTokenSymbol
     )
   }
 
