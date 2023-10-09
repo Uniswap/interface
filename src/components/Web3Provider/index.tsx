@@ -10,10 +10,6 @@ import { ReactNode, useEffect, useMemo } from 'react'
 import { useConnectedWallets } from 'state/wallets/hooks'
 export default function Web3Provider({ children }: { children: ReactNode }) {
   useEagerlyConnect()
-  const connections = useOrderedConnections().filter(Boolean)
-  const connectors: [Connector, Web3ReactHooks][] = connections.map(({ hooks, connector }) => [connector, hooks])
-
-
   const connectors = getConnections().map<[Connector, Web3ReactHooks]>(({ hooks, connector }) => [connector, hooks])
 
   const key = useMemo(

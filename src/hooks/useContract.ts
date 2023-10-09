@@ -37,8 +37,8 @@ import { NonfungiblePositionManager, PegasysInterfaceMulticall, Quoter, QuoterV2
 import { V3Migrator } from 'types/v3/V3Migrator'
 
 import GammaPairABI from '../abis/gamma-hypervisor.json'
-import GammaUniProxyABI from '../abis/gamma-uniorixy.json'
 import GammaMasterChef from '../abis/gamma-masterchef.json'
+import GammaUniProxyABI from '../abis/gamma-uniorixy.json'
 import { getContract } from '../utils'
 
 const { abi: IUniswapV2PairABI } = IPegasysPairJson
@@ -184,6 +184,6 @@ export function useGammaHypervisorContract(address?: string, withSignerIfPossibl
   return useContract(address, GammaPairABI, withSignerIfPossible)
 }
 
-export function useGammaUniProxyContract( withSignerIfPossible?: boolean) {
+export function useGammaUniProxyContract(withSignerIfPossible?: boolean) {
   return useContract(GAMMA_UNIPROXY_ADDRESSES[ChainId.ROLLUX], GammaUniProxyABI, withSignerIfPossible)
 }

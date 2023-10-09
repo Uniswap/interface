@@ -1,8 +1,7 @@
 import { t } from '@lingui/macro'
 import { Currency, CurrencyAmount, TradeType } from '@pollum-io/sdk-core'
-import { nativeOnChain } from '@pollum-io/smart-order-router'
+import { ChainId, nativeOnChain } from '@pollum-io/smart-order-router'
 import { formatCurrencyAmount } from '@uniswap/conedison/format'
-import { SupportedChainId } from 'constants/chains'
 import { TransactionPartsFragment, TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { useMemo } from 'react'
 import { TokenAddressMap, useCombinedActiveList } from 'state/lists/hooks'
@@ -25,7 +24,7 @@ import {
 import { getActivityTitle } from '../constants'
 import { Activity, ActivityMap } from './types'
 
-function getCurrency(currencyId: string, chainId: SupportedChainId, tokens: TokenAddressMap): Currency | undefined {
+function getCurrency(currencyId: string, chainId: ChainId, tokens: TokenAddressMap): Currency | undefined {
   return currencyId === 'ETH' ? nativeOnChain(chainId) : tokens[chainId]?.[currencyId]?.token
 }
 
@@ -45,7 +44,7 @@ function buildCurrencyDescriptor(
 
 function parseSwap(
   swap: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo,
-  chainId: SupportedChainId,
+  chainId: ChainId,
   tokens: TokenAddressMap
 ): Partial<Activity> {
   const tokenIn = getCurrency(swap.inputCurrencyId, chainId, tokens)
@@ -61,7 +60,7 @@ function parseSwap(
   }
 }
 
-function parseWrap(wrap: WrapTransactionInfo, chainId: SupportedChainId, status: TransactionStatus): Partial<Activity> {
+function parseWrap(wrap: WrapTransactionInfo, chainId: ChainId, status: TransactionStatus): Partial<Activity> {
   const native = nativeOnChain(chainId)
   const wrapped = native.wrapped
   const [input, output] = wrap.unwrapped ? [wrapped, native] : [native, wrapped]
@@ -73,11 +72,7 @@ function parseWrap(wrap: WrapTransactionInfo, chainId: SupportedChainId, status:
   return { title, descriptor, currencies }
 }
 
-function parseApproval(
-  approval: ApproveTransactionInfo,
-  chainId: SupportedChainId,
-  tokens: TokenAddressMap
-): Partial<Activity> {
+function parseApproval(approval: ApproveTransactionInfo, chainId: ChainId, tokens: TokenAddressMap): Partial<Activity> {
   // TODO: Add 'amount' approved to ApproveTransactionInfo so we can distinguish between revoke and approve
   const currency = getCurrency(approval.tokenAddress, chainId, tokens)
   const descriptor = currency?.symbol ?? currency?.name ?? t`Unknown`
@@ -91,7 +86,7 @@ type GenericLPInfo = Omit<
   AddLiquidityV3PoolTransactionInfo | RemoveLiquidityV3TransactionInfo | AddLiquidityV2PoolTransactionInfo,
   'type'
 >
-function parseLP(lp: GenericLPInfo, chainId: SupportedChainId, tokens: TokenAddressMap): Partial<Activity> {
+function parseLP(lp: GenericLPInfo, chainId: ChainId, tokens: TokenAddressMap): Partial<Activity> {
   const baseCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
   const quoteCurrency = getCurrency(lp.quoteCurrencyId, chainId, tokens)
   const [baseRaw, quoteRaw] = [lp.expectedAmountBaseRaw, lp.expectedAmountQuoteRaw]
@@ -102,7 +97,7 @@ function parseLP(lp: GenericLPInfo, chainId: SupportedChainId, tokens: TokenAddr
 
 function parseCollectFees(
   collect: CollectFeesTransactionInfo,
-  chainId: SupportedChainId,
+  chainId: ChainId,
   tokens: TokenAddressMap
 ): Partial<Activity> {
   // Adapts CollectFeesTransactionInfo to generic LP type
@@ -117,7 +112,7 @@ function parseCollectFees(
 
 function parseMigrateCreateV3(
   lp: MigrateV2LiquidityToV3TransactionInfo | CreateV3PoolTransactionInfo,
-  chainId: SupportedChainId,
+  chainId: ChainId,
   tokens: TokenAddressMap
 ): Partial<Activity> {
   const baseCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
@@ -131,7 +126,7 @@ function parseMigrateCreateV3(
 
 export function parseLocalActivity(
   details: TransactionDetails,
-  chainId: SupportedChainId,
+  chainId: ChainId,
   tokens: TokenAddressMap
 ): Activity | undefined {
   try {

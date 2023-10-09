@@ -1,7 +1,8 @@
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Token } from '@pollum-io/sdk-core'
+import { ChainId } from '@pollum-io/smart-order-router'
 import { useWeb3React } from '@web3-react/core'
-import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
@@ -28,12 +29,10 @@ export function useTransactionAdder(): (response: TransactionResponse, info: Tra
   )
 }
 
-export function useMultichainTransactions(): [TransactionDetails, SupportedChainId][] {
+export function useMultichainTransactions(): [TransactionDetails, ChainId][] {
   const state = useAppSelector((state) => state.transactions)
   return ALL_SUPPORTED_CHAIN_IDS.flatMap((chainId) =>
-    state[chainId]
-      ? Object.values(state[chainId]).map((tx): [TransactionDetails, SupportedChainId] => [tx, chainId])
-      : []
+    state[chainId] ? Object.values(state[chainId]).map((tx): [TransactionDetails, ChainId] => [tx, chainId]) : []
   )
 }
 

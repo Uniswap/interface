@@ -1,6 +1,5 @@
 import type { SessionTypes } from '@walletconnect/types'
 import { SupportedInterfaceChain } from 'constants/chains'
-// import { SupportedInterfaceChain } from 'constants/chains'
 
 // Helper function to extract chainId from string in format 'eip155:{chainId}'
 function getChainIdFromFormattedString(item: string): number | null {

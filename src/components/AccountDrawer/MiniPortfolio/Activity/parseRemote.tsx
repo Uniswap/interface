@@ -1,7 +1,6 @@
 import { t } from '@lingui/macro'
+import { ChainId } from '@pollum-io/smart-order-router'
 import { formatNumberOrString, NumberType } from '@uniswap/conedison/format'
-import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from 'constants/addresses'
-import { nativeOnChain } from 'constants/tokens'
 import {
   ActivityType,
   AssetActivityPartsFragment,
@@ -11,13 +10,11 @@ import {
   TokenApprovalPartsFragment,
   TokenTransferPartsFragment,
 } from 'graphql/data/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'graphql/utils/util'
 import ms from 'ms.macro'
 import { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
 
 import { Activity } from './types'
-import { SupportedChainId } from '@pollum-io/sdk-core'
 
 type TransactionChanges = {
   NftTransfer: NftTransferPartsFragment[]
@@ -248,7 +245,7 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
     )
     const defaultFields = {
       hash: assetActivity.transaction.hash,
-      chainId: SupportedChainId.ROLLUX, // fromGraphQLChain(assetActivity.chain),
+      chainId: ChainId.ROLLUX, // fromGraphQLChain(assetActivity.chain),
       status: assetActivity.transaction.status,
       timestamp: assetActivity.timestamp,
       logos: getLogoSrcs(changes),
