@@ -266,3 +266,14 @@ export function isConfirmedSwapTypeInfo(
       (typeInfo as ConfirmedSwapTransactionInfo).outputCurrencyAmountRaw
   )
 }
+
+export function isFinalizedTx(
+  tx: TransactionDetails | FinalizedTransactionDetails
+): tx is FinalizedTransactionDetails {
+  return (
+    tx.status === TransactionStatus.Success ||
+    tx.status === TransactionStatus.Failed ||
+    tx.status === TransactionStatus.Cancelled ||
+    tx.status === TransactionStatus.FailedCancel
+  )
+}

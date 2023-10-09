@@ -29,25 +29,14 @@ import {
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
 import {
-  FinalizedTransactionDetails,
+  isFinalizedTx,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
-import { currencyAddress } from 'wallet/src/utils/currencyId'
-
-export function isFinalizedTx(
-  tx: TransactionDetails | FinalizedTransactionDetails
-): tx is FinalizedTransactionDetails {
-  return (
-    tx.status === TransactionStatus.Success ||
-    tx.status === TransactionStatus.Failed ||
-    tx.status === TransactionStatus.Cancelled ||
-    tx.status === TransactionStatus.FailedCancel
-  )
-}
+import { areCurrencyIdsEqual, buildCurrencyId, currencyAddress } from 'wallet/src/utils/currencyId'
 
 export function usePendingTransactions(
   address: Address | null,
@@ -353,7 +342,30 @@ export function useMergeLocalAndRemoteTransactions(
       deDupedTxs.push(remoteTx)
     }
 
-    return deDupedTxs.sort((a, b) => (a.addedTime > b.addedTime ? -1 : 1))
+    return deDupedTxs.sort((a, b) => {
+      // If inclusion times are equal, then sequence approve txs before swap txs
+      if (a.addedTime === b.addedTime) {
+        if (
+          a.typeInfo.type === TransactionType.Approve &&
+          b.typeInfo.type === TransactionType.Swap
+        ) {
+          const aCurrencyId = buildCurrencyId(a.chainId, a.typeInfo.tokenAddress)
+          const bCurrencyId = b.typeInfo.inputCurrencyId
+          if (areCurrencyIdsEqual(aCurrencyId, bCurrencyId)) return 1
+        }
+
+        if (
+          a.typeInfo.type === TransactionType.Swap &&
+          b.typeInfo.type === TransactionType.Approve
+        ) {
+          const aCurrencyId = a.typeInfo.inputCurrencyId
+          const bCurrencyId = buildCurrencyId(b.chainId, b.typeInfo.tokenAddress)
+          if (areCurrencyIdsEqual(aCurrencyId, bCurrencyId)) return -1
+        }
+      }
+
+      return a.addedTime > b.addedTime ? -1 : 1
+    })
   }, [dispatch, localTransactions, remoteTransactions])
 }
 
