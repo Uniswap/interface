@@ -22,7 +22,6 @@ directive @aws_subscribe(
   """
   mutations: [String]
 ) on FIELD_DEFINITION
-
 """
 Tells the service this field/object has access authorized by an OIDC token.
 """
@@ -39,6 +38,7 @@ Tells the service this field/object has access authorized by sigv4 signing.
 directive @aws_iam on OBJECT | FIELD_DEFINITION
 
 """
+
 Tells the service which subscriptions will be published to when this mutation is
 called. This directive is deprecated use @aws_susbscribe directive instead.
 """
@@ -743,6 +743,16 @@ type SwapOrderDetails {
   outputTokenQuantity: String!
 }
 
+input SwapOrderDetailsInput {
+  offerer: String!
+  hash: String!
+  status: SwapOrderStatus!
+  inputToken: TokenInput!
+  inputTokenQuantity: String!
+  outputToken: TokenInput!
+  outputTokenQuantity: String!
+}
+
 enum SwapOrderStatus {
   OPEN
   EXPIRED
@@ -795,6 +805,7 @@ input TokenApprovalInput {
   approvedAddress: String!
   quantity: String!
 }
+
 
 input TokenAssetInput {
   chain: Chain!

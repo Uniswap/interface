@@ -1,32 +1,32 @@
+import { ChainId } from '@pollum-io/smart-order-router'
 import { CoinbaseWallet } from '@web3-react/coinbase-wallet'
 import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
 import { GnosisSafe } from '@web3-react/gnosis-safe'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
-import { Connector } from '@web3-react/types'
+import { Actions, Connector } from '@web3-react/types'
 import COINBASE_ICON from 'assets/images/coinbaseWalletIcon.svg'
 import GNOSIS_ICON from 'assets/images/gnosis.png'
 import METAMASK_ICON from 'assets/images/metamask.svg'
 import PALI_ICON from 'assets/images/pali.svg'
-import UNIWALLET_ICON from 'assets/images/uniwallet.svg'
 import WALLET_CONNECT_ICON from 'assets/images/walletConnectIcon.svg'
 import INJECTED_DARK_ICON from 'assets/svg/browser-wallet-dark.svg'
 import INJECTED_LIGHT_ICON from 'assets/svg/browser-wallet-light.svg'
 import UNISWAP_LOGO from 'assets/svg/logo.svg'
 import { SupportedChainId } from 'constants/chains'
-import { useCallback } from 'react'
+import { useCallback, useSyncExternalStore } from 'react'
 import { isMobile } from 'utils/userAgent'
 
 import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
 import { getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet, getIsPaliWallet } from './utils'
-import { UniwalletConnect, WalletConnectPopup } from './WalletConnect'
+import { WalletConnectV2 } from './WalletConnectV2'
 
 export enum ConnectionType {
-  UNIWALLET = 'UNIWALLET',
+  // UNIWALLET = 'UNIWALLET',
   INJECTED = 'INJECTED',
   COINBASE_WALLET = 'COINBASE_WALLET',
-  WALLET_CONNECT = 'WALLET_CONNECT',
+  WALLET_CONNECT_V2 = 'WALLET_CONNECT_V2',
   NETWORK = 'NETWORK',
   GNOSIS_SAFE = 'GNOSIS_SAFE',
   PALI_WALLET = 'PALI_WALLET',
@@ -48,7 +48,7 @@ function onError(error: Error) {
 }
 
 const [web3Network, web3NetworkHooks] = initializeConnector<Network>(
-  (actions) => new Network({ actions, urlMap: RPC_PROVIDERS, defaultChainId: SupportedChainId.ROLLUX })
+  (actions) => new Network({ actions, urlMap: RPC_PROVIDERS, defaultChainId: ChainId.ROLLUX })
 )
 export const networkConnection: Connection = {
   getName: () => 'Network',
@@ -106,31 +106,90 @@ export const gnosisSafeConnection: Connection = {
   shouldDisplay: () => false,
 }
 
-const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletConnectPopup>(
-  (actions) => new WalletConnectPopup({ actions, onError })
-)
-export const walletConnectConnection: Connection = {
-  getName: () => 'WalletConnect',
-  connector: web3WalletConnect,
-  hooks: web3WalletConnectHooks,
-  type: ConnectionType.WALLET_CONNECT,
-  getIcon: () => WALLET_CONNECT_ICON,
-  // shouldDisplay: () => !getIsInjectedMobileBrowser(),
-  shouldDisplay: () => false,
-}
+export const walletConnectV2Connection: Connection = new (class implements Connection {
+  private initializer = (actions: Actions, defaultChainId = ChainId.ROLLUX) =>
+    new WalletConnectV2({ actions, defaultChainId, onError })
 
-const [web3UniwalletConnect, web3UniwalletConnectHooks] = initializeConnector<UniwalletConnect>(
-  (actions) => new UniwalletConnect({ actions, onError })
-)
-export const uniwalletConnectConnection: Connection = {
-  getName: () => 'Uniswap Wallet',
-  connector: web3UniwalletConnect,
-  hooks: web3UniwalletConnectHooks,
-  type: ConnectionType.UNIWALLET,
-  getIcon: () => UNIWALLET_ICON,
-  shouldDisplay: () => false,
-  // isNew: true,
-}
+  type = ConnectionType.WALLET_CONNECT_V2
+  getName = () => 'WalletConnect'
+  getIcon = () => WALLET_CONNECT_ICON
+  shouldDisplay = () => !getIsInjectedMobileBrowser()
+
+  private activeConnector = initializeConnector<WalletConnectV2>(this.initializer)
+  // The web3-react Provider requires referentially stable connectors, so we use proxies to allow lazy connections
+  // whilst maintaining referential equality.
+  private proxyConnector = new Proxy(
+    {},
+    {
+      get: (target, p, receiver) => Reflect.get(this.activeConnector[0], p, receiver),
+      getOwnPropertyDescriptor: (target, p) => Reflect.getOwnPropertyDescriptor(this.activeConnector[0], p),
+      getPrototypeOf: () => WalletConnectV2.prototype,
+      set: (target, p, receiver) => Reflect.set(this.activeConnector[0], p, receiver),
+    }
+  ) as (typeof this.activeConnector)[0]
+  private proxyHooks = new Proxy(
+    {},
+    {
+      get: (target, p, receiver) => {
+        return () => {
+          // Because our connectors are referentially stable (through proxying), we need a way to trigger React renders
+          // from outside of the React lifecycle when our connector is re-initialized. This is done via 'change' events
+          // with `useSyncExternalStore`:
+          const hooks = useSyncExternalStore(
+            (onChange) => {
+              this.onActivate = onChange
+              return () => (this.onActivate = undefined)
+            },
+            () => this.activeConnector[1]
+          )
+          return Reflect.get(hooks, p, receiver)()
+        }
+      },
+    }
+  ) as (typeof this.activeConnector)[1]
+
+  private onActivate?: () => void
+
+  overrideActivate = (chainId?: ChainId) => {
+    // Always re-create the connector, so that the chainId is updated.
+    this.activeConnector = initializeConnector((actions) => this.initializer(actions, chainId))
+    this.onActivate?.()
+    return false
+  }
+
+  get connector() {
+    return this.proxyConnector
+  }
+  get hooks() {
+    return this.proxyHooks
+  }
+})()
+
+// const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletConnectPopup>(
+//   (actions) => new WalletConnectPopup({ actions, onError })
+// )
+
+// export const walletConnectConnection: Connection = {
+//   getName: () => 'WalletConnect',
+//   connector: web3WalletConnect,
+//   hooks: web3WalletConnectHooks,
+//   type: ConnectionType.WALLET_CONNECT_V2,
+//   getIcon: () => WALLET_CONNECT_ICON,
+//   shouldDisplay: () => !getIsInjectedMobileBrowser(),
+// }
+
+// const [web3UniwalletConnect, web3UniwalletConnectHooks] = initializeConnector<UniwalletConnect>(
+//   (actions) => new UniwalletConnect({ actions, onError })
+// )
+// export const uniwalletConnectConnection: Connection = {
+//   getName: () => 'Uniswap Wallet',
+//   connector: web3UniwalletConnect,
+//   hooks: web3UniwalletConnectHooks,
+//   type: ConnectionType.UNIWALLET,
+//   getIcon: () => UNIWALLET_ICON,
+//   shouldDisplay: () => false,
+//   // isNew: true,
+// }
 
 const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(
   (actions) =>
@@ -187,13 +246,40 @@ const coinbaseWalletConnection: Connection = {
 export function getConnections() {
   return [
     // paliWalletConnection,
-    uniwalletConnectConnection,
+    // uniwalletConnectConnection,
     injectedConnection,
-    walletConnectConnection,
+    walletConnectV2Connection,
     coinbaseWalletConnection,
     gnosisSafeConnection,
     networkConnection,
   ]
+}
+
+export function getConnection(c: Connector | ConnectionType) {
+  if (c instanceof Connector) {
+    const connection = getConnections().find((connection) => connection.connector === c)
+    if (!connection) {
+      throw Error('unsupported connector')
+    }
+    return connection
+  } else {
+    switch (c) {
+      case ConnectionType.INJECTED:
+        return injectedConnection
+      case ConnectionType.COINBASE_WALLET:
+        return coinbaseWalletConnection
+      case ConnectionType.WALLET_CONNECT_V2:
+        return walletConnectV2Connection
+      // case ConnectionType.UNIWALLET:
+      //   return uniwalletConnectConnection
+      case ConnectionType.NETWORK:
+        return networkConnection
+      case ConnectionType.GNOSIS_SAFE:
+        return gnosisSafeConnection
+      case ConnectionType.PALI_WALLET:
+        return gnosisSafeConnection
+    }
+  }
 }
 
 export function useGetConnection() {
@@ -210,10 +296,10 @@ export function useGetConnection() {
           return injectedConnection
         case ConnectionType.COINBASE_WALLET:
           return coinbaseWalletConnection
-        case ConnectionType.WALLET_CONNECT:
-          return walletConnectConnection
-        case ConnectionType.UNIWALLET:
-          return uniwalletConnectConnection
+        case ConnectionType.WALLET_CONNECT_V2:
+          return walletConnectV2Connection
+        // case ConnectionType.UNIWALLET:
+        //   return uniwalletConnectConnection
         case ConnectionType.NETWORK:
           return networkConnection
         case ConnectionType.GNOSIS_SAFE:
