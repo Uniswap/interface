@@ -36,10 +36,12 @@ class MnemonicConfirmationViewModel(
 
   val wordBankList: StateFlow<List<MnemonicWordBankCellUiState>> =
     combine(focusedIndex, selectedWords) { focusedIndexValue, words ->
+      val counter = words.groupingBy { it }.eachCount().toMutableMap()
       shuffledWords.map { shuffledWord ->
+        counter[shuffledWord] = counter.getOrDefault(shuffledWord, 0) - 1
         MnemonicWordBankCellUiState(
           text = shuffledWord,
-          used = words.contains(shuffledWord),
+          used = counter.getOrDefault(shuffledWord, -1) >= 0,
         )
       }
     }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())

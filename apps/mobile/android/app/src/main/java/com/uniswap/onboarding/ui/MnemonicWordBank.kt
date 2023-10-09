@@ -32,8 +32,8 @@ fun MnemonicWordBank(
     modifier = Modifier
       .fillMaxWidth()
       .wrapContentHeight(),
-    mainAxisSpacing = if (showCompact) UniswapTheme.spacing.spacing8 else UniswapTheme.spacing.spacing12,
-    crossAxisSpacing = if (showCompact) UniswapTheme.spacing.spacing8 else UniswapTheme.spacing.spacing12,
+    mainAxisSpacing = if (showCompact) UniswapTheme.spacing.spacing4 else UniswapTheme.spacing.spacing8,
+    crossAxisSpacing = if (showCompact) UniswapTheme.spacing.spacing4 else UniswapTheme.spacing.spacing8,
     mainAxisAlignment = MainAxisAlignment.Center,
   ) {
     words.forEach {
@@ -56,15 +56,20 @@ private fun MnemonicWordBankCell(
   val verticalPadding =
     if (showCompact) UniswapTheme.spacing.spacing4 else UniswapTheme.spacing.spacing8
   val horizontalPadding =
-    if (showCompact) UniswapTheme.spacing.spacing8 else UniswapTheme.spacing.spacing12
+    if (showCompact) UniswapTheme.spacing.spacing4 else UniswapTheme.spacing.spacing8
+
+  var modifier = Modifier
+    .clip(UniswapTheme.shapes.xlarge)
+    .background(UniswapTheme.colors.surface2)
+    .padding(vertical = verticalPadding)
+    .padding(horizontal = horizontalPadding)
+
+  if (!word.used) {
+    modifier = modifier.clickable { onClick() }
+  }
 
   Box(
-    modifier = Modifier
-      .clip(UniswapTheme.shapes.xlarge)
-      .background(UniswapTheme.colors.surface2)
-      .clickable { onClick() }
-      .padding(vertical = verticalPadding)
-      .padding(horizontal = horizontalPadding),
+    modifier = modifier,
   ) {
     Text(
       text = word.text,

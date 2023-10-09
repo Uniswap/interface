@@ -90,6 +90,7 @@ struct MnemonicConfirmationWordBankView: View {
                 labelCallback?(bankWord.word)
               }
               .opacity(bankWord.used ? 0.60 : 1)
+              .disabled(bankWord.used)
           }
         }
       }

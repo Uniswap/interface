@@ -5,4 +5,5 @@ data class MnemonicWordUiState(
   val text: String,
   val focused: Boolean = false,
   val hasError: Boolean = false,
+  val sourceIndex: Int? = null,
 )
