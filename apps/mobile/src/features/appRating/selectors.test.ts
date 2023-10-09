@@ -1,4 +1,5 @@
-import { hasConsecutiveSuccessfulSwapsSelector } from 'src/features/appRating/selectors'
+import { hasConsecutiveRecentSwapsSelector } from 'src/features/appRating/selectors'
+import { ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { ChainId } from 'wallet/src/constants/chains'
 import {
   TransactionDetails,
@@ -8,7 +9,7 @@ import {
 import { RootState } from 'wallet/src/state'
 import { account, mockWalletPreloadedState } from 'wallet/src/test/fixtures'
 
-const MOCK_DATE_PROMPTED = 1000
+const MOCK_DATE_PROMPTED = Date.now()
 
 const state = {
   ...mockWalletPreloadedState,
@@ -40,7 +41,7 @@ const state = {
 
 describe('consecutiveSwapsSelector', () => {
   it('returns false for empty state', () => {
-    const isConsecutiveSwaps = hasConsecutiveSuccessfulSwapsSelector({
+    const isConsecutiveSwaps = hasConsecutiveRecentSwapsSelector({
       ...state,
       transactions: {},
     })
@@ -49,7 +50,7 @@ describe('consecutiveSwapsSelector', () => {
   })
 
   it('returns false when no new swaps since prompt', () => {
-    const condition = hasConsecutiveSuccessfulSwapsSelector({
+    const condition = hasConsecutiveRecentSwapsSelector({
       ...state,
       wallet: { appRatingPromptedMs: MOCK_DATE_PROMPTED + 2000 },
     } as RootState)
@@ -58,18 +59,18 @@ describe('consecutiveSwapsSelector', () => {
   })
 
   it('returns false when last swaps contain failure', () => {
-    const isConsecutiveSwaps = hasConsecutiveSuccessfulSwapsSelector({
+    const isConsecutiveSwaps = hasConsecutiveRecentSwapsSelector({
       ...state,
       transactions: {
         [account.address]: {
           [ChainId.Mainnet]: {
             '0x123': {
-              addedTime: MOCK_DATE_PROMPTED + 1000,
+              addedTime: MOCK_DATE_PROMPTED,
               typeInfo: { type: TransactionType.Swap },
               status: TransactionStatus.Success,
             } as TransactionDetails,
             '0x456': {
-              addedTime: MOCK_DATE_PROMPTED + 1000,
+              addedTime: MOCK_DATE_PROMPTED + 500,
               typeInfo: { type: TransactionType.Swap },
               status: TransactionStatus.Success,
             } as TransactionDetails,
@@ -87,7 +88,7 @@ describe('consecutiveSwapsSelector', () => {
   })
 
   it('returns false for consecutive success, but not swap type', () => {
-    const isConsecutiveSwaps = hasConsecutiveSuccessfulSwapsSelector({
+    const isConsecutiveSwaps = hasConsecutiveRecentSwapsSelector({
       ...state,
       transactions: {
         [account.address]: {
@@ -110,8 +111,32 @@ describe('consecutiveSwapsSelector', () => {
     expect(isConsecutiveSwaps).toBeFalsy()
   })
 
+  it('returns false when last swap was done over a min ago', () => {
+    const isConsecutiveSwaps = hasConsecutiveRecentSwapsSelector({
+      ...state,
+      transactions: {
+        [account.address]: {
+          [ChainId.Mainnet]: {
+            '0x123': {
+              addedTime: MOCK_DATE_PROMPTED - ONE_HOUR_MS,
+              typeInfo: { type: TransactionType.Swap },
+              status: TransactionStatus.Success,
+            } as TransactionDetails,
+            '0x456': {
+              addedTime: MOCK_DATE_PROMPTED - 2 * ONE_MINUTE_MS,
+              typeInfo: { type: TransactionType.Swap },
+              status: TransactionStatus.Success,
+            } as TransactionDetails,
+          },
+        },
+      },
+    })
+
+    expect(isConsecutiveSwaps).toBeFalsy()
+  })
+
   it('returns true for consecutive swaps', () => {
-    const isConsecutiveSwaps = hasConsecutiveSuccessfulSwapsSelector(state)
+    const isConsecutiveSwaps = hasConsecutiveRecentSwapsSelector(state)
 
     expect(isConsecutiveSwaps).toBeTruthy()
   })

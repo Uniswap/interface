@@ -1,7 +1,7 @@
 import * as StoreReview from 'expo-store-review'
 import { Alert } from 'react-native'
 import { APP_FEEDBACK_LINK } from 'src/constants/urls'
-import { hasConsecutiveSuccessfulSwapsSelector } from 'src/features/appRating/selectors'
+import { hasConsecutiveRecentSwapsSelector } from 'src/features/appRating/selectors'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { openUri } from 'src/utils/linking'
@@ -14,12 +14,12 @@ import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors
 import { setAppRating } from 'wallet/src/features/wallet/slice'
 import { appSelect } from 'wallet/src/state'
 
-// at most once per reminder period
-const MIN_PROMPT_REMINDER_MS = 30 * ONE_DAY_MS
+// at most once per reminder period (120 days)
+const MIN_PROMPT_REMINDER_MS = 120 * ONE_DAY_MS
 // remind after a longer delay when user filled the feedback form (180 days)
 const MIN_FEEDBACK_REMINDER_MS = 180 * ONE_DAY_MS
 // small delay to help ux
-const SWAP_FINALIZED_PROMPT_DELAY_MS = 1 * ONE_SECOND_MS
+const SWAP_FINALIZED_PROMPT_DELAY_MS = 3 * ONE_SECOND_MS
 
 export function* appRatingWatcherSaga() {
   function* processFinalizedTx(action: ReturnType<typeof finalizeTransaction>) {
@@ -49,7 +49,7 @@ function* maybeRequestAppRating() {
     const appRatingFeedbackProvidedMs = yield* appSelect(
       (state) => state.wallet.appRatingFeedbackProvidedMs ?? 0
     )
-    const consecutiveSwapsCondition = yield* appSelect(hasConsecutiveSuccessfulSwapsSelector)
+    const consecutiveSwapsCondition = yield* appSelect(hasConsecutiveRecentSwapsSelector)
 
     // prompt if enough time has passed since last prompt or last feedback provided
     const reminderCondition =
