@@ -102,11 +102,11 @@ export function validateUrlChainParam(chainName: string | undefined) {
 
 // TODO(cartcrom): refactor into safer lookup & replace usage
 // TODO verify this later
-export const CHAIN_NAME_TO_CHAIN_ID: { [key in string]: ChainId } = {
-  ['ROLLUX' as Chain]: ChainId.ROLLUX,
+export const CHAIN_NAME_TO_CHAIN_ID: { [key in string]: SupportedChainId } = {
+  ['ROLLUX' as Chain]: SupportedChainId.ROLLUX,
 }
 
-export function fromGraphQLChain(chain: Chain): ChainId {
+export function fromGraphQLChain(chain: Chain): SupportedChainId {
   return CHAIN_NAME_TO_CHAIN_ID[chain]
 }
 
@@ -208,7 +208,7 @@ export const getGammaPositions = async (account?: string) => {
   }
 }
 
-export const getGammaRewards = async () => {
+const getGammaRewards = async () => {
   try {
     const data = await fetch(`${process.env.REACT_APP_GAMMA_API_ENDPOINT}/pegasys/rollux/allRewards2`)
     const gammaData = await data.json()
