@@ -79,6 +79,7 @@ export function createIcon({
 
   const IconPlain = forwardRef<Svg, IconProps>((props, ref) => {
     return getIcon({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(props as any as SvgPropsWithRef),
       ref,
     })

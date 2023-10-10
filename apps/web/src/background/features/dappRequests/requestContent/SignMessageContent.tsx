@@ -16,7 +16,7 @@ function SignatureEducationBox(): JSX.Element {
       <Flex row gap="$spacing8">
         <Icons.GraduationCap color={EDUCATION_BLUE} size="$icon.20" />
         <Text style={{ color: EDUCATION_BLUE }} variant="body2">
-          {t('What‘s a signature request?')}
+          {t('What’s a signature request?')}
         </Text>
       </Flex>
       <Text color="$neutral2" variant="body2">

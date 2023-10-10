@@ -8,7 +8,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { FeeOnTransferInfo } from 'src/features/transactions/swap/FeeOnTransferInfo'
 import { getRateToDisplay } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
-import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
 import { formatPercent, formatPrice, NumberType } from 'utilities/src/format/format'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
@@ -50,7 +50,6 @@ export function SwapDetails({
   onShowSwapProtectionModal,
   onShowFOTInfo,
 }: SwapDetailsProps): JSX.Element {
-  const colors = useSporeColors()
   const { t } = useTranslation()
   const [showInverseRate, setShowInverseRate] = useState(false)
 

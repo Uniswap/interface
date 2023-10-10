@@ -16,7 +16,7 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Flex, Icons, useSporeColors } from 'ui/src'
+import { Flex, Icons } from 'ui/src'
 import { imageSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -37,7 +37,6 @@ export function RestoreCloudBackupLoadingScreen({
   route: { params },
 }: Props): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const dispatch = useAppDispatch()
   const entryPoint = params.entryPoint
   const importType = params.importType

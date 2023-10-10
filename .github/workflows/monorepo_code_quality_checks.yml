@@ -38,6 +38,12 @@ jobs:
       - name: 🏗  Build
         run: yarn g:build
 
+      - name: 🔠 Strings Generation
+        run: yarn i18n:extract
+
+      - name: 🔒 Verify Strings Locked
+        run: ./scripts/check-modified-files.sh
+
       - name: 🧪 Unit Tests
         run: yarn g:test
 
