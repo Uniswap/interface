@@ -198,12 +198,35 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
           <div
             class="c0 c7"
           >
-            <img
-              alt="gas cost icon"
+            <svg
+              aria-labelledby="titleID"
               height="16"
-              src="ethereum-logo.png"
               width="16"
-            />
+            >
+              <title
+                id="titleID"
+              >
+                Ethereum logo
+              </title>
+              <rect
+                fill="#F9F9F9"
+                height="16"
+                rx="4"
+                width="16"
+              />
+              <rect
+                fill="#6B8AFF33"
+                height="16"
+                rx="4"
+                width="16"
+              />
+              <svg
+                height="16"
+                width="16"
+              >
+                ethereum.svg
+              </svg>
+            </svg>
             $0.00
           </div>
         </div>
@@ -1199,12 +1222,35 @@ exports[`SwapLineItem.tsx exact input 1`] = `
           <div
             class="c0 c7"
           >
-            <img
-              alt="gas cost icon"
+            <svg
+              aria-labelledby="titleID"
               height="16"
-              src="ethereum-logo.png"
               width="16"
-            />
+            >
+              <title
+                id="titleID"
+              >
+                Ethereum logo
+              </title>
+              <rect
+                fill="#F9F9F9"
+                height="16"
+                rx="4"
+                width="16"
+              />
+              <rect
+                fill="#6B8AFF33"
+                height="16"
+                rx="4"
+                width="16"
+              />
+              <svg
+                height="16"
+                width="16"
+              >
+                ethereum.svg
+              </svg>
+            </svg>
             $1.00
           </div>
         </div>
@@ -2629,12 +2675,35 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
           <div
             class="c0 c7"
           >
-            <img
-              alt="gas cost icon"
+            <svg
+              aria-labelledby="titleID"
               height="16"
-              src="ethereum-logo.png"
               width="16"
-            />
+            >
+              <title
+                id="titleID"
+              >
+                Ethereum logo
+              </title>
+              <rect
+                fill="#F9F9F9"
+                height="16"
+                rx="4"
+                width="16"
+              />
+              <rect
+                fill="#6B8AFF33"
+                height="16"
+                rx="4"
+                width="16"
+              />
+              <svg
+                height="16"
+                width="16"
+              >
+                ethereum.svg
+              </svg>
+            </svg>
             $1.00
           </div>
         </div>
@@ -4059,12 +4128,35 @@ exports[`SwapLineItem.tsx exact output 1`] = `
           <div
             class="c0 c7"
           >
-            <img
-              alt="gas cost icon"
+            <svg
+              aria-labelledby="titleID"
               height="16"
-              src="ethereum-logo.png"
               width="16"
-            />
+            >
+              <title
+                id="titleID"
+              >
+                Ethereum logo
+              </title>
+              <rect
+                fill="#F9F9F9"
+                height="16"
+                rx="4"
+                width="16"
+              />
+              <rect
+                fill="#6B8AFF33"
+                height="16"
+                rx="4"
+                width="16"
+              />
+              <svg
+                height="16"
+                width="16"
+              >
+                ethereum.svg
+              </svg>
+            </svg>
             -
           </div>
         </div>
@@ -5489,12 +5581,35 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
           <div
             class="c0 c7"
           >
-            <img
-              alt="gas cost icon"
+            <svg
+              aria-labelledby="titleID"
               height="16"
-              src="ethereum-logo.png"
               width="16"
-            />
+            >
+              <title
+                id="titleID"
+              >
+                Ethereum logo
+              </title>
+              <rect
+                fill="#F9F9F9"
+                height="16"
+                rx="4"
+                width="16"
+              />
+              <rect
+                fill="#6B8AFF33"
+                height="16"
+                rx="4"
+                width="16"
+              />
+              <svg
+                height="16"
+                width="16"
+              >
+                ethereum.svg
+              </svg>
+            </svg>
             $1.00
           </div>
         </div>
@@ -7125,12 +7240,35 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
           <div
             class="c0 c7"
           >
-            <img
-              alt="gas cost icon"
+            <svg
+              aria-labelledby="titleID"
               height="16"
-              src="ethereum-logo.png"
               width="16"
-            />
+            >
+              <title
+                id="titleID"
+              >
+                Ethereum logo
+              </title>
+              <rect
+                fill="#F9F9F9"
+                height="16"
+                rx="4"
+                width="16"
+              />
+              <rect
+                fill="#6B8AFF33"
+                height="16"
+                rx="4"
+                width="16"
+              />
+              <svg
+                height="16"
+                width="16"
+              >
+                ethereum.svg
+              </svg>
+            </svg>
             $1.00
           </div>
         </div>

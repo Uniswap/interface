@@ -14,10 +14,3 @@ export const ChainSelector = style([
     background: 'none',
   }),
 ])
-
-export const Image = style([
-  sprinkles({
-    width: '24',
-    height: '24',
-  }),
-])
