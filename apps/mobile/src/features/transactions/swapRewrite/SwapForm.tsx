@@ -17,6 +17,7 @@ import { IS_ANDROID } from 'src/constants/globals'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
 import { useShowSwapNetworkNotification } from 'src/features/transactions/swap/hooks'
+import { isWrapAction } from 'src/features/transactions/swap/utils'
 import { CurrencyInputPanel } from 'src/features/transactions/swapRewrite/CurrencyInputPanel'
 import { DecimalPadInput } from 'src/features/transactions/swapRewrite/DecimalPadInput'
 import { GasFee } from 'src/features/transactions/swapRewrite/GasFee'
@@ -92,8 +93,15 @@ function SwapFormContent(): JSX.Element {
     updateSwapForm,
   } = useSwapContext()
 
-  const { currencyAmounts, currencyBalances, currencies, currencyAmountsUSDValue, chainId } =
-    derivedSwapInfo
+  const {
+    currencyAmounts,
+    currencyBalances,
+    currencies,
+    currencyAmountsUSDValue,
+    wrapType,
+    chainId,
+    trade,
+  } = derivedSwapInfo
 
   useShowSwapNetworkNotification(chainId)
 
@@ -232,8 +240,8 @@ function SwapFormContent(): JSX.Element {
   const exactValue = isFiatInput ? exactAmountFiat : exactAmountToken
   const exactValueRef = isFiatInput ? exactAmountFiatRef : exactAmountTokenRef
 
-  // TODO: implement.
-  const swapDataRefreshing = false
+  // Quote is being fetched for first time
+  const isSwapDataLoading = !isWrapAction(wrapType) && trade.loading
 
   const onReview = useCallback(() => {
     updateSwapForm({
@@ -261,7 +269,7 @@ function SwapFormContent(): JSX.Element {
               currencyAmount={currencyAmounts[CurrencyField.INPUT]}
               currencyBalance={currencyBalances[CurrencyField.INPUT]}
               currencyInfo={currencies[CurrencyField.INPUT]}
-              dimTextColor={exactCurrencyField === CurrencyField.OUTPUT && swapDataRefreshing}
+              dimTextColor={exactCurrencyField === CurrencyField.OUTPUT && isSwapDataLoading}
               focus={focusOnCurrencyField === CurrencyField.INPUT}
               showSoftInputOnFocus={showNativeKeyboard}
               usdValue={currencyAmountsUSDValue[CurrencyField.INPUT]}
@@ -332,7 +340,7 @@ function SwapFormContent(): JSX.Element {
                 currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
                 currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
                 currencyInfo={currencies[CurrencyField.OUTPUT]}
-                dimTextColor={exactCurrencyField === CurrencyField.INPUT && swapDataRefreshing}
+                dimTextColor={exactCurrencyField === CurrencyField.INPUT && isSwapDataLoading}
                 focus={focusOnCurrencyField === CurrencyField.OUTPUT}
                 showNonZeroBalancesOnly={false}
                 showSoftInputOnFocus={showNativeKeyboard}
@@ -410,7 +418,11 @@ function SwapFormContent(): JSX.Element {
           />
         )}
         <Trace logPress element={ElementName.SwapReview}>
-          <Button size="large" testID={ElementName.ReviewSwap} onPress={onReview}>
+          <Button
+            disabled={isSwapDataLoading}
+            size="large"
+            testID={ElementName.ReviewSwap}
+            onPress={onReview}>
             {t('Review swap')}
           </Button>
         </Trace>

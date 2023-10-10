@@ -21,8 +21,11 @@ export const GasFee = ({ derivedSwapInfo }: GasFeeProps): JSX.Element | null => 
 
   return gasFeeUSD ? (
     <Flex centered row gap="$spacing4" padding="$spacing16">
-      <Icons.Gas color={colors.neutral2.val} size="$icon.20" />
-      <Text color="$neutral2" variant="body3">
+      <Icons.Gas
+        color={gasFee.loading ? colors.neutral3.val : colors.neutral2.val}
+        size="$icon.20"
+      />
+      <Text color={gasFee.loading ? '$neutral3' : '$neutral2'} variant="body3">
         {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
       </Text>
     </Flex>
