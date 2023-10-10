@@ -37,11 +37,6 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
   left: 0;
 }
 
-.c4 {
-  height: 14px;
-  width: 14px;
-}
-
 .c2 {
   width: 40px;
   height: 40px;
@@ -49,8 +44,7 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
 }
 
 .c3 {
-  background-color: #222222;
-  border-radius: 2px;
+  border-radius: 4px;
   height: 16px;
   left: 60%;
   position: absolute;
@@ -90,11 +84,35 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
     <div
       class="c3"
     >
-      <img
-        alt="chainLogo"
-        class="c4"
-        src="arbitrum_logo.svg"
-      />
+      <svg
+        aria-labelledby="titleID"
+        height="16"
+        width="16"
+      >
+        <title
+          id="titleID"
+        >
+          Arbitrum logo
+        </title>
+        <rect
+          fill="#F9F9F9"
+          height="16"
+          rx="4"
+          width="16"
+        />
+        <rect
+          fill="#00A3FF33"
+          height="16"
+          rx="4"
+          width="16"
+        />
+        <svg
+          height="16"
+          width="16"
+        >
+          arbitrum.svg
+        </svg>
+      </svg>
     </div>
   </div>
 </div>

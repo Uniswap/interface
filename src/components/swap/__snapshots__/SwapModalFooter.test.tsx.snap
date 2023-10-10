@@ -281,12 +281,35 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
             <div
               class="c2 c13"
             >
-              <img
-                alt="gas cost icon"
+              <svg
+                aria-labelledby="titleID"
                 height="16"
-                src="ethereum-logo.png"
                 width="16"
-              />
+              >
+                <title
+                  id="titleID"
+                >
+                  Ethereum logo
+                </title>
+                <rect
+                  fill="#F9F9F9"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <rect
+                  fill="#6B8AFF33"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <svg
+                  height="16"
+                  width="16"
+                >
+                  ethereum.svg
+                </svg>
+              </svg>
               $1.00
             </div>
           </div>
