@@ -1,4 +1,9 @@
-import { BaseVariant, FeatureFlag, featureFlagSettings as featureFlagSettingsAtom, dynamicConfigSettings as dynamicConfigSettingsAtom } from 'featureFlags'
+import {
+  BaseVariant,
+  dynamicConfigSettings as dynamicConfigSettingsAtom,
+  FeatureFlag,
+  featureFlagSettings as featureFlagSettingsAtom,
+} from 'featureFlags'
 import { DynamicConfigName, useDynamicConfig } from 'featureFlags/dynamicConfig'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo, useState } from 'react'
@@ -64,7 +69,7 @@ export default function DevFlagsBox() {
   const dynamicConfigs = useMemo(() => Object.values(DynamicConfigName), [])
 
   const overrides = featureFlags.map((flagName) => Gate(flagName, featureFlagsAtom))
-  dynamicConfigs.forEach((configName) => { overrides.push(Config(configName, dynamicConfigsAtom)) })
+  dynamicConfigs.forEach((configName) => overrides.push(Config(configName, dynamicConfigsAtom)))
 
   const hasOverrides = overrides.some((g) => g !== null)
 

@@ -6,13 +6,12 @@ import { DynamicConfigName, useDynamicConfig } from '.'
 export function useQuickRouteChains(): ChainId[] {
   const statsigConfig = useDynamicConfig(DynamicConfigName.quickRouteChains)
   const featureFlagsContext = useFeatureFlagsContext()
-  let chains = statsigConfig.get(DynamicConfigName.quickRouteChains, []) as ChainId[]
 
-  const modalSettings = featureFlagsContext.configs[DynamicConfigName.quickRouteChains]
-  if (modalSettings) {
-    const modalSetChains = modalSettings[DynamicConfigName.quickRouteChains]
-    if (Array.isArray(modalSetChains) && modalSetChains !== chains) chains = modalSetChains
-  }
+  const remoteConfigChains = statsigConfig.get(DynamicConfigName.quickRouteChains, []) as ChainId[]
+  const localConfigChains =
+    featureFlagsContext.configs[DynamicConfigName.quickRouteChains]?.[DynamicConfigName.quickRouteChains]
+
+  const chains = Array.isArray(localConfigChains) ? localConfigChains : remoteConfigChains
   if (chains.every((c) => Object.values(ChainId).includes(c))) {
     return chains
   } else {
