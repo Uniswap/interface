@@ -69,6 +69,6 @@ describe('Token explore', () => {
     cy.get(getTestSelector('tokens-network-filter-selected')).click()
     cy.get(getTestSelector('tokens-network-filter-option-optimism')).click()
     cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Optimism')
-    cy.get(getTestSelector('chain-selector-logo')).invoke('attr', 'alt').should('eq', 'Ethereum')
+    cy.get(getTestSelector('chain-selector-logo')).find('title').should('include.text', 'Ethereum logo')
   })
 })

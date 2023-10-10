@@ -1,4 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
+import { getChainInfo } from 'constants/chainInfo'
 import { isSupportedChain, SupportedInterfaceChain } from 'constants/chains'
 import { CSSProperties, FunctionComponent } from 'react'
 import { useTheme } from 'styled-components'
@@ -93,6 +94,7 @@ type ChainLogoProps = {
   size?: number
   borderRadius?: number
   style?: CSSProperties
+  testId?: string
 }
 export function ChainLogo({
   chainId,
@@ -100,15 +102,18 @@ export function ChainLogo({
   style,
   size = 16,
   borderRadius = getDefaultBorderRadius(size),
+  testId,
 }: ChainLogoProps) {
   const darkMode = useIsDarkMode()
   const { surface2 } = useTheme()
 
   if (!isSupportedChain(chainId)) return null
+  const { label } = getChainInfo(chainId)
 
   const { Symbol, bgColor } = getChainUI(chainId, darkMode)
   return (
-    <svg width={size} height={size} className={className} style={style}>
+    <svg width={size} height={size} className={className} style={style} aria-labelledby="titleID" data-testid={testId}>
+      <title id="titleID">{`${label} logo`}</title>
       <rect rx={borderRadius} fill={surface2} width={size} height={size} />
       <rect rx={borderRadius} fill={bgColor} width={size} height={size} />
       <Symbol width={size} height={size} />

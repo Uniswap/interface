@@ -146,7 +146,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
           {!isSupported ? (
             <AlertTriangle size={20} color={theme.neutral2} />
           ) : (
-            <ChainLogo chainId={chainId} size={24} data-testid="chain-selector-logo" />
+            <ChainLogo chainId={chainId} size={24} testId="chain-selector-logo" />
           )}
           {isOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
         </Row>
