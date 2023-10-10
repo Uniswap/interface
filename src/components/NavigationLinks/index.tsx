@@ -184,10 +184,7 @@ export default function NavigationLinks() {
         <StyledNavLinkAlt
           id={`swap-nav-link`}
           onClick={() =>
-            window.open(
-              'https://apy.plasma.finance/#/quadrat/strategy/0x1Ce5B6cC76e49F2fad771c8C01607a9d987620E8?chainId=10',
-              '_blank'
-            )
+            window.open('https://app.gamma.xyz/vault/uni/op-mainnet/details/op-krom-3000-narrow', '_blank')
           }
         >
           <Text fontSize={16} fontWeight={400}>
