@@ -39,7 +39,12 @@ function StringInterpolationWithMotion({ prefix, suffix, value, delay }) {
   const chars = value.split('')
 
   return (
-    <Mask initial="initial" whileInView="animate" transition={{ staggerChildren: 0.025, delayChildren: delay }}>
+    <Mask
+      initial="initial"
+      whileInView="animate"
+      transition={{ staggerChildren: 0.025, delayChildren: delay }}
+      viewport={{ once: true }}
+    >
       {chars.map((char: string, index: number) => {
         // select charset based on char
         const charset = numeric.includes(char)

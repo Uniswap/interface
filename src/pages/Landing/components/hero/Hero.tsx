@@ -65,7 +65,7 @@ const centerRect = {
 
 const poissonConfig = {
   shape: [w, h],
-  minDistance: 300,
+  minDistance: 225,
   maxDistance: 350,
   tries: 10,
 }
@@ -120,6 +120,7 @@ export function Hero() {
           blur: randomInt(6, 12),
           size: randomInt(64, 96),
           color: randomHSLColor(),
+          isBg: randomChoice([true, false]),
           // logoUrl: token.project.logoUrl,
           // type: Math.random() > 0.5 ? 'token' : 'square',
           opacity: randomFloat(0.25, 1.0),

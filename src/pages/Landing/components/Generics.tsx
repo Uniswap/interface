@@ -29,7 +29,6 @@ export const H2 = styled.h2`
   padding: 0;
   margin: 0;
   color: ${({ theme }) => theme.neutral1};
-  /* Heading/1 */
   font-family: Basel;
   font-size: 52px;
   font-style: normal;
