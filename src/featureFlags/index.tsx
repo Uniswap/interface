@@ -45,7 +45,7 @@ export const featureFlagSettings = atomWithStorage<Record<string, string>>('feat
 const dynamicConfigSettings = atomWithStorage<Record<string, any>>('dynamicConfigs', {})
 
 export function useUpdateFlag() {
-  const setFeatureFlags = useUpdateAtom(dynamicConfigSettings)
+  const setFeatureFlags = useUpdateAtom(featureFlagSettings)
 
   return useCallback(
     (featureFlag: string, option: string) => {
