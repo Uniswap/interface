@@ -41,7 +41,7 @@ export enum LinkSource {
 }
 
 const UNISWAP_URL_SCHEME = 'uniswap://'
-const UNISWAP_URL_SCHEME_WALLETCONNECT = 'uniswap://wc?uri='
+export const UNISWAP_URL_SCHEME_WALLETCONNECT = 'uniswap://wc?uri='
 const UNISWAP_URL_SCHEME_WIDGET = 'uniswap://widget/'
 
 const NFT_ITEM_SHARE_LINK_HASH_REGEX = /^(#\/)?nfts\/asset\/(0x[a-fA-F0-9]{40})\/(\d+)$/

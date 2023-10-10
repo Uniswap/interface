@@ -28,7 +28,7 @@ const unsupportedScreenDeepLinkPayload = {
 }
 
 const wcUniversalLinkUrl = `https://uniswap.org/app/wc?uri=wc:123`
-const wcUrlSchemeUrl = `uniswap://wc?uri=wc:123`
+export const wcUrlSchemeUrl = `uniswap://wc?uri=wc:123`
 const invalidUrlSchemeUrl = `uniswap://invalid?param=pepe`
 
 const stateWithActiveAccountAddress = {
