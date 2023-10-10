@@ -32,19 +32,28 @@ runs:
       continue-on-error: true
       with:
         name: ios-vars
+        path: ./apps/mobile
 
     - name: Download android-vars artifact
       uses: actions/download-artifact@v2
       continue-on-error: true
       with:
         name: android-vars
+        path: ./apps/mobile
         
     - name: Set environment variables
       shell: bash
       run: |
-        echo "IOS_VERSION_NUMBER=$(cat ./ios-vars/ios_version_number.txt)" >> $GITHUB_ENV
-        echo "IOS_BUILD_NUMBER=$(cat ./ios-vars/ios_build_number.txt)" >> $GITHUB_ENV
-        echo "ANDROID_VERSION_CODE=$(cat ./android-vars/android_version_code.txt || echo '')" >> $GITHUB_ENV
+        ls -lh ./apps/mobile
+        export IOS_VERSION_NUMBER=$(cat ./apps/mobile/ios_version_number.txt)
+        export IOS_BUILD_NUMBER=$(cat ./apps/mobile/ios_build_number.txt)
+        export ANDROID_VERSION_CODE=$(cat ./apps/mobile/android_version_code.txt || echo '')
+        echo "IOS_VERSION_NUMBER=$IOS_VERSION_NUMBER" >> $GITHUB_ENV
+        echo "IOS_BUILD_NUMBER=$IOS_BUILD_NUMBER" >> $GITHUB_ENV
+        echo "ANDROID_VERSION_CODE=$ANDROID_VERSION_CODE" >> $GITHUB_ENV
+        echo "IOS_VERSION_NUMBER: $IOS_VERSION_NUMBER"
+        echo "IOS_BUILD_NUMBER: $IOS_BUILD_NUMBER"
+        echo "ANDROID_VERSION_CODE: $ANDROID_VERSION_CODE"
 
     - name: 🐞 Create Sentry release
       working-directory: ./apps/mobile
@@ -61,6 +70,7 @@ runs:
 
         # Create new Sentry release
         export SENTRY_RELEASE="$APP_IDENTIFIER@$IOS_VERSION_NUMBER+$IOS_BUILD_NUMBER-$ANDROID_VERSION_CODE"
+        echo "SENTRY_RELEASE: $SENTRY_RELEASE"
         sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE --log-level=info
         sentry-cli releases set-commits $SENTRY_RELEASE --auto --ignore-missing --log-level=info
 
