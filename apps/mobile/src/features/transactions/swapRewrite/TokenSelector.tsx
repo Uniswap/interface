@@ -75,7 +75,8 @@ export function TokenSelector(): JSX.Element {
 
   return (
     <TokenSelectorModal
-      chainId={selectingCurrencyField === CurrencyField.INPUT ? input?.chainId : output?.chainId}
+      // we need to filter tokens using the chainId of the *other* currency
+      chainId={selectingCurrencyField === CurrencyField.INPUT ? output?.chainId : input?.chainId}
       currencyField={selectingCurrencyField}
       flow={TokenSelectorFlow.Swap}
       variation={
