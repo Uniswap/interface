@@ -1,4 +1,4 @@
-import { Box } from 'ui/src'
+import { Flex } from 'ui/src'
 import { CurrencyLogo, STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -29,16 +29,16 @@ export function SplitLogo({
     ) : undefined
 
   return (
-    <Box height={size} width={size}>
-      <Box
+    <Flex height={size} width={size}>
+      <Flex
         left={0}
         overflow="hidden"
         position="absolute"
         top={0}
         width={iconSize - 1 /* -1 to allow for space between the icons */}>
         <CurrencyLogo hideNetworkLogo currencyInfo={inputCurrencyInfo} size={size} />
-      </Box>
-      <Box
+      </Flex>
+      <Flex
         flexDirection="row-reverse"
         overflow="hidden"
         position="absolute"
@@ -46,12 +46,12 @@ export function SplitLogo({
         top={0}
         width={iconSize - 1 /* -1 to allow for space between the icons */}>
         <CurrencyLogo hideNetworkLogo currencyInfo={outputCurrencyInfo} size={size} />
-      </Box>
+      </Flex>
       {icon && (
-        <Box bottom={-4} position="absolute" right={-4}>
+        <Flex bottom={-4} position="absolute" right={-4}>
           {icon}
-        </Box>
+        </Flex>
       )}
-    </Box>
+    </Flex>
   )
 }

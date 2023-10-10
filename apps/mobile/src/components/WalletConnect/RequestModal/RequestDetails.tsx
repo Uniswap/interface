@@ -13,8 +13,7 @@ import {
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 import { useNoYoloParser } from 'src/utils/useNoYoloParser'
 import { Flex, Text, useSporeColors } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
-import { Theme } from 'ui/src/theme/restyle'
+import { iconSizes, TextVariantTokens } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
@@ -32,7 +31,7 @@ const getStrMessage = (request: WalletConnectRequest): string => {
 type AddressButtonProps = {
   address: string
   chainId: number
-  textVariant?: keyof Theme['textVariants']
+  textVariant?: TextVariantTokens
 }
 
 const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps): JSX.Element => {

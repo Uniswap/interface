@@ -1,6 +1,6 @@
 import { Platform, StyleSheet } from 'react-native'
 import WebView from 'react-native-webview'
-import { Box } from 'ui/src'
+import { Flex } from 'ui/src'
 import { Loader } from 'ui/src/loading'
 import { useSvgData } from 'wallet/src/features/images/hooks'
 import { SvgUriProps } from 'wallet/src/features/images/WebSvgUri'
@@ -47,7 +47,7 @@ export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps): JSX.Elemen
     const html = getHTML(svgData.content)
 
     return (
-      <Box aspectRatio={svgData.aspectRatio} maxHeight={maxHeight ?? '100%'}>
+      <Flex aspectRatio={svgData.aspectRatio} maxHeight={maxHeight ?? '100%'}>
         <WebView
           scalesPageToFit
           androidLayerType="hardware"
@@ -67,7 +67,7 @@ export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps): JSX.Elemen
           ]}
           useWebKit={false}
         />
-      </Box>
+      </Flex>
     )
   } else {
     return <Loader.Image />

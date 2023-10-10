@@ -14,7 +14,7 @@ import Animated, { SharedValue } from 'react-native-reanimated'
 import { Route } from 'react-native-tab-view'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { Flex, Text } from 'ui/src'
-import { theme as FixedTheme } from 'ui/src/theme/restyle'
+import { colorsLight, spacing } from 'ui/src/theme'
 
 export const TAB_VIEW_SCROLL_THROTTLE = 16
 export const TAB_BAR_HEIGHT = 48
@@ -22,7 +22,7 @@ export const SWIPE_THRESHOLD = 5
 
 export const TAB_STYLES = StyleSheet.create({
   activeTabIndicator: {
-    backgroundColor: FixedTheme.colors.accent1,
+    backgroundColor: colorsLight.accent1,
     bottom: 0,
     height: 0,
     position: 'absolute',
@@ -53,15 +53,15 @@ export const TAB_STYLES = StyleSheet.create({
     marginHorizontal: 0,
     padding: 0,
     // remove default shadow border under tab bar
-    shadowColor: FixedTheme.colors.none,
+    shadowColor: colorsLight.none,
     shadowOpacity: 0,
     shadowRadius: 0,
     top: 0,
   },
   // For padding on the list components themselves within tabs.
   tabListInner: {
-    paddingBottom: FixedTheme.spacing.spacing12,
-    paddingTop: FixedTheme.spacing.spacing8,
+    paddingBottom: spacing.spacing12,
+    paddingTop: spacing.spacing8,
   },
 })
 

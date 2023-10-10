@@ -2,10 +2,10 @@ import React from 'react'
 import { ColorValue, FlexStyle } from 'react-native'
 import { IS_ANDROID } from 'src/constants/globals'
 import { Flex, useSporeColors } from 'ui/src'
-import { theme as FixedTheme } from 'ui/src/theme/restyle'
+import { spacing } from 'ui/src/theme'
 
-const HANDLEBAR_HEIGHT = FixedTheme.spacing.spacing4
-const HANDLEBAR_WIDTH = FixedTheme.spacing.spacing36
+const HANDLEBAR_HEIGHT = spacing.spacing4
+const HANDLEBAR_WIDTH = spacing.spacing36
 
 export const HandleBar = ({
   backgroundColor,

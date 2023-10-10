@@ -1,12 +1,12 @@
 import React from 'react'
 import { Text, TextProps } from 'ui/src'
-import { Theme } from 'ui/src/theme/restyle'
+import { TextVariantTokens } from 'ui/src/theme'
 
 type DecimalNumberProps = TextProps & {
   number?: number
   formattedNumber: string
   separator?: string
-  variant: keyof Theme['textVariants']
+  variant: TextVariantTokens
   loading?: boolean
   decimalThreshold?: number // below this value (not including) decimal part would have wholePartColor too
 }

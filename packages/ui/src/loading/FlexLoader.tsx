@@ -1,21 +1,21 @@
 import React from 'react'
 import { ViewProps } from 'react-native'
-import { Box, BoxProps } from 'ui/src/components/layout'
+import { Flex, FlexProps } from 'ui/src/components/layout'
 
-export type BoxLoaderProps = { repeat?: number } & BoxProps & ViewProps
-export function BoxLoader({
+export type FlexLoaderProps = { repeat?: number } & FlexProps & ViewProps
+export function FlexLoader({
   repeat = 1,
   backgroundColor = '$surface3',
   borderRadius = '$rounded12',
   width = '100%',
   height,
   ...props
-}: BoxLoaderProps): JSX.Element {
+}: FlexLoaderProps): JSX.Element {
   return (
-    <Box sentry-label="BoxLoader">
+    <Flex sentry-label="FlexLoader">
       {new Array(repeat).fill(null).map((_, i) => (
         <React.Fragment key={i}>
-          <Box
+          <Flex
             backgroundColor={backgroundColor}
             borderRadius={borderRadius}
             height={height}
@@ -24,6 +24,6 @@ export function BoxLoader({
           />
         </React.Fragment>
       ))}
-    </Box>
+    </Flex>
   )
 }

@@ -1,10 +1,10 @@
 import React from 'react'
 import { Image, ImageResizeMode, StyleSheet } from 'react-native'
-import { Box, BoxProps } from 'ui/src'
+import { Flex, FlexProps } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 
-type NetworkLogoProps = BoxProps & {
+type NetworkLogoProps = FlexProps & {
   chainId: ChainId
   size?: number
   shape?: 'circle' | 'square'
@@ -17,9 +17,9 @@ export function TransactionSummaryNetworkLogo({
   size = iconSizes.icon20,
 }: Pick<NetworkLogoProps, 'chainId' | 'size'>): JSX.Element {
   return (
-    <Box borderColor="$surface1" style={styles.squareLogoOutline}>
+    <Flex borderColor="$surface1" style={styles.squareLogoOutline}>
       <NetworkLogo chainId={chainId} shape="square" size={size} />
-    </Box>
+    </Flex>
   )
 }
 
@@ -31,9 +31,9 @@ function _NetworkLogo({
   const { logo } = CHAIN_INFO[chainId]
   const borderRadius = shape === 'circle' ? size / 2 : SQUARE_BORDER_RADIUS
   return logo ? (
-    <Box style={[{ borderRadius }, styles.iconWrapper]}>
+    <Flex style={[{ borderRadius }, styles.iconWrapper]}>
       <Image source={logo} style={[style.image, { width: size, height: size }]} />
-    </Box>
+    </Flex>
   ) : null
 }
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
 import FastImage, { OnLoadEvent } from 'react-native-fast-image'
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { Box } from 'ui/src'
+import { Flex } from 'ui/src'
 import { Loader } from 'ui/src/loading'
 import { ImageUriProps } from 'wallet/src/features/images/ImageUri'
 
@@ -50,9 +50,9 @@ export function ImageUri({
   if (!uri) {
     if (loadingContainerStyle) {
       return (
-        <Box style={loadingContainerStyle}>
+        <Flex style={loadingContainerStyle}>
           <Loader.Image />
-        </Box>
+        </Flex>
       )
     }
     return <Loader.Image />

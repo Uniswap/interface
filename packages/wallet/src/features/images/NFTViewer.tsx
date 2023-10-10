@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
-import { Box, Text } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { isSVGUri, uriToHttp } from 'utilities/src/format/urls'
 import { NFTPreviewImage } from 'wallet/src/features/images/NFTPreviewImage'
 import { WebSvgUri } from 'wallet/src/features/images/WebSvgUri'
@@ -49,17 +49,11 @@ export function NFTViewer(props: Props): JSX.Element {
 
   const fallback = useMemo(
     () => (
-      <Box
-        alignItems="center"
-        aspectRatio={1}
-        bg="$surface2"
-        justifyContent="center"
-        maxHeight={maxHeight ?? '100%'}
-        width="100%">
+      <Flex centered aspectRatio={1} bg="$surface2" maxHeight={maxHeight ?? '100%'} width="100%">
         <Text color="$neutral2" flex={0} variant="subheading2">
           {placeholderContent || t('Content not available')}
         </Text>
-      </Box>
+      </Flex>
     ),
     [placeholderContent, maxHeight, t]
   )

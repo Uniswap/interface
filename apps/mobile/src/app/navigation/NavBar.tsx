@@ -1,4 +1,3 @@
-import { ShadowProps } from '@shopify/restyle'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { BlurView } from 'expo-blur'
 import { impactAsync } from 'expo-haptics'
@@ -34,7 +33,6 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { borderRadii, spacing } from 'ui/src/theme'
-import { Theme } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { useHighestBalanceNativeCurrencyId } from 'wallet/src/features/dataApi/balances'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -44,7 +42,7 @@ export const NAV_BAR_HEIGHT_XS = 52
 export const NAV_BAR_HEIGHT_SM = 72
 
 export const SWAP_BUTTON_HEIGHT = 56
-const SWAP_BUTTON_SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 4 }
+const SWAP_BUTTON_SHADOW_OFFSET = { width: 0, height: 4 }
 
 function sendSwapPressAnalyticsEvent(): void {
   sendMobileAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
@@ -247,8 +245,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
               justifyContent="flex-start"
               p="$spacing16"
               shadowColor={isDarkMode ? '$surface2' : '$neutral3'}
-              // TODO(MOB-1211): review shadow offset in Tamagui
-              // shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
+              shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
               shadowOpacity={isDarkMode ? 0.6 : 0.4}
               shadowRadius={borderRadii.rounded20}>
               <Icons.Search color="$neutral2" size="$icon.24" />

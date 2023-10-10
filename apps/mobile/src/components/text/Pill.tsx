@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { Flex, FlexProps, Text } from 'ui/src'
 import { TextVariantTokens } from 'ui/src/theme'
 

@@ -14,7 +14,7 @@ import {
   createWrapFormFromTxDetails,
 } from 'src/features/transactions/swap/createSwapFormFromTxDetails'
 import { transactionStateActions } from 'src/features/transactions/transactionState/transactionState'
-import { theme } from 'ui/src/theme/restyle'
+import { spacing } from 'ui/src/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
@@ -404,7 +404,7 @@ export function useAllTransactionsBetweenAddresses(
   }, [recipient, sender, txnsToSearch])
 }
 
-const MIN_INPUT_DECIMAL_PAD_GAP = theme.spacing.spacing12
+const MIN_INPUT_DECIMAL_PAD_GAP = spacing.spacing12
 
 export function useShouldShowNativeKeyboard(): {
   onInputPanelLayout: (event: LayoutChangeEvent) => void

@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser'
 import { Linking } from 'react-native'
-import { theme } from 'ui/src/theme/restyle'
+import { colorsLight } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { uniswapUrls } from 'wallet/src/constants/urls'
@@ -24,8 +24,8 @@ export async function openUri(
   uri: string,
   openExternalBrowser = false,
   isSafeUri = false,
-  // NOTE: okay to use theme object directly as we want the same color for light/dark modes
-  controlsColor = theme.colors.accent1
+  // NOTE: okay to use colors object directly as we want the same color for light/dark modes
+  controlsColor = colorsLight.accent1
 ): Promise<void> {
   const trimmedURI = uri.trim()
   if (!isSafeUri && !ALLOWED_EXTERNAL_URI_SCHEMES.some((scheme) => trimmedURI.startsWith(scheme))) {

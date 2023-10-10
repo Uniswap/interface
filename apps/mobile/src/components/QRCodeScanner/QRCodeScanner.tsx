@@ -12,7 +12,6 @@ import { openSettings } from 'src/utils/linking'
 import { AnimatedFlex, Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import { dimensions, iconSizes, spacing } from 'ui/src/theme'
-import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
 type QRCodeScannerProps = {
@@ -32,7 +31,7 @@ const CAMERA_ASPECT_RATIO = 4 / 3
 const SCAN_ICON_WIDTH_RATIO = 0.7
 const SCAN_ICON_MASK_OFFSET = 7 // used for mask to match spacing in CameraScan SVG
 
-const LOADER_SIZE = FixedTheme.iconSizes.icon40
+const LOADER_SIZE = iconSizes.icon40
 
 export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.Element {
   const { onScanCode, shouldFreezeCamera } = props

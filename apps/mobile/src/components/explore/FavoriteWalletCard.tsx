@@ -8,7 +8,7 @@ import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { AccountIcon } from 'src/components/AccountIcon'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { Flex, flexStyles, Text, TouchableArea } from 'ui/src'
-import { theme } from 'ui/src/theme/restyle'
+import { borderRadii, iconSizes, imageSizes } from 'ui/src/theme'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { removeWatchedAddress } from 'wallet/src/features/favorites/slice'
@@ -34,7 +34,7 @@ export default function FavoriteWalletCard({
   const { data: avatar } = useENSAvatar(address)
 
   const icon = useMemo(() => {
-    return <AccountIcon address={address} avatarUri={avatar} size={theme.iconSizes.icon20} />
+    return <AccountIcon address={address} avatarUri={avatar} size={iconSizes.icon20} />
   }, [address, avatar])
 
   const onRemove = useCallback(() => {
@@ -53,7 +53,7 @@ export default function FavoriteWalletCard({
     <ContextMenu
       actions={menuActions}
       disabled={isEditing}
-      style={{ borderRadius: theme.borderRadii.rounded16 }}
+      style={{ borderRadius: borderRadii.rounded16 }}
       onPress={(e): void => {
         // Emitted index based on order of menu action array
         // remove favorite action
@@ -90,11 +90,7 @@ export default function FavoriteWalletCard({
                 {displayName?.name}
               </Text>
             </Flex>
-            {isEditing ? (
-              <RemoveButton onPress={onRemove} />
-            ) : (
-              <Flex height={theme.imageSizes.image24} />
-            )}
+            {isEditing ? <RemoveButton onPress={onRemove} /> : <Flex height={imageSizes.image24} />}
           </Flex>
         </BaseCard.Shadow>
       </TouchableArea>

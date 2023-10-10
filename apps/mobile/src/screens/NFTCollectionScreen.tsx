@@ -21,7 +21,6 @@ import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
 import { AnimatedFlashList, Flex, Text, TouchableArea } from 'ui/src'
 import { dimensions, iconSizes, spacing } from 'ui/src/theme'
-import { theme } from 'ui/src/theme/restyle'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError } from 'wallet/src/data/utils'
 import {
@@ -134,9 +133,9 @@ export function NFTCollectionScreen({
     const last = index % 3 === 2
     const middle = !first && !last
     const containerStyle = {
-      marginLeft: middle ? theme.spacing.spacing8 : first ? theme.spacing.spacing16 : 0,
-      marginRight: middle ? theme.spacing.spacing8 : last ? theme.spacing.spacing16 : 0,
-      marginBottom: theme.spacing.spacing8,
+      marginLeft: middle ? spacing.spacing8 : first ? spacing.spacing16 : 0,
+      marginRight: middle ? spacing.spacing8 : last ? spacing.spacing16 : 0,
+      marginBottom: spacing.spacing8,
     }
     const priceColor = IS_IOS ? '$sporeWhite' : '$neutral1'
 

@@ -1,5 +1,5 @@
 import { Image } from 'react-native'
-import { Box, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { isSVGUri, uriToHttp } from 'utilities/src/format/urls'
 import { STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
@@ -33,7 +33,7 @@ export function TokenLogo({
   if (httpUri) {
     if (isSVGUri(httpUri)) {
       tokenImage = (
-        <Box borderRadius={size / 2} overflow="hidden">
+        <Flex borderRadius={size / 2} overflow="hidden">
           <RemoteSvg
             backgroundColor={colors.surface3.get()}
             borderRadius={size / 2}
@@ -41,7 +41,7 @@ export function TokenLogo({
             imageHttpUrl={httpUri}
             width={size}
           />
-        </Box>
+        </Flex>
       )
     } else {
       tokenImage = (
@@ -64,11 +64,11 @@ export function TokenLogo({
   }
 
   return (
-    <Box alignItems="center" height={size} justifyContent="center" width={size}>
+    <Flex alignItems="center" height={size} justifyContent="center" width={size}>
       {httpUri ? (
         tokenImage
       ) : (
-        <Box
+        <Flex
           alignItems="center"
           bg="$surface3"
           borderRadius="$roundedFull"
@@ -85,10 +85,10 @@ export function TokenLogo({
             textAlign="center">
             {symbol?.slice(0, 3)}
           </Text>
-        </Box>
+        </Flex>
       )}
       {showNetworkLogo && (
-        <Box
+        <Flex
           bottom={0}
           position="absolute"
           right={0}
@@ -97,8 +97,8 @@ export function TokenLogo({
           shadowOpacity={0.1}
           shadowRadius={2}>
           <NetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
-        </Box>
+        </Flex>
       )}
-    </Box>
+    </Flex>
   )
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Image } from 'react-native'
-import { Box } from 'ui/src'
+import { Flex } from 'ui/src'
 import { Loader } from 'ui/src/loading'
 import { ImageUriProps } from 'wallet/src/features/images/ImageUri'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
@@ -38,9 +38,9 @@ export function ImageUri({
   if (!width || !height || !uri) {
     if (loadingContainerStyle) {
       return (
-        <Box style={loadingContainerStyle}>
+        <Flex style={loadingContainerStyle}>
           <Loader.Image />
-        </Box>
+        </Flex>
       )
     }
     return <Loader.Image />

@@ -1,5 +1,6 @@
-import React, { PropsWithChildren } from 'react'
-import { Flex, SpaceTokens } from 'ui/src'
+import { PropsWithChildren } from 'react'
+import { SpaceTokens } from 'tamagui'
+import { Flex } from 'ui/src/components/layout/Flex'
 
 interface InsetProps {
   /** applies consistent padding to each side */

@@ -1,9 +1,6 @@
-import { ResponsiveValue } from '@shopify/restyle'
-import React from 'react'
 import { Modal as BaseModal, ModalProps, StyleSheet, View } from 'react-native'
 import { CloseButton } from 'src/components/buttons/CloseButton'
-import { Flex, Text, TouchableArea } from 'ui/src'
-import { Theme } from 'ui/src/theme/restyle'
+import { Flex, FlexProps, Text, TouchableArea } from 'ui/src'
 
 interface Props extends ModalProps {
   position?: 'top' | 'center' | 'bottom'
@@ -33,7 +30,7 @@ export function Modal({
   presentationStyle = 'overFullScreen',
 }: // ...rest (TODO above)
 Props): JSX.Element {
-  let justifyContent: ResponsiveValue<'center' | 'flex-start' | 'flex-end', Theme> = 'center'
+  let justifyContent: FlexProps['justifyContent'] = 'center'
   if (position === 'top') justifyContent = 'flex-start'
   if (position === 'bottom') justifyContent = 'flex-end'
 

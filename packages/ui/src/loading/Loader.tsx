@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react'
 import { getToken } from 'tamagui'
 import { Flex } from 'ui/src/components/layout'
-import { BoxLoader } from 'ui/src/loading/BoxLoader'
+import { FlexLoader } from 'ui/src/loading/FlexLoader'
 import { NftCardLoader } from 'ui/src/loading/NftCardLoader'
 import { Shimmer } from 'ui/src/loading/Shimmer'
 import { TransactionLoader } from './TransactionLoader'
@@ -54,7 +54,7 @@ function NFT({ repeat = 1 }: { repeat?: number }): JSX.Element {
 function Image(): JSX.Element {
   return (
     <Shimmer>
-      <BoxLoader aspectRatio={1} borderRadius={getToken('$none', 'radius')} />
+      <FlexLoader aspectRatio={1} borderRadius={getToken('$none', 'radius')} />
     </Shimmer>
   )
 }

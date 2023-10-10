@@ -9,7 +9,6 @@ import {
   useSharedValue,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Box } from 'src/components/layout'
 import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import Trace from 'src/components/Trace/Trace'
@@ -54,7 +53,7 @@ export function SwapForm(): JSX.Element {
   return (
     <>
       <TouchableWithoutFeedback>
-        <Box style={{ marginTop: insets.top }}>
+        <Flex mt={insets.top}>
           <HandleBar backgroundColor="none" />
           <AnimatedFlex grow row height="100%" style={wrapperStyle}>
             <Flex
@@ -67,7 +66,7 @@ export function SwapForm(): JSX.Element {
               {isSheetReady && <SwapFormContent />}
             </Flex>
           </AnimatedFlex>
-        </Box>
+        </Flex>
       </TouchableWithoutFeedback>
 
       {!!selectingCurrencyField && <TokenSelector />}

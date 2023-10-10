@@ -1,5 +1,4 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { useResponsiveProp } from '@shopify/restyle'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
@@ -125,16 +124,6 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
     navigation.replace(OnboardingScreens.RestoreCloudBackupLoading, params)
   }
 
-  const subtitleSize = useResponsiveProp({
-    xs: 'body3',
-    sm: 'subheading2',
-  })
-
-  const itemSpacing = useResponsiveProp({
-    xs: '$none',
-    sm: '$spacing8',
-  })
-
   return (
     <SafeKeyboardOnboardingScreen
       subtitle={
@@ -143,7 +132,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
           : t('Your recovery phrase will only be stored locally on your device.')
       }
       title={isRestoringMnemonic ? t('No backups found') : t('Enter your recovery phrase')}>
-      <Flex gap={itemSpacing}>
+      <Flex $short={{ gap: '$none' }} gap="$spacing8">
         <GenericImportForm
           autoCorrect
           blurOnSubmit
@@ -161,7 +150,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
           <Trace logPress element={ElementName.RecoveryHelpButton}>
             <TouchableArea
               onPress={isRestoringMnemonic ? onPressTryAgainButton : onPressRecoveryHelpButton}>
-              <Text color="$accent1" variant={subtitleSize}>
+              <Text $short={{ variant: 'body3' }} color="$accent1" variant="subheading2">
                 {isRestoringMnemonic
                   ? t('Try searching again')
                   : t('How do I find my recovery phrase?')}

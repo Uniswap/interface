@@ -1,5 +1,5 @@
 import { FastImageProps, ImageStyle, ResizeMode } from 'react-native-fast-image'
-import { BoxProps } from 'ui/src'
+import { FlexProps } from 'ui/src'
 import { NotImplementedError } from 'utilities/src/errors'
 
 export type ImageUriProps = {
@@ -8,7 +8,7 @@ export type ImageUriProps = {
   fallback?: JSX.Element
   imageStyle?: ImageStyle
   resizeMode?: ResizeMode
-  loadingContainerStyle?: BoxProps['style']
+  loadingContainerStyle?: FlexProps['style']
   loadedImageContainerStyle?: ImageStyle
   /**
    * Can optimize performance by prefetching dimensions in api request on Image field,

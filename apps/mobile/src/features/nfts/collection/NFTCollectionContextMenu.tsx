@@ -7,7 +7,7 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { getNftCollectionUrl, getTwitterLink, openUri } from 'src/utils/linking'
 import { ColorTokens, Flex, TouchableArea } from 'ui/src'
-import { theme as FixedTheme } from 'ui/src/theme/restyle'
+import { iconSizes, spacing } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { NFTCollectionData } from './types'
 
@@ -16,8 +16,8 @@ type MenuOption = {
   action: () => Promise<void>
 }
 
-const ICON_SIZE = FixedTheme.iconSizes.icon16
-const ICON_PADDING = FixedTheme.spacing.spacing8
+const ICON_SIZE = iconSizes.icon16
+const ICON_PADDING = spacing.spacing8
 
 export function NFTCollectionContextMenu({
   data,

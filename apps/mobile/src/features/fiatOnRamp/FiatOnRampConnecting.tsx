@@ -10,7 +10,7 @@ import {
   UNISWAP_LOGO_LARGE,
 } from 'ui/src/assets'
 import MoonpayLogo from 'ui/src/assets/logos/svg/moonpay.svg'
-import { theme } from 'ui/src/theme/restyle'
+import { iconSizes } from 'ui/src/theme'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 const ICON_SIZE = 90
@@ -73,8 +73,8 @@ const styles = StyleSheet.create({
     width: ICON_SIZE,
   },
   uniswapLogo: {
-    height: theme.iconSizes.icon64,
-    width: theme.iconSizes.icon64,
+    height: iconSizes.icon64,
+    width: iconSizes.icon64,
   },
   uniswapLogoWrapper: {
     backgroundColor: '#FFEFF8', // #FFD8EF with 40% opacity on a white background

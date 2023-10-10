@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 import type { IconProps } from 'ui/src'
-import { Box, Icons, useSporeColors } from 'ui/src'
+import { Flex, Icons, useSporeColors } from 'ui/src'
 import WalletConnectLogo from 'ui/src/assets/icons/walletconnect.svg'
 import MoonpayLogo from 'ui/src/assets/logos/svg/moonpay.svg'
 import { borderRadii } from 'ui/src/theme'
@@ -61,16 +61,15 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): J
     ) : assetType === AssetType.Currency ? (
       <CurrencyLogo hideNetworkLogo currencyInfo={props.currencyInfo} size={size} />
     ) : (
-      <Box
-        alignItems="center"
-        backgroundColor="$surface2"
+      <Flex
+        centered
+        bg="$surface2"
         borderRadius="$rounded4"
         height={size}
-        justifyContent="center"
         overflow="hidden"
         width={size}>
         {props.nftImageUrl && <NFTViewer uri={props.nftImageUrl} />}
-      </Box>
+      </Flex>
     )
 
   const fill = txStatus === TransactionStatus.Success ? colors.statusSuccess : colors.neutral2
@@ -125,14 +124,14 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): J
   }, [icon, txType])
 
   return (
-    <Box alignItems="center" height={size} justifyContent="center" width={size}>
+    <Flex centered height={size} width={size}>
       {logo}
       {icon && (
-        <Box bottom={-4} position="absolute" right={-4}>
+        <Flex bottom={-4} position="absolute" right={-4}>
           {icon}
-        </Box>
+        </Flex>
       )}
-    </Box>
+    </Flex>
   )
 }
 
@@ -168,9 +167,9 @@ export function DappLogoWithTxStatus({
   const statusIcon = getStatusIcon()
 
   const fallback = (
-    <Box height={dappImageSize}>
+    <Flex height={dappImageSize}>
       <DappIconPlaceholder iconSize={dappImageSize} name={dappName} />
-    </Box>
+    </Flex>
   )
 
   const style = StyleSheet.create({
@@ -197,14 +196,14 @@ export function DappLogoWithTxStatus({
   )
 
   return statusIcon ? (
-    <Box height={totalSize} width={totalSize}>
-      <Box left={0} position="absolute" top={0}>
+    <Flex height={totalSize} width={totalSize}>
+      <Flex left={0} position="absolute" top={0}>
         {dappImage}
-      </Box>
-      <Box bottom={0} position="absolute" right={0}>
+      </Flex>
+      <Flex bottom={0} position="absolute" right={0}>
         {statusIcon}
-      </Box>
-    </Box>
+      </Flex>
+    </Flex>
   ) : (
     dappImage
   )
@@ -237,16 +236,16 @@ export function DappLogoWithWCBadge({
   )
 
   return (
-    <Box height={totalSize} width={totalSize}>
-      <Box left={2} top={0}>
+    <Flex height={totalSize} width={totalSize}>
+      <Flex left={2} top={0}>
         {dappImage}
-      </Box>
+      </Flex>
       {chainId && chainId !== ChainId.Mainnet ? (
-        <Box bottom={-2} position="absolute" right={-2}>
+        <Flex bottom={-2} position="absolute" right={-2}>
           <TransactionSummaryNetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
-        </Box>
+        </Flex>
       ) : (
-        <Box
+        <Flex
           backgroundColor="$surface2"
           borderColor="$surface1"
           borderRadius="$roundedFull"
@@ -255,8 +254,8 @@ export function DappLogoWithWCBadge({
           position="absolute"
           right={-2}>
           <WalletConnectLogo height={statusSize} width={statusSize} />
-        </Box>
+        </Flex>
       )}
-    </Box>
+    </Flex>
   )
 }

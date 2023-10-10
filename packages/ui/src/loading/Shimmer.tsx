@@ -9,7 +9,6 @@ import Reanimated, {
   withTiming,
 } from 'react-native-reanimated'
 import { LinearGradient } from 'tamagui/linear-gradient'
-import { Box } from 'ui/src/components/layout/Box'
 import { Flex } from 'ui/src/components/layout/Flex'
 
 const SHIMMER_DURATION = 2000 // 2 seconds
@@ -76,7 +75,7 @@ export function Shimmer({ children, contrast }: Props): JSX.Element {
             />
           }
           style={StyleSheet.absoluteFill}>
-          <Box fullscreen backgroundColor="$surface2" />
+          <Flex backgroundColor="$surface2" style={StyleSheet.absoluteFill} />
         </MaskedView>
       </Reanimated.View>
     </MaskedView>

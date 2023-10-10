@@ -4,7 +4,7 @@ import { TransactionLoader } from 'src/components/loading/TransactionLoader'
 import { WalletLoader } from 'src/components/loading/WalletLoader'
 import { WaveLoader } from 'src/components/loading/WaveLoader'
 import { Flex, getToken } from 'ui/src'
-import { BoxLoader, BoxLoaderProps, Shimmer } from 'ui/src/loading'
+import { FlexLoader, FlexLoaderProps, Shimmer } from 'ui/src/loading'
 
 function Graph(): JSX.Element {
   return (
@@ -60,10 +60,10 @@ export const Transaction = memo(function _Transaction({
   )
 })
 
-function Box(props: BoxLoaderProps): JSX.Element {
+function Box(props: FlexLoaderProps): JSX.Element {
   return (
     <Shimmer>
-      <BoxLoader {...props} />
+      <FlexLoader {...props} />
     </Shimmer>
   )
 }
@@ -71,7 +71,7 @@ function Box(props: BoxLoaderProps): JSX.Element {
 function Image(): JSX.Element {
   return (
     <Shimmer>
-      <BoxLoader aspectRatio={1} borderRadius={getToken('$none', 'radius')} />
+      <FlexLoader aspectRatio={1} borderRadius={getToken('$none', 'radius')} />
     </Shimmer>
   )
 }
@@ -79,7 +79,7 @@ function Image(): JSX.Element {
 function Favorite({ height, contrast }: { height?: number; contrast?: boolean }): JSX.Element {
   return (
     <Shimmer contrast={contrast}>
-      <BoxLoader backgroundColor="$surface3" borderRadius="$rounded16" height={height ?? 50} />
+      <FlexLoader backgroundColor="$surface3" borderRadius="$rounded16" height={height ?? 50} />
     </Shimmer>
   )
 }

@@ -9,7 +9,6 @@ import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollec
 import { Flex, FlexProps, Logos, Text, TouchableArea, useSporeColors } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { formatNumber, NumberType } from 'utilities/src/format/format'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
@@ -17,7 +16,7 @@ import { useExtractedColors } from 'wallet/src/utils/colors'
 import { NFTCollectionData } from './types'
 
 const PROFILE_IMAGE_SIZE = 72
-const PROFILE_IMAGE_WRAPPER_SIZE = PROFILE_IMAGE_SIZE + FixedTheme.spacing.spacing4
+const PROFILE_IMAGE_WRAPPER_SIZE = PROFILE_IMAGE_SIZE + spacing.spacing4
 export const NFT_BANNER_HEIGHT = 102
 
 export function NFTCollectionHeader({

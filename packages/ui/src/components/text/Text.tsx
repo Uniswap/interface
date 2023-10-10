@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react'
 import { useWindowDimensions } from 'react-native'
 import { GetProps, styled, Text as TamaguiText } from 'tamagui'
 import { withAnimated } from 'ui/src/components/factories/animated'
-import { Box } from 'ui/src/components/layout/Box'
+import { Flex } from 'ui/src/components/layout'
 import { HiddenFromScreenReaders } from 'ui/src/components/text/HiddenFromScreenReaders'
 import { Shimmer } from 'ui/src/loading/Shimmer'
 import { fonts } from 'ui/src/theme/fonts'
@@ -121,7 +121,6 @@ export const DEFAULT_FONT_SCALE = 1
 
 export type TextProps = TextFrameProps & {
   maxFontSizeMultiplier?: number
-  animated?: boolean
   allowFontScaling?: boolean
   loading?: boolean | 'no-shimmer'
   loadingPlaceholderText?: string
@@ -134,10 +133,10 @@ export type TextProps = TextFrameProps & {
 
 export const TextPlaceholder = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   return (
-    <Box alignItems="center" flexDirection="row">
-      <Box alignItems="center" flexDirection="row" position="relative">
+    <Flex row alignItems="center">
+      <Flex row alignItems="center" position="relative">
         <HiddenFromScreenReaders>{children}</HiddenFromScreenReaders>
-        <Box
+        <Flex
           bg="$surface2"
           borderRadius="$rounded4"
           bottom="5%"
@@ -146,8 +145,8 @@ export const TextPlaceholder = ({ children }: PropsWithChildren<unknown>): JSX.E
           right={0}
           top="5%"
         />
-      </Box>
-    </Box>
+      </Flex>
+    </Flex>
   )
 }
 

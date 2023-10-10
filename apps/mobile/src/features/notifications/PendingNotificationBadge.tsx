@@ -9,13 +9,12 @@ import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import AlertCircle from 'ui/src/assets/icons/alert-circle.svg'
 import { iconSizes } from 'ui/src/theme'
-import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 const PENDING_TX_TIME_LIMIT = 60_000 * 5 // 5 mins
-const LOADING_SPINNER_SIZE = FixedTheme.iconSizes.icon20
+const LOADING_SPINNER_SIZE = iconSizes.icon20
 
 interface Props {
   size?: number
