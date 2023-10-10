@@ -6,6 +6,7 @@ import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain } from 'constants/chains'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
+import { useMemo } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -75,6 +76,8 @@ export default function BalanceSummary({ token }: { token: Currency }) {
     type: NumberType.FiatTokenStats,
   })
 
+  const currencies = useMemo(() => [token], [token])
+
   if (!account || !balance) {
     return null
   }
@@ -85,7 +88,7 @@ export default function BalanceSummary({ token }: { token: Currency }) {
           <Trans>Your balance on {label}</Trans>
         </ThemedText.SubHeaderSmall>
         <BalanceRow>
-          <PortfolioLogo currencies={[token]} chainId={token.chainId} size="2rem" />
+          <PortfolioLogo currencies={currencies} chainId={token.chainId} size="2rem" />
           <BalanceContainer>
             <BalanceAmountsContainer>
               <BalanceItem>

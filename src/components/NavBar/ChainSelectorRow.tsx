@@ -37,14 +37,12 @@ const Container = styled.button<{ disabled: boolean }>`
     background-color: ${({ disabled, theme }) => (disabled ? 'none' : theme.surface3)};
   }
 `
-
 const Label = styled.div`
   grid-column: 2;
   grid-row: 1;
   font-size: 16px;
   font-weight: 485;
 `
-
 const Status = styled.div`
   grid-column: 3;
   grid-row: 1;
@@ -52,7 +50,6 @@ const Status = styled.div`
   align-items: center;
   width: ${LOGO_SIZE}px;
 `
-
 const CaptionText = styled.div`
   color: ${({ theme }) => theme.neutral2};
   font-size: 12px;
@@ -60,9 +57,6 @@ const CaptionText = styled.div`
   grid-row: 2;
 `
 
-const StyledChainLogo = styled(ChainLogo)`
-  margin-right: 12px;
-`
 interface ChainSelectorRowProps {
   disabled?: boolean
   targetChain: ChainId
@@ -86,7 +80,7 @@ export default function ChainSelectorRow({ disabled, targetChain, onSelectChain,
           if (!disabled) onSelectChain(targetChain)
         }}
       >
-        <StyledChainLogo chainId={targetChain} size={LOGO_SIZE} />
+        <ChainLogo chainId={targetChain} size={LOGO_SIZE} style={{ marginRight: '12px' }} />
         {label && <Label>{label}</Label>}
         {disabled && (
           <CaptionText>

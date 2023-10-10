@@ -199,9 +199,15 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
             class="c0 c7"
           >
             <svg
+              aria-labelledby="titleID"
               height="16"
               width="16"
             >
+              <title
+                id="titleID"
+              >
+                Ethereum logo
+              </title>
               <rect
                 fill="#F9F9F9"
                 height="16"
@@ -1217,9 +1223,15 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             class="c0 c7"
           >
             <svg
+              aria-labelledby="titleID"
               height="16"
               width="16"
             >
+              <title
+                id="titleID"
+              >
+                Ethereum logo
+              </title>
               <rect
                 fill="#F9F9F9"
                 height="16"
@@ -2664,9 +2676,15 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             class="c0 c7"
           >
             <svg
+              aria-labelledby="titleID"
               height="16"
               width="16"
             >
+              <title
+                id="titleID"
+              >
+                Ethereum logo
+              </title>
               <rect
                 fill="#F9F9F9"
                 height="16"
@@ -4111,9 +4129,15 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             class="c0 c7"
           >
             <svg
+              aria-labelledby="titleID"
               height="16"
               width="16"
             >
+              <title
+                id="titleID"
+              >
+                Ethereum logo
+              </title>
               <rect
                 fill="#F9F9F9"
                 height="16"
@@ -5558,9 +5582,15 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             class="c0 c7"
           >
             <svg
+              aria-labelledby="titleID"
               height="16"
               width="16"
             >
+              <title
+                id="titleID"
+              >
+                Ethereum logo
+              </title>
               <rect
                 fill="#F9F9F9"
                 height="16"
@@ -7211,9 +7241,15 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             class="c0 c7"
           >
             <svg
+              aria-labelledby="titleID"
               height="16"
               width="16"
             >
+              <title
+                id="titleID"
+              >
+                Ethereum logo
+              </title>
               <rect
                 fill="#F9F9F9"
                 height="16"

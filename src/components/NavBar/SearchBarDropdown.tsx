@@ -118,6 +118,7 @@ const ChainComingSoonBadge = styled(Badge)`
   padding: 8px;
   margin: 16px 16px 4px;
   width: calc(100% - 32px);
+  gap: 8px;
 `
 
 interface SearchBarDropdownProps {
@@ -144,7 +145,7 @@ export const SearchBarDropdown = (props: SearchBarDropdownProps) => {
         </SuspenseWithPreviousRenderAsFallback>
         {showChainComingSoonBadge && (
           <ChainComingSoonBadge>
-            <ChainLogo chainId={chainId} size={20} style={{ marginRight: '8px' }} />
+            <ChainLogo chainId={chainId} size={20} />
             <ThemedText.BodySmall color="neutral2" fontSize="14px" fontWeight="400" lineHeight="20px">
               <ComingSoonText chainId={chainId} />
             </ThemedText.BodySmall>

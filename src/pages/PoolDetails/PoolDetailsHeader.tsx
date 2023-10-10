@@ -116,8 +116,8 @@ function DoubleCurrencyAndChainLogo({
   )
 }
 
-const L2LogoContainer = styled.div<{ hasSquareLogo?: boolean }>`
-  background-color: ${({ theme, hasSquareLogo }) => (hasSquareLogo ? theme.surface2 : theme.neutral1)};
+const L2LogoContainer = styled.div`
+  background-color: ${({ theme }) => theme.surface2};
   border-radius: 2px;
   height: 12px;
   left: 60%;
@@ -134,7 +134,7 @@ function SquareL2Logo({ chainId }: { chainId: ChainId }) {
   if (chainId === ChainId.MAINNET) return null
 
   return (
-    <L2LogoContainer hasSquareLogo={true}>
+    <L2LogoContainer>
       <ChainLogo chainId={chainId} size={12} />
     </L2LogoContainer>
   )

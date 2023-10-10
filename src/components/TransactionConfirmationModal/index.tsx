@@ -232,8 +232,8 @@ function L2Content({
         {!inline && (
           <RowBetween mb="16px">
             <Badge>
-              <RowFixed>
-                <ChainLogo chainId={chainId} style={{ margin: '0 8px 0 0' }} />
+              <RowFixed gap="8px">
+                <ChainLogo chainId={chainId} />
                 {info.label}
               </RowFixed>
             </Badge>

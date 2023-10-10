@@ -282,9 +282,15 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
               class="c2 c13"
             >
               <svg
+                aria-labelledby="titleID"
                 height="16"
                 width="16"
               >
+                <title
+                  id="titleID"
+                >
+                  Ethereum logo
+                </title>
                 <rect
                   fill="#F9F9F9"
                   height="16"

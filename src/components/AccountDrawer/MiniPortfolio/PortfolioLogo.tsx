@@ -144,11 +144,12 @@ function SquareL2Logo({ chainId }: { chainId: ChainId }) {
 
   return (
     <L2LogoContainer>
-      <ChainLogo chainId={chainId} size={16} />
+      <ChainLogo chainId={chainId} />
     </L2LogoContainer>
   )
 }
 
+// TODO(WEB-2983)
 /**
  * Renders an image by prioritizing a list of sources, and then eventually a fallback contract icon
  */

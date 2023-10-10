@@ -27,6 +27,7 @@ const BridgeLink = styled(ExternalLink)<{ bgColor: string }>`
   border-radius: 20px;
   display: flex;
   flex-direction: row;
+  gap: 12px;
   overflow: hidden;
   position: relative;
   width: 100%;
@@ -34,13 +35,14 @@ const BridgeLink = styled(ExternalLink)<{ bgColor: string }>`
   margin-top: 16px;
 `
 
-const TitleText = styled(ThemedText.BodyPrimary).attrs({ fontWeight: 535 })<{ color: string }>`
-  color: ${({ color }) => color};
+const TitleText = styled(ThemedText.BodyPrimary)<{ $color: string }>`
+  font-weight: 535;
+  color: ${({ $color }) => $color};
 `
 
-const SubtitleText = styled(ThemedText.BodySmall)<{ color: string }>`
+const SubtitleText = styled(ThemedText.BodySmall)<{ $color: string }>`
   line-height: 20px;
-  color: ${({ color }) => color};
+  color: ${({ $color }) => $color};
 `
 
 export function NetworkAlert() {
@@ -54,14 +56,14 @@ export function NetworkAlert() {
 
   return bridge ? (
     <BridgeLink href={bridge} bgColor={bgColor}>
-      <ChainSymbol width={40} height={40} style={{ marginRight: '12px' }} stroke="none" />
+      <ChainSymbol width={40} height={40} stroke="none" />
       <RowBetween>
         <Column>
-          <TitleText color={textColor}>
+          <TitleText $color={textColor}>
             <Trans>{label} token bridge</Trans>
           </TitleText>
           <HideSmall>
-            <SubtitleText color={textColor}>
+            <SubtitleText $color={textColor}>
               <Trans>Deposit tokens to the {label} network.</Trans>
             </SubtitleText>
           </HideSmall>
