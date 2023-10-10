@@ -1,8 +1,9 @@
-import React from 'react'
-import { ScrollView } from 'react-native'
+import React, { useState } from 'react'
+import { I18nManager, ScrollView } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { BackButton } from 'src/components/buttons/BackButton'
+import { Switch } from 'src/components/buttons/Switch'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { resetDismissedWarnings } from 'src/features/tokens/tokensSlice'
 import { Screens } from 'src/screens/Screens'
@@ -17,6 +18,7 @@ import { resetWallet } from 'wallet/src/features/wallet/slice'
 export function DevScreen(): JSX.Element {
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccount()
+  const [rtlEnabled, setRTLEnabled] = useState(I18nManager.isRTL)
 
   const onPressResetTokenWarnings = (): void => {
     dispatch(resetDismissedWarnings())
@@ -95,6 +97,16 @@ export function DevScreen(): JSX.Element {
           <TouchableArea mt="$spacing12" onPress={onPressResetOnboarding}>
             <Text color="$neutral1">Reset onboarding</Text>
           </TouchableArea>
+          <Flex row alignItems="center" gap="$spacing16" justifyContent="space-between">
+            <Text>Force RTL (requires restart to apply)</Text>
+            <Switch
+              value={rtlEnabled}
+              onValueChange={(value: boolean): void => {
+                I18nManager.forceRTL(value)
+                setRTLEnabled(value)
+              }}
+            />
+          </Flex>
         </Flex>
       </ScrollView>
     </SheetScreen>

@@ -46,6 +46,8 @@
   [super application:application didFinishLaunchingWithOptions:newLaunchOptions];
   
   [RNSplashScreen show];
+  
+  [[RCTI18nUtil sharedInstance] allowRTL:YES];
 
   return YES;
 }
