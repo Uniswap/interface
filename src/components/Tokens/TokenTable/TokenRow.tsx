@@ -296,6 +296,9 @@ const InfoIconContainer = styled.div`
 `
 
 export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined> = {
+  [TokenSortMethod.FULLY_DILUTED_VALUATION]: (
+    <Trans>Fully diluted valuation is the market cap of the asset if all tokens were in circulation.</Trans>
+  ),
   [TokenSortMethod.PRICE]: undefined,
   [TokenSortMethod.PERCENT_CHANGE]: undefined,
   [TokenSortMethod.TOTAL_VALUE_LOCKED]: (

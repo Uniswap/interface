@@ -2,6 +2,8 @@ import { Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getChainInfo } from 'constants/chainInfo'
+import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
+import { useTotalSupply } from 'hooks/useTotalSupply'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
@@ -85,36 +87,83 @@ type StatsSectionProps = {
 export default function StatsSection(props: StatsSectionProps) {
   const { chainId, address, priceLow52W, priceHigh52W, TVL, volume24H } = props
   const { label, infoLink } = getChainInfo(chainId)
+  const isInfoTDPEnabled = useInfoTDPEnabled()
 
-  if (TVL || volume24H || priceLow52W || priceHigh52W) {
+  const FDV = currentPrice * useTotalSupply()
+  const marketCap = 100 // todo: get backend to return this
+
+  const haveStats = isInfoTDPEnabled
+    ? TVL || FDV || marketCap || volume24H
+    : TVL || volume24H || priceLow52W || priceHigh52W
+
+  if (haveStats) {
     return (
       <StatsWrapper data-testid="token-details-stats">
         <Header>
           <Trans>Stats</Trans>
         </Header>
         <TokenStatsSection>
-          <StatPair>
-            <Stat
-              dataCy="tvl"
-              value={TVL}
-              description={HEADER_DESCRIPTIONS[TokenSortMethod.TOTAL_VALUE_LOCKED]}
-              title={<Trans>TVL</Trans>}
-            />
-            <Stat
-              dataCy="volume-24h"
-              value={volume24H}
-              description={
-                <Trans>
-                  24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
-                </Trans>
-              }
-              title={<Trans>24H volume</Trans>}
-            />
-          </StatPair>
-          <StatPair>
-            <Stat dataCy="52w-low" value={priceLow52W} title={<Trans>52W low</Trans>} />
-            <Stat dataCy="52w-high" value={priceHigh52W} title={<Trans>52W high</Trans>} />
-          </StatPair>
+          {isInfoTDPEnabled ? (
+            <>
+              <StatPair>
+                <Stat
+                  dataCy="tvl"
+                  value={TVL}
+                  description={HEADER_DESCRIPTIONS[TokenSortMethod.TOTAL_VALUE_LOCKED]}
+                  title={<Trans>TVL</Trans>}
+                />
+                <Stat
+                  dataCy="fdv"
+                  value={FDV}
+                  description={HEADER_DESCRIPTIONS[TokenSortMethod.FULLY_DILUTED_VALUATION]}
+                  title={<Trans>FDV</Trans>}
+                />
+              </StatPair>
+              <StatPair>
+                <Stat
+                  dataCy="market-cap"
+                  value={marketCap}
+                  description={<Trans>Market cap</Trans>}
+                  title={<Trans>Market cap is the total market value of an asset&apos;s circulating supply.</Trans>}
+                />
+                <Stat
+                  dataCy="volume-24h"
+                  value={volume24H}
+                  description={
+                    <Trans>
+                      24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
+                    </Trans>
+                  }
+                  title={<Trans>24H volume</Trans>}
+                />
+              </StatPair>
+            </>
+          ) : (
+            <>
+              <StatPair>
+                <Stat
+                  dataCy="tvl"
+                  value={TVL}
+                  description={HEADER_DESCRIPTIONS[TokenSortMethod.TOTAL_VALUE_LOCKED]}
+                  title={<Trans>TVL</Trans>}
+                />
+                <Stat
+                  dataCy="volume-24h"
+                  value={volume24H}
+                  description={
+                    <Trans>
+                      24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
+                    </Trans>
+                  }
+                  title={<Trans>24H volume</Trans>}
+                />
+              </StatPair>
+              <StatPair>
+                <Stat dataCy="52w-low" value={priceLow52W} title={<Trans>52W low</Trans>} />
+                <Stat dataCy="52w-high" value={priceHigh52W} title={<Trans>52W high</Trans>} />
+              </StatPair>
+            </>
+          )}
         </TokenStatsSection>
       </StatsWrapper>
     )
