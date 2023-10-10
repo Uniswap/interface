@@ -9,8 +9,9 @@ import { useColor } from 'hooks/useColor'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { ReactNode, useMemo } from 'react'
 import { Text } from 'rebass'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
+import { colors } from 'theme/colors'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -99,12 +100,16 @@ export function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsS
   const isScreenSize = useScreenSize()
   const screenIsNotLarge = isScreenSize['lg']
   const { formatNumber } = useFormatter()
+  const theme = useTheme()
 
   const currency0 = useCurrency(poolData?.token0?.id, chainId) ?? undefined
   const currency1 = useCurrency(poolData?.token1?.id, chainId) ?? undefined
 
   const color0 = useColor(currency0?.wrapped)
-  const color1 = useColor(currency1?.wrapped)
+  let color1 = useColor(currency1?.wrapped)
+  if (color0 === color1 && color0 === theme.accent1) {
+    color1 = colors.blue400
+  }
 
   const [token0, token1] = useMemo(() => {
     const fullWidth = poolData?.tvlToken0 / poolData?.token0Price + poolData?.tvlToken1
