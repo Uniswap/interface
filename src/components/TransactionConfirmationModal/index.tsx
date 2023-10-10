@@ -40,12 +40,6 @@ const ConfirmedIcon = styled(ColumnCenter)<{ inline?: boolean }>`
   padding: ${({ inline }) => (inline ? '20px 0' : '32px 0;')};
 `
 
-const StyledLogo = styled.img`
-  height: 16px;
-  width: 16px;
-  margin-left: 6px;
-`
-
 const ConfirmationModalContentWrapper = styled(AutoColumn)`
   padding-bottom: 12px;
 `
