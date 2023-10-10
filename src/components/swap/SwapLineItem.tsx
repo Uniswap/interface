@@ -9,6 +9,7 @@ import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useHoverProps from 'hooks/useHoverProps'
 import { useIsMobile } from 'nft/hooks'
 import React, { PropsWithChildren, useEffect, useState } from 'react'
+import { animated, SpringValue } from 'react-spring'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageTolerance } from 'state/user/hooks'
@@ -238,11 +239,12 @@ function ValueWrapper({ children, lineItem, labelHovered, syncing }: ValueWrappe
   )
 }
 
-interface SwapLineItemProps {
+export interface SwapLineItemProps {
   trade: InterfaceTrade
   syncing: boolean
   allowedSlippage: Percent
   type: SwapLineItemType
+  animatedOpacity?: SpringValue<number>
 }
 
 function SwapLineItem(props: SwapLineItemProps) {
@@ -252,14 +254,16 @@ function SwapLineItem(props: SwapLineItemProps) {
   if (!LineItem) return null
 
   return (
-    <RowBetween>
-      <LabelText {...hoverProps} hasTooltip={!!LineItem.TooltipBody} data-testid="swap-li-label">
-        <LineItem.Label />
-      </LabelText>
-      <ValueWrapper lineItem={LineItem} labelHovered={labelHovered} syncing={props.syncing}>
-        <LineItem.Value />
-      </ValueWrapper>
-    </RowBetween>
+    <animated.div style={{ opacity: props.animatedOpacity }}>
+      <RowBetween>
+        <LabelText {...hoverProps} hasTooltip={!!LineItem.TooltipBody} data-testid="swap-li-label">
+          <LineItem.Label />
+        </LabelText>
+        <ValueWrapper lineItem={LineItem} labelHovered={labelHovered} syncing={props.syncing}>
+          <LineItem.Value />
+        </ValueWrapper>
+      </RowBetween>
+    </animated.div>
   )
 }
 
