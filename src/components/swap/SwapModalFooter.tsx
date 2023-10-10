@@ -28,7 +28,7 @@ import { SwapLineItemProps, SwapLineItemType } from './SwapLineItem'
 import SwapLineItem from './SwapLineItem'
 
 const DetailsContainer = styled(Column)`
-  padding: 0 8px;
+  padding-bottom: 8px;
 `
 
 const StyledAlertTriangle = styled(AlertTriangle)`
@@ -38,7 +38,6 @@ const StyledAlertTriangle = styled(AlertTriangle)`
 
 const ConfirmButton = styled(ButtonError)`
   height: 56px;
-  margin-top: 10px;
 `
 
 const DropdownControllerWrapper = styled.div`
@@ -46,14 +45,26 @@ const DropdownControllerWrapper = styled.div`
   align-items: center;
   margin-right: -6px;
 
-  padding: 16px;
+  padding: 0 16px;
   min-width: fit-content;
   white-space: nowrap;
 `
 
+const DropdownButton = styled.button`
+  padding: 0;
+  margin-top: 16px;
+  height: 28px;
+  text-decoration: none;
+  display: flex;
+  background: none;
+  border: none;
+  align-items: center;
+  cursor: pointer;
+`
+
 function DropdownController({ open, onClick }: { open: boolean; onClick: () => void }) {
   return (
-    <Row onClick={onClick} style={{ cursor: 'pointer' }}>
+    <DropdownButton onClick={onClick}>
       <Separator />
       <DropdownControllerWrapper>
         <ThemedText.BodySmall color="neutral2">
@@ -62,7 +73,7 @@ function DropdownController({ open, onClick }: { open: boolean; onClick: () => v
         {open ? <ExpandoIconOpened /> : <ExpandoIconClosed />}
       </DropdownControllerWrapper>
       <Separator />
-    </Row>
+    </DropdownButton>
   )
 }
 
@@ -105,7 +116,7 @@ export default function SwapModalFooter({
       <DropdownController open={showMore} onClick={() => setShowMore(!showMore)} />
       <DetailsContainer gap="md">
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.EXCHANGE_RATE} />
-        <AdvancedSwapDetails {...{ trade, allowedSlippage, open: showMore }} />
+        <ExpandableLineItems {...lineItemProps} open={showMore} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.OUTPUT_TOKEN_FEE_ON_TRANSFER} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.NETWORK_COST} />
@@ -183,7 +194,7 @@ function AnimatedLineItem(props: SwapLineItemProps & { open: boolean; delay: num
   return <SwapLineItem {...props} {...animatedProps} />
 }
 
-function AdvancedSwapDetails(props: { trade: InterfaceTrade; allowedSlippage: Percent; open: boolean }) {
+function ExpandableLineItems(props: { trade: InterfaceTrade; allowedSlippage: Percent; open: boolean }) {
   const { open, trade, allowedSlippage } = props
 
   if (!trade) return null
