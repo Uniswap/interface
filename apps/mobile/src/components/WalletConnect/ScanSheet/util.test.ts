@@ -1,9 +1,12 @@
 import * as wcUtils from '@walletconnect/utils'
-import { wcUrlSchemeUrl } from 'src/features/deepLinking/handleDeepLinkSaga.test'
+import {
+  wcUniversalLinkUrl,
+  wcUrlSchemeUrl,
+} from 'src/features/deepLinking/handleDeepLinkSaga.test'
 import { CUSTOM_UNI_QR_CODE_PREFIX, getSupportedURI, URIType } from './util'
 
-const VALID_WC_V1_URI = 'validWcV1Uri'
-const VALID_WC_V2_URI = 'validWcV2Uri'
+const VALID_WC_V1_URI = 'validWcV1Uri@1?relay-protocol=irn&symKey=51e'
+const VALID_WC_V2_URI = 'validWcV2Uri@2?relay-protocol=irn&symKey=51e'
 
 function getWcVersion(uri: string): number {
   switch (uri) {
@@ -47,13 +50,23 @@ describe('getSupportedURI', () => {
     expect(result).toEqual({ type: URIType.WalletConnectV2URL, value: VALID_WC_V2_URI })
   })
 
-  it('should return correct values for uniswap scheme v1 URI', async () => {
+  it('should return undefined for uniswap scheme v1 URI', async () => {
     const result = await getSupportedURI(wcUrlSchemeUrl + VALID_WC_V1_URI)
     expect(result).toBeUndefined()
   })
 
   it('should return correct values for uniswap scheme v2 URI', async () => {
     const result = await getSupportedURI('uniswap://wc?uri=' + VALID_WC_V2_URI)
+    expect(result).toEqual({ type: URIType.WalletConnectV2URL, value: VALID_WC_V2_URI })
+  })
+
+  it('should return undefined for uniswap app URL v1 URI', async () => {
+    const result = await getSupportedURI(wcUniversalLinkUrl + VALID_WC_V1_URI)
+    expect(result).toBeUndefined()
+  })
+
+  it('should return correct values for uniswap app URL v2 URI', async () => {
+    const result = await getSupportedURI('https://uniswap.org/app/wc?uri=' + VALID_WC_V2_URI)
     expect(result).toEqual({ type: URIType.WalletConnectV2URL, value: VALID_WC_V2_URI })
   })
 

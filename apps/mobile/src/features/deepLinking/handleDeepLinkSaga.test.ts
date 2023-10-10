@@ -27,7 +27,9 @@ const unsupportedScreenDeepLinkPayload = {
   coldStart: false,
 }
 
-const wcUniversalLinkUrl = `https://uniswap.org/app/wc?uri=wc:123`
+// WalletConnect URI has its own query parameters that should not be dropped
+const wcUri = 'wc:af098@2?relay-protocol=irn&symKey=51e'
+export const wcUniversalLinkUrl = `https://uniswap.org/app/wc?uri=${wcUri}`
 export const wcUrlSchemeUrl = `uniswap://wc?uri=wc:123`
 const invalidUrlSchemeUrl = `uniswap://invalid?param=pepe`
 
@@ -91,7 +93,7 @@ describe(handleDeepLink, () => {
     })
       .withState(stateWithActiveAccountAddress)
       .provide([[call(waitForWcWeb3WalletIsReady), undefined]])
-      .call(handleWalletConnectDeepLink, 'wc:123')
+      .call(handleWalletConnectDeepLink, wcUri)
       .returns(undefined)
 
       .silentRun()

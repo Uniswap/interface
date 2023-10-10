@@ -18,7 +18,7 @@ import { Screens } from 'src/screens/Screens'
 import { openUri, UNISWAP_APP_NATIVE_TOKEN } from 'src/utils/linking'
 import { call, put, takeLatest } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
-import { UNISWAP_APP_HOSTNAME } from 'wallet/src/constants/urls'
+import { uniswapUrls, UNISWAP_APP_HOSTNAME } from 'wallet/src/constants/urls'
 import { fromUniswapWebAppLink } from 'wallet/src/features/chains/utils'
 import {
   selectAccounts,
@@ -43,6 +43,7 @@ export enum LinkSource {
 const UNISWAP_URL_SCHEME = 'uniswap://'
 export const UNISWAP_URL_SCHEME_WALLETCONNECT = 'uniswap://wc?uri='
 const UNISWAP_URL_SCHEME_WIDGET = 'uniswap://widget/'
+export const UNISWAP_WALLETCONNECT_URL = uniswapUrls.appBaseUrl + '/wc?uri='
 
 const NFT_ITEM_SHARE_LINK_HASH_REGEX = /^(#\/)?nfts\/asset\/(0x[a-fA-F0-9]{40})\/(\d+)$/
 const NFT_COLLECTION_SHARE_LINK_HASH_REGEX = /^(#\/)?nfts\/collection\/(0x[a-fA-F0-9]{40})$/
@@ -215,12 +216,18 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
       return
     }
 
-    // Handle WC universal links connections (ex. https://uniswap.org/app/wc?uri=123)
-    if (url.pathname.includes('/wc')) {
-      // Only initial session connections include `uri` param, signing requests only link to /wc
-      const wcUri = url.searchParams.get('uri')
+    /*
+    Handle WC universal links connections in the format https://uniswap.org/app/wc?uri=wc:123
+    Notice that we assume the URL has only one parameter, named uri, which is the WallectConnect URI.
+    Any other parameter present in the URI is considered to be part of the WallectConnect URI.
+    For example, in the URL below, symKey is a parameter of the WallectConnect URI.
+    https://uniswap.org/app/wc?uri=wc:111f1ff289d1cc5a70ec5354779c6a82b3bde5ac72476f7f67326c38a4ce99f2@2?relay-protocol=irn&symKey=75e152d915a717da9f7bca3df23a0c65fcc4725d769f877ccfaa1f65270cded2
+    */
+    if (action.payload.url.startsWith(UNISWAP_WALLETCONNECT_URL)) {
+      // Only initial session connections include `uri` param, signing requests only link to /wc and should be ignored
+      const wcUri = action.payload.url.split(UNISWAP_WALLETCONNECT_URL).pop()
       if (!wcUri) return
-      yield* call(handleWalletConnectDeepLink, wcUri)
+      yield* call(handleWalletConnectDeepLink, decodeURIComponent(wcUri))
       return
     }
 

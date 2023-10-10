@@ -1,5 +1,8 @@
 import { parseUri } from '@walletconnect/utils'
-import { UNISWAP_URL_SCHEME_WALLETCONNECT } from 'src/features/deepLinking/handleDeepLinkSaga'
+import {
+  UNISWAP_URL_SCHEME_WALLETCONNECT,
+  UNISWAP_WALLETCONNECT_URL,
+} from 'src/features/deepLinking/handleDeepLinkSaga'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 
 export enum URIType {
@@ -42,6 +45,7 @@ export async function getSupportedURI(uri: string): Promise<URIFormat | undefine
   const { uri: maybeCustomWcUri, type } =
     (await getWcUriWithCustomPrefix(uri, CUSTOM_UNI_QR_CODE_PREFIX)) ||
     (await getWcUriWithCustomPrefix(uri, UNISWAP_URL_SCHEME_WALLETCONNECT)) ||
+    (await getWcUriWithCustomPrefix(decodeURIComponent(uri), UNISWAP_WALLETCONNECT_URL)) ||
     {}
   if (maybeCustomWcUri && type) {
     return { type, value: maybeCustomWcUri }
