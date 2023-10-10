@@ -78,14 +78,15 @@ export class UniwalletConnect extends WalletConnectV2 {
 
     this.events.on(URI_AVAILABLE, (uri) => {
       if (!uri) return
+
       // Emits custom wallet connect code, parseable by the Uniswap Wallet
-      this.events.emit(UniwalletConnect.UNI_URI_AVAILABLE, `hello_uniwallet:${uri}`)
+      this.events.emit(UniwalletConnect.UNI_URI_AVAILABLE, `https://uniswap.org/app/wc?uri=${uri}`)
 
       // Opens deeplink to Uniswap Wallet if on iOS
       if (isIOS) {
         // Using window.location.href to open the deep link ensures smooth navigation and leverages OS handling for installed apps,
         // avoiding potential popup blockers or inconsistent behavior associated with window.open
-        window.location.href = `uniswap://wc?uri=${encodeURIComponent(uri)}`
+        window.location.href = `https://uniswap.org/app/wc?uri=${encodeURIComponent(uri)}`
       }
     })
   }
