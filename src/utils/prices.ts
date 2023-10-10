@@ -109,7 +109,7 @@ export function getPriceImpactWarning(priceImpact: Percent): 'warning' | 'error'
 export function getPriceImpactColor(priceImpact: Percent): keyof DefaultTheme | undefined {
   switch (getPriceImpactWarning(priceImpact)) {
     case 'error':
-      return 'deprecated_accentFailureSoft'
+      return 'critical'
     case 'warning':
       return 'deprecated_accentWarning'
     default:

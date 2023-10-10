@@ -12,6 +12,7 @@ import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { CollectionNftsAndMenuLoading } from 'nft/components/collection/CollectionNfts'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
+import { UnavailableCollectionPage } from 'nft/components/collection/UnavailableCollectionPage'
 import { BagCloseIcon } from 'nft/components/icons'
 import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
@@ -170,6 +171,7 @@ const Collection = () => {
   }, [])
 
   if (loading) return <CollectionPageSkeleton />
+  if (!collectionStats.name) return <UnavailableCollectionPage />
 
   const toggleActivity = () => {
     isActivityToggled
@@ -256,7 +258,7 @@ const Collection = () => {
               </CollectionDisplaySection>
             </>
           ) : (
-            <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
+            <UnavailableCollectionPage isBlocked />
           )}
         </AnimatedCollectionContainer>
       </Trace>

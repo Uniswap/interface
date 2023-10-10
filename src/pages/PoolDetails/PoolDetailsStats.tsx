@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
-import { DeltaArrow, formatDelta } from 'components/Tokens/TokenDetails/Delta'
+import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { PoolData } from 'graphql/thegraph/PoolData'
 import { useCurrency } from 'hooks/Tokens'
 import { useColor } from 'hooks/useColor'
@@ -199,7 +199,7 @@ const StatItemText = styled(Text)`
 `
 
 function StatItem({ title, value, delta }: { title: ReactNode; value: number; delta?: number }) {
-  const { formatNumber } = useFormatter()
+  const { formatNumber, formatPercent } = useFormatter()
 
   return (
     <StatItemColumn>
@@ -214,7 +214,7 @@ function StatItem({ title, value, delta }: { title: ReactNode; value: number; de
         {!!delta && (
           <Row width="max-content" padding="4px 0px">
             <DeltaArrow delta={delta} />
-            <ThemedText.BodySecondary>{formatDelta(delta)}</ThemedText.BodySecondary>
+            <ThemedText.BodySecondary>{formatPercent(delta)}</ThemedText.BodySecondary>
           </Row>
         )}
       </StatsTextContainer>

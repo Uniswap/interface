@@ -90,7 +90,7 @@ export function useUniswapXSwapCallback({
             const { domain, types, values } = updatedOrder.permitData()
 
             const signature = await signTypedData(provider.getSigner(account), domain, types, values)
-            if (startTime < Math.floor(Date.now() / 1000)) {
+            if (deadline < Math.floor(Date.now() / 1000)) {
               throw new SignatureExpiredError()
             }
             return { signature, updatedOrder }

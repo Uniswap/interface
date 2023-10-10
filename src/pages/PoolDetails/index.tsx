@@ -11,6 +11,7 @@ import { isAddress } from 'utils'
 
 import { PoolDetailsHeader } from './PoolDetailsHeader'
 import { PoolDetailsStats } from './PoolDetailsStats'
+import { PoolDetailsStatsButtons } from './PoolDetailsStatsButtons'
 
 const PageWrapper = styled(Row)`
   padding: 48px;
@@ -67,6 +68,7 @@ export default function PoolDetailsPage() {
         toggleReversed={toggleReversed}
       />
       <RightColumn>
+        <PoolDetailsStatsButtons chainId={chainId} token0={token0} token1={token1} feeTier={poolData?.feeTier} />
         {poolData && <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} />}
       </RightColumn>
     </PageWrapper>

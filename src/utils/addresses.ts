@@ -11,6 +11,10 @@ export function isAddress(value: any): string | false {
   }
 }
 
+export function isSameAddress(a?: string, b?: string) {
+  return a === b || a?.toLowerCase() === b?.toLowerCase() // Lazy-lowercases the addresses
+}
+
 // Shortens an Ethereum address
 export function shortenAddress(address = '', charsStart = 4, charsEnd = 4): string {
   const parsed = isAddress(address)

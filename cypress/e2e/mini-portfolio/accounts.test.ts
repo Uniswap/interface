@@ -53,7 +53,7 @@ describe('Mini Portfolio account drawer', () => {
 
     // Verify that wallet state loads correctly
     cy.get(getTestSelector('mini-portfolio-navbar')).contains('Tokens')
-    cy.get(getTestSelector('mini-portfolio-page')).contains('Hidden (201)')
+    cy.get(getTestSelector('mini-portfolio-page')).contains('Hidden (197)')
 
     cy.intercept(/graphql/, { fixture: 'mini-portfolio/nfts.json' })
     cy.get(getTestSelector('mini-portfolio-navbar')).contains('NFTs').click()
