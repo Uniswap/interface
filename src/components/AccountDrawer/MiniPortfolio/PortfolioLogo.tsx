@@ -164,7 +164,7 @@ function SquareL2Logo({ chainId }: { chainId: ChainId }) {
  */
 export function PortfolioLogo(props: PortfolioLogoProps) {
   return (
-    <StyledLogoParentContainer>
+    <StyledLogoParentContainer style={props.style}>
       {getLogo(props)}
       <SquareL2Logo chainId={props.chainId} />
     </StyledLogoParentContainer>
