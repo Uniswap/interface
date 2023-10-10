@@ -8,10 +8,10 @@ export function useQuickRouteChains(): ChainId[] {
   const featureFlagsContext = useFeatureFlagsContext()
   let chains = statsigConfig.get(DynamicConfigName.quickRouteChains, []) as ChainId[]
 
-  const modalSetChains =
-    featureFlagsContext.configs[DynamicConfigName.quickRouteChains][DynamicConfigName.quickRouteChains]
-  if (Array.isArray(modalSetChains) && modalSetChains !== chains) {
-    chains = modalSetChains
+  const modalSettings = featureFlagsContext.configs[DynamicConfigName.quickRouteChains]
+  if (modalSettings) {
+    const modalSetChains = modalSettings[DynamicConfigName.quickRouteChains]
+    if (Array.isArray(modalSetChains) && modalSetChains !== chains) chains = modalSetChains
   }
   if (chains.every((c) => Object.values(ChainId).includes(c))) {
     return chains

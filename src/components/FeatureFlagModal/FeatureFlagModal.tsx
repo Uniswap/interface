@@ -226,12 +226,13 @@ interface DynamicConfigDropdownProps {
   label: string
   options: any[]
   selected: any[]
+  parser: (opt: string) => any
 }
 
-function DynamicConfigDropdown({ configName, label, options, selected }: DynamicConfigDropdownProps) {
+function DynamicConfigDropdown({ configName, label, options, selected, parser }: DynamicConfigDropdownProps) {
   const updateConfig = useUpdateConfig()
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValues = Array.from(e.target.selectedOptions, (opt) => Number.parseInt(opt.value))
+    const selectedValues = Array.from(e.target.selectedOptions, (opt) => parser(opt.value))
     // Saved to atom as { [configName]: { [configName]: values } } to match Statsig return format
     updateConfig(configName, { [configName]: selectedValues })
   }
@@ -299,6 +300,7 @@ export default function FeatureFlagModal() {
           <DynamicConfigDropdown
             selected={useQuickRouteChains()}
             options={Object.values(ChainId).filter((v) => !isNaN(Number(v))) as ChainId[]}
+            parser={Number.parseInt}
             configName={DynamicConfigName.quickRouteChains}
             label="Enable quick routes for these chains"
           />
