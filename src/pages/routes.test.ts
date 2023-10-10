@@ -12,7 +12,7 @@ describe('Routes', () => {
     const sitemapPaths: string[] = sitemap.urlset.url.map((url: any) => new URL(url['$'].loc).pathname)
 
     sitemapPaths
-      .filter((p) => !p.includes(':') && !p.includes('*') && !p.includes('not-found'))
+      .filter((p) => !p.includes('/0x'))
       .forEach((path: string) => {
         expect(pathNames).toContain(path)
       })
