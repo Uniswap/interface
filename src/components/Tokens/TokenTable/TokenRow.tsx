@@ -113,7 +113,7 @@ const ClickableContent = styled.div<{ gap?: number }>`
   cursor: pointer;
 `
 const ClickableName = styled(ClickableContent)`
-  gap: 8px;
+  gap: 12px;
   max-width: 100%;
 `
 const StyledHeaderRow = styled(StyledTokenRow)`
@@ -480,7 +480,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           listNumber={sortRank}
           tokenInfo={
             <ClickableName>
-              <QueryTokenLogo token={token} />
+              <QueryTokenLogo token={token} size="32px" />
               <TokenInfoCell>
                 <TokenName data-cy="token-name">{token.name}</TokenName>
                 <TokenSymbol>{token.symbol}</TokenSymbol>

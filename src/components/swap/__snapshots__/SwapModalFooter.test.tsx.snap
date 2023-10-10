@@ -2,40 +2,17 @@
 
 exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] = `
 <DocumentFragment>
-  .c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c1 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c4 {
+  .c3 {
   color: #7D7D7D;
 }
 
-.c2 {
+.c1 {
   width: 100%;
   height: 1px;
   background-color: #22222212;
 }
 
-.c3 {
+.c2 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -45,25 +22,43 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
   -ms-flex-align: center;
   align-items: center;
   margin-right: -6px;
-  padding: 16px;
+  padding: 0 16px;
   min-width: -webkit-fit-content;
   min-width: -moz-fit-content;
   min-width: fit-content;
   white-space: nowrap;
 }
 
-<div
-    class="c0 c1"
-    style="cursor: pointer;"
+.c0 {
+  padding: 0;
+  margin-top: 16px;
+  height: 28px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  background: none;
+  border: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+<button
+    class="c0"
   >
     <div
-      class="c2"
+      class="c1"
     />
     <div
-      class="c3"
+      class="c2"
     >
       <div
-        class="c4 css-142zc9n"
+        class="c3 css-142zc9n"
       >
         Show more
       </div>
@@ -72,9 +67,9 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
       </svg>
     </div>
     <div
-      class="c2"
+      class="c1"
     />
-  </div>
+  </button>
   .c2 {
   box-sizing: border-box;
   margin: 0;
@@ -224,7 +219,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
 }
 
 .c1 {
-  padding: 0 8px;
+  padding-bottom: 8px;
 }
 
 <div
@@ -379,12 +374,35 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
               <div
                 class="c2 c13"
               >
-                <img
-                  alt="gas cost icon"
+                <svg
+                  aria-labelledby="titleID"
                   height="16"
-                  src="ethereum-logo.png"
                   width="16"
-                />
+                >
+                  <title
+                    id="titleID"
+                  >
+                    Ethereum logo
+                  </title>
+                  <rect
+                    fill="#F9F9F9"
+                    height="16"
+                    rx="4"
+                    width="16"
+                  />
+                  <rect
+                    fill="#6B8AFF33"
+                    height="16"
+                    rx="4"
+                    width="16"
+                  />
+                  <svg
+                    height="16"
+                    width="16"
+                  >
+                    ethereum.svg
+                  </svg>
+                </svg>
                 $1.00
               </div>
             </div>
@@ -543,7 +561,6 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
 
 .c6 {
   height: 56px;
-  margin-top: 10px;
 }
 
 <div
@@ -566,40 +583,17 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
 
 exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 1`] = `
 <DocumentFragment>
-  .c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c1 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c4 {
+  .c3 {
   color: #7D7D7D;
 }
 
-.c2 {
+.c1 {
   width: 100%;
   height: 1px;
   background-color: #22222212;
 }
 
-.c3 {
+.c2 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -609,29 +603,47 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
   -ms-flex-align: center;
   align-items: center;
   margin-right: -6px;
-  padding: 16px;
+  padding: 0 16px;
   min-width: -webkit-fit-content;
   min-width: -moz-fit-content;
   min-width: fit-content;
   white-space: nowrap;
 }
 
+.c0 {
+  padding: 0;
+  margin-top: 16px;
+  height: 28px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  background: none;
+  border: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+
 @media (max-width:960px) {
 
 }
 
-<div
-    class="c0 c1"
-    style="cursor: pointer;"
+<button
+    class="c0"
   >
     <div
-      class="c2"
+      class="c1"
     />
     <div
-      class="c3"
+      class="c2"
     >
       <div
-        class="c4 css-142zc9n"
+        class="c3 css-142zc9n"
       >
         Show more
       </div>
@@ -640,9 +652,9 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
       </svg>
     </div>
     <div
-      class="c2"
+      class="c1"
     />
-  </div>
+  </button>
   .c2 {
   box-sizing: border-box;
   margin: 0;
@@ -792,7 +804,7 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
 }
 
 .c1 {
-  padding: 0 8px;
+  padding-bottom: 8px;
 }
 
 @media (max-width:960px) {
@@ -1156,7 +1168,6 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
 
 .c6 {
   height: 56px;
-  margin-top: 10px;
 }
 
 @media (max-width:960px) {

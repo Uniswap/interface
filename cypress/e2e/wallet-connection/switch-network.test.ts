@@ -2,7 +2,7 @@ import { createDeferredPromise } from '../../../src/test-utils/promise'
 import { getTestSelector } from '../../utils'
 
 function waitsForActiveChain(chain: string) {
-  cy.get(getTestSelector('chain-selector-logo')).invoke('attr', 'alt').should('eq', chain)
+  cy.get(getTestSelector('chain-selector-logo')).find('title').should('include.text', `${chain} logo`)
 }
 
 function switchChain(chain: string) {

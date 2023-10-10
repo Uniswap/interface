@@ -9,6 +9,7 @@ import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, useTrace } from 'analytics'
 import Badge from 'components/Badge'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { RowFixed } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
@@ -53,11 +54,6 @@ export enum ConfirmModalState {
 
 const StyledL2Badge = styled(Badge)`
   padding: 6px 8px;
-`
-
-const StyledL2Logo = styled.img`
-  height: 16px;
-  width: 16px;
 `
 
 function isInApprovalPhase(confirmModalState: ConfirmModalState) {
@@ -412,7 +408,7 @@ export default function ConfirmSwapModal({
       return (
         <StyledL2Badge>
           <RowFixed data-testid="confirmation-modal-chain-icon" gap="sm">
-            <StyledL2Logo src={info.logoUrl} />
+            <ChainLogo chainId={chainId} size={16} />
             <ThemedText.SubHeaderSmall>{info.label}</ThemedText.SubHeaderSmall>
           </RowFixed>
         </StyledL2Badge>

@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useTrace } from 'analytics'
 import clsx from 'clsx'
 import Badge from 'components/Badge'
-import { getChainInfo } from 'constants/chainInfo'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import { HistoryDuration, SafetyLevel } from 'graphql/data/__generated__/types-and-hooks'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { SearchToken } from 'graphql/data/SearchTokens'
@@ -107,11 +107,6 @@ function isKnownToken(token: SearchToken) {
   return token.project?.safetyLevel == SafetyLevel.Verified || token.project?.safetyLevel == SafetyLevel.MediumWarning
 }
 
-const ChainLogo = styled.img`
-  height: 20px;
-  width: 20px;
-  margin-right: 8px;
-`
 const ChainComingSoonBadge = styled(Badge)`
   align-items: center;
   background-color: ${({ theme }) => theme.surface2};
@@ -123,6 +118,7 @@ const ChainComingSoonBadge = styled(Badge)`
   padding: 8px;
   margin: 16px 16px 4px;
   width: calc(100% - 32px);
+  gap: 8px;
 `
 
 interface SearchBarDropdownProps {
@@ -138,7 +134,6 @@ export const SearchBarDropdown = (props: SearchBarDropdownProps) => {
   const { isLoading } = props
   const { chainId } = useWeb3React()
   const showChainComingSoonBadge = chainId && BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(chainId) && !isLoading
-  const logoUri = getChainInfo(chainId)?.logoUrl
 
   return (
     <Column overflow="hidden" className={clsx(styles.searchBarDropdownNft, styles.searchBarScrollable)}>
@@ -150,7 +145,7 @@ export const SearchBarDropdown = (props: SearchBarDropdownProps) => {
         </SuspenseWithPreviousRenderAsFallback>
         {showChainComingSoonBadge && (
           <ChainComingSoonBadge>
-            <ChainLogo src={logoUri} />
+            <ChainLogo chainId={chainId} size={20} />
             <ThemedText.BodySmall color="neutral2" fontSize="14px" fontWeight="400" lineHeight="20px">
               <ComingSoonText chainId={chainId} />
             </ThemedText.BodySmall>
