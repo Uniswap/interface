@@ -232,9 +232,9 @@ function DynamicConfigDropdown({ configName, label, options, selected }: Dynamic
   const updateConfig = useUpdateConfig()
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValues = Array.from(e.target.selectedOptions, (opt) => Number.parseInt(opt.value))
-    updateConfig(configName, selectedValues)
+    // Saved to atom as { [configName]: { [configName]: values } } to match Statsig return format
+    updateConfig(configName, { [configName]: selectedValues })
   }
-
   return (
     <Row key={configName}>
       <FlagInfo>

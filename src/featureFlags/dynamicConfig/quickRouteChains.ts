@@ -3,13 +3,13 @@ import { useFeatureFlagsContext } from 'featureFlags'
 
 import { DynamicConfigName, useDynamicConfig } from '.'
 
-// eslint-disable-next-line import/no-unused-modules
 export function useQuickRouteChains(): ChainId[] {
   const statsigConfig = useDynamicConfig(DynamicConfigName.quickRouteChains)
   const featureFlagsContext = useFeatureFlagsContext()
-  let chains = statsigConfig.get('chains', []) as ChainId[]
+  let chains = statsigConfig.get(DynamicConfigName.quickRouteChains, []) as ChainId[]
 
-  const modalSetChains = featureFlagsContext.configs[DynamicConfigName.quickRouteChains]
+  const modalSetChains =
+    featureFlagsContext.configs[DynamicConfigName.quickRouteChains][DynamicConfigName.quickRouteChains]
   if (Array.isArray(modalSetChains) && modalSetChains !== chains) {
     chains = modalSetChains
   }

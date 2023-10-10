@@ -42,7 +42,7 @@ export function useFeatureFlagsContext(): FeatureFlagsContextType {
 
 /* update and save feature flag & dynamic config settings */
 export const featureFlagSettings = atomWithStorage<Record<string, string>>('featureFlags', {})
-const dynamicConfigSettings = atomWithStorage<Record<string, any>>('dynamicConfigs', {})
+export const dynamicConfigSettings = atomWithStorage<Record<string, any>>('dynamicConfigs', {})
 
 export function useUpdateFlag() {
   const setFeatureFlags = useUpdateAtom(featureFlagSettings)
