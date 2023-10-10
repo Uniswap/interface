@@ -44,6 +44,7 @@ const UNISWAP_URL_SCHEME = 'uniswap://'
 export const UNISWAP_URL_SCHEME_WALLETCONNECT = 'uniswap://wc?uri='
 const UNISWAP_URL_SCHEME_WIDGET = 'uniswap://widget/'
 export const UNISWAP_WALLETCONNECT_URL = uniswapUrls.appBaseUrl + '/wc?uri='
+const WALLETCONNECT_URI_SCHEME = 'wc:' // https://eips.ethereum.org/EIPS/eip-1328
 
 const NFT_ITEM_SHARE_LINK_HASH_REGEX = /^(#\/)?nfts\/asset\/(0x[a-fA-F0-9]{40})\/(\d+)$/
 const NFT_COLLECTION_SHARE_LINK_HASH_REGEX = /^(#\/)?nfts\/collection\/(0x[a-fA-F0-9]{40})$/
@@ -228,6 +229,13 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
       const wcUri = action.payload.url.split(UNISWAP_WALLETCONNECT_URL).pop()
       if (!wcUri) return
       yield* call(handleWalletConnectDeepLink, decodeURIComponent(wcUri))
+      return
+    }
+
+    // Handle plain WalletConnect URIs
+    if (action.payload.url.startsWith(WALLETCONNECT_URI_SCHEME)) {
+      const wcUri = decodeURIComponent(action.payload.url)
+      yield* call(handleWalletConnectDeepLink, wcUri)
       return
     }
 
