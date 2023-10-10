@@ -92,10 +92,6 @@ const NetworkLabel = styled.div`
   gap: 8px;
   align-items: center;
 `
-const Logo = styled.img`
-  height: 20px;
-  width: 20px;
-`
 const CheckContainer = styled.div`
   display: flex;
   flex-direction: flex-end;

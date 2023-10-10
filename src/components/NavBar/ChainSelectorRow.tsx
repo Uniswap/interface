@@ -60,11 +60,6 @@ const CaptionText = styled.div`
   grid-row: 2;
 `
 
-const Logo = styled.img`
-  height: ${LOGO_SIZE}px;
-  width: ${LOGO_SIZE}px;
-  margin-right: 12px;
-`
 const StyledChainLogo = styled(ChainLogo)`
   margin-right: 12px;
 `
@@ -91,7 +86,7 @@ export default function ChainSelectorRow({ disabled, targetChain, onSelectChain,
           if (!disabled) onSelectChain(targetChain)
         }}
       >
-        <StyledChainLogo chainId={targetChain} size={20} />
+        <StyledChainLogo chainId={targetChain} size={LOGO_SIZE} />
         {label && <Label>{label}</Label>}
         {disabled && (
           <CaptionText>

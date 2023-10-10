@@ -48,16 +48,6 @@ const ENSAvatarImg = styled.img`
   width: 40px;
 `
 
-const StyledChainLogo = styled.img`
-  height: 14px;
-  width: 14px;
-`
-
-const SquareChainLogo = styled.img`
-  height: 100%;
-  width: 100%;
-`
-
 const CircleLogoImage = styled.img<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
