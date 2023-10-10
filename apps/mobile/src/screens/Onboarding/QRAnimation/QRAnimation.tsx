@@ -11,12 +11,13 @@ import {
 import { ResizeMode, Video } from 'expo-av'
 import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 import Animated, {
   AnimateStyle,
   Easing,
   EntryExitAnimationFunction,
   runOnJS,
+  useAnimatedStyle,
   useSharedValue,
   withDelay,
   withTiming,
@@ -62,8 +63,12 @@ export function QRAnimation({
   const video = useRef<Video>(null)
   const media = useMedia()
 
+  const isPlayingVideo = useSharedValue(false)
+
   const playEtchingAfterSlideIn = async (): Promise<void> => {
-    await video.current?.playAsync()
+    await video.current?.playAsync().then(() => {
+      isPlayingVideo.value = true
+    })
   }
 
   const isDarkMode = useIsDarkMode()
@@ -146,6 +151,10 @@ export function QRAnimation({
     preglowBlurSize.current = reSize.value
   }, reSize)
 
+  const videoAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: isPlayingVideo.value ? 1 : 0,
+  }))
+
   const uniconColors = useUniconColors(activeAddress)
 
   // used throughout the page the get the size of the QR code container
@@ -209,8 +218,8 @@ export function QRAnimation({
                       />
                     </Animated.View>
                   </Flex>
-                  <Animated.View entering={videoFadeOut} style={[styles.video]}>
-                    <View style={styles.video}>
+                  <Animated.View entering={videoFadeOut} style={styles.video}>
+                    <Animated.View style={[styles.video, videoAnimatedStyle]}>
                       <Video
                         ref={video}
                         resizeMode={ResizeMode.CONTAIN}
@@ -219,7 +228,7 @@ export function QRAnimation({
                         style={styles.video}
                         useNativeControls={false}
                       />
-                    </View>
+                    </Animated.View>
                   </Animated.View>
                   <Animated.View entering={videoFadeOut} style={[styles.glow]}>
                     <Canvas style={flexStyles.fill}>
