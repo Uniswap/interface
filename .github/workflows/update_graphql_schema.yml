@@ -24,6 +24,9 @@ jobs:
       - name: 📈 Update GraphQL Schema
         run: yarn graphql:schema
 
+      - name: 🤖 Generate types and hooks for typescript
+        run: yarn graphql:generate
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@18f7dc018cc2cd597073088f7c7591b9d1c02672
         with:
