@@ -35,12 +35,12 @@ const RollNumber = ({
 }): JSX.Element => {
   const colors = useSporeColors()
   const fontColor = useSharedValue(
-    nextColor || (index > chars.length - 4 ? colors.neutral3.get() : colors.neutral1.get())
+    nextColor || (index > chars.length - 4 ? colors.neutral3.val : colors.neutral1.val)
   )
   const yOffset = useSharedValue(digit && Number(digit) >= 0 ? DIGIT_HEIGHT * -digit : 0)
 
   useEffect(() => {
-    const finishColor = index > chars.length - 4 ? colors.neutral3.get() : colors.neutral1.get()
+    const finishColor = index > chars.length - 4 ? colors.neutral3.val : colors.neutral1.val
     if (nextColor && index > commonPrefixLength - 1) {
       fontColor.value = withSequence(
         withTiming(nextColor, { duration: 250 }),
@@ -171,7 +171,7 @@ const AnimatedNumber = ({
       if (prevValue && value > prevValue) {
         setNextColor(colors.statusSuccess.val)
       } else if (prevValue && value < prevValue) {
-        setNextColor(colors.neutral2.get())
+        setNextColor(colors.neutral2.val)
       } else {
         setNextColor(undefined)
       }
@@ -194,7 +194,7 @@ const AnimatedNumber = ({
             <Char
               key={
                 index === 0
-                  ? `$_sign_${colors.neutral1.get()}`
+                  ? `$_sign_${colors.neutral1.val}`
                   : `$_number_${placeholderChars.length - index}`
               }
               chars={placeholderChars}
@@ -213,12 +213,12 @@ const AnimatedNumber = ({
       <Svg height={DIGIT_HEIGHT} style={AnimatedNumberStyles.gradientStyle} width="100%">
         <Defs>
           <LinearGradient id="backgroundTop" x1="0%" x2="0%" y1="15%" y2="0%">
-            <Stop offset="0" stopColor={colors.surface1.get()} stopOpacity="0" />
-            <Stop offset="1" stopColor={colors.surface1.get()} stopOpacity="1" />
+            <Stop offset="0" stopColor={colors.surface1.val} stopOpacity="0" />
+            <Stop offset="1" stopColor={colors.surface1.val} stopOpacity="1" />
           </LinearGradient>
           <LinearGradient id="background" x1="0%" x2="0%" y1="85%" y2="100%">
-            <Stop offset="0" stopColor={colors.surface1.get()} stopOpacity="0" />
-            <Stop offset="1" stopColor={colors.surface1.get()} stopOpacity="1" />
+            <Stop offset="0" stopColor={colors.surface1.val} stopOpacity="0" />
+            <Stop offset="1" stopColor={colors.surface1.val} stopOpacity="1" />
           </LinearGradient>
         </Defs>
         <Rect
@@ -233,7 +233,7 @@ const AnimatedNumber = ({
       </Svg>
       {chars?.map((_, index) => (
         <Char
-          key={index === 0 ? `$_sign_${colors.neutral1.get()}` : `$_number_${chars.length - index}`}
+          key={index === 0 ? `$_sign_${colors.neutral1.val}` : `$_number_${chars.length - index}`}
           chars={chars}
           commonPrefixLength={commonPrefixLength}
           index={index}

@@ -89,7 +89,7 @@ export default function WarningModal({
                 opacify(
                   12,
                   // TODO(MOB-1420): clean up types
-                  colors[alertColorValue as ThemeKeys].get()
+                  colors[alertColorValue as ThemeKeys].val
                 ),
             }}
             width={WARNING_MODAL_BG_SIZE}>

@@ -184,8 +184,8 @@ function TokenDetails({
 
   const { tokenColor, tokenColorLoading } = useExtractedTokenColor(
     tokenLogoUrl,
-    /*background=*/ colors.surface1.get(),
-    /*default=*/ colors.neutral3.get()
+    /*background=*/ colors.surface1.val,
+    /*default=*/ colors.neutral3.val
   )
 
   const onPriceChartRetry = useCallback((): void => {

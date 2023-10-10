@@ -572,9 +572,6 @@ function ActionButton({
             borderRadius="$roundedFull"
             gap="$none"
             px="$spacing12"
-            shadowColor="$sporeWhite"
-            shadowOpacity={0.1}
-            shadowRadius={6}
             style={[
               animatedStyle,
               // eslint-disable-next-line react-native/no-inline-styles

@@ -49,16 +49,13 @@ Shared infrastructure packages and configurations.
 
 Store all product related shared packages code here. Packages should be broken down by specific product. For non-product specific code, split into separate yet widely scoped packages rather than small packages.
 
-## TODO's
+---
 
-### Monorepo
+## Using `packages/ui`
 
-- [ ] add storybook back
-- [ ] Evaluate Turbo licensing
+See the [Readme for UI](https://github.com/Uniswap/wallet-internal/blob/main/packages/ui/README.md).
 
-### Wallet Package
-
-- [ ] Define standard for checksumming addresses
+---
 
 ## Monorepo Background
 

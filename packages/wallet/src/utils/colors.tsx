@@ -47,7 +47,7 @@ export function useNetworkColors(chainId: ChainId): {
   background: string
 } {
   const colors = useSporeColors()
-  const color = colors[getNetworkColorKey(chainId)].get()
+  const color = colors[getNetworkColorKey(chainId)].val
 
   const foreground = color
   assert(foreground, 'Network color is not defined in Theme')
@@ -248,7 +248,7 @@ export function useExtractedTokenColor(
 
   if (isSVGUri(imageUrl)) {
     // Fall back to a more neutral color for SVG's since they fail extraction but we can render them elsewhere
-    return { tokenColor: sporeColors.neutral1?.get(), tokenColorLoading: false }
+    return { tokenColor: sporeColors.neutral1?.val, tokenColorLoading: false }
   }
 
   if (!imageUrl) {

@@ -131,7 +131,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
             position="absolute"
             style={{
               borderColor: opacify(15, colors.sporeWhite.val),
-              backgroundColor: opacify(35, colors.surface1.get()),
+              backgroundColor: opacify(35, colors.surface1.val),
             }}
             top={0}>
             <BlurView

@@ -193,7 +193,6 @@ type ExploreTabBarButtonProps = {
 function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): JSX.Element {
   const dispatch = useAppDispatch()
   const isDarkMode = useIsDarkMode()
-  const colors = useSporeColors()
   const { t } = useTranslation()
 
   const onPress = (): void => {
@@ -219,10 +218,8 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
       }
     : {
         bg: '$surface1',
-        style: {
-          borderColor: colors.surface3.get(),
-          borderWidth: 1,
-        },
+        borderColor: '$surface3',
+        borderWidth: 1,
       }
 
   return (

@@ -80,11 +80,11 @@ export function SettingsWalletEdit({
               />
             ) : (
               <Flex row alignItems="center" gap="$spacing16">
-                <Flex shrink>
-                  <Text color="$neutral1" variant="heading2">
-                    {nickname || shortenAddress(address)}
-                  </Text>
-                </Flex>
+                {/* <Flex shrink> */}
+                <Text color="$neutral1" variant="heading2">
+                  {nickname || shortenAddress(address)}
+                </Text>
+                {/* </Flex> */}
                 {!ensName && (
                   <Flex ml="$spacing12">
                     <Button
