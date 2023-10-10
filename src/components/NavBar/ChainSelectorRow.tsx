@@ -4,6 +4,7 @@ import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { CheckMarkIcon } from 'nft/components/icons'
 import styled, { useTheme } from 'styled-components'
@@ -64,6 +65,9 @@ const Logo = styled.img`
   width: ${LOGO_SIZE}px;
   margin-right: 12px;
 `
+const StyledChainLogo = styled(ChainLogo)`
+  margin-right: 12px;
+`
 interface ChainSelectorRowProps {
   disabled?: boolean
   targetChain: ChainId
@@ -75,7 +79,6 @@ export default function ChainSelectorRow({ disabled, targetChain, onSelectChain,
   const active = chainId === targetChain
   const chainInfo = getChainInfo(targetChain)
   const label = chainInfo?.label
-  const logoUrl = chainInfo?.logoUrl
 
   const theme = useTheme()
 
@@ -88,7 +91,7 @@ export default function ChainSelectorRow({ disabled, targetChain, onSelectChain,
           if (!disabled) onSelectChain(targetChain)
         }}
       >
-        {logoUrl && <Logo src={logoUrl} alt={label} />}
+        <StyledChainLogo chainId={targetChain} size={20} />
         {label && <Label>{label}</Label>}
         {disabled && (
           <CaptionText>

@@ -1,10 +1,10 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { LoadingRow } from 'components/Loader/styled'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import RouterLabel from 'components/RouterLabel'
 import Row, { RowBetween } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { getChainInfo } from 'constants/chainInfo'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useHoverProps from 'hooks/useHoverProps'
 import { useIsMobile } from 'nft/hooks'
@@ -128,7 +128,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
           if (isPreview) return <Loading />
           return (
             <Row gap="4px">
-              <img src={getChainInfo(chainId)?.logoUrl} alt="gas cost icon" width={16} height={16} />
+              <ChainLogo chainId={chainId} />
               {formatNumber({ input: trade.totalGasUseEstimateUSD, type: NumberType.FiatGasPrice })}
             </Row>
           )

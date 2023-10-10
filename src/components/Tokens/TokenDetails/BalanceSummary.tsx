@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain } from 'constants/chains'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
@@ -85,7 +85,7 @@ export default function BalanceSummary({ token }: { token: Currency }) {
           <Trans>Your balance on {label}</Trans>
         </ThemedText.SubHeaderSmall>
         <BalanceRow>
-          <CurrencyLogo currency={token} size="2rem" hideL2Icon={false} />
+          <PortfolioLogo currencies={[token]} chainId={token.chainId} size="2rem" />
           <BalanceContainer>
             <BalanceAmountsContainer>
               <BalanceItem>

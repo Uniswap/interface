@@ -2,6 +2,7 @@ import { t, Trans } from '@lingui/macro'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedL2ChainId } from 'constants/chains'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
@@ -232,7 +233,7 @@ function L2Content({
           <RowBetween mb="16px">
             <Badge>
               <RowFixed>
-                <StyledLogo src={info.logoUrl} style={{ margin: '0 8px 0 0' }} />
+                <ChainLogo chainId={chainId} style={{ margin: '0 8px 0 0' }} />
                 {info.label}
               </RowFixed>
             </Badge>

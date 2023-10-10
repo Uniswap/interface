@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
@@ -212,7 +212,7 @@ export default function TokenDetails({
             </BreadcrumbNavLink>
             <TokenInfoContainer data-testid="token-info-container">
               <TokenNameCell>
-                <CurrencyLogo currency={detailedToken} size="32px" hideL2Icon={false} />
+                <PortfolioLogo currencies={[detailedToken]} chainId={detailedToken.chainId} size="32px" />
                 <TokenTitle>
                   {detailedToken.name ?? <Trans>Name not found</Trans>}
                   <TokenSymbol>{detailedToken.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>

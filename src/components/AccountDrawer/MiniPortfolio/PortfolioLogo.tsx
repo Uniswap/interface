@@ -2,8 +2,8 @@ import { ChainId, Currency } from '@uniswap/sdk-core'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction.svg'
 import { MissingImageLogo } from 'components/Logo/AssetLogo'
+import { ChainLogo, getDefaultBorderRadius } from 'components/Logo/ChainLogo'
 import { Unicon } from 'components/Unicon'
-import { getChainInfo } from 'constants/chainInfo'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import useENSAvatar from 'hooks/useENSAvatar'
 import React from 'react'
@@ -64,9 +64,8 @@ const CircleLogoImage = styled.img<{ size: string }>`
   border-radius: 50%;
 `
 
-const L2LogoContainer = styled.div<{ hasSquareLogo?: boolean }>`
-  background-color: ${({ theme, hasSquareLogo }) => (hasSquareLogo ? theme.surface2 : theme.neutral1)};
-  border-radius: 2px;
+const L2LogoContainer = styled.div`
+  border-radius: ${getDefaultBorderRadius(16)}px;
   height: 16px;
   left: 60%;
   position: absolute;
@@ -152,17 +151,10 @@ interface PortfolioLogoProps {
 
 function SquareL2Logo({ chainId }: { chainId: ChainId }) {
   if (chainId === ChainId.MAINNET) return null
-  const { squareLogoUrl, logoUrl } = getChainInfo(chainId)
-
-  const chainLogo = squareLogoUrl ?? logoUrl
 
   return (
-    <L2LogoContainer hasSquareLogo={!!squareLogoUrl}>
-      {squareLogoUrl ? (
-        <SquareChainLogo src={chainLogo} alt="chainLogo" />
-      ) : (
-        <StyledChainLogo src={chainLogo} alt="chainLogo" />
-      )}
+    <L2LogoContainer>
+      <ChainLogo chainId={chainId} size={16} />
     </L2LogoContainer>
   )
 }
