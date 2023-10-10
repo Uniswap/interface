@@ -7,7 +7,7 @@ import { useRef } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { useTheme } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
 import { MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT } from '../constants'
 import { filterTimeAtom } from '../state'
@@ -71,9 +71,14 @@ const MenuTimeFlyout = styled.span<{ isInfoExplorePageEnabled: boolean }>`
   z-index: 100;
   left: 0px;
 
-  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    ${({ isInfoExplorePageEnabled }) => !isInfoExplorePageEnabled && 'left: unset; right: 0px;'}
-  }
+  ${({ isInfoExplorePageEnabled }) =>
+    !isInfoExplorePageEnabled &&
+    css`
+      @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
+        left: unset;
+        right: 0px;
+      }
+    `}
 `
 const StyledMenu = styled.div<{ isInfoExplorePageEnabled: boolean }>`
   display: flex;
@@ -83,9 +88,13 @@ const StyledMenu = styled.div<{ isInfoExplorePageEnabled: boolean }>`
   border: none;
   text-align: left;
 
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    ${({ isInfoExplorePageEnabled }) => !isInfoExplorePageEnabled && 'width: 72px;'}
-  }
+  ${({ isInfoExplorePageEnabled }) =>
+    !isInfoExplorePageEnabled &&
+    css`
+      @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+        width: 72px;
+      }
+    `}
 `
 const StyledMenuContent = styled.div<{ isInfoExplorePageEnabled: boolean }>`
   display: flex;
@@ -144,15 +153,12 @@ export default function TimeSelector() {
                 toggleMenu()
               }}
             >
-              {/* <div>
-                {DISPLAYS[time]} <Trans>volume</Trans>
-              </div> */}
               {isInfoExplorePageEnabled ? (
                 <div>
-                  {DISPLAYS[activeTime]} <Trans>volume</Trans>
+                  {DISPLAYS[time]} <Trans>volume</Trans>
                 </div>
               ) : (
-                <div>{DISPLAYS[activeTime]}</div>
+                <div>{DISPLAYS[time]}</div>
               )}
               {time === activeTime && <Check color={theme.accent1} size={16} />}
             </InternalLinkMenuItem>

@@ -3,11 +3,7 @@ import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName 
 import { TraceEvent } from 'analytics'
 import { Trace } from 'analytics'
 import { AutoRow } from 'components/Row'
-import {
-  LARGE_MEDIA_BREAKPOINT,
-  MAX_WIDTH_MEDIA_BREAKPOINT,
-  MEDIUM_MEDIA_BREAKPOINT,
-} from 'components/Tokens/constants'
+import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
@@ -57,8 +53,7 @@ const NavWrapper = styled.div<{ isInfoExplorePageEnabled: boolean }>`
   ${({ isInfoExplorePageEnabled }) =>
     isInfoExplorePageEnabled &&
     css`
-      /* Use large media breakpoint so expanded search bar doesn't push tabs to next line */
-      @media screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
+      @media screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
         flex-direction: column;
         gap: 16px;
       }

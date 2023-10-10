@@ -34,7 +34,7 @@ const SearchInput = styled.input<{ isInfoExplorePageEnabled: boolean; isOpen?: b
   padding-left: 40px;
   color: ${({ theme }) => theme.neutral2};
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
-  ${({ isInfoExplorePageEnabled }) => isInfoExplorePageEnabled && 'text-overflow: ellipsis;'}
+  ${(isInfoExplorePageEnabled) => isInfoExplorePageEnabled && 'text-overflow: ellipsis;'}
 
   :hover {
     background-color: ${({ theme }) => theme.surface1};
