@@ -6,6 +6,7 @@ import {
   useCallback,
   useContext,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import { useDerivedSwapInfo } from 'src/features/transactions/swap/hooks'
@@ -38,6 +39,8 @@ type DerivedSwapFormState = {
 }
 
 type SwapContextState = {
+  exactAmountFiatRef: React.MutableRefObject<string>
+  exactAmountTokenRef: React.MutableRefObject<string>
   onClose: () => void
   setSwapForm: Dispatch<SetStateAction<SwapFormState>>
   updateSwapForm: (newState: Partial<SwapFormState>) => void
@@ -71,10 +74,19 @@ export function SwapContextProvider({
   prefilledState?: SwapFormState
   onClose: () => void
 }): JSX.Element {
+  const exactAmountFiatRef = useRef<string>('')
+  const exactAmountTokenRef = useRef<string>('')
   const [swapForm, setSwapForm] = useState<SwapFormState>(prefilledState ?? DEFAULT_STATE)
 
   const updateSwapForm = useCallback(
     (newState: Parameters<SwapContextState['updateSwapForm']>[0]): void => {
+      if ('exactAmountFiat' in newState) {
+        exactAmountFiatRef.current = newState.exactAmountFiat ?? ''
+      }
+
+      if ('exactAmountToken' in newState) {
+        exactAmountTokenRef.current = newState.exactAmountToken ?? ''
+      }
       setSwapForm((prevState) => ({ ...prevState, ...newState }))
     },
     [setSwapForm]
@@ -102,7 +114,9 @@ export function SwapContextProvider({
     (): SwapContextState => ({
       customSlippageTolerance: swapForm.customSlippageTolerance,
       exactAmountFiat: swapForm.exactAmountFiat,
+      exactAmountFiatRef,
       exactAmountToken: swapForm.exactAmountToken,
+      exactAmountTokenRef,
       exactCurrencyField: swapForm.exactCurrencyField,
       focusOnCurrencyField: swapForm.focusOnCurrencyField,
       input: swapForm.input,

@@ -26,6 +26,7 @@ const ScaleTimingConfigOut = { duration: 75, easing: Easing.ease }
  */
 export function TouchableArea({
   hapticFeedback = false,
+  ignoreDragEvents = false,
   hapticStyle,
   scaleTo,
   onPress,
@@ -50,28 +51,30 @@ export function TouchableArea({
     async (event: GestureResponderEvent) => {
       if (!onPress) return
 
-      const { pageX, pageY } = event.nativeEvent
+      if (!ignoreDragEvents) {
+        const { pageX, pageY } = event.nativeEvent
 
-      const isDragEvent =
-        touchActivationPositionRef.current &&
-        isDrag(
-          touchActivationPositionRef.current.pageX,
-          touchActivationPositionRef.current.pageY,
-          pageX,
-          pageY
-        )
+        const isDragEvent =
+          touchActivationPositionRef.current &&
+          isDrag(
+            touchActivationPositionRef.current.pageX,
+            touchActivationPositionRef.current.pageY,
+            pageX,
+            pageY
+          )
 
-      if (isDragEvent) {
-        return
+        if (isDragEvent) {
+          return
+        }
       }
+
+      onPress(event)
 
       if (hapticFeedback) {
         await impactAsync(hapticStyle)
       }
-
-      onPress(event)
     },
-    [onPress, hapticFeedback, hapticStyle]
+    [onPress, hapticFeedback, hapticStyle, ignoreDragEvents]
   )
 
   const onPressInHandler = useMemo(() => {

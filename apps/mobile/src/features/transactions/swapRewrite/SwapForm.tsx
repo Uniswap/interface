@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleSheet, TextInputProps, TouchableWithoutFeedback } from 'react-native'
 import {
@@ -9,7 +9,6 @@ import {
   useSharedValue,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { DecimalPad } from 'src/components/input/DecimalPad'
 import { Box } from 'src/components/layout'
 import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { HandleBar } from 'src/components/modals/HandleBar'
@@ -17,18 +16,16 @@ import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID } from 'src/constants/globals'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
-import {
-  useShowSwapNetworkNotification,
-  useSwapTxAndGasInfo,
-} from 'src/features/transactions/swap/hooks'
+import { useShowSwapNetworkNotification } from 'src/features/transactions/swap/hooks'
 import { CurrencyInputPanel } from 'src/features/transactions/swapRewrite/CurrencyInputPanel'
+import { DecimalPadInput } from 'src/features/transactions/swapRewrite/DecimalPadInput'
+import { GasFee } from 'src/features/transactions/swapRewrite/GasFee'
 import { SwapArrowButton } from 'src/features/transactions/swapRewrite/SwapArrowButton'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { formatCurrencyAmount, formatUSDPrice, NumberType } from 'utilities/src/format/format'
-import { useUSDValue } from 'wallet/src/features/gas/hooks'
+import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
@@ -84,7 +81,9 @@ function SwapFormContent(): JSX.Element {
   const {
     derivedSwapInfo,
     exactAmountFiat,
+    exactAmountFiatRef,
     exactAmountToken,
+    exactAmountTokenRef,
     exactCurrencyField,
     focusOnCurrencyField,
     input,
@@ -98,13 +97,6 @@ function SwapFormContent(): JSX.Element {
 
   useShowSwapNetworkNotification(chainId)
 
-  const { gasFee } = useSwapTxAndGasInfo(
-    derivedSwapInfo,
-    // TODO: skip this query when we implement review screen
-    false
-  )
-  const gasFeeUSD = useUSDValue(chainId, gasFee.value ?? undefined)
-
   const { isBlocked } = useIsBlockedActiveAddress()
 
   const { walletNeedsRestore, openWalletRestoreModal } = useWalletRestore()
@@ -117,23 +109,23 @@ function SwapFormContent(): JSX.Element {
   const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
     useShouldShowNativeKeyboard()
 
-  const [inputSelection, setInputSelection] = useState<TextInputProps['selection']>()
-  const [outputSelection, setOutputSelection] = useState<TextInputProps['selection']>()
+  const inputSelectionRef = useRef<TextInputProps['selection']>()
+  const outputSelectionRef = useRef<TextInputProps['selection']>()
 
   const selection = useMemo(
     () => ({
-      [CurrencyField.INPUT]: inputSelection,
-      [CurrencyField.OUTPUT]: outputSelection,
+      [CurrencyField.INPUT]: inputSelectionRef,
+      [CurrencyField.OUTPUT]: outputSelectionRef,
     }),
-    [inputSelection, outputSelection]
+    [inputSelectionRef, outputSelectionRef]
   )
 
   const resetSelection = useCallback(
     (start: number, end?: number) => {
       if (focusOnCurrencyField === CurrencyField.INPUT) {
-        setInputSelection({ start, end: end ?? start })
+        inputSelectionRef.current = { start, end: end ?? start }
       } else if (focusOnCurrencyField === CurrencyField.OUTPUT) {
-        setOutputSelection({ start, end: end ?? start })
+        outputSelectionRef.current = { start, end: end ?? start }
       }
     },
     [focusOnCurrencyField]
@@ -155,11 +147,11 @@ function SwapFormContent(): JSX.Element {
   )
 
   const onInputSelectionChange = useCallback(
-    (start: number, end: number) => setInputSelection({ start, end }),
+    (start: number, end: number) => (inputSelectionRef.current = { start, end }),
     []
   )
   const onOutputSelectionChange = useCallback(
-    (start: number, end: number) => setOutputSelection({ start, end }),
+    (start: number, end: number) => (outputSelectionRef.current = { start, end }),
     []
   )
 
@@ -230,7 +222,15 @@ function SwapFormContent(): JSX.Element {
     ''
   )
 
+  // TODO - improve this to update ref when calculating the derived state
+  // instead of assigning ref based on the derived state
+  const formattedDerivedValueRef = useRef(formattedDerivedValue)
+  useEffect(() => {
+    formattedDerivedValueRef.current = formattedDerivedValue
+  }, [formattedDerivedValue])
+
   const exactValue = isFiatInput ? exactAmountFiat : exactAmountToken
+  const exactValueRef = isFiatInput ? exactAmountFiatRef : exactAmountTokenRef
 
   // TODO: implement.
   const swapDataRefreshing = false
@@ -388,14 +388,7 @@ function SwapFormContent(): JSX.Element {
             )}
           </Flex>
         </Trace>
-        {gasFeeUSD && (
-          <Flex centered row gap="$spacing4" padding="$spacing16">
-            <Icons.Gas color={colors.neutral2.val} size="$icon.20" />
-            <Text color="$neutral2" variant="body3">
-              {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
-            </Text>
-          </Flex>
-        )}
+        <GasFee derivedSwapInfo={derivedSwapInfo} />
       </AnimatedFlex>
       <AnimatedFlex
         bottom={0}
@@ -407,11 +400,13 @@ function SwapFormContent(): JSX.Element {
         right={0}
         onLayout={onDecimalPadLayout}>
         {!showNativeKeyboard && (
-          <DecimalPad
+          <DecimalPadInput
             resetSelection={resetSelection}
-            selection={focusOnCurrencyField ? selection[focusOnCurrencyField] : undefined}
+            selectionRef={focusOnCurrencyField ? selection[focusOnCurrencyField] : undefined}
             setValue={decimalPadSetValue}
-            value={focusOnCurrencyField === exactCurrencyField ? exactValue : formattedDerivedValue}
+            valueRef={
+              focusOnCurrencyField === exactCurrencyField ? exactValueRef : formattedDerivedValueRef
+            }
           />
         )}
         <Trace logPress element={ElementName.SwapReview}>
