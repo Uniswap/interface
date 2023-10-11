@@ -7,6 +7,8 @@ import { HiddenFromScreenReaders } from 'ui/src/components/text/HiddenFromScreen
 import { Shimmer } from 'ui/src/loading/Shimmer'
 import { fonts } from 'ui/src/theme/fonts'
 
+export const DEFAULT_FONT_SCALE = 1
+
 export const TextFrame = styled(TamaguiText, {
   fontFamily: '$body',
   wordWrap: 'break-word',
@@ -116,8 +118,6 @@ export const TextFrame = styled(TamaguiText, {
 })
 
 type TextFrameProps = GetProps<typeof TextFrame>
-
-export const DEFAULT_FONT_SCALE = 1
 
 export type TextProps = TextFrameProps & {
   maxFontSizeMultiplier?: number

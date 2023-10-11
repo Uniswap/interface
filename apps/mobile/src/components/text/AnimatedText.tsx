@@ -16,9 +16,8 @@ import {
   useWindowDimensions,
 } from 'react-native'
 import Animated, { useAnimatedProps } from 'react-native-reanimated'
-import { DEFAULT_FONT_SCALE } from 'src/components/Text'
 import { Flex } from 'ui/src'
-import { TextLoaderWrapper } from 'ui/src/components/text/Text'
+import { DEFAULT_FONT_SCALE, TextLoaderWrapper } from 'ui/src/components/text/Text'
 import { fonts, TextVariantTokens } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 
