@@ -230,9 +230,6 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-  max-height: -webkit-fit-content;
-  max-height: -moz-fit-content;
-  max-height: fit-content;
   line-height: 24px;
   white-space: pre-wrap;
 }

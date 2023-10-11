@@ -166,9 +166,6 @@ exports[`TokenDescription copy address button hidden when flagged 1`] = `
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-  max-height: -webkit-fit-content;
-  max-height: -moz-fit-content;
-  max-height: fit-content;
   line-height: 24px;
   white-space: pre-wrap;
 }
@@ -482,9 +479,6 @@ exports[`TokenDescription no description or social buttons shown when not availa
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-  max-height: -webkit-fit-content;
-  max-height: -moz-fit-content;
-  max-height: fit-content;
   line-height: 24px;
   white-space: pre-wrap;
 }
@@ -762,9 +756,6 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-  max-height: -webkit-fit-content;
-  max-height: -moz-fit-content;
-  max-height: fit-content;
   line-height: 24px;
   white-space: pre-wrap;
 }
@@ -1113,9 +1104,6 @@ exports[`TokenDescription truncates description and shows more 1`] = `
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-  max-height: -webkit-fit-content;
-  max-height: -moz-fit-content;
-  max-height: fit-content;
   line-height: 24px;
   white-space: pre-wrap;
 }

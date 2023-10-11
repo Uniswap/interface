@@ -59,7 +59,7 @@ const TokenInfoButton = styled(Row)<{ tokenColor: string }>`
 const TokenDescriptionContainer = styled(ThemedText.BodyPrimary)`
   ${EllipsisStyle}
   max-width: 100%;
-  max-height: fit-content;
+  // max-height: fit-content;
   line-height: 24px;
   white-space: pre-wrap;
 `
