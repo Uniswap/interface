@@ -9,12 +9,12 @@ describe('Routes', () => {
     const contents = fs.readFileSync('./public/sitemap.xml', 'utf8')
     const sitemap = await parseStringPromise(contents)
 
-    const sitemapPaths = sitemap.urlset.url.map((url: any) => new URL(url['$'].loc).pathname)
+    const sitemapPaths: string[] = sitemap.urlset.url.map((url: any) => new URL(url['$'].loc).pathname)
 
-    pathNames
-      .filter((p) => !p.includes(':') && !p.includes('*') && !p.includes('not-found'))
+    sitemapPaths
+      .filter((p) => !p.includes('/0x'))
       .forEach((path: string) => {
-        expect(sitemapPaths).toContain(path)
+        expect(pathNames).toContain(path)
       })
   })
 
