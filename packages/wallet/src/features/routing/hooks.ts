@@ -136,6 +136,8 @@ export function useSimulatedGasLimit(
     () => ({
       loading: loading || isDebouncing,
       error: error || data?.simulationError,
+      quoteId: data?.trade.quote?.quoteId,
+      requestId: data?.trade.quote?.requestId,
       simulatedGasLimit: data?.gasUseEstimate,
     }),
     [loading, isDebouncing, error, data]

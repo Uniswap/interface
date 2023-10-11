@@ -496,7 +496,11 @@ function useSwapTransactionRequest(
     tokenApprovalInfo?.action === ApprovalAction.Approve ||
     tokenApprovalInfo?.action === ApprovalAction.Permit2Approve
 
-  const { loading: simulatedGasLimitLoading, simulatedGasLimit } = simulatedGasEstimationInfo
+  const {
+    loading: simulatedGasLimitLoading,
+    simulatedGasLimit,
+    error: simulatedGasError,
+  } = simulatedGasEstimationInfo
 
   const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
   return useMemo(() => {
@@ -605,16 +609,39 @@ export function useSwapTxAndGasInfo({
   const swapGasFee = useTransactionGasFee(transactionRequest, GasSpeed.Urgent, skipGasFeeQuery)
 
   useEffect(() => {
-    if (swapGasFee.error && simulatedGasEstimationInfo.error) {
+    const {
+      error: simulatedGasEstimateError,
+      quoteId: simulatedGasEstimateQuoteId,
+      requestId: simulatedGasEstimateRequestId,
+    } = simulatedGasEstimationInfo
+
+    if (simulatedGasEstimateError) {
       const simulationError =
         typeof simulatedGasEstimationInfo.error === 'boolean'
           ? new Error('Unknown gas simulation error')
-          : simulatedGasEstimationInfo.error
+          : simulatedGasEstimateError
+
+      logger.error(simulationError, {
+        tags: { file: 'swap/hooks', function: 'useSwapTxAndGasInfo' },
+        extra: {
+          requestId: simulatedGasEstimateRequestId,
+          quoteId: simulatedGasEstimateQuoteId,
+        },
+      })
       sendMobileAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
         ...getBaseTradeAnalyticsPropertiesFromSwapInfo(derivedSwapInfo),
-        error: shouldFetchSimulatedGasLimit
-          ? simulationError.toString()
-          : swapGasFee.error.toString(),
+        error: simulationError.toString(),
+        txRequest: transactionRequest,
+      })
+    }
+
+    if (swapGasFee.error) {
+      logger.error(swapGasFee.error, {
+        tags: { file: 'swap/hooks', function: 'useSwapTxAndGasInfo' },
+      })
+      sendMobileAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
+        ...getBaseTradeAnalyticsPropertiesFromSwapInfo(derivedSwapInfo),
+        error: swapGasFee.error.toString(),
         txRequest: transactionRequest,
       })
     }
@@ -622,7 +649,7 @@ export function useSwapTxAndGasInfo({
     derivedSwapInfo,
     transactionRequest,
     shouldFetchSimulatedGasLimit,
-    simulatedGasEstimationInfo.error,
+    simulatedGasEstimationInfo,
     swapGasFee.error,
   ])
 

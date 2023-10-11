@@ -83,6 +83,8 @@ export type UseTransactionGasFeeResponse = {
 export interface SimulatedGasEstimationInfo {
   loading: boolean
   simulatedGasLimit?: string
+  quoteId?: string
+  requestId?: string
   error?: boolean | FetchBaseQueryError | SerializedError
 }
 
