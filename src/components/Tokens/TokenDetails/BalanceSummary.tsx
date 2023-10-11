@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain } from 'constants/chains'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
@@ -77,6 +78,11 @@ export default function BalanceSummary({ token }: { token: Currency }) {
   })
 
   const currencies = useMemo(() => [token], [token])
+
+  const { data: portfolioBalances } = useCachedPortfolioBalancesQuery({ account })
+  const tokenBalances = portfolioBalances?.portfolios?.[0].tokenBalances
+  console.log('tokenBalances', tokenBalances)
+  // TODO THIS IS THE LIST OF FULL TOKEN BALANCES, NEED TO FILTER BY THIS TOKEN
 
   if (!account || !balance) {
     return null

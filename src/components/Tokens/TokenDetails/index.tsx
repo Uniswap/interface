@@ -257,9 +257,9 @@ export default function TokenDetails({
             />
           </div>
           {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
-          {!isInfoTDPEnabled && detailedToken && <BalanceSummary token={detailedToken} />}
+          {detailedToken && <BalanceSummary token={detailedToken} />}
         </RightPanel>
-        {!isInfoTDPEnabled && detailedToken && <MobileBalanceSummaryFooter token={detailedToken} />}
+        {detailedToken && <MobileBalanceSummaryFooter token={detailedToken} />}
 
         <TokenSafetyModal
           isOpen={openTokenSafetyModal || !!continueSwap}

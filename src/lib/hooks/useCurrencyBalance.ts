@@ -108,6 +108,7 @@ export function useTokenBalance(account?: string, token?: Token): CurrencyAmount
   return tokenBalances[token.address]
 }
 
+/* Get balance for tokens on current chainId */
 export function useCurrencyBalances(
   account?: string,
   currencies?: (Currency | undefined)[]
