@@ -327,108 +327,114 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
           <div
             class="c18"
           />
-          <div
-            class="c2 c3 c4"
-          >
+          <div>
             <div
-              class="c9 c19 css-142zc9n"
-              data-testid="swap-li-label"
+              class="c2 c3 c4"
             >
-              Price impact
-            </div>
-            <div
-              class="c12"
-            >
-              <div>
-                <div
-                  class="c9 c20 css-142zc9n"
-                >
-                  <span
-                    class=""
-                  >
-                    -105566.373%
-                  </span>
-                </div>
+              <div
+                class="c9 c19 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Price impact
               </div>
-            </div>
-          </div>
-          <div
-            class="c2 c3 c4"
-          >
-            <div
-              class="c9 c19 css-142zc9n"
-              data-testid="swap-li-label"
-            >
-              Max. slippage
-            </div>
-            <div
-              class="c12"
-            >
-              <div>
-                <div
-                  class="c9 c20 css-142zc9n"
-                >
+              <div
+                class="c12"
+              >
+                <div>
                   <div
-                    class="c2 c21"
+                    class="c9 c20 css-142zc9n"
                   >
-                    <div
-                      class="c14 c22 css-1lgneq0"
-                    />
-                     2%
+                    <span
+                      class=""
+                    >
+                      -105566.373%
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div
-            class="c2 c3 c4"
-          >
+          <div>
             <div
-              class="c9 c19 css-142zc9n"
-              data-testid="swap-li-label"
+              class="c2 c3 c4"
             >
-              Network cost
-            </div>
-            <div
-              class="c12"
-            >
-              <div>
-                <div
-                  class="c9 c20 css-142zc9n"
-                >
+              <div
+                class="c9 c19 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Max. slippage
+              </div>
+              <div
+                class="c12"
+              >
+                <div>
                   <div
-                    class="c2 c10"
+                    class="c9 c20 css-142zc9n"
                   >
-                    <svg
-                      aria-labelledby="titleID"
-                      height="16"
-                      width="16"
+                    <div
+                      class="c2 c21"
                     >
-                      <title
-                        id="titleID"
-                      >
-                        Ethereum logo
-                      </title>
-                      <rect
-                        fill="#F9F9F9"
-                        height="16"
-                        rx="4"
-                        width="16"
+                      <div
+                        class="c14 c22 css-1lgneq0"
                       />
-                      <rect
-                        fill="#6B8AFF33"
-                        height="16"
-                        rx="4"
-                        width="16"
-                      />
+                       2%
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c9 c19 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Network cost
+              </div>
+              <div
+                class="c12"
+              >
+                <div>
+                  <div
+                    class="c9 c20 css-142zc9n"
+                  >
+                    <div
+                      class="c2 c10"
+                    >
                       <svg
+                        aria-labelledby="titleID"
                         height="16"
                         width="16"
                       >
-                        ethereum.svg
+                        <title
+                          id="titleID"
+                        >
+                          Ethereum logo
+                        </title>
+                        <rect
+                          fill="#F9F9F9"
+                          height="16"
+                          rx="4"
+                          width="16"
+                        />
+                        <rect
+                          fill="#6B8AFF33"
+                          height="16"
+                          rx="4"
+                          width="16"
+                        />
+                        <svg
+                          height="16"
+                          width="16"
+                        >
+                          ethereum.svg
+                        </svg>
                       </svg>
-                    </svg>
-                    $1.00
+                      $1.00
+                    </div>
                   </div>
                 </div>
               </div>
@@ -437,26 +443,28 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
           <div
             class="c18"
           />
-          <div
-            class="c2 c3 c4"
-          >
+          <div>
             <div
-              class="c9 c19 css-142zc9n"
-              data-testid="swap-li-label"
+              class="c2 c3 c4"
             >
-              Order routing
-            </div>
-            <div
-              class="c12"
-            >
-              <div>
-                <div
-                  class="c9 c20 css-142zc9n"
-                >
+              <div
+                class="c9 c19 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Order routing
+              </div>
+              <div
+                class="c12"
+              >
+                <div>
                   <div
-                    class="css-142zc9n"
+                    class="c9 c20 css-142zc9n"
                   >
-                    Uniswap Client
+                    <div
+                      class="css-142zc9n"
+                    >
+                      Uniswap Client
+                    </div>
                   </div>
                 </div>
               </div>
