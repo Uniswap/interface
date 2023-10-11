@@ -85,7 +85,7 @@ fun decrypt(encryptedSecret: String, password: String, salt: String): String {
  */
 fun keyFromPassword(password: String, salt: String): ByteArray {
     val hash: Argon2KtResult = Argon2Kt().hash(
-      mode = Argon2Mode.ARGON2_I,
+      mode = Argon2Mode.ARGON2_ID,
       password = password.toByteArray(Charsets.UTF_8),
       salt = salt.toByteArray(Charsets.UTF_8),
       tCostInIterations = 3,
