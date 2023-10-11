@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency, Fraction } from '@uniswap/sdk-core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getChainInfo } from 'constants/chainInfo'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TokenQueryData } from 'graphql/data/Token'
 import { useTotalSupply } from 'hooks/useTotalSupply'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
@@ -91,18 +91,21 @@ type StatsSectionProps = {
 }
 export default function StatsSection(props: StatsSectionProps) {
   const { chainId, address, currency, tokenQueryData } = props
+  const { label, infoLink } = getChainInfo(chainId)
+  const isInfoTDPEnabled = useInfoTDPEnabled()
 
-  const marketCap = tokenQueryData?.project?.markets?.[0].marketCap?.value
+  const price = tokenQueryData?.project?.markets?.[0].price?.value ?? 0 // aggregated market price from CoinGecko, used to calculate FDV
+  const totalSupply = useTotalSupply(currency)
+  const FDV = useMemo(() => {
+    const priceFraction = new Fraction(price * 10 ** 18, 10 ** 18)
+    return Number.parseFloat(totalSupply?.multiply(priceFraction).toExact() ?? '0')
+  }, [price, totalSupply]) // todo(kristiehuang): ask BE team to re-implement FDV in gql
+
+  const marketCap = tokenQueryData?.project?.markets?.[0].marketCap?.value ?? FDV
   const TVL = tokenQueryData?.market?.totalValueLocked?.value
   const volume24H = tokenQueryData?.market?.volume24H?.value
   const priceHigh52W = tokenQueryData?.market?.priceHigh52W?.value
   const priceLow52W = tokenQueryData?.market?.priceLow52W?.value
-
-  const currentPrice = tokenQueryData?.market?.price?.value ?? 0
-  const FDV = Number.parseFloat(useTotalSupply(currency)?.multiply(currentPrice).toExact() ?? '')
-
-  const { label, infoLink } = getChainInfo(chainId)
-  const isInfoTDPEnabled = useInfoTDPEnabled()
 
   const haveStats = isInfoTDPEnabled
     ? TVL || FDV || marketCap || volume24H
@@ -135,18 +138,23 @@ export default function StatsSection(props: StatsSectionProps) {
                 <Stat
                   dataCy="market-cap"
                   value={marketCap}
-                  description={<Trans>Market cap</Trans>}
-                  title={<Trans>Market cap is the total market value of an asset&apos;s circulating supply.</Trans>}
+                  description={
+                    <Trans>
+                      Market capitalization is the total market value of an asset&apos;s circulating supply.
+                    </Trans>
+                  }
+                  title={<Trans>Market cap</Trans>}
                 />
                 <Stat
-                  dataCy="volume-24h"
+                  dataCy="volume-1d"
                   value={volume24H}
                   description={
                     <Trans>
-                      24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
+                      1 day volume is the amount of the asset that has been traded on Uniswap v3 during the past 24
+                      hours.
                     </Trans>
                   }
-                  title={<Trans>24H volume</Trans>}
+                  title={<Trans>1 day volume</Trans>}
                 />
               </StatPair>
             </>
