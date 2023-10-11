@@ -16,7 +16,7 @@ import { selectModalState } from 'src/features/modals/selectModalState'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
-import { AnimatedFlex, Button, ColorTokens, Flex, Text, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Button, ColorTokens, Flex, Text, ThemeKeys, useSporeColors } from 'ui/src'
 import { iconSizes, opacify } from 'ui/src/theme'
 import {
   EditAccountAction,
@@ -131,7 +131,7 @@ export function RemoveWalletModal(): JSX.Element | null {
     modalContent
 
   // TODO(MOB-1420): clean up types
-  const labelColor = iconColorLabel as keyof typeof colors
+  const labelColor: ThemeKeys = iconColorLabel
 
   return (
     <BottomSheetModal
@@ -144,7 +144,7 @@ export function RemoveWalletModal(): JSX.Element | null {
           borderRadius="$rounded12"
           p="$spacing12"
           style={{
-            backgroundColor: opacify(12, colors[labelColor].get()),
+            backgroundColor: opacify(12, colors[labelColor].val),
           }}>
           <Icon color={colors[labelColor].val} height={iconSizes.icon24} width={iconSizes.icon24} />
         </Flex>
