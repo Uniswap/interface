@@ -71,8 +71,8 @@ android {
         compileSdk rootProject.ext.compileSdkVersion
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 1 // Updated dynamically, no need to modify
+        versionName "1.0" // Updated for flavor, no need to modify
         multiDexEnabled true
     }
     splits {
@@ -104,17 +104,17 @@ android {
       dev {
         isDefault(true)
         applicationIdSuffix ".dev"
-        versionName "0.1"
+        versionName "1.14"
         dimension "variant"
       }
       beta {
         applicationIdSuffix ".beta"
-        versionName "0.1"
+        versionName "1.14"
         dimension "variant"
       }
       prod {
         dimension "variant"
-        versionName "0.1"
+        versionName "1.14"
       }
     }
 
