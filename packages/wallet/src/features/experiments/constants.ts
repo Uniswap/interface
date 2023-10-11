@@ -8,6 +8,7 @@ export enum FEATURE_FLAGS {
   MevBlocker = 'mev-blocker',
   SwapRewrite = 'swap-rewrite',
   PortionFields = 'portion-fields',
+  DisableGoogleDriveBackup = 'disable-google-drive-backup',
 }
 
 /**

@@ -42,6 +42,8 @@ import ShieldQuestionIcon from 'ui/src/assets/icons/shield-question.svg'
 import { iconSizes } from 'ui/src/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import {
   EditAccountAction,
   editAccountActions,
@@ -68,6 +70,7 @@ export function SettingsWallet({
   const currentAccount = addressToAccount[address]
   const ensName = useENS(ChainId.Mainnet, address)?.name
   const readonly = currentAccount?.type === AccountType.Readonly
+  const googleDriveDisabled = useFeatureFlag(FEATURE_FLAGS.DisableGoogleDriveBackup) && IS_ANDROID
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
 
   const hasCloudBackup = currentAccount?.backups?.includes(BackupType.Cloud)
@@ -223,7 +226,7 @@ export function SettingsWallet({
             : { address },
           text: IS_ANDROID ? t('Google Drive Backup') : t('iCloud backup'),
           icon: <Icons.OSDynamicCloudIcon color="$neutral2" size="$icon.24" />,
-          isHidden: readonly,
+          isHidden: readonly || googleDriveDisabled,
         },
       ],
     },

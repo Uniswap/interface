@@ -18,6 +18,8 @@ import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes } from 'ui/src/theme'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -50,7 +52,7 @@ const options: ImportMethodOption[] = [
     icon: <Icons.OSDynamicCloudIcon color="$accent1" size="$icon.24" />,
     nav: OnboardingScreens.RestoreCloudBackup,
     importType: ImportType.Restore,
-    name: ElementName.OnboardingImportWatchedAccount,
+    name: ElementName.RestoreFromCloud,
   },
 ]
 
@@ -61,6 +63,8 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
   const colors = useSporeColors()
   const dispatch = useAppDispatch()
   const entryPoint = params?.entryPoint
+
+  const googleDriveDisabled = useFeatureFlag(FEATURE_FLAGS.DisableGoogleDriveBackup) && IS_ANDROID
 
   useAddBackButton(navigation)
 
@@ -109,8 +113,8 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
   }
 
   const importOptions =
-    entryPoint === OnboardingEntryPoint.Sidebar
-      ? options.filter((option) => option.name !== ElementName.OnboardingImportWatchedAccount)
+    entryPoint === OnboardingEntryPoint.Sidebar || googleDriveDisabled
+      ? options.filter((option) => option.name !== ElementName.RestoreFromCloud)
       : options
 
   return (

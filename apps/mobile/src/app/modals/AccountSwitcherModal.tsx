@@ -19,6 +19,8 @@ import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
 import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { dimensions, spacing } from 'ui/src/theme'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
 import {
@@ -60,6 +62,8 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const dispatch = useAppDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
   const modalState = useAppSelector(selectModalState(ModalName.AccountSwitcher))
+
+  const googleDriveDisabled = useFeatureFlag(FEATURE_FLAGS.DisableGoogleDriveBackup) && IS_ANDROID
 
   const [showAddWalletModal, setShowAddWalletModal] = useState(false)
 
@@ -200,7 +204,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       },
     ]
 
-    if (!hasImportedSeedPhrase) {
+    if (!hasImportedSeedPhrase && !googleDriveDisabled) {
       options.push({
         key: ElementName.RestoreFromCloud,
         onPress: onPressRestore,
@@ -215,7 +219,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     return options
-  }, [activeAccountAddress, dispatch, hasImportedSeedPhrase, onClose, t])
+  }, [activeAccountAddress, dispatch, googleDriveDisabled, hasImportedSeedPhrase, onClose, t])
 
   const accountsWithoutActive = accounts.filter((a) => a.address !== activeAccountAddress)
 

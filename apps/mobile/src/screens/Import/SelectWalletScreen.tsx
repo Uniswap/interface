@@ -5,6 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Loader } from 'src/components/loading'
+import { IS_ANDROID } from 'src/constants/globals'
 import WalletPreviewCard from 'src/features/import/WalletPreviewCard'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
@@ -15,6 +16,8 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { useSelectWalletScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import {
   EditAccountAction,
   editAccountActions,
@@ -53,6 +56,8 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 export function SelectWalletScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+
+  const googleDriveDisabled = useFeatureFlag(FEATURE_FLAGS.DisableGoogleDriveBackup) && IS_ANDROID
 
   const accounts = useAccounts()
   const initialViewOnlyWallets = useRef<Account[]>( // Hold onto reference of view-only wallets before importing more wallets
@@ -197,15 +202,25 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
         }
       }
     })
+
     navigation.navigate({
       name:
-        params?.importType === ImportType.Restore
+        params?.importType === ImportType.Restore || googleDriveDisabled
           ? OnboardingScreens.Notifications
           : OnboardingScreens.Backup,
       params,
       merge: true,
     })
-  }, [addresses, navigation, params, selectedAddresses, dispatch, pendingAccounts, t])
+  }, [
+    addresses,
+    navigation,
+    params,
+    googleDriveDisabled,
+    selectedAddresses,
+    dispatch,
+    pendingAccounts,
+    t,
+  ])
 
   // Force a fixed duration loading state for smoother transition (as we show different UI for 1 vs multiple wallets)
   const [isForcedLoading, setIsForcedLoading] = useState(true)

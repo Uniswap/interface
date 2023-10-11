@@ -25,6 +25,8 @@ import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import PaperIcon from 'ui/src/assets/icons/paper-stack.svg'
 import { iconSizes } from 'ui/src/theme'
 import { useAsyncData } from 'utilities/src/react/hooks'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
@@ -126,6 +128,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
     !activeAccountBackups?.length &&
     (params?.importType === ImportType.SeedPhrase || params?.importType === ImportType.Restore)
 
+  const googleDriveDisabled = useFeatureFlag(FEATURE_FLAGS.DisableGoogleDriveBackup) && IS_ANDROID
   const hasCloudBackup = activeAccountBackups?.some((backup) => backup === BackupType.Cloud)
   const hasManualBackup = activeAccountBackups?.some((backup) => backup === BackupType.Manual)
 
@@ -133,16 +136,19 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   const screenTitle = isCreatingNew
     ? t('Choose a backup for your wallet')
     : t('Back up your wallet')
-  const options = [
-    <OptionCard
-      blurb={t('Safe, simple, and all you need to save is your password.')}
-      disabled={hasCloudBackup}
-      elementName={ElementName.AddCloudBackup}
-      icon={<Icons.OSDynamicCloudIcon color="$accent1" size="$icon.16" />}
-      title={IS_ANDROID ? t('Backup with Google Drive') : t('Backup with iCloud')}
-      onPress={onPressCloudBackup}
-    />,
-  ]
+  const options = []
+  if (!googleDriveDisabled) {
+    options.push(
+      <OptionCard
+        blurb={t('Safe, simple, and all you need to save is your password.')}
+        disabled={hasCloudBackup}
+        elementName={ElementName.AddCloudBackup}
+        icon={<Icons.OSDynamicCloudIcon color="$accent1" size="$icon.16" />}
+        title={IS_ANDROID ? t('Backup with Google Drive') : t('Backup with iCloud')}
+        onPress={onPressCloudBackup}
+      />
+    )
+  }
   if (isCreatingNew) {
     options.push(
       <OptionCard
