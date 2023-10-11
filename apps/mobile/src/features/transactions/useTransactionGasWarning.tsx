@@ -2,6 +2,7 @@ import { CurrencyAmount, NativeCurrency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
+  Warning,
   WarningAction,
   WarningLabel,
   WarningSeverity,
@@ -13,18 +14,14 @@ import { hasSufficientFundsIncludingGas } from 'wallet/src/features/transactions
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { DerivedSwapInfo } from './swap/types'
 
-export function useTransactionGasWarning(
-  { chainId, currencyAmounts, currencyBalances }: DerivedSwapInfo | DerivedTransferInfo,
+export function useTransactionGasWarning({
+  derivedInfo,
+  gasFee,
+}: {
+  derivedInfo: DerivedSwapInfo | DerivedTransferInfo
   gasFee?: string
-):
-  | {
-      type: WarningLabel
-      severity: WarningSeverity
-      action: WarningAction
-      title: string
-      message: string
-    }
-  | undefined {
+}): Warning | undefined {
+  const { chainId, currencyAmounts, currencyBalances } = derivedInfo
   const { t } = useTranslation()
   const address = useActiveAccountAddressWithThrow()
   const { balance: nativeCurrencyBalance } = useOnChainNativeCurrencyBalance(chainId, address)

@@ -59,7 +59,10 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
     [gasFee?.params, txRequest]
   )
 
-  const gasWarning = useTransactionGasWarning(derivedTransferInfo, gasFee?.value)
+  const gasWarning = useTransactionGasWarning({
+    derivedInfo: derivedTransferInfo,
+    gasFee: gasFee?.value,
+  })
 
   const allWarnings = useMemo(() => {
     return !gasWarning ? warnings : [...warnings, gasWarning]

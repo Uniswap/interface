@@ -17,7 +17,7 @@ export const getNetworkWarning = (
   type: WarningLabel.NetworkError,
   severity: WarningSeverity.Medium,
   action: WarningAction.DisableReview,
-  title: t('Network connection error'),
+  title: t('You’re offline'),
   message: t(
     'You may have lost internet connection or the network may be down. Please check your internet connection and try again.'
   ),

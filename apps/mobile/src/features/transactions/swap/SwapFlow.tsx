@@ -42,12 +42,16 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps): JSX.Elemen
   const [step, setStep] = useState<TransactionStep>(TransactionStep.FORM)
 
   const warnings = useSwapWarnings(t, derivedSwapInfo)
-  const { txRequest, approveTxRequest, gasFee } = useSwapTxAndGasInfo(
+  const { txRequest, approveTxRequest, gasFee } = useSwapTxAndGasInfo({
     derivedSwapInfo,
-    /* skipGasFeeQuery */ step === TransactionStep.SUBMITTED ||
-      warnings.some((warning) => warning.action === WarningAction.DisableReview)
-  )
-  const gasWarning = useTransactionGasWarning(derivedSwapInfo, gasFee.value)
+    skipGasFeeQuery:
+      step === TransactionStep.SUBMITTED ||
+      warnings.some((warning) => warning.action === WarningAction.DisableReview),
+  })
+  const gasWarning = useTransactionGasWarning({
+    derivedInfo: derivedSwapInfo,
+    gasFee: gasFee.value,
+  })
 
   const allWarnings = useMemo(() => {
     return !gasWarning ? warnings : [...warnings, gasWarning]

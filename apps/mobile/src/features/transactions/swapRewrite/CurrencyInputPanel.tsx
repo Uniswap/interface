@@ -11,9 +11,9 @@ import {
 } from 'react-native'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { MaxAmountButton } from 'src/components/input/MaxAmountButton'
-import { Warning, WarningLabel } from 'src/components/modals/WarningModal/types'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
 import { useDynamicFontSizing } from 'src/features/transactions/hooks'
+import { ParsedWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
@@ -39,7 +39,7 @@ type CurrentInputPanelProps = {
   isUSDInput?: boolean
   onSetMax?: (amount: string) => void
   onPressIn?: () => void
-  warnings: Warning[]
+  parsedWarnings: ParsedWarnings
   dimTextColor?: boolean
   selection?: TextInputProps['selection']
   onSelectionChange?: (start: number, end: number) => void
@@ -54,29 +54,27 @@ const MIN_INPUT_FONT_SIZE = 24
 const MAX_CHAR_PIXEL_WIDTH = 23
 
 /** Input panel for a single side of a transfer action. */
-function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
-  const {
-    currencyAmount,
-    currencyBalance,
-    currencyInfo,
-    onSetExactAmount,
-    onSetMax,
-    onShowTokenSelector,
-    value,
-    showNonZeroBalancesOnly = true,
-    showSoftInputOnFocus = false,
-    focus,
-    autoFocus,
-    isOutput = false,
-    isUSDInput = false,
-    onPressIn,
-    warnings,
-    dimTextColor,
-    onSelectionChange: selectionChange,
-    usdValue,
-    ...rest
-  } = props
-
+function _CurrencyInputPanel({
+  currencyAmount,
+  currencyBalance,
+  currencyInfo,
+  onSetExactAmount,
+  onSetMax,
+  onShowTokenSelector,
+  value,
+  showNonZeroBalancesOnly = true,
+  showSoftInputOnFocus = false,
+  focus,
+  autoFocus,
+  isOutput = false,
+  isUSDInput = false,
+  onPressIn,
+  parsedWarnings,
+  dimTextColor,
+  onSelectionChange: selectionChange,
+  usdValue,
+  ...rest
+}: CurrentInputPanelProps): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
   const transformedProps = useRestyle(
@@ -85,10 +83,7 @@ function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
   )
   const inputRef = useRef<TextInput>(null)
 
-  const insufficientBalanceWarning = warnings.find(
-    (warning) => warning.type === WarningLabel.InsufficientFunds
-  )
-
+  const { insufficientBalanceWarning } = parsedWarnings
   const showInsufficientBalanceWarning = insufficientBalanceWarning && !isOutput
 
   const formattedUSDValue = usdValue
@@ -162,6 +157,7 @@ function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
             autoFocus={autoFocus ?? focus}
             backgroundColor="$transparent"
             borderWidth={0}
+            color={showInsufficientBalanceWarning ? '$statusCritical' : '$neutral1'}
             dimTextColor={dimTextColor}
             flex={1}
             focusable={Boolean(currencyInfo)}
@@ -204,9 +200,7 @@ function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
             </Text>
           </Flex>
           <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">
-            <Text
-              color={showInsufficientBalanceWarning ? '$DEP_accentWarning' : '$neutral2'}
-              variant="body3">
+            <Text variant="body3">
               {formatCurrencyAmount(currencyBalance, NumberType.TokenNonTx)}{' '}
               {currencyInfo.currency.symbol}
             </Text>

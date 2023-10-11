@@ -552,10 +552,13 @@ interface SwapTxAndGasInfo {
   gasFee: GasFeeResult
 }
 
-export function useSwapTxAndGasInfo(
-  derivedSwapInfo: DerivedSwapInfo,
+export function useSwapTxAndGasInfo({
+  derivedSwapInfo,
+  skipGasFeeQuery,
+}: {
+  derivedSwapInfo: DerivedSwapInfo
   skipGasFeeQuery: boolean
-): SwapTxAndGasInfo {
+}): SwapTxAndGasInfo {
   const { chainId, wrapType, currencyAmounts, currencies, exactCurrencyField } = derivedSwapInfo
 
   const tokenApprovalInfo = useTokenApprovalInfo(
