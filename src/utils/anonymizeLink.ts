@@ -7,6 +7,7 @@ const EXPLORER_HOSTNAMES: { [hostname: string]: true } = {
   'goerli-optimism.etherscan.io': true,
   'arbiscan.io': true,
   'snowtrace.io': true,
+  'gnosisscan.io': true,
 }
 
 /**

@@ -25,6 +25,7 @@ import {
   USDC_AVALANCHE,
   USDC_BASE,
   USDC_BSC,
+  USDC_GNOSIS,
   USDC_MAINNET,
   USDC_OPTIMISM,
   USDC_POLYGON,
@@ -32,14 +33,17 @@ import {
   USDT_ARBITRUM_ONE,
   USDT_AVALANCHE,
   USDT_BSC,
+  USDT_GNOSIS,
   USDT_OPTIMISM,
   USDT_POLYGON,
   WBTC,
   WBTC_ARBITRUM_ONE,
   WBTC_CELO,
+  WBTC_GNOSIS,
   WBTC_OPTIMISM,
   WBTC_POLYGON,
   WETH_AVALANCHE,
+  WETH_GNOSIS,
   WETH_POLYGON,
   WETH_POLYGON_MUMBAI,
   WRAPPED_NATIVE_CURRENCY,
@@ -115,6 +119,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_AVALANCHE,
     WETH_AVALANCHE,
   ],
+  [ChainId.GNOSIS]: [nativeOnChain(ChainId.GNOSIS), USDC_GNOSIS, USDT_GNOSIS, WETH_GNOSIS, WBTC_GNOSIS],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
@@ -136,6 +141,13 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
     USDC_AVALANCHE,
     USDT_AVALANCHE,
     WETH_AVALANCHE,
+  ],
+  [ChainId.GNOSIS]: [
+    ...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.GNOSIS],
+    USDC_GNOSIS,
+    USDT_GNOSIS,
+    WETH_GNOSIS,
+    WBTC_GNOSIS,
   ],
 }
 export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {

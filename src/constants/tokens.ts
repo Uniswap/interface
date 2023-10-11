@@ -250,6 +250,29 @@ export const DAI_AVALANCHE = new Token(
   'Dai.e Token'
 )
 
+export const USDC_GNOSIS = new Token(ChainId.GNOSIS, '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83', 6, 'USDC', 'USD//C')
+export const USDT_GNOSIS = new Token(
+  ChainId.GNOSIS,
+  '0x4ecaba5870353805a9f068101a40e0f32ed605c6',
+  6,
+  'USDT',
+  'Tether USD'
+)
+export const WETH_GNOSIS = new Token(
+  ChainId.GNOSIS,
+  '0x6a023ccd1ff6f2045c3309768ead9e68f978f6e1',
+  18,
+  'WETH',
+  'Wrapped Ether'
+)
+export const WBTC_GNOSIS = new Token(
+  ChainId.GNOSIS,
+  '0x8e5bbbb09ed1ebde8674cda39a0c169401db4252',
+  8,
+  'WBT',
+  'Wrapped BTC'
+)
+
 export const UNI: { [chainId: number]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, UNI_ADDRESSES[ChainId.MAINNET], 18, 'UNI', 'Uniswap'),
   [ChainId.GOERLI]: new Token(ChainId.GOERLI, UNI_ADDRESSES[ChainId.GOERLI], 18, 'UNI', 'Uniswap'),
@@ -336,6 +359,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WAVAX',
     'Wrapped AVAX'
   ),
+  [ChainId.GNOSIS]: new Token(
+    ChainId.GNOSIS,
+    '0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d',
+    18,
+    'WXDAI',
+    'Wrapped XDAI'
+  ),
 }
 
 export function isCelo(chainId: number): chainId is ChainId.CELO | ChainId.CELO_ALFAJORES {
@@ -419,6 +449,28 @@ class AvaxNativeCurrency extends NativeCurrency {
   }
 }
 
+export function isGnosis(chainId: number): chainId is ChainId.GNOSIS {
+  return chainId === ChainId.GNOSIS
+}
+
+class GnosisNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
+  }
+
+  get wrapped(): Token {
+    if (!isGnosis(this.chainId)) throw new Error('Not gnosis')
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
+    invariant(wrapped instanceof Token)
+    return wrapped
+  }
+
+  public constructor(chainId: number) {
+    if (!isGnosis(chainId)) throw new Error('Not gnosis')
+    super(chainId, 18, 'xDAI', 'xDAI')
+  }
+}
+
 class ExtendedEther extends Ether {
   public get wrapped(): Token {
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
@@ -445,6 +497,8 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
     nativeCurrency = new BscNativeCurrency(chainId)
   } else if (isAvalanche(chainId)) {
     nativeCurrency = new AvaxNativeCurrency(chainId)
+  } else if (isGnosis(chainId)) {
+    nativeCurrency = new GnosisNativeCurrency(chainId)
   } else {
     nativeCurrency = ExtendedEther.onChain(chainId)
   }
@@ -473,5 +527,6 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in ChainId]?: s
     [ChainId.GOERLI]: USDC_GOERLI.address,
     [ChainId.SEPOLIA]: USDC_SEPOLIA.address,
     [ChainId.AVALANCHE]: USDC_AVALANCHE.address,
+    [ChainId.GNOSIS]: USDC_GNOSIS.address,
   },
 }

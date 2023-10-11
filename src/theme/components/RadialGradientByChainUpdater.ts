@@ -120,6 +120,15 @@ export default function RadialGradientByChainUpdater(): null {
         backgroundRadialGradientElement.style.background = darkMode ? baseDarkGradient : baseLightGradient
         break
       }
+      case ChainId.GNOSIS: {
+        setBackground(backgroundResetStyles)
+        const gnosisightGradient =
+          'radial-gradient(100% 100% at 50% 0%, rgba(0, 82, 255, 0) 0%, rgba(0, 82, 255, 0) 40.0%, rgba(252, 255, 82, 0.00) 100%), rgb(255, 255, 255)'
+        const gnosisDarkGradient =
+          'radial-gradient(100% 100% at 50% 0%, rgba(10, 41, 75, 0) 0%, rgba(0, 82, 255, 0) 40%, rgba(0, 82, 255, 0) 100%), rgb(13, 14, 14)'
+        backgroundRadialGradientElement.style.background = darkMode ? gnosisDarkGradient : gnosisightGradient
+        break
+      }
       default: {
         setDefaultBackground(backgroundRadialGradientElement, darkMode)
       }

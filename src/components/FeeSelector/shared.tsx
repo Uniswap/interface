@@ -21,6 +21,7 @@ export const FEE_AMOUNT_DETAIL: Record<
       ChainId.POLYGON_MUMBAI,
       ChainId.AVALANCHE,
       ChainId.BASE,
+      ChainId.GNOSIS,
     ],
   },
   [FeeAmount.LOW]: {

@@ -17,6 +17,7 @@ export const START_BLOCKS: { [key: number]: number } = {
   [ChainId.BNB]: 26324014,
   [ChainId.AVALANCHE]: 31422450,
   [ChainId.BASE]: 1371680,
+  [ChainId.GNOSIS]: 27416614,
 }
 
 export enum NetworkType {
@@ -223,6 +224,18 @@ const CHAIN_INFO: ChainInfoMap = {
     statusPage: 'https://status.base.org/',
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: darkTheme.chain_84531,
+  },
+  [ChainId.GNOSIS]: {
+    networkType: NetworkType.L1,
+    blockWaitMsBeforeWarning: ms(`10m`),
+    bridge: 'https://omnibridge.gnosischain.com/bridge',
+    docs: 'https://docs.gnosischain.com/',
+    explorer: 'https://gnosisscan.io/',
+    infoLink: 'https://info.uniswap.org/#/gnosis/',
+    label: 'Gnosis',
+    nativeCurrency: { name: 'Gnosis', symbol: 'xDAI', decimals: 18 },
+    color: darkTheme.chain_100,
+    backgroundColor: darkTheme.chain_100_background,
   },
 } as const
 

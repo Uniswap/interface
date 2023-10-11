@@ -97,6 +97,7 @@ export const colors = {
   networkPolygonSoft: 'rgba(164, 87, 255, 0.16)',
   networkEthereumSoft: 'rgba(98, 126, 234, 0.16)',
   networkBase: '#0052FF',
+  networkGnosis: '#04795B',
   //NEW COLORS FOR SPORE - need to define light/dark here cause they are root colors now (different system)
   neutral1_dark: '#FFFFFF',
   neutral2_dark: '#9B9B9B',
@@ -137,6 +138,7 @@ const commonTheme = {
   chain_137: colors.networkPolygon,
   chain_42: colors.networkArbitrum,
   chain_56: colors.networkBsc,
+  chain_100: colors.networkGnosis,
   chain_420: colors.networkOptimism,
   chain_42161: colors.networkArbitrum,
   chain_421613: colors.networkArbitrum,
@@ -148,6 +150,7 @@ const commonTheme = {
   chain_42161_background: colors.blue900,
   chain_84531: colors.networkBase,
   chain_56_background: colors.networkBsc,
+  chain_100_background: colors.green700,
   promotional: colors.magenta300,
 
   brandedGradient: 'linear-gradient(139.57deg, #FF79C9 4.35%, #FFB8E2 96.44%);',

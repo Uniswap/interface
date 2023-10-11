@@ -12,6 +12,7 @@ import { ReactComponent as bnb } from './ChainSymbols/bnb.svg'
 import { ReactComponent as celo } from './ChainSymbols/celo.svg'
 import { ReactComponent as celoLight } from './ChainSymbols/celo_light.svg'
 import { ReactComponent as ethereum } from './ChainSymbols/ethereum.svg'
+import { ReactComponent as gnosis } from './ChainSymbols/gnosis.svg'
 import { ReactComponent as optimism } from './ChainSymbols/optimism.svg'
 import { ReactComponent as polygon } from './ChainSymbols/polygon.svg'
 
@@ -80,6 +81,12 @@ export function getChainUI(chainId: ChainId, darkMode: boolean): ChainUI | undef
         Symbol: base,
         bgColor: '#0052FF33',
         textColor: '#0052FF',
+      }
+    case ChainId.GNOSIS:
+      return {
+        Symbol: gnosis,
+        bgColor: '#04795B33',
+        textColor: '#04795B',
       }
     default:
       return undefined

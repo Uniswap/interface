@@ -38,4 +38,9 @@ describe('#getExplorerLink', () => {
   it('base', () => {
     expect(getExplorerLink(ChainId.BASE, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://basescan.org/address/abc')
   })
+  it('gnosis', () => {
+    expect(getExplorerLink(ChainId.GNOSIS, 'abc', ExplorerDataType.ADDRESS)).toEqual(
+      'https://gnosisscan.io/address/abc'
+    )
+  })
 })
