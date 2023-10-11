@@ -79,7 +79,7 @@ function Image(): JSX.Element {
 function Favorite({ height, contrast }: { height?: number; contrast?: boolean }): JSX.Element {
   return (
     <Shimmer contrast={contrast}>
-      <FlexLoader backgroundColor="$surface3" borderRadius="$rounded16" height={height ?? 50} />
+      <FlexLoader backgroundColor="$neutral3" borderRadius="$rounded16" height={height ?? 50} />
     </Shimmer>
   )
 }

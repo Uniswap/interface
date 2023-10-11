@@ -18,7 +18,7 @@ export function TokenLoader({ opacity }: TokenLoaderProps): JSX.Element {
       py="$spacing8">
       <Flex row shrink alignItems="center" gap="$spacing12" overflow="hidden">
         <Flex
-          bg="$surface2"
+          bg="$neutral3"
           borderRadius="$roundedFull"
           minHeight={iconSizes.icon40}
           minWidth={iconSizes.icon40}

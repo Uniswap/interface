@@ -6,16 +6,16 @@ exports[`renders wallet loader 1`] = `
   style={
     {
       "alignItems": "center",
-      "borderBottomColor": "#2222220D",
+      "borderBottomColor": "#CECECE",
       "borderBottomLeftRadius": 20,
       "borderBottomRightRadius": 20,
       "borderBottomWidth": 1,
-      "borderLeftColor": "#2222220D",
+      "borderLeftColor": "#CECECE",
       "borderLeftWidth": 1,
-      "borderRightColor": "#2222220D",
+      "borderRightColor": "#CECECE",
       "borderRightWidth": 1,
       "borderStyle": "solid",
-      "borderTopColor": "#2222220D",
+      "borderTopColor": "#CECECE",
       "borderTopLeftRadius": 20,
       "borderTopRightRadius": 20,
       "borderTopWidth": 1,
@@ -44,7 +44,7 @@ exports[`renders wallet loader 1`] = `
       style={
         {
           "alignItems": "stretch",
-          "backgroundColor": "#2222220D",
+          "backgroundColor": "#CECECE",
           "borderBottomLeftRadius": 999999,
           "borderBottomRightRadius": 999999,
           "borderTopLeftRadius": 999999,

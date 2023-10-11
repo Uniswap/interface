@@ -61,7 +61,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
             style={
               {
                 "alignItems": "stretch",
-                "backgroundColor": "#F9F9F9",
+                "backgroundColor": "#CECECE",
                 "borderBottomLeftRadius": 999999,
                 "borderBottomRightRadius": 999999,
                 "borderTopLeftRadius": 999999,
@@ -241,7 +241,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
             style={
               {
                 "alignItems": "stretch",
-                "backgroundColor": "#F9F9F9",
+                "backgroundColor": "#CECECE",
                 "borderBottomLeftRadius": 999999,
                 "borderBottomRightRadius": 999999,
                 "borderTopLeftRadius": 999999,
