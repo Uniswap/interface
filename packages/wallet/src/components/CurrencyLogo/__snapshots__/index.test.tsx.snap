@@ -2,7 +2,7 @@
 
 exports[`renders a currency logo with network logo 1`] = `
 <div
-  className="   "
+  className=""
   style={
     {
       "alignItems": "center",
@@ -43,7 +43,7 @@ exports[`renders a currency logo with network logo 1`] = `
     }
   />
   <div
-    className="   "
+    className=""
     style={
       {
         "alignItems": "stretch",
@@ -72,7 +72,7 @@ exports[`renders a currency logo with network logo 1`] = `
 
 exports[`renders a currency logo without network logo 1`] = `
 <div
-  className="   "
+  className=""
   style={
     {
       "alignItems": "center",
