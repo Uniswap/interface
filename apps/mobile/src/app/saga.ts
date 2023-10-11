@@ -1,5 +1,4 @@
 import { apolloClient } from 'src/data/usePersistedApolloClient'
-import { appRatingWatcherSaga } from 'src/features/appRating/saga'
 import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
 import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { firebaseDataWatcher } from 'src/features/firebase/firebaseDataSaga'
@@ -46,7 +45,8 @@ import { getMonitoredSagaReducers, MonitoredSaga } from 'wallet/src/state/saga'
 
 // All regular sagas must be included here
 const sagas = [
-  appRatingWatcherSaga,
+  // TODO[MOB-1645]: Explicitly remove app rating prompts for 1.14 release. Re-enable in 1.15.
+  // appRatingWatcherSaga,
   cloudBackupsManagerSaga,
   deepLinkWatcher,
   firebaseDataWatcher,
