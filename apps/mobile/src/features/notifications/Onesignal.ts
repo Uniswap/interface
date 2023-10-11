@@ -7,7 +7,6 @@ import { config } from 'wallet/src/config'
 import { GQLQueries } from 'wallet/src/data/queries'
 
 export const initOneSignal = (): void => {
-  OneSignal.setLogLevel(6, 0)
   OneSignal.setAppId(config.onesignalAppId)
 
   OneSignal.setNotificationWillShowInForegroundHandler((event: NotificationReceivedEvent) => {
