@@ -2,7 +2,7 @@ import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { PersistState } from 'redux-persist'
 import { UserState } from 'state/user/reducer'
 
-type PersistAppStateV1 = {
+export type PersistAppStateV1 = {
   _persist: PersistState
 } & { user?: UserState }
 
