@@ -21,11 +21,11 @@ fs.readFile('./public/sitemap.xml', 'utf8', async (err, data) => {
     const sitemap = await parseStringPromise(data)
     if (sitemap.urlset.url) {
       sitemap.urlset.url.forEach((url) => {
-        const lastMod = new Date(url['$'].lastmod).getTime()
+        const lastMod = new Date(url.lastmod).getTime()
         if (lastMod < Date.now() - weekMs) {
-          url['$'].lastmod = nowISO
+          url.lastmod = nowISO
         }
-        sitemapURLs[url['$']['loc']] = true
+        sitemapURLs[url.loc] = true
       })
     }
 
@@ -45,11 +45,9 @@ fs.readFile('./public/sitemap.xml', 'utf8', async (err, data) => {
         const tokenURL = `https://app.uniswap.org/tokens/${chainName.toLowerCase()}/${address}`
         if (!(tokenURL in sitemapURLs)) {
           sitemap.urlset.url.push({
-            $: {
-              loc: [tokenURL],
-              lastmod: [nowISO],
-              priority: [0.8],
-            },
+            loc: [tokenURL],
+            lastmod: [nowISO],
+            priority: [0.8],
           })
         }
       })
