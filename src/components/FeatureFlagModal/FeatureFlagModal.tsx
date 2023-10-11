@@ -14,6 +14,7 @@ import { useUniswapXDefaultEnabledFlag } from 'featureFlags/flags/uniswapXDefaul
 import { useUniswapXEthOutputFlag } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXExactOutputFlag } from 'featureFlags/flags/uniswapXExactOutput'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
+import { useProgressIndicatorV2 } from 'featureFlags/flags/useProgressIndicatorV2'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
@@ -254,6 +255,12 @@ export default function FeatureFlagModal() {
           value={useFotAdjustmentsFlag()}
           featureFlag={FeatureFlag.fotAdjustedmentsEnabled}
           label="Enable fee-on-transfer UI and slippage adjustments"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useProgressIndicatorV2()}
+          featureFlag={FeatureFlag.progressIndicatorV2}
+          label="Refreshed swap progress indicator"
         />
         <FeatureFlagGroup name="Quick routes">
           <FeatureFlagOption
