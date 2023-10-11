@@ -257,7 +257,7 @@ export default function TokenDetails({
             />
           </div>
           {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
-          {detailedToken && <BalanceSummary token={detailedToken} />}
+          {detailedToken && tokenQuery && <BalanceSummary token={detailedToken} tokenQuery={tokenQuery} />}
         </RightPanel>
         {detailedToken && <MobileBalanceSummaryFooter token={detailedToken} />}
 
