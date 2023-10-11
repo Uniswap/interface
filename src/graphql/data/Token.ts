@@ -58,6 +58,13 @@ gql`
           chain
           address
         }
+        markets(currencies: [USD]) {
+          marketCap {
+            id
+            value
+            currency
+          }
+        }
       }
     }
   }

@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getChainInfo } from 'constants/chainInfo'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
+import { TokenQueryData } from 'graphql/data/Token'
 import { useTotalSupply } from 'hooks/useTotalSupply'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
@@ -79,18 +80,29 @@ function Stat({
 type StatsSectionProps = {
   chainId: ChainId
   address: string
-  priceLow52W?: NumericStat
-  priceHigh52W?: NumericStat
-  TVL?: NumericStat
-  volume24H?: NumericStat
+  currency: Currency
+  tokenQueryData: TokenQueryData
+  // currentPrice?: Amount
+  // marketCap?: NumericStat
+  // priceLow52W?: NumericStat
+  // priceHigh52W?: NumericStat
+  // TVL?: NumericStat
+  // volume24H?: NumericStat
 }
 export default function StatsSection(props: StatsSectionProps) {
-  const { chainId, address, priceLow52W, priceHigh52W, TVL, volume24H } = props
+  const { chainId, address, currency, tokenQueryData } = props
+
+  const marketCap = tokenQueryData?.project?.markets?.[0].marketCap?.value
+  const TVL = tokenQueryData?.market?.totalValueLocked?.value
+  const volume24H = tokenQueryData?.market?.volume24H?.value
+  const priceHigh52W = tokenQueryData?.market?.priceHigh52W?.value
+  const priceLow52W = tokenQueryData?.market?.priceLow52W?.value
+
+  const currentPrice = tokenQueryData?.market?.price?.value ?? 0
+  const FDV = Number.parseFloat(useTotalSupply(currency)?.multiply(currentPrice).toExact() ?? '')
+
   const { label, infoLink } = getChainInfo(chainId)
   const isInfoTDPEnabled = useInfoTDPEnabled()
-
-  const FDV = currentPrice * useTotalSupply()
-  const marketCap = 100 // todo: get backend to return this
 
   const haveStats = isInfoTDPEnabled
     ? TVL || FDV || marketCap || volume24H
