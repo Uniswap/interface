@@ -90,8 +90,16 @@ fs.readFile('./public/sitemap.xml', 'utf8', async (err, data) => {
 
     const builder = new Builder()
     const xml = builder.buildObject(sitemap)
-    fs.writeFile('./public/sitemap.xml', xml, (error) => {
+    const path = './public/sitemap.xml'
+    fs.writeFile(path, xml, (error) => {
       if (error) throw error
+      const stats = fs.statSync(path)
+      const fileSizeBytes = stats.size
+      const fileSizeMegabytes = fileSizeBytes / (1024 * 1024)
+
+      if (fileSizeMegabytes > 50) {
+        throw new Error('File size exceeds 50MB')
+      }
       console.log('Sitemap updated')
     })
   } catch (e) {
