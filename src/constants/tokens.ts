@@ -31,13 +31,6 @@ const USDC_OPTIMISM_GOERLI = new Token(
   'USDC',
   'USD//C'
 )
-export const BRIDGED_USDC_ARBITRUM = new Token(
-  ChainId.ARBITRUM_ONE,
-  '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
-  6,
-  'USDC',
-  'USD//C'
-)
 export const USDC_ARBITRUM = new Token(
   ChainId.ARBITRUM_ONE,
   '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
@@ -468,7 +461,7 @@ export function getSwapCurrencyId(currency: Currency): string {
 export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in ChainId]?: string } } = {
   USDC: {
     [ChainId.MAINNET]: USDC_MAINNET.address,
-    [ChainId.ARBITRUM_ONE]: BRIDGED_USDC_ARBITRUM.address,
+    [ChainId.ARBITRUM_ONE]: USDC_ARBITRUM.address,
     [ChainId.ARBITRUM_GOERLI]: USDC_ARBITRUM_GOERLI.address,
     [ChainId.OPTIMISM]: USDC_OPTIMISM.address,
     [ChainId.OPTIMISM_GOERLI]: USDC_OPTIMISM_GOERLI.address,

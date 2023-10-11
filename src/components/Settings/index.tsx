@@ -152,7 +152,12 @@ export default function SettingsTab({
 
   return (
     <Menu ref={node}>
-      <MenuButton disabled={!isChainSupported || chainId !== connectedChainId} isActive={isOpen} onClick={toggleMenu} />
+      <MenuButton
+        disabled={!isChainSupported || chainId !== connectedChainId}
+        isActive={isOpen}
+        onClick={toggleMenu}
+        trade={trade}
+      />
       {isOpenDesktop && <MenuFlyout>{Settings}</MenuFlyout>}
       {isOpenMobile && (
         <Portal>

@@ -63,6 +63,32 @@ gql`
   }
 `
 
+gql`
+  query TokenProject($chain: Chain!, $address: String = null) {
+    token(chain: $chain, address: $address) {
+      id
+      decimals
+      name
+      chain
+      address
+      symbol
+      standard
+      project {
+        id
+        description
+        homepageUrl
+        twitterName
+        logoUrl
+        tokens {
+          id
+          chain
+          address
+        }
+      }
+    }
+  }
+`
+
 export type { Chain, TokenQuery } from './__generated__/types-and-hooks'
 
 export type TokenQueryData = TokenQuery['token']
