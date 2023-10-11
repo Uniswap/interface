@@ -18,6 +18,10 @@ export const migration1 = (state: PersistAppStateV1 | undefined) => {
         ...state.user,
         userDeadline: DEFAULT_DEADLINE_FROM_NOW,
       },
+      _persist: {
+        ...state._persist,
+        version: 1,
+      },
     }
   }
   return state
