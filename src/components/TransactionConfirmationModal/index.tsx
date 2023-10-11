@@ -188,7 +188,7 @@ export function ConfirmationModalContent({
         </Row>
         {topContent()}
       </AutoColumn>
-      {bottomContent && <BottomSection gap="12px">{bottomContent()}</BottomSection>}
+      {bottomContent && <BottomSection gap="16px">{bottomContent()}</BottomSection>}
     </Wrapper>
   )
 }

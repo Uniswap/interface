@@ -179,88 +179,90 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
 
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+      class="c0 c1 c2"
     >
-      Network cost
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Network cost
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="c0 c7"
+            class="c3 c6 css-142zc9n"
           >
-            <svg
-              aria-labelledby="titleID"
-              height="16"
-              width="16"
+            <div
+              class="c0 c7"
             >
-              <title
-                id="titleID"
-              >
-                Ethereum logo
-              </title>
-              <rect
-                fill="#F9F9F9"
-                height="16"
-                rx="4"
-                width="16"
-              />
-              <rect
-                fill="#6B8AFF33"
-                height="16"
-                rx="4"
-                width="16"
-              />
               <svg
+                aria-labelledby="titleID"
                 height="16"
                 width="16"
               >
-                ethereum.svg
+                <title
+                  id="titleID"
+                >
+                  Ethereum logo
+                </title>
+                <rect
+                  fill="#F9F9F9"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <rect
+                  fill="#6B8AFF33"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <svg
+                  height="16"
+                  width="16"
+                >
+                  ethereum.svg
+                </svg>
               </svg>
-            </svg>
-            $0.00
+              $0.00
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="c8"
-      style="position: fixed; left: 0px; top: 0px;"
-    >
       <div
-        class="c9"
+        class="c8"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c10 css-obwv3p"
+          class="c9"
         >
           <div
-            class="c10 css-1m65e73"
+            class="c10 css-obwv3p"
           >
-            The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
-            <a
-              class="c11"
-              href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-              rel="noopener noreferrer"
-              target="_blank"
+            <div
+              class="c10 css-1m65e73"
             >
-              Learn more
-            </a>
+              The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+              <a
+                class="c11"
+                href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn more
+              </a>
+            </div>
           </div>
         </div>
+        <div
+          class="c12 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c12 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -473,81 +475,83 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
 
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Max. slippage
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          <div
-            class="c0 c7"
-          >
-            <div
-              class="c8 c9 css-1lgneq0"
-            />
-             2%
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="c10"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c11"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
       >
-        <div
-          class="c8 css-obwv3p"
-        >
+        Max. slippage
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="c12"
+            class="c3 c6 css-142zc9n"
           >
             <div
-              class="c0 c1 c2"
+              class="c0 c7"
             >
               <div
-                class="c3 css-obwv3p"
-              >
-                Receive at least
-              </div>
-              <div
-                class="c3 css-obwv3p"
-              >
-                0.0000000000000009 DEF
-              </div>
-            </div>
-            <div
-              class="c13"
-            />
-            <div>
-              If the price moves so that you will receive less than 0.0000000000000009 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
-              <a
-                class="c14"
-                href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
+                class="c8 c9 css-1lgneq0"
+              />
+               2%
             </div>
           </div>
         </div>
       </div>
       <div
-        class="c15 arrow-"
-        style="position: absolute;"
-      />
+        class="c10"
+        style="position: fixed; left: 0px; top: 0px;"
+      >
+        <div
+          class="c11"
+        >
+          <div
+            class="c8 css-obwv3p"
+          >
+            <div
+              class="c12"
+            >
+              <div
+                class="c0 c1 c2"
+              >
+                <div
+                  class="c3 css-obwv3p"
+                >
+                  Receive at least
+                </div>
+                <div
+                  class="c3 css-obwv3p"
+                >
+                  0.0000000000000009 DEF
+                </div>
+              </div>
+              <div
+                class="c13"
+              />
+              <div>
+                If the price moves so that you will receive less than 0.0000000000000009 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+                <a
+                  class="c14"
+                  href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="c15 arrow-"
+          style="position: absolute;"
+        />
+      </div>
     </div>
   </div>
   .c0 {
@@ -690,43 +694,45 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
 
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Receive at least
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          0.0000000000000009 DEF
-        </div>
-      </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c8"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Receive at least
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            0.0000000000000009 DEF
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
-          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+          <div
+            class="c9 css-obwv3p"
+          >
+            The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+          </div>
         </div>
+        <div
+          class="c10 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c10 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -925,104 +931,106 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   }
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+      class="c0 c1 c2"
     >
-      Order routing
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Order routing
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="c7 c8"
-            style="display: inline-flex;"
-            width="auto"
+            class="c3 c6 css-142zc9n"
           >
-            <svg
-              fill="none"
-              height="14"
-              viewBox="0 0 10 14"
-              width="10"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <defs>
-                <lineargradient
-                  gradientUnits="userSpaceOnUse"
-                  id="AutoRouterIconGradientfixed-uuid-value"
-                  x1="-10.1807"
-                  x2="10.6573"
-                  y1="-12.0006"
-                  y2="-11.6017"
-                >
-                  <stop
-                    stop-color="#4673FA"
-                  />
-                  <stop
-                    offset="1"
-                    stop-color="#9646FA"
-                  />
-                </lineargradient>
-              </defs>
-              <path
-                d="M9.97131 6.19803C9.91798 6.07737 9.79866 6.00003 9.66666 6.00003H6.66666V1.00003C6.66666 0.862034 6.58201 0.738037 6.45267 0.688704C6.32267 0.638704 6.17799 0.674696 6.08532 0.776696L0.0853237 7.44336C-0.00267631 7.54136 -0.0253169 7.68137 0.0286831 7.80204C0.0820164 7.9227 0.20133 8.00003 0.33333 8.00003H3.33333V13C3.33333 13.138 3.41799 13.262 3.54732 13.3114C3.58665 13.326 3.62666 13.3334 3.66666 13.3334C3.75933 13.3334 3.85 13.2947 3.91467 13.2227L9.91467 6.55603C10.0027 6.4587 10.0246 6.31803 9.97131 6.19803Z"
-                fill="url(#AutoRouterIconGradientfixed-uuid-value)"
-              />
-            </svg>
             <div
-              class="c9"
+              class="c7 c8"
+              style="display: inline-flex;"
+              width="auto"
             >
-              <div
-                class="c3 css-142zc9n"
+              <svg
+                fill="none"
+                height="14"
+                viewBox="0 0 10 14"
+                width="10"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Uniswap X
+                <defs>
+                  <lineargradient
+                    gradientUnits="userSpaceOnUse"
+                    id="AutoRouterIconGradientfixed-uuid-value"
+                    x1="-10.1807"
+                    x2="10.6573"
+                    y1="-12.0006"
+                    y2="-11.6017"
+                  >
+                    <stop
+                      stop-color="#4673FA"
+                    />
+                    <stop
+                      offset="1"
+                      stop-color="#9646FA"
+                    />
+                  </lineargradient>
+                </defs>
+                <path
+                  d="M9.97131 6.19803C9.91798 6.07737 9.79866 6.00003 9.66666 6.00003H6.66666V1.00003C6.66666 0.862034 6.58201 0.738037 6.45267 0.688704C6.32267 0.638704 6.17799 0.674696 6.08532 0.776696L0.0853237 7.44336C-0.00267631 7.54136 -0.0253169 7.68137 0.0286831 7.80204C0.0820164 7.9227 0.20133 8.00003 0.33333 8.00003H3.33333V13C3.33333 13.138 3.41799 13.262 3.54732 13.3114C3.58665 13.326 3.62666 13.3334 3.66666 13.3334C3.75933 13.3334 3.85 13.2947 3.91467 13.2227L9.91467 6.55603C10.0027 6.4587 10.0246 6.31803 9.97131 6.19803Z"
+                  fill="url(#AutoRouterIconGradientfixed-uuid-value)"
+                />
+              </svg>
+              <div
+                class="c9"
+              >
+                <div
+                  class="c3 css-142zc9n"
+                >
+                  Uniswap X
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="c10"
-      style="position: fixed; left: 0px; top: 0px;"
-    >
       <div
-        class="c11"
+        class="c10"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c12 css-obwv3p"
+          class="c11"
         >
           <div
             class="c12 css-obwv3p"
           >
             <div
-              class="c9 c13"
+              class="c12 css-obwv3p"
             >
-              UniswapX
+              <div
+                class="c9 c13"
+              >
+                UniswapX
+              </div>
+               aggregates liquidity sources for better prices and gas free swaps. 
+              <a
+                class="c14"
+                href="https://support.uniswap.org/hc/en-us/articles/17515415311501"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn more
+              </a>
             </div>
-             aggregates liquidity sources for better prices and gas free swaps. 
-            <a
-              class="c14"
-              href="https://support.uniswap.org/hc/en-us/articles/17515415311501"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Learn more
-            </a>
           </div>
         </div>
+        <div
+          class="c15 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c15 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
 </DocumentFragment>
@@ -1203,88 +1211,90 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+      class="c0 c1 c2"
     >
-      Network cost
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Network cost
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="c0 c7"
+            class="c3 c6 css-142zc9n"
           >
-            <svg
-              aria-labelledby="titleID"
-              height="16"
-              width="16"
+            <div
+              class="c0 c7"
             >
-              <title
-                id="titleID"
-              >
-                Ethereum logo
-              </title>
-              <rect
-                fill="#F9F9F9"
-                height="16"
-                rx="4"
-                width="16"
-              />
-              <rect
-                fill="#6B8AFF33"
-                height="16"
-                rx="4"
-                width="16"
-              />
               <svg
+                aria-labelledby="titleID"
                 height="16"
                 width="16"
               >
-                ethereum.svg
+                <title
+                  id="titleID"
+                >
+                  Ethereum logo
+                </title>
+                <rect
+                  fill="#F9F9F9"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <rect
+                  fill="#6B8AFF33"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <svg
+                  height="16"
+                  width="16"
+                >
+                  ethereum.svg
+                </svg>
               </svg>
-            </svg>
-            $1.00
+              $1.00
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="c8"
-      style="position: fixed; left: 0px; top: 0px;"
-    >
       <div
-        class="c9"
+        class="c8"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c10 css-obwv3p"
+          class="c9"
         >
           <div
-            class="c10 css-1m65e73"
+            class="c10 css-obwv3p"
           >
-            The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
-            <a
-              class="c11"
-              href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-              rel="noopener noreferrer"
-              target="_blank"
+            <div
+              class="c10 css-1m65e73"
             >
-              Learn more
-            </a>
+              The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+              <a
+                class="c11"
+                href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn more
+              </a>
+            </div>
           </div>
         </div>
+        <div
+          class="c12 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c12 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -1423,47 +1433,49 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Price impact
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          <span
-            class=""
-          >
-            -105566.373%
-          </span>
-        </div>
-      </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c8"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Price impact
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            <span
+              class=""
+            >
+              -105566.373%
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
-          The impact your trade has on the market price of this pool.
+          <div
+            class="c9 css-obwv3p"
+          >
+            The impact your trade has on the market price of this pool.
+          </div>
         </div>
+        <div
+          class="c10 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c10 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -1672,81 +1684,83 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   content: 'Auto';
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Max. slippage
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          <div
-            class="c0 c7"
-          >
-            <div
-              class="c8 c9 css-1lgneq0"
-            />
-             2%
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="c10"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c11"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
       >
-        <div
-          class="c8 css-obwv3p"
-        >
+        Max. slippage
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="c12"
+            class="c3 c6 css-142zc9n"
           >
             <div
-              class="c0 c1 c2"
+              class="c0 c7"
             >
               <div
-                class="c3 css-obwv3p"
-              >
-                Receive at least
-              </div>
-              <div
-                class="c3 css-obwv3p"
-              >
-                0.00000000000000098 DEF
-              </div>
-            </div>
-            <div
-              class="c13"
-            />
-            <div>
-              If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
-              <a
-                class="c14"
-                href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
+                class="c8 c9 css-1lgneq0"
+              />
+               2%
             </div>
           </div>
         </div>
       </div>
       <div
-        class="c15 arrow-"
-        style="position: absolute;"
-      />
+        class="c10"
+        style="position: fixed; left: 0px; top: 0px;"
+      >
+        <div
+          class="c11"
+        >
+          <div
+            class="c8 css-obwv3p"
+          >
+            <div
+              class="c12"
+            >
+              <div
+                class="c0 c1 c2"
+              >
+                <div
+                  class="c3 css-obwv3p"
+                >
+                  Receive at least
+                </div>
+                <div
+                  class="c3 css-obwv3p"
+                >
+                  0.00000000000000098 DEF
+                </div>
+              </div>
+              <div
+                class="c13"
+              />
+              <div>
+                If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+                <a
+                  class="c14"
+                  href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="c15 arrow-"
+          style="position: absolute;"
+        />
+      </div>
     </div>
   </div>
   .c0 {
@@ -1885,43 +1899,45 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Receive at least
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          0.00000000000000098 DEF
-        </div>
-      </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c8"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Receive at least
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            0.00000000000000098 DEF
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
-          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+          <div
+            class="c9 css-obwv3p"
+          >
+            The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+          </div>
         </div>
+        <div
+          class="c10 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c10 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -2280,202 +2296,204 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+      class="c0 c1 c2"
     >
-      Order routing
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Order routing
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="css-142zc9n"
+            class="c3 c6 css-142zc9n"
           >
-            Uniswap Client
+            <div
+              class="css-142zc9n"
+            >
+              Uniswap Client
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
-    >
       <div
-        class="c8"
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
           <div
-            class="c10"
+            class="c9 css-obwv3p"
           >
             <div
-              class="c11 css-vurnku"
+              class="c10"
             >
               <div
-                class="c0 c1 c12"
+                class="c11 css-vurnku"
               >
                 <div
-                  class="c13"
-                  style="height: 20px; width: 20px;"
+                  class="c0 c1 c12"
                 >
                   <div
-                    class="c14"
-                  >
-                    <img
-                      alt="ABC logo"
-                      class="c15"
-                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c0 c1 c16"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <svg
-                      class="c18"
-                    >
-                      dot_line.svg
-                    </svg>
-                  </div>
-                  <div
-                    class="c19 c20"
+                    class="c13"
+                    style="height: 20px; width: 20px;"
                   >
                     <div
-                      class="c19 c21"
+                      class="c14"
+                    >
+                      <img
+                        alt="ABC logo"
+                        class="c15"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c0 c1 c16"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <svg
+                        class="c18"
+                      >
+                        dot_line.svg
+                      </svg>
+                    </div>
+                    <div
+                      class="c19 c20"
                     >
                       <div
-                        class="c3 c22 css-1m65e73"
+                        class="c19 c21"
                       >
-                        V3
+                        <div
+                          class="c3 c22 css-1m65e73"
+                        >
+                          V3
+                        </div>
+                      </div>
+                      <div
+                        class="c9 c22 css-1m65e73"
+                        style="min-width: auto;"
+                      >
+                        100%
                       </div>
                     </div>
                     <div
-                      class="c9 c22 css-1m65e73"
-                      style="min-width: auto;"
+                      class="c23 c24 c25"
+                      style="justify-content: space-evenly; z-index: 2;"
+                      width="100%"
                     >
-                      100%
-                    </div>
-                  </div>
-                  <div
-                    class="c23 c24 c25"
-                    style="justify-content: space-evenly; z-index: 2;"
-                    width="100%"
-                  >
-                    <div
-                      class="c5"
-                    >
-                      <div>
-                        <div
-                          class="c19 c26"
-                        >
+                      <div
+                        class="c5"
+                      >
+                        <div>
                           <div
-                            class="css-mbnpt3"
+                            class="c19 c26"
                           >
                             <div
-                              class="c27"
+                              class="css-mbnpt3"
                             >
                               <div
-                                class="c28"
+                                class="c27"
                               >
                                 <div
-                                  class="c13"
-                                  style="height: 20px; width: 20px;"
+                                  class="c28"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
+                                    style="height: 20px; width: 20px;"
                                   >
-                                    <img
-                                      alt="DEF logo"
-                                      class="c15"
-                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                                    />
+                                    <div
+                                      class="c14"
+                                    >
+                                      <img
+                                        alt="DEF logo"
+                                        class="c15"
+                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                              <div
-                                class="c29"
-                              >
                                 <div
-                                  class="c13"
-                                  style="height: 20px; width: 20px;"
+                                  class="c29"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
+                                    style="height: 20px; width: 20px;"
                                   >
-                                    <img
-                                      alt="ABC logo"
-                                      class="c15"
-                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                    />
+                                    <div
+                                      class="c14"
+                                    >
+                                      <img
+                                        alt="ABC logo"
+                                        class="c15"
+                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                          <div
-                            class="c9 c22 css-1m65e73"
-                          >
-                            1%
+                            <div
+                              class="c9 c22 css-1m65e73"
+                            >
+                              1%
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="c7"
-                      style="position: fixed; left: 0px; top: 0px;"
-                    >
                       <div
-                        class="c30"
+                        class="c7"
+                        style="position: fixed; left: 0px; top: 0px;"
                       >
-                        ABC/DEF 1% pool
+                        <div
+                          class="c30"
+                        >
+                          ABC/DEF 1% pool
+                        </div>
+                        <div
+                          class="c31 arrow-"
+                          style="position: absolute;"
+                        />
                       </div>
-                      <div
-                        class="c31 arrow-"
-                        style="position: absolute;"
+                    </div>
+                  </div>
+                  <div
+                    class="c13"
+                    style="height: 20px; width: 20px;"
+                  >
+                    <div
+                      class="c14"
+                    >
+                      <img
+                        alt="DEF logo"
+                        class="c15"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                       />
                     </div>
                   </div>
                 </div>
-                <div
-                  class="c13"
-                  style="height: 20px; width: 20px;"
-                >
-                  <div
-                    class="c14"
-                  >
-                    <img
-                      alt="DEF logo"
-                      class="c15"
-                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                    />
-                  </div>
-                </div>
               </div>
-            </div>
-            <div
-              class="c9 css-obwv3p"
-            >
-              Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+              <div
+                class="c9 css-obwv3p"
+              >
+                Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+              </div>
             </div>
           </div>
         </div>
+        <div
+          class="c31 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c31 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
 </DocumentFragment>
@@ -2656,88 +2674,90 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+      class="c0 c1 c2"
     >
-      Network cost
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Network cost
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="c0 c7"
+            class="c3 c6 css-142zc9n"
           >
-            <svg
-              aria-labelledby="titleID"
-              height="16"
-              width="16"
+            <div
+              class="c0 c7"
             >
-              <title
-                id="titleID"
-              >
-                Ethereum logo
-              </title>
-              <rect
-                fill="#F9F9F9"
-                height="16"
-                rx="4"
-                width="16"
-              />
-              <rect
-                fill="#6B8AFF33"
-                height="16"
-                rx="4"
-                width="16"
-              />
               <svg
+                aria-labelledby="titleID"
                 height="16"
                 width="16"
               >
-                ethereum.svg
+                <title
+                  id="titleID"
+                >
+                  Ethereum logo
+                </title>
+                <rect
+                  fill="#F9F9F9"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <rect
+                  fill="#6B8AFF33"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <svg
+                  height="16"
+                  width="16"
+                >
+                  ethereum.svg
+                </svg>
               </svg>
-            </svg>
-            $1.00
+              $1.00
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="c8"
-      style="position: fixed; left: 0px; top: 0px;"
-    >
       <div
-        class="c9"
+        class="c8"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c10 css-obwv3p"
+          class="c9"
         >
           <div
-            class="c10 css-1m65e73"
+            class="c10 css-obwv3p"
           >
-            The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
-            <a
-              class="c11"
-              href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-              rel="noopener noreferrer"
-              target="_blank"
+            <div
+              class="c10 css-1m65e73"
             >
-              Learn more
-            </a>
+              The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+              <a
+                class="c11"
+                href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn more
+              </a>
+            </div>
           </div>
         </div>
+        <div
+          class="c12 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c12 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -2876,47 +2896,49 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Price impact
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          <span
-            class=""
-          >
-            -105566.373%
-          </span>
-        </div>
-      </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c8"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Price impact
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            <span
+              class=""
+            >
+              -105566.373%
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
-          The impact your trade has on the market price of this pool.
+          <div
+            class="c9 css-obwv3p"
+          >
+            The impact your trade has on the market price of this pool.
+          </div>
         </div>
+        <div
+          class="c10 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c10 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -3125,81 +3147,83 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   content: 'Auto';
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Max. slippage
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          <div
-            class="c0 c7"
-          >
-            <div
-              class="c8 c9 css-1lgneq0"
-            />
-             2%
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="c10"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c11"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
       >
-        <div
-          class="c8 css-obwv3p"
-        >
+        Max. slippage
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="c12"
+            class="c3 c6 css-142zc9n"
           >
             <div
-              class="c0 c1 c2"
+              class="c0 c7"
             >
               <div
-                class="c3 css-obwv3p"
-              >
-                Receive at least
-              </div>
-              <div
-                class="c3 css-obwv3p"
-              >
-                0.00000000000000098 DEF
-              </div>
-            </div>
-            <div
-              class="c13"
-            />
-            <div>
-              If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
-              <a
-                class="c14"
-                href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
+                class="c8 c9 css-1lgneq0"
+              />
+               2%
             </div>
           </div>
         </div>
       </div>
       <div
-        class="c15 arrow-"
-        style="position: absolute;"
-      />
+        class="c10"
+        style="position: fixed; left: 0px; top: 0px;"
+      >
+        <div
+          class="c11"
+        >
+          <div
+            class="c8 css-obwv3p"
+          >
+            <div
+              class="c12"
+            >
+              <div
+                class="c0 c1 c2"
+              >
+                <div
+                  class="c3 css-obwv3p"
+                >
+                  Receive at least
+                </div>
+                <div
+                  class="c3 css-obwv3p"
+                >
+                  0.00000000000000098 DEF
+                </div>
+              </div>
+              <div
+                class="c13"
+              />
+              <div>
+                If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+                <a
+                  class="c14"
+                  href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="c15 arrow-"
+          style="position: absolute;"
+        />
+      </div>
     </div>
   </div>
   .c0 {
@@ -3338,43 +3362,45 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Receive at least
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          0.00000000000000098 DEF
-        </div>
-      </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c8"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Receive at least
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            0.00000000000000098 DEF
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
-          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+          <div
+            class="c9 css-obwv3p"
+          >
+            The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+          </div>
         </div>
+        <div
+          class="c10 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c10 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -3733,202 +3759,204 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+      class="c0 c1 c2"
     >
-      Order routing
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Order routing
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="css-142zc9n"
+            class="c3 c6 css-142zc9n"
           >
-            Uniswap API
+            <div
+              class="css-142zc9n"
+            >
+              Uniswap API
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
-    >
       <div
-        class="c8"
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
           <div
-            class="c10"
+            class="c9 css-obwv3p"
           >
             <div
-              class="c11 css-vurnku"
+              class="c10"
             >
               <div
-                class="c0 c1 c12"
+                class="c11 css-vurnku"
               >
                 <div
-                  class="c13"
-                  style="height: 20px; width: 20px;"
+                  class="c0 c1 c12"
                 >
                   <div
-                    class="c14"
-                  >
-                    <img
-                      alt="ABC logo"
-                      class="c15"
-                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c0 c1 c16"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <svg
-                      class="c18"
-                    >
-                      dot_line.svg
-                    </svg>
-                  </div>
-                  <div
-                    class="c19 c20"
+                    class="c13"
+                    style="height: 20px; width: 20px;"
                   >
                     <div
-                      class="c19 c21"
+                      class="c14"
+                    >
+                      <img
+                        alt="ABC logo"
+                        class="c15"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c0 c1 c16"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <svg
+                        class="c18"
+                      >
+                        dot_line.svg
+                      </svg>
+                    </div>
+                    <div
+                      class="c19 c20"
                     >
                       <div
-                        class="c3 c22 css-1m65e73"
+                        class="c19 c21"
                       >
-                        V3
+                        <div
+                          class="c3 c22 css-1m65e73"
+                        >
+                          V3
+                        </div>
+                      </div>
+                      <div
+                        class="c9 c22 css-1m65e73"
+                        style="min-width: auto;"
+                      >
+                        100%
                       </div>
                     </div>
                     <div
-                      class="c9 c22 css-1m65e73"
-                      style="min-width: auto;"
+                      class="c23 c24 c25"
+                      style="justify-content: space-evenly; z-index: 2;"
+                      width="100%"
                     >
-                      100%
-                    </div>
-                  </div>
-                  <div
-                    class="c23 c24 c25"
-                    style="justify-content: space-evenly; z-index: 2;"
-                    width="100%"
-                  >
-                    <div
-                      class="c5"
-                    >
-                      <div>
-                        <div
-                          class="c19 c26"
-                        >
+                      <div
+                        class="c5"
+                      >
+                        <div>
                           <div
-                            class="css-mbnpt3"
+                            class="c19 c26"
                           >
                             <div
-                              class="c27"
+                              class="css-mbnpt3"
                             >
                               <div
-                                class="c28"
+                                class="c27"
                               >
                                 <div
-                                  class="c13"
-                                  style="height: 20px; width: 20px;"
+                                  class="c28"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
+                                    style="height: 20px; width: 20px;"
                                   >
-                                    <img
-                                      alt="DEF logo"
-                                      class="c15"
-                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                                    />
+                                    <div
+                                      class="c14"
+                                    >
+                                      <img
+                                        alt="DEF logo"
+                                        class="c15"
+                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                              <div
-                                class="c29"
-                              >
                                 <div
-                                  class="c13"
-                                  style="height: 20px; width: 20px;"
+                                  class="c29"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
+                                    style="height: 20px; width: 20px;"
                                   >
-                                    <img
-                                      alt="ABC logo"
-                                      class="c15"
-                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                    />
+                                    <div
+                                      class="c14"
+                                    >
+                                      <img
+                                        alt="ABC logo"
+                                        class="c15"
+                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                          <div
-                            class="c9 c22 css-1m65e73"
-                          >
-                            1%
+                            <div
+                              class="c9 c22 css-1m65e73"
+                            >
+                              1%
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="c7"
-                      style="position: fixed; left: 0px; top: 0px;"
-                    >
                       <div
-                        class="c30"
+                        class="c7"
+                        style="position: fixed; left: 0px; top: 0px;"
                       >
-                        ABC/DEF 1% pool
+                        <div
+                          class="c30"
+                        >
+                          ABC/DEF 1% pool
+                        </div>
+                        <div
+                          class="c31 arrow-"
+                          style="position: absolute;"
+                        />
                       </div>
-                      <div
-                        class="c31 arrow-"
-                        style="position: absolute;"
+                    </div>
+                  </div>
+                  <div
+                    class="c13"
+                    style="height: 20px; width: 20px;"
+                  >
+                    <div
+                      class="c14"
+                    >
+                      <img
+                        alt="DEF logo"
+                        class="c15"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                       />
                     </div>
                   </div>
                 </div>
-                <div
-                  class="c13"
-                  style="height: 20px; width: 20px;"
-                >
-                  <div
-                    class="c14"
-                  >
-                    <img
-                      alt="DEF logo"
-                      class="c15"
-                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                    />
-                  </div>
-                </div>
               </div>
-            </div>
-            <div
-              class="c9 css-obwv3p"
-            >
-              Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+              <div
+                class="c9 css-obwv3p"
+              >
+                Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+              </div>
             </div>
           </div>
         </div>
+        <div
+          class="c31 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c31 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
 </DocumentFragment>
@@ -4109,88 +4137,90 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+      class="c0 c1 c2"
     >
-      Network cost
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Network cost
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="c0 c7"
+            class="c3 c6 css-142zc9n"
           >
-            <svg
-              aria-labelledby="titleID"
-              height="16"
-              width="16"
+            <div
+              class="c0 c7"
             >
-              <title
-                id="titleID"
-              >
-                Ethereum logo
-              </title>
-              <rect
-                fill="#F9F9F9"
-                height="16"
-                rx="4"
-                width="16"
-              />
-              <rect
-                fill="#6B8AFF33"
-                height="16"
-                rx="4"
-                width="16"
-              />
               <svg
+                aria-labelledby="titleID"
                 height="16"
                 width="16"
               >
-                ethereum.svg
+                <title
+                  id="titleID"
+                >
+                  Ethereum logo
+                </title>
+                <rect
+                  fill="#F9F9F9"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <rect
+                  fill="#6B8AFF33"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <svg
+                  height="16"
+                  width="16"
+                >
+                  ethereum.svg
+                </svg>
               </svg>
-            </svg>
-            -
+              -
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="c8"
-      style="position: fixed; left: 0px; top: 0px;"
-    >
       <div
-        class="c9"
+        class="c8"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c10 css-obwv3p"
+          class="c9"
         >
           <div
-            class="c10 css-1m65e73"
+            class="c10 css-obwv3p"
           >
-            The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
-            <a
-              class="c11"
-              href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-              rel="noopener noreferrer"
-              target="_blank"
+            <div
+              class="c10 css-1m65e73"
             >
-              Learn more
-            </a>
+              The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+              <a
+                class="c11"
+                href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn more
+              </a>
+            </div>
           </div>
         </div>
+        <div
+          class="c12 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c12 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -4329,47 +4359,49 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Price impact
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          <span
-            class=""
-          >
-            -105566.373%
-          </span>
-        </div>
-      </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c8"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Price impact
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            <span
+              class=""
+            >
+              -105566.373%
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
-          The impact your trade has on the market price of this pool.
+          <div
+            class="c9 css-obwv3p"
+          >
+            The impact your trade has on the market price of this pool.
+          </div>
         </div>
+        <div
+          class="c10 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c10 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -4578,81 +4610,83 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   content: 'Auto';
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Max. slippage
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          <div
-            class="c0 c7"
-          >
-            <div
-              class="c8 c9 css-1lgneq0"
-            />
-             2%
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="c10"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c11"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
       >
-        <div
-          class="c8 css-obwv3p"
-        >
+        Max. slippage
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="c12"
+            class="c3 c6 css-142zc9n"
           >
             <div
-              class="c0 c1 c2"
+              class="c0 c7"
             >
               <div
-                class="c3 css-obwv3p"
-              >
-                Pay at most
-              </div>
-              <div
-                class="c3 css-obwv3p"
-              >
-                0.00000000000000102 ABC
-              </div>
-            </div>
-            <div
-              class="c13"
-            />
-            <div>
-              If the price moves so that you will pay more than 0.00000000000000102 ABC, your transaction will be reverted. This is the maximum amount you are guaranteed to pay. 
-              <a
-                class="c14"
-                href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
+                class="c8 c9 css-1lgneq0"
+              />
+               2%
             </div>
           </div>
         </div>
       </div>
       <div
-        class="c15 arrow-"
-        style="position: absolute;"
-      />
+        class="c10"
+        style="position: fixed; left: 0px; top: 0px;"
+      >
+        <div
+          class="c11"
+        >
+          <div
+            class="c8 css-obwv3p"
+          >
+            <div
+              class="c12"
+            >
+              <div
+                class="c0 c1 c2"
+              >
+                <div
+                  class="c3 css-obwv3p"
+                >
+                  Pay at most
+                </div>
+                <div
+                  class="c3 css-obwv3p"
+                >
+                  0.00000000000000102 ABC
+                </div>
+              </div>
+              <div
+                class="c13"
+              />
+              <div>
+                If the price moves so that you will pay more than 0.00000000000000102 ABC, your transaction will be reverted. This is the maximum amount you are guaranteed to pay. 
+                <a
+                  class="c14"
+                  href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="c15 arrow-"
+          style="position: absolute;"
+        />
+      </div>
     </div>
   </div>
   .c0 {
@@ -4791,43 +4825,45 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Pay at most
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          0.00000000000000102 ABC
-        </div>
-      </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c8"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Pay at most
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            0.00000000000000102 ABC
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
-          The maximum amount you are guaranteed to spend. If the price slips any further, your transaction will revert.
+          <div
+            class="c9 css-obwv3p"
+          >
+            The maximum amount you are guaranteed to spend. If the price slips any further, your transaction will revert.
+          </div>
         </div>
+        <div
+          class="c10 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c10 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -5186,202 +5222,204 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+      class="c0 c1 c2"
     >
-      Order routing
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Order routing
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="css-142zc9n"
+            class="c3 c6 css-142zc9n"
           >
-            Uniswap Client
+            <div
+              class="css-142zc9n"
+            >
+              Uniswap Client
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
-    >
       <div
-        class="c8"
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
           <div
-            class="c10"
+            class="c9 css-obwv3p"
           >
             <div
-              class="c11 css-vurnku"
+              class="c10"
             >
               <div
-                class="c0 c1 c12"
+                class="c11 css-vurnku"
               >
                 <div
-                  class="c13"
-                  style="height: 20px; width: 20px;"
+                  class="c0 c1 c12"
                 >
                   <div
-                    class="c14"
-                  >
-                    <img
-                      alt="ABC logo"
-                      class="c15"
-                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c0 c1 c16"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <svg
-                      class="c18"
-                    >
-                      dot_line.svg
-                    </svg>
-                  </div>
-                  <div
-                    class="c19 c20"
+                    class="c13"
+                    style="height: 20px; width: 20px;"
                   >
                     <div
-                      class="c19 c21"
+                      class="c14"
+                    >
+                      <img
+                        alt="ABC logo"
+                        class="c15"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c0 c1 c16"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <svg
+                        class="c18"
+                      >
+                        dot_line.svg
+                      </svg>
+                    </div>
+                    <div
+                      class="c19 c20"
                     >
                       <div
-                        class="c3 c22 css-1m65e73"
+                        class="c19 c21"
                       >
-                        V3
+                        <div
+                          class="c3 c22 css-1m65e73"
+                        >
+                          V3
+                        </div>
+                      </div>
+                      <div
+                        class="c9 c22 css-1m65e73"
+                        style="min-width: auto;"
+                      >
+                        100%
                       </div>
                     </div>
                     <div
-                      class="c9 c22 css-1m65e73"
-                      style="min-width: auto;"
+                      class="c23 c24 c25"
+                      style="justify-content: space-evenly; z-index: 2;"
+                      width="100%"
                     >
-                      100%
-                    </div>
-                  </div>
-                  <div
-                    class="c23 c24 c25"
-                    style="justify-content: space-evenly; z-index: 2;"
-                    width="100%"
-                  >
-                    <div
-                      class="c5"
-                    >
-                      <div>
-                        <div
-                          class="c19 c26"
-                        >
+                      <div
+                        class="c5"
+                      >
+                        <div>
                           <div
-                            class="css-mbnpt3"
+                            class="c19 c26"
                           >
                             <div
-                              class="c27"
+                              class="css-mbnpt3"
                             >
                               <div
-                                class="c28"
+                                class="c27"
                               >
                                 <div
-                                  class="c13"
-                                  style="height: 20px; width: 20px;"
+                                  class="c28"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
+                                    style="height: 20px; width: 20px;"
                                   >
-                                    <img
-                                      alt="GHI logo"
-                                      class="c15"
-                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
-                                    />
+                                    <div
+                                      class="c14"
+                                    >
+                                      <img
+                                        alt="GHI logo"
+                                        class="c15"
+                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                              <div
-                                class="c29"
-                              >
                                 <div
-                                  class="c13"
-                                  style="height: 20px; width: 20px;"
+                                  class="c29"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
+                                    style="height: 20px; width: 20px;"
                                   >
-                                    <img
-                                      alt="ABC logo"
-                                      class="c15"
-                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                    />
+                                    <div
+                                      class="c14"
+                                    >
+                                      <img
+                                        alt="ABC logo"
+                                        class="c15"
+                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                          <div
-                            class="c9 c22 css-1m65e73"
-                          >
-                            0.3%
+                            <div
+                              class="c9 c22 css-1m65e73"
+                            >
+                              0.3%
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="c7"
-                      style="position: fixed; left: 0px; top: 0px;"
-                    >
                       <div
-                        class="c30"
+                        class="c7"
+                        style="position: fixed; left: 0px; top: 0px;"
                       >
-                        ABC/GHI 0.3% pool
+                        <div
+                          class="c30"
+                        >
+                          ABC/GHI 0.3% pool
+                        </div>
+                        <div
+                          class="c31 arrow-"
+                          style="position: absolute;"
+                        />
                       </div>
-                      <div
-                        class="c31 arrow-"
-                        style="position: absolute;"
+                    </div>
+                  </div>
+                  <div
+                    class="c13"
+                    style="height: 20px; width: 20px;"
+                  >
+                    <div
+                      class="c14"
+                    >
+                      <img
+                        alt="GHI logo"
+                        class="c15"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
                       />
                     </div>
                   </div>
                 </div>
-                <div
-                  class="c13"
-                  style="height: 20px; width: 20px;"
-                >
-                  <div
-                    class="c14"
-                  >
-                    <img
-                      alt="GHI logo"
-                      class="c15"
-                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
-                    />
-                  </div>
-                </div>
               </div>
-            </div>
-            <div
-              class="c9 css-obwv3p"
-            >
-              This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+              <div
+                class="c9 css-obwv3p"
+              >
+                This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+              </div>
             </div>
           </div>
         </div>
+        <div
+          class="c31 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c31 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
 </DocumentFragment>
@@ -5562,88 +5600,90 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+      class="c0 c1 c2"
     >
-      Network cost
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Network cost
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="c0 c7"
+            class="c3 c6 css-142zc9n"
           >
-            <svg
-              aria-labelledby="titleID"
-              height="16"
-              width="16"
+            <div
+              class="c0 c7"
             >
-              <title
-                id="titleID"
-              >
-                Ethereum logo
-              </title>
-              <rect
-                fill="#F9F9F9"
-                height="16"
-                rx="4"
-                width="16"
-              />
-              <rect
-                fill="#6B8AFF33"
-                height="16"
-                rx="4"
-                width="16"
-              />
               <svg
+                aria-labelledby="titleID"
                 height="16"
                 width="16"
               >
-                ethereum.svg
+                <title
+                  id="titleID"
+                >
+                  Ethereum logo
+                </title>
+                <rect
+                  fill="#F9F9F9"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <rect
+                  fill="#6B8AFF33"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <svg
+                  height="16"
+                  width="16"
+                >
+                  ethereum.svg
+                </svg>
               </svg>
-            </svg>
-            $1.00
+              $1.00
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="c8"
-      style="position: fixed; left: 0px; top: 0px;"
-    >
       <div
-        class="c9"
+        class="c8"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c10 css-obwv3p"
+          class="c9"
         >
           <div
-            class="c10 css-1m65e73"
+            class="c10 css-obwv3p"
           >
-            The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
-            <a
-              class="c11"
-              href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-              rel="noopener noreferrer"
-              target="_blank"
+            <div
+              class="c10 css-1m65e73"
             >
-              Learn more
-            </a>
+              The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+              <a
+                class="c11"
+                href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn more
+              </a>
+            </div>
           </div>
         </div>
+        <div
+          class="c12 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c12 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -5801,55 +5841,57 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      DEF fee
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          <span
-            class=""
-          >
-            3%
-          </span>
-        </div>
-      </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c8"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        DEF fee
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            <span
+              class=""
+            >
+              3%
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
-          Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees. 
-          <a
-            class="c10"
-            href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-"
-            rel="noopener noreferrer"
-            target="_blank"
+          <div
+            class="c9 css-obwv3p"
           >
-            Learn more
-          </a>
+            Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees. 
+            <a
+              class="c10"
+              href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
         </div>
+        <div
+          class="c11 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c11 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -5988,47 +6030,49 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Price impact
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          <span
-            class=""
-          >
-            -105566.373%
-          </span>
-        </div>
-      </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c8"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Price impact
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            <span
+              class=""
+            >
+              -105566.373%
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
-          The impact your trade has on the market price of this pool.
+          <div
+            class="c9 css-obwv3p"
+          >
+            The impact your trade has on the market price of this pool.
+          </div>
         </div>
+        <div
+          class="c10 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c10 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -6237,81 +6281,83 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   content: 'Auto';
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Max. slippage
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          <div
-            class="c0 c7"
-          >
-            <div
-              class="c8 c9 css-1lgneq0"
-            />
-             2%
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="c10"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c11"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
       >
-        <div
-          class="c8 css-obwv3p"
-        >
+        Max. slippage
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="c12"
+            class="c3 c6 css-142zc9n"
           >
             <div
-              class="c0 c1 c2"
+              class="c0 c7"
             >
               <div
-                class="c3 css-obwv3p"
-              >
-                Receive at least
-              </div>
-              <div
-                class="c3 css-obwv3p"
-              >
-                0.000000000000000952 DEF
-              </div>
-            </div>
-            <div
-              class="c13"
-            />
-            <div>
-              If the price moves so that you will receive less than 0.000000000000000952 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
-              <a
-                class="c14"
-                href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
+                class="c8 c9 css-1lgneq0"
+              />
+               2%
             </div>
           </div>
         </div>
       </div>
       <div
-        class="c15 arrow-"
-        style="position: absolute;"
-      />
+        class="c10"
+        style="position: fixed; left: 0px; top: 0px;"
+      >
+        <div
+          class="c11"
+        >
+          <div
+            class="c8 css-obwv3p"
+          >
+            <div
+              class="c12"
+            >
+              <div
+                class="c0 c1 c2"
+              >
+                <div
+                  class="c3 css-obwv3p"
+                >
+                  Receive at least
+                </div>
+                <div
+                  class="c3 css-obwv3p"
+                >
+                  0.000000000000000952 DEF
+                </div>
+              </div>
+              <div
+                class="c13"
+              />
+              <div>
+                If the price moves so that you will receive less than 0.000000000000000952 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+                <a
+                  class="c14"
+                  href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="c15 arrow-"
+          style="position: absolute;"
+        />
+      </div>
     </div>
   </div>
   .c0 {
@@ -6450,43 +6496,45 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Receive at least
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          0.000000000000000952 DEF
-        </div>
-      </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c8"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Receive at least
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            0.000000000000000952 DEF
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
-          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+          <div
+            class="c9 css-obwv3p"
+          >
+            The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+          </div>
         </div>
+        <div
+          class="c10 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c10 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -6845,202 +6893,204 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+      class="c0 c1 c2"
     >
-      Order routing
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Order routing
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="css-142zc9n"
+            class="c3 c6 css-142zc9n"
           >
-            Uniswap API
+            <div
+              class="css-142zc9n"
+            >
+              Uniswap API
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
-    >
       <div
-        class="c8"
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
           <div
-            class="c10"
+            class="c9 css-obwv3p"
           >
             <div
-              class="c11 css-vurnku"
+              class="c10"
             >
               <div
-                class="c0 c1 c12"
+                class="c11 css-vurnku"
               >
                 <div
-                  class="c13"
-                  style="height: 20px; width: 20px;"
+                  class="c0 c1 c12"
                 >
                   <div
-                    class="c14"
-                  >
-                    <img
-                      alt="ABC logo"
-                      class="c15"
-                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c0 c1 c16"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <svg
-                      class="c18"
-                    >
-                      dot_line.svg
-                    </svg>
-                  </div>
-                  <div
-                    class="c19 c20"
+                    class="c13"
+                    style="height: 20px; width: 20px;"
                   >
                     <div
-                      class="c19 c21"
+                      class="c14"
+                    >
+                      <img
+                        alt="ABC logo"
+                        class="c15"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c0 c1 c16"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <svg
+                        class="c18"
+                      >
+                        dot_line.svg
+                      </svg>
+                    </div>
+                    <div
+                      class="c19 c20"
                     >
                       <div
-                        class="c3 c22 css-1m65e73"
+                        class="c19 c21"
                       >
-                        V3
+                        <div
+                          class="c3 c22 css-1m65e73"
+                        >
+                          V3
+                        </div>
+                      </div>
+                      <div
+                        class="c9 c22 css-1m65e73"
+                        style="min-width: auto;"
+                      >
+                        100%
                       </div>
                     </div>
                     <div
-                      class="c9 c22 css-1m65e73"
-                      style="min-width: auto;"
+                      class="c23 c24 c25"
+                      style="justify-content: space-evenly; z-index: 2;"
+                      width="100%"
                     >
-                      100%
-                    </div>
-                  </div>
-                  <div
-                    class="c23 c24 c25"
-                    style="justify-content: space-evenly; z-index: 2;"
-                    width="100%"
-                  >
-                    <div
-                      class="c5"
-                    >
-                      <div>
-                        <div
-                          class="c19 c26"
-                        >
+                      <div
+                        class="c5"
+                      >
+                        <div>
                           <div
-                            class="css-mbnpt3"
+                            class="c19 c26"
                           >
                             <div
-                              class="c27"
+                              class="css-mbnpt3"
                             >
                               <div
-                                class="c28"
+                                class="c27"
                               >
                                 <div
-                                  class="c13"
-                                  style="height: 20px; width: 20px;"
+                                  class="c28"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
+                                    style="height: 20px; width: 20px;"
                                   >
-                                    <img
-                                      alt="DEF logo"
-                                      class="c15"
-                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                                    />
+                                    <div
+                                      class="c14"
+                                    >
+                                      <img
+                                        alt="DEF logo"
+                                        class="c15"
+                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                              <div
-                                class="c29"
-                              >
                                 <div
-                                  class="c13"
-                                  style="height: 20px; width: 20px;"
+                                  class="c29"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
+                                    style="height: 20px; width: 20px;"
                                   >
-                                    <img
-                                      alt="ABC logo"
-                                      class="c15"
-                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                    />
+                                    <div
+                                      class="c14"
+                                    >
+                                      <img
+                                        alt="ABC logo"
+                                        class="c15"
+                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                          <div
-                            class="c9 c22 css-1m65e73"
-                          >
-                            1%
+                            <div
+                              class="c9 c22 css-1m65e73"
+                            >
+                              1%
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="c7"
-                      style="position: fixed; left: 0px; top: 0px;"
-                    >
                       <div
-                        class="c30"
+                        class="c7"
+                        style="position: fixed; left: 0px; top: 0px;"
                       >
-                        ABC/DEF 1% pool
+                        <div
+                          class="c30"
+                        >
+                          ABC/DEF 1% pool
+                        </div>
+                        <div
+                          class="c31 arrow-"
+                          style="position: absolute;"
+                        />
                       </div>
-                      <div
-                        class="c31 arrow-"
-                        style="position: absolute;"
+                    </div>
+                  </div>
+                  <div
+                    class="c13"
+                    style="height: 20px; width: 20px;"
+                  >
+                    <div
+                      class="c14"
+                    >
+                      <img
+                        alt="DEF logo"
+                        class="c15"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                       />
                     </div>
                   </div>
                 </div>
-                <div
-                  class="c13"
-                  style="height: 20px; width: 20px;"
-                >
-                  <div
-                    class="c14"
-                  >
-                    <img
-                      alt="DEF logo"
-                      class="c15"
-                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                    />
-                  </div>
-                </div>
               </div>
-            </div>
-            <div
-              class="c9 css-obwv3p"
-            >
-              Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+              <div
+                class="c9 css-obwv3p"
+              >
+                Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+              </div>
             </div>
           </div>
         </div>
+        <div
+          class="c31 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c31 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
 </DocumentFragment>
@@ -7221,88 +7271,90 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+      class="c0 c1 c2"
     >
-      Network cost
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Network cost
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="c0 c7"
+            class="c3 c6 css-142zc9n"
           >
-            <svg
-              aria-labelledby="titleID"
-              height="16"
-              width="16"
+            <div
+              class="c0 c7"
             >
-              <title
-                id="titleID"
-              >
-                Ethereum logo
-              </title>
-              <rect
-                fill="#F9F9F9"
-                height="16"
-                rx="4"
-                width="16"
-              />
-              <rect
-                fill="#6B8AFF33"
-                height="16"
-                rx="4"
-                width="16"
-              />
               <svg
+                aria-labelledby="titleID"
                 height="16"
                 width="16"
               >
-                ethereum.svg
+                <title
+                  id="titleID"
+                >
+                  Ethereum logo
+                </title>
+                <rect
+                  fill="#F9F9F9"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <rect
+                  fill="#6B8AFF33"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <svg
+                  height="16"
+                  width="16"
+                >
+                  ethereum.svg
+                </svg>
               </svg>
-            </svg>
-            $1.00
+              $1.00
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="c8"
-      style="position: fixed; left: 0px; top: 0px;"
-    >
       <div
-        class="c9"
+        class="c8"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c10 css-obwv3p"
+          class="c9"
         >
           <div
-            class="c10 css-1m65e73"
+            class="c10 css-obwv3p"
           >
-            The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
-            <a
-              class="c11"
-              href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-              rel="noopener noreferrer"
-              target="_blank"
+            <div
+              class="c10 css-1m65e73"
             >
-              Learn more
-            </a>
+              The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+              <a
+                class="c11"
+                href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn more
+              </a>
+            </div>
           </div>
         </div>
+        <div
+          class="c12 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c12 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -7460,55 +7512,57 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      ABC fee
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          <span
-            class=""
-          >
-            3%
-          </span>
-        </div>
-      </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c8"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        ABC fee
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            <span
+              class=""
+            >
+              3%
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
-          Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees. 
-          <a
-            class="c10"
-            href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-"
-            rel="noopener noreferrer"
-            target="_blank"
+          <div
+            class="c9 css-obwv3p"
           >
-            Learn more
-          </a>
+            Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees. 
+            <a
+              class="c10"
+              href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
         </div>
+        <div
+          class="c11 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c11 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -7647,47 +7701,49 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Price impact
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          <span
-            class=""
-          >
-            -105566.373%
-          </span>
-        </div>
-      </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c8"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Price impact
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            <span
+              class=""
+            >
+              -105566.373%
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
-          The impact your trade has on the market price of this pool.
+          <div
+            class="c9 css-obwv3p"
+          >
+            The impact your trade has on the market price of this pool.
+          </div>
         </div>
+        <div
+          class="c10 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c10 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -7896,81 +7952,83 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   content: 'Auto';
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Max. slippage
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          <div
-            class="c0 c7"
-          >
-            <div
-              class="c8 c9 css-1lgneq0"
-            />
-             2%
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="c10"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c11"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
       >
-        <div
-          class="c8 css-obwv3p"
-        >
+        Max. slippage
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="c12"
+            class="c3 c6 css-142zc9n"
           >
             <div
-              class="c0 c1 c2"
+              class="c0 c7"
             >
               <div
-                class="c3 css-obwv3p"
-              >
-                Receive at least
-              </div>
-              <div
-                class="c3 css-obwv3p"
-              >
-                0.000000000000000952 DEF
-              </div>
-            </div>
-            <div
-              class="c13"
-            />
-            <div>
-              If the price moves so that you will receive less than 0.000000000000000952 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
-              <a
-                class="c14"
-                href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
+                class="c8 c9 css-1lgneq0"
+              />
+               2%
             </div>
           </div>
         </div>
       </div>
       <div
-        class="c15 arrow-"
-        style="position: absolute;"
-      />
+        class="c10"
+        style="position: fixed; left: 0px; top: 0px;"
+      >
+        <div
+          class="c11"
+        >
+          <div
+            class="c8 css-obwv3p"
+          >
+            <div
+              class="c12"
+            >
+              <div
+                class="c0 c1 c2"
+              >
+                <div
+                  class="c3 css-obwv3p"
+                >
+                  Receive at least
+                </div>
+                <div
+                  class="c3 css-obwv3p"
+                >
+                  0.000000000000000952 DEF
+                </div>
+              </div>
+              <div
+                class="c13"
+              />
+              <div>
+                If the price moves so that you will receive less than 0.000000000000000952 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+                <a
+                  class="c14"
+                  href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="c15 arrow-"
+          style="position: absolute;"
+        />
+      </div>
     </div>
   </div>
   .c0 {
@@ -8109,43 +8167,45 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Receive at least
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          0.000000000000000952 DEF
-        </div>
-      </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c8"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Receive at least
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            0.000000000000000952 DEF
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
-          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+          <div
+            class="c9 css-obwv3p"
+          >
+            The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+          </div>
         </div>
+        <div
+          class="c10 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c10 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -8504,202 +8564,204 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+      class="c0 c1 c2"
     >
-      Order routing
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Order routing
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="css-142zc9n"
+            class="c3 c6 css-142zc9n"
           >
-            Uniswap API
+            <div
+              class="css-142zc9n"
+            >
+              Uniswap API
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
-    >
       <div
-        class="c8"
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
           <div
-            class="c10"
+            class="c9 css-obwv3p"
           >
             <div
-              class="c11 css-vurnku"
+              class="c10"
             >
               <div
-                class="c0 c1 c12"
+                class="c11 css-vurnku"
               >
                 <div
-                  class="c13"
-                  style="height: 20px; width: 20px;"
+                  class="c0 c1 c12"
                 >
                   <div
-                    class="c14"
-                  >
-                    <img
-                      alt="ABC logo"
-                      class="c15"
-                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c0 c1 c16"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <svg
-                      class="c18"
-                    >
-                      dot_line.svg
-                    </svg>
-                  </div>
-                  <div
-                    class="c19 c20"
+                    class="c13"
+                    style="height: 20px; width: 20px;"
                   >
                     <div
-                      class="c19 c21"
+                      class="c14"
+                    >
+                      <img
+                        alt="ABC logo"
+                        class="c15"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c0 c1 c16"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <svg
+                        class="c18"
+                      >
+                        dot_line.svg
+                      </svg>
+                    </div>
+                    <div
+                      class="c19 c20"
                     >
                       <div
-                        class="c3 c22 css-1m65e73"
+                        class="c19 c21"
                       >
-                        V3
+                        <div
+                          class="c3 c22 css-1m65e73"
+                        >
+                          V3
+                        </div>
+                      </div>
+                      <div
+                        class="c9 c22 css-1m65e73"
+                        style="min-width: auto;"
+                      >
+                        100%
                       </div>
                     </div>
                     <div
-                      class="c9 c22 css-1m65e73"
-                      style="min-width: auto;"
+                      class="c23 c24 c25"
+                      style="justify-content: space-evenly; z-index: 2;"
+                      width="100%"
                     >
-                      100%
-                    </div>
-                  </div>
-                  <div
-                    class="c23 c24 c25"
-                    style="justify-content: space-evenly; z-index: 2;"
-                    width="100%"
-                  >
-                    <div
-                      class="c5"
-                    >
-                      <div>
-                        <div
-                          class="c19 c26"
-                        >
+                      <div
+                        class="c5"
+                      >
+                        <div>
                           <div
-                            class="css-mbnpt3"
+                            class="c19 c26"
                           >
                             <div
-                              class="c27"
+                              class="css-mbnpt3"
                             >
                               <div
-                                class="c28"
+                                class="c27"
                               >
                                 <div
-                                  class="c13"
-                                  style="height: 20px; width: 20px;"
+                                  class="c28"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
+                                    style="height: 20px; width: 20px;"
                                   >
-                                    <img
-                                      alt="DEF logo"
-                                      class="c15"
-                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                                    />
+                                    <div
+                                      class="c14"
+                                    >
+                                      <img
+                                        alt="DEF logo"
+                                        class="c15"
+                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                              <div
-                                class="c29"
-                              >
                                 <div
-                                  class="c13"
-                                  style="height: 20px; width: 20px;"
+                                  class="c29"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
+                                    style="height: 20px; width: 20px;"
                                   >
-                                    <img
-                                      alt="ABC logo"
-                                      class="c15"
-                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                    />
+                                    <div
+                                      class="c14"
+                                    >
+                                      <img
+                                        alt="ABC logo"
+                                        class="c15"
+                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                          <div
-                            class="c9 c22 css-1m65e73"
-                          >
-                            1%
+                            <div
+                              class="c9 c22 css-1m65e73"
+                            >
+                              1%
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="c7"
-                      style="position: fixed; left: 0px; top: 0px;"
-                    >
                       <div
-                        class="c30"
+                        class="c7"
+                        style="position: fixed; left: 0px; top: 0px;"
                       >
-                        ABC/DEF 1% pool
+                        <div
+                          class="c30"
+                        >
+                          ABC/DEF 1% pool
+                        </div>
+                        <div
+                          class="c31 arrow-"
+                          style="position: absolute;"
+                        />
                       </div>
-                      <div
-                        class="c31 arrow-"
-                        style="position: absolute;"
+                    </div>
+                  </div>
+                  <div
+                    class="c13"
+                    style="height: 20px; width: 20px;"
+                  >
+                    <div
+                      class="c14"
+                    >
+                      <img
+                        alt="DEF logo"
+                        class="c15"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                       />
                     </div>
                   </div>
                 </div>
-                <div
-                  class="c13"
-                  style="height: 20px; width: 20px;"
-                >
-                  <div
-                    class="c14"
-                  >
-                    <img
-                      alt="DEF logo"
-                      class="c15"
-                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                    />
-                  </div>
-                </div>
               </div>
-            </div>
-            <div
-              class="c9 css-obwv3p"
-            >
-              Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+              <div
+                class="c9 css-obwv3p"
+              >
+                Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+              </div>
             </div>
           </div>
         </div>
+        <div
+          class="c31 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c31 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
 </DocumentFragment>
@@ -8875,60 +8937,62 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Network cost
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          <div
-            class="c7"
-            data-testid="loading-row"
-            height="15"
-            width="50"
-          />
-        </div>
-      </div>
-    </div>
-    <div
-      class="c8"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c9"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
       >
-        <div
-          class="c10 css-obwv3p"
-        >
+        Network cost
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="c10 css-1m65e73"
+            class="c3 c6 css-142zc9n"
           >
-            The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
-            <a
-              class="c11"
-              href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Learn more
-            </a>
+            <div
+              class="c7"
+              data-testid="loading-row"
+              height="15"
+              width="50"
+            />
           </div>
         </div>
       </div>
       <div
-        class="c12 arrow-"
-        style="position: absolute;"
-      />
+        class="c8"
+        style="position: fixed; left: 0px; top: 0px;"
+      >
+        <div
+          class="c9"
+        >
+          <div
+            class="c10 css-obwv3p"
+          >
+            <div
+              class="c10 css-1m65e73"
+            >
+              The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+              <a
+                class="c11"
+                href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn more
+              </a>
+            </div>
+          </div>
+        </div>
+        <div
+          class="c12 arrow-"
+          style="position: absolute;"
+        />
+      </div>
     </div>
   </div>
   .c0 {
@@ -9080,48 +9144,50 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Price impact
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          <div
-            class="c7"
-            data-testid="loading-row"
-            height="15"
-            width="50"
-          />
-        </div>
-      </div>
-    </div>
-    <div
-      class="c8"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c9"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Price impact
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            <div
+              class="c7"
+              data-testid="loading-row"
+              height="15"
+              width="50"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="c8"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c10 css-obwv3p"
+          class="c9"
         >
-          The impact your trade has on the market price of this pool.
+          <div
+            class="c10 css-obwv3p"
+          >
+            The impact your trade has on the market price of this pool.
+          </div>
         </div>
+        <div
+          class="c11 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c11 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -9330,81 +9396,83 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   content: 'Auto';
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Max. slippage
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          <div
-            class="c0 c7"
-          >
-            <div
-              class="c8 c9 css-1lgneq0"
-            />
-             2%
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="c10"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c11"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
       >
-        <div
-          class="c8 css-obwv3p"
-        >
+        Max. slippage
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
           <div
-            class="c12"
+            class="c3 c6 css-142zc9n"
           >
             <div
-              class="c0 c1 c2"
+              class="c0 c7"
             >
               <div
-                class="c3 css-obwv3p"
-              >
-                Receive at least
-              </div>
-              <div
-                class="c3 css-obwv3p"
-              >
-                0.00000000000000098 DEF
-              </div>
-            </div>
-            <div
-              class="c13"
-            />
-            <div>
-              If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
-              <a
-                class="c14"
-                href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
+                class="c8 c9 css-1lgneq0"
+              />
+               2%
             </div>
           </div>
         </div>
       </div>
       <div
-        class="c15 arrow-"
-        style="position: absolute;"
-      />
+        class="c10"
+        style="position: fixed; left: 0px; top: 0px;"
+      >
+        <div
+          class="c11"
+        >
+          <div
+            class="c8 css-obwv3p"
+          >
+            <div
+              class="c12"
+            >
+              <div
+                class="c0 c1 c2"
+              >
+                <div
+                  class="c3 css-obwv3p"
+                >
+                  Receive at least
+                </div>
+                <div
+                  class="c3 css-obwv3p"
+                >
+                  0.00000000000000098 DEF
+                </div>
+              </div>
+              <div
+                class="c13"
+              />
+              <div>
+                If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+                <a
+                  class="c14"
+                  href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="c15 arrow-"
+          style="position: absolute;"
+        />
+      </div>
     </div>
   </div>
   .c0 {
@@ -9543,43 +9611,45 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Receive at least
-    </div>
-    <div
-      class="c5"
-    >
-      <div>
-        <div
-          class="c3 c6 css-142zc9n"
-        >
-          0.00000000000000098 DEF
-        </div>
-      </div>
-    </div>
-    <div
-      class="c7"
-      style="position: fixed; left: 0px; top: 0px;"
+      class="c0 c1 c2"
     >
       <div
-        class="c8"
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Receive at least
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            0.00000000000000098 DEF
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9 css-obwv3p"
+          class="c8"
         >
-          The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+          <div
+            class="c9 css-obwv3p"
+          >
+            The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+          </div>
         </div>
+        <div
+          class="c10 arrow-"
+          style="position: absolute;"
+        />
       </div>
-      <div
-        class="c10 arrow-"
-        style="position: absolute;"
-      />
     </div>
   </div>
   .c0 {
@@ -9639,24 +9709,26 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
-    >
-      Order routing
-    </div>
-    <div
-      class="c3 c5 css-142zc9n"
+      class="c0 c1 c2"
     >
       <div
-        class="c6"
-        data-testid="loading-row"
-        height="15"
-        width="50"
-      />
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Order routing
+      </div>
+      <div
+        class="c3 c5 css-142zc9n"
+      >
+        <div
+          class="c6"
+          data-testid="loading-row"
+          height="15"
+          width="50"
+        />
+      </div>
     </div>
   </div>
 </DocumentFragment>
@@ -9716,21 +9788,23 @@ exports[`SwapLineItem.tsx syncing 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+      class="c0 c1 c2"
     >
-      Network cost
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Network cost
+      </div>
+      <div
+        class="c5"
+        data-testid="loading-row"
+        height="15"
+        width="50"
+      />
     </div>
-    <div
-      class="c5"
-      data-testid="loading-row"
-      height="15"
-      width="50"
-    />
   </div>
   .c0 {
   box-sizing: border-box;
@@ -9784,21 +9858,23 @@ exports[`SwapLineItem.tsx syncing 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+      class="c0 c1 c2"
     >
-      Price impact
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Price impact
+      </div>
+      <div
+        class="c5"
+        data-testid="loading-row"
+        height="15"
+        width="50"
+      />
     </div>
-    <div
-      class="c5"
-      data-testid="loading-row"
-      height="15"
-      width="50"
-    />
   </div>
   .c0 {
   box-sizing: border-box;
@@ -9852,21 +9928,23 @@ exports[`SwapLineItem.tsx syncing 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+      class="c0 c1 c2"
     >
-      Max. slippage
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Max. slippage
+      </div>
+      <div
+        class="c5"
+        data-testid="loading-row"
+        height="15"
+        width="50"
+      />
     </div>
-    <div
-      class="c5"
-      data-testid="loading-row"
-      height="15"
-      width="50"
-    />
   </div>
   .c0 {
   box-sizing: border-box;
@@ -9920,21 +9998,23 @@ exports[`SwapLineItem.tsx syncing 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+      class="c0 c1 c2"
     >
-      Receive at least
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Receive at least
+      </div>
+      <div
+        class="c5"
+        data-testid="loading-row"
+        height="15"
+        width="70"
+      />
     </div>
-    <div
-      class="c5"
-      data-testid="loading-row"
-      height="15"
-      width="70"
-    />
   </div>
   .c0 {
   box-sizing: border-box;
@@ -9988,21 +10068,23 @@ exports[`SwapLineItem.tsx syncing 1`] = `
   color: #7D7D7D;
 }
 
-<div
-    class="c0 c1 c2"
-  >
+<div>
     <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+      class="c0 c1 c2"
     >
-      Order routing
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Order routing
+      </div>
+      <div
+        class="c5"
+        data-testid="loading-row"
+        height="15"
+        width="50"
+      />
     </div>
-    <div
-      class="c5"
-      data-testid="loading-row"
-      height="15"
-      width="50"
-    />
   </div>
 </DocumentFragment>
 `;

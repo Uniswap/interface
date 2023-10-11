@@ -21,6 +21,7 @@ export enum FeatureFlag {
   infoLiveViews = 'info_live_views',
   uniswapXDefaultEnabled = 'uniswapx_default_enabled',
   quickRouteMainnet = 'enable_quick_route_mainnet',
+  progressIndicatorV2 = 'progress_indicator_v2',
 }
 
 interface FeatureFlagsContextType {
