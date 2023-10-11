@@ -1,0 +1,10 @@
+# *
+User-agent: *
+Disallow: /static/js/
+Allow: /
+
+# Host
+Host: https://app.uniswap.org
+
+# Sitemaps
+Sitemap: https://app.uniswap.org/sitemap.xml

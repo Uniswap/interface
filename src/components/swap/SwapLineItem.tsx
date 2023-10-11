@@ -1,14 +1,15 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { LoadingRow } from 'components/Loader/styled'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import RouterLabel from 'components/RouterLabel'
 import Row, { RowBetween } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { getChainInfo } from 'constants/chainInfo'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useHoverProps from 'hooks/useHoverProps'
 import { useIsMobile } from 'nft/hooks'
 import React, { PropsWithChildren, useEffect, useState } from 'react'
+import { animated, SpringValue } from 'react-spring'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageTolerance } from 'state/user/hooks'
@@ -128,7 +129,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
           if (isPreview) return <Loading />
           return (
             <Row gap="4px">
-              <img src={getChainInfo(chainId)?.logoUrl} alt="gas cost icon" width={16} height={16} />
+              <ChainLogo chainId={chainId} />
               {formatNumber({ input: trade.totalGasUseEstimateUSD, type: NumberType.FiatGasPrice })}
             </Row>
           )
@@ -238,11 +239,12 @@ function ValueWrapper({ children, lineItem, labelHovered, syncing }: ValueWrappe
   )
 }
 
-interface SwapLineItemProps {
+export interface SwapLineItemProps {
   trade: InterfaceTrade
   syncing: boolean
   allowedSlippage: Percent
   type: SwapLineItemType
+  animatedOpacity?: SpringValue<number>
 }
 
 function SwapLineItem(props: SwapLineItemProps) {
@@ -252,14 +254,16 @@ function SwapLineItem(props: SwapLineItemProps) {
   if (!LineItem) return null
 
   return (
-    <RowBetween>
-      <LabelText {...hoverProps} hasTooltip={!!LineItem.TooltipBody} data-testid="swap-li-label">
-        <LineItem.Label />
-      </LabelText>
-      <ValueWrapper lineItem={LineItem} labelHovered={labelHovered} syncing={props.syncing}>
-        <LineItem.Value />
-      </ValueWrapper>
-    </RowBetween>
+    <animated.div style={{ opacity: props.animatedOpacity }}>
+      <RowBetween>
+        <LabelText {...hoverProps} hasTooltip={!!LineItem.TooltipBody} data-testid="swap-li-label">
+          <LineItem.Label />
+        </LabelText>
+        <ValueWrapper lineItem={LineItem} labelHovered={labelHovered} syncing={props.syncing}>
+          <LineItem.Value />
+        </ValueWrapper>
+      </RowBetween>
+    </animated.div>
   )
 }
 

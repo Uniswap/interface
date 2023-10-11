@@ -1,4 +1,10 @@
-import { BaseVariant, FeatureFlag, featureFlagSettings as featureFlagSettingsAtom } from 'featureFlags'
+import {
+  BaseVariant,
+  dynamicConfigSettings as dynamicConfigSettingsAtom,
+  FeatureFlag,
+  featureFlagSettings as featureFlagSettingsAtom,
+} from 'featureFlags'
+import { DynamicConfigName, useDynamicConfig } from 'featureFlags/dynamicConfig'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo, useState } from 'react'
 import { useGate } from 'statsig-react'
@@ -23,7 +29,7 @@ const TopBar = styled.div`
   display: flex;
   justify-content: space-between;
 `
-const Gate = (flagName: string, featureFlagSettings: Record<string, string>) => {
+const Gate = (flagName: FeatureFlag, featureFlagSettings: Record<string, string>) => {
   const gateResult = useGate(flagName)
   if (gateResult) {
     const { value: statsigValue }: { value: boolean } = gateResult
@@ -40,11 +46,31 @@ const Gate = (flagName: string, featureFlagSettings: Record<string, string>) => 
   return null
 }
 
+const Config = (name: DynamicConfigName, savedSettings: Record<string, any>) => {
+  const statsigConfig = useDynamicConfig(name)
+  if (statsigConfig) {
+    const statsigValue = statsigConfig.getValue()
+    const setting = savedSettings[name]
+    if (setting && statsigValue !== setting) {
+      return (
+        <ThemedText.LabelSmall key={name}>
+          {name}: {JSON.stringify(setting[name])}
+        </ThemedText.LabelSmall>
+      )
+    }
+  }
+  return null
+}
+
 export default function DevFlagsBox() {
   const featureFlagsAtom = useAtomValue(featureFlagSettingsAtom)
   const featureFlags = useMemo(() => Object.values(FeatureFlag), [])
+  const dynamicConfigsAtom = useAtomValue(dynamicConfigSettingsAtom)
+  const dynamicConfigs = useMemo(() => Object.values(DynamicConfigName), [])
 
   const overrides = featureFlags.map((flagName) => Gate(flagName, featureFlagsAtom))
+  dynamicConfigs.forEach((configName) => overrides.push(Config(configName, dynamicConfigsAtom)))
+
   const hasOverrides = overrides.some((g) => g !== null)
 
   const [isOpen, setIsOpen] = useState(true)

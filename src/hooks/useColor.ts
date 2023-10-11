@@ -4,6 +4,7 @@ import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import { darken, lighten, rgb } from 'polished'
 import { useEffect, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { useTheme } from 'styled-components'
 import { getColor } from 'utils/getColor'
 import { hex } from 'wcag-contrast'
 
@@ -65,7 +66,8 @@ function convertColorArrayToString([red, green, blue]: number[]): string {
 }
 
 export function useColor(token?: Token, backgroundColor?: string, makeLighter?: boolean) {
-  const [color, setColor] = useState('#2172E5')
+  const theme = useTheme()
+  const [color, setColor] = useState(theme.accent1)
   const [src] = useTokenLogoSource(token?.address, token?.chainId, token?.isNative)
 
   useEffect(() => {
@@ -88,9 +90,9 @@ export function useColor(token?: Token, backgroundColor?: string, makeLighter?: 
 
     return () => {
       stale = true
-      setColor('#2172E5')
+      setColor(theme.accent1)
     }
-  }, [backgroundColor, makeLighter, src, token])
+  }, [backgroundColor, makeLighter, src, theme.accent1, token])
 
   return color
 }

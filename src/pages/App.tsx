@@ -4,6 +4,7 @@ import { getDeviceId, sendAnalyticsEvent, sendInitializationEvent, Trace, user }
 import ErrorBoundary from 'components/ErrorBoundary'
 import Loader from 'components/Icons/LoadingSpinner'
 import NavBar, { PageTabs } from 'components/NavBar'
+import { UK_BANNER_HEIGHT, UK_BANNER_HEIGHT_MD, UK_BANNER_HEIGHT_SM, UkBanner } from 'components/NavBar/UkBanner'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
 import { useAtom } from 'jotai'
@@ -11,6 +12,8 @@ import { useBag } from 'nft/hooks/useBag'
 import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
+import { useAppSelector } from 'state/hooks'
+import { AppState } from 'state/reducer'
 import { RouterPreference } from 'state/routing/types'
 import { useRouterPreference, useUserOptedOutOfUniswapX } from 'state/user/hooks'
 import { StatsigProvider, StatsigUser } from 'statsig-react'
@@ -29,14 +32,22 @@ import { RouteDefinition, routes, useRouterConfig } from './RouteDefinitions'
 
 const AppChrome = lazy(() => import('./AppChrome'))
 
-const BodyWrapper = styled.div`
+const BodyWrapper = styled.div<{ bannerIsVisible?: boolean }>`
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - ${({ bannerIsVisible }) => (bannerIsVisible ? UK_BANNER_HEIGHT : 0)}px);
   padding: ${({ theme }) => theme.navHeight}px 0px 5rem 0px;
   align-items: center;
   flex: 1;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    min-height: calc(100vh - ${({ bannerIsVisible }) => (bannerIsVisible ? UK_BANNER_HEIGHT_MD : 0)}px);
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    min-height: calc(100vh - ${({ bannerIsVisible }) => (bannerIsVisible ? UK_BANNER_HEIGHT_SM : 0)}px);
+  }
 `
 
 const MobileBottomBar = styled.div`
@@ -60,15 +71,23 @@ const MobileBottomBar = styled.div`
   }
 `
 
-const HeaderWrapper = styled.div<{ transparent?: boolean }>`
+const HeaderWrapper = styled.div<{ transparent?: boolean; bannerIsVisible?: boolean; scrollY: number }>`
   ${flexRowNoWrap};
   background-color: ${({ theme, transparent }) => !transparent && theme.surface1};
   border-bottom: ${({ theme, transparent }) => !transparent && `1px solid ${theme.surface3}`};
   width: 100%;
   justify-content: space-between;
   position: fixed;
-  top: 0;
+  top: ${({ bannerIsVisible }) => (bannerIsVisible ? Math.max(UK_BANNER_HEIGHT - scrollY, 0) : 0)}px;
   z-index: ${Z_INDEX.dropdown};
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    top: ${({ bannerIsVisible }) => (bannerIsVisible ? Math.max(UK_BANNER_HEIGHT_MD - scrollY, 0) : 0)}px;
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    top: ${({ bannerIsVisible }) => (bannerIsVisible ? Math.max(UK_BANNER_HEIGHT_SM - scrollY, 0) : 0)}px;
+  }
 `
 
 export default function App() {
@@ -78,16 +97,18 @@ export default function App() {
   const location = useLocation()
   const { pathname } = location
   const currentPage = getCurrentPageFromLocation(pathname)
-  const isDarkMode = useIsDarkMode()
-  const [routerPreference] = useRouterPreference()
-  const [scrolledState, setScrolledState] = useState(false)
-  const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
-  const userOptedOutOfUniswapX = useUserOptedOutOfUniswapX()
+
+  const [scrollY, setScrollY] = useState(0)
+  const scrolledState = scrollY > 0
+
   const routerConfig = useRouterConfig()
+
+  const originCountry = useAppSelector((state: AppState) => state.user.originCountry)
+  const renderUkBannner = Boolean(originCountry) && originCountry === 'GB'
 
   useEffect(() => {
     window.scrollTo(0, 0)
-    setScrolledState(false)
+    setScrollY(0)
   }, [pathname])
 
   const [searchParams] = useSearchParams()
@@ -100,55 +121,8 @@ export default function App() {
   }, [searchParams, setShouldDisableNFTRoutes])
 
   useEffect(() => {
-    // User properties *must* be set before sending corresponding event properties,
-    // so that the event contains the correct and up-to-date user properties.
-    user.set(CustomUserProperties.USER_AGENT, navigator.userAgent)
-    user.set(CustomUserProperties.BROWSER, getBrowser())
-    user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
-    user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
-    user.set(CustomUserProperties.GIT_COMMIT_HASH, process.env.REACT_APP_GIT_COMMIT_HASH ?? 'unknown')
-
-    // Service Worker analytics
-    const isServiceWorkerInstalled = Boolean(window.navigator.serviceWorker?.controller)
-    const isServiceWorkerHit = Boolean((window as any).__isDocumentCached)
-    const serviceWorkerProperty = isServiceWorkerInstalled ? (isServiceWorkerHit ? 'hit' : 'miss') : 'uninstalled'
-
-    const pageLoadProperties = { service_worker: serviceWorkerProperty }
-    sendInitializationEvent(SharedEventName.APP_LOADED, pageLoadProperties)
-    const sendWebVital =
-      (metric: string) =>
-      ({ delta }: Metric) =>
-        sendAnalyticsEvent(SharedEventName.WEB_VITALS, { ...pageLoadProperties, [metric]: delta })
-    getCLS(sendWebVital('cumulative_layout_shift'))
-    getFCP(sendWebVital('first_contentful_paint_ms'))
-    getFID(sendWebVital('first_input_delay_ms'))
-    getLCP(sendWebVital('largest_contentful_paint_ms'))
-  }, [])
-
-  useEffect(() => {
-    user.set(CustomUserProperties.DARK_MODE, isDarkMode)
-  }, [isDarkMode])
-
-  useEffect(() => {
-    // If we're not in the transition period to UniswapX opt-out, set the router preference to whatever is specified.
-    if (!isUniswapXDefaultEnabled) {
-      user.set(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
-      return
-    }
-
-    // In the transition period, override the stored API preference to UniswapX if the user hasn't opted out.
-    if (routerPreference === RouterPreference.API && !userOptedOutOfUniswapX) {
-      user.set(CustomUserProperties.ROUTER_PREFERENCE, RouterPreference.X)
-      return
-    }
-
-    // Otherwise, the user has opted out or their preference is UniswapX/client, so set the preference to whatever is specified.
-    user.set(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
-  }, [routerPreference, isUniswapXDefaultEnabled, userOptedOutOfUniswapX])
-
-  useEffect(() => {
     const scrollListener = () => {
-      setScrolledState(window.scrollY > 0)
+      setScrollY(window.scrollY)
     }
     window.addEventListener('scroll', scrollListener)
     return () => window.removeEventListener('scroll', scrollListener)
@@ -198,10 +172,12 @@ export default function App() {
             api: process.env.REACT_APP_STATSIG_PROXY_URL,
           }}
         >
-          <HeaderWrapper transparent={isHeaderTransparent}>
+          <UserPropertyUpdater />
+          {renderUkBannner && <UkBanner />}
+          <HeaderWrapper transparent={isHeaderTransparent} bannerIsVisible={renderUkBannner} scrollY={scrollY}>
             <NavBar blur={isHeaderTransparent} />
           </HeaderWrapper>
-          <BodyWrapper>
+          <BodyWrapper bannerIsVisible={renderUkBannner}>
             <Suspense>
               <AppChrome />
             </Suspense>
@@ -230,4 +206,60 @@ export default function App() {
       </Trace>
     </ErrorBoundary>
   )
+}
+
+function UserPropertyUpdater() {
+  const isDarkMode = useIsDarkMode()
+
+  const [routerPreference] = useRouterPreference()
+  const userOptedOutOfUniswapX = useUserOptedOutOfUniswapX()
+  const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
+
+  useEffect(() => {
+    // User properties *must* be set before sending corresponding event properties,
+    // so that the event contains the correct and up-to-date user properties.
+    user.set(CustomUserProperties.USER_AGENT, navigator.userAgent)
+    user.set(CustomUserProperties.BROWSER, getBrowser())
+    user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
+    user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
+    user.set(CustomUserProperties.GIT_COMMIT_HASH, process.env.REACT_APP_GIT_COMMIT_HASH ?? 'unknown')
+
+    // Service Worker analytics
+    const isServiceWorkerInstalled = Boolean(window.navigator.serviceWorker?.controller)
+    const isServiceWorkerHit = Boolean((window as any).__isDocumentCached)
+    const serviceWorkerProperty = isServiceWorkerInstalled ? (isServiceWorkerHit ? 'hit' : 'miss') : 'uninstalled'
+
+    const pageLoadProperties = { service_worker: serviceWorkerProperty }
+    sendInitializationEvent(SharedEventName.APP_LOADED, pageLoadProperties)
+    const sendWebVital =
+      (metric: string) =>
+      ({ delta }: Metric) =>
+        sendAnalyticsEvent(SharedEventName.WEB_VITALS, { ...pageLoadProperties, [metric]: delta })
+    getCLS(sendWebVital('cumulative_layout_shift'))
+    getFCP(sendWebVital('first_contentful_paint_ms'))
+    getFID(sendWebVital('first_input_delay_ms'))
+    getLCP(sendWebVital('largest_contentful_paint_ms'))
+  }, [])
+
+  useEffect(() => {
+    user.set(CustomUserProperties.DARK_MODE, isDarkMode)
+  }, [isDarkMode])
+
+  useEffect(() => {
+    // If we're not in the transition period to UniswapX opt-out, set the router preference to whatever is specified.
+    if (!isUniswapXDefaultEnabled) {
+      user.set(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
+      return
+    }
+
+    // In the transition period, override the stored API preference to UniswapX if the user hasn't opted out.
+    if (routerPreference === RouterPreference.API && !userOptedOutOfUniswapX) {
+      user.set(CustomUserProperties.ROUTER_PREFERENCE, RouterPreference.X)
+      return
+    }
+
+    // Otherwise, the user has opted out or their preference is UniswapX/client, so set the preference to whatever is specified.
+    user.set(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
+  }, [routerPreference, isUniswapXDefaultEnabled, userOptedOutOfUniswapX])
+  return null
 }

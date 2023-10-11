@@ -11,6 +11,7 @@ import { ReactNode, useMemo } from 'react'
 import { Text } from 'rebass'
 import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
+import { colors } from 'theme/colors'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -105,7 +106,10 @@ export function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsS
   const currency1 = useCurrency(poolData?.token1?.id, chainId) ?? undefined
 
   const color0 = useColor(currency0?.wrapped, theme.surface2, theme.darkMode)
-  const color1 = useColor(currency1?.wrapped, theme.surface2, theme.darkMode)
+  let color1 = useColor(currency1?.wrapped, theme.surface2, theme.darkMode)
+  if (color0 === color1 && color0 === theme.accent1) {
+    color1 = colors.blue400
+  }
 
   const [token0, token1] = useMemo(() => {
     const fullWidth = poolData?.tvlToken0 / poolData?.token0Price + poolData?.tvlToken1
