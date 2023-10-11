@@ -67,7 +67,7 @@ export function PriceExplorer({
   let content: JSX.Element | null
   if (forcePlaceholder) {
     content = <PriceExplorerPlaceholder loading={forcePlaceholder} />
-  } else if (data?.priceHistory) {
+  } else if (data?.priceHistory?.length) {
     content = (
       <PriceExplorerChart
         loading={loading}
