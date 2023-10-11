@@ -4,6 +4,9 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsController
+import android.view.WindowManager
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.concurrentReactEnabled
@@ -26,12 +29,28 @@ class MainActivity : ReactActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(null);
 
-      window.navigationBarColor = Color.TRANSPARENT
 
-      if (Build.VERSION_CODES.Q <= Build.VERSION.SDK_INT) {
-        window.isNavigationBarContrastEnforced = false
+    if (Build.VERSION_CODES.Q <= Build.VERSION.SDK_INT) {
+      window.isNavigationBarContrastEnforced = false
+    }
+
+    window.navigationBarColor = Color.TRANSPARENT
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      window.setDecorFitsSystemWindows(false)
+      window.insetsController?.let {
+        it.setSystemBarsAppearance(
+          WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS,
+          WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS)
+        it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
       }
-      window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
+    } else {
+      @Suppress("DEPRECATION")
+      window.decorView.systemUiVisibility = (
+        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+          or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+        )
+    }
 
     val sharedI18nUtilInstance = I18nUtil.getInstance()
     sharedI18nUtilInstance.allowRTL(applicationContext, true)
