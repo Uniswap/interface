@@ -43,9 +43,9 @@ export function WaveLoader(): JSX.Element {
       sentry-label="WaveLoader">
       <Animated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
         <Flex centered grow row height="100%">
-          <Wave color={colors.surface3.get()} />
-          <Wave color={colors.surface3.get()} />
-          <Wave color={colors.surface3.get()} />
+          <Wave color={colors.neutral3.get()} />
+          <Wave color={colors.neutral3.get()} />
+          <Wave color={colors.neutral3.get()} />
         </Flex>
       </Animated.View>
     </Flex>
