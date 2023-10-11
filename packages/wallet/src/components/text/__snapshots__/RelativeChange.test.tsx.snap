@@ -2,7 +2,7 @@
 
 exports[`renders a relative change 1`] = `
 <div
-  className=""
+  className="   "
   style={
     {
       "alignItems": "center",
@@ -82,7 +82,7 @@ exports[`renders a relative change 1`] = `
     </RNSVGGroup>
   </RNSVGSvgView>
   <div
-    className=""
+    className="   "
     style={
       {
         "alignItems": "stretch",
@@ -98,7 +98,7 @@ exports[`renders a relative change 1`] = `
     }
   >
     <span
-      className="font_subHeading "
+      className=" font_subHeading  "
       maxFontSizeMultiplier={1.4}
       style={
         {
@@ -125,7 +125,7 @@ exports[`renders a relative change 1`] = `
 
 exports[`renders placeholders with absolute change 1`] = `
 <div
-  className=""
+  className="   "
   style={
     {
       "alignItems": "center",
@@ -205,7 +205,7 @@ exports[`renders placeholders with absolute change 1`] = `
     </RNSVGGroup>
   </RNSVGSvgView>
   <div
-    className=""
+    className="   "
     style={
       {
         "alignItems": "stretch",
@@ -221,7 +221,7 @@ exports[`renders placeholders with absolute change 1`] = `
     }
   >
     <span
-      className="font_subHeading "
+      className=" font_subHeading  "
       maxFontSizeMultiplier={1.4}
       style={
         {
@@ -248,7 +248,7 @@ exports[`renders placeholders with absolute change 1`] = `
 
 exports[`renders placeholders without a change 1`] = `
 <div
-  className=""
+  className="   "
   style={
     {
       "alignItems": "center",
@@ -266,7 +266,7 @@ exports[`renders placeholders without a change 1`] = `
   }
 >
   <div
-    className=""
+    className="   "
     style={
       {
         "alignItems": "stretch",
@@ -282,7 +282,7 @@ exports[`renders placeholders without a change 1`] = `
     }
   >
     <span
-      className="font_subHeading "
+      className=" font_subHeading  "
       maxFontSizeMultiplier={1.4}
       style={
         {

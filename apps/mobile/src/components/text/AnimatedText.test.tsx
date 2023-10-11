@@ -18,15 +18,15 @@ describe(AnimatedText, () => {
         maxFontSizeMultiplier={1.4}
         style={
           [
-            {
-              "padding": 0,
-            },
-            {
-              "fontFamily": "Basel-Book",
-              "fontSize": 17,
-              "lineHeight": 24,
-            },
-            undefined,
+            [
+              {},
+              [
+                {
+                  "padding": 0,
+                },
+                undefined,
+              ],
+            ],
           ]
         }
         underlineColorAndroid="transparent"

@@ -12,7 +12,6 @@ export {
   TamaguiProvider,
   Theme,
   useMedia,
-  usePropsAndStyle,
   useTheme,
   useThemeName,
   YGroup,

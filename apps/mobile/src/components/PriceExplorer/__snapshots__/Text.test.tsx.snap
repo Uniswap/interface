@@ -14,16 +14,21 @@ exports[`DatetimeText renders without error 1`] = `
   maxFontSizeMultiplier={1.4}
   style={
     [
-      {
-        "padding": 0,
-      },
-      {
-        "color": "#7D7D7D",
-        "fontFamily": "Basel-Book",
-        "fontSize": 19,
-        "lineHeight": 24,
-      },
-      undefined,
+      [
+        {
+          "color": "#7D7D7D",
+          "fontFamily": "Basel-Book",
+          "fontSize": 19,
+          "fontWeight": "400",
+          "lineHeight": 24,
+        },
+        [
+          {
+            "padding": 0,
+          },
+          undefined,
+        ],
+      ],
     ]
   }
   underlineColorAndroid="transparent"
@@ -79,14 +84,18 @@ exports[`PriceText renders loading state 1`] = `
               [
                 [
                   {
-                    "padding": 0,
-                  },
-                  {
+                    "color": "#222222",
                     "fontFamily": "Basel-Book",
                     "fontSize": 53,
+                    "fontWeight": "400",
                     "lineHeight": 60,
                   },
-                  undefined,
+                  [
+                    {
+                      "padding": 0,
+                    },
+                    undefined,
+                  ],
                 ],
                 {
                   "marginHorizontal": 0,
@@ -103,14 +112,18 @@ exports[`PriceText renders loading state 1`] = `
               [
                 [
                   {
-                    "padding": 0,
-                  },
-                  {
+                    "color": "#222222",
                     "fontFamily": "Basel-Book",
                     "fontSize": 53,
+                    "fontWeight": "400",
                     "lineHeight": 60,
                   },
-                  undefined,
+                  [
+                    {
+                      "padding": 0,
+                    },
+                    undefined,
+                  ],
                 ],
                 {
                   "opacity": 0,
@@ -166,17 +179,23 @@ exports[`PriceText renders without error 1`] = `
     maxFontSizeMultiplier={1.2}
     style={
       [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel-Book",
-          "fontSize": 53,
-          "lineHeight": 60,
-        },
-        {
-          "color": "#222222",
-        },
+        [
+          {
+            "color": "#222222",
+            "fontFamily": "Basel-Book",
+            "fontSize": 53,
+            "fontWeight": "400",
+            "lineHeight": 60,
+          },
+          [
+            {
+              "padding": 0,
+            },
+            {
+              "color": "#222222",
+            },
+          ],
+        ],
       ]
     }
     testID="wholePart"
@@ -194,17 +213,23 @@ exports[`PriceText renders without error 1`] = `
     maxFontSizeMultiplier={1.2}
     style={
       [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel-Book",
-          "fontSize": 53,
-          "lineHeight": 60,
-        },
-        {
-          "color": "#CECECE",
-        },
+        [
+          {
+            "color": "#222222",
+            "fontFamily": "Basel-Book",
+            "fontSize": 53,
+            "fontWeight": "400",
+            "lineHeight": 60,
+          },
+          [
+            {
+              "padding": 0,
+            },
+            {
+              "color": "#CECECE",
+            },
+          ],
+        ],
       ]
     }
     testID="decimalPart"
@@ -235,17 +260,23 @@ exports[`PriceText renders without error less than a dollar 1`] = `
     maxFontSizeMultiplier={1.2}
     style={
       [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel-Book",
-          "fontSize": 53,
-          "lineHeight": 60,
-        },
-        {
-          "color": "#222222",
-        },
+        [
+          {
+            "color": "#222222",
+            "fontFamily": "Basel-Book",
+            "fontSize": 53,
+            "fontWeight": "400",
+            "lineHeight": 60,
+          },
+          [
+            {
+              "padding": 0,
+            },
+            {
+              "color": "#222222",
+            },
+          ],
+        ],
       ]
     }
     testID="wholePart"
@@ -263,17 +294,23 @@ exports[`PriceText renders without error less than a dollar 1`] = `
     maxFontSizeMultiplier={1.2}
     style={
       [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel-Book",
-          "fontSize": 53,
-          "lineHeight": 60,
-        },
-        {
-          "color": "#222222",
-        },
+        [
+          {
+            "color": "#222222",
+            "fontFamily": "Basel-Book",
+            "fontSize": 53,
+            "fontWeight": "400",
+            "lineHeight": 60,
+          },
+          [
+            {
+              "padding": 0,
+            },
+            {
+              "color": "#222222",
+            },
+          ],
+        ],
       ]
     }
     testID="decimalPart"
@@ -340,14 +377,18 @@ exports[`RelativeChangeText renders loading state 1`] = `
                 [
                   [
                     {
-                      "padding": 0,
-                    },
-                    {
+                      "color": "#222222",
                       "fontFamily": "Basel-Book",
                       "fontSize": 19,
+                      "fontWeight": "400",
                       "lineHeight": 24,
                     },
-                    undefined,
+                    [
+                      {
+                        "padding": 0,
+                      },
+                      undefined,
+                    ],
                   ],
                   {
                     "marginHorizontal": 0,
@@ -364,14 +405,18 @@ exports[`RelativeChangeText renders loading state 1`] = `
                 [
                   [
                     {
-                      "padding": 0,
-                    },
-                    {
+                      "color": "#222222",
                       "fontFamily": "Basel-Book",
                       "fontSize": 19,
+                      "fontWeight": "400",
                       "lineHeight": 24,
                     },
-                    undefined,
+                    [
+                      {
+                        "padding": 0,
+                      },
+                      undefined,
+                    ],
                   ],
                   {
                     "opacity": 0,
@@ -502,17 +547,23 @@ exports[`RelativeChangeText renders without error 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel-Book",
-          "fontSize": 19,
-          "lineHeight": 24,
-        },
-        {
-          "color": "#40B66B",
-        },
+        [
+          {
+            "color": "#222222",
+            "fontFamily": "Basel-Book",
+            "fontSize": 19,
+            "fontWeight": "400",
+            "lineHeight": 24,
+          },
+          [
+            {
+              "padding": 0,
+            },
+            {
+              "color": "#40B66B",
+            },
+          ],
+        ],
       ]
     }
     testID="relative-change-text"

@@ -1,3 +1,12 @@
+import {
+  color,
+  ColorProps,
+  createRestyleComponent,
+  createVariant,
+  typography,
+  TypographyProps,
+  VariantProps,
+} from '@shopify/restyle'
 import React from 'react'
 import {
   StyleSheet,
@@ -7,18 +16,17 @@ import {
   useWindowDimensions,
 } from 'react-native'
 import Animated, { useAnimatedProps } from 'react-native-reanimated'
-import { Flex, TextFrame, TextProps as TamaTextProps, usePropsAndStyle } from 'ui/src'
-import { TextLoaderWrapper } from 'ui/src/components/text/Text'
-import { fonts } from 'ui/src/theme'
+import { Flex } from 'ui/src'
+import { DEFAULT_FONT_SCALE, TextLoaderWrapper } from 'ui/src/components/text/Text'
+import { fonts, TextVariantTokens } from 'ui/src/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 // base animated text component using a TextInput
 // forked from https://github.com/wcandillon/react-native-redash/blob/master/src/ReText.tsx
 // and modified to support the loading state
 Animated.addWhitelistedNativeProps({ text: true })
 
-type TextPropsBase = TamaTextProps & Omit<TextInputProps, 'value' | 'style'>
-
-type TextProps = TextPropsBase & {
+interface TextProps extends Omit<TextInputProps, 'value' | 'style'> {
   text?: Animated.SharedValue<string>
   style?: Animated.AnimateProps<RNTextProps>['style']
   loading?: boolean | 'no-shimmer'
@@ -69,7 +77,7 @@ export const BaseAnimatedText = ({
   return (
     <AnimatedTextInput
       editable={false}
-      style={style}
+      style={[style || undefined]}
       underlineColorAndroid="transparent"
       value={text?.value}
       {...rest}
@@ -79,29 +87,31 @@ export const BaseAnimatedText = ({
 }
 // end of forked from https://github.com/wcandillon/react-native-redash/blob/master/src/ReText.tsx
 
-// gives you tamagui props with reanimated support
-export const AnimatedText = ({ style, ...propsIn }: TextProps): JSX.Element => {
-  const variant = propsIn.variant ?? 'body2'
-  const [props, textStyles] = usePropsAndStyle(
-    {
-      variant,
-      ...propsIn,
-    },
-    {
-      forComponent: TextFrame,
-    }
-  )
+// exposes restyle to base animated text
+const StyledBaseAnimatedText = createRestyleComponent<
+  VariantProps<Theme, 'textVariants'> &
+    TypographyProps<Theme> &
+    ColorProps<Theme> &
+    React.ComponentProps<typeof BaseAnimatedText>,
+  Theme
+>([createVariant({ themeKey: 'textVariants' }), typography, color], BaseAnimatedText)
 
+// wrapped around restyled animated text with convenience props
+export const AnimatedText = (
+  props: React.ComponentProps<typeof StyledBaseAnimatedText>
+): JSX.Element => {
   const { fontScale } = useWindowDimensions()
-  const enableFontScaling = fontScale > 1
+  const enableFontScaling = fontScale > DEFAULT_FONT_SCALE
+
+  const variant = (props.variant ?? 'body2') as TextVariantTokens
   const multiplier = fonts[variant].maxFontSizeMultiplier
 
   return (
-    <BaseAnimatedText
-      {...(props as any)}
+    <StyledBaseAnimatedText
+      {...props}
       allowFontScaling={enableFontScaling}
       maxFontSizeMultiplier={multiplier}
-      style={[styles.input, textStyles, style]}
+      style={[styles.input, props.style]}
     />
   )
 }
