@@ -158,22 +158,20 @@ export function TransactionReview({
         {currencyOutInfo && formattedAmountOut ? (
           <Flex centered $short={{ pb: '$spacing4' }} gap={innerGap} pb="$none">
             <Flex centered gap={amountAndEquivalentValueGap}>
-              <Flex height={fonts.heading3.lineHeight} justifyContent="center" overflow="hidden">
-                <AmountInput
-                  {...textProps}
-                  alignSelf="stretch"
-                  backgroundColor="$transparent"
-                  borderWidth={0}
-                  editable={false}
-                  px="$spacing16"
-                  py="$none"
-                  showCurrencySign={isUSDInput}
-                  showSoftInputOnFocus={false}
-                  testID="amount-input-out"
-                  textAlign="center"
-                  value={formattedAmountOut}
-                />
-              </Flex>
+              <AmountInput
+                {...textProps}
+                alignSelf="stretch"
+                backgroundColor="$transparent"
+                borderWidth={0}
+                editable={false}
+                px="$spacing16"
+                py="$none"
+                showCurrencySign={isUSDInput}
+                showSoftInputOnFocus={false}
+                testID="amount-input-out"
+                textAlign="center"
+                value={formattedAmountOut}
+              />
               {outputCurrencyUSDValue ? (
                 <Text color="$neutral2" variant={equivalentValueTextVariant}>
                   {formattedOutputUsdValue}
