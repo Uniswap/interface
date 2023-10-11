@@ -55,7 +55,6 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     footerHeight,
     isExternalProfile = false,
     renderedInModal = false,
-    loadingStateStyle,
     errorStateStyle,
     emptyStateStyle,
     ListFooterComponent,
@@ -144,9 +143,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
       ListEmptyComponent={
         // initial loading
         isNonPollingRequestInFlight(networkStatus) ? (
-          <Flex style={loadingStateStyle}>
-            <Loader.NFT repeat={6} />
-          </Flex>
+          <Loader.NFT repeat={6} />
         ) : // no response and we're not loading already
         isError(networkStatus, !!data) ? (
           <Flex centered grow style={errorStateStyle}>

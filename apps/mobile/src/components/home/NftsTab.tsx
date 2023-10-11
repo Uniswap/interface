@@ -142,7 +142,6 @@ export const NftsTab = memo(
           errorStateStyle={containerProps?.emptyContainerStyle}
           footerHeight={footerHeight}
           isExternalProfile={isExternalProfile}
-          loadingStateStyle={containerProps?.emptyContainerStyle}
           owner={owner}
           refreshControl={refreshControl}
           refreshing={refreshing}

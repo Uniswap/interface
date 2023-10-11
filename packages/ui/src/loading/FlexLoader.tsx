@@ -5,7 +5,7 @@ import { Flex, FlexProps } from 'ui/src/components/layout'
 export type FlexLoaderProps = { repeat?: number } & FlexProps & ViewProps
 export function FlexLoader({
   repeat = 1,
-  backgroundColor = '$surface3',
+  backgroundColor = '$neutral3',
   borderRadius = '$rounded12',
   width = '100%',
   height,

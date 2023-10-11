@@ -79,7 +79,8 @@ function Image(): JSX.Element {
 function Favorite({ height, contrast }: { height?: number; contrast?: boolean }): JSX.Element {
   return (
     <Shimmer contrast={contrast}>
-      <FlexLoader backgroundColor="$neutral3" borderRadius="$rounded16" height={height ?? 50} />
+      {/* surface3 because these only show up on explore modal which has a blurred bg that makes neutral3 look weird */}
+      <FlexLoader backgroundColor="$surface3" borderRadius="$rounded16" height={height ?? 50} />
     </Shimmer>
   )
 }

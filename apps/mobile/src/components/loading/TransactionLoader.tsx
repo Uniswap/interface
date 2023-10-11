@@ -25,7 +25,7 @@ export function TransactionLoader({ opacity }: TransactionLoaderProps): JSX.Elem
           justifyContent="flex-start">
           <Flex
             centered
-            bg="$surface3"
+            bg="$neutral3"
             borderRadius="$roundedFull"
             height={TXN_HISTORY_ICON_SIZE}
             width={TXN_HISTORY_ICON_SIZE}
@@ -33,15 +33,14 @@ export function TransactionLoader({ opacity }: TransactionLoaderProps): JSX.Elem
           <Flex shrink>
             <Flex row alignItems="center" gap="$spacing4">
               <Text
-                loading
+                loading="no-shimmer"
                 loadingPlaceholderText="Contract Interaction"
                 numberOfLines={1}
                 variant="body1"
               />
             </Flex>
             <Text
-              loading
-              color="$neutral2"
+              loading="no-shimmer"
               loadingPlaceholderText="Caption Text"
               numberOfLines={1}
               variant="subheading2"
