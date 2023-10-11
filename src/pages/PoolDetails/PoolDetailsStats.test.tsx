@@ -1,3 +1,4 @@
+import { enableNetConnect } from 'nock'
 import { validPoolDataResponse } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
 import { BREAKPOINTS } from 'theme'
@@ -11,8 +12,15 @@ describe('PoolDetailsStats', () => {
     chainId: 1,
   }
 
+  beforeEach(() => {
+    // Enable network connections for retrieving token logos
+    enableNetConnect()
+  })
+
   it('renders stats text correctly', async () => {
     const { asFragment } = render(<PoolDetailsStats {...mockProps} />)
+    // After the first render, the extracted color is updated to an a11y compliant color
+    // This is why we need to wrap the fragment in act(...)
     await act(async () => {
       await asFragment
     })
