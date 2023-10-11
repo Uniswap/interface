@@ -27,7 +27,10 @@ export const RemoteSvg = ({
       parse(svgStr)
       return svgStr
     } catch (error) {
-      logger.error(error, { tags: { file: 'RemoteSvg', function: 'fetchSvg', imageHttpUrl } })
+      logger.error(error, {
+        tags: { file: 'RemoteSvg', function: 'fetchSvg' },
+        extra: { imageHttpUrl },
+      })
     }
   }, [imageHttpUrl])
 

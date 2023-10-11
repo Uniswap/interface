@@ -40,13 +40,13 @@ const rtkQueryErrorLogger: Middleware = () => (next) => (action: PayloadAction<u
     tags: {
       file: 'store',
       function: 'rtkQueryErrorLogger',
-      error: JSON.stringify({
-        type: action.type,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        endpointName: (action.meta as any)?.arg?.endpointName,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        status: (action.payload as any)?.status,
-      }),
+    },
+    extra: {
+      type: action.type,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      endpointName: (action.meta as any)?.arg?.endpointName,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      status: (action.payload as any)?.status,
     },
   })
 

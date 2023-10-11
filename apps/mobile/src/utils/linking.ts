@@ -34,8 +34,8 @@ export async function openUri(
       tags: {
         file: 'linking',
         function: 'openUri',
-        uri,
       },
+      extra: { uri },
     })
     return
   }

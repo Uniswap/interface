@@ -23,6 +23,9 @@ function* initProvider(chainId: ChainId, manager: ProviderManager) {
     logger.debug('providerSaga', 'initProvider', 'Creating a provider for:', chainId)
     yield* call([manager, manager.createProvider], chainId)
   } catch (error) {
-    logger.error(error, { tags: { file: 'providers/saga', function: 'initProvider', chainId } })
+    logger.error(error, {
+      tags: { file: 'providers/saga', function: 'initProvider' },
+      extra: { chainId },
+    })
   }
 }

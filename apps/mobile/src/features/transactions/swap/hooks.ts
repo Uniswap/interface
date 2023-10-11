@@ -710,8 +710,8 @@ export function useSwapCallback(
           tags: {
             file: 'swap/hooks',
             function: 'useSwapCallback',
-            params: JSON.stringify({ account, swapTxRequest, trade, gasFee }),
           },
+          extra: { account, swapTxRequest, trade, gasFee },
         })
       }
     }
@@ -792,8 +792,8 @@ export function useWrapCallback(
             tags: {
               file: 'swap/hooks',
               function: 'useWrapCallback',
-              parameters: JSON.stringify({ account, inputCurrencyAmount, txRequest }),
             },
+            extra: { account, inputCurrencyAmount, txRequest },
           }),
       }
     }

@@ -40,7 +40,10 @@ export async function setClipboardImage(imageUrl: string | undefined): Promise<v
       await Clipboard.setImageAsync(formattedEncoding)
     }
   } catch (error) {
-    logger.error(error, { tags: { file: 'clipboard', function: 'setClipboardImage', imageUrl } })
+    logger.error(error, {
+      tags: { file: 'clipboard', function: 'setClipboardImage' },
+      extra: { imageUrl },
+    })
   }
 }
 

@@ -123,24 +123,21 @@ export function getSwapWarnings(
       })
     }
   } catch (error) {
-    // TODO: MOB-1569: evaluate if extra works and switching off tags
-    const errorContextData = {
-      inputToken: currencies[CurrencyField.INPUT]?.currency
-        ? currencyId(currencies[CurrencyField.INPUT]?.currency)
-        : 'None',
-      inputAmount: currencyAmounts[CurrencyField.INPUT]?.toSignificant(),
-      outputToken: currencies[CurrencyField.OUTPUT]?.currency
-        ? currencyId(currencies[CurrencyField.OUTPUT]?.currency)
-        : 'None',
-      outputAmount: currencyAmounts[CurrencyField.OUTPUT]?.toSignificant(),
-    }
     logger.error(error, {
       tags: {
         file: 'useSwapWarnings',
         function: 'getSwapWarnings',
-        ...errorContextData,
       },
-      extra: errorContextData,
+      extra: {
+        inputToken: currencies[CurrencyField.INPUT]?.currency
+          ? currencyId(currencies[CurrencyField.INPUT]?.currency)
+          : 'None',
+        inputAmount: currencyAmounts[CurrencyField.INPUT]?.toSignificant(),
+        outputToken: currencies[CurrencyField.OUTPUT]?.currency
+          ? currencyId(currencies[CurrencyField.OUTPUT]?.currency)
+          : 'None',
+        outputAmount: currencyAmounts[CurrencyField.OUTPUT]?.toSignificant(),
+      },
     })
     warnings.push({
       type: WarningLabel.PriceImpactMedium,

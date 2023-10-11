@@ -104,6 +104,9 @@ export function extractBaseUrl(url?: string): string | undefined {
       parsedUrl.port ? ':' + parsedUrl.port : ''
     }`
   } catch (error) {
-    logger.error(error, { tags: { file: 'dappRequests/utils', function: 'extractBaseUrl', url } })
+    logger.error(error, {
+      tags: { file: 'dappRequests/utils', function: 'extractBaseUrl' },
+      extra: { url },
+    })
   }
 }

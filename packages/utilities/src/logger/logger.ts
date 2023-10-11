@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { Primitive, ScopeContext } from '@sentry/types'
+import { ScopeContext } from '@sentry/types'
 import { errorToString } from 'utilities/src/errors'
 import { Sentry } from './Sentry'
 
@@ -7,8 +7,8 @@ const SENTRY_CHAR_LIMIT = 8192
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
-export type LoggerErrorContext = Partial<ScopeContext> & {
-  tags: { file: string; function: string; [key: string]: Primitive }
+export type LoggerErrorContext = Omit<Partial<ScopeContext>, 'tags'> & {
+  tags: { file: string; function: string }
 }
 
 /**
@@ -64,9 +64,10 @@ function logException(error: unknown, captureContext: LoggerErrorContext): void 
 
   // Limit character length for string tags to the max Sentry allows
   for (const contextProp of Object.keys(captureContext.tags)) {
-    const contextValue = captureContext.tags[contextProp]
+    const prop = contextProp as 'file' | 'function'
+    const contextValue = captureContext.tags[prop]
     if (typeof contextValue === 'string') {
-      captureContext.tags[contextProp] = contextValue.slice(0, SENTRY_CHAR_LIMIT)
+      captureContext.tags[prop] = contextValue.slice(0, SENTRY_CHAR_LIMIT)
     }
   }
 

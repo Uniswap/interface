@@ -31,8 +31,8 @@ const getChainDetails = (chainId: ChainId): L1ChainInfo | L2ChainInfo => {
       tags: {
         file: 'ProviderManager',
         function: 'getChainDetails',
-        chainDetails,
       },
+      extra: { chainDetails },
     })
     throw new Error(`Cannot create provider for invalid chain details for ${chainId}`)
   }

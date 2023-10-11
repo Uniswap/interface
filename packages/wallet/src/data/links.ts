@@ -98,10 +98,8 @@ export function getErrorLink(
               tags: {
                 file: 'data/links',
                 function: 'getErrorLink',
-                message,
-                locations: JSON.stringify(locations),
-                path: JSON.stringify(path),
               },
+              extra: { message, locations, path },
             }),
           graphqlErrorSamplingRate
         )

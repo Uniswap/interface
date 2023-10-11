@@ -48,6 +48,8 @@ export function getCurrencyAmount<T extends Currency>({
       tags: {
         file: 'getCurrencyAmount',
         function: 'getCurrencyAmount',
+      },
+      extra: {
         value,
         valueType,
         symbol: currency.symbol,

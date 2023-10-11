@@ -76,8 +76,8 @@ export function* transactionWatcher({
         tags: {
           file: 'transactionWatcherSaga',
           function: 'watchTransaction',
-          txHash: transaction.hash,
         },
+        extra: { txHash: transaction.hash },
       })
 
       yield* put(

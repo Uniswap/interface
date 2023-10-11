@@ -27,7 +27,8 @@ export function createEthersProvider(
     }
   } catch (error) {
     logger.error(error, {
-      tags: { file: 'createEthersProvider', function: 'createProvider', chainId },
+      tags: { file: 'createEthersProvider', function: 'createProvider' },
+      extra: { chainId },
     })
     return null
   }

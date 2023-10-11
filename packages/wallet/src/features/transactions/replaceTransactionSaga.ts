@@ -77,7 +77,8 @@ export function* attemptReplaceTransaction(
     yield* put(addTransaction(replacementTransaction))
   } catch (error) {
     logger.error(error, {
-      tags: { file: 'replaceTransactionSaga', function: 'attemptReplaceTransaction', txHash: hash },
+      tags: { file: 'replaceTransactionSaga', function: 'attemptReplaceTransaction' },
+      extra: { txHash: hash },
     })
 
     // Unable to submit txn on chain, delete from state. This can sometimes be the case where we

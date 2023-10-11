@@ -31,7 +31,8 @@ export function createSaga<SagaParams = void>(
         yield* call(saga, trigger.payload)
       } catch (error) {
         logger.error(error, {
-          tags: { file: 'utils/saga', function: 'createSaga', sagaName: name },
+          tags: { file: 'utils/saga', function: 'createSaga' },
+          extra: { sagaName: name },
         })
       }
     }
@@ -142,7 +143,8 @@ export function createMonitoredSaga<SagaParams = void>(
         logger.debug('saga', 'monitoredSaga', `${name} finished`)
       } catch (error) {
         logger.error(error, {
-          tags: { file: 'utils/saga', function: 'createMonitoredSaga', sagaName: name },
+          tags: { file: 'utils/saga', function: 'createMonitoredSaga' },
+          extra: { sagaName: name },
         })
 
         const errorMessage = errorToString(error)

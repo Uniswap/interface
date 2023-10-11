@@ -53,6 +53,14 @@ async function processAddChanges() {
       }
     })
   })
+
+  // Check for non-recommended sentry usage
+  if (changes.some((change) => change.content.includes('logger.error(new Error('))) {
+    warn(`It appears you may be manually logging a Sentry error. Please log the error directly if possible. If you need to use a custom error message, ensure the error object is added to the 'cause' property`)
+  }
+  if (changes.some((change) => change.content.includes(`logger.error('`))) {
+    warn(`Please log an error, not a string!`)
+  }
 }
 
 async function checkCocoaPodsVersion() {
