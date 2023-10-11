@@ -15,6 +15,9 @@
     android:icon="@mipmap/ic_launcher"
     android:roundIcon="@mipmap/ic_launcher_round"
     android:allowBackup="false"
+    tools:replace="android:fullBackupContent"
+    android:fullBackupContent="@xml/backup_rules"
+    android:dataExtractionRules="@xml/data_extraction_rules"
     android:theme="@style/AppTheme">
     <activity
       android:name=".MainActivity"
