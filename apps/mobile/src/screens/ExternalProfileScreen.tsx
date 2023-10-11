@@ -20,12 +20,15 @@ import { Flex, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
-type Props = NativeStackScreenProps<AppStackParamList, Screens.ExternalProfile>
+type Props = NativeStackScreenProps<AppStackParamList, Screens.ExternalProfile> & {
+  renderedInModal?: boolean
+}
 
 export function ExternalProfileScreen({
   route: {
     params: { address },
   },
+  renderedInModal = false,
 }: Props): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -80,15 +83,36 @@ export function ExternalProfileScreen({
     }) => {
       switch (route?.key) {
         case SectionName.ProfileActivityTab:
-          return <ActivityTab isExternalProfile containerProps={sharedProps} owner={address} />
+          return (
+            <ActivityTab
+              isExternalProfile
+              containerProps={sharedProps}
+              owner={address}
+              renderedInModal={renderedInModal}
+            />
+          )
         case SectionName.ProfileNftsTab:
-          return <NftsTab isExternalProfile containerProps={sharedProps} owner={address} />
+          return (
+            <NftsTab
+              isExternalProfile
+              containerProps={sharedProps}
+              owner={address}
+              renderedInModal={renderedInModal}
+            />
+          )
         case SectionName.ProfileTokensTab:
-          return <TokensTab isExternalProfile containerProps={sharedProps} owner={address} />
+          return (
+            <TokensTab
+              isExternalProfile
+              containerProps={sharedProps}
+              owner={address}
+              renderedInModal={renderedInModal}
+            />
+          )
       }
       return null
     },
-    [address, sharedProps]
+    [address, sharedProps, renderedInModal]
   )
 
   const renderTabBar = useCallback(

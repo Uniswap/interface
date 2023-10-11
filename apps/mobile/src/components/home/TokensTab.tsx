@@ -30,6 +30,7 @@ export const TokensTab = memo(
       containerProps,
       scrollHandler,
       isExternalProfile = false,
+      renderedInModal = false,
       onRefresh,
       refreshing,
       headerHeight,
@@ -83,6 +84,7 @@ export const TokensTab = memo(
           isExternalProfile={isExternalProfile}
           owner={owner}
           refreshing={refreshing}
+          renderedInModal={renderedInModal}
           scrollHandler={scrollHandler}
           onPressToken={onPressToken}
           onRefresh={onRefresh}

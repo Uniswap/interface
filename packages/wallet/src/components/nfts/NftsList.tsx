@@ -4,7 +4,7 @@ import { ComponentProps, CSSProperties, forwardRef, useCallback, useEffect, useS
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, StyleProp, ViewStyle } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
-import { AnimatedFlashList, Flex, useSporeColors } from 'ui/src'
+import { AnimatedBottomSheetFlashList, AnimatedFlashList, Flex, useSporeColors } from 'ui/src'
 import NoNFTsIcon from 'ui/src/assets/icons/empty-state-picture.svg'
 import { Loader } from 'ui/src/loading'
 import { dimensions } from 'ui/src/theme'
@@ -37,6 +37,7 @@ type NftsListProps = Omit<
       owner: Address
       footerHeight?: SharedValue<number>
       isExternalProfile?: boolean
+      renderedInModal?: boolean
       renderNFTItem: (item: NFTItem) => JSX.Element
       onPressEmptyState?: () => void
       loadingStateStyle?: StyleProp<ViewStyle | CSSProperties | (ViewStyle & CSSProperties)>
@@ -53,6 +54,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     owner,
     footerHeight,
     isExternalProfile = false,
+    renderedInModal = false,
     loadingStateStyle,
     errorStateStyle,
     emptyStateStyle,
@@ -133,8 +135,10 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
 
   const onRetry = useCallback(() => refetch(), [refetch])
 
+  const List = renderedInModal ? AnimatedBottomSheetFlashList : AnimatedFlashList
+
   return (
-    <AnimatedFlashList
+    <List
       {...rest}
       ref={ref}
       ListEmptyComponent={

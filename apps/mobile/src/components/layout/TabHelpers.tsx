@@ -81,6 +81,7 @@ export type TabProps = {
   containerProps?: TabContentProps
   scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
   isExternalProfile?: boolean
+  renderedInModal?: boolean
   refreshing?: boolean
   onRefresh?: () => void
   headerHeight?: number

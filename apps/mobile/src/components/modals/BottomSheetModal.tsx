@@ -74,7 +74,7 @@ type Props = PropsWithChildren<{
 
 const BACKDROP_APPEARS_ON_INDEX = 0
 const DISAPPEARS_ON_INDEX = -1
-const DRAG_ACTIVATION_OFFSET = 25
+const DRAG_ACTIVATION_OFFSET = 40
 
 const Backdrop = (props: BottomSheetBackdropProps): JSX.Element => {
   return (

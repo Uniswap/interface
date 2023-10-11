@@ -19,7 +19,7 @@ import {
 import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { useMostRecentSwapTx } from 'src/features/transactions/swap/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { AnimatedFlashList, Flex, Text, useSporeColors } from 'ui/src'
+import { AnimatedBottomSheetFlashList, AnimatedFlashList, Flex, Text, useSporeColors } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'wallet/src/data/queries'
 import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
@@ -52,6 +52,7 @@ export const ActivityTab = memo(
       scrollHandler,
       headerHeight,
       isExternalProfile = false,
+      renderedInModal = false,
       refreshing,
       onRefresh,
     },
@@ -162,9 +163,11 @@ export const ActivityTab = memo(
     // (list items use their own loading shimmer so there is no need to display it in the footer)
     const isLoadingInitially = isLoading && !sectionData
 
+    const List = renderedInModal ? AnimatedBottomSheetFlashList : AnimatedFlashList
+
     return (
       <Flex grow px="$spacing24">
-        <AnimatedFlashList
+        <List
           ref={ref}
           ListEmptyComponent={emptyComponent}
           // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top

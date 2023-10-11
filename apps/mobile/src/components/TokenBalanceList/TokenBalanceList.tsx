@@ -5,7 +5,10 @@ import { FlatList, RefreshControl } from 'react-native'
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
-import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
+import {
+  AnimatedBottomSheetFlatList,
+  AnimatedFlatList,
+} from 'src/components/layout/AnimatedFlatList'
 import {
   TabProps,
   TAB_BAR_HEIGHT,
@@ -47,6 +50,7 @@ export const TokenBalanceList = forwardRef<FlatList<any>, TokenBalanceListProps>
       containerProps,
       scrollHandler,
       isExternalProfile = false,
+      renderedInModal = false,
       refreshing,
       headerHeight = 0,
       onRefresh,
@@ -117,6 +121,8 @@ export const TokenBalanceList = forwardRef<FlatList<any>, TokenBalanceListProps>
       )
     }, [insets.top, headerHeight, refreshing, colors.neutral3, onRefresh])
 
+    const List = renderedInModal ? AnimatedBottomSheetFlatList : AnimatedFlatList
+
     // Note: `PerformanceView` must wrap the entire return statement to properly track interactive states.
     return (
       <ReactNavigationPerformanceView
@@ -140,7 +146,7 @@ export const TokenBalanceList = forwardRef<FlatList<any>, TokenBalanceListProps>
             </Flex>
           )
         ) : (
-          <AnimatedFlatList
+          <List
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ref={ref as ForwardedRef<Animated.FlatList<any>>}
             ListEmptyComponent={

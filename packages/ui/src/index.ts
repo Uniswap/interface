@@ -35,7 +35,10 @@ export type {
   Tokens,
 } from 'tamagui'
 export { LinearGradient } from 'tamagui/linear-gradient'
-export { AnimatedFlashList } from './components/AnimatedFlashList/AnimatedFlashList'
+export {
+  AnimatedBottomSheetFlashList,
+  AnimatedFlashList,
+} from './components/AnimatedFlashList/AnimatedFlashList'
 export { Button } from './components/button/Button'
 export { withAnimated } from './components/factories/animated'
 export { IconProps } from './components/factories/createIcon'

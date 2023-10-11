@@ -95,6 +95,7 @@ export const NftsTab = memo(
       refreshing,
       onRefresh,
       headerHeight = 0,
+      renderedInModal = false,
     },
     ref
   ) {
@@ -146,6 +147,7 @@ export const NftsTab = memo(
           refreshControl={refreshControl}
           refreshing={refreshing}
           renderNFTItem={renderNFTItem}
+          renderedInModal={renderedInModal}
           onContentSizeChange={onContentSizeChange}
           onPressEmptyState={onPressScan}
           onRefresh={onRefresh}

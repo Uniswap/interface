@@ -144,8 +144,12 @@ export function ExploreStackNavigator(): JSX.Element {
         <ExploreStack.Screen component={ExploreScreen} name={Screens.Explore} />
         <ExploreStack.Group
           screenOptions={{ contentStyle: { backgroundColor: colors.surface1.get() } }}>
-          <ExploreStack.Screen component={ExternalProfileScreen} name={Screens.ExternalProfile} />
-          <ExploreStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
+          <ExploreStack.Screen name={Screens.ExternalProfile}>
+            {(props): JSX.Element => <ExternalProfileScreen {...props} renderedInModal />}
+          </ExploreStack.Screen>
+          <ExploreStack.Screen name={Screens.NFTCollection}>
+            {(props): JSX.Element => <NFTCollectionScreen {...props} renderedInModal />}
+          </ExploreStack.Screen>
           <ExploreStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
           <ExploreStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
         </ExploreStack.Group>
