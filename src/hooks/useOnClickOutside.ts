@@ -12,7 +12,7 @@ export function useOnClickOutside<T extends HTMLElement>(
   }, [handler])
 
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
+    const handleClickOutside = (e: MouseEvent | KeyboardEvent) => {
       const nodeClicked = node.current?.contains(e.target as Node)
       const ignoredNodeClicked = ignoredNodes.reduce(
         (reducer, val) => reducer || !!val.current?.contains(e.target as Node),
@@ -27,9 +27,11 @@ export function useOnClickOutside<T extends HTMLElement>(
     }
 
     document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keyup', handleClickOutside)
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keyup', handleClickOutside)
     }
   }, [node, ignoredNodes])
 }
