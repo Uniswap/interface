@@ -147,7 +147,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const nftsTabScrollRef = useAnimatedRef<FlashList<any>>()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const activityTabScrollRef = useAnimatedRef<FlashList<any>>()
+  const activityTabScrollRef = useAnimatedRef<FlatList<any>>()
 
   const currentScrollValue = useDerivedValue(() => {
     if (tabIndex === HomeScreenTabIndex.Tokens) {

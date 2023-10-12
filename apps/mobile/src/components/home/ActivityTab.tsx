@@ -1,11 +1,15 @@
-import { FlashList } from '@shopify/flash-list'
-import { default as React, forwardRef, memo, useMemo } from 'react'
+import { ForwardedRef, forwardRef, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { RefreshControl } from 'react-native'
+import { FlatList, RefreshControl } from 'react-native'
+import Animated from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch } from 'src/app/hooks'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { NoTransactions } from 'src/components/icons/NoTransactions'
+import {
+  AnimatedBottomSheetFlatList,
+  AnimatedFlatList,
+} from 'src/components/layout/AnimatedFlatList'
 import { TabProps, TAB_BAR_HEIGHT } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
@@ -19,11 +23,10 @@ import {
 import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { useMostRecentSwapTx } from 'src/features/transactions/swap/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { AnimatedBottomSheetFlashList, AnimatedFlashList, Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'wallet/src/data/queries'
 import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
-import { getActivityItemType } from 'wallet/src/features/activity/utils'
 import { SwapSummaryCallbacks } from 'wallet/src/features/transactions/SummaryCards/types'
 import { generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
@@ -45,7 +48,7 @@ const SectionTitle = ({ title }: { title: string }): JSX.Element => (
 )
 
 export const ActivityTab = memo(
-  forwardRef<FlashList<unknown>, TabProps>(function _ActivityTab(
+  forwardRef<FlatList<unknown>, TabProps>(function _ActivityTab(
     {
       owner,
       containerProps,
@@ -163,12 +166,13 @@ export const ActivityTab = memo(
     // (list items use their own loading shimmer so there is no need to display it in the footer)
     const isLoadingInitially = isLoading && !sectionData
 
-    const List = renderedInModal ? AnimatedBottomSheetFlashList : AnimatedFlashList
+    const List = renderedInModal ? AnimatedBottomSheetFlatList : AnimatedFlatList
 
     return (
       <Flex grow px="$spacing24">
         <List
-          ref={ref}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ref={ref as ForwardedRef<Animated.FlatList<any>>}
           ListEmptyComponent={emptyComponent}
           // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
           ListFooterComponent={
@@ -179,16 +183,14 @@ export const ActivityTab = memo(
           }
           data={sectionData}
           estimatedItemSize={ESTIMATED_ITEM_SIZE}
-          // To achieve better performance, specify the type based on the item
-          // https://shopify.github.io/flash-list/docs/fundamentals/performant-components#getitemtype
-          getItemType={getActivityItemType}
+          initialNumToRender={20}
           keyExtractor={keyExtractor}
           maxToRenderPerBatch={20}
-          numColumns={1}
           refreshControl={refreshControl}
           refreshing={refreshing}
           renderItem={renderActivityItem}
           showsVerticalScrollIndicator={false}
+          updateCellsBatchingPeriod={10}
           onContentSizeChange={onContentSizeChange}
           onRefresh={onRefresh}
           onScroll={scrollHandler}
