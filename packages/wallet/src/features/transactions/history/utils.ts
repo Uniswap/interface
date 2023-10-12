@@ -1,6 +1,11 @@
 import { Token } from '@uniswap/sdk-core'
 import dayjs from 'dayjs'
 import {
+  FORMAT_DATE_MONTH,
+  FORMAT_DATE_MONTH_YEAR,
+  LocalizedDayjs,
+} from 'utilities/src/time/localizedDayjs'
+import {
   Amount,
   Chain,
   Currency,
@@ -26,7 +31,8 @@ export interface AllFormattedTransactions {
 }
 
 export function formatTransactionsByDate(
-  transactions: TransactionDetails[] | undefined
+  transactions: TransactionDetails[] | undefined,
+  localizedDayjs: LocalizedDayjs
 ): AllFormattedTransactions {
   // timestamp in ms for start of time periods
   const msTimestampCutoff24h = dayjs().subtract(24, 'hour').valueOf()
@@ -65,10 +71,10 @@ export function formatTransactionsByDate(
   const priorByMonthTransactionList = olderThan24HTransactionList.reduce(
     (accum: Record<string, TransactionDetails[]>, item) => {
       const isPreviousYear = item.addedTime < msTimestampCutoffYear
-      const key = dayjs(item.addedTime)
+      const key = localizedDayjs(item.addedTime)
         // If in a previous year, append year to key string, else just use month
         // This key is used as the section title in TransactionList
-        .format(isPreviousYear ? 'MMMM YYYY' : 'MMMM')
+        .format(isPreviousYear ? FORMAT_DATE_MONTH_YEAR : FORMAT_DATE_MONTH)
         .toString()
       const currentMonthList = accum[key] ?? []
       currentMonthList.push(item)

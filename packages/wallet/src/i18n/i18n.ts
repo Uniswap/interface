@@ -1,11 +1,11 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import { AppTFunction } from 'ui/src/i18n/types'
-import en from './locales/en-US.json'
+import enUS from './locales/en-US.json'
 
 export const resources = {
-  en: {
-    translation: en,
+  'en-US': {
+    translation: enUS,
   },
 }
 
@@ -20,7 +20,7 @@ export function initializeTranslation(): void {
     .use(initReactI18next)
     .init({
       defaultNS,
-      lng: 'en',
+      lng: 'en-US',
       resources,
       interpolation: {
         escapeValue: false, // react already safes from xss

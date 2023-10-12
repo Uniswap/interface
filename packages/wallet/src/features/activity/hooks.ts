@@ -1,5 +1,6 @@
 import { ApolloError, NetworkStatus } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
+import { useLocalizedDayjs } from 'utilities/src/time/localizedDayjs'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { useTransactionListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
@@ -66,9 +67,10 @@ export function useFormattedTransactionDataForActivity(
   const transactions = mergeLocalFunction(address, formattedTransactions)
 
   // Format transactions for section list
+  const localizedDayjs = useLocalizedDayjs()
   const { pending, last24hTransactionList, priorByMonthTransactionList } = useMemo(
-    () => formatTransactionsByDate(transactions),
-    [transactions]
+    () => formatTransactionsByDate(transactions, localizedDayjs),
+    [transactions, localizedDayjs]
   )
 
   const hasTransactions = transactions && transactions.length > 0

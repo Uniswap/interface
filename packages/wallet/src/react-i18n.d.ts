@@ -1,9 +1,9 @@
 import 'react-i18next'
-import en from './i18n/locales/en-US.json'
+import enUS from './i18n/locales/en-US.json'
 
 const resources = {
-  en: {
-    translation: en,
+  'en-US': {
+    translation: enUS,
     // tss
   },
 } as const
@@ -11,6 +11,6 @@ const resources = {
 declare module 'react-i18next' {
   interface CustomTypeOptions {
     defaultNS: 'translation'
-    resources: typeof resources.en
+    resources: (typeof resources)['en-US']
   }
 }

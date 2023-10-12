@@ -8,6 +8,7 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { setClipboard } from 'src/utils/clipboard'
 import { openMoonpayHelpLink, openUniswapHelpLink } from 'src/utils/linking'
 import { ColorTokens, Flex, Separator, Text } from 'ui/src'
+import { FORMAT_DATE_LONG, useFormattedDate } from 'utilities/src/time/localizedDayjs'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
@@ -52,7 +53,7 @@ export default function TransactionActionsModal({
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
-  const dateString = dayjs(msTimestampAdded).format('MMMM D, YYYY')
+  const dateString = useFormattedDate(dayjs(msTimestampAdded), FORMAT_DATE_LONG)
 
   const handleClose = useCallback(() => {
     onClose()

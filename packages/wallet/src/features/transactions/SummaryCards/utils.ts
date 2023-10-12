@@ -1,8 +1,12 @@
-import dayjs from 'dayjs'
 import { createElement, useMemo, useState } from 'react'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { TXN_HISTORY_LOADER_ICON_SIZE } from 'ui/src/loading/TransactionLoader'
 import { iconSizes } from 'ui/src/theme'
+import {
+  FORMAT_DATE_MONTH_DAY,
+  FORMAT_TIME_SHORT,
+  useLocalizedDayjs,
+} from 'utilities/src/time/localizedDayjs'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
 import {
@@ -181,16 +185,17 @@ function useForceUpdateEveryMinute(): number {
 export function useFormattedTime(time: number): string {
   // we need to update formattedAddedTime every minute as it can be relative
   const unixTime = useForceUpdateEveryMinute()
+  const localizedDayjs = useLocalizedDayjs()
 
   return useMemo(() => {
-    const wrappedAddedTime = dayjs(time)
-    return dayjs().isBefore(wrappedAddedTime.add(59, 'minute'), 'minute')
+    const wrappedAddedTime = localizedDayjs(time)
+    return localizedDayjs().isBefore(wrappedAddedTime.add(59, 'minute'), 'minute')
       ? // We do not use dayjs.duration() as it uses Math.round under the hood,
         // so for the first 30s it would show 0 minutes
-        `${Math.ceil(dayjs().diff(wrappedAddedTime) / ONE_MINUTE_MS)}m` // within an hour
-      : dayjs().isBefore(wrappedAddedTime.add(24, 'hour'))
-      ? wrappedAddedTime.format('h:mma') // within last 24 hours
-      : wrappedAddedTime.format('MMM D') // current year
+        `${Math.ceil(localizedDayjs().diff(wrappedAddedTime) / ONE_MINUTE_MS)}m` // within an hour
+      : localizedDayjs().isBefore(wrappedAddedTime.add(24, 'hour'))
+      ? wrappedAddedTime.format(FORMAT_TIME_SHORT) // within last 24 hours
+      : wrappedAddedTime.format(FORMAT_DATE_MONTH_DAY) // current year
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [time, unixTime])
+  }, [time, unixTime, localizedDayjs])
 }
