@@ -47,7 +47,7 @@ export function SpinningLoader({
 
   return (
     <AnimatedFlex sentry-label="SpinningLoader" style={[animatedStyles]}>
-      <Icons.CircleSpinner color={color ?? '$neutral1'} size={size} />
+      <Icons.CircleSpinner color={color ?? '$neutral2'} size={size} />
     </AnimatedFlex>
   )
 }

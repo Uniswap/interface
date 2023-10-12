@@ -35,7 +35,7 @@ export function NetworkFee({
       <Flex row alignItems="center" gap="$spacing8">
         <InlineNetworkPill chainId={chainId} />
         {gasFee.loading ? (
-          <SpinningLoader size={iconSizes.icon20} />
+          <SpinningLoader size={iconSizes.icon16} />
         ) : (
           <Flex row alignItems="center" justifyContent="space-between">
             {gasFee.error ? (
