@@ -82,6 +82,7 @@ function Inputs({
       {layerType === 'foreground' ? (
         <TextInput
           ref={textInputRef}
+          autoFocus
           backgroundColor="$transparent"
           color="$neutral1"
           fontSize={inputFontSize}
@@ -101,7 +102,6 @@ function Inputs({
         />
       ) : (
         <TextInput
-          autoFocus
           autoCapitalize="none"
           backgroundColor="$transparent"
           color="$neutral1"
@@ -117,13 +117,13 @@ function Inputs({
           selectionColor={colors.neutral1.get()}
           spellCheck={false}
           testID="import_account_form/input"
-          textAlign={backgroundTextAlignment}
+          textAlign={isInputEmpty ? 'left' : backgroundTextAlignment}
           textAlignVertical="bottom"
           value={value}
           width={value ? 'auto' : (layout?.width || 0) + spacing.spacing8}
           {...(layerType === 'background'
             ? { opacity: 0, editable: false }
-            : { ...inputProps, ref: textInputRef })}
+            : { ...inputProps, ref: textInputRef, autoFocus: true })}
         />
       )}
       {inputSuffix && value && !value.includes(inputSuffix) ? (

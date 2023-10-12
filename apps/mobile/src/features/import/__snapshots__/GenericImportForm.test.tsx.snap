@@ -98,7 +98,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             "paddingLeft": 0,
             "paddingRight": 0,
             "paddingTop": 0,
-            "textAlign": "center",
+            "textAlign": "left",
             "width": 8,
           }
         }

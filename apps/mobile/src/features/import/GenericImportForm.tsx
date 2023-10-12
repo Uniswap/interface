@@ -1,6 +1,7 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
+  Keyboard,
   LayoutChangeEvent,
   LayoutRectangle,
   StyleSheet,
@@ -75,6 +76,12 @@ export function GenericImportForm({
   const handleSubmit = (): void => {
     onSubmit && onSubmit()
   }
+
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidHide', (): void => {
+      textInputRef?.current?.blur()
+    })
+  }, [])
 
   const INPUT_MIN_HEIGHT = 120
   const INPUT_MIN_HEIGHT_SHORT = 90

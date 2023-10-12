@@ -223,7 +223,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                           "paddingLeft": 0,
                           "paddingRight": 0,
                           "paddingTop": 0,
-                          "textAlign": "center",
+                          "textAlign": "left",
                           "width": 8,
                         }
                       }
