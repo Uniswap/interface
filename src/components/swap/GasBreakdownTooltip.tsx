@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
-import { Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { AutoColumn } from 'components/Column'
 import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/UniswapXRouterLabel'
 import Row from 'components/Row'
+import { getChainInfo } from 'constants/chainInfo'
 import { nativeOnChain } from 'constants/tokens'
 import { ReactNode } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -37,10 +38,10 @@ type GasBreakdownTooltipProps = { trade: InterfaceTrade; hideUniswapXDescription
 
 export function GasBreakdownTooltip({ trade, hideUniswapXDescription }: GasBreakdownTooltipProps) {
   const isUniswapX = isUniswapXTrade(trade)
-  const inputCurrency = trade.inputAmount.currency
-  const native = nativeOnChain(inputCurrency.chainId)
+  const { chainId, symbol } = trade.inputAmount.currency
+  const native = nativeOnChain(chainId)
 
-  if (isPreviewTrade(trade)) return <NetworkFeesDescription native={native} />
+  if (isPreviewTrade(trade)) return <NetworkFeesDescription chainId={chainId} native={native} />
 
   const swapEstimate = !isUniswapX ? trade.gasUseEstimateUSD : undefined
   const approvalEstimate = trade.approveInfo.needsApprove ? trade.approveInfo.approveGasEstimateUSD : undefined
@@ -48,7 +49,11 @@ export function GasBreakdownTooltip({ trade, hideUniswapXDescription }: GasBreak
   const showEstimateDetails = Boolean(wrapEstimate || approvalEstimate)
 
   const description =
-    isUniswapX && !hideUniswapXDescription ? <UniswapXDescription /> : <NetworkFeesDescription native={native} />
+    isUniswapX && !hideUniswapXDescription ? (
+      <UniswapXDescription />
+    ) : (
+      <NetworkFeesDescription chainId={chainId} native={native} />
+    )
 
   if (!showEstimateDetails) return description
 
@@ -56,7 +61,7 @@ export function GasBreakdownTooltip({ trade, hideUniswapXDescription }: GasBreak
     <Container gap="md">
       <AutoColumn gap="sm">
         <GasCostItem title={<Trans>Wrap {native.symbol}</Trans>} amount={wrapEstimate} />
-        <GasCostItem title={<Trans>Allow {inputCurrency.symbol} (one time)</Trans>} amount={approvalEstimate} />
+        <GasCostItem title={<Trans>Allow {symbol} (one time)</Trans>} amount={approvalEstimate} />
         <GasCostItem title={<Trans>Swap</Trans>} amount={swapEstimate} />
         {isUniswapX && <GasCostItem title={<Trans>Swap</Trans>} itemValue={<GaslessSwapLabel />} />}
       </AutoColumn>
@@ -66,11 +71,14 @@ export function GasBreakdownTooltip({ trade, hideUniswapXDescription }: GasBreak
   )
 }
 
-function NetworkFeesDescription({ native }: { native: Currency }) {
+function NetworkFeesDescription({ native, chainId }: { native: Currency; chainId: ChainId }) {
+  const chainInfo = getChainInfo(chainId)
+
   return (
     <ThemedText.LabelMicro>
       <Trans>
-        The fee paid to the Ethereum network to process your transaction. This must be paid in {native.symbol}.
+        The fee paid to the {chainInfo?.label ?? ''} network to process your transaction. This must be paid in{' '}
+        {native.symbol}.
       </Trans>{' '}
       <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-">
         <Trans>Learn more</Trans>
