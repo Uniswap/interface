@@ -6,7 +6,7 @@ const { parseStringPromise, Builder } = require('xml2js')
 const weekMs = 7 * 24 * 60 * 60 * 1000
 const nowISO = new Date().toISOString()
 
-const getTokensQuery = (chain) => `
+const getTopTokensQuery = (chain) => `
   query {
     topTokens(pageSize: 100, page: 1, chain: ${chain}, orderBy: VOLUME) {
       address
@@ -15,7 +15,7 @@ const getTokensQuery = (chain) => `
 `
 const chains = ['ETHEREUM', 'ARBITRUM', 'OPTIMISM', 'POLYGON', 'BASE', 'BNB', 'CELO']
 
-const nftQuery = `
+const nftTopCollectionsQuery = `
   query {
     topCollections(first: 100, duration: MAX) {
       edges {
@@ -50,7 +50,7 @@ fs.readFile('./public/sitemap.xml', 'utf8', async (err, data) => {
           'Content-Type': 'application/json',
           Origin: 'https://app.uniswap.org',
         },
-        body: JSON.stringify({ query: getTokensQuery(chainName) }),
+        body: JSON.stringify({ query: getTopTokensQuery(chainName) }),
       })
       const tokensJSON = await tokensResponse.json()
       const tokenAddresses = tokensJSON.data.topTokens.map((token) => token.address.toLowerCase())
@@ -73,7 +73,7 @@ fs.readFile('./public/sitemap.xml', 'utf8', async (err, data) => {
         'Content-Type': 'application/json',
         Origin: 'https://app.uniswap.org',
       },
-      body: JSON.stringify({ query: nftQuery }),
+      body: JSON.stringify({ query: nftTopCollectionsQuery }),
     })
     const nftJSON = await nftResponse.json()
     const collectionAddresses = nftJSON.data.topCollections.edges.map((edge) => edge.node.nftContracts[0].address)
@@ -98,7 +98,7 @@ fs.readFile('./public/sitemap.xml', 'utf8', async (err, data) => {
       const fileSizeMegabytes = fileSizeBytes / (1024 * 1024)
 
       if (fileSizeMegabytes > 50) {
-        throw new Error('File size exceeds 50MB')
+        throw new Error('Generated sitemap file size exceeds 50MB')
       }
       console.log('Sitemap updated')
     })
