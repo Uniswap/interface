@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import PrefetchBalancesWrapper, {
@@ -10,6 +10,7 @@ import { asSupportedChain } from 'constants/chains'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TokenQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import JSBI from 'jsbi'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import { useMemo } from 'react'
 import styled, { useTheme } from 'styled-components'
@@ -22,6 +23,7 @@ const BalancesCard = styled.div`
   // display: none; // todo: check if this changes anything?
   display: flex;
   flex-direction: column;
+  gap: 24px;
   height: fit-content;
   padding: 16px;
   width: 100%;
@@ -55,11 +57,13 @@ const BalanceContainer = styled.div`
   flex: 1;
 `
 
-const BalanceAmountsContainer = styled.div`
+const BalanceAmountsContainer = styled.div<{ isInfoTDPEnabled?: boolean }>`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  ${({ isInfoTDPEnabled }) => isInfoTDPEnabled && 'margin-left: 8px;'}
 `
 
 const StyledNetworkLabel = styled.div`
@@ -69,128 +73,154 @@ const StyledNetworkLabel = styled.div`
 `
 
 interface BalanceProps {
-  currencies?: Array<Currency | undefined>
+  token?: Currency
   chainId: ChainId
-  formattedBalance: string
-  formattedUsdValue: string
+  balance: CurrencyAmount<Currency>
   tokenSymbol?: string
   color?: string
-  label: string
+  chainName?: string
+  isInfoTDPEnabled?: boolean
 }
-const Balance = ({
-  currencies,
-  chainId,
-  formattedBalance,
-  formattedUsdValue,
-  tokenSymbol,
-  color,
-  label,
-}: BalanceProps) => (
-  <BalanceRow>
-    <PortfolioLogo currencies={currencies} chainId={chainId} size="2rem" />
-    <BalanceContainer>
-      <BalanceAmountsContainer>
-        <BalanceItem>
-          <ThemedText.SubHeader>
-            {formattedBalance} {tokenSymbol}
-          </ThemedText.SubHeader>
-        </BalanceItem>
-        <BalanceItem>
-          <ThemedText.BodyPrimary>{formattedUsdValue}</ThemedText.BodyPrimary>
-        </BalanceItem>
-      </BalanceAmountsContainer>
-      <StyledNetworkLabel color={color}>{label}</StyledNetworkLabel>
-    </BalanceContainer>
-  </BalanceRow>
-)
+const Balance = (props: BalanceProps) => {
+  const { token, chainId, balance, tokenSymbol, color, chainName, isInfoTDPEnabled } = props
+  const { formatCurrencyAmount } = useFormatter()
+  const currencies = useMemo(() => [token], [token])
+
+  const formattedBalance = formatCurrencyAmount({
+    amount: balance,
+    type: NumberType.TokenNonTx,
+  })
+  const formattedUsdValue = formatCurrencyAmount({
+    amount: useStablecoinValue(balance),
+    type: NumberType.PortfolioBalance,
+  })
+
+  if (isInfoTDPEnabled) {
+    return (
+      <BalanceRow>
+        <PortfolioLogo currencies={currencies} chainId={chainId} size="2rem" />
+        <BalanceAmountsContainer isInfoTDPEnabled>
+          <BalanceItem>
+            <ThemedText.BodyPrimary>{formattedUsdValue}</ThemedText.BodyPrimary>
+          </BalanceItem>
+          <BalanceItem>
+            <ThemedText.SubHeader>{formattedBalance}</ThemedText.SubHeader>
+          </BalanceItem>
+        </BalanceAmountsContainer>
+      </BalanceRow>
+    )
+  } else {
+    return (
+      <BalanceRow>
+        <PortfolioLogo currencies={currencies} chainId={chainId} size="2rem" />
+        <BalanceContainer>
+          <BalanceAmountsContainer>
+            <BalanceItem>
+              <ThemedText.SubHeader>
+                {formattedBalance} {tokenSymbol}
+              </ThemedText.SubHeader>
+            </BalanceItem>
+            <BalanceItem>
+              <ThemedText.BodyPrimary>{formattedUsdValue}</ThemedText.BodyPrimary>
+            </BalanceItem>
+          </BalanceAmountsContainer>
+          <StyledNetworkLabel color={color}>{chainName}</StyledNetworkLabel>
+        </BalanceContainer>
+      </BalanceRow>
+    )
+  }
+}
 
 export default function BalanceSummary({ token, tokenQuery }: { token: Currency; tokenQuery: TokenQuery }) {
   const { account, chainId } = useWeb3React()
   const theme = useTheme()
-  const { label, color } = getChainInfo(asSupportedChain(chainId) ?? ChainId.MAINNET)
-  const { formatCurrencyAmount } = useFormatter()
+  const { label: chainName, color: chainColor } = getChainInfo(asSupportedChain(chainId) ?? ChainId.MAINNET)
 
   const isInfoTDPEnabled = useInfoTDPEnabled()
 
   const currentChainBalance = useCurrencyBalance(account, token)
-  const formattedCurrentChainBalance = formatCurrencyAmount({
-    amount: currentChainBalance,
-    type: NumberType.TokenNonTx,
-  })
-  const formattedUsdValue = formatCurrencyAmount({
-    amount: useStablecoinValue(currentChainBalance),
-    type: NumberType.FiatTokenStats,
-  })
-
-  const currencies = useMemo(() => [token], [token])
+  const hasCurrentChainBalance = currentChainBalance?.greaterThan(0)
 
   const { data: portfolioBalances } = useCachedPortfolioBalancesQuery({ account })
   const tokenBalances = portfolioBalances?.portfolios?.[0].tokenBalances
   const bridgeInfo = tokenQuery.token?.project?.tokens
+  console.log('tokenBalances', tokenBalances)
   const otherChainBalances = tokenBalances?.filter(
     (tokenBalance) =>
-      bridgeInfo?.some(
-        (bridgeToken) => bridgeToken.id == tokenBalance.token?.id && tokenBalance.token?.id !== tokenQuery.token?.id
-      ) // does not include token on currently-selected page chain
+      tokenBalance.token?.id !== tokenQuery.token?.id &&
+      bridgeInfo?.some((bridgeToken) => bridgeToken.id == tokenBalance.token?.id) // does not include token on currently-selected page chain
   )
+  const hasOtherChainBalances = Boolean(otherChainBalances?.length)
+  console.log('bridgeInfo', bridgeInfo)
 
   if (!account || !currentChainBalance) {
     return null
   }
 
-  const BalanceSummary = (
-    <BalancesCard>
+  const CurrentChainBalanceSummary = () => (
+    <BalanceSection>
+      {isInfoTDPEnabled ? (
+        <>
+          <ThemedText.SubHeaderSmall color={theme.neutral1}>
+            <Trans>Your {token.symbol}</Trans>
+          </ThemedText.SubHeaderSmall>
+          <Balance token={token} chainId={token.chainId} balance={currentChainBalance} isInfoTDPEnabled={true} />
+        </>
+      ) : (
+        <>
+          <ThemedText.SubHeaderSmall color={theme.neutral1}>
+            <Trans>Your balance on {chainName}</Trans>
+          </ThemedText.SubHeaderSmall>
+          <Balance
+            token={token}
+            chainId={token.chainId}
+            balance={currentChainBalance}
+            tokenSymbol={token.symbol}
+            color={chainColor}
+            chainName={chainName}
+          />
+        </>
+      )}
+    </BalanceSection>
+  )
+
+  const OtherChainsBalanceSummary = () => {
+    return (
       <BalanceSection>
         <ThemedText.SubHeaderSmall color={theme.neutral1}>
-          <Trans>Your balance on {label}</Trans>
+          <Trans>On other networks</Trans>
         </ThemedText.SubHeaderSmall>
-        {isInfoTDPEnabled ? (
-          <Balance
-            currencies={currencies}
-            chainId={token.chainId}
-            formattedBalance={formattedCurrentChainBalance}
-            formattedUsdValue={formattedUsdValue}
-            tokenSymbol={token.symbol}
-            color={color}
-            label={label}
-          />
-        ) : (
-          <Balance
-            currencies={currencies}
-            chainId={token.chainId}
-            formattedBalance={formattedCurrentChainBalance}
-            formattedUsdValue={formattedUsdValue}
-            tokenSymbol={token.symbol}
-            color={color}
-            label={label}
-          />
-        )}
-      </BalanceSection>
-      {isInfoTDPEnabled && (
-        <BalanceSection>
-          <ThemedText.SubHeaderSmall color={theme.neutral1}>
-            <Trans>On other networks</Trans>
-          </ThemedText.SubHeaderSmall>
-          {otherChainBalances?.map((balance) => (
+        {otherChainBalances?.map((balance) => {
+          return (
             <Balance
               key={balance.id}
-              currencies={currencies} // what dis do
+              token={token}
               chainId={token.chainId}
-              formattedBalance={formattedCurrentChainBalance}
-              formattedUsdValue={formattedUsdValue}
-              tokenSymbol={balance.token?.symbol}
-              color={color}
-              label={label}
+              // chainId={balance.token?.chain}
+              balance={CurrencyAmount.fromRawAmount(token, JSBI.BigInt((balance.quantity ?? 0) * 10 ** token.decimals))}
+              isInfoTDPEnabled={true}
             />
-          ))}
-        </BalanceSection>
-      )}
-    </BalancesCard>
-  )
+          )
+        })}
+      </BalanceSection>
+    )
+  }
+
   if (isInfoTDPEnabled) {
-    // check prefetch balances wrapper cuz it doesnt load
-    return <PrefetchBalancesWrapper shouldFetchOnAccountUpdate>{BalanceSummary}</PrefetchBalancesWrapper>
+    // check prefetch balances wrapper cuz it doesnt load, remove isInfoTDPEnabled
+    return (
+      <PrefetchBalancesWrapper shouldFetchOnAccountUpdate>
+        <BalancesCard>
+          {hasCurrentChainBalance && <CurrentChainBalanceSummary />}
+          {hasOtherChainBalances && <OtherChainsBalanceSummary />}
+        </BalancesCard>
+      </PrefetchBalancesWrapper>
+    )
   } else {
-    return BalanceSummary
+    return (
+      <BalancesCard>
+        <CurrentChainBalanceSummary />
+      </BalancesCard>
+    )
   }
 }
