@@ -8,6 +8,7 @@ export {
   ListItem,
   Popover,
   ScrollView,
+  styled,
   Switch,
   TamaguiProvider,
   Theme,

@@ -24,7 +24,7 @@ function OnboardingStepIndicator({ steps, methodRoute }: OnboardingStepsProps): 
   }
 
   return (
-    <Flex centered row gap="$spacing12" mb="$spacing36">
+    <Flex centered row gap="$spacing12" my="$spacing36">
       {steps.map((step) => (
         <StepCircle
           key={step}
