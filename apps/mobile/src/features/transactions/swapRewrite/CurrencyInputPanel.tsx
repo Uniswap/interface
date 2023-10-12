@@ -13,7 +13,6 @@ import { AmountInput } from 'src/components/input/AmountInput'
 import { MaxAmountButton } from 'src/components/input/MaxAmountButton'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
 import { useDynamicFontSizing } from 'src/features/transactions/hooks'
-import { ParsedWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
@@ -25,25 +24,24 @@ const restyleFunctions = [backgroundColor]
 type RestyleProps = BackgroundColorProps<Theme>
 
 type CurrentInputPanelProps = {
-  currencyInfo: Maybe<CurrencyInfo>
+  autoFocus?: boolean
   currencyAmount: Maybe<CurrencyAmount<Currency>>
   currencyBalance: Maybe<CurrencyAmount<Currency>>
-  onShowTokenSelector: () => void
-  onSetExactAmount: (amount: string) => void
-  value?: string
-  showNonZeroBalancesOnly?: boolean
-  showSoftInputOnFocus?: boolean
-  autoFocus?: boolean
+  currencyInfo: Maybe<CurrencyInfo>
+  dimTextColor?: boolean
   focus?: boolean
   isOutput?: boolean
   isUSDInput?: boolean
-  onSetMax?: (amount: string) => void
   onPressIn?: () => void
-  parsedWarnings: ParsedWarnings
-  dimTextColor?: boolean
-  selection?: TextInputProps['selection']
   onSelectionChange?: (start: number, end: number) => void
+  onSetExactAmount: (amount: string) => void
+  onSetMax?: (amount: string) => void
+  onShowTokenSelector: () => void
+  selection?: TextInputProps['selection']
+  showNonZeroBalancesOnly?: boolean
+  showSoftInputOnFocus?: boolean
   usdValue: Maybe<CurrencyAmount<Currency>>
+  value?: string
 } & RestyleProps
 
 const MAX_INPUT_FONT_SIZE = 36
@@ -53,26 +51,26 @@ const MIN_INPUT_FONT_SIZE = 24
 // changes from 36 then width value must be adjusted
 const MAX_CHAR_PIXEL_WIDTH = 23
 
-/** Input panel for a single side of a transfer action. */
-function _CurrencyInputPanel({
+/** Input panel for a single side of a swap action. */
+
+export const CurrencyInputPanel = memo(function _CurrencyInputPanel({
+  autoFocus,
   currencyAmount,
   currencyBalance,
   currencyInfo,
-  onSetExactAmount,
-  onSetMax,
-  onShowTokenSelector,
-  value,
-  showNonZeroBalancesOnly = true,
-  showSoftInputOnFocus = false,
+  dimTextColor,
   focus,
-  autoFocus,
   isOutput = false,
   isUSDInput = false,
   onPressIn,
-  parsedWarnings,
-  dimTextColor,
   onSelectionChange: selectionChange,
+  onSetExactAmount,
+  onSetMax,
+  onShowTokenSelector,
+  showNonZeroBalancesOnly = true,
+  showSoftInputOnFocus = false,
   usdValue,
+  value,
   ...rest
 }: CurrentInputPanelProps): JSX.Element {
   const colors = useSporeColors()
@@ -83,8 +81,8 @@ function _CurrencyInputPanel({
   )
   const inputRef = useRef<TextInput>(null)
 
-  const { insufficientBalanceWarning } = parsedWarnings
-  const showInsufficientBalanceWarning = insufficientBalanceWarning && !isOutput
+  const showInsufficientBalanceWarning =
+    !isOutput && !!currencyBalance && !!currencyAmount && currencyBalance.lessThan(currencyAmount)
 
   const formattedUSDValue = usdValue
     ? formatNumberOrString(usdValue?.toExact(), NumberType.FiatTokenQuantity)
@@ -217,6 +215,4 @@ function _CurrencyInputPanel({
       )}
     </Flex>
   )
-}
-
-export const CurrencyInputPanel = memo(_CurrencyInputPanel)
+})

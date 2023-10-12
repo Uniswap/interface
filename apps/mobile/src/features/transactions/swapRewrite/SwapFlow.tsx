@@ -10,6 +10,7 @@ import {
   SwapScreenContextProvider,
   useSwapScreenContext,
 } from 'src/features/transactions/swapRewrite/contexts/SwapScreenContext'
+import { SwapTxContextProvider } from 'src/features/transactions/swapRewrite/contexts/SwapTxContext'
 import { useSporeColors } from 'ui/src'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import {
@@ -60,7 +61,9 @@ export function SwapFlow({
       onClose={onClose}>
       <SwapScreenContextProvider>
         <SwapFormContextProvider prefilledState={modifiedPrefilledState} onClose={onClose}>
-          <CurrentScreen setScreen={setScreen} />
+          <SwapTxContextProvider>
+            <CurrentScreen setScreen={setScreen} />
+          </SwapTxContextProvider>
         </SwapFormContextProvider>
       </SwapScreenContextProvider>
     </BottomSheetModal>

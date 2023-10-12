@@ -1,25 +1,20 @@
 import { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
 import { useSwapFormContext } from 'src/features/transactions/swapRewrite/contexts/SwapFormContext'
-import { ParsedWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
+import { useSwapTxContext } from 'src/features/transactions/swapRewrite/contexts/SwapTxContext'
+import { useParsedSwapWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
 import { SwapWarningModal } from 'src/features/transactions/swapRewrite/SwapWarningModal'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
-import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
-export function GasAndWarningRows({
-  gasFee,
-  mainWarning,
-}: {
-  gasFee?: GasFeeResult
-  mainWarning?: ParsedWarnings['mainWarning']
-}): JSX.Element {
+export function GasAndWarningRows(): JSX.Element {
   const colors = useSporeColors()
 
+  const { gasFee } = useSwapTxContext()
   const { derivedSwapInfo } = useSwapFormContext()
 
   const { chainId } = derivedSwapInfo
@@ -27,6 +22,8 @@ export function GasAndWarningRows({
   const [showWarningModal, setShowWarningModal] = useState(false)
 
   const { isBlocked } = useIsBlockedActiveAddress()
+
+  const { mainWarning } = useParsedSwapWarnings()
 
   const gasFeeUSD = useUSDValue(chainId, gasFee?.value)
 

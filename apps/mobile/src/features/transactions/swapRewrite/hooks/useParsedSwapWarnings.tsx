@@ -1,5 +1,5 @@
-import { TFunction } from 'i18next'
 import { FunctionComponent, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { SvgProps } from 'react-native-svg'
 import {
   Warning,
@@ -8,11 +8,11 @@ import {
   WarningLabel,
   WarningSeverity,
 } from 'src/components/modals/WarningModal/types'
-import { DerivedSwapInfo } from 'src/features/transactions/swap/types'
 import { useSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
+import { useSwapFormContext } from 'src/features/transactions/swapRewrite/contexts/SwapFormContext'
+import { useSwapTxContext } from 'src/features/transactions/swapRewrite/contexts/SwapTxContext'
 import { useTransactionGasWarning } from 'src/features/transactions/useTransactionGasWarning'
 import { Icons } from 'ui/src'
-import { GasFeeResult } from 'wallet/src/features/gas/types'
 
 export type ParsedWarnings = {
   blockingWarning?: Warning
@@ -25,15 +25,11 @@ export type ParsedWarnings = {
   warnings: Warning[]
 }
 
-export function useParsedSwapWarnings({
-  derivedSwapInfo,
-  gasFee,
-  t,
-}: {
-  derivedSwapInfo: DerivedSwapInfo
-  gasFee: GasFeeResult
-  t: TFunction
-}): ParsedWarnings {
+export function useParsedSwapWarnings(): ParsedWarnings {
+  const { t } = useTranslation()
+  const { derivedSwapInfo } = useSwapFormContext()
+  const { gasFee } = useSwapTxContext()
+
   const swapWarnings = useSwapWarnings(t, derivedSwapInfo)
 
   const gasWarning = useTransactionGasWarning({

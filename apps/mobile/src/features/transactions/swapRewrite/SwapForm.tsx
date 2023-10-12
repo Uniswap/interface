@@ -15,10 +15,7 @@ import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID } from 'src/constants/globals'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
-import {
-  useShowSwapNetworkNotification,
-  useSwapTxAndGasInfo,
-} from 'src/features/transactions/swap/hooks'
+import { useShowSwapNetworkNotification } from 'src/features/transactions/swap/hooks'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
 import {
   SwapScreen,
@@ -81,12 +78,9 @@ export function SwapForm(): JSX.Element {
   )
 }
 
-// eslint-disable-next-line complexity
 function SwapFormContent(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-
-  const { setScreen } = useSwapScreenContext()
 
   const {
     derivedSwapInfo,
@@ -114,15 +108,6 @@ function SwapFormContent(): JSX.Element {
 
   useShowSwapNetworkNotification(chainId)
 
-  // TODO: remove this if we don't need it.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { txRequest, approveTxRequest, gasFee } = useSwapTxAndGasInfo({
-    derivedSwapInfo,
-    skipGasFeeQuery: false,
-  })
-
-  const { isBlocked, isBlockedLoading } = useIsBlockedActiveAddress()
-
   const { walletNeedsRestore, openWalletRestoreModal } = useWalletRestore()
 
   const onRestorePress = (): void => {
@@ -130,26 +115,8 @@ function SwapFormContent(): JSX.Element {
     openWalletRestoreModal()
   }
 
-  const noValidSwap = !isWrapAction(wrapType) && !trade.trade
-
-  const parsedWarnings = useParsedSwapWarnings({
-    derivedSwapInfo,
-    gasFee,
-    t,
-  })
-
-  const { blockingWarning, mainWarning } = parsedWarnings
-
   // Quote is being fetched for first time
   const isSwapDataLoading = !isWrapAction(wrapType) && trade.loading
-
-  const reviewButtonDisabled =
-    isSwapDataLoading ||
-    noValidSwap ||
-    !!blockingWarning ||
-    isBlocked ||
-    isBlockedLoading ||
-    walletNeedsRestore
 
   const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
     useShouldShowNativeKeyboard()
@@ -277,11 +244,6 @@ function SwapFormContent(): JSX.Element {
   const exactValue = isFiatInput ? exactAmountFiat : exactAmountToken
   const exactValueRef = isFiatInput ? exactAmountFiatRef : exactAmountTokenRef
 
-  const onReview = useCallback(() => {
-    updateSwapForm({ txId: createTransactionId() })
-    setScreen(SwapScreen.SwapReview)
-  }, [setScreen, updateSwapForm])
-
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
       <AnimatedFlex
@@ -303,7 +265,6 @@ function SwapFormContent(): JSX.Element {
               currencyInfo={currencies[CurrencyField.INPUT]}
               dimTextColor={exactCurrencyField === CurrencyField.OUTPUT && isSwapDataLoading}
               focus={focusOnCurrencyField === CurrencyField.INPUT}
-              parsedWarnings={parsedWarnings}
               showSoftInputOnFocus={showNativeKeyboard}
               usdValue={currencyAmountsUSDValue[CurrencyField.INPUT]}
               value={
@@ -373,7 +334,6 @@ function SwapFormContent(): JSX.Element {
                 currencyInfo={currencies[CurrencyField.OUTPUT]}
                 dimTextColor={exactCurrencyField === CurrencyField.INPUT && isSwapDataLoading}
                 focus={focusOnCurrencyField === CurrencyField.OUTPUT}
-                parsedWarnings={parsedWarnings}
                 showNonZeroBalancesOnly={false}
                 showSoftInputOnFocus={showNativeKeyboard}
                 usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
@@ -411,7 +371,7 @@ function SwapFormContent(): JSX.Element {
           </Flex>
         </Trace>
 
-        <GasAndWarningRows gasFee={gasFee} mainWarning={mainWarning} />
+        <GasAndWarningRows />
       </AnimatedFlex>
 
       <AnimatedFlex
@@ -433,16 +393,58 @@ function SwapFormContent(): JSX.Element {
             }
           />
         )}
-        <Trace logPress element={ElementName.SwapReview}>
-          <Button
-            disabled={reviewButtonDisabled}
-            size="large"
-            testID={ElementName.ReviewSwap}
-            onPress={onReview}>
-            {t('Review swap')}
-          </Button>
-        </Trace>
+
+        <ReviewButton
+          isSwapDataLoading={isSwapDataLoading}
+          walletNeedsRestore={!!walletNeedsRestore}
+        />
       </AnimatedFlex>
     </Flex>
+  )
+}
+
+function ReviewButton({
+  isSwapDataLoading,
+  walletNeedsRestore,
+}: {
+  isSwapDataLoading: boolean
+  walletNeedsRestore: boolean
+}): JSX.Element {
+  const { t } = useTranslation()
+
+  const { setScreen } = useSwapScreenContext()
+  const { derivedSwapInfo, updateSwapForm } = useSwapFormContext()
+
+  const { wrapType, trade } = derivedSwapInfo
+
+  const { isBlocked, isBlockedLoading } = useIsBlockedActiveAddress()
+
+  const noValidSwap = !isWrapAction(wrapType) && !trade.trade
+
+  const { blockingWarning } = useParsedSwapWarnings()
+
+  const reviewButtonDisabled =
+    isSwapDataLoading ||
+    noValidSwap ||
+    !!blockingWarning ||
+    isBlocked ||
+    isBlockedLoading ||
+    walletNeedsRestore
+
+  const onReview = useCallback(() => {
+    updateSwapForm({ txId: createTransactionId() })
+    setScreen(SwapScreen.SwapReview)
+  }, [setScreen, updateSwapForm])
+
+  return (
+    <Trace logPress element={ElementName.SwapReview}>
+      <Button
+        disabled={reviewButtonDisabled}
+        size="large"
+        testID={ElementName.ReviewSwap}
+        onPress={onReview}>
+        {t('Review swap')}
+      </Button>
+    </Trace>
   )
 }

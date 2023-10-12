@@ -674,17 +674,29 @@ export function useSwapTxAndGasInfo({
 
   const error = shouldFetchSimulatedGasLimit ? simulatedGasEstimationInfo.error : swapGasFee.error
 
-  return {
-    txRequest: txRequestWithGasSettings,
-    approveTxRequest: approveTxWithGasSettings,
-    gasFee: {
+  const gasFee = useMemo(
+    () => ({
       value: totalGasFee,
       loading:
         approveLoading ||
         (shouldFetchSimulatedGasLimit && simulatedGasEstimationInfo.loading) ||
         swapGasFee.loading,
       error,
-    },
+    }),
+    [
+      approveLoading,
+      error,
+      shouldFetchSimulatedGasLimit,
+      simulatedGasEstimationInfo.loading,
+      swapGasFee.loading,
+      totalGasFee,
+    ]
+  )
+
+  return {
+    txRequest: txRequestWithGasSettings,
+    approveTxRequest: approveTxWithGasSettings,
+    gasFee,
   }
 }
 
