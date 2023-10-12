@@ -5,7 +5,7 @@ import ErrorBoundary from 'components/ErrorBoundary'
 import Loader from 'components/Icons/LoadingSpinner'
 import NavBar, { PageTabs } from 'components/NavBar'
 import { UK_BANNER_HEIGHT, UK_BANNER_HEIGHT_MD, UK_BANNER_HEIGHT_SM, UkBanner } from 'components/NavBar/UkBanner'
-import { useFeatureFlagsIsLoaded } from 'featureFlags'
+import { FeatureFlag, useFeatureFlagsIsLoaded } from 'featureFlags'
 import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
@@ -16,7 +16,7 @@ import { useAppSelector } from 'state/hooks'
 import { AppState } from 'state/reducer'
 import { RouterPreference } from 'state/routing/types'
 import { useRouterPreference, useUserOptedOutOfUniswapX } from 'state/user/hooks'
-import { StatsigProvider, StatsigUser } from 'statsig-react'
+import { StatsigProvider, StatsigUser, useGate } from 'statsig-react'
 import styled from 'styled-components'
 import DarkModeQueryParamReader from 'theme/components/DarkModeQueryParamReader'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -97,12 +97,8 @@ export default function App() {
   const location = useLocation()
   const { pathname } = location
   const currentPage = getCurrentPageFromLocation(pathname)
-  const isDarkMode = useIsDarkMode()
-  const [routerPreference] = useRouterPreference()
   const [scrollY, setScrollY] = useState(0)
   const scrolledState = scrollY > 0
-  const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
-  const userOptedOutOfUniswapX = useUserOptedOutOfUniswapX()
   const routerConfig = useRouterConfig()
 
   const originCountry = useAppSelector((state: AppState) => state.user.originCountry)
@@ -121,53 +117,6 @@ export default function App() {
       setShouldDisableNFTRoutes(false)
     }
   }, [searchParams, setShouldDisableNFTRoutes])
-
-  useEffect(() => {
-    // User properties *must* be set before sending corresponding event properties,
-    // so that the event contains the correct and up-to-date user properties.
-    user.set(CustomUserProperties.USER_AGENT, navigator.userAgent)
-    user.set(CustomUserProperties.BROWSER, getBrowser())
-    user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
-    user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
-    user.set(CustomUserProperties.GIT_COMMIT_HASH, process.env.REACT_APP_GIT_COMMIT_HASH ?? 'unknown')
-
-    // Service Worker analytics
-    const isServiceWorkerInstalled = Boolean(window.navigator.serviceWorker?.controller)
-    const isServiceWorkerHit = Boolean((window as any).__isDocumentCached)
-    const serviceWorkerProperty = isServiceWorkerInstalled ? (isServiceWorkerHit ? 'hit' : 'miss') : 'uninstalled'
-
-    const pageLoadProperties = { service_worker: serviceWorkerProperty }
-    sendInitializationEvent(SharedEventName.APP_LOADED, pageLoadProperties)
-    const sendWebVital =
-      (metric: string) =>
-      ({ delta }: Metric) =>
-        sendAnalyticsEvent(SharedEventName.WEB_VITALS, { ...pageLoadProperties, [metric]: delta })
-    getCLS(sendWebVital('cumulative_layout_shift'))
-    getFCP(sendWebVital('first_contentful_paint_ms'))
-    getFID(sendWebVital('first_input_delay_ms'))
-    getLCP(sendWebVital('largest_contentful_paint_ms'))
-  }, [])
-
-  useEffect(() => {
-    user.set(CustomUserProperties.DARK_MODE, isDarkMode)
-  }, [isDarkMode])
-
-  useEffect(() => {
-    // If we're not in the transition period to UniswapX opt-out, set the router preference to whatever is specified.
-    if (!isUniswapXDefaultEnabled) {
-      user.set(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
-      return
-    }
-
-    // In the transition period, override the stored API preference to UniswapX if the user hasn't opted out.
-    if (routerPreference === RouterPreference.API && !userOptedOutOfUniswapX) {
-      user.set(CustomUserProperties.ROUTER_PREFERENCE, RouterPreference.X)
-      return
-    }
-
-    // Otherwise, the user has opted out or their preference is UniswapX/client, so set the preference to whatever is specified.
-    user.set(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
-  }, [routerPreference, isUniswapXDefaultEnabled, userOptedOutOfUniswapX])
 
   useEffect(() => {
     const scrollListener = () => {
@@ -221,6 +170,7 @@ export default function App() {
             api: process.env.REACT_APP_STATSIG_PROXY_URL,
           }}
         >
+          <UserPropertyUpdater />
           {renderUkBannner && <UkBanner />}
           <HeaderWrapper transparent={isHeaderTransparent} bannerIsVisible={renderUkBannner} scrollY={scrollY}>
             <NavBar blur={isHeaderTransparent} />
@@ -254,4 +204,64 @@ export default function App() {
       </Trace>
     </ErrorBoundary>
   )
+}
+
+function UserPropertyUpdater() {
+  const isDarkMode = useIsDarkMode()
+
+  const [routerPreference] = useRouterPreference()
+  const userOptedOutOfUniswapX = useUserOptedOutOfUniswapX()
+  const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
+  const { isLoading: isUniswapXDefaultLoading } = useGate(FeatureFlag.uniswapXDefaultEnabled)
+  const rehydrated = useAppSelector((state) => state._persist.rehydrated)
+
+  useEffect(() => {
+    // User properties *must* be set before sending corresponding event properties,
+    // so that the event contains the correct and up-to-date user properties.
+    user.set(CustomUserProperties.USER_AGENT, navigator.userAgent)
+    user.set(CustomUserProperties.BROWSER, getBrowser())
+    user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
+    user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
+    user.set(CustomUserProperties.GIT_COMMIT_HASH, process.env.REACT_APP_GIT_COMMIT_HASH ?? 'unknown')
+
+    // Service Worker analytics
+    const isServiceWorkerInstalled = Boolean(window.navigator.serviceWorker?.controller)
+    const isServiceWorkerHit = Boolean((window as any).__isDocumentCached)
+    const serviceWorkerProperty = isServiceWorkerInstalled ? (isServiceWorkerHit ? 'hit' : 'miss') : 'uninstalled'
+
+    const pageLoadProperties = { service_worker: serviceWorkerProperty }
+    sendInitializationEvent(SharedEventName.APP_LOADED, pageLoadProperties)
+    const sendWebVital =
+      (metric: string) =>
+      ({ delta }: Metric) =>
+        sendAnalyticsEvent(SharedEventName.WEB_VITALS, { ...pageLoadProperties, [metric]: delta })
+    getCLS(sendWebVital('cumulative_layout_shift'))
+    getFCP(sendWebVital('first_contentful_paint_ms'))
+    getFID(sendWebVital('first_input_delay_ms'))
+    getLCP(sendWebVital('largest_contentful_paint_ms'))
+  }, [])
+
+  useEffect(() => {
+    user.set(CustomUserProperties.DARK_MODE, isDarkMode)
+  }, [isDarkMode])
+
+  useEffect(() => {
+    if (isUniswapXDefaultLoading || !rehydrated) return
+
+    // If we're not in the transition period to UniswapX opt-out, set the router preference to whatever is specified.
+    if (!isUniswapXDefaultEnabled) {
+      user.set(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
+      return
+    }
+
+    // In the transition period, override the stored API preference to UniswapX if the user hasn't opted out.
+    if (routerPreference === RouterPreference.API && !userOptedOutOfUniswapX) {
+      user.set(CustomUserProperties.ROUTER_PREFERENCE, RouterPreference.X)
+      return
+    }
+
+    // Otherwise, the user has opted out or their preference is UniswapX/client, so set the preference to whatever is specified.
+    user.set(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
+  }, [routerPreference, isUniswapXDefaultEnabled, userOptedOutOfUniswapX, isUniswapXDefaultLoading, rehydrated])
+  return null
 }
