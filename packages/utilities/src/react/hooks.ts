@@ -19,19 +19,25 @@ export function usePrevious<T>(value: T): T | undefined {
 // above link contains example on how to add delayed execution if ever needed
 export function useAsyncData<T>(
   asyncCallback: () => Promise<T> | undefined,
-  cancel?: () => void
+  onCancel?: () => void
 ): {
   isLoading: boolean
   data: T | undefined
 } {
-  const [data, setData] = useState<{
-    res: T | undefined
-    input: () => Promise<T> | undefined
+  const [state, setState] = useState<{
+    data: {
+      res: T | undefined
+      input: () => Promise<T> | undefined
+    }
+    isLoading: boolean
   }>({
-    res: undefined,
-    input: asyncCallback,
+    data: {
+      res: undefined,
+      input: asyncCallback,
+    },
+    isLoading: true,
   })
-  const [isLoading, setIsLoading] = useState(true)
+
   const isMountedRef = useRef(true)
 
   useEffect(() => {
@@ -41,19 +47,24 @@ export function useAsyncData<T>(
   }, [])
 
   useEffect(() => {
-    setIsLoading(true)
+    if (!state.isLoading) {
+      setState((currentState) => ({ ...currentState, isLoading: true }))
+    }
+
     let isCancelled = false
 
     async function runCallback(): Promise<void> {
       const res = await asyncCallback()
       // Prevent setting state if the component has unmounted (prevents memory leaks)
       if (!isMountedRef.current) return
-      setIsLoading(false)
-      // Prevent setting data if the request was cancelled
+      // Prevent setting state if the request was cancelled
       if (isCancelled) return
-      setData({
-        res,
-        input: asyncCallback,
+      setState({
+        isLoading: false,
+        data: {
+          res,
+          input: asyncCallback,
+        },
       })
     }
 
@@ -61,16 +72,16 @@ export function useAsyncData<T>(
 
     return () => {
       isCancelled = true
-      cancel?.()
+      onCancel?.()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asyncCallback])
 
   return useMemo(() => {
-    if (asyncCallback !== data.input) return { isLoading: true, data: undefined }
+    if (asyncCallback !== state.data.input) return { isLoading: true, data: undefined }
 
-    return { isLoading, data: data.res }
-  }, [asyncCallback, isLoading, data])
+    return { isLoading: state.isLoading, data: state.data.res }
+  }, [asyncCallback, state.isLoading, state.data])
 }
 
 // modified from https://usehooks.com/useMemoCompare/
