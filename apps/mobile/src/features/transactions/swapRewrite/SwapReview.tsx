@@ -3,7 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { Arrow } from 'src/components/icons/Arrow'
 import { Screen } from 'src/components/layout/Screen'
 import { ElementName } from 'src/features/telemetry/constants'
-import { SwapScreen, useSwapContext } from 'src/features/transactions/swapRewrite/SwapContext'
+import {
+  SwapScreen,
+  useSwapScreenContext,
+} from 'src/features/transactions/swapRewrite/contexts/SwapScreenContext'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
@@ -11,11 +14,11 @@ export function SwapReview(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
 
-  const { updateSwapForm } = useSwapContext()
+  const { setScreen } = useSwapScreenContext()
 
   const onClose = useCallback((): void => {
-    updateSwapForm({ screen: SwapScreen.SwapForm })
-  }, [updateSwapForm])
+    setScreen(SwapScreen.SwapForm)
+  }, [setScreen])
 
   return (
     <Screen noInsets bg="$surface1" margin="$spacing16" marginBottom="$spacing48">

@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
+import { useSwapFormContext } from 'src/features/transactions/swapRewrite/contexts/SwapFormContext'
 import { ParsedWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
-import { useSwapContext } from 'src/features/transactions/swapRewrite/SwapContext'
 import { SwapWarningModal } from 'src/features/transactions/swapRewrite/SwapWarningModal'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -20,7 +20,7 @@ export function GasAndWarningRows({
 }): JSX.Element {
   const colors = useSporeColors()
 
-  const { derivedSwapInfo } = useSwapContext()
+  const { derivedSwapInfo } = useSwapFormContext()
 
   const { chainId } = derivedSwapInfo
 

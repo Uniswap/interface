@@ -20,6 +20,10 @@ import {
   useSwapTxAndGasInfo,
 } from 'src/features/transactions/swap/hooks'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
+import {
+  SwapScreen,
+  useSwapScreenContext,
+} from 'src/features/transactions/swapRewrite/contexts/SwapScreenContext'
 import { CurrencyInputPanel } from 'src/features/transactions/swapRewrite/CurrencyInputPanel'
 import { DecimalPadInput } from 'src/features/transactions/swapRewrite/DecimalPadInput'
 import { GasAndWarningRows } from 'src/features/transactions/swapRewrite/GasAndWarningRows'
@@ -32,7 +36,7 @@ import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
-import { SwapScreen, useSwapContext } from './SwapContext'
+import { useSwapFormContext } from './contexts/SwapFormContext'
 import { SwapFormHeader } from './SwapFormHeader'
 import { TokenSelector } from './TokenSelector'
 
@@ -41,7 +45,7 @@ const SWAP_DIRECTION_BUTTON_INNER_PADDING = spacing.spacing8 + spacing.spacing2
 const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
 
 export function SwapForm(): JSX.Element {
-  const { selectingCurrencyField } = useSwapContext()
+  const { selectingCurrencyField } = useSwapFormContext()
 
   const { isSheetReady } = useBottomSheetContext()
 
@@ -82,6 +86,8 @@ function SwapFormContent(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
 
+  const { setScreen } = useSwapScreenContext()
+
   const {
     derivedSwapInfo,
     exactAmountFiat,
@@ -94,7 +100,7 @@ function SwapFormContent(): JSX.Element {
     isFiatInput,
     output,
     updateSwapForm,
-  } = useSwapContext()
+  } = useSwapFormContext()
 
   const {
     currencyAmounts,
@@ -272,11 +278,9 @@ function SwapFormContent(): JSX.Element {
   const exactValueRef = isFiatInput ? exactAmountFiatRef : exactAmountTokenRef
 
   const onReview = useCallback(() => {
-    updateSwapForm({
-      screen: SwapScreen.SwapReview,
-      txId: createTransactionId(),
-    })
-  }, [updateSwapForm])
+    updateSwapForm({ txId: createTransactionId() })
+    setScreen(SwapScreen.SwapReview)
+  }, [setScreen, updateSwapForm])
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">

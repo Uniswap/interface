@@ -3,6 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { ElementName } from 'src/features/telemetry/constants'
 import { SwapSettingsModal } from 'src/features/transactions/swap/modals/SwapSettingsModal'
+import {
+  SwapScreen,
+  useSwapScreenContext,
+} from 'src/features/transactions/swapRewrite/contexts/SwapScreenContext'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import DollarSign from 'ui/src/assets/icons/dollar.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
@@ -11,15 +15,17 @@ import { iconSizes } from 'ui/src/theme'
 import { formatPercent } from 'utilities/src/format/format'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { SwapScreen, useSwapContext } from './SwapContext'
+import { useSwapFormContext } from './contexts/SwapFormContext'
 
 export function SwapFormHeader(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const account = useActiveAccountWithThrow()
 
-  const { updateSwapForm, isFiatInput, customSlippageTolerance, screen, derivedSwapInfo } =
-    useSwapContext()
+  const { screen } = useSwapScreenContext()
+
+  const { updateSwapForm, isFiatInput, customSlippageTolerance, derivedSwapInfo } =
+    useSwapFormContext()
 
   const [showSwapSettingsModal, setShowSettingsModal] = useState(false)
 

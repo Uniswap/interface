@@ -13,10 +13,10 @@ import { MobileEventName } from 'src/features/telemetry/constants'
 import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { currencyAddress } from 'wallet/src/utils/currencyId'
-import { SwapFormState, useSwapContext } from './SwapContext'
+import { SwapFormState, useSwapFormContext } from './contexts/SwapFormContext'
 
 export function TokenSelector(): JSX.Element {
-  const swapContext = useSwapContext()
+  const swapContext = useSwapFormContext()
   const { updateSwapForm, selectingCurrencyField, output, input } = swapContext
 
   if (!selectingCurrencyField) {

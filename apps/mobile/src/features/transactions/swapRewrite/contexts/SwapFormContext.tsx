@@ -15,11 +15,6 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
-export enum SwapScreen {
-  SwapForm,
-  SwapReview,
-}
-
 export type SwapFormState = {
   customSlippageTolerance?: number
   exactAmountFiat?: string
@@ -28,7 +23,6 @@ export type SwapFormState = {
   focusOnCurrencyField?: CurrencyField
   input?: TradeableAsset
   output?: TradeableAsset
-  screen: SwapScreen
   selectingCurrencyField?: CurrencyField
   txId?: string
 }
@@ -38,7 +32,7 @@ type DerivedSwapFormState = {
   derivedSwapInfo: ReturnType<typeof useDerivedSwapInfo>
 }
 
-type SwapContextState = {
+type SwapFormContextState = {
   exactAmountFiatRef: React.MutableRefObject<string>
   exactAmountTokenRef: React.MutableRefObject<string>
   onClose: () => void
@@ -60,12 +54,11 @@ const DEFAULT_STATE: Readonly<SwapFormState> = {
   focusOnCurrencyField: CurrencyField.INPUT,
   input: ETH_TRADEABLE_ASSET,
   output: undefined,
-  screen: SwapScreen.SwapForm,
 }
 
-export const SwapContext = createContext<SwapContextState | undefined>(undefined)
+export const SwapFormContext = createContext<SwapFormContextState | undefined>(undefined)
 
-export function SwapContextProvider({
+export function SwapFormContextProvider({
   children,
   prefilledState,
   onClose,
@@ -79,7 +72,7 @@ export function SwapContextProvider({
   const [swapForm, setSwapForm] = useState<SwapFormState>(prefilledState ?? DEFAULT_STATE)
 
   const updateSwapForm = useCallback(
-    (newState: Parameters<SwapContextState['updateSwapForm']>[0]): void => {
+    (newState: Parameters<SwapFormContextState['updateSwapForm']>[0]): void => {
       if ('exactAmountFiat' in newState) {
         exactAmountFiatRef.current = newState.exactAmountFiat ?? ''
       }
@@ -110,8 +103,8 @@ export function SwapContextProvider({
     customSlippageTolerance: swapForm.customSlippageTolerance,
   })
 
-  const state = useMemo<SwapContextState>(
-    (): SwapContextState => ({
+  const state = useMemo<SwapFormContextState>(
+    (): SwapFormContextState => ({
       customSlippageTolerance: swapForm.customSlippageTolerance,
       exactAmountFiat: swapForm.exactAmountFiat,
       exactAmountFiatRef,
@@ -123,7 +116,6 @@ export function SwapContextProvider({
       isFiatInput,
       onClose,
       output: swapForm.output,
-      screen: swapForm.screen,
       selectingCurrencyField: swapForm.selectingCurrencyField,
       setSwapForm,
       txId: swapForm.txId,
@@ -141,21 +133,20 @@ export function SwapContextProvider({
       swapForm.focusOnCurrencyField,
       swapForm.input,
       swapForm.output,
-      swapForm.screen,
       swapForm.selectingCurrencyField,
       swapForm.txId,
       updateSwapForm,
     ]
   )
 
-  return <SwapContext.Provider value={state}>{children}</SwapContext.Provider>
+  return <SwapFormContext.Provider value={state}>{children}</SwapFormContext.Provider>
 }
 
-export const useSwapContext = (): SwapContextState => {
-  const swapContext = useContext(SwapContext)
+export const useSwapFormContext = (): SwapFormContextState => {
+  const swapContext = useContext(SwapFormContext)
 
   if (swapContext === undefined) {
-    throw new Error('`useSwapContext` must be used inside of `SwapContextProvider`')
+    throw new Error('`useSwapFormContext` must be used inside of `SwapFormContextProvider`')
   }
 
   return swapContext

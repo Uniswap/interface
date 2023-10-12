@@ -2,11 +2,14 @@ import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { ModalName, SectionName } from 'src/features/telemetry/constants'
 import {
-  SwapContextProvider,
+  SwapFormContextProvider,
   SwapFormState,
+} from 'src/features/transactions/swapRewrite/contexts/SwapFormContext'
+import {
   SwapScreen,
-  useSwapContext,
-} from 'src/features/transactions/swapRewrite/SwapContext'
+  SwapScreenContextProvider,
+  useSwapScreenContext,
+} from 'src/features/transactions/swapRewrite/contexts/SwapScreenContext'
 import { useSporeColors } from 'ui/src'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import {
@@ -25,7 +28,7 @@ export function SwapFlow({
 }): JSX.Element {
   const colors = useSporeColors()
 
-  // We need this additional `screen` state outside of the `SwapContext` because the `SwapContextProvider` needs to be inside the `BottomSheetModal`.
+  // We need this additional `screen` state outside of the `SwapScreenContext` because the `SwapScreenContextProvider` needs to be inside the `BottomSheetModal`.
   const [screen, setScreen] = useState<SwapScreen>(SwapScreen.SwapForm)
 
   const modifiedPrefilledState = useMemo(
@@ -39,7 +42,6 @@ export function SwapFlow({
             focusOnCurrencyField: getFocusOnCurrencyField(prefilledState),
             input: prefilledState.input ?? undefined,
             output: prefilledState.output ?? undefined,
-            screen: SwapScreen.SwapForm,
             selectingCurrencyField: prefilledState.selectingCurrencyField,
             txId: prefilledState.txId,
           }
@@ -56,9 +58,11 @@ export function SwapFlow({
       hideHandlebar={screen === SwapScreen.SwapForm}
       name={ModalName.Swap}
       onClose={onClose}>
-      <SwapContextProvider prefilledState={modifiedPrefilledState} onClose={onClose}>
-        <CurrentScreen setScreen={setScreen} />
-      </SwapContextProvider>
+      <SwapScreenContextProvider>
+        <SwapFormContextProvider prefilledState={modifiedPrefilledState} onClose={onClose}>
+          <CurrentScreen setScreen={setScreen} />
+        </SwapFormContextProvider>
+      </SwapScreenContextProvider>
     </BottomSheetModal>
   )
 }
@@ -68,7 +72,7 @@ function CurrentScreen({
 }: {
   setScreen: Dispatch<SetStateAction<SwapScreen>>
 }): JSX.Element {
-  const { screen } = useSwapContext()
+  const { screen } = useSwapScreenContext()
 
   useEffect(() => {
     setScreen(screen)
@@ -82,7 +86,11 @@ function CurrentScreen({
         </Trace>
       )
     case SwapScreen.SwapReview:
-      return <SwapReview />
+      return (
+        <Trace logImpression section={SectionName.SwapReview}>
+          <SwapReview />
+        </Trace>
+      )
     default:
       throw new Error(`Unknown screen: ${screen}`)
   }
