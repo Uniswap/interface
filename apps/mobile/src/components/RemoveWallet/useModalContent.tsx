@@ -42,10 +42,7 @@ export const useModalContent = ({
 }: ModalContentParams): ModalContentResult | undefined => {
   const { t } = useTranslation()
 
-  // we want to pull the display name for view only accounts
-  const viewOnlyDisplayName = useDisplayName(
-    account?.type === AccountType.Readonly ? account?.address : undefined
-  )
+  const displayName = useDisplayName(account?.address)
 
   return useMemo(() => {
     // 1st speed bump when removing recovery phrase
@@ -56,7 +53,7 @@ export const useModalContent = ({
             <Text color="$neutral1" variant="body1">
               You’re removing{' '}
               <Text color="$statusCritical" variant="body1">
-                {{ wallet: account?.name }}
+                {{ wallet: displayName?.name }}
               </Text>
             </Text>
           </Trans>
@@ -131,7 +128,7 @@ export const useModalContent = ({
             <Text color="$neutral1" variant="body1">
               You’re removing{' '}
               <Text color="$statusCritical" variant="body1">
-                {{ wallet: account?.name }}
+                {{ wallet: displayName?.name }}
               </Text>
             </Text>
           </Trans>
@@ -159,8 +156,10 @@ export const useModalContent = ({
               You’re removing {/* https://react.i18next.com/latest/trans-component#interpolation */}
               {/* @ts-expect-error: react-i18next uses this ^ syntax and it's not canonic */}
               <Text color="neutral2" variant="body1">
-                {{ wallet: viewOnlyDisplayName?.name }}
+                {{ wallet: displayName?.name }}
               </Text>
+              {/* This `Text` above is redundant, but we need it so we can reuse */}
+              {/* the same translation key, as when the account name should be highlighted. */}
             </Text>
           </Trans>
         ),
@@ -177,7 +176,7 @@ export const useModalContent = ({
     account,
     associatedAccounts,
     currentStep,
-    viewOnlyDisplayName?.name,
+    displayName?.name,
     isRemovingRecoveryPhrase,
     isReplacing,
     t,
