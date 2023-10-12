@@ -6,6 +6,7 @@ import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
 import { usePortfolioBalancesQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { useFiatCurrencyConversion } from 'wallet/src/utils/currency'
 
 interface PortfolioBalanceProps {
   owner: Address
@@ -37,7 +38,11 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
 
   const portfolioBalance = data?.portfolios?.[0]
   const portfolioChange = portfolioBalance?.tokensTotalDenominatedValueChange
-  const totalBalance = portfolioBalance?.tokensTotalDenominatedValue?.value
+
+  const { amount: totalBalance } = useFiatCurrencyConversion(
+    portfolioBalance?.tokensTotalDenominatedValue?.value
+  )
+  const { amount: absoluteChange } = useFiatCurrencyConversion(portfolioChange?.absolute?.value)
 
   return (
     <Flex gap="$spacing4">
@@ -48,7 +53,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
         value={formatUSDPrice(totalBalance, NumberType.PortfolioBalance)}
       />
       <RelativeChange
-        absoluteChange={portfolioChange?.absolute?.value}
+        absoluteChange={absoluteChange}
         arrowSize="$icon.20"
         change={portfolioChange?.percentage?.value}
         loading={isWarmLoading || isLoading}

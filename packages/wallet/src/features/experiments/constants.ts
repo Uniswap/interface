@@ -9,6 +9,7 @@ export enum FEATURE_FLAGS {
   SwapRewrite = 'swap-rewrite',
   PortionFields = 'portion-fields',
   DisableGoogleDriveBackup = 'disable-google-drive-backup',
+  CurrencyConversion = 'currency_conversion',
 }
 
 /**

@@ -29,7 +29,6 @@ export type Scalars = {
 export type ActivityDetails = SwapOrderDetails | TransactionDetails;
 
 export type ActivityDetailsInput = {
-  swapOrder?: InputMaybe<SwapOrderDetailsInput>;
   transaction?: InputMaybe<TransactionDetailsInput>;
 };
 
@@ -266,7 +265,6 @@ export type NftApproval = {
 export type NftApprovalInput = {
   approvedAddress: Scalars['String'];
   asset: NftAssetInput;
-  nftStandard: NftStandard;
 };
 
 export type NftApproveForAll = {
@@ -282,7 +280,6 @@ export type NftApproveForAll = {
 export type NftApproveForAllInput = {
   approved: Scalars['Boolean'];
   asset: NftAssetInput;
-  nftStandard: NftStandard;
   operatorAddress: Scalars['String'];
 };
 
@@ -680,7 +677,6 @@ export type NftTransfer = {
 export type NftTransferInput = {
   asset: NftAssetInput;
   direction: TransactionDirection;
-  nftStandard: NftStandard;
   recipient: Scalars['String'];
   sender: Scalars['String'];
 };
@@ -925,16 +921,6 @@ export type SwapOrderDetails = {
   status: SwapOrderStatus;
 };
 
-export type SwapOrderDetailsInput = {
-  hash: Scalars['String'];
-  inputToken: TokenInput;
-  inputTokenQuantity: Scalars['String'];
-  offerer: Scalars['String'];
-  outputToken: TokenInput;
-  outputTokenQuantity: Scalars['String'];
-  status: SwapOrderStatus;
-};
-
 export enum SwapOrderStatus {
   Error = 'ERROR',
   Expired = 'EXPIRED',
@@ -992,9 +978,13 @@ export type TokenApproval = {
 
 export type TokenApprovalInput = {
   approvedAddress: Scalars['String'];
-  asset: TokenInput;
+  asset: TokenAssetInput;
   quantity: Scalars['String'];
-  tokenStandard: TokenStandard;
+};
+
+export type TokenAssetInput = {
+  address: Scalars['String'];
+  chain: Chain;
 };
 
 export type TokenBalance = {
@@ -1154,12 +1144,11 @@ export type TokenTransfer = {
 };
 
 export type TokenTransferInput = {
-  asset: TokenInput;
+  asset: TokenAssetInput;
   direction: TransactionDirection;
   quantity: Scalars['String'];
   recipient: Scalars['String'];
   sender: Scalars['String'];
-  tokenStandard: TokenStandard;
   transactedValue?: InputMaybe<AmountInput>;
 };
 
@@ -1400,6 +1389,14 @@ export type TokensQueryVariables = Exact<{
 
 
 export type TokensQuery = { __typename?: 'Query', tokens?: Array<{ __typename?: 'Token', symbol?: string | null, chain: Chain, address?: string | null, project?: { __typename?: 'TokenProject', name?: string | null } | null } | null> | null };
+
+export type ConvertQueryVariables = Exact<{
+  fromCurrency: Currency;
+  toCurrency: Currency;
+}>;
+
+
+export type ConvertQuery = { __typename?: 'Query', convert?: { __typename?: 'Amount', id: string, value: number, currency?: Currency | null } | null };
 
 export type PortfolioBalanceQueryVariables = Exact<{
   owner: Scalars['String'];
@@ -2946,6 +2943,47 @@ export function useTokensLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Tok
 export type TokensQueryHookResult = ReturnType<typeof useTokensQuery>;
 export type TokensLazyQueryHookResult = ReturnType<typeof useTokensLazyQuery>;
 export type TokensQueryResult = Apollo.QueryResult<TokensQuery, TokensQueryVariables>;
+export const ConvertDocument = gql`
+    query Convert($fromCurrency: Currency!, $toCurrency: Currency!) {
+  convert(
+    fromAmount: {currency: $fromCurrency, value: 1.0}
+    toCurrency: $toCurrency
+  ) {
+    id
+    value
+    currency
+  }
+}
+    `;
+
+/**
+ * __useConvertQuery__
+ *
+ * To run a query within a React component, call `useConvertQuery` and pass it any options that fit your needs.
+ * When your component renders, `useConvertQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useConvertQuery({
+ *   variables: {
+ *      fromCurrency: // value for 'fromCurrency'
+ *      toCurrency: // value for 'toCurrency'
+ *   },
+ * });
+ */
+export function useConvertQuery(baseOptions: Apollo.QueryHookOptions<ConvertQuery, ConvertQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ConvertQuery, ConvertQueryVariables>(ConvertDocument, options);
+      }
+export function useConvertLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ConvertQuery, ConvertQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ConvertQuery, ConvertQueryVariables>(ConvertDocument, options);
+        }
+export type ConvertQueryHookResult = ReturnType<typeof useConvertQuery>;
+export type ConvertLazyQueryHookResult = ReturnType<typeof useConvertLazyQuery>;
+export type ConvertQueryResult = Apollo.QueryResult<ConvertQuery, ConvertQueryVariables>;
 export const PortfolioBalanceDocument = gql`
     query PortfolioBalance($owner: String!) {
   portfolios(

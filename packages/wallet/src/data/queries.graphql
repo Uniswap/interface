@@ -810,3 +810,11 @@ query Tokens($contracts: [ContractInput!]!) {
     }
   }
 }
+
+  query Convert($fromCurrency: Currency!, $toCurrency: Currency!) {
+    convert(fromAmount: { currency: $fromCurrency, value: 1.0 }, toCurrency: $toCurrency) {
+      id
+      value
+      currency
+    }
+  }
