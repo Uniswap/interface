@@ -11,45 +11,48 @@ import javax.crypto.spec.IvParameterSpec
  * Encrypts a string using an AES/GCM cipher and a key derived from a password and salt.
  *
  * This function creates a key from a password and salt with the function [keyFromPassword].
- * It then creates a Cipher instance for AES/GCM/NoPadding and encrypts the original string.
- * The result of this operation is encoded as Base64 and then returned.
+ * It then creates a Cipher instance for AES/GCM/NoPadding with a given random nonce and
+ * encrypts the original string. The result of this operation is encoded as Base64 and
+ * then returned.
  *
  * @param secret The original plaintext string to be encrypted.
  * @param password The user-supplied password used for generating the encryption key with the salt.
  * @param salt The unique salt used in conjunction with the password for key generation.
+ * @param nonce The unique byte array nonce (IV) used for AES-GCM cipher
  *
  * @return A string representing the Base64 encoded encrypted string.
  *
- * @throws IllegalArgumentException If secret, password, or salt is blank.
+ * @throws IllegalArgumentException If secret, password, salt, or nonce is blank.
  *
  * @see Cipher
  * @see SecretKeySpec
  * @see IvParameterSpec
  * @see Base64
  */
-fun encrypt(secret: String, password: String, salt: String): String {
+fun encrypt(secret: String, password: String, salt: String, nonce: ByteArray): String {
     val key = keyFromPassword(password, salt)
     val cipher = Cipher.getInstance("AES/GCM/NoPadding")
-    cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(key, "AES"), IvParameterSpec(ByteArray(16)))
+    cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(key, "AES"), IvParameterSpec(nonce))
     val encrypted = cipher.doFinal(secret.toByteArray(Charsets.UTF_8))
     return Base64.encodeToString(encrypted, Base64.DEFAULT)
 }
 
 /**
- * Decrypts an AES/GCM encrypted string using a password and salt to provide the decryption key.
+ * Decrypts an AES/GCM encrypted string using a password, salt, and nonce to provide the decryption key.
  *
- * This function generates a key derived from a password and salt. This key is then used
- * in an AES/GCM cipher to decrypt the provided encrypted secret. Returns the decrypted
+ * This function generates a key derived from a password and salt, along with the nonce used for AES-GCM cipher
+ * This key is then used in an AES/GCM cipher to decrypt the provided encrypted secret. Returns the decrypted
  * original string.
  *
  * @param encryptedSecret The encrypted string (in Base64 format) to be decrypted.
  * @param password User-supplied password used along with salt for deriving the decryption key.
  * @param salt A unique string (in Base64 format) used to diversify derived encryption keys
  *             and to protect from rainbow table attacks.
+ * @param nonce A unique byte array used as an nonce/IV for the AES-GCM cipher.
  *
  * @return A UTF-8 encoded string that was decrypted from the encryptedSecret.
  *
- * @throws IllegalArgumentException If password or salt is blank or encryptedSecret is not a valid Base64 string.
+ * @throws IllegalArgumentException If password or salt or nonce is blank or encryptedSecret is not a valid Base64 string.
  *
  * @see Cipher
  * @see SecretKeySpec
@@ -57,10 +60,10 @@ fun encrypt(secret: String, password: String, salt: String): String {
  * @see Base64
  * @see Charsets.UTF_8
  */
-fun decrypt(encryptedSecret: String, password: String, salt: String): String {
+fun decrypt(encryptedSecret: String, password: String, salt: String, nonce: ByteArray): String {
     val key = keyFromPassword(password, salt)
     val cipher = Cipher.getInstance("AES/GCM/NoPadding")
-    cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(key, "AES"), IvParameterSpec(ByteArray(16)))
+    cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(key, "AES"), IvParameterSpec(nonce))
     val original = cipher.doFinal(Base64.decode(encryptedSecret, Base64.DEFAULT))
     return String(original, Charsets.UTF_8)
 }
@@ -113,4 +116,24 @@ fun generateSalt(length: Int): String {
     val secureRandom = SecureRandom()
     secureRandom.nextBytes(bytes)
     return Base64.encodeToString(bytes, Base64.DEFAULT)
+}
+
+/**
+ * Generates a byte array to be used as a nonce/initialization vector.
+ *
+ * This function creates a ByteArray of a given length and populates it
+ * with securely random bytes.
+ *
+ * @param length The length of the byte array to be generated.
+ *
+ * @return A random array of bytes representing the generated nonce.
+ *
+ * @see SecureRandom
+ * @see Base64
+ */
+fun generateNonce(length: Int): ByteArray {
+    val bytes = ByteArray(length)
+    val secureRandom = SecureRandom()
+    secureRandom.nextBytes(bytes)
+    return bytes
 }

@@ -14,6 +14,7 @@ import com.google.gson.Gson
 import decrypt
 import encrypt
 import generateSalt
+import generateNonce
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,13 +30,15 @@ import javax.crypto.IllegalBlockSizeException
  *
  * @property mnemonicId The ID of the mnemonic string.
  * @property encryptedMnemonic The encrypted mnemonic string.
- * @property encryptionSalt The salt used for encryption.
+ * @property encryptionSalt The salt used for generating the encryption key from password.
+ * @property encryptionNonce The nonce used for encryption.
  * @property createdAt The time the backup was created, in seconds since the epoch.
  */
 data class CloudStorageMnemonicBackup(
   val mnemonicId: String,
   val encryptedMnemonic: String,
   val encryptionSalt: String,
+  val encryptionNonce: ByteArray,
   val createdAt: Double,
   val googleDriveEmail: String? = null
 )
@@ -178,8 +181,9 @@ class RNCloudStorageBackupsManager(private val reactContext: ReactApplicationCon
         val mnemonic = rnEthersRS.retrieveMnemonic(mnemonicId)
           ?: throw Exception("rnEthersRs module retrieve mnemonic null")
         val encryptionSalt = generateSalt(16)
+        val encryptionNonce = generateNonce(12)
         val encryptedMnemonic =
-          withContext(Dispatchers.IO) { encrypt(mnemonic, password, encryptionSalt) }
+          withContext(Dispatchers.IO) { encrypt(mnemonic, password, encryptionSalt, encryptionNonce) }
         GoogleDriveApiHelper.getGoogleDrive(reactContext).let { (drive, acc) ->
           if (drive == null) return@launch
           val createdAt = Date().time / 1000.0
@@ -187,6 +191,7 @@ class RNCloudStorageBackupsManager(private val reactContext: ReactApplicationCon
             mnemonicId,
             encryptedMnemonic,
             encryptionSalt,
+            encryptionNonce,
             createdAt,
             acc?.email
           )
@@ -244,12 +249,13 @@ class RNCloudStorageBackupsManager(private val reactContext: ReactApplicationCon
 
           val encryptedMnemonic = mnemonicsBackup?.encryptedMnemonic
           val encryptionSalt = mnemonicsBackup?.encryptionSalt
+          val encryptionNonce = mnemonicsBackup?.encryptionNonce
 
-          if (encryptedMnemonic == null || encryptionSalt == null) throw Exception("Failed to read mnemonics backup")
+          if (encryptedMnemonic == null || encryptionSalt == null || encryptionNonce == null) throw Exception("Failed to read mnemonics backup")
 
           try {
             decryptedMnemonics = withContext(Dispatchers.IO) {
-              decrypt(encryptedMnemonic, password, encryptionSalt)
+              decrypt(encryptedMnemonic, password, encryptionSalt, encryptionNonce)
             }
           } catch (e: BadPaddingException) {
             Log.e("EXCEPTION", "${e.message}")
