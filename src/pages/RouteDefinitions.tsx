@@ -1,6 +1,7 @@
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useInfoPoolPageEnabled } from 'featureFlags/flags/infoPoolPage'
 import { useAtom } from 'jotai'
+import { ExploreTab } from 'pages/Explore'
 import { lazy, ReactNode, Suspense, useMemo } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
@@ -19,6 +20,7 @@ const AddLiquidity = lazy(() => import('pages/AddLiquidity'))
 const Explore = lazy(() => import('pages/Explore'))
 const RedirectDuplicateTokenIds = lazy(() => import('pages/AddLiquidity/redirects'))
 const RedirectDuplicateTokenIdsV2 = lazy(() => import('pages/AddLiquidityV2/redirects'))
+const RedirectExploreTokens = lazy(() => import('pages/Explore/redirects'))
 const MigrateV2 = lazy(() => import('pages/MigrateV2'))
 const MigrateV2Pair = lazy(() => import('pages/MigrateV2/MigrateV2Pair'))
 const NotFound = lazy(() => import('pages/NotFound'))
@@ -104,15 +106,14 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/explore',
     nestedPaths: [':chainName'],
-    getElement: () => <Explore />,
+    getElement: () => <RedirectExploreTokens />,
     enabled: (args) => Boolean(args.infoExplorePageEnabled),
   }),
   createRouteDefinition({
-    path: '/tokens',
+    path: '/explore/tokens',
     nestedPaths: [':chainName'],
-    getElement: (args) => {
-      return args.infoExplorePageEnabled ? <Navigate to="/explore" replace /> : <Explore />
-    },
+    getElement: () => <Explore />,
+    enabled: (args) => Boolean(args.infoExplorePageEnabled),
   }),
   createRouteDefinition({
     path: '/explore/tokens/:chainName/:tokenAddress',
@@ -120,19 +121,34 @@ export const routes: RouteDefinition[] = [
     enabled: (args) => Boolean(args.infoExplorePageEnabled),
   }),
   createRouteDefinition({
-    path: '/tokens/:chainName/:tokenAddress',
+    path: '/tokens',
+    nestedPaths: [':chainName'],
     getElement: (args) => {
-      return args.infoExplorePageEnabled ? (
-        <Navigate to="/explore/tokens/:chainName/:tokenAddress" replace />
-      ) : (
-        <TokenDetails />
-      )
+      return args.infoExplorePageEnabled ? <RedirectExploreTokens /> : <Explore />
     },
   }),
   createRouteDefinition({
-    path: '/pools/:chainName/:poolAddress',
+    path: '/tokens/:chainName/:tokenAddress',
+    getElement: (args) => {
+      return args.infoExplorePageEnabled ? <RedirectExploreTokens /> : <TokenDetails />
+    },
+  }),
+  createRouteDefinition({
+    path: '/explore/pools',
+    nestedPaths: [':chainName'],
+    getElement: () => <Explore initialTab={ExploreTab.Pools} />,
+    enabled: (args) => Boolean(args.infoExplorePageEnabled),
+  }),
+  createRouteDefinition({
+    path: 'explore/pools/:chainName/:poolAddress',
     getElement: () => <PoolDetails />,
-    enabled: (args) => Boolean(args.infoPoolPageEnabled),
+    enabled: (args) => Boolean(args.infoExplorePageEnabled && args.infoPoolPageEnabled),
+  }),
+  createRouteDefinition({
+    path: '/explore/transactions',
+    nestedPaths: [':chainName'],
+    getElement: () => <Explore initialTab={ExploreTab.Transactions} />,
+    enabled: (args) => Boolean(args.infoExplorePageEnabled),
   }),
   createRouteDefinition({
     path: '/vote/*',

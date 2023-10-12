@@ -12,8 +12,8 @@ import TokenTable from 'components/Tokens/TokenTable/TokenTable'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useResetAtom } from 'jotai/utils'
-import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { ThemedText } from 'theme/components'
 
@@ -110,39 +110,55 @@ const SearchContainer = styled(FiltersContainer)<{ isInfoExplorePageEnabled: boo
     ${({ isInfoExplorePageEnabled }) => isInfoExplorePageEnabled && 'justify-content: flex-end;'}
   }
 `
+export enum ExploreTab {
+  Tokens = 'tokens',
+  Pools = 'pools',
+  Transactions = 'transactions',
+}
 
 interface Page {
   title: React.ReactNode
-  key: string
+  key: ExploreTab
   component: () => JSX.Element
   loggingElementName: string
 }
 const Pages: Array<Page> = [
   {
     title: <Trans>Tokens</Trans>,
-    key: 'tokens',
+    key: ExploreTab.Tokens,
     component: TokenTable,
     loggingElementName: InterfaceElementName.EXPLORE_TOKENS_TAB,
   },
   {
     title: <Trans>Pools</Trans>,
-    key: 'pools',
+    key: ExploreTab.Pools,
     component: TokenTable,
     loggingElementName: InterfaceElementName.EXPLORE_POOLS_TAB,
   },
   {
     title: <Trans>Transactions</Trans>,
-    key: 'transactions',
+    key: ExploreTab.Transactions,
     component: TokenTable,
     loggingElementName: InterfaceElementName.EXPLORE_TRANSACTIONS_TAB,
   },
 ]
 
-const Explore = () => {
+const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const resetFilterString = useResetAtom(filterStringAtom)
   const location = useLocation()
-  const [currentTab, setCurrentTab] = useState(0)
+  const navigate = useNavigate()
+
+  const initialKey = useMemo(() => initialTab && Object.values(ExploreTab).indexOf(initialTab), [initialTab])
+  const [currentTab, setCurrentTab] = useState(initialKey ?? 0)
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
+
+  useEffect(() => {
+    const tabFromPath = location.pathname.split('/')[2] // assuming the tab is the third part of the URL
+    const tabIndex = Pages.findIndex((page) => page.key === tabFromPath)
+    if (tabIndex !== -1) {
+      setCurrentTab(tabIndex)
+    }
+  }, [location])
 
   useEffect(() => {
     resetFilterString()
@@ -175,6 +191,7 @@ const Explore = () => {
               {Pages.map(({ title, loggingElementName, key }, index) => {
                 const handleNavItemClick = () => {
                   setCurrentTab(index)
+                  navigate(`/explore/${key}`)
                 }
                 return (
                   <TraceEvent
@@ -195,10 +212,10 @@ const Explore = () => {
             <FiltersContainer isInfoExplorePageEnabled>
               <DropdownFilterContainer isInfoExplorePageEnabled>
                 <NetworkFilter />
-                {currentKey === 'tokens' && <TimeSelector />}
+                {currentKey === ExploreTab.Tokens && <TimeSelector />}
               </DropdownFilterContainer>
               <SearchContainer isInfoExplorePageEnabled>
-                {currentKey !== 'transactions' && <SearchBar tab={currentKey} />}
+                {currentKey !== ExploreTab.Transactions && <SearchBar tab={currentKey} />}
               </SearchContainer>
             </FiltersContainer>
           ) : (
