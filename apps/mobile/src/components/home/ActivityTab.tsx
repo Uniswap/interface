@@ -174,7 +174,7 @@ export const ActivityTab = memo(
           ListFooterComponent={
             <>
               {isLoadingInitially && <Loader.Transaction repeat={4} />}
-              {adaptiveFooter}
+              {isExternalProfile ? null : adaptiveFooter}
             </>
           }
           data={sectionData}

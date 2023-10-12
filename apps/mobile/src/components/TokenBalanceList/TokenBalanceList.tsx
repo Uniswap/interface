@@ -155,7 +155,7 @@ export const TokenBalanceList = forwardRef<FlatList<any>, TokenBalanceListProps>
               </Flex>
             }
             // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
-            ListFooterComponent={adaptiveFooter}
+            ListFooterComponent={isExternalProfile ? null : adaptiveFooter}
             // add negative z index to prevent footer from covering hidden tokens row when minimized
             ListFooterComponentStyle={{ zIndex: zIndices.negative }}
             ListHeaderComponent={

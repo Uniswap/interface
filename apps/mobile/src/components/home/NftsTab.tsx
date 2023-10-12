@@ -137,7 +137,7 @@ export const NftsTab = memo(
       <Flex grow px="$spacing12">
         <NftsList
           ref={ref}
-          ListFooterComponent={adaptiveFooter}
+          ListFooterComponent={isExternalProfile ? null : adaptiveFooter}
           emptyStateStyle={{ paddingHorizontal: spacing.spacing12 }}
           errorStateStyle={containerProps?.emptyContainerStyle}
           footerHeight={footerHeight}
