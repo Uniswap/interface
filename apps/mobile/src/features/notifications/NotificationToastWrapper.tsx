@@ -1,4 +1,3 @@
-import { Portal } from '@gorhom/portal'
 import React from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import {
@@ -27,11 +26,7 @@ export function NotificationToastWrapper(): JSX.Element | null {
 
   if (!notification) return null
 
-  return (
-    <Portal>
-      <NotificationToastRouter notification={notification} />
-    </Portal>
-  )
+  return <NotificationToastRouter notification={notification} />
 }
 
 export function NotificationToastRouter({
