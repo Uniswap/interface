@@ -1,20 +1,16 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { TokenDescription } from 'components/Tokens/TokenDetails/TokenDescription'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { usePoolData } from 'graphql/thegraph/PoolData'
-import NotFound from 'pages/NotFound'
 import { useReducer } from 'react'
 import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
+import { ThemedText } from 'theme/components'
 import { isAddress } from 'utils'
-
-import { PoolDetailsHeader } from './PoolDetailsHeader'
-import { PoolDetailsStats } from './PoolDetailsStats'
-import { PoolDetailsStatsButtons } from './PoolDetailsStatsButtons'
 
 const PageWrapper = styled(Row)`
   padding: 48px;
@@ -80,31 +76,127 @@ export default function PoolDetailsPage() {
   const poolNotFound = (!loading && !poolData) || isInvalidPool
 
   // TODO(WEB-2814): Add skeleton once designed
-  if (loading) return null
-  if (poolNotFound) return <NotFound />
   return (
     <PageWrapper>
-      <PoolDetailsHeader
-        chainId={chainId}
-        poolAddress={poolAddress}
-        token0={token0}
-        token1={token1}
-        feeTier={poolData?.feeTier}
-        toggleReversed={toggleReversed}
-      />
-      <RightColumn>
-        <PoolDetailsStatsButtons chainId={chainId} token0={token0} token1={token1} feeTier={poolData?.feeTier} />
-        {poolData && <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} />}
-        {(token0 || token1) && (
-          <TokenDetailsWrapper>
-            <TokenDetailsHeader>
-              <Trans>Info</Trans>
-            </TokenDetailsHeader>
-            {token0 && <TokenDescription tokenAddress={token0.id} chainId={chainId} />}
-            {token1 && <TokenDescription tokenAddress={token1.id} chainId={chainId} />}
-          </TokenDetailsWrapper>
-        )}
-      </RightColumn>
+      <PoolDetailsLoadingSkeleton />
     </PageWrapper>
+  )
+  // if (poolNotFound) return <NotFound />
+  // return (
+  //   <PageWrapper>
+  //     <PoolDetailsHeader
+  //       chainId={chainId}
+  //       poolAddress={poolAddress}
+  //       token0={token0}
+  //       token1={token1}
+  //       feeTier={poolData?.feeTier}
+  //       toggleReversed={toggleReversed}
+  //     />
+  //     <RightColumn>
+  //       <PoolDetailsStatsButtons chainId={chainId} token0={token0} token1={token1} feeTier={poolData?.feeTier} />
+  //       {poolData && <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} />}
+  //       {(token0 || token1) && (
+  //         <TokenDetailsWrapper>
+  //           <TokenDetailsHeader>
+  //             <Trans>Info</Trans>
+  //           </TokenDetailsHeader>
+  //           {token0 && <TokenDescription tokenAddress={token0.id} chainId={chainId} />}
+  //           {token1 && <TokenDescription tokenAddress={token1.id} chainId={chainId} />}
+  //         </TokenDetailsWrapper>
+  //       )}
+  //     </RightColumn>
+  //   </PageWrapper>
+  // )
+}
+
+const LeftColumn = styled(Column)`
+  gap: 24px;
+  width: 75vw;
+`
+
+const DetailBubble = styled(LoadingBubble)`
+  height: 16px;
+  width: 80px;
+`
+
+const RouteBubble = styled(DetailBubble)`
+  width: 300px;
+`
+
+const IconBubble = styled(LoadingBubble)`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+`
+
+const TokenNameBubble = styled(DetailBubble)`
+  width: 137px;
+`
+
+const TVLBubble = styled(LoadingBubble)`
+  width: 180px;
+  height: 40px;
+`
+
+const ChartSkeleton = styled.div`
+  height: 462px;
+`
+
+const HR = styled.hr`
+  border: 1px solid ${({ theme }) => theme.surface3};
+  margin: 16px 0px;
+  width: 100%;
+`
+
+const ChartHeaderBubble = styled(LoadingBubble)`
+  width: 180px;
+  height: 32px;
+`
+
+const TableHeader = styled(ThemedText.BodySecondary)<{ alignRight?: boolean }>`
+  width: 100%;
+  text-align: ${({ alignRight }) => (alignRight ? 'right' : 'left')};
+`
+
+function PoolDetailsLoadingSkeleton() {
+  return (
+    <LeftColumn>
+      <RouteBubble />
+      <Column gap="sm">
+        <Row gap="8px">
+          <IconBubble />
+          <TokenNameBubble />
+        </Row>
+        <TVLBubble />
+      </Column>
+      {/* TODO Actual Chart skeleton */}
+      <ChartSkeleton />
+      <HR />
+      <ChartHeaderBubble />
+      {/* TODO(WEB-2735): When making table, have headers be shared */}
+      <Row justifyContent="space-between">
+        <TableHeader>
+          <Trans>Time</Trans>
+        </TableHeader>
+        <TableHeader>
+          <Trans>Type</Trans>
+        </TableHeader>
+        <TableHeader>
+          <Trans>USD</Trans>
+        </TableHeader>
+        <TableHeader>
+          <Trans>PEPE</Trans>
+        </TableHeader>
+        <TableHeader>
+          <Trans>ETH</Trans>
+        </TableHeader>
+        <TableHeader>
+          <Trans>Maker</Trans>
+        </TableHeader>
+        <TableHeader>
+          <Trans>Txn</Trans>
+        </TableHeader>
+      </Row>
+    </LeftColumn>
   )
 }
