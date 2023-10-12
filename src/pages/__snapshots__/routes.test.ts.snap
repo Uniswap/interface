@@ -22,7 +22,7 @@ Array [
     "nestedPaths": Array [
       ":chainName",
     ],
-    "path": "/tokens",
+    "path": "/explore/tokens",
   },
   Object {
     "enabled": [Function],
@@ -33,14 +33,38 @@ Array [
   Object {
     "enabled": [Function],
     "getElement": [Function],
+    "nestedPaths": Array [
+      ":chainName",
+    ],
+    "path": "/tokens",
+  },
+  Object {
+    "enabled": [Function],
+    "getElement": [Function],
     "nestedPaths": Array [],
     "path": "/tokens/:chainName/:tokenAddress",
   },
   Object {
     "enabled": [Function],
     "getElement": [Function],
+    "nestedPaths": Array [
+      ":chainName",
+    ],
+    "path": "/explore/pools",
+  },
+  Object {
+    "enabled": [Function],
+    "getElement": [Function],
     "nestedPaths": Array [],
-    "path": "/pools/:chainName/:poolAddress",
+    "path": "explore/pools/:chainName/:poolAddress",
+  },
+  Object {
+    "enabled": [Function],
+    "getElement": [Function],
+    "nestedPaths": Array [
+      ":chainName",
+    ],
+    "path": "/explore/transactions",
   },
   Object {
     "enabled": [Function],

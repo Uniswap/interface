@@ -219,7 +219,7 @@ export default function TokenDetails({
       <TokenDetailsLayout>
         {detailedToken && !isPending ? (
           <LeftPanel>
-            <BreadcrumbNavLink to={(isInfoExplorePageEnabled ? '/explore' : '/tokens') + `/${chain.toLowerCase()}`}>
+            <BreadcrumbNavLink to={`${isInfoExplorePageEnabled ? '/explore' : '/tokens'}/${chain.toLowerCase()}`}>
               <ArrowLeft data-testid="token-details-return-button" size={14} /> Tokens
             </BreadcrumbNavLink>
             <TokenInfoContainer data-testid="token-info-container">
