@@ -37,7 +37,7 @@ if (window.ethereum) {
 
 function Updaters() {
   const location = useLocation()
-  const baseUrl = `${window.location.protocol}//${window.location.host}${location.pathname}`
+  const baseUrl = `${window.location.origin}${location.pathname}`
   return (
     <>
       <Helmet>
