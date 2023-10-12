@@ -9,16 +9,19 @@ import {
   TextInputProps,
   TextInputSelectionChangeEventData,
 } from 'react-native'
+import { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { MaxAmountButton } from 'src/components/input/MaxAmountButton'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
 import { useDynamicFontSizing } from 'src/features/transactions/hooks'
-import { Flex, Text, useSporeColors } from 'ui/src'
-import { fonts } from 'ui/src/theme'
+import { AnimatedFlex, Flex, Text, useSporeColors } from 'ui/src'
+import { fonts, spacing } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'utilities/src/format/format'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
+
+const PADDING_ANIMATION_DURATION = 110
 
 const restyleFunctions = [backgroundColor]
 type RestyleProps = BackgroundColorProps<Theme>
@@ -134,14 +137,22 @@ export const CurrencyInputPanel = memo(function _CurrencyInputPanel({
 
   const placeholderText = isOutput ? t('Receive') : t('Sell')
 
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      paddingVertical: withTiming(focus ? spacing.spacing4 : spacing.none, {
+        duration: PADDING_ANIMATION_DURATION,
+      }),
+    }
+  }, [focus])
+
   return (
     <Flex {...transformedProps} p="$spacing16">
-      <Flex
+      <AnimatedFlex
         row
         alignItems="center"
         gap="$spacing8"
         justifyContent={!currencyInfo ? 'flex-end' : 'space-between'}
-        py={focus ? '$spacing4' : '$none'}>
+        style={animatedStyle}>
         <Flex
           fill
           grow
@@ -188,7 +199,7 @@ export const CurrencyInputPanel = memo(function _CurrencyInputPanel({
             onPress={onShowTokenSelector}
           />
         </Flex>
-      </Flex>
+      </AnimatedFlex>
 
       {currencyInfo && focus && (
         <Flex row alignItems="center" gap="$spacing8" justifyContent="space-between">
