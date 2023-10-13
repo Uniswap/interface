@@ -106,7 +106,7 @@ Set this as your default version:
 `rbenv global 3.2.2`
 
 Install cocoapods:
-`gem install cocoapods -v 1.11.3`
+`gem install cocoapods -v 1.13.0`
 
 ### Add Xcode Command Line Tools
 
