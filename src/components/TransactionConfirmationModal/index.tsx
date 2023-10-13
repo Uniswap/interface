@@ -193,6 +193,10 @@ export function ConfirmationModalContent({
   )
 }
 
+const StyledL2Badge = styled(Badge)`
+  padding: 6px 8px;
+`
+
 function L2Content({
   onDismiss,
   chainId,
@@ -225,12 +229,12 @@ function L2Content({
       <AutoColumn>
         {!inline && (
           <RowBetween mb="16px">
-            <Badge>
-              <RowFixed gap="8px">
+            <StyledL2Badge>
+              <RowFixed gap="sm">
                 <ChainLogo chainId={chainId} />
                 <ThemedText.SubHeaderSmall>{info.label}</ThemedText.SubHeaderSmall>
               </RowFixed>
-            </Badge>
+            </StyledL2Badge>
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
         )}
