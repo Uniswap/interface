@@ -19,7 +19,7 @@ const AddLiquidity = lazy(() => import('pages/AddLiquidity'))
 const Explore = lazy(() => import('pages/Explore'))
 const RedirectDuplicateTokenIds = lazy(() => import('pages/AddLiquidity/redirects'))
 const RedirectDuplicateTokenIdsV2 = lazy(() => import('pages/AddLiquidityV2/redirects'))
-const RedirectExploreTokens = lazy(() => import('pages/Explore/redirects'))
+const RedirectExplore = lazy(() => import('pages/Explore/redirects'))
 const MigrateV2 = lazy(() => import('pages/MigrateV2'))
 const MigrateV2Pair = lazy(() => import('pages/MigrateV2/MigrateV2Pair'))
 const NotFound = lazy(() => import('pages/NotFound'))
@@ -104,8 +104,8 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/explore',
-    nestedPaths: [':chainName', ':tab'],
-    getElement: () => <RedirectExploreTokens />,
+    nestedPaths: [':tab', ':chainName'],
+    getElement: () => <RedirectExplore />,
     enabled: (args) => Boolean(args.infoExplorePageEnabled),
   }),
   createRouteDefinition({
@@ -123,13 +123,13 @@ export const routes: RouteDefinition[] = [
     path: '/tokens',
     nestedPaths: [':chainName'],
     getElement: (args) => {
-      return args.infoExplorePageEnabled ? <RedirectExploreTokens /> : <Explore />
+      return args.infoExplorePageEnabled ? <RedirectExplore /> : <Explore />
     },
   }),
   createRouteDefinition({
     path: '/tokens/:chainName/:tokenAddress',
     getElement: (args) => {
-      return args.infoExplorePageEnabled ? <RedirectExploreTokens /> : <TokenDetails />
+      return args.infoExplorePageEnabled ? <RedirectExplore /> : <TokenDetails />
     },
   }),
   createRouteDefinition({

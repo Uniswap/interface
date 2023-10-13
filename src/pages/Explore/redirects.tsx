@@ -12,18 +12,18 @@ export function useExploreParams() {
     return { tab, chainName, tokenAddress }
   }
 }
-export default function RedirectExploreTokens() {
+export default function RedirectExplore() {
   const { tab, chainName, tokenAddress } = useExploreParams()
 
   if (tab && chainName && tokenAddress) {
     return <Navigate to={`/explore/${tab}/${chainName}/${tokenAddress}`} replace />
   } else if (tab && chainName) {
     return <Navigate to={`/explore/${tab}/${chainName}`} replace />
-  } else if (tab) {
-    return <Explore initialTab={tab as ExploreTab} />
-  } else if (chainName) {
-    return <Navigate to={`/explore/tokens/${chainName}`} replace />
+  } else if (chainName && tokenAddress) {
+    return <Navigate to={`/explore/tokens/${chainName}/${tokenAddress}`} replace />
+  } else if (!tab) {
+    return <Navigate to="/explore/tokens" replace />
   }
 
-  return <Explore />
+  return <Explore initialTab={tab as ExploreTab} />
 }

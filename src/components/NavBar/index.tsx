@@ -70,7 +70,7 @@ export const PageTabs = () => {
         <Trans>Swap</Trans>
       </MenuItem>
       {infoExplorePageEnabled ? (
-        <MenuItem href={`/explore/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/explore')}>
+        <MenuItem href={`/explore/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/explore')}>
           <Trans>Explore</Trans>
         </MenuItem>
       ) : (
