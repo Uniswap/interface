@@ -20,7 +20,7 @@ const currency = ['¥', '£', '€', '$']
 const suffixes = [' ', 'K', 'M', 'B', 'T']
 const delineators = [',', '.']
 
-export default function StatCard(props: StatCardProps) {
+export function StatCard(props: StatCardProps) {
   return (
     <Container>
       <H3>{props.title}</H3>

@@ -1,18 +1,9 @@
 import styled from 'styled-components'
 
-export const Container = styled.div`
-  width: 100%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 80px;
-`
-
 export const H1 = styled.h1`
   padding: 0;
   margin: 0;
-  color: ${({ theme }) => theme.neutral1};
+  color: ${(props) => props.color || props.theme.neutral1};
   text-align: center;
   font-family: Basel;
   font-size: 64px;
@@ -28,12 +19,15 @@ export const H1 = styled.h1`
 export const H2 = styled.h2`
   padding: 0;
   margin: 0;
-  color: ${({ theme }) => theme.neutral1};
+  color: ${(props) => props.color || props.theme.neutral1};
   font-family: Basel;
   font-size: 52px;
   font-style: normal;
   font-weight: 500;
   line-height: 60px; /* 115.385% */
+  @media (max-width: 768px) {
+    font-size: 36px;
+  }
 `
 
 export const H3 = styled.h3`
@@ -44,13 +38,13 @@ export const H3 = styled.h3`
   font-style: normal;
   font-weight: 500;
   line-height: 32px; /* 133.333% */
-  color: ${({ theme }) => theme.neutral1};
+  color: ${(props) => props.color || props.theme.neutral1};
 `
 
 export const Body1 = styled.p`
   padding: 0;
   margin: 0;
-  color: ${({ theme }) => theme.neutral1};
+  color: ${(props) => props.color || props.theme.neutral1};
   font-feature-settings: 'ss07' on;
   /* Body/1 */
   font-family: Basel;
@@ -63,7 +57,7 @@ export const Body1 = styled.p`
 export const Body2 = styled.p`
   padding: 0;
   margin: 0;
-  color: ${({ theme }) => theme.neutral2};
+  color: ${(props) => props.color || props.theme.neutral2};
   text-align: center;
   /* Body/2 */
   font-family: Basel;
@@ -77,7 +71,7 @@ export const Body2 = styled.p`
 export const Subheading = styled.p`
   padding: 0;
   margin: 0;
-  color: ${({ theme }) => theme.neutral2};
+  color: ${(props) => props.color || props.theme.neutral2};
   text-align: center;
   /* Subheading/1 */
   font-family: Basel;

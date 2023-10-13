@@ -16,6 +16,7 @@ const Button = styled(motion.button)`
   background-color: ${({ theme }) => theme.surface1};
   overflow: hidden;
   cursor: pointer;
+  flex: none;
 `
 
 const Slider = styled(motion.div)`
