@@ -150,8 +150,12 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const initialKey = useMemo(() => initialTab && Pages.findIndex((page) => page.key === initialTab), [initialTab])
-  const [currentTab, setCurrentTab] = useState(initialKey ?? 0)
+  const initialKey: number = useMemo(() => {
+    const key = initialTab && Pages.findIndex((page) => page.key === initialTab)
+    if (!key || key === -1) return 0
+    return key
+  }, [initialTab])
+  const [currentTab, setCurrentTab] = useState(initialKey)
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
   // to allow backward navigation between tabs
