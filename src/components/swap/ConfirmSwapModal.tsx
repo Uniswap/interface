@@ -13,17 +13,21 @@ import { ChainLogo } from 'components/Logo/ChainLogo'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { RowFixed } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
+import { BaseVariant } from 'featureFlags'
+import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicatorV2'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import { SwapResult } from 'hooks/useSwapCallback'
 import useWrapCallback from 'hooks/useWrapCallback'
+import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isPreviewTrade } from 'state/routing/utils'
+import { useOrder } from 'state/signatures/hooks'
 import { Field } from 'state/swap/actions'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled from 'styled-components'
@@ -40,6 +44,7 @@ import { ConfirmationModalContent } from '../TransactionConfirmationModal'
 import { RESET_APPROVAL_TOKENS } from './constants'
 import { PendingConfirmModalState, PendingModalContent } from './PendingModalContent'
 import { ErrorModalContent, PendingModalError } from './PendingModalContent/ErrorModalContent'
+import { ProgressIndicator } from './PendingModalContent/ProgressIndicator'
 import SwapModalFooter from './SwapModalFooter'
 import SwapModalHeader from './SwapModalHeader'
 
@@ -303,6 +308,9 @@ export default function ConfirmSwapModal({
     })
 
   const swapStatus = useSwapTransactionStatus(swapResult)
+  const order = useOrder(swapResult?.type === TradeFillType.UniswapX ? swapResult.response.orderHash : '')
+  const swapConfirmed = swapStatus === TransactionStatus.Confirmed || order?.status === UniswapXOrderStatus.FILLED
+  const showProgressIndicatorV2 = useProgressIndicatorV2Flag() === BaseVariant.Enabled
 
   // Swap was reverted onchain.
   const swapReverted = swapStatus === TransactionStatus.Failed
@@ -330,6 +338,15 @@ export default function ConfirmSwapModal({
     }
   }, [lastExecutionPrice, setLastExecutionPrice, trade])
 
+  const getErrorType = () => {
+    if (approvalError) return approvalError
+    // SignatureExpiredError is a special case. The UI is shown in the PendingModalContent component.
+    if (swapError instanceof SignatureExpiredError) return
+    if (swapError && !didUserReject(swapError)) return PendingModalError.CONFIRMATION_ERROR
+    return
+  }
+  const errorType = getErrorType()
+
   const onModalDismiss = useCallback(() => {
     if (showAcceptChanges) {
       // If the user dismissed the modal while showing the price update, log the event as rejected.
@@ -346,11 +363,26 @@ export default function ConfirmSwapModal({
   }, [onCancel, onDismiss, priceUpdate, showAcceptChanges, trade])
 
   const modalHeader = useCallback(() => {
-    if (confirmModalState !== ConfirmModalState.REVIEWING && !showAcceptChanges) {
+    // Header remains visible above V2 of the progress indicator until swap is finalized (i.e. success or failure)
+    const lastStepComplete = swapConfirmed || errorType
+    const isSingleStep = confirmModalState !== ConfirmModalState.REVIEWING && pendingModalSteps.length === 1
+    if (showProgressIndicatorV2 && (isSingleStep || lastStepComplete)) {
+      return null
+    } else if (!showProgressIndicatorV2 && confirmModalState !== ConfirmModalState.REVIEWING && !showAcceptChanges) {
       return null
     }
     return <SwapModalHeader inputCurrency={inputCurrency} trade={trade} allowedSlippage={allowedSlippage} />
-  }, [allowedSlippage, confirmModalState, showAcceptChanges, trade, inputCurrency])
+  }, [
+    showProgressIndicatorV2,
+    swapConfirmed,
+    errorType,
+    confirmModalState,
+    showAcceptChanges,
+    pendingModalSteps.length,
+    inputCurrency,
+    trade,
+    allowedSlippage,
+  ])
 
   const modalBottom = useCallback(() => {
     if (confirmModalState === ConfirmModalState.REVIEWING || showAcceptChanges) {
@@ -367,6 +399,20 @@ export default function ConfirmSwapModal({
           showAcceptChanges={showAcceptChanges}
           onAcceptChanges={onAcceptChanges}
           swapErrorMessage={swapFailed ? swapError?.message : undefined}
+        />
+      )
+    } else if (showProgressIndicatorV2 && !swapConfirmed && pendingModalSteps.length > 1) {
+      return (
+        <ProgressIndicator
+          steps={pendingModalSteps}
+          currentStep={confirmModalState}
+          trade={trade}
+          swapResult={swapResult}
+          wrapTxHash={wrapTxHash}
+          tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
+          revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
+          swapError={swapError}
+          onRetryUniswapXSignature={onConfirm}
         />
       )
     }
@@ -387,6 +433,7 @@ export default function ConfirmSwapModal({
   }, [
     confirmModalState,
     showAcceptChanges,
+    showProgressIndicatorV2,
     pendingModalSteps,
     trade,
     swapResult,
@@ -399,6 +446,7 @@ export default function ConfirmSwapModal({
     fiatValueOutput,
     onAcceptChanges,
     swapFailed,
+    swapConfirmed,
     onConfirm,
   ])
 
@@ -416,15 +464,6 @@ export default function ConfirmSwapModal({
     }
     return undefined
   }
-
-  const getErrorType = () => {
-    if (approvalError) return approvalError
-    // SignatureExpiredError is a special case. The UI is shown in the PendingModalContent component.
-    if (swapError instanceof SignatureExpiredError) return
-    if (swapError && !didUserReject(swapError)) return PendingModalError.CONFIRMATION_ERROR
-    return
-  }
-  const errorType = getErrorType()
 
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
