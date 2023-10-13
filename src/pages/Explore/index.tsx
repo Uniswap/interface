@@ -17,6 +17,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { ThemedText } from 'theme/components'
 
+import { useExploreParams } from './redirects'
+
 const ExploreContainer = styled.div`
   width: 100%;
   min-width: 320px;
@@ -148,17 +150,18 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const initialKey = useMemo(() => initialTab && Object.values(ExploreTab).indexOf(initialTab), [initialTab])
+  const initialKey = useMemo(() => initialTab && Pages.findIndex((page) => page.key === initialTab), [initialTab])
   const [currentTab, setCurrentTab] = useState(initialKey ?? 0)
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
+  // to allow backward navigation between tabs
+  const { tab } = useExploreParams()
   useEffect(() => {
-    const tabFromPath = location.pathname.split('/')[2] // assuming the tab is the third part of the URL
-    const tabIndex = Pages.findIndex((page) => page.key === tabFromPath)
+    const tabIndex = Pages.findIndex((page) => page.key === tab)
     if (tabIndex !== -1) {
       setCurrentTab(tabIndex)
     }
-  }, [location])
+  }, [tab])
 
   useEffect(() => {
     resetFilterString()

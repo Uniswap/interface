@@ -9,6 +9,7 @@ import {
   validateUrlChainParam,
 } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { useExploreParams } from 'pages/Explore/redirects'
 import { useRef } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -126,6 +127,7 @@ export default function NetworkFilter() {
   const toggleMenu = useToggleModal(ApplicationModal.NETWORK_FILTER)
   useOnClickOutside(node, open ? toggleMenu : undefined)
   const navigate = useNavigate()
+  const { tab } = useExploreParams()
 
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
@@ -167,7 +169,7 @@ export default function NetworkFilter() {
                 data-testid={`tokens-network-filter-option-${network.toLowerCase()}`}
                 onClick={() => {
                   isInfoExplorePageEnabled
-                    ? navigate(`/explore/${network.toLowerCase()}`)
+                    ? navigate(`/explore/${tab}/${network.toLowerCase()}`)
                     : navigate(`/tokens/${network.toLowerCase()}`)
                   toggleMenu()
                 }}

@@ -1,7 +1,6 @@
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useInfoPoolPageEnabled } from 'featureFlags/flags/infoPoolPage'
 import { useAtom } from 'jotai'
-import { ExploreTab } from 'pages/Explore'
 import { lazy, ReactNode, Suspense, useMemo } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
@@ -105,13 +104,13 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/explore',
-    nestedPaths: [':chainName'],
+    nestedPaths: [':chainName', ':tab'],
     getElement: () => <RedirectExploreTokens />,
     enabled: (args) => Boolean(args.infoExplorePageEnabled),
   }),
   createRouteDefinition({
-    path: '/explore/tokens',
-    nestedPaths: [':chainName'],
+    path: '/explore',
+    nestedPaths: [':tab/:chainName'],
     getElement: () => <Explore />,
     enabled: (args) => Boolean(args.infoExplorePageEnabled),
   }),
@@ -134,21 +133,9 @@ export const routes: RouteDefinition[] = [
     },
   }),
   createRouteDefinition({
-    path: '/explore/pools',
-    nestedPaths: [':chainName'],
-    getElement: () => <Explore initialTab={ExploreTab.Pools} />,
-    enabled: (args) => Boolean(args.infoExplorePageEnabled),
-  }),
-  createRouteDefinition({
     path: 'explore/pools/:chainName/:poolAddress',
     getElement: () => <PoolDetails />,
     enabled: (args) => Boolean(args.infoExplorePageEnabled && args.infoPoolPageEnabled),
-  }),
-  createRouteDefinition({
-    path: '/explore/transactions',
-    nestedPaths: [':chainName'],
-    getElement: () => <Explore initialTab={ExploreTab.Transactions} />,
-    enabled: (args) => Boolean(args.infoExplorePageEnabled),
   }),
   createRouteDefinition({
     path: '/vote/*',

@@ -13,6 +13,7 @@ Array [
     "getElement": [Function],
     "nestedPaths": Array [
       ":chainName",
+      ":tab",
     ],
     "path": "/explore",
   },
@@ -20,9 +21,9 @@ Array [
     "enabled": [Function],
     "getElement": [Function],
     "nestedPaths": Array [
-      ":chainName",
+      ":tab/:chainName",
     ],
-    "path": "/explore/tokens",
+    "path": "/explore",
   },
   Object {
     "enabled": [Function],
@@ -47,24 +48,8 @@ Array [
   Object {
     "enabled": [Function],
     "getElement": [Function],
-    "nestedPaths": Array [
-      ":chainName",
-    ],
-    "path": "/explore/pools",
-  },
-  Object {
-    "enabled": [Function],
-    "getElement": [Function],
     "nestedPaths": Array [],
     "path": "explore/pools/:chainName/:poolAddress",
-  },
-  Object {
-    "enabled": [Function],
-    "getElement": [Function],
-    "nestedPaths": Array [
-      ":chainName",
-    ],
-    "path": "/explore/transactions",
   },
   Object {
     "enabled": [Function],
