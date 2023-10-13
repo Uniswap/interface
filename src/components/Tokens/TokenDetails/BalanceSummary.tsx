@@ -221,6 +221,7 @@ export default function BalanceSummary({ token, tokenQuery }: { token: Currency;
             balance.token?.name
             // add: logoSrc
           ) // should be crosschain? used to get portlogo
+          // doesn't currently work with Native tokens rip
 
           return (
             <Balance
