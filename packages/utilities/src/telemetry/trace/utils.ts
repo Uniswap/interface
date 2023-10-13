@@ -1,5 +1,6 @@
 import React from 'react'
 import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native'
+import { logger } from 'utilities/src/logger/logger'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
@@ -21,8 +22,22 @@ export function getEventHandlers(
   > = {}
   for (const event of EVENTS_HANDLED) {
     eventHandlers[event] = (eventHandlerArgs: unknown): void => {
+      if (!child.props[event]) {
+        logger.error(new Error('Found a null handler while logging an event'), {
+          tags: {
+            file: 'trace/utils.ts',
+            function: 'getEventHandlers',
+          },
+          extra: {
+            eventName,
+            ...consumedProps,
+            ...properties,
+          },
+        })
+      }
+
       // call child event handler with original arguments
-      child.props[event].apply(child, [eventHandlerArgs])
+      child.props[event]?.apply(child, [eventHandlerArgs])
 
       // augment handler with analytics logging
       analytics.sendEvent(eventName, {
