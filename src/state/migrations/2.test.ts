@@ -8,7 +8,7 @@ import { migration2, PersistAppStateV2 } from './2'
 const previousState: PersistAppStateV2 = {
   user: {
     userLocale: null,
-    // @ts-ignore, this is a deprecated router preference
+    // @ts-ignore this is intentionally a string and not the `RouterPreference` enum because `client` is a deprecated option
     userRouterPreference: 'client',
     userHideClosedPositions: false,
     userSlippageTolerance: SlippageTolerance.Auto,
@@ -20,7 +20,7 @@ const previousState: PersistAppStateV2 = {
     hideBaseWalletBanner: false,
   },
   _persist: {
-    version: 0,
+    version: 1,
     rehydrated: true,
   },
 }
