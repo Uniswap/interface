@@ -72,7 +72,7 @@ async function checkCocoaPodsVersion() {
     })
     const changedCocoaPodsVersion = changedLines.some((change) => change.content.includes('COCOAPODS: '))
     if (changedCocoaPodsVersion) {
-      warn(`You're changing the Podfile version! Ensure you are using the correct version / this change is intentional.`)
+      fail(`You're changing the Podfile version! Ensure you are using the correct version. If this change is intentional, you should ignore this check and merge anyways.`)
     }
   }
 }
