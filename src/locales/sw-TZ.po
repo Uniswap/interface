@@ -1,0 +1,3734 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2023-10-13 18:34+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: sw_TZ\n"
+"Project-Id-Version: uniswap-interface\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2023-10-13 19:20\n"
+"Last-Translator: \n"
+"Language-Team: Swahili, Tanzania\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: uniswap-interface\n"
+"X-Crowdin-Project-ID: 458284\n"
+"X-Crowdin-Language: sw-TZ\n"
+"X-Crowdin-File: en-US.po\n"
+"X-Crowdin-File-ID: 4\n"
+
+#: src/pages/CreateProposal/index.tsx
+#: src/pages/Vote/Landing.tsx
+msgid "Create proposal"
+msgstr "Tengeneza pendekezo"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "No pool found."
+msgstr "Hakuna dimbwi lililopatikana."
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't traded on leading U.S. centralized exchanges.} other {These tokens aren't traded on leading U.S. centralized exchanges.}}"
+msgstr "{0, plural, =1 {Tokeni hii haiuzwi kwenye masoko ya kati ya Marekani yanayoongoza.} other {Tokeni hizi haziuzwi kwenye ubadilishanaji wa kati wa Marekani.}}"
+
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+msgid "Your transaction may be frontrun and result in an unfavorable trade."
+msgstr "Muamala wako unaweza kuwa wa mbele na kusababisha biashara isiyofaa."
+
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
+msgid "Buy crypto"
+msgstr "Nunua crypto"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Unknown Swap"
+msgstr "Ubadilishanaji Usiojulikana"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Supplying {0} {1} and {2} {3}"
+msgstr "Kusambaza {0} {1} na {2} {3}"
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "{0, plural, =1 {{1}} other {{2}}}"
+msgstr "{0, plural, =1 {{1}} other {{2}}}"
+
+#: src/components/Banner/BaseAnnouncementBanner/index.tsx
+msgid "Swap on <0><1/></0> BASE in the Uniswap wallet"
+msgstr "Badilika na <0><1/></0> BASE kwenye pochi ya Uniswap"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feature Flags"
+msgstr "Bendera za Kipengele"
+
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
+msgid "Claim Uniswap NFT Airdrop"
+msgstr "Dai Uniswap NFT Airdrop"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Add V2 liquidity failed"
+msgstr "Imeshindwa kuongeza ukwasi wa V2"
+
+#: src/pages/Swap/index.tsx
+msgid "Swap anyway"
+msgstr "Badili hata hivyo"
+
+#: src/pages/Landing/index.tsx
+msgid "Buy, sell, and explore tokens and NFTs"
+msgstr "Nunua, uza na uchunguze tokeni na NFTs"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Try the"
+msgstr "Jaribu"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Manage this pool."
+msgstr "Simamia dimbwi hili."
+
+#: src/nft/components/profile/list/ListPage.tsx
+msgid "My NFTs"
+msgstr "NFTs zangu"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Receive cancelled"
+msgstr "Kupokea kumeghairiwa"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Allow LP token migration"
+msgstr "Ruhusu uhamiaji wa ishara za LP"
+
+#: src/nft/components/profile/list/SetDurationModal.tsx
+msgid "{amount, plural, =1 {day} other {days}}"
+msgstr "{amount, plural, =1 {siku} other {siku}}"
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Your onchain transactions and crypto purchases will appear here."
+msgstr "Miamala yako ya onchain na ununuzi wa cryptocurrency utaonekana hapa."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Withdrew"
+msgstr "Alijiondoa"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execute proposal {proposalId}"
+msgstr "Tekeleza pendekezo {proposalId}"
+
+#: src/nft/components/details/AssetActivity.tsx
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
+msgid "To"
+msgstr "Kwa"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting starts approximately {0}"
+msgstr "Upigaji kura huanza takriban {0}"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Fees"
+msgstr "Ada"
+
+#: src/state/swap/hooks.tsx
+msgid "Connecting wallet..."
+msgstr "Inaunganisha pochi..."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Collect fees failed"
+msgstr "Imeshindwa kukusanya ada"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Removed Liquidity"
+msgstr "Imeondolewa Ukwasi"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Deploying"
+msgstr "Inapeleka"
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "No tokens yet"
+msgstr "Bado hakuna tokeni"
+
+#: src/components/Tokens/TokenDetails/TokenDescription.tsx
+msgid "Twitter"
+msgstr "Twitter"
+
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
+msgid "Select token"
+msgstr "Chagua tokeni"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+#: src/pages/PoolDetails/PoolDetailsStats.tsx
+msgid "24H volume"
+msgstr "Kiasi cha 24H"
+
+#: src/components/Charts/PriceChart/index.tsx
+msgid "Invalid chart"
+msgstr "Chati batili"
+
+#: src/components/swap/PendingModalContent/TransitionText.tsx
+msgid "{transitionText}"
+msgstr "{transitionText}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "Kasimu mamlaka ya kupiga kura kwa {0}"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Download Uniswap Wallet"
+msgstr "Pakua Uniswap Wallet"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "Piga kura kwa pendekezo {proposalKey}"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Tip:"
+msgstr "Kidokezo:"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Create {0}/{1} V3 pool"
+msgstr "Kujenga {0}/{1} V3 pool"
+
+#: src/nft/components/details/AssetActivity.tsx
+msgid "Event"
+msgstr "Tukio"
+
+#: src/components/PositionListItem/index.tsx
+msgid "Min:"
+msgstr "Dak:"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "ETH Registrar Controller"
+msgstr "Mdhibiti wa Msajili wa ETH"
+
+#: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
+msgid "Switch to {0}"
+msgstr "Badilisha hadi {0}"
+
+#: src/components/InputStepCounter/InputStepCounter.tsx
+msgid "{tokenB} per {tokenA}"
+msgstr "{tokenB} kwa {tokenA}"
+
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/AddressClaimModal.tsx
+msgid "{0} UNI"
+msgstr "{0} UN"
+
+#: src/hooks/useUniversalRouter.ts
+msgid "Your swap is expected to fail."
+msgstr "Ubadilishanaji wako unatarajiwa kutofaulu."
+
+#: src/components/NavBar/UkDisclaimerModal.tsx
+#: src/nft/components/profile/list/PriceTextInput.tsx
+msgid "Dismiss"
+msgstr "Ondoa"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collecting"
+msgstr "Kusanya"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Unlock voting"
+msgstr "Fungua upigaji kura"
+
+#: src/pages/Pool/index.tsx
+msgid "New position"
+msgstr "Nafasi mpya"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Queuing"
+msgstr "Kupanga foleni"
+
+#: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Explore tokens"
+msgstr "Chunguza tokeni"
+
+#: src/nft/components/bag/ButtonStates.tsx
+msgid "Insufficient pool liquidity to complete transaction"
+msgstr "Upungufu wa ukwasi wa bwawa kukamilisha shughuli"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Added V2 liquidity"
+msgstr "Aliongeza ukwasi wa V2"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+#: src/pages/PoolDetails/PoolDetailsStats.tsx
+msgid "Stats"
+msgstr "Takwimu"
+
+#: src/nft/components/bag/ButtonStates.tsx
+msgid "Pay Anyway"
+msgstr "Lipa Hata hivyo"
+
+#: src/pages/Pool/index.tsx
+msgid "More"
+msgstr "Zaidi"
+
+#: src/nft/components/collection/ActivityCells.tsx
+#: src/nft/components/collection/CollectionAsset.tsx
+msgid "Add to bag"
+msgstr "Ongeza kwenye begi"
+
+#: src/pages/PoolDetails/PoolDetailsStats.tsx
+msgid "Pool balances"
+msgstr "Mizani ya bwawa"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.} other {These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.}}"
+msgstr "{0, plural, =1 {Tokeni hii haiuzwi kwenye masoko ya kati ya Marekani au hubadilishwa mara kwa mara kwenye Uniswap.} other {Tokeni hizi haziuzwi kwenye masoko ya kati ya Marekani au hubadilishwa mara kwa mara kwenye Uniswap.}}"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Ethereum Name Service"
+msgstr "Huduma ya Jina la Ethereum"
+
+#: src/nft/components/bag/ButtonStates.tsx
+msgid "Refunds for unavailable items will be given in ETH"
+msgstr "Urejeshaji pesa wa bidhaa ambazo hazipatikani utatolewa katika ETH"
+
+#: src/components/Polling/ChainConnectivityWarning.tsx
+msgid "{label} might be down right now, or you may have lost your network connection."
+msgstr "{label} inaweza kuwa chini sasa hivi, au unaweza kuwa umepoteza muunganisho wako wa mtandao."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Burning"
+msgstr "Kuungua"
+
+#: src/pages/Vote/Landing.tsx
+msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
+msgstr "Kiwangu cha chini cha 0.25% ya jumla ya usambazaji wa UNI inahitajika kuwasilisha mapendekezo"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Borrowing"
+msgstr "Kukopa"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting ended {0}"
+msgstr "Upigaji kura uliisha {0}"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "Rates"
+msgstr "Viwango"
+
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Finalizing quote..."
+msgstr "Inamalizia kunukuu..."
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
+msgstr "Wewe ndiye mtoaji wa kwanza wa ukwasi wa dimbwi hili la V3 lisilobadilishwa. Ukwasi wako kuhamia kwa bei {0}"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Proceed in your wallet"
+msgstr "Endelea kwenye mkoba wako"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Add {0}"
+msgstr "Ongeza {0}"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Increase liquidity"
+msgstr "Kuongeza ukwasi"
+
+#: src/components/Polling/ChainConnectivityWarning.tsx
+msgid "Network warning"
+msgstr "Onyo la mtandao"
+
+#: src/components/swap/TradePrice.tsx
+msgid "({0})"
+msgstr "({0})"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "MAX"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "(View on Explorer)"
+msgstr "(Fungua kwa uchunguzi zaidi)"
+
+#: src/components/AccountDrawer/UniwalletModal.tsx
+msgid "Scan with Uniswap Wallet"
+msgstr "Changanua kwa Uniswap Wallet"
+
+#: src/components/WalletModal/ConnectionErrorView.tsx
+msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
+msgstr "Jaribio la kuunganisha halikufaulu. Tafadhali bofya jaribu tena na ufuate hatua za kuunganisha kwenye pochi yako."
+
+#: src/components/NavBar/SearchBarDropdown.tsx
+msgid "Recent searches"
+msgstr "Utafutaji wa hivi majuzi"
+
+#: src/components/NavBar/SearchBarDropdown.tsx
+msgid "Popular NFT collections"
+msgstr "Mikusanyiko maarufu ya NFT"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Connect to a wallet to find pools"
+msgstr "Unganisha kwenye mkoba kupata mabwawa"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are approvals required?"
+msgstr "Kwa nini vibali vinahitajika?"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Price difference:"
+msgstr "Tofauti ya bei:"
+
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+msgid "Pay"
+msgstr "Lipa"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queueing"
+msgstr "Kupanga foleni"
+
+#: src/nft/components/bag/ButtonStates.tsx
+msgid "Approve in your wallet"
+msgstr "Idhinisha kwenye mkoba wako"
+
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "Allow {0} (one time)"
+msgstr "Ruhusu {0} (mara moja)"
+
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
+msgstr "Pato inakadiriwa. Ikiwa bei itabadilika kwa zaidi ya {0}% shughuli yako itarejea."
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Learn about providing liquidity"
+msgstr "Jifunze juu ya kutoa ukwasi"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Deposited"
+msgstr "Imewekwa"
+
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "{0} Try increasing your slippage tolerance.\n"
+"Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "{0} Jaribu kuongeza uvumilivu wako wa kuteleza. Kumbuka\n"
+": tokeni za ada-ya-hamisha na kuweka upya hazioani na Uniswap V3."
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Queue proposal {proposalKey}."
+msgstr "Pendekezo la foleni {proposalKey}."
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Set price range"
+msgstr "Weka anuwai ya bei"
+
+#: src/components/RangeSelector/PresetsButtons.tsx
+msgid "Full range"
+msgstr "Masafa kamili"
+
+#: src/nft/components/profile/list/RoyaltyTooltip.tsx
+msgid "Max creator royalties"
+msgstr "Mrahaba wa juu zaidi wa watayarishi"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Delegate failed"
+msgstr "Mjumbe ameshindwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "DNS Registrar"
+msgstr "Msajili wa DNS"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "Dai zawadi ya UNI kwa {0}"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I understand"
+msgstr "Naelewa"
+
+#: src/components/PositionPreview/index.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "Max price"
+msgstr "Bei ya juu"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Proposer"
+msgstr "Mtangazaji"
+
+#: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
+msgid "This token doesn't exist"
+msgstr "Tokeni hii haipo"
+
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "$-"
+msgstr "$ -"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches the optimal trade route from a Uniswap Labs server."
+msgstr "Programu hutafuta njia mojawapo ya biashara kutoka kwa seva ya Uniswap Labs."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "Bora kwa jozi imara sana."
+
+#: src/hooks/useUniversalRouter.ts
+msgid "Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds."
+msgstr "Ubadilishanaji wako ulirekebishwa kupitia pochi yako. Ikiwa hili lilikuwa kosa, tafadhali ghairi mara moja au ujihatarishe kupoteza pesa zako."
+
+#: src/constants/tokenSafety.tsx
+msgid "Token not found"
+msgstr "Ishara haijapatikana"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "Share of Pool:"
+msgstr "Shiriki la Dimbwi:"
+
+#: src/nft/components/collection/TransactionCompleteModal.tsx
+msgid "Complete!"
+msgstr "Kamilisha!"
+
+#: src/components/AccountDrawer/MiniPortfolio/index.tsx
+#: src/components/NavBar/index.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
+msgid "Tokens"
+msgstr "Ishara"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Proposals"
+msgstr "Mapendekezo"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
+msgid "Retry"
+msgstr "Jaribu tena"
+
+#: src/nft/utils/time.ts
+msgid "months"
+msgstr "miezi"
+
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Show less"
+msgstr "Onyesha kidogo"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Repay failed"
+msgstr "Imeshindwa kurejesha"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Liquidity"
+msgstr "Kioevu"
+
+#: src/components/WalletModal/PrivacyPolicyNotice.tsx
+msgid "and consent to its"
+msgstr "na kuridhia kwake"
+
+#: src/components/PositionCard/index.tsx
+msgid "{0} %"
+msgstr "{0} %"
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Total"
+msgstr "Jumla"
+
+#: src/components/NavBar/ChainSelectorRow.tsx
+msgid "Approve in wallet"
+msgstr "Idhinisha kwenye mkoba"
+
+#: src/nft/components/collection/CollectionAsset.tsx
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "Remove from bag"
+msgstr "Ondoa kwenye begi"
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Liquidity data not available."
+msgstr "Data ya kioevu haipatikani."
+
+#: src/components/vote/DelegateModal.tsx
+msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
+msgstr "Unaweza kupiga kura juu ya kila pendekezo mwenyewe au upe kura zako kwa mtu wa tatu."
+
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
+msgid "Failed"
+msgstr "Imeshindwa"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Price range"
+msgstr "Kiwango cha bei"
+
+#: src/pages/Landing/index.tsx
+msgid "Trade crypto with confidence"
+msgstr "Biashara crypto kwa kujiamini"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Back to Pools"
+msgstr "Rudi kwenye Madimbwi"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Your account had insufficent funds to complete this swap."
+msgstr "Akaunti yako haikuwa na pesa za kutosha kukamilisha ubadilishanaji huu."
+
+#: src/components/swap/UnsupportedCurrencyFooter.tsx
+msgid "Unsupported assets"
+msgstr "Vipengee visivyotumika"
+
+#: src/components/Charts/PriceChart/index.tsx
+msgid "Missing price data due to recently low trading volume on Uniswap v3"
+msgstr "Data ya bei haipo kwa sababu ya kiwango cha chini cha biashara cha hivi majuzi kwenye Uniswap v3"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Confirm"
+msgstr "Kubali"
+
+#: src/components/PositionPreview/index.tsx
+#: src/components/PositionPreview/index.tsx
+#: src/components/PositionPreview/index.tsx
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "{0} per {1}"
+msgstr "{0} kwa {1}"
+
+#: src/pages/Pool/v2.tsx
+msgid "Read more about providing liquidity"
+msgstr "Soma zaidi juu ya kutoa ukwasi"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
+msgstr "Kura tu za UNI ambazo zilikabidhiwa kibinafsi au kupelekwa kwa anwani nyingine kabla ya kizuizi {0} zinastahili kupiga kura."
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "{0} NFTs are listed significantly"
+msgstr "NFT {0} zimeorodheshwa kwa kiasi kikubwa"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to {0}"
+msgstr "Fungua <0/> hadi {0}"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "<0>Current price:</0><1>{0}</1>{1}"
+msgstr "<0>Bei ya sasa:</0><1>{0}</1>{1}"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Approved"
+msgstr "Imesibitishwa"
+
+#: src/components/addLiquidity/OwnershipWarning.tsx
+msgid "You are not the owner of this LP position. You will not be able to withdraw the liquidity from this position unless you own the following address: {ownerAddress}"
+msgstr "Wewe si mmiliki wa nafasi hii ya LP. Hutaweza kuondoa ukwasi kutoka kwa nafasi hii isipokuwa unamiliki anwani ifuatayo: {ownerAddress}"
+
+#: src/components/swap/SwapLineItem.tsx
+msgid "Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees."
+msgstr "Ishara zingine huchukua ada wakati zinunuliwa au kuuzwa, ambayo imewekwa na mtoaji wa ishara. Uniswap haipokei yoyote ya ada hizi."
+
+#: src/components/swap/SwapModalHeader.tsx
+#: src/nft/components/profile/list/ListPage.tsx
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+#: src/pages/Swap/index.tsx
+msgid "You receive"
+msgstr "Unapokea"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit approval failed"
+msgstr "Uidhinishaji wa kibali umeshindwa"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Sorry, an error occured while processing your request. If you request support, be sure to copy the details of this error."
+msgstr "Samahani, hitilafu ilitokea wakati wa kuchakata ombi lako. Ukiomba usaidizi, hakikisha unakili maelezo ya hitilafu hii."
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Vote in governance"
+msgstr "Piga kura katika utawala"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Bought"
+msgstr "Imenunuliwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/index.tsx
+#: src/components/NavBar/index.tsx
+msgid "NFTs"
+msgstr "NFTs"
+
+#: src/components/Web3Status/index.tsx
+msgid "{pendingActivityCount} Pending"
+msgstr "{pendingActivityCount} Inasubiri"
+
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "${0}"
+msgstr "${0}"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Add liquidity cancelled"
+msgstr "Kuongeza ukwasi kughairiwa"
+
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "{0, plural, =1 {collection} other {collections}}"
+msgstr "{0, plural, =1 {mkusanyiko} other {makusanyo}}"
+
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Custom"
+msgstr "Desturi"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
+msgstr "Ingiza anwani ili kuchochea dai la UNI. Ikiwa anwani ina UNI yoyote inayodaiwa itatumwa kwao kwa kuwasilisha."
+
+#: src/components/FeeSelector/index.tsx
+msgid "The % you will earn in fees."
+msgstr "% Utakayopata katika ada."
+
+#: src/pages/CreateProposal/index.tsx
+msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
+msgstr "<0>Kidokezo:</0> Chagua kitendo na ueleze pendekezo lako kwa jamii. Pendekezo haliwezi kubadilishwa baada ya kuwasilisha, kwa hivyo tafadhali thibitisha habari zote kabla ya kuwasilisha. Kipindi cha kupiga kura kitaanza mara moja na kitadumu kwa siku 7. Kupendekeza kitendo maalum cha kwako, <1>soma maelezo</1>."
+
+#: src/pages/PoolDetails/PoolDetailsHeader.tsx
+msgid "Explore"
+msgstr "Chunguza"
+
+#: src/components/AccountDrawer/MiniPortfolio/ExpandoRow.tsx
+msgid "Show"
+msgstr "Onyesha"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/pages/Vote/styled.tsx
+msgid "Queued"
+msgstr "Imewekwa foleni"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add {0}/{1} V3 liquidity"
+msgstr "Kuongeza {0}/{1} V3 mtaji"
+
+#: src/components/Settings/MenuButton/index.tsx
+msgid "{0} slippage"
+msgstr "{0} kuteleza"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Claim failed"
+msgstr "Dai limeshindwa"
+
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "List for sale"
+msgstr "Orodha ya kuuza"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "Token stats and charts for {label} are available on <0>info.uniswap.org</0>"
+msgstr "Takwimu za ishara na chati za {label} zinapatikana kwenye <0>info.uniswap.org</0>"
+
+#: src/components/NavBar/SearchBarDropdown.tsx
+msgid "Popular tokens"
+msgstr "Ishara maarufu"
+
+#: src/nft/components/profile/list/RoyaltyTooltip.tsx
+msgid "fee"
+msgstr "ada"
+
+#: src/components/swap/SwapRoute.tsx
+msgid "Best price route costs ~{gasPrice} in gas."
+msgstr "Gharama bora za njia ya bei ~{gasPrice} kwa gesi."
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "Not enough liquidity to show accurate USD value."
+msgstr "Hakuna ukwasi wa kutosha kuonyesha thamani sahihi ya USD."
+
+#: src/pages/MigrateV2/index.tsx
+msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
+msgstr "Kwa kila dimbwi lililoonyeshwa hapa chini, bonyeza hamisha ili kuondoa ukwasi wako kutoka kwa Uniswap V2 na uweke kwenye Uniswap V3."
+
+#: src/pages/MigrateV2/index.tsx
+msgid "Connect to a wallet to view your V2 liquidity."
+msgstr "Unganisha kwenye mkoba ili uone ukwasi wako wa V2."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Sending"
+msgstr "Inatuma"
+
+#: src/pages/Landing/index.tsx
+msgid "Go direct to DeFi with Uniswap"
+msgstr "Nenda moja kwa moja kwa DeFi na Uniswap"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search"
+msgstr "Tafuta"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Better prices and more liquidity"
+msgstr "Bei bora na ukwasi zaidi"
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "+ New position"
+msgstr "+ Nafasi mpya"
+
+#: src/components/vote/VoteModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Vote for proposal {proposalId}"
+msgstr "Piga kura ya pendekezo {proposalId}"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "{percentForSlider}%"
+msgstr "{percentForSlider}%"
+
+#: src/components/swap/MaxSlippageTooltip.tsx
+#: src/components/swap/SwapLineItem.tsx
+msgid "Pay at most"
+msgstr "Lipa zaidi"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Simple"
+msgstr "Rahisi"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Repaid"
+msgstr "Kulipwa"
+
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "You will receive"
+msgstr "Utapokea"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Migrating liquidity"
+msgstr "Ukwasi unaohama"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Starting {0} Price:"
+msgstr "Kuanzia Bei {0}:"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Burn cancelled"
+msgstr "Kuchoma kumeghairiwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Learn more about swapping with UniswapX"
+msgstr "Pata maelezo zaidi kuhusu kubadilishana na UniswapX"
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Explore NFTs"
+msgstr "Gundua NFTs"
+
+#: src/nft/components/profile/list/Modal/SuccessScreen.tsx
+msgid "Share on Twitter"
+msgstr "Shiriki kwenye Twitter"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Add more liquidity"
+msgstr "Ongeza Mtaji zaidi"
+
+#: src/components/PositionListItem/index.tsx
+msgid "Max:"
+msgstr "Upeo:"
+
+#: src/components/WalletModal/PrivacyPolicyNotice.tsx
+msgid "Last updated"
+msgstr "Ilisasishwa mwisho"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "{0} Deposited"
+msgstr "{0} Iliyowekwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Deposit cancelled"
+msgstr "Amana imeghairiwa"
+
+#: src/pages/PoolDetails/index.tsx
+msgid "Info"
+msgstr "Habari"
+
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Max"
+msgstr "Upeo"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Help center"
+msgstr "Kituo cha usaidizi"
+
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "Why is a transaction required?"
+msgstr "Kwa nini muamala unahitajika?"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app logs anonymized usage statistics in order to improve over time."
+msgstr "Programu huweka takwimu za matumizi bila utambulisho ili kuboreshwa kadri muda unavyopita."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Swap failed"
+msgstr "Kubadilishana kumeshindwa"
+
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
+msgid "Proceed in wallet"
+msgstr "Endelea kwenye mkoba"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "{0} {1} Price:"
+msgstr "Bei {0} {1}"
+
+#: src/nft/components/collection/UnavailableCollectionPage.tsx
+msgid "No collection assets exist at this address"
+msgstr "Hakuna vipengee vya kukusanya vilivyo kwenye anwani hii"
+
+#: src/components/swap/SwapLineItem.tsx
+msgid "The impact your trade has on the market price of this pool."
+msgstr "Athari za biashara yako kwenye bei ya soko ya bwawa hili."
+
+#: src/components/AccountDrawer/MiniPortfolio/ExpandoRow.tsx
+msgid "Hidden"
+msgstr "Imefichwa"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Initial prices and pool share"
+msgstr "Bei za awali na sehemu ya dimbwi"
+
+#: src/components/AccountDrawer/MiniPortfolio/Pools/index.tsx
+#: src/components/Badge/RangeBadge.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Closed"
+msgstr "Imefungwa"
+
+#: src/components/PositionPreview/index.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "Current price"
+msgstr "Bei ya sasa"
+
+#: src/components/Settings/TransactionDeadlineSettings/index.tsx
+msgid "Your transaction will revert if it is pending for more than this period of time."
+msgstr "Shughuli yako itarejeshwa ikiwa inasubiri kwa zaidi ya kipindi hiki cha wakati."
+
+#: src/components/PositionCard/index.tsx
+msgid "View accrued fees and analytics<0>↗</0>"
+msgstr "Angalia ada na uchanganuzi ulioongezeka <0> ↗</0>"
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for most pairs."
+msgstr "Bora kwa pair nyingi."
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "52W low"
+msgstr "52W chini"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Time expired"
+msgstr "Muda umekwisha"
+
+#: src/components/NavigationTabs/index.tsx
+#: src/pages/PoolDetails/PoolDetailsStatsButtons.tsx
+msgid "Add liquidity"
+msgstr "Ongeza ukwasi"
+
+#: src/nft/components/card/icons.tsx
+msgid "Blocked on OpenSea"
+msgstr "Imezuiwa kwenye OpenSea"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "Badilisha <0/> haswa kwa <1/>"
+
+#: src/components/swap/PriceImpactWarning.tsx
+msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
+msgstr "Kubadilishana kwa ukubwa huu kunaweza kuwa na athari ya bei ya juu, kutokana na ukwasi wa sasa katika bwawa. Kunaweza kuwa na tofauti kubwa kati ya kiasi cha tokeni yako ya ingizo na kile utakachopokea katika tokeni ya matokeo"
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/V2.tsx
+msgid "Your total pool tokens:"
+msgstr "Ishara zako za jumla za dimbwi:"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Gas free swaps"
+msgstr "Ubadilishanaji wa bure wa gesi"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "Create pool & supply"
+msgstr "Unda bwawa na usambazaji"
+
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Copy Link"
+msgstr "Nakili Kiungo"
+
+#: src/components/PositionPreview/index.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "Min price"
+msgstr "Bei ndogo"
+
+#: src/components/FeeSelector/index.tsx
+#: src/components/PositionPreview/index.tsx
+msgid "Fee tier"
+msgstr "Kiwango cha ada"
+
+#: src/pages/CreateProposal/index.tsx
+msgid "You already have an active or pending proposal"
+msgstr "Tayari una pendekezo linalotumika au linalosubiri"
+
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
+msgid "View and sell NFTs"
+msgstr "Tazama na uuze NFTs"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+msgid "Unknown"
+msgstr "Haijulikani"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Wallet Address or ENS name"
+msgstr "Anwani ya Mkoba au jina la ENS"
+
+#: src/nft/components/profile/list/ListPage.tsx
+msgid "Sell NFTs"
+msgstr "Uza NFTs"
+
+#: src/components/swap/SwapModalFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+msgid "Price updated"
+msgstr "Bei imesasishwa"
+
+#: src/nft/components/bag/BagHeader.tsx
+msgid "Bag"
+msgstr "Mfuko"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View more analytics"
+msgstr "Tazama uchanganuzi zaidi"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/vote/DelegateModal.tsx
+#: src/components/vote/QueueModal.tsx
+msgid "Transaction submitted"
+msgstr "Muamala umewasilishwa"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Get support"
+msgstr "Pata usaidizi"
+
+#: src/pages/Pool/index.tsx
+msgid "V2 liquidity"
+msgstr "V2 ukwasi"
+
+#: src/components/swap/MaxSlippageTooltip.tsx
+msgid "If the price moves so that you will pay more than {amount}, your transaction will be reverted. This is the maximum amount you are guaranteed to pay."
+msgstr "Ikiwa bei itasogea ili ulipe zaidi ya {amount}, muamala wako utarejeshwa. Hiki ndicho kiwango cha juu zaidi ambacho umehakikishiwa kulipa."
+
+#: src/components/Tokens/TokenDetails/index.tsx
+msgid "Symbol not found"
+msgstr "Alama haijapatikana"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "You must connect an account."
+msgstr "Lazima uunganishe akaunti."
+
+#: src/pages/Vote/styled.tsx
+msgid "Active"
+msgstr "Inatumika"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Removing {0} {1} and {2} {3}"
+msgstr "Kuondoa {0} {1} na {2} {3}"
+
+#: src/theme/components/ThemeToggle.tsx
+msgid "Theme"
+msgstr "Mandhari"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+#: src/pages/PoolDetails/PoolDetailsStats.tsx
+msgid "TVL"
+msgstr "TVL"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Uniswap Protocol"
+msgstr "Itifaki ya Uniswap"
+
+#: src/nft/components/profile/list/ListingButton.tsx
+msgid "Set prices to continue"
+msgstr "Weka bei ili uendelee"
+
+#: src/components/swap/MaxSlippageTooltip.tsx
+#: src/components/swap/SwapLineItem.tsx
+msgid "Receive at least"
+msgstr "Pokea angalau"
+
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
+msgstr "Ununuzi huu hautafanikiwa ama kwa sababu ya kusonga kwa bei au ada kwenye uhamishaji. Jaribu kuongeza uvumilivu wako wa kuteleza."
+
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
+msgid "The market price is outside your specified price range. Single-asset deposit only."
+msgstr "Bei ya soko iko nje ya kiwango chako cha bei maalum. Amana ya mali moja tu."
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Against"
+msgstr "Kupinga"
+
+#: src/pages/Vote/styled.tsx
+msgid "Canceled"
+msgstr "Imeghairishwa"
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "No pools yet"
+msgstr "Hakuna mabwawa bado"
+
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
+#: src/pages/Pool/index.tsx
+msgid "Show closed positions"
+msgstr "Onyesha nafasi zilizofungwa"
+
+#: src/nft/utils/time.ts
+msgid "{i, plural, one {month} other {months}}"
+msgstr "{i, plural, one {mwezi} other {miezi}}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "Piga kura ili kujiepusha na pendekezo {proposalKey}"
+
+#: src/pages/NotFound/index.tsx
+msgid "Oops, take me back to Swap"
+msgstr "Lo, nirudishe kwa Wabadilishane"
+
+#: src/pages/Pool/index.tsx
+msgid "Connect a wallet"
+msgstr "Unganisha mkoba"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "from"
+msgstr "kutoka"
+
+#: src/pages/CreateProposal/index.tsx
+msgid "You don't have enough votes to submit a proposal"
+msgstr "Huna kura za kutosha kuwasilisha pendekezo"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Removed liquidity"
+msgstr "Kuondolewa kwa ukwasi"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Send cancelled"
+msgstr "Utumaji umeghairiwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Submitted proposal"
+msgstr "Pendekezo lililowasilishwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Execute failed"
+msgstr "Imeshindwa kutekeleza"
+
+#: src/components/Settings/TransactionDeadlineSettings/index.tsx
+msgid "minutes"
+msgstr "dakika"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Borrow cancelled"
+msgstr "Kukopa kumeghairiwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Add liquidity failed"
+msgstr "Imeshindwa kuongeza ukwasi"
+
+#: src/components/Popups/PopupContent.tsx
+msgid "Failed to switch networks"
+msgstr "Imeshindwa kubadilisha mitandao"
+
+#: src/state/mint/v3/hooks.tsx
+msgid "Invalid price input"
+msgstr "Ingizo batili la bei"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+msgid "and"
+msgstr "na"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "<0/> All Proposals"
+msgstr "<0/> Mapendekezo Yote"
+
+#: src/components/AccountDrawer/UniwalletModal.tsx
+msgid "Download in the App Store to safely store your tokens and NFTs, swap tokens, and connect to crypto apps."
+msgstr "Pakua katika Duka la Programu ili kuhifadhi tokeni na NFT zako kwa usalama, kubadilishana tokeni na kuunganisha kwenye programu za crypto."
+
+#: src/nft/components/profile/list/ListingButton.tsx
+msgid "Start listing"
+msgstr "Anza kuorodhesha"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Claim your UNI tokens"
+msgstr "Chukua UNI tokeni yako"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Last price"
+msgstr "Bei ya mwisho"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Hide resources"
+msgstr "Ficha rasilimali"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Unknown Lend"
+msgstr "Ukopeshaji Usiojulikana"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Create pool."
+msgstr "Unda bwawa."
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Recipient"
+msgstr "Mpokeaji"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Deployed"
+msgstr "Imetumwa"
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/V2.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Pooled {0}:"
+msgstr "Iliyounganishwa {0}:"
+
+#: src/components/Polling/ChainConnectivityWarning.tsx
+msgid "Check network status"
+msgstr "Angalia hali ya mtandao"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting ends approximately {0}"
+msgstr "Upigaji kura unaisha takriban {0}"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Floor price"
+msgstr "Bei ya sakafu"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Unsupported Asset"
+msgstr "Sifa isiyotumika"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Voted"
+msgstr "Imepiga kura"
+
+#: src/components/AccountDrawer/UniwalletModal.tsx
+msgid "Don't have Uniswap Wallet?"
+msgstr "Je, huna Uniswap Wallet?"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Position unavailable"
+msgstr "Nafasi haipatikani"
+
+#: src/nft/components/bag/ButtonStates.tsx
+msgid "Wrong network"
+msgstr "Mtandao mbaya"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
+msgstr "Bei ya dimbwi hili iko nje ya masafa yako uliyochagua. Msimamo wako kwa sasa hautoi ada."
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/ErrorBoundary/index.tsx
+#: src/components/RateToggle/index.tsx
+#: src/components/RateToggle/index.tsx
+#: src/nft/components/bag/BagFooter.tsx
+msgid "{0}"
+msgstr "{0}"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on  Etherscan"
+msgstr "Tazama kwenye Etherscan"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Remove liquidity failed"
+msgstr "Imeshindwa kuondoa ukwasi"
+
+#: src/components/WalletModal/ConnectionErrorView.tsx
+msgid "Error connecting"
+msgstr "Hitilafu wakati wa kuunganisha"
+
+#: src/nft/components/profile/list/SetDurationModal.tsx
+msgid "{amount, plural, =1 {hour} other {hours}}"
+msgstr "{amount, plural, =1 {saa} other {masaa}}"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Swapping"
+msgstr "BADILISHA"
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Pay with"
+msgstr "Lipa na"
+
+#: src/components/V2Unsupported/index.tsx
+msgid "Uniswap V2 is not available on this network."
+msgstr "Uniswap V2 haipatikani kwenye mtandao huu."
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "To view a position, you must be connected to the network it belongs to."
+msgstr "Ili kutazama nafasi, lazima uunganishwe kwenye mtandao unaomilikiwa."
+
+#: src/components/swap/SwapDetailsDropdown.tsx
+msgid "Fetching best price..."
+msgstr "Inaleta bei nzuri..."
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Invalid range selected. The min price must be lower than the max price."
+msgstr "Masafa batili yamechaguliwa. Bei ya min lazima iwe chini kuliko bei ya juu."
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collected"
+msgstr "Imekusanywa"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Withdraw failed"
+msgstr "Imeshindwa kutoa"
+
+#: src/nft/utils/time.ts
+msgid "{i, plural, one {minute} other {minutes}}"
+msgstr "{i, plural, one {dakika} other {dakika}}"
+
+#: src/pages/Vote/styled.tsx
+msgid "Succeeded"
+msgstr "Imefanikiwa"
+
+#: src/components/WalletModal/ConnectionErrorView.tsx
+msgid "Try again"
+msgstr "Jaribu tena"
+
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "Unavailable for listing"
+msgstr "Haipatikani kwa kuorodheshwa"
+
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/nft/components/bag/BagFooter.tsx
+msgid "The estimated difference between the USD values of input and output amounts."
+msgstr "Tofauti inayokadiriwa kati ya thamani za USD za kiasi cha pembejeo na pato."
+
+#: src/nft/components/profile/list/ListingButton.tsx
+msgid "{0, plural, =1 {Resolve issue} other {{1}}}"
+msgstr "{0, plural, =1 {Tatua suala} other {{1}}}"
+
+#: src/components/Settings/MenuButton/index.tsx
+msgid "Transaction Settings"
+msgstr "Mipangilio ya shughuli"
+
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+#: src/components/swap/SwapLineItem.tsx
+msgid "Max. slippage"
+msgstr "Max. kuteleza"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Claiming"
+msgstr "Inachukuliwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/pages/Vote/styled.tsx
+msgid "Executed"
+msgstr "Wanyongwa"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Reload the app"
+msgstr "Pakia upya programu"
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Import V2 pool"
+msgstr "Ingiza bwawa la kuogelea la V2"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Proposals submitted by community members will appear here."
+msgstr "Mapendekezo yaliyowasilishwa na wanajamii yataonekana hapa."
+
+#: src/pages/Vote/VotePage.tsx
+msgid "<0>Unlock voting</0> to prepare for the next proposal."
+msgstr "<0>Kufungua upigaji kura</0> kujiandaa kwa pendekezo linalofuata."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Privacy Policy"
+msgstr "Sera ya Faragha"
+
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
+msgid "Your positions"
+msgstr "Nafasi zako"
+
+#: src/nft/components/details/AssetActivity.tsx
+msgid "Time"
+msgstr "Muda"
+
+#: src/components/WalletModal/PrivacyPolicyNotice.tsx
+msgid "By connecting a wallet, you agree to Uniswap Labs'"
+msgstr "Kwa kuunganisha pochi, unakubali Uniswap Labs'"
+
+#: src/pages/Tokens/index.tsx
+msgid "This table contains the top tokens by Uniswap volume, sorted based on your input."
+msgstr "Jedwali hili lina tokeni za juu kwa kiasi cha Uniswap, zilizopangwa kulingana na ingizo lako."
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "below the collection’s floor price. Are you sure you want to continue?"
+msgstr "chini ya bei ya sakafu ya mkusanyiko. Je, una uhakika ungependa kuendelea?"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Owner"
+msgstr "Mmiliki"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "You don’t have liquidity in this pool yet."
+msgstr "Bado huna ukwasi katika dimbwi hili."
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Swap submitted"
+msgstr "Badiliko limewasilishwa"
+
+#: src/components/swap/SwapRoute.tsx
+msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
+msgstr "Njia hii huboresha jumla ya matokeo yako kwa kuzingatia njia zilizogawanyika, miinuko mingi na gharama ya gesi ya kila hatua."
+
+#: src/nft/components/collection/ActivityCells.tsx
+#: src/pages/Vote/styled.tsx
+msgid "Expired"
+msgstr "Imeisha muda"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Contract Interaction"
+msgstr "Mwingiliano wa Mkataba"
+
+#: src/components/Polling/index.tsx
+msgid "The most recent block number on this network. Prices update on every block."
+msgstr "Nambari ya hivi karibuni ya kuzuia kwenye mtandao huu. Bei zinasasishwa kwa kila kizuizi."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Approval cancelled"
+msgstr "Uidhinishaji umeghairiwa"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Deposit amounts"
+msgstr "Kiasi cha amana"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "Your position has 0 liquidity, and is not earning fees."
+msgstr "Nafasi yako ina ukwasi 0, na hailipi ada."
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "No results found."
+msgstr "Hakuna matokeo yaliyopatikana."
+
+#: src/pages/Pool/v2.tsx
+msgid "Your V2 liquidity"
+msgstr "Ukiritimba wako wa V2"
+
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Unlock votes"
+msgstr "Fungua kura"
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Approving {0}"
+msgstr "Kusibitisha {0}"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Transaction pending..."
+msgstr "Muamala unasubiri..."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Wrap cancelled"
+msgstr "Ufungaji umeghairiwa"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "75%"
+msgstr "75%"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "Badilisha <0/> kwa <1/>haswa"
+
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "The input token cannot be transferred. There may be an issue with the input token."
+msgstr "Ishara ya kuingiza haiwezi kuhamishwa. Kunaweza kuwa na shida na ishara ya kuingiza."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Unwrap failed"
+msgstr "Imeshindwa kufuta"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Swap success!"
+msgstr "Badili mafanikio!"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Pending..."
+msgstr "Inasubiri..."
+
+#: src/components/swap/PriceImpactWarning.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+msgid "Price impact warning"
+msgstr "Onyo la athari ya bei"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
+msgstr "Je! Huoni moja ya nafasi zako za v2? <0> Ingiza.</0>"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoke approval failed"
+msgstr "Imeshindwa kubatilisha idhini"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
+msgstr "Unapoongeza ukwasi, utapokea tokeni za bwawa zinazowakilisha nafasi yako. Tokeni hizi hupata ada kiotomatiki sawia na mgao wako wa bwawa, na zinaweza kukombolewa wakati wowote."
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Description"
+msgstr "Maelezo"
+
+#: src/constants/tokenSafety.tsx
+#: src/constants/tokenSafety.tsx
+msgid "Always conduct your own research before trading."
+msgstr "Daima fanya utafiti wako mwenyewe kabla ya kufanya biashara."
+
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "Your position will be 100% {0} at this price."
+msgstr "Nafasi yako itakuwa 100% {0} kwa bei hii."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are permits required?"
+msgstr "Kwa nini vibali vinahitajika?"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on Block Explorer"
+msgstr "Tazama kwenye Block Explorer"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Add Liquidity"
+msgstr "Ongeza Mtaji"
+
+#: src/constants/tokenSafety.tsx
+msgid "Not available"
+msgstr "Haipatikani"
+
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "{0, plural, =1 {listing} other {listings}}"
+msgstr "{0, plural, =1 {kuorodhesha} other {orodha}}"
+
+#: src/nft/components/profile/list/Modal/SuccessScreen.tsx
+msgid "Proceeds if sold"
+msgstr "Mapato ikiwa yanauzwa"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Claim UNI token"
+msgstr "Dai tokeni ya UNI"
+
+#: src/components/AccountDrawer/AnalyticsToggle.tsx
+msgid "We use anonymized data to enhance your experience with Uniswap Labs products."
+msgstr "Tunatumia data isiyojulikana ili kuboresha matumizi yako na bidhaa za Uniswap Labs."
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Your position will appear here."
+msgstr "Msimamo wako utaonekana hapa."
+
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "This transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
+msgstr "Muamala huu haukuweza kutumwa kwa sababu tarehe ya mwisho imepita. Tafadhali hakikisha kwamba tarehe ya mwisho ya muamala wako si ya chini sana."
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Show resources"
+msgstr "Onyesha rasilimali"
+
+#: src/components/Tokens/TokenDetails/TokenDescription.tsx
+msgid "Website"
+msgstr "Tovuti"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Removing {0} {1} and{2} {3}"
+msgstr "Kuondoa {0} {1} na{2} {3}"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Wrapped"
+msgstr "Imefungwa"
+
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
+msgid "{0}% select"
+msgstr "Chagua {0}"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queue proposal {proposalId}"
+msgstr "Pendekezo la foleni {proposalId}"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Approval failed"
+msgstr "Uidhinishaji haukufaulu"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "You can turn it off at anytime in settings"
+msgstr "Unaweza kukizima wakati wowote katika mipangilio"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Public Resolver"
+msgstr "Mtatuzi wa Umma"
+
+#: src/theme/components/index.tsx
+msgid "Copied!"
+msgstr "Imenakiliwa!"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Transfer token"
+msgstr "Ishara ya uhamisho"
+
+#: src/pages/PoolDetails/PoolDetailsStats.tsx
+msgid "24H fees"
+msgstr "Ada ya 24H"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "for {0}"
+msgstr "kwa {0}"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Sorry, an error occured while processing your request. If you request support, be sure to provide your error ID."
+msgstr "Samahani, hitilafu ilitokea wakati wa kuchakata ombi lako. Ukiomba usaidizi, hakikisha kuwa umetoa kitambulisho chako cha hitilafu."
+
+#: src/components/AccountDrawer/LocalCurrencyMenu.tsx
+#: src/components/AccountDrawer/SettingsMenu.tsx
+msgid "Currency"
+msgstr "Sarafu"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "Hamisha ukwasi {0}{1} V3"
+
+#: src/components/AccountDrawer/SettingsMenu.tsx
+msgid "Preferences"
+msgstr "Mapendeleo"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours."
+msgstr "Kiasi cha 24H ni kiasi cha mali ambacho kimeuzwa kwenye Uniswap v3 katika saa 24 zilizopita."
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Buy or transfer tokens to this wallet to get started."
+msgstr "Nunua au uhamishe tokeni kwenye pochi hii ili uanze."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Withdrawing"
+msgstr "Kujitoa"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Swapped"
+msgstr "Imebadilishwa"
+
+#: src/pages/Landing/index.tsx
+msgid "Swap and explore tokens and NFTs"
+msgstr "Badilisha na uchunguze tokeni na NFTs"
+
+#: src/components/AccountDrawer/MiniPortfolio/Pools/index.tsx
+msgid "Closed Positions"
+msgstr "Nafasi Zilizofungwa"
+
+#: src/components/NavBar/UkBanner.tsx
+msgid "Read more"
+msgstr "Soma zaidi"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Self"
+msgstr "Binafsi"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "You will also collect fees earned from this position."
+msgstr "Pia utakusanya ada inayopatikana kutoka kwa nafasi hii."
+
+#: src/pages/Swap/index.tsx
+msgid "Unwrap"
+msgstr "Fungua"
+
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+msgid "Invalid pair"
+msgstr "Jozi batili"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collecting fees will withdraw currently available fees for you."
+msgstr "Kukusanya ada kutaondoa ada zinazopatikana sasa kwako."
+
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+#: src/components/swap/SwapLineItem.tsx
+#: src/theme/components/ThemeToggle.tsx
+msgid "Auto"
+msgstr "Otomatiki"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "No V2 liquidity found."
+msgstr "Hakuna ukwasi wa V2 uliopatikana."
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "Kukusanya {0}/{1} makato"
+
+#: src/components/vote/VoteModal.tsx
+msgid "Transaction Submitted"
+msgstr "Uwasilishaji Uwasilishaji"
+
+#: src/components/Tokens/TokenDetails/About.tsx
+msgid "Links"
+msgstr "Viungo"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Cancel failed"
+msgstr "Imeshindwa kughairi"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Last"
+msgstr "Mwisho"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Uniswap migration contract↗"
+msgstr "Mkataba wa uhamiaji usiobadilika↗"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collecting fees"
+msgstr "Kukusanya makato"
+
+#: src/components/AccountDrawer/TestnetsToggle.tsx
+msgid "Show testnets"
+msgstr "Onyesha majaribio"
+
+#: src/components/Tokens/TokenTable/TokenRow.tsx
+msgid "Token name"
+msgstr "Jina la ishara"
+
+#: src/components/NavBar/SearchBarDropdown.tsx
+msgid "No tokens found."
+msgstr "Hakuna tokeni zilizopatikana."
+
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+msgid "Share of pool"
+msgstr "Sehemu ya bwawa"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit tokens to the {label} network."
+msgstr "Weka tokeni kwenye mtandao {label}."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on Explorer"
+msgstr "Angalia kwenye Kichunguzi"
+
+#: src/pages/Pool/v2.tsx
+msgid "Import pool"
+msgstr "Bwawa la kuagiza"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Error"
+msgstr "Kosa"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Self-delegate"
+msgstr "Mjumbe binafsi"
+
+#: src/nft/components/bag/ButtonStates.tsx
+msgid "Transaction pending"
+msgstr "Muamala unasubiri"
+
+#: src/state/burn/v3/hooks.tsx
+msgid "Enter a percent"
+msgstr "Ingiza asilimia"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Buy failed"
+msgstr "Imeshindwa kununua"
+
+#: src/components/swap/PendingModalContent/TransitionText.tsx
+msgid "{initialText}"
+msgstr "{initialText}"
+
+#: src/components/swap/SwapRoute.tsx
+msgid "Price Impact"
+msgstr "Athari ya Bei"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {Huwezi kufanya biashara ya tokeni hii kwa kutumia Programu ya Uniswap.} other {Huwezi kufanya biashara ya tokeni hizi kwa kutumia Programu ya Uniswap.}}"
+
+#: src/components/CurrencyInputPanel/index.tsx
+#: src/components/SearchModal/CurrencySearch.tsx
+#: src/pages/PoolFinder/index.tsx
+#: src/pages/PoolFinder/index.tsx
+#: src/state/swap/hooks.tsx
+msgid "Select a token"
+msgstr "Chagua ishara"
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Top pools"
+msgstr "Mabwawa ya juu"
+
+#: src/components/Settings/TransactionDeadlineSettings/index.tsx
+msgid "Transaction deadline"
+msgstr "Mwisho wa shughuli"
+
+#: src/components/Tokens/TokenDetails/AddressSection.tsx
+msgid "Contract address"
+msgstr "Anwani ya mkataba"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
+msgstr "Angalau {0} {1} na {2} {3} zitarejeshwa kwa mkoba wako kwa sababu ya bei iliyochaguliwa."
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Vote for"
+msgstr "Piga kura kwa"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Approve token"
+msgstr "Idhinisha tokeni"
+
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "Wrap {0}"
+msgstr "Funga {0}"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "The ratio of tokens you add will set the price of this pool."
+msgstr "Uwiano wa ishara unazoongeza zitaweka bei ya dimbwi hili."
+
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Ishara ya pato haiwezi kuhamishwa. Kunaweza kuwa na shida na ishara ya pato. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Your swap couldn't be filled at this time. Try again or"
+msgstr "Ubadilishanaji wako haukuweza kujazwa kwa wakati huu. Jaribu tena au"
+
+#: src/components/NavBar/ChainSelectorRow.tsx
+msgid "Unsupported by your wallet"
+msgstr "Haitumiki na pochi yako"
+
+#: src/nft/components/bag/ButtonStates.tsx
+msgid "Loading allowance"
+msgstr "Kupakia posho"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Documentation"
+msgstr "Nyaraka"
+
+#: src/nft/components/profile/list/MarketplaceRow.tsx
+msgid "% max"
+msgstr "% upeo"
+
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "blocked activities"
+msgstr "shughuli zilizozuiwa"
+
+#: src/components/AccountDrawer/SettingsMenu.tsx
+#: src/components/Settings/index.tsx
+msgid "Settings"
+msgstr "Mipangilio"
+
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "<0>UniswapX</0> aggregates liquidity sources for better prices and gas free swaps."
+msgstr "<0>UniswapX</0> hujumlisha vyanzo vya ukwasi kwa bei bora na ubadilishaji usio na gesi."
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Once you are happy with the rate click supply to review."
+msgstr "Mara tu unapofurahi na usambazaji wa kiwango cha bonyeza kukagua."
+
+#: src/components/Tokens/TokenTable/TokenRow.tsx
+msgid "Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame."
+msgstr "Kiasi ni kiasi cha kipengee ambacho kimeuzwa kwenye Uniswap v3 katika muda uliochaguliwa."
+
+#: src/pages/Vote/Landing.tsx
+msgid "Read more about Uniswap governance"
+msgstr "Soma zaidi kuhusu Uniswap utawala"
+
+#: src/pages/Vote/Landing.tsx
+msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "Ishara za UNI zinawakilisha hisa za kupiga kura katika utawala wa Uniswap. Unaweza kupiga kura kwa kila pendekezo mwenyewe au kupeana kura zako kwa mtu wa tatu."
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Details"
+msgstr "Maelezo"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/utils.ts
+#: src/pages/Vote/styled.tsx
+msgid "Pending"
+msgstr "Inasubiri"
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
+msgstr "Ingizo inakadiriwa. Utauza zaidi <0>{0} {1}</0> au shughuli itarejea."
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Delegate votes"
+msgstr "Kura za mjumbe"
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
+msgstr "Pato inakadiriwa. Utapokea angalau <0>{0} {1}</0> au shughuli itarejea."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Removing liquidity"
+msgstr "Kuondoa ukwasi"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Repaying"
+msgstr "Kulipa"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "Ongeza <0/> na <1/> kwenye Uniswap V2"
+
+#: src/components/swap/SwapModalHeader.tsx
+#: src/pages/Swap/index.tsx
+msgid "You pay"
+msgstr "Unalipa"
+
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/pages/profile/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/state/burn/hooks.tsx
+#: src/state/burn/v3/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/swap/hooks.tsx
+msgid "Connect wallet"
+msgstr "Unganisha mkoba"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing this proposal will enact the calldata on-chain."
+msgstr "Kutekeleza pendekezo hili kutaweka data ya simu kwenye mnyororo."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Migrate liquidity cancelled"
+msgstr "Ushuru wa kuhama umeghairiwa"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Try gas free swaps with the"
+msgstr "Jaribu kubadilishana bila gesi na"
+
+#: src/components/PositionCard/index.tsx
+msgid "Your position"
+msgstr "Msimamo wako"
+
+#: src/components/swap/MaxSlippageTooltip.tsx
+msgid "If the price moves so that you will receive less than {amount}, your transaction will be reverted. This is the minimum amount you are guaranteed to receive."
+msgstr "Ikiwa bei itasogea ili upokee chini ya {amount}, muamala wako utarejeshwa. Hiki ndicho kiwango cha chini ambacho umehakikishiwa kupokea."
+
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "{0} Fees Earned:"
+msgstr "{0} zimepatikana:"
+
+#: src/nft/components/profile/list/PriceTextInput.tsx
+msgid "Already listed at"
+msgstr "Tayari zimeorodheshwa katika"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
+msgstr "<0>Kidokezo:</0> Kuondoa tokeni za share hubadilisha msimamo wako kuwa ishara za msingi kwa kiwango cha sasa, sawia na sehemu yako ya share. Makato yaliyokusanywa imejumuishwa katika kiasi unachopokea."
+
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Uuzaji huu hautafaulu kwa sababu ya harakati za bei. Jaribu kuongeza uvumilivu wako wa kuteleza. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
+
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "Listing an NFT requires a one-time marketplace approval for each NFT collection."
+msgstr "Kuorodhesha NFT kunahitaji idhini ya mara moja ya soko kwa kila mkusanyiko wa NFT."
+
+#: src/pages/Pool/v2.tsx
+msgid "Liquidity provider rewards"
+msgstr "Tuzo ya mtoaji wa kioevu"
+
+#: src/components/CurrencyInputPanel/index.tsx
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
+msgid "Balance: {0}"
+msgstr "Salio: {0}"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Claim UNI"
+msgstr "Chukua UNI"
+
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "Tahadhari"
+
+#: src/pages/Tokens/index.tsx
+msgid "Top tokens on Uniswap"
+msgstr "Ishara kuu kwenye Uniswap"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "Ununuzi umekamilika katika"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Voting"
+msgstr "Kupiga kura"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Submit proposal failed"
+msgstr "Imeshindwa kuwasilisha pendekezo"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Vote failed"
+msgstr "Kura imeshindwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "This order was cancelled"
+msgstr "Agizo hili lilighairiwa"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Floor"
+msgstr "Sakafu"
+
+#: src/nft/components/collection/UnavailableCollectionPage.tsx
+#: src/nft/components/collection/UnavailableCollectionPage.tsx
+msgid "Return to NFT Explore"
+msgstr "Rudi kwa NFT Gundua"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoking approval"
+msgstr "Inabatilisha idhini"
+
+#: src/components/vote/VoteModal.tsx
+msgid "{0} Votes"
+msgstr "{0} Kura"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Swap expired"
+msgstr "Ubadilishanaji umekwisha"
+
+#: src/pages/Vote/styled.tsx
+msgid "Defeated"
+msgstr "Imeshindwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Deploy failed"
+msgstr "Imeshindwa kusambaza"
+
+#: src/components/PositionPreview/index.tsx
+#: src/components/PositionPreview/index.tsx
+msgid "Your position will be 100% composed of {0} at this price"
+msgstr "Nafasi yako itakuwa 100% iliyo na {0} kwa bei hii"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Reset {0}"
+msgstr "Weka upya {0}"
+
+#: src/components/NavBar/UkBanner.tsx
+msgid "This web application is provided as a tool for users to interact with the Uniswap Protocol on\n"
+"their own initiative, with no endorsement or recommendation of cryptocurrency trading activities. In doing so,\n"
+"Uniswap is not recommending that users or potential users engage in cryptoasset trading activity, and users or\n"
+"potential users of the web application should not regard this webpage or its contents as involving any form of\n"
+"recommendation, invitation or inducement to deal in cryptoassets."
+msgstr "Programu hii ya wavuti imetolewa kama zana kwa watumiaji kuingiliana na Itifaki ya Uniswap kwa\n"
+"yao wenyewe, bila idhini au mapendekezo ya shughuli za biashara ya cryptocurrency. Kwa kufanya hivyo,\n"
+"Uniswap haipendekezi kwamba watumiaji au watumiaji watarajiwa washiriki katika shughuli ya biashara ya cryptoasset, na watumiaji au watumiaji\n"
+"watarajiwa wa programu ya wavuti hawapaswi kuzingatia ukurasa huu wa tovuti au yaliyomo kama inayohusisha aina yoyote ya\n"
+"ya mapendekezo, mwaliko au ushawishi biashara katika cryptoassets."
+
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "If you believe this is an error, please send an email including your address to"
+msgstr "Ikiwa unaamini kuwa hii ni hitilafu, tafadhali tuma barua pepe ikijumuisha anwani yako kwa"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Token approval failed"
+msgstr "Uidhinishaji wa ishara umeshindwa"
+
+#: src/utils/errors.ts
+msgid "Your wallet is connected to the wrong network."
+msgstr "Mkoba wako umeunganishwa kwenye mtandao usio sahihi."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
+msgstr "Bwawa hili lazima lianzishwe kabla ya kuongeza ukwasi. Ili kuanzisha, chagua bei ya kuanzia ya bwawa. Kisha, ingiza anuwai ya bei ya ukwasi na kiwango cha amana. Ada ya gesi itakuwa kubwa kuliko kawaida kwa sababu ya shughuli za uanzishaji."
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Unclaimed fees"
+msgstr "Makato ambayo ayajachukuliwa"
+
+#: src/components/SwitchLocaleLink/index.tsx
+msgid "Uniswap available in: <0>{0}</0>"
+msgstr "Kubadilisha kunapatikana katika: <0>{0}</0>"
+
+#: src/pages/Landing/index.tsx
+msgid "Trade crypto and NFTs with confidence"
+msgstr "Biashara ya crypto na NFTs kwa kujiamini"
+
+#: src/components/AccountDrawer/MiniPortfolio/index.tsx
+msgid "Activity"
+msgstr "Shughuli"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Added liquidity"
+msgstr "Aliongeza ukwasi"
+
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
+msgid "Not available in your region"
+msgstr "Haipatikani katika eneo lako"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "25%"
+msgstr "25%"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Execute proposal {proposalKey}."
+msgstr "Tekeleza pendekezo {proposalKey}."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Delegated"
+msgstr "Imekabidhiwa"
+
+#: src/components/PositionListItem/index.tsx
+#: src/components/PositionListItem/index.tsx
+msgid "<0>{0} </0><1/> per <2/>"
+msgstr "<0>{0} </0><1/> kwa <2/>"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Beta"
+msgstr "Beta"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "For"
+msgstr "Kwa maana"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Address has no available claim"
+msgstr "Anwani haina dai linalopatikana"
+
+#: src/pages/Pool/index.tsx
+msgid "Your active V3 liquidity positions will appear here."
+msgstr "Nafasi zako za ukwasi za V3 zinazotumika zitaonekana hapa."
+
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
+msgid "<0/> Votes"
+msgstr "<0/> Kura"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feedback"
+msgstr "Maoni"
+
+#: src/components/Tokens/TokenTable/SearchBar.tsx
+msgid "Filter tokens"
+msgstr "Chuja tokeni"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Migrated liquidity"
+msgstr "Ukwasi uliohama"
+
+#: src/components/PositionCard/index.tsx
+msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
+msgstr "Kwa kuongeza ukwasi utapata 0.3% ya biashara zote kwenye jozi hii sawia na sehemu yako ya dimbwi. Ada zinaongezwa kwenye dimbwi, zinapatikana kwa wakati halisi na zinaweza kudaiwa kwa kuondoa ukwasi wako."
+
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Approve"
+msgstr "Sibitisha"
+
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/Swap/index.tsx
+msgid "Unsupported asset"
+msgstr "Kipengee kisichotumika"
+
+#: src/pages/Swap/index.tsx
+msgid "- Remove recipient"
+msgstr "- Ondoa mpokeaji"
+
+#: src/components/vote/ExecuteModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Execute"
+msgstr "Tekeleza"
+
+#: src/nft/components/collection/Sweep.tsx
+msgid "Sweep"
+msgstr "Zoa"
+
+#: src/pages/Landing/index.tsx
+msgid "Get started"
+msgstr "Anza"
+
+#: src/components/Settings/TransactionDeadlineSettings/index.tsx
+msgid "{0}m"
+msgstr "{0}m"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
+msgstr "Kuongeza pendekezo hili kwenye foleni itaruhusu kutekelezwa, baada ya kuchelewa."
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Proposed action"
+msgstr "Hatua iliyopendekezwa"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Deposit liquidity"
+msgstr "Amana ukwasi"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Revoke {0}"
+msgstr "Batilisha {0}"
+
+#: src/nft/components/details/AssetActivity.tsx
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Price"
+msgstr "Bei"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "The price of this pool is within your selected range. Your position is currently earning fees."
+msgstr "Bei ya dimbwi hili iko katika anuwai uliyochagua. Msimamo wako kwa sasa unapata ada."
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "You are creating a pool"
+msgstr "Unaunda dimbwi"
+
+#: src/components/vote/VoteModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Vote against proposal {proposalId}"
+msgstr "Piga kura dhidi ya pendekezo {proposalId}"
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "No activity yet"
+msgstr "Hakuna shughuli bado"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Unknown Approval"
+msgstr "Idhini Isiyojulikana"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "UNI has arrived"
+msgstr "UNI imefika"
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
+msgstr "Msimamo wako hautapata ada au kutumiwa katika biashara hadi bei ya soko iingie katika anuwai yako."
+
+#: src/pages/Vote/Landing.tsx
+msgid "Uniswap governance"
+msgstr "Utawala wa Uniswap"
+
+#: src/nft/components/profile/list/RoyaltyTooltip.tsx
+msgid "Max fees"
+msgstr "Upeo wa ada"
+
+#: src/components/vote/QueueModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Queue"
+msgstr "Foleni"
+
+#: src/components/Tokens/TokenTable/TokenRow.tsx
+msgid "Total value locked (TVL) is the aggregate amount of the asset available across all Uniswap v3 liquidity pools."
+msgstr "Thamani ya jumla iliyofungwa (TVL) ni kiasi cha jumla cha mali inayopatikana kwenye dimbwi zote za ukwasi za Uniswap v3."
+
+#: src/components/vote/VoteModal.tsx
+msgid "Submitting vote"
+msgstr "Kuwasilisha kura"
+
+#: src/components/swap/UnsupportedCurrencyFooter.tsx
+msgid "Read more about unsupported assets"
+msgstr "Soma zaidi kuhusu mali zisizoungwa mkono"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "Dai <0/> kwa {0}"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "This proposal may be executed after {0}."
+msgstr "Pendekezo hili linaweza kutekelezwa baada ya {0}."
+
+#: src/components/swap/SwapLineItem.tsx
+msgid "Network cost"
+msgstr "Gharama ya mtandao"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Earned UNI tokens represent voting shares in Uniswap governance."
+msgstr "Ishara zilizopatikana za UNI zinawakilisha hisa za kupiga kura katika utawala wa Uniswap."
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Why is this required?"
+msgstr "Kwa nini hii inahitajika?"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "Ondoa <0/> na <1/>"
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Supply"
+msgstr "Ugavi"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Enable spending {0} on Uniswap"
+msgstr "Washa matumizi {0} kwenye Uniswap"
+
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "Sign"
+msgstr "Ishara"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "This app uses the following third-party APIs:"
+msgstr "Programu hii hutumia API za wahusika wengine zifuatazo:"
+
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "Blocked address"
+msgstr "Anwani iliyozuiliwa"
+
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
+msgid "reward"
+msgstr "zawadi"
+
+#: src/nft/components/card/media.tsx
+msgid "Content not"
+msgstr "Yaliyomo sio"
+
+#: src/components/NavigationTabs/index.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Remove liquidity"
+msgstr "Ondoa ukwasi"
+
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
+msgid "Not created"
+msgstr "Haijaundwa"
+
+#: src/nft/components/bag/ButtonStates.tsx
+msgid "Insufficient funds"
+msgstr "Hela hazitoshi"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing"
+msgstr "Utekelezaji"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Withdraw deposited liquidity"
+msgstr "Ondoa ukwasi uliowekwa"
+
+#: src/components/AccountDrawer/GitVersionRow.tsx
+msgid "Version:"
+msgstr "Toleo:"
+
+#: src/nft/utils/time.ts
+msgid "{i, plural, one {second} other {seconds}}"
+msgstr "{i, plural, one {pili} other {sekunde}}"
+
+#: src/components/swap/PriceImpactModal.tsx
+msgid "Cancel"
+msgstr "Ghairi"
+
+#: src/nft/components/bag/ButtonStates.tsx
+msgid "Insufficient liquidity"
+msgstr "Ukwasi wa kutosha"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "to"
+msgstr "kwa"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Selected range"
+msgstr "Masafa yaliyochaguliwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Wrap failed"
+msgstr "Kufunga kumeshindwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Purchased"
+msgstr "Imenunuliwa"
+
+#: src/pages/Swap/index.tsx
+msgid "Connecting to {0}"
+msgstr "Inaunganisha kwa {0}"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens and NFT collections"
+msgstr "Tafuta tokeni na mikusanyo ya NFT"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Migrate liquidity failed"
+msgstr "Malipo ya kuhama yameshindwa"
+
+#: src/components/swap/SwapLineItem.tsx
+msgid "The maximum amount you are guaranteed to spend. If the price slips any further, your transaction will revert."
+msgstr "Kiasi cha juu ambacho umehakikishiwa kutumia. Ikiwa bei itapungua zaidi, muamala wako utarejeshwa."
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Added {0}"
+msgstr "Imeongezwa {0}"
+
+#: src/nft/components/profile/list/Modal/SuccessScreen.tsx
+msgid "Return to My NFTs"
+msgstr "Rudi kwa NFTs Zangu"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Edit"
+msgstr "Hariri"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/utils.ts
+msgid "Today"
+msgstr "Leo"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "52W high"
+msgstr "52W juu"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Queue failed"
+msgstr "Foleni imeshindwa"
+
+#: src/components/vote/VoteModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Vote to abstain on proposal {proposalId}"
+msgstr "Kura ya kuacha pendekezo {proposalId}"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Please connect to Layer 1 Ethereum"
+msgstr "Tafadhali unganisha kwenye Tabaka 1 Ethereum"
+
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
+msgid "Rejected"
+msgstr "Imekataliwa"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "Utawala usiobadilishwa unapatikana tu kwenye Tabaka la 1. Badilisha mtandao wako uwe Ethereum Mainnet ili uone Mapendekezo na Kura."
+
+#: src/components/swap/SwapLineItem.tsx
+msgid "The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert."
+msgstr "Kiasi cha chini ambacho umehakikishiwa kupokea. Ikiwa bei itapungua zaidi, muamala wako utarejeshwa."
+
+#: src/pages/Pool/v2.tsx
+msgid "No liquidity found."
+msgstr "Hakuna ukwasi uliopatikana."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Unwrapping"
+msgstr "Kufungua"
+
+#: src/components/WalletModal/ConnectionErrorView.tsx
+msgid "Back to wallet selection"
+msgstr "Rudi kwenye uteuzi wa pochi"
+
+#: src/nft/components/collection/UnavailableCollectionPage.tsx
+msgid "Learn why"
+msgstr "Jifunze kwa nini"
+
+#: src/nft/utils/time.ts
+msgid "{i, plural, one {week} other {weeks}}"
+msgstr "{i, plural, one {wiki} other {wiki}}"
+
+#: src/components/NavBar/NavIcon.tsx
+msgid "Navigation button"
+msgstr "Kitufe cha kusogeza"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Borrowed"
+msgstr "Alikopa"
+
+#: src/components/swap/SwapModalFooter.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
+#: src/components/Tokens/TokenDetails/TokenDescription.tsx
+msgid "Show more"
+msgstr "Onyesha zaidi"
+
+#: src/nft/components/bag/ButtonStates.tsx
+msgid "Something went wrong. Please try again."
+msgstr "Hitilafu fulani imetokea. Tafadhali jaribu tena."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Permit2"
+msgstr "Kibali2"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Received"
+msgstr "Imepokelewa"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
+msgstr "Chombo hiki kitahamisha {0} kwa V3. Mchakato huo hauna shukrani kabisa kwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Your swap expired before it could be filled. Try again or"
+msgstr "Ubadilishanaji wako umekwisha kabla ya kujazwa. Jaribu tena au"
+
+#: src/nft/components/bag/ButtonStates.tsx
+msgid "Switch networks"
+msgstr "Badilisha mitandao"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Approve {0}"
+msgstr "Sibitisha {0}"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "Thibitisha shughuli kwenye mkoba"
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for exotic pairs."
+msgstr "Bora kwa pair maalum."
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "V3 {0} Price:"
+msgstr "Bei ya V3 {0}"
+
+#: src/components/swap/SwapLineItem.tsx
+msgid "Rate"
+msgstr "Kiwango"
+
+#: src/nft/components/details/AssetActivity.tsx
+msgid "By"
+msgstr "Na"
+
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgstr "Kiasi kisichobadilika x * y = k hakiridhika na ubadilishaji. Hii kawaida inamaanisha moja ya ishara unazobadilisha zinajumuisha tabia ya kawaida kwenye uhamishaji."
+
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "Transaction rejected"
+msgstr "Muamala umekataliwa"
+
+#: src/components/Charts/PriceChart/index.tsx
+msgid "Missing chart data"
+msgstr "Data ya chati haipo"
+
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Accept"
+msgstr "Kubali"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "Tafuta ishara"
+
+#: src/nft/components/bag/ButtonStates.tsx
+msgid "Approval pending"
+msgstr "Idhini inasubiri"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Vote cancelled"
+msgstr "Kura imeghairiwa"
+
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
+msgstr "Muamala wako utarejeshwa ikiwa bei itabadilika vibaya na zaidi ya asilimia hii."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Delegating"
+msgstr "Kukabidhi madaraka"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Show cancelled"
+msgstr "Onyesho limeghairiwa"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collect fees"
+msgstr "Kusanya makato"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Sent"
+msgstr "Imetumwa"
+
+#: src/nft/components/bag/ButtonStates.tsx
+msgid "Fetching route"
+msgstr "Inaleta njia"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Claimed"
+msgstr "Ushachukua"
+
+#: src/components/FeeSelector/FeeOption.tsx
+#: src/components/PositionListItem/index.tsx
+#: src/components/PositionPreview/index.tsx
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+msgid "{0}%"
+msgstr "{0}%"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Amount"
+msgstr "Kiasi"
+
+#: src/pages/Swap/index.tsx
+msgid "Wrap"
+msgstr "Funga"
+
+#: src/components/FiatOnrampModal/index.tsx
+msgid "MoonPay fiat on-ramp iframe"
+msgstr "MoonPay fiat on-ramp iframe"
+
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
+msgid "Claim"
+msgstr "Chukua"
+
+#: src/components/AccountDrawer/AuthenticatedHeader.tsx
+msgid "Moonpay is not available in some regions. Click to learn more."
+msgstr "Moonpay haipatikani katika baadhi ya maeneo. Bofya ili kujifunza zaidi."
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Fetching price..."
+msgstr "Inaleta bei..."
+
+#: src/components/ConnectedAccountBlocked/index.tsx
+msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
+msgstr "Anwani hii imezuiwa kwenye kiolesura cha Uniswap Labs kwa sababu inahusishwa na moja au zaidi"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Deposit failed"
+msgstr "Amana imeshindwa"
+
+#: src/nft/components/collection/CollectionAsset.tsx
+msgid "Not listed"
+msgstr "Haijaorodheshwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Burned"
+msgstr "Imechomwa"
+
+#: src/state/swap/hooks.tsx
+msgid "Enter a recipient"
+msgstr "Ingiza mpokeaji"
+
+#: src/components/AccountDrawer/MiniPortfolio/Pools/index.tsx
+#: src/components/Badge/RangeBadge.tsx
+msgid "Out of range"
+msgstr "Kati ya masafa"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Add delegate +"
+msgstr "Ongeza mjumbe +"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Uniswap Labs' Terms of Service"
+msgstr "Sheria na Masharti ya Uniswap Labs"
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "No NFTs yet"
+msgstr "Bado hakuna NFTs"
+
+#: src/state/burn/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/swap/hooks.tsx
+msgid "Enter an amount"
+msgstr "Ingiza kiasi"
+
+#: src/components/Web3Status/index.tsx
+msgid "Connect"
+msgstr "Unganisha"
+
+#: src/components/Polling/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection."
+msgstr "Labda umepoteza muunganisho wako wa mtandao."
+
+#: src/pages/Vote/Landing.tsx
+msgid "Delegated to:"
+msgstr "Imekabidhiwa kwa:"
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for stable pairs."
+msgstr "Bora kwa pair thabiti."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Add V2 liquidity cancelled"
+msgstr "Kuongeza ukwasi wa V2 kumeghairiwa"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
+msgstr "Unapaswa kuweka tu ukwasi kwenye Uniswap V3 kwa bei unayoamini ni sahihi. <0 /> Ikiwa bei inaonekana si sahihi, unaweza kubadilisha kwa kuhamisha bei au subiri mtu mwingine afanye hivyo."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "learn more."
+msgstr "Jifunze zaidi."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Approving"
+msgstr "Kusibitisha"
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "Edit listings"
+msgstr "Hariri matangazo"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Submitting proposal"
+msgstr "Kuwasilisha pendekezo"
+
+#: src/pages/Pool/v2.tsx
+msgid "Connect to a wallet to view your liquidity."
+msgstr "Unganisha kwenye mkoba ili uone ukwasi wako."
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Allowed"
+msgstr "Ruhusu"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Adding V2 liquidity"
+msgstr "Kuongeza ukwasi wa V2"
+
+#: src/components/Polling/ChainConnectivityWarning.tsx
+msgid "here."
+msgstr "hapa."
+
+#: src/nft/components/collection/ActivityCells.tsx
+msgid "Unavailable"
+msgstr "Haipatikani"
+
+#: src/pages/MigrateV2/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Migrate V2 liquidity"
+msgstr "Hamisha ukwasi wa V2"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Execute cancelled"
+msgstr "Utekelezaji umeghairiwa"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "No tokens found"
+msgstr "Hakuna tokeni zilizopatikana"
+
+#: src/nft/components/profile/list/Modal/ListModal.tsx
+msgid "List NFTs"
+msgstr "Orodhesha NFTs"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Added Liquidity"
+msgstr "Aliongeza Liquidity"
+
+#: src/components/RangeSelector/index.tsx
+msgid "High price"
+msgstr "Bei ya juu"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Insufficient funds for swap"
+msgstr "Fedha haitoshi kwa kubadilishana"
+
+#: src/pages/Pool/v2.tsx
+msgid "Migrate liquidity to V3"
+msgstr "Hamisha ukwasi hadi V3"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Burn failed"
+msgstr "Kuchoma kumeshindwa"
+
+#: src/components/swap/SwapLineItem.tsx
+msgid "Price impact"
+msgstr "Athari ya bei"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Collected fees"
+msgstr "Ada zilizokusanywa"
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/V2.tsx
+msgid "Pool tokens in rewards pool:"
+msgstr "Ishara za dimbwi kwenye dimbwi la tuzo:"
+
+#: src/components/Tokens/TokenDetails/About.tsx
+#: src/components/Tokens/TokenDetails/TokenDescription.tsx
+msgid "No token information available"
+msgstr "Hakuna maelezo ya tokeni yanayopatikana"
+
+#: src/hooks/useWrapCallback.tsx
+#: src/hooks/useWrapCallback.tsx
+msgid "Enter {0} amount"
+msgstr "Weka kiasi {0}"
+
+#: src/state/swap/hooks.tsx
+msgid "Invalid recipient"
+msgstr "Mpokeaji si sahihi"
+
+#: src/pages/Pool/v2.tsx
+msgid "Add V2 liquidity"
+msgstr "Ongeza ukwasi wa V2"
+
+#: src/nft/components/bag/ButtonStates.tsx
+msgid "An approval is needed to use this token."
+msgstr "Idhini inahitajika ili kutumia tokeni hii."
+
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
+msgid "Hide closed positions"
+msgstr "Ficha nafasi zilizofungwa"
+
+#: src/components/swap/UnsupportedCurrencyFooter.tsx
+msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
+msgstr "Mali zingine hazipatikani kupitia kiolesura hiki kwa sababu zinaweza kufanya kazi vizuri na mikataba mizuri au hatuwezi kuruhusu biashara kwa sababu za kisheria."
+
+#: src/pages/Landing/index.tsx
+msgid "Buy, sell, and explore tokens"
+msgstr "Nunua, uza na uchunguze tokeni"
+
+#: src/nft/components/profile/list/ListPage.tsx
+msgid "Receive"
+msgstr "Pokea"
+
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm swap"
+msgstr "Thibitisha ubadilishaji"
+
+#: src/components/AccountDrawer/MiniPortfolio/index.tsx
+#: src/components/NavBar/index.tsx
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
+msgid "Pools"
+msgstr "Mabwawa"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "An error occurred loading tokens. Please try again."
+msgstr "Hitilafu imetokea wakati wa kupakia tokeni. Tafadhali jaribu tena."
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "You're in!"
+msgstr "Umeingia!"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Pool found!"
+msgstr "Bwawa limepatikana!"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "Piga kura ili kujiepusha na pendekezo {proposalKey} kwa sababu \"{0}\""
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Withdrawal cancelled"
+msgstr "Uondoaji umeghairiwa"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Retry confirmation"
+msgstr "Jaribu tena uthibitisho"
+
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "When available, aggregates liquidity sources for better prices and gas free swaps."
+msgstr "Inapopatikana, hujumlisha vyanzo vya ukwasi kwa bei bora na ubadilishaji usio na gesi."
+
+#: src/components/PositionCard/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+msgid "Add"
+msgstr "Ongeza"
+
+#: src/hooks/useWrapCallback.tsx
+#: src/hooks/useWrapCallback.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/swap/hooks.tsx
+msgid "Insufficient {0} balance"
+msgstr "Usawa wa kutosha {0}"
+
+#: src/components/NavBar/UkDisclaimerModal.tsx
+msgid "Disclaimer for UK residents"
+msgstr "Kanusho kwa wakazi wa Uingereza"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Send failed"
+msgstr "Imeshindwa kutuma"
+
+#: src/components/RoutingDiagram/RoutingDiagram.tsx
+msgid "{0}% pool"
+msgstr "{0}% bwawa"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Created pool"
+msgstr "Bwawa lililoundwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Creating pool"
+msgstr "Kujenga bwawa"
+
+#: src/nft/components/profile/list/ListingButton.tsx
+msgid "Resolve {issues} issues"
+msgstr "Tatua masuala {issues}"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Delegating votes"
+msgstr "Kukabidhi kura"
+
+#: src/components/NavigationTabs/index.tsx
+#: src/pages/Pool/v2.tsx
+msgid "Create a pair"
+msgstr "Unda jozi"
+
+#: src/components/Banner/BaseAnnouncementBanner/index.tsx
+msgid "Download"
+msgstr "Pakua"
+
+#: src/components/Logo/UniswapXBrandMark.tsx
+msgid "UniswapX"
+msgstr "UniswapX"
+
+#: src/nft/components/profile/list/Modal/SuccessScreen.tsx
+msgid "Successfully listed"
+msgstr "Imeorodheshwa kwa mafanikio"
+
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
+msgid "Your balance on {label}"
+msgstr "Salio lako kwenye {label}"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Depositing"
+msgstr "Kuweka amana"
+
+#: src/components/Banner/BaseAnnouncementBanner/index.tsx
+msgid "Download app"
+msgstr "Pakua programu"
+
+#: src/pages/Swap/TaxTooltipBody.tsx
+msgid "{currencySymbol} fees don't allow for accurate exact outputs. Use the `You pay` field instead."
+msgstr "Ada {currencySymbol} haziruhusu matokeo sahihi. Tumia sehemu ya `Unalipa` badala yake."
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Remove amount"
+msgstr "Ondoa kiasi"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Adding liquidity"
+msgstr "Kuongeza ukwasi"
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported."
+msgstr "Mtandao wako uliounganishwa hautumiki."
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "Low listing price"
+msgstr "Bei ya chini ya tangazo"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Collect fees cancelled"
+msgstr "Ada ya kukusanya imeghairiwa"
+
+#: src/components/Tokens/TokenDetails/TokenDescription.tsx
+msgid "Etherscan"
+msgstr "Etherscan"
+
+#: src/nft/components/collection/UnavailableCollectionPage.tsx
+msgid "This collection is blocked"
+msgstr "Mkusanyiko huu umezuiwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Remove liquidity cancelled"
+msgstr "Kuondoa ukwasi kumeghairiwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Swap cancelled"
+msgstr "Ubadilishanaji umeghairiwa"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "{0}/{1} LP Tokens"
+msgstr "{0}/{1} LP Shuhuda"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Cancellation cancelled"
+msgstr "Ughairi umeghairiwa"
+
+#: src/components/ErrorBoundary/index.tsx
+#: src/components/ErrorBoundary/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+msgid "Something went wrong"
+msgstr "Hitilafu imetokea"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Select pair"
+msgstr "Chagua jozi"
+
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Collect as {nativeWrappedSymbol}"
+msgstr "Kusanya kama {nativeWrappedSymbol}"
+
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/ModalViews/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Confirm this transaction in your wallet"
+msgstr "Thibitisha shughuli hii kwenye mkoba wako"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Buying"
+msgstr "Kununua"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "{0}/{1} LP NFT"
+msgstr "{0}/{1} LP NFT"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Unknown Send"
+msgstr "Tuma Isiyojulikana"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/utils.ts
+msgid "This month"
+msgstr "Mwezi huu"
+
+#: src/components/swap/SwapLineItem.tsx
+#: src/components/swap/SwapLineItem.tsx
+msgid "Order routing"
+msgstr "Uelekezaji wa agizo"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Unknown Mint"
+msgstr "Mint isiyojulikana"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Minting"
+msgstr "Uchimbaji"
+
+#: src/components/NavBar/MenuDropdown.tsx
+#: src/pages/PoolDetails/PoolDetailsHeader.tsx
+msgid "Pool"
+msgstr "Dimbwi"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Invalid pair."
+msgstr "Jozi batili."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Submit proposal cancelled"
+msgstr "Kuwasilisha pendekezo kughairiwa"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Search name or paste address"
+msgstr "Tafuta jina au ubandike anwani"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Select a token to find your v2 liquidity."
+msgstr "Chagua ishara ili kupata v2 yako ukwasi."
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "UNI {0}/{1} Burned"
+msgstr "UNI {0}/{1} kuchomwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Repay cancelled"
+msgstr "Ulipaji umeghairiwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Wrapping"
+msgstr "Kufunga"
+
+#: src/components/swap/ConfirmSwapModal.tsx
+msgid "Review swap"
+msgstr "Kagua ubadilishaji"
+
+#: src/components/NavBar/SearchBarDropdown.tsx
+msgid "NFT collections"
+msgstr "Mkusanyiko wa NFT"
+
+#: src/pages/Swap/TaxTooltipBody.tsx
+msgid "Fees on the selected output token don't allow for accurate exact outputs. Use the `You pay` field instead."
+msgstr "Ada kwenye tokeni iliyochaguliwa hairuhusu matokeo kamili. Tumia sehemu ya `Unalipa` badala yake."
+
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
+msgid "No data"
+msgstr "Hakuna data"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Select an action"
+msgstr "Chagua kitendo"
+
+#: src/pages/Vote/Landing.tsx
+msgid "Update delegation"
+msgstr "Sasisha uwakilishi"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Your swap could not be fulfilled at this time. Please try again."
+msgstr "Ubadilishanaji wako haukuweza kutimizwa kwa wakati huu. Tafadhali jaribu tena."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Create pool cancelled"
+msgstr "Uundaji wa bwawa umeghairiwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Revoked Approval"
+msgstr "Idhini Imebatilishwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "You didn't have enough {0} to complete this swap."
+msgstr "Hukuwa na {0} ya kutosha kukamilisha ubadilishanaji huu."
+
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal"
+msgstr "Pendekezo"
+
+#: src/components/swap/SwapBuyFiatButton.tsx
+msgid "Buy"
+msgstr "Nunua"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Mint cancelled"
+msgstr "Mint imeghairiwa"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "MEV protection"
+msgstr "Ulinzi wa MEV"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
+msgstr "<0> Kidokezo:</0> Tumia zana hii kupata shares ya v2 ambayo hayaonekani kiotomatiki kwenye muonekano wa nje."
+
+#: src/components/Popups/PopupContent.tsx
+msgid "To use Uniswap on {0}, switch the network in your wallet’s settings."
+msgstr "Ili kutumia Uniswap kwenye {0}, badilisha mtandao katika mipangilio ya pochi yako."
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "One NFT is listed {0}%"
+msgstr "NFT moja imeorodheshwa {0}%"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Wrap ETH"
+msgstr "Funga ETH"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "UNI Governance"
+msgstr "Utawala wa UNI"
+
+#: src/components/addLiquidity/OwnershipWarning.tsx
+#: src/components/swap/PriceImpactModal.tsx
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "Onyo"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoked approval"
+msgstr "Uidhinishaji uliobatilishwa"
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "There is no liquidity data."
+msgstr "Hakuna data ya ukwasi."
+
+#: src/nft/components/profile/list/PriceTextInput.tsx
+msgid "below floor price."
+msgstr "bei ya chini ya sakafu."
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Unlocking votes"
+msgstr "Kufungua kura"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Price:"
+msgstr "Bei:"
+
+#: src/nft/components/collection/TransactionCompleteModal.tsx
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "View on Etherscan"
+msgstr "Angalia kwenye Etherscan"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Preview"
+msgstr "Hakiki"
+
+#: src/pages/Pool/index.tsx
+msgid "Learn"
+msgstr "Jifunze"
+
+#: src/state/governance/hooks.ts
+msgid "No description."
+msgstr "Hakuna maelezo."
+
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "The output token cannot be transferred. There may be an issue with the output token."
+msgstr "Ishara ya pato haiwezi kuhamishwa. Kunaweza kuwa na shida na ishara ya pato."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/nft/components/collection/ActivityCells.tsx
+msgid "Sold"
+msgstr "Inauzwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Unwrapped"
+msgstr "Imefunuliwa"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Thanks for being part of the Uniswap community <0/>"
+msgstr "Asante kwa kuwa sehemu ya jamii ya Uniswap <0 />"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "for"
+msgstr "kwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+msgid "{baseSymbol} and {quoteSymbol}"
+msgstr "{baseSymbol} na {quoteSymbol}"
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Explore Uniswap Analytics."
+msgstr "Gundua Takwimu za Uniswap."
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "← Back to Pools"
+msgstr "← Rudi kwenye Madimbwi"
+
+#: src/nft/utils/time.ts
+msgid "{i, plural, one {day} other {days}}"
+msgstr "{i, plural, one {siku} other {siku}}"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Create pool failed"
+msgstr "Imeshindwa kuunda bwawa"
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/V2.tsx
+#: src/nft/components/collection/ActivityCells.tsx
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Remove"
+msgstr "Ondoa"
+
+#: src/pages/Swap/index.tsx
+msgid "Insufficient liquidity for this trade."
+msgstr "Ukosefu wa kutosha wa biashara hii."
+
+#: src/components/NavBar/MenuDropdown.tsx
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Legal & Privacy"
+msgstr "Kisheria na Faragha"
+
+#: src/components/Settings/MaxSlippageSettings/index.tsx
+msgid "Slippage below {0} may result in a failed transaction"
+msgstr "Kuteleza chini ya {0} kunaweza kusababisha shughuli iliyofeli"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
+msgstr "Programu hukusanya kwa usalama anwani ya mkoba wako na kuishiriki na TRM Labs Inc. kwa sababu za hatari na kufuata."
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% fee tier"
+msgstr "Kiwango cha ada ya {0}"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches on-chain data and constructs contract calls with an Infura API."
+msgstr "Programu huchota data ya mtandaoni na kuunda simu za mkataba kwa kutumia API ya Infura."
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Detailed"
+msgstr "Kina kina"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Vote against"
+msgstr "Piga kura dhidi ya"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Confirm Swap"
+msgstr "Thibitisha Kubadilisha"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches blockchain data from The Graph’s hosted service."
+msgstr "Programu huchota data ya blockchain kutoka kwa huduma inayopangishwa na The Graph."
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "You are the first liquidity provider."
+msgstr "Wewe ndiye mtoaji wa kwanza wa ukwasi."
+
+#: src/components/WalletModal/PrivacyPolicyNotice.tsx
+msgid "Privacy Policy."
+msgstr "Sera ya Faragha."
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Claim fees"
+msgstr "Chukua makato"
+
+#: src/components/NavBar/SearchBarDropdown.tsx
+msgid "Coming soon: search and explore tokens on Avalanche Chain"
+msgstr "Inakuja hivi karibuni: tafuta na uchunguze ishara kwenye Msururu wa Avalanche"
+
+#: src/components/NavBar/ChainSelector.tsx
+msgid "Your wallet's current network is unsupported."
+msgstr "Mtandao wa sasa wa pochi yako hautumiki."
+
+#: src/components/RangeSelector/index.tsx
+msgid "Low price"
+msgstr "Bei ya chini"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Migrating"
+msgstr "Kuhamia"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Same price"
+msgstr "Bei sawa"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit2 allows token approvals to be shared and managed across different applications."
+msgstr "Permit2 inaruhusu uidhinishaji wa tokeni kushirikiwa na kudhibitiwa katika programu mbalimbali."
+
+#: src/nft/components/collection/TransactionCompleteModal.tsx
+msgid "Uniswap has granted your wish!"
+msgstr "Uniswap imetimiza matakwa yako!"
+
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Share to Twitter"
+msgstr "Shiriki kwenye Twitter"
+
+#: src/components/Tokens/TokenDetails/About.tsx
+msgid "About"
+msgstr "Kuhusu"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Waiting for confirmation"
+msgstr "Inasubiri uthibitisho"
+
+#: src/pages/Vote/styled.tsx
+msgid "Undetermined"
+msgstr "Haijakadiriwa"
+
+#: src/components/swap/SwapLineItem.tsx
+msgid "{0} fee"
+msgstr "{0} ada"
+
+#: src/nft/components/profile/list/SetDurationModal.tsx
+msgid "{amount, plural, =1 {week} other {weeks}}"
+msgstr "{amount, plural, =1 {wiki} other {wiki}}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to {0}"
+msgstr "Funga <0/> hadi {0}"
+
+#: src/pages/Pool/v2.tsx
+msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
+msgstr "<0>Uchanganuzi wa akaunti na makato iliyokusanywa</0><1> ↗ </1>"
+
+#: src/components/NavBar/index.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/SwapHeader.tsx
+#: src/components/swap/SwapSkeleton.tsx
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+#: src/pages/PoolDetails/PoolDetailsStatsButtons.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+msgid "Swap"
+msgstr "Badilishana"
+
+#: src/components/AccountDrawer/MiniPortfolio/ExpandoRow.tsx
+#: src/components/FeeSelector/index.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
+#: src/components/Tokens/TokenDetails/TokenDescription.tsx
+msgid "Hide"
+msgstr "Ficha"
+
+#: src/components/AccountDrawer/MiniPortfolio/Pools/index.tsx
+#: src/components/Badge/RangeBadge.tsx
+msgid "In range"
+msgstr "Katika anuwai"
+
+#: src/pages/Pool/PositionPage.tsx
+msgid "Collect"
+msgstr "Kusanya"
+
+#: src/pages/Pool/v2.tsx
+msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
+msgstr "Watoaji wa kioevu hupata ada ya 0.3% kwa biashara zote sawia na sehemu yao ya dimbwi. Ada zinaongezwa kwenye dimbwi, zinapatikana kwa wakati halisi na zinaweza kudaiwa kwa kuondoa ukwasi wako."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Buy cancelled"
+msgstr "Ununuzi umeghairiwa"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Return"
+msgstr "Kurudi"
+
+#: src/components/vote/DelegateModal.tsx
+msgid "Remove delegate"
+msgstr "Ondoa mjumbe"
+
+#: src/components/AccountDrawer/LanguageMenu.tsx
+#: src/components/AccountDrawer/SettingsMenu.tsx
+#: src/components/AccountDrawer/SettingsMenu.tsx
+msgid "Language"
+msgstr "Lugha"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "{0} requires resetting approval when spending limits are too low."
+msgstr "{0} inahitaji uidhinishaji upya wakati vikwazo vya matumizi ni vya chini sana."
+
+#: src/pages/AddLiquidityV2/index.tsx
+msgid "Prices and pool share"
+msgstr "Bei na sehemu ya dimbwi"
+
+#: src/nft/components/profile/list/PriceTextInput.tsx
+msgid "Remove item"
+msgstr "Ondoa kipengee"
+
+#: src/components/Tokens/TokenDetails/TokenDescription.tsx
+msgid "Explorer"
+msgstr "Mchunguzi"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/nft/components/collection/ActivityCells.tsx
+msgid "Cancelled"
+msgstr "Imeghairiwa"
+
+#: src/components/PositionCard/index.tsx
+msgid "Manage liquidity in rewards pool"
+msgstr "Dhibiti ukwasi katika hifadhi ya zawadi"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "Piga kura dhidi ya pendekezo {proposalKey}"
+
+#: src/components/AccountDrawer/AnalyticsToggle.tsx
+msgid "Allow analytics"
+msgstr "Ruhusu uchanganuzi"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "Pendekeza pendekezo jipya"
+
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "50%"
+msgstr "50%"
+
+#: src/components/swap/SwapBuyFiatButton.tsx
+msgid "Crypto purchases are not available in your region."
+msgstr "Ununuzi wa Crypto haupatikani katika eneo lako."
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Claim cancelled"
+msgstr "Dai limeghairiwa"
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/V2.tsx
+msgid "Your pool share:"
+msgstr "Sehemu yako ya dimbwi:"
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/V2.tsx
+#: src/components/PositionCard/V2.tsx
+msgid "Manage"
+msgstr "Simamia"
+
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "The fee paid to the Ethereum network to process your transaction. This must be paid in {0}."
+msgstr "Ada iliyolipwa kwa mtandao wa Ethereum ili kushughulikia muamala wako. Hii lazima ilipwe katika {0}."
+
+#: src/state/governance/hooks.ts
+msgid "Untitled"
+msgstr "Haina Jina"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "Piga kura dhidi ya pendekezo {proposalKey} kwa sababu \"{0}\""
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "No proposals found."
+msgstr "Hakuna mapendekezo yaliyopatikana."
+
+#: src/components/AccountDrawer/SmallBalanceToggle.tsx
+msgid "Hide small balances"
+msgstr "Ficha mizani ndogo"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days."
+msgstr "Hii hutoa ufikiaji wa itifaki ya Uniswap kwa tokeni yako ya kufanya biashara. Kwa usalama, muda huu utaisha baada ya siku 30."
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Open a new position or create a pool to get started."
+msgstr "Fungua nafasi mpya au uunde bwawa ili kuanza."
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "Buy or transfer NFTs to this wallet to get started."
+msgstr "Nunua au uhamishe NFTs kwenye pochi hii ili kuanza."
+
+#: src/components/swap/PriceImpactModal.tsx
+#: src/components/TokenSafety/index.tsx
+#: src/nft/components/bag/Bag.tsx
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "Continue"
+msgstr "Endelea"
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Add liquidity."
+msgstr "Ongeza Mtaji."
+
+#: src/nft/components/bag/BagHeader.tsx
+msgid "Sell"
+msgstr "Uza"
+
+#: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
+msgid "This token doesn't exist on {connectedChainLabel}"
+msgstr "Tokeni hii haipo kwenye {connectedChainLabel}"
+
+#: src/pages/Swap/TaxTooltipBody.tsx
+msgid "Exact input only"
+msgstr "Ingizo kamili pekee"
+
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Hitilafu ilitokea wakati wa kujaribu kutekeleza ubadilishaji huu. Unaweza kuhitaji kuongeza uvumilivu wako wa kuteleza. Ikiwa hiyo haifanyi kazi, kunaweza kuwa na kutokubaliana na ishara unayofanya biashara. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Check out our v3 LP walkthrough and migration guides."
+msgstr "Angalia mwongozo wetu wa v3 LP na mwongozo wa uhamiaji."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/utils.ts
+msgid "This year"
+msgstr "Mwaka huu"
+
+#: src/nft/pages/profile/index.tsx
+msgid "No items to display"
+msgstr "Hakuna vipengee vya kuonyesha"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Create pool and add {0}/{1} V3 liquidity"
+msgstr "Kujenga bwawa na kuongeza {0}/{1} V3 ukwasi"
+
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+msgid "Your {0} balance"
+msgstr "Salio lako {0}"
+
+#: src/components/WalletModal/PrivacyPolicyNotice.tsx
+msgid "Terms of Service"
+msgstr "Masharti ya Huduma"
+
+#: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
+msgid "Confirm supply"
+msgstr "Thibitisha usambazaji"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execution submitted"
+msgstr "Utekelezaji umewasilishwa"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Error ID: {eventId}"
+msgstr "Kitambulisho cha hitilafu: {eventId}"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Cancelling"
+msgstr "Inaghairi"
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/Sushi.tsx
+#: src/components/PositionCard/V2.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/Pool/index.tsx
+msgid "Migrate"
+msgstr "Hamia"
+
+#: src/components/Charts/PriceChart/index.tsx
+msgid "This price may not be up-to-date due to low trading volume."
+msgstr "Bei hii inaweza kuwa sio ya kisasa kwa sababu ya kiwango cha chini cha biashara."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/utils.ts
+msgid "This week"
+msgstr "Wiki hii"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Receiving"
+msgstr "Kupokea"
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/Sushi.tsx
+#: src/components/PositionCard/V2.tsx
+#: src/pages/MigrateV2/index.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/Pool/v2.tsx
+#: src/pages/PoolFinder/index.tsx
+msgid "Loading"
+msgstr "Inapakia"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Reverse Registrar"
+msgstr "Rejesha Msajili"
+
+#: src/components/claim/AddressClaimModal.tsx
+#: src/components/ModalViews/index.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "View transaction on Explorer"
+msgstr "Angalia shughuli kwenye Kivinjari"
+
+#: src/nft/components/bag/BagHeader.tsx
+#: src/pages/AddLiquidity/index.tsx
+msgid "Clear all"
+msgstr "Futa yote"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
+msgstr "Hamisha ishara zako za ukwasi kutoka kwa Uniswap V2 hadi Uniswap V3."
+
+#: src/pages/NotFound/index.tsx
+msgid "Page not found!"
+msgstr "Ukurasa haujapatikana!"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "{label} token bridge"
+msgstr "{label} daraja la ishara"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Delegate cancelled"
+msgstr "Mjumbe ameghairiwa"
+
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal Title"
+msgstr "Kichwa cha Pendekezo"
+
+#: src/components/FiatOnrampModal/index.tsx
+msgid "Something went wrong!"
+msgstr "Hitilafu fulani imetokea!"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Borrow failed"
+msgstr "Kukopa kumeshindwa"
+
+#: src/components/TokenSafety/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Close"
+msgstr "Funga"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Receive failed"
+msgstr "Imeshindwa kupokea"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Allow {0} to be used for swapping"
+msgstr "Ruhusu {0} itumike kubadilishana"
+
+#: src/components/NavBar/UkBanner.tsx
+msgid "UK disclaimer:"
+msgstr "Kanusho la Uingereza:"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Mint failed"
+msgstr "Mint imeshindwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Queue cancelled"
+msgstr "Foleni imeghairiwa"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Deploy cancelled"
+msgstr "Usambazaji umeghairiwa"
+
+#: src/components/claim/AddressClaimModal.tsx
+msgid "Welcome to team Unicorn :)"
+msgstr "Karibu kwenye timu ya Unicorn :)"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "Pigia kura pendekezo {proposalKey} kwa sababu \"{0}\""
+
+#: src/pages/Vote/Landing.tsx
+msgid "(edit)"
+msgstr "(rekebisha)"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Proposal submitted"
+msgstr "Pendekezo limewasilishwa"
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "NFT"
+msgstr "NFT"
+
+#: src/components/Tokens/TokenDetails/index.tsx
+msgid "Name not found"
+msgstr "Jina halijapatikana"
+
+#: src/nft/components/card/media.tsx
+msgid "available yet"
+msgstr "inapatikana bado"
+
+#: src/utils/errors.ts
+msgid "Your signature has expired."
+msgstr "Sahihi yako imeisha muda."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Minted"
+msgstr "Minted"
+
+#: src/pages/CreateProposal/index.tsx
+msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
+msgstr "Lazima uwe na {formattedProposalThreshold} ili kuwasilisha pendekezo"
+
+#: src/components/swap/PriceImpactModal.tsx
+msgid "This transaction will result in a <0>{0}</0> price impact on the market price of this pool. Do you wish to continue?"
+msgstr "Muamala huu utasababisha athari ya bei ya <0>{0}</0> kwa bei ya soko ya hifadhi hii. Je, ungependa kuendelea?"
+
+#: src/nft/components/profile/list/SetDurationModal.tsx
+msgid "{amount, plural, =1 {month} other {months}}"
+msgstr "{amount, plural, =1 {mwezi} other {miezi}}"
+
+#: src/nft/utils/time.ts
+msgid "{i, plural, one {hour} other {hours}}"
+msgstr "{i, plural, one {saa} other {masaa}}"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
+msgstr "Gharama yako ya ununuzi itakuwa kubwa zaidi kwani inajumuisha gesi kuunda dimbwi."
+
+#: src/components/Banner/BaseAnnouncementBanner/index.tsx
+#: src/components/Banner/BaseAnnouncementBanner/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/SwapBuyFiatButton.tsx
+#: src/components/TokenSafety/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
+#: src/pages/Landing/index.tsx
+msgid "Learn more"
+msgstr "Jifunze zaidi"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "Mafanikio"
+
