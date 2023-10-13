@@ -6,7 +6,10 @@ import { Flex, FlexProps, Text, TouchableArea, useSporeColors } from 'ui/src'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { iconSizes } from 'ui/src/theme'
 
-export function BlockedAddressWarning(props: FlexProps): JSX.Element {
+export function BlockedAddressWarning({
+  isRecipientBlocked,
+  ...props
+}: { isRecipientBlocked?: boolean } & FlexProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
 
@@ -29,7 +32,7 @@ export function BlockedAddressWarning(props: FlexProps): JSX.Element {
             width={iconSizes.icon16}
           />
           <Text color="$neutral2" variant="subheading2">
-            {t('This wallet is blocked')}
+            {t(`${isRecipientBlocked ? 'Recipient' : 'This'} wallet is blocked`)}
           </Text>
         </Flex>
       </TouchableArea>

@@ -1,4 +1,4 @@
-import { ONE_DAY_MS } from 'utilities/src/time/time'
+import { ONE_HOUR_MS } from 'utilities/src/time/time'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useRestQuery } from 'wallet/src/data/rest'
 
@@ -12,7 +12,7 @@ export function useTrmQuery(address?: string): ReturnType<typeof useRestQuery<Sc
     { address },
     ['block'],
     {
-      ttlMs: ONE_DAY_MS,
+      ttlMs: ONE_HOUR_MS,
       skip: !address,
     }
   )

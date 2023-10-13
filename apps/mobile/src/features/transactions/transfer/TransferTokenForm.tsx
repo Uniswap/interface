@@ -37,7 +37,7 @@ import { usePrevious } from 'utilities/src/react/hooks'
 import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
-import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
+import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { TransferSpeedbump } from './types'
 
 interface TransferTokenProps {
@@ -96,7 +96,12 @@ export function TransferTokenForm({
   const { onSetExactAmount, onSetMax } = useTokenFormActionHandlers(dispatch)
   const onToggleShowRecipientSelector = useOnToggleShowRecipientSelector(dispatch)
 
-  const { isBlocked, isBlockedLoading } = useIsBlockedActiveAddress()
+  const { isBlocked: isActiveBlocked, isBlockedLoading: isActiveBlockedLoading } =
+    useIsBlockedActiveAddress()
+  const { isBlocked: isRecipientBlocked, isBlockedLoading: isRecipientBlockedLoading } =
+    useIsBlocked(recipient)
+  const isBlocked = isActiveBlocked || isRecipientBlocked
+  const isBlockedLoading = isActiveBlockedLoading || isRecipientBlockedLoading
 
   const { walletNeedsRestore, openWalletRestoreModal } = useWalletRestore()
 
@@ -357,6 +362,7 @@ export function TransferTokenForm({
                 backgroundColor="$surface2"
                 borderBottomLeftRadius="$rounded16"
                 borderBottomRightRadius="$rounded16"
+                isRecipientBlocked={isRecipientBlocked}
                 mt="$spacing2"
                 px="$spacing16"
                 py="$spacing12"
