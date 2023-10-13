@@ -9,15 +9,15 @@ export const defaultCoin = {
   type: 'COIN',
 }
 
-export const staticTokens = [
+export const staticCoins = [
   {
     name: 'Uniswap',
     symbol: 'UNI',
     pricePercentChange: 0.25,
     color: '#FF007A',
     logoUrl:
-      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984/logo.png',
-    address: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984',
+      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png',
+    address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
     type: 'COIN',
   },
   {
@@ -107,5 +107,116 @@ export const staticTokens = [
     logoUrl: 'https://assets.coingecko.com/coins/images/30323/large/hpos10i_logo_casino_night-dexview.png?1696529224',
     address: '0x6b175474e89094c44da98b954eedeac495271d0f',
     type: 'COIN',
+  },
+  {
+    name: 'Apecoin',
+    symbol: 'APE',
+    pricePercentChange: 0.25,
+    color: 'rgba(0, 20, 195, 1)',
+    logoUrl:
+      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x4d224452801ACEd8B2F0aebE155379bb5D594381/logo.png',
+    address: '0x4d224452801ACEd8B2F0aebE155379bb5D594381',
+    type: 'COIN',
+  },
+  {
+    name: 'rETH',
+    symbol: 'rETH',
+    pricePercentChange: 0.25,
+    color: '#EF8770',
+    logoUrl: 'https://assets.coingecko.com/coins/images/20764/large/reth.png?1696520159',
+    address: '0x4d224452801ACEd8B2F0aebE155379bb5D594381',
+    type: 'COIN',
+  },
+  {
+    name: 'Maker',
+    symbol: 'MKR',
+    pricePercentChange: 0.25,
+    color: '#6DAEA2',
+    logoUrl:
+      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png',
+    address: '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2',
+    type: 'COIN',
+  },
+  {
+    name: 'Tether',
+    symbol: 'USDT',
+    pricePercentChange: 0.25,
+    color: '#409192',
+    logoUrl:
+      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png',
+    address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+    type: 'COIN',
+  },
+]
+
+export const staticCollections = [
+  {
+    name: 'Bibos',
+    symbol: 'BIBO',
+    pricePercentChange: 0.25,
+    color: '#6629C9',
+    logoUrl:
+      'https://assets.coingecko.com/nft_contracts/images/1290/large/8b3c65ff29a58dd59ae26503ad40ab72.png?1659692625',
+    address: '0xf528e3381372c43f5e8a55b3e6c252e32f1a26e4',
+    type: 'COLLECTIBLE',
+  },
+  {
+    name: 'Mutant Ape Yacht Club',
+    symbol: 'MAYC',
+    pricePercentChange: 0.25,
+    color: '#CFDD40',
+    logoUrl:
+      'https://i.seadn.io/gae/lHexKRMpw-aoSyB1WdFBff5yfANLReFxHzt1DOj_sg7mS14yARpuvYcUtsyyx-Nkpk6WTcUPFoG53VnLJezYi8hAs0OxNZwlw6Y-dmI?w=500&auto=format',
+    address: '0x60e4d786628fea6478f785a6d7e704777c86a7c6',
+    type: 'COLLECTIBLE',
+  },
+  {
+    name: 'Pudgy Penguins',
+    symbol: 'PUDGY',
+    pricePercentChange: 0.25,
+    color: '#80AAFE',
+    logoUrl:
+      'https://i.seadn.io/gae/yNi-XdGxsgQCPpqSio4o31ygAV6wURdIdInWRcFIl46UjUQ1eV7BEndGe8L661OoG-clRi7EgInLX4LPu9Jfw4fq0bnVYHqg7RFi?w=500&auto=format',
+    address: '0xbd3531da5cf5857e7cfaa92426877b022e612cf8',
+    type: 'COLLECTIBLE',
+  },
+  {
+    name: 'Milady Maker',
+    symbol: 'MILADY',
+    pricePercentChange: 0.25,
+    color: '#69358A',
+    logoUrl:
+      'https://i.seadn.io/gae/a_frplnavZA9g4vN3SexO5rrtaBX_cBTaJYcgrPtwQIqPhzgzUendQxiwUdr51CGPE2QyPEa1DHnkW1wLrHAv5DgfC3BP-CWpFq6BA?w=500&auto=format',
+    address: '0x1a92f7381b9f03921564a437210bb9396471050c',
+    type: 'COLLECTIBLE',
+  },
+  {
+    name: 'Azuki',
+    symbol: 'AZUKI',
+    pricePercentChange: 0.25,
+    color: '#BC3748',
+    logoUrl:
+      'https://i.seadn.io/gae/H8jOCJuQokNqGBpkBN5wk1oZwO7LM8bNnrHCaekV2nKjnCqw6UB5oaH8XyNeBDj6bA_n1mjejzhFQUP3O1NfjFLHr3FOaeHcTOOT?w=500&auto=format',
+    address: '0x7b6ab32ca02b31485fbf7265437c2853792cc5d9',
+    type: 'COLLECTIBLE',
+  },
+  {
+    name: 'Bored Ape Yacht Club',
+    symbol: 'BAYC',
+    pricePercentChange: 0.25,
+    color: '#F4B000',
+    logoUrl: 'https://i.seadn.io/gae/2hQ3ZI6Kk',
+    address: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
+    type: 'COLLECTIBLE',
+  },
+  {
+    name: 'Mfers',
+    symbol: 'MFERS',
+    pricePercentChange: 0.25,
+    color: '#F4B000',
+    logoUrl:
+      'https://i.seadn.io/gae/J2iIgy5_gmA8IS6sXGKGZeFVZwhldQylk7w7fLepTE9S7ICPCn_dlo8kypX8Ju0N6wvLVOKsbP_7bNGd8cpKmWhFQmqMXOC8q2sOdqw?w=500&auto=format',
+    address: '0x7b6ab32ca02b31485fbf7265437c2853792cc5d9',
+    type: 'COLLECTIBLE',
   },
 ]

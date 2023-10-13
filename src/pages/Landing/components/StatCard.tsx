@@ -9,6 +9,7 @@ type StatCardProps = {
   prefix?: string
   suffix?: string
   delay?: number
+  inView?: boolean
 }
 
 function rotateArray<T>(arr: T[], n: number) {
@@ -23,27 +24,29 @@ const delineators = [',', '.']
 export function StatCard(props: StatCardProps) {
   return (
     <Container>
-      <H3>{props.title}</H3>
+      <Title>{props.title}</Title>
       <StringInterpolationWithMotion
         prefix={props.prefix}
         suffix={props.suffix}
         value={props.value}
         delay={props.delay}
+        inView={props.inView}
       />
     </Container>
   )
 }
 
 // @ts-ignore
-function StringInterpolationWithMotion({ prefix, suffix, value, delay }) {
+function StringInterpolationWithMotion({ prefix, suffix, value, delay, inView }) {
   const chars = value.split('')
 
   return (
     <Mask
       initial="initial"
-      whileInView="animate"
+      animate={inView ? 'animate' : 'initial'}
+      // whileInView="animate"
       transition={{ staggerChildren: 0.025, delayChildren: delay }}
-      viewport={{ once: true }}
+      // viewport={{ once: true }}
     >
       {chars.map((char: string, index: number) => {
         // select charset based on char
@@ -91,7 +94,7 @@ function NumberSprite({ char, charset }: { char: string; charset: string[] }) {
       {chars.map((char, index) => {
         const charVariants = {
           initial: {
-            opacity: 1,
+            opacity: 0.25,
           },
           animate: {
             opacity: idx === index ? 1 : 0,
@@ -142,6 +145,11 @@ const Mask = motion(styled.span`
   max-height: 180px;
   width: 100%;
   overflow: hidden;
+  @media (max-width: 768px) {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    height: 92px;
+  }
 `)
 
 const Char = motion(styled.div`
@@ -150,7 +158,11 @@ const Char = motion(styled.div`
   font-size: 52px;
   font-style: normal;
   font-weight: 500;
-  line-height: 60px; /* 115.385% */
+  color: ${({ theme }) => theme.neutral1};
+  line-height: 32px; /* 115.385% */
+  @media (max-width: 768px) {
+    font-size: 24px;
+  }
 `)
 
 const Container = styled.div`
@@ -168,6 +180,10 @@ const Container = styled.div`
   height: 100%;
   background-color: ${({ theme }) => theme.surface2};
   overflow: hidden;
+  @media (max-width: 768px) {
+    padding: 16px;
+    padding-bottom: 0px;
+  }
 `
 
 const SpriteContainer = motion(styled.div`
@@ -176,3 +192,11 @@ const SpriteContainer = motion(styled.div`
   flex-direction: column;
   color: ${({ theme }) => theme.neutral2};
 `)
+
+const Title = styled(H3)`
+  color: ${({ theme }) => theme.neutral2};
+  @media (max-width: 768px) {
+    font-size: 16px;
+    line-height: 24px;
+  }
+`

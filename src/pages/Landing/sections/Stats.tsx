@@ -1,3 +1,4 @@
+import { useInView } from 'react-intersection-observer'
 import styled, { useTheme } from 'styled-components'
 
 import { Body1, Box, Button, H2 } from '../components/Generics'
@@ -10,8 +11,14 @@ const copy = `The Uniswap platform is powered by the Uniswap protocol. The large
 
 export function Stats() {
   const theme = useTheme()
+  const { ref, inView, entry } = useInView({
+    /* Optional options */
+    threshold: 0,
+    triggerOnce: true,
+  })
+
   return (
-    <Box direction="column" align="center" padding="0 24px">
+    <Box ref={ref} direction="column" align="center" padding="0 24px">
       <HideWhenSmall direction="row" maxWidth="1328px" height="624px" gap="24px">
         <Box direction="column" justify-content="space-between" height="100%">
           <H2>Trusted by millions</H2>
@@ -24,12 +31,12 @@ export function Stats() {
         </Box>
         <Box direction="column" gap="16px" height="100%">
           <Box gap="16px" height="100%">
-            <StatCard title="Lifetime volume" value="$1.6T" delay={0} />
-            <StatCard title="Assets" value="81,036" delay={0.2} />
+            <StatCard title="Lifetime volume" value="$1.6T" delay={0} inView={inView} />
+            <StatCard title="Assets" value="81,036" delay={0.2} inView={inView} />
           </Box>
           <Box gap="16px" height="100%">
-            <StatCard title="Lifetime swappers" value="38M" delay={0.4} />
-            <StatCard title="Trades today" value="3,461" delay={0.6} />
+            <StatCard title="Lifetime swappers" value="38M" delay={0.4} inView={inView} />
+            <StatCard title="Trades today" value="3,461" delay={0.6} inView={inView} />
           </Box>
         </Box>
       </HideWhenSmall>
@@ -37,12 +44,12 @@ export function Stats() {
         <H2>Trusted by millions</H2>
         <Box direction="column" gap="16px" height="100%">
           <Box gap="16px" height="100%">
-            <StatCard title="Lifetime volume" value="$1.6T" delay={0} />
-            <StatCard title="Assets" value="81,036" delay={0.2} />
+            <StatCard title="Lifetime volume" value="$1.6T" delay={0} inView={inView} />
+            <StatCard title="Assets" value="81,036" delay={0.2} inView={inView} />
           </Box>
           <Box gap="16px" height="100%">
-            <StatCard title="Lifetime swappers" value="38M" delay={0.4} />
-            <StatCard title="Trades today" value="3,461" delay={0.6} />
+            <StatCard title="Lifetime swappers" value="38M" delay={0.4} inView={inView} />
+            <StatCard title="Trades today" value="3,461" delay={0.6} inView={inView} />
           </Box>
         </Box>
         <Body1>{copy}</Body1>

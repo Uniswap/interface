@@ -7,9 +7,11 @@ import PoissonDiskSampling from 'poisson-disk-sampling'
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { defaultCoin, staticTokens } from '../staticTokens'
+import { defaultCoin, staticCoins, staticCollections } from '../staticTokens'
 import { Box } from './Generics'
 import { PriceArrowDown, PriceArrowUp, PriceNeutral } from './Icons'
+
+const tokenList = mixArrays(staticCoins, staticCollections, 0.33)
 
 type Point = [number, number]
 
@@ -54,6 +56,13 @@ function shuffleArray(array: any[]) {
   return newArray
 }
 
+function mixArrays(arr1: any[], arr2: any[], ratio: number) {
+  const arr2TrimLength = Math.floor(arr1.length * ratio)
+  const arr2Trimmed = arr2.slice(0, arr2TrimLength)
+
+  return shuffleArray([...arr1, ...arr2Trimmed])
+}
+
 const w = 3000
 const h = 800 - 72
 
@@ -89,6 +98,8 @@ export function TokenCloud() {
       }
     })
 
+    console.log('simpleCollectionData', simpleCollectionData)
+
     const simpleTokenData = tokens?.data?.map((t) => {
       return {
         // @ts-ignore
@@ -101,7 +112,7 @@ export function TokenCloud() {
       }
     })
 
-    console.log(simpleTokenData)
+    console.log('simpleTokenData', simpleTokenData)
 
     const displayTokens = shuffleArray([...simpleCollectionData, ...simpleTokenData])
     setDisplayTokens(displayTokens)
@@ -116,8 +127,10 @@ export function TokenCloud() {
       // Order by distance from center, ie idx = 0 is closest to center
       .sort((a: Point, b: Point) => Math.abs(a[0] - w / 2) - Math.abs(b[0] - w / 2))
       .map(([x, y]: Point, idx: number) => {
-        const token = !staticTokens[idx] ? defaultCoin : staticTokens[idx]
-        const size = randomInt(32, 96)
+        const token = !tokenList[idx] ? defaultCoin : tokenList[idx]
+
+        const size = randomInt(40, 96)
+
         return {
           x,
           y,
@@ -125,7 +138,7 @@ export function TokenCloud() {
           size,
           color: token.color,
           logoUrl: token.logoUrl,
-          opacity: randomFloat(0.25, 1.0),
+          opacity: randomFloat(0.5, 1.0),
           rotation: randomInt(-20, 20),
           delay: Math.abs(x - w / 2) / 800,
           floatDuration: randomFloat(3, 6),
@@ -245,17 +258,19 @@ export function TokenCloud() {
 
             return (
               <TokenIconPositioner
-                onMouseEnter={() => setCursor(idx)}
-                onMouseLeave={() => setCursor(-1)}
                 key={`tokenIcon-${idx}`}
                 variants={positionerVariants}
                 initial="initial"
                 animate="animate"
-                dragSnapToOrigin
                 transition={{ delay, duration: 0.8, type: 'spring', bounce: 0.6 }}
                 size={size}
               >
-                <FloatContainer variants={floatVariants} animate="animate">
+                <FloatContainer
+                  onMouseEnter={() => setCursor(idx)}
+                  onMouseLeave={() => setCursor(-1)}
+                  variants={floatVariants}
+                  animate="animate"
+                >
                   <Ticker
                     size={size}
                     color={color}
@@ -340,8 +355,8 @@ const TokenIcon = styled(motion.div)<TokenIconProps>`
   width: ${(props) => `${props.size}px`};
   height: ${(props) => `${props.size}px`};
   background-color:${(props) => `${props.color}`};
-  filter: blur(${(props) => props.blur}px);
-   background-image: url(${(props) => props.logoUrl});
+  filter: blur(${(props) => `${props.blur}px`});
+  background-image: url(${(props) => props.logoUrl});
   background-size: cover;
   background-position: center center;
   transition: filter 0.15s ease-in-out;
@@ -387,6 +402,7 @@ const TokenIconRing = styled(motion.div)<TokenIconRingProps>`
   height: ${(props) => `${props.size}px`};
   background-color: rgba(0,0,0,0);
   border: 1px solid ${(props) => `${props.color}`};
+  
   transform-origin: center center;
   position: absolute;
   pointer-events: all;
@@ -433,7 +449,6 @@ type TickerProps = {
 }
 
 function Ticker(props: TickerProps) {
-  // const rootVariants = { rest: {}, hover: {} }
   const priceVariants = {
     rest: { opacity: 0, x: 0 },
     hover: { opacity: 1, x: 8 },

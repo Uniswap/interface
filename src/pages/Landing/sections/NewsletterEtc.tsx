@@ -12,7 +12,7 @@ export function NewsletterEtc() {
       <Box direction="row" maxWidth="1328px" gap="24px">
         <Box direction="column" justify-content="space-between" height="100%" gap="40px">
           <H2>Learn more</H2>
-          <RowToCol gap="24px" width="100%" maxWidth="1328px">
+          <RowToCol gap="16px" width="100%" maxWidth="1328px">
             <SquareCard backgroundColor={theme.surface2}>
               <PillButton icon={<HelpCircle fill={theme.neutral1} />} color={theme.neutral1} label="Help Center" />
               <H3>Get support</H3>
