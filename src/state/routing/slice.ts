@@ -19,7 +19,7 @@ import {
   URAQuoteResponse,
   URAQuoteType,
 } from './types'
-import { isExactInput, shouldUseAPIRouter, transformRoutesToTrade } from './utils'
+import { isExactInput, transformRoutesToTrade } from './utils'
 
 const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
 if (UNISWAP_API_URL === undefined) {
@@ -121,73 +121,69 @@ export const routingApi = createApi({
         )
       },
       async queryFn(args, _api, _extraOptions, fetch) {
-        let fellBack = false
         logSwapQuoteRequest(args.tokenInChainId, args.routerPreference, false)
         const quoteStartMark = performance.mark(`quote-fetch-start-${Date.now()}`)
-        if (shouldUseAPIRouter(args)) {
-          fellBack = true
-          try {
-            const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
-            const type = isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT'
-
-            const requestBody = {
-              tokenInChainId,
-              tokenIn: tokenInAddress,
-              tokenOutChainId,
-              tokenOut: tokenOutAddress,
-              amount,
-              type,
-              intent: args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? 'pricing' : undefined,
-              configs: getRoutingAPIConfig(args),
-            }
-
-            const response = await fetch({
-              method: 'POST',
-              url: '/quote',
-              body: JSON.stringify(requestBody),
-            })
-
-            if (response.error) {
-              try {
-                // cast as any here because we do a runtime check on it being an object before indexing into .errorCode
-                const errorData = response.error.data as { errorCode?: string; detail?: string }
-                // NO_ROUTE should be treated as a valid response to prevent retries.
-                if (
-                  typeof errorData === 'object' &&
-                  (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
-                ) {
-                  sendAnalyticsEvent('No quote received from routing API', {
-                    requestBody,
-                    response,
-                    routerPreference: args.routerPreference,
-                  })
-                  return {
-                    data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
-                  }
-                }
-              } catch {
-                throw response.error
-              }
-            }
-
-            const uraQuoteResponse = response.data as URAQuoteResponse
-            const tradeResult = await transformRoutesToTrade(args, uraQuoteResponse, QuoteMethod.ROUTING_API)
-            return { data: { ...tradeResult, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
-          } catch (error: any) {
-            console.warn(
-              `GetQuote failed on Unified Routing API, falling back to client: ${
-                error?.message ?? error?.detail ?? error
-              }`
-            )
-          }
-        }
         try {
-          const method = fellBack ? QuoteMethod.CLIENT_SIDE_FALLBACK : QuoteMethod.CLIENT_SIDE
+          const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
+          const type = isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT'
+
+          const requestBody = {
+            tokenInChainId,
+            tokenIn: tokenInAddress,
+            tokenOutChainId,
+            tokenOut: tokenOutAddress,
+            amount,
+            type,
+            intent: args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? 'pricing' : undefined,
+            configs: getRoutingAPIConfig(args),
+          }
+
+          const response = await fetch({
+            method: 'POST',
+            url: '/quote',
+            body: JSON.stringify(requestBody),
+          })
+
+          if (response.error) {
+            try {
+              // cast as any here because we do a runtime check on it being an object before indexing into .errorCode
+              const errorData = response.error.data as { errorCode?: string; detail?: string }
+              // NO_ROUTE should be treated as a valid response to prevent retries.
+              if (
+                typeof errorData === 'object' &&
+                (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
+              ) {
+                sendAnalyticsEvent('No quote received from routing API', {
+                  requestBody,
+                  response,
+                  routerPreference: args.routerPreference,
+                })
+                return {
+                  data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
+                }
+              }
+            } catch {
+              throw response.error
+            }
+          }
+
+          const uraQuoteResponse = response.data as URAQuoteResponse
+          const tradeResult = await transformRoutesToTrade(args, uraQuoteResponse, QuoteMethod.ROUTING_API)
+          return { data: { ...tradeResult, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
+        } catch (error: any) {
+          console.warn(
+            `GetQuote failed on Unified Routing API, falling back to client: ${
+              error?.message ?? error?.detail ?? error
+            }`
+          )
+        }
+
+        try {
           const { getRouter, getClientSideQuote } = await import('lib/hooks/routing/clientSideSmartOrderRouter')
           const router = getRouter(args.tokenInChainId)
           const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
           if (quoteResult.state === QuoteState.SUCCESS) {
-            const trade = await transformRoutesToTrade(args, quoteResult.data, method)
+            const trade = await transformRoutesToTrade(args, quoteResult.data, QuoteMethod.CLIENT_SIDE_FALLBACK)
             return {
               data: { ...trade, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
             }

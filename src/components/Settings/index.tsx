@@ -5,7 +5,7 @@ import { Scrim } from 'components/AccountDrawer'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column, { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
-import { isSupportedChain, L2_CHAIN_IDS } from 'constants/chains'
+import { isSupportedChain, isUniswapXSupportedChain, L2_CHAIN_IDS } from 'constants/chains'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Portal } from 'nft/components/common/Portal'
@@ -101,12 +101,12 @@ export default function SettingsTab({
   autoSlippage,
   chainId,
   trade,
-  showRoutingSettings = true,
+  hideRoutingSettings = false,
 }: {
   autoSlippage: Percent
   chainId?: number
   trade?: InterfaceTrade
-  showRoutingSettings?: boolean
+  hideRoutingSettings?: boolean
 }) {
   const { chainId: connectedChainId } = useWeb3React()
   const showDeadlineSettings = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
@@ -123,6 +123,9 @@ export default function SettingsTab({
 
   useOnClickOutside(node, isOpenDesktop ? closeMenu : undefined)
   useDisableScrolling(isOpen)
+
+  const uniswapXEnabled = chainId && isUniswapXSupportedChain(chainId)
+  const showRoutingSettings = Boolean(uniswapXEnabled && !hideRoutingSettings)
 
   const isChainSupported = isSupportedChain(chainId)
   const Settings = useMemo(

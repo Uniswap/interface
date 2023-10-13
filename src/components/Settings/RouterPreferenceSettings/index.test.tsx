@@ -24,18 +24,4 @@ describe('RouterPreferenceSettings', () => {
     expect(uniswapXToggle).toHaveAttribute('aria-selected', 'false')
     expect(store.getState().user.userRouterPreference).toEqual(RouterPreference.API)
   })
-  it('toggles `Local Routing` router preference', () => {
-    render(<RouterPreferenceSettings />)
-
-    const localRoutingToggle = screen.getByTestId('toggle-local-routing-button')
-
-    fireEvent.click(localRoutingToggle)
-    expect(localRoutingToggle).toHaveAttribute('aria-selected', 'true')
-    expect(store.getState().user.userRouterPreference).toEqual(RouterPreference.CLIENT)
-
-    fireEvent.click(localRoutingToggle)
-
-    expect(localRoutingToggle).toHaveAttribute('aria-selected', 'false')
-    expect(store.getState().user.userRouterPreference).toEqual(RouterPreference.API)
-  })
 })

@@ -37,7 +37,7 @@ export function useDebouncedTrade(
   tradeType: TradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency,
-  routerPreferenceOverride?: RouterPreference.API | RouterPreference.CLIENT,
+  routerPreferenceOverride?: RouterPreference.API,
   account?: string,
   inputTax?: Percent,
   outputTax?: Percent
@@ -97,8 +97,7 @@ export function useDebouncedTrade(
   const skipBothFetches = !autoRouterSupported || !isWindowVisible || isWrap
   const skipRoutingFetch = skipBothFetches || isDebouncing
 
-  const skipPreviewTradeFetch =
-    skipBothFetches || routerPreference === RouterPreference.CLIENT || isPreviewTradeDebouncing
+  const skipPreviewTradeFetch = skipBothFetches || isPreviewTradeDebouncing
 
   const previewTradeResult = usePreviewTrade(
     skipPreviewTradeFetch,
