@@ -7,8 +7,8 @@ export type PersistAppStateV2 = {
 } & { user?: UserState }
 
 /**
- * Migration to change the default user deadline from 30 minutes to 10 minutes.
- * We only migrate if the saved deadline is the old default.
+ * Migration to move users who have local routing as their router preference to API
+ * since forced local routing is now deprecated
  */
 export const migration2 = (state: PersistAppStateV2 | undefined) => {
   // @ts-ignore this is intentionally a string and not the `RouterPreference` enum because `client` is a deprecated option
