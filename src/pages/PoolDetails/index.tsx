@@ -168,7 +168,7 @@ const TableRow = styled(Row)<{ $borderBottom?: boolean }>`
   justify-content: space-between;
   border-bottom: ${({ $borderBottom, theme }) => ($borderBottom ? `1px solid ${theme.surface3}` : 'none')}};
   padding: 12px;
-  width: max(100%, 100vw);
+  min-width: max-content;
 `
 
 const TableElement = styled(ThemedText.BodySecondary)<{
