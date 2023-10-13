@@ -5,6 +5,7 @@ import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 // @ts-ignore
 import PoissonDiskSampling from 'poisson-disk-sampling'
 import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { defaultCoin, staticCoins, staticCollections } from '../staticTokens'
@@ -12,6 +13,32 @@ import { Box } from './Generics'
 import { PriceArrowDown, PriceArrowUp, PriceNeutral } from './Icons'
 
 const tokenList = mixArrays(staticCoins, staticCollections, 0.33)
+
+type Token = {
+  address: string
+  color: string
+  logoUrl: string
+  pricePercentChange: number
+  symbol: string
+  type: string
+}
+
+type TokenPoint = {
+  x: number
+  y: number
+  blur: number
+  size: number
+  color: string
+  logoUrl: string
+  opacity: number
+  rotation: number
+  delay: number
+  floatDuration: number
+  ticker: string
+  delta: number
+  type: string
+  address: string
+}
 
 type Point = [number, number]
 
@@ -81,7 +108,7 @@ const poissonConfig = {
 }
 
 export function TokenCloud() {
-  const [pts, setPts] = useState<Point[]>([])
+  const [pts, setPts] = useState<TokenPoint[]>([])
   const tokens = useLandingTokens(1)
   const collections = useTrendingCollections(25, HistoryDuration.Day)
   const [displayTokens, setDisplayTokens] = useState<SimpleToken[]>([])
@@ -145,6 +172,7 @@ export function TokenCloud() {
           ticker: token.symbol,
           delta: token.pricePercentChange,
           type: token.type,
+          address: token.address,
         }
       })
       // @ts-ignore
@@ -156,7 +184,7 @@ export function TokenCloud() {
         }
       })
 
-    setPts(points as Point[])
+    setPts(points as TokenPoint[])
   }, [])
 
   const constraintsRef = useRef(null)
@@ -168,156 +196,163 @@ export function TokenCloud() {
         {pts.map(
           (
             // @ts-ignore
-            point,
+            point: TokenPoint,
             idx
           ) => {
-            // @ts-ignore
-            const { x, y, blur, size, rotation, opacity, delay, floatDuration, logoUrl, type, delta, ticker, color } =
-              point
-            // const { logoUrl, type, delta, ticker, color } = displayTokens[idx]
-
-            const borderRadius = size / 8
-
-            const positionerVariants = {
-              initial: { scale: 0.5, opacity: 0, rotateX: 15, left: x, top: y + 30 },
-              animate: {
-                scale: 1,
-                opacity: 1,
-                rotateX: 0,
-                left: x,
-                top: y,
-              },
-            }
-
-            const floatVariants = {
-              animate: {
-                y: ['-8px', '8px', '-8px'],
-                transition: {
-                  delay: 0,
-                  duration: floatDuration,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                },
-              },
-            }
-
-            const rotateVariants = {
-              animate: {
-                rotate: [rotation - 2, rotation + 2, rotation - 2],
-                transition: {
-                  delay: 0,
-                  duration: floatDuration,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                },
-              },
-              hover: {},
-            }
-
-            const coinVariants = {
-              rest: {
-                color,
-                opacity,
-                scale: 1,
-                // rotate: rotation,
-              },
-              hover: {
-                opacity: 1,
-                scale: 1.2,
-                rotate: randomChoice([0 - rotation, 0 - rotation]),
-                transition: {
-                  delayChildren: 0.1,
-                  staggerChildren: 0.1,
-                  delay: 0,
-                  duration: 0.3,
-                  type: 'spring',
-                  bounce: 0.5,
-                },
-              },
-            }
-
-            const iconRingVariant1 = {
-              rest: { scale: 1, opacity: 0 },
-              hover: {
-                opacity: 0.3,
-                scale: 1.2,
-                transition: { duration: 0.3, type: 'spring', bounce: 0.5 },
-              },
-            }
-
-            const iconRingVariant2 = {
-              rest: { scale: 1, opacity: 0 },
-              hover: {
-                opacity: 0.1,
-                scale: 1.4,
-                transition: { duration: 0.3, type: 'spring', bounce: 0.5 },
-              },
-            }
-
-            const hovered = cursor === idx
-
-            return (
-              <TokenIconPositioner
-                key={`tokenIcon-${idx}`}
-                variants={positionerVariants}
-                initial="initial"
-                animate="animate"
-                transition={{ delay, duration: 0.8, type: 'spring', bounce: 0.6 }}
-                size={size}
-              >
-                <FloatContainer
-                  onMouseEnter={() => setCursor(idx)}
-                  onMouseLeave={() => setCursor(-1)}
-                  variants={floatVariants}
-                  animate="animate"
-                >
-                  <Ticker
-                    size={size}
-                    color={color}
-                    delta={delta}
-                    ticker={ticker}
-                    animate={hovered ? 'hover' : 'animate'}
-                  />
-                  <RotateContainer variants={rotateVariants} animate="animate">
-                    <TokenIcon
-                      size={size}
-                      blur={blur}
-                      color={color}
-                      type={type}
-                      rotation={rotation}
-                      logoUrl={logoUrl}
-                      opacity={opacity}
-                      initial="rest"
-                      animate={hovered ? 'hover' : 'animate'}
-                      borderRadius={borderRadius}
-                      variants={coinVariants}
-                      transition={{ delay: 0 }}
-                    >
-                      <TokenIconRing
-                        variants={iconRingVariant1}
-                        size={size}
-                        type={type}
-                        color={color}
-                        borderRadius={borderRadius * 1.3}
-                      />
-                      <TokenIconRing
-                        variants={iconRingVariant2}
-                        size={size}
-                        type={type}
-                        color={color}
-                        borderRadius={borderRadius * 1.6}
-                      />
-                    </TokenIcon>
-                  </RotateContainer>
-                </FloatContainer>
-              </TokenIconPositioner>
-            )
+            return <Token key={`token-${idx}`} point={point} idx={idx} cursor={cursor} setCursor={setCursor} />
           }
         )}
-        {/* <TopGradient /> */}
-        {/* <BottomGradient /> */}
       </Inner>
     </Container>
+  )
+}
+
+type TokenProps = {
+  point: TokenPoint
+  idx: number
+  cursor: number
+  setCursor: (idx: number) => void
+}
+
+function Token(props: TokenProps) {
+  const { cursor, setCursor, idx, point } = props
+  const { x, y, blur, size, rotation, opacity, delay, floatDuration, logoUrl, type, delta, ticker, color, address } =
+    point
+  // const { logoUrl, type, delta, ticker, color } = displayTokens[idx]
+
+  const navigate = useNavigate()
+  const handleOnClick = () => navigate(type === 'COIN' ? `/tokens/ethereum/${address}` : `/nfts/collection/${address}`)
+
+  const borderRadius = size / 8
+
+  const positionerVariants = {
+    initial: { scale: 0.5, opacity: 0, rotateX: 15, left: x, top: y + 30 },
+    animate: {
+      scale: 1,
+      opacity: 1,
+      rotateX: 0,
+      left: x,
+      top: y,
+    },
+  }
+
+  const floatVariants = {
+    animate: {
+      y: ['-8px', '8px', '-8px'],
+      transition: {
+        delay: 0,
+        duration: floatDuration,
+        repeat: Infinity,
+        ease: 'easeInOut',
+      },
+    },
+  }
+
+  const rotateVariants = {
+    animate: {
+      rotate: [rotation - 2, rotation + 2, rotation - 2],
+      transition: {
+        delay: 0,
+        duration: floatDuration,
+        repeat: Infinity,
+        ease: 'easeInOut',
+      },
+    },
+    hover: {},
+  }
+
+  const coinVariants = {
+    rest: {
+      color,
+      opacity,
+      scale: 1,
+      // rotate: rotation,
+    },
+    hover: {
+      opacity: 1,
+      scale: 1.2,
+      rotate: randomChoice([0 - rotation, 0 - rotation]),
+      transition: {
+        delayChildren: 0.1,
+        staggerChildren: 0.1,
+        delay: 0,
+        duration: 0.3,
+        type: 'spring',
+        bounce: 0.5,
+      },
+    },
+  }
+
+  const iconRingVariant1 = {
+    rest: { scale: 1, opacity: 0 },
+    hover: {
+      opacity: 0.3,
+      scale: 1.2,
+      transition: { duration: 0.3, type: 'spring', bounce: 0.5 },
+    },
+  }
+
+  const iconRingVariant2 = {
+    rest: { scale: 1, opacity: 0 },
+    hover: {
+      opacity: 0.1,
+      scale: 1.4,
+      transition: { duration: 0.3, type: 'spring', bounce: 0.5 },
+    },
+  }
+
+  const hovered = cursor === idx
+
+  return (
+    <TokenIconPositioner
+      key={`tokenIcon-${idx}`}
+      variants={positionerVariants}
+      initial="initial"
+      animate="animate"
+      transition={{ delay, duration: 0.8, type: 'spring', bounce: 0.6 }}
+      size={size}
+    >
+      <FloatContainer
+        onMouseEnter={() => setCursor(idx)}
+        onMouseLeave={() => setCursor(-1)}
+        variants={floatVariants}
+        animate="animate"
+      >
+        <Ticker size={size} color={color} delta={delta} ticker={ticker} animate={hovered ? 'hover' : 'animate'} />
+        <RotateContainer variants={rotateVariants} animate="animate">
+          <TokenIcon
+            size={size}
+            blur={blur}
+            color={color}
+            type={type}
+            rotation={rotation}
+            logoUrl={logoUrl}
+            opacity={opacity}
+            initial="rest"
+            animate={hovered ? 'hover' : 'animate'}
+            borderRadius={borderRadius}
+            variants={coinVariants}
+            transition={{ delay: 0 }}
+            onClick={() => handleOnClick()}
+          >
+            <TokenIconRing
+              variants={iconRingVariant1}
+              size={size}
+              type={type}
+              color={color}
+              borderRadius={borderRadius * 1.3}
+            />
+            <TokenIconRing
+              variants={iconRingVariant2}
+              size={size}
+              type={type}
+              color={color}
+              borderRadius={borderRadius * 1.6}
+            />
+          </TokenIcon>
+        </RotateContainer>
+      </FloatContainer>
+    </TokenIconPositioner>
   )
 }
 
