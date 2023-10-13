@@ -114,7 +114,7 @@ export function AddRemoveTabs({
           )}
         </AddRemoveTitleText>
         {children && <Box style={{ marginRight: '.5rem' }}>{children}</Box>}
-        <SettingsTab autoSlippage={autoSlippage} chainId={chainId} showRoutingSettings={false} />
+        <SettingsTab autoSlippage={autoSlippage} chainId={chainId} hideRoutingSettings />
       </RowBetween>
     </Tabs>
   )
