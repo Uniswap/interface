@@ -32,12 +32,12 @@ function RouteLabel({ trade }: { trade: SubmittableTrade }) {
 }
 
 function PriceImpactRow({ trade }: { trade: ClassicTrade }) {
-  const { formatPriceImpact } = useFormatter()
+  const { formatPercent } = useFormatter()
   return (
     <ThemedText.BodySmall color="neutral2">
       <RowBetween>
         <Trans>Price Impact</Trans>
-        <div>{formatPriceImpact(trade.priceImpact)}</div>
+        <div>{formatPercent(trade.priceImpact)}</div>
       </RowBetween>
     </ThemedText.BodySmall>
   )

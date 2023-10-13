@@ -458,31 +458,21 @@ function formatCurrencyAmount({
   })
 }
 
-function formatPriceImpact(priceImpact: Percent | undefined, locale: SupportedLocale = DEFAULT_LOCALE): string {
-  if (!priceImpact) return '-'
+function formatPercent(percent: Percent | undefined, locale: SupportedLocale = DEFAULT_LOCALE) {
+  if (!percent) return '-'
 
-  return `${Number(priceImpact.multiply(-1).toFixed(3)).toLocaleString(locale, {
-    minimumFractionDigits: 3,
+  return `${Number(percent.toFixed(3)).toLocaleString(locale, {
     maximumFractionDigits: 3,
     useGrouping: false,
   })}%`
 }
 
-function formatSlippage(slippage: Percent | undefined, locale: SupportedLocale = DEFAULT_LOCALE) {
-  if (!slippage) return '-'
-
-  return `${Number(slippage.toFixed(3)).toLocaleString(locale, {
-    maximumFractionDigits: 3,
-    useGrouping: false,
-  })}%`
-}
-
-function formatPercent(percent: Nullish<number>, locale: SupportedLocale = DEFAULT_LOCALE) {
-  if (percent === null || percent === undefined || percent === Infinity || isNaN(percent)) {
+function formatDelta(delta: Nullish<number>, locale: SupportedLocale = DEFAULT_LOCALE) {
+  if (delta === null || delta === undefined || delta === Infinity || isNaN(delta)) {
     return '-'
   }
 
-  return `${Number(Math.abs(percent).toFixed(2)).toLocaleString(locale, {
+  return `${Number(Math.abs(delta).toFixed(2)).toLocaleString(locale, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
     useGrouping: false,
@@ -686,18 +676,8 @@ export function useFormatter() {
     [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
   )
 
-  const formatPriceImpactWithLocales = useCallback(
-    (priceImpact: Percent | undefined) => formatPriceImpact(priceImpact, formatterLocale),
-    [formatterLocale]
-  )
-
   const formatReviewSwapCurrencyAmountWithLocales = useCallback(
     (amount: CurrencyAmount<Currency>) => formatReviewSwapCurrencyAmount(amount, formatterLocale),
-    [formatterLocale]
-  )
-
-  const formatSlippageWithLocales = useCallback(
-    (slippage: Percent | undefined) => formatSlippage(slippage, formatterLocale),
     [formatterLocale]
   )
 
@@ -734,8 +714,13 @@ export function useFormatter() {
     [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
   )
 
+  const formatDeltaWithLocales = useCallback(
+    (percent: Nullish<number>) => formatDelta(percent, formatterLocale),
+    [formatterLocale]
+  )
+
   const formatPercentWithLocales = useCallback(
-    (percent: Nullish<number>) => formatPercent(percent, formatterLocale),
+    (percent: Percent | undefined) => formatPercent(percent, formatterLocale),
     [formatterLocale]
   )
 
@@ -745,11 +730,10 @@ export function useFormatter() {
       formatFiatPrice: formatFiatPriceWithLocales,
       formatNumber: formatNumberWithLocales,
       formatNumberOrString: formatNumberOrStringWithLocales,
+      formatDelta: formatDeltaWithLocales,
       formatPercent: formatPercentWithLocales,
       formatPrice: formatPriceWithLocales,
-      formatPriceImpact: formatPriceImpactWithLocales,
       formatReviewSwapCurrencyAmount: formatReviewSwapCurrencyAmountWithLocales,
-      formatSlippage: formatSlippageWithLocales,
       formatTickPrice: formatTickPriceWithLocales,
     }),
     [
@@ -757,11 +741,10 @@ export function useFormatter() {
       formatFiatPriceWithLocales,
       formatNumberOrStringWithLocales,
       formatNumberWithLocales,
+      formatDeltaWithLocales,
       formatPercentWithLocales,
-      formatPriceImpactWithLocales,
       formatPriceWithLocales,
       formatReviewSwapCurrencyAmountWithLocales,
-      formatSlippageWithLocales,
       formatTickPriceWithLocales,
     ]
   )

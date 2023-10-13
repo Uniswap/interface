@@ -441,7 +441,7 @@ interface LoadedRowProps {
 
 /* Loaded State: row component with token information */
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
-  const { formatFiatPrice, formatNumber, formatPercent } = useFormatter()
+  const { formatFiatPrice, formatNumber, formatDelta } = useFormatter()
 
   const { tokenListIndex, tokenListLength, token, sortRank } = props
   const filterString = useAtomValue(filterStringAtom)
@@ -450,7 +450,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const chainId = supportedChainIdFromGQLChain(filterNetwork)
   const timePeriod = useAtomValue(filterTimeAtom)
   const delta = token.market?.pricePercentChange?.value
-  const formattedDelta = formatPercent(delta)
+  const formattedDelta = formatDelta(delta)
 
   const exploreTokenSelectedEventProperties = {
     chain_id: chainId,

@@ -37,7 +37,7 @@ interface PriceImpactModalProps {
 }
 
 export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }: PriceImpactModalProps) {
-  const { formatPriceImpact } = useFormatter()
+  const { formatPercent } = useFormatter()
 
   return (
     <Modal isOpen onDismiss={onDismiss}>
@@ -56,7 +56,7 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
             <Trans>
               This transaction will result in a{' '}
               <ThemedText.BodyPrimary lineHeight="24px" color="critical" display="inline">
-                {formatPriceImpact(priceImpact)}
+                ~{formatPercent(priceImpact)}
               </ThemedText.BodyPrimary>{' '}
               price impact on the market price of this pool. Do you wish to continue?
             </Trans>

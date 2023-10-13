@@ -38,23 +38,23 @@ const NUMBER_WITH_MAX_TWO_DECIMAL_PLACES = /^(?:\d*\.\d{0,2}|\d+)$/
 const MINIMUM_RECOMMENDED_SLIPPAGE = new Percent(5, 10_000)
 const MAXIMUM_RECOMMENDED_SLIPPAGE = new Percent(1, 100)
 
-function useFormatSlippageInput() {
-  const { formatSlippage } = useFormatter()
+function useFormatPercentInput() {
+  const { formatPercent } = useFormatter()
 
-  return (slippage: Percent) => formatSlippage(slippage).slice(0, -1) // remove % sign
+  return (slippage: Percent) => formatPercent(slippage).slice(0, -1) // remove % sign
 }
 
 export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Percent }) {
   const [userSlippageTolerance, setUserSlippageTolerance] = useUserSlippageTolerance()
-  const { formatSlippage } = useFormatter()
-  const formatSlippageInput = useFormatSlippageInput()
+  const { formatPercent } = useFormatter()
+  const formatPercentInput = useFormatPercentInput()
 
   // In order to trigger `custom` mode, we need to set `userSlippageTolerance` to a value that is not `auto`.
   // To do so, we use `autoSlippage` value. However, since users are likely to change that value,
   // we render it as a placeholder instead of a value.
   const defaultSlippageInputValue =
     userSlippageTolerance !== SlippageTolerance.Auto && !userSlippageTolerance.equalTo(autoSlippage)
-      ? formatSlippageInput(userSlippageTolerance)
+      ? formatPercentInput(userSlippageTolerance)
       : ''
 
   // If user has previously entered a custom slippage, we want to show that value in the input field
@@ -124,7 +124,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
           {userSlippageTolerance === SlippageTolerance.Auto ? (
             <Trans>Auto</Trans>
           ) : (
-            formatSlippage(userSlippageTolerance)
+            formatPercent(userSlippageTolerance)
           )}
         </ThemedText.BodyPrimary>
       }
@@ -158,7 +158,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
         <InputContainer gap="md" error={!!slippageError}>
           <Input
             data-testid="slippage-input"
-            placeholder={formatSlippageInput(autoSlippage)}
+            placeholder={formatPercentInput(autoSlippage)}
             value={slippageInput}
             onChange={(e) => parseSlippageInput(e.target.value)}
             onBlur={() => {
@@ -176,7 +176,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
           <ThemedText.BodySmall color="deprecated_accentWarning">
             {tooLow ? (
               <Trans>
-                Slippage below {formatSlippage(MINIMUM_RECOMMENDED_SLIPPAGE)} may result in a failed transaction
+                Slippage below {formatPercent(MINIMUM_RECOMMENDED_SLIPPAGE)} may result in a failed transaction
               </Trans>
             ) : (
               <Trans>Your transaction may be frontrun and result in an unfavorable trade.</Trans>

@@ -71,7 +71,7 @@ const TokenNameText = styled(ThemedText.SubHeader)`
 type PortfolioToken = NonNullable<TokenBalance['token']>
 
 function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: TokenBalance & { token: PortfolioToken }) {
-  const { formatPercent } = useFormatter()
+  const { formatDelta } = useFormatter()
   const percentChange = tokenProjectMarket?.pricePercentChange?.value ?? 0
 
   const navigate = useNavigate()
@@ -121,7 +121,7 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
               </ThemedText.SubHeader>
               <Row justify="flex-end">
                 <DeltaArrow delta={percentChange} />
-                <ThemedText.BodySecondary>{formatPercent(percentChange)}</ThemedText.BodySecondary>
+                <ThemedText.BodySecondary>{formatDelta(percentChange)}</ThemedText.BodySecondary>
               </Row>
             </>
           )
