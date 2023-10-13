@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { InterfaceTrade, QuoteMethod } from 'state/routing/types'
-import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
+import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
 export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEpoch?: number): number | undefined => {
@@ -29,12 +29,18 @@ export const getPriceUpdateBasisPoints = (
   return formatPercentInBasisPointsNumber(changePercentage)
 }
 
+function getEstimatedNetworkFee(trade: InterfaceTrade) {
+  if (isClassicTrade(trade)) return trade.gasUseEstimateUSD
+  if (isUniswapXTrade(trade)) return trade.classicGasUseEstimateUSD
+  return undefined
+}
+
 export function formatCommonPropertiesForTrade(trade: InterfaceTrade, allowedSlippage: Percent) {
   return {
     routing: trade.fillType,
     type: trade.tradeType,
     ura_quote_id: isUniswapXTrade(trade) ? trade.quoteId : undefined,
-    ura_request_id: trade.requestId,
+    ura_request_id: isSubmittableTrade(trade) ? trade.requestId : undefined,
     ura_quote_block_number: isClassicTrade(trade) ? trade.blockNumber : undefined,
     token_in_address: getTokenAddress(trade.inputAmount.currency),
     token_out_address: getTokenAddress(trade.outputAmount.currency),
@@ -49,7 +55,7 @@ export function formatCommonPropertiesForTrade(trade: InterfaceTrade, allowedSli
       trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
         ? trade.inputAmount.currency.chainId
         : undefined,
-    estimated_network_fee_usd: isClassicTrade(trade) ? trade.gasUseEstimateUSD : trade.classicGasUseEstimateUSD,
+    estimated_network_fee_usd: getEstimatedNetworkFee(trade),
     minimum_output_after_slippage: trade.minimumAmountOut(allowedSlippage).toSignificant(6),
     allowed_slippage: formatPercentNumber(allowedSlippage),
     method: getQuoteMethod(trade),

@@ -443,7 +443,7 @@ export default function AddLiquidity() {
             {addIsUnsupported ? (
               <ButtonPrimary disabled={true}>
                 <ThemedText.DeprecatedMain mb="4px">
-                  <Trans>Unsupported Asset</Trans>
+                  <Trans>Unsupported asset</Trans>
                 </ThemedText.DeprecatedMain>
               </ButtonPrimary>
             ) : !account ? (
@@ -454,7 +454,7 @@ export default function AddLiquidity() {
                 element={InterfaceElementName.CONNECT_WALLET_BUTTON}
               >
                 <ButtonLight onClick={toggleWalletDrawer}>
-                  <Trans>Connect Wallet</Trans>
+                  <Trans>Connect wallet</Trans>
                 </ButtonLight>
               </TraceEvent>
             ) : (

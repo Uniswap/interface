@@ -101,7 +101,7 @@ const CreateProposalButton = ({
           )}
         </>
       ) : (
-        <Trans>Create Proposal</Trans>
+        <Trans>Create proposal</Trans>
       )}
     </ButtonError>
   )

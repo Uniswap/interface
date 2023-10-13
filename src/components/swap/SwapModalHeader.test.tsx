@@ -1,7 +1,9 @@
 import {
   ETH_MAINNET,
+  PREVIEW_EXACT_IN_TRADE,
   TEST_ALLOWED_SLIPPAGE,
   TEST_DUTCH_TRADE_ETH_INPUT,
+  TEST_TOKEN_2,
   TEST_TRADE_EXACT_INPUT,
   TEST_TRADE_EXACT_OUTPUT,
 } from 'test-utils/constants'
@@ -43,5 +45,16 @@ describe('SwapModalHeader.tsx', () => {
 
     expect(screen.getByTestId('INPUT-amount')).toHaveTextContent(`<0.00001 ABC`)
     expect(screen.getByTestId('OUTPUT-amount')).toHaveTextContent(`<0.00001 GHI`)
+  })
+
+  it('renders preview trades with loading states', () => {
+    const { asFragment } = render(
+      <SwapModalHeader
+        inputCurrency={TEST_TOKEN_2}
+        trade={PREVIEW_EXACT_IN_TRADE}
+        allowedSlippage={TEST_ALLOWED_SLIPPAGE}
+      />
+    )
+    expect(asFragment()).toMatchSnapshot()
   })
 })

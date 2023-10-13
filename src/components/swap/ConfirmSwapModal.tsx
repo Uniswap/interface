@@ -9,6 +9,7 @@ import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, useTrace } from 'analytics'
 import Badge from 'components/Badge'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { RowFixed } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
@@ -22,12 +23,14 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
+import { isPreviewTrade } from 'state/routing/utils'
 import { Field } from 'state/swap/actions'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import invariant from 'tiny-invariant'
 import { isL2ChainId } from 'utils/chains'
+import { SignatureExpiredError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -51,11 +54,6 @@ export enum ConfirmModalState {
 
 const StyledL2Badge = styled(Badge)`
   padding: 6px 8px;
-`
-
-const StyledL2Logo = styled.img`
-  height: 16px;
-  width: 16px;
 `
 
 function isInApprovalPhase(confirmModalState: ConfirmModalState) {
@@ -265,6 +263,7 @@ export default function ConfirmSwapModal({
   onAcceptChanges,
   allowedSlippage,
   allowance,
+  clearSwapState,
   onConfirm,
   onDismiss,
   onCurrencySelection,
@@ -280,6 +279,7 @@ export default function ConfirmSwapModal({
   allowedSlippage: Percent
   allowance: Allowance
   onAcceptChanges: () => void
+  clearSwapState: () => void
   onConfirm: () => void
   swapError?: Error
   onDismiss: () => void
@@ -293,7 +293,10 @@ export default function ConfirmSwapModal({
     useConfirmModalState({
       trade,
       allowedSlippage,
-      onSwap: onConfirm,
+      onSwap: () => {
+        clearSwapState()
+        onConfirm()
+      },
       onCurrencySelection,
       allowance,
       doesTradeDiffer: Boolean(doesTradeDiffer),
@@ -357,7 +360,8 @@ export default function ConfirmSwapModal({
           trade={trade}
           swapResult={swapResult}
           allowedSlippage={allowedSlippage}
-          disabledConfirm={showAcceptChanges}
+          isLoading={isPreviewTrade(trade)}
+          disabledConfirm={showAcceptChanges || isPreviewTrade(trade) || allowance.state === AllowanceState.LOADING}
           fiatValueInput={fiatValueInput}
           fiatValueOutput={fiatValueOutput}
           showAcceptChanges={showAcceptChanges}
@@ -376,6 +380,8 @@ export default function ConfirmSwapModal({
         wrapTxHash={wrapTxHash}
         tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
         revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
+        swapError={swapError}
+        onRetryUniswapXSignature={onConfirm}
       />
     )
   }, [
@@ -386,13 +392,14 @@ export default function ConfirmSwapModal({
     swapResult,
     wrapTxHash,
     allowance,
+    swapError,
+    startSwapFlow,
     allowedSlippage,
     fiatValueInput,
     fiatValueOutput,
     onAcceptChanges,
     swapFailed,
-    swapError?.message,
-    startSwapFlow,
+    onConfirm,
   ])
 
   const l2Badge = () => {
@@ -401,7 +408,7 @@ export default function ConfirmSwapModal({
       return (
         <StyledL2Badge>
           <RowFixed data-testid="confirmation-modal-chain-icon" gap="sm">
-            <StyledL2Logo src={info.logoUrl} />
+            <ChainLogo chainId={chainId} size={16} />
             <ThemedText.SubHeaderSmall>{info.label}</ThemedText.SubHeaderSmall>
           </RowFixed>
         </StyledL2Badge>
@@ -410,14 +417,20 @@ export default function ConfirmSwapModal({
     return undefined
   }
 
+  const getErrorType = () => {
+    if (approvalError) return approvalError
+    // SignatureExpiredError is a special case. The UI is shown in the PendingModalContent component.
+    if (swapError instanceof SignatureExpiredError) return
+    if (swapError && !didUserReject(swapError)) return PendingModalError.CONFIRMATION_ERROR
+    return
+  }
+  const errorType = getErrorType()
+
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <Modal isOpen $scrollOverlay onDismiss={onModalDismiss} maxHeight={90}>
-        {approvalError || swapFailed ? (
-          <ErrorModalContent
-            errorType={approvalError ?? PendingModalError.CONFIRMATION_ERROR}
-            onRetry={startSwapFlow}
-          />
+        {errorType ? (
+          <ErrorModalContent errorType={errorType} onRetry={startSwapFlow} />
         ) : (
           <ConfirmationModalContent
             title={confirmModalState === ConfirmModalState.REVIEWING ? <Trans>Review swap</Trans> : undefined}

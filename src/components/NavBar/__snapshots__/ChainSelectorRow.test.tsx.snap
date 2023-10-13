@@ -30,14 +30,14 @@ exports[`ChainSelectorRow should match snapshot for chainId 1 1`] = `
   background-color: #22222212;
 }
 
-.c2 {
+.c1 {
   grid-column: 2;
   grid-row: 1;
   font-size: 16px;
   font-weight: 485;
 }
 
-.c3 {
+.c2 {
   grid-column: 3;
   grid-row: 1;
   display: -webkit-box;
@@ -51,12 +51,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 1 1`] = `
   width: 20px;
 }
 
-.c1 {
-  height: 20px;
-  width: 20px;
-  margin-right: 12px;
-}
-
 @media only screen and (max-width:640px) {
   .c0 {
     width: 100%;
@@ -68,18 +62,43 @@ exports[`ChainSelectorRow should match snapshot for chainId 1 1`] = `
     class="c0"
     data-testid="Ethereum-selector"
   >
-    <img
-      alt="Ethereum"
-      class="c1"
-      src="ethereum-logo.png"
-    />
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Ethereum logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#6B8AFF33"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        ethereum.svg
+      </svg>
+    </svg>
     <div
-      class="c2"
+      class="c1"
     >
       Ethereum
     </div>
     <div
-      class="c3"
+      class="c2"
     >
       <svg
         color="#FC72FF"
@@ -131,14 +150,14 @@ exports[`ChainSelectorRow should match snapshot for chainId 5 1`] = `
   background-color: #22222212;
 }
 
-.c2 {
+.c1 {
   grid-column: 2;
   grid-row: 1;
   font-size: 16px;
   font-weight: 485;
 }
 
-.c3 {
+.c2 {
   grid-column: 3;
   grid-row: 1;
   display: -webkit-box;
@@ -152,12 +171,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 5 1`] = `
   width: 20px;
 }
 
-.c1 {
-  height: 20px;
-  width: 20px;
-  margin-right: 12px;
-}
-
 @media only screen and (max-width:640px) {
   .c0 {
     width: 100%;
@@ -169,18 +182,43 @@ exports[`ChainSelectorRow should match snapshot for chainId 5 1`] = `
     class="c0"
     data-testid="Görli-selector"
   >
-    <img
-      alt="Görli"
-      class="c1"
-      src="ethereum-logo.png"
-    />
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Görli logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#6B8AFF33"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        ethereum.svg
+      </svg>
+    </svg>
     <div
-      class="c2"
+      class="c1"
     >
       Görli
     </div>
     <div
-      class="c3"
+      class="c2"
     />
   </button>
 </div>
@@ -216,14 +254,14 @@ exports[`ChainSelectorRow should match snapshot for chainId 10 1`] = `
   background-color: #22222212;
 }
 
-.c2 {
+.c1 {
   grid-column: 2;
   grid-row: 1;
   font-size: 16px;
   font-weight: 485;
 }
 
-.c3 {
+.c2 {
   grid-column: 3;
   grid-row: 1;
   display: -webkit-box;
@@ -237,12 +275,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 10 1`] = `
   width: 20px;
 }
 
-.c1 {
-  height: 20px;
-  width: 20px;
-  margin-right: 12px;
-}
-
 @media only screen and (max-width:640px) {
   .c0 {
     width: 100%;
@@ -254,18 +286,43 @@ exports[`ChainSelectorRow should match snapshot for chainId 10 1`] = `
     class="c0"
     data-testid="Optimism-selector"
   >
-    <img
-      alt="Optimism"
-      class="c1"
-      src="optimistic_ethereum.svg"
-    />
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Optimism logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#FF042033"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        optimism.svg
+      </svg>
+    </svg>
     <div
-      class="c2"
+      class="c1"
     >
       Optimism
     </div>
     <div
-      class="c3"
+      class="c2"
     />
   </button>
 </div>
@@ -301,14 +358,14 @@ exports[`ChainSelectorRow should match snapshot for chainId 56 1`] = `
   background-color: #22222212;
 }
 
-.c2 {
+.c1 {
   grid-column: 2;
   grid-row: 1;
   font-size: 16px;
   font-weight: 485;
 }
 
-.c3 {
+.c2 {
   grid-column: 3;
   grid-row: 1;
   display: -webkit-box;
@@ -322,12 +379,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 56 1`] = `
   width: 20px;
 }
 
-.c1 {
-  height: 20px;
-  width: 20px;
-  margin-right: 12px;
-}
-
 @media only screen and (max-width:640px) {
   .c0 {
     width: 100%;
@@ -339,18 +390,43 @@ exports[`ChainSelectorRow should match snapshot for chainId 56 1`] = `
     class="c0"
     data-testid="BNB Chain-selector"
   >
-    <img
-      alt="BNB Chain"
-      class="c1"
-      src="bnb-logo.svg"
-    />
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        BNB Chain logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#EAB20033"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        bnb.svg
+      </svg>
+    </svg>
     <div
-      class="c2"
+      class="c1"
     >
       BNB Chain
     </div>
     <div
-      class="c3"
+      class="c2"
     />
   </button>
 </div>
@@ -386,14 +462,14 @@ exports[`ChainSelectorRow should match snapshot for chainId 137 1`] = `
   background-color: #22222212;
 }
 
-.c2 {
+.c1 {
   grid-column: 2;
   grid-row: 1;
   font-size: 16px;
   font-weight: 485;
 }
 
-.c3 {
+.c2 {
   grid-column: 3;
   grid-row: 1;
   display: -webkit-box;
@@ -407,12 +483,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 137 1`] = `
   width: 20px;
 }
 
-.c1 {
-  height: 20px;
-  width: 20px;
-  margin-right: 12px;
-}
-
 @media only screen and (max-width:640px) {
   .c0 {
     width: 100%;
@@ -424,18 +494,43 @@ exports[`ChainSelectorRow should match snapshot for chainId 137 1`] = `
     class="c0"
     data-testid="Polygon-selector"
   >
-    <img
-      alt="Polygon"
-      class="c1"
-      src="polygon-matic-logo.svg"
-    />
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Polygon logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#9558FF33"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        polygon.svg
+      </svg>
+    </svg>
     <div
-      class="c2"
+      class="c1"
     >
       Polygon
     </div>
     <div
-      class="c3"
+      class="c2"
     />
   </button>
 </div>
@@ -471,14 +566,14 @@ exports[`ChainSelectorRow should match snapshot for chainId 420 1`] = `
   background-color: #22222212;
 }
 
-.c2 {
+.c1 {
   grid-column: 2;
   grid-row: 1;
   font-size: 16px;
   font-weight: 485;
 }
 
-.c3 {
+.c2 {
   grid-column: 3;
   grid-row: 1;
   display: -webkit-box;
@@ -492,12 +587,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 420 1`] = `
   width: 20px;
 }
 
-.c1 {
-  height: 20px;
-  width: 20px;
-  margin-right: 12px;
-}
-
 @media only screen and (max-width:640px) {
   .c0 {
     width: 100%;
@@ -509,18 +598,43 @@ exports[`ChainSelectorRow should match snapshot for chainId 420 1`] = `
     class="c0"
     data-testid="Optimism Görli-selector"
   >
-    <img
-      alt="Optimism Görli"
-      class="c1"
-      src="optimistic_ethereum.svg"
-    />
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Optimism Görli logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#FF042033"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        optimism.svg
+      </svg>
+    </svg>
     <div
-      class="c2"
+      class="c1"
     >
       Optimism Görli
     </div>
     <div
-      class="c3"
+      class="c2"
     />
   </button>
 </div>
@@ -556,14 +670,14 @@ exports[`ChainSelectorRow should match snapshot for chainId 8453 1`] = `
   background-color: #22222212;
 }
 
-.c2 {
+.c1 {
   grid-column: 2;
   grid-row: 1;
   font-size: 16px;
   font-weight: 485;
 }
 
-.c3 {
+.c2 {
   grid-column: 3;
   grid-row: 1;
   display: -webkit-box;
@@ -577,12 +691,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 8453 1`] = `
   width: 20px;
 }
 
-.c1 {
-  height: 20px;
-  width: 20px;
-  margin-right: 12px;
-}
-
 @media only screen and (max-width:640px) {
   .c0 {
     width: 100%;
@@ -594,18 +702,43 @@ exports[`ChainSelectorRow should match snapshot for chainId 8453 1`] = `
     class="c0"
     data-testid="Base-selector"
   >
-    <img
-      alt="Base"
-      class="c1"
-      src="base_logo.svg"
-    />
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Base logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#0052FF33"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        base.svg
+      </svg>
+    </svg>
     <div
-      class="c2"
+      class="c1"
     >
       Base
     </div>
     <div
-      class="c3"
+      class="c2"
     />
   </button>
 </div>
@@ -641,14 +774,14 @@ exports[`ChainSelectorRow should match snapshot for chainId 42161 1`] = `
   background-color: #22222212;
 }
 
-.c2 {
+.c1 {
   grid-column: 2;
   grid-row: 1;
   font-size: 16px;
   font-weight: 485;
 }
 
-.c3 {
+.c2 {
   grid-column: 3;
   grid-row: 1;
   display: -webkit-box;
@@ -662,12 +795,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 42161 1`] = `
   width: 20px;
 }
 
-.c1 {
-  height: 20px;
-  width: 20px;
-  margin-right: 12px;
-}
-
 @media only screen and (max-width:640px) {
   .c0 {
     width: 100%;
@@ -679,18 +806,43 @@ exports[`ChainSelectorRow should match snapshot for chainId 42161 1`] = `
     class="c0"
     data-testid="Arbitrum-selector"
   >
-    <img
-      alt="Arbitrum"
-      class="c1"
-      src="arbitrum_logo.svg"
-    />
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Arbitrum logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#00A3FF33"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        arbitrum.svg
+      </svg>
+    </svg>
     <div
-      class="c2"
+      class="c1"
     >
       Arbitrum
     </div>
     <div
-      class="c3"
+      class="c2"
     />
   </button>
 </div>
@@ -726,14 +878,14 @@ exports[`ChainSelectorRow should match snapshot for chainId 42220 1`] = `
   background-color: #22222212;
 }
 
-.c2 {
+.c1 {
   grid-column: 2;
   grid-row: 1;
   font-size: 16px;
   font-weight: 485;
 }
 
-.c3 {
+.c2 {
   grid-column: 3;
   grid-row: 1;
   display: -webkit-box;
@@ -747,12 +899,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 42220 1`] = `
   width: 20px;
 }
 
-.c1 {
-  height: 20px;
-  width: 20px;
-  margin-right: 12px;
-}
-
 @media only screen and (max-width:640px) {
   .c0 {
     width: 100%;
@@ -764,18 +910,43 @@ exports[`ChainSelectorRow should match snapshot for chainId 42220 1`] = `
     class="c0"
     data-testid="Celo-selector"
   >
-    <img
-      alt="Celo"
-      class="c1"
-      src="celo_logo.svg"
-    />
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Celo logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#FCFF5299"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        celo_light.svg
+      </svg>
+    </svg>
     <div
-      class="c2"
+      class="c1"
     >
       Celo
     </div>
     <div
-      class="c3"
+      class="c2"
     />
   </button>
 </div>
@@ -811,14 +982,14 @@ exports[`ChainSelectorRow should match snapshot for chainId 43114 1`] = `
   background-color: #22222212;
 }
 
-.c2 {
+.c1 {
   grid-column: 2;
   grid-row: 1;
   font-size: 16px;
   font-weight: 485;
 }
 
-.c3 {
+.c2 {
   grid-column: 3;
   grid-row: 1;
   display: -webkit-box;
@@ -832,12 +1003,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 43114 1`] = `
   width: 20px;
 }
 
-.c1 {
-  height: 20px;
-  width: 20px;
-  margin-right: 12px;
-}
-
 @media only screen and (max-width:640px) {
   .c0 {
     width: 100%;
@@ -849,18 +1014,43 @@ exports[`ChainSelectorRow should match snapshot for chainId 43114 1`] = `
     class="c0"
     data-testid="Avalanche-selector"
   >
-    <img
-      alt="Avalanche"
-      class="c1"
-      src="avax_logo.svg"
-    />
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Avalanche logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#E8414233"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        avax.svg
+      </svg>
+    </svg>
     <div
-      class="c2"
+      class="c1"
     >
       Avalanche
     </div>
     <div
-      class="c3"
+      class="c2"
     />
   </button>
 </div>
@@ -896,14 +1086,14 @@ exports[`ChainSelectorRow should match snapshot for chainId 44787 1`] = `
   background-color: #22222212;
 }
 
-.c2 {
+.c1 {
   grid-column: 2;
   grid-row: 1;
   font-size: 16px;
   font-weight: 485;
 }
 
-.c3 {
+.c2 {
   grid-column: 3;
   grid-row: 1;
   display: -webkit-box;
@@ -917,12 +1107,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 44787 1`] = `
   width: 20px;
 }
 
-.c1 {
-  height: 20px;
-  width: 20px;
-  margin-right: 12px;
-}
-
 @media only screen and (max-width:640px) {
   .c0 {
     width: 100%;
@@ -934,18 +1118,43 @@ exports[`ChainSelectorRow should match snapshot for chainId 44787 1`] = `
     class="c0"
     data-testid="Celo Alfajores-selector"
   >
-    <img
-      alt="Celo Alfajores"
-      class="c1"
-      src="celo_logo.svg"
-    />
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Celo Alfajores logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#FCFF5299"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        celo_light.svg
+      </svg>
+    </svg>
     <div
-      class="c2"
+      class="c1"
     >
       Celo Alfajores
     </div>
     <div
-      class="c3"
+      class="c2"
     />
   </button>
 </div>
@@ -981,14 +1190,14 @@ exports[`ChainSelectorRow should match snapshot for chainId 80001 1`] = `
   background-color: #22222212;
 }
 
-.c2 {
+.c1 {
   grid-column: 2;
   grid-row: 1;
   font-size: 16px;
   font-weight: 485;
 }
 
-.c3 {
+.c2 {
   grid-column: 3;
   grid-row: 1;
   display: -webkit-box;
@@ -1002,12 +1211,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 80001 1`] = `
   width: 20px;
 }
 
-.c1 {
-  height: 20px;
-  width: 20px;
-  margin-right: 12px;
-}
-
 @media only screen and (max-width:640px) {
   .c0 {
     width: 100%;
@@ -1019,18 +1222,43 @@ exports[`ChainSelectorRow should match snapshot for chainId 80001 1`] = `
     class="c0"
     data-testid="Polygon Mumbai-selector"
   >
-    <img
-      alt="Polygon Mumbai"
-      class="c1"
-      src="polygon-matic-logo.svg"
-    />
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Polygon Mumbai logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#9558FF33"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        polygon.svg
+      </svg>
+    </svg>
     <div
-      class="c2"
+      class="c1"
     >
       Polygon Mumbai
     </div>
     <div
-      class="c3"
+      class="c2"
     />
   </button>
 </div>
@@ -1128,14 +1356,14 @@ exports[`ChainSelectorRow should match snapshot for chainId 421613 1`] = `
   background-color: #22222212;
 }
 
-.c2 {
+.c1 {
   grid-column: 2;
   grid-row: 1;
   font-size: 16px;
   font-weight: 485;
 }
 
-.c3 {
+.c2 {
   grid-column: 3;
   grid-row: 1;
   display: -webkit-box;
@@ -1149,12 +1377,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 421613 1`] = `
   width: 20px;
 }
 
-.c1 {
-  height: 20px;
-  width: 20px;
-  margin-right: 12px;
-}
-
 @media only screen and (max-width:640px) {
   .c0 {
     width: 100%;
@@ -1166,18 +1388,43 @@ exports[`ChainSelectorRow should match snapshot for chainId 421613 1`] = `
     class="c0"
     data-testid="Arbitrum Goerli-selector"
   >
-    <img
-      alt="Arbitrum Goerli"
-      class="c1"
-      src="arbitrum_logo.svg"
-    />
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Arbitrum Goerli logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#00A3FF33"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        arbitrum.svg
+      </svg>
+    </svg>
     <div
-      class="c2"
+      class="c1"
     >
       Arbitrum Goerli
     </div>
     <div
-      class="c3"
+      class="c2"
     />
   </button>
 </div>
@@ -1213,14 +1460,14 @@ exports[`ChainSelectorRow should match snapshot for chainId 11155111 1`] = `
   background-color: #22222212;
 }
 
-.c2 {
+.c1 {
   grid-column: 2;
   grid-row: 1;
   font-size: 16px;
   font-weight: 485;
 }
 
-.c3 {
+.c2 {
   grid-column: 3;
   grid-row: 1;
   display: -webkit-box;
@@ -1234,12 +1481,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 11155111 1`] = `
   width: 20px;
 }
 
-.c1 {
-  height: 20px;
-  width: 20px;
-  margin-right: 12px;
-}
-
 @media only screen and (max-width:640px) {
   .c0 {
     width: 100%;
@@ -1251,18 +1492,43 @@ exports[`ChainSelectorRow should match snapshot for chainId 11155111 1`] = `
     class="c0"
     data-testid="Sepolia-selector"
   >
-    <img
-      alt="Sepolia"
-      class="c1"
-      src="ethereum-logo.png"
-    />
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Sepolia logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#6B8AFF33"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        ethereum.svg
+      </svg>
+    </svg>
     <div
-      class="c2"
+      class="c1"
     >
       Sepolia
     </div>
     <div
-      class="c3"
+      class="c2"
     />
   </button>
 </div>

@@ -1,5 +1,8 @@
+import { ChainId } from '@uniswap/sdk-core'
 import Column from 'components/Column'
-import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateConfig, useUpdateFlag } from 'featureFlags'
+import { DynamicConfigName } from 'featureFlags/dynamicConfig'
+import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
 import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
 import { useFallbackProviderEnabledFlag } from 'featureFlags/flags/fallbackProvider'
 import { useFotAdjustmentsFlag } from 'featureFlags/flags/fotAdjustments'
@@ -8,6 +11,8 @@ import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
 import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
 import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
+import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicatorV2'
+import { useQuickRouteMainnetFlag } from 'featureFlags/flags/quickRouteMainnet'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useUniswapXDefaultEnabledFlag } from 'featureFlags/flags/uniswapXDefault'
 import { useUniswapXEthOutputFlag } from 'featureFlags/flags/uniswapXEthOutput'
@@ -217,16 +222,48 @@ function FeatureFlagOption({ value, variant, featureFlag, label }: FeatureFlagPr
   )
 }
 
+interface DynamicConfigDropdownProps {
+  configName: DynamicConfigName
+  label: string
+  options: any[]
+  selected: any[]
+  parser: (opt: string) => any
+}
+
+function DynamicConfigDropdown({ configName, label, options, selected, parser }: DynamicConfigDropdownProps) {
+  const updateConfig = useUpdateConfig()
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValues = Array.from(e.target.selectedOptions, (opt) => parser(opt.value))
+    // Saved to atom as { [configName]: { [configName]: values } } to match Statsig return format
+    updateConfig(configName, { [configName]: selectedValues })
+  }
+  return (
+    <Row key={configName}>
+      <FlagInfo>
+        <FlagName>{configName}</FlagName>
+        <FlagDescription>{label}</FlagDescription>
+      </FlagInfo>
+      <select multiple onChange={handleSelectChange}>
+        {options.map((opt) => (
+          <option key={opt} value={opt} selected={selected.includes(opt)}>
+            {opt}
+          </option>
+        ))}
+      </select>
+    </Row>
+  )
+}
+
 export default function FeatureFlagModal() {
   const open = useModalIsOpen(ApplicationModal.FEATURE_FLAGS)
-  const toggle = useToggleFeatureFlags()
+  const toggleModal = useToggleFeatureFlags()
 
   return (
     <Modal open={open}>
       <FlagsColumn>
         <Header>
           Feature Flag Settings
-          <CloseButton onClick={toggle}>
+          <CloseButton onClick={toggleModal}>
             <X size={24} />
           </CloseButton>
         </Header>
@@ -254,6 +291,27 @@ export default function FeatureFlagModal() {
           featureFlag={FeatureFlag.fotAdjustedmentsEnabled}
           label="Enable fee-on-transfer UI and slippage adjustments"
         />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useProgressIndicatorV2Flag()}
+          featureFlag={FeatureFlag.progressIndicatorV2}
+          label="Refreshed swap progress indicator"
+        />
+        <FeatureFlagGroup name="Quick routes">
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useQuickRouteMainnetFlag()}
+            featureFlag={FeatureFlag.quickRouteMainnet}
+            label="Enable quick routes for Mainnet"
+          />
+          <DynamicConfigDropdown
+            selected={useQuickRouteChains()}
+            options={Object.values(ChainId).filter((v) => !isNaN(Number(v))) as ChainId[]}
+            parser={Number.parseInt}
+            configName={DynamicConfigName.quickRouteChains}
+            label="Enable quick routes for these chains"
+          />
+        </FeatureFlagGroup>
         <FeatureFlagGroup name="UniswapX Flags">
           <FeatureFlagOption
             variant={BaseVariant}

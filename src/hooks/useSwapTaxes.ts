@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import FOT_DETECTOR_ABI from 'abis/fee-on-transfer-detector.json'
 import { FeeOnTransferDetector } from 'abis/types'
 import { sendAnalyticsEvent } from 'analytics'
-import { ZERO_PERCENT } from 'constants/misc'
+import { BIPS_BASE, ZERO_PERCENT } from 'constants/misc'
 import { useEffect, useState } from 'react'
 
 import { useContract } from './useContract'
@@ -53,8 +53,8 @@ async function getSwapTaxes(
 
       addresses.forEach((address, index) => {
         const { sellFeeBps, buyFeeBps } = data[index]
-        const sellTax = new Percent(sellFeeBps.toNumber(), 10000)
-        const buyTax = new Percent(buyFeeBps.toNumber(), 10000)
+        const sellTax = new Percent(sellFeeBps.toNumber(), BIPS_BASE)
+        const buyTax = new Percent(buyFeeBps.toNumber(), BIPS_BASE)
 
         FEE_CACHE[address] = { sellTax, buyTax }
       })

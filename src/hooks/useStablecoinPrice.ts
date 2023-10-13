@@ -6,9 +6,9 @@ import { INTERNAL_ROUTER_PREFERENCE_PRICE } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 
 import {
-  BRIDGED_USDC_ARBITRUM,
   CUSD_CELO,
   DAI_OPTIMISM,
+  USDC_ARBITRUM,
   USDC_AVALANCHE,
   USDC_BASE,
   USDC_MAINNET,
@@ -20,7 +20,7 @@ import {
 // The amount is large enough to filter low liquidity pairs.
 const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
   [ChainId.MAINNET]: CurrencyAmount.fromRawAmount(USDC_MAINNET, 100_000e6),
-  [ChainId.ARBITRUM_ONE]: CurrencyAmount.fromRawAmount(BRIDGED_USDC_ARBITRUM, 10_000e6),
+  [ChainId.ARBITRUM_ONE]: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
   [ChainId.OPTIMISM]: CurrencyAmount.fromRawAmount(DAI_OPTIMISM, 10_000e18),
   [ChainId.POLYGON]: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
   [ChainId.CELO]: CurrencyAmount.fromRawAmount(CUSD_CELO, 10_000e18),
@@ -38,7 +38,13 @@ export default function useStablecoinPrice(currency?: Currency): Price<Currency,
   const amountOut = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
   const stablecoin = amountOut?.currency
 
-  const { trade } = useRoutingAPITrade(TradeType.EXACT_OUTPUT, amountOut, currency, INTERNAL_ROUTER_PREFERENCE_PRICE)
+  const { trade } = useRoutingAPITrade(
+    false /* skip */,
+    TradeType.EXACT_OUTPUT,
+    amountOut,
+    currency,
+    INTERNAL_ROUTER_PREFERENCE_PRICE
+  )
   const price = useMemo(() => {
     if (!currency || !stablecoin) {
       return undefined

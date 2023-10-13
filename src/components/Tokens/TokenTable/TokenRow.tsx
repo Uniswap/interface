@@ -34,7 +34,7 @@ import {
   TokenSortMethod,
   useSetSortMethod,
 } from '../state'
-import { DeltaArrow, DeltaText, formatDelta } from '../TokenDetails/Delta'
+import { DeltaArrow, DeltaText } from '../TokenDetails/Delta'
 
 const Cell = styled.div`
   display: flex;
@@ -113,7 +113,7 @@ const ClickableContent = styled.div<{ gap?: number }>`
   cursor: pointer;
 `
 const ClickableName = styled(ClickableContent)`
-  gap: 8px;
+  gap: 12px;
   max-width: 100%;
 `
 const StyledHeaderRow = styled(StyledTokenRow)`
@@ -441,7 +441,7 @@ interface LoadedRowProps {
 
 /* Loaded State: row component with token information */
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
-  const { formatFiatPrice, formatNumber } = useFormatter()
+  const { formatFiatPrice, formatNumber, formatPercent } = useFormatter()
 
   const { tokenListIndex, tokenListLength, token, sortRank } = props
   const filterString = useAtomValue(filterStringAtom)
@@ -450,7 +450,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const chainId = supportedChainIdFromGQLChain(filterNetwork)
   const timePeriod = useAtomValue(filterTimeAtom)
   const delta = token.market?.pricePercentChange?.value
-  const formattedDelta = formatDelta(delta)
+  const formattedDelta = formatPercent(delta)
 
   const exploreTokenSelectedEventProperties = {
     chain_id: chainId,
@@ -480,7 +480,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           listNumber={sortRank}
           tokenInfo={
             <ClickableName>
-              <QueryTokenLogo token={token} />
+              <QueryTokenLogo token={token} size="32px" />
               <TokenInfoCell>
                 <TokenName data-cy="token-name">{token.name}</TokenName>
                 <TokenSymbol>{token.symbol}</TokenSymbol>

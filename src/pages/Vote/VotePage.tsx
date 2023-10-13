@@ -283,7 +283,7 @@ export default function VotePage() {
           <DelegateModal
             isOpen={showDelegateModal}
             onDismiss={toggleDelegateModal}
-            title={<Trans>Unlock Votes</Trans>}
+            title={<Trans>Unlock votes</Trans>}
           />
           <QueueModal isOpen={showQueueModal} onDismiss={toggleQueueModal} proposalId={proposalData?.id} />
           <ExecuteModal isOpen={showExecuteModal} onDismiss={toggleExecuteModal} proposalId={proposalData?.id} />
@@ -346,7 +346,7 @@ export default function VotePage() {
                     toggleVoteModal()
                   }}
                 >
-                  <Trans>Vote For</Trans>
+                  <Trans>Vote for</Trans>
                 </ButtonPrimary>
                 <ButtonPrimary
                   padding="8px"
@@ -356,7 +356,7 @@ export default function VotePage() {
                     toggleVoteModal()
                   }}
                 >
-                  <Trans>Vote Against</Trans>
+                  <Trans>Vote against</Trans>
                 </ButtonPrimary>
               </RowFixed>
             )}

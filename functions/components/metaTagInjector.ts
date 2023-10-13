@@ -10,7 +10,7 @@ type MetaTagInjectorInput = {
  * to inject meta tags into the <head> of an HTML document.
  */
 export class MetaTagInjector implements HTMLRewriterElementContentHandlers {
-  constructor(private input: MetaTagInjectorInput) {}
+  constructor(private input: MetaTagInjectorInput, private request: Request) {}
 
   append(element: Element, property: string, content: string) {
     element.append(`<meta property="${property}" content="${content}"/>`, { html: true })
@@ -37,6 +37,11 @@ export class MetaTagInjector implements HTMLRewriterElementContentHandlers {
     if (this.input.image) {
       this.append(element, 'twitter:image', this.input.image)
       this.append(element, 'twitter:image:alt', this.input.title)
+    }
+
+    const blockedPaths = this.request.headers.get('x-blocked-paths')
+    if (blockedPaths) {
+      this.append(element, 'x:blocked-paths', blockedPaths)
     }
   }
 }
