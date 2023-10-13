@@ -1,29 +1,24 @@
 import { motion } from 'framer-motion'
-import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
-import { useLandingTokens } from 'graphql/data/LandingTokens'
-import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 // @ts-ignore
 import PoissonDiskSampling from 'poisson-disk-sampling'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { defaultCoin, staticCoins, staticCollections } from '../staticTokens'
+import { defaultCoin, staticCoins, staticCollections } from '../assets/staticTokens'
 import { Box } from './Generics'
 import { PriceArrowDown, PriceArrowUp, PriceNeutral } from './Icons'
-
-const tokenList = mixArrays(staticCoins, staticCollections, 0.33)
 
 type Token = {
   address: string
   color: string
   logoUrl: string
-  pricePercentChange: number
+  PricePercentChange: number
   symbol: string
   type: string
 }
 
-type TokenPoint = {
+type TokenPoint = Token & {
   x: number
   y: number
   blur: number
@@ -35,20 +30,17 @@ type TokenPoint = {
   delay: number
   floatDuration: number
   ticker: string
-  delta: number
-  type: string
-  address: string
 }
 
 type Point = [number, number]
 
-type SimpleToken = {
-  delta: number
-  logoUrl: string
-  ticker: string
-  type: string
-  color: string
-}
+// type SimpleToken = {
+//    PricePercentChange: number
+//   logoUrl: string
+//   ticker: string
+//   type: string
+//   color: string
+// }
 
 function isNegative(n: number) {
   return n < 0
@@ -109,43 +101,45 @@ const poissonConfig = {
 
 export function TokenCloud() {
   const [pts, setPts] = useState<TokenPoint[]>([])
-  const tokens = useLandingTokens(1)
-  const collections = useTrendingCollections(25, HistoryDuration.Day)
-  const [displayTokens, setDisplayTokens] = useState<SimpleToken[]>([])
+  // const tokens = useLandingTokens(1)
+  // const collections = useTrendingCollections(25, HistoryDuration.Day)
+  // const [displayTokens, setDisplayTokens] = useState<SimpleToken[]>([])
+
+  // useEffect(() => {
+  //   if (!collections.data || !tokens.data) return
+  //   const simpleCollectionData = collections?.data?.map((c) => {
+  //     return {
+  //        PricePercentChange: c.floorChange?.toFixed(2) || 0,
+  //       logoUrl: c.imageUrl || '',
+  //       ticker: c.name || '',
+  //       type: 'collection',
+  //       color: randomHSLColor(),
+  //     }
+  //   })
+
+  //   console.log('simpleCollectionData', simpleCollectionData)
+
+  //   const simpleTokenData = tokens?.data?.map((t) => {
+  //     return {
+  //       // @ts-ignore
+  //        PricePercentChange: t.market?.PricePercentChange?.value?.toFixed(2) || 0,
+  //       // @ts-ignore
+  //       logoUrl: t.project.logoUrl || '',
+  //       ticker: t.symbol || '',
+  //       type: 'token',
+  //       color: randomHSLColor(),
+  //     }
+  //   })
+
+  //   console.log('simpleTokenData', simpleTokenData)
+
+  //   const displayTokens = shuffleArray([...simpleCollectionData, ...simpleTokenData])
+  //   setDisplayTokens(displayTokens)
+  // }, [collections.data, tokens.data])
 
   useEffect(() => {
-    if (!collections.data || !tokens.data) return
-    const simpleCollectionData = collections?.data?.map((c) => {
-      return {
-        delta: c.floorChange?.toFixed(2) || 0,
-        logoUrl: c.imageUrl || '',
-        ticker: c.name || '',
-        type: 'collection',
-        color: randomHSLColor(),
-      }
-    })
+    const tokenList = mixArrays(staticCoins, staticCollections, 0.33)
 
-    console.log('simpleCollectionData', simpleCollectionData)
-
-    const simpleTokenData = tokens?.data?.map((t) => {
-      return {
-        // @ts-ignore
-        delta: t.market?.pricePercentChange?.value?.toFixed(2) || 0,
-        // @ts-ignore
-        logoUrl: t.project.logoUrl || '',
-        ticker: t.symbol || '',
-        type: 'token',
-        color: randomHSLColor(),
-      }
-    })
-
-    console.log('simpleTokenData', simpleTokenData)
-
-    const displayTokens = shuffleArray([...simpleCollectionData, ...simpleTokenData])
-    setDisplayTokens(displayTokens)
-  }, [collections.data, tokens.data])
-
-  useEffect(() => {
     const p = new PoissonDiskSampling(poissonConfig)
     const points = p
       .fill()
@@ -170,7 +164,7 @@ export function TokenCloud() {
           delay: Math.abs(x - w / 2) / 800,
           floatDuration: randomFloat(3, 6),
           ticker: token.symbol,
-          delta: token.pricePercentChange,
+          PricePercentChange: token.PricePercentChange,
           type: token.type,
           address: token.address,
         }
@@ -216,9 +210,23 @@ type TokenProps = {
 
 function Token(props: TokenProps) {
   const { cursor, setCursor, idx, point } = props
-  const { x, y, blur, size, rotation, opacity, delay, floatDuration, logoUrl, type, delta, ticker, color, address } =
-    point
-  // const { logoUrl, type, delta, ticker, color } = displayTokens[idx]
+  const {
+    x,
+    y,
+    blur,
+    size,
+    rotation,
+    opacity,
+    delay,
+    floatDuration,
+    logoUrl,
+    type,
+    PricePercentChange,
+    ticker,
+    color,
+    address,
+  } = point
+  // const { logoUrl, type,  PricePercentChange, ticker, color } = displayTokens[idx]
 
   const navigate = useNavigate()
   const handleOnClick = () => navigate(type === 'COIN' ? `/tokens/ethereum/${address}` : `/nfts/collection/${address}`)
@@ -318,7 +326,13 @@ function Token(props: TokenProps) {
         variants={floatVariants}
         animate="animate"
       >
-        <Ticker size={size} color={color} delta={delta} ticker={ticker} animate={hovered ? 'hover' : 'animate'} />
+        <Ticker
+          size={size}
+          color={color}
+          PricePercentChange={PricePercentChange}
+          ticker={ticker}
+          animate={hovered ? 'hover' : 'animate'}
+        />
         <RotateContainer variants={rotateVariants} animate="animate">
           <TokenIcon
             size={size}
@@ -463,20 +477,20 @@ const TickerContainer = styled(motion.div)`
   gap: 20px;
 `
 
-const DeltaText = styled(motion.div)`
+const PricePercentChangeText = styled(motion.div)`
   font-size: 12px;
   font-weight: 500;
   color: ${(props) => `${props.color}`};
 `
 
-const Delta = styled(motion.div)`
+const PricePercentChange = styled(motion.div)`
   display: flex;
   flex-direction: row;
 `
 
 type TickerProps = {
   color: string
-  delta: number
+  PricePercentChange: number
   ticker: string
   size: number
   children?: React.ReactNode
@@ -493,10 +507,16 @@ function Ticker(props: TickerProps) {
       <Box flex="none" width={`${props.size}px`} height={`${props.size}px`} />
       <PriceContainer>
         <TickerText color={props.color}>{props.ticker}</TickerText>
-        <Delta>
-          {(props.delta | 0) === 0 ? <PriceNeutral /> : isNegative(props.delta) ? <PriceArrowDown /> : <PriceArrowUp />}
-          <DeltaText>{props.delta}</DeltaText>
-        </Delta>
+        <PricePercentChange>
+          {(props.PricePercentChange | 0) === 0 ? (
+            <PriceNeutral />
+          ) : isNegative(props.PricePercentChange) ? (
+            <PriceArrowDown />
+          ) : (
+            <PriceArrowUp />
+          )}
+          <PricePercentChangeText>{props.PricePercentChange}</PricePercentChangeText>
+        </PricePercentChange>
       </PriceContainer>
     </TickerContainer>
   )

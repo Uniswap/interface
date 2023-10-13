@@ -33,13 +33,16 @@ export function Hero() {
             </Subheading>
           </RiseIn>
         </Box>
+
         <RiseIn delay={0.4}>
-          <LandingSwap />
+          <LandingSwapContainer>
+            <LandingSwap />
+          </LandingSwapContainer>
         </RiseIn>
       </Box>
       <Box position="absolute" bottom="48px" width="100%" align="center" justify="center" pointerEvents="none">
         <RiseIn delay={0.3}>
-          <Box direction="column" align="center" justify="flex-start">
+          <Box direction="column" align="center" justify="flex-start" pointerEvents="none">
             <Body2>Scroll to Learn More</Body2>
             <Hover>
               <ChevronDown />
@@ -51,30 +54,39 @@ export function Hero() {
   )
 }
 
+const LandingSwapContainer = styled(Box)`
+  width: 464px;
+  padding: 0px 16px;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`
+
 const LandingSwap = styled(Swap)`
   position: relative;
-  z-index: 9999;
-  width: 464px;
-  padding: 0 0 0 0;
-  border: 0;
-  background-color: transparent;
-  box-shadow: none;
-  border-radius: 0;
-
-  &:hover {
-    box-shadow: none;
-    border: 0;
-  }
+  width: 100%;
+  padding: 8px;
 
   & > div:first-child {
     display: none;
   }
-
-  & > div:nth-child(2) > div:first-child {
-    background-color: ${({ theme }) => theme.surface1};
-  }
-
-  & > div:nth-child(3) > div:first-child > div:first-child {
-    background-color: ${({ theme }) => theme.surface1};
-  }
 `
+
+// &:hover {
+//   box-shadow: none;
+//   border: 0;
+// }
+
+// & > div:nth-child(2) > div:first-child {
+//   background-color: ${({ theme }) => theme.surface1};
+//   box-shadow: 0px 8px 24px 0px rgba(252, 114, 255, 0.1);
+// }
+
+// & > div:nth-child(3) > div:first-child > div:first-child {
+//   background-color: ${({ theme }) => theme.surface1};
+//   box-shadow: 0px 8px 24px 0px rgba(252, 114, 255, 0.1);
+// }
+
+// & > div:nth-child(3) > div:nth-child(2) > button {
+//   box-shadow: 0px 8px 24px 0px rgba(252, 114, 255, 0.1);
+// }

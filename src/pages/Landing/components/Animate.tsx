@@ -24,7 +24,7 @@ export const RiseIn = (props: RiseInProps) => {
       initial={{ opacity: 0, rotate: 2, rotateX: -45, y: 100 }}
       animate={{ opacity: 1, rotate: 0, rotateX: 0, y: 0 }}
       transition={{ delay: props.delay, duration: 0.9, ease: [0.19, 1, 0.22, 1] }}
-      style={{ flex: 'none' }}
+      style={{ flex: 'none', width: '100%', display: 'flex', justifyContent: 'center', pointerEvents: 'none' }}
     >
       {props.children}
     </motion.div>
