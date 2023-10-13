@@ -215,7 +215,7 @@ export function Complete(): JSX.Element {
           py="$spacing24"
           viewportName="onboarding">
           <Toast.Title alignItems="center" display="flex" flexDirection="row" gap="$spacing8">
-            <Icons.Checkmark color="$statusSuccess" size={iconSizes.icon24} />
+            <Icons.Check color="$statusSuccess" size={iconSizes.icon24} />
             <Text variant="body1">{t('Pinned! It’s safe to close this tab now')}</Text>
           </Toast.Title>
         </Toast>
