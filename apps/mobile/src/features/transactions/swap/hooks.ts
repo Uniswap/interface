@@ -11,6 +11,8 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
+import { selectSwapStartTimestamp } from 'src/features/telemetry/timing/selectors'
+import { updateSwapStartTimestamp } from 'src/features/telemetry/timing/slice'
 import {
   getBaseTradeAnalyticsProperties,
   getBaseTradeAnalyticsPropertiesFromSwapInfo,
@@ -715,6 +717,8 @@ export function useSwapCallback(
   const appDispatch = useAppDispatch()
   const account = useActiveAccount()
 
+  const swapStartTimestamp = useAppSelector(selectSwapStartTimestamp)
+
   return useMemo(() => {
     if (!account || !swapTxRequest || !trade || !gasFee.value) {
       return () => {
@@ -755,7 +759,13 @@ export function useSwapCallback(
         transaction_deadline_seconds: trade.deadline,
         swap_quote_block_number: trade.quote?.blockNumber,
         is_auto_slippage: isAutoSlippage,
+        swap_flow_duration_milliseconds: swapStartTimestamp
+          ? Date.now() - swapStartTimestamp
+          : undefined,
       })
+
+      // Reset swap start timestamp now that the swap has been submitted
+      appDispatch(updateSwapStartTimestamp({ timestamp: undefined }))
     }
   }, [
     account,
@@ -769,6 +779,7 @@ export function useSwapCallback(
     approveTxRequest,
     onSubmit,
     isAutoSlippage,
+    swapStartTimestamp,
   ])
 }
 

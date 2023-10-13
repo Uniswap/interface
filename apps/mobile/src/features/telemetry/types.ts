@@ -133,6 +133,7 @@ export type MobileEventProperties = {
     token_out_amount_usd?: number
     is_auto_slippage?: boolean
     swap_quote_block_number?: string
+    swap_flow_duration_milliseconds?: number
   } & SwapTradeBaseProperties
   [SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED]: {
     error?: ApolloError | FetchBaseQueryError | SerializedError | Error | string

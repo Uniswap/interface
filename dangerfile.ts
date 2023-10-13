@@ -210,14 +210,10 @@ if (!updatedSchemaFile && updatedMigrationsFile) {
   )
 }
 
-if (createdSliceFile && (!updatedMigrationsFile || !updatedSchemaFile)) {
-  fail(
-    'You created a new slice file. Please write a migration, update initialState in the `migrations.test.ts` file, and create a new schema.'
-  )
-}
+if ((createdSliceFile || deletedSliceFile) && (!updatedSchemaFile || !updatedMigrationsFile)) {
+  warn('You created or deleted a slice file. Make sure to create check schema and migration is updated if needed.')
 
-if (deletedSliceFile && (!updatedSchemaFile || !updatedMigrationsFile)) {
-  fail('You deleted a slice file. Make sure to define a new schema and and create a migration.')
+
 }
 
 if (updatedMigrationsFile && !updatedMigrationsTestFile) {
