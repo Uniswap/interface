@@ -86,7 +86,6 @@
     "@shopify/react-native-performance": "4.1.2",
     "@shopify/react-native-performance-navigation": "3.0.0",
     "@shopify/react-native-skia": "0.1.187",
-    "@shopify/restyle": "1.6.1",
     "@uniswap/analytics": "1.4.0",
     "@uniswap/analytics-events": "2.15.0",
     "@uniswap/ethers-rs-mobile": "0.0.3",

@@ -8,7 +8,6 @@
     "@ethersproject/units": "5.7.0",
     "@redux-saga/core": "1.2.3",
     "@reduxjs/toolkit": "1.9.3",
-    "@shopify/restyle": "1.6.1",
     "@tamagui/animations-react-native": "1.74.15",
     "@tamagui/colors": "1.74.15",
     "@tamagui/font-inter": "1.74.15",

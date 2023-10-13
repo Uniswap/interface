@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "dependencies": {
     "@react-native-masked-view/masked-view": "0.2.9",
-    "@shopify/restyle": "1.6.1",
     "@tamagui/animations-css": "1.74.15",
     "@tamagui/animations-react-native": "1.74.15",
     "@tamagui/font-inter": "1.74.15",
