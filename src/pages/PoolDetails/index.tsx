@@ -1,10 +1,12 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
+import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { usePoolData } from 'graphql/thegraph/PoolData'
 import { useReducer } from 'react'
+import { ArrowDown } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -111,7 +113,7 @@ export default function PoolDetailsPage() {
 
 const LeftColumn = styled(Column)`
   gap: 24px;
-  width: 75vw;
+  width: 65vw;
 `
 
 const DetailBubble = styled(LoadingBubble)`
@@ -153,9 +155,39 @@ const ChartHeaderBubble = styled(LoadingBubble)`
   height: 32px;
 `
 
-const TableHeader = styled(ThemedText.BodySecondary)<{ alignRight?: boolean }>`
-  width: 100%;
-  text-align: ${({ alignRight }) => (alignRight ? 'right' : 'left')};
+const Table = styled(Column)`
+  gap: 24px;
+  border-radius: 20px;
+  border: 1px solid ${({ theme }) => theme.surface3};
+  padding-bottom: 12px;
+  overflow-y: hidden;
+  ${ScrollBarStyles}
+`
+
+const TableRow = styled(Row)<{ $borderBottom?: boolean }>`
+  justify-content: space-between;
+  border-bottom: ${({ $borderBottom, theme }) => ($borderBottom ? `1px solid ${theme.surface3}` : 'none')}};
+  padding: 12px;
+  width: max(100%, 100vw);
+`
+
+const TableElement = styled(ThemedText.BodySecondary)<{
+  alignRight?: boolean
+  small?: boolean
+  large?: boolean
+}>`
+  display: flex;
+  padding: 0px 8px;
+  flex: ${({ small }) => (small ? 'unset' : '1')};
+  width: ${({ small }) => (small ? '44px' : 'auto')};
+  min-width: ${({ large, small }) => (large ? '136px' : small ? 'unset' : '121px')} !important;
+  justify-content: ${({ alignRight }) => (alignRight ? 'flex-end' : 'flex-start')};
+`
+
+const SmallDetailBubble = styled(LoadingBubble)`
+  height: 20px;
+  width: 20px;
+  border-radius: 100px;
 `
 
 function PoolDetailsLoadingSkeleton() {
@@ -174,29 +206,59 @@ function PoolDetailsLoadingSkeleton() {
       <HR />
       <ChartHeaderBubble />
       {/* TODO(WEB-2735): When making table, have headers be shared */}
-      <Row justifyContent="space-between">
-        <TableHeader>
-          <Trans>Time</Trans>
-        </TableHeader>
-        <TableHeader>
-          <Trans>Type</Trans>
-        </TableHeader>
-        <TableHeader>
-          <Trans>USD</Trans>
-        </TableHeader>
-        <TableHeader>
-          <Trans>PEPE</Trans>
-        </TableHeader>
-        <TableHeader>
-          <Trans>ETH</Trans>
-        </TableHeader>
-        <TableHeader>
-          <Trans>Maker</Trans>
-        </TableHeader>
-        <TableHeader>
-          <Trans>Txn</Trans>
-        </TableHeader>
-      </Row>
+      <Table $isHorizontalScroll>
+        <TableRow $borderBottom>
+          <TableElement large>
+            <Row>
+              <ArrowDown size={16} />
+              <Trans>Time</Trans>
+            </Row>
+          </TableElement>
+          <TableElement>
+            <Trans>Type</Trans>
+          </TableElement>
+          <TableElement alignRight>
+            <Trans>USD</Trans>
+          </TableElement>
+          <TableElement alignRight>
+            <DetailBubble />
+          </TableElement>
+          <TableElement alignRight>
+            <DetailBubble />
+          </TableElement>
+          <TableElement alignRight>
+            <Trans>Maker</Trans>
+          </TableElement>
+          <TableElement alignRight small>
+            <Trans>Txn</Trans>
+          </TableElement>
+        </TableRow>
+        {Array.from({ length: 10 }).map((_, i) => (
+          <TableRow key={`loading-table-row-${i}`}>
+            <TableElement large>
+              <DetailBubble />
+            </TableElement>
+            <TableElement>
+              <DetailBubble />
+            </TableElement>
+            <TableElement alignRight>
+              <DetailBubble />
+            </TableElement>
+            <TableElement alignRight>
+              <DetailBubble />
+            </TableElement>
+            <TableElement alignRight>
+              <DetailBubble />
+            </TableElement>
+            <TableElement alignRight>
+              <DetailBubble />
+            </TableElement>
+            <TableElement alignRight small>
+              <SmallDetailBubble />
+            </TableElement>
+          </TableRow>
+        ))}
+      </Table>
     </LeftColumn>
   )
 }
