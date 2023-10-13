@@ -1,7 +1,8 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { expectSaga } from 'redux-saga-test-plan'
 import { pushTransactionNotification } from 'src/features/notifications/notificationWatcherSaga'
-import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
+import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -95,7 +96,7 @@ describe(pushTransactionNotification, () => {
     const swapTypeInfo: ExactOutputSwapTransactionInfo = {
       type: TransactionType.Swap,
       tradeType: TradeType.EXACT_OUTPUT,
-      inputCurrencyId: `1-${NATIVE_ADDRESS}`,
+      inputCurrencyId: `1-${getNativeAddress(ChainId.Mainnet)}`,
       outputCurrencyId: '1-0x4d224452801ACEd8B2F0aebE155379bb5D594381',
       outputCurrencyAmountRaw: '230000000000000000',
       expectedInputCurrencyAmountRaw: '12000000000000000',

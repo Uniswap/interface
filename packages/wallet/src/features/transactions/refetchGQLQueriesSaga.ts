@@ -1,6 +1,7 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { call, delay } from 'typed-redux-saga'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { GQLQueries } from 'wallet/src/data/queries'
 import {
@@ -16,7 +17,6 @@ import {
   buildNativeCurrencyId,
   buildWrappedNativeCurrencyId,
   CurrencyId,
-  getNativeCurrencyAddressForChain,
 } from 'wallet/src/utils/currencyId'
 
 type CurrencyIdToBalance = Record<CurrencyId, number>
@@ -133,7 +133,7 @@ function readBalancesFromCache({
     if (!chainId) continue
 
     // backend represents native currency addresses as null but client uses a reserved address
-    const tokenAddress = tokenData?.token?.address ?? getNativeCurrencyAddressForChain(chainId)
+    const tokenAddress = tokenData?.token?.address ?? getNativeAddress(chainId)
     const currencyId = buildCurrencyId(chainId, tokenAddress).toLowerCase()
 
     if (currencyIdsToUpdate.has(currencyId)) {

@@ -1,4 +1,5 @@
 import { logger } from 'utilities/src/logger/logger'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { MoonpayTransactionsResponse } from 'wallet/src/features/fiatOnRamp/types'
@@ -8,7 +9,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { getNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 
 const MOONPAY_ETH_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000'
 
@@ -36,7 +36,7 @@ function parseFiatPurchaseTransaction(
 
   const outputTokenAddress =
     outputCurrency.metadata?.contractAddress === MOONPAY_ETH_CONTRACT_ADDRESS
-      ? getNativeCurrencyAddressForChain(chainId)
+      ? getNativeAddress(chainId)
       : outputCurrency.metadata?.contractAddress
   if (!outputTokenAddress) throw new Error('Expected output currency address to be defined')
 

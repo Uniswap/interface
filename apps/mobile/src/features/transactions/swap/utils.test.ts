@@ -3,17 +3,17 @@ import { Route } from '@uniswap/v3-sdk'
 import { getWrapType, requireAcceptNewTrade } from 'src/features/transactions/swap/utils'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { ChainId } from 'wallet/src/constants/chains'
-import { UNI, WBTC, WRAPPED_NATIVE_CURRENCY } from 'wallet/src/constants/tokens'
+import { UNI, WBTC, wrappedNativeCurrency } from 'wallet/src/constants/tokens'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { mockPool } from 'wallet/src/test/fixtures'
 
 describe(getWrapType, () => {
   const eth = NativeCurrency.onChain(ChainId.Mainnet)
-  const weth = WRAPPED_NATIVE_CURRENCY[ChainId.Mainnet]
+  const weth = wrappedNativeCurrency(ChainId.Mainnet)
 
   const goerliEth = NativeCurrency.onChain(ChainId.Goerli)
-  const goerliWeth = WRAPPED_NATIVE_CURRENCY[ChainId.Goerli]
+  const goerliWeth = wrappedNativeCurrency(ChainId.Goerli)
 
   it('handles undefined args', () => {
     expect(getWrapType(undefined, weth)).toEqual(WrapType.NotApplicable)

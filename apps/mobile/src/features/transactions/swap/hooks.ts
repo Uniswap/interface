@@ -498,11 +498,7 @@ function useSwapTransactionRequest(
     tokenApprovalInfo?.action === ApprovalAction.Approve ||
     tokenApprovalInfo?.action === ApprovalAction.Permit2Approve
 
-  const {
-    loading: simulatedGasLimitLoading,
-    simulatedGasLimit,
-    error: simulatedGasError,
-  } = simulatedGasEstimationInfo
+  const { loading: simulatedGasLimitLoading, simulatedGasLimit } = simulatedGasEstimationInfo
 
   const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
   return useMemo(() => {

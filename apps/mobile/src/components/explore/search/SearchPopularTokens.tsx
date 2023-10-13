@@ -5,7 +5,7 @@ import { getSearchResultId } from 'src/components/explore/search/utils'
 import { Loader } from 'src/components/loading'
 import { SearchResultType, TokenSearchResult } from 'src/features/explore/SearchResult'
 import { Inset } from 'ui/src'
-import { WRAPPED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
+import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import {
   Chain,
@@ -26,7 +26,7 @@ export function SearchPopularTokens(): JSX.Element {
     // eth will be defined only if all the required data is available
     // when eth data is not fully available, we do not replace weth with eth
     const eth = data?.eth && data?.eth.length > 0 && data?.eth?.[0]?.project ? data.eth[0] : null
-    const wethAddress = WRAPPED_BASE_ADDRESSES[ChainId.Mainnet]
+    const wethAddress = getWrappedNativeAddress(ChainId.Mainnet)
 
     return data.topTokens
       .map((token) => {

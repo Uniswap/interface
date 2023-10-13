@@ -2,7 +2,7 @@ import { call } from '@redux-saga/core/effects'
 import { BigNumber } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
-import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI } from 'wallet/src/constants/tokens'
 import { AssetType } from 'wallet/src/entities/assets'
@@ -27,7 +27,7 @@ const erc20TranferParams: TransferCurrencyParams = {
 }
 const nativeTranferParams: TransferCurrencyParams = {
   ...erc20TranferParams,
-  tokenAddress: NATIVE_ADDRESS,
+  tokenAddress: getNativeAddress(ChainId.Goerli),
 }
 const erc721TransferParams: TransferNFTParams = {
   txId: '1',

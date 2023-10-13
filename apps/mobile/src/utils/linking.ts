@@ -4,7 +4,7 @@ import { colorsLight } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { uniswapUrls } from 'wallet/src/constants/urls'
-import { toUniswapWebAppLink } from 'wallet/src/features/chains/utils'
+import { toSupportedChainId, toUniswapWebAppLink } from 'wallet/src/features/chains/utils'
 import { FiatPurchaseTransactionInfo } from 'wallet/src/features/transactions/types'
 import { currencyIdToChain, currencyIdToGraphQLAddress } from 'wallet/src/utils/currencyId'
 
@@ -105,7 +105,8 @@ export function getExplorerLink(
 ): string {
   if (!chainId) return ''
 
-  const prefix = CHAIN_INFO[chainId]?.explorer ?? 'https://etherscan.io/'
+  const supportedChainId = toSupportedChainId(chainId)
+  const prefix = supportedChainId ? CHAIN_INFO[supportedChainId].explorer : 'https://etherscan.io/'
 
   switch (type) {
     case ExplorerDataType.TRANSACTION:

@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
 import {
@@ -9,7 +10,6 @@ import {
 } from 'wallet/src/features/transactions/transactionState/types'
 import { useAppDispatch } from 'wallet/src/state'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
-import { getNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 
 export const useNavigateToSwap: () => (
   currencyField: CurrencyField,
@@ -19,7 +19,7 @@ export const useNavigateToSwap: () => (
   const dispatch = useAppDispatch()
   return useCallback(
     (currencyField, currencyAddress, currencyChainId) => {
-      const nativeTokenAddress = getNativeCurrencyAddressForChain(currencyChainId)
+      const nativeTokenAddress = getNativeAddress(currencyChainId)
       const nativeToken: CurrencyAsset = {
         address: nativeTokenAddress,
         chainId: currencyChainId,

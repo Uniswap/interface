@@ -17,7 +17,7 @@ import {
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { Flex, Inset, Text } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { WRAPPED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
+import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
@@ -71,7 +71,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
     // eth will be defined only if all the required data is available
     // when eth data is not fully available, we do not replace weth with eth
     const { eth } = data
-    const wethAddress = WRAPPED_BASE_ADDRESSES[ChainId.Mainnet]
+    const wethAddress = getWrappedNativeAddress(ChainId.Mainnet)
 
     const topTokens = data.topTokens
       .map((token) => {

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { shallowEqual } from 'react-redux'
-import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
 import {
@@ -9,7 +9,7 @@ import {
 } from 'wallet/src/features/transactions/transactionState/types'
 
 const ETH_TRADEABLE_ASSET: TradeableAsset = {
-  address: NATIVE_ADDRESS,
+  address: getNativeAddress(ChainId.Mainnet),
   chainId: ChainId.Mainnet,
   type: AssetType.Currency,
 }

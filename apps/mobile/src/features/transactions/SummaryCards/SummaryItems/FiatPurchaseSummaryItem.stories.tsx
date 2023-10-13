@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
 import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
-import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { Chain, TokenDocument } from 'wallet/src/data/__generated__/types-and-hooks'
 import { FiatPurchaseSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/FiatPurchaseSummaryItem'
@@ -72,7 +72,7 @@ const baseFaitPurchaseTx: Omit<TransactionDetails, 'status'> & {
     outputCurrency: {
       type: 'crypto',
       metadata: {
-        contractAddress: NATIVE_ADDRESS,
+        contractAddress: getNativeAddress(ChainId.Mainnet),
         chainId: Chain.Ethereum,
       },
     },

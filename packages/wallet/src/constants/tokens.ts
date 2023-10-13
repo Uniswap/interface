@@ -1,7 +1,7 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/constants/tokens.ts
 import { Token } from '@uniswap/sdk-core'
 import { UNI_ADDRESS } from 'wallet/src/constants/addresses'
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 
 export const DAI = new Token(
   ChainId.Mainnet,
@@ -89,61 +89,13 @@ export const UNI = {
   [ChainId.Goerli]: new Token(ChainId.Goerli, UNI_ADDRESS[ChainId.Goerli], 18, 'UNI', 'Uniswap'),
 }
 
-export const WRAPPED_NATIVE_CURRENCY = {
-  [ChainId.Mainnet]: new Token(
-    1,
-    '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-    18,
-    'WETH',
-    'Wrapped Ether'
-  ),
-  [ChainId.Goerli]: new Token(
-    5,
-    '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6',
-    18,
-    'WETH',
-    'Wrapped Ether'
-  ),
-  [ChainId.Optimism]: new Token(
-    ChainId.Optimism,
-    '0x4200000000000000000000000000000000000006',
-    18,
-    'WETH',
-    'Wrapped Ether'
-  ),
-  [ChainId.ArbitrumOne]: new Token(
-    ChainId.ArbitrumOne,
-    '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
-    18,
-    'WETH',
-    'Wrapped Ether'
-  ),
-  [ChainId.Base]: new Token(
-    ChainId.Base,
-    '0x4200000000000000000000000000000000000006',
-    18,
-    'WETH',
-    'Wrapped Ether'
-  ),
-  [ChainId.Bnb]: new Token(
-    ChainId.Bnb,
-    '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
-    18,
-    'WBNB',
-    'Wrapped BNB'
-  ),
-  [ChainId.Polygon]: new Token(
-    ChainId.Polygon,
-    '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
-    18,
-    'WMATIC',
-    'Wrapped MATIC'
-  ),
-  [ChainId.PolygonMumbai]: new Token(
-    ChainId.PolygonMumbai,
-    '0x9c3c9283d3e44854697cd22d3faa240cfb032889',
-    18,
-    'WMATIC',
-    'Wrapped MATIC'
-  ),
+export function wrappedNativeCurrency(chainId: ChainId): Token {
+  const wrappedCurrencyInfo = CHAIN_INFO[chainId].wrappedNativeCurrency
+  return new Token(
+    chainId,
+    wrappedCurrencyInfo.address,
+    wrappedCurrencyInfo.decimals,
+    wrappedCurrencyInfo.symbol,
+    wrappedCurrencyInfo.name
+  )
 }

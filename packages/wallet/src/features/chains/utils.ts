@@ -33,12 +33,6 @@ export function isTestnet(chainId?: ChainId): boolean {
   return TESTNET_CHAIN_IDS.includes(chainId)
 }
 
-export function isPolygonChain(
-  chainId: number
-): chainId is ChainId.Polygon | ChainId.PolygonMumbai {
-  return chainId === ChainId.PolygonMumbai || chainId === ChainId.Polygon
-}
-
 export function fromGraphQLChain(chain: Chain | undefined): ChainId | null {
   switch (chain) {
     case Chain.Ethereum:

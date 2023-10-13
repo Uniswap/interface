@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import { faker } from '@faker-js/faker'
-import { WRAPPED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
+import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, USDC } from 'wallet/src/constants/tokens'
 import {
@@ -473,7 +473,7 @@ export const TopNFTCollections: [NftCollection, NftCollection] = [
 export const TopTokens: [Token, Token] = [
   {
     id: faker.datatype.uuid(),
-    address: WRAPPED_BASE_ADDRESSES[ChainId.Mainnet],
+    address: getWrappedNativeAddress(ChainId.Mainnet),
     chain: Chain.Ethereum,
     symbol: 'WETH',
     project: {

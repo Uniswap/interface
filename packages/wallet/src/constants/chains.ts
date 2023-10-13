@@ -13,6 +13,9 @@ import {
 } from 'ui/src/assets'
 import { config } from 'wallet/src/config'
 
+/** Address that represents native currencies on ETH, Arbitrum, etc. */
+const DEFAULT_NATIVE_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+
 export enum RPCType {
   Public = 'public',
   Private = 'private',
@@ -77,7 +80,14 @@ export interface L1ChainInfo {
   readonly nativeCurrency: {
     name: string // 'Goerli ETH',
     symbol: string // 'gorETH',
-    decimals: number //18,
+    decimals: number // 18,
+    address: string // '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+  }
+  readonly wrappedNativeCurrency: {
+    name: string // 'Wrapped Ether',
+    symbol: string // 'WETH',
+    decimals: number // 18,
+    address: string // '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6'
   }
 }
 export interface L2ChainInfo extends L1ChainInfo {
@@ -86,8 +96,6 @@ export interface L2ChainInfo extends L1ChainInfo {
 }
 
 export type ChainInfo = {
-  readonly [chainId: number]: L1ChainInfo | L2ChainInfo
-} & {
   readonly [chainId in L2ChainId]: L2ChainInfo
 } & { readonly [chainId in EthereumChainId]: L1ChainInfo }
 
@@ -100,7 +108,18 @@ export const CHAIN_INFO: ChainInfo = {
     infoLink: 'https://info.uniswap.org/#/arbitrum',
     label: 'Arbitrum',
     logo: ARBITRUM_LOGO,
-    nativeCurrency: { name: 'Arbitrum ETH', symbol: 'ETH', decimals: 18 },
+    nativeCurrency: {
+      name: 'Arbitrum ETH',
+      symbol: 'ETH',
+      decimals: 18,
+      address: DEFAULT_NATIVE_ADDRESS,
+    },
+    wrappedNativeCurrency: {
+      name: 'Wrapped Ether',
+      symbol: 'WETH',
+      decimals: 18,
+      address: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+    },
     rpcUrls: { [RPCType.PublicAlt]: 'https://arb1.arbitrum.io/rpc' },
   },
   [ChainId.Mainnet]: {
@@ -110,7 +129,18 @@ export const CHAIN_INFO: ChainInfo = {
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Ethereum',
     logo: ETHEREUM_LOGO,
-    nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18,
+      address: DEFAULT_NATIVE_ADDRESS,
+    },
+    wrappedNativeCurrency: {
+      name: 'Wrapped Ether',
+      symbol: 'WETH',
+      decimals: 18,
+      address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+    },
     rpcUrls: { [RPCType.Private]: 'https://rpc.mevblocker.io/?referrer=uniswapwallet' },
   },
   [ChainId.Goerli]: {
@@ -120,7 +150,18 @@ export const CHAIN_INFO: ChainInfo = {
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Görli',
     logo: GOERLI_LOGO,
-    nativeCurrency: { name: 'Görli ETH', symbol: 'görETH', decimals: 18 },
+    nativeCurrency: {
+      name: 'Görli ETH',
+      symbol: 'görETH',
+      decimals: 18,
+      address: DEFAULT_NATIVE_ADDRESS,
+    },
+    wrappedNativeCurrency: {
+      name: 'Wrapped Ether',
+      symbol: 'WETH',
+      decimals: 18,
+      address: '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6',
+    },
   },
   [ChainId.Base]: {
     blockWaitMsBeforeWarning: 600000,
@@ -130,7 +171,18 @@ export const CHAIN_INFO: ChainInfo = {
     infoLink: 'https://info.uniswap.org/#/base',
     label: 'Base',
     logo: BASE_LOGO,
-    nativeCurrency: { name: 'Base ETH', symbol: 'ETH', decimals: 18 },
+    nativeCurrency: {
+      name: 'Base ETH',
+      symbol: 'ETH',
+      decimals: 18,
+      address: DEFAULT_NATIVE_ADDRESS,
+    },
+    wrappedNativeCurrency: {
+      name: 'Wrapped Ether',
+      symbol: 'WETH',
+      decimals: 18,
+      address: '0x4200000000000000000000000000000000000006',
+    },
     rpcUrls: { [RPCType.Public]: 'https://mainnet.base.org' },
   },
   [ChainId.Bnb]: {
@@ -141,7 +193,18 @@ export const CHAIN_INFO: ChainInfo = {
     infoLink: 'https://info.uniswap.org/#/bnb',
     label: 'BNB',
     logo: BNB_LOGO,
-    nativeCurrency: { name: 'Binance Coin', symbol: 'BNB', decimals: 18 },
+    nativeCurrency: {
+      name: 'Binance Coin',
+      symbol: 'BNB',
+      decimals: 18,
+      address: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
+    },
+    wrappedNativeCurrency: {
+      name: 'Wrapped BNB',
+      symbol: 'WBNB',
+      decimals: 18,
+      address: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
+    },
     rpcUrls: { [RPCType.Public]: config.quicknodeBnbRpcUrl },
   },
   [ChainId.Optimism]: {
@@ -152,7 +215,18 @@ export const CHAIN_INFO: ChainInfo = {
     infoLink: 'https://info.uniswap.org/#/optimism',
     label: 'Optimism',
     logo: OPTIMISM_LOGO,
-    nativeCurrency: { name: 'Optimistic ETH', symbol: 'ETH', decimals: 18 },
+    nativeCurrency: {
+      name: 'Optimistic ETH',
+      symbol: 'ETH',
+      decimals: 18,
+      address: DEFAULT_NATIVE_ADDRESS,
+    },
+    wrappedNativeCurrency: {
+      name: 'Wrapped Ether',
+      symbol: 'WETH',
+      decimals: 18,
+      address: '0x4200000000000000000000000000000000000006',
+    },
     rpcUrls: { [RPCType.PublicAlt]: 'https://mainnet.optimism.io' },
     statusPage: 'https://optimism.io/status',
   },
@@ -164,7 +238,18 @@ export const CHAIN_INFO: ChainInfo = {
     infoLink: 'https://info.uniswap.org/#/polygon/',
     label: 'Polygon',
     logo: POLYGON_LOGO,
-    nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
+    nativeCurrency: {
+      name: 'Polygon Matic',
+      symbol: 'MATIC',
+      decimals: 18,
+      address: '0x0000000000000000000000000000000000001010',
+    },
+    wrappedNativeCurrency: {
+      name: 'Wrapped MATIC',
+      symbol: 'WMATIC',
+      decimals: 18,
+      address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+    },
     rpcUrls: { [RPCType.PublicAlt]: 'https://polygon-rpc.com/' },
   },
   [ChainId.PolygonMumbai]: {
@@ -179,6 +264,13 @@ export const CHAIN_INFO: ChainInfo = {
       name: 'Polygon Mumbai Matic',
       symbol: 'mMATIC',
       decimals: 18,
+      address: '0x0000000000000000000000000000000000001010',
+    },
+    wrappedNativeCurrency: {
+      name: 'Wrapped MATIC',
+      symbol: 'WMATIC',
+      decimals: 18,
+      address: '0x9c3c9283d3e44854697cd22d3faa240cfb032889',
     },
     rpcUrls: { [RPCType.PublicAlt]: 'https://rpc-endpoints.superfluid.dev/mumbai' },
   },

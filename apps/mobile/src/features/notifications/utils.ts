@@ -1,5 +1,6 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
+import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
 import { WalletConnectNotification } from 'wallet/src/features/notifications/types'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
@@ -22,10 +23,13 @@ export const formWCNotificationTitle = (appNotification: WalletConnectNotificati
     case WalletConnectEvent.Disconnected:
       return i18n.t('Disconnected')
     case WalletConnectEvent.NetworkChanged:
-      if (chainId) {
-        return i18n.t('Switched to {{networkName}}', {
-          networkName: CHAIN_INFO[chainId]?.label,
-        })
+      {
+        const supportedChainId = toSupportedChainId(chainId)
+        if (supportedChainId) {
+          return i18n.t('Switched to {{networkName}}', {
+            networkName: CHAIN_INFO[supportedChainId].label,
+          })
+        }
       }
       return i18n.t('Switched networks')
     case WalletConnectEvent.TransactionConfirmed:

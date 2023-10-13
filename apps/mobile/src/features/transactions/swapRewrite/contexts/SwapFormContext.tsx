@@ -10,7 +10,7 @@ import {
   useState,
 } from 'react'
 import { useDerivedSwapInfo } from 'src/features/transactions/swap/hooks'
-import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -42,7 +42,7 @@ type SwapFormContextState = {
   DerivedSwapFormState
 
 const ETH_TRADEABLE_ASSET: Readonly<TradeableAsset> = {
-  address: NATIVE_ADDRESS,
+  address: getNativeAddress(ChainId.Mainnet),
   chainId: ChainId.Mainnet,
   type: AssetType.Currency,
 }

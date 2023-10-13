@@ -34,7 +34,7 @@ import { dimensions, fonts, iconSizes, spacing } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
 import { useTimeout } from 'utilities/src/time/timing'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
-import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
@@ -96,7 +96,9 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
 
   // We hardcode ETH as the starting currency
   const [currency, setCurrency] = useState<FiatOnRampCurrency>({
-    currencyInfo: useCurrencyInfo(buildCurrencyId(ChainId.Mainnet, NATIVE_ADDRESS)),
+    currencyInfo: useCurrencyInfo(
+      buildCurrencyId(ChainId.Mainnet, getNativeAddress(ChainId.Mainnet))
+    ),
     moonpayCurrency: {
       code: 'eth',
       type: 'crypto',

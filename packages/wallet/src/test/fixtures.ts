@@ -13,7 +13,7 @@ import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import { Erc20, Weth } from 'wallet/src/abis/types'
 import WETH_ABI from 'wallet/src/abis/weth.json'
 import { config } from 'wallet/src/config'
-import { NATIVE_ADDRESS, WRAPPED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
+import { getNativeAddress, getWrappedNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, DAI_ARBITRUM_ONE, UNI, WBTC } from 'wallet/src/constants/tokens'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -134,14 +134,14 @@ export const contractManager = new ContractManager()
 contractManager.getOrCreateContract(ChainId.Goerli, DAI.address, provider, ERC20_ABI)
 contractManager.getOrCreateContract(
   ChainId.Goerli,
-  WRAPPED_BASE_ADDRESSES[ChainId.Goerli],
+  getWrappedNativeAddress(ChainId.Goerli),
   provider,
   WETH_ABI
 )
 export const tokenContract = contractManager.getContract(ChainId.Goerli, DAI.address) as Erc20
 export const wethContract = contractManager.getContract(
   ChainId.Goerli,
-  WRAPPED_BASE_ADDRESSES[ChainId.Goerli]
+  getWrappedNativeAddress(ChainId.Goerli)
 ) as Weth
 
 /**
@@ -252,7 +252,7 @@ export const swapNotification = {
   txHash: '0x01',
   txType: TransactionType.Swap,
   txStatus: TransactionStatus.Success,
-  inputCurrencyId: `1-${NATIVE_ADDRESS}`,
+  inputCurrencyId: `1-${getNativeAddress(ChainId.Mainnet)}`,
   outputCurrencyId: '1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
   inputCurrencyAmountRaw: '230000000000000000',
   outputCurrencyAmountRaw: '123000000000000000000',

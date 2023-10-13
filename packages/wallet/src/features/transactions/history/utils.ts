@@ -5,6 +5,7 @@ import {
   FORMAT_DATE_MONTH_YEAR,
   LocalizedDayjs,
 } from 'utilities/src/time/localizedDayjs'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
 import {
   Amount,
   Chain,
@@ -20,7 +21,6 @@ import {
   TransactionListQueryResponse,
   TransactionStatus,
 } from 'wallet/src/features/transactions/types'
-import { getNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export interface AllFormattedTransactions {
@@ -169,7 +169,7 @@ export function getAddressFromAsset({
     return null
   }
   if (tokenStandard === TokenStandard.Native) {
-    return getNativeCurrencyAddressForChain(supportedChainId)
+    return getNativeAddress(supportedChainId)
   }
   return address
 }

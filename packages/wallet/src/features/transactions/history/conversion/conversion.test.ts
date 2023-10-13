@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { NATIVE_ADDRESS, WRAPPED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
+import { getNativeAddress, getWrappedNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI } from 'wallet/src/constants/tokens'
 import {
@@ -33,7 +33,7 @@ const FROM_ADDRESS = SAMPLE_SEED_ADDRESS_1
 const TO_ADDRESS = SAMPLE_SEED_ADDRESS_2
 const TEST_HASH = '0x00'
 const ERC20_ASSET_ADDRESS = DAI.address
-const WRAPPED_NATIVE_ADDRESS = WRAPPED_BASE_ADDRESSES[ChainId.Mainnet]
+const WRAPPED_NATIVE_ADDRESS = getWrappedNativeAddress(ChainId.Mainnet)
 
 const RESPONSE_BASE = {
   id: 'base_id',
@@ -108,7 +108,7 @@ const NATIVE_TRANSFER_OUT_ASSET_CHANGE = {
   ...ERC20_TRANSFER_OUT_ASSET_CHANGE,
   asset: {
     ...ERC20_TRANSFER_OUT_ASSET_CHANGE.asset,
-    address: NATIVE_ADDRESS,
+    address: getNativeAddress(ChainId.Mainnet),
   },
   tokenbStandard: TokenStandard.Native,
 }
@@ -224,7 +224,7 @@ describe(parseNFTMintTransaction, () => {
         imageURL: 'image_url',
         tokenId: 'token_id',
       },
-      purchaseCurrencyId: `1-${NATIVE_ADDRESS}`,
+      purchaseCurrencyId: `1-${getNativeAddress(ChainId.Mainnet)}`,
       purchaseCurrencyAmountRaw: '1000000000000000000',
       transactedUSDValue: 1,
       isSpam: false,
@@ -444,7 +444,7 @@ describe(parseTradeTransaction, () => {
   it('Swap: parse native swap', () => {
     expect(parseTradeTransaction(MOCK_NATIVE_SWAP)).toEqual({
       type: TransactionType.Swap,
-      inputCurrencyId: `1-${NATIVE_ADDRESS}`,
+      inputCurrencyId: `1-${getNativeAddress(ChainId.Mainnet)}`,
       outputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       transactedUSDValue: 1,
       inputCurrencyAmountRaw: '1000000000000000000',

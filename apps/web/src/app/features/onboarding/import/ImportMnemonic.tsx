@@ -124,7 +124,7 @@ export function ImportMnemonic(): JSX.Element {
 
   const { error: mnemonicError } = useMemo(() => {
     const mnemonicString = mnemonic.join(' ').toLowerCase()
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+
     return validateMnemonic(mnemonicString)
   }, [mnemonic])
 
