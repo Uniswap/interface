@@ -267,6 +267,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       cancelable={true}
                       focusable={true}
                       minPressDuration={0}
+                      onBlur={[Function]}
+                      onFocus={[Function]}
                       onMouseEnter={[Function]}
                       onMouseLeave={[Function]}
                       onPress={[Function]}
@@ -510,8 +512,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               </View>
             </View>
             <View
-              onBlur={[Function]}
-              onFocus={[Function]}
               pointerEvents="none"
               style={
                 {

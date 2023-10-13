@@ -76,5 +76,5 @@ export function DatetimeText({ loading }: { loading: boolean }): JSX.Element | n
 
   if (loading) return null
 
-  return <AnimatedText color="neutral2" text={datetime.formatted} variant="body1" />
+  return <AnimatedText color="$neutral2" text={datetime.formatted} variant="body1" />
 }

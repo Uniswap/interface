@@ -36,9 +36,7 @@ export function TouchableArea({
   hitSlop,
   ...propsIn
 }: TouchableAreaProps): JSX.Element {
-  const [rest, style] = usePropsAndStyle(propsIn, {
-    resolveValues: 'auto',
-  })
+  const [rest, style] = usePropsAndStyle(propsIn)
 
   const touchActivationPositionRef = useRef<Pick<
     GestureResponderEvent['nativeEvent'],
