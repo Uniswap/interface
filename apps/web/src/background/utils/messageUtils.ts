@@ -19,16 +19,21 @@ export function sendMessageToActiveTab(message: Message, onError?: () => void): 
 
 export function sendMessageToSpecificTab(
   message: Message,
-  tabId: number,
+  tabId: number | undefined,
   onError?: () => void
 ): void {
+  if (!tabId) return
+
   chrome.tabs.sendMessage<Message>(tabId, message).catch((error) => {
     onError?.()
     logger.error(error, { tags: { file: 'messageUtils', function: 'sendMessageToSpecificTab' } })
   })
 }
 
-export function sendRejectionToContentScript(requestId: string, senderTabId: number): void {
+export function sendRejectionToContentScript(
+  requestId: string,
+  senderTabId: number | undefined
+): void {
   const response: TransactionRejectedResponse = {
     type: DappResponseType.TransactionRejected,
     requestId,

@@ -6,6 +6,7 @@ import {
   DappRequestType,
 } from 'src/background/features/dappRequests/dappRequestTypes'
 import { addRequest } from 'src/background/features/dappRequests/saga'
+import { sendRejectionToContentScript } from 'src/background/utils/messageUtils'
 import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
 import { PortName } from 'src/types'
 import { logger } from 'utilities/src/logger/logger'
@@ -90,6 +91,7 @@ chrome.runtime.onConnect.addListener(async (port) => {
     // If the user is in the onboarding flow then we need to reinitialize the store
     // so that the sidepanel can be connected to the new store.
     isInOnboarding = false
+    chrome.runtime.onMessage.removeListener(notOnboardedMessageListener)
     await initApp()
   } else {
     notifyStoreInitialized()
@@ -104,8 +106,14 @@ async function maybeOpenOnboarding(): Promise<void> {
   }
 }
 
+function notOnboardedMessageListener(request: unknown, sender: chrome.runtime.MessageSender): void {
+  sendRejectionToContentScript((request as BaseDappRequest).requestId, sender.tab?.id)
+}
+
 function initMessageBridge(dispatch: Dispatch<AnyAction>): void {
   if (!isOnboarded()) {
+    // create a different listener and then remove is once onboarding is completed
+    chrome.runtime.onMessage.addListener(notOnboardedMessageListener)
     return
   }
 
