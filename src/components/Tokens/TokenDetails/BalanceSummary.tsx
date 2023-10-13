@@ -2,13 +2,13 @@ import { Trans } from '@lingui/macro'
 import { ChainId, Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import PrefetchBalancesWrapper, {
-  useCachedPortfolioBalancesQuery,
-} from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain } from 'constants/chains'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TokenQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { useCrossChainGqlBalances } from 'graphql/data/portfolios'
+import { QueryTokenB } from 'graphql/data/Token'
+import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import JSBI from 'jsbi'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
@@ -138,66 +138,99 @@ export default function BalanceSummary({ token, tokenQuery }: { token: Currency;
 
   const isInfoTDPEnabled = useInfoTDPEnabled()
 
-  const currentChainBalance = useCurrencyBalance(account, token)
-  const hasCurrentChainBalance = currentChainBalance?.greaterThan(0)
+  const connectedChainBalance = useCurrencyBalance(account, token)
+  const hasConnectedChainBalance = connectedChainBalance && connectedChainBalance.greaterThan(0)
 
-  const { data: portfolioBalances } = useCachedPortfolioBalancesQuery({ account })
-  const tokenBalances = portfolioBalances?.portfolios?.[0].tokenBalances
-  const bridgeInfo = tokenQuery.token?.project?.tokens
-  console.log('tokenBalances', tokenBalances)
-  const otherChainBalances = tokenBalances?.filter(
-    (tokenBalance) =>
-      tokenBalance.token?.id !== tokenQuery.token?.id &&
-      bridgeInfo?.some((bridgeToken) => bridgeToken.id == tokenBalance.token?.id) // does not include token on currently-selected page chain
+  const crossChainBalances = useCrossChainGqlBalances(tokenQuery, account)
+  const pageChainBalance = crossChainBalances?.find((tokenBalance) => tokenBalance.token?.id === tokenQuery.token?.id)
+  const otherChainBalances = crossChainBalances?.filter(
+    (tokenBalance) => tokenBalance.token?.id !== tokenQuery.token?.id
   )
-  const hasOtherChainBalances = Boolean(otherChainBalances?.length)
-  console.log('bridgeInfo', bridgeInfo)
+  const hasOtherChainBalances = otherChainBalances && Boolean(otherChainBalances.length)
 
-  if (!account || !currentChainBalance) {
-    return null
-  }
-
-  const CurrentChainBalanceSummary = () => (
-    <BalanceSection>
-      {isInfoTDPEnabled ? (
-        <>
-          <ThemedText.SubHeaderSmall color={theme.neutral1}>
-            <Trans>Your {token.symbol}</Trans>
-          </ThemedText.SubHeaderSmall>
-          <Balance token={token} chainId={token.chainId} balance={currentChainBalance} isInfoTDPEnabled={true} />
-        </>
-      ) : (
-        <>
-          <ThemedText.SubHeaderSmall color={theme.neutral1}>
-            <Trans>Your balance on {chainName}</Trans>
-          </ThemedText.SubHeaderSmall>
-          <Balance
-            token={token}
-            chainId={token.chainId}
-            balance={currentChainBalance}
-            tokenSymbol={token.symbol}
-            color={chainColor}
-            chainName={chainName}
-          />
-        </>
-      )}
-    </BalanceSection>
-  )
-
-  const OtherChainsBalanceSummary = () => {
+  const ConnectedChainBalanceSummary = () => {
+    if (!hasConnectedChainBalance) return null
     return (
       <BalanceSection>
         <ThemedText.SubHeaderSmall color={theme.neutral1}>
-          <Trans>On other networks</Trans>
+          <Trans>Your balance on {chainName}</Trans>
+        </ThemedText.SubHeaderSmall>
+        <Balance
+          token={token}
+          chainId={token.chainId}
+          balance={connectedChainBalance}
+          tokenSymbol={token.symbol}
+          color={chainColor}
+          chainName={chainName}
+        />
+      </BalanceSection>
+    )
+  }
+
+  const PageChainBalanceSummary = () => {
+    if (!pageChainBalance) return null
+
+    const pageChainId =
+      (pageChainBalance.token?.chain ? supportedChainIdFromGQLChain(pageChainBalance.token?.chain) : ChainId.MAINNET) ??
+      ChainId.MAINNET
+
+    const balanceToken = new QueryTokenB(
+      pageChainBalance.token?.address ?? '',
+      pageChainBalance.token?.chain,
+      pageChainBalance.token?.decimals,
+      pageChainBalance.token?.symbol,
+      pageChainBalance.token?.name
+      // logoSrc
+    )
+
+    return (
+      <BalanceSection>
+        <ThemedText.SubHeaderSmall color={theme.neutral1}>
+          <Trans>Your balance</Trans>
+        </ThemedText.SubHeaderSmall>
+        <Balance
+          token={balanceToken}
+          chainId={token.chainId}
+          balance={CurrencyAmount.fromRawAmount(
+            balanceToken,
+            JSBI.BigInt((pageChainBalance.quantity ?? 0) * 10 ** token.decimals)
+          )}
+          isInfoTDPEnabled={true}
+        />
+      </BalanceSection>
+    )
+  }
+
+  const OtherChainsBalanceSummary = () => {
+    if (!hasOtherChainBalances) return null
+    return (
+      <BalanceSection>
+        <ThemedText.SubHeaderSmall color={theme.neutral1}>
+          <Trans>Balance on other networks</Trans>
         </ThemedText.SubHeaderSmall>
         {otherChainBalances?.map((balance) => {
+          const chainId =
+            (balance.token?.chain ? supportedChainIdFromGQLChain(balance.token?.chain) : ChainId.MAINNET) ??
+            ChainId.MAINNET
+
+          const balanceToken = new QueryTokenB(
+            balance.token?.address ?? '',
+            balance.token?.chain,
+            balance.token?.decimals,
+            balance.token?.symbol,
+            balance.token?.name
+            // add: logoSrc
+          ) // should be crosschain? used to get portlogo
+
           return (
             <Balance
               key={balance.id}
-              token={token}
-              chainId={token.chainId}
-              // chainId={balance.token?.chain}
-              balance={CurrencyAmount.fromRawAmount(token, JSBI.BigInt((balance.quantity ?? 0) * 10 ** token.decimals))}
+              token={balanceToken}
+              chainId={chainId}
+              balance={CurrencyAmount.fromRawAmount(
+                balanceToken,
+                JSBI.BigInt((balance.quantity ?? 0) * 10 ** token.decimals)
+              )}
               isInfoTDPEnabled={true}
             />
           )
@@ -206,21 +239,18 @@ export default function BalanceSummary({ token, tokenQuery }: { token: Currency;
     )
   }
 
-  if (isInfoTDPEnabled) {
-    // check prefetch balances wrapper cuz it doesnt load, remove isInfoTDPEnabled
-    return (
-      <PrefetchBalancesWrapper shouldFetchOnAccountUpdate>
-        <BalancesCard>
-          {hasCurrentChainBalance && <CurrentChainBalanceSummary />}
-          {hasOtherChainBalances && <OtherChainsBalanceSummary />}
-        </BalancesCard>
-      </PrefetchBalancesWrapper>
-    )
-  } else {
-    return (
-      <BalancesCard>
-        <CurrentChainBalanceSummary />
-      </BalancesCard>
-    )
+  if (!account) {
+    return null
   }
+  return (
+    <BalancesCard>
+      {!isInfoTDPEnabled && <ConnectedChainBalanceSummary />}
+      {isInfoTDPEnabled && (
+        <>
+          <PageChainBalanceSummary />
+          <OtherChainsBalanceSummary />
+        </>
+      )}
+    </BalancesCard>
+  )
 }

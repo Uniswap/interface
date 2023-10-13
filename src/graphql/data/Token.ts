@@ -1,8 +1,9 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import gql from 'graphql-tag'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
-import { TokenQuery } from './__generated__/types-and-hooks'
+import { Chain, TokenQuery } from './__generated__/types-and-hooks'
 import { supportedChainIdFromGQLChain } from './util'
 
 // The difference between Token and TokenProject:
@@ -105,6 +106,23 @@ export class QueryToken extends WrappedTokenInfo {
         symbol: data.symbol ?? '',
         name: data.name ?? '',
         logoURI: logoSrc ?? data.project?.logoUrl ?? undefined,
+      })
+    }
+  }
+}
+
+export class QueryTokenB extends WrappedTokenInfo {
+  constructor(address: string, chain?: Chain, decimals?: number, symbol?: string, name?: string, logoSrc?: string) {
+    // const chainId = supportedChainIdFromGQLChain(chain)
+    const chainId = (chain ? supportedChainIdFromGQLChain(chain) : ChainId.MAINNET) ?? ChainId.MAINNET
+    if (chainId) {
+      super({
+        chainId,
+        address,
+        decimals: decimals ?? DEFAULT_ERC20_DECIMALS,
+        symbol: symbol ?? '',
+        name: name ?? '',
+        logoURI: logoSrc ?? undefined,
       })
     }
   }
