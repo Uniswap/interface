@@ -228,7 +228,7 @@ function L2Content({
             <Badge>
               <RowFixed gap="8px">
                 <ChainLogo chainId={chainId} />
-                {info.label}
+                <ThemedText.SubHeaderSmall>{info.label}</ThemedText.SubHeaderSmall>
               </RowFixed>
             </Badge>
             <CloseIcon onClick={onDismiss} />
