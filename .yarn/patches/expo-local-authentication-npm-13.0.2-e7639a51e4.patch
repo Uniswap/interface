@@ -1,5 +1,5 @@
 diff --git a/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt b/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt
-index 9980dfabbd5179753ba99f50c6ecfadd732cfdb9..648ddbf933eb789f2920354b4116b64292f1d2b9 100644
+index 9980dfabbd5179753ba99f50c6ecfadd732cfdb9..c7b0bc2acd8ab516e9d14ef108a078a64afe8b97 100644
 --- a/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt
 +++ b/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt
 @@ -7,6 +7,7 @@ import android.content.Context
@@ -68,25 +68,24 @@ index 9980dfabbd5179753ba99f50c6ecfadd732cfdb9..648ddbf933eb789f2920354b4116b642
    @ExpoMethod
    fun authenticateAsync(options: Map<String?, Any?>, promise: Promise) {
      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-@@ -215,15 +234,15 @@ class LocalAuthenticationModule(context: Context) : ExportedModule(context), Act
-         promptMessage?.let {
-           promptInfoBuilder.setTitle(it)
-         }
--        if (disableDeviceFallback == true) {
--          cancelLabel?.let {
--            promptInfoBuilder.setNegativeButtonText(it)
--          }
--        } else {
-+        if (Build.VERSION.SDK_INT >= 30) {
-           promptInfoBuilder.setAllowedAuthenticators(
+@@ -220,10 +239,16 @@ class LocalAuthenticationModule(context: Context) : ExportedModule(context), Act
+             promptInfoBuilder.setNegativeButtonText(it)
+           }
+         } else {
+-          promptInfoBuilder.setAllowedAuthenticators(
 -            BiometricManager.Authenticators.BIOMETRIC_WEAK
-+            BiometricManager.Authenticators.BIOMETRIC_STRONG
-               or BiometricManager.Authenticators.DEVICE_CREDENTIAL
-           )
-+        } else {
-+          promptInfoBuilder.setAllowedAuthenticators(
-+            BiometricManager.Authenticators.BIOMETRIC_STRONG
-+          )
+-              or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+-          )
++          if (Build.VERSION.SDK_INT >= 30) {
++            promptInfoBuilder.setAllowedAuthenticators(
++              BiometricManager.Authenticators.BIOMETRIC_STRONG
++                or BiometricManager.Authenticators.DEVICE_CREDENTIAL
++            )
++          } else {
++            promptInfoBuilder.setAllowedAuthenticators(
++              BiometricManager.Authenticators.BIOMETRIC_STRONG
++            )
++          }
          }
          promptInfoBuilder.setConfirmationRequired(requireConfirmation)
          val promptInfo = promptInfoBuilder.build()

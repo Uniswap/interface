@@ -26,6 +26,12 @@ export async function enroll(): Promise<void> {
   ELA?.enrollForAuthentication()
 }
 
+const DEFAULT_AUTHENTICATE_OPTIONS = {
+  promptMessage: 'Please authenticate',
+  disableDeviceFallback: true,
+  cancelLabel: 'Cancel',
+}
+
 // TODO: [MOB-220] Move into a saga
 export async function tryLocalAuthenticate(
   authenticateOptions?: LocalAuthenticationOptions
@@ -41,7 +47,7 @@ export async function tryLocalAuthenticate(
       return BiometricAuthenticationStatus.MissingEnrollment
     }
 
-    const result = await authenticateAsync(authenticateOptions)
+    const result = await authenticateAsync(authenticateOptions || DEFAULT_AUTHENTICATE_OPTIONS)
     if (result.success === false) {
       return BiometricAuthenticationStatus.Rejected
     }

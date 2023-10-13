@@ -20017,12 +20017,12 @@ __metadata:
 
 "expo-local-authentication@patch:expo-local-authentication@npm%3A13.0.2#./.yarn/patches/expo-local-authentication-npm-13.0.2-e7639a51e4.patch::locator=universe%40workspace%3A.":
   version: 13.0.2
-  resolution: "expo-local-authentication@patch:expo-local-authentication@npm%3A13.0.2#./.yarn/patches/expo-local-authentication-npm-13.0.2-e7639a51e4.patch::version=13.0.2&hash=08ca81&locator=universe%40workspace%3A."
+  resolution: "expo-local-authentication@patch:expo-local-authentication@npm%3A13.0.2#./.yarn/patches/expo-local-authentication-npm-13.0.2-e7639a51e4.patch::version=13.0.2&hash=714f2a&locator=universe%40workspace%3A."
   dependencies:
     invariant: ^2.2.4
   peerDependencies:
     expo: "*"
-  checksum: fbcbc57805708ef3f195ab371a527bc206ce1a9ac2d7d0b180c8fe6139f347690924eb5e29b7500aeaf47dcc780cd15ba2363957f99119006fa1fc84275eba31
+  checksum: 79e2e8324b39ddeabb2237cb0150bb1e960e0e679925cb8185adecb9f91cd5aad84d9d625251a80de6f6ceb96ce52db18657cdbb49f7887723615fe4ce085ce1
   languageName: node
   linkType: hard
 
