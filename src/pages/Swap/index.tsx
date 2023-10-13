@@ -658,6 +658,7 @@ export function Swap({
               id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
               loading={independentField === Field.OUTPUT && routeIsSyncing}
               ref={inputCurrencyNumericalInputRef}
+              autoFocus
             />
           </Trace>
         </SwapSection>

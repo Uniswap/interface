@@ -56,10 +56,11 @@ interface InputProps extends Omit<React.HTMLProps<HTMLInputElement>, 'ref' | 'on
   fontSize?: string
   align?: 'right' | 'left'
   prependSymbol?: string
+  autoFocus?: boolean
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ value, onUserInput, placeholder, prependSymbol, ...rest }: InputProps, ref) => {
+  ({ value, onUserInput, placeholder, prependSymbol, autoFocus, ...rest }: InputProps, ref) => {
     const { formatterLocale } = useFormatterLocales()
 
     const enforcer = (nextUserInput: string) => {
@@ -106,6 +107,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         minLength={1}
         maxLength={79}
         spellCheck="false"
+        autoFocus={autoFocus}
       />
     )
   }

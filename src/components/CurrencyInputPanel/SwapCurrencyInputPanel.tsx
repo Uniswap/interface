@@ -242,6 +242,7 @@ interface SwapCurrencyInputPanelProps {
     onDisabledClick?: () => void
     disabledTooltipBody?: ReactNode
   }
+  autoFocus?: boolean
 }
 
 const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPanelProps>(
@@ -269,6 +270,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
       disabled = false,
       numericalInputSettings,
       label,
+      autoFocus,
       ...rest
     },
     ref
@@ -323,6 +325,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                   $loading={loading}
                   id={id}
                   ref={ref}
+                  autoFocus={autoFocus}
                 />
               </div>
             )}
