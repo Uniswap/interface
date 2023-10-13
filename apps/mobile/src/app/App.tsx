@@ -33,7 +33,6 @@ import {
   setAccountAddressesUserDefaults,
   setFavoritesUserDefaults,
 } from 'src/features/widgets/widgets'
-import { DynamicThemeProvider } from 'src/theme/DynamicThemeProvider'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getSentryEnvironment, getStatsigEnvironmentTier, isDevBuild } from 'src/utils/version'
 import { StatsigProvider } from 'statsig-react-native'
@@ -150,27 +149,25 @@ function AppOuter(): JSX.Element | null {
   return (
     <ApolloProvider client={client}>
       <PersistGate loading={null} persistor={persistor}>
-        <DynamicThemeProvider>
-          <ErrorBoundary>
-            <GestureHandlerRootView style={flexStyles.fill}>
-              <WalletContextProvider>
-                <BiometricContextProvider>
-                  <LockScreenContextProvider>
-                    <Sentry.TouchEventBoundary>
-                      <DataUpdaters />
-                      <BottomSheetModalProvider>
-                        <AppModals />
-                        <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                          <AppInner />
-                        </PerformanceProfiler>
-                      </BottomSheetModalProvider>
-                    </Sentry.TouchEventBoundary>
-                  </LockScreenContextProvider>
-                </BiometricContextProvider>
-              </WalletContextProvider>
-            </GestureHandlerRootView>
-          </ErrorBoundary>
-        </DynamicThemeProvider>
+        <ErrorBoundary>
+          <GestureHandlerRootView style={flexStyles.fill}>
+            <WalletContextProvider>
+              <BiometricContextProvider>
+                <LockScreenContextProvider>
+                  <Sentry.TouchEventBoundary>
+                    <DataUpdaters />
+                    <BottomSheetModalProvider>
+                      <AppModals />
+                      <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                        <AppInner />
+                      </PerformanceProfiler>
+                    </BottomSheetModalProvider>
+                  </Sentry.TouchEventBoundary>
+                </LockScreenContextProvider>
+              </BiometricContextProvider>
+            </WalletContextProvider>
+          </GestureHandlerRootView>
+        </ErrorBoundary>
       </PersistGate>
     </ApolloProvider>
   )

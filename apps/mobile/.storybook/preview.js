@@ -1,11 +1,12 @@
 import { MockedProvider } from '@apollo/client/testing'
-import { ThemeProvider } from '@shopify/restyle'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import React from 'react'
 import { I18nextProvider } from 'react-i18next'
-import { useDarkMode } from 'storybook-dark-mode'
 import i18n from 'wallet/src/i18n/i18n'
-import { darkTheme, theme } from '../../../packages/ui/src/theme/restyle'
+import {
+  darkColors,
+  lightColors,
+} from '../../../packages/ui/src/theme/color/colors'
 import { ReduxDecorator } from './ReduxDecorator'
 import { NavigationDecorator } from './StoryNavigator'
 
@@ -32,14 +33,13 @@ export const parameters = {
     current: 'dark',
     // Override the default dark theme
     dark: {
-      ...theme.dark,
-      barSelectedColor: darkTheme.colors.accent1,
-      appBg: darkTheme.colors.surface1,
-      appContentBg: darkTheme.colors.surface3,
-      barBg: darkTheme.colors.surface2,
-      textColor: darkTheme.colors.neutral1,
-      colorPrimary: darkTheme.colors.accent1,
-      colorSecondary: darkTheme.colors.accent1,
+      barSelectedColor: darkColors.accent1,
+      appBg: darkColors.surface1,
+      appContentBg: darkColors.surface3,
+      barBg: darkColors.surface2,
+      textColor: darkColors.neutral1,
+      colorPrimary: darkColors.accent1,
+      colorSecondary: darkColors.accent1,
     },
     docs: {
       inlineStories: false,
@@ -51,14 +51,13 @@ export const parameters = {
     },
     // Override the default light theme
     light: {
-      ...theme.light,
-      barSelectedColor: theme.colors.accent1,
-      appBg: theme.colors.surface1,
-      appContentBg: theme.colors.surface2,
-      barBg: theme.colors.surface2,
-      textColor: theme.colors.neutral1,
-      colorPrimary: theme.colors.accent1,
-      colorSecondary: theme.colors.accent1,
+      barSelectedColor: lightColors.accent1,
+      appBg: lightColors.surface1,
+      appContentBg: lightColors.surface2,
+      barBg: lightColors.surface2,
+      textColor: lightColors.neutral1,
+      colorPrimary: lightColors.accent1,
+      colorSecondary: lightColors.accent1,
     },
   },
   options: {
@@ -74,11 +73,7 @@ export const parameters = {
 export const decorators = [
   NavigationDecorator,
   ReduxDecorator,
-  (Story) => (
-    <ThemeProvider theme={useDarkMode() ? darkTheme : theme}>
-      <Story />
-    </ThemeProvider>
-  ),
+  (Story) => <Story />,
   (Story) => (
     <I18nextProvider i18n={i18n}>
       <Story />

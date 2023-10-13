@@ -36,8 +36,6 @@ export const config = createTamagui({
     xl: { maxWidth: breakpoints.xl },
     xxl: { maxWidth: breakpoints.xxl },
     xxxl: { maxWidth: breakpoints.xxxl },
-
-    // height based, equivalent to "sm" in restyle setup
     short: { maxHeight: heightBreakpoints.short },
   }),
   settings: {

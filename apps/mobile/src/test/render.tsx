@@ -3,18 +3,15 @@ import { MockedProvider, MockedResponse, MockLink } from '@apollo/client/testing
 import { NavigationContainer } from '@react-navigation/native'
 import type { EnhancedStore, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
-import { ThemeProvider } from '@shopify/restyle'
 import {
   render as RNRender,
   renderHook as RNRenderHook,
   RenderOptions,
 } from '@testing-library/react-native'
 import React, { PropsWithChildren } from 'react'
-import { ReactTestRendererJSON } from 'react-test-renderer'
 import type { MobileState } from 'src/app/reducer'
 import type { AppStore } from 'src/app/store'
 import { persistedReducer } from 'src/app/store'
-import { theme } from 'ui/src/theme/restyle'
 import { setupCache } from 'wallet/src/data/cache'
 import { getErrorLink } from 'wallet/src/data/links'
 import { SharedProvider } from 'wallet/src/provider'
@@ -62,9 +59,7 @@ Record<string, any> & {
     return (
       <MockedProvider addTypename={false} cache={setupCache()} link={link} mocks={mocks}>
         <SharedProvider reduxStore={store}>
-          <NavigationContainer>
-            <ThemeProvider theme={theme}>{children}</ThemeProvider>
-          </NavigationContainer>
+          <NavigationContainer>{children}</NavigationContainer>
         </SharedProvider>
       </MockedProvider>
     )
@@ -103,9 +98,7 @@ Record<string, any> & {
 
     return (
       <MockedProvider addTypename={false} cache={setupCache()} link={link} mocks={mocks}>
-        <SharedProvider reduxStore={store}>
-          <ThemeProvider theme={theme}>{children}</ThemeProvider>
-        </SharedProvider>
+        <SharedProvider reduxStore={store}>{children}</SharedProvider>
       </MockedProvider>
     )
   }
@@ -120,12 +113,3 @@ Record<string, any> & {
     }),
   }
 }
-
-export const WithTheme = ({ component }: { component: JSX.Element }): JSX.Element => {
-  return <ThemeProvider theme={theme}>{component}</ThemeProvider>
-}
-
-export const renderWithTheme = (
-  element: JSX.Element
-): ReactTestRendererJSON | ReactTestRendererJSON[] | null =>
-  RNRender(<WithTheme component={element} />).toJSON()

@@ -1,6 +1,4 @@
-import { backgroundColor, BackgroundColorProps, useRestyle } from '@shopify/restyle'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import _ from 'lodash'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -14,17 +12,12 @@ import { AmountInput } from 'src/components/input/AmountInput'
 import { MaxAmountButton } from 'src/components/input/MaxAmountButton'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
 import { useDynamicFontSizing } from 'src/features/transactions/hooks'
-import { AnimatedFlex, Flex, Text, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, FlexProps, Text, useSporeColors } from 'ui/src'
 import { fonts, spacing } from 'ui/src/theme'
-import { Theme } from 'ui/src/theme/restyle'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'utilities/src/format/format'
-import { useMemoCompare } from 'utilities/src/react/hooks'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 
 const PADDING_ANIMATION_DURATION = 110
-
-const restyleFunctions = [backgroundColor]
-type RestyleProps = BackgroundColorProps<Theme>
 
 type CurrentInputPanelProps = {
   autoFocus?: boolean
@@ -45,7 +38,7 @@ type CurrentInputPanelProps = {
   showSoftInputOnFocus?: boolean
   usdValue: Maybe<CurrencyAmount<Currency>>
   value?: string
-} & RestyleProps
+} & FlexProps
 
 const MAX_INPUT_FONT_SIZE = 36
 const MIN_INPUT_FONT_SIZE = 24
@@ -78,10 +71,6 @@ export const CurrencyInputPanel = memo(function _CurrencyInputPanel({
 }: CurrentInputPanelProps): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
-  const transformedProps = useRestyle(
-    restyleFunctions,
-    useMemoCompare(() => rest, _.isEqual)
-  )
   const inputRef = useRef<TextInput>(null)
 
   const showInsufficientBalanceWarning =
@@ -146,7 +135,7 @@ export const CurrencyInputPanel = memo(function _CurrencyInputPanel({
   }, [focus])
 
   return (
-    <Flex {...transformedProps} p="$spacing16">
+    <Flex {...rest} p="$spacing16">
       <AnimatedFlex
         row
         alignItems="center"

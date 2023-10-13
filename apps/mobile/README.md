@@ -178,7 +178,7 @@ These are some tools you might want to familiarize yourself with to understand t
 - [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/): state management
 - [redux-saga](https://redux-saga.js.org/) & [typed-redux-saga](https://github.com/agiledigital/typed-redux-saga): Redux side effect manager -- used for complex/stateful network calls
 - [ethers](https://docs.ethers.io/v5/)
-- [Shopify/restyle](https://github.com/Shopify/restyle): UI framework
+- [Tamagui](https://tamagui.dev): UI framework
 - [React navigation](https://reactnavigation.org/): routing and navigation with animations and gestures
 - [react-i18next](https://react.i18next.com/): i18n
 

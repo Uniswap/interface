@@ -1,6 +1,4 @@
-import { backgroundColor, BackgroundColorProps, useRestyle } from '@shopify/restyle'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import _ from 'lodash'
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -14,15 +12,10 @@ import { MaxAmountButton } from 'src/components/input/MaxAmountButton'
 import { Warning, WarningLabel } from 'src/components/modals/WarningModal/types'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
 import { useDynamicFontSizing } from 'src/features/transactions/hooks'
-import { Flex, SpaceTokens, Text } from 'ui/src'
+import { Flex, FlexProps, SpaceTokens, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
-import { Theme } from 'ui/src/theme/restyle'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'utilities/src/format/format'
-import { useMemoCompare } from 'utilities/src/react/hooks'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
-
-const restyleFunctions = [backgroundColor]
-type RestyleProps = BackgroundColorProps<Theme>
 
 type CurrentInputPanelProps = {
   currencyInfo: Maybe<CurrencyInfo>
@@ -47,7 +40,7 @@ type CurrentInputPanelProps = {
 
   // sometimes CurrencyInputPanel rendered off screen like with Send input -> selector flow
   isOnScreen?: boolean
-} & RestyleProps
+} & FlexProps
 
 const MAX_INPUT_FONT_SIZE = 42
 const MIN_INPUT_FONT_SIZE = 28
@@ -119,10 +112,6 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
   } = props
 
   const { t } = useTranslation()
-  const transformedProps = useRestyle(
-    restyleFunctions,
-    useMemoCompare(() => rest, _.isEqual)
-  )
   const inputRef = useRef<TextInput>(null)
 
   const insufficientBalanceWarning = warnings.find(
@@ -204,12 +193,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
   const { paddingBottom: innerPaddingBottom, paddingTop: innerPaddingTop } = innerPadding
 
   return (
-    <Flex
-      gap="$spacing8"
-      {...transformedProps}
-      pb={paddingBottom}
-      pt={paddingTop}
-      px={paddingHorizontal}>
+    <Flex gap="$spacing8" pb={paddingBottom} pt={paddingTop} px={paddingHorizontal} {...rest}>
       <Flex
         row
         alignItems="center"
