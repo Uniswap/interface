@@ -3,6 +3,7 @@ import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Warning } from 'src/components/modals/WarningModal/types'
+import { OnShowSwapFeeInfo } from 'src/components/SwapFee/SwapFee'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
 import { FeeOnTransferInfo } from 'src/features/transactions/swap/FeeOnTransferInfo'
@@ -27,7 +28,7 @@ interface SwapDetailsProps {
   gasFee: GasFeeResult
   onAcceptTrade: () => void
   onShowNetworkFeeInfo: () => void
-  onShowSwapFeeInfo?: () => void
+  onShowSwapFeeInfo?: OnShowSwapFeeInfo
   onShowWarning?: () => void
   onShowSlippageModal: () => void
   onShowSwapProtectionModal: () => void

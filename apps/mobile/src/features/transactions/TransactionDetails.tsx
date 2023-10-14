@@ -5,7 +5,7 @@ import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { Warning } from 'src/components/modals/WarningModal/types'
 import { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
-import { SwapFee } from 'src/components/SwapFee/SwapFee'
+import { OnShowSwapFeeInfo, SwapFee } from 'src/components/SwapFee/SwapFee'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { FeeOnTransferInfo } from 'src/features/transactions/swap/FeeOnTransferInfo'
 import { Flex, Icons, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -27,7 +27,7 @@ interface TransactionDetailsProps {
   warning?: Warning
   feeOnTransferInfo?: FeeOnTransferInfo
   onShowNetworkFeeInfo?: () => void
-  onShowSwapFeeInfo?: () => void
+  onShowSwapFeeInfo?: OnShowSwapFeeInfo
   onShowWarning?: () => void
   isSwap?: boolean
 }

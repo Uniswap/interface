@@ -57,6 +57,7 @@ export function SwapReview({
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [showNetworkFeeInfoModal, setShowNetworkFeeInfoModal] = useState(false)
   const [showSwapFeeInfoModal, setShowSwapFeeInfoModal] = useState(false)
+  const [noSwapFee, setNoSwapFee] = useState(false)
   const [showSlippageModal, setShowSlippageModal] = useState(false)
   const [showFOTInfoModal, setShowFOTInfoModal] = useState(false)
   const [warningAcknowledged, setWarningAcknowledged] = useState(false)
@@ -168,8 +169,9 @@ export function SwapReview({
     setShowNetworkFeeInfoModal(true)
   }, [])
 
-  const onShowSwapFeeInfo = useCallback(() => {
+  const onShowSwapFeeInfo = useCallback((noFee: boolean) => {
     setShowSwapFeeInfoModal(true)
+    setNoSwapFee(noFee)
   }, [])
 
   const onCloseNetworkFeeInfo = useCallback(() => {
@@ -282,7 +284,7 @@ export function SwapReview({
       {showSwapProtectionModal && <SwapProtectionInfoModal onClose={onCloseSwapProtectionModal} />}
       {showFOTInfoModal && <FeeOnTransferInfoModal onClose={onCloseFOTInfo} />}
       {showNetworkFeeInfoModal && <NetworkFeeInfoModal onClose={onCloseNetworkFeeInfo} />}
-      {showSwapFeeInfoModal && <SwapFeeInfoModal onClose={onCloseSwapFeeInfo} />}
+      {showSwapFeeInfoModal && <SwapFeeInfoModal noFee={noSwapFee} onClose={onCloseSwapFeeInfo} />}
       <Trace logImpression section={SectionName.SwapReview}>
         <TransactionReview
           actionButtonProps={actionButtonProps}
