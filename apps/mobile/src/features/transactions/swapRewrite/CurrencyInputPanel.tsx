@@ -8,10 +8,10 @@ import {
   TextInputSelectionChangeEventData,
 } from 'react-native'
 import { useAnimatedStyle, withTiming } from 'react-native-reanimated'
+import { useDynamicFontSizing } from 'src/app/hooks'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { MaxAmountButton } from 'src/components/input/MaxAmountButton'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
-import { useDynamicFontSizing } from 'src/features/transactions/hooks'
 import { AnimatedFlex, Flex, FlexProps, Text, useSporeColors } from 'ui/src'
 import { fonts, spacing } from 'ui/src/theme'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'utilities/src/format/format'

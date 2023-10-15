@@ -5,6 +5,7 @@ import React, { Dispatch, memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleSheet, TextInputProps } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
+import { useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
@@ -14,7 +15,6 @@ import { TokenSelectorFlow } from 'src/components/TokenSelector/types'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import {
-  useShouldShowNativeKeyboard,
   useTokenFormActionHandlers,
   useTokenSelectorActionHandlers,
 } from 'src/features/transactions/hooks'

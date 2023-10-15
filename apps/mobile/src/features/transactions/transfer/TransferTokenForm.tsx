@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
+import { useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
@@ -16,7 +17,6 @@ import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { TokenSelectorFlow } from 'src/components/TokenSelector/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import {
-  useShouldShowNativeKeyboard,
   useTokenFormActionHandlers,
   useTokenSelectorActionHandlers,
 } from 'src/features/transactions/hooks'
