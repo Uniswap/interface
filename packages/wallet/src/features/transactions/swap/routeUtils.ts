@@ -7,7 +7,7 @@ import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import {
   PoolType,
   QuoteResult,
-  SwapFeeInfo,
+  SwapFee,
   V2PoolInRoute,
   V3PoolInRoute,
 } from 'wallet/src/features/routing/types'
@@ -29,7 +29,7 @@ export function transformQuoteToTrade(
     return null
   }
 
-  const swapFee: SwapFeeInfo | undefined =
+  const swapFee: SwapFee | undefined =
     quoteResult?.portionAmount !== undefined && quoteResult?.portionBips !== undefined
       ? {
           recipient: quoteResult.portionRecipient,

@@ -23,6 +23,7 @@ import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { WalletEventName } from 'wallet/src/telemetry/constants'
 import { getCurrencyAddressForAnalytics } from 'wallet/src/utils/currencyId'
+import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
 
 export interface SendTransactionParams {
@@ -106,17 +107,28 @@ function* addTransaction(
   }
 
   if (transaction.typeInfo.type === TransactionType.Swap && trade) {
+    const feeCurrencyAmount = getCurrencyAmount({
+      value: trade.quote?.portionAmount,
+      valueType: ValueType.Raw,
+      currency: trade.outputAmount.currency,
+    })
+
+    const finalOutputAmount = feeCurrencyAmount
+      ? trade.outputAmount.subtract(feeCurrencyAmount)
+      : trade.outputAmount
+
     yield* call(sendWalletAnalyticsEvent, WalletEventName.SwapSubmitted, {
       transaction_hash: hash,
       chain_id: chainId,
       price_impact_basis_points: trade.priceImpact.multiply(100).toSignificant(),
       token_in_amount: trade.inputAmount.toExact(),
-      token_out_amount: formatCurrencyAmount(trade.outputAmount, NumberType.SwapTradeAmount),
+      token_out_amount: formatCurrencyAmount(finalOutputAmount, NumberType.SwapTradeAmount),
       token_in_symbol: trade.inputAmount.currency.symbol,
       token_in_address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),
       token_out_symbol: trade.outputAmount.currency.symbol,
       token_out_address: getCurrencyAddressForAnalytics(trade.outputAmount.currency),
       trade_type: trade.tradeType,
+      fee_amount: trade.quote?.portionAmount,
     })
   }
   yield* put(transactionActions.addTransaction(transaction))

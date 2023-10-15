@@ -1,4 +1,4 @@
-import { Currency, Percent, Token } from '@uniswap/sdk-core'
+import { Percent, Token } from '@uniswap/sdk-core'
 import { ChainId } from 'wallet/src/constants/chains'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 
@@ -71,9 +71,14 @@ export interface QuoteResult {
   quoteGasAndPortionAdjustedDecimals?: string
 }
 
-export type SwapFeeInfo = { recipient?: string; percent: Percent; amount: string }
+export type SwapFee = { recipient?: string; percent: Percent; amount: string }
 
-export type SwapFeeCurrencyInfo = SwapFeeInfo & { currency: Currency }
+export type SwapFeeInfo = {
+  noFeeCharged: boolean
+  formattedPercent: string
+  formattedAmount: string
+  formattedAmountUsd?: string
+}
 
 export interface TradeQuoteResult {
   trade: Trade

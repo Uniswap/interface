@@ -77,6 +77,14 @@ export function SwapReview({
     customSlippageTolerance,
   } = derivedSwapInfo
 
+  const outputCurrencyPricePerUnitExact =
+    currencyAmountsUSDValue[CurrencyField.OUTPUT] && currencyAmounts[CurrencyField.OUTPUT]
+      ? (
+          parseFloat(currencyAmountsUSDValue[CurrencyField.OUTPUT].toExact()) /
+          parseFloat(currencyAmounts[CurrencyField.OUTPUT].toExact())
+        ).toString()
+      : undefined
+
   const swapWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
 
   const { onAcceptTrade, acceptedTrade, newTradeRequiresAcceptance } = useAcceptedTrade(trade)
@@ -221,6 +229,7 @@ export function SwapReview({
         customSlippageTolerance={customSlippageTolerance}
         gasFee={gasFee}
         newTradeRequiresAcceptance={newTradeRequiresAcceptance}
+        outputCurrencyPricePerUnitExact={outputCurrencyPricePerUnitExact}
         trade={trade}
         warning={swapWarning}
         onAcceptTrade={onAcceptTrade}

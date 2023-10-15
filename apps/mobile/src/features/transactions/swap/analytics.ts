@@ -7,6 +7,7 @@ import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { SwapTradeBaseProperties } from 'wallet/src/telemetry/types'
 import { currencyAddress, getCurrencyAddressForAnalytics } from 'wallet/src/utils/currencyId'
+import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 import { DerivedSwapInfo } from './types'
 
 // hook-based analytics because this one is data-lifecycle dependent
@@ -49,6 +50,17 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
 export function getBaseTradeAnalyticsProperties(
   trade: Trade<Currency, Currency, TradeType>
 ): SwapTradeBaseProperties {
+  const portionAmount = trade.quote?.portionAmount
+
+  const feeCurrencyAmount = getCurrencyAmount({
+    value: portionAmount,
+    valueType: ValueType.Raw,
+    currency: trade.outputAmount.currency,
+  })
+
+  const finalOutputAmount = feeCurrencyAmount
+    ? trade.outputAmount.subtract(feeCurrencyAmount)
+    : trade.outputAmount
   return {
     token_in_symbol: trade.inputAmount.currency.symbol,
     token_out_symbol: trade.outputAmount.currency.symbol,
@@ -59,8 +71,9 @@ export function getBaseTradeAnalyticsProperties(
     estimated_network_fee_usd: undefined,
     chain_id: trade.inputAmount.currency.chainId,
     token_in_amount: trade.inputAmount.toExact(),
-    token_out_amount: formatCurrencyAmount(trade.outputAmount, NumberType.SwapTradeAmount),
+    token_out_amount: formatCurrencyAmount(finalOutputAmount, NumberType.SwapTradeAmount),
     allowed_slippage_basis_points: trade.slippageTolerance * 100,
+    fee_amount: portionAmount,
   }
 }
 
@@ -72,6 +85,19 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo(
   const outputCurrencyAmount = currencyAmounts[CurrencyField.OUTPUT]
   const slippageTolerance =
     derivedSwapInfo.customSlippageTolerance ?? derivedSwapInfo.autoSlippageTolerance
+  const portionAmount = derivedSwapInfo.trade.trade?.quote?.portionAmount
+
+  const feeCurrencyAmount = getCurrencyAmount({
+    value: portionAmount,
+    valueType: ValueType.Raw,
+    currency: outputCurrencyAmount?.currency,
+  })
+
+  const finalOutputAmount =
+    outputCurrencyAmount && feeCurrencyAmount
+      ? outputCurrencyAmount.subtract(feeCurrencyAmount)
+      : outputCurrencyAmount
+
   return {
     token_in_symbol: inputCurrencyAmount?.currency.symbol,
     token_out_symbol: outputCurrencyAmount?.currency.symbol,
@@ -87,7 +113,8 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo(
     estimated_network_fee_usd: undefined,
     chain_id: chainId,
     token_in_amount: inputCurrencyAmount?.toExact() ?? '',
-    token_out_amount: formatCurrencyAmount(outputCurrencyAmount, NumberType.SwapTradeAmount),
+    token_out_amount: formatCurrencyAmount(finalOutputAmount, NumberType.SwapTradeAmount),
     allowed_slippage_basis_points: slippageTolerance ? slippageTolerance * 100 : undefined,
+    fee_amount: portionAmount,
   }
 }

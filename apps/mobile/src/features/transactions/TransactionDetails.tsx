@@ -14,7 +14,7 @@ import AnglesMinimize from 'ui/src/assets/icons/angles-minimize.svg'
 import { iconSizes } from 'ui/src/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
-import { SwapFeeCurrencyInfo } from 'wallet/src/features/routing/types'
+import { SwapFeeInfo } from 'wallet/src/features/routing/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface TransactionDetailsProps {
@@ -22,7 +22,7 @@ interface TransactionDetailsProps {
   chainId: ChainId
   gasFee: GasFeeResult
   showExpandedChildren?: boolean
-  swapFee?: SwapFeeCurrencyInfo
+  swapFeeInfo?: SwapFeeInfo
   showWarning?: boolean
   warning?: Warning
   feeOnTransferInfo?: FeeOnTransferInfo
@@ -38,7 +38,7 @@ export function TransactionDetails({
   showExpandedChildren,
   chainId,
   gasFee,
-  swapFee,
+  swapFeeInfo,
   showWarning,
   warning,
   feeOnTransferInfo,
@@ -60,6 +60,8 @@ export function TransactionDetails({
     }
     setShowChildren(!showChildren)
   }
+
+  const displaySwapFeeInfo = isSwap && swapFeeInfo && onShowSwapFeeInfo
 
   return (
     <Flex>
@@ -122,9 +124,11 @@ export function TransactionDetails({
       <Flex gap="$spacing12" pb="$spacing8" px="$spacing12">
         {showChildren ? <Flex gap="$spacing12">{children}</Flex> : null}
         {feeOnTransferInfo && <FeeOnTransferInfo {...feeOnTransferInfo} />}
-        {isSwap && swapFee && <SwapFee swapFee={swapFee} onShowSwapFeeInfo={onShowSwapFeeInfo} />}
+        {displaySwapFeeInfo && (
+          <SwapFee swapFeeInfo={swapFeeInfo} onShowSwapFeeInfo={onShowSwapFeeInfo} />
+        )}
         <NetworkFee chainId={chainId} gasFee={gasFee} onShowNetworkFeeInfo={onShowNetworkFeeInfo} />
-        {!isSwap || !swapFee ? (
+        {!isSwap || !swapFeeInfo ? (
           <AccountDetails address={userAddress} iconSize={iconSizes.icon20} />
         ) : null}
       </Flex>

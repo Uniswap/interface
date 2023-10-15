@@ -11,11 +11,31 @@ import { getRateToDisplay } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
-import { formatPercent, formatPrice, NumberType } from 'utilities/src/format/format'
+import { formatPercent, formatPrice, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
 import { useShouldUseMEVBlocker } from 'wallet/src/features/transactions/swap/customRpc'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
+import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'wallet/src/utils/currency'
+import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
+
+const getFormattedFeeAmountUsd = (
+  trade: Trade<Currency, Currency, TradeType>,
+  outputCurrencyPricePerUnitExact?: string
+): string | undefined => {
+  if (!trade.swapFee || !outputCurrencyPricePerUnitExact) return
+
+  const currencyAmount = getCurrencyAmount({
+    value: trade.swapFee.amount,
+    valueType: ValueType.Raw,
+    currency: trade.outputAmount.currency,
+  })
+
+  if (!currencyAmount) return
+
+  const feeUSD = parseFloat(outputCurrencyPricePerUnitExact) * parseFloat(currencyAmount.toExact())
+  return formatUSDPrice(feeUSD, NumberType.PortfolioBalance)
+}
 
 interface SwapDetailsProps {
   acceptedTrade: Trade<Currency, Currency, TradeType>
@@ -26,9 +46,10 @@ interface SwapDetailsProps {
   newTradeRequiresAcceptance: boolean
   warning?: Warning
   gasFee: GasFeeResult
+  outputCurrencyPricePerUnitExact?: string
   onAcceptTrade: () => void
   onShowNetworkFeeInfo: () => void
-  onShowSwapFeeInfo?: OnShowSwapFeeInfo
+  onShowSwapFeeInfo: OnShowSwapFeeInfo
   onShowWarning?: () => void
   onShowSlippageModal: () => void
   onShowSwapProtectionModal: () => void
@@ -50,6 +71,7 @@ export function SwapDetails({
   onShowSlippageModal,
   onShowSwapProtectionModal,
   onShowFOTInfo,
+  outputCurrencyPricePerUnitExact,
 }: SwapDetailsProps): JSX.Element {
   const { t } = useTranslation()
   const [showInverseRate, setShowInverseRate] = useState(false)
@@ -58,8 +80,16 @@ export function SwapDetails({
   const usdcPrice = useUSDCPrice(showInverseRate ? price.quoteCurrency : price.baseCurrency)
   const acceptedRate = getRateToDisplay(acceptedTrade, showInverseRate)
   const rate = getRateToDisplay(trade, showInverseRate)
-  const swapFee = trade.swapFee
-    ? { ...trade.swapFee, currency: trade.outputAmount.currency }
+
+  const swapFeeInfo = trade.swapFee
+    ? {
+        noFeeCharged: trade.swapFee.percent.equalTo(0),
+        formattedPercent: formatPercent(trade.swapFee.percent.toFixed()),
+        formattedAmount:
+          getFormattedCurrencyAmount(trade.outputAmount.currency, trade.swapFee.amount) +
+          getSymbolDisplayText(trade.outputAmount.currency.symbol),
+        formattedAmountUsd: getFormattedFeeAmountUsd(trade, outputCurrencyPricePerUnitExact),
+      }
     : undefined
 
   // Make text the warning color if user is setting custom slippage higher than auto slippage value
@@ -146,7 +176,7 @@ export function SwapDetails({
       gasFee={gasFee}
       showExpandedChildren={!!customSlippageTolerance}
       showWarning={warning && !newTradeRequiresAcceptance}
-      swapFee={swapFee}
+      swapFeeInfo={swapFeeInfo}
       warning={warning}
       onShowNetworkFeeInfo={onShowNetworkFeeInfo}
       onShowSwapFeeInfo={onShowSwapFeeInfo}

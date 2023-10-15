@@ -14,7 +14,7 @@ import {
 } from 'wallet/src/constants/transactions'
 import { isL2Chain } from 'wallet/src/features/chains/utils'
 import { useRouterQuote } from 'wallet/src/features/routing/hooks'
-import { QuoteResult, SwapFeeInfo } from 'wallet/src/features/routing/types'
+import { QuoteResult, SwapFee } from 'wallet/src/features/routing/types'
 import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
 import { transformQuoteToTrade } from 'wallet/src/features/transactions/swap/routeUtils'
 import { clearStaleTrades } from 'wallet/src/features/transactions/swap/utils'
@@ -28,7 +28,7 @@ export class Trade<
   readonly quote?: QuoteResult
   readonly deadline?: number
   readonly slippageTolerance: number
-  readonly swapFee?: SwapFeeInfo
+  readonly swapFee?: SwapFee
 
   constructor({
     quote,
@@ -38,7 +38,7 @@ export class Trade<
     ...routes
   }: {
     readonly quote?: QuoteResult
-    readonly swapFee?: SwapFeeInfo
+    readonly swapFee?: SwapFee
     readonly deadline?: number
     readonly slippageTolerance: number
     readonly v2Routes: {

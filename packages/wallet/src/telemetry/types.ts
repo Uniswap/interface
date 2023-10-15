@@ -15,6 +15,7 @@ export type SwapTradeBaseProperties = {
   chain_id: number
   token_in_amount: string
   token_out_amount: string
+  fee_amount?: string
 } & TraceProps
 
 type SwapTransactionResultProperties = {

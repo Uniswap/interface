@@ -1,41 +1,25 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
-import { formatPercent } from 'utilities/src/format/format'
-import { SwapFeeCurrencyInfo } from 'wallet/src/features/routing/types'
-import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'wallet/src/utils/currency'
-
-const ZERO_FEE = '$0'
+import { SwapFeeInfo } from 'wallet/src/features/routing/types'
 
 export type OnShowSwapFeeInfo = (noFee: boolean) => void
 
 export function SwapFee({
-  swapFee,
+  swapFeeInfo,
   onShowSwapFeeInfo,
 }: {
-  swapFee: SwapFeeCurrencyInfo
-  onShowSwapFeeInfo?: OnShowSwapFeeInfo
+  swapFeeInfo: SwapFeeInfo
+  onShowSwapFeeInfo: OnShowSwapFeeInfo
 }): JSX.Element {
   const { t } = useTranslation()
-
-  const percent = swapFee?.percent.greaterThan(0)
-    ? formatPercent(swapFee.percent.toFixed())
-    : undefined
-
-  const noFee = swapFee?.percent.equalTo(0)
-  // we want to explicelty show $0 for the fee if it is 0
-  const formattedFee = noFee
-    ? ZERO_FEE
-    : getFormattedCurrencyAmount(swapFee.currency, swapFee.amount) +
-      getSymbolDisplayText(swapFee.currency.symbol)
-
   return (
     <Flex row alignItems="center" justifyContent="space-between">
-      <TouchableArea onPress={(): void => onShowSwapFeeInfo?.(noFee)}>
+      <TouchableArea onPress={(): void => onShowSwapFeeInfo(swapFeeInfo.noFeeCharged)}>
         <Flex centered row gap="$spacing4">
           <Text color="$neutral2" variant="body3">
             {t('Fee')}
-            {percent && ` (${percent})`}
+            {!swapFeeInfo.noFeeCharged && ` (${swapFeeInfo.formattedPercent})`}
           </Text>
           <Icons.InfoCircleFilled color="$neutral3" size="$icon.16" />
         </Flex>
@@ -43,7 +27,8 @@ export function SwapFee({
       <Flex row alignItems="center" gap="$spacing8">
         <Flex row alignItems="center" justifyContent="space-between">
           <Text color="$neutral1" variant="body3">
-            {formattedFee}
+            {swapFeeInfo.formattedAmountUsd ??
+              (swapFeeInfo.noFeeCharged ? '$0.00' : swapFeeInfo.formattedAmount)}
           </Text>
         </Flex>
       </Flex>
