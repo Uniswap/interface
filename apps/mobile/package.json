@@ -90,7 +90,7 @@
     "@uniswap/analytics-events": "2.15.0",
     "@uniswap/ethers-rs-mobile": "0.0.3",
     "@uniswap/permit2-sdk": "1.2.0",
-    "@uniswap/router-sdk": "1.7.0",
+    "@uniswap/router-sdk": "1.7.1",
     "@uniswap/sdk-core": "4.0.7",
     "@uniswap/universal-router-sdk": "1.5.8",
     "@uniswap/v2-sdk": "3.2.1",

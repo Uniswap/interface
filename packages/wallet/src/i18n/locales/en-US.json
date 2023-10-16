@@ -360,7 +360,6 @@
   "Rate": "Rate",
   "Rate impacted by swap size ({{ swapSize }})": "Rate impacted by swap size ({{ swapSize }})",
   "Rate limit exceeded": "Rate limit exceeded",
-  "Rate might be impacted by swap size": "Rate might be impacted by swap size",
   "Read less": "Read less",
   "Read more": "Read more",
   "Receive": "Receive",

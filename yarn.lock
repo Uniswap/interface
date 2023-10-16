@@ -11929,7 +11929,7 @@ __metadata:
     "@uniswap/analytics-events": 2.15.0
     "@uniswap/ethers-rs-mobile": 0.0.3
     "@uniswap/permit2-sdk": 1.2.0
-    "@uniswap/router-sdk": 1.7.0
+    "@uniswap/router-sdk": 1.7.1
     "@uniswap/sdk-core": 4.0.7
     "@uniswap/universal-router-sdk": 1.5.8
     "@uniswap/v2-sdk": 3.2.1
@@ -12059,16 +12059,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/router-sdk@npm:1.7.0, @uniswap/router-sdk@npm:^1.6.0":
-  version: 1.7.0
-  resolution: "@uniswap/router-sdk@npm:1.7.0"
+"@uniswap/router-sdk@npm:1.7.1, @uniswap/router-sdk@npm:^1.6.0":
+  version: 1.7.1
+  resolution: "@uniswap/router-sdk@npm:1.7.1"
   dependencies:
     "@ethersproject/abi": ^5.5.0
     "@uniswap/sdk-core": ^4.0.7
     "@uniswap/swap-router-contracts": ^1.1.0
     "@uniswap/v2-sdk": ^3.2.0
     "@uniswap/v3-sdk": ^3.10.0
-  checksum: 047fe078f152ff24b73caac2be848a5d10c34bc8f7f00089f1ce2b8201b5a41634992a50868687b3ea0de2dcd4863bb19a8f124d50182abf3d7e1a8148384444
+  checksum: 9d93a454da8badad038afe10563fb7556d74b99cd23b2aff10faf58f927e284bc0be21bbb3a569b90f339057bb3ecc698aea85a38c42960632978eca1669bb0f
   languageName: node
   linkType: hard
 
@@ -37758,7 +37758,7 @@ __metadata:
     "@tamagui/theme-base": 1.74.16
     "@types/react": ^18.0.15
     "@uniswap/permit2-sdk": 1.2.0
-    "@uniswap/router-sdk": 1.7.0
+    "@uniswap/router-sdk": 1.7.1
     "@uniswap/sdk-core": 4.0.7
     "@uniswap/universal-router-sdk": 1.5.8
     "@uniswap/v2-sdk": 3.2.1
