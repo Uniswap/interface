@@ -29,6 +29,14 @@ const nftTopCollectionsQuery = `
   }
 `
 
+const topPoolsQuery = `
+  query topPools {
+    pools(first: 50, orderBy: totalValueLockedUSD, orderDirection: desc, subgraphError: allow) {
+      id
+    }
+  }
+`
+
 fs.readFile('./public/tokens-sitemap.xml', 'utf8', async (err, data) => {
   const tokenURLs = {}
   try {
@@ -124,6 +132,61 @@ fs.readFile('./public/nfts-sitemap.xml', 'utf8', async (err, data) => {
     const builder = new Builder()
     const xml = builder.buildObject(sitemap)
     const path = './public/nfts-sitemap.xml'
+    fs.writeFile(path, xml, (error) => {
+      if (error) throw error
+      const stats = fs.statSync(path)
+      const fileSizeBytes = stats.size
+      const fileSizeMegabytes = fileSizeBytes / (1024 * 1024)
+
+      if (fileSizeMegabytes > 50) {
+        throw new Error('Generated nfts-sitemap.xml file size exceeds 50MB')
+      }
+      console.log('NFT collections sitemap updated')
+    })
+  } catch (e) {
+    console.error(e)
+  }
+})
+
+fs.readFile('./public/pools-sitemap.xml', 'utf8', async (err, data) => {
+  const poolURLs = {}
+  try {
+    const sitemap = await parseStringPromise(data)
+    if (sitemap.urlset.url) {
+      sitemap.urlset.url.forEach((url) => {
+        const lastMod = new Date(url.lastmod).getTime()
+        if (lastMod < Date.now() - weekMs) {
+          url.lastmod = nowISO
+        }
+        poolURLs[url.loc] = true
+      })
+    }
+
+    // todo: repeat this query and sitemap generation for other chains
+    const poolsResponse = await fetch('https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3?source=uniswap', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Origin: 'https://app.uniswap.org',
+      },
+      body: JSON.stringify({ query: topPoolsQuery }),
+    })
+    const poolsJSON = await poolsResponse.json()
+    const poolAddresses = poolsJSON.data.pools.map((pool) => pool.id)
+    poolAddresses.forEach((address) => {
+      const poolURL = `https://app.uniswap.org/pools/ethereum/${address}`
+      if (!(poolURL in poolURLs)) {
+        sitemap.urlset.url.push({
+          loc: [poolURL],
+          lastmod: [nowISO],
+          priority: [0.7],
+        })
+      }
+    })
+
+    const builder = new Builder()
+    const xml = builder.buildObject(sitemap)
+    const path = './public/pools-sitemap.xml'
     fs.writeFile(path, xml, (error) => {
       if (error) throw error
       const stats = fs.statSync(path)

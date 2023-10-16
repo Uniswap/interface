@@ -1660,4 +1660,14 @@
     <lastmod>2023-10-16T19:49:27.657Z</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://app.uniswap.org/tokens/base/0x50c5725949a6f0c72e6c4a641f24049a917db0cb</loc>
+    <lastmod>2023-10-16T20:29:39.819Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/tokens/ethereum/0x955d5c14c8d4944da1ea7836bd44d54a8ec35ba1</loc>
+    <lastmod>2023-10-16T20:35:34.527Z</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>
