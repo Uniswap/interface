@@ -228,7 +228,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                   ethereum.svg
                 </svg>
               </svg>
-              $0.00
+              $0
             </div>
           </div>
         </div>
@@ -549,6 +549,214 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
         </div>
         <div
           class="c15 arrow-"
+          style="position: absolute;"
+        />
+      </div>
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c10 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c10:hover {
+  opacity: 0.6;
+}
+
+.c10:active {
+  opacity: 0.4;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c11 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c11::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c11.arrow-top {
+  bottom: -4px;
+}
+
+.c11.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c11.arrow-bottom {
+  top: -4px;
+}
+
+.c11.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c11.arrow-left {
+  right: -4px;
+}
+
+.c11.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c11.arrow-right {
+  left: -4px;
+}
+
+.c11.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+@supports (-webkit-background-clip:text) and (-webkit-text-fill-color:transparent) {
+
+}
+
+<div>
+    <div
+      class="c0 c1 c2"
+    >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Fee 
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            0 DEF
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
+      >
+        <div
+          class="c8"
+        >
+          <div
+            class="c9 css-obwv3p"
+          >
+            Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+            <a
+              class="c10"
+              href="https://uniswap.org/docs/v2/protocol-overview/fees/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+        <div
+          class="c11 arrow-"
           style="position: absolute;"
         />
       </div>
@@ -1758,6 +1966,210 @@ exports[`SwapLineItem.tsx exact input 1`] = `
         </div>
         <div
           class="c15 arrow-"
+          style="position: absolute;"
+        />
+      </div>
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c10 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c10:hover {
+  opacity: 0.6;
+}
+
+.c10:active {
+  opacity: 0.4;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c11 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c11::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c11.arrow-top {
+  bottom: -4px;
+}
+
+.c11.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c11.arrow-bottom {
+  top: -4px;
+}
+
+.c11.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c11.arrow-left {
+  right: -4px;
+}
+
+.c11.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c11.arrow-right {
+  left: -4px;
+}
+
+.c11.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div>
+    <div
+      class="c0 c1 c2"
+    >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Fee 
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            0 DEF
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
+      >
+        <div
+          class="c8"
+        >
+          <div
+            class="c9 css-obwv3p"
+          >
+            Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+            <a
+              class="c10"
+              href="https://uniswap.org/docs/v2/protocol-overview/fees/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+        <div
+          class="c11 arrow-"
           style="position: absolute;"
         />
       </div>
@@ -3264,6 +3676,210 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   color: #7D7D7D;
 }
 
+.c10 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c10:hover {
+  opacity: 0.6;
+}
+
+.c10:active {
+  opacity: 0.4;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c11 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c11::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c11.arrow-top {
+  bottom: -4px;
+}
+
+.c11.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c11.arrow-bottom {
+  top: -4px;
+}
+
+.c11.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c11.arrow-left {
+  right: -4px;
+}
+
+.c11.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c11.arrow-right {
+  left: -4px;
+}
+
+.c11.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div>
+    <div
+      class="c0 c1 c2"
+    >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Fee 
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            0 DEF
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
+      >
+        <div
+          class="c8"
+        >
+          <div
+            class="c9 css-obwv3p"
+          >
+            Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+            <a
+              class="c10"
+              href="https://uniswap.org/docs/v2/protocol-overview/fees/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+        <div
+          class="c11 arrow-"
+          style="position: absolute;"
+        />
+      </div>
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
 .c7 {
   z-index: 1070;
   pointer-events: none;
@@ -4684,6 +5300,210 @@ exports[`SwapLineItem.tsx exact output 1`] = `
         </div>
         <div
           class="c15 arrow-"
+          style="position: absolute;"
+        />
+      </div>
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
+.c10 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c10:hover {
+  opacity: 0.6;
+}
+
+.c10:active {
+  opacity: 0.4;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c11 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c11::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c11.arrow-top {
+  bottom: -4px;
+}
+
+.c11.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c11.arrow-bottom {
+  top: -4px;
+}
+
+.c11.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c11.arrow-left {
+  right: -4px;
+}
+
+.c11.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c11.arrow-right {
+  left: -4px;
+}
+
+.c11.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div>
+    <div
+      class="c0 c1 c2"
+    >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Fee 
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            0 GHI
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
+      >
+        <div
+          class="c8"
+        >
+          <div
+            class="c9 css-obwv3p"
+          >
+            Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+            <a
+              class="c10"
+              href="https://uniswap.org/docs/v2/protocol-overview/fees/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+        <div
+          class="c11 arrow-"
           style="position: absolute;"
         />
       </div>
@@ -6398,6 +7218,210 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   color: #7D7D7D;
 }
 
+.c10 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c10:hover {
+  opacity: 0.6;
+}
+
+.c10:active {
+  opacity: 0.4;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c11 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c11::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c11.arrow-top {
+  bottom: -4px;
+}
+
+.c11.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c11.arrow-bottom {
+  top: -4px;
+}
+
+.c11.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c11.arrow-left {
+  right: -4px;
+}
+
+.c11.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c11.arrow-right {
+  left: -4px;
+}
+
+.c11.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div>
+    <div
+      class="c0 c1 c2"
+    >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Fee 
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            0 DEF
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
+      >
+        <div
+          class="c8"
+        >
+          <div
+            class="c9 css-obwv3p"
+          >
+            Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+            <a
+              class="c10"
+              href="https://uniswap.org/docs/v2/protocol-overview/fees/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+        <div
+          class="c11 arrow-"
+          style="position: absolute;"
+        />
+      </div>
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
 .c7 {
   z-index: 1070;
   pointer-events: none;
@@ -8069,6 +9093,210 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   color: #7D7D7D;
 }
 
+.c10 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c10:hover {
+  opacity: 0.6;
+}
+
+.c10:active {
+  opacity: 0.4;
+}
+
+.c7 {
+  z-index: 1070;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
+  transition: visibility 150ms linear,opacity 150ms linear;
+  color: #7D7D7D;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c11 {
+  width: 8px;
+  height: 8px;
+  z-index: 9998;
+}
+
+.c11::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  z-index: 9998;
+  content: '';
+  border: 1px solid #22222212;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #FFFFFF;
+}
+
+.c11.arrow-top {
+  bottom: -4px;
+}
+
+.c11.arrow-top::before {
+  border-top: none;
+  border-left: none;
+}
+
+.c11.arrow-bottom {
+  top: -4px;
+}
+
+.c11.arrow-bottom::before {
+  border-bottom: none;
+  border-right: none;
+}
+
+.c11.arrow-left {
+  right: -4px;
+}
+
+.c11.arrow-left::before {
+  border-bottom: none;
+  border-left: none;
+}
+
+.c11.arrow-right {
+  left: -4px;
+}
+
+.c11.arrow-right::before {
+  border-right: none;
+  border-top: none;
+}
+
+.c8 {
+  max-width: 256px;
+  width: calc(100vw - 16px);
+  cursor: default;
+  padding: 12px;
+  pointer-events: auto;
+  color: #222222;
+  font-weight: 485;
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #22222212;
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
+}
+
+.c6 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div>
+    <div
+      class="c0 c1 c2"
+    >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Fee 
+      </div>
+      <div
+        class="c5"
+      >
+        <div>
+          <div
+            class="c3 c6 css-142zc9n"
+          >
+            0 DEF
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="position: fixed; left: 0px; top: 0px;"
+      >
+        <div
+          class="c8"
+        >
+          <div
+            class="c9 css-obwv3p"
+          >
+            Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+            <a
+              class="c10"
+              href="https://uniswap.org/docs/v2/protocol-overview/fees/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+        <div
+          class="c11 arrow-"
+          style="position: absolute;"
+        />
+      </div>
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c9 {
+  color: #7D7D7D;
+}
+
 .c7 {
   z-index: 1070;
   pointer-events: none;
@@ -9509,6 +10737,85 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   color: #222222;
 }
 
+.c6 {
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
+  background-size: 400%;
+  will-change: background-position;
+  border-radius: 12px;
+  height: 15px;
+  width: 50px;
+}
+
+.c5 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c4 {
+  cursor: auto;
+  color: #7D7D7D;
+}
+
+<div>
+    <div
+      class="c0 c1 c2"
+    >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Fee
+      </div>
+      <div
+        class="c3 c5 css-142zc9n"
+      >
+        <div
+          class="c6"
+          data-testid="loading-row"
+          height="15"
+          width="50"
+        />
+      </div>
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
 .c9 {
   color: #7D7D7D;
 }
@@ -9937,6 +11244,76 @@ exports[`SwapLineItem.tsx syncing 1`] = `
         data-testid="swap-li-label"
       >
         Max. slippage
+      </div>
+      <div
+        class="c5"
+        data-testid="loading-row"
+        height="15"
+        width="50"
+      />
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  color: #222222;
+}
+
+.c5 {
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
+  background-size: 400%;
+  will-change: background-position;
+  border-radius: 12px;
+  height: 15px;
+  width: 50px;
+}
+
+.c4 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+<div>
+    <div
+      class="c0 c1 c2"
+    >
+      <div
+        class="c3 c4 css-142zc9n"
+        data-testid="swap-li-label"
+      >
+        Fee 
       </div>
       <div
         class="c5"
