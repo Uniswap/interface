@@ -57,7 +57,7 @@ We’ll be using Homebrew to install many of the other required tools through th
 
 ### nvm
 
-`nvm` is the Node Version Manager. While not required, it makes it easy to install Node and switch between different versions. A minimum Node version of 16 is required to use this repository.
+`nvm` is the Node Version Manager. While not required, it makes it easy to install Node and switch between different versions. A minimum Node version of 18 is required to use this repository.
 
 Copy the curl command listed under _Install & Update Script_ on [this page](https://github.com/nvm-sh/nvm#install--update-script) and run it in your terminal.
 
@@ -68,15 +68,15 @@ To make sure nvm installed correctly, try running `nvm -v` (you may need to quit
 Now we want to use nvm to install a specific version of node.
 
 Run the following command in your terminal:
-`nvm install 16`
+`nvm install 18`
 
 and then when it’s finished, run:
-`nvm use 16`
+`nvm use 18`
 
 Quit and re-open the terminal, and then run:
 `node -v`
 
-to make sure you get a version number that starts with `v16.`.
+to make sure you get a version number that starts with `v18.`.
 
 ### yarn
 
