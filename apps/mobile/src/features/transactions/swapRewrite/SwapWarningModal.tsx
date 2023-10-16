@@ -9,7 +9,7 @@ export function SwapWarningModal({
   parsedWarning,
 }: {
   onClose: () => void
-  parsedWarning: Required<ParsedWarnings>['mainWarning']
+  parsedWarning: Required<ParsedWarnings>['reviewScreenWarning']
 }): JSX.Element {
   const { t } = useTranslation()
 

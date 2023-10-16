@@ -11,6 +11,7 @@ import {
 export enum SwapScreen {
   SwapForm,
   SwapReview,
+  SwapPending,
 }
 
 type SwapScreenContextState = {

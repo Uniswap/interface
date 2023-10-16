@@ -23,25 +23,25 @@ export function GasAndWarningRows(): JSX.Element {
 
   const { isBlocked } = useIsBlockedActiveAddress()
 
-  const { mainWarning } = useParsedSwapWarnings()
+  const { formScreenWarning } = useParsedSwapWarnings()
 
   const gasFeeUSD = useUSDValue(chainId, gasFee?.value)
 
   const onSwapWarningClick = useCallback(() => {
-    if (!mainWarning?.warning.message) {
+    if (!formScreenWarning?.warning.message) {
       // Do not show the modal if the warning doesn't have a message.
       return
     }
 
     Keyboard.dismiss()
     setShowWarningModal(true)
-  }, [mainWarning?.warning.message])
+  }, [formScreenWarning?.warning.message])
 
   return (
     <>
-      {showWarningModal && mainWarning && (
+      {showWarningModal && formScreenWarning && (
         <SwapWarningModal
-          parsedWarning={mainWarning}
+          parsedWarning={formScreenWarning}
           onClose={(): void => setShowWarningModal(false)}
         />
       )}
@@ -71,20 +71,20 @@ export function GasAndWarningRows(): JSX.Element {
           </Flex>
         )}
 
-        {mainWarning && !isBlocked && (
+        {formScreenWarning && !isBlocked && (
           <TouchableArea onPress={onSwapWarningClick}>
             <Flex centered row gap="$spacing8">
-              {mainWarning.Icon && (
-                <mainWarning.Icon
-                  color={mainWarning.color.text}
+              {formScreenWarning.Icon && (
+                <formScreenWarning.Icon
+                  color={formScreenWarning.color.text}
                   height={iconSizes.icon16}
                   strokeWidth={1.5}
                   width={iconSizes.icon16}
                 />
               )}
               <Flex row>
-                <Text color={mainWarning.color.text} variant="body3">
-                  {mainWarning.warning.title}
+                <Text color={formScreenWarning.color.text} variant="body3">
+                  {formScreenWarning.warning.title}
                 </Text>
               </Flex>
             </Flex>

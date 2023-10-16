@@ -14,14 +14,17 @@ import { useSwapTxContext } from 'src/features/transactions/swapRewrite/contexts
 import { useTransactionGasWarning } from 'src/features/transactions/useTransactionGasWarning'
 import { Icons } from 'ui/src'
 
+type WarningWithStyle = {
+  warning: Warning
+  color: WarningColor
+  Icon: FunctionComponent<SvgProps> | typeof Icons.AlertTriangle | null
+}
+
 export type ParsedWarnings = {
   blockingWarning?: Warning
+  formScreenWarning?: WarningWithStyle
   insufficientBalanceWarning?: Warning
-  mainWarning?: {
-    warning: Warning
-    color: WarningColor
-    Icon: FunctionComponent<SvgProps> | typeof Icons.AlertTriangle | null
-  }
+  reviewScreenWarning?: WarningWithStyle
   warnings: Warning[]
 }
 
@@ -41,7 +44,9 @@ export function useParsedSwapWarnings(): ParsedWarnings {
     const warnings = !gasWarning ? swapWarnings : [...swapWarnings, gasWarning]
 
     const blockingWarning = warnings.find(
-      (warning) => warning.action === WarningAction.DisableReview
+      (warning) =>
+        warning.action === WarningAction.DisableReview ||
+        warning.action === WarningAction.DisableSubmit
     )
 
     const insufficientBalanceWarning = warnings.find(
@@ -51,14 +56,29 @@ export function useParsedSwapWarnings(): ParsedWarnings {
     return {
       blockingWarning,
       insufficientBalanceWarning,
-      mainWarning: getMainWarning(warnings),
+      formScreenWarning: getFormScreenWarning(warnings),
+      reviewScreenWarning: getReviewScreenWarning(warnings),
       warnings,
     }
   }, [gasWarning, swapWarnings])
 }
 
+function getReviewScreenWarning(
+  warnings: Warning[]
+): ParsedWarnings['reviewScreenWarning'] | undefined {
+  const swapWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
+
+  if (!swapWarning) {
+    return undefined
+  }
+
+  return getWarningWithStyle(swapWarning)
+}
+
 // This function decides which warning to show when there is more than one.
-function getMainWarning(warnings: Warning[]): ParsedWarnings['mainWarning'] | undefined {
+function getFormScreenWarning(
+  warnings: Warning[]
+): ParsedWarnings['reviewScreenWarning'] | undefined {
   const insufficientBalanceWarning = warnings.find(
     (warning) => warning.type === WarningLabel.InsufficientFunds
   )
@@ -71,23 +91,16 @@ function getMainWarning(warnings: Warning[]): ParsedWarnings['mainWarning'] | un
     }
   }
 
-  const mainWarning = warnings.find(
+  const formWarning = warnings.find(
     (warning) =>
       warning.type === WarningLabel.InsufficientFunds || warning.severity >= WarningSeverity.Low
   )
 
-  if (!mainWarning) {
+  if (!formWarning) {
     return undefined
   }
 
-  const mainWarningColor = getAlertColor(mainWarning?.severity)
-  const mainWarningIcon = mainWarning?.icon ?? Icons.AlertTriangle
-
-  return {
-    warning: mainWarning,
-    color: mainWarningColor,
-    Icon: mainWarningIcon,
-  }
+  return getWarningWithStyle(formWarning)
 }
 
 function getAlertColor(severity?: WarningSeverity): WarningColor {
@@ -122,5 +135,13 @@ function getAlertColor(severity?: WarningSeverity): WarningColor {
         background: '$transparent',
         buttonTheme: 'tertiary',
       }
+  }
+}
+
+function getWarningWithStyle(warning: Warning): WarningWithStyle {
+  return {
+    warning,
+    color: getAlertColor(warning.severity),
+    Icon: warning.icon ?? Icons.AlertTriangle,
   }
 }

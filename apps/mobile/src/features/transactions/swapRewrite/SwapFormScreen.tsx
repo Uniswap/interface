@@ -1,22 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, StyleSheet, TextInputProps, TouchableWithoutFeedback } from 'react-native'
-import {
-  FadeIn,
-  FadeOut,
-  FadeOutDown,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Keyboard, StyleSheet, TextInputProps } from 'react-native'
+import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
-import { HandleBar } from 'src/components/modals/HandleBar'
 import Trace from 'src/components/Trace/Trace'
-import { IS_ANDROID } from 'src/constants/globals'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { useShowSwapNetworkNotification } from 'src/features/transactions/swap/hooks'
-import { isWrapAction } from 'src/features/transactions/swap/utils'
+import { getReviewActionName, isWrapAction } from 'src/features/transactions/swap/utils'
 import {
   SwapScreen,
   useSwapScreenContext,
@@ -41,37 +32,16 @@ const SWAP_DIRECTION_BUTTON_SIZE = iconSizes.icon24
 const SWAP_DIRECTION_BUTTON_INNER_PADDING = spacing.spacing8 + spacing.spacing2
 const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
 
-export function SwapForm(): JSX.Element {
+export function SwapFormScreen(): JSX.Element {
   const { selectingCurrencyField } = useSwapFormContext()
 
   const { isSheetReady } = useBottomSheetContext()
 
-  const insets = useSafeAreaInsets()
-
-  const screenXOffset = useSharedValue(0)
-
-  const wrapperStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: screenXOffset.value }],
-  }))
-
   return (
     <>
-      <TouchableWithoutFeedback>
-        <Flex mt={insets.top}>
-          <HandleBar backgroundColor="none" />
-          <AnimatedFlex grow row height="100%" style={wrapperStyle}>
-            <Flex
-              gap="$spacing16"
-              pb={IS_ANDROID ? '$spacing32' : '$spacing16'}
-              px="$spacing16"
-              style={{ marginBottom: insets.bottom }}
-              width="100%">
-              <SwapFormHeader />
-              {isSheetReady && <SwapFormContent />}
-            </Flex>
-          </AnimatedFlex>
-        </Flex>
-      </TouchableWithoutFeedback>
+      <SwapFormHeader />
+
+      {isSheetReady && <SwapFormContent />}
 
       {!!selectingCurrencyField && <TokenSelector />}
     </>
@@ -443,7 +413,7 @@ function ReviewButton({
         size="large"
         testID={ElementName.ReviewSwap}
         onPress={onReview}>
-        {t('Review swap')}
+        {getReviewActionName(t, wrapType)}
       </Button>
     </Trace>
   )
