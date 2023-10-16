@@ -8,6 +8,7 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader
 import androidx.multidex.MultiDexApplication;
+import com.shopify.reactnativeperformance.ReactNativePerformance
 
 class MainApplication : MultiDexApplication(), ReactApplication {
   private val mReactNativeHost: ReactNativeHost =
@@ -40,6 +41,7 @@ class MainApplication : MultiDexApplication(), ReactApplication {
   }
 
   override fun onCreate() {
+    ReactNativePerformance.onAppStarted()
     super.onCreate()
     SoLoader.init(this,false)
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
