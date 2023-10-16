@@ -121,7 +121,12 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/tokens',
-    nestedPaths: [':chainName'],
+    getElement: (args) => {
+      return args.infoExplorePageEnabled ? <Navigate to="/explore/tokens" replace /> : <Explore />
+    },
+  }),
+  createRouteDefinition({
+    path: '/tokens/:chainName',
     getElement: (args) => {
       return args.infoExplorePageEnabled ? <RedirectExplore /> : <Explore />
     },
