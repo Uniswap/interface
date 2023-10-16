@@ -32,7 +32,7 @@ export function BlockedAddressWarning({
             width={iconSizes.icon16}
           />
           <Text color="$neutral2" variant="subheading2">
-            {t(`${isRecipientBlocked ? 'Recipient' : 'This'} wallet is blocked`)}
+            {isRecipientBlocked ? t('Recipient wallet is blocked') : t('This wallet is blocked')}
           </Text>
         </Flex>
       </TouchableArea>
