@@ -4,6 +4,7 @@ import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
 import { useUniswapXEthOutputEnabled } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXExactOutputEnabled } from 'featureFlags/flags/uniswapXExactOutput'
 import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
+import { useFeesEnabled } from 'featureFlags/flags/useFees'
 import { useMemo } from 'react'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
@@ -40,6 +41,10 @@ export function useRoutingAPIArguments({
   const uniswapXExactOutputEnabled = useUniswapXExactOutputEnabled()
   const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
 
+  const feesEnabled = useFeesEnabled()
+  // Don't enable fee logic if this is a quote for pricing
+  const sendPortionEnabled = routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? false : feesEnabled
+
   return useMemo(
     () =>
       !tokenIn || !tokenOut || !amount || tokenIn.equals(tokenOut) || tokenIn.wrapped.equals(tokenOut.wrapped)
@@ -64,6 +69,7 @@ export function useRoutingAPIArguments({
             uniswapXEthOutputEnabled,
             uniswapXExactOutputEnabled,
             isUniswapXDefaultEnabled,
+            sendPortionEnabled,
             inputTax,
             outputTax,
           },
@@ -80,6 +86,7 @@ export function useRoutingAPIArguments({
       userOptedOutOfUniswapX,
       uniswapXEthOutputEnabled,
       isUniswapXDefaultEnabled,
+      sendPortionEnabled,
       inputTax,
       outputTax,
     ]
