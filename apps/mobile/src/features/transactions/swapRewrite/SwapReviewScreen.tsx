@@ -32,7 +32,7 @@ import { useSwapTxContext } from 'src/features/transactions/swapRewrite/contexts
 import { useParsedSwapWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
 import { TransactionAmountsReview } from 'src/features/transactions/swapRewrite/TransactionAmountsReview'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
-import { Button, Flex, useSporeColors } from 'ui/src'
+import { Button, Flex, Icons, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'utilities/src/format/format'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -346,6 +346,7 @@ export function SwapReviewScreen(): JSX.Element | null {
           <Button
             fill
             disabled={submitButtonDisabled}
+            icon={<Icons.Faceid color="white" size="$icon.20" />}
             size="large"
             testID={getActionElementName(wrapType)}
             onPress={onSubmitTransaction}>

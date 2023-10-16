@@ -55,6 +55,9 @@ export function SwapFormHeader(): JSX.Element {
 
   const isViewOnlyWallet = account?.type === AccountType.Readonly
 
+  // TODO: implement USD form input
+  const showUSDToggle = false
+
   return (
     <>
       <Flex
@@ -70,7 +73,7 @@ export function SwapFormHeader(): JSX.Element {
         </Text>
 
         <Flex row gap="$spacing4">
-          {screen === SwapScreen.SwapForm && (
+          {showUSDToggle && screen === SwapScreen.SwapForm && (
             <TouchableArea
               hapticFeedback
               bg={isFiatInput ? '$accent2' : '$surface2'}
