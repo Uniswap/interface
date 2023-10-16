@@ -362,6 +362,29 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
           class="c5 c6 css-142zc9n"
           data-testid="swap-li-label"
         >
+          Fee 
+        </div>
+        <div
+          class="c7"
+        >
+          <div>
+            <div
+              class="c5 c8 css-142zc9n"
+            >
+              0 DEF
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div
+        class="c2 c3 c4"
+      >
+        <div
+          class="c5 c6 css-142zc9n"
+          data-testid="swap-li-label"
+        >
           Network cost
         </div>
         <div
@@ -935,6 +958,28 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div
+        class="c2 c3 c4"
+      >
+        <div
+          class="c5 c6 css-142zc9n"
+          data-testid="swap-li-label"
+        >
+          Fee
+        </div>
+        <div
+          class="c5 c7 css-142zc9n"
+        >
+          <div
+            class="c11"
+            data-testid="loading-row"
+            height="15"
+            width="50"
+          />
         </div>
       </div>
     </div>

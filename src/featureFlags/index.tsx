@@ -22,6 +22,7 @@ export enum FeatureFlag {
   uniswapXDefaultEnabled = 'uniswapx_default_enabled',
   quickRouteMainnet = 'enable_quick_route_mainnet',
   progressIndicatorV2 = 'progress_indicator_v2',
+  feesEnabled = 'fees_enabled',
 }
 
 interface FeatureFlagsContextType {

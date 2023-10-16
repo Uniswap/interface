@@ -294,6 +294,7 @@ export function Swap({
     inputError: swapInputError,
     inputTax,
     outputTax,
+    outputFeeFiatValue,
   } = swapInfo
 
   const [inputTokenHasTax, outputTokenHasTax] = useMemo(
@@ -441,8 +442,8 @@ export function Swap({
   )
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
   const swapFiatValues = useMemo(() => {
-    return { amountIn: fiatValueTradeInput.data, amountOut: fiatValueTradeOutput.data }
-  }, [fiatValueTradeInput, fiatValueTradeOutput])
+    return { amountIn: fiatValueTradeInput.data, amountOut: fiatValueTradeOutput.data, feeUsd: outputFeeFiatValue }
+  }, [fiatValueTradeInput.data, fiatValueTradeOutput.data, outputFeeFiatValue])
 
   // the callback to execute the swap
   const swapCallback = useSwapCallback(
@@ -584,10 +585,17 @@ export function Swap({
     if (!trade || prevTrade === trade) return // no new swap quote to log
 
     sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
-      ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, swapQuoteLatency, inputTax, outputTax),
+      ...formatSwapQuoteReceivedEventProperties(
+        trade,
+        allowedSlippage,
+        swapQuoteLatency,
+        inputTax,
+        outputTax,
+        outputFeeFiatValue
+      ),
       ...trace,
     })
-  }, [prevTrade, trade, trace, allowedSlippage, swapQuoteLatency, inputTax, outputTax])
+  }, [prevTrade, trade, trace, allowedSlippage, swapQuoteLatency, inputTax, outputTax, outputFeeFiatValue])
 
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
