@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { InterfaceTrade, QuoteMethod } from 'state/routing/types'
+import { InterfaceTrade, QuoteMethod, SubmittableTrade } from 'state/routing/types'
 import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
@@ -35,7 +35,11 @@ function getEstimatedNetworkFee(trade: InterfaceTrade) {
   return undefined
 }
 
-export function formatCommonPropertiesForTrade(trade: InterfaceTrade, allowedSlippage: Percent) {
+export function formatCommonPropertiesForTrade(
+  trade: InterfaceTrade,
+  allowedSlippage: Percent,
+  outputFeeFiatValue?: number
+) {
   return {
     routing: trade.fillType,
     type: trade.tradeType,
@@ -47,7 +51,7 @@ export function formatCommonPropertiesForTrade(trade: InterfaceTrade, allowedSli
     token_in_symbol: trade.inputAmount.currency.symbol,
     token_out_symbol: trade.outputAmount.currency.symbol,
     token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
-    token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
+    token_out_amount: formatToDecimal(trade.postTaxOutputAmount, trade.outputAmount.currency.decimals),
     price_impact_basis_points: isClassicTrade(trade)
       ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade))
       : undefined,
@@ -59,6 +63,7 @@ export function formatCommonPropertiesForTrade(trade: InterfaceTrade, allowedSli
     minimum_output_after_slippage: trade.minimumAmountOut(allowedSlippage).toSignificant(6),
     allowed_slippage: formatPercentNumber(allowedSlippage),
     method: getQuoteMethod(trade),
+    fee_usd: outputFeeFiatValue,
   }
 }
 
@@ -68,19 +73,22 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   fiatValues,
   txHash,
   timeToSignSinceRequestMs,
+  portfolioBalanceUsd,
 }: {
-  trade: InterfaceTrade
+  trade: SubmittableTrade
   allowedSlippage: Percent
-  fiatValues: { amountIn?: number; amountOut?: number }
+  fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }
   txHash?: string
   timeToSignSinceRequestMs?: number
+  portfolioBalanceUsd?: number
 }) => ({
+  total_balances_usd: portfolioBalanceUsd,
   transaction_hash: txHash,
   token_in_amount_usd: fiatValues.amountIn,
   token_out_amount_usd: fiatValues.amountOut,
   // measures the amount of time the user took to sign the permit message or swap tx in their wallet
   time_to_sign_since_request_ms: timeToSignSinceRequestMs,
-  ...formatCommonPropertiesForTrade(trade, allowedSlippage),
+  ...formatCommonPropertiesForTrade(trade, allowedSlippage, fiatValues.feeUsd),
 })
 
 function getQuoteMethod(trade: InterfaceTrade) {
@@ -94,10 +102,11 @@ export const formatSwapQuoteReceivedEventProperties = (
   allowedSlippage: Percent,
   swapQuoteLatencyMs: number | undefined,
   inputTax: Percent,
-  outputTax: Percent
+  outputTax: Percent,
+  outputFeeFiatValue: number | undefined
 ) => {
   return {
-    ...formatCommonPropertiesForTrade(trade, allowedSlippage),
+    ...formatCommonPropertiesForTrade(trade, allowedSlippage, outputFeeFiatValue),
     swap_quote_block_number: isClassicTrade(trade) ? trade.blockNumber : undefined,
     allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
     token_in_amount_max: trade.maximumAmountIn(allowedSlippage).toExact(),
