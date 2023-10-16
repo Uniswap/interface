@@ -103,22 +103,36 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
   const token0BalanceRequest = useSingleCallResult(useTokenContract(token0Address, true), 'balanceOf', [
     account ?? undefined,
   ])
+  const token0DecimalsRequest = useSingleCallResult(useTokenContract(token0Address, true), 'decimals')
+
   const token1BalanceRequest = useSingleCallResult(useTokenContract(token1Address, true), 'balanceOf', [
     account ?? undefined,
   ])
+  const token1DecimalsRequest = useSingleCallResult(useTokenContract(token1Address, true), 'decimals')
+
   const stakedData = useSingleCallResult(masterChefContract, 'userInfo', [pairData.pid, account ?? undefined])
+
+  const token0Decimals =
+    !token0DecimalsRequest.loading && token0DecimalsRequest.result && token0DecimalsRequest.result.length > 0
+      ? token0DecimalsRequest.result[0]
+      : undefined
+
+  const token1Decimals =
+  !token1DecimalsRequest.loading && token1DecimalsRequest.result && token1DecimalsRequest.result.length > 0
+    ? token1DecimalsRequest.result[0]
+    : undefined
 
   const token0BalanceBN =
     !token0BalanceRequest.loading && token0BalanceRequest.result && token0BalanceRequest.result.length > 0
       ? token0BalanceRequest.result[0]
       : undefined
-  const token0Balance = token0BalanceBN ? formatUnits(token0BalanceBN, 18) : '0'
+  const token0Balance = token0BalanceBN && token0Decimals ? formatUnits(token0BalanceBN, token0Decimals) : '0'
 
   const token1BalanceBN =
     !token1BalanceRequest.loading && token1BalanceRequest.result && token1BalanceRequest.result.length > 0
       ? token1BalanceRequest.result[0]
       : undefined
-  const token1Balance = token1BalanceBN ? formatUnits(token1BalanceBN, 18) : '0'
+  const token1Balance = token1BalanceBN && token1Decimals ? formatUnits(token1BalanceBN, token1Decimals) : '0'
 
   const stakedAmountBN =
     !stakedData.loading && stakedData.result && stakedData.result.length > 0 ? stakedData.result[0] : undefined
@@ -274,6 +288,8 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
         hypervisorContract={hypervisorContract}
         lpTokenBalance={availableStakeAmount}
         lpTokenSymbol={lpSymbol}
+        decimals0={token0Decimals}
+        decimals1={token1Decimals}
       />
       <CardContainer showDetails={showDetails}>
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center', height: '60px', alignItems: 'center' }}>
@@ -311,7 +327,7 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
             {!isMobile && (
               <>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  {rewardData?.tvl && <small style={{ fontWeight: 600 }}>${formatNumber(rewardData.tvl)}</small>}
+                  { <small style={{ fontWeight: 600 }}>{rewardData?.tvl ? "$" + formatNumber(rewardData.tvl) : "$0"}</small>}
                 </div>
                 <small style={{ fontWeight: 600 }}>
                   {rewardsAmount &&

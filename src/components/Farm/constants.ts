@@ -213,27 +213,57 @@ export type InfoAddress = OwnerInfo & DynamicObject
 
 export const GammaPairs = {
   [ChainId.ROLLUX]: {
+    '0x28c9c7fb3fe3104d2116af26cc8ef7905547349c-0x368433cac2a0b8d76e64681a9835502a1f2a8a30': [
+      {
+        type: Presets.GAMMA_NARROW,
+        title: 'Narrow',
+        address: '0x197e0865e759235699a758c5428944964627cde1',
+        token0Address: '0x28c9c7fb3fe3104d2116af26cc8ef7905547349c',
+        token1Address: '0x368433cac2a0b8d76e64681a9835502a1f2a8a30',
+        ableToFarm: true,
+        feerTier: 500,
+        pid: 0,
+        hypervisor: '0xf3b1125c8505f038503e002e61a78253610d4f60',
+      },
+    ],
+    '0x28c9c7fb3fe3104d2116af26cc8ef7905547349c-0x48023b16c3e81aa7f6effbdeb35bb83f4f31a8fd': [
+      {
+        type: Presets.GAMMA_NARROW,
+        title: 'Narrow',
+        address: '0xab07b0c933dacb9d776af7dfaa814a4e3bea8d9a',
+        token0Address: '0x28c9c7fb3fe3104d2116af26cc8ef7905547349c',
+        token1Address: '0x48023b16c3e81aa7f6effbdeb35bb83f4f31a8fd',
+        ableToFarm: true,
+        feerTier: 3000,
+        pid: 1,
+        hypervisor: '0x8421c6102ee8a147facc01977df3b159f7921d54',
+      },
+    ],
+    '0x368433cac2a0b8d76e64681a9835502a1f2a8a30-0x4200000000000000000000000000000000000006': [
+      {
+        type: Presets.GAMMA_NARROW,
+        title: 'Narrow',
+        address: '0x391bca3c3c5a71e369d284b0cd81a7fe8c097e20',
+        token0Address: '0x368433cac2a0b8d76e64681a9835502a1f2a8a30',
+        token1Address: '0x4200000000000000000000000000000000000006',
+        ableToFarm: true,
+        feerTier: 3000,
+        pid: 2,
+        hypervisor: '0x0b15a5e3ca0d4b492c3b476d0f807535f9b72079',
+      },
+    ],
     '0x4200000000000000000000000000000000000006-0x48023b16c3e81aa7f6effbdeb35bb83f4f31a8fd': [
       {
         type: Presets.GAMMA_NARROW,
         title: 'Narrow',
-        address: '0xf91726da5da9de95d7c3c504d36e6db307659a3b',
+        address: '0xdafeb8351d63df6a85359142cc78aa5e319a6ffe',
         token0Address: '0x4200000000000000000000000000000000000006',
         token1Address: '0x48023b16c3e81aa7f6effbdeb35bb83f4f31a8fd',
         ableToFarm: true,
-        feerTier: 500,
-        pid: 0,
-        hypervisor: '0x2fcc0d25c4cd2084e402c16db68fbe206a36a46f',
+        feerTier: 3000,
+        pid: 3,
+        hypervisor: '0xb5a638528c2e15dd3475f57fd063ccffb587943c',
       },
-      // {
-      //   type: Presets.GAMMA_WIDE,
-      //   title: 'Wide',
-      //   address: '0x81cec323bf8c4164c66ec066f53cc053a535f03d',
-      //   token0Address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
-      //   token1Address: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
-      //   ableToFarm: true,
-      //   pid: 1,
-      // },
     ],
   },
 }
