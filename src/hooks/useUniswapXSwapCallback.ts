@@ -1,10 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import * as Sentry from '@sentry/react'
-import { SwapEventName } from '@uniswap/analytics-events'
+import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { DutchOrder, DutchOrderBuilder } from '@uniswap/uniswapx-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
+import { getConnection } from 'connection'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { DutchOrderTrade, TradeFillType } from 'state/routing/types'
@@ -12,6 +13,7 @@ import { trace } from 'tracing/trace'
 import { SignatureExpiredError, UserRejectedRequestError } from 'utils/errors'
 import { signTypedData } from 'utils/signing'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
+import { getWalletMeta } from 'utils/walletMeta'
 
 type DutchAuctionOrderError = { errorCode?: number; detail?: string }
 type DutchAuctionOrderSuccess = { hash: string }
@@ -53,7 +55,7 @@ export function useUniswapXSwapCallback({
   fiatValues: { amountIn?: number; amountOut?: number }
   allowedSlippage: Percent
 }) {
-  const { account, provider } = useWeb3React()
+  const { account, provider, connector } = useWeb3React()
   const analyticsContext = useTrace()
 
   return useCallback(
@@ -117,6 +119,10 @@ export function useUniswapXSwapCallback({
             timeToSignSinceRequestMs: Date.now() - beforeSign,
           }),
           ...analyticsContext,
+          // TODO (WEB-2993): remove these after debugging missing user properties.
+          [CustomUserProperties.WALLET_ADDRESS]: account,
+          [CustomUserProperties.WALLET_TYPE]: getConnection(connector).getName(),
+          [CustomUserProperties.PEER_WALLET_AGENT]: provider ? getWalletMeta(provider)?.agent : undefined,
         })
 
         const res = await fetch(`${UNISWAP_API_URL}/order`, {
@@ -154,6 +160,6 @@ export function useUniswapXSwapCallback({
           response: { orderHash: body.hash, deadline: updatedOrder.info.deadline },
         }
       }),
-    [account, provider, trade, allowedSlippage, fiatValues, analyticsContext]
+    [account, provider, trade, allowedSlippage, fiatValues, analyticsContext, connector]
   )
 }

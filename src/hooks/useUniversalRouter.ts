@@ -1,11 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
-import { SwapEventName } from '@uniswap/analytics-events'
+import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
+import { getConnection } from 'connection'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
@@ -16,6 +17,7 @@ import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { UserRejectedRequestError, WrongChainError } from 'utils/errors'
 import isZero from 'utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
+import { getWalletMeta } from 'utils/walletMeta'
 
 import { PermitSignature } from './usePermitAllowance'
 
@@ -50,7 +52,7 @@ export function useUniversalRouterSwapCallback(
   fiatValues: { amountIn?: number; amountOut?: number },
   options: SwapOptions
 ) {
-  const { account, chainId, provider } = useWeb3React()
+  const { account, chainId, provider, connector } = useWeb3React()
   const analyticsContext = useTrace()
   const blockNumber = useBlockNumber()
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
@@ -119,6 +121,10 @@ export function useUniversalRouterSwapCallback(
                 txHash: response.hash,
               }),
               ...analyticsContext,
+              // TODO (WEB-2993): remove these after debugging missing user properties.
+              [CustomUserProperties.WALLET_ADDRESS]: account,
+              [CustomUserProperties.WALLET_TYPE]: getConnection(connector).getName(),
+              [CustomUserProperties.PEER_WALLET_AGENT]: provider ? getWalletMeta(provider)?.agent : undefined,
             })
             if (tx.data !== response.data) {
               sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, {
@@ -154,16 +160,17 @@ export function useUniversalRouterSwapCallback(
     })
   }, [
     account,
-    analyticsContext,
-    blockNumber,
     chainId,
-    fiatValues,
-    options.deadline,
-    options.feeOptions,
-    options.permit,
-    options.slippageTolerance,
     provider,
     trade,
+    options.slippageTolerance,
+    options.deadline,
+    options.permit,
+    options.feeOptions,
+    analyticsContext,
+    blockNumber,
     isAutoSlippage,
+    fiatValues,
+    connector,
   ])
 }
