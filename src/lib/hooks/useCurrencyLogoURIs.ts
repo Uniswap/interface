@@ -10,7 +10,7 @@ import CeloLogo from '../../assets/svg/celo_logo.svg'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
 import { isCelo, NATIVE_CHAIN_ID, nativeOnChain } from '../../constants/tokens'
 
-type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon' | 'smartchain' | 'celo' | 'avalanchec'
+type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon' | 'smartchain' | 'celo' | 'avalanchec' | 'base'
 
 export function chainIdToNetworkName(networkId: ChainId): Network {
   switch (networkId) {
@@ -28,6 +28,8 @@ export function chainIdToNetworkName(networkId: ChainId): Network {
       return 'celo'
     case ChainId.AVALANCHE:
       return 'avalanchec'
+    case ChainId.BASE:
+      return 'base'
     default:
       return 'ethereum'
   }
@@ -52,7 +54,14 @@ export function getNativeLogoURI(chainId: ChainId = ChainId.MAINNET): string {
 
 function getTokenLogoURI(address: string, chainId: ChainId = ChainId.MAINNET): string | void {
   const networkName = chainIdToNetworkName(chainId)
-  const networksWithUrls = [ChainId.ARBITRUM_ONE, ChainId.MAINNET, ChainId.OPTIMISM, ChainId.BNB, ChainId.AVALANCHE]
+  const networksWithUrls = [
+    ChainId.ARBITRUM_ONE,
+    ChainId.MAINNET,
+    ChainId.OPTIMISM,
+    ChainId.BNB,
+    ChainId.AVALANCHE,
+    ChainId.BASE,
+  ]
   if (isCelo(chainId) && address === nativeOnChain(chainId).wrapped.address) {
     return CeloLogo
   }
@@ -75,6 +84,7 @@ export default function useCurrencyLogoURIs(
     | undefined
 ): string[] {
   const locations = useHttpLocations(currency?.logoURI)
+  console.log(currency?.address, currency?.logoURI)
   return useMemo(() => {
     const logoURIs = [...locations]
     if (currency) {
