@@ -44,7 +44,7 @@ export type AppState = ReturnType<typeof appReducer>
 
 const persistConfig: PersistConfig<AppState> = {
   key: 'interface',
-  version: 1, // see migrations.ts for more details about this version
+  version: 2, // see migrations.ts for more details about this version
   storage: localForage.createInstance({
     name: 'redux',
   }),

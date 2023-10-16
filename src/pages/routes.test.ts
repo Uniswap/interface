@@ -9,7 +9,7 @@ describe('Routes', () => {
     const contents = fs.readFileSync('./public/sitemap.xml', 'utf8')
     const sitemap = await parseStringPromise(contents)
 
-    const sitemapPaths: string[] = sitemap.urlset.url.map((url: any) => new URL(url['$'].loc).pathname)
+    const sitemapPaths: string[] = sitemap.urlset.url.map((url: any) => new URL(url.loc).pathname)
 
     sitemapPaths
       .filter((p) => !p.includes('/0x'))

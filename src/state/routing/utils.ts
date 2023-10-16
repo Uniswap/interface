@@ -339,7 +339,3 @@ export function isSubmittableTrade(trade?: InterfaceTrade): trade is Submittable
 export function isUniswapXTrade(trade?: InterfaceTrade): trade is DutchOrderTrade {
   return trade?.fillType === TradeFillType.UniswapX
 }
-
-export function shouldUseAPIRouter(args: GetQuoteArgs): boolean {
-  return args.routerPreference !== RouterPreference.CLIENT
-}

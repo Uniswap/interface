@@ -6,6 +6,7 @@ import Badge from 'components/Badge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row, { AutoRow } from 'components/Row'
+import { BIPS_BASE } from 'constants/misc'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Box } from 'rebass'
 import styled from 'styled-components'
@@ -148,7 +149,7 @@ function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; curren
         <Box margin="0 4px 0 12px">
           <DoubleCurrencyLogo currency0={tokenInfo1} currency1={tokenInfo0} size={20} />
         </Box>
-        <BadgeText>{feeAmount / 10000}%</BadgeText>
+        <BadgeText>{feeAmount / BIPS_BASE}%</BadgeText>
       </PoolBadge>
     </MouseoverTooltip>
   )

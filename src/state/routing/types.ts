@@ -16,7 +16,6 @@ export enum TradeState {
 export enum QuoteMethod {
   ROUTING_API = 'ROUTING_API',
   QUICK_ROUTE = 'QUICK_ROUTE',
-  CLIENT_SIDE = 'CLIENT_SIDE',
   CLIENT_SIDE_FALLBACK = 'CLIENT_SIDE_FALLBACK', // If client-side was used after the routing-api call failed.
 }
 
@@ -27,7 +26,6 @@ export const INTERNAL_ROUTER_PREFERENCE_PRICE = 'price' as const
 export enum RouterPreference {
   X = 'uniswapx',
   API = 'api',
-  CLIENT = 'client',
 }
 
 export interface GetQuoteArgs {

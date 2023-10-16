@@ -17,6 +17,7 @@ import {
 import { formatCommonPropertiesForTrade } from 'lib/utils/analytics'
 import { PropsWithChildren, useEffect, useRef, useState } from 'react'
 import { X } from 'react-feather'
+import { useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useAppDispatch } from 'state/hooks'
 import { RouterPreference } from 'state/routing/types'
@@ -73,6 +74,7 @@ const OptInContents = ({
   const dispatch = useAppDispatch()
   const [showYoureIn, setShowYoureIn] = useState(false)
   const isVisible = isOnClassic
+  const location = useLocation()
 
   // adding this as we need to mount and then set shouldAnimate = true after it mounts to avoid a flicker on initial mount
   const [shouldAnimate, setShouldAnimate] = useState(false)
@@ -115,7 +117,7 @@ const OptInContents = ({
 
   const containerRef = useRef<HTMLDivElement>()
 
-  if (isSmall) {
+  if (isSmall || location.pathname.includes('/tokens/')) {
     return (
       <SwapOptInSmallContainer ref={containerRef as any} visible={isVisible} shouldAnimate={shouldAnimate}>
         <SwapMustache>
