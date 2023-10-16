@@ -12,6 +12,7 @@ export interface DappRequestStoreItem {
   dappRequest: BaseDappRequest
   account: Account
   senderTabId: number
+  dappUrl: string | undefined
 }
 
 const slice = createSlice({

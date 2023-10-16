@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ChainId } from 'wallet/src/constants/chains'
 
-export const DEFAULT_DAPP_URL = 'DEFAULT_DAPP_URL'
 export interface DappState {
   [dappUrl: string]: {
     [walletAddress: Address]: {
@@ -16,7 +15,7 @@ const slice = createSlice({
   name: 'dapp',
   initialState: initialDappState,
   reducers: {
-    saveDappChain(
+    saveDappConnection(
       state,
       action: PayloadAction<{
         dappUrl: string
@@ -35,6 +34,6 @@ const slice = createSlice({
   },
 })
 
-export const { saveDappChain } = slice.actions
+export const { saveDappConnection } = slice.actions
 
 export const dappReducer = slice.reducer

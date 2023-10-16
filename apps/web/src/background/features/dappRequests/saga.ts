@@ -1,8 +1,11 @@
 import { Provider, TransactionResponse } from '@ethersproject/providers'
 import { createAction } from '@reduxjs/toolkit'
 import { ethers, providers } from 'ethers'
-import { selectChainByDappAndWallet } from 'src/background/features/dapp/selectors'
-import { DEFAULT_DAPP_URL, saveDappChain } from 'src/background/features/dapp/slice'
+import {
+  selectChainByDappAndWallet,
+  selectWalletsByDapp,
+} from 'src/background/features/dapp/selectors'
+import { saveDappConnection } from 'src/background/features/dapp/slice'
 import { appSelect } from 'src/background/store'
 import { sendMessageToActiveTab, sendMessageToSpecificTab } from 'src/background/utils/messageUtils'
 import { DisconnectResponse, ExtensionChainChange, ExtensionRequestType } from 'src/types/requests'
@@ -22,11 +25,13 @@ import { hexlifyTransaction } from 'wallet/src/utils/transaction'
 import {
   AccountResponse,
   ChangeChainResponse,
-  ConnectResponse,
   DappRequestType,
   DappResponseType,
+  SendTransactionRequest,
   SendTransactionResponse,
+  SignMessageRequest,
   SignMessageResponse,
+  SignTypedDataRequest,
   SignTypedDataResponse,
 } from './dappRequestTypes'
 import { dappRequestActions, DappRequestStoreItem } from './slice'
@@ -37,7 +42,7 @@ const SUCCESS_IMAGE_PATH = 'assets/success.png'
 const FAIL_IMAGE_PATH = 'assets/fail.png'
 const PENDING_IMAGE_PATH = 'assets/pending.png'
 
-export type DappRequestSagaParams = Omit<DappRequestStoreItem, 'account'>
+export type DappRequestSagaParams = Omit<DappRequestStoreItem, 'account' | 'dappUrl'>
 
 export const addRequest = createAction<DappRequestSagaParams>(`dappRequest/handleRequest`)
 export const confirmRequest = createAction<DappRequestStoreItem>(`dappRequest/confirmRequest`)
@@ -64,16 +69,31 @@ export function* handleRequest(requestParams: DappRequestSagaParams) {
     throw new Error('No active account')
   }
 
+  const tab = yield* call(chrome.tabs.get, requestParams.senderTabId)
+  const dappUrl = extractBaseUrl(tab.url)
+  const connectedWallets = yield* select(selectWalletsByDapp(dappUrl))
+
+  const isConnectedToDapp = connectedWallets.has(activeAccount.address)
+
   const requestForStore: DappRequestStoreItem = {
     dappRequest: requestParams.dappRequest,
     senderTabId: requestParams.senderTabId,
     account: activeAccount,
+    dappUrl,
   }
 
-  // If the request is a connect, we don't need to prompt the user since it just getting the provider url
+  // If the dapp is not connected to the active account the only request it can make is to GetAccountRequest.
+  // Everything else is rejected. If the dapp is connected to the active account then it can connect to the
+  // account without confirmation and for any other transactions it will require confirmation.
   if (
-    requestForStore.dappRequest.type === DappRequestType.Connect ||
-    requestForStore.dappRequest.type === DappRequestType.GetAccount
+    !isConnectedToDapp &&
+    requestForStore.dappRequest.type !== DappRequestType.GetAccountRequest
+  ) {
+    yield* put(rejectRequest(requestForStore))
+  } else if (
+    isConnectedToDapp &&
+    (requestForStore.dappRequest.type === DappRequestType.GetAccount ||
+      requestForStore.dappRequest.type === DappRequestType.GetAccountRequest)
   ) {
     yield* put(confirmRequest(requestForStore))
   } else {
@@ -81,13 +101,16 @@ export function* handleRequest(requestParams: DappRequestSagaParams) {
   }
 }
 
-export function* sendTransaction(
-  transactionRequest: ethers.providers.TransactionRequest,
-  account: Account,
-  requestId: string,
-  senderTabId: number
-) {
-  const chainId = yield* call(getChainIdForDapp, senderTabId, account.address)
+export function* sendTransaction({
+  dappRequest,
+  account,
+  senderTabId,
+  dappUrl,
+}: DappRequestStoreItem) {
+  const transactionRequest = (dappRequest as SendTransactionRequest).transaction
+  const requestId = dappRequest.requestId
+
+  const chainId = yield* select(selectChainByDappAndWallet(account.address, dappUrl))
   // Sign and send the transaction
   const provider = yield* call(getProvider, chainId)
   const signerManager = yield* call(getSignerManager)
@@ -113,20 +136,18 @@ export function* sendTransaction(
  * @param requestId
  * @param senderTabId
  */
-export function* getAccount(requestId: string, senderTabId: number) {
+export function* getAccount(requestId: string, senderTabId: number, dappUrl: string | undefined) {
   const activeAccount = yield* appSelect(selectActiveAccount)
   if (!activeAccount) {
     throw new Error('No active account')
   }
-  const tab = yield* call(chrome.tabs.get, senderTabId)
-  const dappUrl = extractBaseUrl(tab.url)
-  let chainForWalletAndDapp = ChainId.Mainnet // Default to mainnet
-  if (dappUrl) {
-    chainForWalletAndDapp = yield* select(
-      selectChainByDappAndWallet(activeAccount.address, dappUrl)
-    )
-  }
+
+  const chainForWalletAndDapp = yield* select(
+    selectChainByDappAndWallet(activeAccount.address, dappUrl)
+  )
+
   const provider = yield* call(getProvider, chainForWalletAndDapp)
+  yield* call(saveLastChainForDapp, chainForWalletAndDapp, senderTabId)
 
   const response: AccountResponse = {
     type: DappResponseType.AccountResponse,
@@ -219,52 +240,6 @@ async function onTransactionSentToChain(
   }, 15000)
 }
 
-// TODO: Update this when we have proper active accounts
-export function getCurrentAccount(accounts: Record<string, Account>): Account {
-  const accountKeys = Object.keys(accounts) || []
-
-  if (accountKeys.length === 0) {
-    throw new Error('No accounts found')
-  }
-  const first = accountKeys[0]
-  if (!first) {
-    throw new Error('No accounts found')
-  }
-
-  const account = accounts[first]
-  if (!account) {
-    throw new Error('No accounts found')
-  }
-  return account
-}
-
-export function* getChainIdForDapp(senderTabId: number, walletAddress: Address) {
-  const tab = yield* call(chrome.tabs.get, senderTabId)
-  const dappUrl = extractBaseUrl(tab.url) || DEFAULT_DAPP_URL
-  const chainId = yield* select(selectChainByDappAndWallet(walletAddress, dappUrl))
-  return chainId
-}
-
-export function* connect(requestId: string, chainId: string, senderTabId: number) {
-  // get chain id enum
-  const chainIdEnum = toSupportedChainId(chainId)
-  if (!chainIdEnum) {
-    throw new Error(`Invalid chainId: ${chainId}`)
-  }
-
-  // get provider
-  const provider = yield* call(getProvider, chainIdEnum)
-  yield* call(saveLastChainForDapp, chainIdEnum, senderTabId)
-
-  // prepare dapp response
-  const response: ConnectResponse = {
-    type: DappResponseType.ConnectResponse,
-    requestId,
-    providerUrl: provider.connection.url,
-  }
-  yield* call(sendMessageToSpecificTab, response, senderTabId)
-}
-
 export function* changeChain(requestId: string, chainId: string, senderTabId: number) {
   const chainIdEnum = toSupportedChainId(chainId)
   if (!chainIdEnum) {
@@ -284,14 +259,17 @@ export function* changeChain(requestId: string, chainId: string, senderTabId: nu
   yield* call(sendMessageToSpecificTab, response, senderTabId)
 }
 
-export function* handleSignMessage(
-  account: Account,
-  requestId: string,
-  messageHex: string,
-  senderTabId: number
-) {
+export function* handleSignMessage({
+  dappRequest,
+  account,
+  senderTabId,
+  dappUrl,
+}: DappRequestStoreItem) {
+  const requestId = dappRequest.requestId
+  const messageHex = (dappRequest as SignMessageRequest).messageHex
+
   // Get currently selected chain id
-  const chainId = yield* call(getChainIdForDapp, senderTabId, account.address)
+  const chainId = yield* select(selectChainByDappAndWallet(account.address, dappUrl))
   const signerManager = yield* call(getSignerManager)
   const provider = yield* call(getProvider, chainId)
 
@@ -308,14 +286,17 @@ export function* handleSignMessage(
   yield* call(sendMessageToSpecificTab, response, senderTabId)
 }
 
-export function* handleSignTypedData(
-  account: Account,
-  requestId: string,
-  typedData: string,
-  senderTabId: number
-) {
+export function* handleSignTypedData({
+  dappRequest,
+  account,
+  senderTabId,
+  dappUrl,
+}: DappRequestStoreItem) {
+  const requestId = dappRequest.requestId
+  const typedData = (dappRequest as SignTypedDataRequest).typedData
+
   // Get currently selected chain id
-  const chainId = yield* call(getChainIdForDapp, senderTabId, account.address)
+  const chainId = yield* select(selectChainByDappAndWallet(account.address, dappUrl))
   const signerManager = yield* call(getSignerManager)
   const provider = yield* call(getProvider, chainId)
 
@@ -344,7 +325,7 @@ function* saveLastChainForDapp(chainId: ChainId, senderTabId?: number) {
 
   if (dappUrl) {
     yield* put(
-      saveDappChain({
+      saveDappConnection({
         chainId,
         dappUrl,
         walletAddress: activeWalletAddress,

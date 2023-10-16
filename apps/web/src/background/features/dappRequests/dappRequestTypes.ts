@@ -18,7 +18,6 @@ export interface BaseDappResponse extends Message {
 }
 
 export enum DappRequestType {
-  Connect = 'Connect',
   ChangeChain = 'ChangeChain',
   GetAccount = 'GetAccount',
   GetAccountRequest = 'GetAccountRequest',
@@ -31,7 +30,6 @@ export enum DappRequestType {
 export enum DappResponseType {
   AccountResponse = 'AccountResponse',
   ChainChangeResponse = 'ChainChangeResponse',
-  ConnectResponse = 'ConnectResponse',
   SignTransactionResponse = 'SignTransactionResponse',
   SendTransactionResponse = 'SendTransactionResponse',
   SignTypedDataResponse = 'SignTypedDataResponse',
@@ -61,10 +59,6 @@ export interface SendTransactionRequest extends BaseDappRequest {
   transaction: ethers.providers.TransactionRequest
 }
 
-export interface ConnectRequest extends BaseDappRequest {
-  type: DappRequestType.Connect
-  chainId: string
-}
 export interface ChangeChainRequest extends BaseDappRequest {
   type: DappRequestType.ChangeChain
   chainId: string
@@ -98,11 +92,6 @@ export interface SendTransactionResponse extends BaseDappResponse {
 
 export interface TransactionRejectedResponse extends BaseDappResponse {
   type: DappResponseType.TransactionRejected
-}
-
-export interface ConnectResponse extends BaseDappResponse {
-  type: DappResponseType.ConnectResponse
-  providerUrl: string
 }
 
 export interface ChangeChainResponse extends BaseDappResponse {

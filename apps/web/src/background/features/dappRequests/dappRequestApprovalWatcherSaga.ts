@@ -1,18 +1,10 @@
 import { sendRejectionToContentScript } from 'src/background/utils/messageUtils'
 import { call, put, take } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
-import {
-  ChangeChainRequest,
-  ConnectRequest,
-  DappRequestType,
-  SendTransactionRequest,
-  SignMessageRequest,
-  SignTypedDataRequest,
-} from './dappRequestTypes'
+import { ChangeChainRequest, DappRequestType } from './dappRequestTypes'
 import {
   changeChain,
   confirmRequest,
-  connect,
   getAccount,
   handleSignMessage,
   handleSignTypedData,
@@ -36,17 +28,16 @@ export function* dappRequestApprovalWatcher() {
 
         switch (request.dappRequest.type) {
           case DappRequestType.SendTransaction:
-            yield* call(
-              sendTransaction,
-              (request.dappRequest as SendTransactionRequest).transaction,
-              request.account,
-              request.dappRequest.requestId,
-              request.senderTabId
-            )
+            yield* call(sendTransaction, request)
             break
           case DappRequestType.GetAccount:
           case DappRequestType.GetAccountRequest:
-            yield* call(getAccount, request.dappRequest.requestId, request.senderTabId)
+            yield* call(
+              getAccount,
+              request.dappRequest.requestId,
+              request.senderTabId,
+              request.dappUrl
+            )
             break
           case DappRequestType.ChangeChain:
             yield* call(
@@ -56,31 +47,11 @@ export function* dappRequestApprovalWatcher() {
               request.senderTabId
             )
             break
-          case DappRequestType.Connect:
-            yield* call(
-              connect,
-              request.dappRequest.requestId,
-              (request.dappRequest as ConnectRequest).chainId,
-              request.senderTabId
-            )
-            break
           case DappRequestType.SignMessage:
-            yield* call(
-              handleSignMessage,
-              request.account,
-              request.dappRequest.requestId,
-              (request.dappRequest as SignMessageRequest).messageHex,
-              request.senderTabId
-            )
+            yield* call(handleSignMessage, request)
             break
           case DappRequestType.SignTypedData:
-            yield* call(
-              handleSignTypedData,
-              request.account,
-              request.dappRequest.requestId,
-              (request.dappRequest as SignTypedDataRequest).typedData,
-              request.senderTabId
-            )
+            yield* call(handleSignTypedData, request)
             break
           // Add more request types here
         }

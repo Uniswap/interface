@@ -9,10 +9,13 @@ export const selectChainByDappAndWallet = (
 ): Selector<WebState, ChainId> =>
   createSelector(
     (state: WebState) => state.dapp[dappUrl ?? ''],
-    (dappPreferences) => {
-      if (!dappPreferences) {
-        return ChainId.Mainnet
-      }
-      return dappPreferences[wallet]?.lastChainId ?? ChainId.Mainnet
-    }
+    (dappPreferences) => dappPreferences?.[wallet]?.lastChainId ?? ChainId.Mainnet
+  )
+
+export const selectWalletsByDapp = (
+  dappUrl: string | undefined
+): Selector<WebState, Set<Address>> =>
+  createSelector(
+    (state: WebState) => state.dapp[dappUrl ?? ''],
+    (dappWallets) => new Set(Object.keys(dappWallets || {}))
   )

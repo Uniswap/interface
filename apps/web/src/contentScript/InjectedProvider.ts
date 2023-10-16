@@ -10,8 +10,6 @@ import {
   BaseDappResponse,
   ChangeChainRequest,
   ChangeChainResponse,
-  ConnectRequest,
-  ConnectResponse,
   DappRequestType,
   DappResponseType,
   GetAccountRequest,
@@ -88,26 +86,21 @@ const messages = {
   },
 }
 
-export interface BaseProviderState {
-  isConnected: boolean
-}
-
 export class InjectedProvider extends EventEmitter {
-  state!: BaseProviderState
-
-  protected static _defaultState: BaseProviderState = {
-    isConnected: false,
-  }
-
   /**
    * The chain ID of the currently connected Ethereum chain.
    */
-  chainId?: string
+  private chainId?: string
 
   /**
-   * The user's currently selected Ethereum address.
+   * The user's currently connected Ethereum addresses.
    */
-  publicKey: string | null
+  private publicKeys: string[] | null
+
+  /**
+   * Ethereum JSON RPC provider.
+   */
+  private provider?: ethers.providers.JsonRpcProvider
 
   /**
    * Boolean indicating that the provider is Uniswap Wallet.
@@ -119,21 +112,12 @@ export class InjectedProvider extends EventEmitter {
    */
   isMetaMask: boolean
 
-  /**
-   * Ethereum JSON RPC provider.
-   */
-  provider?: ethers.providers.JsonRpcProvider
-
   constructor() {
     super()
 
-    this.setState({
-      ...InjectedProvider._defaultState,
-    })
-
     this.isMetaMask = true
     this.isUniswapWallet = true
-    this.publicKey = null
+    this.publicKeys = null
 
     this.initExtensionToDappOneWayListener()
     this.initExtensionToDappRoundtripListener()
@@ -142,7 +126,7 @@ export class InjectedProvider extends EventEmitter {
   /**
    * Initialize a listener for messages posted from the Uniswap Wallet extension.
    */
-  initExtensionToDappOneWayListener = (): void => {
+  private initExtensionToDappOneWayListener = (): void => {
     const handleDappRequest = async (event: MessageEvent<BaseExtensionRequest>): Promise<void> => {
       const messageData = event.data
       switch (messageData?.type) {
@@ -168,14 +152,14 @@ export class InjectedProvider extends EventEmitter {
   /**
    * Initialize a listener for messages posted from the Uniswap Wallet extension that also require a response
    */
-  initExtensionToDappRoundtripListener = (): void => {
+  private initExtensionToDappRoundtripListener = (): void => {
     const handleRoundTripRequest = (event: MessageEvent<BaseExtensionRequest>): void => {
       const request = event.data as BaseExtensionRequest
       switch (request?.type) {
         case ExtensionRequestType.GetConnectionStatus: {
           const response = {
             type: DappToExtensionRequestType.ConnectionStatus,
-            connected: this.publicKey !== null,
+            connected: this.publicKeys !== null,
           }
 
           window.postMessage(response)
@@ -188,25 +172,17 @@ export class InjectedProvider extends EventEmitter {
     window.addEventListener('message', handleRoundTripRequest)
   }
 
-  setState = (updatedState: BaseProviderState): void => {
-    this.state = updatedState
-    Object.freeze(this.state)
-  }
-
   //
   // Public methods
   //
 
   /**
    * Returns whether the provider can process RPC requests. (does not imply wallet is connected to dApp)
+   * Returns true if the provider is connected to the current chain. If the provider isn't connected,
+   * the page must be reloaded to re-establish the connection.
    */
   isConnected = (): boolean => {
-    return this.state.isConnected
-  }
-
-  // Deprecated EIP-1193 method
-  enable = async (): Promise<unknown> => {
-    return this.request({ method: 'eth_requestAccounts' })
+    return !!this.publicKeys
   }
 
   // Deprecated EIP-1193 method
@@ -327,71 +303,13 @@ export class InjectedProvider extends EventEmitter {
   }
 
   /**
-   * Update local state and emit required event for connect.
-   * Not used by Uniswap dApp
-   * https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect
-   */
-  handleConnect = async (chainId: string): Promise<void> => {
-    this.chainId = chainId
-    if (!this.state.isConnected) {
-      try {
-        const handleConnectRequest: ConnectRequest = {
-          type: DappRequestType.Connect,
-          requestId: uuidv4(),
-          chainId,
-        }
-        const { providerUrl } = await sendRequestAsync<ConnectResponse>(
-          handleConnectRequest,
-          DappResponseType.ConnectResponse
-        )
-
-        this.provider = new ethers.providers.JsonRpcProvider(providerUrl)
-        this.setState({ ...this.state, isConnected: true })
-      } catch (error) {
-        throw new Error('Failed to connect to wallet')
-      }
-    }
-    this.emit('connect', { chainId } as ProviderConnectInfo)
-  }
-
-  /**
-   * Update local state and emit required event for chain change.
-   */
-  handleChainChanged = async (chainId: string): Promise<void> => {
-    const changeChainRequest: ChangeChainRequest = {
-      type: DappRequestType.ChangeChain,
-      requestId: uuidv4(),
-      chainId,
-    }
-
-    const { chainId: newChainId, providerUrl } = await sendRequestAsync<ChangeChainResponse>(
-      changeChainRequest,
-      DappResponseType.ChainChangeResponse
-    )
-
-    this.provider = new ethers.providers.JsonRpcProvider(providerUrl)
-    this.chainId = newChainId
-    logger.info('UniswapInjectedProvider', 'chain changed', newChainId)
-
-    // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#chainchanged
-    this.emit('chainChanged', chainId)
-  }
-
-  /**
-   * Emit the required event for a change of accounts.
-   */
-  handleAccountsChanged = async (accounts: unknown[]): Promise<void> => {
-    this.emit('accountsChanged', accounts)
-  }
-
-  /**
    * Handle eth_accounts requests. This is called when a dapp first loads.
    * If the user has already connected then this will automatically reconnect them.
    */
-  handleEthAccounts = async (): Promise<string[]> => {
+  private handleEthAccounts = async (): Promise<string[]> => {
     // Send request to the RPC API.
-    if (this.publicKey) {
-      return [this.publicKey]
+    if (this.publicKeys) {
+      return this.publicKeys
     }
 
     const getAccountRequest: GetAccountRequest = {
@@ -405,10 +323,10 @@ export class InjectedProvider extends EventEmitter {
    * Handle eth_requestAccounts requests.
    * The same as handleEthAccounts but it requires user approval for the first connection.
    */
-  handleEthRequestAccounts = async (): Promise<string[]> => {
+  private handleEthRequestAccounts = async (): Promise<string[]> => {
     // Send request to the RPC API.
-    if (this.publicKey) {
-      return [this.publicKey]
+    if (this.publicKeys) {
+      return this.publicKeys
     }
 
     const getAccountRequest: GetAccountRequest = {
@@ -420,26 +338,29 @@ export class InjectedProvider extends EventEmitter {
 
   private _handleEthAccounts = async (request: GetAccountRequest): Promise<string[]> => {
     // Send request to the RPC API.
-    const { accountAddress, chainId, providerUrl } = await sendRequestAsync<AccountResponse>(
+    const response = await sendRequestAsync<AccountResponse | TransactionRejectedResponse>(
       request,
       DappResponseType.AccountResponse
     )
-    this.publicKey = accountAddress
 
-    // TODO: Remove this once we have a better way to handle the connection state.
-    this.setState({ ...this.state, isConnected: true })
+    if (response.type === DappResponseType.TransactionRejected) {
+      throw new Error('Transaction rejected')
+    }
+
+    const { accountAddress, chainId, providerUrl } = response
+    this.publicKeys = [accountAddress, ...(this.publicKeys || [])]
     this.chainId = chainId
     this.provider = new ethers.providers.JsonRpcProvider(providerUrl)
     this.emit('connect', { chainId } as ProviderConnectInfo)
 
-    return [this.publicKey]
+    return this.publicKeys
   }
 
   /**
    * Handle eth_sign, eth_signTypedData, personal_sign RPC requests.
    */
-  handleEthSignMessage = async (messageHex: string): Promise<string | undefined> => {
-    if (!this.publicKey) {
+  private handleEthSignMessage = async (messageHex: string): Promise<string | undefined> => {
+    if (!this.publicKeys) {
       throw new Error('Wallet not connected')
     }
 
@@ -459,8 +380,8 @@ export class InjectedProvider extends EventEmitter {
   /**
    * Handle eth_signTransaction RPC requests.
    */
-  handleEthSignTransaction = async (transaction: unknown): Promise<string | undefined> => {
-    if (!this.publicKey) {
+  private handleEthSignTransaction = async (transaction: unknown): Promise<string | undefined> => {
+    if (!this.publicKeys) {
       throw new Error('Wallet not connected')
     }
 
@@ -482,8 +403,8 @@ export class InjectedProvider extends EventEmitter {
    * // TODO: Unit tests for provider injection methods
    * @returns transaction hash
    */
-  handleEthSendTransaction = async (transaction: unknown): Promise<string | undefined> => {
-    if (!this.publicKey) {
+  private handleEthSendTransaction = async (transaction: unknown): Promise<string | undefined> => {
+    if (!this.publicKeys) {
       throw new Error('Wallet not connected')
     }
 
@@ -498,16 +419,17 @@ export class InjectedProvider extends EventEmitter {
       DappResponseType.SendTransactionResponse
     )
 
+    // TODO(EXT-341): make sure error handling is correct and in accordance with EIP-1193
     if (response.type === DappResponseType.TransactionRejected) {
       throw new Error('Transaction rejected')
     }
     return response?.transaction?.hash
   }
 
-  handleWalletSwitchEthereumChain = async (
+  private handleWalletSwitchEthereumChain = async (
     switchRequest: SwitchEthereumChainParameter
   ): Promise<null> => {
-    if (!this.publicKey) {
+    if (!this.publicKeys) {
       throw new Error('Wallet not connected')
     }
 
@@ -534,8 +456,8 @@ export class InjectedProvider extends EventEmitter {
    * @param typedData typed data to sign
    * @returns
    */
-  handleEthSignTypedData = async (_address: any, typedData: any): Promise<string> => {
-    if (!this.publicKey) {
+  private handleEthSignTypedData = async (_address: any, typedData: any): Promise<string> => {
+    if (!this.publicKeys) {
       throw new Error('Wallet not connected')
     }
 
@@ -553,30 +475,11 @@ export class InjectedProvider extends EventEmitter {
     return response.signature
   }
 
-  handleDisconnectAccount = async (): Promise<void> => {
-    this.publicKey = null
+  private handleDisconnectAccount = async (): Promise<void> => {
+    this.publicKeys = null
     this.emit('accountsChanged', [])
-  }
 
-  /**
-   * Handle case where all chains are disconnected from provider
-   */
-  _handleDisconnected = async (): Promise<void> => {
-    if (this.isConnected()) {
-      // Reset public state
-      this.publicKey = null
-      // Reset private state
-
-      this.setState({
-        ...InjectedProvider._defaultState,
-      })
-    }
-
-    // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#disconnect
-    this.emit('disconnect', {
-      code: 4900,
-      message: 'User disconnected',
-    } as ProviderRpcError)
+    // TODO(EXT-347): emit a disconnect event and ensure this is being handled correctly
   }
 }
 
