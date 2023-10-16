@@ -3,12 +3,16 @@ import { Navigate, useParams } from 'react-router-dom'
 import Explore, { ExploreTab } from '.'
 
 // useParams struggles to distinguish between /explore/:chainId and /explore/:tab
-export function useExploreParams() {
+export function useExploreParams(): {
+  tab?: ExploreTab
+  chainName?: string
+  tokenAddress?: string
+} {
   const { tab, chainName, tokenAddress } = useParams<{ tab: string; chainName: string; tokenAddress: string }>()
   const exploreTabs = Object.values(ExploreTab)
   if (tab && !chainName && exploreTabs.includes(tab as ExploreTab)) {
     // /explore/:tab
-    return { tab, chainName: undefined, tokenAddress }
+    return { tab: tab as ExploreTab, chainName: undefined, tokenAddress }
   } else if (tab && !chainName) {
     // /explore/:chainName
     return { tab: ExploreTab.Tokens, chainName: tab, tokenAddress }
@@ -17,7 +21,7 @@ export function useExploreParams() {
     return { tab: ExploreTab.Tokens, chainName: undefined, tokenAddress: undefined }
   } else {
     // /explore/:tab/:chainName
-    return { tab, chainName, tokenAddress }
+    return { tab: tab as ExploreTab, chainName, tokenAddress }
   }
 }
 export default function RedirectExplore() {
