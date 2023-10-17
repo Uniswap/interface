@@ -12,8 +12,8 @@ Array [
     "enabled": [Function],
     "getElement": [Function],
     "nestedPaths": Array [
-      ":chainName",
       ":tab",
+      ":chainName",
     ],
     "path": "/explore",
   },
@@ -34,10 +34,14 @@ Array [
   Object {
     "enabled": [Function],
     "getElement": [Function],
-    "nestedPaths": Array [
-      ":chainName",
-    ],
+    "nestedPaths": Array [],
     "path": "/tokens",
+  },
+  Object {
+    "enabled": [Function],
+    "getElement": [Function],
+    "nestedPaths": Array [],
+    "path": "/tokens/:chainName",
   },
   Object {
     "enabled": [Function],
