@@ -118,6 +118,9 @@ export class InjectedProvider extends EventEmitter {
     this.isUniswapWallet = true
     this.publicKeys = null
 
+    // TODO(EXT-346): pass in an initial state here that's read from local storage so that the dapp doesn't have to wait for a round trip call to initialize
+    // When that is done emit a 'connected' event
+
     this.initExtensionToDappOneWayListener()
   }
 
@@ -158,6 +161,11 @@ export class InjectedProvider extends EventEmitter {
    */
   isConnected = (): boolean => {
     return !!this.publicKeys
+  }
+
+  // Deprecated EIP-1193 method
+  enable = async (): Promise<unknown> => {
+    return this.request({ method: 'eth_requestAccounts' })
   }
 
   // Deprecated EIP-1193 method
@@ -259,6 +267,7 @@ export class InjectedProvider extends EventEmitter {
     const func = functionMap[method]
     if (func === undefined) {
       throw ethErrors.rpc.invalidRequest({
+        // TODO(EXT-341): this should reject with 4200
         message: messages.errors.invalidRequestMethod(),
         data: args,
       })
@@ -280,6 +289,8 @@ export class InjectedProvider extends EventEmitter {
   /**
    * Handle eth_accounts requests. This is called when a dapp first loads.
    * If the user has already connected then this will automatically reconnect them.
+   * TODO(EXT-346): This could be optimized to just read info from this file without
+   * doing a roundtrip to the bg thread.
    */
   private handleEthAccounts = async (): Promise<string[]> => {
     // Send request to the RPC API.
@@ -453,8 +464,6 @@ export class InjectedProvider extends EventEmitter {
   private handleDisconnectAccount = async (): Promise<void> => {
     this.publicKeys = null
     this.emit('accountsChanged', [])
-
-    // TODO(EXT-347): emit a disconnect event and ensure this is being handled correctly
   }
 }
 

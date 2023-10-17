@@ -5,7 +5,7 @@ import {
   selectChainByDappAndWallet,
   selectWalletsByDapp,
 } from 'src/background/features/dapp/selectors'
-import { saveDappConnection } from 'src/background/features/dapp/slice'
+import { removeDappConnection, saveDappConnection } from 'src/background/features/dapp/slice'
 import { appSelect } from 'src/background/store'
 import { sendMessageToActiveTab, sendMessageToSpecificTab } from 'src/background/utils/messageUtils'
 import {
@@ -70,6 +70,7 @@ export function* dappRequestWatcher() {
 export function* handleRequest(requestParams: DappRequestSagaParams) {
   const activeAccount = yield* appSelect(selectActiveAccount)
   if (!activeAccount) {
+    // TODO(EXT-341): reject with error code 4900 (disconnected)
     throw new Error('No active account')
   }
 
@@ -77,6 +78,7 @@ export function* handleRequest(requestParams: DappRequestSagaParams) {
   const dappUrl = extractBaseUrl(tab.url)
   const connectedWallets = yield* select(selectWalletsByDapp(dappUrl))
 
+  // TODO(EXT-341): it also has to be connected to the correct chain. If its not then reject with error 4901
   const isConnectedToDapp = connectedWallets.has(activeAccount.address)
 
   const requestForStore: DappRequestStoreItem = {
@@ -93,6 +95,7 @@ export function* handleRequest(requestParams: DappRequestSagaParams) {
     !isConnectedToDapp &&
     requestForStore.dappRequest.type !== DappRequestType.GetAccountRequest
   ) {
+    // TODO(EXT-341): reject with error code 4100 (unauthorized)
     yield* put(rejectRequest(requestForStore))
   } else if (
     isConnectedToDapp &&
@@ -341,17 +344,16 @@ function* saveLastChainForDapp(chainId: ChainId, senderTabId?: number) {
 }
 
 export const saveChainAction = createAction<{ chainId: ChainId }>(`dappRequest/saveChainAction`)
-export const disconnectAction = createAction(`extensionRequest/disconnectAction`)
 
 export function* extensionRequestWatcher() {
   while (true) {
-    const { payload, type } = yield* take([saveChainAction, disconnectAction])
+    const { payload, type } = yield* take([saveChainAction, removeDappConnection])
 
     switch (type) {
       case saveChainAction.type:
         yield* call(changeChainFromExtension, payload.chainId)
         break
-      case disconnectAction.type:
+      case removeDappConnection.type:
         yield* call(disconnectFromExtension)
         break
     }

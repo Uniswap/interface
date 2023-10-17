@@ -56,6 +56,7 @@ export function* dappRequestApprovalWatcher() {
           // Add more request types here
         }
       } else if (type === rejectRequest.type) {
+        // TODO(EXT-341): if the user rejects the request the error type should be 4001
         logger.info('dappRequestApprovalWatcher', 'rejectRequest', JSON.stringify(request))
         yield* call(
           sendRejectionToContentScript,

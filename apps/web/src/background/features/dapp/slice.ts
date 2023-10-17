@@ -31,9 +31,22 @@ const slice = createSlice({
         lastChainId: chainId,
       }
     },
+    removeDappConnection(
+      state,
+      action: PayloadAction<{ dappUrl: string; walletAddress: Address }>
+    ) {
+      const { dappUrl, walletAddress } = action.payload
+
+      if (state[dappUrl]?.[walletAddress]) {
+        delete state[dappUrl]?.[walletAddress]
+        if (!Object.keys(state[dappUrl] || {}).length) {
+          delete state[dappUrl]
+        }
+      }
+    },
   },
 })
 
-export const { saveDappConnection } = slice.actions
+export const { saveDappConnection, removeDappConnection } = slice.actions
 
 export const dappReducer = slice.reducer

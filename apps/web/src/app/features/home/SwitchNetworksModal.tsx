@@ -1,6 +1,7 @@
 import { useDappContext } from 'src/background/features/dapp/hooks'
 import { selectChainByDappAndWallet } from 'src/background/features/dapp/selectors'
-import { disconnectAction, saveChainAction } from 'src/background/features/dappRequests/saga'
+import { removeDappConnection } from 'src/background/features/dapp/slice'
+import { saveChainAction } from 'src/background/features/dappRequests/saga'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { Button, Circle, Flex, getTokenValue, Icons, Popover, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -19,7 +20,7 @@ export function SwitchNetworksModal(): JSX.Element {
   }
 
   const onDisconnect = async (): Promise<void> => {
-    await dispatch(disconnectAction())
+    await dispatch(removeDappConnection({ dappUrl, walletAddress: activeWalletAddress }))
   }
 
   return (
