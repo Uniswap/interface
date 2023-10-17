@@ -747,7 +747,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
             Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
             <a
               class="c10"
-              href="https://uniswap.org/docs/v2/protocol-overview/fees/"
+              href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -2160,7 +2160,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
             <a
               class="c10"
-              href="https://uniswap.org/docs/v2/protocol-overview/fees/"
+              href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -3827,7 +3827,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
             <a
               class="c10"
-              href="https://uniswap.org/docs/v2/protocol-overview/fees/"
+              href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -5494,7 +5494,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
             <a
               class="c10"
-              href="https://uniswap.org/docs/v2/protocol-overview/fees/"
+              href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -7369,7 +7369,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
             <a
               class="c10"
-              href="https://uniswap.org/docs/v2/protocol-overview/fees/"
+              href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -9244,7 +9244,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
             <a
               class="c10"
-              href="https://uniswap.org/docs/v2/protocol-overview/fees/"
+              href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
               rel="noopener noreferrer"
               target="_blank"
             >
