@@ -96,6 +96,7 @@ export const MATIC_MAINNET = new Token(
   'MATIC',
   'Polygon Matic'
 )
+const MATIC_POLYGON = new Token(ChainId.POLYGON, '0x0000000000000000000000000000000000001010', 18, 'MATIC', 'Matic')
 export const DAI_POLYGON = new Token(
   ChainId.POLYGON,
   '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
@@ -147,7 +148,13 @@ export const WBTC_OPTIMISM = new Token(
   'WBTC',
   'Wrapped BTC'
 )
-
+const MATIC_POLYGON_MUMBAI = new Token(
+  ChainId.POLYGON_MUMBAI,
+  '0x0000000000000000000000000000000000001010',
+  18,
+  'MATIC',
+  'Matic'
+)
 export const WETH_POLYGON_MUMBAI = new Token(
   ChainId.POLYGON_MUMBAI,
   '0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa',
@@ -357,21 +364,14 @@ export function isPolygon(chainId: number): chainId is ChainId.POLYGON | ChainId
   return chainId === ChainId.POLYGON_MUMBAI || chainId === ChainId.POLYGON
 }
 
-class PolygonNativeCurrency extends NativeCurrency {
-  equals(other: Currency): boolean {
-    return other.isNative && other.chainId === this.chainId
-  }
-
-  get wrapped(): Token {
-    if (!isPolygon(this.chainId)) throw new Error('Not matic')
-    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
-    invariant(wrapped instanceof Token)
-    return wrapped
-  }
-
-  public constructor(chainId: number) {
-    if (!isPolygon(chainId)) throw new Error('Not polygon')
-    super(chainId, 18, 'MATIC', 'Matic')
+function getPolygonNativeCurrency(chainId: number) {
+  switch (chainId) {
+    case ChainId.POLYGON:
+      return MATIC_POLYGON
+    case ChainId.POLYGON_MUMBAI:
+      return MATIC_POLYGON_MUMBAI
+    default:
+      throw new Error('Not polygon')
   }
 }
 
@@ -438,7 +438,7 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
   if (cachedNativeCurrency[chainId]) return cachedNativeCurrency[chainId]
   let nativeCurrency: NativeCurrency | Token
   if (isPolygon(chainId)) {
-    nativeCurrency = new PolygonNativeCurrency(chainId)
+    nativeCurrency = getPolygonNativeCurrency(chainId)
   } else if (isCelo(chainId)) {
     nativeCurrency = getCeloNativeCurrency(chainId)
   } else if (isBsc(chainId)) {
