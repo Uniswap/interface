@@ -1,4 +1,5 @@
 import Badge from 'components/Badge'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import {
   BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS,
@@ -91,10 +92,6 @@ const NetworkLabel = styled.div`
   gap: 8px;
   align-items: center;
 `
-const Logo = styled.img`
-  height: 20px;
-  width: 20px;
-`
 const CheckContainer = styled.div`
   display: flex;
   flex-direction: flex-end;
@@ -118,10 +115,10 @@ export default function NetworkFilter() {
   useOnClickOutside(node, open ? toggleMenu : undefined)
   const navigate = useNavigate()
 
-  const { chainName } = useParams<{ chainName?: string }>()
-  const currentChainName = validateUrlChainParam(chainName)
+  const currentChainName = validateUrlChainParam(useParams().chainName)
+  const chainId = supportedChainIdFromGQLChain(currentChainName)
 
-  const chainInfo = getChainInfo(supportedChainIdFromGQLChain(currentChainName))
+  const chainInfo = getChainInfo(chainId)
 
   return (
     <StyledMenu ref={node}>
@@ -133,7 +130,7 @@ export default function NetworkFilter() {
       >
         <StyledMenuContent>
           <NetworkLabel>
-            <Logo src={chainInfo.logoUrl} /> {chainInfo.label}
+            <ChainLogo chainId={chainId} size={20} /> {chainInfo.label}
           </NetworkLabel>
           <Chevron open={open}>
             {open ? (
@@ -147,7 +144,8 @@ export default function NetworkFilter() {
       {open && (
         <MenuTimeFlyout>
           {BACKEND_SUPPORTED_CHAINS.map((network) => {
-            const chainInfo = getChainInfo(supportedChainIdFromGQLChain(network))
+            const chainId = supportedChainIdFromGQLChain(network)
+            const chainInfo = getChainInfo(chainId)
             return (
               <InternalLinkMenuItem
                 key={network}
@@ -158,8 +156,7 @@ export default function NetworkFilter() {
                 }}
               >
                 <NetworkLabel>
-                  <Logo src={chainInfo.logoUrl} />
-                  {chainInfo.label}
+                  <ChainLogo chainId={chainId} size={20} /> {chainInfo.label}
                 </NetworkLabel>
                 {network === currentChainName && (
                   <CheckContainer>
@@ -178,8 +175,7 @@ export default function NetworkFilter() {
                 disabled
               >
                 <NetworkLabel>
-                  <Logo src={chainInfo.logoUrl} />
-                  {chainInfo.label}
+                  <ChainLogo chainId={network} size={20} /> {chainInfo.label}
                 </NetworkLabel>
                 <Tag>Coming soon</Tag>
               </InternalLinkMenuItem>

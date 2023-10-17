@@ -188,7 +188,7 @@ describe('formatNumber', () => {
     expect(formatNumber({ input: 1234567.891, type: NumberType.FiatGasPrice })).toBe('$1.23M')
     expect(formatNumber({ input: 18.448, type: NumberType.FiatGasPrice })).toBe('$18.45')
     expect(formatNumber({ input: 0.0099, type: NumberType.FiatGasPrice })).toBe('<$0.01')
-    expect(formatNumber({ input: 0, type: NumberType.FiatGasPrice })).toBe('$0.00')
+    expect(formatNumber({ input: 0, type: NumberType.FiatGasPrice })).toBe('$0')
   })
 
   it('formats gas prices correctly with portugese locale and thai baht currency', () => {
@@ -199,7 +199,7 @@ describe('formatNumber', () => {
     expect(formatNumber({ input: 1234567.891, type: NumberType.FiatGasPrice })).toBe('฿\xa01,23\xa0mi')
     expect(formatNumber({ input: 18.448, type: NumberType.FiatGasPrice })).toBe('฿\xa018,45')
     expect(formatNumber({ input: 0.0099, type: NumberType.FiatGasPrice })).toBe('<฿\xa00,01')
-    expect(formatNumber({ input: 0, type: NumberType.FiatGasPrice })).toBe('฿\xa00,00')
+    expect(formatNumber({ input: 0, type: NumberType.FiatGasPrice })).toBe('฿\xa00')
   })
 
   it('formats USD token quantities prices correctly', () => {
@@ -402,25 +402,25 @@ describe('formatSlippage', () => {
     expect(formatSlippage(undefined)).toBe('-')
   })
 
-  it('correctly formats a percent with 3 significant digits', () => {
+  it('correctly formats a percent with no trailing digits', () => {
     const { formatSlippage } = renderHook(() => useFormatter()).result.current
 
     expect(formatSlippage(new Percent(1, 100000))).toBe('0.001%')
-    expect(formatSlippage(new Percent(1, 1000))).toBe('0.100%')
-    expect(formatSlippage(new Percent(1, 100))).toBe('1.000%')
-    expect(formatSlippage(new Percent(1, 10))).toBe('10.000%')
-    expect(formatSlippage(new Percent(1, 1))).toBe('100.000%')
+    expect(formatSlippage(new Percent(1, 1000))).toBe('0.1%')
+    expect(formatSlippage(new Percent(1, 100))).toBe('1%')
+    expect(formatSlippage(new Percent(1, 10))).toBe('10%')
+    expect(formatSlippage(new Percent(1, 1))).toBe('100%')
   })
 
-  it('correctly formats a percent with 3 significant digits with french locale', () => {
+  it('correctly formats a percent with french locale', () => {
     mocked(useActiveLocale).mockReturnValue('fr-FR')
     const { formatSlippage } = renderHook(() => useFormatter()).result.current
 
     expect(formatSlippage(new Percent(1, 100000))).toBe('0,001%')
-    expect(formatSlippage(new Percent(1, 1000))).toBe('0,100%')
-    expect(formatSlippage(new Percent(1, 100))).toBe('1,000%')
-    expect(formatSlippage(new Percent(1, 10))).toBe('10,000%')
-    expect(formatSlippage(new Percent(1, 1))).toBe('100,000%')
+    expect(formatSlippage(new Percent(1, 1000))).toBe('0,1%')
+    expect(formatSlippage(new Percent(1, 100))).toBe('1%')
+    expect(formatSlippage(new Percent(1, 10))).toBe('10%')
+    expect(formatSlippage(new Percent(1, 1))).toBe('100%')
   })
 })
 

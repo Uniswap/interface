@@ -117,7 +117,8 @@ export function gqlToCurrency(token: {
 }): Currency | undefined {
   const chainId = supportedChainIdFromGQLChain(token.chain)
   if (!chainId) return undefined
-  if (token.standard === TokenStandard.Native || !token.address) return nativeOnChain(chainId)
+  if (token.standard === TokenStandard.Native || token.address === 'NATIVE' || !token.address)
+    return nativeOnChain(chainId)
   else return new Token(chainId, token.address, token.decimals ?? 18, token.symbol, token.name)
 }
 

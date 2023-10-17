@@ -16,7 +16,6 @@ export enum TradeState {
 export enum QuoteMethod {
   ROUTING_API = 'ROUTING_API',
   QUICK_ROUTE = 'QUICK_ROUTE',
-  CLIENT_SIDE = 'CLIENT_SIDE',
   CLIENT_SIDE_FALLBACK = 'CLIENT_SIDE_FALLBACK', // If client-side was used after the routing-api call failed.
 }
 
@@ -27,7 +26,6 @@ export const INTERNAL_ROUTER_PREFERENCE_PRICE = 'price' as const
 export enum RouterPreference {
   X = 'uniswapx',
   API = 'api',
-  CLIENT = 'client',
 }
 
 export interface GetQuoteArgs {
@@ -52,6 +50,7 @@ export interface GetQuoteArgs {
   // temporary field indicating the user disabled UniswapX during the transition to the opt-out model
   userOptedOutOfUniswapX: boolean
   isUniswapXDefaultEnabled: boolean
+  sendPortionEnabled: boolean
   inputTax: Percent
   outputTax: Percent
 }
@@ -114,11 +113,11 @@ export interface ClassicQuoteData {
   blockNumber: string
   amount: string
   amountDecimals: string
-  gasPriceWei: string
-  gasUseEstimate: string
-  gasUseEstimateQuote: string
-  gasUseEstimateQuoteDecimals: string
-  gasUseEstimateUSD: string
+  gasPriceWei?: string
+  gasUseEstimate?: string
+  gasUseEstimateQuote?: string
+  gasUseEstimateQuoteDecimals?: string
+  gasUseEstimateUSD?: string
   methodParameters?: { calldata: string; value: string }
   quote: string
   quoteDecimals: string
@@ -126,19 +125,30 @@ export interface ClassicQuoteData {
   quoteGasAdjustedDecimals: string
   route: Array<(V3PoolInRoute | V2PoolInRoute)[]>
   routeString: string
+  portionBips?: number
+  portionRecipient?: string
+  portionAmount?: string
+  portionAmountDecimals?: string
+  quoteGasAndPortionAdjusted?: string
+  quoteGasAndPortionAdjustedDecimals?: string
+}
+
+export type URADutchOrderQuoteData = {
+  auctionPeriodSecs: number
+  deadlineBufferSecs: number
+  startTimeBufferSecs: number
+  orderInfo: DutchOrderInfoJSON
+  quoteId?: string
+  requestId?: string
+  slippageTolerance: string
+  portionBips?: number
+  portionRecipient?: string
+  portionAmount?: string
 }
 
 type URADutchOrderQuoteResponse = {
   routing: URAQuoteType.DUTCH_LIMIT
-  quote: {
-    auctionPeriodSecs: number
-    deadlineBufferSecs: number
-    startTimeBufferSecs: number
-    orderInfo: DutchOrderInfoJSON
-    quoteId?: string
-    requestId?: string
-    slippageTolerance: string
-  }
+  quote: URADutchOrderQuoteData
   allQuotes: Array<URAQuoteResponse>
 }
 type URAClassicQuoteResponse = {
@@ -181,6 +191,8 @@ export enum TradeFillType {
 export type ApproveInfo = { needsApprove: true; approveGasEstimateUSD: number } | { needsApprove: false }
 export type WrapInfo = { needsWrap: true; wrapGasEstimateUSD: number } | { needsWrap: false }
 
+export type SwapFeeInfo = { recipient: string; percent: Percent; amount: string /* raw amount of output token */ }
+
 export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   public readonly fillType = TradeFillType.Classic
   approveInfo: ApproveInfo
@@ -191,6 +203,7 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   quoteMethod: QuoteMethod
   inputTax: Percent
   outputTax: Percent
+  swapFee: SwapFeeInfo | undefined
 
   constructor({
     gasUseEstimateUSD,
@@ -201,6 +214,7 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     approveInfo,
     inputTax,
     outputTax,
+    swapFee,
     ...routes
   }: {
     gasUseEstimateUSD?: number
@@ -212,6 +226,7 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     approveInfo: ApproveInfo
     inputTax: Percent
     outputTax: Percent
+    swapFee?: SwapFeeInfo
     v2Routes: {
       routev2: V2Route<Currency, Currency>
       inputAmount: CurrencyAmount<Currency>
@@ -238,17 +253,33 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     this.approveInfo = approveInfo
     this.inputTax = inputTax
     this.outputTax = outputTax
+    this.swapFee = swapFee
+  }
+
+  public get executionPrice(): Price<Currency, Currency> {
+    if (this.tradeType === TradeType.EXACT_INPUT || !this.swapFee) return super.executionPrice
+
+    // Fix inaccurate price calculation for exact output trades
+    return new Price({ baseAmount: this.inputAmount, quoteAmount: this.postSwapFeeOutputAmount })
   }
 
   public get totalTaxRate(): Percent {
     return this.inputTax.add(this.outputTax)
   }
 
+  public get postSwapFeeOutputAmount(): CurrencyAmount<Currency> {
+    // Routing api already applies the swap fee to the output amount for exact-in
+    if (this.tradeType === TradeType.EXACT_INPUT) return this.outputAmount
+
+    const swapFeeAmount = CurrencyAmount.fromRawAmount(this.outputAmount.currency, this.swapFee?.amount ?? 0)
+    return this.outputAmount.subtract(swapFeeAmount)
+  }
+
   public get postTaxOutputAmount() {
     // Ideally we should calculate the final output amount by ammending the inputAmount based on the input tax and then applying the output tax,
     // but this isn't currently possible because V2Trade reconstructs the total inputAmount based on the swap routes
     // TODO(WEB-2761): Amend V2Trade objects in the v2-sdk to have a separate field for post-input tax routes
-    return this.outputAmount.multiply(new Fraction(ONE).subtract(this.totalTaxRate))
+    return this.postSwapFeeOutputAmount.multiply(new Fraction(ONE).subtract(this.totalTaxRate))
   }
 
   public minimumAmountOut(slippageTolerance: Percent, amountOut = this.outputAmount): CurrencyAmount<Currency> {
@@ -283,6 +314,7 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
 
   inputTax = ZERO_PERCENT
   outputTax = ZERO_PERCENT
+  swapFee: SwapFeeInfo | undefined
 
   constructor({
     currencyIn,
@@ -298,6 +330,7 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     startTimeBufferSecs,
     deadlineBufferSecs,
     slippageTolerance,
+    swapFee,
   }: {
     currencyIn: Currency
     currenciesOut: Currency[]
@@ -312,6 +345,7 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     startTimeBufferSecs: number
     deadlineBufferSecs: number
     slippageTolerance: Percent
+    swapFee?: SwapFeeInfo
   }) {
     super({ currencyIn, currenciesOut, orderInfo, tradeType })
     this.quoteId = quoteId
@@ -323,6 +357,7 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     this.deadlineBufferSecs = deadlineBufferSecs
     this.slippageTolerance = slippageTolerance
     this.startTimeBufferSecs = startTimeBufferSecs
+    this.swapFee = swapFee
   }
 
   public get totalGasUseEstimateUSD(): number {

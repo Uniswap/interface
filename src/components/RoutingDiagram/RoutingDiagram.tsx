@@ -6,6 +6,7 @@ import Badge from 'components/Badge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row, { AutoRow } from 'components/Row'
+import { BIPS_BASE } from 'constants/misc'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Box } from 'rebass'
 import styled from 'styled-components'
@@ -14,7 +15,7 @@ import { Z_INDEX } from 'theme/zIndex'
 import { RoutingDiagramEntry } from 'utils/getRoutingDiagramEntries'
 
 import { ReactComponent as DotLine } from '../../assets/svg/dot_line.svg'
-import { MouseoverTooltip } from '../Tooltip'
+import { MouseoverTooltip, TooltipSize } from '../Tooltip'
 
 const Wrapper = styled(Box)`
   align-items: center;
@@ -142,12 +143,13 @@ function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; curren
   return (
     <MouseoverTooltip
       text={<Trans>{tokenInfo0?.symbol + '/' + tokenInfo1?.symbol + ' ' + feeAmount / 10000}% pool</Trans>}
+      size={TooltipSize.ExtraSmall}
     >
       <PoolBadge>
         <Box margin="0 4px 0 12px">
           <DoubleCurrencyLogo currency0={tokenInfo1} currency1={tokenInfo0} size={20} />
         </Box>
-        <BadgeText>{feeAmount / 10000}%</BadgeText>
+        <BadgeText>{feeAmount / BIPS_BASE}%</BadgeText>
       </PoolBadge>
     </MouseoverTooltip>
   )
