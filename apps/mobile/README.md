@@ -157,11 +157,9 @@ This is done in bootstrap but good to know about. Before the code will compile y
 
 In the root directory, run `yarn` to install all the necessary npm packages.
 
-Then run `yarn pod` to install all the necessary pods.
+Then run `yarn mobile pod` to install all the necessary pods. (You may need to updated source repos with `pod repo update` if this fails.)
 
-If you do not have Swift graphQL files and Env Constants in your local (probably if it is your first time running widgets) Then run `yarn graphql:generate:swift` to generate graphQL schemas and types for the widgets. Then run `yarn env:local:copy:swift` to copy over the Environment Variables into a swift constants file.
-
-Finally, run `yarn ios` to boot up the iOS Simulator and run the app inside it. The JS bundler (metro) should automatically open in a new terminal window. If it does not, start it manually with `yarn start`.
+Finally, run `yarn mobile ios` to boot up the iOS Simulator and run the app inside it. The JS bundler (metro) should automatically open in a new terminal window. If it does not, start it manually with `yarn start`.
 
 Or you can use one command to run them all one after the other: `yarn && yarn pod && yarn ios`
 
