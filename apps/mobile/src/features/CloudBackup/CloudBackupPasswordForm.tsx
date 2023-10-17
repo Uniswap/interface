@@ -30,7 +30,7 @@ export function CloudBackupPasswordForm({
   const [password, setPassword] = useState('')
 
   const [consentChecked, setConsentChecked] = useState(false)
-  const [error, setError] = useState<PasswordErrors | undefined>(undefined)
+  const [error, setError] = useState<PasswordErrors | string | undefined>(undefined)
 
   const isButtonDisabled = (!isConfirmation && !consentChecked) || !!error || password.length === 0
 
@@ -50,8 +50,9 @@ export function CloudBackupPasswordForm({
   }
 
   const onPasswordSubmitEditing = (): void => {
-    if (!isConfirmation && !validatePassword(password).valid) {
-      setError(PasswordErrors.InvalidPassword)
+    const { valid, validationErrorString } = validatePassword(password)
+    if (!isConfirmation && !valid) {
+      setError(validationErrorString || PasswordErrors.InvalidPassword)
       return
     }
     if (isConfirmation && passwordToConfirm !== password) {
@@ -63,8 +64,9 @@ export function CloudBackupPasswordForm({
   }
 
   const onPressNext = (): void => {
-    if (!isConfirmation && !validatePassword(password).valid) {
-      setError(PasswordErrors.InvalidPassword)
+    const { valid, validationErrorString } = validatePassword(password)
+    if (!isConfirmation && !valid) {
+      setError(validationErrorString || PasswordErrors.InvalidPassword)
       return
     }
     if (isConfirmation && passwordToConfirm !== password) {
@@ -75,6 +77,16 @@ export function CloudBackupPasswordForm({
     if (!error) {
       navigateToNextScreen({ password })
     }
+  }
+
+  let errorText = ''
+  if (error === PasswordErrors.InvalidPassword) {
+    errorText = t('Invalid password')
+  } else if (error === PasswordErrors.PasswordsDoNotMatch) {
+    errorText = t('Passwords do not match')
+  } else if (error) {
+    // use the upstream zxcvbn error message
+    errorText = error
   }
 
   return (
@@ -92,15 +104,7 @@ export function CloudBackupPasswordForm({
             }}
             onSubmitEditing={onPasswordSubmitEditing}
           />
-          {error ? (
-            <PasswordError
-              errorText={
-                error === PasswordErrors.InvalidPassword
-                  ? t('Password must be at least 8 characters')
-                  : t('Passwords do not match')
-              }
-            />
-          ) : null}
+          {error ? <PasswordError errorText={errorText} /> : null}
         </Flex>
         {!isConfirmation && (
           <CheckBox

@@ -11522,6 +11522,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/zxcvbn@npm:4.4.2":
+  version: 4.4.2
+  resolution: "@types/zxcvbn@npm:4.4.2"
+  checksum: 8b1dc561970a3c69d13b03a83ea4b3bd1ef9d6ea46e85454b1260eb5219262abd6ae36970e1fe3389f2d0341108cdde8cee470f85e5c6b5cd6bef165f10ec076
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/eslint-plugin@npm:5.59.2, @typescript-eslint/eslint-plugin@npm:^5.15.0":
   version: 5.59.2
   resolution: "@typescript-eslint/eslint-plugin@npm:5.59.2"
@@ -37757,6 +37764,7 @@ __metadata:
     "@tamagui/shorthands": 1.74.16
     "@tamagui/theme-base": 1.74.16
     "@types/react": ^18.0.15
+    "@types/zxcvbn": 4.4.2
     "@uniswap/permit2-sdk": 1.2.0
     "@uniswap/router-sdk": 1.7.1
     "@uniswap/sdk-core": 4.0.7
@@ -37791,6 +37799,7 @@ __metadata:
     typescript: 4.9.4
     ui: "workspace:^"
     utilities: "workspace:^"
+    zxcvbn: 4.4.2
   languageName: unknown
   linkType: soft
 
@@ -38758,5 +38767,12 @@ __metadata:
   version: 2.0.4
   resolution: "zwitch@npm:2.0.4"
   checksum: f22ec5fc2d5f02c423c93d35cdfa83573a3a3bd98c66b927c368ea4d0e7252a500df2a90a6b45522be536a96a73404393c958e945fdba95e6832c200791702b6
+  languageName: node
+  linkType: hard
+
+"zxcvbn@npm:4.4.2":
+  version: 4.4.2
+  resolution: "zxcvbn@npm:4.4.2"
+  checksum: 76ab32c066082ac73491b7cd7f93ad0595c59b6d45ae80a0745e9e1661237388beb2f0c2ba0ae3dc330ca3ecdb87edcb7a21e0c09137ab81d5b32e584cda1e5d
   languageName: node
   linkType: hard

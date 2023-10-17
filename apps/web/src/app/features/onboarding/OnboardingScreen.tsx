@@ -49,9 +49,9 @@ export function OnboardingScreen({
           </Flex>
         </Flex>
       </Flex>
-      <Flex alignItems="center" gap="$spacing8" width="100%">
+      <Flex alignItems="center" gap="$spacing16" width="100%">
         {children}
-        {inputError && <InputError error={inputError} />}
+        <InputError error={inputError} />
       </Flex>
       <Flex row gap="$spacing12" width="100%">
         {onBack && (

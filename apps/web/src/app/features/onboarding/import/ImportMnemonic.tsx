@@ -9,7 +9,7 @@ import {
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
 import { useAppDispatch } from 'src/background/store'
-import { Circle, Icons, inputStyles } from 'ui/src'
+import { Button, Circle, Flex, FlexProps, Icons, Input, inputStyles, Text } from 'ui/src'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import {
@@ -27,14 +27,6 @@ import {
   TextInputChangeEventData,
   TextInputFocusEventData,
 } from 'react-native'
-
-import { Button, Flex, Input, styled as styledTamagui, Text } from 'ui/src'
-
-const ExpandInputButton = styledTamagui(Button, {
-  style: { backgroundColor: 'transparent' },
-  pressStyle: { backgroundColor: 'transparent' },
-  hoverStyle: { backgroundColor: 'transparent' },
-})
 
 export function ImportMnemonic(): JSX.Element {
   const { t } = useTranslation()
@@ -191,10 +183,16 @@ export function ImportMnemonic(): JSX.Element {
             )
         )}
         {!expanded && (
-          <ExpandInputButton mt="$spacing16" mx="auto" onPress={(): void => setExpanded(true)}>
+          <Button
+            backgroundColor="$transparent"
+            hoverStyle={{ backgroundColor: 'transparent' } as FlexProps}
+            mt="$spacing16"
+            mx="auto"
+            pressStyle={{ backgroundColor: 'transparent' } as FlexProps}
+            onPress={(): void => setExpanded(true)}>
             <Text color="$neutral3">{t('My recovery phrase is longer than 12 words')}</Text>{' '}
             <Icons.RotatableChevron color="$neutral3" direction="s" />
-          </ExpandInputButton>
+          </Button>
         )}
       </Flex>
     </OnboardingScreen>

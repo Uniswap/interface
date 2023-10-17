@@ -1,18 +1,20 @@
-const PASSWORD_LENGTH_MIN = 8
+import zxcvbn from 'zxcvbn'
 
-interface PasswordValidationResult {
+export interface PasswordValidationResult {
   valid: boolean
   validationErrorString?: string
 }
 
 export function validatePassword(password: string): PasswordValidationResult {
-  const validLength = password.length >= PASSWORD_LENGTH_MIN
-  if (validLength) {
+  const {
+    score,
+    feedback: { warning },
+  } = zxcvbn(password)
+  if (score >= 4) {
     return { valid: true }
-  } else {
-    return {
-      valid: false,
-      validationErrorString: 'Password is too short.',
-    }
+  }
+  return {
+    valid: false,
+    validationErrorString: warning,
   }
 }

@@ -7,6 +7,9 @@ describe(validatePassword, () => {
 
   it('returns false for invalid passwords', () => {
     expect(validatePassword('short').valid).toBeFalsy()
-    expect(validatePassword('short').validationErrorString).toBe('Password is too short.')
+  })
+
+  it('returns false for simple passwords', () => {
+    expect(validatePassword('asdfasdf').valid).toBeFalsy()
   })
 })

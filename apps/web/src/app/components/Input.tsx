@@ -16,7 +16,6 @@ export const Input = forwardRef<GetRef<typeof TamaguiInput>, InputProps>(functio
   return (
     <TamaguiInput
       ref={ref}
-      autoFocus
       backgroundColor={large ? '$surface1' : '$surface2'}
       borderColor="$surface3"
       borderRadius={large ? '$rounded12' : '$rounded20'}
