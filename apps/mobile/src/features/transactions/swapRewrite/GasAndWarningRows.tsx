@@ -73,7 +73,7 @@ export function GasAndWarningRows(): JSX.Element {
 
         {formScreenWarning && !isBlocked && (
           <TouchableArea onPress={onSwapWarningClick}>
-            <Flex centered row gap="$spacing8">
+            <Flex centered row gap="$spacing8" px="$spacing24">
               {formScreenWarning.Icon && (
                 <formScreenWarning.Icon
                   color={formScreenWarning.color.text}
@@ -83,7 +83,7 @@ export function GasAndWarningRows(): JSX.Element {
                 />
               )}
               <Flex row>
-                <Text color={formScreenWarning.color.text} variant="body3">
+                <Text color={formScreenWarning.color.text} textAlign="center" variant="body3">
                   {formScreenWarning.warning.title}
                 </Text>
               </Flex>

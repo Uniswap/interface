@@ -8,6 +8,8 @@ import {
   WarningSeverity,
 } from 'src/components/modals/WarningModal/types'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { useOnChainNativeCurrencyBalance } from 'wallet/src/features/portfolio/api'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { hasSufficientFundsIncludingGas } from 'wallet/src/features/transactions/utils'
@@ -40,6 +42,8 @@ export function useTransactionGasWarning({
   })
   const balanceInsufficient = currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)
 
+  const isSwapRewriteFeatureEnabled = useFeatureFlag(FEATURE_FLAGS.SwapRewrite)
+
   return useMemo(() => {
     // if balance is already insufficient, dont need to show warning about network fee
     if (gasFee === undefined || balanceInsufficient || !nativeCurrencyBalance || hasGasFunds) return
@@ -48,12 +52,23 @@ export function useTransactionGasWarning({
       type: WarningLabel.InsufficientGasFunds,
       severity: WarningSeverity.Medium,
       action: WarningAction.DisableSubmit,
-      title: t('Not enough {{ nativeCurrency }} to pay network fee', {
-        nativeCurrency: nativeCurrencyBalance.currency.symbol,
-      }),
+      title: isSwapRewriteFeatureEnabled
+        ? t('You don’t have enough {{ nativeCurrency }} to cover the network cost', {
+            nativeCurrency: nativeCurrencyBalance.currency.symbol,
+          })
+        : t('Not enough {{ nativeCurrency }} to cover network cost', {
+            nativeCurrency: nativeCurrencyBalance.currency.symbol,
+          }),
       message: t('Network fees are paid in the native token. Buy more {{ nativeCurrency }}.', {
         nativeCurrency: nativeCurrencyBalance.currency.symbol,
       }),
     }
-  }, [gasFee, hasGasFunds, nativeCurrencyBalance, balanceInsufficient, t])
+  }, [
+    gasFee,
+    balanceInsufficient,
+    nativeCurrencyBalance,
+    hasGasFunds,
+    isSwapRewriteFeatureEnabled,
+    t,
+  ])
 }

@@ -142,6 +142,6 @@ function getWarningWithStyle(warning: Warning): WarningWithStyle {
   return {
     warning,
     color: getAlertColor(warning.severity),
-    Icon: warning.icon ?? Icons.AlertTriangle,
+    Icon: warning.icon ?? null,
   }
 }
