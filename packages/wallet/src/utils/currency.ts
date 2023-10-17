@@ -1,7 +1,5 @@
-import { BigintIsh, Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { convertScientificNotationToNumber } from 'utilities/src/format/convertScientificNotation'
+import { Currency } from '@uniswap/sdk-core'
 import { formatCurrencyAmount } from 'utilities/src/format/format'
-import { logger } from 'utilities/src/logger/logger'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   Currency as ServerCurrency,
@@ -10,28 +8,23 @@ import {
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
+import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export function getFormattedCurrencyAmount(
   currency: Maybe<Currency>,
   currencyAmountRaw: string,
   isApproximateAmount = false
 ): string {
-  if (!currency) return ''
+  const currencyAmount = getCurrencyAmount({
+    value: currencyAmountRaw,
+    valueType: ValueType.Raw,
+    currency,
+  })
 
-  try {
-    // Convert scientific notation into number format so it can be parsed by BigInt properly
-    const parsedCurrencyAmountRaw: string | BigintIsh =
-      convertScientificNotationToNumber(currencyAmountRaw)
+  if (!currencyAmount) return ''
 
-    const currencyAmount = CurrencyAmount.fromRawAmount<Currency>(currency, parsedCurrencyAmountRaw)
-    const formattedAmount = formatCurrencyAmount(currencyAmount)
-    return isApproximateAmount ? `~${formattedAmount} ` : `${formattedAmount} `
-  } catch (error) {
-    logger.error(error, {
-      tags: { file: 'wallet/src/utils/currency', function: 'getFormattedCurrencyAmount' },
-    })
-    return ''
-  }
+  const formattedAmount = formatCurrencyAmount(currencyAmount)
+  return isApproximateAmount ? `~${formattedAmount} ` : `${formattedAmount} `
 }
 
 export function getCurrencyDisplayText(
