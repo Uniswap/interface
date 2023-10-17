@@ -1,37 +1,34 @@
-import { Plural, t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Percent, TradeType } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { Percent } from '@uniswap/sdk-core'
 import { TraceEvent } from 'analytics'
+import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
 import SpinningLoader from 'components/Loader/SpinningLoader'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { ZERO_PERCENT } from 'constants/misc'
 import { SwapResult } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { ReactNode } from 'react'
+import ms from 'ms'
+import { ReactNode, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { ClassicTrade, InterfaceTrade, PreviewTrade, RouterPreference } from 'state/routing/types'
-import { getTransactionCount, isClassicTrade, isPreviewTrade, isSubmittableTrade } from 'state/routing/utils'
+import { easings, useSpring } from 'react-spring'
+import { InterfaceTrade, RouterPreference } from 'state/routing/types'
+import { isClassicTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
-import styled, { DefaultTheme, useTheme } from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme/components'
-import { FormatterRule, NumberType, SIX_SIG_FIGS_NO_COMMAS, useFormatter } from 'utils/formatNumbers'
+import styled, { useTheme } from 'styled-components'
+import { Separator, ThemedText } from 'theme/components'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
-import { getPriceImpactColor } from 'utils/prices'
 
+import { ReactComponent as ExpandoIconClosed } from '../../assets/svg/expando-icon-closed.svg'
+import { ReactComponent as ExpandoIconOpened } from '../../assets/svg/expando-icon-opened.svg'
 import { ButtonError, SmallButtonPrimary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
-import { GasBreakdownTooltip } from './GasBreakdownTooltip'
 import { SwapCallbackError, SwapShowAcceptChanges } from './styled'
-import { Label } from './SwapModalHeaderAmount'
-
-const sixFigsFormatterRules: FormatterRule[] = [{ upperBound: Infinity, formatterOptions: SIX_SIG_FIGS_NO_COMMAS }]
+import { SwapLineItemProps, SwapLineItemType } from './SwapLineItem'
+import SwapLineItem from './SwapLineItem'
 
 const DetailsContainer = styled(Column)`
-  padding: 0 8px;
+  padding-bottom: 8px;
 `
 
 const StyledAlertTriangle = styled(AlertTriangle)`
@@ -41,14 +38,44 @@ const StyledAlertTriangle = styled(AlertTriangle)`
 
 const ConfirmButton = styled(ButtonError)`
   height: 56px;
-  margin-top: 10px;
 `
 
-const DetailRowValue = styled(ThemedText.BodySmall)<{ warningColor?: keyof DefaultTheme }>`
-  text-align: right;
-  overflow-wrap: break-word;
-  ${({ warningColor, theme }) => warningColor && `color: ${theme[warningColor]};`};
+const DropdownControllerWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: -6px;
+
+  padding: 0 16px;
+  min-width: fit-content;
+  white-space: nowrap;
 `
+
+const DropdownButton = styled.button`
+  padding: 0;
+  margin-top: 16px;
+  height: 28px;
+  text-decoration: none;
+  display: flex;
+  background: none;
+  border: none;
+  align-items: center;
+  cursor: pointer;
+`
+
+function DropdownController({ open, onClick }: { open: boolean; onClick: () => void }) {
+  return (
+    <DropdownButton onClick={onClick}>
+      <Separator />
+      <DropdownControllerWrapper>
+        <ThemedText.BodySmall color="neutral2">
+          {open ? <Trans>Show less</Trans> : <Trans>Show more</Trans>}
+        </ThemedText.BodySmall>
+        {open ? <ExpandoIconOpened /> : <ExpandoIconClosed />}
+      </DropdownControllerWrapper>
+      <Separator />
+    </DropdownButton>
+  )
+}
 
 export default function SwapModalFooter({
   trade,
@@ -80,116 +107,20 @@ export default function SwapModalFooter({
   const [routerPreference] = useRouterPreference()
   const routes = isClassicTrade(trade) ? getRoutingDiagramEntries(trade) : undefined
   const theme = useTheme()
-  const { chainId } = useWeb3React()
-  const nativeCurrency = useNativeCurrency(chainId)
-  const { formatCurrencyAmount, formatNumber, formatPriceImpact } = useFormatter()
+  const [showMore, setShowMore] = useState(false)
 
-  const label = `${trade.executionPrice.baseCurrency?.symbol} `
-  const labelInverted = `${trade.executionPrice.quoteCurrency?.symbol}`
-  const formattedPrice = formatNumber({
-    input: trade.executionPrice ? parseFloat(trade.executionPrice.toFixed(9)) : undefined,
-    type: NumberType.TokenTx,
-  })
-  const txCount = getTransactionCount(trade)
+  const lineItemProps = { trade, allowedSlippage, syncing: false }
 
   return (
     <>
+      <DropdownController open={showMore} onClick={() => setShowMore(!showMore)} />
       <DetailsContainer gap="md">
-        <ThemedText.BodySmall>
-          <Row align="flex-start" justify="space-between" gap="sm">
-            <Label>
-              <Trans>Exchange rate</Trans>
-            </Label>
-            <DetailRowValue>{`1 ${labelInverted} = ${formattedPrice ?? '-'} ${label}`}</DetailRowValue>
-          </Row>
-        </ThemedText.BodySmall>
-        <ThemedText.BodySmall>
-          <Row align="flex-start" justify="space-between" gap="sm">
-            <MouseoverTooltip
-              text={
-                <Trans>
-                  The fee paid to miners who process your transaction. This must be paid in ${nativeCurrency.symbol}.
-                </Trans>
-              }
-            >
-              <Label cursor="help">
-                <Plural value={txCount} one="Network fee" other="Network fees" />
-              </Label>
-            </MouseoverTooltip>
-            <MouseoverTooltip
-              placement="right"
-              size={TooltipSize.Small}
-              text={isSubmittableTrade(trade) ? <GasBreakdownTooltip trade={trade} /> : undefined}
-            >
-              <DetailRowValue>
-                {isSubmittableTrade(trade)
-                  ? formatNumber({
-                      input: trade.totalGasUseEstimateUSD,
-                      type: NumberType.FiatGasPrice,
-                    })
-                  : '-'}
-              </DetailRowValue>
-            </MouseoverTooltip>
-          </Row>
-        </ThemedText.BodySmall>
-        {(isClassicTrade(trade) || isPreviewTrade(trade)) && (
-          <>
-            <TokenTaxLineItem trade={trade} type="input" />
-            <TokenTaxLineItem trade={trade} type="output" />
-            <ThemedText.BodySmall>
-              <Row align="flex-start" justify="space-between" gap="sm">
-                <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
-                  <Label cursor="help">
-                    <Trans>Price impact</Trans>
-                  </Label>
-                </MouseoverTooltip>
-                <DetailRowValue
-                  warningColor={isClassicTrade(trade) ? getPriceImpactColor(trade.priceImpact) : undefined}
-                >
-                  {isClassicTrade(trade) && trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-'}
-                </DetailRowValue>
-              </Row>
-            </ThemedText.BodySmall>
-          </>
-        )}
-        <ThemedText.BodySmall>
-          <Row align="flex-start" justify="space-between" gap="sm">
-            <MouseoverTooltip
-              text={
-                trade.tradeType === TradeType.EXACT_INPUT ? (
-                  <Trans>
-                    The minimum amount you are guaranteed to receive. If the price slips any further, your transaction
-                    will revert.
-                  </Trans>
-                ) : (
-                  <Trans>
-                    The maximum amount you are guaranteed to spend. If the price slips any further, your transaction
-                    will revert.
-                  </Trans>
-                )
-              }
-            >
-              <Label cursor="help">
-                {trade.tradeType === TradeType.EXACT_INPUT ? (
-                  <Trans>Minimum received</Trans>
-                ) : (
-                  <Trans>Maximum sent</Trans>
-                )}
-              </Label>
-            </MouseoverTooltip>
-            <DetailRowValue>
-              {trade.tradeType === TradeType.EXACT_INPUT
-                ? `${formatCurrencyAmount({
-                    amount: trade.minimumAmountOut(allowedSlippage),
-                    type: sixFigsFormatterRules,
-                  })} ${trade.outputAmount.currency.symbol}`
-                : `${formatCurrencyAmount({
-                    amount: trade.maximumAmountIn(allowedSlippage),
-                    type: sixFigsFormatterRules,
-                  })} ${trade.inputAmount.currency.symbol}`}
-            </DetailRowValue>
-          </Row>
-        </ThemedText.BodySmall>
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.EXCHANGE_RATE} />
+        <ExpandableLineItems {...lineItemProps} open={showMore} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.OUTPUT_TOKEN_FEE_ON_TRANSFER} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.SWAP_FEE} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.NETWORK_COST} />
       </DetailsContainer>
       {showAcceptChanges ? (
         <SwapShowAcceptChanges data-testid="show-accept-changes">
@@ -252,34 +183,42 @@ export default function SwapModalFooter({
   )
 }
 
-function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade | PreviewTrade; type: 'input' | 'output' }) {
-  const { formatPriceImpact } = useFormatter()
+function AnimatedLineItem(props: SwapLineItemProps & { open: boolean; delay: number }) {
+  const { open, delay } = props
 
-  const [currency, percentage] =
-    type === 'input' ? [trade.inputAmount.currency, trade.inputTax] : [trade.outputAmount.currency, trade.outputTax]
+  const animatedProps = useSpring({
+    animatedOpacity: open ? 1 : 0,
+    config: { duration: ms('300ms'), easing: easings.easeOutSine },
+    delay,
+  })
 
-  if (percentage.equalTo(ZERO_PERCENT)) return null
+  return <SwapLineItem {...props} {...animatedProps} />
+}
+
+function ExpandableLineItems(props: { trade: InterfaceTrade; allowedSlippage: Percent; open: boolean }) {
+  const { open, trade, allowedSlippage } = props
+
+  if (!trade) return null
+
+  const lineItemProps = { trade, allowedSlippage, syncing: false, open }
 
   return (
-    <ThemedText.BodySmall>
-      <Row align="flex-start" justify="space-between" gap="sm">
-        <MouseoverTooltip
-          text={
-            <>
-              <Trans>
-                Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not
-                receive any of these fees.
-              </Trans>{' '}
-              <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-">
-                Learn more
-              </ExternalLink>
-            </>
-          }
-        >
-          <Label cursor="help">{t`${currency.symbol} fee`}</Label>
-        </MouseoverTooltip>
-        <DetailRowValue warningColor={getPriceImpactColor(percentage)}>{formatPriceImpact(percentage)}</DetailRowValue>
-      </Row>
-    </ThemedText.BodySmall>
+    <AnimatedDropdown
+      open={open}
+      springProps={{
+        marginTop: open ? 0 : -12,
+        config: {
+          duration: ms('200ms'),
+          easing: easings.easeOutSine,
+        },
+      }}
+    >
+      <Column gap="md">
+        <AnimatedLineItem {...lineItemProps} type={SwapLineItemType.PRICE_IMPACT} delay={ms('50ms')} />
+        <AnimatedLineItem {...lineItemProps} type={SwapLineItemType.MAX_SLIPPAGE} delay={ms('100ms')} />
+        <AnimatedLineItem {...lineItemProps} type={SwapLineItemType.MINIMUM_OUTPUT} delay={ms('120ms')} />
+        <AnimatedLineItem {...lineItemProps} type={SwapLineItemType.MAXIMUM_INPUT} delay={ms('120ms')} />
+      </Column>
+    </AnimatedDropdown>
   )
 }

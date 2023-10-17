@@ -21,6 +21,7 @@ import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromG
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
+import { isSameAddress } from 'utils/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { MOONPAY_SENDER_ADDRESSES, OrderStatusTable, OrderTextTable } from '../constants'
@@ -75,10 +76,6 @@ const COMMON_CONTRACTS: { [key: string]: Partial<Activity> | undefined } = {
     descriptor: t`ETH Registrar Controller`,
     logos: [ENS_IMG],
   },
-}
-
-function isSameAddress(a?: string, b?: string) {
-  return a === b || a?.toLowerCase() === b?.toLowerCase() // Lazy-lowercases the addresses
 }
 
 function callsPositionManagerContract(assetActivity: TransactionActivity) {

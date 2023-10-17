@@ -3,30 +3,144 @@
 exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] = `
 <DocumentFragment>
   .c3 {
+  color: #7D7D7D;
+}
+
+.c1 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-right: -6px;
+  padding: 0 16px;
+  min-width: -webkit-fit-content;
+  min-width: -moz-fit-content;
+  min-width: fit-content;
+  white-space: nowrap;
+}
+
+.c0 {
+  padding: 0;
+  margin-top: 16px;
+  height: 28px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  background: none;
+  border: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+<button
+    class="c0"
+  >
+    <div
+      class="c1"
+    />
+    <div
+      class="c2"
+    >
+      <div
+        class="c3 css-142zc9n"
+      >
+        Show more
+      </div>
+      <svg>
+        expando-icon-closed.svg
+      </svg>
+    </div>
+    <div
+      class="c1"
+    />
+  </button>
+  .c2 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c4 {
+.c3 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: flex-start;
-  -webkit-box-align: flex-start;
-  -ms-flex-align: flex-start;
-  align-items: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c10 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c13 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c4 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  gap: 8px;
 }
 
-.c2 {
+.c11 {
+  color: #7D7D7D;
+}
+
+.c5 {
   color: #222222;
 }
 
@@ -50,125 +164,272 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
   height: inherit;
 }
 
-.c5 {
-  color: #7D7D7D;
-  margin-right: 8px;
+.c9 {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 0;
+  grid-template-columns: 1fr auto;
+  grid-gap: 0.25rem;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  text-align: left;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 .c8 {
-  cursor: help;
-  color: #7D7D7D;
-  margin-right: 8px;
-}
-
-.c1 {
-  padding: 0 8px;
+  text-align: right;
+  overflow-wrap: break-word;
 }
 
 .c6 {
-  text-align: right;
-  overflow-wrap: break-word;
+  cursor: help;
+  color: #7D7D7D;
+}
+
+.c12 {
+  background: #22222212;
+  border-radius: 8px;
+  color: #7D7D7D;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.c12::after {
+  content: 'Auto';
+}
+
+.c1 {
+  padding-bottom: 8px;
 }
 
 <div
     class="c0 c1"
   >
-    <div
-      class="c2 css-142zc9n"
-    >
+    <div>
       <div
-        class="c3 c4"
+        class="c2 c3 c4"
       >
         <div
-          class="c2 c5 css-142zc9n"
+          class="c5 c6 css-142zc9n"
+          data-testid="swap-li-label"
         >
-          Exchange rate
-        </div>
-        <div
-          class="c2 c6 css-142zc9n"
-        >
-          1 DEF = 1.00 ABC 
-        </div>
-      </div>
-    </div>
-    <div
-      class="c2 css-142zc9n"
-    >
-      <div
-        class="c3 c4"
-      >
-        <div
-          class="c7"
-        >
-          <div>
-            <div
-              class="c2 c8 css-142zc9n"
-              cursor="help"
-            >
-              Network fee
-            </div>
-          </div>
+          Rate
         </div>
         <div
           class="c7"
         >
           <div>
             <div
-              class="c2 c6 css-142zc9n"
+              class="c5 c8 css-142zc9n"
             >
-              $1.00
+              <button
+                class="c9"
+                title="1 DEF = 1.00 ABC "
+              >
+                <div
+                  class="c5 css-142zc9n"
+                >
+                  1 DEF = 1.00 ABC 
+                </div>
+                 
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
     <div
-      class="c2 css-142zc9n"
+      style="height: 0px; margin-top: -12px; overflow: hidden; width: 100%; min-width: min-content; will-change: height;"
     >
-      <div
-        class="c3 c4"
-      >
+      <div>
         <div
-          class="c7"
+          class="c0"
         >
-          <div>
+          <div
+            style="opacity: 0;"
+          >
             <div
-              class="c2 c8 css-142zc9n"
-              cursor="help"
+              class="c2 c3 c4"
             >
-              Price impact
+              <div
+                class="c5 c6 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Price impact
+              </div>
+              <div
+                class="c7"
+              >
+                <div>
+                  <div
+                    class="c5 c8 css-142zc9n"
+                  >
+                    <span
+                      class=""
+                    >
+                      -105566.373%
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c2 c6 css-142zc9n"
-        >
-          105566.373%
+          <div
+            style="opacity: 0;"
+          >
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c5 c6 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Max. slippage
+              </div>
+              <div
+                class="c7"
+              >
+                <div>
+                  <div
+                    class="c5 c8 css-142zc9n"
+                  >
+                    <div
+                      class="c2 c10"
+                    >
+                      <div
+                        class="c11 c12 css-1lgneq0"
+                      />
+                       2%
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="opacity: 0;"
+          >
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c5 c6 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Receive at least
+              </div>
+              <div
+                class="c7"
+              >
+                <div>
+                  <div
+                    class="c5 c8 css-142zc9n"
+                  >
+                    0.00000000000000098 DEF
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div
-      class="c2 css-142zc9n"
-    >
+    <div>
       <div
-        class="c3 c4"
+        class="c2 c3 c4"
       >
+        <div
+          class="c5 c6 css-142zc9n"
+          data-testid="swap-li-label"
+        >
+          Fee 
+        </div>
         <div
           class="c7"
         >
           <div>
             <div
-              class="c2 c8 css-142zc9n"
-              cursor="help"
+              class="c5 c8 css-142zc9n"
             >
-              Minimum received
+              0 DEF
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div>
+      <div
+        class="c2 c3 c4"
+      >
         <div
-          class="c2 c6 css-142zc9n"
+          class="c5 c6 css-142zc9n"
+          data-testid="swap-li-label"
         >
-          0.00000000000000098 DEF
+          Network cost
+        </div>
+        <div
+          class="c7"
+        >
+          <div>
+            <div
+              class="c5 c8 css-142zc9n"
+            >
+              <div
+                class="c2 c13"
+              >
+                <svg
+                  aria-labelledby="titleID"
+                  height="16"
+                  width="16"
+                >
+                  <title
+                    id="titleID"
+                  >
+                    Ethereum logo
+                  </title>
+                  <rect
+                    fill="#F9F9F9"
+                    height="16"
+                    rx="4"
+                    width="16"
+                  />
+                  <rect
+                    fill="#6B8AFF33"
+                    height="16"
+                    rx="4"
+                    width="16"
+                  />
+                  <svg
+                    height="16"
+                    width="16"
+                  >
+                    ethereum.svg
+                  </svg>
+                </svg>
+                $1.00
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -323,7 +584,6 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
 
 .c6 {
   height: 56px;
-  margin-top: 10px;
 }
 
 <div
@@ -347,30 +607,130 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
 exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 1`] = `
 <DocumentFragment>
   .c3 {
+  color: #7D7D7D;
+}
+
+.c1 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-right: -6px;
+  padding: 0 16px;
+  min-width: -webkit-fit-content;
+  min-width: -moz-fit-content;
+  min-width: fit-content;
+  white-space: nowrap;
+}
+
+.c0 {
+  padding: 0;
+  margin-top: 16px;
+  height: 28px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  background: none;
+  border: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+@media (max-width:960px) {
+
+}
+
+<button
+    class="c0"
+  >
+    <div
+      class="c1"
+    />
+    <div
+      class="c2"
+    >
+      <div
+        class="c3 css-142zc9n"
+      >
+        Show more
+      </div>
+      <svg>
+        expando-icon-closed.svg
+      </svg>
+    </div>
+    <div
+      class="c1"
+    />
+  </button>
+  .c2 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c4 {
+.c3 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: flex-start;
-  -webkit-box-align: flex-start;
-  -ms-flex-align: flex-start;
-  align-items: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c12 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c4 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  gap: 8px;
 }
 
-.c2 {
+.c13 {
+  color: #7D7D7D;
+}
+
+.c5 {
   color: #222222;
 }
 
@@ -389,29 +749,85 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
   gap: 12px;
 }
 
-.c7 {
+.c11 {
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
+  background-size: 400%;
+  will-change: background-position;
+  border-radius: 12px;
+  height: 15px;
+  width: 50px;
+}
+
+.c10 {
   display: inline-block;
   height: inherit;
 }
 
-.c5 {
-  color: #7D7D7D;
-  margin-right: 8px;
-}
-
 .c8 {
-  cursor: help;
-  color: #7D7D7D;
-  margin-right: 8px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 0;
+  grid-template-columns: 1fr auto;
+  grid-gap: 0.25rem;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  text-align: left;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
-.c1 {
-  padding: 0 8px;
+.c7 {
+  text-align: right;
+  overflow-wrap: break-word;
 }
 
 .c6 {
-  text-align: right;
-  overflow-wrap: break-word;
+  cursor: auto;
+  color: #7D7D7D;
+}
+
+.c9 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+.c14 {
+  background: #22222212;
+  border-radius: 8px;
+  color: #7D7D7D;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.c14::after {
+  content: 'Auto';
+}
+
+.c1 {
+  padding-bottom: 8px;
 }
 
 @media (max-width:960px) {
@@ -421,102 +837,177 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
 <div
     class="c0 c1"
   >
-    <div
-      class="c2 css-142zc9n"
-    >
+    <div>
       <div
-        class="c3 c4"
+        class="c2 c3 c4"
       >
         <div
-          class="c2 c5 css-142zc9n"
+          class="c5 c6 css-142zc9n"
+          data-testid="swap-li-label"
         >
-          Exchange rate
+          Rate
         </div>
         <div
-          class="c2 c6 css-142zc9n"
+          class="c5 c7 css-142zc9n"
         >
-          1 DEF = 1.00 ABC 
+          <button
+            class="c8"
+            title="1 DEF = 1.00 ABC "
+          >
+            <div
+              class="c5 css-142zc9n"
+            >
+              1 DEF = 1.00 ABC 
+            </div>
+             
+          </button>
         </div>
       </div>
     </div>
     <div
-      class="c2 css-142zc9n"
+      style="height: 0px; margin-top: -12px; overflow: hidden; width: 100%; min-width: min-content; will-change: height;"
     >
-      <div
-        class="c3 c4"
-      >
+      <div>
         <div
-          class="c7"
+          class="c0"
         >
-          <div>
+          <div
+            style="opacity: 0;"
+          >
             <div
-              class="c2 c8 css-142zc9n"
-              cursor="help"
+              class="c2 c3 c4"
             >
-              Network fees
+              <div
+                class="c5 c9 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Price impact
+              </div>
+              <div
+                class="c10"
+              >
+                <div>
+                  <div
+                    class="c5 c7 css-142zc9n"
+                  >
+                    <div
+                      class="c11"
+                      data-testid="loading-row"
+                      height="15"
+                      width="50"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c7"
-        >
-          <div>
+          <div
+            style="opacity: 0;"
+          >
             <div
-              class="c2 c6 css-142zc9n"
+              class="c2 c3 c4"
             >
-              -
+              <div
+                class="c5 c9 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Max. slippage
+              </div>
+              <div
+                class="c10"
+              >
+                <div>
+                  <div
+                    class="c5 c7 css-142zc9n"
+                  >
+                    <div
+                      class="c2 c12"
+                    >
+                      <div
+                        class="c13 c14 css-1lgneq0"
+                      />
+                       2%
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="opacity: 0;"
+          >
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c5 c9 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Receive at least
+              </div>
+              <div
+                class="c10"
+              >
+                <div>
+                  <div
+                    class="c5 c7 css-142zc9n"
+                  >
+                    0.00000000000000098 DEF
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div
-      class="c2 css-142zc9n"
-    >
+    <div>
       <div
-        class="c3 c4"
+        class="c2 c3 c4"
       >
         <div
-          class="c7"
+          class="c5 c6 css-142zc9n"
+          data-testid="swap-li-label"
         >
-          <div>
-            <div
-              class="c2 c8 css-142zc9n"
-              cursor="help"
-            >
-              Price impact
-            </div>
-          </div>
+          Fee
         </div>
         <div
-          class="c2 c6 css-142zc9n"
+          class="c5 c7 css-142zc9n"
         >
-          -
+          <div
+            class="c11"
+            data-testid="loading-row"
+            height="15"
+            width="50"
+          />
         </div>
       </div>
     </div>
-    <div
-      class="c2 css-142zc9n"
-    >
+    <div>
       <div
-        class="c3 c4"
+        class="c2 c3 c4"
       >
         <div
-          class="c7"
+          class="c5 c9 css-142zc9n"
+          data-testid="swap-li-label"
+        >
+          Network cost
+        </div>
+        <div
+          class="c10"
         >
           <div>
             <div
-              class="c2 c8 css-142zc9n"
-              cursor="help"
+              class="c5 c7 css-142zc9n"
             >
-              Minimum received
+              <div
+                class="c11"
+                data-testid="loading-row"
+                height="15"
+                width="50"
+              />
             </div>
           </div>
-        </div>
-        <div
-          class="c2 c6 css-142zc9n"
-        >
-          0.00000000000000098 DEF
         </div>
       </div>
     </div>
@@ -722,7 +1213,6 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
 
 .c6 {
   height: 56px;
-  margin-top: 10px;
 }
 
 @media (max-width:960px) {

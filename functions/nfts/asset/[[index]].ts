@@ -8,7 +8,7 @@ export const onRequest: PagesFunction = async ({ params, request, next }) => {
     const { index } = params
     const collectionAddress = index[0]?.toString()
     const tokenId = index[1]?.toString()
-    return getMetadataRequest(res, request.url, () => getAsset(collectionAddress, tokenId, request.url))
+    return getMetadataRequest(res, request, () => getAsset(collectionAddress, tokenId, request.url))
   } catch (e) {
     return res
   }

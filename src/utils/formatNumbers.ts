@@ -39,6 +39,14 @@ const NO_DECIMALS: NumberFormatOptions = {
   minimumFractionDigits: 0,
 }
 
+const NO_DECIMALS_CURRENCY: NumberFormatOptions = {
+  notation: 'standard',
+  maximumFractionDigits: 0,
+  minimumFractionDigits: 0,
+  currency: 'USD',
+  style: 'currency',
+}
+
 const THREE_DECIMALS_NO_TRAILING_ZEROS: NumberFormatOptions = {
   notation: 'standard',
   maximumFractionDigits: 3,
@@ -119,7 +127,7 @@ const SIX_SIG_FIGS_TWO_DECIMALS: NumberFormatOptions = {
   minimumFractionDigits: 2,
 }
 
-export const SIX_SIG_FIGS_NO_COMMAS: NumberFormatOptions = {
+const SIX_SIG_FIGS_NO_COMMAS: NumberFormatOptions = {
   notation: 'standard',
   maximumSignificantDigits: 6,
   useGrouping: false,
@@ -178,7 +186,7 @@ type FormatterBaseRule = { formatterOptions: NumberFormatOptions }
 type FormatterExactRule = { upperBound?: undefined; exact: number } & FormatterBaseRule
 type FormatterUpperBoundRule = { upperBound: number; exact?: undefined } & FormatterBaseRule
 
-export type FormatterRule = (FormatterExactRule | FormatterUpperBoundRule) & { hardCodedInput?: HardCodedInputFormat }
+type FormatterRule = (FormatterExactRule | FormatterUpperBoundRule) & { hardCodedInput?: HardCodedInputFormat }
 
 // these formatter objects dictate which formatter rule to use based on the interval that
 // the number falls into. for example, based on the rule set below, if your number
@@ -214,6 +222,8 @@ const swapTradeAmountFormatter: FormatterRule[] = [
   { upperBound: 1, formatterOptions: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN_NO_COMMAS },
   { upperBound: Infinity, formatterOptions: SIX_SIG_FIGS_TWO_DECIMALS_NO_COMMAS },
 ]
+
+const swapDetailsAmountFormatter: FormatterRule[] = [{ upperBound: Infinity, formatterOptions: SIX_SIG_FIGS_NO_COMMAS }]
 
 const swapPriceFormatter: FormatterRule[] = [
   { exact: 0, formatterOptions: NO_DECIMALS },
@@ -260,7 +270,7 @@ const fiatTokenStatsFormatter: FormatterRule[] = [
 ]
 
 const fiatGasPriceFormatter: FormatterRule[] = [
-  { exact: 0, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { exact: 0, formatterOptions: NO_DECIMALS_CURRENCY },
   { upperBound: 0.01, hardCodedInput: { input: 0.01, prefix: '<' }, formatterOptions: TWO_DECIMALS_CURRENCY },
   { upperBound: 1e6, formatterOptions: TWO_DECIMALS_CURRENCY },
   { upperBound: Infinity, formatterOptions: SHORTHAND_CURRENCY_TWO_DECIMALS },
@@ -322,6 +332,8 @@ export enum NumberType {
   // in the text input boxes. Output amounts on review screen should use the above TokenTx formatter
   SwapTradeAmount = 'swap-trade-amount',
 
+  SwapDetailsAmount = 'swap-details-amount',
+
   // fiat prices in any component that belongs in the Token Details flow (except for token stats)
   FiatTokenDetails = 'fiat-token-details',
 
@@ -356,6 +368,7 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.TokenTx]: tokenTxFormatter,
   [NumberType.SwapPrice]: swapPriceFormatter,
   [NumberType.SwapTradeAmount]: swapTradeAmountFormatter,
+  [NumberType.SwapDetailsAmount]: swapDetailsAmountFormatter,
   [NumberType.FiatTokenQuantity]: fiatTokenQuantityFormatter,
   [NumberType.FiatTokenDetails]: fiatTokenDetailsFormatter,
   [NumberType.FiatTokenPrice]: fiatTokenPricesFormatter,
@@ -467,8 +480,19 @@ function formatSlippage(slippage: Percent | undefined, locale: SupportedLocale =
   if (!slippage) return '-'
 
   return `${Number(slippage.toFixed(3)).toLocaleString(locale, {
-    minimumFractionDigits: 3,
     maximumFractionDigits: 3,
+    useGrouping: false,
+  })}%`
+}
+
+function formatPercent(percent: Nullish<number>, locale: SupportedLocale = DEFAULT_LOCALE) {
+  if (percent === null || percent === undefined || percent === Infinity || isNaN(percent)) {
+    return '-'
+  }
+
+  return `${Number(Math.abs(percent).toFixed(2)).toLocaleString(locale, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
     useGrouping: false,
   })}%`
 }
@@ -718,12 +742,18 @@ export function useFormatter() {
     [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
   )
 
+  const formatPercentWithLocales = useCallback(
+    (percent: Nullish<number>) => formatPercent(percent, formatterLocale),
+    [formatterLocale]
+  )
+
   return useMemo(
     () => ({
       formatCurrencyAmount: formatCurrencyAmountWithLocales,
       formatFiatPrice: formatFiatPriceWithLocales,
       formatNumber: formatNumberWithLocales,
       formatNumberOrString: formatNumberOrStringWithLocales,
+      formatPercent: formatPercentWithLocales,
       formatPrice: formatPriceWithLocales,
       formatPriceImpact: formatPriceImpactWithLocales,
       formatReviewSwapCurrencyAmount: formatReviewSwapCurrencyAmountWithLocales,
@@ -735,6 +765,7 @@ export function useFormatter() {
       formatFiatPriceWithLocales,
       formatNumberOrStringWithLocales,
       formatNumberWithLocales,
+      formatPercentWithLocales,
       formatPriceImpactWithLocales,
       formatPriceWithLocales,
       formatReviewSwapCurrencyAmountWithLocales,
