@@ -28,7 +28,7 @@ interface Props {
 }
 
 export default function InputWithSuffix(props: Props): JSX.Element {
-  return IS_ANDROID && props.inputSuffix ? (
+  return IS_ANDROID ? (
     <Flex width="100%">
       <Inputs {...props} layerType="foreground" />
       <Inputs {...props} layerType="background" />

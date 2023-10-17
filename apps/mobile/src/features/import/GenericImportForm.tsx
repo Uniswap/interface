@@ -57,6 +57,7 @@ export function GenericImportForm({
   const [focused, setFocused] = useState(false)
   const [layout, setLayout] = useState<LayoutRectangle | null>()
   const textInputRef = useRef<NativeTextInput>(null)
+  const isKeyboardVisibleRef = useRef(false)
 
   const INPUT_FONT_SIZE = fonts.body1.fontSize
   const INPUT_MAX_FONT_SIZE_MULTIPLIER = fonts.body1.maxFontSizeMultiplier
@@ -78,9 +79,20 @@ export function GenericImportForm({
   }
 
   useEffect(() => {
-    Keyboard.addListener('keyboardDidHide', (): void => {
-      textInputRef?.current?.blur()
-    })
+    const keyboardListeners = [
+      Keyboard.addListener('keyboardDidShow', (): void => {
+        isKeyboardVisibleRef.current = true
+      }),
+      Keyboard.addListener('keyboardDidHide', (): void => {
+        if (!isKeyboardVisibleRef.current) return
+        isKeyboardVisibleRef.current = false
+        textInputRef?.current?.blur()
+      }),
+    ]
+
+    return () => {
+      keyboardListeners.forEach((listener) => listener.remove())
+    }
   }, [])
 
   const INPUT_MIN_HEIGHT = 120
