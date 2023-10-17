@@ -92,7 +92,7 @@ function SwapFeeTooltipContent({ hasFee }: { hasFee: boolean }) {
   return (
     <>
       {message}{' '}
-      <ExternalLink href="https://uniswap.org/docs/v2/protocol-overview/fees/">
+      <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/20131678274957">
         <Trans>Learn more</Trans>
       </ExternalLink>
     </>
