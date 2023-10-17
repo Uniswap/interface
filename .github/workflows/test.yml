@@ -133,6 +133,9 @@ jobs:
       matrix:
         containers: [1, 2, 3, 4]
     steps:
+      # cypress/base:18.16 images are missing openssl and ca-certificates, but they should be used to match .nvmrc.
+      # See https://github.com/cypress-io/cypress-docker-images/issues/803#issuecomment-1451083809.
+      - run: apt-get update && apt-get install -y --no-install-recommends ca-certificates
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: actions/cache@v3
