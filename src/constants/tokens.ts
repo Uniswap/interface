@@ -89,7 +89,7 @@ export const DAI_OPTIMISM = new Token(
   'DAI',
   'Dai stable coin'
 )
-export const MATIC = new Token(
+export const MATIC_MAINNET = new Token(
   ChainId.MAINNET,
   '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0',
   18,
@@ -353,25 +353,25 @@ function getCeloNativeCurrency(chainId: number) {
   }
 }
 
-export function isMatic(chainId: number): chainId is ChainId.POLYGON | ChainId.POLYGON_MUMBAI {
+export function isPolygon(chainId: number): chainId is ChainId.POLYGON | ChainId.POLYGON_MUMBAI {
   return chainId === ChainId.POLYGON_MUMBAI || chainId === ChainId.POLYGON
 }
 
-class MaticNativeCurrency extends NativeCurrency {
+class PolygonNativeCurrency extends NativeCurrency {
   equals(other: Currency): boolean {
     return other.isNative && other.chainId === this.chainId
   }
 
   get wrapped(): Token {
-    if (!isMatic(this.chainId)) throw new Error('Not matic')
+    if (!isPolygon(this.chainId)) throw new Error('Not matic')
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
     invariant(wrapped instanceof Token)
     return wrapped
   }
 
   public constructor(chainId: number) {
-    if (!isMatic(chainId)) throw new Error('Not matic')
-    super(chainId, 18, 'MATIC', 'Polygon Matic')
+    if (!isPolygon(chainId)) throw new Error('Not polygon')
+    super(chainId, 18, 'MATIC', 'Matic')
   }
 }
 
@@ -437,8 +437,8 @@ const cachedNativeCurrency: { [chainId: number]: NativeCurrency | Token } = {}
 export function nativeOnChain(chainId: number): NativeCurrency | Token {
   if (cachedNativeCurrency[chainId]) return cachedNativeCurrency[chainId]
   let nativeCurrency: NativeCurrency | Token
-  if (isMatic(chainId)) {
-    nativeCurrency = new MaticNativeCurrency(chainId)
+  if (isPolygon(chainId)) {
+    nativeCurrency = new PolygonNativeCurrency(chainId)
   } else if (isCelo(chainId)) {
     nativeCurrency = getCeloNativeCurrency(chainId)
   } else if (isBsc(chainId)) {

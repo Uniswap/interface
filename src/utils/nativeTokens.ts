@@ -9,8 +9,10 @@ export function getNativeTokenDBAddress(chain: Chain): string | undefined {
   }
   switch (chain) {
     case Chain.Celo:
-    case Chain.Polygon:
       return nativeOnChain(pageChainId).wrapped.address
+    case Chain.Polygon:
+      // the precompile address. temporary until backend returns correct NATIVE tokenquerydata
+      return '0x0000000000000000000000000000000000001010'
     case Chain.Ethereum:
     case Chain.Arbitrum:
     case Chain.EthereumGoerli:
