@@ -189,29 +189,29 @@ function WithdrawLiquidityStakingSummary() {
 
 function AddLiquidityGammaSummary({ info }: { info: AddLiquidityGammaTransactionInfo }) {
   const Text = `Add Liquidity with ${info.amount0} ${info.symbol0} and ${info.amount1} ${info.symbol1}`
-  return <Trans>{Text}</Trans>
+  return <div>{Text}</div>
 }
 
 function RemoveLiquidityGammaSummary({ info }: { info: RemoveLiquidityGammaTransactionInfo }) {
   const Text = `Remove ${info.amount} ${info.symbol}`
-  return <Trans>{Text}</Trans>
+  return <div>{Text}</div>
 }
 
 function DepositFarmSummary({ info }: { info: DepositFarmTransactionInfo }) {
   // not worth rendering the tokens since you can should no longer deposit liquidity in the staking contracts
   // todo: deprecate and delete the code paths that allow this, show user more information
   const Text = `Deposit Farm for Pool Id ${info.pid}`
-  return <Trans>{Text}</Trans>
+  return <div>{Text}</div>
 }
 
 function WithdrawFarmSummary({ info }: { info: WithdrawFarmTransactionInfo }) {
   const Text = `Withdraw Farm for Pool Id ${info.pid}`
-  return <Trans>{Text}</Trans>
+  return <div>{Text}</div>
 }
 
 function ClaimFarmSummary({ info }: { info: ClaimFarmTransactionInfo }) {
   const Text = `Claim Rewards for Pool Id ${info.pid}`
-  return <Trans>{Text}</Trans>
+  return <div>{Text}</div>
 }
 
 function MigrateLiquidityToV3Summary({
