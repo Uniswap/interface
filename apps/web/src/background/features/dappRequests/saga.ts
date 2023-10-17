@@ -8,7 +8,11 @@ import {
 import { saveDappConnection } from 'src/background/features/dapp/slice'
 import { appSelect } from 'src/background/store'
 import { sendMessageToActiveTab, sendMessageToSpecificTab } from 'src/background/utils/messageUtils'
-import { DisconnectResponse, ExtensionChainChange, ExtensionRequestType } from 'src/types/requests'
+import {
+  DisconnectResponse,
+  ExtensionChainChange,
+  ExtensionToDappRequestType,
+} from 'src/types/requests'
 import { call, put, select, take } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -110,7 +114,8 @@ export function* sendTransaction({
   const transactionRequest = (dappRequest as SendTransactionRequest).transaction
   const requestId = dappRequest.requestId
 
-  const chainId = yield* select(selectChainByDappAndWallet(account.address, dappUrl))
+  const chainId =
+    (yield* select(selectChainByDappAndWallet(account.address, dappUrl))) || ChainId.Mainnet
   // Sign and send the transaction
   const provider = yield* call(getProvider, chainId)
   const signerManager = yield* call(getSignerManager)
@@ -142,9 +147,8 @@ export function* getAccount(requestId: string, senderTabId: number, dappUrl: str
     throw new Error('No active account')
   }
 
-  const chainForWalletAndDapp = yield* select(
-    selectChainByDappAndWallet(activeAccount.address, dappUrl)
-  )
+  const chainForWalletAndDapp =
+    (yield* select(selectChainByDappAndWallet(activeAccount.address, dappUrl))) || ChainId.Mainnet
 
   const provider = yield* call(getProvider, chainForWalletAndDapp)
   yield* call(saveLastChainForDapp, chainForWalletAndDapp, senderTabId)
@@ -269,7 +273,8 @@ export function* handleSignMessage({
   const messageHex = (dappRequest as SignMessageRequest).messageHex
 
   // Get currently selected chain id
-  const chainId = yield* select(selectChainByDappAndWallet(account.address, dappUrl))
+  const chainId =
+    (yield* select(selectChainByDappAndWallet(account.address, dappUrl))) || ChainId.Mainnet
   const signerManager = yield* call(getSignerManager)
   const provider = yield* call(getProvider, chainId)
 
@@ -296,7 +301,8 @@ export function* handleSignTypedData({
   const typedData = (dappRequest as SignTypedDataRequest).typedData
 
   // Get currently selected chain id
-  const chainId = yield* select(selectChainByDappAndWallet(account.address, dappUrl))
+  const chainId =
+    (yield* select(selectChainByDappAndWallet(account.address, dappUrl))) ?? ChainId.Mainnet
   const signerManager = yield* call(getSignerManager)
   const provider = yield* call(getProvider, chainId)
 
@@ -357,7 +363,7 @@ export function* changeChainFromExtension(chainId: ChainId) {
   yield* call(saveLastChainForDapp, chainId)
 
   const response: ExtensionChainChange = {
-    type: ExtensionRequestType.SwitchChain,
+    type: ExtensionToDappRequestType.SwitchChain,
     providerUrl: provider.connection.url,
     chainId,
   }
@@ -366,7 +372,7 @@ export function* changeChainFromExtension(chainId: ChainId) {
 
 export function* disconnectFromExtension() {
   const response: DisconnectResponse = {
-    type: ExtensionRequestType.Disconnect,
+    type: ExtensionToDappRequestType.Disconnect,
   }
   yield* call(sendMessageToActiveTab, response)
 }

@@ -5,11 +5,7 @@ import {
   Message,
 } from 'src/background/features/dappRequests/dappRequestTypes'
 import { PortName } from 'src/types'
-import {
-  DappToExtensionRequestType,
-  ExtensionRequestType,
-  ExtensionToContentScriptRequestType,
-} from 'src/types/requests'
+import { ExtensionToContentScriptRequestType, ExtensionToDappRequestType } from 'src/types/requests'
 import { logger } from 'utilities/src/logger/logger'
 import { InjectedAssetsManager } from './InjectedAssetsManager'
 
@@ -17,7 +13,6 @@ InjectedAssetsManager.init()
 
 // TODO: Migrate these to onConnect listeners to avoid sendResponse problems when multiple listeners are active
 addDappToExtensionRoundtripListener()
-addDappToExtensionOneWayListener()
 addExtensionRequestListener()
 
 chrome.runtime.connect({ name: PortName.ContentScript })
@@ -75,18 +70,6 @@ function dappRequestListener(event: MessageEvent): void {
   }
 }
 
-function addDappToExtensionOneWayListener(): void {
-  window.addEventListener('message', (event) => {
-    if (event?.data?.type === DappToExtensionRequestType.ConnectionStatus) {
-      chrome.runtime.sendMessage(event?.data).catch((error) => {
-        logger.error(error, {
-          tags: { file: 'injected.ts', function: 'addDappToExtensionOneWayListener' },
-        })
-      })
-    }
-  })
-}
-
 function addDappToExtensionRoundtripListener(): void {
   window.addEventListener('message', dappRequestListener)
 }
@@ -105,7 +88,7 @@ function addExtensionRequestListener(): void {
         message
       )
 
-      if (Object.values(ExtensionRequestType).includes(message?.type)) {
+      if (Object.values(ExtensionToDappRequestType).includes(message?.type)) {
         window.postMessage(message)
       }
 

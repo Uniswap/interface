@@ -9,6 +9,7 @@ import { addRequest } from 'src/background/features/dappRequests/saga'
 import { sendRejectionToContentScript } from 'src/background/utils/messageUtils'
 import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
 import { PortName } from 'src/types'
+import { BackgroundToExtensionRequestType } from 'src/types/requests'
 import { logger } from 'utilities/src/logger/logger'
 import { authActions } from 'wallet/src/features/auth/saga'
 import { AuthActionType } from 'wallet/src/features/auth/types'
@@ -45,6 +46,15 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
       type: AuthActionType.Lock,
     })
   )
+})
+
+/** Fires an event whenever a tab is changed so the sidebar can reflect the current connection status properly. */
+chrome.tabs.onActivated.addListener(async () => {
+  try {
+    await chrome.runtime.sendMessage({ type: BackgroundToExtensionRequestType.TabActivated })
+  } catch (e) {
+    // an error will be thrown if the sidebar is not open. This is expected and in this case there is no action to be taken anyways so ignore.
+  }
 })
 
 /** Main entrypoint for intializing the app. */
@@ -151,7 +161,7 @@ function initMessageBridge(dispatch: Dispatch<AnyAction>): void {
 function notifyStoreInitialized(): void {
   chrome.runtime
     .sendMessage({
-      type: 'STORE_INITIALIZED',
+      type: BackgroundToExtensionRequestType.StoreInitialized,
     })
     .catch(() => undefined)
 }

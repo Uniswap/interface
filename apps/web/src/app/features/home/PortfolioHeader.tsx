@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { SwitchNetworksModal } from 'src/app/features/home/SwitchNetworksModal'
 import { AppRoutes } from 'src/app/navigation/constants'
-import { useDappContext } from 'src/background/features/dapp/hooks'
+import { useIsDappConnected } from 'src/background/features/dapp/hooks'
 import { Flex, Icons, Popover, Text, TouchableArea, Unicon } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -24,7 +24,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
 
   // Value does not matter, only used as a trigger to re-render the component when the dapp connection status changes
   const [updateConnectionStatus, setUpdateConnectionStatus] = useState(false)
-  const { dappConnected } = useDappContext(undefined, updateConnectionStatus)
+  const isDappConnected = useIsDappConnected()
 
   return (
     <Flex row alignItems="center" justifyContent="space-between">
@@ -47,7 +47,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
         </Flex>
       </Flex>
       <Flex row alignItems="center" gap="$spacing16" justifyContent="space-around">
-        {dappConnected ? (
+        {isDappConnected ? (
           <Popover stayInFrame>
             <Popover.Trigger
               onTouchEnd={(): void => setUpdateConnectionStatus(!updateConnectionStatus)}>

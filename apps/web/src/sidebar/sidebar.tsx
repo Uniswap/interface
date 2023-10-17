@@ -5,6 +5,7 @@ import React, { lazy } from 'react'
 import { createRoot } from 'react-dom/client'
 import { WebState } from 'src/background/store'
 import { PortName } from 'src/types'
+import { BackgroundToExtensionRequestType } from 'src/types/requests'
 import { logger } from 'utilities/src/logger/logger'
 import { initializeTranslation } from 'wallet/src/i18n/i18n'
 import { Store } from 'webext-redux'
@@ -18,7 +19,7 @@ const App = lazy(() => import('src/app/SidebarApp'))
 
 chrome.runtime.connect({ name: PortName.Sidebar })
 chrome.runtime.onMessage.addListener(async (req) => {
-  if (req.type === 'STORE_INITIALIZED') {
+  if (req.type === BackgroundToExtensionRequestType.StoreInitialized) {
     await initContentWindow()
   }
 })

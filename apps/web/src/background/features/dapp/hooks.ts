@@ -1,41 +1,34 @@
 import { useEffect, useState } from 'react'
+import { selectChainByDappAndWallet } from 'src/background/features/dapp/selectors'
 import { extractBaseUrl } from 'src/background/features/dappRequests/utils'
-import { sendMessageToActiveTab } from 'src/background/utils/messageUtils'
-import {
-  DappToExtensionRequestType,
-  ExtensionRequestType,
-  GetConnectionStatusRequest,
-} from 'src/types/requests'
-import { v4 as uuidv4 } from 'uuid'
+import { useAppSelector } from 'src/background/store'
+import { BackgroundToExtensionRequestType, BaseExtensionRequest } from 'src/types/requests'
+import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 type DappContext = {
   dappUrl: string
   dappName: string
-  dappConnected: boolean
   dappIconUrl?: string
 }
 
+/** Hook to indicate whether the current dapp is connected to the active address. */
+export function useIsDappConnected(): boolean {
+  const { dappUrl } = useDappContext()
+  const activeAddress = useActiveAccountAddress()
+
+  return useAppSelector(selectChainByDappAndWallet(activeAddress, dappUrl)) !== undefined
+}
+
 /**
- * Hook used to get the dApp context
- * @param tabId - the id of the tab to get the dapp context from (undefined defaults to the active tab).
- * We should typically use a specific tabId, and use active tab only when dapp details do not matter (e.g. popup edge cases)
- * @param updateTrigger - a boolean that can be used to trigger an update of the dapp context
+ * Hook used to get the dApp context. It updates whenever the current tab changes
  **/
-export function useDappContext(tabId?: number, updateTrigger?: boolean): DappContext {
+export function useDappContext(): DappContext {
   const [dappUrl, setDappUrl] = useState('')
   const [dappName, setDappName] = useState('')
-  const [dappConnected, setDappConnected] = useState(false)
   const [dappIconUrl, setDappIconUrl] = useState<string | undefined>(undefined)
 
-  // TODO (EXT-188): add a way to update this dapp context whenver the active tab changes
   useEffect(() => {
-    if (tabId) {
-      chrome.tabs.get(tabId, (tab) => {
-        setDappUrl(extractBaseUrl(tab?.url) || '')
-        setDappName(tab?.title || '')
-        setDappIconUrl(tab.favIconUrl)
-      })
-    } else {
+    const updateDappInfo = (): void => {
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         const tab = tabs[0]
         if (tab) {
@@ -46,21 +39,16 @@ export function useDappContext(tabId?: number, updateTrigger?: boolean): DappCon
       })
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const connectionStatusListener = (request: any): void => {
-      if (request?.type === DappToExtensionRequestType.ConnectionStatus) {
-        setDappConnected(request.connected || false)
-        chrome.runtime.onMessage.removeListener(connectionStatusListener)
+    updateDappInfo()
+
+    const tabUpdatedListener = (request: BaseExtensionRequest): void => {
+      if (request?.type === BackgroundToExtensionRequestType.TabActivated) {
+        updateDappInfo()
       }
     }
 
-    chrome.runtime.onMessage.addListener(connectionStatusListener)
-    const request: GetConnectionStatusRequest = {
-      type: ExtensionRequestType.GetConnectionStatus,
-      requestId: uuidv4(),
-    }
-    sendMessageToActiveTab(request)
-  }, [updateTrigger, tabId])
+    chrome.runtime.onMessage.addListener(tabUpdatedListener)
+  }, [setDappIconUrl, setDappUrl, setDappName])
 
-  return { dappUrl, dappName, dappConnected, dappIconUrl }
+  return { dappUrl, dappName, dappIconUrl }
 }

@@ -2,7 +2,7 @@ import { useDappContext } from 'src/background/features/dapp/hooks'
 import { selectChainByDappAndWallet } from 'src/background/features/dapp/selectors'
 import { disconnectAction, saveChainAction } from 'src/background/features/dappRequests/saga'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
-import { Button, Circle, Flex, getTokenValue, Icons, Image, Popover, Text } from 'ui/src'
+import { Button, Circle, Flex, getTokenValue, Icons, Popover, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
@@ -53,12 +53,6 @@ export function SwitchNetworksModal(): JSX.Element {
             <Flex grow row alignItems="center" justifyContent="flex-start">
               <Flex grow row alignItems="center" gap="$spacing8" pr="$spacing8">
                 <NetworkLogo chainId={chain} size={iconSizes.icon20} />
-                <Image
-                  borderRadius="$roundedFull"
-                  height={iconSizes.icon28}
-                  source={CHAIN_INFO[chain].logo ?? { uri: '' }}
-                  width={iconSizes.icon28}
-                />
                 <Text color="$neutral1" variant="subheading2">
                   {CHAIN_INFO[chain]?.label}
                 </Text>

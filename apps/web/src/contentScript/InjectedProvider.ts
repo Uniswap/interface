@@ -25,9 +25,8 @@ import {
 } from 'src/background/features/dappRequests/dappRequestTypes'
 import {
   BaseExtensionRequest,
-  DappToExtensionRequestType,
   ExtensionChainChange,
-  ExtensionRequestType,
+  ExtensionToDappRequestType,
 } from 'src/types/requests'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_HOUR_MS } from 'utilities/src/time/time'
@@ -120,7 +119,6 @@ export class InjectedProvider extends EventEmitter {
     this.publicKeys = null
 
     this.initExtensionToDappOneWayListener()
-    this.initExtensionToDappRoundtripListener()
   }
 
   /**
@@ -130,7 +128,7 @@ export class InjectedProvider extends EventEmitter {
     const handleDappRequest = async (event: MessageEvent<BaseExtensionRequest>): Promise<void> => {
       const messageData = event.data
       switch (messageData?.type) {
-        case ExtensionRequestType.SwitchChain: {
+        case ExtensionToDappRequestType.SwitchChain: {
           const request = messageData as ExtensionChainChange
           const chainId = chainIdToHexadecimalString(request.chainId)
           this.chainId = chainId
@@ -138,7 +136,7 @@ export class InjectedProvider extends EventEmitter {
           this.emit('chainChanged', chainId)
           break
         }
-        case ExtensionRequestType.Disconnect: {
+        case ExtensionToDappRequestType.Disconnect: {
           await this.handleDisconnectAccount()
         }
       }
@@ -147,29 +145,6 @@ export class InjectedProvider extends EventEmitter {
     // This listener isn't removed because it's needed for the lifetime of the app
     // TODO: Check for active tab when listening to events
     window.addEventListener('message', handleDappRequest)
-  }
-
-  /**
-   * Initialize a listener for messages posted from the Uniswap Wallet extension that also require a response
-   */
-  private initExtensionToDappRoundtripListener = (): void => {
-    const handleRoundTripRequest = (event: MessageEvent<BaseExtensionRequest>): void => {
-      const request = event.data as BaseExtensionRequest
-      switch (request?.type) {
-        case ExtensionRequestType.GetConnectionStatus: {
-          const response = {
-            type: DappToExtensionRequestType.ConnectionStatus,
-            connected: this.publicKeys !== null,
-          }
-
-          window.postMessage(response)
-        }
-      }
-    }
-
-    // This listener isn't removed because it's needed for the lifetime of the app
-    // TODO: Check for active tab when listening to events
-    window.addEventListener('message', handleRoundTripRequest)
   }
 
   //

@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { Image } from 'tamagui'
 import { Button, Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { ChainId } from 'wallet/src/constants/chains'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { DappRequestType } from './dappRequestTypes'
 import { SendTransactionDetails } from './requestContent/SendTransactionContent'
@@ -19,10 +20,11 @@ export function DappRequestContent(): JSX.Element {
   const pendingRequests = useAppSelector((state) => state.dappRequests.pending)
   const request = pendingRequests[pendingRequests.length - 1]
 
-  const { dappName, dappUrl, dappIconUrl } = useDappContext(request?.senderTabId)
+  const { dappName, dappUrl, dappIconUrl } = useDappContext()
 
   const activeAccount = useActiveAccountWithThrow()
-  const activeChainId = useAppSelector(selectChainByDappAndWallet(dappUrl, activeAccount.address))
+  const activeChainId =
+    useAppSelector(selectChainByDappAndWallet(dappUrl, activeAccount.address)) || ChainId.Mainnet
 
   if (!activeAccount) {
     throw new Error('No active account')
