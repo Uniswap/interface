@@ -1,3 +1,4 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import Column from 'components/Column'
@@ -104,7 +105,7 @@ export function ProgressIndicator({
         previewTitle: `Wrap ${nativeCurrency.symbol}`,
         actionRequiredTitle: `Wrap  ${nativeCurrency.symbol} in wallet`,
         inProgressTitle: `Wrapping  ${nativeCurrency.symbol}...`,
-        timeToEnd: 15,
+        timeToEnd: chainId === ChainId.MAINNET ? 20 : 10,
         delayedTitle: 'Longer than expected...',
         learnMoreLinkText: `Why do I have to wrap my ${nativeCurrency.symbol}?`,
         learnMoreLinkHref: SupportArticleURL.WETH_EXPLAINER,
@@ -115,7 +116,7 @@ export function ProgressIndicator({
         previewTitle: `Reset ${trade?.inputAmount.currency.symbol} limit`,
         actionRequiredTitle: `Reset ${trade?.inputAmount.currency.symbol} limit in wallet`,
         inProgressTitle: `Resetting ${trade?.inputAmount.currency.symbol} limit...`,
-        timeToEnd: 15,
+        timeToEnd: chainId === ChainId.MAINNET ? 20 : 10,
         delayedTitle: 'Longer than expected...',
       },
       [ConfirmModalState.APPROVING_TOKEN]: {
@@ -124,7 +125,7 @@ export function ProgressIndicator({
         previewTitle: `Approve ${trade?.inputAmount.currency.symbol} spending`,
         actionRequiredTitle: `Approve in wallet`,
         inProgressTitle: 'Approval pending...',
-        timeToEnd: 15,
+        timeToEnd: chainId === ChainId.MAINNET ? 20 : 10,
         delayedTitle: 'Longer than expected...',
         learnMoreLinkText: 'Why do I have to approve a token?',
         learnMoreLinkHref: SupportArticleURL.APPROVALS_EXPLAINER,
@@ -143,7 +144,7 @@ export function ProgressIndicator({
         previewTitle: 'Confirm swap',
         actionRequiredTitle: 'Confirm swap in wallet',
         inProgressTitle: 'Swap pending...',
-        timeToEnd: 20,
+        timeToEnd: chainId === ChainId.MAINNET ? 20 : 10,
         delayedEndTitle: 'Longer than expected...',
         ...(trade?.fillType === TradeFillType.UniswapX
           ? {
@@ -153,7 +154,7 @@ export function ProgressIndicator({
           : {}),
       },
     }),
-    [inputTokenColor, nativeCurrency.symbol, trade]
+    [chainId, inputTokenColor, nativeCurrency.symbol, trade]
   )
 
   // TODO: update single-step content; currently falling back to v1 experience
