@@ -74,26 +74,29 @@ const IconWrapper = styled.div<{ isActive: boolean }>`
   filter: ${({ isActive }) => `grayscale(${isActive ? 0 : 1})`};
   opacity: ${({ isActive }) => (isActive ? '1' : '0.5')};
 `
-function RippleAnimation({ isActive, rippleColor }: { isActive: boolean; rippleColor?: string }) {
-  if (!isActive || !rippleColor) {
+function RippleAnimation({ rippleColor }: { rippleColor?: string }) {
+  if (!rippleColor) {
     return null
   }
   return (
-    <>
+    <div data-testid="icon-ripple-animation">
       <Ring width="1px" color={rippleColor} animation={innerRingAnimation} />
       <Ring width="0.5px" color={rippleColor} animation={outerRingAnimation} />
-    </>
+    </div>
   )
 }
+
 function Icon({ stepStatus, icon, rippleColor }: { stepStatus: StepStatus; icon: ReactElement; rippleColor?: string }) {
   if (stepStatus === StepStatus.IN_PROGRESS) {
-    return <LoaderV3 size="24px" fill={rippleColor} />
+    return <LoaderV3 size="24px" fill={rippleColor} data-testid="loader-icon" />
   }
   return (
-    <>
-      <RippleAnimation isActive={stepStatus === StepStatus.ACTIVE} rippleColor={rippleColor} />
-      <IconWrapper isActive={stepStatus === StepStatus.ACTIVE}>{icon}</IconWrapper>
-    </>
+    <div>
+      {stepStatus === StepStatus.ACTIVE && <RippleAnimation rippleColor={rippleColor} />}
+      <IconWrapper isActive={stepStatus === StepStatus.ACTIVE} data-testid="step-icon">
+        {icon}
+      </IconWrapper>
+    </div>
   )
 }
 
@@ -134,7 +137,11 @@ function Timer({ secondsRemaining }: { secondsRemaining: number }) {
   const minutesText = minutes < 10 ? `0${minutes}` : minutes
   const secondsText = seconds < 10 ? `0${seconds}` : seconds
   const timerText = `${minutesText}:${secondsText}`
-  return <ThemedText.BodySecondary paddingRight="8px">{timerText}</ThemedText.BodySecondary>
+  return (
+    <ThemedText.BodySecondary paddingRight="8px" data-testid="step-timer">
+      {timerText}
+    </ThemedText.BodySecondary>
+  )
 }
 
 export function Step({ stepStatus, stepDetails }: { stepStatus: StepStatus; stepDetails: StepDetails }) {
@@ -177,7 +184,7 @@ export function Step({ stepStatus, stepDetails }: { stepStatus: StepStatus; step
     <RowBetween>
       <Row align="center" gap="12px">
         <Icon stepStatus={stepStatus} icon={stepDetails.icon} rippleColor={stepDetails.rippleColor} />
-        <Title stepStatus={stepStatus} stepDetails={stepDetails} isTimeRemaining={isTimed && secondsRemaining > 0} />
+        <Title stepStatus={stepStatus} stepDetails={stepDetails} isTimeRemaining={!isTimed || secondsRemaining > 0} />
       </Row>
       {isTimed && <Timer secondsRemaining={secondsRemaining} />}
       {stepStatus === StepStatus.COMPLETE && <CheckMark />}

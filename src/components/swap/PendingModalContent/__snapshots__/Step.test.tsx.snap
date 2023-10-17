@@ -1,0 +1,780 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Step in swap confirmation flow displays an active step in progress 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c6 {
+  color: #222222;
+}
+
+.c7 {
+  color: #7D7D7D;
+}
+
+.c4 {
+  height: 24px;
+  width: 24px;
+}
+
+.c4 path {
+  stroke: #CECECE;
+  background: #7D7D7D;
+  fill: #4C82FB;
+}
+
+.c5 {
+  -webkit-animation: 2s fvtopB linear infinite;
+  animation: 2s fvtopB linear infinite;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c0 c3"
+    >
+      <svg
+        class="c4 c5"
+        data-testid="loader-icon"
+        fill="#4C82FB"
+        stroke="#CECECE"
+        viewBox="0 0 54 54"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M53.6666 26.9999C53.6666 41.7275 41.7276 53.6666 27 53.6666C12.2724 53.6666 0.333313 41.7275 0.333313 26.9999C0.333313 12.2723 12.2724 0.333252 27 0.333252C41.7276 0.333252 53.6666 12.2723 53.6666 26.9999ZM8.33331 26.9999C8.33331 37.3092 16.6907 45.6666 27 45.6666C37.3093 45.6666 45.6666 37.3092 45.6666 26.9999C45.6666 16.6906 37.3093 8.33325 27 8.33325C16.6907 8.33325 8.33331 16.6906 8.33331 26.9999Z"
+          fill="#CECECE"
+          opacity="0.1"
+        />
+        <path
+          d="M49.6666 26.9999C51.8758 26.9999 53.6973 25.1992 53.3672 23.0149C53.0452 20.884 52.4652 18.7951 51.6368 16.795C50.2966 13.5597 48.3324 10.62 45.8562 8.14374C43.3799 5.66751 40.4402 3.70326 37.2049 2.36313C35.2048 1.53466 33.1159 0.954747 30.985 0.632693C28.8007 0.30256 27 2.12411 27 4.33325C27 6.54239 28.8108 8.29042 30.9695 8.76019C32.0523 8.99585 33.1146 9.32804 34.1434 9.75417C36.4081 10.6923 38.4659 12.0672 40.1993 13.8006C41.9327 15.534 43.3076 17.5918 44.2457 19.8565C44.6719 20.8853 45.004 21.9476 45.2397 23.0304C45.7095 25.1891 47.4575 26.9999 49.6666 26.9999Z"
+          fill="#CECECE"
+        />
+      </svg>
+      <div
+        class="c6 css-1urox24"
+      >
+        Swap pending...
+      </div>
+    </div>
+    <div
+      class="c7 css-15d6nrs"
+      data-testid="step-timer"
+    >
+      00:20
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Step in swap confirmation flow displays an active step, ETA only 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c7 {
+  color: #222222;
+}
+
+.c8 {
+  color: #7D7D7D;
+}
+
+.c4 {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 1px solid #4C82FB;
+  border-radius: 50%;
+  -webkit-animation: cdcKrq 2s linear infinite;
+  animation: cdcKrq 2s linear infinite;
+}
+
+.c5 {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 0.5px solid #4C82FB;
+  border-radius: 50%;
+  -webkit-animation: fUGyYy 2s linear infinite;
+  animation: fUGyYy 2s linear infinite;
+}
+
+.c6 {
+  width: 24px;
+  height: 24px;
+  -webkit-filter: grayscale(0);
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c0 c3"
+    >
+      <div>
+        <div
+          data-testid="icon-ripple-animation"
+        >
+          <div
+            class="c4"
+            color="#4C82FB"
+            width="1px"
+          />
+          <div
+            class="c5"
+            color="#4C82FB"
+            width="0.5px"
+          />
+        </div>
+        <div
+          class="c6"
+          data-testid="step-icon"
+        >
+          <svg
+            fill="none"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="#4C82FB"
+              height="24"
+              rx="12"
+              width="24"
+            />
+            <path
+              d="M10.6663 8.33325L13.6663 5.33325M13.6663 5.33325L16.6663 8.33325M13.6663 5.33325V11.9999M13.333 15.6666L10.333 18.6666M10.333 18.6666L7.33301 15.6666M10.333 18.6666L10.333 12.6666"
+              stroke="#F5F6FC"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.33333"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class="c7 css-1urox24"
+      >
+        Confirm swap in wallet
+      </div>
+    </div>
+    <div
+      class="c8 css-15d6nrs"
+      data-testid="step-timer"
+    >
+      00:20
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Step in swap confirmation flow displays an active step, awaiting user action - not timed and no ETA 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c7 {
+  color: #222222;
+}
+
+.c4 {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 1px solid #4C82FB;
+  border-radius: 50%;
+  -webkit-animation: cdcKrq 2s linear infinite;
+  animation: cdcKrq 2s linear infinite;
+}
+
+.c5 {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 0.5px solid #4C82FB;
+  border-radius: 50%;
+  -webkit-animation: fUGyYy 2s linear infinite;
+  animation: fUGyYy 2s linear infinite;
+}
+
+.c6 {
+  width: 24px;
+  height: 24px;
+  -webkit-filter: grayscale(0);
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c0 c3"
+    >
+      <div>
+        <div
+          data-testid="icon-ripple-animation"
+        >
+          <div
+            class="c4"
+            color="#4C82FB"
+            width="1px"
+          />
+          <div
+            class="c5"
+            color="#4C82FB"
+            width="0.5px"
+          />
+        </div>
+        <div
+          class="c6"
+          data-testid="step-icon"
+        >
+          <svg
+            fill="none"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="#4C82FB"
+              height="24"
+              rx="12"
+              width="24"
+            />
+            <path
+              d="M10.6663 8.33325L13.6663 5.33325M13.6663 5.33325L16.6663 8.33325M13.6663 5.33325V11.9999M13.333 15.6666L10.333 18.6666M10.333 18.6666L7.33301 15.6666M10.333 18.6666L10.333 12.6666"
+              stroke="#F5F6FC"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.33333"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class="c7 css-1urox24"
+      >
+        Confirm swap in wallet
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Step in swap confirmation flow displays an active step, awaiting user action - timed 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c7 {
+  color: #222222;
+}
+
+.c8 {
+  color: #7D7D7D;
+}
+
+.c4 {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 1px solid #4C82FB;
+  border-radius: 50%;
+  -webkit-animation: cdcKrq 2s linear infinite;
+  animation: cdcKrq 2s linear infinite;
+}
+
+.c5 {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 0.5px solid #4C82FB;
+  border-radius: 50%;
+  -webkit-animation: fUGyYy 2s linear infinite;
+  animation: fUGyYy 2s linear infinite;
+}
+
+.c6 {
+  width: 24px;
+  height: 24px;
+  -webkit-filter: grayscale(0);
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c0 c3"
+    >
+      <div>
+        <div
+          data-testid="icon-ripple-animation"
+        >
+          <div
+            class="c4"
+            color="#4C82FB"
+            width="1px"
+          />
+          <div
+            class="c5"
+            color="#4C82FB"
+            width="0.5px"
+          />
+        </div>
+        <div
+          class="c6"
+          data-testid="step-icon"
+        >
+          <svg
+            fill="none"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="#4C82FB"
+              height="24"
+              rx="12"
+              width="24"
+            />
+            <path
+              d="M10.6663 8.33325L13.6663 5.33325M13.6663 5.33325L16.6663 8.33325M13.6663 5.33325V11.9999M13.333 15.6666L10.333 18.6666M10.333 18.6666L7.33301 15.6666M10.333 18.6666L10.333 12.6666"
+              stroke="#F5F6FC"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.33333"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class="c7 css-1urox24"
+      >
+        Confirm swap in wallet
+      </div>
+    </div>
+    <div
+      class="c8 css-15d6nrs"
+      data-testid="step-timer"
+    >
+      00:20
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Step in swap confirmation flow displays an upcoming step 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c5 {
+  color: #7D7D7D;
+}
+
+.c4 {
+  width: 24px;
+  height: 24px;
+  -webkit-filter: grayscale(1);
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c0 c3"
+    >
+      <div>
+        <div
+          class="c4"
+          data-testid="step-icon"
+        >
+          <svg
+            fill="none"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="#4C82FB"
+              height="24"
+              rx="12"
+              width="24"
+            />
+            <path
+              d="M10.6663 8.33325L13.6663 5.33325M13.6663 5.33325L16.6663 8.33325M13.6663 5.33325V11.9999M13.333 15.6666L10.333 18.6666M10.333 18.6666L7.33301 15.6666M10.333 18.6666L10.333 12.6666"
+              stroke="#F5F6FC"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.33333"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class="c5 css-1urox24"
+      >
+        Confirm swap
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Step in swap confirmation flow displays checkmark once step is complete 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c5 {
+  color: #7D7D7D;
+}
+
+.c4 {
+  width: 24px;
+  height: 24px;
+  -webkit-filter: grayscale(1);
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c0 c3"
+    >
+      <div>
+        <div
+          class="c4"
+          data-testid="step-icon"
+        >
+          <svg
+            fill="none"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="#4C82FB"
+              height="24"
+              rx="12"
+              width="24"
+            />
+            <path
+              d="M10.6663 8.33325L13.6663 5.33325M13.6663 5.33325L16.6663 8.33325M13.6663 5.33325V11.9999M13.333 15.6666L10.333 18.6666M10.333 18.6666L7.33301 15.6666M10.333 18.6666L10.333 12.6666"
+              stroke="#F5F6FC"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.33333"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class="c5 css-1urox24"
+      >
+        Confirm swap
+      </div>
+    </div>
+    <svg
+      data-testid="checkmark-icon"
+      fill="none"
+      height="24"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M9.00002 17C8.99902 17 8.99802 17 8.99602 17C8.72902 16.999 8.47502 16.892 8.28802 16.702L4.28802 12.64C3.90002 12.246 3.90503 11.613 4.29903 11.226C4.69303 10.839 5.32502 10.843 5.71302 11.237L9.00602 14.581L18.294 5.29398C18.685 4.90298 19.317 4.90298 19.708 5.29398C20.099 5.68398 20.099 6.31798 19.708 6.70798L9.70801 16.708C9.52001 16.895 9.26502 17 9.00002 17Z"
+        fill="#40B66B"
+      />
+    </svg>
+  </div>
+</DocumentFragment>
+`;
