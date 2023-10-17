@@ -111,9 +111,8 @@ export class QueryToken extends WrappedTokenInfo {
   }
 }
 
-export class QueryTokenB extends WrappedTokenInfo {
+export class PortfolioBalanceQueryToken extends WrappedTokenInfo {
   constructor(address: string, chain?: Chain, decimals?: number, symbol?: string, name?: string, logoSrc?: string) {
-    // const chainId = supportedChainIdFromGQLChain(chain)
     const chainId = (chain ? supportedChainIdFromGQLChain(chain) : ChainId.MAINNET) ?? ChainId.MAINNET
     if (chainId) {
       super({

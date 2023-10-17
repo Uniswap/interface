@@ -184,8 +184,12 @@ export function useCrossChainGqlBalances(tokenQuery: TokenQuery, account?: strin
   // const { data: portfolioBalances } = useCachedPortfolioBalancesQuery({ account }) // hmm cached?
   const tokenBalances = portfolioBalances?.portfolios?.[0].tokenBalances
   const bridgeInfo = tokenQuery.token?.project?.tokens
-  const otherChainBalances = tokenBalances?.filter((tokenBalance) =>
-    bridgeInfo?.some((bridgeToken) => bridgeToken.id == tokenBalance.token?.id)
+  console.log('tokenbalances', tokenBalances)
+  console.log('bridgeinfo', bridgeInfo) // why does bridge info flicker... bridge info does not give ETHER across chains as native balance.. also MATIC does not show either crosschain
+  const otherChainBalances = tokenBalances?.filter(
+    (tokenBalance) =>
+      tokenBalance.token?.symbol === tokenQuery.token?.symbol &&
+      bridgeInfo?.some((bridgeToken) => bridgeToken.id == tokenBalance.token?.id)
   )
   return otherChainBalances
 

@@ -1,13 +1,13 @@
 import { Trans } from '@lingui/macro'
-import { ChainId, Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain } from 'constants/chains'
+import { nativeOnChain } from 'constants/tokens'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TokenQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useCrossChainGqlBalances } from 'graphql/data/portfolios'
-import { QueryTokenB } from 'graphql/data/Token'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import JSBI from 'jsbi'
@@ -174,14 +174,16 @@ export default function BalanceSummary({ token, tokenQuery }: { token: Currency;
       (pageChainBalance.token?.chain ? supportedChainIdFromGQLChain(pageChainBalance.token?.chain) : ChainId.MAINNET) ??
       ChainId.MAINNET
 
-    const balanceToken = new QueryTokenB(
-      pageChainBalance.token?.address ?? '',
-      pageChainBalance.token?.chain,
-      pageChainBalance.token?.decimals,
-      pageChainBalance.token?.symbol,
-      pageChainBalance.token?.name
-      // logoSrc
-    )
+    const currency = pageChainBalance.token?.address
+      ? new Token(
+          pageChainId,
+          pageChainBalance.token?.address,
+          pageChainBalance.token?.decimals ?? 6,
+          pageChainBalance.token?.symbol,
+          pageChainBalance.token?.name ?? undefined,
+          /* bypassChecksum:*/ true
+        )
+      : nativeOnChain(pageChainId)
 
     return (
       <BalanceSection>
@@ -189,10 +191,10 @@ export default function BalanceSummary({ token, tokenQuery }: { token: Currency;
           <Trans>Your balance</Trans>
         </ThemedText.SubHeaderSmall>
         <Balance
-          token={balanceToken}
+          token={currency}
           chainId={token.chainId}
           balance={CurrencyAmount.fromRawAmount(
-            balanceToken,
+            currency,
             JSBI.BigInt((pageChainBalance.quantity ?? 0) * 10 ** token.decimals)
           )}
           isInfoTDPEnabled={true}
@@ -213,23 +215,24 @@ export default function BalanceSummary({ token, tokenQuery }: { token: Currency;
             (balance.token?.chain ? supportedChainIdFromGQLChain(balance.token?.chain) : ChainId.MAINNET) ??
             ChainId.MAINNET
 
-          const balanceToken = new QueryTokenB(
-            balance.token?.address ?? '',
-            balance.token?.chain,
-            balance.token?.decimals,
-            balance.token?.symbol,
-            balance.token?.name
-            // add: logoSrc
-          ) // should be crosschain? used to get portlogo
-          // doesn't currently work with Native tokens rip
+          const currency = balance.token?.address
+            ? new Token(
+                chainId,
+                balance.token?.address,
+                balance.token?.decimals ?? 6,
+                balance.token?.symbol,
+                balance.token?.name ?? undefined,
+                /* bypassChecksum:*/ true
+              )
+            : nativeOnChain(chainId)
 
           return (
             <Balance
               key={balance.id}
-              token={balanceToken}
+              token={currency}
               chainId={chainId}
               balance={CurrencyAmount.fromRawAmount(
-                balanceToken,
+                currency,
                 JSBI.BigInt((balance.quantity ?? 0) * 10 ** token.decimals)
               )}
               isInfoTDPEnabled={true}

@@ -10,6 +10,8 @@ interface TagInfo extends TagDetails {
 /**
  * Token instances created from token info on a token list.
  */
+// todo: misleading class name, thought it was for WETH/WBTC/etc. maybe TokenFromTokenList? also.. queryToken (from gql uses this class..
+// is it accurate still to put it in src/state/lists (which is for redux tokenlists?))
 export class WrappedTokenInfo implements Token {
   public readonly isNative = false as const
   public readonly isToken = true as const
