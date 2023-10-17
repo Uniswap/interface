@@ -1,7 +1,7 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo, useMemo } from 'react'
 import { getNumberFormatSettings } from 'react-native-localize'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 
 // if this setting is changed in phone settings the app would be restarted
 const { decimalSeparator } = getNumberFormatSettings()
@@ -11,7 +11,7 @@ export enum KeyAction {
   Delete = 'delete',
 }
 
-export type KeyLabel = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '.' | '0' | '←'
+export type KeyLabel = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '.' | '0' | 'backspace'
 
 type KeyProps = {
   action: KeyAction
@@ -70,7 +70,7 @@ export const DecimalPad = memo(function DecimalPad({
       },
       { label: '0', action: KeyAction.Insert, align: 'center' },
       {
-        label: '←',
+        label: 'backspace',
         action: KeyAction.Delete,
         align: 'center',
       },
@@ -140,13 +140,17 @@ const KeyButton = memo(function KeyButton({
       width={index % 3 === 1 ? '50%' : '25%'}
       onLongPress={handleLongPress}
       onPress={handlePress}>
-      <Text color={disabled ? '$neutral2' : '$neutral1'} textAlign="center" variant="heading2">
-        {
-          label === '.' ? decimalSeparator : label
-          /* respect phone settings to show decimal separator in the numpad,
-           * but in the input we always have '.' as a decimal separator for now*/
-        }
-      </Text>
+      {label === 'backspace' ? (
+        <Icons.BackArrow color={disabled ? '$neutral3' : '$neutral1'} size={32} />
+      ) : (
+        <Text color={disabled ? '$neutral3' : '$neutral1'} textAlign="center" variant="heading2">
+          {
+            label === '.' ? decimalSeparator : label
+            /* respect phone settings to show decimal separator in the numpad,
+             * but in the input we always have '.' as a decimal separator for now*/
+          }
+        </Text>
+      )}
     </TouchableArea>
   )
 })

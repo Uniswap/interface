@@ -29,7 +29,7 @@ export const DecimalPadInput = memo(function DecimalPadInput({
   const disableKeysConditions = useMemo<Partial<Record<KeyLabel, (value: string) => boolean>>>(
     () => ({
       '.': (v) => v.includes('.'),
-      '←': (v) => cursorAtStartRef.current || v.length === 0,
+      backspace: (v) => cursorAtStartRef.current || v.length === 0,
     }),
     []
   )

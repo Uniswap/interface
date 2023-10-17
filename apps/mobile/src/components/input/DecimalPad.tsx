@@ -2,7 +2,7 @@ import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo, useMemo } from 'react'
 import { TextInputProps } from 'react-native'
 import { getNumberFormatSettings } from 'react-native-localize'
-import { AnimatedFlex, Flex, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlex, Flex, Icons, Text, TouchableArea } from 'ui/src'
 
 // if this setting is changed in phone settings the app would be restarted
 const { decimalSeparator } = getNumberFormatSettings()
@@ -12,10 +12,12 @@ enum KeyAction {
   Delete = 'delete',
 }
 
+export type KeyLabel = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '.' | '0' | 'backspace'
+
 type KeyProps = {
   action: KeyAction
   disabled?: (value: string) => boolean
-  label: string
+  label: KeyLabel
   hidden?: boolean
   paddingTop?: '$spacing12'
   align: 'flex-start' | 'center' | 'flex-end'
@@ -81,7 +83,7 @@ export function _DecimalPad({
       },
       { label: '0', action: KeyAction.Insert, align: 'center', disabled: () => disabled },
       {
-        label: '←',
+        label: 'backspace',
         action: KeyAction.Delete,
         disabled: (v: string) => cursorAtStart || v.length === 0 || disabled,
         align: 'center',
@@ -201,13 +203,17 @@ function KeyButton({
       width={index % 3 === 1 ? '50%' : '25%'}
       onLongPress={onLongPress}
       onPress={onPress}>
-      <Text color={isDisabled ? '$neutral2' : '$neutral1'} textAlign="center" variant="heading2">
-        {
-          label === '.' ? decimalSeparator : label
-          /* respect phone settings to show decimal separator in the numpad,
-           * but in the input we always have '.' as a decimal separator for now*/
-        }
-      </Text>
+      {label === 'backspace' ? (
+        <Icons.BackArrow color={isDisabled ? '$neutral3' : '$neutral1'} size={32} />
+      ) : (
+        <Text color={isDisabled ? '$neutral3' : '$neutral1'} textAlign="center" variant="heading2">
+          {
+            label === '.' ? decimalSeparator : label
+            /* respect phone settings to show decimal separator in the numpad,
+             * but in the input we always have '.' as a decimal separator for now*/
+          }
+        </Text>
+      )}
     </TouchableArea>
   )
 }
