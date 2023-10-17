@@ -125,6 +125,9 @@ jobs:
   cypress-test-matrix:
     needs: [build, cypress-rerun]
     runs-on: ubuntu-latest
+    container:
+      image: cypress/base:18.16.0 # matches .nvmrc
+      options: --shm-size 2gb
     strategy:
       fail-fast: false
       matrix:
