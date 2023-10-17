@@ -38,16 +38,12 @@ const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
   [darkMode in 'dark' | 'light']: { [chainId in NetworkAlertChains]: string }
 } = {
   dark: {
-    // [SupportedChainId.BNB]:
-    //   'radial-gradient(182.71% 150.59% at 2.81% 7.69%, rgba(240, 185, 11, 0.16) 0%, rgba(255, 168, 0, 0.16) 100%)',
     [SupportedChainId.ROLLUX]:
       'radial-gradient(182.71% 150.59% at 2.81% 7.69%, rgba(240, 185, 11, 0.16) 0%, rgba(255, 168, 0, 0.16) 100%)',
     [SupportedChainId.ROLLUX_TANENBAUM]:
       'radial-gradient(182.71% 150.59% at 2.81% 7.69%, rgba(240, 185, 11, 0.16) 0%, rgba(255, 168, 0, 0.16) 100%)',
   },
   light: {
-    // [SupportedChainId.BNB]:
-    //   'radial-gradient(182.71% 150.59% at 2.81% 7.69%, rgba(240, 185, 11, 0.16) 0%, rgba(255, 168, 0, 0.16) 100%)',
     [SupportedChainId.ROLLUX]:
       'radial-gradient(182.71% 150.59% at 2.81% 7.69%, rgba(240, 185, 11, 0.16) 0%, rgba(255, 168, 0, 0.16) 100%)',
     [SupportedChainId.ROLLUX_TANENBAUM]:
@@ -122,7 +118,6 @@ export function BannerAlert() {
   const chainInfo = getChainInfo(chainId)
   if (!chainInfo) return null
 
-  const { label } = chainInfo
   const textColor = TEXT_COLORS[chainId]
 
   return (
@@ -137,10 +132,10 @@ export function BannerAlert() {
             <L2Icon src="https://images.squarespace-cdn.com/content/v1/638a48377c09bb00bbc62b94/019e9ada-f799-47ec-b429-c4b6c5f426ec/coinify_logomark_orange.png?format=1500w" />
             <AutoRow>
               <Header>
-                <Trans>Buy $SYS Rollux here</Trans>
+                <Trans>Buy $SYS on Coinify</Trans>
               </Header>
               <HideSmall>
-                <Trans>Buy tokens to the {label} network.</Trans>
+                <Trans>With a few clicks you can acquire $SYS on Rollux Network</Trans>
               </HideSmall>
             </AutoRow>
           </BodyText>

@@ -71,7 +71,7 @@ export const TICK_LENS_ADDRESSES: AddressMap = {
 
 // Farms address
 export const GAMMA_MASTERCHEF_ADDRESSES: AddressMap = {
-  ...constructSameAddressMap('0xc9261c3c43d40509563f900D07F5b52b55dF9Cd9'),
+  ...constructSameAddressMap('0x70e0461e476de1211d789e9ea4ec2d3bb126d16a'),
 }
 
 export const GAMMA_UNIPROXY_ADDRESSES: AddressMap = {

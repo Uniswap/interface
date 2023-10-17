@@ -117,7 +117,9 @@ const GammaFarmCardDetails: React.FC<{
         await stakeLP()
       } else {
         await dataDetails.approveCallback()
+        stateTransactionDeposit(false, false, undefined, undefined)
       }
+
       setApproveOrStaking(false)
     } catch (e) {
       stateTransactionDeposit(false, true, e.message, undefined)
@@ -468,17 +470,17 @@ const GammaFarmCardDetails: React.FC<{
           <ConfirmationModalContent
             title={<Trans>Transaction summary</Trans>}
             onDismiss={handleDismissTransactionDeposit}
-            topContent={ dataDetails.approval === ApprovalState.APPROVED ? modalHeaderDeposit: modalHeaderApprove}
+            topContent={dataDetails.approval === ApprovalState.APPROVED ? modalHeaderDeposit : modalHeaderApprove}
             bottomContent={() => (
               <ButtonPrimary style={{ marginTop: '0.5rem' }} onClick={approveOrStakeLP}>
                 <Text fontWeight={500} fontSize={20}>
-                  <Trans>{dataDetails.approval === ApprovalState.APPROVED ? "Deposit" : "Approve"}</Trans>
+                  <Trans>{dataDetails.approval === ApprovalState.APPROVED ? 'Deposit' : 'Approve'}</Trans>
                 </Text>
               </ButtonPrimary>
             )}
           />
         )}
-      /> 
+      />
       <TransactionConfirmationModal
         isOpen={showTransactionWithdrawModal}
         onDismiss={handleDismissTransactionWithdraw}
