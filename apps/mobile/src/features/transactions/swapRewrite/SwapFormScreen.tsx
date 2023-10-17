@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, StyleSheet, TextInputProps } from 'react-native'
+import { Keyboard, StyleSheet, TextInput, TextInputProps } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
@@ -91,6 +91,9 @@ function SwapFormContent(): JSX.Element {
   const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
     useShouldShowNativeKeyboard()
 
+  const inputRef = useRef<TextInput>(null)
+  const outputRef = useRef<TextInput>(null)
+
   const inputSelectionRef = useRef<TextInputProps['selection']>()
   const outputSelectionRef = useRef<TextInputProps['selection']>()
 
@@ -105,9 +108,11 @@ function SwapFormContent(): JSX.Element {
   const resetSelection = useCallback(
     (start: number, end?: number) => {
       if (focusOnCurrencyField === CurrencyField.INPUT) {
-        inputSelectionRef.current = { start, end: end ?? start }
+        inputSelectionRef.current = { start, end }
+        inputRef.current?.setNativeProps({ selection: { start, end } })
       } else if (focusOnCurrencyField === CurrencyField.OUTPUT) {
-        outputSelectionRef.current = { start, end: end ?? start }
+        outputSelectionRef.current = { start, end }
+        outputRef.current?.setNativeProps({ selection: { start, end } })
       }
     },
     [focusOnCurrencyField]
@@ -118,7 +123,6 @@ function SwapFormContent(): JSX.Element {
       if (!focusOnCurrencyField) {
         return
       }
-
       updateSwapForm({
         exactAmountFiat: isFiatInput ? value : undefined,
         exactAmountToken: !isFiatInput ? value : undefined,
@@ -175,6 +179,9 @@ function SwapFormContent(): JSX.Element {
 
   const onSetMax = useCallback(
     (amount: string): void => {
+      inputRef.current?.setNativeProps({
+        selection: { start: 0, end: 0 },
+      })
       updateSwapForm({
         exactAmountFiat: undefined,
         exactAmountToken: amount,
@@ -230,6 +237,7 @@ function SwapFormContent(): JSX.Element {
             borderRadius="$rounded20"
             borderWidth={1}>
             <CurrencyInputPanel
+              ref={inputRef}
               currencyAmount={currencyAmounts[CurrencyField.INPUT]}
               currencyBalance={currencyBalances[CurrencyField.INPUT]}
               currencyInfo={currencies[CurrencyField.INPUT]}
@@ -298,6 +306,7 @@ function SwapFormContent(): JSX.Element {
               overflow="hidden"
               position="relative">
               <CurrencyInputPanel
+                ref={outputRef}
                 isOutput
                 currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
                 currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
