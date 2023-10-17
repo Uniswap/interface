@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { MouseoverTooltip } from 'components/Tooltip'
 import styled from 'styled-components/macro'
@@ -15,9 +14,9 @@ const TitleContainer = styled.div`
 export default function SubTitleContainer({ text, description }: { text: string; description: string }) {
   return (
     <TitleContainer>
-      <MouseoverTooltip text={<Trans>{text}</Trans>} placement="bottom">
+      <MouseoverTooltip text={<div>{text}</div>} placement="bottom">
         <ThemedText.SubHeaderSmall>
-          <Trans>{description}</Trans>
+          <div>{description}</div>
         </ThemedText.SubHeaderSmall>
       </MouseoverTooltip>
     </TitleContainer>
