@@ -185,12 +185,12 @@ export const MarketplaceRow = ({
     <Row onMouseEnter={toggleMarketRowHovered} onMouseLeave={toggleMarketRowHovered}>
       <FloorPriceInfo>
         <ThemedText.BodyPrimary color="neutral2" lineHeight="24px">
-          {asset.floorPrice
-            ? `${formatNumberOrString({
-                input: asset.floorPrice,
-                type: NumberType.NFTToken,
-              })} ETH`
-            : '-'}
+          {formatNumberOrString({
+            input: asset.floorPrice,
+            type: NumberType.NFTToken,
+          }) + asset.floorPrice
+            ? ' ETH'
+            : ''}
         </ThemedText.BodyPrimary>
       </FloorPriceInfo>
       <LastPriceInfo>

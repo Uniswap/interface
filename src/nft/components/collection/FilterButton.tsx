@@ -5,7 +5,7 @@ import { FilterIcon } from 'nft/components/icons'
 import { buttonTextMedium } from 'nft/css/common.css'
 import { breakpoints } from 'nft/css/sprinkles.css'
 import { pluralize } from 'nft/utils'
-import { NO_DECIMALS, useFormatter } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export const FilterButton = ({
   onClick,
@@ -45,7 +45,7 @@ export const FilterButton = ({
             ? 'Filter'
             : `Filter • ${formatNumberOrString({
                 input: collectionCount,
-                type: [{ upperBound: Infinity, formatterOptions: NO_DECIMALS }],
+                type: NumberType.WholeNumber,
               })} result${pluralize(collectionCount)}`}
         </Box>
       ) : null}

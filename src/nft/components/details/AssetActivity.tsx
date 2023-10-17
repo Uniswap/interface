@@ -155,7 +155,7 @@ const AssetActivity = ({ events }: { events?: ActivityEvent[] }) => {
         events.map((event, index) => {
           const { eventTimestamp, eventType, fromAddress, marketplace, price, toAddress, transactionHash } = event
           const formattedPrice = price
-            ? formatNumberOrString({ input: parseFloat(price ?? ''), type: NumberType.NFTToken })
+            ? formatNumberOrString({ input: parseFloat(price), type: NumberType.NFTToken })
             : null
           if (!eventType) return null
           return (
