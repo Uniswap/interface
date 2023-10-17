@@ -314,7 +314,7 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
                 <>
                   <DoubleCurrencyLogo currency0={tokenZero} currency1={tokenOne} size={30} />
                   <div style={{ marginLeft: '6px' }}>
-                    <small className="weight-600">{`${tokenZero.symbol}/${tokenOne.symbol} (${pairData.title})`}</small>
+                    <small className="weight-600">{`${tokenZero.symbol}/${tokenOne.symbol}`}</small>
                     <Box className="cursor-pointer">
                       <ButtonEmpty width="fit-content" padding="0" onClick={() => setModalOpen(true)}>
                         <small style={{ color: theme.accentActive }}>Manage Gamma Liquidity</small>
