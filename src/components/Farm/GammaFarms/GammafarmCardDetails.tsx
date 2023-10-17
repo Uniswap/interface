@@ -224,8 +224,8 @@ const GammaFarmCardDetails: React.FC<{
       addTransaction(response, {
         type: TransactionType.CLAIM_FARM,
         pid: pairData.pid,
-        amount: formatNumber(Number(rewardsBN.toString())),
-        tokenAddress: rewardData.rewardTokenAddress,
+        amount: formatNumber(Number(rewardsAmount)),
+        tokenAddress: rewardTokenAddress?.result?.toString(),
       })
       const receipt = await response.wait()
       finalizedTransaction(receipt, {

@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro'
-import { Currency, CurrencyAmount, TradeType } from '@pollum-io/sdk-core'
+import { Currency,Token, CurrencyAmount, TradeType } from '@pollum-io/sdk-core'
 import { ChainId, nativeOnChain } from '@pollum-io/smart-order-router'
 import { formatCurrencyAmount } from '@uniswap/conedison/format'
 import { TransactionPartsFragment, TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
@@ -174,9 +174,8 @@ export function parseLocalActivity(
       info.type === TransactionType.WITHDRAW_FARM ||
       info.type === TransactionType.REMOVE_LIQUIDITY_GAMMA
     ) {
-      const currency = getCurrency(info.tokenAddress, chainId, tokens)
-      const formatted = currency ? formatCurrencyAmount(CurrencyAmount.fromRawAmount(currency, info.amount)) : undefined
-      const descriptor = formatted ? t`${formatted} ${currency?.symbol}` : t`Unknown`
+      const currency =  getCurrency(info.tokenAddress, chainId, tokens)  
+      const descriptor = currency ? t`${info.amount} ${currency?.symbol}` : t`Unknown`
       additionalFields = {
         descriptor,
         currencies: [currency],
