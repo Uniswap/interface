@@ -30,6 +30,7 @@ export function SeedPhraseDisplay({
   )
 
   const prevIsWalletRestoreModalOpen = usePrevious(isWalletRestoreModalOpen)
+
   useEffect(() => {
     if (prevIsWalletRestoreModalOpen && !isWalletRestoreModalOpen) {
       onDismiss?.()
@@ -39,10 +40,6 @@ export function SeedPhraseDisplay({
   const onShowSeedPhraseConfirmed = (): void => {
     setShowSeedPhrase(true)
     setShowSeedPhraseViewWarningModal(false)
-  }
-
-  const onClose = (): void => {
-    if (!showSeedPhrase) onDismiss?.()
   }
 
   const onConfirmWarning = async (): Promise<void> => {
@@ -99,8 +96,10 @@ export function SeedPhraseDisplay({
           title={t('Be careful')}
           onCancel={(): void => {
             setShowSeedPhraseViewWarningModal(false)
+            if (!showSeedPhrase) {
+              onDismiss?.()
+            }
           }}
-          onClose={onClose}
           onConfirm={onConfirmWarning}
         />
       )}
