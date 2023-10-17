@@ -16,6 +16,7 @@ import { getChainInfo } from 'constants/chainInfo'
 import { BaseVariant } from 'featureFlags'
 import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicatorV2'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { useColor } from 'hooks/useColor'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
@@ -293,6 +294,7 @@ export default function ConfirmSwapModal({
   fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
   const { chainId } = useWeb3React()
+  const inputTokenColor = useColor(trade?.inputAmount.currency.wrapped)
   const doesTradeDiffer = originalTrade && tradeMeaningfullyDiffers(trade, originalTrade, allowedSlippage)
   const { startSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps, wrapTxHash } =
     useConfirmModalState({
@@ -412,6 +414,7 @@ export default function ConfirmSwapModal({
           tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
           revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
           swapError={swapError}
+          inputTokenColor={inputTokenColor}
           onRetryUniswapXSignature={onConfirm}
         />
       )
@@ -448,6 +451,7 @@ export default function ConfirmSwapModal({
     swapFailed,
     swapConfirmed,
     onConfirm,
+    inputTokenColor,
   ])
 
   const l2Badge = () => {

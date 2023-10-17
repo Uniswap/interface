@@ -1,18 +1,22 @@
 import { CheckMark } from 'components/Icons/CheckMark'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
-import Row from 'components/Row'
+import Row, { RowBetween } from 'components/Row'
 import { ReactElement, useEffect, useState } from 'react'
-import styled, { Keyframes, keyframes, useTheme } from 'styled-components'
+import styled, { Keyframes, keyframes } from 'styled-components'
 import { ThemedText } from 'theme/components'
 
 export interface StepDetails {
   icon: ReactElement
-  rippleColor: string
+  rippleColor?: string
   previewTitle: string
-  actionRequiredTitle: string
+  actionRequiredTitle: string | ReactElement
   inProgressTitle?: string
   delayedTitle?: string
+  delayedStartTitle?: string
+  delayedEndTitle?: string
   timerValueInSeconds?: number
+  timeToStart?: number
+  timeToEnd?: number
   learnMoreLinkText?: string
   learnMoreLinkHref?: string
 }
@@ -23,30 +27,14 @@ export enum StepStatus {
   IN_PROGRESS,
   COMPLETE,
 }
-const rippleAnimation = keyframes`
-  0% {
-    transform: scale(0);
-    border-width: 2px;
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.1);
-    border-width: 1px;
-    opacity: 0.75;
-  }
-  100% {
-    transform: scale(1.4);
-    border-width: 0.5px;
-    opacity: 0.5;
-  }
-`
+
 const outerRingAnimation = keyframes`
   0% {
     transform: scale(1.4);
     opacity: 0.25;
   }
   50% {
-    transform: scale(1.5);
+    transform: scale(1.4);
     opacity: 0.75;
   }
   100% {
@@ -81,79 +69,98 @@ const Ring = styled.div<{ width: string; color: string; animation: Keyframes }>`
   animation: ${({ animation }) => animation} 2s linear infinite;
 `
 const IconWrapper = styled.div<{ isActive: boolean }>`
+  width: 24px;
+  height: 24px;
   filter: ${({ isActive }) => `grayscale(${isActive ? 0 : 1})`};
+  opacity: ${({ isActive }) => (isActive ? '1' : '0.5')};
 `
-function Icon({ stepStatus, icon, rippleColor }: { stepStatus: StepStatus; icon: ReactElement; rippleColor: string }) {
-  const theme = useTheme()
-  if (stepStatus === StepStatus.IN_PROGRESS) {
-    return <LoaderV3 size="24px" fill={theme.neutral1} />
+function RippleAnimation({ isActive, rippleColor }: { isActive: boolean; rippleColor?: string }) {
+  if (!isActive || !rippleColor) {
+    return null
   }
-  const isActive = stepStatus === StepStatus.ACTIVE
   return (
-    <div style={{ textAlign: 'center' }}>
-      {isActive && (
-        <>
-          <Ring width="1px" color={rippleColor} animation={innerRingAnimation} />
-          <Ring width="0.5px" color={rippleColor} animation={outerRingAnimation} />
-        </>
-      )}
-      <IconWrapper isActive={isActive}>{icon}</IconWrapper>
-    </div>
+    <>
+      <Ring width="1px" color={rippleColor} animation={innerRingAnimation} />
+      <Ring width="0.5px" color={rippleColor} animation={outerRingAnimation} />
+    </>
+  )
+}
+function Icon({ stepStatus, icon, rippleColor }: { stepStatus: StepStatus; icon: ReactElement; rippleColor?: string }) {
+  if (stepStatus === StepStatus.IN_PROGRESS) {
+    return <LoaderV3 size="24px" fill={rippleColor} />
+  }
+  return (
+    <>
+      <RippleAnimation isActive={stepStatus === StepStatus.ACTIVE} rippleColor={rippleColor} />
+      <IconWrapper isActive={stepStatus === StepStatus.ACTIVE}>{icon}</IconWrapper>
+    </>
   )
 }
 
 function Title({
   stepStatus,
   stepDetails,
-  isTimeElapsed,
+  isTimeRemaining,
 }: {
   stepStatus: StepStatus
   stepDetails: StepDetails
-  isTimeElapsed: boolean
+  isTimeRemaining: boolean
 }) {
   switch (stepStatus) {
     case StepStatus.PREVIEW:
       return <ThemedText.BodySecondary>{stepDetails.previewTitle}</ThemedText.BodySecondary>
     case StepStatus.ACTIVE:
-      return <ThemedText.BodyPrimary>{stepDetails.actionRequiredTitle}</ThemedText.BodyPrimary>
-    case StepStatus.IN_PROGRESS:
-      return isTimeElapsed ? (
-        <ThemedText.BodyPrimary>{stepDetails.delayedTitle}</ThemedText.BodyPrimary>
+      return isTimeRemaining ? (
+        <ThemedText.BodyPrimary>{stepDetails.actionRequiredTitle}</ThemedText.BodyPrimary>
       ) : (
+        <ThemedText.BodyPrimary>{stepDetails.delayedStartTitle}</ThemedText.BodyPrimary>
+      )
+    case StepStatus.IN_PROGRESS:
+      return isTimeRemaining ? (
         <ThemedText.BodyPrimary>{stepDetails.inProgressTitle}</ThemedText.BodyPrimary>
+      ) : (
+        <ThemedText.BodyPrimary>{stepDetails.delayedEndTitle}</ThemedText.BodyPrimary>
       )
     case StepStatus.COMPLETE:
       return <ThemedText.BodySecondary>{stepDetails.previewTitle}</ThemedText.BodySecondary>
     default:
-      return <></>
+      return null
   }
 }
 
-function Timer({ stepStatus, secondsRemaining }: { stepStatus: StepStatus; secondsRemaining: number }) {
+function Timer({ secondsRemaining }: { secondsRemaining: number }) {
   const minutes = Math.floor(secondsRemaining / 60)
   const seconds = secondsRemaining % 60
-  if (!(stepStatus === StepStatus.ACTIVE || stepStatus === StepStatus.IN_PROGRESS)) {
-    return <></>
-  }
-  return stepStatus === StepStatus.IN_PROGRESS ? (
-    <ThemedText.BodyPrimary>
-      {minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-    </ThemedText.BodyPrimary>
-  ) : (
-    <ThemedText.BodySecondary>
-      {minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-    </ThemedText.BodySecondary>
-  )
+  const minutesText = minutes < 10 ? `0${minutes}` : minutes
+  const secondsText = seconds < 10 ? `0${seconds}` : seconds
+  const timerText = `${minutesText}:${secondsText}`
+  return <ThemedText.BodySecondary paddingRight="8px">{timerText}</ThemedText.BodySecondary>
 }
 
 export function Step({ stepStatus, stepDetails }: { stepStatus: StepStatus; stepDetails: StepDetails }) {
-  const [secondsRemaining, setSecondsRemaining] = useState(stepDetails.timerValueInSeconds ?? 0)
+  // Timer is shown in three cases:
+  // (1) User has a specified amount of time to perform a required action. Timer starts running as soon as the step becomes active.
+  // (2) Step has an estimated amount of time in which it should be completed. Timer is set but not running when step becomes active.
+  // (3) Step has an estimated amount of time in which it should be completed. Timer starts running when step is in progress.
+  const isTimed =
+    (stepStatus === StepStatus.ACTIVE && Boolean(stepDetails.timeToStart)) ||
+    (stepStatus === StepStatus.ACTIVE && Boolean(stepDetails.timeToEnd)) ||
+    (stepStatus === StepStatus.IN_PROGRESS && Boolean(stepDetails.timeToEnd))
+  const [secondsRemaining, setSecondsRemaining] = useState(0)
 
   useEffect(() => {
+    if (stepStatus === StepStatus.ACTIVE && Boolean(stepDetails.timeToStart)) {
+      setSecondsRemaining(stepDetails.timeToStart ?? 0)
+    } else if (stepStatus === StepStatus.ACTIVE && Boolean(stepDetails.timeToEnd)) {
+      setSecondsRemaining(stepDetails.timeToEnd ?? 0)
+      return
+    } else if (stepStatus === StepStatus.IN_PROGRESS) {
+      setSecondsRemaining(stepDetails.timeToEnd ?? 0)
+    } else {
+      return
+    }
+
     const timer = setInterval(() => {
-      if (stepStatus !== StepStatus.IN_PROGRESS) {
-        return
-      }
       setSecondsRemaining((prevSecondsRemaining) => {
         if (prevSecondsRemaining > 0) {
           return prevSecondsRemaining - 1
@@ -164,16 +171,16 @@ export function Step({ stepStatus, stepDetails }: { stepStatus: StepStatus; step
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [stepStatus])
+  }, [stepStatus, stepDetails.timeToStart, stepDetails.timeToEnd])
 
   return (
-    <Row justifyContent="space-between">
-      <Row gap="12px" align="center">
+    <RowBetween>
+      <Row align="center" gap="12px">
         <Icon stepStatus={stepStatus} icon={stepDetails.icon} rippleColor={stepDetails.rippleColor} />
-        <Title stepStatus={stepStatus} stepDetails={stepDetails} isTimeElapsed={secondsRemaining === 0} />
+        <Title stepStatus={stepStatus} stepDetails={stepDetails} isTimeRemaining={isTimed && secondsRemaining > 0} />
       </Row>
-      {stepDetails.timerValueInSeconds && <Timer stepStatus={stepStatus} secondsRemaining={secondsRemaining} />}
+      {isTimed && <Timer secondsRemaining={secondsRemaining} />}
       {stepStatus === StepStatus.COMPLETE && <CheckMark />}
-    </Row>
+    </RowBetween>
   )
 }

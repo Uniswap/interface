@@ -7,20 +7,23 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import { SupportArticleURL } from 'constants/supportArticles'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
-import { useColor } from 'hooks/useColor'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { useOrder } from 'state/signatures/hooks'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled from 'styled-components'
-import { ExternalLink } from 'theme/components'
+import { Divider, ExternalLink } from 'theme/components'
+import { SignatureExpiredError } from 'utils/errors'
 
 import { ConfirmModalState } from '../ConfirmSwapModal'
 import { Step, StepDetails, StepStatus } from './Step'
 
+const StyledDivider = styled(Divider)`
+  margin: 16px 0px;
+`
 const Line = styled.div`
   width: 2px;
   height: 24px;
@@ -45,6 +48,7 @@ export function ProgressIndicator({
   tokenApprovalPending = false,
   revocationPending = false,
   swapError,
+  inputTokenColor,
   onRetryUniswapXSignature,
 }: {
   steps: ProgressIndicatorStep[]
@@ -55,12 +59,11 @@ export function ProgressIndicator({
   tokenApprovalPending?: boolean
   revocationPending?: boolean
   swapError?: Error | string
+  inputTokenColor?: string
   onRetryUniswapXSignature?: () => void
 }) {
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
-  const inputTokenColor = useColor(trade?.inputAmount.currency.wrapped)
-  console.log(inputTokenColor)
 
   const swapStatus = useSwapTransactionStatus(swapResult)
   const order = useOrder(swapResult?.type === TradeFillType.UniswapX ? swapResult.response.orderHash : '')
@@ -71,6 +74,14 @@ export function ProgressIndicator({
   const swapPending = swapResult !== undefined && !swapConfirmed
   const wrapPending = wrapTxHash != undefined && !wrapConfirmed
   const transactionPending = revocationPending || tokenApprovalPending || wrapPending || swapPending
+
+  const [signatureExpiredErrorId, setSignatureExpiredErrorId] = useState('')
+  useEffect(() => {
+    if (swapError instanceof SignatureExpiredError && swapError.id !== signatureExpiredErrorId) {
+      setSignatureExpiredErrorId(swapError.id)
+      onRetryUniswapXSignature?.()
+    }
+  }, [onRetryUniswapXSignature, signatureExpiredErrorId, swapError])
 
   function getStatus(targetStep: ProgressIndicatorStep) {
     const currentIndex = steps.indexOf(currentStep)
@@ -84,6 +95,7 @@ export function ProgressIndicator({
     }
   }
 
+  // TODO: update timeToEnd with dynamic value, calculated as approx. the most recent block confirmation time
   const stepDetails: Record<ProgressIndicatorStep, StepDetails> = useMemo(
     () => ({
       [ConfirmModalState.WRAPPING]: {
@@ -92,19 +104,19 @@ export function ProgressIndicator({
         previewTitle: `Wrap ${nativeCurrency.symbol}`,
         actionRequiredTitle: `Wrap  ${nativeCurrency.symbol} in wallet`,
         inProgressTitle: `Wrapping  ${nativeCurrency.symbol}...`,
+        timeToEnd: 15,
         delayedTitle: 'Longer than expected...',
-        timerValueInSeconds: 15,
         learnMoreLinkText: `Why do I have to wrap my ${nativeCurrency.symbol}?`,
         learnMoreLinkHref: SupportArticleURL.WETH_EXPLAINER,
       },
       [ConfirmModalState.RESETTING_TOKEN_ALLOWANCE]: {
-        icon: <Swap />,
+        icon: <CurrencyLogo currency={trade?.inputAmount.currency} />,
         rippleColor: inputTokenColor,
         previewTitle: `Reset ${trade?.inputAmount.currency.symbol} limit`,
         actionRequiredTitle: `Reset ${trade?.inputAmount.currency.symbol} limit in wallet`,
         inProgressTitle: `Resetting ${trade?.inputAmount.currency.symbol} limit...`,
+        timeToEnd: 15,
         delayedTitle: 'Longer than expected...',
-        timerValueInSeconds: 15,
       },
       [ConfirmModalState.APPROVING_TOKEN]: {
         icon: <CurrencyLogo currency={trade?.inputAmount.currency} />,
@@ -112,8 +124,8 @@ export function ProgressIndicator({
         previewTitle: `Approve ${trade?.inputAmount.currency.symbol} spending`,
         actionRequiredTitle: `Approve in wallet`,
         inProgressTitle: 'Approval pending...',
+        timeToEnd: 15,
         delayedTitle: 'Longer than expected...',
-        timerValueInSeconds: 15,
         learnMoreLinkText: 'Why do I have to approve a token?',
         learnMoreLinkHref: SupportArticleURL.APPROVALS_EXPLAINER,
       },
@@ -131,13 +143,20 @@ export function ProgressIndicator({
         previewTitle: 'Confirm swap',
         actionRequiredTitle: 'Confirm swap in wallet',
         inProgressTitle: 'Swap pending...',
-        delayedTitle: 'Longer than expected...',
-        timerValueInSeconds: 15,
+        timeToEnd: 20,
+        delayedEndTitle: 'Longer than expected...',
+        ...(trade?.fillType === TradeFillType.UniswapX
+          ? {
+              timeToStart: trade.order.info.deadline - Math.floor(Date.now() / 1000),
+              delayedStartTitle: 'Confirmation timed out. Please retry.',
+            }
+          : {}),
       },
     }),
-    [nativeCurrency, trade?.inputAmount.currency]
+    [inputTokenColor, nativeCurrency.symbol, trade]
   )
 
+  // TODO: update single-step content; currently falling back to v1 experience
   if (steps.length === 0) {
     return null
   }
@@ -149,6 +168,7 @@ export function ProgressIndicator({
 
   return (
     <Column>
+      <StyledDivider />
       {steps.map((step, i) => {
         return (
           <>
@@ -158,7 +178,7 @@ export function ProgressIndicator({
         )
       })}
       {!!stepDetails[currentStep].learnMoreLinkHref && (
-        <Row justify="center" width="100%" padding="28px 0px 0px 0px">
+        <Row justify="center" width="100%" padding="16px">
           <ExternalLink href={stepDetails[currentStep].learnMoreLinkHref || ''}>
             {stepDetails[currentStep].learnMoreLinkText}
           </ExternalLink>
