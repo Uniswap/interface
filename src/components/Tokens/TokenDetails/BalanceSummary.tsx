@@ -1,13 +1,13 @@
 import { Trans } from '@lingui/macro'
-import { ChainId, Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain } from 'constants/chains'
+import { DEFAULT_ERC20_DECIMALS, nativeOnChain } from 'constants/tokens'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
-import { TokenQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { TokenBalance, TokenQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useCrossChainGqlBalances } from 'graphql/data/portfolios'
-import { QueryTokenB } from 'graphql/data/Token'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import JSBI from 'jsbi'
@@ -20,7 +20,6 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 const BalancesCard = styled.div`
   border-radius: 16px;
   color: ${({ theme }) => theme.neutral1};
-  // display: none; // todo: check if this changes anything?
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -131,10 +130,23 @@ const Balance = (props: BalanceProps) => {
   }
 }
 
+function getCurrencyFromPortfolioQuery(chainId: ChainId, portfolioQueryToken: TokenBalance['token']): Currency {
+  return portfolioQueryToken?.address
+    ? new Token(
+        chainId,
+        portfolioQueryToken?.address,
+        portfolioQueryToken?.decimals ?? DEFAULT_ERC20_DECIMALS,
+        portfolioQueryToken?.symbol,
+        portfolioQueryToken?.name,
+        /* bypassChecksum:*/ true
+      )
+    : nativeOnChain(chainId)
+}
+
 export default function BalanceSummary({ token, tokenQuery }: { token: Currency; tokenQuery: TokenQuery }) {
-  const { account, chainId } = useWeb3React()
+  const { account, chainId: connectedChainId } = useWeb3React()
   const theme = useTheme()
-  const { label: chainName, color: chainColor } = getChainInfo(asSupportedChain(chainId) ?? ChainId.MAINNET)
+  const { label: chainName, color: chainColor } = getChainInfo(asSupportedChain(connectedChainId) ?? ChainId.MAINNET)
 
   const isInfoTDPEnabled = useInfoTDPEnabled()
 
@@ -169,19 +181,7 @@ export default function BalanceSummary({ token, tokenQuery }: { token: Currency;
 
   const PageChainBalanceSummary = () => {
     if (!pageChainBalance) return null
-
-    const pageChainId =
-      (pageChainBalance.token?.chain ? supportedChainIdFromGQLChain(pageChainBalance.token?.chain) : ChainId.MAINNET) ??
-      ChainId.MAINNET
-
-    const balanceToken = new QueryTokenB(
-      pageChainBalance.token?.address ?? '',
-      pageChainBalance.token?.chain,
-      pageChainBalance.token?.decimals,
-      pageChainBalance.token?.symbol,
-      pageChainBalance.token?.name
-      // logoSrc
-    )
+    const currency = getCurrencyFromPortfolioQuery(token.chainId, pageChainBalance.token)
 
     return (
       <BalanceSection>
@@ -189,10 +189,10 @@ export default function BalanceSummary({ token, tokenQuery }: { token: Currency;
           <Trans>Your balance</Trans>
         </ThemedText.SubHeaderSmall>
         <Balance
-          token={balanceToken}
+          token={currency}
           chainId={token.chainId}
           balance={CurrencyAmount.fromRawAmount(
-            balanceToken,
+            currency,
             JSBI.BigInt((pageChainBalance.quantity ?? 0) * 10 ** token.decimals)
           )}
           isInfoTDPEnabled={true}
@@ -212,24 +212,15 @@ export default function BalanceSummary({ token, tokenQuery }: { token: Currency;
           const chainId =
             (balance.token?.chain ? supportedChainIdFromGQLChain(balance.token?.chain) : ChainId.MAINNET) ??
             ChainId.MAINNET
-
-          const balanceToken = new QueryTokenB(
-            balance.token?.address ?? '',
-            balance.token?.chain,
-            balance.token?.decimals,
-            balance.token?.symbol,
-            balance.token?.name
-            // add: logoSrc
-          ) // should be crosschain? used to get portlogo
-          // doesn't currently work with Native tokens rip
+          const currency = getCurrencyFromPortfolioQuery(chainId, balance.token)
 
           return (
             <Balance
               key={balance.id}
-              token={balanceToken}
+              token={currency}
               chainId={chainId}
               balance={CurrencyAmount.fromRawAmount(
-                balanceToken,
+                currency,
                 JSBI.BigInt((balance.quantity ?? 0) * 10 ** token.decimals)
               )}
               isInfoTDPEnabled={true}

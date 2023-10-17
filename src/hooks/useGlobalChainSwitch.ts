@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { Chain } from 'graphql/data/Token'
+import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useEffect, useRef } from 'react'
 

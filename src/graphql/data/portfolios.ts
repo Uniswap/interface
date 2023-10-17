@@ -178,37 +178,34 @@ export function useCrossChainGqlBalances(tokenQuery: TokenQuery, account?: strin
   const { data: portfolioBalances } = usePortfolioBalancesQuery({
     skip: !account,
     variables: { ownerAddress: account ?? '', chains: GQL_MAINNET_CHAINS },
-    fetchPolicy: 'cache-and-network', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
+    fetchPolicy: 'cache-and-network',
     errorPolicy: 'all',
   })
-  // const { data: portfolioBalances } = useCachedPortfolioBalancesQuery({ account }) // hmm cached?
+  // const {
+  //     data: balancesData,
+  //     loading,
+  //     networkStatus,
+  //     refetch,
+  //     error,
+  //   } = usePortfolioBalancesQuery({
+  //     fetchPolicy,
+  //     notifyOnNetworkStatusChange: true,
+  //     onCompleted,
+  //     pollInterval: shouldPoll ? PollingInterval.KindaFast : undefined,
+  //     variables: address ? { ownerAddress: address } : undefined,
+  //     skip: !address,
+  //   })
+
+  //   const persistedError = usePersistedError(loading, error)
+  //   const balancesForAddress = balancesData?.portfolios?.[0]?.tokenBalances
   const tokenBalances = portfolioBalances?.portfolios?.[0].tokenBalances
   const bridgeInfo = tokenQuery.token?.project?.tokens
-  const otherChainBalances = tokenBalances?.filter((tokenBalance) =>
-    bridgeInfo?.some((bridgeToken) => bridgeToken.id == tokenBalance.token?.id)
+  console.log('tokenbalances', tokenBalances)
+  console.log('bridgeinfo', bridgeInfo)
+  console.log('page gql token', tokenQuery.token)
+  return tokenBalances?.filter(
+    (tokenBalance) =>
+      tokenBalance.token?.symbol === tokenQuery.token?.symbol &&
+      bridgeInfo?.some((bridgeToken) => bridgeToken.id == tokenBalance.token?.id)
   )
-  return otherChainBalances
-
-  // const currentChainBalance = useBalances([currencyId])?.[0] ?? null
-  // const currentChainId = currencyIdToChain(currencyId)
-
-  // const bridgedCurrencyIds = useMemo(
-  //   () =>
-  //     bridgeInfo
-  //       ?.map(({ chain, address }) => {
-  //         const chainId = fromGraphQLChain(chain)
-  //         if (!chainId || chainId === currentChainId) return null
-  //         if (!address) return buildNativeCurrencyId(chainId)
-  //         return buildCurrencyId(chainId, address)
-  //       })
-  //       .filter((b): b is string => !!b),
-
-  //   [bridgeInfo, currentChainId]
-  // )
-  // const otherChainBalances = useBalances(bridgedCurrencyIds)
-
-  // return {
-  //   currentChainBalance,
-  //   otherChainBalances,
-  // }
 }

@@ -23,10 +23,8 @@ import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
-import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
-import { TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { Chain, TokenQuery, TokenQueryData } from 'graphql/data/Token'
-import { QueryToken } from 'graphql/data/Token'
+import { Chain, TokenPriceQuery, TokenQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { QueryToken, TokenQueryData } from 'graphql/data/Token'
 import { getTokenDetailsURL, InterfaceGqlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
@@ -129,8 +127,6 @@ export default function TokenDetails({
       }, {} as { [key: string]: string | undefined }) ?? {},
     [tokenQueryData]
   )
-  const isInfoTDPEnabled = useInfoTDPEnabled()
-
   const { token: detailedToken, didFetchFromChain } = useRelevantToken(address, pageChainId, tokenQueryData)
 
   const tokenWarning = address ? checkWarning(address) : null
