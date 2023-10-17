@@ -111,9 +111,9 @@ const GammaFarmCardDetails: React.FC<{
 
   const approveOrStakeLP = async () => {
     setApproveOrStaking(true)
-    stateTransactionDeposit(true, true, undefined, undefined)
     try {
       if (dataDetails.approval === ApprovalState.APPROVED) {
+        stateTransactionDeposit(true, true, undefined, undefined)
         await stakeLP()
       } else {
         await dataDetails.approveCallback()
@@ -361,6 +361,21 @@ const GammaFarmCardDetails: React.FC<{
     )
   }
 
+  const modalHeaderApprove = () => {
+    return (
+      <AutoColumn>
+        <Row style={{ padding: '20px', display: 'flex', justifyContent: 'center' }}>
+          <Text fontSize="18px">
+            {'Approve' + ' '}
+            <Text as="span" color={theme.accentActive}>
+              {dataDetails.lpSymbol}
+            </Text>
+          </Text>
+        </Row>
+      </AutoColumn>
+    )
+  }
+
   const modalHeaderWithdraw = () => {
     return (
       <AutoColumn>
@@ -435,7 +450,7 @@ const GammaFarmCardDetails: React.FC<{
             bottomContent={() => (
               <ButtonPrimary style={{ marginTop: '0.5rem' }} onClick={claimReward}>
                 <Text fontWeight={500} fontSize={20}>
-                  <Trans>Claim Token</Trans>
+                  <Trans>Claim</Trans>
                 </Text>
               </ButtonPrimary>
             )}
@@ -453,18 +468,17 @@ const GammaFarmCardDetails: React.FC<{
           <ConfirmationModalContent
             title={<Trans>Transaction summary</Trans>}
             onDismiss={handleDismissTransactionDeposit}
-            topContent={modalHeaderDeposit}
+            topContent={ dataDetails.approval === ApprovalState.APPROVED ? modalHeaderDeposit: modalHeaderApprove}
             bottomContent={() => (
               <ButtonPrimary style={{ marginTop: '0.5rem' }} onClick={approveOrStakeLP}>
                 <Text fontWeight={500} fontSize={20}>
-                  <Trans>Deposit Tokens</Trans>
+                  <Trans>{dataDetails.approval === ApprovalState.APPROVED ? "Deposit" : "Approve"}</Trans>
                 </Text>
               </ButtonPrimary>
             )}
           />
         )}
-      />
-
+      /> 
       <TransactionConfirmationModal
         isOpen={showTransactionWithdrawModal}
         onDismiss={handleDismissTransactionWithdraw}

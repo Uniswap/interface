@@ -125,7 +125,7 @@ export const buildRedirectPath = (currentPath: string, parsedQuery: ParsedQs, st
 }
 
 export const getStakedAmount = (item: any, stakedAmounts: any) => {
-  const masterChefIndex = item.masterChefIndex ?? 0
+  const masterChefIndex = item.pid ?? 0
   const sItem = stakedAmounts?.find(
     (sAmount: any) => sAmount.pid === item.pid && sAmount.masterChefIndex === masterChefIndex
   )
@@ -133,7 +133,7 @@ export const getStakedAmount = (item: any, stakedAmounts: any) => {
 }
 
 export const getRewardsAmount = (item: any, rewardsAmount: any) => {
-  const masterChefIndex = item.masterChefIndex ?? 0
+  const masterChefIndex = item.pid ?? 0
   const sItem = rewardsAmount?.find(
     (sAmount: any) => sAmount.pid === item.pid && sAmount.masterChefIndex === masterChefIndex
   )
@@ -373,8 +373,8 @@ export const depositUniProxy = async (
       currencyId1: token1Address,
       symbol0,
       symbol1,
-      amount0: parseUnits(deposit0, decimals0).toString(),
-      amount1: parseUnits(deposit1, decimals1).toString(),
+      amount0: formatNumber(Number(deposit0)),
+      amount1: formatNumber(Number(deposit1)),
     })
 
     const receipt = await response.wait()

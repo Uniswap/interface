@@ -99,7 +99,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const [totalBalance, setTotalBalance] = useState(0)
   const getConnection = useGetConnection()
   const connection = getConnection(connector)
-  console.log('connection', connection)
   const disconnect = useCallback(() => {
     if (connector && connector.deactivate) {
       connector.deactivate()
