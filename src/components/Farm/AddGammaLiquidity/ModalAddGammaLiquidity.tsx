@@ -96,8 +96,8 @@ interface ModalProps {
   hypervisorContract: Contract | null
   lpTokenBalance: string
   lpTokenSymbol: string
-  decimals0:number
-  decimals1:number
+  decimals0: number
+  decimals1: number
 }
 
 export default function ModalAddGammaLiquidity({
@@ -126,7 +126,7 @@ export default function ModalAddGammaLiquidity({
   lpTokenBalance,
   lpTokenSymbol = 'LP',
   decimals0,
-  decimals1
+  decimals1,
 }: ModalProps) {
   const finalizedTransaction = useTransactionFinalizer()
   const addTransaction = useTransactionAdder()

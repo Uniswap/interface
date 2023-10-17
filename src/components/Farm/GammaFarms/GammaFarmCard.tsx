@@ -118,9 +118,9 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
       : undefined
 
   const token1Decimals =
-  !token1DecimalsRequest.loading && token1DecimalsRequest.result && token1DecimalsRequest.result.length > 0
-    ? token1DecimalsRequest.result[0]
-    : undefined
+    !token1DecimalsRequest.loading && token1DecimalsRequest.result && token1DecimalsRequest.result.length > 0
+      ? token1DecimalsRequest.result[0]
+      : undefined
 
   const token0BalanceBN =
     !token0BalanceRequest.loading && token0BalanceRequest.result && token0BalanceRequest.result.length > 0
@@ -327,7 +327,9 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
             {!isMobile && (
               <>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  { <small style={{ fontWeight: 600 }}>{rewardData?.tvl ? "$" + formatNumber(rewardData.tvl) : "$0"}</small>}
+                  <small style={{ fontWeight: 600 }}>
+                    {rewardData?.tvl ? '$' + formatNumber(rewardData.tvl) : '$0'}
+                  </small>
                 </div>
                 <small style={{ fontWeight: 600 }}>
                   {rewardsAmount &&

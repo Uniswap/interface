@@ -271,8 +271,8 @@ export const getDepositAmounts = async (
   token1Address: string,
   deposit0: string,
   deposit1: string,
-  decimals0:number,
-  decimals1:number
+  decimals0: number,
+  decimals1: number
 ) => {
   if (!uniProxyContract) return
   let amounts
@@ -284,7 +284,11 @@ export const getDepositAmounts = async (
 
     if (tokenInput === 0 && deposit0 && parseFloat(deposit0) > 0) {
       if (parseFloat(deposit0) > 0) {
-        amounts = await uniProxyContract.getDepositAmount(pairData.hypervisor, token0Address, parseUnits(deposit0, decimals0))
+        amounts = await uniProxyContract.getDepositAmount(
+          pairData.hypervisor,
+          token0Address,
+          parseUnits(deposit0, decimals0)
+        )
         setDeposit1(formatUnits(amounts.amountEnd, decimals1))
         setDeposit0(deposit0)
       } else {
@@ -293,7 +297,11 @@ export const getDepositAmounts = async (
       }
     } else if (tokenInput === 1 && deposit1) {
       if (parseFloat(deposit1) > 0) {
-        amounts = await uniProxyContract.getDepositAmount(pairData.hypervisor, token1Address, parseUnits(deposit1, decimals1))
+        amounts = await uniProxyContract.getDepositAmount(
+          pairData.hypervisor,
+          token1Address,
+          parseUnits(deposit1, decimals1)
+        )
         setDeposit0(formatUnits(amounts.amountEnd, decimals0))
         setDeposit1(deposit1)
       } else {
@@ -319,8 +327,8 @@ export const depositUniProxy = async (
   symbol1: string,
   deposit0: string,
   deposit1: string,
-  decimals0:number,
-  decimals1:number,
+  decimals0: number,
+  decimals1: number,
   finalizedTransaction: (
     receipt: TransactionReceipt,
     customData?:
