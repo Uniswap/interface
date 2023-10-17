@@ -1,3 +1,4 @@
+import { formatEther as ethersFormatEther } from '@ethersproject/units'
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import {
   DEFAULT_LOCAL_CURRENCY,
@@ -33,7 +34,7 @@ const FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN_NO_COMMAS: NumberFormatOptions = {
   useGrouping: false,
 }
 
-export const NO_DECIMALS: NumberFormatOptions = {
+const NO_DECIMALS: NumberFormatOptions = {
   notation: 'standard',
   maximumFractionDigits: 0,
   minimumFractionDigits: 0,
@@ -638,6 +639,18 @@ function formatNumberOrString({
   return formatNumber({ input, type, locale, localCurrency, conversionRate })
 }
 
+interface FormatEtherOptions {
+  input: Nullish<number | string>
+  type: FormatterType
+  locale?: SupportedLocale
+  localCurrency?: SupportedLocalCurrency
+}
+
+function formatEther({ input, type, locale, localCurrency }: FormatEtherOptions) {
+  if (input === null || input === undefined) return '-'
+  return formatNumber({ input: parseFloat(ethersFormatEther(input.toString())), type, locale, localCurrency })
+}
+
 interface FormatFiatPriceOptions {
   price: Nullish<number | string>
   type?: FormatterType
@@ -813,9 +826,20 @@ export function useFormatter() {
     [formatterLocale]
   )
 
+  const formatEtherwithLocales = useCallback(
+    (options: Omit<FormatEtherOptions, LocalesType>) =>
+      formatEther({
+        ...options,
+        locale: formatterLocale,
+        localCurrency: currencyToFormatWith,
+      }),
+    [currencyToFormatWith, formatterLocale]
+  )
+
   return useMemo(
     () => ({
       formatCurrencyAmount: formatCurrencyAmountWithLocales,
+      formatEther: formatEtherwithLocales,
       formatFiatPrice: formatFiatPriceWithLocales,
       formatNumber: formatNumberWithLocales,
       formatNumberOrString: formatNumberOrStringWithLocales,
@@ -828,6 +852,7 @@ export function useFormatter() {
     }),
     [
       formatCurrencyAmountWithLocales,
+      formatEtherwithLocales,
       formatFiatPriceWithLocales,
       formatNumberOrStringWithLocales,
       formatNumberWithLocales,

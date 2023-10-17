@@ -189,12 +189,12 @@ const InputCurrencyValue = ({
   tradeState: TradeState
   trade?: InterfaceTrade
 }) => {
-  const { formatNumberOrString } = useFormatter()
+  const { formatEther, formatNumberOrString } = useFormatter()
 
   if (!usingPayWithAnyToken) {
     return (
       <ThemedText.BodyPrimary lineHeight="20px" fontWeight="535">
-        {formatNumberOrString({ input: formatEther(totalEthPrice.toString()), type: NumberType.NFTToken })}
+        {formatEther({ input: totalEthPrice.toString(), type: NumberType.NFTToken })}
         &nbsp;{activeCurrency?.symbol ?? 'ETH'}
       </ThemedText.BodyPrimary>
     )

@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatEther } from '@ethersproject/units'
+import { formatEther as ethersFormatEther } from '@ethersproject/units'
 import clsx from 'clsx'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { TimedLoader } from 'nft/components/bag/TimedLoader'
@@ -91,7 +91,7 @@ interface BagRowProps {
 }
 
 export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, isMobile }: BagRowProps) => {
-  const { formatNumberOrString } = useFormatter()
+  const { formatEther, formatNumberOrString } = useFormatter()
   const [loadedImage, setImageLoaded] = useState(false)
   const [noImageAvailable, setNoImageAvailable] = useState(!asset.smallImageUrl)
 
@@ -101,9 +101,9 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
   const showRemoveButton = Boolean(showRemove && cardHovered && !isMobile)
 
   const assetEthPrice = asset.updatedPriceInfo ? asset.updatedPriceInfo.ETHPrice : asset.priceInfo.ETHPrice
-  const assetEthPriceFormatted = formatNumberOrString({ input: formatEther(assetEthPrice), type: NumberType.NFTToken })
+  const assetEthPriceFormatted = formatEther({ input: assetEthPrice, type: NumberType.NFTToken })
   const assetUSDPriceFormatted = formatNumberOrString({
-    input: usdPrice ? parseFloat(formatEther(assetEthPrice)) * usdPrice : usdPrice,
+    input: usdPrice ? parseFloat(ethersFormatEther(assetEthPrice)) * usdPrice : usdPrice,
     type: NumberType.FiatNFTToken,
   })
 
@@ -177,7 +177,7 @@ interface PriceChangeBagRowProps {
 }
 
 export const PriceChangeBagRow = ({ asset, usdPrice, markAssetAsReviewed, top, isMobile }: PriceChangeBagRowProps) => {
-  const { formatNumberOrString } = useFormatter()
+  const { formatEther } = useFormatter()
   const isPriceIncrease = BigNumber.from(asset.updatedPriceInfo?.ETHPrice).gt(BigNumber.from(asset.priceInfo.ETHPrice))
   const handleRemove = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
@@ -201,8 +201,8 @@ export const PriceChangeBagRow = ({ asset, usdPrice, markAssetAsReviewed, top, i
     <Column className={styles.priceChangeColumn} borderTopColor={top ? 'surface3' : 'transparent'}>
       <Row className={styles.priceChangeRow}>
         {isPriceIncrease ? <SquareArrowUpIcon /> : <SquareArrowDownIcon />}
-        <Box>{`Price ${isPriceIncrease ? 'increased' : 'decreased'} from ${formatNumberOrString({
-          input: formatEther(asset.priceInfo.ETHPrice),
+        <Box>{`Price ${isPriceIncrease ? 'increased' : 'decreased'} from ${formatEther({
+          input: asset.priceInfo.ETHPrice,
           type: NumberType.NFTToken,
         })} ETH`}</Box>
       </Row>

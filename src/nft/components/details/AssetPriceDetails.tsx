@@ -1,4 +1,3 @@
-import { formatEther } from '@ethersproject/units'
 import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
@@ -209,7 +208,7 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const selectSellAsset = useSellAsset((state) => state.selectSellAsset)
   const resetSellAssets = useSellAsset((state) => state.reset)
-  const { formatNumberOrString } = useFormatter()
+  const { formatEther, formatNumberOrString } = useFormatter()
 
   const listing = asset.sellOrders && asset.sellOrders.length > 0 ? asset.sellOrders[0] : undefined
   const expirationDate = listing?.endAt ? new Date(listing.endAt) : undefined
@@ -246,8 +245,8 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
         {listing ? (
           <>
             <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
-              {formatNumberOrString({
-                input: asset.priceInfo?.ETHPrice ? formatEther(asset.priceInfo?.ETHPrice) : undefined,
+              {formatEther({
+                input: asset.priceInfo?.ETHPrice,
                 type: NumberType.NFTToken,
               })}{' '}
               ETH
@@ -312,7 +311,7 @@ const NotForSale = ({ collectionName, collectionUrl }: { collectionName: string;
 
 export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps) => {
   const { account } = useWeb3React()
-  const { formatNumberOrString } = useFormatter()
+  const { formatEther, formatNumberOrString } = useFormatter()
 
   const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
   const expirationDate = cheapestOrder?.endAt ? new Date(cheapestOrder.endAt) : undefined
@@ -378,7 +377,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
           </HeaderRow>
           <PriceRow>
             <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
-              {formatNumberOrString({ input: formatEther(asset.priceInfo.ETHPrice), type: NumberType.NFTToken })} ETH
+              {formatEther({ input: asset.priceInfo.ETHPrice, type: NumberType.NFTToken })} ETH
             </ThemedText.MediumHeader>
             {USDPrice && (
               <ThemedText.BodySecondary lineHeight="24px">

@@ -1,4 +1,4 @@
-import { formatEther } from '@ethersproject/units'
+import { formatEther as ethersFormatEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import { Trace, useTrace } from 'analytics'
@@ -41,7 +41,7 @@ const UploadLink = styled.a`
 
 const TxCompleteModal = () => {
   const ethUsdPrice = useNativeUsdPrice()
-  const { formatNumberOrString } = useFormatter()
+  const { formatEther, formatNumberOrString } = useFormatter()
   const [showUnavailable, setShowUnavailable] = useState(false)
   const txHash = useSendTransaction((state) => state.txHash)
   const purchasedWithErc20 = useSendTransaction((state) => state.purchasedWithErc20)
@@ -102,7 +102,7 @@ const TxCompleteModal = () => {
                 name={NFTEventName.NFT_BUY_BAG_SUCCEEDED}
                 properties={{
                   buy_quantity: nftsPurchased.length,
-                  usd_value: parseFloat(formatEther(totalPurchaseValue)) * ethUsdPrice,
+                  usd_value: parseFloat(ethersFormatEther(totalPurchaseValue)) * ethUsdPrice,
                   transaction_hash: txHash,
                   using_erc20: purchasedWithErc20,
                   ...formatAssetEventProperties(nftsPurchased),
@@ -164,8 +164,8 @@ const TxCompleteModal = () => {
                         {nftsPurchased.length} NFT{nftsPurchased.length === 1 ? '' : 's'}
                       </Box>
                       <Box>
-                        {formatNumberOrString({
-                          input: formatEther(totalPurchaseValue.toString()),
+                        {formatEther({
+                          input: totalPurchaseValue.toString(),
                           type: NumberType.NFTToken,
                         })}{' '}
                         ETH
@@ -207,8 +207,8 @@ const TxCompleteModal = () => {
                       <p className={styles.interStd}>
                         Uniswap returned{' '}
                         <span style={{ fontWeight: '535' }}>
-                          {formatNumberOrString({
-                            input: formatEther(totalRefundValue.toString()),
+                          {formatEther({
+                            input: totalRefundValue.toString(),
                             type: NumberType.NFTToken,
                           })}{' '}
                           ETH
@@ -224,8 +224,8 @@ const TxCompleteModal = () => {
                         position={{ sm: 'absolute', md: 'static' }}
                       >
                         <p className={styles.totalEthCost} style={{ marginBottom: '2px' }}>
-                          {formatNumberOrString({
-                            input: formatEther(totalRefundValue.toString()),
+                          {formatEther({
+                            input: totalRefundValue.toString(),
                             type: NumberType.NFTToken,
                           })}{' '}
                           ETH
@@ -338,12 +338,10 @@ const TxCompleteModal = () => {
                             <Box flexWrap="wrap" marginTop="4">
                               <Box marginLeft="4" width="full" display="flex">
                                 <p className={styles.totalEthCost} style={{ marginBottom: '2px' }}>
-                                  {formatNumberOrString({
-                                    input: formatEther(
-                                      asset.updatedPriceInfo
-                                        ? asset.updatedPriceInfo.ETHPrice
-                                        : asset.priceInfo.ETHPrice
-                                    ),
+                                  {formatEther({
+                                    input: asset.updatedPriceInfo
+                                      ? asset.updatedPriceInfo.ETHPrice
+                                      : asset.priceInfo.ETHPrice,
                                     type: NumberType.NFTToken,
                                   })}{' '}
                                   ETH
@@ -358,8 +356,8 @@ const TxCompleteModal = () => {
                     </Box>
                     {showUnavailable && <Box className={styles.fullRefundOverflowFade} />}
                     <p className={styles.totalEthCost} style={{ marginBottom: '2px' }}>
-                      {formatNumberOrString({
-                        input: formatEther(totalRefundValue.toString()),
+                      {formatEther({
+                        input: totalRefundValue.toString(),
                         type: NumberType.NFTToken,
                       })}{' '}
                       ETH

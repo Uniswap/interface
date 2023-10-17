@@ -1,5 +1,4 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
@@ -32,7 +31,7 @@ export const CollectionAsset = ({
   renderedHeight,
   setRenderedHeight,
 }: CollectionAssetProps) => {
-  const { formatNumberOrString } = useFormatter()
+  const { formatEther, formatNumberOrString } = useFormatter()
   const bagManuallyClosed = useBag((state) => state.bagManuallyClosed)
   const addAssetsToBag = useBag((state) => state.addAssetsToBag)
   const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
@@ -80,7 +79,7 @@ export const CollectionAsset = ({
       primaryInfoRight: asset.rarity && provider ? <RankingContainer provider={provider} /> : null,
       secondaryInfo: notForSale
         ? ''
-        : `${formatNumberOrString({ input: formatEther(asset.priceInfo.ETHPrice), type: NumberType.NFTToken })} ETH`,
+        : `${formatEther({ input: asset.priceInfo.ETHPrice, type: NumberType.NFTToken })} ETH`,
       selectedInfo: <Trans>Remove from bag</Trans>,
       notSelectedInfo: <Trans>Add to bag</Trans>,
       disabledInfo: <Trans>Not listed</Trans>,

@@ -1,7 +1,7 @@
 import 'rc-slider/assets/index.css'
 
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatEther, parseEther } from '@ethersproject/units'
+import { formatEther as ethersFormatEther, parseEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { SweepFetcherParams, useSweepNftAssets } from 'graphql/data/nft/Asset'
 import { useBag, useCollectionFilters } from 'nft/hooks'
@@ -161,7 +161,7 @@ interface SweepProps {
 
 export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
   const theme = useTheme()
-  const { formatNumberOrString } = useFormatter()
+  const { formatEther } = useFormatter()
 
   const [isItemsToggled, toggleSweep] = useReducer((state) => !state, true)
   const [sweepAmount, setSweepAmount] = useState<string>('')
@@ -376,8 +376,12 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
           <StyledSlider
             defaultValue={0}
             min={0}
-            max={isItemsToggled ? sortedAssets?.length ?? 0 : parseFloat(formatEther(sortedAssetsTotalEth).toString())}
-            value={isItemsToggled ? sweepItemsInBag.length : parseFloat(formatEther(sweepEthPrice.toString()))}
+            max={
+              isItemsToggled
+                ? sortedAssets?.length ?? 0
+                : parseFloat(ethersFormatEther(sortedAssetsTotalEth).toString())
+            }
+            value={isItemsToggled ? sweepItemsInBag.length : parseFloat(ethersFormatEther(sweepEthPrice.toString()))}
             step={isItemsToggled ? 1 : 0.01}
             trackStyle={{
               top: '3px',
@@ -426,8 +430,8 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
         </SweepSubContainer>
       </SweepLeftmostContainer>
       <SweepRightmostContainer>
-        <ThemedText.SubHeader font-size="14px">{`${formatNumberOrString({
-          input: formatEther(sweepEthPrice.toString()),
+        <ThemedText.SubHeader font-size="14px">{`${formatEther({
+          input: sweepEthPrice.toString(),
           type: NumberType.NFTToken,
         })} ETH`}</ThemedText.SubHeader>
         <NftDisplay nfts={sweepItemsInBag} />

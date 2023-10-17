@@ -1,4 +1,3 @@
-import { formatEther } from '@ethersproject/units'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { body, bodySmall } from 'nft/css/common.css'
@@ -13,7 +12,7 @@ export const MobileHoverBag = () => {
   const toggleBag = useBag((state) => state.toggleBag)
   const totalEthPrice = useBagTotalEthPrice()
   const totalUsdPrice = useBagTotalUsdPrice()
-  const { formatNumberOrString } = useFormatter()
+  const { formatEther, formatNumberOrString } = useFormatter()
 
   const shouldShowBag = itemsInBag.length > 0
 
@@ -52,8 +51,7 @@ export const MobileHoverBag = () => {
           </Box>
           <Row gap="8">
             <Box className={body}>
-              {`${formatNumberOrString({ input: formatEther(totalEthPrice.toString()), type: NumberType.NFTToken })}`}{' '}
-              ETH
+              {`${formatEther({ input: totalEthPrice.toString(), type: NumberType.NFTToken })}`} ETH
             </Box>
             <Box color="neutral2" className={bodySmall}>
               {formatNumberOrString({ input: totalUsdPrice, type: NumberType.FiatNFTToken })}
