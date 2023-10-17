@@ -1,6 +1,6 @@
 import React from 'react'
 import { requireNativeComponent, StyleSheet, ViewProps } from 'react-native'
-import { HiddenFromScreenReaders } from 'ui/src'
+import { flexStyles, HiddenFromScreenReaders } from 'ui/src'
 
 interface NativeMnemonicDisplayProps {
   mnemonicId: Address
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
 
 export function MnemonicDisplay(props: MnemonicDisplayProps): JSX.Element {
   return (
-    <HiddenFromScreenReaders>
+    <HiddenFromScreenReaders style={flexStyles.fill}>
       <NativeMnemonicDisplay style={styles.mnemonicDisplay} {...props} />
     </HiddenFromScreenReaders>
   )
