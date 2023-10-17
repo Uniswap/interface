@@ -1,3 +1,5 @@
+import { Trans } from '@lingui/macro'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { TimePeriod } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useAtom } from 'jotai'
@@ -5,7 +7,7 @@ import { useRef } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { useTheme } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
 import { MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT } from '../constants'
 import { filterTimeAtom } from '../state'
@@ -52,8 +54,8 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
     text-decoration: none;
   }
 `
-const MenuTimeFlyout = styled.span`
-  min-width: 240px;
+const MenuTimeFlyout = styled.span<{ isInfoExplorePageEnabled: boolean }>`
+  min-width: ${({ isInfoExplorePageEnabled }) => (isInfoExplorePageEnabled ? '150px' : '240px')};
   max-height: 300px;
   overflow: auto;
   background-color: ${({ theme }) => theme.surface1};
@@ -69,12 +71,16 @@ const MenuTimeFlyout = styled.span`
   z-index: 100;
   left: 0px;
 
-  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    right: 0px;
-    left: unset;
-  }
+  ${({ isInfoExplorePageEnabled }) =>
+    !isInfoExplorePageEnabled &&
+    css`
+      @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
+        left: unset;
+        right: 0px;
+      }
+    `}
 `
-const StyledMenu = styled.div`
+const StyledMenu = styled.div<{ isInfoExplorePageEnabled: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -82,11 +88,15 @@ const StyledMenu = styled.div`
   border: none;
   text-align: left;
 
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    width: 72px;
-  }
+  ${({ isInfoExplorePageEnabled }) =>
+    !isInfoExplorePageEnabled &&
+    css`
+      @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+        width: 72px;
+      }
+    `}
 `
-const StyledMenuContent = styled.div`
+const StyledMenuContent = styled.div<{ isInfoExplorePageEnabled: boolean }>`
   display: flex;
   justify-content: space-between;
   gap: 8px;
@@ -94,6 +104,7 @@ const StyledMenuContent = styled.div`
   border: none;
   width: 100%;
   vertical-align: middle;
+  ${({ isInfoExplorePageEnabled }) => isInfoExplorePageEnabled && 'white-space: nowrap;'}
 `
 const Chevron = styled.span<{ open: boolean }>`
   padding-top: 1px;
@@ -109,11 +120,19 @@ export default function TimeSelector() {
   useOnClickOutside(node, open ? toggleMenu : undefined)
   const [activeTime, setTime] = useAtom(filterTimeAtom)
 
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
+
   return (
-    <StyledMenu ref={node}>
+    <StyledMenu ref={node} isInfoExplorePageEnabled={isInfoExplorePageEnabled}>
       <FilterOption onClick={toggleMenu} aria-label="timeSelector" active={open} data-testid="time-selector">
-        <StyledMenuContent>
-          {DISPLAYS[activeTime]}
+        <StyledMenuContent isInfoExplorePageEnabled={isInfoExplorePageEnabled}>
+          {isInfoExplorePageEnabled ? (
+            <>
+              {DISPLAYS[activeTime]} <Trans>volume</Trans>
+            </>
+          ) : (
+            DISPLAYS[activeTime]
+          )}
           <Chevron open={open}>
             {open ? (
               <ChevronUp width={20} height={15} viewBox="0 0 24 20" />
@@ -124,7 +143,7 @@ export default function TimeSelector() {
         </StyledMenuContent>
       </FilterOption>
       {open && (
-        <MenuTimeFlyout>
+        <MenuTimeFlyout isInfoExplorePageEnabled={isInfoExplorePageEnabled}>
           {ORDERED_TIMES.map((time) => (
             <InternalLinkMenuItem
               key={DISPLAYS[time]}
@@ -134,7 +153,13 @@ export default function TimeSelector() {
                 toggleMenu()
               }}
             >
-              <div>{DISPLAYS[time]}</div>
+              {isInfoExplorePageEnabled ? (
+                <div>
+                  {DISPLAYS[time]} <Trans>volume</Trans>
+                </div>
+              ) : (
+                <div>{DISPLAYS[time]}</div>
+              )}
               {time === activeTime && <Check color={theme.accent1} size={16} />}
             </InternalLinkMenuItem>
           ))}

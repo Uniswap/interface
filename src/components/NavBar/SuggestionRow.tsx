@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkSearchTokenWarning } from 'constants/tokenSafety'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { Chain, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
@@ -138,7 +139,9 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
 
-  const tokenDetailsPath = getTokenDetailsURL(token)
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
+
+  const tokenDetailsPath = getTokenDetailsURL({ ...token, isInfoExplorePageEnabled })
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
