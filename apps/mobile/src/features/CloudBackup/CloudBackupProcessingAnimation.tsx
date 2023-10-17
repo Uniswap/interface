@@ -105,9 +105,13 @@ export function CloudBackupProcessingAnimation({
     }, [backup, navigation])
   )
 
+  const iconSize = iconSizes.icon40
+
   return processing ? (
     <Flex centered grow gap="$spacing24">
-      <ActivityIndicator size="large" />
+      <Flex centered height={iconSize} width={iconSize}>
+        <ActivityIndicator size="large" />
+      </Flex>
       <Text variant="heading3">
         {IS_ANDROID ? t('Backing up to Google Drive...') : t('Backing up to iCloud...')}
       </Text>
@@ -119,7 +123,7 @@ export function CloudBackupProcessingAnimation({
         borderWidth={3}
         checkmarkStrokeWidth={2}
         color={colors.statusSuccess.val}
-        size={iconSizes.icon40}
+        size={iconSize}
       />
       <Text variant="heading3">
         {IS_ANDROID ? t('Backed up to Google Drive') : t('Backed up to iCloud')}
