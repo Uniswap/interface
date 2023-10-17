@@ -1,6 +1,6 @@
 import React from 'react'
 import { requireNativeComponent, StyleProp, ViewProps } from 'react-native'
-import { FlexProps } from 'ui/src'
+import { FlexProps, flexStyles, HiddenFromScreenReaders } from 'ui/src'
 import { dimensions } from 'ui/src/theme'
 
 interface NativeMnemonicConfirmationProps {
@@ -26,10 +26,12 @@ export function MnemonicConfirmation(props: MnemonicConfirmationProps): JSX.Elem
   const shouldShowSmallText = dimensions.fullHeight < 700
 
   return (
-    <NativeMnemonicConfirmation
-      shouldShowSmallText={shouldShowSmallText}
-      style={mnemonicConfirmationStyle}
-      {...props}
-    />
+    <HiddenFromScreenReaders style={flexStyles.fill}>
+      <NativeMnemonicConfirmation
+        shouldShowSmallText={shouldShowSmallText}
+        style={mnemonicConfirmationStyle}
+        {...props}
+      />
+    </HiddenFromScreenReaders>
   )
 }
