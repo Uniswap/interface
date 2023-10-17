@@ -66,6 +66,13 @@ export const PORTAL_USDC_CELO = new Token(
   'USDCet',
   'USDC (Portal from Ethereum)'
 )
+export const USDbC_BASE = new Token(
+  ChainId.BASE,
+  '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA',
+  6,
+  'USDbC',
+  'USD Base Coin'
+)
 export const USDC_BASE = new Token(ChainId.BASE, '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', 6, 'USDC', 'USD Coin')
 
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
@@ -93,13 +100,6 @@ export const MATIC = new Token(
 export const DAI_POLYGON = new Token(
   ChainId.POLYGON,
   '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
-  18,
-  'DAI',
-  'Dai Stablecoin'
-)
-export const DAI_BASE = new Token(
-  ChainId.BASE,
-  '0x50c5725949a6f0c72e6c4a641f24049a917db0cb',
   18,
   'DAI',
   'Dai Stablecoin'
