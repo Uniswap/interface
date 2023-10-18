@@ -48,7 +48,7 @@ const LeftColumn = styled(Column)`
 `
 
 const HR = styled.hr`
-  border: 1px solid ${({ theme }) => theme.surface3};
+  border: 0.5px solid ${({ theme }) => theme.surface3};
   margin: 16px 0px;
   width: 100%;
 `
@@ -105,27 +105,30 @@ export default function PoolDetailsPage() {
   }>()
   const chain = getValidUrlChainName(chainName)
   const chainId = chain && supportedChainIdFromGQLChain(chain)
-  const { data: poolData, loading } = usePoolData(poolAddress ?? '', chainId)
+  const { data: poolData } = usePoolData(poolAddress ?? '', chainId)
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
   const token0 = isReversed ? poolData?.token1 : poolData?.token0
   const token1 = isReversed ? poolData?.token0 : poolData?.token1
   const isInvalidPool = !chainName || !poolAddress || !getValidUrlChainName(chainName) || !isAddress(poolAddress)
+  const loading = true
   const poolNotFound = (!loading && !poolData) || isInvalidPool
 
   if (poolNotFound) return <NotFound />
   return (
     <PageWrapper>
       <LeftColumn>
-        <PoolDetailsHeader
-          chainId={chainId}
-          poolAddress={poolAddress}
-          token0={token0}
-          token1={token1}
-          feeTier={poolData?.feeTier}
-          toggleReversed={toggleReversed}
-          loading={loading}
-        />
-        <LoadingChart />
+        <Column gap="sm">
+          <PoolDetailsHeader
+            chainId={chainId}
+            poolAddress={poolAddress}
+            token0={token0}
+            token1={token1}
+            feeTier={poolData?.feeTier}
+            toggleReversed={toggleReversed}
+            loading={loading}
+          />
+          <LoadingChart />
+        </Column>
         <HR />
         <ChartHeaderBubble />
         <PoolDetailsTableSkeleton />
