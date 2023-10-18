@@ -4,6 +4,7 @@ import blankTokenUrl from 'assets/svg/blank_token.svg'
 import Column from 'components/Column'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import Row from 'components/Row'
+import { BIPS_BASE } from 'constants/misc'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
@@ -88,7 +89,7 @@ export function PoolDetailsHeader({
             {token0?.symbol} / {token1?.symbol}
           </ThemedText.HeadlineSmall>
         </Row>
-        {!!feeTier && <FeeTier>{feeTier / 10000}%</FeeTier>}
+        {!!feeTier && <FeeTier>{feeTier / BIPS_BASE}%</FeeTier>}
         <ToggleReverseArrows data-testid="toggle-tokens-reverse-arrows" onClick={toggleReversed} />
       </Row>
     </HeaderColumn>

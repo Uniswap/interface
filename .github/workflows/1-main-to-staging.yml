@@ -67,12 +67,6 @@ jobs:
           echo '* @uniswap/web-admins' > CODEOWNERS
           git add CODEOWNERS
           git commit -m 'ci: add global CODEOWNERS'
-      
-      - name: Update sitemap
-        run: |
-          yarn sitemap:generate
-          git add public/sitemap.xml
-          git commit -m 'ci: update sitemap'
 
       - name: Git push
         run: |

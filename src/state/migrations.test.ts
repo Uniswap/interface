@@ -13,7 +13,7 @@ const defaultState = {
   user: {},
   _persist: {
     rehydrated: true,
-    version: 1,
+    version: 2,
   },
   application: {
     chainId: null,

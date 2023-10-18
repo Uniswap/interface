@@ -119,6 +119,7 @@ export default function SwapModalFooter({
         <ExpandableLineItems {...lineItemProps} open={showMore} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.OUTPUT_TOKEN_FEE_ON_TRANSFER} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.SWAP_FEE} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.NETWORK_COST} />
       </DetailsContainer>
       {showAcceptChanges ? (
