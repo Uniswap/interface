@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
@@ -77,9 +77,6 @@ export function CurrencySearch({
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
 
   const defaultTokens = useDefaultActiveTokens(chainId)
-  const filteredTokens: Token[] = useMemo(() => {
-    return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
-  }, [defaultTokens, debouncedQuery])
 
   const { data, loading: balancesAreLoading } = useCachedPortfolioBalancesQuery({ account })
   const balances: TokenBalances = useMemo(() => {
@@ -101,34 +98,57 @@ export function CurrencySearch({
     )
   }, [chainId, data?.portfolios])
 
-  const sortedTokens: Token[] = useMemo(
-    () =>
-      !balancesAreLoading
-        ? filteredTokens
-            .filter((token) => {
-              if (onlyShowCurrenciesWithBalance) {
-                return balances[token.address?.toLowerCase()]?.usdValue > 0
-              }
+  const sortedTokens: Token[] = useMemo(() => {
+    const portfolioTokens = data?.portfolios?.[0].tokenBalances
+      ?.map((tokenBalance) => {
+        if (!tokenBalance?.token?.chain || !tokenBalance.token?.address || !tokenBalance.token?.decimals) {
+          return undefined
+        }
+        return new Token(
+          supportedChainIdFromGQLChain(tokenBalance.token?.chain) ?? ChainId.MAINNET,
+          tokenBalance.token?.address,
+          tokenBalance.token?.decimals,
+          tokenBalance.token?.symbol,
+          tokenBalance.token?.name
+        )
+      })
+      .filter((token) => !!token) as Token[]
 
-              // If there is no query, filter out unselected user-added tokens with no balance.
-              if (!debouncedQuery && token instanceof UserAddedToken) {
-                if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
-                return balances[token.address.toLowerCase()]?.usdValue > 0
-              }
-              return true
-            })
-            .sort(tokenComparator.bind(null, balances))
-        : filteredTokens,
-    [
-      balancesAreLoading,
-      filteredTokens,
-      balances,
-      onlyShowCurrenciesWithBalance,
-      debouncedQuery,
-      selectedCurrency,
-      otherSelectedCurrency,
-    ]
-  )
+    const filteredTokens = Object.values(defaultTokens)
+      .filter(getTokenFilter(debouncedQuery))
+      // Filter out tokens with balances so they aren't duplicated when we merge below.
+      .filter((token) => !(token.address?.toLowerCase() in balances))
+    const mergedTokens = [...(portfolioTokens ?? []), ...filteredTokens]
+
+    if (balancesAreLoading) {
+      return mergedTokens
+    }
+
+    return mergedTokens
+      .filter((token) => {
+        if (onlyShowCurrenciesWithBalance) {
+          return balances[token.address?.toLowerCase()]?.usdValue > 0
+        }
+
+        // If there is no query, filter out unselected user-added tokens with no balance.
+        if (!debouncedQuery && token instanceof UserAddedToken) {
+          if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
+          return balances[token.address.toLowerCase()]?.usdValue > 0
+        }
+        return true
+      })
+      .sort(tokenComparator.bind(null, balances))
+  }, [
+    data,
+    defaultTokens,
+    debouncedQuery,
+    balancesAreLoading,
+    balances,
+    onlyShowCurrenciesWithBalance,
+    selectedCurrency,
+    otherSelectedCurrency,
+  ])
+
   const isLoading = Boolean(balancesAreLoading && !tokenLoaderTimerElapsed)
 
   const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
@@ -206,7 +226,7 @@ export function CurrencySearch({
 
   // if no results on main list, show option to expand into inactive
   const filteredInactiveTokens = useSearchInactiveTokenLists(
-    !onlyShowCurrenciesWithBalance && (filteredTokens.length === 0 || (debouncedQuery.length > 2 && !isAddressSearch))
+    !onlyShowCurrenciesWithBalance && (sortedTokens.length === 0 || (debouncedQuery.length > 2 && !isAddressSearch))
       ? debouncedQuery
       : undefined
   )

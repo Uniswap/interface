@@ -5,6 +5,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { DutchOrder, DutchOrderBuilder } from '@uniswap/uniswapx-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
+import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { DutchOrderTrade, TradeFillType } from 'state/routing/types'
@@ -50,11 +51,14 @@ export function useUniswapXSwapCallback({
   fiatValues,
 }: {
   trade?: DutchOrderTrade
-  fiatValues: { amountIn?: number; amountOut?: number }
+  fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }
   allowedSlippage: Percent
 }) {
   const { account, provider } = useWeb3React()
   const analyticsContext = useTrace()
+
+  const { data } = useCachedPortfolioBalancesQuery({ account })
+  const portfolioBalanceUsd = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
 
   return useCallback(
     async () =>
@@ -82,7 +86,7 @@ export function useUniswapXSwapCallback({
               .decayEndTime(endTime)
               .deadline(deadline)
               .swapper(account)
-              .nonFeeRecipient(account)
+              .nonFeeRecipient(account, trade.swapFee?.recipient)
               // if fetching the nonce fails for any reason, default to existing nonce from the Swap quote.
               .nonce(updatedNonce ?? trade.order.info.nonce)
               .build()
@@ -115,6 +119,7 @@ export function useUniswapXSwapCallback({
             allowedSlippage,
             fiatValues,
             timeToSignSinceRequestMs: Date.now() - beforeSign,
+            portfolioBalanceUsd,
           }),
           ...analyticsContext,
         })
@@ -139,6 +144,7 @@ export function useUniswapXSwapCallback({
               trade,
               allowedSlippage,
               fiatValues,
+              portfolioBalanceUsd,
             }),
             ...analyticsContext,
             errorCode: body.errorCode,
@@ -154,6 +160,6 @@ export function useUniswapXSwapCallback({
           response: { orderHash: body.hash, deadline: updatedOrder.info.deadline },
         }
       }),
-    [account, provider, trade, allowedSlippage, fiatValues, analyticsContext]
+    [account, provider, trade, allowedSlippage, fiatValues, analyticsContext, portfolioBalanceUsd]
   )
 }
