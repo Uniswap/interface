@@ -33,7 +33,7 @@ describe('formatNumber', () => {
     expect(formatNumber({ input: 0, type: NumberType.TokenNonTx })).toBe('0')
   })
 
-  it('formats token reference numbers correctly with netherlands locale', () => {
+  it('formats token reference numbers correctly with Dutch locale', () => {
     mocked(useActiveLocale).mockReturnValue('nl-NL')
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
