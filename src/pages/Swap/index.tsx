@@ -193,8 +193,8 @@ export function Swap({
   const trace = useTrace()
 
   // token warning stuff
-  const prefilledInputCurrency = useCurrency(initialInputCurrencyId)
-  const prefilledOutputCurrency = useCurrency(initialOutputCurrencyId)
+  const prefilledInputCurrency = useCurrency(initialInputCurrencyId, chainId)
+  const prefilledOutputCurrency = useCurrency(initialOutputCurrencyId, chainId)
 
   const [loadedInputCurrency, setLoadedInputCurrency] = useState(prefilledInputCurrency)
   const [loadedOutputCurrency, setLoadedOutputCurrency] = useState(prefilledOutputCurrency)
