@@ -48,7 +48,7 @@ export const TEST_TRADE_EXACT_INPUT = new ClassicTrade({
   tradeType: TradeType.EXACT_INPUT,
   gasUseEstimateUSD: 1.0,
   approveInfo: { needsApprove: false },
-  quoteMethod: QuoteMethod.CLIENT_SIDE,
+  quoteMethod: QuoteMethod.CLIENT_SIDE_FALLBACK,
   inputTax: ZERO_PERCENT,
   outputTax: ZERO_PERCENT,
 })
@@ -80,7 +80,7 @@ export const TEST_TRADE_EXACT_OUTPUT = new ClassicTrade({
   ],
   v2Routes: [],
   tradeType: TradeType.EXACT_OUTPUT,
-  quoteMethod: QuoteMethod.CLIENT_SIDE,
+  quoteMethod: QuoteMethod.CLIENT_SIDE_FALLBACK,
   approveInfo: { needsApprove: false },
   inputTax: ZERO_PERCENT,
   outputTax: ZERO_PERCENT,

@@ -11,7 +11,7 @@ export const onRequest: PagesFunction = async ({ params, request, next }) => {
     if (!tokenAddress) {
       return res
     }
-    return getMetadataRequest(res, request.url, () => getToken(networkName, tokenAddress, request.url))
+    return getMetadataRequest(res, request, () => getToken(networkName, tokenAddress, request.url))
   } catch (e) {
     return res
   }

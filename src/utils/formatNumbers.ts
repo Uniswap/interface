@@ -39,6 +39,14 @@ const NO_DECIMALS: NumberFormatOptions = {
   minimumFractionDigits: 0,
 }
 
+const NO_DECIMALS_CURRENCY: NumberFormatOptions = {
+  notation: 'standard',
+  maximumFractionDigits: 0,
+  minimumFractionDigits: 0,
+  currency: 'USD',
+  style: 'currency',
+}
+
 const THREE_DECIMALS_NO_TRAILING_ZEROS: NumberFormatOptions = {
   notation: 'standard',
   maximumFractionDigits: 3,
@@ -262,7 +270,7 @@ const fiatTokenStatsFormatter: FormatterRule[] = [
 ]
 
 const fiatGasPriceFormatter: FormatterRule[] = [
-  { exact: 0, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { exact: 0, formatterOptions: NO_DECIMALS_CURRENCY },
   { upperBound: 0.01, hardCodedInput: { input: 0.01, prefix: '<' }, formatterOptions: TWO_DECIMALS_CURRENCY },
   { upperBound: 1e6, formatterOptions: TWO_DECIMALS_CURRENCY },
   { upperBound: Infinity, formatterOptions: SHORTHAND_CURRENCY_TWO_DECIMALS },
@@ -472,8 +480,19 @@ function formatSlippage(slippage: Percent | undefined, locale: SupportedLocale =
   if (!slippage) return '-'
 
   return `${Number(slippage.toFixed(3)).toLocaleString(locale, {
-    minimumFractionDigits: 3,
     maximumFractionDigits: 3,
+    useGrouping: false,
+  })}%`
+}
+
+function formatPercent(percent: Nullish<number>, locale: SupportedLocale = DEFAULT_LOCALE) {
+  if (percent === null || percent === undefined || percent === Infinity || isNaN(percent)) {
+    return '-'
+  }
+
+  return `${Number(Math.abs(percent).toFixed(2)).toLocaleString(locale, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
     useGrouping: false,
   })}%`
 }
@@ -723,12 +742,18 @@ export function useFormatter() {
     [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
   )
 
+  const formatPercentWithLocales = useCallback(
+    (percent: Nullish<number>) => formatPercent(percent, formatterLocale),
+    [formatterLocale]
+  )
+
   return useMemo(
     () => ({
       formatCurrencyAmount: formatCurrencyAmountWithLocales,
       formatFiatPrice: formatFiatPriceWithLocales,
       formatNumber: formatNumberWithLocales,
       formatNumberOrString: formatNumberOrStringWithLocales,
+      formatPercent: formatPercentWithLocales,
       formatPrice: formatPriceWithLocales,
       formatPriceImpact: formatPriceImpactWithLocales,
       formatReviewSwapCurrencyAmount: formatReviewSwapCurrencyAmountWithLocales,
@@ -740,6 +765,7 @@ export function useFormatter() {
       formatFiatPriceWithLocales,
       formatNumberOrStringWithLocales,
       formatNumberWithLocales,
+      formatPercentWithLocales,
       formatPriceImpactWithLocales,
       formatPriceWithLocales,
       formatReviewSwapCurrencyAmountWithLocales,

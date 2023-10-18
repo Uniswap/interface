@@ -2,15 +2,16 @@ import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
-import { DeltaArrow, formatDelta } from 'components/Tokens/TokenDetails/Delta'
+import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { PoolData } from 'graphql/thegraph/PoolData'
 import { useCurrency } from 'hooks/Tokens'
 import { useColor } from 'hooks/useColor'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { ReactNode, useMemo } from 'react'
 import { Text } from 'rebass'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
+import { colors } from 'theme/colors'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -99,12 +100,16 @@ export function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsS
   const isScreenSize = useScreenSize()
   const screenIsNotLarge = isScreenSize['lg']
   const { formatNumber } = useFormatter()
+  const theme = useTheme()
 
   const currency0 = useCurrency(poolData?.token0?.id, chainId) ?? undefined
   const currency1 = useCurrency(poolData?.token1?.id, chainId) ?? undefined
 
-  const color0 = useColor(currency0?.wrapped)
-  const color1 = useColor(currency1?.wrapped)
+  const color0 = useColor(currency0?.wrapped, theme.surface2, theme.darkMode)
+  let color1 = useColor(currency1?.wrapped, theme.surface2, theme.darkMode)
+  if (color0 === color1 && color0 === theme.accent1) {
+    color1 = colors.blue400
+  }
 
   const [token0, token1] = useMemo(() => {
     const fullWidth = poolData?.tvlToken0 / poolData?.token0Price + poolData?.tvlToken1
@@ -199,7 +204,7 @@ const StatItemText = styled(Text)`
 `
 
 function StatItem({ title, value, delta }: { title: ReactNode; value: number; delta?: number }) {
-  const { formatNumber } = useFormatter()
+  const { formatNumber, formatPercent } = useFormatter()
 
   return (
     <StatItemColumn>
@@ -214,7 +219,7 @@ function StatItem({ title, value, delta }: { title: ReactNode; value: number; de
         {!!delta && (
           <Row width="max-content" padding="4px 0px">
             <DeltaArrow delta={delta} />
-            <ThemedText.BodySecondary>{formatDelta(delta)}</ThemedText.BodySecondary>
+            <ThemedText.BodySecondary>{formatPercent(delta)}</ThemedText.BodySecondary>
           </Row>
         )}
       </StatsTextContainer>

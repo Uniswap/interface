@@ -32,22 +32,8 @@ const GasCostItem = ({ title, amount, itemValue }: GasCostItemProps) => {
 }
 
 const GaslessSwapLabel = () => {
-  const price = useFormatter().formatNumber({
-    input: 0,
-    type: [
-      {
-        upperBound: Infinity,
-        formatterOptions: {
-          notation: 'standard',
-          minimumSignificantDigits: 0,
-          maximumSignificantDigits: 0,
-          currency: 'USD',
-          style: 'currency',
-        },
-      },
-    ],
-  })
-  return <UniswapXRouterLabel>{price}</UniswapXRouterLabel>
+  const { formatNumber } = useFormatter()
+  return <UniswapXRouterLabel>{formatNumber({ input: 0, type: NumberType.FiatGasPrice })}</UniswapXRouterLabel>
 }
 
 type GasBreakdownTooltipProps = { trade: InterfaceTrade; hideUniswapXDescription?: boolean }

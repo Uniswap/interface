@@ -6,13 +6,14 @@ import { useFotAdjustmentsEnabled } from 'featureFlags/flags/fotAdjustments'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
-import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
+import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
@@ -82,6 +83,7 @@ export type SwapInfo = {
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   inputTax: Percent
   outputTax: Percent
+  outputFeeFiatValue?: number
   parsedAmount?: CurrencyAmount<Currency>
   inputError?: ReactNode
   trade: {
@@ -138,6 +140,13 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
     account,
     inputTax,
     outputTax
+  )
+
+  const { data: outputFeeFiatValue } = useUSDPrice(
+    isSubmittableTrade(trade.trade) && trade.trade.swapFee
+      ? CurrencyAmount.fromRawAmount(trade.trade.outputAmount.currency, trade.trade.swapFee.amount)
+      : undefined,
+    trade.trade?.outputAmount.currency
   )
 
   const currencyBalances = useMemo(
@@ -215,8 +224,20 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
       allowedSlippage,
       inputTax,
       outputTax,
+      outputFeeFiatValue,
     }),
-    [allowedSlippage, autoSlippage, currencies, currencyBalances, inputError, inputTax, outputTax, parsedAmount, trade]
+    [
+      allowedSlippage,
+      autoSlippage,
+      currencies,
+      currencyBalances,
+      inputError,
+      inputTax,
+      outputFeeFiatValue,
+      outputTax,
+      parsedAmount,
+      trade,
+    ]
   )
 }
 
