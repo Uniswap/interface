@@ -6,13 +6,8 @@ import {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import {
-  BUTTON_PADDING,
-  BUTTON_WIDTH,
-  CHART_WIDTH,
-  LABEL_WIDTH,
-  TIME_RANGES,
-} from 'src/components/PriceExplorer/constants'
+import { BUTTON_PADDING, TIME_RANGES } from 'src/components/PriceExplorer/constants'
+import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
 import Trace from 'src/components/Trace/Trace'
 import { AnimatedFlex, AnimatedText, Flex, TouchableArea, useSporeColors } from 'ui/src'
 import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -53,23 +48,27 @@ export function TimeRangeGroup({
 }: {
   setDuration: (newDuration: HistoryDuration) => void
 }): JSX.Element {
+  const { chartWidth, buttonWidth, labelWidth } = useChartDimensions()
   const transition = useSharedValue(1)
   const previousIndex = useSharedValue(1)
   const currentIndex = useSharedValue(1)
 
   // animates slider (time range label background) on press
-  const sliderStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: BUTTON_WIDTH * currentIndex.value + BUTTON_PADDING }],
-  }))
+  const sliderStyle = useAnimatedStyle(
+    () => ({
+      transform: [{ translateX: buttonWidth * currentIndex.value + BUTTON_PADDING }],
+    }),
+    [buttonWidth]
+  )
 
   return (
-    <Flex row alignSelf="center" width={CHART_WIDTH}>
+    <Flex row alignSelf="center" width={chartWidth}>
       <View style={StyleSheet.absoluteFill}>
         <AnimatedFlex
           bg="$surface3"
           borderRadius="$rounded20"
           style={[StyleSheet.absoluteFillObject, sliderStyle]}
-          width={LABEL_WIDTH}
+          width={labelWidth}
         />
       </View>
       {TIME_RANGES.map(([duration, label, element], index) => {
@@ -77,7 +76,7 @@ export function TimeRangeGroup({
           <Trace key={label} logPress element={element}>
             <TouchableArea
               p="$spacing4"
-              width={BUTTON_WIDTH}
+              width={buttonWidth}
               onPress={(): void => {
                 setDuration(duration)
 

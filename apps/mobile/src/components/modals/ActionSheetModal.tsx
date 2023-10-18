@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { BottomSheetDetachedModal } from 'src/components/modals/BottomSheetModal'
 import { ModalName } from 'src/features/telemetry/constants'
-import { Flex, flexStyles, Text, TouchableArea } from 'ui/src'
-import { dimensions } from 'ui/src/theme'
+import { Flex, flexStyles, Text, TouchableArea, useDeviceDimensions } from 'ui/src'
 
 export interface MenuItemProp {
   key: string
@@ -21,6 +20,7 @@ interface ActionSheetModalContentProps {
 
 export function ActionSheetModalContent(props: ActionSheetModalContentProps): JSX.Element {
   const { t } = useTranslation()
+  const { fullHeight } = useDeviceDimensions()
 
   const { header, closeButtonLabel = t('Cancel'), options, onClose } = props
 
@@ -35,7 +35,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps): JS
           header
         )}
 
-        <Flex maxHeight={dimensions.fullHeight * 0.5} width="100%">
+        <Flex maxHeight={fullHeight * 0.5} width="100%">
           <ScrollView bounces={false} style={flexStyles.grow}>
             {options.map(({ key, onPress, render }) => {
               return (

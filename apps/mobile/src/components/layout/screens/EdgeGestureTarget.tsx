@@ -1,6 +1,5 @@
 import React from 'react'
-import { Flex } from 'ui/src'
-import { dimensions } from 'ui/src/theme'
+import { Flex, useDeviceDimensions } from 'ui/src'
 
 /**
  * Adds a transparent box to the specific edge as a gesture target.
@@ -8,7 +7,7 @@ import { dimensions } from 'ui/src/theme'
  */
 export function HorizontalEdgeGestureTarget({
   edge = 'left',
-  height = dimensions.fullHeight,
+  height,
   top = 0,
   width = 20,
 }: {
@@ -17,10 +16,12 @@ export function HorizontalEdgeGestureTarget({
   top?: number
   width?: number
 }): JSX.Element {
+  const dimensions = useDeviceDimensions()
+
   return (
     <Flex
       bg="$accent1"
-      height={height}
+      height={height ?? dimensions.fullHeight}
       left={edge === 'left' ? 0 : undefined}
       opacity={0}
       position="absolute"

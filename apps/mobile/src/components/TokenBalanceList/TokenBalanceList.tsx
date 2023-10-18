@@ -20,8 +20,8 @@ import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceIt
 import { IS_ANDROID } from 'src/constants/globals'
 import { useTokenBalancesGroupedByVisibility } from 'src/features/balances/hooks'
 import { Screens } from 'src/screens/Screens'
-import { AnimatedFlex, Flex, useSporeColors } from 'ui/src'
-import { dimensions, zIndices } from 'ui/src/theme'
+import { AnimatedFlex, Flex, useDeviceDimensions, useSporeColors } from 'ui/src'
+import { zIndices } from 'ui/src/theme'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError, isNonPollingRequestInFlight, isWarmLoadingStatus } from 'wallet/src/data/utils'
 import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
@@ -59,6 +59,7 @@ export const TokenBalanceList = forwardRef<FlatList<any>, TokenBalanceListProps>
   ) {
     const { t } = useTranslation()
     const colors = useSporeColors()
+    const dimensions = useDeviceDimensions()
     const insets = useSafeAreaInsets()
 
     const { onContentSizeChange, adaptiveFooter, footerHeight } = useAdaptiveFooter(

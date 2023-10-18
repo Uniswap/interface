@@ -19,8 +19,9 @@ import {
   SpaceTokens,
   Text,
   TouchableArea,
+  useDeviceDimensions,
 } from 'ui/src'
-import { dimensions, fonts, spacing } from 'ui/src/theme'
+import { fonts, spacing } from 'ui/src/theme'
 import { SHADOW_OFFSET_SMALL } from 'wallet/src/components/BaseCard/BaseCard'
 
 export const springConfig = {
@@ -44,6 +45,7 @@ export type SearchTextInputProps = InputProps & {
 
 export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>(
   function _SearchTextInput(props, ref) {
+    const dimensions = useDeviceDimensions()
     const { t } = useTranslation()
     const {
       autoFocus,

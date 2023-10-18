@@ -1,10 +1,6 @@
 import React from 'react'
 import { Extrapolate, interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
-import { AnimatedFlex, Flex } from 'ui/src'
-import { dimensions } from 'ui/src/theme'
-
-const { fullWidth } = dimensions
-const INDICATOR_WIDTH = (200 / 375) * fullWidth
+import { AnimatedFlex, Flex, useDeviceDimensions } from 'ui/src'
 
 export function Indicator({
   stepCount,
@@ -13,13 +9,16 @@ export function Indicator({
   stepCount: number
   currentStep: number
 }): JSX.Element {
+  const { fullWidth } = useDeviceDimensions()
+  const indicatorWidth = (200 / 375) * fullWidth
+
   return (
     <Flex
       row
       alignItems="center"
       gap="$spacing8"
       justifyContent="space-evenly"
-      width={INDICATOR_WIDTH}>
+      width={indicatorWidth}>
       {[...Array(stepCount)].map((_, i) => (
         <Flex
           key={`indicator-${i}`}
@@ -57,6 +56,7 @@ function AnimatedIndicatorPill({
   index: number
   scroll: SharedValue<number>
 }): JSX.Element {
+  const { fullWidth } = useDeviceDimensions()
   const style = useAnimatedStyle(() => {
     const inputRange = [(index - 1) * fullWidth, index * fullWidth, (index + 1) * fullWidth]
     return {

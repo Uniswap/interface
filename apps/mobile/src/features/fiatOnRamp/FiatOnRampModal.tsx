@@ -28,8 +28,17 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName, ModalName } from 'src/features/telemetry/constants'
 import { MobileEventProperties } from 'src/features/telemetry/types'
 import { openUri } from 'src/utils/linking'
-import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { dimensions, fonts, iconSizes, spacing } from 'ui/src/theme'
+import {
+  AnimatedFlex,
+  Button,
+  Flex,
+  Icons,
+  Text,
+  TouchableArea,
+  useDeviceDimensions,
+  useSporeColors,
+} from 'ui/src'
+import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { formatFiatNumber, NumberType } from 'utilities/src/format/format'
 import { useTimeout } from 'utilities/src/time/timing'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
@@ -76,6 +85,7 @@ export function FiatOnRampModal(): JSX.Element {
 
 function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
   const { t } = useTranslation()
+  const { fullWidth } = useDeviceDimensions()
   const inputRef = useRef<TextInput>(null)
 
   const { isSheetReady } = useBottomSheetContext()
@@ -179,12 +189,12 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
   }, [showSoftInputOnFocus, showTokenSelector])
 
   const hideInnerContentRouter = showTokenSelector
-  const screenXOffset = useSharedValue(hideInnerContentRouter ? -dimensions.fullWidth : 0)
+  const screenXOffset = useSharedValue(hideInnerContentRouter ? -fullWidth : 0)
 
   useEffect(() => {
     const screenOffset = showTokenSelector ? 1 : 0
-    screenXOffset.value = withSpring(-(dimensions.fullWidth * screenOffset), ANIMATE_SPRING_CONFIG)
-  }, [screenXOffset, showTokenSelector])
+    screenXOffset.value = withSpring(-(fullWidth * screenOffset), ANIMATE_SPRING_CONFIG)
+  }, [screenXOffset, showTokenSelector, fullWidth])
 
   const wrapperStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: screenXOffset.value }],

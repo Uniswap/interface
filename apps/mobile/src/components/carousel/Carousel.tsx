@@ -3,10 +3,7 @@ import { ListRenderItemInfo } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 import { AnimatedIndicator } from 'src/components/carousel/Indicator'
 import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
-import { Flex } from 'ui/src'
-import { dimensions } from 'ui/src/theme'
-
-const { fullWidth } = dimensions
+import { Flex, useDeviceDimensions } from 'ui/src'
 
 interface CarouselContextProps {
   current: number
@@ -27,6 +24,7 @@ type CarouselProps = {
 
 export function Carousel({ slides, ...flatListProps }: CarouselProps): JSX.Element {
   const scroll = useSharedValue(0)
+  const { fullWidth } = useDeviceDimensions()
   const myRef = useRef<Animated.FlatList<unknown>>(null)
 
   const scrollHandler = useAnimatedScrollHandler({
@@ -40,14 +38,14 @@ export function Carousel({ slides, ...flatListProps }: CarouselProps): JSX.Eleme
     myRef.current?._listRef._scrollRef.scrollTo({
       x: scroll.value + fullWidth,
     })
-  }, [scroll.value])
+  }, [scroll, fullWidth])
 
   const goToPrev = useCallback(() => {
     // @ts-expect-error https://github.com/software-mansion/react-native-reanimated/issues/2976
     myRef.current?._listRef._scrollRef.scrollTo({
       x: scroll.value - fullWidth,
     })
-  }, [scroll.value])
+  }, [scroll, fullWidth])
 
   return (
     <CarouselContext.Provider value={{ goToNext, goToPrev, current: 0 }}>

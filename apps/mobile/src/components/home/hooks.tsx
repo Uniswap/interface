@@ -3,7 +3,7 @@ import { StyleProp, ViewStyle } from 'react-native'
 import Animated, { SharedValue, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { TAB_BAR_HEIGHT } from 'src/components/layout/TabHelpers'
-import { dimensions } from 'ui/src/theme'
+import { useDeviceDimensions } from 'ui/src'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 export function useAdaptiveFooter(contentContainerStyle?: StyleProp<ViewStyle>): {
@@ -11,9 +11,10 @@ export function useAdaptiveFooter(contentContainerStyle?: StyleProp<ViewStyle>):
   footerHeight: SharedValue<number>
   adaptiveFooter: JSX.Element
 } {
+  const { fullHeight } = useDeviceDimensions()
   const insets = useSafeAreaInsets()
   // Content is rendered under the navigation bar but not under the status bar
-  const maxContentHeight = dimensions.fullHeight - insets.top
+  const maxContentHeight = fullHeight - insets.top
   // Use maxContentHeight as the initial value to properly position the TabBar
   // while changing tabs when data is loading (before the onContentSizeChange
   // was called and appropriate footer height was calculated)
@@ -49,8 +50,8 @@ export function useAdaptiveFooter(contentContainerStyle?: StyleProp<ViewStyle>):
   useEffect(() => {
     // Reset footer height to the initial value when the active account changes
     // (the fullHeight value is used for the same reason as the initial value)
-    footerHeight.value = dimensions.fullHeight
-  }, [activeAccount, footerHeight])
+    footerHeight.value = fullHeight
+  }, [activeAccount, footerHeight, fullHeight])
 
   const footerStyle = useAnimatedStyle(() => ({
     height: footerHeight.value,

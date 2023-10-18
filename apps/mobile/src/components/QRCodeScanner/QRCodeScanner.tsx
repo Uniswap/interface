@@ -9,9 +9,17 @@ import PasteButton from 'src/components/buttons/PasteButton'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { openSettings } from 'src/utils/linking'
-import { AnimatedFlex, Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
+import {
+  AnimatedFlex,
+  Button,
+  Flex,
+  Icons,
+  Text,
+  useDeviceDimensions,
+  useSporeColors,
+} from 'ui/src'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
-import { dimensions, iconSizes, spacing } from 'ui/src/theme'
+import { iconSizes, spacing } from 'ui/src/theme'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
 type QRCodeScannerProps = {
@@ -28,9 +36,9 @@ function isWalletConnect(props: QRCodeScannerProps | WCScannerProps): props is W
 }
 
 const CAMERA_ASPECT_RATIO = 4 / 3
+const SCAN_ICON_RADIUS_RATIO = 0.1
 const SCAN_ICON_WIDTH_RATIO = 0.7
-const SCAN_ICON_MASK_OFFSET = 7 // used for mask to match spacing in CameraScan SVG
-
+const SCAN_ICON_MASK_OFFSET_RATIO = 0.02 // used for mask to match spacing in CameraScan SVG
 const LOADER_SIZE = iconSizes.icon40
 
 export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.Element {
@@ -39,6 +47,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
 
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const dimensions = useDeviceDimensions()
 
   const [permissionResponse, requestPermissionResponse] = BarCodeScanner.usePermissions()
   const permissionStatus = permissionResponse?.status
@@ -76,7 +85,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   useAsyncData(getPermissionStatuses)
 
   const overlayWidth = (overlayLayout?.height ?? 0) / CAMERA_ASPECT_RATIO
-  const scannerSize = overlayWidth * SCAN_ICON_WIDTH_RATIO
+  const scannerSize = Math.min(overlayWidth, dimensions.fullWidth) * SCAN_ICON_WIDTH_RATIO
 
   return (
     <AnimatedFlex
@@ -229,14 +238,16 @@ const GradientOverlay = memo(function GradientOverlay({
   scannerSize,
 }: GradientOverlayProps): JSX.Element {
   const colors = useSporeColors()
+  const dimensions = useDeviceDimensions()
   const [size, setSize] = useState<{ width: number; height: number } | null>(null)
 
   const pathWithHole = useMemo(() => {
     if (!size) return ''
     const { width: W, height: H } = size
-    const paddingX = Math.max(0, (W - scannerSize) / 2) + SCAN_ICON_MASK_OFFSET
-    const paddingY = Math.max(0, (H - scannerSize) / 2) + SCAN_ICON_MASK_OFFSET
-    const r = 35
+    const iconMaskOffset = SCAN_ICON_MASK_OFFSET_RATIO * scannerSize
+    const paddingX = Math.max(0, (W - scannerSize) / 2) + iconMaskOffset
+    const paddingY = Math.max(0, (H - scannerSize) / 2) + iconMaskOffset
+    const r = scannerSize * SCAN_ICON_RADIUS_RATIO
     const L = paddingX
     const R = W - paddingX
     const T = paddingY

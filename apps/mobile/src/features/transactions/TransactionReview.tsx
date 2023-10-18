@@ -12,8 +12,16 @@ import { TextInputProps } from 'src/components/input/TextInput'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
-import { AnimatedFlex, Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
-import { dimensions, fonts, iconSizes } from 'ui/src/theme'
+import {
+  AnimatedFlex,
+  Button,
+  Flex,
+  Text,
+  useDeviceDimensions,
+  useMedia,
+  useSporeColors,
+} from 'ui/src'
+import { fonts, iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/format'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
@@ -66,6 +74,7 @@ export function TransactionReview({
 }: TransactionReviewProps): JSX.Element {
   const colors = useSporeColors()
   const media = useMedia()
+  const { fullHeight } = useDeviceDimensions()
   const { t } = useTranslation()
 
   const { trigger: actionButtonTrigger } = useBiometricPrompt(actionButtonProps.onPress)
@@ -148,7 +157,7 @@ export function TransactionReview({
           </Flex>
         ) : nftIn ? (
           <Flex mt="$spacing60">
-            <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 5} />
+            <NFTTransfer asset={nftIn} nftSize={fullHeight / 5} />
           </Flex>
         ) : null}
         <TransferArrowButton

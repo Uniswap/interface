@@ -19,8 +19,15 @@ import {
 } from 'src/features/nfts/collection/NFTCollectionHeader'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
-import { AnimatedBottomSheetFlashList, AnimatedFlashList, Flex, Text, TouchableArea } from 'ui/src'
-import { dimensions, iconSizes, spacing } from 'ui/src/theme'
+import {
+  AnimatedBottomSheetFlashList,
+  AnimatedFlashList,
+  Flex,
+  Text,
+  TouchableArea,
+  useDeviceDimensions,
+} from 'ui/src'
+import { iconSizes, spacing } from 'ui/src/theme'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError } from 'wallet/src/data/utils'
 import {
@@ -76,6 +83,7 @@ export function NFTCollectionScreen({
   renderedInModal = false,
 }: NFTCollectionScreenProps): ReactElement {
   const { t } = useTranslation()
+  const dimensions = useDeviceDimensions()
   const navigation = useAppStackNavigation()
 
   // Collection overview data and paginated grid items

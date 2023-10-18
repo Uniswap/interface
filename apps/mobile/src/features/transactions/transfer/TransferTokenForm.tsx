@@ -29,10 +29,18 @@ import {
 import { TransferFormSpeedbumps } from 'src/features/transactions/transfer/TransferFormWarnings'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { AnimatedFlex, Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import {
+  AnimatedFlex,
+  Button,
+  Flex,
+  Text,
+  TouchableArea,
+  useDeviceDimensions,
+  useSporeColors,
+} from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
-import { dimensions, iconSizes, spacing } from 'ui/src/theme'
+import { iconSizes, spacing } from 'ui/src/theme'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -57,6 +65,7 @@ export function TransferTokenForm({
 }: TransferTokenProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const { fullHeight } = useDeviceDimensions()
 
   const {
     currencyAmounts,
@@ -237,7 +246,7 @@ export function TransferTokenForm({
           gap="$spacing2"
           onLayout={onInputPanelLayout}>
           {nftIn ? (
-            <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 4} />
+            <NFTTransfer asset={nftIn} nftSize={fullHeight / 4} />
           ) : (
             <Flex backgroundColor="$surface2" borderRadius="$rounded20" justifyContent="center">
               <CurrencyInputPanel

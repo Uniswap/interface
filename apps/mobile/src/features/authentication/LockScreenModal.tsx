@@ -5,9 +5,8 @@ import { Modal } from 'src/components/modals/Modal'
 import { IS_ANDROID } from 'src/constants/globals'
 import { useLockScreenContext } from 'src/features/authentication/lockScreenContext'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
-import { Flex, TouchableArea } from 'ui/src'
+import { Flex, TouchableArea, useDeviceDimensions } from 'ui/src'
 import { UNISWAP_LOGO_LARGE } from 'ui/src/assets'
-import { dimensions } from 'ui/src/theme'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 export const SPLASH_SCREEN = { uri: 'SplashScreen' }
@@ -16,6 +15,7 @@ export function LockScreenModal(): JSX.Element | null {
   const { isLockScreenVisible, animationType, setIsLockScreenVisible } = useLockScreenContext()
   const { trigger } = useBiometricPrompt(() => setIsLockScreenVisible(false))
   const insets = useSafeAreaInsets()
+  const dimensions = useDeviceDimensions()
   const isDarkMode = useIsDarkMode()
 
   if (!isLockScreenVisible) return null

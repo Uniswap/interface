@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatList, StyleSheet, ViewStyle } from 'react-native'
+import { FlatList, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { DappConnectedNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappConnectedNetworksModal'
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
-import { AnimatedFlex, Flex, Text, TouchableArea } from 'ui/src'
-import { dimensions, iconSizes, spacing } from 'ui/src/theme'
+import { AnimatedFlex, Flex, Text, TouchableArea, useDeviceDimensions } from 'ui/src'
+import { iconSizes, spacing } from 'ui/src/theme'
 
 type ConnectedDappsProps = {
   sessions: WalletConnectSession[]
@@ -16,6 +16,7 @@ type ConnectedDappsProps = {
 
 export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps): JSX.Element {
   const { t } = useTranslation()
+  const { fullHeight } = useDeviceDimensions()
   const [isEditing, setIsEditing] = useState(false)
   const [selectedSession, setSelectedSession] = useState<WalletConnectSession>()
 
@@ -69,7 +70,14 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
             )}
           />
         ) : (
-          <Flex fill alignItems="center" gap="$spacing8" px="$spacing24" style={emptyCardStyle}>
+          <Flex
+            fill
+            alignItems="center"
+            gap="$spacing8"
+            px="$spacing24"
+            style={{
+              paddingTop: fullHeight / 5,
+            }}>
             <Text color="$neutral1" variant="subheading1">
               {t('No apps connected')}
             </Text>
@@ -94,6 +102,3 @@ const ColumnStyle = StyleSheet.create({
     justifyContent: 'space-between',
   },
 })
-const emptyCardStyle: ViewStyle = {
-  paddingTop: dimensions.fullHeight / 5,
-}

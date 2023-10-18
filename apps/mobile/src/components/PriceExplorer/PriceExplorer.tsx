@@ -8,14 +8,11 @@ import {
   TLineChartDataProp,
 } from 'react-native-wagmi-charts'
 import { Loader } from 'src/components/loading'
-import {
-  CHART_HEIGHT,
-  CURSOR_INNER_SIZE,
-  CURSOR_SIZE,
-} from 'src/components/PriceExplorer/constants'
+import { CURSOR_INNER_SIZE, CURSOR_SIZE } from 'src/components/PriceExplorer/constants'
 import { PriceExplorerError } from 'src/components/PriceExplorer/PriceExplorerError'
 import { DatetimeText, PriceText, RelativeChangeText } from 'src/components/PriceExplorer/Text'
 import { TimeRangeGroup } from 'src/components/PriceExplorer/TimeRangeGroup'
+import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
 import { invokeImpact } from 'src/utils/haptic'
 import { Flex } from 'ui/src'
 import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -132,6 +129,8 @@ function PriceExplorerChart({
   loading: boolean
   tokenColor?: string
 }): JSX.Element {
+  const { chartHeight, chartWidth } = useChartDimensions()
+
   return (
     <LineChartProvider
       data={priceHistory}
@@ -139,7 +138,7 @@ function PriceExplorerChart({
       <Flex gap="$spacing8">
         <PriceTextSection loading={loading} relativeChange={spot?.relativeChange} />
         <Flex my="$spacing24">
-          <LineChart height={CHART_HEIGHT}>
+          <LineChart height={chartHeight} width={chartWidth}>
             <LineChart.Path color={tokenColor} pathProps={{ isTransitionEnabled: false }} />
             <LineChart.CursorLine color={tokenColor} />
             <LineChart.CursorCrosshair

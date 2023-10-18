@@ -17,8 +17,16 @@ import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
-import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { dimensions, spacing } from 'ui/src/theme'
+import {
+  Button,
+  Flex,
+  Icons,
+  Text,
+  TouchableArea,
+  useDeviceDimensions,
+  useSporeColors,
+} from 'ui/src'
+import { spacing } from 'ui/src/theme'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
@@ -57,6 +65,7 @@ export function AccountSwitcherModal(): JSX.Element {
  * TODO [MOB-259] Once testing works with the BottomSheetModal stop exporting this component.
  */
 export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Element | null {
+  const dimensions = useDeviceDimensions()
   const { t } = useTranslation()
   const activeAccountAddress = useActiveAccountAddress()
   const dispatch = useAppDispatch()

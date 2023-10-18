@@ -1,6 +1,6 @@
 import React, { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CHART_HEIGHT } from 'src/components/PriceExplorer/constants'
+import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
 import { Flex, Text } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 
@@ -11,6 +11,8 @@ export function PriceExplorerError({
   showRetry: boolean
 }): JSX.Element {
   const { t } = useTranslation()
+  const { chartHeight } = useChartDimensions()
+
   return (
     <Flex gap="$spacing16" mx="$spacing24">
       <Flex gap="$spacing12">
@@ -23,7 +25,7 @@ export function PriceExplorerError({
       <Flex
         alignItems="center"
         borderRadius="$rounded16"
-        height={CHART_HEIGHT}
+        height={chartHeight}
         justifyContent="center"
         overflow="hidden">
         <BaseCard.ErrorState

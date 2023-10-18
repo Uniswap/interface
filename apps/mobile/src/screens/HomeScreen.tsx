@@ -57,11 +57,19 @@ import { useWalletRestore } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { hideSplashScreen } from 'src/utils/splashScreen'
-import { AnimatedFlex, Flex, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
+import {
+  AnimatedFlex,
+  Flex,
+  Text,
+  TouchableArea,
+  useDeviceDimensions,
+  useMedia,
+  useSporeColors,
+} from 'ui/src'
 import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-receive.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
-import { dimensions, iconSizes, spacing } from 'ui/src/theme'
+import { iconSizes, spacing } from 'ui/src/theme'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval, useTimeout } from 'utilities/src/time/timing'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
@@ -82,6 +90,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const colors = useSporeColors()
   const media = useMedia()
   const insets = useSafeAreaInsets()
+  const dimensions = useDeviceDimensions()
   const dispatch = useAppDispatch()
 
   // opens the wallet restore modal if recovery phrase is missing after the app is opened

@@ -29,8 +29,8 @@ import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
-import { Flex, useMedia, useSporeColors } from 'ui/src'
-import { borderRadii, dimensions, spacing } from 'ui/src/theme'
+import { Flex, useDeviceDimensions, useMedia, useSporeColors } from 'ui/src'
+import { borderRadii, spacing } from 'ui/src/theme'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 /**
@@ -109,6 +109,7 @@ export function BottomSheetModal({
   // probably it requires usage of <BottomSheetTextInput>
   extendOnKeyboardVisible = false,
 }: Props): JSX.Element {
+  const dimensions = useDeviceDimensions()
   const insets = useSafeAreaInsets()
   const modalRef = useRef<BaseModal>(null)
   const keyboard = useKeyboardLayout()
@@ -300,6 +301,7 @@ export function BottomSheetDetachedModal({
   hideHandlebar,
   backgroundColor,
 }: Props): JSX.Element {
+  const dimensions = useDeviceDimensions()
   const insets = useSafeAreaInsets()
   const modalRef = useRef<BaseModal>(null)
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =

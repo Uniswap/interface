@@ -1,8 +1,8 @@
 import React from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Flex, Text } from 'ui/src'
-import { dimensions, spacing } from 'ui/src/theme'
+import { Flex, Text, useDeviceDimensions } from 'ui/src'
+import { spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/format'
 import {
   AccountListQuery,
@@ -16,6 +16,7 @@ const ADDRESS_ROW_HEIGHT = 40
 type Portfolio = NonNullable<NonNullable<NonNullable<AccountListQuery['portfolios']>[0]>>
 
 function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Element {
+  const { fullHeight } = useDeviceDimensions()
   const { data, loading } = useAccountListQuery({
     variables: {
       addresses: accounts.map((account) => account.address),
@@ -34,7 +35,7 @@ function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Ele
   // set max height to around 30% screen size, so we always cut the last visible element
   // this way user is aware if there are more elements to see
   const accountsScrollViewHeight =
-    Math.floor((dimensions.fullHeight * 0.3) / ADDRESS_ROW_HEIGHT) * ADDRESS_ROW_HEIGHT +
+    Math.floor((fullHeight * 0.3) / ADDRESS_ROW_HEIGHT) * ADDRESS_ROW_HEIGHT +
     ADDRESS_ROW_HEIGHT / 2 +
     spacing.spacing12 // 12 is the ScrollView vertical padding
 

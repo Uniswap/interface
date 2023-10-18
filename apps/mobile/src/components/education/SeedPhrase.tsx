@@ -6,10 +6,7 @@ import { CloseButton } from 'src/components/buttons/CloseButton'
 import { CarouselContext } from 'src/components/carousel/Carousel'
 import { IS_ANDROID } from 'src/constants/globals'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { Flex, Text } from 'ui/src'
-import { dimensions } from 'ui/src/theme'
-
-const { fullWidth } = dimensions
+import { Flex, Text, useDeviceDimensions } from 'ui/src'
 
 function Page({
   text,
@@ -18,6 +15,7 @@ function Page({
   text: ReactNode
   params: OnboardingStackBaseParams
 }): JSX.Element {
+  const { fullWidth } = useDeviceDimensions()
   const navigation = useOnboardingStackNavigation()
   const onDismiss = (): void => {
     navigation.navigate(OnboardingScreens.Backup, params)
