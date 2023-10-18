@@ -475,6 +475,7 @@ function formatPercent(percent: Percent | undefined, locale: SupportedLocale = D
   })}%`
 }
 
+// Used to format floats representing percent change with fixed decimal places
 function formatDelta(delta: Nullish<number>, locale: SupportedLocale = DEFAULT_LOCALE) {
   if (delta === null || delta === undefined || delta === Infinity || isNaN(delta)) {
     return '-'
