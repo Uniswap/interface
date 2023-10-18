@@ -41,15 +41,22 @@ describe('Landing Page', () => {
   })
 
   it('does not render landing page when / path is blocked', () => {
-    cy.visit('/', { userState: DISCONNECTED_WALLET_USER_STATE })
-    cy.document().then((doc) => {
-      const meta = document.createElement('meta')
-      meta.setAttribute('property', 'x:blocked-paths')
-      meta.setAttribute('content', '/,/nfts,/buy')
-      doc.head.appendChild(meta)
+    cy.intercept('/', (req) => {
+      req.reply((res) => {
+        const parser = new DOMParser()
+        const doc = parser.parseFromString(res.body, 'text/html')
+        const meta = document.createElement('meta')
+        meta.setAttribute('property', 'x:blocked-paths')
+        meta.setAttribute('content', '/,/buy')
+        doc.head.appendChild(meta)
+
+        res.body = doc.documentElement.outerHTML
+      })
     })
+    cy.visit('/', { userState: DISCONNECTED_WALLET_USER_STATE })
+
     cy.get(getTestSelector('landing-page')).should('not.exist')
-    cy.get(getTestSelector('fiat-on-ramp-unavailable-tooltip')).should('not.exist')
+    cy.get(getTestSelector('buy-fiat-button')).should('not.exist')
     cy.url().should('include', '/swap')
   })
 
