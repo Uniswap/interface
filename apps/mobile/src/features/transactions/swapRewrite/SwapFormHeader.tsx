@@ -1,13 +1,15 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
-import { ElementName } from 'src/features/telemetry/constants'
+import { WarningSeverity } from 'src/components/modals/WarningModal/types'
+import WarningModal from 'src/components/modals/WarningModal/WarningModal'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { SwapSettingsModal } from 'src/features/transactions/swap/modals/SwapSettingsModal'
 import {
   SwapScreen,
   useSwapScreenContext,
 } from 'src/features/transactions/swapRewrite/contexts/SwapScreenContext'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -29,6 +31,7 @@ export function SwapFormHeader(): JSX.Element {
     useSwapFormContext()
 
   const [showSwapSettingsModal, setShowSettingsModal] = useState(false)
+  const [showViewOnlyModal, setShowViewOnlyModal] = useState(false)
 
   const onToggleFiatInput = useCallback((): void => {
     // TODO: implement
@@ -40,7 +43,7 @@ export function SwapFormHeader(): JSX.Element {
   }, [])
 
   const onPressViewOnlyModal = useCallback((): void => {
-    // TODO: implement
+    setShowViewOnlyModal(true)
   }, [])
 
   const setCustomSlippageTolerance = useCallback(
@@ -66,7 +69,7 @@ export function SwapFormHeader(): JSX.Element {
         alignItems="center"
         justifyContent="space-between"
         mt="$spacing8"
-        pb="$spacing8"
+        pb="$spacing12"
         pl="$spacing12"
         pr={customSlippageTolerance ? '$spacing8' : '$spacing16'}>
         <Text $sm={{ variant: 'subheading1' }} $xs={{ variant: 'subheading2' }}>
@@ -133,7 +136,7 @@ export function SwapFormHeader(): JSX.Element {
                   </Text>
                 )}
                 <SettingsIcon
-                  color={colors.neutral3.get()}
+                  color={colors.neutral2.get()}
                   height={iconSizes.icon28}
                   width={iconSizes.icon28}
                 />
@@ -150,6 +153,23 @@ export function SwapFormHeader(): JSX.Element {
           onClose={onCloseSettingsModal}
         />
       )}
+      {showViewOnlyModal && <ViewOnlyModal onDismiss={(): void => setShowViewOnlyModal(false)} />}
     </>
+  )
+}
+
+const ViewOnlyModal = ({ onDismiss }: { onDismiss: () => void }): JSX.Element => {
+  const { t } = useTranslation()
+  return (
+    <WarningModal
+      caption={t('You need to import this wallet via recovery phrase to swap tokens.')}
+      confirmText={t('Dismiss')}
+      icon={<Icons.Eye color="$neutral2" size={iconSizes.icon24} />}
+      modalName={ModalName.SwapWarning}
+      severity={WarningSeverity.Low}
+      title={t('This wallet is view-only')}
+      onClose={onDismiss}
+      onConfirm={onDismiss}
+    />
   )
 }

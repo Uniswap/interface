@@ -95,7 +95,7 @@ export function TransactionDetails({
         <Flex centered row pb="$spacing16">
           <Separator mr="$spacing16" />
           <TouchableArea
-            alignContent="center"
+            alignItems="center"
             flexDirection="row"
             justifyContent="center"
             pb="$spacing4"

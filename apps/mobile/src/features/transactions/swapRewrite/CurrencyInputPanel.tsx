@@ -1,13 +1,11 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { forwardRef, memo, useCallback, useEffect, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 import {
   NativeSyntheticEvent,
   TextInput,
   TextInputProps,
   TextInputSelectionChangeEventData,
 } from 'react-native'
-import { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { useDynamicFontSizing } from 'src/app/hooks'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { MaxAmountButton } from 'src/components/input/MaxAmountButton'
@@ -18,8 +16,6 @@ import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { useForwardRef } from 'utilities/src/react/hooks'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
-
-const PADDING_ANIMATION_DURATION = 110
 
 type CurrentInputPanelProps = {
   autoFocus?: boolean
@@ -76,7 +72,6 @@ export const CurrencyInputPanel = memo(
     forwardedRef
   ): JSX.Element {
     const colors = useSporeColors()
-    const { t } = useTranslation()
     const inputRef = useRef<TextInput>(null)
 
     useForwardRef(forwardedRef, inputRef)
@@ -133,24 +128,17 @@ export const CurrencyInputPanel = memo(
       [selectionChange]
     )
 
-    const placeholderText = isOutput ? t('Receive') : t('Sell')
-
-    const animatedStyle = useAnimatedStyle(() => {
-      return {
-        paddingVertical: withTiming(focus ? spacing.spacing4 : spacing.none, {
-          duration: PADDING_ANIMATION_DURATION,
-        }),
-      }
-    }, [focus])
-
     return (
-      <Flex {...rest} p="$spacing16">
+      <Flex
+        {...rest}
+        paddingBottom="$spacing16"
+        paddingTop={!focus ? '$spacing16' : '$spacing24'}
+        px="$spacing16">
         <AnimatedFlex
           row
           alignItems="center"
           gap="$spacing8"
-          justifyContent={!currencyInfo ? 'flex-end' : 'space-between'}
-          style={animatedStyle}>
+          justifyContent={!currencyInfo ? 'flex-end' : 'space-between'}>
           <Flex
             fill
             grow
@@ -176,7 +164,7 @@ export const CurrencyInputPanel = memo(
               // centered vertically, so the caret is cut off but the text is not)
               minHeight={2 * MAX_INPUT_FONT_SIZE}
               overflow="visible"
-              placeholder={currencyInfo ? '0' : placeholderText}
+              placeholder="0"
               placeholderTextColor={colors.neutral3.val}
               px="$none"
               py="$none"
@@ -200,14 +188,22 @@ export const CurrencyInputPanel = memo(
         </AnimatedFlex>
 
         {currencyInfo && focus && (
-          <Flex row alignItems="center" gap="$spacing8" justifyContent="space-between">
+          <Flex
+            row
+            alignContent="center"
+            alignItems="center"
+            gap="$spacing8"
+            // TODO: remove this fix height when we implement "getMax" button, this is to keep entire container hieight consistent on focus change
+            height={spacing.spacing36}
+            justifyContent="space-between"
+            paddingTop="$spacing16">
             <Flex shrink>
               <Text color="$neutral2" numberOfLines={1} variant="body3">
                 {!isFiatInput ? (usdValue ? formattedFiatValue : '') : formattedCurrencyAmount}
               </Text>
             </Flex>
             <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">
-              <Text variant="body3">
+              <Text color="$neutral2" variant="body3">
                 {formatCurrencyAmount(currencyBalance, NumberType.TokenNonTx)}{' '}
                 {currencyInfo.currency.symbol}
               </Text>

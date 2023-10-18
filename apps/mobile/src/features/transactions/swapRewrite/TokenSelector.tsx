@@ -1,6 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback } from 'react'
-import { shallowEqual } from 'react-redux'
 import { SearchContext } from 'src/components/explore/search/SearchContext'
 import { flowToModalName } from 'src/components/TokenSelector/flowToModalName'
 import {
@@ -38,15 +37,20 @@ export function TokenSelector(): JSX.Element {
       const newState: Partial<SwapFormState> = {}
 
       const otherField = field === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
+      const otherFieldTradeableAsset = swapContext[otherField]
+
+      // We need to parse this, because one value is 'Currency' type, other is 'TradeableAsset', so shallowCompare on objects wont work
+      const chainsAreEqual = currency.chainId === otherFieldTradeableAsset?.chainId
+      const addressesAreEqual = currencyAddress(currency) === otherFieldTradeableAsset?.address
 
       // swap order if tokens are the same
-      if (shallowEqual(currency, swapContext[otherField])) {
+      if (chainsAreEqual && addressesAreEqual) {
         newState.exactCurrencyField = field
         newState[otherField] = swapContext[field]
       }
 
       // reset the other field if network changed
-      if (currency.chainId !== swapContext[otherField]?.chainId) {
+      if (currency.chainId !== otherFieldTradeableAsset?.chainId) {
         newState.exactCurrencyField = field
         newState[otherField] = undefined
       }

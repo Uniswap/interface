@@ -235,7 +235,8 @@ function SwapFormContent(): JSX.Element {
             }
             borderColor="$surface3"
             borderRadius="$rounded20"
-            borderWidth={1}>
+            borderWidth={1}
+            paddingBottom="$spacing4">
             <CurrencyInputPanel
               ref={inputRef}
               currencyAmount={currencyAmounts[CurrencyField.INPUT]}
@@ -257,96 +258,60 @@ function SwapFormContent(): JSX.Element {
           </Flex>
         </Trace>
 
-        <Flex zIndex="$popover">
-          <Flex alignItems="center" height={0} style={StyleSheet.absoluteFill}>
-            <Flex
-              alignItems="center"
-              bottom={
-                -(
-                  // (icon size + (top + bottom padding) + (top + bottom border)) / 2
-                  // to center the swap direction button vertically
-                  (
-                    SWAP_DIRECTION_BUTTON_SIZE +
-                    SWAP_DIRECTION_BUTTON_INNER_PADDING * 2 +
-                    SWAP_DIRECTION_BUTTON_BORDER_WIDTH * 2
-                  )
-                ) / 2
-              }
-              position="absolute">
-              <Trace logPress element={ElementName.SwitchCurrenciesButton}>
-                <SwapArrowButton
-                  bg="$surface1"
-                  size={SWAP_DIRECTION_BUTTON_SIZE}
-                  onPress={onSwitchCurrencies}
-                />
-              </Trace>
-            </Flex>
-          </Flex>
-        </Flex>
+        <SwitchCurrenciesButton onSwitchCurrencies={onSwitchCurrencies} />
 
         <Trace section={SectionName.CurrencyOutputPanel}>
-          <Flex>
-            <Flex
-              backgroundColor={
-                focusOnCurrencyField === CurrencyField.OUTPUT ? '$surface1' : '$surface2'
+          <Flex
+            backgroundColor={
+              focusOnCurrencyField === CurrencyField.OUTPUT ? '$surface1' : '$surface2'
+            }
+            borderColor="$surface3"
+            borderRadius="$rounded20"
+            borderWidth={1}
+            overflow="hidden"
+            paddingTop="$spacing4"
+            position="relative">
+            <CurrencyInputPanel
+              ref={outputRef}
+              isOutput
+              currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
+              currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
+              currencyInfo={currencies[CurrencyField.OUTPUT]}
+              dimTextColor={exactCurrencyField === CurrencyField.INPUT && isSwapDataLoading}
+              focus={focusOnCurrencyField === CurrencyField.OUTPUT}
+              showNonZeroBalancesOnly={false}
+              showSoftInputOnFocus={showNativeKeyboard}
+              usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
+              value={
+                exactCurrencyField === CurrencyField.OUTPUT ? exactValue : formattedDerivedValue
               }
-              borderBottomLeftRadius={
-                // TODO: maybe add this.
-                //swapWarning || showRate || isBlocked ? '$none' : '$rounded20'
-                '$rounded20'
-              }
-              borderBottomRightRadius={
-                // TODO: maybe add this.
-                // swapWarning || showRate || isBlocked ? '$none' : '$rounded20'
-                '$rounded20'
-              }
-              borderColor="$surface3"
-              borderRadius="$rounded20"
-              borderWidth={1}
-              overflow="hidden"
-              position="relative">
-              <CurrencyInputPanel
-                ref={outputRef}
-                isOutput
-                currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
-                currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
-                currencyInfo={currencies[CurrencyField.OUTPUT]}
-                dimTextColor={exactCurrencyField === CurrencyField.INPUT && isSwapDataLoading}
-                focus={focusOnCurrencyField === CurrencyField.OUTPUT}
-                showNonZeroBalancesOnly={false}
-                showSoftInputOnFocus={showNativeKeyboard}
-                usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
-                value={
-                  exactCurrencyField === CurrencyField.OUTPUT ? exactValue : formattedDerivedValue
-                }
-                onPressIn={onFocusOutput}
-                onSelectionChange={showNativeKeyboard ? undefined : onOutputSelectionChange}
-                onSetExactAmount={onSetExactAmountOutput}
-                onShowTokenSelector={onShowTokenSelectorOutput}
-              />
-              {walletNeedsRestore && (
-                <TouchableArea onPress={onRestorePress}>
-                  <Flex
-                    grow
-                    row
-                    alignItems="center"
-                    alignSelf="stretch"
-                    backgroundColor="$surface2"
-                    borderBottomLeftRadius="$rounded16"
-                    borderBottomRightRadius="$rounded16"
-                    borderTopColor="$surface1"
-                    borderTopWidth={1}
-                    gap="$spacing8"
-                    px="$spacing12"
-                    py="$spacing12">
-                    <Icons.InfoCircleFilled color={colors.DEP_accentWarning.val} size="$icon.20" />
-                    <Text color="$DEP_accentWarning" variant="subheading2">
-                      {t('Restore your wallet to swap')}
-                    </Text>
-                  </Flex>
-                </TouchableArea>
-              )}
-            </Flex>
+              onPressIn={onFocusOutput}
+              onSelectionChange={showNativeKeyboard ? undefined : onOutputSelectionChange}
+              onSetExactAmount={onSetExactAmountOutput}
+              onShowTokenSelector={onShowTokenSelectorOutput}
+            />
+            {walletNeedsRestore && (
+              <TouchableArea onPress={onRestorePress}>
+                <Flex
+                  grow
+                  row
+                  alignItems="center"
+                  alignSelf="stretch"
+                  backgroundColor="$surface2"
+                  borderBottomLeftRadius="$rounded16"
+                  borderBottomRightRadius="$rounded16"
+                  borderTopColor="$surface1"
+                  borderTopWidth={1}
+                  gap="$spacing8"
+                  px="$spacing12"
+                  py="$spacing12">
+                  <Icons.InfoCircleFilled color={colors.DEP_accentWarning.val} size="$icon.20" />
+                  <Text color="$DEP_accentWarning" variant="subheading2">
+                    {t('Restore your wallet to swap')}
+                  </Text>
+                </Flex>
+              </TouchableArea>
+            )}
           </Flex>
         </Trace>
 
@@ -372,7 +337,6 @@ function SwapFormContent(): JSX.Element {
             }
           />
         )}
-
         <ReviewButton
           isSwapDataLoading={isSwapDataLoading}
           walletNeedsRestore={!!walletNeedsRestore}
@@ -425,5 +389,40 @@ function ReviewButton({
         {getReviewActionName(t, wrapType)}
       </Button>
     </Trace>
+  )
+}
+
+const SwitchCurrenciesButton = ({
+  onSwitchCurrencies,
+}: {
+  onSwitchCurrencies: () => void
+}): JSX.Element => {
+  return (
+    <Flex zIndex="$popover">
+      <Flex alignItems="center" height={0} style={StyleSheet.absoluteFill}>
+        <Flex
+          alignItems="center"
+          bottom={
+            -(
+              // (icon size + (top + bottom padding) + (top + bottom border)) / 2
+              // to center the swap direction button vertically
+              (
+                SWAP_DIRECTION_BUTTON_SIZE +
+                SWAP_DIRECTION_BUTTON_INNER_PADDING * 2 +
+                SWAP_DIRECTION_BUTTON_BORDER_WIDTH * 2
+              )
+            ) / 2
+          }
+          position="absolute">
+          <Trace logPress element={ElementName.SwitchCurrenciesButton}>
+            <SwapArrowButton
+              bg="$surface1"
+              size={SWAP_DIRECTION_BUTTON_SIZE}
+              onPress={onSwitchCurrencies}
+            />
+          </Trace>
+        </Flex>
+      </Flex>
+    </Flex>
   )
 }

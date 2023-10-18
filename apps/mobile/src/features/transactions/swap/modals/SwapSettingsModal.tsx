@@ -22,7 +22,6 @@ import { DerivedSwapInfo } from 'src/features/transactions/swap/types'
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
 import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
-import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { formatCurrencyAmount, formatPercent, NumberType } from 'utilities/src/format/format'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
@@ -214,11 +213,7 @@ function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Eleme
                 <Text color="$neutral1" variant="subheading2">
                   {t('Swap protection')}
                 </Text>
-                <InfoCircle
-                  color={colors.neutral1.get()}
-                  height={iconSizes.icon16}
-                  width={iconSizes.icon16}
-                />
+                <Icons.InfoCircleFilled color="$neutral3" size={iconSizes.icon16} />
               </Flex>
               <Text color="$neutral2" variant="body3">
                 {subText}

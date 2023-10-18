@@ -1,11 +1,12 @@
 import { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSwapFormContext } from 'src/features/transactions/swapRewrite/contexts/SwapFormContext'
 import { useSwapTxContext } from 'src/features/transactions/swapRewrite/contexts/SwapTxContext'
 import { useParsedSwapWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
 import { SwapWarningModal } from 'src/features/transactions/swapRewrite/SwapWarningModal'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
-import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/format'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
@@ -65,17 +66,23 @@ export function GasAndWarningRows(): JSX.Element {
         )}
 
         {gasFeeUSD && (
-          <Flex centered row gap="$spacing4">
-            <Icons.Gas color={colors.neutral2.val} size="$icon.20" />
+          <AnimatedFlex centered row entering={FadeIn} exiting={FadeOut} gap="$spacing4">
+            <Icons.Gas color={colors.neutral2.val} size="$icon.16" />
             <Text color="$neutral2" variant="body3">
               {gasFeeFormatted}
             </Text>
-          </Flex>
+          </AnimatedFlex>
         )}
 
         {formScreenWarning && !isBlocked && (
           <TouchableArea onPress={onSwapWarningClick}>
-            <Flex centered row gap="$spacing8" px="$spacing24">
+            <AnimatedFlex
+              centered
+              row
+              entering={FadeIn}
+              exiting={FadeOut}
+              gap="$spacing8"
+              px="$spacing24">
               {formScreenWarning.Icon && (
                 <formScreenWarning.Icon
                   color={formScreenWarning.color.text}
@@ -89,7 +96,7 @@ export function GasAndWarningRows(): JSX.Element {
                   {formScreenWarning.warning.title}
                 </Text>
               </Flex>
-            </Flex>
+            </AnimatedFlex>
           </TouchableArea>
         )}
       </Flex>
