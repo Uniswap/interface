@@ -79,7 +79,6 @@ export function SettingsScreen(): JSX.Element {
       size: '$icon.24',
       strokeLinecap: 'round',
       strokeLinejoin: 'round',
-      strokeWidth: '$spacing2',
     }
 
     // Defining them inline instead of outside component b.c. they need t()
