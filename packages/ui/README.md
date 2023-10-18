@@ -1,6 +1,35 @@
 ## Where to put code
 
-The `ui` package should be where we put all low level interface components. It should *not* contain components that are specific to any one app, or which touch app-level data in any way. A good rule of thumb is: if it deals with redux state, it goes into `packages/app`, if it only handles internal state and is generally useful across multiple apps, it goes in `ui`.
+The `ui` package should be where we put all low level interface components that are shared between apps (or will likely be shared). It should *not* contain components that are specific to any one app, or which touch app-level data in any way.
+
+A good rule of thumb is: if it deals with app-specific state (eg anything thats stored in redux) or has a very complex interface, then:
+
+- If it's specific to just one app, put it in that app, like `apps/mobile` or `apps/web`.
+- Else if it's shared between mutliple apps, put it in `packages/app`.
+
+Otherwise, if it's simpler, put it in `packages/ui`.
+
+Think of `packages/ui` as our low level and more pure building blocks for interface, and `packages/app` as our higher level shared components that deal with complex dependencies or app-specific state.
+
+## When to use `styled()` vs inline props
+
+Rule of thumb:
+
+1. If it's used only once, always prefer inline for simplicity's sake. It avoids having to name things and avoids having to jump up/down to see what's going on.
+
+2. If it's used more than once, you may want to pull it out into a `styled()` component that is shared between the multiple usages to avoid inconsistencies. But it still should live as close to the usage as possible, so if used only within a single file, keep it within that file. Or if used only within a single app but in a few files, keep it in that app.
+
+3. If it's used across multiple apps or has a strong potential to be, see the "Where to put code" section above.
+
+## Optimization
+
+The Tamagui optimizing compiler will extract CSS and do tree-flattening optimizations for all of `ui`, and for all usages of components from `ui` in the apps.
+
+Where it will bail out of optimization is if you define a new `styled()` component outside of `ui` and then use that component.
+
+But this is fine! It will still be pretty fast.
+
+Also, in the future we can turn `enableDynamicEvaluation` which enables the compiler to optimize those one-off `styled()` definitions within apps to also extract CSS and flatten. Its still a bit of a beta feature so no rush to turn it on, and likely it's fast enough that we don't need to worry about it.
 
 ## Accessing colors
 
