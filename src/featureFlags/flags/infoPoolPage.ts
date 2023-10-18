@@ -1,7 +1,7 @@
 import { BaseVariant, FeatureFlag, useBaseFlag } from '../index'
 
 export function useInfoPoolPageFlag(): BaseVariant {
-  return useBaseFlag(FeatureFlag.infoPoolPage, BaseVariant.Enabled)
+  return useBaseFlag(FeatureFlag.infoPoolPage)
 }
 
 export function useInfoPoolPageEnabled(): boolean {

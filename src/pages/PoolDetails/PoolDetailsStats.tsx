@@ -105,8 +105,8 @@ const StatHeaderBubble = styled(LoadingBubble)`
 `
 
 interface PoolDetailsStatsProps {
-  poolData: PoolData
-  isReversed: boolean
+  poolData?: PoolData
+  isReversed?: boolean
   chainId?: number
   loading?: boolean
 }
@@ -127,27 +127,31 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
   }
 
   const [token0, token1] = useMemo(() => {
-    const fullWidth = poolData?.tvlToken0 / poolData?.token0Price + poolData?.tvlToken1
-    const token0FullData = {
-      ...poolData?.token0,
-      price: poolData?.token0Price,
-      tvl: poolData?.tvlToken0,
-      color: color0,
-      percent: poolData?.tvlToken0 / poolData?.token0Price / fullWidth,
-      currency: currency0,
+    if (poolData) {
+      const fullWidth = poolData?.tvlToken0 / poolData?.token0Price + poolData?.tvlToken1
+      const token0FullData = {
+        ...poolData?.token0,
+        price: poolData?.token0Price,
+        tvl: poolData?.tvlToken0,
+        color: color0,
+        percent: poolData?.tvlToken0 / poolData?.token0Price / fullWidth,
+        currency: currency0,
+      }
+      const token1FullData = {
+        ...poolData?.token1,
+        price: poolData?.token1Price,
+        tvl: poolData?.tvlToken1,
+        color: color1,
+        percent: poolData?.tvlToken1 / fullWidth,
+        currency: currency1,
+      }
+      return isReversed ? [token1FullData, token0FullData] : [token0FullData, token1FullData]
+    } else {
+      return [undefined, undefined]
     }
-    const token1FullData = {
-      ...poolData?.token1,
-      price: poolData?.token1Price,
-      tvl: poolData?.tvlToken1,
-      color: color1,
-      percent: poolData?.tvlToken1 / fullWidth,
-      currency: currency1,
-    }
-    return isReversed ? [token1FullData, token0FullData] : [token0FullData, token1FullData]
   }, [color0, color1, currency0, currency1, isReversed, poolData])
 
-  if (loading) {
+  if (loading || !token0 || !token1 || !poolData) {
     return (
       <StatsWrapper>
         <HeaderText>

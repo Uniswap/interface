@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
-import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
@@ -9,17 +8,16 @@ import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data
 import { usePoolData } from 'graphql/thegraph/PoolData'
 import NotFound from 'pages/NotFound'
 import { useReducer } from 'react'
-import { ArrowDown } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
-import { ThemedText } from 'theme/components'
 import { isAddress } from 'utils'
 
 import { PoolDetailsHeader } from './PoolDetailsHeader'
 import { PoolDetailsStats } from './PoolDetailsStats'
 import { PoolDetailsStatsButtons } from './PoolDetailsStatsButtons'
+import { PoolDetailsTableSkeleton } from './PoolDetailsTableSkeleton'
 import { DetailBubble, SmallDetailBubble } from './shared'
 
 const PageWrapper = styled(Row)`
@@ -47,6 +45,22 @@ const LeftColumn = styled(Column)`
   @media (max-width: ${BREAKPOINTS.lg - 1}px) {
     width: 100%;
   }
+`
+
+const HR = styled.hr`
+  border: 1px solid ${({ theme }) => theme.surface3};
+  margin: 16px 0px;
+  width: 100%;
+`
+
+const ChartHeaderBubble = styled(LoadingBubble)`
+  width: 180px;
+  height: 32px;
+`
+
+const LinkColumn = styled(Column)`
+  gap: 16px;
+  padding: 20px;
 `
 
 const RightColumn = styled(Column)`
@@ -97,8 +111,6 @@ export default function PoolDetailsPage() {
   const token1 = isReversed ? poolData?.token0 : poolData?.token1
   const isInvalidPool = !chainName || !poolAddress || !getValidUrlChainName(chainName) || !isAddress(poolAddress)
   const poolNotFound = (!loading && !poolData) || isInvalidPool
-  // TODO: replace with loading
-  const isLoading = true
 
   if (poolNotFound) return <NotFound />
   return (
@@ -111,84 +123,24 @@ export default function PoolDetailsPage() {
           token1={token1}
           feeTier={poolData?.feeTier}
           toggleReversed={toggleReversed}
-          loading={isLoading}
+          loading={loading}
         />
         <LoadingChart />
         <HR />
         <ChartHeaderBubble />
-        {/* TODO(WEB-2735): When making table, have headers be shared */}
-        <Table $isHorizontalScroll>
-          <TableRow $borderBottom>
-            <TableElement large>
-              <Row>
-                <ArrowDown size={16} />
-                <Trans>Time</Trans>
-              </Row>
-            </TableElement>
-            <TableElement>
-              <Trans>Type</Trans>
-            </TableElement>
-            <TableElement alignRight>
-              <Trans>USD</Trans>
-            </TableElement>
-            <TableElement alignRight>
-              <DetailBubble />
-            </TableElement>
-            <TableElement alignRight>
-              <DetailBubble />
-            </TableElement>
-            <TableElement alignRight>
-              <Trans>Maker</Trans>
-            </TableElement>
-            <TableElement alignRight small>
-              <Trans>Txn</Trans>
-            </TableElement>
-          </TableRow>
-          {Array.from({ length: 10 }).map((_, i) => (
-            <TableRow key={`loading-table-row-${i}`}>
-              <TableElement large>
-                <DetailBubble />
-              </TableElement>
-              <TableElement>
-                <DetailBubble />
-              </TableElement>
-              <TableElement alignRight>
-                <DetailBubble />
-              </TableElement>
-              <TableElement alignRight>
-                <DetailBubble />
-              </TableElement>
-              <TableElement alignRight>
-                <DetailBubble />
-              </TableElement>
-              <TableElement alignRight>
-                <DetailBubble />
-              </TableElement>
-              <TableElement alignRight small>
-                <SmallDetailBubble />
-              </TableElement>
-            </TableRow>
-          ))}
-        </Table>
+        <PoolDetailsTableSkeleton />
       </LeftColumn>
       <RightColumn>
         <PoolDetailsStatsButtons
           chainId={chainId}
           token0={token0}
           token1={token1}
-          feeTier={poolData?.feeTier} // TODO: implement
-          loading={isLoading}
+          feeTier={poolData?.feeTier}
+          loading={loading}
         />
-        {poolData && (
-          <PoolDetailsStats
-            poolData={poolData}
-            isReversed={isReversed}
-            chainId={chainId} // TODO: implement
-            loading={isLoading}
-          />
-        )}
-        {(token0 || token1) &&
-          (isLoading ? (
+        <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} loading={loading} />
+        {(token0 || token1 || loading) &&
+          (loading ? (
             <LinkColumn>
               <DetailBubble $height={24} $width={116} />
               {Array.from({ length: 3 }).map((_, i) => (
@@ -211,48 +163,3 @@ export default function PoolDetailsPage() {
     </PageWrapper>
   )
 }
-
-const HR = styled.hr`
-  border: 1px solid ${({ theme }) => theme.surface3};
-  margin: 16px 0px;
-  width: 100%;
-`
-
-const ChartHeaderBubble = styled(LoadingBubble)`
-  width: 180px;
-  height: 32px;
-`
-
-const Table = styled(Column)`
-  gap: 24px;
-  border-radius: 20px;
-  border: 1px solid ${({ theme }) => theme.surface3};
-  padding-bottom: 12px;
-  overflow-y: hidden;
-  ${ScrollBarStyles}
-`
-
-const TableRow = styled(Row)<{ $borderBottom?: boolean }>`
-  justify-content: space-between;
-  border-bottom: ${({ $borderBottom, theme }) => ($borderBottom ? `1px solid ${theme.surface3}` : 'none')}};
-  padding: 12px;
-  min-width: max-content;
-`
-
-const TableElement = styled(ThemedText.BodySecondary)<{
-  alignRight?: boolean
-  small?: boolean
-  large?: boolean
-}>`
-  display: flex;
-  padding: 0px 8px;
-  flex: ${({ small }) => (small ? 'unset' : '1')};
-  width: ${({ small }) => (small ? '44px' : 'auto')};
-  min-width: ${({ large, small }) => (large ? '136px' : small ? 'unset' : '121px')} !important;
-  justify-content: ${({ alignRight }) => (alignRight ? 'flex-end' : 'flex-start')};
-`
-
-const LinkColumn = styled(Column)`
-  gap: 16px;
-  padding: 20px;
-`

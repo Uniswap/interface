@@ -72,14 +72,15 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
       )
     }
   }
-  if (loading)
+
+  if (loading || !currency0 || !currency1)
     return (
       <PoolDetailsStatsButtonsRow>
         <ButtonBubble />
         <ButtonBubble />
       </PoolDetailsStatsButtonsRow>
     )
-  if (!currency0 || !currency1) return null
+
   return (
     <PoolDetailsStatsButtonsRow>
       <PoolButton
