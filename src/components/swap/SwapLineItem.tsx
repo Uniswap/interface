@@ -198,7 +198,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
       return {
         Label: () => (
           <>
-            <Trans>Fee</Trans> {trade.swapFee && `(${formatSlippage(trade.swapFee.percent)})`}
+            <Trans>Fee</Trans> {trade.swapFee && `(${formatPercent(trade.swapFee.percent)})`}
           </>
         ),
         TooltipBody: () => <SwapFeeTooltipContent hasFee={Boolean(trade.swapFee)} />,
