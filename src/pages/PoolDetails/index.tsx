@@ -204,7 +204,12 @@ const LinkColumn = styled(Column)`
   gap: 16px;
   padding: 20px;
 `
-
+/**
+ * TODO
+ * Add graph skeleton
+ * separate into their respective components if available, try to condense
+ * only show when actually loading
+ */
 function PoolDetailsLoadingSkeleton() {
   return (
     <Row gap="60px">
