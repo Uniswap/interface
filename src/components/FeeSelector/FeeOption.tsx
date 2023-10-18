@@ -31,14 +31,14 @@ interface FeeOptionProps {
 }
 
 export function FeeOption({ feeAmount, active, poolState, distributions, onClick }: FeeOptionProps) {
-  const { formatPercent } = useFormatter()
+  const { formatDelta } = useFormatter()
 
   return (
     <ButtonRadioChecked active={active} onClick={onClick}>
       <AutoColumn gap="sm" justify="flex-start">
         <AutoColumn justify="flex-start" gap="6px">
           <ResponsiveText>
-            <Trans>{formatPercent(parseFloat(FEE_AMOUNT_DETAIL[feeAmount].label))}</Trans>
+            <Trans>{formatDelta(parseFloat(FEE_AMOUNT_DETAIL[feeAmount].label))}</Trans>
           </ResponsiveText>
           <ThemedText.DeprecatedMain fontWeight={485} fontSize="12px" textAlign="left">
             {FEE_AMOUNT_DETAIL[feeAmount].description}

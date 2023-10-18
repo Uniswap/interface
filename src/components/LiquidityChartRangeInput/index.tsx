@@ -142,7 +142,7 @@ export default function LiquidityChartRangeInput({
       : undefined
   }, [isSorted, priceLower, priceUpper])
 
-  const { formatPercent } = useFormatter()
+  const { formatDelta } = useFormatter()
   const brushLabelValue = useCallback(
     (d: 'w' | 'e', x: number) => {
       if (!price) return ''
@@ -152,9 +152,9 @@ export default function LiquidityChartRangeInput({
 
       const percent = (x < price ? -1 : 1) * ((Math.max(x, price) - Math.min(x, price)) / price) * 100
 
-      return price ? `${(Math.sign(percent) < 0 ? '-' : '') + formatPercent(percent)}` : ''
+      return price ? `${(Math.sign(percent) < 0 ? '-' : '') + formatDelta(percent)}` : ''
     },
-    [formatPercent, isSorted, price, ticksAtLimit]
+    [formatDelta, isSorted, price, ticksAtLimit]
   )
 
   const isUninitialized = !currencyA || !currencyB || (formattedData === undefined && !isLoading)

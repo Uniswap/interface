@@ -396,7 +396,7 @@ function PositionPageContent() {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const { chainId, account, provider } = useWeb3React()
   const theme = useTheme()
-  const { formatCurrencyAmount, formatPercent, formatTickPrice } = useFormatter()
+  const { formatCurrencyAmount, formatDelta, formatTickPrice } = useFormatter()
 
   const parsedTokenId = parseTokenId(tokenIdFromUrl)
   const { loading, position: positionDetails } = useV3PositionFromTokenId(parsedTokenId)
@@ -696,7 +696,7 @@ function PositionPageContent() {
                   </ThemedText.DeprecatedLabel>
                   <Badge style={{ marginRight: '8px' }}>
                     <BadgeText>
-                      <Trans>{formatPercent(parseFloat(new Percent(feeAmount, 1_000_000).toSignificant()))}</Trans>
+                      <Trans>{formatDelta(parseFloat(new Percent(feeAmount, 1_000_000).toSignificant()))}</Trans>
                     </BadgeText>
                   </Badge>
                   <RangeBadge removed={removed} inRange={inRange} />

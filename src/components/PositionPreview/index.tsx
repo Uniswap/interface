@@ -32,7 +32,7 @@ export const PositionPreview = ({
   ticksAtLimit: { [bound: string]: boolean | undefined }
 }) => {
   const theme = useTheme()
-  const { formatCurrencyAmount, formatPercent, formatPrice, formatTickPrice } = useFormatter()
+  const { formatCurrencyAmount, formatDelta, formatPrice, formatTickPrice } = useFormatter()
 
   const currency0 = unwrappedToken(position.pool.token0)
   const currency1 = unwrappedToken(position.pool.token1)
@@ -109,7 +109,7 @@ export const PositionPreview = ({
               <Trans>Fee tier</Trans>
             </ThemedText.DeprecatedLabel>
             <ThemedText.DeprecatedLabel>
-              <Trans>{formatPercent(position?.pool?.fee / BIPS_BASE)}</Trans>
+              <Trans>{formatDelta(position?.pool?.fee / BIPS_BASE)}</Trans>
             </ThemedText.DeprecatedLabel>
           </RowBetween>
         </AutoColumn>

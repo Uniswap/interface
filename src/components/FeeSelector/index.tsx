@@ -63,7 +63,7 @@ export default function FeeSelector({
 }) {
   const { chainId } = useWeb3React()
   const trace = useTrace()
-  const { formatPercent } = useFormatter()
+  const { formatDelta } = useFormatter()
 
   const { isLoading, isError, largestUsageFeeTier, distributions } = useFeeTierDistribution(currencyA, currencyB)
 
@@ -163,7 +163,7 @@ export default function FeeSelector({
               ) : (
                 <>
                   <ThemedText.DeprecatedLabel className="selected-fee-label">
-                    <Trans>{formatPercent(parseFloat(FEE_AMOUNT_DETAIL[feeAmount].label))} fee tier</Trans>
+                    <Trans>{formatDelta(parseFloat(FEE_AMOUNT_DETAIL[feeAmount].label))} fee tier</Trans>
                   </ThemedText.DeprecatedLabel>
                   <Box style={{ width: 'fit-content', marginTop: '8px' }} className="selected-fee-percentage">
                     {distributions && (
