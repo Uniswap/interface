@@ -1,6 +1,6 @@
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import gql from 'graphql-tag'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { TokenInfoWrapper } from 'utils/tokenInfoWrapper'
 
 import { TokenQuery } from './__generated__/types-and-hooks'
 import { supportedChainIdFromGQLChain } from './util'
@@ -94,7 +94,7 @@ export type { Chain, TokenQuery } from './__generated__/types-and-hooks'
 export type TokenQueryData = TokenQuery['token']
 
 // TODO: Return a QueryToken from useTokenQuery instead of TokenQueryData to make it more usable in Currency-centric interfaces.
-export class QueryToken extends WrappedTokenInfo {
+export class QueryToken extends TokenInfoWrapper {
   constructor(address: string, data: NonNullable<TokenQueryData>, logoSrc?: string) {
     const chainId = supportedChainIdFromGQLChain(data.chain)
     if (chainId) {
