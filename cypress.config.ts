@@ -4,6 +4,7 @@ import { setupHardhatEvents } from 'cypress-hardhat'
 export default defineConfig({
   projectId: 'yp82ef',
   defaultCommandTimeout: 24000, // 2x average block time
+  requestTimeout: 12000, // average block time
   chromeWebSecurity: false,
   experimentalMemoryManagement: true, // better memory management, see https://github.com/cypress-io/cypress/pull/25462
   retries: { runMode: process.env.CYPRESS_RETRIES ? +process.env.CYPRESS_RETRIES : 2 },
