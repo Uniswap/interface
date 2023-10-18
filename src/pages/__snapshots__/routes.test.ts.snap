@@ -12,9 +12,36 @@ Array [
     "enabled": [Function],
     "getElement": [Function],
     "nestedPaths": Array [
+      ":tab",
       ":chainName",
     ],
+    "path": "/explore",
+  },
+  Object {
+    "enabled": [Function],
+    "getElement": [Function],
+    "nestedPaths": Array [
+      ":tab/:chainName",
+    ],
+    "path": "/explore",
+  },
+  Object {
+    "enabled": [Function],
+    "getElement": [Function],
+    "nestedPaths": Array [],
+    "path": "/explore/tokens/:chainName/:tokenAddress",
+  },
+  Object {
+    "enabled": [Function],
+    "getElement": [Function],
+    "nestedPaths": Array [],
     "path": "/tokens",
+  },
+  Object {
+    "enabled": [Function],
+    "getElement": [Function],
+    "nestedPaths": Array [],
+    "path": "/tokens/:chainName",
   },
   Object {
     "enabled": [Function],
@@ -26,7 +53,7 @@ Array [
     "enabled": [Function],
     "getElement": [Function],
     "nestedPaths": Array [],
-    "path": "/pools/:chainName/:poolAddress",
+    "path": "explore/pools/:chainName/:poolAddress",
   },
   Object {
     "enabled": [Function],

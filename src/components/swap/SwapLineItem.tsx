@@ -6,11 +6,13 @@ import RouterLabel from 'components/RouterLabel'
 import Row, { RowBetween } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
+import { useFeesEnabled } from 'featureFlags/flags/useFees'
 import useHoverProps from 'hooks/useHoverProps'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import { useIsMobile } from 'nft/hooks'
 import React, { PropsWithChildren, useEffect, useState } from 'react'
 import { animated, SpringValue } from 'react-spring'
-import { InterfaceTrade, TradeFillType } from 'state/routing/types'
+import { InterfaceTrade, SubmittableTrade, TradeFillType } from 'state/routing/types'
 import { isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
@@ -31,6 +33,7 @@ export enum SwapLineItemType {
   OUTPUT_TOKEN_FEE_ON_TRANSFER,
   PRICE_IMPACT,
   MAX_SLIPPAGE,
+  SWAP_FEE,
   MAXIMUM_INPUT,
   MINIMUM_OUTPUT,
   ROUTING_INFO,
@@ -74,6 +77,28 @@ function FOTTooltipContent() {
   )
 }
 
+function SwapFeeTooltipContent({ hasFee }: { hasFee: boolean }) {
+  const message = hasFee ? (
+    <Trans>
+      Fee is applied on a few token pairs to ensure the best experience with Uniswap. It is paid in the output token and
+      has already been factored into the quote.
+    </Trans>
+  ) : (
+    <Trans>
+      Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with
+      this swap.
+    </Trans>
+  )
+  return (
+    <>
+      {message}{' '}
+      <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/20131678274957">
+        <Trans>Learn more</Trans>
+      </ExternalLink>
+    </>
+  )
+}
+
 function Loading({ width = 50 }: { width?: number }) {
   return <LoadingRow data-testid="loading-row" height={15} width={width} />
 }
@@ -89,6 +114,18 @@ function CurrencyAmountRow({ amount }: { amount: CurrencyAmount<Currency> }) {
   return <>{`${formattedAmount} ${amount.currency.symbol}`}</>
 }
 
+function FeeRow({ trade: { swapFee, outputAmount } }: { trade: SubmittableTrade }) {
+  const { formatNumber } = useFormatter()
+
+  const feeCurrencyAmount = CurrencyAmount.fromRawAmount(outputAmount.currency, swapFee?.amount ?? 0)
+  const { data: outputFeeFiatValue } = useUSDPrice(feeCurrencyAmount, feeCurrencyAmount?.currency)
+
+  // Fallback to displaying token amount if fiat value is not available
+  if (outputFeeFiatValue === undefined) return <CurrencyAmountRow amount={feeCurrencyAmount} />
+
+  return <>{formatNumber({ input: outputFeeFiatValue, type: NumberType.FiatGasPrice })}</>
+}
+
 type LineItemData = {
   Label: React.FC
   Value: React.FC
@@ -101,6 +138,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   const { trade, syncing, allowedSlippage, type } = props
   const { formatNumber, formatSlippage } = useFormatter()
   const isAutoSlippage = useUserSlippageTolerance()[0] === SlippageTolerance.Auto
+  const feesEnabled = useFeesEnabled()
 
   const isUniswapX = isUniswapXTrade(trade)
   const isPreview = isPreviewTrade(trade)
@@ -153,6 +191,19 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
           </Row>
         ),
       }
+    case SwapLineItemType.SWAP_FEE: {
+      if (!feesEnabled) return
+      if (isPreview) return { Label: () => <Trans>Fee</Trans>, Value: () => <Loading /> }
+      return {
+        Label: () => (
+          <>
+            <Trans>Fee</Trans> {trade.swapFee && `(${formatSlippage(trade.swapFee.percent)})`}
+          </>
+        ),
+        TooltipBody: () => <SwapFeeTooltipContent hasFee={Boolean(trade.swapFee)} />,
+        Value: () => <FeeRow trade={trade} />,
+      }
+    }
     case SwapLineItemType.MAXIMUM_INPUT:
       if (trade.tradeType === TradeType.EXACT_INPUT) return
       return {

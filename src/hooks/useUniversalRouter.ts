@@ -2,10 +2,11 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
 import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
-import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
+import { FlatFeeOptions, SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
+import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { getConnection } from 'connection'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
@@ -45,17 +46,20 @@ interface SwapOptions {
   deadline?: BigNumber
   permit?: PermitSignature
   feeOptions?: FeeOptions
+  flatFeeOptions?: FlatFeeOptions
 }
 
 export function useUniversalRouterSwapCallback(
   trade: ClassicTrade | undefined,
-  fiatValues: { amountIn?: number; amountOut?: number },
+  fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number },
   options: SwapOptions
 ) {
   const { account, chainId, provider, connector } = useWeb3React()
   const analyticsContext = useTrace()
   const blockNumber = useBlockNumber()
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
+  const { data } = useCachedPortfolioBalancesQuery({ account })
+  const portfolioBalanceUsd = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
 
   return useCallback(async () => {
     return trace('swap.send', async ({ setTraceData, setTraceStatus, setTraceError }) => {
@@ -78,6 +82,7 @@ export function useUniversalRouterSwapCallback(
           deadlineOrPreviousBlockhash: options.deadline?.toString(),
           inputTokenPermit: options.permit,
           fee: options.feeOptions,
+          flatFee: options.flatFeeOptions,
         })
 
         const tx = {
@@ -119,6 +124,7 @@ export function useUniversalRouterSwapCallback(
                 allowedSlippage: options.slippageTolerance,
                 fiatValues,
                 txHash: response.hash,
+                portfolioBalanceUsd,
               }),
               ...analyticsContext,
               // TODO (WEB-2993): remove these after debugging missing user properties.
@@ -167,10 +173,12 @@ export function useUniversalRouterSwapCallback(
     options.deadline,
     options.permit,
     options.feeOptions,
+    options.flatFeeOptions,
     analyticsContext,
     blockNumber,
     isAutoSlippage,
     fiatValues,
+    portfolioBalanceUsd,
     connector,
   ])
 }

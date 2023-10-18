@@ -29,8 +29,8 @@ const nftTopCollectionsQuery = `
   }
 `
 
-fs.readFile('./public/sitemap.xml', 'utf8', async (err, data) => {
-  const sitemapURLs = {}
+fs.readFile('./public/tokens-sitemap.xml', 'utf8', async (err, data) => {
+  const tokenURLs = {}
   try {
     const sitemap = await parseStringPromise(data)
     if (sitemap.urlset.url) {
@@ -39,7 +39,7 @@ fs.readFile('./public/sitemap.xml', 'utf8', async (err, data) => {
         if (lastMod < Date.now() - weekMs) {
           url.lastmod = nowISO
         }
-        sitemapURLs[url.loc] = true
+        tokenURLs[url.loc] = true
       })
     }
 
@@ -57,13 +57,46 @@ fs.readFile('./public/sitemap.xml', 'utf8', async (err, data) => {
 
       tokenAddresses.forEach((address) => {
         const tokenURL = `https://app.uniswap.org/tokens/${chainName.toLowerCase()}/${address}`
-        if (!(tokenURL in sitemapURLs)) {
+        if (!(tokenURL in tokenURLs)) {
           sitemap.urlset.url.push({
             loc: [tokenURL],
             lastmod: [nowISO],
             priority: [0.8],
           })
         }
+      })
+    }
+
+    const builder = new Builder()
+    const xml = builder.buildObject(sitemap)
+    const path = './public/tokens-sitemap.xml'
+    fs.writeFile(path, xml, (error) => {
+      if (error) throw error
+      const stats = fs.statSync(path)
+      const fileSizeBytes = stats.size
+      const fileSizeMegabytes = fileSizeBytes / (1024 * 1024)
+
+      if (fileSizeMegabytes > 50) {
+        throw new Error('Generated tokens-sitemap.xml file size exceeds 50MB')
+      }
+      console.log('Tokens sitemap updated')
+    })
+  } catch (e) {
+    console.error(e)
+  }
+})
+
+fs.readFile('./public/nfts-sitemap.xml', 'utf8', async (err, data) => {
+  const collectionURLs = {}
+  try {
+    const sitemap = await parseStringPromise(data)
+    if (sitemap.urlset.url) {
+      sitemap.urlset.url.forEach((url) => {
+        const lastMod = new Date(url.lastmod).getTime()
+        if (lastMod < Date.now() - weekMs) {
+          url.lastmod = nowISO
+        }
+        collectionURLs[url.loc] = true
       })
     }
 
@@ -79,7 +112,7 @@ fs.readFile('./public/sitemap.xml', 'utf8', async (err, data) => {
     const collectionAddresses = nftJSON.data.topCollections.edges.map((edge) => edge.node.nftContracts[0].address)
     collectionAddresses.forEach((address) => {
       const collectionURL = `https://app.uniswap.org/nfts/collection/${address}`
-      if (!(collectionURL in sitemapURLs)) {
+      if (!(collectionURL in collectionURLs)) {
         sitemap.urlset.url.push({
           loc: [collectionURL],
           lastmod: [nowISO],
@@ -90,7 +123,7 @@ fs.readFile('./public/sitemap.xml', 'utf8', async (err, data) => {
 
     const builder = new Builder()
     const xml = builder.buildObject(sitemap)
-    const path = './public/sitemap.xml'
+    const path = './public/nfts-sitemap.xml'
     fs.writeFile(path, xml, (error) => {
       if (error) throw error
       const stats = fs.statSync(path)
@@ -98,9 +131,9 @@ fs.readFile('./public/sitemap.xml', 'utf8', async (err, data) => {
       const fileSizeMegabytes = fileSizeBytes / (1024 * 1024)
 
       if (fileSizeMegabytes > 50) {
-        throw new Error('Generated sitemap file size exceeds 50MB')
+        throw new Error('Generated nfts-sitemap.xml file size exceeds 50MB')
       }
-      console.log('Sitemap updated')
+      console.log('NFT collections sitemap updated')
     })
   } catch (e) {
     console.error(e)

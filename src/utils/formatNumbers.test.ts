@@ -188,7 +188,7 @@ describe('formatNumber', () => {
     expect(formatNumber({ input: 1234567.891, type: NumberType.FiatGasPrice })).toBe('$1.23M')
     expect(formatNumber({ input: 18.448, type: NumberType.FiatGasPrice })).toBe('$18.45')
     expect(formatNumber({ input: 0.0099, type: NumberType.FiatGasPrice })).toBe('<$0.01')
-    expect(formatNumber({ input: 0, type: NumberType.FiatGasPrice })).toBe('$0.00')
+    expect(formatNumber({ input: 0, type: NumberType.FiatGasPrice })).toBe('$0')
   })
 
   it('formats gas prices correctly with portugese locale and thai baht currency', () => {
@@ -199,7 +199,7 @@ describe('formatNumber', () => {
     expect(formatNumber({ input: 1234567.891, type: NumberType.FiatGasPrice })).toBe('฿\xa01,23\xa0mi')
     expect(formatNumber({ input: 18.448, type: NumberType.FiatGasPrice })).toBe('฿\xa018,45')
     expect(formatNumber({ input: 0.0099, type: NumberType.FiatGasPrice })).toBe('<฿\xa00,01')
-    expect(formatNumber({ input: 0, type: NumberType.FiatGasPrice })).toBe('฿\xa00,00')
+    expect(formatNumber({ input: 0, type: NumberType.FiatGasPrice })).toBe('฿\xa00')
   })
 
   it('formats USD token quantities prices correctly', () => {
