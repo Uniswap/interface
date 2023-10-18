@@ -38,6 +38,9 @@ export function* appRatingWatcherSaga() {
 
 function* maybeRequestAppRating() {
   try {
+    const canRequestReview = yield* call(StoreReview.hasAction)
+    if (!canRequestReview) return
+
     const activeAddress = yield* select(selectActiveAccountAddress)
     if (!activeAddress) return
 
