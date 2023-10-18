@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { PoolData } from 'graphql/thegraph/PoolData'
 import { useCurrency } from 'hooks/Tokens'
@@ -15,7 +16,7 @@ import { colors } from 'theme/colors'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { DetailBubble, LargeHeaderBubble } from './shared'
+import { DetailBubble } from './shared'
 
 const HeaderText = styled(Text)`
   font-weight: 485;
@@ -92,6 +93,17 @@ const BalanceChartSide = styled.div<{ percent: number; $color: string; isLeft: b
   ${({ isLeft }) => (isLeft ? leftBarChartStyles : rightBarChartStyles)}
 `
 
+const StatSectionBubble = styled(LoadingBubble)`
+  width: 180px;
+  height: 40px;
+`
+
+const StatHeaderBubble = styled(LoadingBubble)`
+  width: 116px;
+  height: 24px;
+  border-radius: 8px;
+`
+
 interface PoolDetailsStatsProps {
   poolData: PoolData
   isReversed: boolean
@@ -139,12 +151,12 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
     return (
       <StatsWrapper>
         <HeaderText>
-          <DetailBubble $height={24} $width={116} />
+          <StatHeaderBubble />
         </HeaderText>
         {Array.from({ length: 4 }).map((_, i) => (
           <Column gap="md" key={`loading-info-row-${i}`}>
             <DetailBubble />
-            <LargeHeaderBubble />
+            <StatSectionBubble />
           </Column>
         ))}
       </StatsWrapper>

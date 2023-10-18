@@ -20,6 +20,7 @@ import { isAddress } from 'utils'
 import { PoolDetailsHeader } from './PoolDetailsHeader'
 import { PoolDetailsStats } from './PoolDetailsStats'
 import { PoolDetailsStatsButtons } from './PoolDetailsStatsButtons'
+import { DetailBubble, SmallDetailBubble } from './shared'
 
 const PageWrapper = styled(Row)`
   padding: 48px;
@@ -96,14 +97,9 @@ export default function PoolDetailsPage() {
   const token1 = isReversed ? poolData?.token0 : poolData?.token1
   const isInvalidPool = !chainName || !poolAddress || !getValidUrlChainName(chainName) || !isAddress(poolAddress)
   const poolNotFound = (!loading && !poolData) || isInvalidPool
+  // TODO: replace with loading
   const isLoading = true
 
-  // TODO(WEB-2814): Add skeleton once designed
-  // return (
-  //   <PageWrapper>
-  //     <PoolDetailsLoadingSkeleton />
-  //   </PageWrapper>
-  // )
   if (poolNotFound) return <NotFound />
   return (
     <PageWrapper>
@@ -216,22 +212,6 @@ export default function PoolDetailsPage() {
   )
 }
 
-const DetailBubble = styled(LoadingBubble)<{ $height?: number; $width?: number }>`
-  height: ${({ $height }) => ($height ? `${$height}px` : '16px')};
-  width: ${({ $width }) => ($width ? `${$width}px` : '80px')};
-`
-
-const IconBubble = styled(LoadingBubble)`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-`
-
-const LargeHeaderBubble = styled(LoadingBubble)`
-  width: 180px;
-  height: 40px;
-`
-
 const HR = styled.hr`
   border: 1px solid ${({ theme }) => theme.surface3};
   margin: 16px 0px;
@@ -272,129 +252,7 @@ const TableElement = styled(ThemedText.BodySecondary)<{
   justify-content: ${({ alignRight }) => (alignRight ? 'flex-end' : 'flex-start')};
 `
 
-const SmallDetailBubble = styled(LoadingBubble)`
-  height: 20px;
-  width: 20px;
-  border-radius: 100px;
-`
-
-const ButtonBubble = styled(LoadingBubble)`
-  height: 44px;
-  width: 175px;
-  border-radius: 900px;
-`
-
-const InfoColumn = styled(Column)`
-  gap: 24px;
-  background-color: ${({ theme }) => theme.surface2};
-  padding: 20px;
-  border-radius: 20px;
-`
-
 const LinkColumn = styled(Column)`
   gap: 16px;
   padding: 20px;
 `
-/**
- * TODO
- * separate into their respective components if available, try to condense
- * only show when actually loading
- */
-function PoolDetailsLoadingSkeleton() {
-  return (
-    <Row gap="60px" align="flex-start">
-      <LeftColumn>
-        <DetailBubble $width={300} />
-        <Column gap="sm">
-          <Row gap="8px">
-            <IconBubble />
-            <DetailBubble $width={137} />
-          </Row>
-          <LargeHeaderBubble />
-        </Column>
-        <LoadingChart />
-        <HR />
-        <ChartHeaderBubble />
-        {/* TODO(WEB-2735): When making table, have headers be shared */}
-        <Table $isHorizontalScroll>
-          <TableRow $borderBottom>
-            <TableElement large>
-              <Row>
-                <ArrowDown size={16} />
-                <Trans>Time</Trans>
-              </Row>
-            </TableElement>
-            <TableElement>
-              <Trans>Type</Trans>
-            </TableElement>
-            <TableElement alignRight>
-              <Trans>USD</Trans>
-            </TableElement>
-            <TableElement alignRight>
-              <DetailBubble />
-            </TableElement>
-            <TableElement alignRight>
-              <DetailBubble />
-            </TableElement>
-            <TableElement alignRight>
-              <Trans>Maker</Trans>
-            </TableElement>
-            <TableElement alignRight small>
-              <Trans>Txn</Trans>
-            </TableElement>
-          </TableRow>
-          {Array.from({ length: 10 }).map((_, i) => (
-            <TableRow key={`loading-table-row-${i}`}>
-              <TableElement large>
-                <DetailBubble />
-              </TableElement>
-              <TableElement>
-                <DetailBubble />
-              </TableElement>
-              <TableElement alignRight>
-                <DetailBubble />
-              </TableElement>
-              <TableElement alignRight>
-                <DetailBubble />
-              </TableElement>
-              <TableElement alignRight>
-                <DetailBubble />
-              </TableElement>
-              <TableElement alignRight>
-                <DetailBubble />
-              </TableElement>
-              <TableElement alignRight small>
-                <SmallDetailBubble />
-              </TableElement>
-            </TableRow>
-          ))}
-        </Table>
-      </LeftColumn>
-      <RightColumn>
-        {/* buttons */}
-        <Row gap="10px">
-          <ButtonBubble />
-          <ButtonBubble />
-        </Row>
-        <InfoColumn>
-          <DetailBubble $height={24} $width={116} />
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Column gap="md" key={`loading-info-row-${i}`}>
-              <DetailBubble />
-              <LargeHeaderBubble />
-            </Column>
-          ))}
-        </InfoColumn>
-        <LinkColumn>
-          <DetailBubble $height={24} $width={116} />
-          {Array.from({ length: 3 }).map((_, i) => (
-            <Row gap="8px" key={`loading-link-row-${i}`}>
-              <SmallDetailBubble />
-              <DetailBubble $width={117} />
-            </Row>
-          ))}
-        </LinkColumn>
-      </RightColumn>
-    </Row>
-  )
-}

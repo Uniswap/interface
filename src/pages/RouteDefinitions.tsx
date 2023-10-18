@@ -105,7 +105,11 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({ path: '/tokens/:chainName/:tokenAddress', getElement: () => <TokenDetails /> }),
   createRouteDefinition({
     path: '/pools/:chainName/:poolAddress',
-    getElement: () => <PoolDetails />,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <PoolDetails />
+      </Suspense>
+    ),
     enabled: (args) => Boolean(args.infoPoolPageEnabled),
   }),
   createRouteDefinition({

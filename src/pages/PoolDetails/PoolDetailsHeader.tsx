@@ -15,7 +15,7 @@ import { ClickableStyle, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils'
 
 import { ReversedArrowsIcon } from './icons'
-import { DetailBubble, LargeHeaderBubble } from './shared'
+import { DetailBubble } from './shared'
 
 const HeaderColumn = styled(Column)`
   gap: 36px;
@@ -78,7 +78,6 @@ export function PoolDetailsHeader({
             <IconBubble />
             <DetailBubble $width={137} />
           </Row>
-          <LargeHeaderBubble />
         </Column>
       </HeaderColumn>
     )
