@@ -7,12 +7,10 @@ import { UniconThemedGradient } from 'src/components/gradients/UniconThemedGradi
 import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
 import { LearnMoreLink } from 'src/components/text/LearnMoreLink'
 import { useUniconColors } from 'src/components/unicons/utils'
-import { AnimatedFlex, Text, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Text, useMedia, useSporeColors } from 'ui/src'
+import { spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
-
-const QR_CODE_SIZE = 220
-const UNICON_SIZE = QR_CODE_SIZE / 2.8
 
 interface Props {
   address?: Address
@@ -24,6 +22,11 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
   const gradientData = useUniconColors(address)
   const { t } = useTranslation()
 
+  const media = useMedia()
+
+  const QR_CODE_SIZE = media.short ? 175 : 220
+  const UNICON_SIZE = QR_CODE_SIZE / 2.8
+
   if (!address) return null
 
   return (
@@ -32,7 +35,7 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
         <UniconThemedGradient
           middleOut
           borderRadius="$rounded16"
-          gradientEndColor={colors.surface1.get()}
+          gradientEndColor={colors.surface1.val}
           gradientStartColor={gradientData.glow}
           opacity={isDarkMode ? 0.24 : 0.2}
         />
@@ -40,6 +43,7 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
       <AnimatedFlex
         centered
         grow
+        $short={{ mb: spacing.none, mx: spacing.spacing48 }}
         entering={FadeIn}
         exiting={FadeOut}
         gap="$spacing24"
