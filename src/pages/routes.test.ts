@@ -6,7 +6,7 @@ import { routes } from './RouteDefinitions'
 describe('Routes', () => {
   it('sitemap URLs should exist as Router paths', async () => {
     const pathNames: string[] = routes.map((routeDef) => routeDef.path)
-    const contents = fs.readFileSync('./public/sitemap.xml', 'utf8')
+    const contents = fs.readFileSync('./public/app-sitemap.xml', 'utf8')
     const sitemap = await parseStringPromise(contents)
 
     const sitemapPaths: string[] = sitemap.urlset.url.map((url: any) => new URL(url.loc).pathname)

@@ -1,9 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { MixedRouteSDK } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { DutchOrderInfo, DutchOrderInfoJSON } from '@uniswap/uniswapx-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
+import { BIPS_BASE } from 'constants/misc'
 import { isAvalanche, isBsc, isMatic, nativeOnChain } from 'constants/tokens'
 import { toSlippagePercent } from 'utils/slippage'
 
@@ -23,9 +24,11 @@ import {
   QuoteState,
   RouterPreference,
   SubmittableTrade,
+  SwapFeeInfo,
   SwapRouterNativeAssets,
   TradeFillType,
   TradeResult,
+  URADutchOrderQuoteData,
   URAQuoteResponse,
   URAQuoteType,
   V2PoolInRoute,
@@ -152,6 +155,18 @@ function getTradeCurrencies(args: GetQuoteArgs | GetQuickQuoteArgs, isUniswapXTr
   return [currencyIn.isNative ? currencyIn.wrapped : currencyIn, currencyOut]
 }
 
+function getSwapFee(data: ClassicQuoteData | URADutchOrderQuoteData): SwapFeeInfo | undefined {
+  const { portionAmount, portionBips, portionRecipient } = data
+
+  if (!portionAmount || !portionBips || !portionRecipient) return undefined
+
+  return {
+    recipient: portionRecipient,
+    percent: new Percent(portionBips, BIPS_BASE),
+    amount: portionAmount,
+  }
+}
+
 function getClassicTradeDetails(
   currencyIn: Currency,
   currencyOut: Currency,
@@ -161,14 +176,19 @@ function getClassicTradeDetails(
   gasUseEstimateUSD?: number
   blockNumber?: string
   routes?: RouteResult[]
+  swapFee?: SwapFeeInfo
 } {
   const classicQuote =
     data.routing === URAQuoteType.CLASSIC ? data.quote : data.allQuotes.find(isClassicQuoteResponse)?.quote
+
+  if (!classicQuote) return {}
+
   return {
-    gasUseEstimate: classicQuote?.gasUseEstimate ? parseFloat(classicQuote.gasUseEstimate) : undefined,
-    gasUseEstimateUSD: classicQuote?.gasUseEstimateUSD ? parseFloat(classicQuote.gasUseEstimateUSD) : undefined,
-    blockNumber: classicQuote?.blockNumber,
-    routes: classicQuote ? computeRoutes(currencyIn, currencyOut, classicQuote.route) : undefined,
+    gasUseEstimate: classicQuote.gasUseEstimate ? parseFloat(classicQuote.gasUseEstimate) : undefined,
+    gasUseEstimateUSD: classicQuote.gasUseEstimateUSD ? parseFloat(classicQuote.gasUseEstimateUSD) : undefined,
+    blockNumber: classicQuote.blockNumber,
+    routes: computeRoutes(currencyIn, currencyOut, classicQuote.route),
+    swapFee: getSwapFee(classicQuote),
   }
 }
 
@@ -204,7 +224,7 @@ export async function transformRoutesToTrade(
     (routerPreference === RouterPreference.X || (isUniswapXDefaultEnabled && routerPreference === RouterPreference.API))
 
   const [currencyIn, currencyOut] = getTradeCurrencies(args, showUniswapXTrade)
-  const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate } = getClassicTradeDetails(
+  const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate, swapFee } = getClassicTradeDetails(
     currencyIn,
     currencyOut,
     data
@@ -254,12 +274,14 @@ export async function transformRoutesToTrade(
     quoteMethod,
     inputTax,
     outputTax,
+    swapFee,
   })
 
   // During the opt-in period, only return UniswapX quotes if the user has turned on the setting,
   // even if it is the better quote.
   if (isUniswapXBetter && (routerPreference === RouterPreference.X || isUniswapXDefaultEnabled)) {
     const orderInfo = toDutchOrderInfo(data.quote.orderInfo)
+    const swapFee = getSwapFee(data.quote)
     const wrapInfo = await getWrapInfo(needsWrapIfUniswapX, account, currencyIn.chainId, amount, usdCostPerGas)
 
     const uniswapXTrade = new DutchOrderTrade({
@@ -276,6 +298,7 @@ export async function transformRoutesToTrade(
       startTimeBufferSecs: data.quote.startTimeBufferSecs,
       deadlineBufferSecs: data.quote.deadlineBufferSecs,
       slippageTolerance: toSlippagePercent(data.quote.slippageTolerance),
+      swapFee,
     })
 
     return {
@@ -338,8 +361,4 @@ export function isSubmittableTrade(trade?: InterfaceTrade): trade is Submittable
 
 export function isUniswapXTrade(trade?: InterfaceTrade): trade is DutchOrderTrade {
   return trade?.fillType === TradeFillType.UniswapX
-}
-
-export function shouldUseAPIRouter(args: GetQuoteArgs): boolean {
-  return args.routerPreference !== RouterPreference.CLIENT
 }

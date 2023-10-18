@@ -1,3 +1,4 @@
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useInfoPoolPageEnabled } from 'featureFlags/flags/infoPoolPage'
 import { useAtom } from 'jotai'
 import { lazy, ReactNode, Suspense, useMemo } from 'react'
@@ -15,8 +16,10 @@ const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
 const AddLiquidity = lazy(() => import('pages/AddLiquidity'))
+const Explore = lazy(() => import('pages/Explore'))
 const RedirectDuplicateTokenIds = lazy(() => import('pages/AddLiquidity/redirects'))
 const RedirectDuplicateTokenIdsV2 = lazy(() => import('pages/AddLiquidityV2/redirects'))
+const RedirectExplore = lazy(() => import('pages/Explore/redirects'))
 const MigrateV2 = lazy(() => import('pages/MigrateV2'))
 const MigrateV2Pair = lazy(() => import('pages/MigrateV2/MigrateV2Pair'))
 const NotFound = lazy(() => import('pages/NotFound'))
@@ -28,7 +31,6 @@ const PoolFinder = lazy(() => import('pages/PoolFinder'))
 const RemoveLiquidity = lazy(() => import('pages/RemoveLiquidity'))
 const RemoveLiquidityV3 = lazy(() => import('pages/RemoveLiquidity/V3'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
-const Tokens = lazy(() => import('pages/Tokens'))
 const Vote = lazy(() => import('pages/Vote'))
 
 // this is the same svg defined in assets/images/blue-loader.svg
@@ -48,6 +50,7 @@ const LazyLoadSpinner = () => (
 interface RouterConfig {
   browserRouterEnabled?: boolean
   hash?: string
+  infoExplorePageEnabled?: boolean
   infoPoolPageEnabled?: boolean
   shouldDisableNFTRoutes?: boolean
 }
@@ -59,15 +62,17 @@ export function useRouterConfig(): RouterConfig {
   const browserRouterEnabled = isBrowserRouterEnabled()
   const { hash } = useLocation()
   const infoPoolPageEnabled = useInfoPoolPageEnabled()
+  const infoExplorePageEnabled = useInfoExplorePageEnabled()
   const [shouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
   return useMemo(
     () => ({
       browserRouterEnabled,
       hash,
+      infoExplorePageEnabled,
       infoPoolPageEnabled,
       shouldDisableNFTRoutes: Boolean(shouldDisableNFTRoutes),
     }),
-    [browserRouterEnabled, hash, infoPoolPageEnabled, shouldDisableNFTRoutes]
+    [browserRouterEnabled, hash, infoExplorePageEnabled, infoPoolPageEnabled, shouldDisableNFTRoutes]
   )
 }
 
@@ -98,19 +103,48 @@ export const routes: RouteDefinition[] = [
     },
   }),
   createRouteDefinition({
-    path: '/tokens',
-    nestedPaths: [':chainName'],
-    getElement: () => <Tokens />,
+    path: '/explore',
+    nestedPaths: [':tab', ':chainName'],
+    getElement: () => <RedirectExplore />,
+    enabled: (args) => Boolean(args.infoExplorePageEnabled),
   }),
-  createRouteDefinition({ path: '/tokens/:chainName/:tokenAddress', getElement: () => <TokenDetails /> }),
   createRouteDefinition({
-    path: '/pools/:chainName/:poolAddress',
+    path: '/explore',
+    nestedPaths: [':tab/:chainName'],
+    getElement: () => <Explore />,
+    enabled: (args) => Boolean(args.infoExplorePageEnabled),
+  }),
+  createRouteDefinition({
+    path: '/explore/tokens/:chainName/:tokenAddress',
+    getElement: () => <TokenDetails />,
+    enabled: (args) => Boolean(args.infoExplorePageEnabled),
+  }),
+  createRouteDefinition({
+    path: '/tokens',
+    getElement: (args) => {
+      return args.infoExplorePageEnabled ? <Navigate to="/explore/tokens" replace /> : <Explore />
+    },
+  }),
+  createRouteDefinition({
+    path: '/tokens/:chainName',
+    getElement: (args) => {
+      return args.infoExplorePageEnabled ? <RedirectExplore /> : <Explore />
+    },
+  }),
+  createRouteDefinition({
+    path: '/tokens/:chainName/:tokenAddress',
+    getElement: (args) => {
+      return args.infoExplorePageEnabled ? <RedirectExplore /> : <TokenDetails />
+    },
+  }),
+  createRouteDefinition({
+    path: 'explore/pools/:chainName/:poolAddress',
     getElement: () => (
       <Suspense fallback={null}>
         <PoolDetails />
       </Suspense>
     ),
-    enabled: (args) => Boolean(args.infoPoolPageEnabled),
+    enabled: (args) => Boolean(args.infoExplorePageEnabled && args.infoPoolPageEnabled),
   }),
   createRouteDefinition({
     path: '/vote/*',

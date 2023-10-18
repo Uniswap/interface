@@ -1,3 +1,4 @@
+import { BIPS_BASE } from 'constants/misc'
 import { parseEther } from 'ethers/lib/utils'
 import gql from 'graphql-tag'
 import { GenieCollection, WalletAsset } from 'nft/types'
@@ -190,7 +191,7 @@ export function useNftBalance(
       collectionIsVerified: asset?.collection?.isVerified,
       lastPrice: queryAsset.node.lastPrice?.value,
       floorPrice: asset?.collection?.markets?.[0]?.floorPrice?.value,
-      basisPoints: queryAsset?.node?.listingFees?.[0]?.basisPoints ?? 0 / 10000,
+      basisPoints: queryAsset?.node?.listingFees?.[0]?.basisPoints ?? 0 / BIPS_BASE,
       listing_date: asset?.listings?.edges?.[0]?.node?.createdAt?.toString(),
       date_acquired: queryAsset.node.lastPrice?.timestamp?.toString(),
       sellOrders: asset?.listings?.edges.map((edge: any) => edge.node),

@@ -1,6 +1,6 @@
 import { Percent } from '@uniswap/sdk-core'
+import { BIPS_BASE } from 'constants/misc'
 
-const PRECISION = 10000
 export function computeFiatValuePriceImpact(
   fiatValueInput: number | undefined | null,
   fiatValueOutput: number | undefined | null
@@ -9,6 +9,6 @@ export function computeFiatValuePriceImpact(
   if (fiatValueInput === 0) return undefined
 
   const ratio = 1 - fiatValueOutput / fiatValueInput
-  const numerator = Math.floor(ratio * PRECISION)
-  return new Percent(numerator, PRECISION)
+  const numerator = Math.floor(ratio * BIPS_BASE)
+  return new Percent(numerator, BIPS_BASE)
 }
