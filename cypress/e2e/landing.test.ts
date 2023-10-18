@@ -40,7 +40,7 @@ describe('Landing Page', () => {
     cy.url().should('include', '/pools')
   })
 
-  it('does not render landing page in when path is blocked', () => {
+  it('does not render landing page when / path is blocked', () => {
     cy.visit('/', { userState: DISCONNECTED_WALLET_USER_STATE })
     cy.document().then((doc) => {
       const meta = document.createElement('meta')
