@@ -1,5 +1,75 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`PoolDetailsStatsButton loading skeleton shown correctly 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c3 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+  width: 50%;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c2 {
+  gap: 12px;
+}
+
+.c4 {
+  height: 44px;
+  width: 175px;
+  border-radius: 900px;
+}
+
+@media (max-width:1023px) {
+  .c2 {
+    display: none;
+  }
+}
+
+<div
+    class="c0 c1 c2"
+    data-testid="pdp-buttons-loading-skeleton"
+  >
+    <div
+      class="c3 c4"
+    />
+    <div
+      class="c3 c4"
+    />
+  </div>
+</DocumentFragment>
+`;
+
 exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
 <DocumentFragment>
   .c0 {

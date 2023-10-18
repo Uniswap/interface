@@ -35,6 +35,7 @@ const FeeTier = styled(ThemedText.LabelMicro)`
 const ToggleReverseArrows = styled(ReversedArrowsIcon)`
   ${ClickableStyle}
 `
+
 const IconBubble = styled(LoadingBubble)`
   width: 32px;
   height: 32px;
@@ -71,7 +72,7 @@ export function PoolDetailsHeader({
 
   if (loading)
     return (
-      <HeaderColumn>
+      <HeaderColumn data-testid="pdp-header-loading-skeleton">
         <DetailBubble $width={300} />
         <Column gap="sm">
           <Row gap="8px">
@@ -81,6 +82,7 @@ export function PoolDetailsHeader({
         </Column>
       </HeaderColumn>
     )
+
   return (
     <HeaderColumn>
       <Row>

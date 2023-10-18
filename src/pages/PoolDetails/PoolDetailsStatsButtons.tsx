@@ -75,7 +75,7 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
 
   if (loading || !currency0 || !currency1)
     return (
-      <PoolDetailsStatsButtonsRow>
+      <PoolDetailsStatsButtonsRow data-testid="pdp-buttons-loading-skeleton">
         <ButtonBubble />
         <ButtonBubble />
       </PoolDetailsStatsButtonsRow>

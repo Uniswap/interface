@@ -8,7 +8,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   min-width: 0;
 }
 
-.c9 {
+.c10 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -17,7 +17,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   width: max-content;
 }
 
-.c31 {
+.c51 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -44,7 +44,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   justify-content: flex-start;
 }
 
-.c8 {
+.c9 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -62,7 +62,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   gap: 18px;
 }
 
-.c10 {
+.c11 {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
@@ -82,7 +82,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   gap: 8px;
 }
 
-.c32 {
+.c52 {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
@@ -102,15 +102,15 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   padding: 4px 0px;
 }
 
-.c6 {
+.c7 {
   color: #7D7D7D;
 }
 
-.c7 {
+.c8 {
   color: #222222;
 }
 
-.c43 {
+.c63 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -121,11 +121,11 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   font-weight: 500;
 }
 
-.c43:hover {
+.c63:hover {
   opacity: 0.6;
 }
 
-.c43:active {
+.c63:active {
   opacity: 0.4;
 }
 
@@ -143,98 +143,22 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   justify-content: flex-start;
 }
 
-.c40 {
-  opacity: 0;
-  -webkit-transition: opacity 250ms ease-in;
-  transition: opacity 250ms ease-in;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c39 {
-  width: 20px;
-  height: 20px;
-  background: #22222212;
-  -webkit-transition: background-color 250ms ease-in;
-  transition: background-color 250ms ease-in;
-  box-shadow: 0 0 1px white;
-  border-radius: 50%;
-}
-
-.c38 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.c46 {
-  color: #CECECE;
-  font-weight: 485;
-  font-size: 16px;
-}
-
-.c36 {
-  gap: 12px;
-  width: 100%;
-}
-
-.c37 {
-  gap: 8px;
-  width: 100%;
+.c18 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+  width: 50%;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
 }
 
 .c41 {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.c42 {
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-}
-
-.c44 {
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 20px;
-  color: #FC72FF;
-  background-color: #FC72FF1f;
-  font-size: 14px;
-  font-weight: 535;
-  line-height: 16px;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c44:hover {
-  opacity: 0.6;
-}
-
-.c44:active {
-  opacity: 0.4;
-}
-
-.c45 {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  line-height: 24px;
-  white-space: pre-wrap;
-}
-
-.c21 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -248,7 +172,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   width: 100%;
 }
 
-.c18 {
+.c38 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -283,34 +207,205 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   user-select: none;
 }
 
-.c18:active .c20 {
+.c38:active .c40 {
   background-color: #B8C0DC3d;
 }
 
-.c18:focus .c20 {
+.c38:focus .c40 {
   background-color: #B8C0DC3d;
 }
 
-.c18:hover .c20 {
+.c38:hover .c40 {
   background-color: #98A1C014;
 }
 
-.c18:disabled {
+.c38:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c18:disabled:active .c20,
-.c18:disabled:focus .c20,
-.c18:disabled:hover .c20 {
+.c38:disabled:active .c40,
+.c38:disabled:focus .c40,
+.c38:disabled:hover .c40 {
   background-color: transparent;
 }
 
-.c4 {
-  gap: 36px;
+.c53 {
+  color: #FF5F52;
+}
+
+.c60 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c59 {
+  width: 20px;
+  height: 20px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
+}
+
+.c58 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c66 {
+  color: #CECECE;
+  font-weight: 485;
+  font-size: 16px;
+}
+
+.c17 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  height: 436px;
+  margin-bottom: 24px;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.c23 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+  height: 100%;
+  margin-bottom: 44px;
+  padding-bottom: 66px;
+  overflow: hidden;
+}
+
+.c19 {
+  height: 16px;
+  width: 180px;
+}
+
+.c20 {
+  height: 32px;
+  border-radius: 8px;
+}
+
+.c21 {
+  margin-top: 4px;
+  height: 40px;
+}
+
+.c24 {
+  -webkit-animation: wave 8s cubic-bezier(0.36,0.45,0.63,0.53) infinite;
+  animation: wave 8s cubic-bezier(0.36,0.45,0.63,0.53) infinite;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  overflow: hidden;
+  margin-top: 90px;
+}
+
+.c22 {
+  height: 6px;
+}
+
+.c56 {
+  gap: 12px;
+  width: 100%;
+}
+
+.c57 {
+  gap: 8px;
+  width: 100%;
+}
+
+.c61 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.c62 {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.c64 {
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  color: #FC72FF;
+  background-color: #FC72FF1f;
+  font-size: 14px;
+  font-weight: 535;
+  line-height: 16px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c64:hover {
+  opacity: 0.6;
+}
+
+.c64:active {
+  opacity: 0.4;
+}
+
+.c65 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  line-height: 24px;
+  white-space: pre-wrap;
+}
+
+.c32 {
+  height: 16px;
+  width: 80px;
+}
+
+.c35 {
+  height: 20px;
+  width: 20px;
+  border-radius: 100px;
 }
 
 .c5 {
+  gap: 36px;
+}
+
+.c6 {
   -webkit-text-decoration: none;
   text-decoration: none;
   -webkit-text-decoration: none;
@@ -320,21 +415,21 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   transition-duration: 125ms;
 }
 
-.c5:hover {
+.c6:hover {
   opacity: 0.6;
 }
 
-.c5:active {
+.c6:active {
   opacity: 0.4;
 }
 
-.c14 {
+.c15 {
   background: #F9F9F9;
   padding: 2px 6px;
   border-radius: 4px;
 }
 
-.c15 {
+.c16 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -342,21 +437,21 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   transition-duration: 125ms;
 }
 
-.c15:hover {
+.c16:hover {
   opacity: 0.6;
 }
 
-.c15:active {
+.c16:active {
   opacity: 0.4;
 }
 
-.c11 {
+.c12 {
   position: relative;
   top: 0;
   left: 0;
 }
 
-.c12 {
+.c13 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -367,39 +462,35 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   left: 0;
 }
 
-.c12 img {
+.c13 img {
   width: 16px;
   height: 32px;
   object-fit: cover;
 }
 
-.c12 img:first-child {
+.c13 img:first-child {
   border-radius: 16px 0 0 16px;
   object-position: 0 0;
 }
 
-.c12 img:last-child {
+.c13 img:last-child {
   border-radius: 0 16px 16px 0;
   object-position: 100% 0;
 }
 
-.c13 {
+.c14 {
   width: 32px;
   height: 32px;
   border-radius: 50%;
 }
 
-.c33 {
-  color: #FF5F52;
-}
-
-.c23 {
+.c43 {
   font-weight: 485;
   font-size: 24px;
   line-height: 36px;
 }
 
-.c22 {
+.c42 {
   gap: 24px;
   padding: 20px;
   border-radius: 20px;
@@ -407,7 +498,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   width: 100%;
 }
 
-.c24 {
+.c44 {
   gap: 8px;
   -webkit-flex: 1;
   -ms-flex: 1;
@@ -415,14 +506,14 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   min-width: 180px;
 }
 
-.c25 {
+.c45 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
 }
 
-.c26 {
+.c46 {
   font-weight: 485;
   font-size: 18px;
   line-height: 24px;
@@ -431,7 +522,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   width: max-content;
 }
 
-.c27 {
+.c47 {
   height: 8px;
   width: 40.698463777008904%;
   background: #FC72FF;
@@ -440,7 +531,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   border-right: 1px solid #F9F9F9;
 }
 
-.c28 {
+.c48 {
   height: 8px;
   width: 59.3015362229911%;
   background: #4C82FB;
@@ -449,7 +540,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   border-left: 1px solid #F9F9F9;
 }
 
-.c29 {
+.c49 {
   gap: 4px;
   width: 100%;
   -webkit-align-items: flex-end;
@@ -458,21 +549,141 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   align-items: flex-end;
 }
 
-.c30 {
+.c50 {
   color: #222222;
   font-size: 36px;
   font-weight: 485;
   line-height: 44px;
 }
 
-.c17 {
+.c37 {
   gap: 12px;
 }
 
-.c19 {
+.c39 {
   padding: 12px 16px 12px 12px;
   border-radius: 900px;
   width: 50%;
+}
+
+.c27 {
+  gap: 24px;
+  border-radius: 20px;
+  border: 1px solid #22222212;
+  padding-bottom: 12px;
+  overflow-y: hidden;
+  -webkit-scrollbar-width: thin;
+  -moz-scrollbar-width: thin;
+  -ms-scrollbar-width: thin;
+  scrollbar-width: thin;
+  -webkit-scrollbar-color: #22222212 transparent;
+  -moz-scrollbar-color: #22222212 transparent;
+  -ms-scrollbar-color: #22222212 transparent;
+  scrollbar-color: #22222212 transparent;
+  height: 100%;
+}
+
+.c27::-webkit-scrollbar {
+  background: transparent;
+  height: 4px;
+  overflow-x: scroll;
+}
+
+.c27::-webkit-scrollbar-thumb {
+  background: #22222212;
+  border-radius: 8px;
+}
+
+.c28 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  border-bottom: 1px solid #22222212;
+  padding: 12px;
+  min-width: -webkit-max-content;
+  min-width: -moz-max-content;
+  min-width: max-content;
+}
+
+.c34 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  border-bottom: none;
+  padding: 12px;
+  min-width: -webkit-max-content;
+  min-width: -moz-max-content;
+  min-width: max-content;
+}
+
+.c29 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px 8px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  width: auto;
+  min-width: 136px !important;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c30 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px 8px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  width: auto;
+  min-width: 121px !important;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c31 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px 8px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  width: auto;
+  min-width: 121px !important;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+}
+
+.c33 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px 8px;
+  -webkit-flex: unset;
+  -ms-flex: unset;
+  flex: unset;
+  width: 44px;
+  min-width: unset !important;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
 }
 
 .c2 {
@@ -482,21 +693,43 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   -webkit-box-align: flex-start;
   -ms-flex-align: flex-start;
   align-items: flex-start;
+  gap: 60px;
 }
 
-.c16 {
+.c4 {
+  gap: 24px;
+  width: 65vw;
+  overflow: hidden;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c25 {
+  border: 1px solid #22222212;
+  margin: 16px 0px;
+  width: 100%;
+}
+
+.c26 {
+  width: 180px;
+  height: 32px;
+}
+
+.c36 {
   gap: 24px;
   margin: 0 48px 0 auto;
   width: 22vw;
   min-width: 360px;
 }
 
-.c34 {
+.c54 {
   gap: 24px;
   padding: 20px;
 }
 
-.c35 {
+.c55 {
   width: 100%;
   font-size: 24px;
   font-weight: 485;
@@ -504,19 +737,19 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
 }
 
 @media (max-width:1023px) and (min-width:640px) {
-  .c36 {
+  .c56 {
     max-width: 45%;
   }
 }
 
 @media (max-width:1023px) {
-  .c23 {
+  .c43 {
     width: 100%;
   }
 }
 
 @media (max-width:1023px) {
-  .c22 {
+  .c42 {
     -webkit-flex-direction: row;
     -ms-flex-direction: row;
     flex-direction: row;
@@ -533,13 +766,13 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
 }
 
 @media (max-width:640px) {
-  .c24 {
+  .c44 {
     min-width: 150px;
   }
 }
 
 @media (max-width:1023px) {
-  .c25 {
+  .c45 {
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
@@ -547,7 +780,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
 }
 
 @media (max-width:1023px) {
-  .c26 {
+  .c46 {
     font-size: 20px;
     line-height: 28px;
     width: 100%;
@@ -555,7 +788,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
 }
 
 @media (max-width:1023px) {
-  .c29 {
+  .c49 {
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
@@ -568,14 +801,14 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
 }
 
 @media (max-width:1023px) {
-  .c30 {
+  .c50 {
     font-size: 20px;
     line-height: 28px;
   }
 }
 
 @media (max-width:1023px) {
-  .c17 {
+  .c37 {
     display: none;
   }
 }
@@ -585,6 +818,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
+    gap: unset;
   }
 }
 
@@ -595,7 +829,13 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
 }
 
 @media (max-width:1023px) {
-  .c16 {
+  .c4 {
+    width: 100%;
+  }
+}
+
+@media (max-width:1023px) {
+  .c36 {
     margin: 44px 0px;
     width: 100%;
     min-width: unset;
@@ -603,7 +843,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
 }
 
 @media (max-width:1023px) and (min-width:640px) {
-  .c34 {
+  .c54 {
     -webkit-flex-direction: row;
     -ms-flex-direction: row;
     flex-direction: row;
@@ -615,7 +855,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
 }
 
 @media (max-width:639px) {
-  .c34 {
+  .c54 {
     padding: unset;
   }
 }
@@ -627,147 +867,843 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
       class="c3 c4"
     >
       <div
-        class="c0 c1"
-      >
-        <a
-          class="c5"
-          href="/tokens/ETHEREUM"
-        >
-          <div
-            class="c6 css-1urox24"
-          >
-            Explore
-          </div>
-        </a>
-        <div
-          class="c6 css-1urox24"
-        >
-           &gt; 
-        </div>
-        <a
-          class="c5"
-          href="/tokens/ETHEREUM"
-        >
-          <div
-            class="c6 css-1urox24"
-          >
-            Pool
-          </div>
-        </a>
-        <div
-          class="c6 css-1urox24"
-        >
-           &gt; 
-        </div>
-        <div
-          class="c7 css-1urox24"
-        >
-          USDC / WETH (0x88e6...5640)
-        </div>
-      </div>
-      <div
-        class="c0 c8"
+        class="c3 c5"
       >
         <div
-          class="c9 c10"
-          width="max-content"
+          class="c0 c1"
+        >
+          <a
+            class="c6"
+            href="/tokens/ETHEREUM"
+          >
+            <div
+              class="c7 css-1urox24"
+            >
+              Explore
+            </div>
+          </a>
+          <div
+            class="c7 css-1urox24"
+          >
+             &gt; 
+          </div>
+          <a
+            class="c6"
+            href="/tokens/ETHEREUM"
+          >
+            <div
+              class="c7 css-1urox24"
+            >
+              Pool
+            </div>
+          </a>
+          <div
+            class="c7 css-1urox24"
+          >
+             &gt; 
+          </div>
+          <div
+            class="c8 css-1urox24"
+          >
+            USDC / WETH (0x88e6...5640)
+          </div>
+        </div>
+        <div
+          class="c0 c9"
         >
           <div
-            class="c11"
+            class="c10 c11"
+            width="max-content"
           >
             <div
               class="c12"
             >
-              <img
+              <div
                 class="c13"
-                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-              />
-              <img
-                class="c13"
-                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-              />
+              >
+                <img
+                  class="c14"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                />
+                <img
+                  class="c14"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                />
+              </div>
+            </div>
+            <div
+              class="c8 css-1jyz67g"
+            >
+              USDC / WETH
             </div>
           </div>
           <div
-            class="c7 css-1jyz67g"
+            class="c7 c15 css-1m65e73"
           >
-            USDC / WETH
+            0.05%
+          </div>
+          <svg
+            class="c16"
+            data-testid="toggle-tokens-reverse-arrows"
+            fill="none"
+            height="20"
+            viewBox="0 0 20 20"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18.125 10V12.5C18.125 14.2233 16.7225 15.625 15 15.625H4.0092L5.4425 17.0583C5.68667 17.3025 5.68667 17.6983 5.4425 17.9425C5.32084 18.0642 5.16081 18.1258 5.00081 18.1258C4.84081 18.1258 4.68079 18.065 4.55912 17.9425L2.05912 15.4425C2.00162 15.385 1.9559 15.3159 1.92424 15.2393C1.8609 15.0868 1.8609 14.9143 1.92424 14.7618C1.9559 14.6851 2.00162 14.6158 2.05912 14.5583L4.55912 12.0583C4.80329 11.8141 5.19915 11.8141 5.44332 12.0583C5.68749 12.3025 5.68749 12.6983 5.44332 12.9425L4.01001 14.3758H15C16.0333 14.3758 16.875 13.535 16.875 12.5008V10.0008C16.875 9.65581 17.155 9.37581 17.5 9.37581C17.845 9.37581 18.125 9.655 18.125 10ZM2.5 10.625C2.845 10.625 3.125 10.345 3.125 10V7.5C3.125 6.46583 3.96667 5.625 5 5.625H15.9908L14.5575 7.05831C14.3133 7.30247 14.3133 7.69834 14.5575 7.9425C14.6792 8.06417 14.8392 8.12581 14.9992 8.12581C15.1592 8.12581 15.3192 8.065 15.4409 7.9425L17.9409 5.4425C17.9984 5.385 18.0441 5.31592 18.0758 5.23926C18.1391 5.08676 18.1391 4.91426 18.0758 4.76176C18.0441 4.68509 17.9984 4.61581 17.9409 4.55831L15.4409 2.05831C15.1967 1.81414 14.8008 1.81414 14.5567 2.05831C14.3125 2.30247 14.3125 2.69834 14.5567 2.9425L15.99 4.37581H5C3.2775 4.37581 1.875 5.77748 1.875 7.50081V10.0008C1.875 10.345 2.155 10.625 2.5 10.625Z"
+              fill="#5E5E5E"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class="c17"
+      >
+        <div
+          class="c8 css-15popx1"
+        >
+          <div
+            class="c18 c19 c20 c21"
+          />
+        </div>
+        <div
+          class="c22"
+        />
+        <div
+          class="c23"
+        >
+          <div>
+            <div
+              class="c24"
+            >
+              <svg
+                height="160"
+                width="416"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M 0 80 Q 104 10, 208 80 T 416 80"
+                  fill="transparent"
+                  stroke="#22222212"
+                  stroke-width="2"
+                />
+              </svg>
+              <svg
+                height="160"
+                width="416"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M 0 80 Q 104 10, 208 80 T 416 80"
+                  fill="transparent"
+                  stroke="#22222212"
+                  stroke-width="2"
+                />
+              </svg>
+              <svg
+                height="160"
+                width="416"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M 0 80 Q 104 10, 208 80 T 416 80"
+                  fill="transparent"
+                  stroke="#22222212"
+                  stroke-width="2"
+                />
+              </svg>
+              <svg
+                height="160"
+                width="416"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M 0 80 Q 104 10, 208 80 T 416 80"
+                  fill="transparent"
+                  stroke="#22222212"
+                  stroke-width="2"
+                />
+              </svg>
+              <svg
+                height="160"
+                width="416"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M 0 80 Q 104 10, 208 80 T 416 80"
+                  fill="transparent"
+                  stroke="#22222212"
+                  stroke-width="2"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr
+        class="c25"
+      />
+      <div
+        class="c18 c26"
+      />
+      <div
+        class="c3 c27"
+      >
+        <div
+          class="c0 c1 c28"
+        >
+          <div
+            class="c7 c29 css-1urox24"
+          >
+            <div
+              class="c0 c1"
+            >
+              <svg
+                fill="none"
+                height="16"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <line
+                  x1="12"
+                  x2="12"
+                  y1="5"
+                  y2="19"
+                />
+                <polyline
+                  points="19 12 12 19 5 12"
+                />
+              </svg>
+              Time
+            </div>
+          </div>
+          <div
+            class="c7 c30 css-1urox24"
+          >
+            Type
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            USD
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            Maker
+          </div>
+          <div
+            class="c7 c33 css-1urox24"
+          >
+            Txn
           </div>
         </div>
         <div
-          class="c6 c14 css-1m65e73"
+          class="c0 c1 c34"
         >
-          0.05%
+          <div
+            class="c7 c29 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c30 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c33 css-1urox24"
+          >
+            <div
+              class="c18 c35"
+            />
+          </div>
         </div>
-        <svg
-          class="c15"
-          data-testid="toggle-tokens-reverse-arrows"
-          fill="none"
-          height="20"
-          viewBox="0 0 20 20"
-          width="20"
-          xmlns="http://www.w3.org/2000/svg"
+        <div
+          class="c0 c1 c34"
         >
-          <path
-            d="M18.125 10V12.5C18.125 14.2233 16.7225 15.625 15 15.625H4.0092L5.4425 17.0583C5.68667 17.3025 5.68667 17.6983 5.4425 17.9425C5.32084 18.0642 5.16081 18.1258 5.00081 18.1258C4.84081 18.1258 4.68079 18.065 4.55912 17.9425L2.05912 15.4425C2.00162 15.385 1.9559 15.3159 1.92424 15.2393C1.8609 15.0868 1.8609 14.9143 1.92424 14.7618C1.9559 14.6851 2.00162 14.6158 2.05912 14.5583L4.55912 12.0583C4.80329 11.8141 5.19915 11.8141 5.44332 12.0583C5.68749 12.3025 5.68749 12.6983 5.44332 12.9425L4.01001 14.3758H15C16.0333 14.3758 16.875 13.535 16.875 12.5008V10.0008C16.875 9.65581 17.155 9.37581 17.5 9.37581C17.845 9.37581 18.125 9.655 18.125 10ZM2.5 10.625C2.845 10.625 3.125 10.345 3.125 10V7.5C3.125 6.46583 3.96667 5.625 5 5.625H15.9908L14.5575 7.05831C14.3133 7.30247 14.3133 7.69834 14.5575 7.9425C14.6792 8.06417 14.8392 8.12581 14.9992 8.12581C15.1592 8.12581 15.3192 8.065 15.4409 7.9425L17.9409 5.4425C17.9984 5.385 18.0441 5.31592 18.0758 5.23926C18.1391 5.08676 18.1391 4.91426 18.0758 4.76176C18.0441 4.68509 17.9984 4.61581 17.9409 4.55831L15.4409 2.05831C15.1967 1.81414 14.8008 1.81414 14.5567 2.05831C14.3125 2.30247 14.3125 2.69834 14.5567 2.9425L15.99 4.37581H5C3.2775 4.37581 1.875 5.77748 1.875 7.50081V10.0008C1.875 10.345 2.155 10.625 2.5 10.625Z"
-            fill="#5E5E5E"
-          />
-        </svg>
+          <div
+            class="c7 c29 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c30 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c33 css-1urox24"
+          >
+            <div
+              class="c18 c35"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c34"
+        >
+          <div
+            class="c7 c29 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c30 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c33 css-1urox24"
+          >
+            <div
+              class="c18 c35"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c34"
+        >
+          <div
+            class="c7 c29 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c30 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c33 css-1urox24"
+          >
+            <div
+              class="c18 c35"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c34"
+        >
+          <div
+            class="c7 c29 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c30 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c33 css-1urox24"
+          >
+            <div
+              class="c18 c35"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c34"
+        >
+          <div
+            class="c7 c29 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c30 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c33 css-1urox24"
+          >
+            <div
+              class="c18 c35"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c34"
+        >
+          <div
+            class="c7 c29 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c30 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c33 css-1urox24"
+          >
+            <div
+              class="c18 c35"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c34"
+        >
+          <div
+            class="c7 c29 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c30 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c33 css-1urox24"
+          >
+            <div
+              class="c18 c35"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c34"
+        >
+          <div
+            class="c7 c29 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c30 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c33 css-1urox24"
+          >
+            <div
+              class="c18 c35"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c34"
+        >
+          <div
+            class="c7 c29 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c30 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c31 css-1urox24"
+          >
+            <div
+              class="c18 c32"
+            />
+          </div>
+          <div
+            class="c7 c33 css-1urox24"
+          >
+            <div
+              class="c18 c35"
+            />
+          </div>
+        </div>
       </div>
     </div>
     <div
-      class="c3 c16"
+      class="c3 c36"
     >
       <div
-        class="c0 c1 c17"
+        class="c0 c1 c37"
       >
         <button
-          class="c18 c19"
+          class="c38 c39"
           data-testid="pool-details-add-liquidity-button"
           size="1"
         >
           <div
-            class="c20 c21"
+            class="c40 c41"
           />
           Add liquidity
         </button>
         <button
-          class="c18 c19"
+          class="c38 c39"
           data-testid="pool-details-swap-button"
           size="1"
         >
           <div
-            class="c20 c21"
+            class="c40 c41"
           />
           Swap
         </button>
       </div>
       <div
-        class="c3 c22"
+        class="c3 c42"
       >
         <div
-          class="c23 css-vurnku"
+          class="c43 css-vurnku"
         >
           Stats
         </div>
         <div
-          class="c3 c24"
+          class="c3 c44"
         >
           <div
-            class="c6 css-1urox24"
+            class="c7 css-1urox24"
           >
             Pool balances
           </div>
           <div
-            class="c0 c1 c25"
+            class="c0 c1 c45"
           >
             <div
-              class="c0 c1 c26"
+              class="c0 c1 c46"
             >
               90.93M USDC
             </div>
             <div
-              class="c0 c1 c26"
+              class="c0 c1 c46"
             >
               82,526.49 WETH
             </div>
@@ -777,36 +1713,36 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
             data-testid="pool-balance-chart"
           >
             <div
-              class="c27"
+              class="c47"
             />
             <div
-              class="c28"
+              class="c48"
             />
           </div>
         </div>
         <div
-          class="c3 c24"
+          class="c3 c44"
         >
           <div
-            class="c6 css-1urox24"
+            class="c7 css-1urox24"
           >
             TVL
           </div>
           <div
-            class="c0 c1 c29"
+            class="c0 c1 c49"
           >
             <div
-              class="c30 css-vurnku"
+              class="c50 css-vurnku"
             >
               $223.2M
             </div>
             <div
-              class="c31 c32"
+              class="c51 c52"
               width="max-content"
             >
               <svg
                 aria-label="down"
-                class="c33"
+                class="c53"
                 fill="none"
                 height="16"
                 viewBox="0 0 24 24"
@@ -819,7 +1755,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
                 />
               </svg>
               <div
-                class="c6 css-1urox24"
+                class="c7 css-1urox24"
               >
                 0.37%
               </div>
@@ -827,28 +1763,28 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
           </div>
         </div>
         <div
-          class="c3 c24"
+          class="c3 c44"
         >
           <div
-            class="c6 css-1urox24"
+            class="c7 css-1urox24"
           >
             24H volume
           </div>
           <div
-            class="c0 c1 c29"
+            class="c0 c1 c49"
           >
             <div
-              class="c30 css-vurnku"
+              class="c50 css-vurnku"
             >
               $233.4M
             </div>
             <div
-              class="c31 c32"
+              class="c51 c52"
               width="max-content"
             >
               <svg
                 aria-label="down"
-                class="c33"
+                class="c53"
                 fill="none"
                 height="16"
                 viewBox="0 0 24 24"
@@ -861,7 +1797,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
                 />
               </svg>
               <div
-                class="c6 css-1urox24"
+                class="c7 css-1urox24"
               >
                 17.75%
               </div>
@@ -869,18 +1805,18 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
           </div>
         </div>
         <div
-          class="c3 c24"
+          class="c3 c44"
         >
           <div
-            class="c6 css-1urox24"
+            class="c7 css-1urox24"
           >
             24H fees
           </div>
           <div
-            class="c0 c1 c29"
+            class="c0 c1 c49"
           >
             <div
-              class="c30 css-vurnku"
+              class="c50 css-vurnku"
             >
               $116.7K
             </div>
@@ -888,56 +1824,56 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
         </div>
       </div>
       <div
-        class="c3 c34"
+        class="c3 c54"
       >
         <div
-          class="c35 css-vurnku"
+          class="c55 css-vurnku"
         >
           Info
         </div>
         <div
-          class="c3 c36"
+          class="c3 c56"
         >
           <div
-            class="c0 c1 c37"
+            class="c0 c1 c57"
           >
             <div
-              class="c38"
+              class="c58"
               style="height: 20px; width: 20px;"
             >
               <div
-                class="c39"
+                class="c59"
               >
                 <img
                   alt="UNKNOWN logo"
-                  class="c40"
+                  class="c60"
                   loading="lazy"
                   src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
                 />
               </div>
             </div>
             <div
-              class="c7 c41 css-1urox24"
+              class="c8 c61 css-1urox24"
             >
               Unknown Token
             </div>
             <div
-              class="c6 css-1urox24"
+              class="c7 css-1urox24"
             >
               UNKNOWN
             </div>
           </div>
           <div
-            class="c0 c1 c37 c42"
+            class="c0 c1 c57 c62"
           >
             <a
-              class="c43"
+              class="c63"
               href="https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
               rel="noopener noreferrer"
               target="_blank"
             >
               <div
-                class="c0 c1 c44"
+                class="c0 c1 c64"
               >
                 <svg
                   fill="#FC72FF"
@@ -961,58 +1897,58 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
             </a>
           </div>
           <div
-            class="c7 c45 css-1urox24"
+            class="c8 c65 css-1urox24"
           >
             <span
-              class="c46"
+              class="c66"
             >
               No token information available
             </span>
           </div>
         </div>
         <div
-          class="c3 c36"
+          class="c3 c56"
         >
           <div
-            class="c0 c1 c37"
+            class="c0 c1 c57"
           >
             <div
-              class="c38"
+              class="c58"
               style="height: 20px; width: 20px;"
             >
               <div
-                class="c39"
+                class="c59"
               >
                 <img
                   alt="WETH logo"
-                  class="c40"
+                  class="c60"
                   loading="lazy"
                   src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
                 />
               </div>
             </div>
             <div
-              class="c7 c41 css-1urox24"
+              class="c8 c61 css-1urox24"
             >
               Wrapped Ether
             </div>
             <div
-              class="c6 css-1urox24"
+              class="c7 css-1urox24"
             >
               WETH
             </div>
           </div>
           <div
-            class="c0 c1 c37 c42"
+            class="c0 c1 c57 c62"
           >
             <a
-              class="c43"
+              class="c63"
               href="https://etherscan.io/token/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
               rel="noopener noreferrer"
               target="_blank"
             >
               <div
-                class="c0 c1 c44"
+                class="c0 c1 c64"
               >
                 <svg
                   fill="#FC72FF"
@@ -1036,10 +1972,10 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
             </a>
           </div>
           <div
-            class="c7 c45 css-1urox24"
+            class="c8 c65 css-1urox24"
           >
             <span
-              class="c46"
+              class="c66"
             >
               No token information available
             </span>

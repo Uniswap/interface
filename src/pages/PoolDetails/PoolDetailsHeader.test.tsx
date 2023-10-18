@@ -13,6 +13,13 @@ describe('PoolDetailsHeader', () => {
     toggleReversed: jest.fn(),
   }
 
+  it('loading skeleton is show', () => {
+    const { asFragment } = render(<PoolDetailsHeader {...mockProps} loading={true} />)
+    expect(asFragment()).toMatchSnapshot()
+
+    expect(screen.getByTestId('pdp-header-loading-skeleton')).toBeInTheDocument()
+  })
+
   it('renders header text correctly', () => {
     const { asFragment } = render(<PoolDetailsHeader {...mockProps} />)
     expect(asFragment()).toMatchSnapshot()

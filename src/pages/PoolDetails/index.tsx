@@ -141,7 +141,7 @@ export default function PoolDetailsPage() {
         <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} loading={loading} />
         {(token0 || token1 || loading) &&
           (loading ? (
-            <LinkColumn>
+            <LinkColumn data-testid="pdp-links-loading-skeleton">
               <DetailBubble $height={24} $width={116} />
               {Array.from({ length: 3 }).map((_, i) => (
                 <Row gap="8px" key={`loading-link-row-${i}`}>
