@@ -8,10 +8,13 @@ import {
   SettingsStackParamList,
 } from 'src/app/navigation/types'
 import { Arrow } from 'src/components/icons/Arrow'
+import { openModal } from 'src/features/modals/modalSlice'
+import { ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
 import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { useAppDispatch } from 'wallet/src/state'
 
 export interface SettingsSection {
   subTitle: string
@@ -24,8 +27,10 @@ export interface SettingsSectionItemComponent {
   isHidden?: boolean
 }
 
+type SettingsModal = Extract<ModalName, ModalName.LanguageSelector | ModalName.FiatCurrencySelector>
 export interface SettingsSectionItem {
   screen?: keyof SettingsStackParamList | typeof Screens.OnboardingStack
+  modal?: SettingsModal
   screenProps?: ValueOf<SettingsStackParamList> | NavigatorScreenParams<OnboardingStackParamList>
   externalLink?: string
   action?: JSX.Element
@@ -42,14 +47,17 @@ interface SettingsRowProps {
 }
 
 export function SettingsRow({
-  page: { screen, screenProps, externalLink, action, icon, text, subText, currentSetting },
+  page: { screen, modal, screenProps, externalLink, action, icon, text, subText, currentSetting },
   navigation,
 }: SettingsRowProps): JSX.Element {
   const colors = useSporeColors()
+  const dispatch = useAppDispatch()
 
   const handleRow = async (): Promise<void> => {
     if (screen) {
       navigation.navigate(screen, screenProps)
+    } else if (modal) {
+      dispatch(openModal({ name: modal }))
     } else if (externalLink) {
       await openUri(externalLink)
     }
@@ -77,7 +85,7 @@ export function SettingsRow({
             )}
           </Flex>
         </Flex>
-        {screen ? (
+        {screen || modal ? (
           <Flex centered row>
             {currentSetting ? (
               <Flex row shrink alignItems="flex-end" flexBasis="30%" justifyContent="flex-end">

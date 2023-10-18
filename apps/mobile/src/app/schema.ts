@@ -1,4 +1,6 @@
 import { ModalName } from 'src/features/telemetry/constants'
+import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
+import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
 // only add fields that are persisted
@@ -355,6 +357,30 @@ const v50SchemaIntermediate = { ...v49Schema, chains: undefined }
 delete v50SchemaIntermediate.chains
 export const v50Schema = { ...v50SchemaIntermediate }
 
+export const v51Schema = {
+  ...v50Schema,
+  modals: {
+    ...v50Schema.modals,
+    [ModalName.LanguageSelector]: {
+      isOpen: false,
+      initialState: undefined,
+    },
+  },
+  languageSettings: initialLanguageState,
+}
+
+export const v52Schema = {
+  ...v51Schema,
+  modals: {
+    ...v51Schema.modals,
+    [ModalName.FiatCurrencySelector]: {
+      isOpen: false,
+      initialState: undefined,
+    },
+  },
+  fiatCurrencySettings: initialFiatCurrencyState,
+}
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v50Schema => v50Schema
+export const getSchema = (): typeof v52Schema => v52Schema

@@ -66,13 +66,15 @@ const whitelist: Array<ReducerNames | RootReducerNames> = [
   'tweaks',
   'wallet',
   'cloudBackup',
+  'languageSettings',
+  'fiatCurrencySettings',
 ]
 
 export const persistConfig = {
   key: 'root',
   storage: reduxStorage,
   whitelist,
-  version: 50,
+  version: 52,
   migrate: createMigrate(migrations),
 }
 

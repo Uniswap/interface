@@ -44,6 +44,7 @@ export type SettingsStackParamList = {
   [Screens.SettingsHelpCenter]: undefined
   [Screens.SettingsBiometricAuth]: undefined
   [Screens.SettingsAppearance]: undefined
+  [Screens.SettingsLanguage]: undefined
   [Screens.WebView]: { headerTitle: string; uriLink: string }
   [Screens.Dev]: undefined
   [Screens.SettingsCloudBackupPasswordCreate]: { address: Address }

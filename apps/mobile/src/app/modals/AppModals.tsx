@@ -12,6 +12,8 @@ import { WalletConnectModals } from 'src/components/WalletConnect/WalletConnectM
 import { LockScreenModal } from 'src/features/authentication/LockScreenModal'
 import { FiatOnRampModal } from 'src/features/fiatOnRamp/FiatOnRampModal'
 import { ModalName } from 'src/features/telemetry/constants'
+import { SettingsFiatCurrencyModal } from 'src/screens/SettingsFiatCurrencyModal'
+import { SettingsLanguageModal } from 'src/screens/SettingsLanguageModal'
 
 export function AppModals(): JSX.Element {
   return (
@@ -52,6 +54,14 @@ export function AppModals(): JSX.Element {
 
       <LazyModalRenderer name={ModalName.RestoreWallet}>
         <RestoreWalletModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.LanguageSelector}>
+        <SettingsLanguageModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.FiatCurrencySelector}>
+        <SettingsFiatCurrencyModal />
       </LazyModalRenderer>
     </>
   )

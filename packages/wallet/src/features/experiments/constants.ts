@@ -10,6 +10,7 @@ export enum FEATURE_FLAGS {
   PortionFields = 'portion-fields',
   DisableGoogleDriveBackup = 'disable-google-drive-backup',
   CurrencyConversion = 'currency_conversion',
+  LanguageSelection = 'language-selection',
 }
 
 /**

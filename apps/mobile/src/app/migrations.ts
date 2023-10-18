@@ -8,6 +8,8 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { AccountToNftData } from 'wallet/src/features/favorites/slice'
+import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
+import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
 import {
@@ -682,5 +684,33 @@ export const migrations = {
     const newState = { ...state }
     delete newState.chains
     return newState
+  },
+
+  51: function addLanguageSettings(state: any) {
+    return {
+      ...state,
+      modals: {
+        ...state.modals,
+        [ModalName.LanguageSelector]: {
+          isOpen: false,
+          initialState: undefined,
+        },
+      },
+      languageSettings: initialLanguageState,
+    }
+  },
+
+  52: function addFiatCurrencySettings(state: any) {
+    return {
+      ...state,
+      modals: {
+        ...state.modals,
+        [ModalName.FiatCurrencySelector]: {
+          isOpen: false,
+          initialState: undefined,
+        },
+      },
+      fiatCurrencySettings: initialFiatCurrencyState,
+    }
   },
 }

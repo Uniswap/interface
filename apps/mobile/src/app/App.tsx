@@ -3,6 +3,7 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import { default as React, StrictMode, useCallback, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { NativeModules, StatusBar } from 'react-native'
 import { getUniqueId } from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -38,12 +39,14 @@ import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/versi
 import { StatsigProvider } from 'statsig-react-native'
 import { flexStyles } from 'ui/src'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
+import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { config } from 'wallet/src/config'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useCurrentAppearanceSetting, useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
+import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 import { useTrmQuery } from 'wallet/src/features/trm/api'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
@@ -189,6 +192,8 @@ function DataUpdaters(): JSX.Element {
   const activeAccount = useActiveAccount()
   const favoriteTokens: CurrencyId[] = useAppSelector(selectFavoriteTokens)
   const accountsMap: Record<string, Account> = useAccounts()
+  const currentLanguageInfo = useCurrentLanguageInfo()
+  const { i18n } = useTranslation()
 
   useTrmQuery(
     activeAccount && activeAccount.type === AccountType.SignerMnemonic
@@ -206,6 +211,21 @@ function DataUpdaters(): JSX.Element {
   useEffect(() => {
     setAccountAddressesUserDefaults(Object.values(accountsMap))
   }, [accountsMap])
+
+  useEffect(() => {
+    const locale = currentLanguageInfo.locale
+    if (locale !== i18n.language) {
+      i18n
+        .changeLanguage(locale)
+        .catch(() =>
+          logger.warn(
+            'App',
+            'DataUpdaters',
+            'Sync of language setting state and i18n instance failed'
+          )
+        )
+    }
+  }, [i18n, currentLanguageInfo])
 
   return (
     <>

@@ -94,13 +94,17 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const listBottomPadding = media.short ? spacing.spacing36 : spacing.spacing12
 
   const [tabIndex, setTabIndex] = useState(props?.route?.params?.tab ?? HomeScreenTabIndex.Tokens)
+  // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
+  const tokensTitle = t('Tokens')
+  const nftsTitle = t('NFTs')
+  const activityTitle = t('Activity')
   const routes = useMemo(
     () => [
-      { key: SectionName.HomeTokensTab, title: t('Tokens') },
-      { key: SectionName.HomeNFTsTab, title: t('NFTs') },
-      { key: SectionName.HomeActivityTab, title: t('Activity') },
+      { key: SectionName.HomeTokensTab, title: tokensTitle },
+      { key: SectionName.HomeNFTsTab, title: nftsTitle },
+      { key: SectionName.HomeActivityTab, title: activityTitle },
     ],
-    [t]
+    [tokensTitle, nftsTitle, activityTitle]
   )
 
   useEffect(
@@ -237,6 +241,58 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const { sync } = useScrollSync(currentTabIndex, scrollPairs, headerConfig)
 
+  const onPressBuy = useCallback(
+    () => dispatch(openModal({ name: ModalName.FiatOnRamp })),
+    [dispatch]
+  )
+  const onPressScan = useCallback(() => {
+    // in case we received a pending session from a previous scan after closing modal
+    dispatch(removePendingSession())
+    dispatch(
+      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr })
+    )
+  }, [dispatch])
+  const onPressSend = useCallback(() => dispatch(openModal({ name: ModalName.Send })), [dispatch])
+
+  // hide fiat onramp banner when active account isn't a signer account.
+  const showFiatOnRamp = activeAccount.type === AccountType.SignerMnemonic
+  // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
+  const buyLabel = t('Buy')
+  const sendLabel = t('Send')
+  const scanLabel = t('Scan')
+  const actions = useMemo(
+    (): QuickAction[] => [
+      ...(showFiatOnRamp
+        ? [
+            {
+              Icon: BuyIcon,
+              eventName: MobileEventName.FiatOnRampQuickActionButtonPressed,
+              iconScale: 1.2,
+              label: buyLabel,
+              name: ElementName.Buy,
+              sentryLabel: 'BuyActionButton',
+              onPress: onPressBuy,
+            },
+          ]
+        : []),
+      {
+        Icon: SendIcon,
+        iconScale: 1.1,
+        label: sendLabel,
+        name: ElementName.Send,
+        sentryLabel: 'SendActionButton',
+        onPress: onPressSend,
+      },
+      {
+        Icon: ScanIcon,
+        label: scanLabel,
+        name: ElementName.WalletConnectScan,
+        sentryLabel: 'ScanActionButton',
+        onPress: onPressScan,
+      },
+    ],
+    [showFiatOnRamp, buyLabel, sendLabel, scanLabel, onPressBuy, onPressScan, onPressSend]
+  )
   const contentHeader = useMemo(() => {
     return (
       <Flex bg="$surface1" gap="$spacing12" pb="$spacing16" px="$spacing24">
@@ -246,10 +302,10 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
         <Flex pb="$spacing4">
           <PortfolioBalance owner={activeAccount.address} />
         </Flex>
-        <QuickActions sentry-label="QuickActions" />
+        <QuickActions actions={actions} sentry-label="QuickActions" />
       </Flex>
     )
-  }, [activeAccount.address])
+  }, [activeAccount.address, actions])
 
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
@@ -466,59 +522,30 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   )
 }
 
-function QuickActions(): JSX.Element {
-  const dispatch = useAppDispatch()
-  const activeAccount = useActiveAccountWithThrow()
-  const { t } = useTranslation()
-
-  const onPressBuy = (): void => {
-    dispatch(openModal({ name: ModalName.FiatOnRamp }))
-  }
-  const onPressScan = (): void => {
-    // in case we received a pending session from a previous scan after closing modal
-    dispatch(removePendingSession())
-    dispatch(
-      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr })
-    )
-  }
-  const onPressSend = (): void => {
-    dispatch(openModal({ name: ModalName.Send }))
-  }
-
-  // hide fiat onramp banner when active account isn't a signer account.
-  const showFiatOnRamp = activeAccount.type === AccountType.SignerMnemonic
-
+type QuickAction = {
+  Icon: React.FC<SvgProps>
+  eventName?: MobileEventName
+  iconScale?: number
+  label: string
+  name: ElementName
+  sentryLabel: string
+  onPress: () => void
+}
+function QuickActions({ actions }: { actions: QuickAction[] }): JSX.Element {
   return (
     <Flex centered row gap="$spacing8">
-      {showFiatOnRamp ? (
+      {actions.map((action) => (
         <ActionButton
-          Icon={BuyIcon}
-          eventName={MobileEventName.FiatOnRampQuickActionButtonPressed}
+          Icon={action.Icon}
+          eventName={action.eventName}
           flex={1}
-          iconScale={1.2}
-          label={t('Buy')}
-          name={ElementName.Buy}
-          sentry-label="BuyActionButton"
-          onPress={onPressBuy}
+          iconScale={action.iconScale}
+          label={action.label}
+          name={action.name}
+          sentry-label={action.sentryLabel}
+          onPress={action.onPress}
         />
-      ) : null}
-      <ActionButton
-        Icon={SendIcon}
-        flex={1}
-        iconScale={1.1}
-        label={t('Send')}
-        name={ElementName.Send}
-        sentry-label="SendActionButton"
-        onPress={onPressSend}
-      />
-      <ActionButton
-        Icon={ScanIcon}
-        flex={1}
-        label={t('Scan')}
-        name={ElementName.WalletConnectScan}
-        sentry-label="ScanActionButton"
-        onPress={onPressScan}
-      />
+      ))}
     </Flex>
   )
 }

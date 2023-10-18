@@ -21,9 +21,10 @@ import {
 import { APP_FEEDBACK_LINK } from 'src/constants/urls'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricName, useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
+import { ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { getFullAppVersion } from 'src/utils/version'
-import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, IconProps, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AVATARS_DARK, AVATARS_LIGHT } from 'ui/src/assets'
 import BookOpenIcon from 'ui/src/assets/icons/book-open.svg'
 import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
@@ -38,6 +39,10 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useCurrentAppearanceSetting, useIsDarkMode } from 'wallet/src/features/appearance/hooks'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 import { AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { resetWallet, setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
@@ -48,21 +53,33 @@ export function SettingsScreen(): JSX.Element {
   const { deviceSupportsBiometrics } = useBiometricContext()
   const { t } = useTranslation()
 
+  const languageSelectionEnabled = useFeatureFlag(FEATURE_FLAGS.LanguageSelection)
+  const currencyConversionEnabled = useFeatureFlag(FEATURE_FLAGS.CurrencyConversion)
+
   // check if device supports biometric authentication, if not, hide option
   const { touchId: isTouchIdSupported, faceId: isFaceIdSupported } =
     useDeviceSupportsBiometricAuth()
 
   const authenticationTypeName = useBiometricName(isTouchIdSupported, true)
   const currentAppearanceSetting = useCurrentAppearanceSetting()
+  const currentLanguageInfo = useCurrentLanguageInfo()
+  const currentFiatCurrencyInfo = useAppFiatCurrencyInfo()
 
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
-    const iconProps: SvgProps = {
+    const svgProps: SvgProps = {
       color: colors.neutral2.get(),
       height: iconSizes.icon24,
       strokeLinecap: 'round',
       strokeLinejoin: 'round',
       strokeWidth: '2',
       width: iconSizes.icon24,
+    }
+    const iconProps: IconProps = {
+      color: '$neutral2',
+      size: '$icon.24',
+      strokeLinecap: 'round',
+      strokeLinejoin: 'round',
+      strokeWidth: '$spacing2',
     }
 
     // Defining them inline instead of outside component b.c. they need t()
@@ -79,8 +96,28 @@ export function SettingsScreen(): JSX.Element {
                 : currentAppearanceSetting === 'dark'
                 ? t('Dark mode')
                 : t('Light mode'),
-            icon: <ContrastIcon {...iconProps} />,
+            icon: <ContrastIcon {...svgProps} />,
           },
+          ...(languageSelectionEnabled
+            ? ([
+                {
+                  modal: ModalName.LanguageSelector,
+                  text: t('Language'),
+                  currentSetting: currentLanguageInfo.name,
+                  icon: <Icons.Globe {...iconProps} />,
+                },
+              ] as SettingsSectionItem[])
+            : []),
+          ...(currencyConversionEnabled
+            ? ([
+                {
+                  modal: ModalName.FiatCurrencySelector,
+                  text: t('Local currency'),
+                  currentSetting: currentFiatCurrencyInfo.code,
+                  icon: <Icons.Coins {...iconProps} />,
+                },
+              ] as SettingsSectionItem[])
+            : []),
           ...(deviceSupportsBiometrics
             ? [
                 {
@@ -88,9 +125,9 @@ export function SettingsScreen(): JSX.Element {
                   isHidden: !isTouchIdSupported && !isFaceIdSupported,
                   text: authenticationTypeName,
                   icon: isTouchIdSupported ? (
-                    <FingerprintIcon {...iconProps} />
+                    <FingerprintIcon {...svgProps} />
                   ) : (
-                    <FaceIdIcon {...iconProps} />
+                    <FaceIdIcon {...svgProps} />
                   ),
                 },
               ]
@@ -108,7 +145,7 @@ export function SettingsScreen(): JSX.Element {
               headerTitle: t('Send Feedback'),
             },
             text: t('Send Feedback'),
-            icon: <LikeSquare {...iconProps} />,
+            icon: <LikeSquare {...svgProps} />,
           },
           {
             screen: Screens.WebView,
@@ -117,7 +154,7 @@ export function SettingsScreen(): JSX.Element {
               headerTitle: t('Get Help'),
             },
             text: t('Get Help'),
-            icon: <MessageQuestion {...iconProps} />,
+            icon: <MessageQuestion {...svgProps} />,
           },
         ],
       },
@@ -131,7 +168,7 @@ export function SettingsScreen(): JSX.Element {
               headerTitle: t('Privacy Policy'),
             },
             text: t('Privacy Policy'),
-            icon: <LockIcon {...iconProps} />,
+            icon: <LockIcon {...svgProps} />,
           },
           {
             screen: Screens.WebView,
@@ -140,7 +177,7 @@ export function SettingsScreen(): JSX.Element {
               headerTitle: t('Terms of Service'),
             },
             text: t('Terms of Service'),
-            icon: <BookOpenIcon {...iconProps} />,
+            icon: <BookOpenIcon {...svgProps} />,
           },
         ],
       },
@@ -151,9 +188,9 @@ export function SettingsScreen(): JSX.Element {
           {
             screen: Screens.Dev,
             text: t('Dev Options'),
-            icon: <UniswapIcon {...iconProps} />,
+            icon: <UniswapIcon {...svgProps} />,
           },
-          { component: <OnboardingRow iconProps={iconProps} /> },
+          { component: <OnboardingRow iconProps={svgProps} /> },
         ],
       },
     ]
@@ -165,6 +202,10 @@ export function SettingsScreen(): JSX.Element {
     isTouchIdSupported,
     isFaceIdSupported,
     authenticationTypeName,
+    languageSelectionEnabled,
+    currentLanguageInfo,
+    currentFiatCurrencyInfo,
+    currencyConversionEnabled,
   ])
 
   const renderItem = ({

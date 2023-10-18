@@ -16,7 +16,11 @@ type ExploreModalParams = {
   initialState?: ExploreModalState
 }
 
+type FiatCurrencySelectorParams = { name: ModalName.FiatCurrencySelector; initialState?: undefined }
+
 type FiatOnRampModalParams = { name: ModalName.FiatOnRamp; initialState?: undefined }
+
+type LanguageSelectorParams = { name: ModalName.LanguageSelector; initialState?: undefined }
 
 type RemoveWalletModalParams = {
   name: ModalName.RemoveWallet
@@ -38,7 +42,9 @@ export type OpenModalParams =
   | AccountSwitcherModalParams
   | ExperimentsModalParams
   | ExploreModalParams
+  | FiatCurrencySelectorParams
   | FiatOnRampModalParams
+  | LanguageSelectorParams
   | RemoveWalletModalParams
   | SendModalParams
   | SwapModalParams
@@ -79,6 +85,14 @@ export const initialModalState: ModalsState = {
     initialState: undefined,
   },
   [ModalName.RestoreWallet]: {
+    isOpen: false,
+    initialState: undefined,
+  },
+  [ModalName.LanguageSelector]: {
+    isOpen: false,
+    initialState: undefined,
+  },
+  [ModalName.FiatCurrencySelector]: {
     isOpen: false,
     initialState: undefined,
   },

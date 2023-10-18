@@ -49,6 +49,8 @@ import {
   v48Schema,
   v49Schema,
   v4Schema,
+  v50Schema,
+  v51Schema,
   v5Schema,
   v6Schema,
   v7Schema,
@@ -69,6 +71,8 @@ import { initialTweaksState } from 'src/features/tweaks/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { ChainId } from 'wallet/src/constants/chains'
 import { initialFavoritesState } from 'wallet/src/features/favorites/slice'
+import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
+import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { initialNotificationsState } from 'wallet/src/features/notifications/slice'
 import {
   initialTransactionsState,
@@ -141,6 +145,8 @@ describe('Redux state migrations', () => {
       cloudBackup: initialCloudBackupState,
       ens: { ensForAddress: {} },
       favorites: initialFavoritesState,
+      fiatCurrencySettings: initialFiatCurrencyState,
+      languageSettings: initialLanguageState,
       modals: initialModalState,
       notifications: initialNotificationsState,
       passwordLockout: initialPasswordLockoutState,
@@ -1203,5 +1209,19 @@ describe('Redux state migrations', () => {
     const v50 = migrations[50](v449Stub)
 
     expect(v50.chains).toBeUndefined()
+  })
+
+  it('migrates from v50 to 51', () => {
+    const v50Stub = { ...v50Schema }
+    const v51 = migrations[51](v50Stub)
+
+    expect(v51.languageSettings).not.toBeUndefined()
+  })
+
+  it('migrates from v51 to 52', () => {
+    const v51Stub = { ...v51Schema }
+    const v52 = migrations[52](v51Stub)
+
+    expect(v52.fiatCurrencySettings).not.toBeUndefined()
   })
 })
