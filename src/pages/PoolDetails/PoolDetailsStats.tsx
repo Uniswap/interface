@@ -15,6 +15,8 @@ import { colors } from 'theme/colors'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { DetailBubble, LargeHeaderBubble } from './shared'
+
 const HeaderText = styled(Text)`
   font-weight: 485;
   font-size: 24px;
@@ -94,9 +96,10 @@ interface PoolDetailsStatsProps {
   poolData: PoolData
   isReversed: boolean
   chainId?: number
+  loading?: boolean
 }
 
-export function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsStatsProps) {
+export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: PoolDetailsStatsProps) {
   const isScreenSize = useScreenSize()
   const screenIsNotLarge = isScreenSize['lg']
   const { formatNumber } = useFormatter()
@@ -131,6 +134,22 @@ export function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsS
     }
     return isReversed ? [token1FullData, token0FullData] : [token0FullData, token1FullData]
   }, [color0, color1, currency0, currency1, isReversed, poolData])
+
+  if (loading) {
+    return (
+      <StatsWrapper>
+        <HeaderText>
+          <DetailBubble $height={24} $width={116} />
+        </HeaderText>
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Column gap="md" key={`loading-info-row-${i}`}>
+            <DetailBubble />
+            <LargeHeaderBubble />
+          </Column>
+        ))}
+      </StatsWrapper>
+    )
+  }
 
   return (
     <StatsWrapper>

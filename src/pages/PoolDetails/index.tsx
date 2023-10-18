@@ -3,8 +3,11 @@ import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
+import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
+import { TokenDescription } from 'components/Tokens/TokenDetails/TokenDescription'
 import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { usePoolData } from 'graphql/thegraph/PoolData'
+import NotFound from 'pages/NotFound'
 import { useReducer } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useParams } from 'react-router-dom'
@@ -14,13 +17,19 @@ import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { isAddress } from 'utils'
 
+import { PoolDetailsHeader } from './PoolDetailsHeader'
+import { PoolDetailsStats } from './PoolDetailsStats'
+import { PoolDetailsStatsButtons } from './PoolDetailsStatsButtons'
+
 const PageWrapper = styled(Row)`
   padding: 48px;
   width: 100%;
   align-items: flex-start;
+  gap: 60px;
 
   @media (max-width: ${BREAKPOINTS.lg - 1}px) {
     flex-direction: column;
+    gap: unset;
   }
 
   @media (max-width: ${BREAKPOINTS.sm - 1}px) {
@@ -28,18 +37,29 @@ const PageWrapper = styled(Row)`
   }
 `
 
-// const RightColumn = styled(Column)`
-//   gap: 24px;
-//   margin: 0 48px 0 auto;
-//   width: 22vw;
-//   min-width: 360px;
+const LeftColumn = styled(Column)`
+  gap: 24px;
+  width: 65vw;
+  overflow: hidden;
+  justify-content: flex-start;
 
-//   @media (max-width: ${BREAKPOINTS.lg - 1}px) {
-//     margin: 44px 0px;
-//     width: 100%;
-//     min-width: unset;
-//   }
-// `
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) {
+    width: 100%;
+  }
+`
+
+const RightColumn = styled(Column)`
+  gap: 24px;
+  margin: 0 48px 0 auto;
+  width: 22vw;
+  min-width: 360px;
+
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) {
+    margin: 44px 0px;
+    width: 100%;
+    min-width: unset;
+  }
+`
 
 const TokenDetailsWrapper = styled(Column)`
   gap: 24px;
@@ -76,50 +96,125 @@ export default function PoolDetailsPage() {
   const token1 = isReversed ? poolData?.token0 : poolData?.token1
   const isInvalidPool = !chainName || !poolAddress || !getValidUrlChainName(chainName) || !isAddress(poolAddress)
   const poolNotFound = (!loading && !poolData) || isInvalidPool
+  const isLoading = true
 
   // TODO(WEB-2814): Add skeleton once designed
-  return (
-    <PageWrapper>
-      <PoolDetailsLoadingSkeleton />
-    </PageWrapper>
-  )
-  // if (poolNotFound) return <NotFound />
   // return (
   //   <PageWrapper>
-  //     <PoolDetailsHeader
-  //       chainId={chainId}
-  //       poolAddress={poolAddress}
-  //       token0={token0}
-  //       token1={token1}
-  //       feeTier={poolData?.feeTier}
-  //       toggleReversed={toggleReversed}
-  //     />
-  //     <RightColumn>
-  //       <PoolDetailsStatsButtons chainId={chainId} token0={token0} token1={token1} feeTier={poolData?.feeTier} />
-  //       {poolData && <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} />}
-  //       {(token0 || token1) && (
-  //         <TokenDetailsWrapper>
-  //           <TokenDetailsHeader>
-  //             <Trans>Info</Trans>
-  //           </TokenDetailsHeader>
-  //           {token0 && <TokenDescription tokenAddress={token0.id} chainId={chainId} />}
-  //           {token1 && <TokenDescription tokenAddress={token1.id} chainId={chainId} />}
-  //         </TokenDetailsWrapper>
-  //       )}
-  //     </RightColumn>
+  //     <PoolDetailsLoadingSkeleton />
   //   </PageWrapper>
   // )
+  if (poolNotFound) return <NotFound />
+  return (
+    <PageWrapper>
+      <LeftColumn>
+        <PoolDetailsHeader
+          chainId={chainId}
+          poolAddress={poolAddress}
+          token0={token0}
+          token1={token1}
+          feeTier={poolData?.feeTier}
+          toggleReversed={toggleReversed}
+          loading={isLoading}
+        />
+        <LoadingChart />
+        <HR />
+        <ChartHeaderBubble />
+        {/* TODO(WEB-2735): When making table, have headers be shared */}
+        <Table $isHorizontalScroll>
+          <TableRow $borderBottom>
+            <TableElement large>
+              <Row>
+                <ArrowDown size={16} />
+                <Trans>Time</Trans>
+              </Row>
+            </TableElement>
+            <TableElement>
+              <Trans>Type</Trans>
+            </TableElement>
+            <TableElement alignRight>
+              <Trans>USD</Trans>
+            </TableElement>
+            <TableElement alignRight>
+              <DetailBubble />
+            </TableElement>
+            <TableElement alignRight>
+              <DetailBubble />
+            </TableElement>
+            <TableElement alignRight>
+              <Trans>Maker</Trans>
+            </TableElement>
+            <TableElement alignRight small>
+              <Trans>Txn</Trans>
+            </TableElement>
+          </TableRow>
+          {Array.from({ length: 10 }).map((_, i) => (
+            <TableRow key={`loading-table-row-${i}`}>
+              <TableElement large>
+                <DetailBubble />
+              </TableElement>
+              <TableElement>
+                <DetailBubble />
+              </TableElement>
+              <TableElement alignRight>
+                <DetailBubble />
+              </TableElement>
+              <TableElement alignRight>
+                <DetailBubble />
+              </TableElement>
+              <TableElement alignRight>
+                <DetailBubble />
+              </TableElement>
+              <TableElement alignRight>
+                <DetailBubble />
+              </TableElement>
+              <TableElement alignRight small>
+                <SmallDetailBubble />
+              </TableElement>
+            </TableRow>
+          ))}
+        </Table>
+      </LeftColumn>
+      <RightColumn>
+        <PoolDetailsStatsButtons
+          chainId={chainId}
+          token0={token0}
+          token1={token1}
+          feeTier={poolData?.feeTier} // TODO: implement
+          loading={isLoading}
+        />
+        {poolData && (
+          <PoolDetailsStats
+            poolData={poolData}
+            isReversed={isReversed}
+            chainId={chainId} // TODO: implement
+            loading={isLoading}
+          />
+        )}
+        {(token0 || token1) &&
+          (isLoading ? (
+            <LinkColumn>
+              <DetailBubble $height={24} $width={116} />
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Row gap="8px" key={`loading-link-row-${i}`}>
+                  <SmallDetailBubble />
+                  <DetailBubble $width={117} />
+                </Row>
+              ))}
+            </LinkColumn>
+          ) : (
+            <TokenDetailsWrapper>
+              <TokenDetailsHeader>
+                <Trans>Info</Trans>
+              </TokenDetailsHeader>
+              {token0 && <TokenDescription tokenAddress={token0.id} chainId={chainId} />}
+              {token1 && <TokenDescription tokenAddress={token1.id} chainId={chainId} />}
+            </TokenDetailsWrapper>
+          ))}
+      </RightColumn>
+    </PageWrapper>
+  )
 }
-
-const LeftColumn = styled(Column)`
-  gap: 24px;
-  width: 65vw;
-`
-
-const RightColumn = styled(Column)`
-  gap: 24px;
-  height: 100vw;
-`
 
 const DetailBubble = styled(LoadingBubble)<{ $height?: number; $width?: number }>`
   height: ${({ $height }) => ($height ? `${$height}px` : '16px')};
@@ -135,10 +230,6 @@ const IconBubble = styled(LoadingBubble)`
 const LargeHeaderBubble = styled(LoadingBubble)`
   width: 180px;
   height: 40px;
-`
-
-const ChartSkeleton = styled.div`
-  height: 462px;
 `
 
 const HR = styled.hr`
@@ -206,13 +297,12 @@ const LinkColumn = styled(Column)`
 `
 /**
  * TODO
- * Add graph skeleton
  * separate into their respective components if available, try to condense
  * only show when actually loading
  */
 function PoolDetailsLoadingSkeleton() {
   return (
-    <Row gap="60px">
+    <Row gap="60px" align="flex-start">
       <LeftColumn>
         <DetailBubble $width={300} />
         <Column gap="sm">
@@ -222,8 +312,7 @@ function PoolDetailsLoadingSkeleton() {
           </Row>
           <LargeHeaderBubble />
         </Column>
-        {/* TODO Actual Chart skeleton */}
-        <ChartSkeleton />
+        <LoadingChart />
         <HR />
         <ChartHeaderBubble />
         {/* TODO(WEB-2735): When making table, have headers be shared */}
@@ -282,6 +371,7 @@ function PoolDetailsLoadingSkeleton() {
         </Table>
       </LeftColumn>
       <RightColumn>
+        {/* buttons */}
         <Row gap="10px">
           <ButtonBubble />
           <ButtonBubble />
