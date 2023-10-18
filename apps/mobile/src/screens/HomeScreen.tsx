@@ -338,10 +338,11 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const emptyContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
-      paddingTop: spacing.spacing60,
+      paddingTop: media.short ? spacing.none : spacing.spacing60,
       paddingBottom: insets.bottom,
+      paddingHorizontal: media.short ? spacing.spacing12 : spacing.spacing48,
     }),
-    [insets.bottom]
+    [insets.bottom, media.short]
   )
 
   const sharedProps = useMemo<TabContentProps>(

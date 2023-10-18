@@ -16,7 +16,7 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { Flex, TouchableArea, useSporeColors } from 'ui/src'
-import { borderRadii, spacing } from 'ui/src/theme'
+import { borderRadii } from 'ui/src/theme'
 import { NftsList } from 'wallet/src/components/nfts/NftsList'
 import { GQLQueries } from 'wallet/src/data/queries'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
@@ -138,7 +138,7 @@ export const NftsTab = memo(
         <NftsList
           ref={ref}
           ListFooterComponent={isExternalProfile ? null : adaptiveFooter}
-          emptyStateStyle={{ paddingHorizontal: spacing.spacing12 }}
+          emptyStateStyle={containerProps?.emptyContainerStyle}
           errorStateStyle={containerProps?.emptyContainerStyle}
           footerHeight={footerHeight}
           isExternalProfile={isExternalProfile}
