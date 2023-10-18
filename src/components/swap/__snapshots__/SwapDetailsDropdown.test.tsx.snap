@@ -146,28 +146,6 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   fill: #7D7D7D;
 }
 
-.c20 {
-  text-align: right;
-  overflow-wrap: break-word;
-}
-
-.c19 {
-  cursor: help;
-  color: #7D7D7D;
-}
-
-.c22 {
-  background: #22222212;
-  border-radius: 8px;
-  color: #7D7D7D;
-  height: 20px;
-  padding: 0 6px;
-}
-
-.c22::after {
-  content: 'Auto';
-}
-
 .c8 {
   background-color: transparent;
   border: none;
@@ -198,6 +176,28 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   -moz-user-select: text;
   -ms-user-select: text;
   user-select: text;
+}
+
+.c20 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c19 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+.c22 {
+  background: #22222212;
+  border-radius: 8px;
+  color: #7D7D7D;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.c22::after {
+  content: 'Auto';
 }
 
 .c5 {
@@ -327,85 +327,137 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
           <div
             class="c18"
           />
-          <div
-            class="c2 c3 c4"
-          >
+          <div>
             <div
-              class="c9 c19 css-142zc9n"
-              data-testid="swap-li-label"
+              class="c2 c3 c4"
             >
-              Price impact
-            </div>
-            <div
-              class="c12"
-            >
-              <div>
-                <div
-                  class="c9 c20 css-142zc9n"
-                >
-                  <span
-                    class=""
-                  >
-                    -105566.373%
-                  </span>
-                </div>
+              <div
+                class="c9 c19 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Price impact
               </div>
-            </div>
-          </div>
-          <div
-            class="c2 c3 c4"
-          >
-            <div
-              class="c9 c19 css-142zc9n"
-              data-testid="swap-li-label"
-            >
-              Max. slippage
-            </div>
-            <div
-              class="c12"
-            >
-              <div>
-                <div
-                  class="c9 c20 css-142zc9n"
-                >
+              <div
+                class="c12"
+              >
+                <div>
                   <div
-                    class="c2 c21"
+                    class="c9 c20 css-142zc9n"
                   >
-                    <div
-                      class="c14 c22 css-1lgneq0"
-                    />
-                     2%
+                    <span
+                      class=""
+                    >
+                      -105566.373%
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div
-            class="c2 c3 c4"
-          >
+          <div>
             <div
-              class="c9 c19 css-142zc9n"
-              data-testid="swap-li-label"
+              class="c2 c3 c4"
             >
-              Network cost
-            </div>
-            <div
-              class="c12"
-            >
-              <div>
-                <div
-                  class="c9 c20 css-142zc9n"
-                >
+              <div
+                class="c9 c19 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Max. slippage
+              </div>
+              <div
+                class="c12"
+              >
+                <div>
                   <div
-                    class="c2 c10"
+                    class="c9 c20 css-142zc9n"
                   >
-                    <img
-                      alt="gas cost icon"
-                      height="16"
-                      src="ethereum-logo.png"
-                      width="16"
-                    />
-                    $1.00
+                    <div
+                      class="c2 c21"
+                    >
+                      <div
+                        class="c14 c22 css-1lgneq0"
+                      />
+                       2%
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c9 c19 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Fee 
+              </div>
+              <div
+                class="c12"
+              >
+                <div>
+                  <div
+                    class="c9 c20 css-142zc9n"
+                  >
+                    0 DEF
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c9 c19 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Network cost
+              </div>
+              <div
+                class="c12"
+              >
+                <div>
+                  <div
+                    class="c9 c20 css-142zc9n"
+                  >
+                    <div
+                      class="c2 c10"
+                    >
+                      <svg
+                        aria-labelledby="titleID"
+                        height="16"
+                        width="16"
+                      >
+                        <title
+                          id="titleID"
+                        >
+                          Ethereum logo
+                        </title>
+                        <rect
+                          fill="#F9F9F9"
+                          height="16"
+                          rx="4"
+                          width="16"
+                        />
+                        <rect
+                          fill="#6B8AFF33"
+                          height="16"
+                          rx="4"
+                          width="16"
+                        />
+                        <svg
+                          height="16"
+                          width="16"
+                        >
+                          ethereum.svg
+                        </svg>
+                      </svg>
+                      $1.00
+                    </div>
                   </div>
                 </div>
               </div>
@@ -414,26 +466,28 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
           <div
             class="c18"
           />
-          <div
-            class="c2 c3 c4"
-          >
+          <div>
             <div
-              class="c9 c19 css-142zc9n"
-              data-testid="swap-li-label"
+              class="c2 c3 c4"
             >
-              Order routing
-            </div>
-            <div
-              class="c12"
-            >
-              <div>
-                <div
-                  class="c9 c20 css-142zc9n"
-                >
+              <div
+                class="c9 c19 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Order routing
+              </div>
+              <div
+                class="c12"
+              >
+                <div>
                   <div
-                    class="css-142zc9n"
+                    class="c9 c20 css-142zc9n"
                   >
-                    Uniswap Client
+                    <div
+                      class="css-142zc9n"
+                    >
+                      Uniswap Client
+                    </div>
                   </div>
                 </div>
               </div>

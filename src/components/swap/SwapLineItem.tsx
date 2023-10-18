@@ -1,15 +1,18 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { LoadingRow } from 'components/Loader/styled'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import RouterLabel from 'components/RouterLabel'
 import Row, { RowBetween } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { getChainInfo } from 'constants/chainInfo'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
+import { useFeesEnabled } from 'featureFlags/flags/useFees'
 import useHoverProps from 'hooks/useHoverProps'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import { useIsMobile } from 'nft/hooks'
 import React, { PropsWithChildren, useEffect, useState } from 'react'
-import { InterfaceTrade, TradeFillType } from 'state/routing/types'
+import { animated, SpringValue } from 'react-spring'
+import { InterfaceTrade, SubmittableTrade, TradeFillType } from 'state/routing/types'
 import { isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
@@ -20,7 +23,8 @@ import { getPriceImpactColor } from 'utils/prices'
 
 import { GasBreakdownTooltip, UniswapXDescription } from './GasBreakdownTooltip'
 import { MaxSlippageTooltip } from './MaxSlippageTooltip'
-import SwapRoute from './SwapRoute'
+import { RoutingTooltip, SwapRoute } from './SwapRoute'
+import TradePrice from './TradePrice'
 
 export enum SwapLineItemType {
   EXCHANGE_RATE,
@@ -29,6 +33,7 @@ export enum SwapLineItemType {
   OUTPUT_TOKEN_FEE_ON_TRANSFER,
   PRICE_IMPACT,
   MAX_SLIPPAGE,
+  SWAP_FEE,
   MAXIMUM_INPUT,
   MINIMUM_OUTPUT,
   ROUTING_INFO,
@@ -72,17 +77,30 @@ function FOTTooltipContent() {
   )
 }
 
-function Loading({ width = 50 }: { width?: number }) {
-  return <LoadingRow data-testid="loading-row" height={15} width={width} />
+function SwapFeeTooltipContent({ hasFee }: { hasFee: boolean }) {
+  const message = hasFee ? (
+    <Trans>
+      Fee is applied on a few token pairs to ensure the best experience with Uniswap. It is paid in the output token and
+      has already been factored into the quote.
+    </Trans>
+  ) : (
+    <Trans>
+      Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with
+      this swap.
+    </Trans>
+  )
+  return (
+    <>
+      {message}{' '}
+      <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/20131678274957">
+        <Trans>Learn more</Trans>
+      </ExternalLink>
+    </>
+  )
 }
 
-function ExchangeRateRow({ trade }: { trade: InterfaceTrade }) {
-  const { formatNumber } = useFormatter()
-  const rate = `1 ${trade.executionPrice.quoteCurrency.symbol} = ${formatNumber({
-    input: parseFloat(trade.executionPrice.toFixed(9)),
-    type: NumberType.TokenTx,
-  })} ${trade.executionPrice.baseCurrency.symbol}`
-  return <>{rate}</>
+function Loading({ width = 50 }: { width?: number }) {
+  return <LoadingRow data-testid="loading-row" height={15} width={width} />
 }
 
 function ColoredPercentRow({ percent }: { percent: Percent }) {
@@ -94,6 +112,18 @@ function CurrencyAmountRow({ amount }: { amount: CurrencyAmount<Currency> }) {
   const { formatCurrencyAmount } = useFormatter()
   const formattedAmount = formatCurrencyAmount({ amount, type: NumberType.SwapDetailsAmount })
   return <>{`${formattedAmount} ${amount.currency.symbol}`}</>
+}
+
+function FeeRow({ trade: { swapFee, outputAmount } }: { trade: SubmittableTrade }) {
+  const { formatNumber } = useFormatter()
+
+  const feeCurrencyAmount = CurrencyAmount.fromRawAmount(outputAmount.currency, swapFee?.amount ?? 0)
+  const { data: outputFeeFiatValue } = useUSDPrice(feeCurrencyAmount, feeCurrencyAmount?.currency)
+
+  // Fallback to displaying token amount if fiat value is not available
+  if (outputFeeFiatValue === undefined) return <CurrencyAmountRow amount={feeCurrencyAmount} />
+
+  return <>{formatNumber({ input: outputFeeFiatValue, type: NumberType.FiatGasPrice })}</>
 }
 
 type LineItemData = {
@@ -108,6 +138,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   const { trade, syncing, allowedSlippage, type } = props
   const { formatNumber, formatSlippage } = useFormatter()
   const isAutoSlippage = useUserSlippageTolerance()[0] === SlippageTolerance.Auto
+  const feesEnabled = useFeesEnabled()
 
   const isUniswapX = isUniswapXTrade(trade)
   const isPreview = isPreviewTrade(trade)
@@ -122,8 +153,10 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   switch (type) {
     case SwapLineItemType.EXCHANGE_RATE:
       return {
-        Label: () => <Trans>Exchange rate</Trans>,
-        Value: () => <ExchangeRateRow trade={trade} />,
+        Label: () => <Trans>Rate</Trans>,
+        Value: () => <TradePrice price={trade.executionPrice} />,
+        TooltipBody: !isPreview ? () => <RoutingTooltip trade={trade} /> : undefined,
+        tooltipSize: isUniswapX ? TooltipSize.Small : TooltipSize.Large,
       }
     case SwapLineItemType.NETWORK_COST:
       if (!SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) return
@@ -134,7 +167,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
           if (isPreview) return <Loading />
           return (
             <Row gap="4px">
-              <img src={getChainInfo(chainId)?.logoUrl} alt="gas cost icon" width={16} height={16} />
+              <ChainLogo chainId={chainId} />
               {formatNumber({ input: trade.totalGasUseEstimateUSD, type: NumberType.FiatGasPrice })}
             </Row>
           )
@@ -158,6 +191,19 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
           </Row>
         ),
       }
+    case SwapLineItemType.SWAP_FEE: {
+      if (!feesEnabled) return
+      if (isPreview) return { Label: () => <Trans>Fee</Trans>, Value: () => <Loading /> }
+      return {
+        Label: () => (
+          <>
+            <Trans>Fee</Trans> {trade.swapFee && `(${formatSlippage(trade.swapFee.percent)})`}
+          </>
+        ),
+        TooltipBody: () => <SwapFeeTooltipContent hasFee={Boolean(trade.swapFee)} />,
+        Value: () => <FeeRow trade={trade} />,
+      }
+    }
     case SwapLineItemType.MAXIMUM_INPUT:
       if (trade.tradeType === TradeType.EXACT_INPUT) return
       return {
@@ -185,12 +231,12 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
         loaderWidth: 70,
       }
     case SwapLineItemType.ROUTING_INFO:
-      if (isPreview) return { Label: () => <Trans>Order routing</Trans>, Value: () => <Loading /> }
+      if (isPreview || syncing) return { Label: () => <Trans>Order routing</Trans>, Value: () => <Loading /> }
       return {
         Label: () => <Trans>Order routing</Trans>,
         TooltipBody: () => {
           if (isUniswapX) return <UniswapXDescription />
-          return <SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} />
+          return <SwapRoute data-testid="swap-route-info" trade={trade} />
         },
         tooltipSize: isUniswapX ? TooltipSize.Small : TooltipSize.Large,
         Value: () => <RouterLabel trade={trade} />,
@@ -244,11 +290,12 @@ function ValueWrapper({ children, lineItem, labelHovered, syncing }: ValueWrappe
   )
 }
 
-interface SwapLineItemProps {
+export interface SwapLineItemProps {
   trade: InterfaceTrade
   syncing: boolean
   allowedSlippage: Percent
   type: SwapLineItemType
+  animatedOpacity?: SpringValue<number>
 }
 
 function SwapLineItem(props: SwapLineItemProps) {
@@ -258,14 +305,16 @@ function SwapLineItem(props: SwapLineItemProps) {
   if (!LineItem) return null
 
   return (
-    <RowBetween>
-      <LabelText {...hoverProps} hasTooltip={!!LineItem.TooltipBody} data-testid="swap-li-label">
-        <LineItem.Label />
-      </LabelText>
-      <ValueWrapper lineItem={LineItem} labelHovered={labelHovered} syncing={props.syncing}>
-        <LineItem.Value />
-      </ValueWrapper>
-    </RowBetween>
+    <animated.div style={{ opacity: props.animatedOpacity }}>
+      <RowBetween>
+        <LabelText {...hoverProps} hasTooltip={!!LineItem.TooltipBody} data-testid="swap-li-label">
+          <LineItem.Label />
+        </LabelText>
+        <ValueWrapper lineItem={LineItem} labelHovered={labelHovered} syncing={props.syncing}>
+          <LineItem.Value />
+        </ValueWrapper>
+      </RowBetween>
+    </animated.div>
   )
 }
 

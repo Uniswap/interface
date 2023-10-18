@@ -1,10 +1,13 @@
+import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
+import { TokenDescription } from 'components/Tokens/TokenDetails/TokenDescription'
 import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { usePoolData } from 'graphql/thegraph/PoolData'
 import NotFound from 'pages/NotFound'
 import { useReducer } from 'react'
 import { useParams } from 'react-router-dom'
+import { Text } from 'rebass'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { isAddress } from 'utils'
@@ -40,6 +43,28 @@ const RightColumn = styled(Column)`
   }
 `
 
+const TokenDetailsWrapper = styled(Column)`
+  gap: 24px;
+  padding: 20px;
+
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) and (min-width: ${BREAKPOINTS.sm}px) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: unset;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm - 1}px) {
+    padding: unset;
+  }
+`
+
+const TokenDetailsHeader = styled(Text)`
+  width: 100%;
+  font-size: 24px;
+  font-weight: 485;
+  line-height: 32px;
+`
+
 export default function PoolDetailsPage() {
   const { poolAddress, chainName } = useParams<{
     poolAddress: string
@@ -70,6 +95,15 @@ export default function PoolDetailsPage() {
       <RightColumn>
         <PoolDetailsStatsButtons chainId={chainId} token0={token0} token1={token1} feeTier={poolData?.feeTier} />
         {poolData && <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} />}
+        {(token0 || token1) && (
+          <TokenDetailsWrapper>
+            <TokenDetailsHeader>
+              <Trans>Info</Trans>
+            </TokenDetailsHeader>
+            {token0 && <TokenDescription tokenAddress={token0.id} chainId={chainId} />}
+            {token1 && <TokenDescription tokenAddress={token1.id} chainId={chainId} />}
+          </TokenDetailsWrapper>
+        )}
       </RightColumn>
     </PageWrapper>
   )

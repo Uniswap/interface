@@ -34,14 +34,6 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
   color: #222222;
 }
 
-.c13 {
-  width: 100%;
-  height: 1px;
-  border-width: 0;
-  margin: 0;
-  background-color: #22222212;
-}
-
 .c2 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -111,13 +103,14 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
 }
 
 .c9 {
-  cursor: help;
   color: #7D7D7D;
   margin-right: 8px;
 }
 
-.c14 {
-  margin: 16px 2px 24px 2px;
+.c13 {
+  cursor: help;
+  color: #7D7D7D;
+  margin-right: 8px;
 }
 
 .c1 {
@@ -145,7 +138,6 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
               <div>
                 <div
                   class="c8 c9 css-142zc9n"
-                  cursor="help"
                 >
                   You pay
                 </div>
@@ -193,7 +185,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
             >
               <div>
                 <div
-                  class="c8 c9 css-142zc9n"
+                  class="c8 c13 css-142zc9n"
                   cursor="help"
                 >
                   You receive
@@ -229,9 +221,6 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
         </div>
       </div>
     </div>
-    <div
-      class="c13 c14"
-    />
   </div>
 </DocumentFragment>
 `;
@@ -268,14 +257,6 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
 
 .c8 {
   color: #222222;
-}
-
-.c13 {
-  width: 100%;
-  height: 1px;
-  border-width: 0;
-  margin: 0;
-  background-color: #22222212;
 }
 
 .c2 {
@@ -347,13 +328,14 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
 }
 
 .c9 {
-  cursor: help;
   color: #7D7D7D;
   margin-right: 8px;
 }
 
-.c14 {
-  margin: 16px 2px 24px 2px;
+.c13 {
+  cursor: help;
+  color: #7D7D7D;
+  margin-right: 8px;
 }
 
 .c1 {
@@ -381,7 +363,6 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
               <div>
                 <div
                   class="c8 c9 css-142zc9n"
-                  cursor="help"
                 >
                   You pay
                 </div>
@@ -429,7 +410,7 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
             >
               <div>
                 <div
-                  class="c8 c9 css-142zc9n"
+                  class="c8 c13 css-142zc9n"
                   cursor="help"
                 >
                   You receive
@@ -465,9 +446,6 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
         </div>
       </div>
     </div>
-    <div
-      class="c13 c14"
-    />
   </div>
 </DocumentFragment>
 `;
@@ -504,14 +482,6 @@ exports[`SwapModalHeader.tsx renders preview trades with loading states 1`] = `
 
 .c8 {
   color: #222222;
-}
-
-.c13 {
-  width: 100%;
-  height: 1px;
-  border-width: 0;
-  margin: 0;
-  background-color: #22222212;
 }
 
 .c2 {
@@ -583,13 +553,14 @@ exports[`SwapModalHeader.tsx renders preview trades with loading states 1`] = `
 }
 
 .c9 {
-  cursor: help;
   color: #7D7D7D;
   margin-right: 8px;
 }
 
-.c14 {
-  margin: 16px 2px 24px 2px;
+.c13 {
+  cursor: help;
+  color: #7D7D7D;
+  margin-right: 8px;
 }
 
 .c1 {
@@ -617,7 +588,6 @@ exports[`SwapModalHeader.tsx renders preview trades with loading states 1`] = `
               <div>
                 <div
                   class="c8 c9 css-142zc9n"
-                  cursor="help"
                 >
                   You pay
                 </div>
@@ -665,7 +635,7 @@ exports[`SwapModalHeader.tsx renders preview trades with loading states 1`] = `
             >
               <div>
                 <div
-                  class="c8 c9 css-142zc9n"
+                  class="c8 c13 css-142zc9n"
                   cursor="help"
                 >
                   You receive
@@ -701,9 +671,6 @@ exports[`SwapModalHeader.tsx renders preview trades with loading states 1`] = `
         </div>
       </div>
     </div>
-    <div
-      class="c13 c14"
-    />
   </div>
 </DocumentFragment>
 `;
@@ -740,14 +707,6 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
 
 .c8 {
   color: #222222;
-}
-
-.c13 {
-  width: 100%;
-  height: 1px;
-  border-width: 0;
-  margin: 0;
-  background-color: #22222212;
 }
 
 .c2 {
@@ -819,13 +778,14 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
 }
 
 .c9 {
-  cursor: help;
   color: #7D7D7D;
   margin-right: 8px;
 }
 
-.c14 {
-  margin: 16px 2px 24px 2px;
+.c13 {
+  cursor: help;
+  color: #7D7D7D;
+  margin-right: 8px;
 }
 
 .c1 {
@@ -853,7 +813,6 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
               <div>
                 <div
                   class="c8 c9 css-142zc9n"
-                  cursor="help"
                 >
                   You pay
                 </div>
@@ -901,7 +860,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
             >
               <div>
                 <div
-                  class="c8 c9 css-142zc9n"
+                  class="c8 c13 css-142zc9n"
                   cursor="help"
                 >
                   You receive
@@ -937,9 +896,6 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
         </div>
       </div>
     </div>
-    <div
-      class="c13 c14"
-    />
   </div>
 </DocumentFragment>
 `;

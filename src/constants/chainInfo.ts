@@ -1,20 +1,4 @@
 import { ChainId } from '@uniswap/sdk-core'
-import bnbCircleLogoUrl from 'assets/images/bnbCircle.svg'
-import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
-import polygonCircleLogoUrl from 'assets/images/polygonCircle.png'
-import { default as arbitrumCircleLogoUrl, default as arbitrumLogoUrl } from 'assets/svg/arbitrum_logo.svg'
-import avaxLogo from 'assets/svg/avax_logo.svg'
-import avaxSquareLogo from 'assets/svg/avax_square_logo.svg'
-import baseLogo from 'assets/svg/base_logo.svg'
-import baseSquareLogo from 'assets/svg/base_square_logo.svg'
-import bnbSquareLogoUrl from 'assets/svg/bnb_square_logo.svg'
-import bnbLogo from 'assets/svg/bnb-logo.svg'
-import celoLogo from 'assets/svg/celo_logo.svg'
-import celoSquareLogoUrl from 'assets/svg/celo_square_logo.svg'
-import optimismSquareLogoUrl from 'assets/svg/optimism_square_logo.svg'
-import optimismLogoUrl from 'assets/svg/optimistic_ethereum.svg'
-import polygonSquareLogoUrl from 'assets/svg/polygon_square_logo.svg'
-import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
 import ms from 'ms'
 import { darkTheme } from 'theme/colors'
 
@@ -46,9 +30,6 @@ interface BaseChainInfo {
   readonly bridge?: string
   readonly explorer: string
   readonly infoLink: string
-  readonly logoUrl: string
-  readonly circleLogoUrl?: string
-  readonly squareLogoUrl?: string
   readonly label: string
   readonly helpCenterUrl?: string
   readonly nativeCurrency: {
@@ -83,7 +64,6 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Ethereum',
-    logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: darkTheme.chain_1,
   },
@@ -93,7 +73,6 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://goerli.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Görli',
-    logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Görli Ether', symbol: 'görETH', decimals: 18 },
     color: darkTheme.chain_5,
   },
@@ -103,7 +82,6 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://sepolia.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Sepolia',
-    logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Sepolia Ether', symbol: 'SepoliaETH', decimals: 18 },
     color: darkTheme.chain_5,
   },
@@ -116,10 +94,6 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism/',
     label: 'Optimism',
-    logoUrl: optimismLogoUrl,
-    // Optimism perfers same icon for both
-    circleLogoUrl: optimismLogoUrl,
-    squareLogoUrl: optimismSquareLogoUrl,
     statusPage: 'https://optimism.io/status',
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
@@ -135,7 +109,6 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://goerli-optimism.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism/',
     label: 'Optimism Görli',
-    logoUrl: optimismLogoUrl,
     statusPage: 'https://optimism.io/status',
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
     nativeCurrency: { name: 'Optimism Goerli Ether', symbol: 'görOpETH', decimals: 18 },
@@ -149,8 +122,6 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://arbiscan.io/',
     infoLink: 'https://info.uniswap.org/#/arbitrum',
     label: 'Arbitrum',
-    logoUrl: arbitrumLogoUrl,
-    circleLogoUrl: arbitrumCircleLogoUrl,
     defaultListUrl: ARBITRUM_LIST,
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
@@ -165,7 +136,6 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://goerli.arbiscan.io/',
     infoLink: 'https://info.uniswap.org/#/arbitrum/',
     label: 'Arbitrum Goerli',
-    logoUrl: arbitrumLogoUrl,
     defaultListUrl: ARBITRUM_LIST, // TODO: use arbitrum goerli token list
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
     nativeCurrency: { name: 'Goerli Arbitrum Ether', symbol: 'goerliArbETH', decimals: 18 },
@@ -179,9 +149,6 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://polygonscan.com/',
     infoLink: 'https://info.uniswap.org/#/polygon/',
     label: 'Polygon',
-    logoUrl: polygonMaticLogo,
-    circleLogoUrl: polygonCircleLogoUrl,
-    squareLogoUrl: polygonSquareLogoUrl,
     nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
     color: darkTheme.chain_137,
     backgroundColor: darkTheme.chain_137_background,
@@ -194,7 +161,6 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://mumbai.polygonscan.com/',
     infoLink: 'https://info.uniswap.org/#/polygon/',
     label: 'Polygon Mumbai',
-    logoUrl: polygonMaticLogo,
     nativeCurrency: { name: 'Polygon Mumbai Matic', symbol: 'mMATIC', decimals: 18 },
   },
   [ChainId.CELO]: {
@@ -205,9 +171,6 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://celoscan.io/',
     infoLink: 'https://info.uniswap.org/#/celo/',
     label: 'Celo',
-    logoUrl: celoLogo,
-    circleLogoUrl: celoLogo,
-    squareLogoUrl: celoSquareLogoUrl,
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
     defaultListUrl: CELO_LIST,
   },
@@ -219,7 +182,6 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://alfajores-blockscout.celo-testnet.org/',
     infoLink: 'https://info.uniswap.org/#/celo/',
     label: 'Celo Alfajores',
-    logoUrl: celoLogo,
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
     defaultListUrl: CELO_LIST,
   },
@@ -231,9 +193,6 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://bscscan.com/',
     infoLink: 'https://info.uniswap.org/#/bnb/',
     label: 'BNB Chain',
-    logoUrl: bnbLogo,
-    circleLogoUrl: bnbCircleLogoUrl,
-    squareLogoUrl: bnbSquareLogoUrl,
     nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
     defaultListUrl: PLASMA_BNB_LIST,
     color: darkTheme.chain_56,
@@ -247,9 +206,6 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://snowtrace.io/',
     infoLink: 'https://info.uniswap.org/#/avax/', // TODO(WEB-2336): Add avax support to info site
     label: 'Avalanche',
-    logoUrl: avaxLogo,
-    circleLogoUrl: avaxLogo,
-    squareLogoUrl: avaxSquareLogo,
     nativeCurrency: { name: 'AVAX', symbol: 'AVAX', decimals: 18 },
     defaultListUrl: AVALANCHE_LIST,
     color: darkTheme.chain_43114,
@@ -264,10 +220,7 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://basescan.org/',
     infoLink: 'https://info.uniswap.org/#/base/',
     label: 'Base',
-    logoUrl: baseLogo,
     statusPage: 'https://status.base.org/',
-    circleLogoUrl: baseLogo,
-    squareLogoUrl: baseSquareLogo,
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: darkTheme.chain_84531,
   },

@@ -1,8 +1,15 @@
-import { Box } from 'nft/components/Box'
 import { FilterDropdown, FilterItem } from 'nft/components/collection/MarketplaceSelect'
 import { useCollectionFilters } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useState } from 'react'
+import { Check } from 'react-feather'
+import styled from 'styled-components'
+
+const CheckIcon = styled(Check)`
+  height: 20px;
+  width: 20px;
+  color: ${({ theme }) => theme.accent1};
+`
 
 export const FilterSortDropdown = ({ sortDropDownOptions }: { sortDropDownOptions: DropDownOption[] }) => {
   const [isOpen, setOpen] = useState(false)
@@ -24,19 +31,7 @@ const SortByItem = ({
   parentOnClick: React.MouseEventHandler<HTMLElement>
 }) => {
   const sortBy = useCollectionFilters((state) => state.sortBy)
-  const checkMark =
-    dropDownOption.sortBy !== undefined && sortBy === dropDownOption.sortBy ? (
-      <Box
-        as="img"
-        alt={dropDownOption.displayText}
-        width="20"
-        height="20"
-        objectFit="cover"
-        src="/nft/svgs/checkmark.svg"
-      />
-    ) : (
-      <></>
-    )
+  const checkMark = dropDownOption.sortBy !== undefined && sortBy === dropDownOption.sortBy ? <CheckIcon /> : <></>
   const onClick: React.MouseEventHandler<HTMLElement> = (e) => {
     e.preventDefault()
     parentOnClick(e)

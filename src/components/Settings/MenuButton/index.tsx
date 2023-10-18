@@ -1,6 +1,8 @@
 import { t, Trans } from '@lingui/macro'
 import { Settings } from 'components/Icons/Settings'
 import Row from 'components/Row'
+import { InterfaceTrade } from 'state/routing/types'
+import { isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import styled from 'styled-components'
@@ -45,11 +47,11 @@ const IconContainerWithSlippage = styled(IconContainer)<{ displayWarning?: boole
     displayWarning ? theme.deprecated_accentWarningSoft : theme.surface2};
 `
 
-const ButtonContent = () => {
+const ButtonContent = ({ trade }: { trade?: InterfaceTrade }) => {
   const [userSlippageTolerance] = useUserSlippageTolerance()
   const { formatSlippage } = useFormatter()
 
-  if (userSlippageTolerance === SlippageTolerance.Auto) {
+  if (userSlippageTolerance === SlippageTolerance.Auto || isUniswapXTrade(trade)) {
     return (
       <IconContainer>
         <Icon />
@@ -73,10 +75,12 @@ export default function MenuButton({
   disabled,
   onClick,
   isActive,
+  trade,
 }: {
   disabled: boolean
   onClick: () => void
   isActive: boolean
+  trade?: InterfaceTrade
 }) {
   return (
     <Button
@@ -87,7 +91,7 @@ export default function MenuButton({
       data-testid="open-settings-dialog-button"
       aria-label={t`Transaction Settings`}
     >
-      <ButtonContent />
+      <ButtonContent trade={trade} />
     </Button>
   )
 }

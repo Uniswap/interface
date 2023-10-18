@@ -11,6 +11,8 @@ import { act, render, screen } from 'test-utils/render'
 
 import SwapDetailsDropdown from './SwapDetailsDropdown'
 
+jest.mock('../../featureFlags/flags/useFees', () => ({ useFeesEnabled: () => true }))
+
 describe('SwapDetailsDropdown.tsx', () => {
   it('renders a trade', () => {
     const { asFragment } = render(
