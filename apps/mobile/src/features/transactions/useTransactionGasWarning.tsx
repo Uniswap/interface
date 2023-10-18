@@ -59,9 +59,12 @@ export function useTransactionGasWarning({
         : t('Not enough {{ nativeCurrency }} to cover network cost', {
             nativeCurrency: nativeCurrencyBalance.currency.symbol,
           }),
-      message: t('Network fees are paid in the native token. Buy more {{ nativeCurrency }}.', {
-        nativeCurrency: nativeCurrencyBalance.currency.symbol,
-      }),
+      // TODO: No modal for this error state in the swap rewrite until "BUY" button implemented
+      message: isSwapRewriteFeatureEnabled
+        ? undefined
+        : t('Network fees are paid in the native token. Buy more {{ nativeCurrency }}.', {
+            nativeCurrency: nativeCurrencyBalance.currency.symbol,
+          }),
     }
   }, [
     gasFee,
