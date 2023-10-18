@@ -85,7 +85,7 @@ describe('PoolDetailsPage', () => {
     render(<PoolDetails />)
 
     waitFor(() => {
-      expect(screen.getByTestId('pdp-links-loading-skeleton')).not.toBeInTheDocument()
+      expect(screen.getByTestId('pdp-links-loading-skeleton')).toBeInTheDocument()
     })
   })
 

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PoolDetailsHeader loading skeleton is show 1`] = `
+exports[`PoolDetailsHeader loading skeleton is shown 1`] = `
 <DocumentFragment>
   .c5 {
   box-sizing: border-box;

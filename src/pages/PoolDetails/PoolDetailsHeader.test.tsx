@@ -13,7 +13,7 @@ describe('PoolDetailsHeader', () => {
     toggleReversed: jest.fn(),
   }
 
-  it('loading skeleton is show', () => {
+  it('loading skeleton is shown', () => {
     const { asFragment } = render(<PoolDetailsHeader {...mockProps} loading={true} />)
     expect(asFragment()).toMatchSnapshot()
 
