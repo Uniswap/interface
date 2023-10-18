@@ -4,7 +4,11 @@ import { useWeb3React } from '@web3-react/core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain } from 'constants/chains'
+<<<<<<< HEAD
 import { DEFAULT_ERC20_DECIMALS, nativeOnChain } from 'constants/tokens'
+=======
+import { nativeOnChain } from 'constants/tokens'
+>>>>>>> 66499aac10e9595e2737befd83840a17e23bbd9a
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TokenBalance, TokenQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useCrossChainGqlBalances } from 'graphql/data/portfolios'
