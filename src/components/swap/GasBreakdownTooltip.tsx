@@ -43,7 +43,7 @@ export function GasBreakdownTooltip({ trade, hideUniswapXDescription }: GasBreak
   const inputCurrency = trade.inputAmount.currency
   const native = nativeOnChain(inputCurrency.chainId)
 
-  if (isPreviewTrade(trade)) return <NetworkFeesDescription native={native} />
+  if (isPreviewTrade(trade)) return <NetworkCostDescription native={native} />
 
   const swapEstimate = !isUniswapX ? trade.gasUseEstimateUSD : undefined
   const approvalEstimate = trade.approveInfo.needsApprove ? trade.approveInfo.approveGasEstimateUSD : undefined
@@ -51,7 +51,7 @@ export function GasBreakdownTooltip({ trade, hideUniswapXDescription }: GasBreak
   const showEstimateDetails = Boolean(wrapEstimate || approvalEstimate)
 
   const description =
-    isUniswapX && !hideUniswapXDescription ? <UniswapXDescription /> : <NetworkFeesDescription native={native} />
+    isUniswapX && !hideUniswapXDescription ? <UniswapXDescription /> : <NetworkCostDescription native={native} />
 
   if (!showEstimateDetails) return description
 
@@ -69,12 +69,10 @@ export function GasBreakdownTooltip({ trade, hideUniswapXDescription }: GasBreak
   )
 }
 
-function NetworkFeesDescription({ native }: { native: Currency }) {
+function NetworkCostDescription({ native }: { native: Currency }) {
   return (
     <ThemedText.LabelMicro>
-      <Trans>
-        The fee paid to the Ethereum network to process your transaction. This must be paid in {native.symbol}.
-      </Trans>{' '}
+      <Trans>The cost to transact on the Ethereum network. This must be paid in {native.symbol}.</Trans>{' '}
       <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-">
         <Trans>Learn more</Trans>
       </ExternalLink>
