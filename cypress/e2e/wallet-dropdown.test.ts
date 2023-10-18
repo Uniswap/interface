@@ -50,7 +50,7 @@ describe('Wallet Dropdown', () => {
     itChangesTheme()
     itChangesLocale()
 
-    it('should not show buy crypto button in uk', () => {
+    it('should not show buy crypto button when /buy path is blocked', () => {
       cy.document().then((doc) => {
         const meta = document.createElement('meta')
         meta.setAttribute('property', 'x:blocked-paths')
