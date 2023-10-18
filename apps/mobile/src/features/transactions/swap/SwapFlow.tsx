@@ -72,7 +72,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps): JSX.Elemen
     }
   }, [selectingCurrencyField])
 
-  const exactValue = state.isUSDInput ? state.exactAmountUSD : state.exactAmountToken
+  const exactValue = state.isFiatInput ? state.exactAmountFiat : state.exactAmountToken
 
   const otherCurrencyChainId = selectingCurrencyField
     ? currencies[otherCurrencyField(selectingCurrencyField)]?.currency.chainId

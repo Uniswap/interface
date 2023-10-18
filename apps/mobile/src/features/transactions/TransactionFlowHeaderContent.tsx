@@ -4,18 +4,18 @@ import { Keyboard } from 'react-native'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useTokenFormActionHandlers } from 'src/features/transactions/hooks'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import DollarSign from 'ui/src/assets/icons/dollar.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
 import { iconSizes } from 'ui/src/theme'
 import { formatPercent } from 'utilities/src/format/format'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useAppCurrency } from 'wallet/src/utils/currency'
 import { TransactionFlowProps, TransactionStep } from './types'
 
 type HeaderContentProps = Pick<
   TransactionFlowProps,
-  'dispatch' | 'flowName' | 'step' | 'showUSDToggle' | 'isUSDInput'
+  'dispatch' | 'flowName' | 'step' | 'showFiatToggle' | 'isFiatInput'
 > & {
   isSwap: boolean
   customSlippageTolerance: number | undefined
@@ -29,15 +29,16 @@ export function HeaderContent({
   customSlippageTolerance,
   flowName,
   step,
-  showUSDToggle,
-  isUSDInput,
+  showFiatToggle,
+  isFiatInput,
   setShowSettingsModal,
   setShowViewOnlyModal,
 }: HeaderContentProps): JSX.Element {
   const colors = useSporeColors()
   const account = useActiveAccountWithThrow()
   const { t } = useTranslation()
-  const { onToggleUSDInput } = useTokenFormActionHandlers(dispatch)
+  const { onToggleFiatInput } = useTokenFormActionHandlers(dispatch)
+  const currency = useAppCurrency()
 
   const onPressSwapSettings = (): void => {
     setShowSettingsModal(true)
@@ -59,22 +60,20 @@ export function HeaderContent({
         {flowName}
       </Text>
       <Flex row gap="$spacing4">
-        {step === TransactionStep.FORM && showUSDToggle ? (
+        {step === TransactionStep.FORM && showFiatToggle ? (
           <TouchableArea
             hapticFeedback
-            bg={isUSDInput ? '$accent2' : '$surface2'}
+            bg={isFiatInput ? '$accent2' : '$surface2'}
             borderRadius="$rounded16"
             px="$spacing8"
             py="$spacing4"
-            onPress={(): void => onToggleUSDInput(!isUSDInput)}>
+            onPress={(): void => onToggleFiatInput(!isFiatInput)}>
             <Flex row alignItems="center" gap="$spacing4">
-              <DollarSign
-                color={isUSDInput ? colors.accent1.get() : colors.neutral2.get()}
-                height={iconSizes.icon16}
-                width={iconSizes.icon16}
-              />
-              <Text color={isUSDInput ? '$accent1' : '$neutral2'} variant="buttonLabel3">
-                {t('USD')}
+              <Text color={isFiatInput ? '$accent1' : '$neutral2'} variant="buttonLabel3">
+                {currency.symbol}
+              </Text>
+              <Text color={isFiatInput ? '$accent1' : '$neutral2'} variant="buttonLabel3">
+                {currency.code}
               </Text>
             </Flex>
           </TouchableArea>

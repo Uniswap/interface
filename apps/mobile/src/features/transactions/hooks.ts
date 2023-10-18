@@ -195,8 +195,8 @@ export function useTokenFormActionHandlers(dispatch: React.Dispatch<AnyAction>):
   onFocusInput: () => void
   onFocusOutput: () => void
   onSwitchCurrencies: () => void
-  onToggleUSDInput: (isUSDInput: boolean) => void
-  onSetExactAmount: (field: CurrencyField, value: string, isUSDInput?: boolean) => void
+  onToggleFiatInput: (isFiatInput: boolean) => void
+  onSetExactAmount: (field: CurrencyField, value: string, isFiatInput?: boolean) => void
   onSetMax: (amount: string) => void
 } {
   const onUpdateExactTokenAmount = useCallback(
@@ -207,13 +207,13 @@ export function useTokenFormActionHandlers(dispatch: React.Dispatch<AnyAction>):
 
   const onUpdateExactUSDAmount = useCallback(
     (field: CurrencyField, amount: string) =>
-      dispatch(transactionStateActions.updateExactAmountUSD({ field, amount })),
+      dispatch(transactionStateActions.updateExactAmountFiat({ field, amount })),
     [dispatch]
   )
 
   const onSetExactAmount = useCallback(
-    (field: CurrencyField, value: string, isUSDInput?: boolean) => {
-      const updater = isUSDInput ? onUpdateExactUSDAmount : onUpdateExactTokenAmount
+    (field: CurrencyField, value: string, isFiatInput?: boolean) => {
+      const updater = isFiatInput ? onUpdateExactUSDAmount : onUpdateExactTokenAmount
       updater(field, value)
     },
     [onUpdateExactUSDAmount, onUpdateExactTokenAmount]
@@ -223,7 +223,7 @@ export function useTokenFormActionHandlers(dispatch: React.Dispatch<AnyAction>):
     (amount: string) => {
       // when setting max amount, always switch to token mode because
       // our token/usd updater doesnt handle this case yet
-      dispatch(transactionStateActions.toggleUSDInput(false))
+      dispatch(transactionStateActions.toggleFiatInput(false))
       dispatch(
         transactionStateActions.updateExactAmountToken({ field: CurrencyField.INPUT, amount })
       )
@@ -237,8 +237,8 @@ export function useTokenFormActionHandlers(dispatch: React.Dispatch<AnyAction>):
     dispatch(transactionStateActions.switchCurrencySides())
   }, [dispatch])
 
-  const onToggleUSDInput = useCallback(
-    (isUSDInput: boolean) => dispatch(transactionStateActions.toggleUSDInput(isUSDInput)),
+  const onToggleFiatInput = useCallback(
+    (isFiatInput: boolean) => dispatch(transactionStateActions.toggleFiatInput(isFiatInput)),
     [dispatch]
   )
 
@@ -260,7 +260,7 @@ export function useTokenFormActionHandlers(dispatch: React.Dispatch<AnyAction>):
     onFocusInput,
     onFocusOutput,
     onSwitchCurrencies,
-    onToggleUSDInput,
+    onToggleFiatInput,
     onSetExactAmount,
     onSetMax,
   }

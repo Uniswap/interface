@@ -39,7 +39,7 @@ import {
 } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
-import { formatUSDPrice } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -55,6 +55,7 @@ import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useExtractedTokenColor } from 'wallet/src/utils/colors'
+import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
 function HeaderTitleElement({
@@ -80,7 +81,7 @@ function HeaderTitleElement({
       justifyContent="space-between"
       ml={ellipsisMenuVisible ? '$spacing32' : '$none'}>
       <Text color="$neutral1" variant="body1">
-        {formatUSDPrice(price)}
+        {useFiatConversionFormatted(price, NumberType.FiatTokenPrice)}
       </Text>
       <Flex centered row gap="$spacing4">
         <TokenLogo

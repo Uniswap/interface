@@ -6,11 +6,11 @@ import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { borderRadii } from 'ui/src/theme'
-import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
+import { formatNumber, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
+import { getSymbolDisplayText, useFiatConversionFormatted } from 'wallet/src/utils/currency'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 interface TokenBalanceItemProps {
@@ -43,6 +43,10 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   })
 
   const shortenedSymbol = getSymbolDisplayText(currency.symbol)
+  const balance = useFiatConversionFormatted(
+    portfolioBalance.balanceUSD,
+    NumberType.FiatTokenQuantity
+  )
 
   return (
     <ContextMenu
@@ -90,7 +94,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
             ) : (
               <Flex alignItems="flex-end" gap="$spacing4" pl="$spacing8">
                 <Text color="$neutral1" numberOfLines={1} variant="body1">
-                  {formatUSDPrice(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)}
+                  {balance}
                 </Text>
                 <RelativeChange
                   alignRight

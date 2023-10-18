@@ -1,7 +1,12 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { SharedValue } from 'react-native-reanimated'
-import { LineChart, LineChartProvider, TLineChartDataProp } from 'react-native-wagmi-charts'
+import {
+  LineChart,
+  LineChartProvider,
+  TLineChartData,
+  TLineChartDataProp,
+} from 'react-native-wagmi-charts'
 import { Loader } from 'src/components/loading'
 import {
   CHART_HEIGHT,
@@ -14,6 +19,7 @@ import { TimeRangeGroup } from 'src/components/PriceExplorer/TimeRangeGroup'
 import { invokeImpact } from 'src/utils/haptic'
 import { Flex } from 'ui/src'
 import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
+import { useFiatConversion } from 'wallet/src/utils/currency'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { TokenSpotData, useTokenPriceHistory } from './usePriceHistory'
 
@@ -51,10 +57,26 @@ export function PriceExplorer({
 }): JSX.Element {
   const { data, loading, error, refetch, setDuration, selectedDuration } =
     useTokenPriceHistory(currencyId)
+  const conversionRate = useFiatConversion(1).amount
+  const convertedPriceHistory = useMemo(
+    (): TLineChartData | undefined =>
+      data?.priceHistory?.map((point) => {
+        return { ...point, value: point.value * conversionRate }
+      }),
+    [data, conversionRate]
+  )
+  const convertedSpot = useMemo((): TokenSpotData | undefined => {
+    return (
+      data?.spot && {
+        ...data?.spot,
+        value: { value: conversionRate * (data?.spot?.value?.value ?? 0) },
+      }
+    )
+  }, [data, conversionRate])
 
   if (
     !loading &&
-    (!data || !data.priceHistory || (!data.spot && selectedDuration === HistoryDuration.Day))
+    (!convertedPriceHistory || (!convertedSpot && selectedDuration === HistoryDuration.Day))
   ) {
     // Propagate retry up while refetching, if available
     const refetchAndRetry = (): void => {
@@ -67,12 +89,12 @@ export function PriceExplorer({
   let content: JSX.Element | null
   if (forcePlaceholder) {
     content = <PriceExplorerPlaceholder loading={forcePlaceholder} />
-  } else if (data?.priceHistory?.length) {
+  } else if (convertedPriceHistory?.length) {
     content = (
       <PriceExplorerChart
         loading={loading}
-        priceHistory={data.priceHistory}
-        spot={data.spot}
+        priceHistory={convertedPriceHistory}
+        spot={convertedSpot}
         tokenColor={tokenColor}
       />
     )

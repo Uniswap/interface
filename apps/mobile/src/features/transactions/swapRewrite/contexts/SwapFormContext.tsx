@@ -96,9 +96,9 @@ export function SwapFormContextProvider({
     output: swapForm.output ?? null,
     exactCurrencyField: swapForm.exactCurrencyField,
     exactAmountToken: swapForm.exactAmountToken ?? '',
-    exactAmountUSD: swapForm.exactAmountFiat,
+    exactAmountFiat: swapForm.exactAmountFiat,
     focusOnCurrencyField: swapForm.focusOnCurrencyField,
-    isUSDInput: isFiatInput,
+    isFiatInput,
     selectingCurrencyField: swapForm.selectingCurrencyField,
     customSlippageTolerance: swapForm.customSlippageTolerance,
   })

@@ -9,11 +9,12 @@ import { useCancelationGasFeeInfo } from 'src/features/gas/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
-import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
+import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 export function CancelConfirmationView({
   onBack,
@@ -29,10 +30,11 @@ export function CancelConfirmationView({
   const accountAddress = useActiveAccount()?.address
 
   const cancelationGasFeeInfo = useCancelationGasFeeInfo(transactionDetails)
-  const gasFeeUSD = formatUSDPrice(
-    useUSDValue(transactionDetails.chainId, cancelationGasFeeInfo?.cancelationGasFee),
-    NumberType.FiatGasPrice
+  const gasFeeUSD = useUSDValue(
+    transactionDetails.chainId,
+    cancelationGasFeeInfo?.cancelationGasFee
   )
+  const gasFee = useFiatConversionFormatted(gasFeeUSD, NumberType.FiatGasPrice)
 
   const onCancelConfirm = useCallback(() => {
     if (!cancelationGasFeeInfo?.cancelRequest) return
@@ -85,7 +87,7 @@ export function CancelConfirmationView({
         width="100%">
         <Flex grow row justifyContent="space-between" p="$spacing12">
           <Text variant="subheading2">{t('Network cost')}</Text>
-          {!gasFeeUSD ? <ActivityIndicator /> : <Text variant="subheading2">{gasFeeUSD}</Text>}
+          {!gasFeeUSD ? <ActivityIndicator /> : <Text variant="subheading2">{gasFee}</Text>}
         </Flex>
         {accountAddress && (
           <Flex grow row justifyContent="space-between" p="$spacing12">

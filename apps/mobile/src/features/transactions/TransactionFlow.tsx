@@ -65,8 +65,8 @@ export function TransactionFlow({
   dispatch,
   warnings,
   exactValue,
-  isUSDInput,
-  showUSDToggle,
+  isFiatInput,
+  showFiatToggle,
 }: TransactionFlowProps): JSX.Element {
   const colors = useSporeColors()
   const insets = useSafeAreaInsets()
@@ -120,11 +120,11 @@ export function TransactionFlow({
                 customSlippageTolerance={customSlippageTolerance}
                 dispatch={dispatch}
                 flowName={flowName}
+                isFiatInput={isFiatInput}
                 isSwap={isSwap}
-                isUSDInput={isUSDInput}
                 setShowSettingsModal={setShowSettingsModal}
                 setShowViewOnlyModal={setShowViewOnlyModal}
-                showUSDToggle={showUSDToggle}
+                showFiatToggle={showFiatToggle}
                 step={step}
               />
             )}

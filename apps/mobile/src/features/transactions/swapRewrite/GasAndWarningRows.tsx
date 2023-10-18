@@ -7,9 +7,10 @@ import { SwapWarningModal } from 'src/features/transactions/swapRewrite/SwapWarn
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
+import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 export function GasAndWarningRows(): JSX.Element {
   const colors = useSporeColors()
@@ -26,6 +27,7 @@ export function GasAndWarningRows(): JSX.Element {
   const { formScreenWarning } = useParsedSwapWarnings()
 
   const gasFeeUSD = useUSDValue(chainId, gasFee?.value)
+  const gasFeeFormatted = useFiatConversionFormatted(gasFeeUSD, NumberType.FiatGasPrice)
 
   const onSwapWarningClick = useCallback(() => {
     if (!formScreenWarning?.warning.message) {
@@ -66,7 +68,7 @@ export function GasAndWarningRows(): JSX.Element {
           <Flex centered row gap="$spacing4">
             <Icons.Gas color={colors.neutral2.val} size="$icon.20" />
             <Text color="$neutral2" variant="body3">
-              {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
+              {gasFeeFormatted}
             </Text>
           </Flex>
         )}

@@ -11,10 +11,10 @@ export interface TransactionState {
   [CurrencyField.OUTPUT]: TradeableAsset | null
   exactCurrencyField: CurrencyField
   exactAmountToken: string
-  exactAmountUSD?: string
+  exactAmountFiat?: string
   focusOnCurrencyField?: CurrencyField | null
   recipient?: string
-  isUSDInput?: boolean
+  isFiatInput?: boolean
   selectingCurrencyField?: CurrencyField
   showRecipientSelector?: boolean
   customSlippageTolerance?: number

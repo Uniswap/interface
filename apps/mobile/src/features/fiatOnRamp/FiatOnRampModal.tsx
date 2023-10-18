@@ -30,7 +30,7 @@ import { MobileEventProperties } from 'src/features/telemetry/types'
 import { openUri } from 'src/utils/linking'
 import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { dimensions, fonts, iconSizes, spacing } from 'ui/src/theme'
-import { formatUSDPrice } from 'utilities/src/format/format'
+import { formatFiatNumber, NumberType } from 'utilities/src/format/format'
 import { useTimeout } from 'utilities/src/time/timing'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
@@ -320,7 +320,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
       )}
       {showConnectingToMoonpayScreen && (
         <FiatOnRampConnectingView
-          amount={formatUSDPrice(value)}
+          amount={formatFiatNumber(value, NumberType.FiatTokenPrice, 'usd')} // TODO remove hard-coded USD after adding support for more currencies
           quoteCurrencyCode={currency.currencyInfo?.currency.symbol}
         />
       )}

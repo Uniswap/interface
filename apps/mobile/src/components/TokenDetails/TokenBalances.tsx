@@ -11,7 +11,7 @@ import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount, useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
+import { getSymbolDisplayText, useFiatConversionFormatted } from 'wallet/src/utils/currency'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { SendButton } from './SendButton'
 
@@ -105,7 +105,7 @@ export function CurrentChainBalance({
           {isReadonly ? t('{{owner}}’s balance', { owner: displayName }) : t('Your balance')}
         </Text>
         <Text variant="subheading1">
-          {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
+          {useFiatConversionFormatted(balance.balanceUSD, NumberType.FiatTokenDetails)}
         </Text>
         <Text color="$neutral2" variant="body2">
           {formatNumber(balance.quantity, NumberType.TokenNonTx)}{' '}
@@ -139,7 +139,7 @@ function OtherChainBalance({
             />
             <Flex alignItems="flex-start">
               <Text px="$spacing4" variant="body1">
-                {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
+                {useFiatConversionFormatted(balance.balanceUSD, NumberType.FiatTokenDetails)}
               </Text>
               <InlineNetworkPill
                 chainId={balance.currencyInfo.currency.chainId}

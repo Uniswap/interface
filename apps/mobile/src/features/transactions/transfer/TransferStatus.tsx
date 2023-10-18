@@ -29,7 +29,8 @@ const getTextFromTransferStatus = (
   title: string
   description: string
 } => {
-  const { currencyInInfo, nftIn, currencyAmounts, isUSDInput, exactAmountUSD } = derivedTransferInfo
+  const { currencyInInfo, nftIn, currencyAmounts, isFiatInput, exactAmountFiat } =
+    derivedTransferInfo
   if (
     !transactionDetails ||
     transactionDetails.typeInfo.type !== TransactionType.Send ||
@@ -48,12 +49,12 @@ const getTextFromTransferStatus = (
     return {
       title: t('Send successful!'),
       description: t(
-        'You sent {{ currencyAmount }}{{ tokenName }}{{ usdValue }} to {{ recipient }}.',
+        'You sent {{ currencyAmount }}{{ tokenName }}{{ fiatValue }} to {{ recipient }}.',
         {
           currencyAmount: nftIn
             ? ''
             : formatCurrencyAmount(currencyAmounts[CurrencyField.INPUT], NumberType.TokenTx),
-          usdValue: isUSDInput ? ` ($${exactAmountUSD})` : '',
+          fiatValue: isFiatInput ? ` ($${exactAmountFiat})` : '',
           tokenName: nftIn?.name ?? ` ${currencyInInfo?.currency.symbol}` ?? ' tokens',
           recipient,
         }

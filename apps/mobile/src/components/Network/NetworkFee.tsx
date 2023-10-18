@@ -4,10 +4,11 @@ import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
+import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 export function NetworkFee({
   chainId,
@@ -21,6 +22,7 @@ export function NetworkFee({
   const { t } = useTranslation()
 
   const gasFeeUSD = useUSDValue(chainId, gasFee.value ?? undefined)
+  const gasFeeFormatted = useFiatConversionFormatted(gasFeeUSD, NumberType.FiatTokenPrice)
 
   return (
     <Flex row alignItems="center" justifyContent="space-between">
@@ -44,7 +46,7 @@ export function NetworkFee({
               </Text>
             ) : (
               <Text color="$neutral1" variant="body3">
-                {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
+                {gasFeeFormatted}
               </Text>
             )}
           </Flex>

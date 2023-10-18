@@ -14,9 +14,10 @@ import { MaxAmountButton } from 'src/components/input/MaxAmountButton'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
 import { AnimatedFlex, Flex, FlexProps, Text, useSporeColors } from 'ui/src'
 import { fonts, spacing } from 'ui/src/theme'
-import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'utilities/src/format/format'
+import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { useForwardRef } from 'utilities/src/react/hooks'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
+import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 const PADDING_ANIMATION_DURATION = 110
 
@@ -28,7 +29,7 @@ type CurrentInputPanelProps = {
   dimTextColor?: boolean
   focus?: boolean
   isOutput?: boolean
-  isUSDInput?: boolean
+  isFiatInput?: boolean
   onPressIn?: () => void
   onSelectionChange?: (start: number, end: number) => void
   onSetExactAmount: (amount: string) => void
@@ -60,7 +61,7 @@ export const CurrencyInputPanel = memo(
       dimTextColor,
       focus,
       isOutput = false,
-      isUSDInput = false,
+      isFiatInput = false,
       onPressIn,
       onSelectionChange: selectionChange,
       onSetExactAmount,
@@ -83,9 +84,10 @@ export const CurrencyInputPanel = memo(
     const showInsufficientBalanceWarning =
       !isOutput && !!currencyBalance && !!currencyAmount && currencyBalance.lessThan(currencyAmount)
 
-    const formattedUSDValue = usdValue
-      ? formatNumberOrString(usdValue?.toExact(), NumberType.FiatTokenQuantity)
-      : ''
+    const formattedFiatValue = useFiatConversionFormatted(
+      usdValue?.toExact(),
+      NumberType.FiatTokenQuantity
+    )
     const formattedCurrencyAmount = currencyAmount
       ? formatCurrencyAmount(currencyAmount, NumberType.TokenTx)
       : ''
@@ -179,7 +181,7 @@ export const CurrencyInputPanel = memo(
               px="$none"
               py="$none"
               returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
-              showCurrencySign={isUSDInput}
+              showCurrencySign={isFiatInput}
               showSoftInputOnFocus={showSoftInputOnFocus}
               testID={isOutput ? 'amount-input-out' : 'amount-input-in'}
               value={value}
@@ -201,7 +203,7 @@ export const CurrencyInputPanel = memo(
           <Flex row alignItems="center" gap="$spacing8" justifyContent="space-between">
             <Flex shrink>
               <Text color="$neutral2" numberOfLines={1} variant="body3">
-                {!isUSDInput ? formattedUSDValue : formattedCurrencyAmount}
+                {!isFiatInput ? (usdValue ? formattedFiatValue : '') : formattedCurrencyAmount}
               </Text>
             </Flex>
             <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">

@@ -12,7 +12,7 @@ export type BaseDerivedInfo<TInput = CurrencyInfo> = {
   currencyBalances: {
     [CurrencyField.INPUT]: Maybe<CurrencyAmount<Currency>>
   }
-  exactAmountUSD?: string
+  exactAmountFiat?: string
   exactAmountToken: string
   exactCurrencyField: CurrencyField
 }

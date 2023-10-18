@@ -1,11 +1,12 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { LongText } from 'src/components/text/LongText'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import StatsIcon from 'ui/src/assets/icons/chart-bar.svg'
 import { iconSizes } from 'ui/src/theme'
-import { formatNumber, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 function StatsRow({
   label,
@@ -51,31 +52,27 @@ export function TokenDetailsMarketData({
 }): JSX.Element {
   const { t } = useTranslation()
 
-  // Utility component to render formatted values
-  const FormattedValue = useCallback(
-    ({ value, numberType }: { value?: number; numberType: NumberType }) => {
-      return (
-        <Text loading={isLoading} variant="body2">
-          {formatNumber(value, numberType)}
-        </Text>
-      )
-    },
-    [isLoading]
-  )
-
   return (
     <Flex gap="$spacing8">
       <StatsRow label={t('24h Uniswap volume')} tokenColor={tokenColor}>
-        <FormattedValue numberType={NumberType.FiatTokenStats} value={volume} />
+        <Text loading={isLoading} variant="body2">
+          {useFiatConversionFormatted(volume, NumberType.FiatTokenStats)}
+        </Text>
       </StatsRow>
       <StatsRow label={t('Market cap')} tokenColor={tokenColor}>
-        <FormattedValue numberType={NumberType.FiatTokenStats} value={marketCap} />
+        <Text loading={isLoading} variant="body2">
+          {useFiatConversionFormatted(marketCap, NumberType.FiatTokenStats)}
+        </Text>
       </StatsRow>
       <StatsRow label={t('52W high')} tokenColor={tokenColor}>
-        <FormattedValue numberType={NumberType.FiatTokenDetails} value={priceHight52W} />
+        <Text loading={isLoading} variant="body2">
+          {useFiatConversionFormatted(priceHight52W, NumberType.FiatTokenDetails)}
+        </Text>
       </StatsRow>
       <StatsRow label={t('52W low')} tokenColor={tokenColor}>
-        <FormattedValue numberType={NumberType.FiatTokenDetails} value={priceLow52W} />
+        <Text loading={isLoading} variant="body2">
+          {useFiatConversionFormatted(priceLow52W, NumberType.FiatTokenDetails)}
+        </Text>
       </StatsRow>
     </Flex>
   )

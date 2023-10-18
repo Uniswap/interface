@@ -18,6 +18,7 @@ import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useAppCurrency } from 'wallet/src/utils/currency'
 import { currencyAddress } from 'wallet/src/utils/currencyId'
 
 interface TransferFormProps {
@@ -41,6 +42,7 @@ export function TransferReview({
   const account = useActiveAccountWithThrow()
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [showNetworkFeeInfoModal, setShowNetworkFeeInfoModal] = useState(false)
+  const currency = useAppCurrency()
 
   const onShowWarning = (): void => {
     setShowWarningModal(true)
@@ -61,12 +63,12 @@ export function TransferReview({
   const {
     currencyAmounts,
     recipient,
-    isUSDInput = false,
+    isFiatInput = false,
     currencyInInfo,
     nftIn,
     chainId,
     txId,
-    exactAmountUSD,
+    exactAmountFiat,
   } = derivedTransferInfo
 
   const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
@@ -124,8 +126,8 @@ export function TransferReview({
     currencyAmounts[CurrencyField.INPUT],
     NumberType.TokenTx
   )
-  const formattedAmountIn = isUSDInput
-    ? formatNumberOrString(exactAmountUSD, NumberType.FiatTokenQuantity)
+  const formattedAmountIn = isFiatInput
+    ? formatNumberOrString(exactAmountFiat, NumberType.FiatTokenQuantity, currency.code)
     : formattedCurrencyAmount
 
   return (
@@ -149,7 +151,7 @@ export function TransferReview({
         currencyInInfo={currencyInInfo}
         formattedAmountIn={formattedAmountIn}
         inputCurrencyUSDValue={inputCurrencyUSDValue}
-        isUSDInput={isUSDInput}
+        isFiatInput={isFiatInput}
         nftIn={nftIn}
         recipient={recipient}
         transactionDetails={

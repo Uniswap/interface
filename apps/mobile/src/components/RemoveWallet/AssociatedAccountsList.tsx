@@ -3,12 +3,13 @@ import { ScrollView, StyleSheet } from 'react-native'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Flex, Text } from 'ui/src'
 import { dimensions, spacing } from 'ui/src/theme'
-import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import {
   AccountListQuery,
   useAccountListQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 const ADDRESS_ROW_HEIGHT = 40
 
@@ -48,22 +49,13 @@ function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Ele
       width="100%">
       <ScrollView bounces={false} contentContainerStyle={styles.accounts}>
         {sortedAddressesByBalance.map(({ address, balance }, index) => (
-          <Flex
-            key={address}
-            row
-            alignItems="center"
-            justifyContent="space-between"
-            pb={index !== accounts.length - 1 ? '$spacing16' : undefined}>
-            <AddressDisplay
-              hideAddressInSubtitle
-              address={address}
-              size={24}
-              variant="subheading2"
-            />
-            <Text color="$neutral2" loading={loading} numberOfLines={1} variant="body3">
-              {formatUSDPrice(balance, NumberType.PortfolioBalance)}
-            </Text>
-          </Flex>
+          <AssociatedAccountRow
+            address={address}
+            balance={balance}
+            index={index}
+            loading={loading}
+            totalCount={accounts.length}
+          />
         ))}
       </ScrollView>
     </Flex>
@@ -71,6 +63,36 @@ function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Ele
 }
 
 export const AssociatedAccountsList = React.memo(_AssociatedAccountsList)
+
+function AssociatedAccountRow({
+  index,
+  address,
+  balance,
+  totalCount,
+  loading,
+}: {
+  index: number
+  address: string
+  balance: number | undefined
+  totalCount: number
+  loading: boolean
+}): JSX.Element {
+  const balanceFormatted = useFiatConversionFormatted(balance, NumberType.PortfolioBalance)
+
+  return (
+    <Flex
+      key={address}
+      row
+      alignItems="center"
+      justifyContent="space-between"
+      pb={index !== totalCount - 1 ? '$spacing16' : undefined}>
+      <AddressDisplay hideAddressInSubtitle address={address} size={24} variant="subheading2" />
+      <Text color="$neutral2" loading={loading} numberOfLines={1} variant="body3">
+        {balanceFormatted}
+      </Text>
+    </Flex>
+  )
+}
 
 const styles = StyleSheet.create({
   accounts: {

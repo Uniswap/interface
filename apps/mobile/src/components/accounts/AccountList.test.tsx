@@ -5,7 +5,7 @@ import { AccountList } from 'src/components/accounts/AccountList'
 import { ON_PRESS_EVENT_PAYLOAD } from 'src/test/eventFixtures'
 import { Portfolios } from 'src/test/gqlFixtures'
 import { render, screen } from 'src/test/test-utils'
-import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
+import { formatFiatNumber, NumberType } from 'utilities/src/format/format'
 import {
   AccountListDocument,
   AccountListQuery,
@@ -34,9 +34,10 @@ describe(AccountList, () => {
 
     expect(
       await screen.findByText(
-        formatUSDPrice(
+        formatFiatNumber(
           Portfolios[0].tokensTotalDenominatedValue?.value,
-          NumberType.PortfolioBalance
+          NumberType.PortfolioBalance,
+          'usd'
         )
       )
     ).toBeDefined()
@@ -51,9 +52,10 @@ describe(AccountList, () => {
     // go to success state
     expect(
       await screen.findByText(
-        formatUSDPrice(
+        formatFiatNumber(
           Portfolios[0].tokensTotalDenominatedValue?.value,
-          NumberType.PortfolioBalance
+          NumberType.PortfolioBalance,
+          'usd'
         )
       )
     ).toBeDefined()

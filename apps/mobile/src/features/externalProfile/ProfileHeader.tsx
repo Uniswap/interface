@@ -62,7 +62,7 @@ export const ProfileHeader = memo(function ProfileHeader({
     return {
       recipient: address,
       exactAmountToken: '',
-      exactAmountUSD: '',
+      exactAmountFiat: '',
       exactCurrencyField: CurrencyField.INPUT,
       [CurrencyField.INPUT]: null,
       [CurrencyField.OUTPUT]: null,

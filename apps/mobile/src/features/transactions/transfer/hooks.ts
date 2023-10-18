@@ -32,9 +32,9 @@ export type DerivedTransferInfo = BaseDerivedInfo<CurrencyInfo | GQLNftAsset> & 
   currencyTypes: { [CurrencyField.INPUT]?: AssetType }
   currencyInInfo?: CurrencyInfo | null
   chainId: ChainId
-  exactAmountUSD: string
+  exactAmountFiat: string
   exactCurrencyField: CurrencyField.INPUT
-  isUSDInput?: boolean
+  isFiatInput?: boolean
   nftIn: GQLNftAsset | undefined
   recipient?: string
   txId?: string
@@ -44,9 +44,9 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
   const {
     [CurrencyField.INPUT]: tradeableAsset,
     exactAmountToken,
-    exactAmountUSD,
+    exactAmountFiat,
     recipient,
-    isUSDInput,
+    isFiatInput,
     txId,
   } = state
 
@@ -116,9 +116,9 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
       currencyTypes: { [CurrencyField.INPUT]: tradeableAsset?.type },
       currencyInInfo,
       exactAmountToken,
-      exactAmountUSD: exactAmountUSD ?? '',
+      exactAmountFiat: exactAmountFiat ?? '',
       exactCurrencyField: CurrencyField.INPUT,
-      isUSDInput,
+      isFiatInput,
       nftIn: nftIn ?? undefined,
       recipient,
       txId,
@@ -130,8 +130,8 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
       currencyBalances,
       currencyInInfo,
       exactAmountToken,
-      exactAmountUSD,
-      isUSDInput,
+      exactAmountFiat,
+      isFiatInput,
       nftIn,
       recipient,
       tradeableAsset?.type,

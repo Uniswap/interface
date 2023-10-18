@@ -1,6 +1,6 @@
 import React, { createElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import { formatFiatPrice, formatNumber } from 'utilities/src/format/format'
+import { formatFiatNumber, formatNumber, NumberType } from 'utilities/src/format/format'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'wallet/src/entities/assets'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
@@ -33,9 +33,10 @@ export function FiatPurchaseSummaryItem({
       : undefined
   )
 
-  const fiatPurchaseAmount = formatFiatPrice(
+  const fiatPurchaseAmount = formatFiatNumber(
     inputCurrencyAmount && inputCurrencyAmount > 0 ? inputCurrencyAmount : undefined,
-    inputCurrency?.code
+    NumberType.FiatTokenPrice,
+    inputCurrency?.code ?? 'usd'
   )
 
   const symbol = getSymbolDisplayText(outputCurrencyInfo?.currency.symbol) ?? t('unknown token')

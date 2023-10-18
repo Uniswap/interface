@@ -12,7 +12,7 @@ import { SectionName } from 'src/features/telemetry/constants'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { AnimatedTouchableArea, Flex, Text } from 'ui/src'
 import { borderRadii, imageSizes } from 'ui/src/theme'
-import { formatUSDPrice } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
@@ -23,7 +23,7 @@ import { useFavoriteTokenCardQuery } from 'wallet/src/data/__generated__/types-a
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { removeFavoriteToken } from 'wallet/src/features/favorites/slice'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
+import { getSymbolDisplayText, useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 114
 
@@ -56,7 +56,10 @@ function FavoriteTokenCard({
   // Mirror behavior in top tokens list, use first chain the token is on for the symbol
   const chainId = fromGraphQLChain(token?.chain) ?? ChainId.Mainnet
 
-  const usdPrice = token?.project?.markets?.[0]?.price?.value
+  const price = useFiatConversionFormatted(
+    token?.project?.markets?.[0]?.price?.value,
+    NumberType.FiatTokenPrice
+  )
   const pricePercentChange = token?.project?.markets?.[0]?.pricePercentChange24h?.value
 
   const onRemove = useCallback(() => {
@@ -122,7 +125,7 @@ function FavoriteTokenCard({
             </Flex>
             <Flex gap="$spacing2">
               <Text adjustsFontSizeToFit numberOfLines={1} variant="heading3">
-                {formatUSDPrice(usdPrice)}
+                {price}
               </Text>
               <RelativeChange
                 arrowSize="$icon.16"

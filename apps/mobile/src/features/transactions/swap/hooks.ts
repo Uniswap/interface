@@ -31,8 +31,8 @@ import {
   WrapType,
 } from 'src/features/transactions/swap/wrapSaga'
 import {
+  updateExactAmountFiat,
   updateExactAmountToken,
-  updateExactAmountUSD,
 } from 'src/features/transactions/transactionState/transactionState'
 import { toStringish } from 'src/utils/number'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
@@ -77,18 +77,20 @@ import {
   useActiveAccount,
   useActiveAccountAddressWithThrow,
 } from 'wallet/src/features/wallet/hooks'
+import { useFiatConversion } from 'wallet/src/utils/currency'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 import { DerivedSwapInfo } from './types'
 
-const NUM_USD_DECIMALS_DISPLAY = 2
+const NUM_DECIMALS_USD = 2
+const NUM_DECIMALS_DISPLAY = 2
 
 /** Returns information derived from the current swap state */
 export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   const {
     [CurrencyField.INPUT]: currencyAssetIn,
     [CurrencyField.OUTPUT]: currencyAssetOut,
-    exactAmountUSD,
+    exactAmountFiat,
     exactAmountToken,
     exactCurrencyField,
     focusOnCurrencyField = CurrencyField.INPUT,
@@ -212,7 +214,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       currencyAmountsUSDValue,
       currencyBalances,
       exactAmountToken,
-      exactAmountUSD,
+      exactAmountFiat,
       exactCurrencyField,
       focusOnCurrencyField,
       trade,
@@ -229,7 +231,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     currencyBalances,
     currencyAmountsUSDValue,
     exactAmountToken,
-    exactAmountUSD,
+    exactAmountFiat,
     exactCurrencyField,
     focusOnCurrencyField,
     selectingCurrencyField,
@@ -243,20 +245,23 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
 
 export function useUSDTokenUpdater(
   dispatch: React.Dispatch<AnyAction>,
-  isUSDInput: boolean,
+  isFiatInput: boolean,
   exactAmountToken: string,
-  exactAmountUSD: string,
+  exactAmountFiat: string,
   exactCurrency?: Currency
 ): void {
   const price = useUSDCPrice(exactCurrency)
-  const shouldUseUSDRef = useRef(isUSDInput)
+  const shouldUseUSDRef = useRef(isFiatInput)
+  const conversionRate = useFiatConversion(1).amount
 
   useEffect(() => {
-    shouldUseUSDRef.current = isUSDInput
-  }, [isUSDInput])
+    shouldUseUSDRef.current = isFiatInput
+  }, [isFiatInput])
 
   useEffect(() => {
     if (!exactCurrency || !price) return
+
+    const exactAmountUSD = (parseFloat(exactAmountFiat) / conversionRate).toFixed(NUM_DECIMALS_USD)
 
     if (shouldUseUSDRef.current) {
       const stablecoinAmount = getCurrencyAmount({
@@ -280,10 +285,20 @@ export function useUSDTokenUpdater(
       currency: exactCurrency,
     })
     const usdPrice = exactCurrencyAmount ? price?.quote(exactCurrencyAmount) : undefined
+    const fiatPrice = parseFloat(usdPrice?.toExact() ?? '0') * conversionRate
+
     return dispatch(
-      updateExactAmountUSD({ amount: usdPrice?.toFixed(NUM_USD_DECIMALS_DISPLAY) || '' })
+      updateExactAmountFiat({ amount: fiatPrice ? fiatPrice.toFixed(NUM_DECIMALS_DISPLAY) : '0' })
     )
-  }, [dispatch, shouldUseUSDRef, exactAmountUSD, exactAmountToken, exactCurrency, price])
+  }, [
+    dispatch,
+    shouldUseUSDRef,
+    exactAmountFiat,
+    exactAmountToken,
+    exactCurrency,
+    price,
+    conversionRate,
+  ])
 }
 
 export enum ApprovalAction {

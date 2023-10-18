@@ -26,6 +26,6 @@ export interface TransactionFlowProps {
   setStep: (newStep: TransactionStep) => void
   warnings: Warning[]
   exactValue: string
-  isUSDInput?: boolean
-  showUSDToggle?: boolean
+  isFiatInput?: boolean
+  showFiatToggle?: boolean
 }

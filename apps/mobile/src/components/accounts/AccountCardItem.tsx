@@ -11,9 +11,10 @@ import { Screens } from 'src/screens/Screens'
 import { setClipboard } from 'src/utils/clipboard'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
+import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 type AccountCardItemProps = {
   address: Address
@@ -38,7 +39,7 @@ function PortfolioValue({
       loading={isLoading}
       loadingPlaceholderText="$000.00"
       variant="subheading2">
-      {formatUSDPrice(portfolioValue, NumberType.PortfolioBalance)}
+      {useFiatConversionFormatted(portfolioValue, NumberType.PortfolioBalance)}
     </Text>
   )
 }

@@ -33,11 +33,12 @@ import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors 
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { formatCurrencyAmount, formatPrice, NumberType } from 'utilities/src/format/format'
+import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
+import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 import { DerivedSwapInfo } from './types'
 
 interface SwapFormProps {
@@ -149,6 +150,10 @@ function _SwapForm({
   const [showInverseRate, setShowInverseRate] = useState(false)
   const price = trade.trade?.executionPrice
   const rateUnitPrice = useUSDCPrice(showInverseRate ? price?.quoteCurrency : price?.baseCurrency)
+  const rateUnitPriceFormatted = useFiatConversionFormatted(
+    rateUnitPrice?.toSignificant(),
+    NumberType.FiatTokenPrice
+  )
   const showRate = !swapWarning && (trade.trade || swapDataRefreshing)
 
   const derivedCurrencyField =
@@ -370,8 +375,7 @@ function _SwapForm({
                       </Text>
                       {isPriceImpactWarning(swapWarning) && (
                         <Text color="$neutral2" variant="body2">
-                          {rateUnitPrice &&
-                            ` (${formatPrice(rateUnitPrice, NumberType.FiatTokenPrice)})`}
+                          {rateUnitPrice && ` (${rateUnitPriceFormatted})`}
                         </Text>
                       )}
                     </Flex>
@@ -427,8 +431,7 @@ function _SwapForm({
                       <Text
                         color={swapDataRefreshing ? '$neutral3' : '$neutral2'}
                         variant="subheading2">
-                        {rateUnitPrice &&
-                          ` (${formatPrice(rateUnitPrice, NumberType.FiatTokenPrice)})`}
+                        {rateUnitPrice && ` (${rateUnitPriceFormatted})`}
                       </Text>
                     </Flex>
                   </Flex>

@@ -11,8 +11,8 @@ import {
   selectCurrency,
   switchCurrencySides,
   transactionStateReducer,
+  updateExactAmountFiat,
   updateExactAmountToken,
-  updateExactAmountUSD,
 } from './transactionState'
 
 const chainId = ChainId.Goerli
@@ -29,7 +29,7 @@ const testInitialState: Readonly<TransactionState> = {
   [CurrencyField.OUTPUT]: null,
   exactCurrencyField: CurrencyField.INPUT,
   exactAmountToken: '',
-  exactAmountUSD: '',
+  exactAmountFiat: '',
 }
 
 test('should return the initial state', () => {
@@ -160,7 +160,7 @@ describe(switchCurrencySides, () => {
       focusOnCurrencyField: CurrencyField.OUTPUT,
       [CurrencyField.INPUT]: ethTradeableAsset,
       [CurrencyField.OUTPUT]: daiTradeableAsset,
-      exactAmountUSD: '',
+      exactAmountFiat: '',
       exactAmountToken: '',
     })
   })
@@ -188,12 +188,12 @@ describe(updateExactAmountToken, () => {
     expect(
       transactionStateReducer(
         previousState,
-        updateExactAmountUSD({ field: CurrencyField.INPUT, amount: '1' })
+        updateExactAmountFiat({ field: CurrencyField.INPUT, amount: '1' })
       )
     ).toEqual({
       ...previousState,
       exactCurrencyField: CurrencyField.INPUT,
-      exactAmountUSD: '1',
+      exactAmountFiat: '1',
     })
   })
 

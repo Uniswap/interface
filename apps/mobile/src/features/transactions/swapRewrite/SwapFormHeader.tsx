@@ -8,19 +8,20 @@ import {
   useSwapScreenContext,
 } from 'src/features/transactions/swapRewrite/contexts/SwapScreenContext'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import DollarSign from 'ui/src/assets/icons/dollar.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
 import { iconSizes } from 'ui/src/theme'
 import { formatPercent } from 'utilities/src/format/format'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useAppCurrency } from 'wallet/src/utils/currency'
 import { useSwapFormContext } from './contexts/SwapFormContext'
 
 export function SwapFormHeader(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const account = useActiveAccountWithThrow()
+  const currency = useAppCurrency()
 
   const { screen } = useSwapScreenContext()
 
@@ -80,13 +81,11 @@ export function SwapFormHeader(): JSX.Element {
               borderRadius="$rounded16"
               onPress={(): void => onToggleFiatInput()}>
               <Flex row alignItems="center" flex={1} gap="$spacing4" px="$spacing8" py="$spacing4">
-                <DollarSign
-                  color={isFiatInput ? colors.accent1.get() : colors.neutral2.get()}
-                  height={iconSizes.icon16}
-                  width={iconSizes.icon16}
-                />
                 <Text color={isFiatInput ? '$accent1' : '$neutral2'} variant="buttonLabel3">
-                  {t('USD')}
+                  {currency.symbol}
+                </Text>
+                <Text color={isFiatInput ? '$accent1' : '$neutral2'} variant="buttonLabel3">
+                  {currency.code}
                 </Text>
               </Flex>
             </TouchableArea>

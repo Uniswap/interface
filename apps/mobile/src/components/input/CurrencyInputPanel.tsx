@@ -14,8 +14,9 @@ import { Warning, WarningLabel } from 'src/components/modals/WarningModal/types'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
 import { Flex, FlexProps, SpaceTokens, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
-import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'utilities/src/format/format'
+import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
+import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 type CurrentInputPanelProps = {
   currencyInfo: Maybe<CurrencyInfo>
@@ -29,7 +30,7 @@ type CurrentInputPanelProps = {
   autoFocus?: boolean
   focus?: boolean
   isOutput?: boolean
-  isUSDInput?: boolean
+  isFiatInput?: boolean
   onSetMax?: (amount: string) => void
   onPressIn?: () => void
   warnings: Warning[]
@@ -101,7 +102,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
     focus,
     autoFocus,
     isOutput = false,
-    isUSDInput = false,
+    isFiatInput = false,
     onPressIn,
     warnings,
     dimTextColor,
@@ -120,9 +121,10 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
 
   const showInsufficientBalanceWarning = insufficientBalanceWarning && !isOutput
 
-  const formattedUSDValue = usdValue
-    ? formatNumberOrString(usdValue?.toExact(), NumberType.FiatTokenQuantity)
-    : ''
+  const formattedFiatValue = useFiatConversionFormatted(
+    usdValue?.toExact(),
+    NumberType.FiatTokenQuantity
+  )
   const formattedCurrencyAmount = currencyAmount
     ? formatCurrencyAmount(currencyAmount, NumberType.TokenTx)
     : ''
@@ -230,7 +232,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
               px="$none"
               py="$none"
               returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
-              showCurrencySign={isUSDInput}
+              showCurrencySign={isFiatInput}
               showSoftInputOnFocus={showSoftInputOnFocus}
               testID={isOutput ? 'amount-input-out' : 'amount-input-in'}
               value={value}
@@ -253,7 +255,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
         <Flex row alignItems="center" gap="$spacing8" justifyContent="space-between" mb="$spacing4">
           <Flex shrink>
             <Text color="$neutral2" numberOfLines={1} variant="subheading2">
-              {!isUSDInput ? formattedUSDValue : formattedCurrencyAmount}
+              {!isFiatInput ? (usdValue ? formattedFiatValue : '') : formattedCurrencyAmount}
             </Text>
           </Flex>
           <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">

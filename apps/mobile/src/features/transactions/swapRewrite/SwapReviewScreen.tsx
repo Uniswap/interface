@@ -38,6 +38,7 @@ import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'utilitie
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 // eslint-disable-next-line complexity
 export function SwapReviewScreen(): JSX.Element | null {
@@ -131,6 +132,42 @@ export function SwapReviewScreen(): JSX.Element | null {
 
   const { trigger: submitWithBiometrix } = useBiometricPrompt(submitTransaction)
   const { requiredForTransactions: requiresBiometrics } = useBiometricAppSettings()
+
+  const derivedCurrencyField =
+    exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
+
+  const derivedAmount = formatCurrencyAmount(
+    acceptedDerivedSwapInfo?.currencyAmounts[derivedCurrencyField],
+    NumberType.TokenTx
+  )
+
+  // const exactValue = isFiatInput ? exactAmountFiat : exactAmountToken
+  // const formattedExactValue = formatNumberOrString(exactValue, NumberType.TokenTx)
+  const formattedExactAmountToken = formatNumberOrString(exactAmountToken, NumberType.TokenTx)
+
+  const [formattedTokenAmountIn, formattedTokenAmountOut] =
+    exactCurrencyField === CurrencyField.INPUT
+      ? [formattedExactAmountToken, derivedAmount]
+      : [derivedAmount, formattedExactAmountToken]
+
+  const usdAmountIn =
+    exactCurrencyField === CurrencyField.INPUT
+      ? currencyAmountsUSDValue[CurrencyField.INPUT]?.toExact()
+      : acceptedDerivedSwapInfo?.currencyAmountsUSDValue[CurrencyField.INPUT]?.toExact()
+
+  const usdAmountOut =
+    exactCurrencyField === CurrencyField.OUTPUT
+      ? currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact()
+      : acceptedDerivedSwapInfo?.currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact()
+
+  const formattedFiatAmountIn = useFiatConversionFormatted(
+    usdAmountIn,
+    NumberType.FiatTokenQuantity
+  )
+  const formattedFiatAmountOut = useFiatConversionFormatted(
+    usdAmountOut,
+    NumberType.FiatTokenQuantity
+  )
 
   const onSubmitTransaction = useCallback(async () => {
     await notificationAsync()
@@ -239,34 +276,6 @@ export function SwapReviewScreen(): JSX.Element | null {
     // This should never happen. It's just to keep TS happy.
     throw new Error('Missing required props in `derivedSwapInfo` to render `SwapReview` screen.')
   }
-
-  const derivedCurrencyField =
-    exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
-
-  const derivedAmount = formatCurrencyAmount(
-    acceptedDerivedSwapInfo.currencyAmounts[derivedCurrencyField],
-    NumberType.TokenTx
-  )
-
-  const formattedExactAmountToken = formatNumberOrString(exactAmountToken, NumberType.TokenTx)
-
-  const [formattedTokenAmountIn, formattedTokenAmountOut] =
-    exactCurrencyField === CurrencyField.INPUT
-      ? [formattedExactAmountToken, derivedAmount]
-      : [derivedAmount, formattedExactAmountToken]
-
-  const formattedFiatAmountIn = formatNumberOrString(
-    exactCurrencyField === CurrencyField.INPUT
-      ? currencyAmountsUSDValue[CurrencyField.INPUT]?.toExact()
-      : acceptedDerivedSwapInfo.currencyAmountsUSDValue[CurrencyField.INPUT]?.toExact(),
-    NumberType.FiatTokenQuantity
-  )
-  const formattedFiatAmountOut = formatNumberOrString(
-    exactCurrencyField === CurrencyField.OUTPUT
-      ? currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact()
-      : acceptedDerivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact(),
-    NumberType.FiatTokenQuantity
-  )
 
   return (
     <>

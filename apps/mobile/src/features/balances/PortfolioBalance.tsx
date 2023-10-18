@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import AnimatedNumber from 'src/components/AnimatedNumber'
 import { Flex } from 'ui/src'
-import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
 import { usePortfolioBalancesQuery } from 'wallet/src/data/__generated__/types-and-hooks'
-import { useFiatCurrencyConversion } from 'wallet/src/utils/currency'
+import { useFiatConversion, useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 interface PortfolioBalanceProps {
   owner: Address
@@ -39,10 +39,11 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
   const portfolioBalance = data?.portfolios?.[0]
   const portfolioChange = portfolioBalance?.tokensTotalDenominatedValueChange
 
-  const { amount: totalBalance } = useFiatCurrencyConversion(
-    portfolioBalance?.tokensTotalDenominatedValue?.value
+  const totalBalance = useFiatConversionFormatted(
+    portfolioBalance?.tokensTotalDenominatedValue?.value,
+    NumberType.PortfolioBalance
   )
-  const { amount: absoluteChange } = useFiatCurrencyConversion(portfolioChange?.absolute?.value)
+  const { amount: absoluteChange } = useFiatConversion(portfolioChange?.absolute?.value)
 
   return (
     <Flex gap="$spacing4">
@@ -50,7 +51,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
         colorIndicationDuration={2000}
         loading={isWarmLoading || isLoading}
         loadingPlaceholderText="$00000.00"
-        value={formatUSDPrice(totalBalance, NumberType.PortfolioBalance)}
+        value={totalBalance}
       />
       <RelativeChange
         absoluteChange={absoluteChange}

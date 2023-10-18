@@ -43,7 +43,7 @@ export function SwapFlow({
       prefilledState
         ? {
             customSlippageTolerance: prefilledState.customSlippageTolerance,
-            exactAmountFiat: prefilledState.exactAmountUSD,
+            exactAmountFiat: prefilledState.exactAmountFiat,
             exactAmountToken: prefilledState.exactAmountToken,
             exactCurrencyField: prefilledState.exactCurrencyField,
             focusOnCurrencyField: getFocusOnCurrencyField(prefilledState),

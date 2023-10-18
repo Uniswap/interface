@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { formatCurrencyAmount } from 'utilities/src/format/format'
+import { FiatNumberType, formatCurrencyAmount, formatFiatNumber } from 'utilities/src/format/format'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   Currency as ServerCurrency,
@@ -79,7 +79,7 @@ export type SupportedCurrency = Extract<
 
 const SOURCE_CURRENCY = ServerCurrency.Usd // Assuming that all incoming values in the app are in USD
 
-export function useFiatCurrencyConversion(
+export function useFiatConversion(
   fromAmount = 0,
   toCurrency: SupportedCurrency = ServerCurrency.Eur // TODO gary placeholder until in app currency selection
 ): { amount: number; currency: ServerCurrency } {
@@ -101,4 +101,45 @@ export function useFiatCurrencyConversion(
   }
 
   return { amount: fromAmount * conversionRate, currency: conversionCurrency }
+}
+
+export function useFiatConversionFormatted(
+  fromAmount: Maybe<number | string>,
+  numberType: FiatNumberType,
+  toCurrency: SupportedCurrency = ServerCurrency.Eur // TODO gary placeholder until in app currency selection
+): string {
+  let amountNumber = typeof fromAmount === 'string' ? parseFloat(fromAmount) : fromAmount ?? 0
+  if (isNaN(amountNumber)) {
+    amountNumber = 0
+  }
+  const conversion = useFiatConversion(amountNumber, toCurrency)
+
+  if (fromAmount == null || fromAmount === undefined) {
+    return '-'
+  }
+
+  return formatFiatNumber(conversion.amount, numberType, conversion.currency.toString())
+}
+
+export function useAppCurrency(): { symbol: string; code: string } {
+  const featureEnabled = useFeatureFlag(FEATURE_FLAGS.CurrencyConversion)
+  if (!featureEnabled) {
+    return { symbol: '$', code: 'USD' }
+  }
+
+  // TODO gary placeholder replace with real locale and currency
+  const symbol = (0)
+    .toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'eur',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    })
+    .replace(/\d/g, '')
+    .trim()
+
+  return {
+    symbol,
+    code: 'EUR', // May not be translated because ISO codes are only available in English
+  }
 }

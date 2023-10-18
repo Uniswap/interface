@@ -8,11 +8,12 @@ import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, SectionName } from 'src/features/telemetry/constants'
 import { AnimatedFlex, Flex, Text, TouchableArea } from 'ui/src'
-import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { ChainId } from 'wallet/src/constants/chains'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
+import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 import {
   buildCurrencyId,
   buildNativeCurrencyId,
@@ -60,16 +61,22 @@ export const TokenItem = memo(function _TokenItem({
     totalValueLocked,
   } = tokenItemData
   const _currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
+  const marketCapFormatted = useFiatConversionFormatted(marketCap, NumberType.FiatTokenDetails)
+  const volume24hFormatted = useFiatConversionFormatted(volume24h, NumberType.FiatTokenDetails)
+  const totalValueLockedFormatted = useFiatConversionFormatted(
+    totalValueLocked,
+    NumberType.FiatTokenDetails
+  )
 
   const getMetadataSubtitle = (): string | undefined => {
     switch (metadataDisplayType) {
       case TokenMetadataDisplayType.MarketCap:
-        return t('{{num}} MCap', { num: formatNumber(marketCap, NumberType.FiatTokenStats) })
+        return t('{{num}} MCap', { num: marketCapFormatted })
       case TokenMetadataDisplayType.Volume:
-        return t('{{num}} Vol', { num: formatNumber(volume24h, NumberType.FiatTokenStats) })
+        return t('{{num}} Vol', { num: volume24hFormatted })
       case TokenMetadataDisplayType.TVL:
         return t('{{num}} TVL', {
-          num: formatNumber(totalValueLocked, NumberType.FiatTokenStats),
+          num: totalValueLockedFormatted,
         })
       case TokenMetadataDisplayType.Symbol:
         return symbol
@@ -122,7 +129,7 @@ export const TokenItem = memo(function _TokenItem({
           <Flex grow row alignItems="center" justifyContent="flex-end">
             <TokenMetadata>
               <Text lineHeight={24} variant="body1">
-                {formatUSDPrice(price)}
+                {useFiatConversionFormatted(price, NumberType.FiatTokenPrice)}
               </Text>
               <RelativeChange change={pricePercentChange24h} variant="body2" />
             </TokenMetadata>

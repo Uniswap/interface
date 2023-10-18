@@ -62,9 +62,9 @@ export function TransferTokenForm({
     currencyAmounts,
     currencyBalances,
     exactAmountToken,
-    exactAmountUSD,
+    exactAmountFiat,
     recipient,
-    isUSDInput = false,
+    isFiatInput = false,
     currencyInInfo,
     nftIn,
     chainId,
@@ -73,9 +73,9 @@ export function TransferTokenForm({
   const currencyIn = currencyInInfo?.currency
   useUSDTokenUpdater(
     dispatch,
-    isUSDInput,
+    isFiatInput,
     exactAmountToken,
-    exactAmountUSD,
+    exactAmountFiat,
     currencyIn ?? undefined
   )
 
@@ -148,7 +148,7 @@ export function TransferTokenForm({
     [setInputSelection]
   )
 
-  const prevIsUSDInput = usePrevious(isUSDInput)
+  const previsFiatInput = usePrevious(isFiatInput)
 
   // when text changes on the screen, the default iOS input behavior is to use the same cursor
   // position but from the END of the input. so for example, if the cursor is currently at
@@ -156,34 +156,34 @@ export function TransferTokenForm({
   // this useEffect essentially calculates where the new cursor position is when the text has changed
   // and that only happens on toggling USD <-> token input
   useEffect(() => {
-    // only run this useEffect if isUSDInput has changed
+    // only run this useEffect if isFiatInput has changed
     // if inputSelection is undefined, then that means no text selection or cursor
     // movement has happened yet, so let iOS do its default thang
-    if (isUSDInput === prevIsUSDInput || !inputSelection) return
+    if (isFiatInput === previsFiatInput || !inputSelection) return
 
     if (inputSelection.start !== inputSelection.end) {
       setInputSelection(undefined)
       return
     }
 
-    const [prevInput, newInput] = isUSDInput
-      ? [exactAmountToken, exactAmountUSD]
-      : [exactAmountUSD, exactAmountToken]
+    const [prevInput, newInput] = isFiatInput
+      ? [exactAmountToken, exactAmountFiat]
+      : [exactAmountFiat, exactAmountToken]
     const positionFromEnd = prevInput.length - inputSelection.start
     const newPositionFromStart = newInput.length - positionFromEnd
-    const newPositionFromStartWithPrefix = newPositionFromStart + (isUSDInput ? 1 : -1)
+    const newPositionFromStartWithPrefix = newPositionFromStart + (isFiatInput ? 1 : -1)
 
     setInputSelection({
       start: newPositionFromStartWithPrefix,
       end: newPositionFromStartWithPrefix,
     })
   }, [
-    isUSDInput,
-    prevIsUSDInput,
+    isFiatInput,
+    previsFiatInput,
     inputSelection,
     setInputSelection,
     exactAmountToken,
-    exactAmountUSD,
+    exactAmountFiat,
   ])
 
   const onTransferWarningClick = (): void => {
@@ -245,11 +245,11 @@ export function TransferTokenForm({
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
                 currencyInfo={currencyInInfo}
                 focus={currencyFieldFocused}
+                isFiatInput={isFiatInput}
                 isOnScreen={!showingSelectorScreen}
-                isUSDInput={isUSDInput}
                 showSoftInputOnFocus={showNativeKeyboard}
                 usdValue={inputCurrencyUSDValue}
-                value={isUSDInput ? exactAmountUSD : exactAmountToken}
+                value={isFiatInput ? exactAmountFiat : exactAmountToken}
                 warnings={warnings}
                 onPressIn={(): void => setCurrencyFieldFocused(true)}
                 onSelectionChange={
@@ -258,7 +258,7 @@ export function TransferTokenForm({
                     : (start, end): void => setInputSelection({ start, end })
                 }
                 onSetExactAmount={(value): void =>
-                  onSetExactAmount(CurrencyField.INPUT, value, isUSDInput)
+                  onSetExactAmount(CurrencyField.INPUT, value, isFiatInput)
                 }
                 onSetMax={(amount): void => {
                   onSetMax(amount)
@@ -381,14 +381,14 @@ export function TransferTokenForm({
           onLayout={onDecimalPadLayout}>
           {!nftIn && !showNativeKeyboard && (
             <DecimalPad
-              hasCurrencyPrefix={isUSDInput}
+              hasCurrencyPrefix={isFiatInput}
               resetSelection={resetSelection}
               selection={inputSelection}
               setValue={(newValue): void => {
                 if (!currencyFieldFocused) return
-                onSetExactAmount(CurrencyField.INPUT, newValue, isUSDInput)
+                onSetExactAmount(CurrencyField.INPUT, newValue, isFiatInput)
               }}
-              value={isUSDInput ? exactAmountUSD : exactAmountToken}
+              value={isFiatInput ? exactAmountFiat : exactAmountToken}
             />
           )}
           <Button

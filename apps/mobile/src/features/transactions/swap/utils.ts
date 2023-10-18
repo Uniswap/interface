@@ -10,7 +10,7 @@ import { BigNumber } from 'ethers'
 import { ElementName } from 'src/features/telemetry/constants'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { AppTFunction } from 'ui/src/i18n/types'
-import { formatPrice, NumberType } from 'utilities/src/format/format'
+import { formatNumberOrString, NumberType } from 'utilities/src/format/format'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
@@ -119,7 +119,7 @@ export function requireAcceptNewTrade(oldTrade: Maybe<Trade>, newTrade: Maybe<Tr
 
 export const getRateToDisplay = (trade: Trade, showInverseRate: boolean): string => {
   const price = showInverseRate ? trade.executionPrice.invert() : trade.executionPrice
-  const formattedPrice = formatPrice(price, NumberType.SwapPrice)
+  const formattedPrice = formatNumberOrString(price.toSignificant(), NumberType.SwapPrice)
   const quoteCurrencySymbol = getSymbolDisplayText(trade.executionPrice.quoteCurrency.symbol)
   const baseCurrencySymbol = getSymbolDisplayText(trade.executionPrice.baseCurrency.symbol)
   const rate = `1 ${quoteCurrencySymbol} = ${formattedPrice} ${baseCurrencySymbol}`

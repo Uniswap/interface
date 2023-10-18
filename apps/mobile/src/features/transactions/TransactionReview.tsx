@@ -14,15 +14,15 @@ import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biomet
 import { ElementName } from 'src/features/telemetry/constants'
 import { AnimatedFlex, Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import { dimensions, fonts, iconSizes } from 'ui/src/theme'
-import { formatNumberOrString, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
+import { getSymbolDisplayText, useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 interface BaseReviewProps {
   actionButtonProps: { disabled: boolean; label: string; name: ElementName; onPress: () => void }
-  isUSDInput?: boolean
+  isFiatInput?: boolean
   transactionDetails?: ReactNode
   nftIn?: GQLNftAsset
   currencyInInfo: Maybe<CurrencyInfo>
@@ -59,7 +59,7 @@ export function TransactionReview({
   outputCurrencyUSDValue,
   nftIn,
   recipient,
-  isUSDInput = false,
+  isFiatInput = false,
   transactionDetails,
   usdTokenEquivalentAmount,
   onPrev,
@@ -91,12 +91,14 @@ export function TransactionReview({
   const arrowPadding = media.short ? '$spacing4' : '$spacing8'
   const amountAndEquivalentValueGap = media.short ? '$spacing4' : '$spacing8'
 
-  const formattedInputUsdValue = inputCurrencyUSDValue
-    ? formatNumberOrString(inputCurrencyUSDValue?.toExact(), NumberType.FiatTokenQuantity)
-    : ''
-  const formattedOutputUsdValue = outputCurrencyUSDValue
-    ? formatNumberOrString(outputCurrencyUSDValue?.toExact(), NumberType.FiatTokenQuantity)
-    : ''
+  const formattedInputFiatValue = useFiatConversionFormatted(
+    inputCurrencyUSDValue?.toExact(),
+    NumberType.FiatTokenQuantity
+  )
+  const formattedOutputFiatValue = useFiatConversionFormatted(
+    outputCurrencyUSDValue?.toExact(),
+    NumberType.FiatTokenQuantity
+  )
 
   return (
     <>
@@ -130,12 +132,12 @@ export function TransactionReview({
                 textAlign="center"
                 value={formattedAmountIn}
               />
-              {recipient && inputCurrencyUSDValue && !isUSDInput ? (
+              {recipient && inputCurrencyUSDValue && !isFiatInput ? (
                 <Text color="$neutral2" variant={equivalentValueTextVariant}>
-                  {formattedInputUsdValue}
+                  {formattedInputFiatValue}
                 </Text>
               ) : null}
-              {isUSDInput ? (
+              {isFiatInput ? (
                 <Text color="$neutral2" variant={equivalentValueTextVariant}>
                   {/* when sending a token with USD input, show the amount of the token being sent */}
                   {usdTokenEquivalentAmount}
@@ -166,7 +168,7 @@ export function TransactionReview({
                 editable={false}
                 px="$spacing16"
                 py="$none"
-                showCurrencySign={isUSDInput}
+                showCurrencySign={isFiatInput}
                 showSoftInputOnFocus={false}
                 testID="amount-input-out"
                 textAlign="center"
@@ -174,7 +176,7 @@ export function TransactionReview({
               />
               {outputCurrencyUSDValue ? (
                 <Text color="$neutral2" variant={equivalentValueTextVariant}>
-                  {formattedOutputUsdValue}
+                  {formattedOutputFiatValue}
                 </Text>
               ) : null}
             </Flex>

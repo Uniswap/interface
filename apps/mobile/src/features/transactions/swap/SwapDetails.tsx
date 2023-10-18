@@ -13,13 +13,7 @@ import { getRateToDisplay } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
-import {
-  formatCurrencyAmount,
-  formatPercent,
-  formatPrice,
-  formatUSDPrice,
-  NumberType,
-} from 'utilities/src/format/format'
+import { formatCurrencyAmount, formatPercent, NumberType } from 'utilities/src/format/format'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
@@ -27,13 +21,17 @@ import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
 import { useShouldUseMEVBlocker } from 'wallet/src/features/transactions/swap/customRpc'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'wallet/src/utils/currency'
+import {
+  getFormattedCurrencyAmount,
+  getSymbolDisplayText,
+  useFiatConversionFormatted,
+} from 'wallet/src/utils/currency'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
-const getFormattedFeeAmountUsd = (
+const getFeeAmountUsd = (
   trade: Trade<Currency, Currency, TradeType>,
   outputCurrencyPricePerUnitExact?: string
-): string | undefined => {
+): number | undefined => {
   if (!trade.swapFee || !outputCurrencyPricePerUnitExact) return
 
   const currencyAmount = getCurrencyAmount({
@@ -45,7 +43,7 @@ const getFormattedFeeAmountUsd = (
   if (!currencyAmount) return
 
   const feeUSD = parseFloat(outputCurrencyPricePerUnitExact) * parseFloat(currencyAmount.toExact())
-  return formatUSDPrice(feeUSD, NumberType.PortfolioBalance)
+  return feeUSD
 }
 
 interface SwapDetailsProps {
@@ -101,16 +99,27 @@ export function SwapDetails({
   }
 
   const acceptedPrice = acceptedTrade.executionPrice
-  const acceptedFiatRate = useUSDCPrice(
+  const acceptedUSDPrice = useUSDCPrice(
     showInverseRate ? acceptedPrice.quoteCurrency : acceptedPrice.baseCurrency
+  )
+  const acceptedFiatPriceFormatted = useFiatConversionFormatted(
+    acceptedUSDPrice?.toSignificant(),
+    NumberType.FiatTokenPrice
   )
   const acceptedRate = getRateToDisplay(acceptedTrade, showInverseRate)
 
   const latestPrice = trade.executionPrice
-  const latestFiatRate = useUSDCPrice(
+  const latestUSDPrice = useUSDCPrice(
     showInverseRate ? latestPrice.quoteCurrency : latestPrice.baseCurrency
   )
+  const latesetFiatPriceFormatted = useFiatConversionFormatted(
+    latestUSDPrice?.toSignificant(),
+    NumberType.FiatTokenPrice
+  )
   const latestRate = getRateToDisplay(trade, showInverseRate)
+
+  const swapFeeUsd = getFeeAmountUsd(trade, outputCurrencyPricePerUnitExact)
+  const swapFeeFiatFormatted = useFiatConversionFormatted(swapFeeUsd, NumberType.PortfolioBalance)
 
   const swapFeeInfo = trade.swapFee
     ? {
@@ -119,7 +128,7 @@ export function SwapDetails({
         formattedAmount:
           getFormattedCurrencyAmount(trade.outputAmount.currency, trade.swapFee.amount) +
           getSymbolDisplayText(trade.outputAmount.currency.symbol),
-        formattedAmountUsd: getFormattedFeeAmountUsd(trade, outputCurrencyPricePerUnitExact),
+        formattedAmountFiat: swapFeeFiatFormatted,
       }
     : undefined
 
@@ -185,13 +194,10 @@ export function SwapDetails({
               {/* On the new design, we show the *new* rate on this row. */}
               {shouldShowSwapRewrite ? latestRate : acceptedRate}
               <Text color="$neutral2" variant="body3">
-                {shouldShowSwapRewrite &&
-                  latestFiatRate &&
-                  ` (${formatPrice(latestFiatRate, NumberType.FiatTokenPrice)})`}
+                {/* {usdcPrice && ` (${priceFormatted})`} */}
+                {shouldShowSwapRewrite && latestUSDPrice && ` (${latesetFiatPriceFormatted})`}
 
-                {!shouldShowSwapRewrite &&
-                  acceptedFiatRate &&
-                  ` (${formatPrice(acceptedFiatRate, NumberType.FiatTokenPrice)})`}
+                {!shouldShowSwapRewrite && acceptedUSDPrice && ` (${acceptedFiatPriceFormatted})`}
               </Text>
             </Text>
           </TouchableOpacity>

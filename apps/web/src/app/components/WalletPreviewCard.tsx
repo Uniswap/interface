@@ -1,8 +1,9 @@
 import { Circle, Flex, Text, Unicon, useUniconColors } from 'ui/src'
 import { CheckmarkIcon } from 'ui/src/assets/icons/CheckmarkIcon'
 import { iconSizes, validToken } from 'ui/src/theme'
-import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { shortenAddress } from 'wallet/src/utils/addresses'
+import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 interface Props {
   address: string
@@ -25,6 +26,7 @@ export default function WalletPreviewCard({
 }: Props): JSX.Element {
   const unselectedBorderColor = '$surface3'
 
+  const balanceFormatted = useFiatConversionFormatted(balance, NumberType.FiatTokenQuantity)
   const { gradientStart } = useUniconColors(address)
 
   return (
@@ -52,7 +54,7 @@ export default function WalletPreviewCard({
             <Text variant="subheading1">{shortenAddress(address)}</Text>
             {balance ? (
               <Text color="$neutral2" variant="body2">
-                {formatUSDPrice(balance, NumberType.FiatTokenQuantity)}
+                {balanceFormatted}
               </Text>
             ) : null}
           </Flex>

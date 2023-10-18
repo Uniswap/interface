@@ -21,8 +21,8 @@ export const initialState: Readonly<TransactionState> = {
   exactCurrencyField: CurrencyField.INPUT,
   focusOnCurrencyField: CurrencyField.INPUT,
   exactAmountToken: '',
-  exactAmountUSD: '',
-  isUSDInput: false,
+  exactAmountFiat: '',
+  isFiatInput: false,
   selectingCurrencyField: undefined,
   showRecipientSelector: true,
   customSlippageTolerance: undefined,
@@ -87,7 +87,7 @@ const slice = createSlice({
       state.exactAmountToken = amount
     },
     /** Processes a new typed value for the given `field` */
-    updateExactAmountUSD: (
+    updateExactAmountFiat: (
       state,
       action: PayloadAction<{
         field?: CurrencyField
@@ -98,7 +98,7 @@ const slice = createSlice({
       if (field) {
         state.exactCurrencyField = field
       }
-      state.exactAmountUSD = amount
+      state.exactAmountFiat = amount
     },
     /** Changes the recipient */
     selectRecipient: (state, action: PayloadAction<{ recipient: Address }>) => {
@@ -111,8 +111,8 @@ const slice = createSlice({
     onFocus: (state, action: PayloadAction<CurrencyField | null>) => {
       state.focusOnCurrencyField = action.payload
     },
-    toggleUSDInput: (state, action: PayloadAction<boolean>) => {
-      state.isUSDInput = action.payload
+    toggleFiatInput: (state, action: PayloadAction<boolean>) => {
+      state.isFiatInput = action.payload
     },
     setCustomSlippageTolerance: (state, action: PayloadAction<number | undefined>) => {
       state.customSlippageTolerance = action.payload
@@ -133,10 +133,10 @@ export const {
   selectCurrency,
   switchCurrencySides,
   updateExactAmountToken,
-  updateExactAmountUSD,
+  updateExactAmountFiat,
   selectRecipient,
   clearRecipient,
-  toggleUSDInput,
+  toggleFiatInput,
   setCustomSlippageTolerance,
   setTxId,
   showTokenSelector,

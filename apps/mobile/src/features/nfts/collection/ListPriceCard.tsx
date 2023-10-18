@@ -6,6 +6,7 @@ import { ColorTokens, Flex, FlexProps, Logos, SpaceTokens, Text, useSporeColors 
 import { borderRadii, iconSizes, spacing, TextVariantTokens } from 'ui/src/theme'
 import { formatNumber, NumberType } from 'utilities/src/format/format'
 import { Amount } from 'wallet/src/data/__generated__/types-and-hooks'
+import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 type ListPriceProps = FlexProps & {
   price: Amount
@@ -51,8 +52,9 @@ export function PriceAmount({
   textColor = '$neutral1',
 }: ListPriceProps): JSX.Element {
   const isUSD = price.currency === 'USD'
+  const formattedFiatValue = useFiatConversionFormatted(price.value, NumberType.FiatTokenPrice)
   const formattedAmount = isUSD
-    ? formatNumber(price.value, NumberType.FiatTokenPrice)
+    ? formattedFiatValue
     : formatNumber(price.value, NumberType.NFTTokenFloorPrice)
 
   return (

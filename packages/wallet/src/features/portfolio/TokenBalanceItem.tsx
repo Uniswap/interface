@@ -1,10 +1,10 @@
 import { memo } from 'react'
 import { Flex, getTokenValue, Icons, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
+import { formatNumber, NumberType } from 'utilities/src/format/format'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
+import { getSymbolDisplayText, useFiatConversionFormatted } from 'wallet/src/utils/currency'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 interface TokenBalanceItemProps {
@@ -24,6 +24,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   const { quantity, relativeChange24, balanceUSD, currencyInfo } = portfolioBalance
   const { currency } = currencyInfo
   const colors = useSporeColors()
+  const balanceFormatted = useFiatConversionFormatted(balanceUSD, NumberType.FiatTokenQuantity)
 
   const onPress = (): void => {
     onPressToken?.(currencyInfo.currencyId)
@@ -76,7 +77,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
           {/* Portfolio balance */}
           <Flex fill alignItems="flex-end" justifyContent="flex-end" width={0}>
             <Text ellipsizeMode="tail" numberOfLines={1} variant="body1">
-              {balanceUSD === 0 ? 'N/A' : formatUSDPrice(balanceUSD, NumberType.FiatTokenQuantity)}
+              {balanceUSD === 0 ? 'N/A' : balanceFormatted}
             </Text>
             <Flex row alignItems="center" gap="$spacing4">
               <Icons.ArrowChange

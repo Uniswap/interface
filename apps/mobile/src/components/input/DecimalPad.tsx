@@ -135,7 +135,7 @@ function KeyButton({
   hasCurrencyPrefix,
 }: KeyButtonProps): JSX.Element {
   const isDisabled = disabled?.(value) ?? false
-  // when input is in terms of USD, there is an extra "$" in the TextInput value, but not in props.value
+  // when input is in terms of fiat currency, there is an extra symbol (e.g. "$") in the TextInput value, but not in props.value
   // so account for the extra prefix in `selection`
   // i.e. when cursor is in: "$5.|13", selection will give start === 3, end === 3, but we
   // should only be deleting/inserting at position 2 of "5.13"

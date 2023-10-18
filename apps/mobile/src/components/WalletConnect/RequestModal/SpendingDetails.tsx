@@ -2,12 +2,12 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { formatCurrencyAmount, formatUSDPrice, NumberType } from 'utilities/src/format/format'
+import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { useNativeCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
+import { getSymbolDisplayText, useFiatConversionFormatted } from 'wallet/src/utils/currency'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export function SpendingDetails({
@@ -41,7 +41,7 @@ export function SpendingDetails({
           {getSymbolDisplayText(nativeCurrencyInfo?.currency.symbol)}
         </Text>
         <Text color="$neutral2" loading={!usdValue} variant="subheading2">
-          ({formatUSDPrice(usdValue)})
+          ({useFiatConversionFormatted(usdValue, NumberType.FiatTokenPrice)})
         </Text>
       </Flex>
     </Flex>
