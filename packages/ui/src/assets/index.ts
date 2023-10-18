@@ -13,6 +13,16 @@ export const ONBOARDING_QR_ETCHING_VIDEO_DARK = require('./videos/dark-etching.m
 export const AVATARS_LIGHT = require('./misc/avatars-light.png')
 export const AVATARS_DARK = require('./misc/avatars-dark.png')
 
+export const ONBOARDING_LANDING_LIGHT = {
+  ios: require(`./backgrounds/onboarding-landing-static-light.png`),
+  android: require(`./backgrounds/onboarding-landing-static-light.png`),
+}
+
+export const ONBOARDING_LANDING_DARK = {
+  ios: require(`./backgrounds/onboarding-landing-static-dark.png`),
+  android: require(`./backgrounds/onboarding-landing-static-dark.png`),
+}
+
 export const ONBOARDING_NOTIFICATIONS_DARK = {
   ios: require(`./backgrounds/ios/notifications-dark.png`),
   android: require(`./backgrounds/android/notifications-dark.png`),
