@@ -12,7 +12,7 @@ import { ResizeMode, Video } from 'expo-av'
 import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
-import Animated, {
+import {
   AnimateStyle,
   Easing,
   EntryExitAnimationFunction,
@@ -45,7 +45,7 @@ import {
 import { Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'ui/src/assets'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
-import { flexStyles } from 'ui/src/components/layout'
+import { AnimatedFlex, flexStyles } from 'ui/src/components/layout'
 import { fonts, iconSizes, opacify } from 'ui/src/theme'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -165,7 +165,7 @@ export function QRAnimation({
 
   return (
     <>
-      <Animated.View entering={realQrTopGlowFadeIn}>
+      <AnimatedFlex entering={realQrTopGlowFadeIn}>
         <GradientBackground>
           <UniconThemedGradient
             borderRadius="$rounded16"
@@ -174,13 +174,13 @@ export function QRAnimation({
             opacity={isDarkMode ? 0.3 : 0.2}
           />
         </GradientBackground>
-      </Animated.View>
+      </AnimatedFlex>
       <Flex grow justifyContent="space-between" px="$spacing16" py="$spacing24">
         <Flex centered grow gap="$spacing36" mb="$spacing12" mt="$spacing12">
           <Flex centered gap="$spacing12" pt="$spacing48">
-            <Animated.View entering={qrSlideUpAndFadeIn}>
-              <Animated.View entering={qrSlideUpAtEnd}>
-                <Animated.View entering={flashWipeAnimation} style={styles.behindQrBlur}>
+            <AnimatedFlex entering={qrSlideUpAndFadeIn}>
+              <AnimatedFlex entering={qrSlideUpAtEnd}>
+                <AnimatedFlex entering={flashWipeAnimation} style={styles.behindQrBlur}>
                   <Canvas style={flexStyles.fill}>
                     <Group transform={[{ translateX: 50 }, { translateY: 50 }]}>
                       <RoundedRect
@@ -195,8 +195,8 @@ export function QRAnimation({
                       <Blur blur={25 as unknown as SkiaValue} />
                     </Group>
                   </Canvas>
-                </Animated.View>
-                <Animated.View entering={qrScaleIn}>
+                </AnimatedFlex>
+                <AnimatedFlex entering={qrScaleIn}>
                   <Flex
                     bg="$surface1"
                     borderColor="$surface3"
@@ -205,7 +205,7 @@ export function QRAnimation({
                     height={QR_CONTAINER_SIZE}
                     overflow="hidden"
                     width={QR_CONTAINER_SIZE}>
-                    <Animated.View entering={realQrFadeIn} style={[styles.qrCodeContainer]}>
+                    <AnimatedFlex entering={realQrFadeIn} style={[styles.qrCodeContainer]}>
                       <QRCodeDisplay
                         hideOutline
                         address={activeAddress}
@@ -216,10 +216,10 @@ export function QRAnimation({
                         safeAreaColor="$surface1"
                         size={QR_CODE_SIZE}
                       />
-                    </Animated.View>
+                    </AnimatedFlex>
                   </Flex>
-                  <Animated.View entering={videoFadeOut} style={styles.video}>
-                    <Animated.View style={[styles.video, videoAnimatedStyle]}>
+                  <AnimatedFlex entering={videoFadeOut} style={styles.video}>
+                    <AnimatedFlex style={[styles.video, videoAnimatedStyle]}>
                       <Video
                         ref={video}
                         resizeMode={ResizeMode.CONTAIN}
@@ -228,9 +228,9 @@ export function QRAnimation({
                         style={styles.video}
                         useNativeControls={false}
                       />
-                    </Animated.View>
-                  </Animated.View>
-                  <Animated.View entering={videoFadeOut} style={[styles.glow]}>
+                    </AnimatedFlex>
+                  </AnimatedFlex>
+                  <AnimatedFlex entering={videoFadeOut} style={[styles.glow]}>
                     <Canvas style={flexStyles.fill}>
                       <Group
                         transform={[
@@ -246,17 +246,17 @@ export function QRAnimation({
                         <Blur blur={preglowBlurSize as unknown as SkiaValue} />
                       </Group>
                     </Canvas>
-                  </Animated.View>
-                  <Animated.View entering={flashWipeAnimation} style={styles.glow}>
+                  </AnimatedFlex>
+                  <AnimatedFlex entering={flashWipeAnimation} style={styles.glow}>
                     <Flex
                       borderRadius="$rounded20"
                       height="100%"
                       style={{ backgroundColor: uniconColors.glow }}
                       width="100%"
                     />
-                  </Animated.View>
-                </Animated.View>
-                <Animated.View entering={textSlideUpAtEnd}>
+                  </AnimatedFlex>
+                </AnimatedFlex>
+                <AnimatedFlex entering={textSlideUpAtEnd}>
                   <Flex centered mt="$spacing24">
                     <AddressDisplay
                       showCopy
@@ -267,11 +267,11 @@ export function QRAnimation({
                       variant="heading3"
                     />
                   </Flex>
-                </Animated.View>
-              </Animated.View>
-            </Animated.View>
+                </AnimatedFlex>
+              </AnimatedFlex>
+            </AnimatedFlex>
           </Flex>
-          <Animated.View entering={textSlideUpAtEnd} style={[styles.textContainer]}>
+          <AnimatedFlex entering={textSlideUpAtEnd} style={[styles.textContainer]}>
             <Text
               $short={{ variant: 'subheading2', maxFontSizeMultiplier: 1.1 }}
               maxFontSizeMultiplier={fonts.heading3.maxFontSizeMultiplier}
@@ -292,9 +292,9 @@ export function QRAnimation({
                     'Check out your tokens and NFTs, follow crypto wallets, and stay up to date on the go.'
                   )}
             </Text>
-          </Animated.View>
+          </AnimatedFlex>
         </Flex>
-        <Animated.View entering={letsGoButtonFadeIn}>
+        <AnimatedFlex entering={letsGoButtonFadeIn}>
           <Trace logPress element={ElementName.Next}>
             <Button
               icon={
@@ -320,7 +320,7 @@ export function QRAnimation({
               onPress={onPressNext}
             />
           </Trace>
-        </Animated.View>
+        </AnimatedFlex>
       </Flex>
     </>
   )

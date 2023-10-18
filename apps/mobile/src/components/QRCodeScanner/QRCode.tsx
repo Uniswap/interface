@@ -159,7 +159,7 @@ const _QRCodeDisplay = ({
         <Unicon
           showBorder
           address={address}
-          backgroundColor={colors.surface1.get()}
+          backgroundColor={colors.surface1.val}
           size={logoSize}
         />
       </Flex>
