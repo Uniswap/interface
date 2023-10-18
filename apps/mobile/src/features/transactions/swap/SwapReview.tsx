@@ -87,7 +87,10 @@ export function SwapReview({
 
   const swapWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
 
-  const { onAcceptTrade, acceptedTrade, newTradeRequiresAcceptance } = useAcceptedTrade(trade)
+  const { onAcceptTrade, acceptedDerivedSwapInfo, newTradeRequiresAcceptance } = useAcceptedTrade({
+    derivedSwapInfo,
+  })
+  const acceptedTrade = acceptedDerivedSwapInfo?.trade.trade
 
   const noValidSwap = !isWrapAction(wrapType) && !trade
   const blockingWarning = warnings.some(
@@ -224,13 +227,13 @@ export function SwapReview({
 
     return (
       <SwapDetails
-        acceptedTrade={acceptedTrade}
+        acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
         autoSlippageTolerance={autoSlippageTolerance}
         customSlippageTolerance={customSlippageTolerance}
+        derivedSwapInfo={derivedSwapInfo}
         gasFee={gasFee}
         newTradeRequiresAcceptance={newTradeRequiresAcceptance}
         outputCurrencyPricePerUnitExact={outputCurrencyPricePerUnitExact}
-        trade={trade}
         warning={swapWarning}
         onAcceptTrade={onAcceptTrade}
         onShowFOTInfo={onShowFOTInfo}

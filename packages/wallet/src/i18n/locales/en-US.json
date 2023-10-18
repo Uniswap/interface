@@ -307,6 +307,8 @@
   "Network fees are paid in the native token. Buy more {{ nativeCurrency }}.": "Network fees are paid in the native token. Buy more {{ nativeCurrency }}.",
   "Networks": "Networks",
   "New address": "New address",
+  "New input": "New input",
+  "New output": "New output",
   "New rate": "New rate",
   "NFT Collections": "NFT Collections",
   "NFTs": "NFTs",

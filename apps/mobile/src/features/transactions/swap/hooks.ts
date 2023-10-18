@@ -835,12 +835,16 @@ export function useWrapCallback(
 
 // The first trade shown to the user is implicitly accepted but every subsequent update to
 // the trade params require an explicit user approval
-export function useAcceptedTrade(trade: Maybe<Trade>): {
+export function useAcceptedTrade({ derivedSwapInfo }: { derivedSwapInfo?: DerivedSwapInfo }): {
   onAcceptTrade: () => undefined
-  acceptedTrade: Trade<Currency, Currency, TradeType> | undefined
+  acceptedDerivedSwapInfo?: DerivedSwapInfo
   newTradeRequiresAcceptance: boolean
 } {
-  const [acceptedTrade, setAcceptedTrade] = useState<Trade>()
+  const [acceptedDerivedSwapInfo, setAcceptedDerivedSwapInfo] = useState<DerivedSwapInfo>()
+
+  const trade = derivedSwapInfo?.trade.trade
+  const acceptedTrade = acceptedDerivedSwapInfo?.trade.trade
+
   const newTradeRequiresAcceptance = requireAcceptNewTrade(acceptedTrade, trade)
 
   useEffect(() => {
@@ -848,19 +852,19 @@ export function useAcceptedTrade(trade: Maybe<Trade>): {
 
     // auto-accept: 1) first valid trade for the user or 2) new trade if price movement is below threshold
     if (!acceptedTrade || !newTradeRequiresAcceptance) {
-      setAcceptedTrade(trade)
+      setAcceptedDerivedSwapInfo(derivedSwapInfo)
     }
-  }, [trade, acceptedTrade, newTradeRequiresAcceptance])
+  }, [trade, acceptedTrade, newTradeRequiresAcceptance, derivedSwapInfo])
 
   const onAcceptTrade = (): undefined => {
     if (!trade) return undefined
 
-    setAcceptedTrade(trade)
+    setAcceptedDerivedSwapInfo(derivedSwapInfo)
   }
 
   return {
     onAcceptTrade,
-    acceptedTrade,
+    acceptedDerivedSwapInfo,
     newTradeRequiresAcceptance,
   }
 }

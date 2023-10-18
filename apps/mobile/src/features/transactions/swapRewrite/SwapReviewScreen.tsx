@@ -58,7 +58,7 @@ export function SwapReviewScreen(): JSX.Element | null {
   const [showSwapProtectionModal, setShowSwapProtectionModal] = useState(false)
 
   const { approveTxRequest, gasFee, txRequest } = useSwapTxContext()
-  const { derivedSwapInfo, isFiatInput } = useSwapFormContext()
+  const { derivedSwapInfo } = useSwapFormContext()
 
   const {
     autoSlippageTolerance,
@@ -68,7 +68,6 @@ export function SwapReviewScreen(): JSX.Element | null {
     currencyAmountsUSDValue,
     customSlippageTolerance,
     exactAmountToken,
-    exactAmountUSD,
     exactCurrencyField,
     trade: { trade: trade },
     txId,
@@ -85,7 +84,10 @@ export function SwapReviewScreen(): JSX.Element | null {
 
   const { blockingWarning, reviewScreenWarning } = useParsedSwapWarnings()
 
-  const { onAcceptTrade, acceptedTrade, newTradeRequiresAcceptance } = useAcceptedTrade(trade)
+  const { onAcceptTrade, acceptedDerivedSwapInfo, newTradeRequiresAcceptance } = useAcceptedTrade({
+    derivedSwapInfo,
+  })
+  const acceptedTrade = acceptedDerivedSwapInfo?.trade.trade
 
   const noValidSwap = !isWrapAction(wrapType) && !trade
 
@@ -230,7 +232,9 @@ export function SwapReviewScreen(): JSX.Element | null {
     !currencyInInfo ||
     !currencyOutInfo ||
     !currencyAmounts[CurrencyField.INPUT] ||
-    !currencyAmounts[CurrencyField.OUTPUT]
+    !currencyAmounts[CurrencyField.OUTPUT] ||
+    !acceptedDerivedSwapInfo.currencyAmounts[CurrencyField.INPUT] ||
+    !acceptedDerivedSwapInfo.currencyAmounts[CurrencyField.OUTPUT]
   ) {
     // This should never happen. It's just to keep TS happy.
     throw new Error('Missing required props in `derivedSwapInfo` to render `SwapReview` screen.')
@@ -240,24 +244,27 @@ export function SwapReviewScreen(): JSX.Element | null {
     exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
 
   const derivedAmount = formatCurrencyAmount(
-    currencyAmounts[derivedCurrencyField],
+    acceptedDerivedSwapInfo.currencyAmounts[derivedCurrencyField],
     NumberType.TokenTx
   )
 
-  const exactValue = isFiatInput ? exactAmountUSD : exactAmountToken
-  const formattedExactValue = formatNumberOrString(exactValue, NumberType.TokenTx)
+  const formattedExactAmountToken = formatNumberOrString(exactAmountToken, NumberType.TokenTx)
 
   const [formattedTokenAmountIn, formattedTokenAmountOut] =
     exactCurrencyField === CurrencyField.INPUT
-      ? [formattedExactValue, derivedAmount]
-      : [derivedAmount, formattedExactValue]
+      ? [formattedExactAmountToken, derivedAmount]
+      : [derivedAmount, formattedExactAmountToken]
 
   const formattedFiatAmountIn = formatNumberOrString(
-    currencyAmountsUSDValue[CurrencyField.INPUT]?.toExact(),
+    exactCurrencyField === CurrencyField.INPUT
+      ? currencyAmountsUSDValue[CurrencyField.INPUT]?.toExact()
+      : acceptedDerivedSwapInfo.currencyAmountsUSDValue[CurrencyField.INPUT]?.toExact(),
     NumberType.FiatTokenQuantity
   )
   const formattedFiatAmountOut = formatNumberOrString(
-    currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact(),
+    exactCurrencyField === CurrencyField.OUTPUT
+      ? currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact()
+      : acceptedDerivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact(),
     NumberType.FiatTokenQuantity
   )
 
@@ -296,15 +303,15 @@ export function SwapReviewScreen(): JSX.Element | null {
 
       <Flex gap="$spacing16">
         <TransactionAmountsReview
+          acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
           currencyInInfo={currencyInInfo}
           currencyOutInfo={currencyOutInfo}
           formattedFiatAmountIn={formattedFiatAmountIn}
           formattedFiatAmountOut={formattedFiatAmountOut}
           formattedTokenAmountIn={formattedTokenAmountIn}
           formattedTokenAmountOut={formattedTokenAmountOut}
+          newTradeRequiresAcceptance={newTradeRequiresAcceptance}
         />
-
-        {/* TODO: review new design for these rows. */}
 
         {isWrapAction(wrapType) ? (
           <TransactionDetails
@@ -317,13 +324,13 @@ export function SwapReviewScreen(): JSX.Element | null {
           />
         ) : (
           <SwapDetails
-            acceptedTrade={acceptedTrade}
+            acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
             autoSlippageTolerance={autoSlippageTolerance}
             customSlippageTolerance={customSlippageTolerance}
+            derivedSwapInfo={derivedSwapInfo}
             gasFee={gasFee}
             newTradeRequiresAcceptance={newTradeRequiresAcceptance}
             outputCurrencyPricePerUnitExact={outputCurrencyPricePerUnitExact}
-            trade={trade}
             warning={reviewScreenWarning?.warning}
             onAcceptTrade={onAcceptTrade}
             onShowFOTInfo={onShowFOTInfo}
