@@ -14,7 +14,7 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { useFormatter } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { useIsUserAddedToken } from '../../../hooks/Tokens'
 import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
@@ -74,16 +74,7 @@ function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
     <StyledBalanceText title={balance.toExact()}>
       {formatNumberOrString({
         input: balance.toExact(),
-        type: [
-          {
-            upperBound: Infinity,
-            formatterOptions: {
-              notation: 'standard',
-              maximumSignificantDigits: 4,
-              minimumSignificantDigits: 1,
-            },
-          },
-        ],
+        type: NumberType.TokenNonTx,
       })}
     </StyledBalanceText>
   )
