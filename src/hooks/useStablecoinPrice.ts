@@ -10,6 +10,7 @@ import {
   DAI_OPTIMISM,
   USDC_ARBITRUM,
   USDC_AVALANCHE,
+  USDC_BASE,
   USDC_MAINNET,
   USDC_POLYGON,
   USDT_BSC,
@@ -25,6 +26,7 @@ const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
   [ChainId.CELO]: CurrencyAmount.fromRawAmount(CUSD_CELO, 10_000e18),
   [ChainId.BNB]: CurrencyAmount.fromRawAmount(USDT_BSC, 100e18),
   [ChainId.AVALANCHE]: CurrencyAmount.fromRawAmount(USDC_AVALANCHE, 10_000e6),
+  [ChainId.BASE]: CurrencyAmount.fromRawAmount(USDC_BASE, 10_000e6),
 }
 
 /**
