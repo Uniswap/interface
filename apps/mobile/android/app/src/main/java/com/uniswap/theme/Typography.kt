@@ -78,9 +78,9 @@ data class CustomTypography(
   ),
   val buttonLabel1: TextStyle = TextStyle(
     fontFamily = defaultFontFamily,
-    fontSize = 20.sp,
+    fontSize = 18.sp,
     lineHeight = 24.sp,
-    fontWeight = FontWeight.Medium,
+    fontWeight = FontWeight.Normal,
     letterSpacing = defaultLetterSpacing,
   ),
   val buttonLabel2: TextStyle = TextStyle(
@@ -92,14 +92,14 @@ data class CustomTypography(
   ),
   val buttonLabel3: TextStyle = TextStyle(
     fontFamily = defaultFontFamily,
-    fontSize = 16.sp,
+    fontSize = 18.sp,
     lineHeight = 24.sp,
-    fontWeight = FontWeight.Medium,
+    fontWeight = FontWeight.Normal,
     letterSpacing = defaultLetterSpacing,
   ),
   val buttonLabel4: TextStyle = TextStyle(
     fontFamily = defaultFontFamily,
-    fontSize = 12.sp,
+    fontSize = 14.sp,
     lineHeight = 16.sp,
     fontWeight = FontWeight.Medium,
     letterSpacing = defaultLetterSpacing,

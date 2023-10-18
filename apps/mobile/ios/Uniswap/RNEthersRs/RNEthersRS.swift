@@ -37,6 +37,15 @@ class RNEthersRS: NSObject {
     return false
   }
   
+  func findInvalidWord(mnemonic: String) -> String {
+    let firstInvalidMnemonic = find_invalid_word(mnemonic)
+    return String(cString: firstInvalidMnemonic!)
+  }
+  
+  func validateMnemonic(mnemonic: String) -> Bool {
+    return validate_mnemonic(mnemonic)
+  }
+
   /**
    Fetches all mnemonic IDs, which are used as keys to access the actual mnemonics in the native keychain secure key-value store.
    

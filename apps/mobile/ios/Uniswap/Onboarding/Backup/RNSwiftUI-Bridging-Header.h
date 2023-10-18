@@ -14,6 +14,7 @@
 #import "React/RCTConvert.h"
 #import "React/RCTComponentData.h"
 #import "React/RCTBridgeModule.h"
+#import "React/UIView+React.h"
 
 #define RCT_EXPORT_SWIFTUI_PROPERTY(name, type, proxyClass)                                                 \
 RCT_CUSTOM_VIEW_PROPERTY(name, type, proxyClass) {                                                          \
@@ -35,6 +36,5 @@ RCT_REMAP_VIEW_PROPERTY(name, __custom__, type)                                 
   };                                                                                                        \
   proxy.name = eventHandler;                                                                                \
 }
-
 
 #endif /* RNSwiftUI_Bridging_Header_h */

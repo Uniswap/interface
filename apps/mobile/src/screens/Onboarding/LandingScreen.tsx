@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { selectionAsync } from 'expo-haptics'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
@@ -6,11 +7,13 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { LandingBackground } from 'src/components/gradients/LandingBackground'
 import { Screen } from 'src/components/layout/Screen'
 import Trace from 'src/components/Trace/Trace'
+import { openModal } from 'src/features/modals/modalSlice'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
-import { ElementName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
 import { hideSplashScreen } from 'src/utils/splashScreen'
+import { isDevBuild } from 'src/utils/version'
 import { Button, Flex, Text, TouchableArea, useMedia } from 'ui/src'
 import { useTimeout } from 'utilities/src/time/timing'
 import { uniswapUrls } from 'wallet/src/constants/urls'
@@ -75,6 +78,12 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
               hapticFeedback
               alignItems="center"
               hitSlop={16}
+              onLongPress={async (): Promise<void> => {
+                if (isDevBuild()) {
+                  await selectionAsync()
+                  dispatch(openModal({ name: ModalName.Experiments }))
+                }
+              }}
               onPress={onPressImportWallet}>
               <Text $short={{ variant: 'buttonLabel2' }} color="$accent1" variant="buttonLabel1">
                 {t('Add an existing wallet')}
