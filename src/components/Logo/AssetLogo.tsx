@@ -96,6 +96,7 @@ export default function AssetLogo({
             onLoad={() => void setImgLoaded(true)}
             onError={nextSrc}
             imgLoaded={imgLoaded}
+            loading="lazy"
           />
         </LogoImageWrapper>
       ) : (

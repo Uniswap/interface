@@ -2301,6 +2301,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                     <img
                       alt="ABC logo"
                       class="c16"
+                      loading="lazy"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                     />
                   </div>
@@ -2367,6 +2368,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                                     <img
                                       alt="DEF logo"
                                       class="c16"
+                                      loading="lazy"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                     />
                                   </div>
@@ -2385,6 +2387,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                                     <img
                                       alt="ABC logo"
                                       class="c16"
+                                      loading="lazy"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                     />
                                   </div>
@@ -2426,6 +2429,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                     <img
                       alt="DEF logo"
                       class="c16"
+                      loading="lazy"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                     />
                   </div>
@@ -3748,6 +3752,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                     <img
                       alt="ABC logo"
                       class="c16"
+                      loading="lazy"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                     />
                   </div>
@@ -3814,6 +3819,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                                     <img
                                       alt="DEF logo"
                                       class="c16"
+                                      loading="lazy"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                     />
                                   </div>
@@ -3832,6 +3838,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                                     <img
                                       alt="ABC logo"
                                       class="c16"
+                                      loading="lazy"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                     />
                                   </div>
@@ -3873,6 +3880,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                     <img
                       alt="DEF logo"
                       class="c16"
+                      loading="lazy"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                     />
                   </div>
@@ -5195,6 +5203,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                     <img
                       alt="ABC logo"
                       class="c16"
+                      loading="lazy"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                     />
                   </div>
@@ -5261,6 +5270,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                                     <img
                                       alt="GHI logo"
                                       class="c16"
+                                      loading="lazy"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
                                     />
                                   </div>
@@ -5279,6 +5289,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                                     <img
                                       alt="ABC logo"
                                       class="c16"
+                                      loading="lazy"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                     />
                                   </div>
@@ -5320,6 +5331,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                     <img
                       alt="GHI logo"
                       class="c16"
+                      loading="lazy"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
                     />
                   </div>
@@ -5756,7 +5768,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
           <span
             class=""
           >
-            3.000%
+            3%
           </span>
         </div>
       </div>
@@ -6848,6 +6860,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                     <img
                       alt="ABC logo"
                       class="c16"
+                      loading="lazy"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                     />
                   </div>
@@ -6914,6 +6927,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                                     <img
                                       alt="DEF logo"
                                       class="c16"
+                                      loading="lazy"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                     />
                                   </div>
@@ -6932,6 +6946,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                                     <img
                                       alt="ABC logo"
                                       class="c16"
+                                      loading="lazy"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                     />
                                   </div>
@@ -6973,6 +6988,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                     <img
                       alt="DEF logo"
                       class="c16"
+                      loading="lazy"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                     />
                   </div>
@@ -7409,7 +7425,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
           <span
             class=""
           >
-            3.000%
+            3%
           </span>
         </div>
       </div>
@@ -8501,6 +8517,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                     <img
                       alt="ABC logo"
                       class="c16"
+                      loading="lazy"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                     />
                   </div>
@@ -8567,6 +8584,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                                     <img
                                       alt="DEF logo"
                                       class="c16"
+                                      loading="lazy"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                     />
                                   </div>
@@ -8585,6 +8603,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                                     <img
                                       alt="ABC logo"
                                       class="c16"
+                                      loading="lazy"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                     />
                                   </div>
@@ -8626,6 +8645,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                     <img
                       alt="DEF logo"
                       class="c16"
+                      loading="lazy"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                     />
                   </div>
