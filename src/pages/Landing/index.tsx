@@ -419,7 +419,7 @@ export default function Landing() {
               />
             ))}
           </CardGrid>
-          <CardGrid cols={3}>
+          <CardGrid cols={MORE_CARDS.length}>
             {MORE_CARDS.map(({ darkIcon, lightIcon, ...card }) => (
               <Card {...card} icon={isDarkMode ? darkIcon : lightIcon} key={card.title} type={CardType.Secondary} />
             ))}
