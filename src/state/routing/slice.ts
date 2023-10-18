@@ -35,6 +35,8 @@ const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
 // routing API quote query params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
 const DEFAULT_QUERY_PARAMS = {
   protocols,
+  // this should be removed once BE fixes issue where enableUniversalRouter is required for fees to work
+  enableUniversalRouter: true,
 }
 
 function getQuoteLatencyMeasure(mark: PerformanceMark): PerformanceMeasure {
@@ -66,6 +68,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   const classic = {
     ...DEFAULT_QUERY_PARAMS,
     routingType: URAQuoteType.CLASSIC,
+    recipient: account,
   }
 
   const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOutAddress as SwapRouterNativeAssets)
@@ -124,16 +127,24 @@ export const routingApi = createApi({
         logSwapQuoteRequest(args.tokenInChainId, args.routerPreference, false)
         const quoteStartMark = performance.mark(`quote-fetch-start-${Date.now()}`)
         try {
-          const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
-          const type = isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT'
+          const {
+            tokenInAddress: tokenIn,
+            tokenInChainId,
+            tokenOutAddress: tokenOut,
+            tokenOutChainId,
+            amount,
+            tradeType,
+            sendPortionEnabled,
+          } = args
 
           const requestBody = {
             tokenInChainId,
-            tokenIn: tokenInAddress,
+            tokenIn,
             tokenOutChainId,
-            tokenOut: tokenOutAddress,
+            tokenOut,
             amount,
-            type,
+            sendPortionEnabled,
+            type: isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT',
             intent: args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? 'pricing' : undefined,
             configs: getRoutingAPIConfig(args),
           }

@@ -39,6 +39,14 @@ const NO_DECIMALS: NumberFormatOptions = {
   minimumFractionDigits: 0,
 }
 
+const NO_DECIMALS_CURRENCY: NumberFormatOptions = {
+  notation: 'standard',
+  maximumFractionDigits: 0,
+  minimumFractionDigits: 0,
+  currency: 'USD',
+  style: 'currency',
+}
+
 const THREE_DECIMALS_NO_TRAILING_ZEROS: NumberFormatOptions = {
   notation: 'standard',
   maximumFractionDigits: 3,
@@ -262,7 +270,7 @@ const fiatTokenStatsFormatter: FormatterRule[] = [
 ]
 
 const fiatGasPriceFormatter: FormatterRule[] = [
-  { exact: 0, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { exact: 0, formatterOptions: NO_DECIMALS_CURRENCY },
   { upperBound: 0.01, hardCodedInput: { input: 0.01, prefix: '<' }, formatterOptions: TWO_DECIMALS_CURRENCY },
   { upperBound: 1e6, formatterOptions: TWO_DECIMALS_CURRENCY },
   { upperBound: Infinity, formatterOptions: SHORTHAND_CURRENCY_TWO_DECIMALS },

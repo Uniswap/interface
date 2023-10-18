@@ -18,6 +18,7 @@ import { useUniswapXDefaultEnabledFlag } from 'featureFlags/flags/uniswapXDefaul
 import { useUniswapXEthOutputFlag } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXExactOutputFlag } from 'featureFlags/flags/uniswapXExactOutput'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
+import { useFeesEnabledFlag } from 'featureFlags/flags/useFees'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
@@ -267,6 +268,12 @@ export default function FeatureFlagModal() {
             <X size={24} />
           </CloseButton>
         </Header>
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useFeesEnabledFlag()}
+          featureFlag={FeatureFlag.feesEnabled}
+          label="Enable Swap Fees"
+        />
         <FeatureFlagOption
           variant={BaseVariant}
           value={useFallbackProviderEnabledFlag()}
