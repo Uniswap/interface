@@ -2,8 +2,9 @@ import { Trans } from '@lingui/macro'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
 import Column from 'components/Column'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import Row from 'components/Row'
-import { getChainInfo } from 'constants/chainInfo'
+import { BIPS_BASE } from 'constants/misc'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
@@ -88,7 +89,7 @@ export function PoolDetailsHeader({
             {token0?.symbol} / {token1?.symbol}
           </ThemedText.HeadlineSmall>
         </Row>
-        {!!feeTier && <FeeTier>{feeTier / 10000}%</FeeTier>}
+        {!!feeTier && <FeeTier>{feeTier / BIPS_BASE}%</FeeTier>}
         <ToggleReverseArrows data-testid="toggle-tokens-reverse-arrows" onClick={toggleReversed} />
       </Row>
     </HeaderColumn>
@@ -116,8 +117,8 @@ function DoubleCurrencyAndChainLogo({
   )
 }
 
-const L2LogoContainer = styled.div<{ hasSquareLogo?: boolean }>`
-  background-color: ${({ theme, hasSquareLogo }) => (hasSquareLogo ? theme.surface2 : theme.neutral1)};
+const L2LogoContainer = styled.div`
+  background-color: ${({ theme }) => theme.surface2};
   border-radius: 2px;
   height: 12px;
   left: 60%;
@@ -130,29 +131,12 @@ const L2LogoContainer = styled.div<{ hasSquareLogo?: boolean }>`
   justify-content: center;
 `
 
-const StyledChainLogo = styled.img`
-  height: 12px;
-  width: 12px;
-`
-
-const SquareChainLogo = styled.img`
-  height: 100%;
-  width: 100%;
-`
-
 function SquareL2Logo({ chainId }: { chainId: ChainId }) {
   if (chainId === ChainId.MAINNET) return null
-  const { squareLogoUrl, logoUrl } = getChainInfo(chainId)
-
-  const chainLogo = squareLogoUrl ?? logoUrl
 
   return (
-    <L2LogoContainer hasSquareLogo={!!squareLogoUrl}>
-      {squareLogoUrl ? (
-        <SquareChainLogo src={chainLogo} alt="chainLogo" />
-      ) : (
-        <StyledChainLogo src={chainLogo} alt="chainLogo" />
-      )}
+    <L2LogoContainer>
+      <ChainLogo chainId={chainId} size={12} />
     </L2LogoContainer>
   )
 }

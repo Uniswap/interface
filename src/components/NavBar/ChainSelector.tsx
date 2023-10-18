@@ -2,6 +2,7 @@ import { t } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
@@ -145,7 +146,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
           {!isSupported ? (
             <AlertTriangle size={20} color={theme.neutral2} />
           ) : (
-            <img src={info.logoUrl} alt={info.label} className={styles.Image} data-testid="chain-selector-logo" />
+            <ChainLogo chainId={chainId} size={24} testId="chain-selector-logo" />
           )}
           {isOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
         </Row>

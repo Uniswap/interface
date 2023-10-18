@@ -9,6 +9,7 @@ import { Break } from 'components/earn/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import RateToggle from 'components/RateToggle'
 import { RowBetween, RowFixed } from 'components/Row'
+import { BIPS_BASE } from 'constants/misc'
 import JSBI from 'jsbi'
 import { ReactNode, useCallback, useState } from 'react'
 import { Bound } from 'state/mint/v3/actions'
@@ -108,7 +109,7 @@ export const PositionPreview = ({
               <Trans>Fee tier</Trans>
             </ThemedText.DeprecatedLabel>
             <ThemedText.DeprecatedLabel>
-              <Trans>{formatPercent(position?.pool?.fee / 10000)}</Trans>
+              <Trans>{formatPercent(position?.pool?.fee / BIPS_BASE)}</Trans>
             </ThemedText.DeprecatedLabel>
           </RowBetween>
         </AutoColumn>

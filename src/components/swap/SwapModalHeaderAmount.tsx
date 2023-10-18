@@ -61,7 +61,7 @@ export function SwapModalHeaderAmount({
       <Column gap="xs">
         <ThemedText.BodySecondary>
           <MouseoverTooltip text={tooltipText} disabled={!tooltipText}>
-            <Label cursor="help">{label}</Label>
+            <Label cursor={tooltipText ? 'help' : undefined}>{label}</Label>
           </MouseoverTooltip>
         </ThemedText.BodySecondary>
         <Column gap="xs">
