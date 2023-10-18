@@ -1,3 +1,4 @@
+import { WatchQueryFetchPolicy } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -5,14 +6,15 @@ import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioL
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain } from 'constants/chains'
 import { DEFAULT_ERC20_DECIMALS, nativeOnChain } from 'constants/tokens'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TokenBalance, TokenQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useCrossChainGqlBalances } from 'graphql/data/portfolios'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
-import JSBI from 'jsbi'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import { useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -74,15 +76,17 @@ const StyledNetworkLabel = styled.div`
 interface BalanceProps {
   token?: Currency
   chainId: ChainId
-  balance: CurrencyAmount<Currency>
+  balance?: CurrencyAmount<Currency> // only used for legacy Explore page calculations
+  gqlBalance?: any // Gql query return type from PortfolioBalance['portfolios][0]['tokenBalances][0]
   tokenSymbol?: string
   color?: string
   chainName?: string
+  onClick?: () => void
   isInfoTDPEnabled?: boolean
 }
 const Balance = (props: BalanceProps) => {
-  const { token, chainId, balance, tokenSymbol, color, chainName, isInfoTDPEnabled } = props
-  const { formatCurrencyAmount } = useFormatter()
+  const { token, chainId, balance, gqlBalance, tokenSymbol, color, chainName, onClick, isInfoTDPEnabled } = props
+  const { formatCurrencyAmount, formatNumber } = useFormatter()
   const currencies = useMemo(() => [token], [token])
 
   const formattedBalance = formatCurrencyAmount({
@@ -93,17 +97,25 @@ const Balance = (props: BalanceProps) => {
     amount: useStablecoinValue(balance),
     type: NumberType.PortfolioBalance,
   })
+  const formattedGqlBalance = formatNumber({
+    input: gqlBalance?.quantity,
+    type: NumberType.TokenNonTx,
+  })
+  const formattedUsdGqlValue = formatNumber({
+    input: gqlBalance?.denominatedValue?.value,
+    type: NumberType.PortfolioBalance,
+  })
 
   if (isInfoTDPEnabled) {
     return (
-      <BalanceRow>
+      <BalanceRow onClick={onClick}>
         <PortfolioLogo currencies={currencies} chainId={chainId} size="2rem" />
         <BalanceAmountsContainer isInfoTDPEnabled>
           <BalanceItem>
-            <ThemedText.BodyPrimary>{formattedUsdValue}</ThemedText.BodyPrimary>
+            <ThemedText.BodyPrimary>{formattedUsdGqlValue}</ThemedText.BodyPrimary>
           </BalanceItem>
           <BalanceItem>
-            <ThemedText.SubHeader>{formattedBalance}</ThemedText.SubHeader>
+            <ThemedText.SubHeader>{formattedGqlBalance}</ThemedText.SubHeader>
           </BalanceItem>
         </BalanceAmountsContainer>
       </BalanceRow>
@@ -130,7 +142,7 @@ const Balance = (props: BalanceProps) => {
   }
 }
 
-function getCurrencyFromPortfolioQuery(chainId: ChainId, portfolioQueryToken: TokenBalance['token']): Currency {
+function getCurrencyFromGqlPortfolioQuery(chainId: ChainId, portfolioQueryToken: TokenBalance['token']): Currency {
   return portfolioQueryToken?.address
     ? new Token(
         chainId,
@@ -147,13 +159,19 @@ export default function BalanceSummary({ token, tokenQuery }: { token: Currency;
   const { account, chainId: connectedChainId } = useWeb3React()
   const theme = useTheme()
   const { label: chainName, color: chainColor } = getChainInfo(asSupportedChain(connectedChainId) ?? ChainId.MAINNET)
+  const navigate = useNavigate()
 
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
   const isInfoTDPEnabled = useInfoTDPEnabled()
 
   const connectedChainBalance = useCurrencyBalance(account, token)
   const hasConnectedChainBalance = connectedChainBalance && connectedChainBalance.greaterThan(0)
 
-  const crossChainBalances = useCrossChainGqlBalances(tokenQuery, account)
+  const crossChainBalances = useCrossChainGqlBalances({
+    tokenQuery,
+    address: account,
+    fetchPolicy: 'cache-and-network' as WatchQueryFetchPolicy,
+  })
   const pageChainBalance = crossChainBalances?.find((tokenBalance) => tokenBalance.token?.id === tokenQuery.token?.id)
   const otherChainBalances = crossChainBalances?.filter(
     (tokenBalance) => tokenBalance.token?.id !== tokenQuery.token?.id
@@ -181,22 +199,13 @@ export default function BalanceSummary({ token, tokenQuery }: { token: Currency;
 
   const PageChainBalanceSummary = () => {
     if (!pageChainBalance) return null
-    const currency = getCurrencyFromPortfolioQuery(token.chainId, pageChainBalance.token)
-
+    const currency = getCurrencyFromGqlPortfolioQuery(token.chainId, pageChainBalance.token)
     return (
       <BalanceSection>
         <ThemedText.SubHeaderSmall color={theme.neutral1}>
           <Trans>Your balance</Trans>
         </ThemedText.SubHeaderSmall>
-        <Balance
-          token={currency}
-          chainId={token.chainId}
-          balance={CurrencyAmount.fromRawAmount(
-            currency,
-            JSBI.BigInt((pageChainBalance.quantity ?? 0) * 10 ** token.decimals)
-          )}
-          isInfoTDPEnabled={true}
-        />
+        <Balance token={currency} chainId={token.chainId} gqlBalance={pageChainBalance} isInfoTDPEnabled={true} />
       </BalanceSection>
     )
   }
@@ -212,17 +221,21 @@ export default function BalanceSummary({ token, tokenQuery }: { token: Currency;
           const chainId =
             (balance.token?.chain ? supportedChainIdFromGQLChain(balance.token?.chain) : ChainId.MAINNET) ??
             ChainId.MAINNET
-          const currency = getCurrencyFromPortfolioQuery(chainId, balance.token)
+          const currency = getCurrencyFromGqlPortfolioQuery(chainId, balance.token)
 
           return (
             <Balance
               key={balance.id}
               token={currency}
               chainId={chainId}
-              balance={CurrencyAmount.fromRawAmount(
-                currency,
-                JSBI.BigInt((balance.quantity ?? 0) * 10 ** token.decimals)
-              )}
+              gqlBalance={balance}
+              onClick={() =>
+                navigate(
+                  `${isInfoExplorePageEnabled ? '/explore' : ''}/tokens/${balance.token?.chain.toLowerCase()}/${
+                    balance.token?.address ?? 'NATIVE'
+                  }`
+                )
+              }
               isInfoTDPEnabled={true}
             />
           )
