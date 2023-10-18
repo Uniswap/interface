@@ -7,7 +7,6 @@ export default defineConfig({
   chromeWebSecurity: false,
   experimentalMemoryManagement: true, // better memory management, see https://github.com/cypress-io/cypress/pull/25462
   retries: { runMode: process.env.CYPRESS_RETRIES ? +process.env.CYPRESS_RETRIES : 1 },
-  video: false, // GH provides 2 CPUs, and cypress video eats one up, see https://github.com/cypress-io/cypress/issues/20468#issuecomment-1307608025
   e2e: {
     async setupNodeEvents(on, config) {
       await setupHardhatEvents(on, config)
