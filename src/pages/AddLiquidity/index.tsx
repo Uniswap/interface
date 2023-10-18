@@ -14,7 +14,7 @@ import usePrevious from 'hooks/usePrevious'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { BodyWrapper } from 'pages/AppBody'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -99,6 +99,7 @@ function AddLiquidity() {
   const { account, chainId, provider } = useWeb3React()
   const theme = useTheme()
   const trace = useTrace()
+  const chainIdRef = useRef(chainId)
 
   const toggleWalletDrawer = useToggleAccountDrawer() // toggle wallet when disconnected
   const addTransaction = useTransactionAdder()
@@ -401,6 +402,14 @@ function AddLiquidity() {
     onRightRangeInput('')
     navigate(`/add`)
   }, [navigate, onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput])
+
+  // reset inputs on chain change
+  useEffect(() => {
+    if (chainId !== chainIdRef.current) {
+      clearAll()
+      chainIdRef.current = chainId
+    }
+  }, [chainId, clearAll])
 
   // get value and prices at ticks
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
