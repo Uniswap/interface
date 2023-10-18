@@ -1661,7 +1661,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             <span
               class=""
             >
-              -105566.373%
+              ~-105566.373%
             </span>
           </div>
         </div>
@@ -3328,7 +3328,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             <span
               class=""
             >
-              -105566.373%
+              ~-105566.373%
             </span>
           </div>
         </div>
@@ -4995,7 +4995,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             <span
               class=""
             >
-              -105566.373%
+              ~-105566.373%
             </span>
           </div>
         </div>
@@ -6870,7 +6870,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             <span
               class=""
             >
-              -105566.373%
+              ~-105566.373%
             </span>
           </div>
         </div>
@@ -8745,7 +8745,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             <span
               class=""
             >
-              -105566.373%
+              ~-105566.373%
             </span>
           </div>
         </div>

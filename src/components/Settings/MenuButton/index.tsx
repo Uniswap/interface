@@ -49,7 +49,7 @@ const IconContainerWithSlippage = styled(IconContainer)<{ displayWarning?: boole
 
 const ButtonContent = ({ trade }: { trade?: InterfaceTrade }) => {
   const [userSlippageTolerance] = useUserSlippageTolerance()
-  const { formatSlippage } = useFormatter()
+  const { formatPercent } = useFormatter()
 
   if (userSlippageTolerance === SlippageTolerance.Auto || isUniswapXTrade(trade)) {
     return (
@@ -64,7 +64,7 @@ const ButtonContent = ({ trade }: { trade?: InterfaceTrade }) => {
   return (
     <IconContainerWithSlippage data-testid="settings-icon-with-slippage" gap="sm" displayWarning={isInvalidSlippage}>
       <ThemedText.BodySmall>
-        <Trans>{formatSlippage(userSlippageTolerance)} slippage</Trans>
+        <Trans>{formatPercent(userSlippageTolerance)} slippage</Trans>
       </ThemedText.BodySmall>
       <Icon />
     </IconContainerWithSlippage>
