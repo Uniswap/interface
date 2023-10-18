@@ -15,7 +15,7 @@ import {
   UniswapXShine,
 } from 'components/swap/styled'
 import { formatCommonPropertiesForTrade } from 'lib/utils/analytics'
-import { PropsWithChildren, useEffect, useRef, useState } from 'react'
+import { PropsWithChildren, useRef, useState } from 'react'
 import { X } from 'react-feather'
 import { useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -76,16 +76,6 @@ const OptInContents = ({
   const isVisible = isOnClassic
   const location = useLocation()
 
-  // adding this as we need to mount and then set shouldAnimate = true after it mounts to avoid a flicker on initial mount
-  const [shouldAnimate, setShouldAnimate] = useState(false)
-
-  useEffect(() => {
-    if (!isVisible || shouldAnimate) return
-    // delay visible animation a bit
-    const tm = setTimeout(() => setShouldAnimate(true), 350)
-    return () => clearTimeout(tm)
-  }, [isVisible, shouldAnimate])
-
   const tryItNowElement = (
     <ThemedText.BodySecondary
       color="accent1"
@@ -119,7 +109,7 @@ const OptInContents = ({
 
   if (isSmall || location.pathname.includes('/tokens/')) {
     return (
-      <SwapOptInSmallContainer ref={containerRef as any} visible={isVisible} shouldAnimate={shouldAnimate}>
+      <SwapOptInSmallContainer ref={containerRef as any} visible={isVisible}>
         <SwapMustache>
           <UniswapXShine />
           <SwapMustacheShadow />
