@@ -160,7 +160,10 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
     if (contract && account) {
       sendAnalyticsEvent(InterfaceEventName.WALLET_PROVIDER_USED, {
         source: 'useV3NFTPositionManagerContract',
-        contract,
+        contract: {
+          name: 'NonfungiblePositionManager',
+          address: contract.address,
+        },
       })
     }
   }, [account, contract])

@@ -20,7 +20,10 @@ function useFeeOnTransferDetectorContract(): FeeOnTransferDetector | null {
     if (contract && account) {
       sendAnalyticsEvent(InterfaceEventName.WALLET_PROVIDER_USED, {
         source: 'useFeeOnTransferDetectorContract',
-        contract,
+        contract: {
+          name: 'FeeOnTransferDetector',
+          address: FEE_ON_TRANSFER_DETECTOR_ADDRESS,
+        },
       })
     }
   }, [account, contract])
