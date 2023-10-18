@@ -28,18 +28,18 @@ const PageWrapper = styled(Row)`
   }
 `
 
-const RightColumn = styled(Column)`
-  gap: 24px;
-  margin: 0 48px 0 auto;
-  width: 22vw;
-  min-width: 360px;
+// const RightColumn = styled(Column)`
+//   gap: 24px;
+//   margin: 0 48px 0 auto;
+//   width: 22vw;
+//   min-width: 360px;
 
-  @media (max-width: ${BREAKPOINTS.lg - 1}px) {
-    margin: 44px 0px;
-    width: 100%;
-    min-width: unset;
-  }
-`
+//   @media (max-width: ${BREAKPOINTS.lg - 1}px) {
+//     margin: 44px 0px;
+//     width: 100%;
+//     min-width: unset;
+//   }
+// `
 
 const TokenDetailsWrapper = styled(Column)`
   gap: 24px;
@@ -116,13 +116,14 @@ const LeftColumn = styled(Column)`
   width: 65vw;
 `
 
-const DetailBubble = styled(LoadingBubble)`
-  height: 16px;
-  width: 80px;
+const RightColumn = styled(Column)`
+  gap: 24px;
+  height: 100vw;
 `
 
-const RouteBubble = styled(DetailBubble)`
-  width: 300px;
+const DetailBubble = styled(LoadingBubble)<{ $height?: number; $width?: number }>`
+  height: ${({ $height }) => ($height ? `${$height}px` : '16px')};
+  width: ${({ $width }) => ($width ? `${$width}px` : '80px')};
 `
 
 const IconBubble = styled(LoadingBubble)`
@@ -131,11 +132,7 @@ const IconBubble = styled(LoadingBubble)`
   border-radius: 50%;
 `
 
-const TokenNameBubble = styled(DetailBubble)`
-  width: 137px;
-`
-
-const TVLBubble = styled(LoadingBubble)`
+const LargeHeaderBubble = styled(LoadingBubble)`
   width: 180px;
   height: 40px;
 `
@@ -190,56 +187,54 @@ const SmallDetailBubble = styled(LoadingBubble)`
   border-radius: 100px;
 `
 
+const ButtonBubble = styled(LoadingBubble)`
+  height: 44px;
+  width: 175px;
+  border-radius: 900px;
+`
+
+const InfoColumn = styled(Column)`
+  gap: 24px;
+  background-color: ${({ theme }) => theme.surface2};
+  padding: 20px;
+  border-radius: 20px;
+`
+
+const LinkColumn = styled(Column)`
+  gap: 16px;
+  padding: 20px;
+`
+
 function PoolDetailsLoadingSkeleton() {
   return (
-    <LeftColumn>
-      <RouteBubble />
-      <Column gap="sm">
-        <Row gap="8px">
-          <IconBubble />
-          <TokenNameBubble />
-        </Row>
-        <TVLBubble />
-      </Column>
-      {/* TODO Actual Chart skeleton */}
-      <ChartSkeleton />
-      <HR />
-      <ChartHeaderBubble />
-      {/* TODO(WEB-2735): When making table, have headers be shared */}
-      <Table $isHorizontalScroll>
-        <TableRow $borderBottom>
-          <TableElement large>
-            <Row>
-              <ArrowDown size={16} />
-              <Trans>Time</Trans>
-            </Row>
-          </TableElement>
-          <TableElement>
-            <Trans>Type</Trans>
-          </TableElement>
-          <TableElement alignRight>
-            <Trans>USD</Trans>
-          </TableElement>
-          <TableElement alignRight>
-            <DetailBubble />
-          </TableElement>
-          <TableElement alignRight>
-            <DetailBubble />
-          </TableElement>
-          <TableElement alignRight>
-            <Trans>Maker</Trans>
-          </TableElement>
-          <TableElement alignRight small>
-            <Trans>Txn</Trans>
-          </TableElement>
-        </TableRow>
-        {Array.from({ length: 10 }).map((_, i) => (
-          <TableRow key={`loading-table-row-${i}`}>
+    <Row gap="60px">
+      <LeftColumn>
+        <DetailBubble $width={300} />
+        <Column gap="sm">
+          <Row gap="8px">
+            <IconBubble />
+            <DetailBubble $width={137} />
+          </Row>
+          <LargeHeaderBubble />
+        </Column>
+        {/* TODO Actual Chart skeleton */}
+        <ChartSkeleton />
+        <HR />
+        <ChartHeaderBubble />
+        {/* TODO(WEB-2735): When making table, have headers be shared */}
+        <Table $isHorizontalScroll>
+          <TableRow $borderBottom>
             <TableElement large>
-              <DetailBubble />
+              <Row>
+                <ArrowDown size={16} />
+                <Trans>Time</Trans>
+              </Row>
             </TableElement>
             <TableElement>
-              <DetailBubble />
+              <Trans>Type</Trans>
+            </TableElement>
+            <TableElement alignRight>
+              <Trans>USD</Trans>
             </TableElement>
             <TableElement alignRight>
               <DetailBubble />
@@ -248,17 +243,63 @@ function PoolDetailsLoadingSkeleton() {
               <DetailBubble />
             </TableElement>
             <TableElement alignRight>
-              <DetailBubble />
-            </TableElement>
-            <TableElement alignRight>
-              <DetailBubble />
+              <Trans>Maker</Trans>
             </TableElement>
             <TableElement alignRight small>
-              <SmallDetailBubble />
+              <Trans>Txn</Trans>
             </TableElement>
           </TableRow>
-        ))}
-      </Table>
-    </LeftColumn>
+          {Array.from({ length: 10 }).map((_, i) => (
+            <TableRow key={`loading-table-row-${i}`}>
+              <TableElement large>
+                <DetailBubble />
+              </TableElement>
+              <TableElement>
+                <DetailBubble />
+              </TableElement>
+              <TableElement alignRight>
+                <DetailBubble />
+              </TableElement>
+              <TableElement alignRight>
+                <DetailBubble />
+              </TableElement>
+              <TableElement alignRight>
+                <DetailBubble />
+              </TableElement>
+              <TableElement alignRight>
+                <DetailBubble />
+              </TableElement>
+              <TableElement alignRight small>
+                <SmallDetailBubble />
+              </TableElement>
+            </TableRow>
+          ))}
+        </Table>
+      </LeftColumn>
+      <RightColumn>
+        <Row gap="10px">
+          <ButtonBubble />
+          <ButtonBubble />
+        </Row>
+        <InfoColumn>
+          <DetailBubble $height={24} $width={116} />
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Column gap="md" key={`loading-info-row-${i}`}>
+              <DetailBubble />
+              <LargeHeaderBubble />
+            </Column>
+          ))}
+        </InfoColumn>
+        <LinkColumn>
+          <DetailBubble $height={24} $width={116} />
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Row gap="8px" key={`loading-link-row-${i}`}>
+              <SmallDetailBubble />
+              <DetailBubble $width={117} />
+            </Row>
+          ))}
+        </LinkColumn>
+      </RightColumn>
+    </Row>
   )
 }
