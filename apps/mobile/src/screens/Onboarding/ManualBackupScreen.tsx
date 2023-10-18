@@ -47,12 +47,14 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
   const [view, nextView] = useReducer((curView: View) => curView + 1, View.SeedPhrase)
 
   const [continueButtonEnabled, setContinueButtonEnabled] = useState(false)
+  const [continueButtonPressed, setContinueButtonPressed] = useState(false)
 
   // warning modal on seed phrase view
   const [seedWarningAcknowledged, setSeedWarningAcknowledged] = useState(false)
 
   const onValidationSuccessful = (): void => {
     if (activeAccount) {
+      setContinueButtonPressed(true)
       dispatch(
         editAccountActions.trigger({
           type: EditAccountAction.AddBackupMethod,
@@ -73,10 +75,10 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
   }, [view])
 
   useEffect(() => {
-    if (activeAccount?.backups?.includes(BackupType.Manual)) {
+    if (continueButtonPressed && activeAccount?.backups?.includes(BackupType.Manual)) {
       navigation.navigate({ name: OnboardingScreens.Notifications, params, merge: true })
     }
-  }, [activeAccount?.backups, navigation, params])
+  }, [continueButtonPressed, activeAccount?.backups, navigation, params])
 
   const responsiveTitle = media.short ? undefined : t('Confirm your recovery phrase')
 
