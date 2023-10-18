@@ -40,6 +40,19 @@ describe('Landing Page', () => {
     cy.url().should('include', '/pools')
   })
 
+  it('does not render landing page in when path is blocked', () => {
+    cy.visit('/', { userState: DISCONNECTED_WALLET_USER_STATE })
+    cy.document().then((doc) => {
+      const meta = document.createElement('meta')
+      meta.setAttribute('property', 'x:blocked-paths')
+      meta.setAttribute('content', '/,/nfts,/buy')
+      doc.head.appendChild(meta)
+    })
+    cy.get(getTestSelector('landing-page')).should('not.exist')
+    cy.get(getTestSelector('fiat-on-ramp-unavailable-tooltip')).should('not.exist')
+    cy.url().should('include', '/swap')
+  })
+
   it('does not render uk compliance banner in US', () => {
     cy.visit('/swap')
     cy.contains('UK disclaimer').should('not.exist')
