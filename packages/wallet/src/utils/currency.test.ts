@@ -1,19 +1,22 @@
 import { DAI, USDC } from 'wallet/src/constants/tokens'
+import { mockLocalizedFormatter } from 'wallet/src/test/utils'
 import { getCurrencyDisplayText, getFormattedCurrencyAmount } from './currency'
 
 describe(getFormattedCurrencyAmount, () => {
   it('formats valid amount', () => {
-    expect(getFormattedCurrencyAmount(DAI, '1000000000000000000')).toEqual('1.00 ')
+    expect(getFormattedCurrencyAmount(DAI, '1000000000000000000', mockLocalizedFormatter)).toEqual(
+      '1.00 '
+    )
   })
 
   it('handles invalid Currency', () => {
-    expect(getFormattedCurrencyAmount(undefined, '1')).toEqual('')
-    expect(getFormattedCurrencyAmount(null, '1')).toEqual('')
+    expect(getFormattedCurrencyAmount(undefined, '1', mockLocalizedFormatter)).toEqual('')
+    expect(getFormattedCurrencyAmount(null, '1', mockLocalizedFormatter)).toEqual('')
   })
 
   it('handles error', () => {
     // invalid raw amount will throw error
-    expect(getFormattedCurrencyAmount(USDC, '0.1')).toEqual('')
+    expect(getFormattedCurrencyAmount(USDC, '0.1', mockLocalizedFormatter)).toEqual('')
   })
 })
 

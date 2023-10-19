@@ -33,12 +33,13 @@ import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors 
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
-import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 import { DerivedSwapInfo } from './types'
 
 interface SwapFormProps {
@@ -60,6 +61,8 @@ function _SwapForm({
 }: SwapFormProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const { convertFiatAmountFormatted } = useFiatConverter()
+  const formatter = useLocalizedFormatter()
 
   const {
     chainId,
@@ -150,7 +153,7 @@ function _SwapForm({
   const [showInverseRate, setShowInverseRate] = useState(false)
   const price = trade.trade?.executionPrice
   const rateUnitPrice = useUSDCPrice(showInverseRate ? price?.quoteCurrency : price?.baseCurrency)
-  const rateUnitPriceFormatted = useFiatConversionFormatted(
+  const rateUnitPriceFormatted = convertFiatAmountFormatted(
     rateUnitPrice?.toSignificant(),
     NumberType.FiatTokenPrice
   )
@@ -158,11 +161,11 @@ function _SwapForm({
 
   const derivedCurrencyField =
     exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
-  const formattedDerivedValue = formatCurrencyAmount(
-    currencyAmounts[derivedCurrencyField],
-    NumberType.SwapTradeAmount,
-    ''
-  )
+  const formattedDerivedValue = formatter.formatCurrencyAmount({
+    value: currencyAmounts[derivedCurrencyField],
+    type: NumberType.SwapTradeAmount,
+    placeholder: '',
+  })
 
   const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
     useShouldShowNativeKeyboard()
@@ -370,7 +373,7 @@ function _SwapForm({
                     <Flex row>
                       <Text color={swapWarningColor.text} variant="subheading2">
                         {trade.trade && isPriceImpactWarning(swapWarning)
-                          ? getRateToDisplay(trade.trade, showInverseRate)
+                          ? getRateToDisplay(formatter, trade.trade, showInverseRate)
                           : swapWarning.title}
                       </Text>
                       {isPriceImpactWarning(swapWarning) && (
@@ -425,7 +428,7 @@ function _SwapForm({
                         color={swapDataRefreshing ? '$neutral3' : '$neutral2'}
                         variant="subheading2">
                         {trade.trade
-                          ? getRateToDisplay(trade.trade, showInverseRate)
+                          ? getRateToDisplay(formatter, trade.trade, showInverseRate)
                           : t('Fetching price...')}
                       </Text>
                       <Text

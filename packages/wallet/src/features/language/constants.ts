@@ -61,3 +61,23 @@ export const ORDERED_LANGUAGES: Language[] = [
   Language.Urdu,
   Language.Vietnamese,
 ]
+
+export const mapLanguageToLocale: Record<Language, Locale> = {
+  [Language.ChineseSimplified]: Locale.ChineseChina,
+  [Language.ChineseTraditional]: Locale.ChineseTaiwan,
+  [Language.Dutch]: Locale.DutchNetherlands,
+  [Language.English]: Locale.EnglishUnitedStates,
+  [Language.French]: Locale.FrenchFrance,
+  [Language.Hindi]: Locale.HindiIndia,
+  [Language.Indonesian]: Locale.IndonesianIndonesia,
+  [Language.Japanese]: Locale.JapaneseJapan,
+  [Language.Malay]: Locale.FrenchFrance,
+  [Language.Portuguese]: Locale.PortuguesePortugal,
+  [Language.Russian]: Locale.RussianRussia,
+  [Language.Spanish]: Locale.SpanishSpain,
+  [Language.Thai]: Locale.ThaiThailand,
+  [Language.Turkish]: Locale.TurkishTurkey,
+  [Language.Ukrainian]: Locale.UkrainianUkraine,
+  [Language.Urdu]: Locale.UrduPakistan,
+  [Language.Vietnamese]: Locale.VietnameseVietnam,
+}

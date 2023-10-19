@@ -6,7 +6,7 @@ import StatsIcon from 'ui/src/assets/icons/chart-bar.svg'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/format'
 import { TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
-import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 
 function StatsRow({
   label,
@@ -51,27 +51,28 @@ export function TokenDetailsMarketData({
   tokenColor?: Nullable<string>
 }): JSX.Element {
   const { t } = useTranslation()
+  const { convertFiatAmountFormatted } = useFiatConverter()
 
   return (
     <Flex gap="$spacing8">
       <StatsRow label={t('24h Uniswap volume')} tokenColor={tokenColor}>
         <Text loading={isLoading} variant="body2">
-          {useFiatConversionFormatted(volume, NumberType.FiatTokenStats)}
+          {convertFiatAmountFormatted(volume, NumberType.FiatTokenStats)}
         </Text>
       </StatsRow>
       <StatsRow label={t('Market cap')} tokenColor={tokenColor}>
         <Text loading={isLoading} variant="body2">
-          {useFiatConversionFormatted(marketCap, NumberType.FiatTokenStats)}
+          {convertFiatAmountFormatted(marketCap, NumberType.FiatTokenStats)}
         </Text>
       </StatsRow>
       <StatsRow label={t('52W high')} tokenColor={tokenColor}>
         <Text loading={isLoading} variant="body2">
-          {useFiatConversionFormatted(priceHight52W, NumberType.FiatTokenDetails)}
+          {convertFiatAmountFormatted(priceHight52W, NumberType.FiatTokenDetails)}
         </Text>
       </StatsRow>
       <StatsRow label={t('52W low')} tokenColor={tokenColor}>
         <Text loading={isLoading} variant="body2">
-          {useFiatConversionFormatted(priceLow52W, NumberType.FiatTokenDetails)}
+          {convertFiatAmountFormatted(priceLow52W, NumberType.FiatTokenDetails)}
         </Text>
       </StatsRow>
     </Flex>

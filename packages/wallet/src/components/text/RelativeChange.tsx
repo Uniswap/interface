@@ -1,6 +1,8 @@
 import { ColorTokens, Flex, Icons, Text } from 'ui/src'
 import { fonts, IconSizeTokens } from 'ui/src/theme'
-import { formatNumber, formatPercent, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 
 interface RelativeChangeProps {
   change?: number
@@ -26,13 +28,19 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
     loading = false,
     alignRight = false,
   } = props
+  const { formatNumberOrString, formatPercent } = useLocalizedFormatter()
+  const currency = useAppFiatCurrencyInfo()
 
   const isPositiveChange = change !== undefined ? change >= 0 : undefined
   const arrowColor = isPositiveChange ? positiveChangeColor : negativeChangeColor
 
   const formattedChange = formatPercent(change !== undefined ? Math.abs(change) : change)
   const formattedAbsChange = absoluteChange
-    ? `${formatNumber(Math.abs(absoluteChange), NumberType.PortfolioBalance)}`
+    ? `${formatNumberOrString({
+        value: Math.abs(absoluteChange),
+        type: NumberType.PortfolioBalance,
+        currencyCode: currency.code,
+      })}`
     : ''
 
   return (

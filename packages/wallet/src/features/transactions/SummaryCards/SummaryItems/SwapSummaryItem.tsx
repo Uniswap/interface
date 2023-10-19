@@ -2,6 +2,7 @@ import { TradeType } from '@uniswap/sdk-core'
 import { createElement, useMemo } from 'react'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 import {
@@ -31,6 +32,7 @@ export function SwapSummaryItem({
   const { typeInfo } = transaction
   const inputCurrencyInfo = useCurrencyInfo(typeInfo.inputCurrencyId)
   const outputCurrencyInfo = useCurrencyInfo(typeInfo.outputCurrencyId)
+  const formatter = useLocalizedFormatter()
 
   const caption = useMemo(() => {
     if (!inputCurrencyInfo || !outputCurrencyInfo) {
@@ -43,19 +45,21 @@ export function SwapSummaryItem({
     const currencyAmount = getFormattedCurrencyAmount(
       inputCurrency,
       inputCurrencyAmountRaw,
+      formatter,
       //** isApproximateAmount - input value and confirmed amount are both exact so this should be false **//
       isConfirmedSwapTypeInfo(typeInfo) ? false : typeInfo.tradeType === TradeType.EXACT_OUTPUT
     )
     const otherCurrencyAmount = getFormattedCurrencyAmount(
       outputCurrency,
       outputCurrencyAmountRaw,
+      formatter,
       //** isApproximateAmount - input value and confirmed amount are both exact so this should be false **//
       isConfirmedSwapTypeInfo(typeInfo) ? false : typeInfo.tradeType === TradeType.EXACT_INPUT
     )
     return `${currencyAmount}${getSymbolDisplayText(
       inputCurrency.symbol
     )} → ${otherCurrencyAmount}${getSymbolDisplayText(outputCurrency.symbol)}`
-  }, [inputCurrencyInfo, outputCurrencyInfo, typeInfo])
+  }, [inputCurrencyInfo, outputCurrencyInfo, formatter, typeInfo])
 
   // For retrying failed, locally submitted swaps
   const swapFormState = swapCallbacks?.getSwapFormTransactionState(

@@ -6,11 +6,13 @@ import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { borderRadii } from 'ui/src/theme'
-import { formatNumber, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
-import { getSymbolDisplayText, useFiatConversionFormatted } from 'wallet/src/utils/currency'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 interface TokenBalanceItemProps {
@@ -29,6 +31,8 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   const { quantity, currencyInfo, relativeChange24, balanceUSD } = portfolioBalance
   const { currency, currencyId, isSpam } = currencyInfo
   const { t } = useTranslation()
+  const { convertFiatAmountFormatted } = useFiatConverter()
+  const { formatNumberOrString } = useLocalizedFormatter()
 
   const onPress = (): void => {
     onPressToken?.(currencyInfo.currencyId)
@@ -43,7 +47,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   })
 
   const shortenedSymbol = getSymbolDisplayText(currency.symbol)
-  const balance = useFiatConversionFormatted(
+  const balance = convertFiatAmountFormatted(
     portfolioBalance.balanceUSD,
     NumberType.FiatTokenQuantity
   )
@@ -80,7 +84,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
             </Text>
             <Flex row alignItems="center" gap="$spacing8" minHeight={20}>
               <Text color="$neutral2" numberOfLines={1} variant="subheading2">
-                {`${formatNumber(quantity)}`} {shortenedSymbol}
+                {`${formatNumberOrString({ value: quantity })}`} {shortenedSymbol}
               </Text>
             </Flex>
           </Flex>

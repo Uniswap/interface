@@ -6,7 +6,7 @@ import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
 import { usePortfolioBalancesQuery } from 'wallet/src/data/__generated__/types-and-hooks'
-import { useFiatConversion, useFiatConversionFormatted } from 'wallet/src/utils/currency'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 
 interface PortfolioBalanceProps {
   owner: Address
@@ -26,6 +26,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
       setIsWarmLoading(false)
     },
   })
+  const { convertFiatAmount, convertFiatAmountFormatted } = useFiatConverter()
 
   const [isWarmLoading, setIsWarmLoading] = useState(false)
   const isLoading = loading && !data
@@ -39,11 +40,11 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
   const portfolioBalance = data?.portfolios?.[0]
   const portfolioChange = portfolioBalance?.tokensTotalDenominatedValueChange
 
-  const totalBalance = useFiatConversionFormatted(
+  const totalBalance = convertFiatAmountFormatted(
     portfolioBalance?.tokensTotalDenominatedValue?.value,
     NumberType.PortfolioBalance
   )
-  const { amount: absoluteChange } = useFiatConversion(portfolioChange?.absolute?.value)
+  const { amount: absoluteChange } = convertFiatAmount(portfolioChange?.absolute?.value)
 
   return (
     <Flex gap="$spacing4">

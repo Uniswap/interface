@@ -13,19 +13,17 @@ import { getRateToDisplay } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
-import { formatCurrencyAmount, formatPercent, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
 import { useShouldUseMEVBlocker } from 'wallet/src/features/transactions/swap/customRpc'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import {
-  getFormattedCurrencyAmount,
-  getSymbolDisplayText,
-  useFiatConversionFormatted,
-} from 'wallet/src/utils/currency'
+import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 const getFeeAmountUsd = (
@@ -84,6 +82,8 @@ export function SwapDetails({
 }: SwapDetailsProps): JSX.Element {
   const { t } = useTranslation()
   const [showInverseRate, setShowInverseRate] = useState(false)
+  const { convertFiatAmountFormatted } = useFiatConverter()
+  const formatter = useLocalizedFormatter()
 
   const shouldShowSwapRewrite = useFeatureFlag(FEATURE_FLAGS.SwapRewrite)
 
@@ -102,31 +102,31 @@ export function SwapDetails({
   const acceptedUSDPrice = useUSDCPrice(
     showInverseRate ? acceptedPrice.quoteCurrency : acceptedPrice.baseCurrency
   )
-  const acceptedFiatPriceFormatted = useFiatConversionFormatted(
+  const acceptedFiatPriceFormatted = convertFiatAmountFormatted(
     acceptedUSDPrice?.toSignificant(),
     NumberType.FiatTokenPrice
   )
-  const acceptedRate = getRateToDisplay(acceptedTrade, showInverseRate)
+  const acceptedRate = getRateToDisplay(formatter, acceptedTrade, showInverseRate)
 
   const latestPrice = trade.executionPrice
   const latestUSDPrice = useUSDCPrice(
     showInverseRate ? latestPrice.quoteCurrency : latestPrice.baseCurrency
   )
-  const latesetFiatPriceFormatted = useFiatConversionFormatted(
+  const latesetFiatPriceFormatted = convertFiatAmountFormatted(
     latestUSDPrice?.toSignificant(),
     NumberType.FiatTokenPrice
   )
-  const latestRate = getRateToDisplay(trade, showInverseRate)
+  const latestRate = getRateToDisplay(formatter, trade, showInverseRate)
 
   const swapFeeUsd = getFeeAmountUsd(trade, outputCurrencyPricePerUnitExact)
-  const swapFeeFiatFormatted = useFiatConversionFormatted(swapFeeUsd, NumberType.PortfolioBalance)
+  const swapFeeFiatFormatted = convertFiatAmountFormatted(swapFeeUsd, NumberType.PortfolioBalance)
 
   const swapFeeInfo = trade.swapFee
     ? {
         noFeeCharged: trade.swapFee.percent.equalTo(0),
-        formattedPercent: formatPercent(trade.swapFee.percent.toFixed()),
+        formattedPercent: formatter.formatPercent(trade.swapFee.percent.toFixed()),
         formattedAmount:
-          getFormattedCurrencyAmount(trade.outputAmount.currency, trade.swapFee.amount) +
+          getFormattedCurrencyAmount(trade.outputAmount.currency, trade.swapFee.amount, formatter) +
           getSymbolDisplayText(trade.outputAmount.currency.symbol),
         formattedAmountFiat: swapFeeFiatFormatted,
       }
@@ -239,7 +239,7 @@ export function SwapDetails({
             </Flex>
           ) : null}
           <Text color={showSlippageWarning ? '$DEP_accentWarning' : '$neutral1'} variant="body3">
-            {formatPercent(acceptedTrade.slippageTolerance)}
+            {formatter.formatPercent(acceptedTrade.slippageTolerance)}
           </Text>
         </Flex>
       </Flex>
@@ -261,6 +261,7 @@ function AcceptNewQuoteRow({
   setShowInverseRate: React.Dispatch<React.SetStateAction<boolean>>
 }): JSX.Element {
   const { t } = useTranslation()
+  const { formatCurrencyAmount } = useLocalizedFormatter()
 
   const shouldShowSwapRewrite = useFeatureFlag(FEATURE_FLAGS.SwapRewrite)
 
@@ -273,7 +274,10 @@ function AcceptNewQuoteRow({
   const derivedSymbol = getSymbolDisplayText(
     derivedSwapInfo.currencies[derivedCurrencyField]?.currency.symbol
   )
-  const formattedDerivedAmount = formatCurrencyAmount(derivedAmount, NumberType.TokenTx)
+  const formattedDerivedAmount = formatCurrencyAmount({
+    value: derivedAmount,
+    type: NumberType.TokenTx,
+  })
 
   const percentageDifference = calculatePercentageDifference({
     derivedSwapInfo,

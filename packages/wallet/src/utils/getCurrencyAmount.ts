@@ -24,7 +24,7 @@ export enum ValueType {
  */
 export function getCurrencyAmount<T extends Currency>({
   value,
-  valueType,
+  valueType = ValueType.Raw,
   currency,
 }: {
   value?: string

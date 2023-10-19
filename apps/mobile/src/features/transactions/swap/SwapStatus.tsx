@@ -8,6 +8,7 @@ import { AppTFunction } from 'ui/src/i18n/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 
+import { LocalizedFormatter, useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import {
@@ -34,18 +35,20 @@ type SwapStatusText = {
 const getTextFromTxStatus = (
   t: AppTFunction,
   derivedSwapInfo: DerivedSwapInfo,
+  formatter: LocalizedFormatter,
   transactionDetails?: TransactionDetails
 ): SwapStatusText => {
   if (derivedSwapInfo.wrapType === WrapType.NotApplicable) {
-    return getTextFromSwapStatus(t, derivedSwapInfo, transactionDetails)
+    return getTextFromSwapStatus(t, derivedSwapInfo, formatter, transactionDetails)
   }
 
-  return getTextFromWrapStatus(t, derivedSwapInfo, transactionDetails)
+  return getTextFromWrapStatus(t, derivedSwapInfo, formatter, transactionDetails)
 }
 
 const getTextFromWrapStatus = (
   t: AppTFunction,
   derivedSwapInfo: DerivedSwapInfo,
+  formatter: LocalizedFormatter,
   transactionDetails?: TransactionDetails
 ): SwapStatusText => {
   const { wrapType } = derivedSwapInfo
@@ -77,7 +80,8 @@ const getTextFromWrapStatus = (
     // input and output amounts are the same for wraps/unwraps
     const inputAmount = getFormattedCurrencyAmount(
       currencies[CurrencyField.INPUT]?.currency,
-      typeInfo.currencyAmountRaw
+      typeInfo.currencyAmountRaw,
+      formatter
     )
 
     if (wrapType === WrapType.Unwrap) {
@@ -127,6 +131,7 @@ const getTextFromWrapStatus = (
 const getTextFromSwapStatus = (
   t: AppTFunction,
   derivedSwapInfo: DerivedSwapInfo,
+  formatter: LocalizedFormatter,
   transactionDetails?: TransactionDetails
 ): SwapStatusText => {
   // transactionDetails may not been added to the store yet
@@ -154,12 +159,14 @@ const getTextFromSwapStatus = (
     const inputAmount = getFormattedCurrencyAmount(
       inputCurrency?.currency,
       inputCurrencyAmountRaw,
+      formatter,
       isConfirmedSwapTypeInfo(typeInfo) ? false : typeInfo.tradeType === TradeType.EXACT_OUTPUT
     )
 
     const outputAmount = getFormattedCurrencyAmount(
       outputCurrency?.currency,
       outputCurrencyAmountRaw,
+      formatter,
       isConfirmedSwapTypeInfo(typeInfo) ? false : typeInfo.tradeType === TradeType.EXACT_INPUT
     )
 
@@ -194,10 +201,11 @@ export function SwapStatus({ derivedSwapInfo, onNext, onTryAgain }: SwapStatusPr
     toSupportedChainId(currencies[CurrencyField.INPUT]?.currency.chainId) ?? ChainId.Mainnet
   const activeAddress = useActiveAccountAddressWithThrow()
   const transaction = useSelectTransaction(activeAddress, chainId, txId)
+  const formatter = useLocalizedFormatter()
 
   const { title, description } = useMemo(() => {
-    return getTextFromTxStatus(t, derivedSwapInfo, transaction)
-  }, [t, transaction, derivedSwapInfo])
+    return getTextFromTxStatus(t, derivedSwapInfo, formatter, transaction)
+  }, [t, transaction, formatter, derivedSwapInfo])
 
   return (
     <TransactionPending

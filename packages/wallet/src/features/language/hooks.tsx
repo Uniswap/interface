@@ -1,11 +1,18 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Language, Locale } from 'wallet/src/features/language/constants'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
+import { Language, Locale, mapLanguageToLocale } from 'wallet/src/features/language/constants'
 import { useAppSelector } from 'wallet/src/state'
 
+/**
+ * Hook used to get the currently selected language for the app
+ * @returns currently selected language enum
+ */
 export function useCurrentLanguage(): Language {
+  const featureEnabled = useFeatureFlag(FEATURE_FLAGS.LanguageSelection)
   const { currentLanguage } = useAppSelector((state) => state.languageSettings)
-  return currentLanguage
+  return featureEnabled ? currentLanguage : Language.English
 }
 
 export type LanguageInfo = {
@@ -14,6 +21,23 @@ export type LanguageInfo = {
   locale: Locale
 }
 
+/**
+ * Helper function used get the locale from the language. They're strongly associated,
+ * but they have different ISO values and are used differently. Locale is what's mainly
+ * used for integrations with other libraries, while language is more internal
+ * @param language target language
+ * @returns associated locale
+ */
+export function getLocale(language: Language): Locale {
+  return mapLanguageToLocale[language]
+}
+
+/**
+ * Returns all relevant info for the target language, including the translated name of
+ * that langauge in that language (not a typo).
+ * @param language target language
+ * @returns all relevant language info
+ */
 export function useLanguageInfo(language: Language): LanguageInfo {
   const { t } = useTranslation()
 
@@ -21,88 +45,88 @@ export function useLanguageInfo(language: Language): LanguageInfo {
     return {
       [Language.ChineseSimplified]: {
         name: t('Chinese, Simplified'),
-        originName: t('Chinese, Simplified', { lng: Locale.ChineseChina }),
-        locale: Locale.ChineseChina,
+        originName: t('Chinese, Simplified', { lng: getLocale(Language.ChineseSimplified) }),
+        locale: getLocale(Language.ChineseSimplified),
       },
       [Language.ChineseTraditional]: {
         name: t('Chinese, Traditional'),
-        originName: t('Chinese, Traditional', { lng: Locale.ChineseTaiwan }),
-        locale: Locale.ChineseTaiwan,
+        originName: t('Chinese, Traditional', { lng: getLocale(Language.ChineseTraditional) }),
+        locale: getLocale(Language.ChineseTraditional),
       },
       [Language.Dutch]: {
         name: t('Dutch'),
-        originName: t('Dutch', { lng: Locale.DutchNetherlands }),
-        locale: Locale.DutchNetherlands,
+        originName: t('Dutch', { lng: getLocale(Language.Dutch) }),
+        locale: getLocale(Language.Dutch),
       },
       [Language.English]: {
         name: t('English'),
-        originName: t('English', { lng: Locale.EnglishUnitedStates }),
-        locale: Locale.EnglishUnitedStates,
+        originName: t('English', { lng: getLocale(Language.English) }),
+        locale: getLocale(Language.English),
       },
       [Language.French]: {
         name: t('French'),
-        originName: t('French', { lng: Locale.FrenchFrance }),
-        locale: Locale.FrenchFrance,
+        originName: t('French', { lng: getLocale(Language.French) }),
+        locale: getLocale(Language.French),
       },
       [Language.Hindi]: {
         name: t('Hindi'),
-        originName: t('Hindi', { lng: Locale.HindiIndia }),
-        locale: Locale.HindiIndia,
+        originName: t('Hindi', { lng: getLocale(Language.Hindi) }),
+        locale: getLocale(Language.Hindi),
       },
       [Language.Indonesian]: {
         name: t('Indonesian'),
-        originName: t('Indonesian', { lng: Locale.IndonesianIndonesia }),
-        locale: Locale.IndonesianIndonesia,
+        originName: t('Indonesian', { lng: getLocale(Language.Indonesian) }),
+        locale: getLocale(Language.Indonesian),
       },
       [Language.Japanese]: {
         name: t('Japanese'),
-        originName: t('Japanese', { lng: Locale.JapaneseJapan }),
-        locale: Locale.JapaneseJapan,
+        originName: t('Japanese', { lng: getLocale(Language.Japanese) }),
+        locale: getLocale(Language.Japanese),
       },
       [Language.Malay]: {
         name: t('Malay'),
-        originName: t('Malay', { lng: Locale.MalayMalaysia }),
-        locale: Locale.MalayMalaysia,
+        originName: t('Malay', { lng: getLocale(Language.Malay) }),
+        locale: getLocale(Language.Malay),
       },
       [Language.Portuguese]: {
         name: t('Portuguese'),
-        originName: t('Portuguese', { lng: Locale.PortuguesePortugal }),
-        locale: Locale.PortuguesePortugal,
+        originName: t('Portuguese', { lng: getLocale(Language.Portuguese) }),
+        locale: getLocale(Language.Portuguese),
       },
       [Language.Russian]: {
         name: t('Russian'),
-        originName: t('Russian', { lng: Locale.RussianRussia }),
-        locale: Locale.RussianRussia,
+        originName: t('Russian', { lng: getLocale(Language.Russian) }),
+        locale: getLocale(Language.Russian),
       },
       [Language.Spanish]: {
         name: t('Spanish'),
-        originName: t('Spanish', { lng: Locale.SpanishSpain }),
-        locale: Locale.SpanishSpain,
+        originName: t('Spanish', { lng: getLocale(Language.Spanish) }),
+        locale: getLocale(Language.Spanish),
       },
       [Language.Thai]: {
         name: t('Thai'),
-        originName: t('Thai', { lng: Locale.ThaiThailand }),
-        locale: Locale.ThaiThailand,
+        originName: t('Thai', { lng: getLocale(Language.Thai) }),
+        locale: getLocale(Language.Thai),
       },
       [Language.Turkish]: {
         name: t('Turkish'),
-        originName: t('Turkish', { lng: Locale.TurkishTurkey }),
-        locale: Locale.TurkishTurkey,
+        originName: t('Turkish', { lng: getLocale(Language.Turkish) }),
+        locale: getLocale(Language.Turkish),
       },
       [Language.Ukrainian]: {
         name: t('Ukrainian'),
-        originName: t('Ukrainian', { lng: Locale.UkrainianUkraine }),
-        locale: Locale.UkrainianUkraine,
+        originName: t('Ukrainian', { lng: getLocale(Language.Ukrainian) }),
+        locale: getLocale(Language.Ukrainian),
       },
       [Language.Urdu]: {
         name: t('Urdu'),
-        originName: t('Urdu', { lng: Locale.UrduPakistan }),
-        locale: Locale.UrduPakistan,
+        originName: t('Urdu', { lng: getLocale(Language.Urdu) }),
+        locale: getLocale(Language.Urdu),
       },
       [Language.Vietnamese]: {
         name: t('Vietnamese'),
-        originName: t('Vietnamese', { lng: Locale.VietnameseVietnam }),
-        locale: Locale.VietnameseVietnam,
+        originName: t('Vietnamese', { lng: getLocale(Language.Vietnamese) }),
+        locale: getLocale(Language.Vietnamese),
       },
     }
   }, [t])
@@ -110,6 +134,19 @@ export function useLanguageInfo(language: Language): LanguageInfo {
   return languageToLanguageInfo[language]
 }
 
+/**
+ * Hook used to get the locale for the currently selected language in the app
+ * @returns locale for the currently selected language
+ */
+export function useCurrentLocale(): Locale {
+  const currentLanguage = useCurrentLanguage()
+  return getLocale(currentLanguage)
+}
+
+/**
+ * Hook used to get all relevant info for the currently selected language in the app
+ * @returns all relevant language info
+ */
 export function useCurrentLanguageInfo(): LanguageInfo {
   const currentLanguage = useCurrentLanguage()
   return useLanguageInfo(currentLanguage)

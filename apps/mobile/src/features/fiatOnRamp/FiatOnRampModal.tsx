@@ -39,12 +39,13 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
-import { formatFiatNumber, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { useTimeout } from 'utilities/src/time/timing'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { ANIMATE_SPRING_CONFIG } from 'wallet/src/features/transactions/utils'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
@@ -86,6 +87,7 @@ export function FiatOnRampModal(): JSX.Element {
 function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
   const { t } = useTranslation()
   const { fullWidth } = useDeviceDimensions()
+  const { formatNumberOrString } = useLocalizedFormatter()
   const inputRef = useRef<TextInput>(null)
 
   const { isSheetReady } = useBottomSheetContext()
@@ -330,7 +332,11 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
       )}
       {showConnectingToMoonpayScreen && (
         <FiatOnRampConnectingView
-          amount={formatFiatNumber(value, NumberType.FiatTokenPrice, 'usd')} // TODO remove hard-coded USD after adding support for more currencies
+          amount={formatNumberOrString({
+            value,
+            type: NumberType.FiatTokenPrice,
+            currencyCode: 'usd', // TODO remove hard-coded USD after adding support for more currencies
+          })}
           quoteCurrencyCode={currency.currencyInfo?.currency.symbol}
         />
       )}

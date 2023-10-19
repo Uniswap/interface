@@ -6,9 +6,9 @@ import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/format'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
-import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 export function NetworkFee({
   chainId,
@@ -20,9 +20,10 @@ export function NetworkFee({
   onShowNetworkFeeInfo?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
+  const { convertFiatAmountFormatted } = useFiatConverter()
 
   const gasFeeUSD = useUSDValue(chainId, gasFee.value ?? undefined)
-  const gasFeeFormatted = useFiatConversionFormatted(gasFeeUSD, NumberType.FiatTokenPrice)
+  const gasFeeFormatted = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatTokenPrice)
 
   return (
     <Flex row alignItems="center" justifyContent="space-between">

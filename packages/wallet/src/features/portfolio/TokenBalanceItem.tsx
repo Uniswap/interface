@@ -1,10 +1,12 @@
 import { memo } from 'react'
 import { Flex, getTokenValue, Icons, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { formatNumber, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
-import { getSymbolDisplayText, useFiatConversionFormatted } from 'wallet/src/utils/currency'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 interface TokenBalanceItemProps {
@@ -24,7 +26,10 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   const { quantity, relativeChange24, balanceUSD, currencyInfo } = portfolioBalance
   const { currency } = currencyInfo
   const colors = useSporeColors()
-  const balanceFormatted = useFiatConversionFormatted(balanceUSD, NumberType.FiatTokenQuantity)
+  const { convertFiatAmountFormatted } = useFiatConverter()
+  const { formatNumberOrString } = useLocalizedFormatter()
+
+  const balanceFormatted = convertFiatAmountFormatted(balanceUSD, NumberType.FiatTokenQuantity)
 
   const onPress = (): void => {
     onPressToken?.(currencyInfo.currencyId)
@@ -69,7 +74,10 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
               {currency.name ?? getSymbolDisplayText(currency.symbol)}
             </Text>
             <Text color="$neutral2" numberOfLines={1} variant="body1">
-              {`${formatNumber(quantity, NumberType.TokenNonTx)}`}{' '}
+              {`${formatNumberOrString({
+                value: quantity,
+                type: NumberType.TokenNonTx,
+              })}`}{' '}
               {getSymbolDisplayText(currency.symbol)}
             </Text>
           </Flex>

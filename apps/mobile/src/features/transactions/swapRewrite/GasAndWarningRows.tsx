@@ -9,12 +9,13 @@ import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/format'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
-import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 export function GasAndWarningRows(): JSX.Element {
   const colors = useSporeColors()
+  const { convertFiatAmountFormatted } = useFiatConverter()
 
   const { gasFee } = useSwapTxContext()
   const { derivedSwapInfo } = useSwapFormContext()
@@ -28,7 +29,7 @@ export function GasAndWarningRows(): JSX.Element {
   const { formScreenWarning } = useParsedSwapWarnings()
 
   const gasFeeUSD = useUSDValue(chainId, gasFee?.value)
-  const gasFeeFormatted = useFiatConversionFormatted(gasFeeUSD, NumberType.FiatGasPrice)
+  const gasFeeFormatted = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
 
   const onSwapWarningClick = useCallback(() => {
     if (!formScreenWarning?.warning.message) {

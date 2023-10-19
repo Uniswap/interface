@@ -2,7 +2,8 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useEffect, useRef } from 'react'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
+import { LocalizedFormatter, useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { SwapTradeBaseProperties } from 'wallet/src/telemetry/types'
@@ -12,6 +13,7 @@ import { DerivedSwapInfo } from './types'
 
 // hook-based analytics because this one is data-lifecycle dependent
 export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
+  const formatter = useLocalizedFormatter()
   const {
     trade: { trade },
   } = derivedSwapInfo
@@ -40,14 +42,15 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
 
     sendMobileAnalyticsEvent(
       SwapEventName.SWAP_QUOTE_RECEIVED,
-      getBaseTradeAnalyticsProperties(currTrade)
+      getBaseTradeAnalyticsProperties(formatter, currTrade)
     )
-  }, [inputAmount, inputCurrencyId, outputCurrencyId, tradeType])
+  }, [inputAmount, inputCurrencyId, outputCurrencyId, tradeType, formatter])
 
   return
 }
 
 export function getBaseTradeAnalyticsProperties(
+  formatter: LocalizedFormatter,
   trade: Trade<Currency, Currency, TradeType>
 ): SwapTradeBaseProperties {
   const portionAmount = trade.quote?.portionAmount
@@ -71,14 +74,18 @@ export function getBaseTradeAnalyticsProperties(
     estimated_network_fee_usd: undefined,
     chain_id: trade.inputAmount.currency.chainId,
     token_in_amount: trade.inputAmount.toExact(),
-    token_out_amount: formatCurrencyAmount(finalOutputAmount, NumberType.SwapTradeAmount),
+    token_out_amount: formatter.formatCurrencyAmount({
+      value: finalOutputAmount,
+      type: NumberType.SwapTradeAmount,
+    }),
     allowed_slippage_basis_points: trade.slippageTolerance * 100,
     fee_amount: portionAmount,
   }
 }
 
 export function getBaseTradeAnalyticsPropertiesFromSwapInfo(
-  derivedSwapInfo: DerivedSwapInfo
+  derivedSwapInfo: DerivedSwapInfo,
+  formatter: LocalizedFormatter
 ): SwapTradeBaseProperties {
   const { chainId, currencyAmounts } = derivedSwapInfo
   const inputCurrencyAmount = currencyAmounts[CurrencyField.INPUT]
@@ -113,7 +120,10 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo(
     estimated_network_fee_usd: undefined,
     chain_id: chainId,
     token_in_amount: inputCurrencyAmount?.toExact() ?? '',
-    token_out_amount: formatCurrencyAmount(finalOutputAmount, NumberType.SwapTradeAmount),
+    token_out_amount: formatter.formatCurrencyAmount({
+      value: finalOutputAmount,
+      type: NumberType.SwapTradeAmount,
+    }),
     allowed_slippage_basis_points: slippageTolerance ? slippageTolerance * 100 : undefined,
     fee_amount: portionAmount,
   }

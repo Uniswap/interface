@@ -1,5 +1,6 @@
 import { createElement, useMemo } from 'react'
 import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import {
   useNativeCurrencyInfo,
   useWrappedNativeCurrencyInfo,
@@ -18,6 +19,7 @@ export function WrapSummaryItem({
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: WrapTransactionInfo }
 }): JSX.Element {
+  const formatter = useLocalizedFormatter()
   const { unwrapped } = transaction.typeInfo
 
   const nativeCurrencyInfo = useNativeCurrencyInfo(transaction.chainId)
@@ -35,14 +37,22 @@ export function WrapSummaryItem({
     const { currency: outputCurrency } = outputCurrencyInfo
     const currencyAmount = getFormattedCurrencyAmount(
       inputCurrency,
-      transaction.typeInfo.currencyAmountRaw
+      transaction.typeInfo.currencyAmountRaw,
+      formatter
     )
     const otherCurrencyAmount = getFormattedCurrencyAmount(
       outputCurrency,
-      transaction.typeInfo.currencyAmountRaw
+      transaction.typeInfo.currencyAmountRaw,
+      formatter
     )
     return `${currencyAmount}${inputCurrency.symbol} → ${otherCurrencyAmount}${outputCurrency.symbol}`
-  }, [nativeCurrencyInfo, transaction.typeInfo.currencyAmountRaw, unwrapped, wrappedCurrencyInfo])
+  }, [
+    nativeCurrencyInfo,
+    transaction.typeInfo.currencyAmountRaw,
+    unwrapped,
+    wrappedCurrencyInfo,
+    formatter,
+  ])
 
   return createElement(layoutElement as React.FunctionComponent<TransactionSummaryLayoutProps>, {
     caption,

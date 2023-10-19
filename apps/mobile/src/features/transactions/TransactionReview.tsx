@@ -25,8 +25,9 @@ import { fonts, iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/format'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
-import { getSymbolDisplayText, useFiatConversionFormatted } from 'wallet/src/utils/currency'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 interface BaseReviewProps {
   actionButtonProps: { disabled: boolean; label: string; name: ElementName; onPress: () => void }
@@ -76,6 +77,7 @@ export function TransactionReview({
   const media = useMedia()
   const { fullHeight } = useDeviceDimensions()
   const { t } = useTranslation()
+  const { convertFiatAmountFormatted } = useFiatConverter()
 
   const { trigger: actionButtonTrigger } = useBiometricPrompt(actionButtonProps.onPress)
   const { requiredForTransactions } = useBiometricAppSettings()
@@ -100,11 +102,11 @@ export function TransactionReview({
   const arrowPadding = media.short ? '$spacing4' : '$spacing8'
   const amountAndEquivalentValueGap = media.short ? '$spacing4' : '$spacing8'
 
-  const formattedInputFiatValue = useFiatConversionFormatted(
+  const formattedInputFiatValue = convertFiatAmountFormatted(
     inputCurrencyUSDValue?.toExact(),
     NumberType.FiatTokenQuantity
   )
-  const formattedOutputFiatValue = useFiatConversionFormatted(
+  const formattedOutputFiatValue = convertFiatAmountFormatted(
     outputCurrencyUSDValue?.toExact(),
     NumberType.FiatTokenQuantity
   )

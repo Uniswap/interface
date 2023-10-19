@@ -12,6 +12,7 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { initializeTranslation } from 'wallet/src/i18n/i18n'
 import { account, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
+import { mockLocalizedFormatter } from 'wallet/src/test/utils'
 import { buildReceiveNotification } from './buildReceiveNotification'
 
 describe(formSwapNotificationTitle, () => {
@@ -22,6 +23,7 @@ describe(formSwapNotificationTitle, () => {
   it('formats successful local swap title', () => {
     expect(
       formSwapNotificationTitle(
+        mockLocalizedFormatter,
         TransactionStatus.Success,
         DAI,
         USDC,
@@ -37,6 +39,7 @@ describe(formSwapNotificationTitle, () => {
   it('formats successful remote swap title', () => {
     expect(
       formSwapNotificationTitle(
+        mockLocalizedFormatter,
         TransactionStatus.Success,
         DAI,
         USDC,
@@ -51,6 +54,7 @@ describe(formSwapNotificationTitle, () => {
   it('formats canceled swap title', () => {
     expect(
       formSwapNotificationTitle(
+        mockLocalizedFormatter,
         TransactionStatus.Cancelled,
         DAI,
         USDC,
@@ -66,6 +70,7 @@ describe(formSwapNotificationTitle, () => {
   it('formats failed swap title', () => {
     expect(
       formSwapNotificationTitle(
+        mockLocalizedFormatter,
         TransactionStatus.Failed,
         DAI,
         USDC,

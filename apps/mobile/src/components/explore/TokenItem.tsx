@@ -12,8 +12,8 @@ import { NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
-import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 import {
   buildCurrencyId,
   buildNativeCurrencyId,
@@ -47,6 +47,7 @@ export const TokenItem = memo(function _TokenItem({
 }: TokenItemProps) {
   const { t } = useTranslation()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
+  const { convertFiatAmountFormatted } = useFiatConverter()
 
   const {
     name,
@@ -61,9 +62,9 @@ export const TokenItem = memo(function _TokenItem({
     totalValueLocked,
   } = tokenItemData
   const _currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
-  const marketCapFormatted = useFiatConversionFormatted(marketCap, NumberType.FiatTokenDetails)
-  const volume24hFormatted = useFiatConversionFormatted(volume24h, NumberType.FiatTokenDetails)
-  const totalValueLockedFormatted = useFiatConversionFormatted(
+  const marketCapFormatted = convertFiatAmountFormatted(marketCap, NumberType.FiatTokenDetails)
+  const volume24hFormatted = convertFiatAmountFormatted(volume24h, NumberType.FiatTokenDetails)
+  const totalValueLockedFormatted = convertFiatAmountFormatted(
     totalValueLocked,
     NumberType.FiatTokenDetails
   )
@@ -129,7 +130,7 @@ export const TokenItem = memo(function _TokenItem({
           <Flex grow row alignItems="center" justifyContent="flex-end">
             <TokenMetadata>
               <Text lineHeight={24} variant="body1">
-                {useFiatConversionFormatted(price, NumberType.FiatTokenPrice)}
+                {convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)}
               </Text>
               <RelativeChange change={pricePercentChange24h} variant="body2" />
             </TokenMetadata>

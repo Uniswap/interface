@@ -4,9 +4,9 @@ import { DappRequestStoreItem } from 'src/background/features/dappRequests/slice
 import { useAppSelector } from 'src/background/store'
 import { Flex, Text } from 'ui/src'
 import { NumberType } from 'utilities/src/format/format'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { useTransactionGasFee, useUSDValue } from 'wallet/src/features/gas/hooks'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 export const SendTransactionDetails = ({
   activeAccount,
@@ -14,10 +14,11 @@ export const SendTransactionDetails = ({
   dappUrl,
 }: {
   activeAccount: Account
-
   request: DappRequestStoreItem
   dappUrl: string
 }): JSX.Element => {
+  const { convertFiatAmountFormatted } = useFiatConverter()
+
   const sendTransactionRequest = request.dappRequest as SendTransactionRequest
 
   const sending = sendTransactionRequest.transaction.value
@@ -89,7 +90,7 @@ export const SendTransactionDetails = ({
             Network fee
           </Text>
           <Text color="$neutral2" textAlign="right" variant="body2">
-            {useFiatConversionFormatted(gasFeeUSD, NumberType.FiatGasPrice)}
+            {convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)}
           </Text>
         </Flex>
       </Flex>

@@ -2,7 +2,7 @@ import React, { forwardRef, useCallback, useEffect, useMemo } from 'react'
 import { AppState, Keyboard, KeyboardTypeOptions, TextInput as NativeTextInput } from 'react-native'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { escapeRegExp } from 'utilities/src/primitives/string'
-import { useAppCurrency } from 'wallet/src/utils/currency'
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
 const inputRegex = RegExp('^\\d*(?:\\\\[.])?\\d*$') // match escaped "." characters via in a non-capturing group
 
@@ -72,7 +72,7 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
     [onChangeText, showCurrencySign]
   )
 
-  const currency = useAppCurrency()
+  const currency = useAppFiatCurrencyInfo()
   const formattedValue = showCurrencySign ? `${currency.symbol}${value}` : value
 
   const textInputProps: TextInputProps = useMemo(

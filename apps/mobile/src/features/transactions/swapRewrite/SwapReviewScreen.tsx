@@ -35,16 +35,19 @@ import { TransactionAmountsReview } from 'src/features/transactions/swapRewrite/
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { AnimatedFlex, Button, Flex, Icons, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 // eslint-disable-next-line complexity
 export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const { convertFiatAmountFormatted } = useFiatConverter()
+  const { formatCurrencyAmount, formatNumberOrString } = useLocalizedFormatter()
 
   const { setScreen } = useSwapScreenContext()
 
@@ -137,14 +140,15 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   const derivedCurrencyField =
     exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
 
-  const derivedAmount = formatCurrencyAmount(
-    acceptedDerivedSwapInfo?.currencyAmounts[derivedCurrencyField],
-    NumberType.TokenTx
-  )
+  const derivedAmount = formatCurrencyAmount({
+    value: acceptedDerivedSwapInfo?.currencyAmounts[derivedCurrencyField],
+    type: NumberType.TokenTx,
+  })
 
-  // const exactValue = isFiatInput ? exactAmountFiat : exactAmountToken
-  // const formattedExactValue = formatNumberOrString(exactValue, NumberType.TokenTx)
-  const formattedExactAmountToken = formatNumberOrString(exactAmountToken, NumberType.TokenTx)
+  const formattedExactAmountToken = formatNumberOrString({
+    value: exactAmountToken,
+    type: NumberType.TokenTx,
+  })
 
   const [formattedTokenAmountIn, formattedTokenAmountOut] =
     exactCurrencyField === CurrencyField.INPUT
@@ -161,11 +165,11 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
       ? currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact()
       : acceptedDerivedSwapInfo?.currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact()
 
-  const formattedFiatAmountIn = useFiatConversionFormatted(
+  const formattedFiatAmountIn = convertFiatAmountFormatted(
     usdAmountIn,
     NumberType.FiatTokenQuantity
   )
-  const formattedFiatAmountOut = useFiatConversionFormatted(
+  const formattedFiatAmountOut = convertFiatAmountFormatted(
     usdAmountOut,
     NumberType.FiatTokenQuantity
   )

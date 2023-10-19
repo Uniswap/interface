@@ -12,10 +12,11 @@ import { MaxAmountButton } from 'src/components/input/MaxAmountButton'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
 import { AnimatedFlex, Flex, FlexProps, Text, useSporeColors } from 'ui/src'
 import { fonts, spacing } from 'ui/src/theme'
-import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { useForwardRef } from 'utilities/src/react/hooks'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
-import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 
 type CurrentInputPanelProps = {
   autoFocus?: boolean
@@ -72,6 +73,8 @@ export const CurrencyInputPanel = memo(
     forwardedRef
   ): JSX.Element {
     const colors = useSporeColors()
+    const { convertFiatAmountFormatted } = useFiatConverter()
+    const { formatCurrencyAmount } = useLocalizedFormatter()
     const inputRef = useRef<TextInput>(null)
 
     useForwardRef(forwardedRef, inputRef)
@@ -79,12 +82,12 @@ export const CurrencyInputPanel = memo(
     const showInsufficientBalanceWarning =
       !isOutput && !!currencyBalance && !!currencyAmount && currencyBalance.lessThan(currencyAmount)
 
-    const formattedFiatValue = useFiatConversionFormatted(
+    const formattedFiatValue = convertFiatAmountFormatted(
       usdValue?.toExact(),
       NumberType.FiatTokenQuantity
     )
     const formattedCurrencyAmount = currencyAmount
-      ? formatCurrencyAmount(currencyAmount, NumberType.TokenTx)
+      ? formatCurrencyAmount({ value: currencyAmount, type: NumberType.TokenTx })
       : ''
 
     // the focus state for native Inputs can sometimes be out of sync with the controlled `focus`
@@ -204,7 +207,7 @@ export const CurrencyInputPanel = memo(
             </Flex>
             <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">
               <Text color="$neutral2" variant="body3">
-                {formatCurrencyAmount(currencyBalance, NumberType.TokenNonTx)}{' '}
+                {formatCurrencyAmount({ value: currencyBalance, type: NumberType.TokenNonTx })}{' '}
                 {currencyInfo.currency.symbol}
               </Text>
 

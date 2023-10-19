@@ -35,7 +35,7 @@ import {
   updateExactAmountToken,
 } from 'src/features/transactions/transactionState/transactionState'
 import { toStringish } from 'src/utils/number'
-import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { logger } from 'utilities/src/logger/logger'
 import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
 import { useAsyncData, usePrevious } from 'utilities/src/react/hooks'
@@ -45,8 +45,10 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult, GasSpeed, SimulatedGasEstimationInfo } from 'wallet/src/features/gas/types'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useOnChainCurrencyBalance } from 'wallet/src/features/portfolio/api'
@@ -77,7 +79,6 @@ import {
   useActiveAccount,
   useActiveAccountAddressWithThrow,
 } from 'wallet/src/features/wallet/hooks'
-import { useFiatConversion } from 'wallet/src/utils/currency'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 import { DerivedSwapInfo } from './types'
@@ -252,7 +253,9 @@ export function useUSDTokenUpdater(
 ): void {
   const price = useUSDCPrice(exactCurrency)
   const shouldUseUSDRef = useRef(isFiatInput)
-  const conversionRate = useFiatConversion(1).amount
+  const { formatCurrencyAmount } = useLocalizedFormatter()
+  const { convertFiatAmount } = useFiatConverter()
+  const conversionRate = convertFiatAmount().amount
 
   useEffect(() => {
     shouldUseUSDRef.current = isFiatInput
@@ -274,7 +277,11 @@ export function useUSDTokenUpdater(
 
       return dispatch(
         updateExactAmountToken({
-          amount: formatCurrencyAmount(currencyAmount, NumberType.SwapTradeAmount, ''),
+          amount: formatCurrencyAmount({
+            value: currencyAmount,
+            type: NumberType.SwapTradeAmount,
+            placeholder: '',
+          }),
         })
       )
     }
@@ -298,6 +305,7 @@ export function useUSDTokenUpdater(
     exactCurrency,
     price,
     conversionRate,
+    formatCurrencyAmount,
   ])
 }
 
@@ -576,6 +584,7 @@ export function useSwapTxAndGasInfo({
   derivedSwapInfo: DerivedSwapInfo
   skipGasFeeQuery: boolean
 }): SwapTxAndGasInfo {
+  const formatter = useLocalizedFormatter()
   const { chainId, wrapType, currencyAmounts, currencies, exactCurrencyField } = derivedSwapInfo
 
   const tokenApprovalInfo = useTokenApprovalInfo(
@@ -642,7 +651,7 @@ export function useSwapTxAndGasInfo({
         },
       })
       sendMobileAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
-        ...getBaseTradeAnalyticsPropertiesFromSwapInfo(derivedSwapInfo),
+        ...getBaseTradeAnalyticsPropertiesFromSwapInfo(derivedSwapInfo, formatter),
         error: simulationError.toString(),
         txRequest: transactionRequest,
       })
@@ -653,7 +662,7 @@ export function useSwapTxAndGasInfo({
         tags: { file: 'swap/hooks', function: 'useSwapTxAndGasInfo' },
       })
       sendMobileAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
-        ...getBaseTradeAnalyticsPropertiesFromSwapInfo(derivedSwapInfo),
+        ...getBaseTradeAnalyticsPropertiesFromSwapInfo(derivedSwapInfo, formatter),
         error: swapGasFee.error.toString(),
         txRequest: transactionRequest,
       })
@@ -664,6 +673,7 @@ export function useSwapTxAndGasInfo({
     shouldFetchSimulatedGasLimit,
     simulatedGasEstimationInfo,
     swapGasFee.error,
+    formatter,
   ])
 
   const txRequestWithGasSettings = useMemo((): providers.TransactionRequest | undefined => {
@@ -727,6 +737,7 @@ export function useSwapCallback(
 ): () => void {
   const appDispatch = useAppDispatch()
   const account = useActiveAccount()
+  const formatter = useLocalizedFormatter()
 
   const swapStartTimestamp = useAppSelector(selectSwapStartTimestamp)
 
@@ -758,7 +769,7 @@ export function useSwapCallback(
       onSubmit()
 
       sendMobileAnalyticsEvent(SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED, {
-        ...getBaseTradeAnalyticsProperties(trade),
+        ...getBaseTradeAnalyticsProperties(formatter, trade),
         estimated_network_fee_wei: gasFee.value,
         gas_limit: toStringish(swapTxRequest.gasLimit),
         token_in_amount_usd: currencyInAmountUSD
@@ -791,6 +802,7 @@ export function useSwapCallback(
     onSubmit,
     isAutoSlippage,
     swapStartTimestamp,
+    formatter,
   ])
 }
 

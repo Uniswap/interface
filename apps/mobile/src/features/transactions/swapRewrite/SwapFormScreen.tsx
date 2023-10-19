@@ -20,7 +20,8 @@ import { SwapArrowButton } from 'src/features/transactions/swapRewrite/SwapArrow
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
@@ -49,6 +50,7 @@ export function SwapFormScreen({ hideContent }: { hideContent: boolean }): JSX.E
 function SwapFormContent(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const { formatCurrencyAmount } = useLocalizedFormatter()
 
   const {
     derivedSwapInfo,
@@ -205,11 +207,11 @@ function SwapFormContent(): JSX.Element {
   const derivedCurrencyField =
     exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
 
-  const formattedDerivedValue = formatCurrencyAmount(
-    currencyAmounts[derivedCurrencyField],
-    NumberType.SwapTradeAmount,
-    ''
-  )
+  const formattedDerivedValue = formatCurrencyAmount({
+    value: currencyAmounts[derivedCurrencyField],
+    type: NumberType.SwapTradeAmount,
+    placeholder: '',
+  })
 
   // TODO - improve this to update ref when calculating the derived state
   // instead of assigning ref based on the derived state

@@ -1,6 +1,7 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
+import { LocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
 import { WalletConnectNotification } from 'wallet/src/features/notifications/types'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
@@ -64,6 +65,7 @@ export const formApproveNotificationTitle = (
 }
 
 export const formSwapNotificationTitle = (
+  formatter: LocalizedFormatter,
   txStatus: TransactionStatus,
   inputCurrency: Maybe<Currency>,
   outputCurrency: Maybe<Currency>,
@@ -85,11 +87,13 @@ export const formSwapNotificationTitle = (
   const inputAmount = getFormattedCurrencyAmount(
     inputCurrency,
     inputCurrencyAmountRaw,
+    formatter,
     tradeType === TradeType.EXACT_OUTPUT
   )
   const outputAmount = getFormattedCurrencyAmount(
     outputCurrency,
     outputCurrencyAmountRaw,
+    formatter,
     tradeType === TradeType.EXACT_INPUT
   )
 
@@ -113,6 +117,7 @@ export const formSwapNotificationTitle = (
 }
 
 export const formWrapNotificationTitle = (
+  formatter: LocalizedFormatter,
   txStatus: TransactionStatus,
   inputCurrency: Maybe<Currency>,
   outputCurrency: Maybe<Currency>,
@@ -122,8 +127,8 @@ export const formWrapNotificationTitle = (
   const inputCurrencySymbol = getSymbolDisplayText(inputCurrency?.symbol)
   const outputCurrencySymbol = getSymbolDisplayText(outputCurrency?.symbol)
 
-  const inputAmount = getFormattedCurrencyAmount(inputCurrency, currencyAmountRaw)
-  const outputAmount = getFormattedCurrencyAmount(outputCurrency, currencyAmountRaw)
+  const inputAmount = getFormattedCurrencyAmount(inputCurrency, currencyAmountRaw, formatter)
+  const outputAmount = getFormattedCurrencyAmount(outputCurrency, currencyAmountRaw, formatter)
 
   const inputAssetInfo = `${inputAmount}${inputCurrencySymbol}`
   const outputAssetInfo = `${outputAmount}${outputCurrencySymbol}`
@@ -157,6 +162,7 @@ export const formWrapNotificationTitle = (
 }
 
 export const formTransferCurrencyNotificationTitle = (
+  formatter: LocalizedFormatter,
   txType: TransactionType,
   txStatus: TransactionStatus,
   currency: Maybe<Currency>,
@@ -165,7 +171,7 @@ export const formTransferCurrencyNotificationTitle = (
   senderOrRecipient: string
 ): string => {
   const currencySymbol = getCurrencyDisplayText(currency, tokenAddress)
-  const amount = getFormattedCurrencyAmount(currency, currencyAmountRaw)
+  const amount = getFormattedCurrencyAmount(currency, currencyAmountRaw, formatter)
   const shortenedAddressOrENS = getShortenedAddressOrEns(senderOrRecipient)
   return formTransferTxTitle(txType, txStatus, `${amount}${currencySymbol}`, shortenedAddressOrENS)
 }

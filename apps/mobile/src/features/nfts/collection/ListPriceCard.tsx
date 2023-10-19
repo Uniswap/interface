@@ -4,9 +4,10 @@ import { StyleSheet } from 'react-native'
 import { IS_IOS } from 'src/constants/globals'
 import { ColorTokens, Flex, FlexProps, Logos, SpaceTokens, Text, useSporeColors } from 'ui/src'
 import { borderRadii, iconSizes, spacing, TextVariantTokens } from 'ui/src/theme'
-import { formatNumber, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { Amount } from 'wallet/src/data/__generated__/types-and-hooks'
-import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 
 type ListPriceProps = FlexProps & {
   price: Amount
@@ -51,11 +52,14 @@ export function PriceAmount({
   iconColor = '$neutral1',
   textColor = '$neutral1',
 }: ListPriceProps): JSX.Element {
+  const { convertFiatAmountFormatted } = useFiatConverter()
+  const { formatNumberOrString } = useLocalizedFormatter()
+
   const isUSD = price.currency === 'USD'
-  const formattedFiatValue = useFiatConversionFormatted(price.value, NumberType.FiatTokenPrice)
+  const formattedFiatValue = convertFiatAmountFormatted(price.value, NumberType.FiatTokenPrice)
   const formattedAmount = isUSD
     ? formattedFiatValue
-    : formatNumber(price.value, NumberType.NFTTokenFloorPrice)
+    : formatNumberOrString({ value: price.value, type: NumberType.NFTTokenFloorPrice })
 
   return (
     <Flex centered row gap={gap} overflow="hidden">

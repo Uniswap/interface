@@ -5,12 +5,13 @@ import { AccountList } from 'src/components/accounts/AccountList'
 import { ON_PRESS_EVENT_PAYLOAD } from 'src/test/eventFixtures'
 import { Portfolios } from 'src/test/gqlFixtures'
 import { render, screen } from 'src/test/test-utils'
-import { formatFiatNumber, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import {
   AccountListDocument,
   AccountListQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { account } from 'wallet/src/test/fixtures'
+import { mockLocalizedFormatter } from 'wallet/src/test/utils'
 
 jest.mock('@react-navigation/drawer', () => ({ useDrawerStatus: jest.fn(() => 'unknown') }))
 
@@ -34,11 +35,11 @@ describe(AccountList, () => {
 
     expect(
       await screen.findByText(
-        formatFiatNumber(
-          Portfolios[0].tokensTotalDenominatedValue?.value,
-          NumberType.PortfolioBalance,
-          'usd'
-        )
+        mockLocalizedFormatter.formatNumberOrString({
+          value: Portfolios[0].tokensTotalDenominatedValue?.value,
+          type: NumberType.PortfolioBalance,
+          currencyCode: 'usd',
+        })
       )
     ).toBeDefined()
     expect(tree.toJSON()).toMatchSnapshot()
@@ -52,11 +53,11 @@ describe(AccountList, () => {
     // go to success state
     expect(
       await screen.findByText(
-        formatFiatNumber(
-          Portfolios[0].tokensTotalDenominatedValue?.value,
-          NumberType.PortfolioBalance,
-          'usd'
-        )
+        mockLocalizedFormatter.formatNumberOrString({
+          value: Portfolios[0].tokensTotalDenominatedValue?.value,
+          type: NumberType.PortfolioBalance,
+          currencyCode: 'usd',
+        })
       )
     ).toBeDefined()
 

@@ -12,13 +12,14 @@ import {
   useTransferERC20Callback,
   useTransferNFTCallback,
 } from 'src/features/transactions/transfer/hooks'
-import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { useAppCurrency } from 'wallet/src/utils/currency'
 import { currencyAddress } from 'wallet/src/utils/currencyId'
 
 interface TransferFormProps {
@@ -39,10 +40,11 @@ export function TransferReview({
   warnings,
 }: TransferFormProps): JSX.Element | null {
   const { t } = useTranslation()
+  const { formatCurrencyAmount, formatNumberOrString } = useLocalizedFormatter()
   const account = useActiveAccountWithThrow()
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [showNetworkFeeInfoModal, setShowNetworkFeeInfoModal] = useState(false)
-  const currency = useAppCurrency()
+  const currency = useAppFiatCurrencyInfo()
 
   const onShowWarning = (): void => {
     setShowWarningModal(true)
@@ -122,12 +124,16 @@ export function TransferReview({
 
   const transferWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
 
-  const formattedCurrencyAmount = formatCurrencyAmount(
-    currencyAmounts[CurrencyField.INPUT],
-    NumberType.TokenTx
-  )
+  const formattedCurrencyAmount = formatCurrencyAmount({
+    value: currencyAmounts[CurrencyField.INPUT],
+    type: NumberType.TokenTx,
+  })
   const formattedAmountIn = isFiatInput
-    ? formatNumberOrString(exactAmountFiat, NumberType.FiatTokenQuantity, currency.code)
+    ? formatNumberOrString({
+        value: exactAmountFiat,
+        type: NumberType.FiatTokenQuantity,
+        currencyCode: currency.code,
+      })
     : formattedCurrencyAmount
 
   return (

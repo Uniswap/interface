@@ -3,34 +3,50 @@ import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 // Number formatting in our app should follow the guide in this doc:
 // https://www.notion.so/uniswaplabs/Number-standards-fbb9f533f10e4e22820722c2f66d23c0
 
-const FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN = new Intl.NumberFormat('en-US', {
-  notation: 'standard',
-  maximumFractionDigits: 5,
-  minimumFractionDigits: 2,
-})
+const FiveDecimalsMaxTwoDecimalsMin: FormatCreator = {
+  createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
+    return new Intl.NumberFormat(locale, {
+      notation: 'standard',
+      maximumFractionDigits: 5,
+      minimumFractionDigits: 2,
+    })
+  },
+}
 
-const FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN_NO_COMMAS = new Intl.NumberFormat('en-US', {
-  notation: 'standard',
-  maximumFractionDigits: 5,
-  minimumFractionDigits: 2,
-  useGrouping: false,
-})
+const FiveDecimalsMaxTwoDecimalsMinNoCommas: FormatCreator = {
+  createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
+    return new Intl.NumberFormat(locale, {
+      notation: 'standard',
+      maximumFractionDigits: 5,
+      minimumFractionDigits: 2,
+      useGrouping: false,
+    })
+  },
+}
 
-const NO_DECIMALS = new Intl.NumberFormat('en-US', {
-  notation: 'standard',
-  maximumFractionDigits: 0,
-  minimumFractionDigits: 0,
-})
+const NoDecimals: FormatCreator = {
+  createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
+    return new Intl.NumberFormat(locale, {
+      notation: 'standard',
+      maximumFractionDigits: 0,
+      minimumFractionDigits: 0,
+    })
+  },
+}
 
-const THREE_DECIMALS = new Intl.NumberFormat('en-US', {
-  notation: 'standard',
-  maximumFractionDigits: 3,
-  minimumFractionDigits: 3,
-})
+const ThreeDecimals: FormatCreator = {
+  createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
+    return new Intl.NumberFormat(locale, {
+      notation: 'standard',
+      maximumFractionDigits: 3,
+      minimumFractionDigits: 3,
+    })
+  },
+}
 
-const ThreeDecimalsCurrencyCreator: FormatCreator = {
-  createFormat: (currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat('en-US', {
+const ThreeDecimalsCurrency: FormatCreator = {
+  createFormat: (locale: string, currencyCode: string): Intl.NumberFormat => {
+    return new Intl.NumberFormat(locale, {
       notation: 'standard',
       maximumFractionDigits: 3,
       minimumFractionDigits: 3,
@@ -40,9 +56,9 @@ const ThreeDecimalsCurrencyCreator: FormatCreator = {
   },
 }
 
-const TwoDecimalsCurrencyCreator: FormatCreator = {
-  createFormat: (currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat('en-US', {
+const TwoDecimalsCurrency: FormatCreator = {
+  createFormat: (locale: string, currencyCode: string): Intl.NumberFormat => {
+    return new Intl.NumberFormat(locale, {
       notation: 'standard',
       maximumFractionDigits: 2,
       minimumFractionDigits: 2,
@@ -52,9 +68,9 @@ const TwoDecimalsCurrencyCreator: FormatCreator = {
   },
 }
 
-const ShorthandTwoDecimalsCurrencyCreator: FormatCreator = {
-  createFormat: (currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat('en-US', {
+const ShorthandTwoDecimalsCurrency: FormatCreator = {
+  createFormat: (locale: string, currencyCode: string): Intl.NumberFormat => {
+    return new Intl.NumberFormat(locale, {
       notation: 'compact',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -64,9 +80,9 @@ const ShorthandTwoDecimalsCurrencyCreator: FormatCreator = {
   },
 }
 
-const ShorthandOneDecimalsCurrencyCreator: FormatCreator = {
-  createFormat: (currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat('en-US', {
+const ShorthandOneDecimalsCurrency: FormatCreator = {
+  createFormat: (locale: string, currencyCode: string): Intl.NumberFormat => {
+    return new Intl.NumberFormat(locale, {
       notation: 'compact',
       minimumFractionDigits: 1,
       maximumFractionDigits: 1,
@@ -76,9 +92,9 @@ const ShorthandOneDecimalsCurrencyCreator: FormatCreator = {
   },
 }
 
-const ThreeSigFigsCurrencyCreator: FormatCreator = {
-  createFormat: (currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat('en-US', {
+const ThreeSigFigsCurrency: FormatCreator = {
+  createFormat: (locale: string, currencyCode: string): Intl.NumberFormat => {
+    return new Intl.NumberFormat(locale, {
       notation: 'standard',
       minimumSignificantDigits: 3,
       maximumSignificantDigits: 3,
@@ -88,65 +104,103 @@ const ThreeSigFigsCurrencyCreator: FormatCreator = {
   },
 }
 
-const TWO_DECIMALS = new Intl.NumberFormat('en-US', {
-  notation: 'standard',
-  maximumFractionDigits: 2,
-  minimumFractionDigits: 2,
-})
+const TwoDecimals: FormatCreator = {
+  createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
+    return new Intl.NumberFormat(locale, {
+      notation: 'standard',
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2,
+    })
+  },
+}
 
-const SHORTHAND_ONE_DECIMAL = new Intl.NumberFormat('en-US', {
-  notation: 'compact',
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
-})
+const ShorthandOneDecimal: FormatCreator = {
+  createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
+    return new Intl.NumberFormat(locale, {
+      notation: 'compact',
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    })
+  },
+}
 
-const SHORTHAND_TWO_DECIMALS = new Intl.NumberFormat('en-US', {
-  notation: 'compact',
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-})
+const ShorthandTwoDecimals: FormatCreator = {
+  createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
+    return new Intl.NumberFormat(locale, {
+      notation: 'compact',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })
+  },
+}
 
-const SIX_SIG_FIGS_TWO_DECIMALS = new Intl.NumberFormat('en-US', {
-  notation: 'standard',
-  maximumSignificantDigits: 6,
-  minimumSignificantDigits: 3,
-  maximumFractionDigits: 2,
-  minimumFractionDigits: 2,
-})
+const SixSigFigsTwoDecimals: FormatCreator = {
+  createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
+    return new Intl.NumberFormat(locale, {
+      notation: 'standard',
+      maximumSignificantDigits: 6,
+      minimumSignificantDigits: 3,
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2,
+    })
+  },
+}
 
-const SIX_SIG_FIGS_NO_COMMAS = new Intl.NumberFormat('en-US', {
-  notation: 'standard',
-  maximumSignificantDigits: 6,
-  useGrouping: false,
-})
+const SixSigFigsNoCommas: FormatCreator = {
+  createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
+    return new Intl.NumberFormat(locale, {
+      notation: 'standard',
+      maximumSignificantDigits: 6,
+      useGrouping: false,
+    })
+  },
+}
 
-const SIX_SIG_FIGS_TWO_DECIMALS_NO_COMMAS = new Intl.NumberFormat('en-US', {
-  notation: 'standard',
-  maximumSignificantDigits: 6,
-  minimumSignificantDigits: 3,
-  maximumFractionDigits: 2,
-  minimumFractionDigits: 2,
-  useGrouping: false,
-})
+const SixSigFigsTwoDecimalsNoCommas: FormatCreator = {
+  createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
+    return new Intl.NumberFormat(locale, {
+      notation: 'standard',
+      maximumSignificantDigits: 6,
+      minimumSignificantDigits: 3,
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2,
+      useGrouping: false,
+    })
+  },
+}
 
-const NO_TRAILING_DECIMALS_PERCENTAGES = new Intl.NumberFormat('en-US', {
-  notation: 'standard',
-  style: 'percent',
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 2,
-})
+const NoTrailingDecimalsPercentages: FormatCreator = {
+  createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
+    return new Intl.NumberFormat(locale, {
+      notation: 'standard',
+      style: 'percent',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    })
+  },
+}
 
-const TWO_DECIMALS_PERCENTAGES = new Intl.NumberFormat('en-US', {
-  notation: 'standard',
-  style: 'percent',
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-})
+const TwoDecimalsPercentages: FormatCreator = {
+  createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
+    return new Intl.NumberFormat(locale, {
+      notation: 'standard',
+      style: 'percent',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })
+  },
+}
 
 interface FormatCreator {
-  createFormat: (currencyCode: string) => Intl.NumberFormat
+  /**
+   * Creates a Intl.NumberFormat based off of locale and currency
+   * @param locale comprised of a two letter ISO 639 language code combined with ISO 3166 country code e.g. "en-US"
+   * @param currencyCode three letter ISO 4217 currency code e.g. "USD"
+   * @returns created Intl.NumberFormat
+   */
+  createFormat: (locale: string, currencyCode: string) => Intl.NumberFormat
 }
-type Format = Intl.NumberFormat | string | FormatCreator
+type Format = string | FormatCreator
 
 // each rule must contain either an `upperBound` or an `exact` value.
 // upperBound => number will use that formatter as long as it is < upperBound
@@ -157,29 +211,29 @@ type FormatterRule =
 
 // these formatter objects dictate which formatter rule to use based on the interval that
 // the number falls into. for example, based on the rule set below, if your number
-// falls between 1 and 1e6, you'd use TWO_DECIMALS as the formatter.
+// falls between 1 and 1e6, you'd use TwoDecimals as the formatter.
 const tokenNonTxFormatter: FormatterRule[] = [
   { exact: 0, formatter: '0' },
   { upperBound: 0.001, formatter: '<0.001' },
-  { upperBound: 1, formatter: THREE_DECIMALS },
-  { upperBound: 1e6, formatter: TWO_DECIMALS },
-  { upperBound: 1e15, formatter: SHORTHAND_TWO_DECIMALS },
+  { upperBound: 1, formatter: ThreeDecimals },
+  { upperBound: 1e6, formatter: TwoDecimals },
+  { upperBound: 1e15, formatter: ShorthandTwoDecimals },
   { upperBound: Infinity, formatter: '>999T' },
 ]
 
 const tokenTxFormatter: FormatterRule[] = [
   { exact: 0, formatter: '0' },
   { upperBound: 0.00001, formatter: '<0.00001' },
-  { upperBound: 1, formatter: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN },
-  { upperBound: 10000, formatter: SIX_SIG_FIGS_TWO_DECIMALS },
-  { upperBound: Infinity, formatter: TWO_DECIMALS },
+  { upperBound: 1, formatter: FiveDecimalsMaxTwoDecimalsMin },
+  { upperBound: 10000, formatter: SixSigFigsTwoDecimals },
+  { upperBound: Infinity, formatter: TwoDecimals },
 ]
 
 const swapTradeAmountFormatter: FormatterRule[] = [
   { exact: 0, formatter: '0' },
-  { upperBound: 0.1, formatter: SIX_SIG_FIGS_NO_COMMAS },
-  { upperBound: 1, formatter: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN_NO_COMMAS },
-  { upperBound: Infinity, formatter: SIX_SIG_FIGS_TWO_DECIMALS_NO_COMMAS },
+  { upperBound: 0.1, formatter: SixSigFigsNoCommas },
+  { upperBound: 1, formatter: FiveDecimalsMaxTwoDecimalsMinNoCommas },
+  { upperBound: Infinity, formatter: SixSigFigsTwoDecimalsNoCommas },
 ]
 
 const swapPriceFormatter: FormatterRule[] = [
@@ -190,57 +244,57 @@ const swapPriceFormatter: FormatterRule[] = [
 
 const fiatTokenDetailsFormatter: FormatterRule[] = [
   { upperBound: 0.00000001, formatter: '<$0.00000001' },
-  { upperBound: 0.1, formatter: ThreeSigFigsCurrencyCreator },
-  { upperBound: 1.05, formatter: ThreeDecimalsCurrencyCreator },
-  { upperBound: 1e6, formatter: TwoDecimalsCurrencyCreator },
-  { upperBound: Infinity, formatter: ShorthandTwoDecimalsCurrencyCreator },
+  { upperBound: 0.1, formatter: ThreeSigFigsCurrency },
+  { upperBound: 1.05, formatter: ThreeDecimalsCurrency },
+  { upperBound: 1e6, formatter: TwoDecimalsCurrency },
+  { upperBound: Infinity, formatter: ShorthandTwoDecimalsCurrency },
 ]
 
 const fiatTokenPricesFormatter: FormatterRule[] = [
   { upperBound: 0.00000001, formatter: '<$0.00000001' },
-  { upperBound: 1, formatter: ThreeSigFigsCurrencyCreator },
-  { upperBound: 1e6, formatter: TwoDecimalsCurrencyCreator },
-  { upperBound: Infinity, formatter: ShorthandTwoDecimalsCurrencyCreator },
+  { upperBound: 1, formatter: ThreeSigFigsCurrency },
+  { upperBound: 1e6, formatter: TwoDecimalsCurrency },
+  { upperBound: Infinity, formatter: ShorthandTwoDecimalsCurrency },
 ]
 
 const fiatTokenStatsFormatter: FormatterRule[] = [
   // if token stat value is 0, we probably don't have the data for it, so show '-' as a placeholder
   { exact: 0, formatter: '-' },
   { upperBound: 0.01, formatter: '<$0.01' },
-  { upperBound: 1000, formatter: TwoDecimalsCurrencyCreator },
-  { upperBound: Infinity, formatter: ShorthandOneDecimalsCurrencyCreator },
+  { upperBound: 1000, formatter: TwoDecimalsCurrency },
+  { upperBound: Infinity, formatter: ShorthandOneDecimalsCurrency },
 ]
 
 const fiatGasPriceFormatter: FormatterRule[] = [
   { upperBound: 0.01, formatter: '<$0.01' },
-  { upperBound: 1e6, formatter: TwoDecimalsCurrencyCreator },
-  { upperBound: Infinity, formatter: ShorthandTwoDecimalsCurrencyCreator },
+  { upperBound: 1e6, formatter: TwoDecimalsCurrency },
+  { upperBound: Infinity, formatter: ShorthandTwoDecimalsCurrency },
 ]
 
 const fiatTokenQuantityFormatter = [{ exact: 0, formatter: '$0.00' }, ...fiatGasPriceFormatter]
 
 const portfolioBalanceFormatter: FormatterRule[] = [
   { exact: 0, formatter: '$0.00' },
-  { upperBound: Infinity, formatter: TwoDecimalsCurrencyCreator },
+  { upperBound: Infinity, formatter: TwoDecimalsCurrency },
 ]
 
 const ntfTokenFloorPriceFormatter: FormatterRule[] = [
   { exact: 0, formatter: '0' },
   { upperBound: 0.001, formatter: '<0.001' },
-  { upperBound: 1, formatter: THREE_DECIMALS },
-  { upperBound: 1000, formatter: TWO_DECIMALS },
-  { upperBound: 1e15, formatter: SHORTHAND_TWO_DECIMALS },
+  { upperBound: 1, formatter: ThreeDecimals },
+  { upperBound: 1000, formatter: TwoDecimals },
+  { upperBound: 1e15, formatter: ShorthandTwoDecimals },
   { upperBound: Infinity, formatter: '>999T' },
 ]
 
 const ntfCollectionStatsFormatter: FormatterRule[] = [
-  { upperBound: 1000, formatter: NO_DECIMALS },
-  { upperBound: Infinity, formatter: SHORTHAND_ONE_DECIMAL },
+  { upperBound: 1000, formatter: NoDecimals },
+  { upperBound: Infinity, formatter: ShorthandOneDecimal },
 ]
 
 const percentagesFormatter: FormatterRule[] = [
-  { upperBound: 0.01, formatter: TWO_DECIMALS_PERCENTAGES },
-  { upperBound: Infinity, formatter: NO_TRAILING_DECIMALS_PERCENTAGES },
+  { upperBound: 0.01, formatter: TwoDecimalsPercentages },
+  { upperBound: Infinity, formatter: NoTrailingDecimalsPercentages },
 ]
 
 export enum NumberType {
@@ -284,6 +338,15 @@ export enum NumberType {
 
   Percentage = 'percentage',
 }
+export type FiatNumberType = Extract<
+  NumberType,
+  | NumberType.FiatTokenPrice
+  | NumberType.FiatTokenDetails
+  | NumberType.FiatTokenStats
+  | NumberType.FiatTokenQuantity
+  | NumberType.FiatGasPrice
+  | NumberType.PortfolioBalance
+>
 
 const TYPE_TO_FORMATTER_RULES = {
   [NumberType.TokenNonTx]: tokenNonTxFormatter,
@@ -315,12 +378,20 @@ function getFormatterRule(input: number, type: NumberType): Format {
   throw new Error(`formatter for type ${type} not configured correctly`)
 }
 
-export function formatNumber(
-  input?: number | null,
-  type: NumberType = NumberType.TokenNonTx,
-  currencyCode = 'usd',
-  placeholder = '-'
-): string {
+// Avoid calling directly, use localized hook instead
+export function formatNumber({
+  input,
+  locale,
+  currencyCode = 'USD',
+  type = NumberType.TokenNonTx,
+  placeholder = '-',
+}: {
+  input: number | null | undefined
+  locale: string
+  currencyCode?: string
+  type?: NumberType
+  placeholder?: string
+}): string {
   if (input === null || input === undefined) {
     return placeholder
   }
@@ -328,25 +399,30 @@ export function formatNumber(
   const formatter = getFormatterRule(input, type)
   if (typeof formatter === 'string') {
     return formatter
-  } else if (formatter instanceof Intl.NumberFormat) {
-    return formatter.format(input)
   }
 
-  const createdFormat = formatter.createFormat(currencyCode)
+  const createdFormat = formatter.createFormat(locale, currencyCode)
   return createdFormat.format(input)
 }
 
-export function formatCurrencyAmount(
-  amount?: CurrencyAmount<Currency> | null,
-  type: NumberType = NumberType.TokenNonTx,
+// Avoid calling directly, use localized hook instead
+export function formatCurrencyAmount({
+  amount,
+  locale,
+  type = NumberType.TokenNonTx,
+  placeholder,
+}: {
+  amount?: CurrencyAmount<Currency> | null | undefined
+  locale: string
+  type?: NumberType
   placeholder?: string
-): string {
-  return formatNumber(
-    amount ? parseFloat(amount.toFixed()) : undefined,
+}): string {
+  return formatNumber({
+    input: amount ? parseFloat(amount.toFixed()) : undefined,
+    locale,
     type,
-    undefined,
-    placeholder
-  )
+    placeholder,
+  })
 }
 
 export function formatPriceImpact(priceImpact: Percent | undefined): string {
@@ -355,39 +431,32 @@ export function formatPriceImpact(priceImpact: Percent | undefined): string {
   return `${priceImpact.multiply(-1).toFixed(3)}%`
 }
 
-export function formatNumberOrString(
-  price: Maybe<number | string>,
-  type: NumberType,
+// Avoid calling directly, use localized hook instead
+export function formatNumberOrString({
+  price,
+  locale,
+  currencyCode,
+  type,
+  placeholder = '-',
+}: {
+  price: Maybe<number | string>
+  locale: string
   currencyCode?: string
-): string {
-  if (price === null || price === undefined) return '-'
-  if (typeof price === 'string') return formatNumber(parseFloat(price), type, currencyCode)
-  return formatNumber(price, type, currencyCode)
+  type: NumberType
+  placeholder?: string
+}): string {
+  if (price === null || price === undefined) return placeholder
+  if (typeof price === 'string')
+    return formatNumber({ input: parseFloat(price), locale, currencyCode, type, placeholder })
+  return formatNumber({ input: price, locale, currencyCode, type, placeholder })
 }
 
-/** Formats USD and non-USD prices */
-export type FiatNumberType = Extract<
-  NumberType,
-  | NumberType.FiatTokenPrice
-  | NumberType.FiatTokenDetails
-  | NumberType.FiatTokenStats
-  | NumberType.FiatTokenQuantity
-  | NumberType.FiatGasPrice
-  | NumberType.PortfolioBalance
->
-export function formatFiatNumber(
-  number: Maybe<number | string>,
-  type: FiatNumberType,
-  currencyCode: string
-): string {
-  return formatNumberOrString(number, type, currencyCode)
-}
-
-export function formatPercent(rawPercentage: Maybe<number | string>): string {
+// Avoid calling directly, use localized hook instead
+export function formatPercent(rawPercentage: Maybe<number | string>, locale: string): string {
   if (rawPercentage === null || rawPercentage === undefined) return '-'
   const percentage =
     typeof rawPercentage === 'string'
       ? parseFloat(rawPercentage)
       : parseFloat(rawPercentage.toString())
-  return formatNumber(percentage / 100, NumberType.Percentage)
+  return formatNumber({ input: percentage / 100, type: NumberType.Percentage, locale })
 }

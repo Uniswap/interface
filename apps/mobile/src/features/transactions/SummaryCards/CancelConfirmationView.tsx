@@ -10,11 +10,11 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
 import { NumberType } from 'utilities/src/format/format'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
-import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 export function CancelConfirmationView({
   onBack,
@@ -27,6 +27,7 @@ export function CancelConfirmationView({
 }): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
+  const { convertFiatAmountFormatted } = useFiatConverter()
   const accountAddress = useActiveAccount()?.address
 
   const cancelationGasFeeInfo = useCancelationGasFeeInfo(transactionDetails)
@@ -34,7 +35,7 @@ export function CancelConfirmationView({
     transactionDetails.chainId,
     cancelationGasFeeInfo?.cancelationGasFee
   )
-  const gasFee = useFiatConversionFormatted(gasFeeUSD, NumberType.FiatGasPrice)
+  const gasFee = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
 
   const onCancelConfirm = useCallback(() => {
     if (!cancelationGasFeeInfo?.cancelRequest) return

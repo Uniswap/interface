@@ -8,11 +8,13 @@ import { TokenOption } from 'src/components/TokenSelector/types'
 import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { formatNumber, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { shortenAddress } from 'wallet/src/utils/addresses'
-import { getSymbolDisplayText, useFiatConversionFormatted } from 'wallet/src/utils/currency'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 interface OptionProps {
   option: TokenOption
@@ -34,8 +36,10 @@ function _TokenOptionItem({
 
   const [showWarningModal, setShowWarningModal] = useState(false)
   const { tokenWarningDismissed, dismissWarningCallback } = useTokenWarningDismissed(currencyId)
+  const { convertFiatAmountFormatted } = useFiatConverter()
+  const { formatNumberOrString } = useLocalizedFormatter()
 
-  const balance = useFiatConversionFormatted(balanceUSD, NumberType.FiatTokenPrice)
+  const balance = convertFiatAmountFormatted(balanceUSD, NumberType.FiatTokenPrice)
 
   const onPressTokenOption = useCallback(() => {
     if (
@@ -113,7 +117,9 @@ function _TokenOptionItem({
 
           {quantity && quantity !== 0 ? (
             <Flex alignItems="flex-end">
-              <Text variant="body1">{formatNumber(quantity, NumberType.TokenTx)}</Text>
+              <Text variant="body1">
+                {formatNumberOrString({ value: quantity, type: NumberType.TokenTx })}
+              </Text>
               <Text color="$neutral2" variant="subheading2">
                 {balance}
               </Text>

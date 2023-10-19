@@ -8,8 +8,9 @@ import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils
 import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes } from 'ui/src/theme'
-import { formatCurrencyAmount, formatPercent, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { uniswapUrls } from 'wallet/src/constants/urls'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
@@ -28,16 +29,18 @@ export function SlippageInfoModal({
 }: SlippageInfoModalProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const { formatCurrencyAmount, formatPercent } = useLocalizedFormatter()
 
   const { slippageTolerance, tradeType } = trade
   const showSlippageWarning = autoSlippageTolerance && slippageTolerance > autoSlippageTolerance
   const slippageTolerancePercent = slippageToleranceToPercent(slippageTolerance)
-  const amount = formatCurrencyAmount(
-    trade.tradeType === TradeType.EXACT_INPUT
-      ? trade.minimumAmountOut(slippageTolerancePercent)
-      : trade.maximumAmountIn(slippageTolerancePercent),
-    NumberType.TokenTx
-  )
+  const amount = formatCurrencyAmount({
+    value:
+      trade.tradeType === TradeType.EXACT_INPUT
+        ? trade.minimumAmountOut(slippageTolerancePercent)
+        : trade.maximumAmountIn(slippageTolerancePercent),
+    type: NumberType.TokenTx,
+  })
   const symbol =
     trade.tradeType === TradeType.EXACT_INPUT
       ? trade.outputAmount.currency.symbol

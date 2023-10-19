@@ -53,9 +53,9 @@ import {
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useExtractedTokenColor } from 'wallet/src/utils/colors'
-import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
 function HeaderTitleElement({
@@ -66,6 +66,7 @@ function HeaderTitleElement({
   ellipsisMenuVisible?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
+  const { convertFiatAmountFormatted } = useFiatConverter()
 
   const onChainData = data?.token
   const offChainData = onChainData?.project
@@ -81,7 +82,7 @@ function HeaderTitleElement({
       justifyContent="space-between"
       ml={ellipsisMenuVisible ? '$spacing32' : '$none'}>
       <Text color="$neutral1" variant="body1">
-        {useFiatConversionFormatted(price, NumberType.FiatTokenPrice)}
+        {convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)}
       </Text>
       <Flex centered row gap="$spacing4">
         <TokenLogo

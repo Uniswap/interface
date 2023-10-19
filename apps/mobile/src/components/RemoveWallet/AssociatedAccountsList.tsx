@@ -8,8 +8,8 @@ import {
   AccountListQuery,
   useAccountListQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 const ADDRESS_ROW_HEIGHT = 40
 
@@ -78,7 +78,8 @@ function AssociatedAccountRow({
   totalCount: number
   loading: boolean
 }): JSX.Element {
-  const balanceFormatted = useFiatConversionFormatted(balance, NumberType.PortfolioBalance)
+  const { convertFiatAmountFormatted } = useFiatConverter()
+  const balanceFormatted = convertFiatAmountFormatted(balance, NumberType.PortfolioBalance)
 
   return (
     <Flex

@@ -14,9 +14,10 @@ import { Warning, WarningLabel } from 'src/components/modals/WarningModal/types'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
 import { Flex, FlexProps, SpaceTokens, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
-import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
-import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 
 type CurrentInputPanelProps = {
   currencyInfo: Maybe<CurrencyInfo>
@@ -114,6 +115,8 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
 
   const { t } = useTranslation()
   const inputRef = useRef<TextInput>(null)
+  const { convertFiatAmountFormatted } = useFiatConverter()
+  const { formatCurrencyAmount } = useLocalizedFormatter()
 
   const insufficientBalanceWarning = warnings.find(
     (warning) => warning.type === WarningLabel.InsufficientFunds
@@ -121,12 +124,12 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
 
   const showInsufficientBalanceWarning = insufficientBalanceWarning && !isOutput
 
-  const formattedFiatValue = useFiatConversionFormatted(
+  const formattedFiatValue = convertFiatAmountFormatted(
     usdValue?.toExact(),
     NumberType.FiatTokenQuantity
   )
   const formattedCurrencyAmount = currencyAmount
-    ? formatCurrencyAmount(currencyAmount, NumberType.TokenTx)
+    ? formatCurrencyAmount({ value: currencyAmount, type: NumberType.TokenTx })
     : ''
 
   // the focus state for native Inputs can sometimes be out of sync with the controlled `focus`
@@ -262,7 +265,11 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
             <Text
               color={showInsufficientBalanceWarning ? '$DEP_accentWarning' : '$neutral2'}
               variant="subheading2">
-              {t('Balance')}: {formatCurrencyAmount(currencyBalance, NumberType.TokenNonTx)}
+              {t('Balance')}:{' '}
+              {formatCurrencyAmount({
+                value: currencyBalance,
+                type: NumberType.TokenNonTx,
+              })}
             </Text>
 
             {onSetMax && (

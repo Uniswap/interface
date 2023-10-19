@@ -9,9 +9,10 @@ import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollec
 import { Flex, FlexProps, Logos, Text, TouchableArea, useSporeColors } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { formatNumber, NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/format'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { useExtractedColors } from 'wallet/src/utils/colors'
 import { NFTCollectionData } from './types'
 
@@ -30,6 +31,7 @@ export function NFTCollectionHeader({
 }): ReactElement {
   const colors = useSporeColors()
   const { t } = useTranslation()
+  const { formatNumberOrString } = useLocalizedFormatter()
 
   // Style based on device sizing
   const { top: deviceTopPadding } = useSafeAreaInsets()
@@ -165,7 +167,10 @@ export function NFTCollectionHeader({
                 {t('Items')}
               </Text>
               <Text loading={loading} variant="body1">
-                {formatNumber(data?.numAssets, NumberType.NFTCollectionStats)}
+                {formatNumberOrString({
+                  value: data?.numAssets,
+                  type: NumberType.NFTCollectionStats,
+                })}
               </Text>
             </Flex>
             <Flex fill alignItems="flex-start" gap="$spacing4">
@@ -173,7 +178,10 @@ export function NFTCollectionHeader({
                 {t('Owners')}
               </Text>
               <Text loading={loading} variant="body1">
-                {formatNumber(collectionStats?.owners, NumberType.NFTCollectionStats)}
+                {formatNumberOrString({
+                  value: collectionStats?.owners,
+                  type: NumberType.NFTCollectionStats,
+                })}
               </Text>
             </Flex>
             <Flex fill alignItems="flex-start" gap="$spacing4">
@@ -182,10 +190,10 @@ export function NFTCollectionHeader({
               </Text>
               <Flex row alignItems="center">
                 <Text loading={loading} variant="body1">
-                  {`${formatNumber(
-                    collectionStats?.floorPrice?.value,
-                    NumberType.NFTTokenFloorPrice
-                  )} `}
+                  {`${formatNumberOrString({
+                    value: collectionStats?.floorPrice?.value,
+                    type: NumberType.NFTTokenFloorPrice,
+                  })} `}
                 </Text>
                 {collectionStats?.floorPrice?.value !== undefined ? (
                   <Logos.Ethereum color="$neutral1" size="$icon.16" />
@@ -198,10 +206,10 @@ export function NFTCollectionHeader({
               </Text>
               <Flex row alignItems="center" gap="$spacing4">
                 <Text loading={loading} pr="$spacing1" variant="body1">
-                  {`${formatNumber(
-                    collectionStats?.totalVolume?.value,
-                    NumberType.NFTCollectionStats
-                  )}`}
+                  {`${formatNumberOrString({
+                    value: collectionStats?.totalVolume?.value,
+                    type: NumberType.NFTCollectionStats,
+                  })}`}
                 </Text>
                 {collectionStats?.totalVolume?.value !== undefined ? (
                   <Logos.Ethereum color="$neutral1" size="$icon.16" />
