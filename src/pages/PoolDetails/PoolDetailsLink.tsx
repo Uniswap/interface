@@ -21,7 +21,7 @@ import { DoubleCurrencyAndChainLogo } from './PoolDetailsHeader'
 const TokenName = styled(ThemedText.BodyPrimary)`
   display: none;
 
-  @media (max-width: ${BREAKPOINTS.lg - 1}px) and (min-width: ${BREAKPOINTS.xs}px) {
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) and (min-width: ${BREAKPOINTS.xs - 1}px) {
     display: block;
   }
   ${EllipsisStyle}
@@ -36,7 +36,7 @@ const TokenTextWrapper = styled(Row)<{ isClickable?: boolean }>`
 const SymbolText = styled(ThemedText.BodyPrimary)`
   flex-shrink: 0;
 
-  @media (max-width: ${BREAKPOINTS.lg - 1}px) and (min-width: ${BREAKPOINTS.xs}px) {
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) and (min-width: ${BREAKPOINTS.xs - 1}px) {
     color: ${({ theme }) => theme.neutral2};
   }
   ${EllipsisStyle}
