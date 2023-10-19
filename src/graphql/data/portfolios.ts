@@ -69,7 +69,6 @@ export function useCrossChainGqlBalances({
 }: {
   tokenQuery: TokenQuery
   address?: string
-  shouldPoll?: boolean
   fetchPolicy?: WatchQueryFetchPolicy
 }): TokenBalance[] | undefined {
   const { data: portfolioBalances } = usePortfolioBalancesQuery({

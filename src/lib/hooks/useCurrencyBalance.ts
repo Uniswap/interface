@@ -108,7 +108,7 @@ export function useTokenBalance(account?: string, token?: Token): CurrencyAmount
   return tokenBalances[token.address]
 }
 
-/* Get balance for tokens on current chainId */
+/* Get balance for tokens on currently-connected chainId. See graphql/data/portfolios.ts for useCrossChainGqlBalances. */
 export function useCurrencyBalances(
   account?: string,
   currencies?: (Currency | undefined)[]
