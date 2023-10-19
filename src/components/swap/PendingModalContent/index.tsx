@@ -34,6 +34,7 @@ import {
 } from './Logos'
 import { TradeSummary } from './TradeSummary'
 import { TransitionText } from './TransitionText'
+import {MixPanelTrackEvent} from "../../../pages/mixpanel";
 
 export const PendingModalContainer = styled(ColumnCenter)`
   margin: 48px 0 8px;
@@ -127,6 +128,8 @@ interface ContentArgs {
   onRetryUniswapXSignature?: () => void
 }
 
+
+
 function getPendingConfirmationContent({
   swapConfirmed,
   swapPending,
@@ -152,6 +155,13 @@ function getPendingConfirmationContent({
       ),
     }
   } else if ((swapPending || swapConfirmed) && chainId && swapResult?.type === TradeFillType.Classic) {
+    MixPanelTrackEvent(
+      {
+        category:"Swap confirmed",
+        action:"User swapped",
+        label:"Swap event"
+      }
+    )
     const explorerLink = (
       <ExternalLink
         href={getExplorerLink(chainId, swapResult.response.hash, ExplorerDataType.TRANSACTION)}
