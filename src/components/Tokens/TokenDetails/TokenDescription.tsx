@@ -19,6 +19,7 @@ import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
 import { shortenAddress } from 'utils'
+import { useFormatter } from 'utils/formatNumbers'
 import { BLOCK_EXPLORER_PREFIXES, ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
@@ -102,8 +103,14 @@ export function TokenDescription({
   const truncatedDescription = truncateDescription(description ?? '', characterCount)
   const shouldTruncate = !!description && description.length > characterCount
   const showTruncatedDescription = shouldTruncate && isDescriptionTruncated
-  const { inputTax: fee } = useSwapTaxes(tokenAddress, undefined)
-  const feeString = fee.toFixed(2)
+  const { inputTax: sellFee, outputTax: buyFee } = useSwapTaxes(tokenAddress, tokenAddress)
+  const { formatPercent } = useFormatter()
+  const { sellFeeString, buyFeeString } = {
+    sellFeeString: formatPercent(sellFee),
+    buyFeeString: formatPercent(buyFee),
+  }
+  const hasFee = Boolean(parseFloat(sellFeeString)) || Boolean(parseFloat(buyFee.toFixed(2)))
+  const sameFee = sellFeeString === buyFeeString
 
   return (
     <TokenInfoSection>
@@ -165,7 +172,7 @@ export function TokenDescription({
           </TruncateDescriptionButton>
         )}
       </TokenDescriptionContainer>
-      {Boolean(parseFloat(feeString)) && (
+      {hasFee && (
         <MouseoverTooltip
           placement="left"
           size={TooltipSize.Small}
@@ -175,10 +182,25 @@ export function TokenDescription({
             </ThemedText.Caption>
           }
         >
-          <ThemedText.BodyPrimary>
-            {tokenQuery?.token?.symbol}&nbsp;
-            <Trans>fee:</Trans>&nbsp;{feeString}%
-          </ThemedText.BodyPrimary>
+          <Column gap="sm">
+            {sameFee ? (
+              <ThemedText.BodyPrimary>
+                {tokenQuery?.token?.symbol}&nbsp;
+                <Trans>fee:</Trans>&nbsp;{sellFeeString}
+              </ThemedText.BodyPrimary>
+            ) : (
+              <>
+                <ThemedText.BodyPrimary>
+                  {tokenQuery?.token?.symbol}&nbsp;
+                  <Trans>buy fee:</Trans>&nbsp;{buyFeeString}
+                </ThemedText.BodyPrimary>{' '}
+                <ThemedText.BodyPrimary>
+                  {tokenQuery?.token?.symbol}&nbsp;
+                  <Trans>sell fee:</Trans>&nbsp;{sellFeeString}
+                </ThemedText.BodyPrimary>{' '}
+              </>
+            )}
+          </Column>
         </MouseoverTooltip>
       )}
     </TokenInfoSection>
