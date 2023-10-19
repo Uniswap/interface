@@ -159,10 +159,9 @@ export function Farms() {
           </div>
         </Switch>
       </Header>
-      {selectedFarmCategory.id !== 0 && (
-        <>
-          {/* TODO: return this component after receive new pool with differents types */}
-          {/* <TabSwitchLayout>
+      <>
+        {/* TODO: return this component after receive new pool with differents types */}
+        {/* <TabSwitchLayout>
             <CustomTabSwitch
               items={farmFilters}
               selectedItem={farmFilter}
@@ -170,13 +169,12 @@ export function Farms() {
               height={50}
             />
           </TabSwitchLayout> */}
-          {!isMobile && (
-            <TabFiltersLayout>
-              <SortColumns sortColumns={sortByDesktopItems} selectedSort={sortBy} sortDesc={sortDesc} />
-            </TabFiltersLayout>
-          )}
-        </>
-      )}
+        {!isMobile && (
+          <TabFiltersLayout>
+            <SortColumns sortColumns={sortByDesktopItems} selectedSort={sortBy} sortDesc={sortDesc} />
+          </TabFiltersLayout>
+        )}
+      </>
 
       {selectedFarmCategory?.id === 0 && chainId && <FarmingMyFarms search={filterSearch} chainId={chainId} />}
 
