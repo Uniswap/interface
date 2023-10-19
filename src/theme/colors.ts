@@ -107,7 +107,7 @@ export const colors = {
   surface4_dark: '#FFFFFF20',
   surface5_dark: '#00000004',
   accent1_dark: '#FF621F',
-  accent2_dark: '#311C31',
+  accent2_dark: '#511800',
   neutral1_light: '#222222',
   neutral2_light: '#7D7D7D',
   neutral3_light: '#CECECE',
@@ -150,7 +150,7 @@ const commonTheme = {
   chain_56_background: colors.networkBsc,
   promotional: colors.magenta300,
 
-  brandedGradient: 'linear-gradient(139.57deg, #FF79C9 4.35%, #FFB8E2 96.44%);',
+  brandedGradient: 'linear-gradient(139.57deg, #FF7033 4.35%, #FFB899 96.44%);',
   promotionalGradient: colors.accent1_light,
 }
 

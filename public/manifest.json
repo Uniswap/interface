@@ -1,10 +1,10 @@
 {
   "background_color": "#fff",
   "display": "standalone",
-  "homepage_url": "https://app.uniswap.org",
+  "homepage_url": "https://swap.a51.finance",
   "providedBy": {
-    "name": "Uniswap",
-    "url": "https://uniswap.org"
+    "name": "Swap51",
+    "url": "https://a51.fiance"
   },
   "icons": [
     {
@@ -21,10 +21,10 @@
     }
   ],
   "orientation": "portrait",
-  "name": "Uniswap",
-  "description": "Swap or provide liquidity on the Uniswap Protocol",
+  "name": "Swap51",
+  "description": "Swap or provide liquidity on the Swap51 Protocol",
   "iconPath": "./images/256x256_App_Icon_Pink.svg",
-  "short_name": "Uniswap",
+  "short_name": "Swap51",
   "start_url": ".",
   "theme_color": "#FF621F"
 }

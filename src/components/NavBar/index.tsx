@@ -3,21 +3,18 @@ import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import Web3Status from 'components/Web3Status'
 import { chainIdToBackendName } from 'graphql/data/util'
-import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
-import { UniIcon } from 'nft/components/icons'
-import { useProfilePageState } from 'nft/hooks'
-import { ProfilePageStateType } from 'nft/types'
+import { GithubIconMenu, Swap51Icon, TwitterIconMenu, WorldIconMenu } from 'nft/components/icons'
+import { themeVars } from 'nft/css/sprinkles.css'
 import { ReactNode, useCallback } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { useIsNavSearchInputVisible } from '../../nft/hooks/useIsNavSearchInputVisible'
-import { Bag } from './Bag'
 import Blur from './Blur'
 import { ChainSelector } from './ChainSelector'
-import { MenuDropdown } from './MenuDropdown'
+import * as menu from './MenuDropdown.css'
 import { SearchBar } from './SearchBar'
 import * as styles from './style.css'
 
@@ -36,6 +33,32 @@ const NavAnaltics = styled.a`
     border-radius: 10px;
   }
 `
+const IconRow = ({ children }: { children: ReactNode }) => {
+  return <Row className={menu.IconRow}>{children}</Row>
+}
+
+const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
+  return (
+    <>
+      <Box
+        as={href ? 'a' : 'div'}
+        href={href ?? undefined}
+        target={href ? '_blank' : undefined}
+        rel={href ? 'noopener noreferrer' : undefined}
+        display="flex"
+        flexDirection="column"
+        color="neutral1"
+        background="none"
+        border="none"
+        justifyContent="center"
+        textAlign="center"
+        marginRight="4"
+      >
+        {children}
+      </Box>
+    </>
+  )
+}
 
 interface MenuItemProps {
   href: string
@@ -75,22 +98,20 @@ export const PageTabs = () => {
       <NavAnaltics href="https://info.uniswap.org/#/" target="_blank" rel="noreferrer">
         <Trans>Analytics</Trans>
       </NavAnaltics>
-      <Box marginY="4">
+      {/* <Box marginY="4">
         <MenuDropdown />
-      </Box>
+      </Box> */}
     </>
   )
 }
 
 const Navbar = ({ blur }: { blur: boolean }) => {
-  const isNftPage = useIsNftPage()
-  const sellPageState = useProfilePageState((state) => state.state)
   const navigate = useNavigate()
   const isNavSearchInputVisible = useIsNavSearchInputVisible()
 
   const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
 
-  const handleUniIconClick = useCallback(() => {
+  const handleSwap51IconClick = useCallback(() => {
     if (accountDrawerOpen) {
       toggleAccountDrawer()
     }
@@ -107,19 +128,17 @@ const Navbar = ({ blur }: { blur: boolean }) => {
         <Box display="flex" height="full" flexWrap="nowrap">
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
-              <UniIcon
-                width="48"
-                height="48"
+              <Swap51Icon
+                width="85"
+                height="20"
                 data-testid="uniswap-logo"
                 className={styles.logo}
-                onClick={handleUniIconClick}
+                onClick={handleSwap51IconClick}
               />
             </Box>
-            {!isNftPage && (
-              <Box display={{ sm: 'flex', lg: 'none' }}>
-                <ChainSelector leftAlign={true} />
-              </Box>
-            )}
+            <Box display={{ sm: 'flex', lg: 'none' }}>
+              <ChainSelector leftAlign={true} />
+            </Box>
             <Row display={{ sm: 'none', lg: 'flex' }}>
               <PageTabs />
             </Row>
@@ -137,12 +156,18 @@ const Navbar = ({ blur }: { blur: boolean }) => {
               <Box position="relative" display={isNavSearchInputVisible ? 'none' : { sm: 'flex' }}>
                 <SearchBar />
               </Box>
-              {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}
-              {!isNftPage && (
-                <Box display={{ sm: 'none', lg: 'flex' }}>
-                  <ChainSelector />
-                </Box>
-              )}
+              <Icon href="https://a51.finance/">
+                <WorldIconMenu className={menu.hover} width={15} height={15} color={themeVars.colors.neutral2} />
+              </Icon>
+              <Icon href="https://twitter.com/A51_Fi">
+                <TwitterIconMenu className={menu.hover} width={24} height={24} color={themeVars.colors.neutral2} />
+              </Icon>
+              <Icon href="https://github.com/a51finance">
+                <GithubIconMenu className={menu.hover} width={24} height={24} color={themeVars.colors.neutral2} />
+              </Icon>
+              <Box display={{ sm: 'none', lg: 'flex' }}>
+                <ChainSelector />
+              </Box>
 
               <Web3Status />
             </Row>

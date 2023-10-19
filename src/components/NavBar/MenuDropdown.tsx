@@ -5,17 +5,8 @@ import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import {
-  BarChartIcon,
-  EllipsisIcon,
-  GithubIconMenu,
-  GovernanceIcon,
-  PoolIcon,
-  TwitterIconMenu,
-  WorldIconMenu,
-} from 'nft/components/icons'
+import { BarChartIcon, EllipsisIcon, GovernanceIcon, PoolIcon } from 'nft/components/icons'
 import { body, bodySmall } from 'nft/css/common.css'
-import { themeVars } from 'nft/css/sprinkles.css'
 import { ReactNode, useReducer, useRef } from 'react'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import { useToggleModal } from 'state/application/hooks'
@@ -219,7 +210,7 @@ export const MenuDropdown = () => {
                   </SecondaryLinkedText>
                 )}
               </Box>
-              <IconRow>
+              {/* <IconRow>
                 <Icon href="https://a51.finance/">
                   <WorldIconMenu className={styles.hover} width={15} height={15} color={themeVars.colors.neutral2} />
                 </Icon>
@@ -229,7 +220,7 @@ export const MenuDropdown = () => {
                 <Icon href="https://github.com/a51finance">
                   <GithubIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.neutral2} />
                 </Icon>
-              </IconRow>
+              </IconRow> */}
             </Column>
           </NavDropdown>
         )}

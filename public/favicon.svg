@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#0D1118;}
+	.st1{fill:#EEEEEE;}
+	.st2{fill:#FFFFFF;}
+	.st3{fill:#132747;}
+	.st4{fill:#566276;}
+	.st5{fill:#D98A66;}
+	.st6{fill:#FF7033;}
+	.st7{fill:#090909;}
+	.st8{opacity:0.25;clip-path:url(#SVGID_2_);}
+	.st9{opacity:0.1;clip-path:url(#SVGID_4_);}
+	.st10{fill:#151C28;}
+	.st11{fill:none;stroke:#090909;stroke-width:2;stroke-miterlimit:10;}
+	.st12{fill:#FF7033;stroke:#090909;stroke-width:2;stroke-miterlimit:10;}
+	.st13{clip-path:url(#SVGID_6_);}
+	.st14{opacity:0.02;fill:none;stroke:#EEEEEE;stroke-width:12.1940536;stroke-miterlimit:10;}
+	.st15{fill:#FFFFFF;stroke:#231F20;stroke-miterlimit:10;}
+</style>
+<path class="st1" d="M8.0000076,16H7.9999919C3.5817184,16,0,12.4182816,0,8.0000076V7.9999919C0,3.5817184,3.5817184,0,7.9999919,0
+	h0.0000157C12.4182816,0,16,3.5817184,16,7.9999919v0.0000157C16,12.4182816,12.4182816,16,8.0000076,16z"/>
+<g>
+	<path class="st6" d="M0,11.8724051V4.1275949l1.1109952-1.1109951h1.2925881V3.892596H1.5703992L0.9934645,4.4587498v7.0825005
+		l0.5769347,0.5662165h0.8331841v0.8759336H1.1109952L0,11.8724051z"/>
+	<path class="st0" d="M3.487221,10.7026758V9.7412424h1.0254958v0.6302786l0.4699979,0.4700603h2.1364908l0.4701228-0.4700603
+		V8.3845921l-0.4701228-0.459342H3.594033V4.2611098h4.8712282v0.8866525H4.5982161v1.8801169h2.9696751l1.0469322,1.0468707
+		v2.6279259l-1.0362139,1.0362139H4.5234351L3.487221,10.7026758z"/>
+	<path class="st0" d="M11.3596573,5.3293552L9.7038832,6.1839767V5.2439184l1.7946177-0.9828086h0.886652v7.4777799h-1.0254955
+		V5.3293552z"/>
+	<path class="st6" d="M13.5964165,12.9834003v-0.8759336h0.8331842l0.5769348-0.5662165V4.4587498L14.4296007,3.892596h-0.8331842
+		V3.0165999h1.2925882L16,4.1275949v7.7448101l-1.1109953,1.1109953H13.5964165z"/>
+</g>
+</svg>
