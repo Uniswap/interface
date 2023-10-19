@@ -232,6 +232,7 @@ export const enum ElementName {
 export enum UserPropertyName {
   ActiveWalletAddress = 'active_wallet_address',
   ActiveWalletType = 'active_wallet_type',
+  AndroidPerfClass = 'android_perf_class',
   AppOpenAuthMethod = 'app_open_auth_method',
   AppVersion = 'app_version',
   DarkMode = 'is_dark_mode',

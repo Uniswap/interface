@@ -4,7 +4,7 @@ import * as Sentry from '@sentry/react-native'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import { default as React, StrictMode, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NativeModules, StatusBar } from 'react-native'
+import { I18nManager, NativeModules, StatusBar } from 'react-native'
 import { getUniqueId } from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -116,6 +116,8 @@ function App(): JSX.Element | null {
     user: deviceId ? { userID: deviceId } : {},
     waitForInitialization: true,
   }
+
+  I18nManager.forceRTL(false)
 
   return (
     <Trace>

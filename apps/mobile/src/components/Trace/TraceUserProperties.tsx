@@ -1,4 +1,6 @@
 import { useEffect } from 'react'
+import { NativeModules } from 'react-native'
+import { IS_ANDROID } from 'src/constants/globals'
 import {
   useBiometricAppSettings,
   useDeviceSupportsBiometricAuth,
@@ -28,6 +30,11 @@ export function TraceUserProperties(): null {
 
   useEffect(() => {
     setUserProperty(UserPropertyName.AppVersion, getFullAppVersion())
+    if (IS_ANDROID) {
+      NativeModules.AndroidDeviceModule.getPerformanceClass().then((perfClass: number) => {
+        setUserProperty(UserPropertyName.AndroidPerfClass, perfClass)
+      })
+    }
     return () => {
       analytics.flushEvents()
     }

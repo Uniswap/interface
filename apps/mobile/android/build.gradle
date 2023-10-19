@@ -4,13 +4,14 @@ buildscript {
   ext {
     buildToolsVersion = "33.0.0"
     minSdkVersion = 28
-    compileSdkVersion = 33
-    targetSdkVersion = 33
+    compileSdkVersion = 34
+    targetSdkVersion = 34
     ndkVersion = "25.2.9519653"
     kotlinVersion = "1.8.20"
 
     appCompat = "1.6.1"
     compose = "1.4.3"
+    corePerf = "1.0.0-beta01"
     flowlayout = "0.23.1"
     kotlinSerialization = "1.5.1"
     lifecycle = "2.5.1"
@@ -21,7 +22,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath('com.android.tools.build:gradle:7.3.1')
+    classpath('com.android.tools.build:gradle:7.4.2')
     classpath("com.facebook.react:react-native-gradle-plugin")
     classpath('com.google.gms:google-services:4.3.15')
     // NOTE: Do not place your application dependencies here; they belong

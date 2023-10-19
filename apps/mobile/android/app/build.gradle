@@ -207,6 +207,10 @@ dependencies {
 
     implementation "com.google.accompanist:accompanist-flowlayout:$flowlayout"
 
+    // Used for device-reported performance class.
+    implementation("androidx.core:core-performance:$corePerf")
+    implementation("androidx.core:core-performance-play-services:$corePerf")
+
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
     }
