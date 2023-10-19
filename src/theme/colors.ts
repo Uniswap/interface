@@ -163,6 +163,8 @@ export const darkTheme = {
   neutral2: colors.neutral2_dark,
   neutral3: colors.neutral3_dark,
 
+  lightGrayOverlay: '#99A1BD14',
+
   surface1: colors.surface1_dark,
   surface2: colors.surface2_dark,
   surface3: colors.surface3_dark,
@@ -184,6 +186,8 @@ export const lightTheme: Theme = {
   neutral1: colors.neutral1_light,
   neutral2: colors.neutral2_light,
   neutral3: colors.neutral3_light,
+
+  lightGrayOverlay: '#99A1BD14',
 
   surface1: colors.surface1_light,
   surface2: colors.surface2_light,
