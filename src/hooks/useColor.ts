@@ -5,7 +5,7 @@ import { darken, lighten, rgb } from 'polished'
 import { useEffect, useState } from 'react'
 import { useTheme } from 'styled-components'
 import { getColor } from 'utils/getColor'
-import { TokenFromList } from 'utils/tokenFromList'
+import { TokenFromList } from 'state/lists/tokenFromList'
 import { hex } from 'wcag-contrast'
 
 // The WCAG AA standard color contrast threshold

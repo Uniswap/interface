@@ -1,5 +1,5 @@
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
-import { TokenFromList } from 'utils/tokenFromList'
+import { TokenFromList } from 'state/lists/tokenFromList'
 
 type TokenMap = Readonly<{ [tokenAddress: string]: { token: TokenFromList; list?: TokenList } }>
 // TODO(WEB-2347): replace usage of the misnomered TokenAddressMap w/ ChainTokenMap from src/hooks/Tokens.ts

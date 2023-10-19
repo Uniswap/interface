@@ -11,7 +11,7 @@ import { isL2ChainId } from 'utils/chains'
 
 import { useAllLists, useCombinedActiveList, useCombinedTokenMapFromUrls } from '../state/lists/hooks'
 import { deserializeToken, useUserAddedTokens } from '../state/user/hooks'
-import { TokenFromList } from '../utils/tokenFromList'
+import { TokenFromList } from '../state/lists/tokenFromList'
 import { useUnsupportedTokenList } from './../state/lists/hooks'
 
 type Maybe<T> = T | null | undefined

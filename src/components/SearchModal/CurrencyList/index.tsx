@@ -16,7 +16,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 
 import { useIsUserAddedToken } from '../../../hooks/Tokens'
-import { TokenFromList } from '../../../utils/tokenFromList'
+import { TokenFromList } from '../../../state/lists/tokenFromList'
 import Column, { AutoColumn } from '../../Column'
 import CurrencyLogo from '../../Logo/CurrencyLogo'
 import Row, { RowFixed } from '../../Row'
