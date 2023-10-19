@@ -5,7 +5,9 @@ import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { Globe } from 'components/Icons/Globe'
 import { TwitterXLogo } from 'components/Icons/TwitterX'
 import Row from 'components/Row'
+import { FOTTooltipContent } from 'components/swap/SwapLineItem'
 import { NoInfoAvailable, truncateDescription, TruncateDescriptionButton } from 'components/Tokens/TokenDetails/shared'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { useTokenProjectQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName } from 'graphql/data/util'
 import useCopyClipboard from 'hooks/useCopyClipboard'
@@ -164,10 +166,20 @@ export function TokenDescription({
         )}
       </TokenDescriptionContainer>
       {Boolean(parseFloat(feeString)) && (
-        <ThemedText.BodyPrimary>
-          {tokenQuery?.token?.symbol}&nbsp;
-          <Trans>fee:</Trans>&nbsp;{feeString}%
-        </ThemedText.BodyPrimary>
+        <MouseoverTooltip
+          placement="left"
+          size={TooltipSize.Small}
+          text={
+            <ThemedText.Caption color="neutral2">
+              <FOTTooltipContent />
+            </ThemedText.Caption>
+          }
+        >
+          <ThemedText.BodyPrimary>
+            {tokenQuery?.token?.symbol}&nbsp;
+            <Trans>fee:</Trans>&nbsp;{feeString}%
+          </ThemedText.BodyPrimary>
+        </MouseoverTooltip>
       )}
     </TokenInfoSection>
   )

@@ -63,7 +63,7 @@ const AutoBadge = styled(ThemedText.LabelMicro).attrs({ fontWeight: 535 })`
   }
 `
 
-function FOTTooltipContent() {
+export function FOTTooltipContent() {
   return (
     <>
       <Trans>
