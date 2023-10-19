@@ -1,3 +1,4 @@
+import { WatchQueryFetchPolicy } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
@@ -24,7 +25,8 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
-import { Chain, TokenPriceQuery, TokenQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { Chain, TokenBalance, TokenPriceQuery, TokenQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { useCrossChainGqlBalances } from 'graphql/data/portfolios'
 import { QueryToken, TokenQueryData } from 'graphql/data/Token'
 import { getTokenDetailsURL, InterfaceGqlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
@@ -117,7 +119,7 @@ export default function TokenDetails({
     [urlAddress]
   )
 
-  const { chainId: connectedChainId } = useWeb3React()
+  const { account, chainId: connectedChainId } = useWeb3React()
   const pageChainId = supportedChainIdFromGQLChain(chain)
   const tokenQueryData = tokenQuery.token
   const crossChainMap = useMemo(
@@ -202,6 +204,12 @@ export default function TokenDetails({
     [continueSwap, setContinueSwap]
   )
 
+  const crossChainBalances: TokenBalance[] | undefined = useCrossChainGqlBalances({
+    tokenQuery,
+    account,
+    fetchPolicy: 'cache-and-network' as WatchQueryFetchPolicy,
+  })
+
   // address will never be undefined if token is defined; address is checked here to appease typechecker
   if (detailedToken === undefined || !address) {
     return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!address} />
@@ -265,9 +273,22 @@ export default function TokenDetails({
             />
           </div>
           {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
-          {detailedToken && tokenQuery && <BalanceSummary token={detailedToken} tokenQuery={tokenQuery} />}
+          {detailedToken && tokenQuery && (
+            <BalanceSummary
+              token={detailedToken}
+              crossChainBalances={crossChainBalances}
+              tokenQueryId={tokenQuery.token?.id}
+            />
+          )}
         </RightPanel>
-        {detailedToken && <MobileBalanceSummaryFooter token={detailedToken} />}
+        {detailedToken && (
+          <MobileBalanceSummaryFooter
+            token={detailedToken}
+            pageChainBalance={crossChainBalances?.find(
+              (tokenBalance) => tokenBalance.token?.id === tokenQuery.token?.id
+            )}
+          />
+        )}
 
         <TokenSafetyModal
           isOpen={openTokenSafetyModal || !!continueSwap}

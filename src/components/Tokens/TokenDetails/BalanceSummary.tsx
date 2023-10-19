@@ -1,4 +1,3 @@
-import { WatchQueryFetchPolicy } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { ChainId, Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -7,8 +6,7 @@ import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain } from 'constants/chains'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
-import { TokenBalance, TokenQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { useCrossChainGqlBalances } from 'graphql/data/portfolios'
+import { TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
 import { gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
@@ -242,22 +240,24 @@ const OtherChainsBalanceSummary = ({
   )
 }
 
-export default function BalanceSummary({ token, tokenQuery }: { token: Currency; tokenQuery: TokenQuery }) {
+export default function BalanceSummary({
+  token,
+  crossChainBalances,
+  tokenQueryId,
+}: {
+  token: Currency
+  crossChainBalances?: TokenBalance[]
+  tokenQueryId?: string
+}) {
   const { account, chainId: connectedChainId } = useWeb3React()
   const theme = useTheme()
 
   const isInfoTDPEnabled = useInfoTDPEnabled()
 
   const connectedChainBalance = useCurrencyBalance(account, token)
-  const crossChainBalances: TokenBalance[] | undefined = useCrossChainGqlBalances({
-    tokenQuery,
-    account,
-    fetchPolicy: 'cache-and-network' as WatchQueryFetchPolicy,
-  })
-  const pageChainBalance = crossChainBalances?.find((tokenBalance) => tokenBalance.token?.id === tokenQuery.token?.id)
-  const otherChainBalances = crossChainBalances?.filter(
-    (tokenBalance) => tokenBalance.token?.id !== tokenQuery.token?.id
-  )
+
+  const pageChainBalance = crossChainBalances?.find((tokenBalance) => tokenBalance.token?.id === tokenQueryId)
+  const otherChainBalances = crossChainBalances?.filter((tokenBalance) => tokenBalance.token?.id !== tokenQueryId)
 
   if (!account) {
     return null
