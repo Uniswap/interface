@@ -1,6 +1,7 @@
 import { notificationAsync } from 'expo-haptics'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { FadeIn } from 'react-native-reanimated'
 import { Arrow } from 'src/components/icons/Arrow'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
@@ -32,7 +33,7 @@ import { useSwapTxContext } from 'src/features/transactions/swapRewrite/contexts
 import { useParsedSwapWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
 import { TransactionAmountsReview } from 'src/features/transactions/swapRewrite/TransactionAmountsReview'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
-import { Button, Flex, Icons, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Button, Flex, Icons, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'utilities/src/format/format'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -41,7 +42,7 @@ import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useFiatConversionFormatted } from 'wallet/src/utils/currency'
 
 // eslint-disable-next-line complexity
-export function SwapReviewScreen(): JSX.Element | null {
+export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
 
@@ -243,12 +244,14 @@ export function SwapReviewScreen(): JSX.Element | null {
     setShowSwapFeeInfoModal(false)
   }, [])
 
-  if (!acceptedTrade || !trade) {
-    // This can happen when the user leaves the app and comes back to the review screen after 1 minute when the TTL for the quote has expired.
+  if (hideContent || !acceptedTrade || !trade) {
+    // We forcefully hide the content via `hideContent` to allow the bottom sheet to animate faster while still allowing all API requests to trigger ASAP.
+    // A missing `acceptedTrade` or `trade` can happen when the user leaves the app and comes back to the review screen after 1 minute when the TTL for the quote has expired.
     // When that happens, we remove the quote from the cache before refetching, so there's no `trade`.
     return (
-      <Flex centered height={300} mb="$spacing28">
-        <SpinningLoader size={iconSizes.icon40} />
+      // The value of `height + mb` must be equal to the height of the fully rendered component to avoid any jumps.
+      <Flex centered height={377} mb="$spacing28">
+        {!hideContent && <SpinningLoader size={iconSizes.icon40} />}
       </Flex>
     )
   }
@@ -310,7 +313,7 @@ export function SwapReviewScreen(): JSX.Element | null {
 
       {showSwapFeeInfoModal && <SwapFeeInfoModal noFee={noSwapFee} onClose={onCloseSwapFeeInfo} />}
 
-      <Flex gap="$spacing16">
+      <AnimatedFlex entering={FadeIn} gap="$spacing16">
         <TransactionAmountsReview
           acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
           currencyInInfo={currencyInInfo}
@@ -369,7 +372,7 @@ export function SwapReviewScreen(): JSX.Element | null {
             {getActionName(t, wrapType)}
           </Button>
         </Flex>
-      </Flex>
+      </AnimatedFlex>
     </>
   )
 }

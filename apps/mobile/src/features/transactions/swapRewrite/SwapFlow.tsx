@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import { IS_ANDROID } from 'src/constants/globals'
@@ -88,7 +89,7 @@ export function SwapFlow({
               <SwapScreenContextProvider>
                 <SwapFormContextProvider prefilledState={modifiedPrefilledState} onClose={onClose}>
                   <SwapTxContextProvider>
-                    <CurrentScreen setScreen={setScreen} />
+                    <CurrentScreen screen={screen} setScreen={setScreen} />
                   </SwapTxContextProvider>
                 </SwapFormContextProvider>
               </SwapScreenContextProvider>
@@ -101,27 +102,29 @@ export function SwapFlow({
 }
 
 function CurrentScreen({
+  screen,
   setScreen,
 }: {
+  screen: SwapScreen
   setScreen: Dispatch<SetStateAction<SwapScreen>>
 }): JSX.Element {
-  const { screen } = useSwapScreenContext()
+  const { screen: contextScreen } = useSwapScreenContext()
 
   useEffect(() => {
-    setScreen(screen)
-  }, [screen, setScreen])
+    setScreen(contextScreen)
+  }, [contextScreen, setScreen])
 
   switch (screen) {
     case SwapScreen.SwapForm:
       return (
         <Trace logImpression section={SectionName.SwapForm}>
-          <SwapFormScreen />
+          <SwapFormScreenDelayedRender />
         </Trace>
       )
     case SwapScreen.SwapReview:
       return (
         <Trace logImpression section={SectionName.SwapReview}>
-          <SwapReviewScreen />
+          <SwapReviewScreenDelayedRender />
         </Trace>
       )
     case SwapScreen.SwapPending:
@@ -133,6 +136,31 @@ function CurrentScreen({
     default:
       throw new Error(`Unknown screen: ${screen}`)
   }
+}
+
+// We delay rendering of the `SwapFormScreen` until the bottom sheet is ready,
+// and we also add a short hardcoded delay to allow the sheet to animate quickly when going back from Review -> Form.
+// Note: we do this instead of using `isSheetReady` within `BottomSheetModal`, because `isSheetReady`only applies to first render or modal.
+function SwapFormScreenDelayedRender(): JSX.Element {
+  const { isSheetReady } = useBottomSheetContext()
+  const [hideContent, setHideContent] = useState(true)
+
+  useEffect(() => {
+    setTimeout(() => setHideContent(false), 25)
+  }, [])
+
+  return <SwapFormScreen hideContent={hideContent || !isSheetReady} />
+}
+
+// We add a short hardcoded delay to allow the sheet to animate quickly when going from Form -> Review.
+function SwapReviewScreenDelayedRender(): JSX.Element {
+  const [hideContent, setHideContent] = useState(true)
+
+  useEffect(() => {
+    setTimeout(() => setHideContent(false), 25)
+  }, [])
+
+  return <SwapReviewScreen hideContent={hideContent} />
 }
 
 function getFocusOnCurrencyField({

@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleSheet, TextInput, TextInputProps } from 'react-native'
-import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
+import { FadeIn, FadeOutDown } from 'react-native-reanimated'
 import { useShouldShowNativeKeyboard } from 'src/app/hooks'
-import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { useSwapAnalytics } from 'src/features/transactions/swap/analytics'
@@ -33,18 +32,16 @@ const SWAP_DIRECTION_BUTTON_SIZE = iconSizes.icon24
 const SWAP_DIRECTION_BUTTON_INNER_PADDING = spacing.spacing8 + spacing.spacing2
 const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
 
-export function SwapFormScreen(): JSX.Element {
+export function SwapFormScreen({ hideContent }: { hideContent: boolean }): JSX.Element {
   const { selectingCurrencyField } = useSwapFormContext()
-
-  const { isSheetReady } = useBottomSheetContext()
 
   return (
     <>
       <SwapFormHeader />
 
-      {isSheetReady && <SwapFormContent />}
+      {!hideContent && <SwapFormContent />}
 
-      {!!selectingCurrencyField && <TokenSelector />}
+      {!hideContent && !!selectingCurrencyField && <TokenSelector />}
     </>
   )
 }
@@ -226,11 +223,7 @@ function SwapFormContent(): JSX.Element {
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
-      <AnimatedFlex
-        entering={FadeIn}
-        exiting={FadeOut}
-        gap="$spacing2"
-        onLayout={onInputPanelLayout}>
+      <AnimatedFlex entering={FadeIn} gap="$spacing2" onLayout={onInputPanelLayout}>
         <Trace section={SectionName.CurrencyInputPanel}>
           <Flex
             backgroundColor={
