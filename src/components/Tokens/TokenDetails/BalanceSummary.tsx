@@ -1,16 +1,15 @@
 import { WatchQueryFetchPolicy } from '@apollo/client'
 import { Trans } from '@lingui/macro'
-import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain } from 'constants/chains'
-import { DEFAULT_ERC20_DECIMALS, nativeOnChain } from 'constants/tokens'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TokenBalance, TokenQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useCrossChainGqlBalances } from 'graphql/data/portfolios'
-import { supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import React from 'react'
@@ -76,7 +75,7 @@ const StyledNetworkLabel = styled.div`
 
 interface BalanceProps {
   token?: Currency
-  chainId: ChainId
+  chainId?: ChainId
   balance?: CurrencyAmount<Currency> // todo: only used for pre-Info-project calculations, should remove after
   gqlBalance?: TokenBalance
   tokenSymbol?: string
@@ -110,7 +109,7 @@ const Balance = (props: BalanceProps) => {
   if (isInfoTDPEnabled) {
     return (
       <BalanceRow onClick={onClick}>
-        <PortfolioLogo currencies={currencies} chainId={chainId} size="2rem" />
+        <PortfolioLogo currencies={currencies} chainId={chainId ?? ChainId.MAINNET} size="2rem" />
         <BalanceAmountsContainer isInfoTDPEnabled>
           <BalanceItem>
             <ThemedText.BodyPrimary>{formattedUsdGqlValue}</ThemedText.BodyPrimary>
@@ -124,7 +123,7 @@ const Balance = (props: BalanceProps) => {
   } else {
     return (
       <BalanceRow>
-        <PortfolioLogo currencies={currencies} chainId={chainId} size="2rem" />
+        <PortfolioLogo currencies={currencies} chainId={chainId ?? ChainId.MAINNET} size="2rem" />
         <BalanceContainer>
           <BalanceAmountsContainer>
             <BalanceItem>
@@ -141,19 +140,6 @@ const Balance = (props: BalanceProps) => {
       </BalanceRow>
     )
   }
-}
-
-function getCurrencyFromGqlPortfolioQuery(chainId: ChainId, portfolioQueryToken: TokenBalance['token']): Currency {
-  return portfolioQueryToken?.address
-    ? new Token(
-        chainId,
-        portfolioQueryToken?.address,
-        portfolioQueryToken?.decimals ?? DEFAULT_ERC20_DECIMALS,
-        portfolioQueryToken?.symbol,
-        portfolioQueryToken?.name,
-        /* bypassChecksum:*/ true
-      )
-    : nativeOnChain(chainId)
 }
 
 const ConnectedChainBalanceSummary = ({
@@ -197,8 +183,8 @@ const PageChainBalanceSummary = ({
   chainId: ChainId
   theme: DefaultTheme
 }) => {
-  if (!pageChainBalance) return null
-  const currency = getCurrencyFromGqlPortfolioQuery(chainId, pageChainBalance.token)
+  if (!pageChainBalance || !pageChainBalance.token) return null
+  const currency = gqlToCurrency(pageChainBalance.token)
   return (
     <BalanceSection>
       <ThemedText.SubHeaderSmall color={theme.neutral1}>
@@ -227,11 +213,8 @@ const OtherChainsBalanceSummary = ({
         <Trans>Balance on other networks</Trans>
       </ThemedText.SubHeaderSmall>
       {otherChainBalances?.map((balance) => {
-        const chainId =
-          (balance.token?.chain ? supportedChainIdFromGQLChain(balance.token?.chain) : ChainId.MAINNET) ??
-          ChainId.MAINNET
-        const currency = getCurrencyFromGqlPortfolioQuery(chainId, balance.token)
-
+        const currency = balance.token && gqlToCurrency(balance.token)
+        const chainId = balance.token && supportedChainIdFromGQLChain(balance.token.chain)
         return (
           <Balance
             key={balance.id}
