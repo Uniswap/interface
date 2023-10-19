@@ -86,7 +86,7 @@ class RNCloudStorageBackupsManager: RCTEventEmitter {
      do {
        try FileManager.default.createDirectory(at: containerUrl, withIntermediateDirectories: true, attributes: nil)
      } catch {
-       return reject(ICloudBackupError.iCloudError.rawValue, "Failed to create iCloud container", ICloudBackupError.iCloudError)
+       return reject(ICloudBackupError.iCloudError.rawValue, "Failed to create iCloud container \(error)", ICloudBackupError.iCloudError)
      }
    }
    

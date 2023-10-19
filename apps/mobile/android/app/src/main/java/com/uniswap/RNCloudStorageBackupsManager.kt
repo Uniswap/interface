@@ -204,7 +204,8 @@ class RNCloudStorageBackupsManager(private val reactContext: ReactApplicationCon
       } catch (e: Exception) {
         promise.reject(
           CloudBackupError.BACKUP_ENCRYPTION_ERROR.value,
-          "Failed to encrypt mnemonics"
+          "Failed to encrypt mnemonics: ${e.message}",
+          e,
         )
       }
     }
