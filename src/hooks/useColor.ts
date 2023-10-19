@@ -3,9 +3,9 @@ import { DEFAULT_COLOR } from 'constants/tokenColors'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import { darken, lighten, rgb } from 'polished'
 import { useEffect, useState } from 'react'
-import { TokenInfoWrapper } from 'utils/tokenInfoWrapper'
 import { useTheme } from 'styled-components'
 import { getColor } from 'utils/getColor'
+import { TokenFromList } from 'utils/tokenFromList'
 import { hex } from 'wcag-contrast'
 
 // The WCAG AA standard color contrast threshold
@@ -35,7 +35,7 @@ function URIForEthToken(address: string) {
  * @returns {Promise< | null>} A promise that resolves to a color string or null if color cannot be determined.
  */
 async function getColorFromToken(token: Token, primarySrc?: string): Promise<string | null> {
-  const wrappedToken = token as TokenInfoWrapper
+  const wrappedToken = token as TokenFromList
   let color: string | null = null
 
   try {

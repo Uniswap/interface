@@ -10,7 +10,7 @@ interface TagInfo extends TagDetails {
 /**
  * Token instances created from token info on a token list.
  */
-export class TokenInfoWrapper implements Token {
+export class TokenFromList implements Token {
   public readonly isNative = false as const
   public readonly isToken = true as const
   public readonly list?: TokenList
