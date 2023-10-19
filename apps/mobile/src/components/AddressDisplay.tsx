@@ -2,7 +2,7 @@ import { impactAsync } from 'expo-haptics'
 import { default as React, PropsWithChildren, useMemo } from 'react'
 import { FlexAlignType } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
-import { AccountIcon } from 'src/components/AccountIcon'
+import { AccountIcon, AccountIconProps } from 'src/components/AccountIcon'
 import { NotificationBadge } from 'src/components/notifications/Badge'
 import { ElementName } from 'src/features/telemetry/constants'
 import { setClipboard } from 'src/utils/clipboard'
@@ -31,10 +31,9 @@ type AddressDisplayProps = {
   showIconBackground?: boolean
   textAlign?: FlexAlignType
   horizontalGap?: SpaceTokens
-  showViewOnlyBadge?: boolean
   showNotificationsBadge?: boolean
   gapBetweenLines?: SpaceTokens
-}
+} & Pick<AccountIconProps, 'showViewOnlyBadge' | 'viewOnlyBadgeScalingFactor'>
 
 type CopyButtonWrapperProps = {
   onPress?: () => void
@@ -74,6 +73,7 @@ export function AddressDisplay({
   showIconBackground,
   horizontalGap = '$spacing12',
   showViewOnlyBadge = false,
+  viewOnlyBadgeScalingFactor,
   gapBetweenLines = '$none',
 }: AddressDisplayProps): JSX.Element {
   const dispatch = useAppDispatch()
@@ -108,9 +108,10 @@ export function AddressDisplay({
         showBackground={showIconBackground}
         showViewOnlyBadge={showViewOnlyBadge}
         size={size}
+        viewOnlyBadgeScalingFactor={viewOnlyBadgeScalingFactor}
       />
     )
-  }, [address, avatar, showIconBackground, showViewOnlyBadge, size])
+  }, [address, avatar, showIconBackground, showViewOnlyBadge, size, viewOnlyBadgeScalingFactor])
 
   return (
     <Flex alignItems={contentAlign} flexDirection={direction} gap={horizontalGap}>

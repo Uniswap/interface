@@ -7,9 +7,10 @@ import { Flex, Icons } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 
-interface Props {
+export interface AccountIconProps {
   size: number
   showViewOnlyBadge?: boolean
+  viewOnlyBadgeScalingFactor?: number
   address: string
   avatarUri?: string | null
   showBackground?: boolean // Display images with solid background.
@@ -23,7 +24,8 @@ export function AccountIcon({
   address,
   avatarUri,
   showBackground,
-}: Props): JSX.Element {
+  viewOnlyBadgeScalingFactor = 0.45,
+}: AccountIconProps): JSX.Element {
   // If background, add padding and center Unicons. Leave ENS avatars as is.
   const shouldShowUniconInsetPadding = !avatarUri && showBackground
 
@@ -34,7 +36,7 @@ export function AccountIcon({
   const { gradientStart: uniconColor } = useUniconColors(address)
 
   const iconPadding = size * 0.15
-  const iconEyeContainerSize = size * 0.45
+  const iconEyeContainerSize = size * viewOnlyBadgeScalingFactor
   const iconEyeSize = iconEyeContainerSize - iconPadding
 
   const defaultImage = (

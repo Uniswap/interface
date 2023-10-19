@@ -12,10 +12,15 @@ import { Flex, Icons, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
+import { AccountType } from 'wallet/src/features/wallet/accounts/types'
+import {
+  selectActiveAccount,
+  selectActiveAccountAddress,
+} from 'wallet/src/features/wallet/selectors'
 
 export function AccountHeader(): JSX.Element {
   const activeAddress = useAppSelector(selectActiveAccountAddress)
+  const account = useAppSelector(selectActiveAccount)
   const dispatch = useAppDispatch()
 
   const onPressAccountHeader = useCallback(() => {
@@ -70,8 +75,10 @@ export function AccountHeader(): JSX.Element {
                 hideAddressInSubtitle
                 address={activeAddress}
                 horizontalGap="$spacing8"
+                showViewOnlyBadge={account?.type === AccountType.Readonly}
                 size={iconSizes.icon28}
                 variant="subheading1"
+                viewOnlyBadgeScalingFactor={0.55}
               />
             </Flex>
             <Icons.RotatableChevron
