@@ -43,6 +43,7 @@ import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
 import { OnChangeTimePeriod } from './ChartSection'
 import InvalidTokenDetails from './InvalidTokenDetails'
+import { TokenDescription } from './TokenDescription'
 
 const TokenSymbol = styled.span`
   text-transform: uppercase;
@@ -258,7 +259,7 @@ export default function TokenDetails({
           <TokenDetailsSkeleton />
         )}
 
-        <RightPanel onClick={() => isBlockedToken && setOpenTokenSafetyModal(true)}>
+        <RightPanel isInfoTDPEnabled onClick={() => isBlockedToken && setOpenTokenSafetyModal(true)}>
           <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
             <Swap
               chainId={pageChainId}
@@ -270,6 +271,14 @@ export default function TokenDetails({
           </div>
           {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
           {!isInfoTDPEnabled && detailedToken && <BalanceSummary token={detailedToken} />}
+          {isInfoTDPEnabled && (
+            <TokenDescription
+              tokenAddress={address}
+              chainId={pageChainId}
+              isNative={detailedToken?.isNative}
+              characterCount={200}
+            />
+          )}
         </RightPanel>
         {!isInfoTDPEnabled && detailedToken && <MobileBalanceSummaryFooter token={detailedToken} />}
 

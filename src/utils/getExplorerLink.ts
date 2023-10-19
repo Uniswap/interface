@@ -1,6 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
 
-const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
+export const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
   [ChainId.MAINNET]: 'https://etherscan.io',
   [ChainId.GOERLI]: 'https://goerli.etherscan.io',
   [ChainId.SEPOLIA]: 'https://sepolia.etherscan.io',

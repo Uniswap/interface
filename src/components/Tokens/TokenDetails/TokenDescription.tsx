@@ -4,14 +4,12 @@ import Column from 'components/Column'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { Globe } from 'components/Icons/Globe'
 import { TwitterXLogo } from 'components/Icons/TwitterX'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import { NoInfoAvailable, truncateDescription, TruncateDescriptionButton } from 'components/Tokens/TokenDetails/shared'
 import { useTokenProjectQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName } from 'graphql/data/util'
-import { useCurrency } from 'hooks/Tokens'
-import { useColor } from 'hooks/useColor'
 import useCopyClipboard from 'hooks/useCopyClipboard'
+import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { useCallback, useReducer } from 'react'
 import { Copy } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
@@ -19,10 +17,11 @@ import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
 import { shortenAddress } from 'utils'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { BLOCK_EXPLORER_PREFIXES, ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 const TokenInfoSection = styled(Column)`
-  gap: 12px;
+  gap: 16px;
   width: 100%;
 
   @media (max-width: ${BREAKPOINTS.lg - 1}px) and (min-width: ${BREAKPOINTS.sm}px) {
@@ -33,10 +32,6 @@ const TokenInfoSection = styled(Column)`
 const TokenNameRow = styled(Row)`
   gap: 8px;
   width: 100%;
-`
-
-const TokenName = styled(ThemedText.BodyPrimary)`
-  ${EllipsisStyle}
 `
 
 const TokenButtonRow = styled(TokenNameRow)`
@@ -73,25 +68,28 @@ const TRUNCATE_CHARACTER_COUNT = 75
 export function TokenDescription({
   tokenAddress,
   chainId = ChainId.MAINNET,
-  showCopy = false,
+  isNative = false,
+  characterCount = TRUNCATE_CHARACTER_COUNT,
 }: {
   tokenAddress: string
   chainId?: number
-  showCopy?: boolean
+  isNative?: boolean
+  characterCount?: number
 }) {
-  const currency = useCurrency(tokenAddress, chainId)
-  const theme = useTheme()
-  const color = useColor(currency?.wrapped, theme.surface1, theme.darkMode)
+  const color = useTheme().neutral1
+  const chainName = chainIdToBackendName(chainId)
   const { data: tokenQuery } = useTokenProjectQuery({
     variables: {
-      address: tokenAddress,
-      chain: chainIdToBackendName(chainId),
+      address: isNative ? getNativeTokenDBAddress(chainName) : tokenAddress,
+      chain: chainName,
     },
     errorPolicy: 'all',
   })
   const tokenProject = tokenQuery?.token?.project
   const description = tokenProject?.description
-  const explorerUrl = getExplorerLink(chainId, tokenAddress, ExplorerDataType.TOKEN)
+  const explorerUrl = isNative
+    ? BLOCK_EXPLORER_PREFIXES[chainId]
+    : getExplorerLink(chainId, tokenAddress, ExplorerDataType.TOKEN)
 
   const [, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
@@ -99,19 +97,19 @@ export function TokenDescription({
   }, [tokenAddress, setCopied])
 
   const [isDescriptionTruncated, toggleIsDescriptionTruncated] = useReducer((x) => !x, true)
-  const truncatedDescription = truncateDescription(description ?? '', TRUNCATE_CHARACTER_COUNT)
-  const shouldTruncate = !!description && description.length > TRUNCATE_CHARACTER_COUNT
+  const truncatedDescription = truncateDescription(description ?? '', characterCount)
+  const shouldTruncate = !!description && description.length > characterCount
   const showTruncatedDescription = shouldTruncate && isDescriptionTruncated
+  const { inputTax: fee } = useSwapTaxes(tokenAddress, undefined)
+  const feeString = fee.toFixed(2)
 
   return (
     <TokenInfoSection>
-      <TokenNameRow>
-        <CurrencyLogo currency={currency} size="20px" />
-        <TokenName>{currency?.name}</TokenName>
-        <ThemedText.BodySecondary>{currency?.symbol}</ThemedText.BodySecondary>
-      </TokenNameRow>
+      <ThemedText.HeadlineSmall>
+        <Trans>Info</Trans>
+      </ThemedText.HeadlineSmall>
       <TokenButtonRow>
-        {showCopy && (
+        {!isNative && (
           <TokenInfoButton tokenColor={color} onClick={copy}>
             <Copy width="18px" height="18px" color={color} />
             {shortenAddress(tokenAddress)}
@@ -165,6 +163,12 @@ export function TokenDescription({
           </TruncateDescriptionButton>
         )}
       </TokenDescriptionContainer>
+      {Boolean(parseFloat(feeString)) && (
+        <ThemedText.BodyPrimary>
+          {tokenQuery?.token?.symbol}&nbsp;
+          <Trans>fee:</Trans>&nbsp;{feeString}%
+        </ThemedText.BodyPrimary>
+      )}
     </TokenInfoSection>
   )
 }
