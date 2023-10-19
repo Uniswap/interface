@@ -65,7 +65,7 @@ const HideTextOverflow = css`
   white-space: nowrap;
 `
 
-const TokenFromList = styled(Column)`
+const TokenInfoWrapper = styled(Column)`
   margin-right: 8px;
   min-width: 0px;
 `
@@ -152,13 +152,13 @@ export const NFTListRow = ({
 
       <NFTInfoWrapper>
         <NFTImage alt={asset.name} src={asset.imageUrl || '/nft/svgs/image-placeholder.svg'} />
-        <TokenFromList>
+        <TokenInfoWrapper>
           <TokenName>{asset.name ? asset.name : `#${asset.tokenId}`}</TokenName>
           <CollectionName>
             {asset.collection?.name}
             {asset.collectionIsVerified && <VerifiedIcon style={{ marginBottom: '-5px' }} />}
           </CollectionName>
-        </TokenFromList>
+        </TokenInfoWrapper>
       </NFTInfoWrapper>
       <MarketPlaceRowWrapper>
         {expandMarketplaceRows && localMarkets.length > 1 ? (
