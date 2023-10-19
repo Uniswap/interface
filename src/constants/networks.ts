@@ -127,7 +127,7 @@ export const FALLBACK_URLS = {
  */
 export const RPC_URLS = {
   [ChainId.MAINNET]: [
-    `https://mainnet.infura.io/v3/${INFURA_KEY}`,
+    `https://eth.llamarpc.com	`,
     QUICKNODE_MAINNET_RPC_URL,
     ...FALLBACK_URLS[ChainId.MAINNET],
   ],

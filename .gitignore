@@ -55,3 +55,4 @@ cypress/screenshots
 .vercel
 
 .wrangler
+.env

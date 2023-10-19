@@ -43,7 +43,7 @@ export function useRoutingAPIArguments({
 
   const feesEnabled = useFeesEnabled()
   // Don't enable fee logic if this is a quote for pricing
-  const sendPortionEnabled = routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? false : feesEnabled
+  const sendPortionEnabled = routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? false : false
 
   return useMemo(
     () =>
