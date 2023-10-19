@@ -161,7 +161,7 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
       sendAnalyticsEvent(InterfaceEventName.WALLET_PROVIDER_USED, {
         source: 'useV3NFTPositionManagerContract',
         contract: {
-          name: 'NonfungiblePositionManager',
+          name: 'V3NonfungiblePositionManager',
           address: contract.address,
           withSignerIfPossible,
           chainId,

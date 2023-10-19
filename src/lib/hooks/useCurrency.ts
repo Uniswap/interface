@@ -93,7 +93,6 @@ export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string
           name: tokenFromNetwork?.name,
           symbol: tokenFromNetwork?.symbol,
           address: tokenFromNetwork?.address,
-          decimals: tokenFromNetwork?.decimals,
           isNative: tokenFromNetwork?.isNative,
         },
       })
