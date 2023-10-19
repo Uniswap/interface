@@ -12,7 +12,7 @@ import { ExplorerDataType, getExplorerLink, getProfileUrl, openUri } from 'src/u
 import { Flex, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 
@@ -52,7 +52,9 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
   const menuActions = useMemo(
     () => [
       {
-        title: t('View on Etherscan'),
+        title: t('View on {{ blockExplorerName }}', {
+          blockExplorerName: CHAIN_INFO[ChainId.Mainnet].explorer.name,
+        }),
         action: openExplorerLink,
         systemIcon: 'link',
       },

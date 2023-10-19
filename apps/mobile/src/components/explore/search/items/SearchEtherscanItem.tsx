@@ -2,7 +2,7 @@ import { ImpactFeedbackStyle } from 'expo-haptics'
 import { default as React } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { Arrow } from 'src/components/icons/Arrow'
-import { EtherscanIcon } from 'src/components/icons/EtherscanIcon'
+import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
 import { addToSearchHistory } from 'src/features/explore/searchHistorySlice'
 import { EtherscanSearchResult } from 'src/features/explore/SearchResult'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -31,6 +31,8 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
       })
     )
   }
+
+  const EtherscanIcon = getBlockExplorerIcon(ChainId.Mainnet)
 
   return (
     <TouchableArea

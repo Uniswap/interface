@@ -23,7 +23,7 @@ import { useIsSmartContractAddress } from 'src/features/transactions/transfer/ho
 import { AnimatedFlex, Flex, Text } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { SafetyLevel, useExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import i18n from 'wallet/src/i18n/i18n'
@@ -46,7 +46,9 @@ const NFTHeaderItem: SearchResultOrHeader = {
 }
 const EtherscanHeaderItem: SearchResultOrHeader = {
   type: SEARCH_RESULT_HEADER_KEY,
-  title: i18n.t('View on Etherscan'),
+  title: i18n.t('View on {{ blockExplorerName }}', {
+    blockExplorerName: CHAIN_INFO[ChainId.Mainnet].explorer.name,
+  }),
 }
 
 export function SearchResultsSection({ searchQuery }: { searchQuery: string }): JSX.Element {

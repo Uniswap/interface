@@ -1,6 +1,7 @@
 // Based on https://github.com/Uniswap/interface/blob/main/src/constants/chains.ts
 
 import { ImageSourcePropType } from 'react-native'
+import { GeneratedIcon, Logos } from 'ui/src'
 import {
   ARBITRUM_LOGO,
   BASE_LOGO,
@@ -71,7 +72,12 @@ export interface L1ChainInfo {
   readonly blockWaitMsBeforeWarning?: number
   readonly bridge?: string
   readonly docs: string
-  readonly explorer: string
+  readonly explorer: {
+    name: string
+    url: string
+    logoLight: GeneratedIcon
+    logoDark: GeneratedIcon
+  }
   readonly infoLink: string
   readonly label: string
   readonly logoUrl?: string
@@ -104,7 +110,12 @@ export const CHAIN_INFO: ChainInfo = {
     blockWaitMsBeforeWarning: 600000, // 10 minutes
     bridge: 'https://bridge.arbitrum.io/',
     docs: 'https://offchainlabs.com/',
-    explorer: 'https://arbiscan.io/',
+    explorer: {
+      name: 'Arbiscan',
+      url: 'https://arbiscan.io/',
+      logoLight: Logos.ArbiscanLogo,
+      logoDark: Logos.ArbiscanLogo,
+    },
     infoLink: 'https://info.uniswap.org/#/arbitrum',
     label: 'Arbitrum',
     logo: ARBITRUM_LOGO,
@@ -125,7 +136,12 @@ export const CHAIN_INFO: ChainInfo = {
   [ChainId.Mainnet]: {
     blockWaitMsBeforeWarning: 60000, // 1 minute
     docs: 'https://docs.uniswap.org/',
-    explorer: 'https://etherscan.io/',
+    explorer: {
+      name: 'Etherscan',
+      url: 'https://etherscan.io/',
+      logoLight: Logos.EtherscanLogoLight,
+      logoDark: Logos.EtherscanLogoDark,
+    },
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Ethereum',
     logo: ETHEREUM_LOGO,
@@ -146,7 +162,12 @@ export const CHAIN_INFO: ChainInfo = {
   [ChainId.Goerli]: {
     blockWaitMsBeforeWarning: 180000, // 3 minutes
     docs: 'https://docs.uniswap.org/',
-    explorer: 'https://goerli.etherscan.io/',
+    explorer: {
+      name: 'Etherscan',
+      url: 'https://goerli.etherscan.io/',
+      logoLight: Logos.EtherscanLogoLight,
+      logoDark: Logos.EtherscanLogoDark,
+    },
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Görli',
     logo: GOERLI_LOGO,
@@ -167,7 +188,12 @@ export const CHAIN_INFO: ChainInfo = {
     blockWaitMsBeforeWarning: 600000,
     bridge: 'https://bridge.base.org/',
     docs: 'https://base.org/',
-    explorer: 'https://basescan.org/',
+    explorer: {
+      name: 'BaseScan',
+      url: 'https://basescan.org/',
+      logoLight: Logos.BasescanLogoLight,
+      logoDark: Logos.BasescanLogoDark,
+    },
     infoLink: 'https://info.uniswap.org/#/base',
     label: 'Base',
     logo: BASE_LOGO,
@@ -189,7 +215,12 @@ export const CHAIN_INFO: ChainInfo = {
     blockWaitMsBeforeWarning: 600000,
     bridge: 'https://www.bnbchain.org/bridge',
     docs: 'https://www.bnbchain.org/',
-    explorer: 'https://bscscan.com/',
+    explorer: {
+      name: 'BscScan',
+      url: 'https://bscscan.com/',
+      logoLight: Logos.BscscanLogoLight,
+      logoDark: Logos.BscscanLogoDark,
+    },
     infoLink: 'https://info.uniswap.org/#/bnb',
     label: 'BNB',
     logo: BNB_LOGO,
@@ -211,7 +242,12 @@ export const CHAIN_INFO: ChainInfo = {
     blockWaitMsBeforeWarning: 1200000, // 20 minutes
     bridge: 'https://gateway.optimism.io/',
     docs: 'https://optimism.io/',
-    explorer: 'https://optimistic.etherscan.io/',
+    explorer: {
+      name: 'OP Etherscan',
+      url: 'https://optimistic.etherscan.io/',
+      logoLight: Logos.OpEtherscanLogo,
+      logoDark: Logos.OpEtherscanLogo,
+    },
     infoLink: 'https://info.uniswap.org/#/optimism',
     label: 'Optimism',
     logo: OPTIMISM_LOGO,
@@ -234,7 +270,12 @@ export const CHAIN_INFO: ChainInfo = {
     blockWaitMsBeforeWarning: 600000, // 10 minutes
     bridge: 'https://wallet.polygon.technology/bridge',
     docs: 'https://polygon.io/',
-    explorer: 'https://polygonscan.com/',
+    explorer: {
+      name: 'PolygonScan',
+      url: 'https://polygonscan.com/',
+      logoLight: Logos.PolygonscanLogo,
+      logoDark: Logos.PolygonscanLogo,
+    },
     infoLink: 'https://info.uniswap.org/#/polygon/',
     label: 'Polygon',
     logo: POLYGON_LOGO,
@@ -256,7 +297,12 @@ export const CHAIN_INFO: ChainInfo = {
     blockWaitMsBeforeWarning: 600000, // 10 minutes
     bridge: 'https://wallet.polygon.technology/bridge',
     docs: 'https://polygon.io/',
-    explorer: 'https://mumbai.polygonscan.com/',
+    explorer: {
+      name: 'PolygonScan',
+      url: 'https://mumbai.polygonscan.com/',
+      logoLight: Logos.PolygonscanLogo,
+      logoDark: Logos.PolygonscanLogo,
+    },
     infoLink: 'https://info.uniswap.org/#/polygon/',
     label: 'Polygon Mumbai',
     logo: MUMBAI_LOGO,

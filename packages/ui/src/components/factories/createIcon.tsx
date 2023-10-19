@@ -37,7 +37,8 @@ const IconFrame = styled(Stack, {
   },
 })
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export type GeneratedIcon = React.ForwardRefExoticComponent<IconProps & React.RefAttributes<Svg>>
+
 export function createIcon({
   name,
   getIcon,
@@ -46,7 +47,7 @@ export function createIcon({
   name: string
   getIcon: (props: SvgPropsWithRef) => JSX.Element
   defaultFill?: string
-}) {
+}): readonly [GeneratedIcon, GeneratedIcon] {
   const Icon = forwardRef<Svg, IconProps>((propsIn, ref) => {
     const [props, style] = usePropsAndStyle(
       {

@@ -12,6 +12,7 @@ import ExternalLinkIcon from 'ui/src/assets/icons/external-link.svg'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes, imageSizes, opacify, ThemeNames } from 'ui/src/theme'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
+import { ChainId } from 'wallet/src/constants/chains'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
@@ -59,7 +60,7 @@ export default function TokenWarningModal({
   const colors = useSporeColors()
   const warningColor = useTokenSafetyLevelColors(safetyLevel)
 
-  const chainId = currencyIdToChain(currencyId)
+  const chainId = currencyIdToChain(currencyId) ?? ChainId.Mainnet
   const address = currencyIdToAddress(currencyId)
 
   const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.TOKEN)

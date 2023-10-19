@@ -1,13 +1,14 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
-import { EtherscanIcon } from 'src/components/icons/EtherscanIcon'
+import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
 import { ElementName } from 'src/features/telemetry/constants'
 import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'src/utils/linking'
 import { Flex, Text } from 'ui/src'
 import GlobeIcon from 'ui/src/assets/icons/globe-filled.svg'
 import AddressIcon from 'ui/src/assets/icons/sticky-note-text-square.svg'
 import TwitterIcon from 'ui/src/assets/icons/twitter.svg'
+import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
@@ -23,7 +24,7 @@ export function TokenDetailsLinks({
   const { t } = useTranslation()
 
   const { homepageUrl, twitterName } = data?.token?.project ?? {}
-  const chainId = currencyIdToChain(currencyId)
+  const chainId = currencyIdToChain(currencyId) ?? ChainId.Mainnet
   const address = currencyIdToAddress(currencyId)
   const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
 
@@ -62,10 +63,10 @@ export function TokenDetailsLinks({
               />
             )}
             <LinkButton
-              Icon={EtherscanIcon}
+              Icon={getBlockExplorerIcon(chainId)}
               buttonType={LinkButtonType.Link}
               element={ElementName.TokenLinkEtherscan}
-              label={t('Etherscan')}
+              label={CHAIN_INFO[chainId].explorer.name}
               value={explorerLink}
             />
           </Flex>

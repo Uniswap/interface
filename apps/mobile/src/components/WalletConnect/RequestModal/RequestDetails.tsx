@@ -16,6 +16,7 @@ import { Flex, Text, useSporeColors } from 'ui/src'
 import { iconSizes, TextVariantTokens } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
+import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { EthMethod, EthTransaction } from 'wallet/src/features/walletConnect/types'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
@@ -37,6 +38,7 @@ type AddressButtonProps = {
 const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps): JSX.Element => {
   const { name } = useENS(chainId, address, false)
   const colors = useSporeColors()
+  const supportedChainId = toSupportedChainId(chainId) ?? ChainId.Mainnet
 
   return (
     <LinkButton
@@ -48,7 +50,7 @@ const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps): JSX.E
       py="$spacing4"
       size={iconSizes.icon16}
       textVariant="body2"
-      url={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}
+      url={getExplorerLink(supportedChainId, address, ExplorerDataType.ADDRESS)}
       {...rest}
     />
   )

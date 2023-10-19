@@ -42,7 +42,7 @@ export {
 } from './components/AnimatedFlashList/AnimatedFlashList'
 export { Button } from './components/button/Button'
 export { withAnimated } from './components/factories/animated'
-export { IconProps } from './components/factories/createIcon'
+export { GeneratedIcon, IconProps } from './components/factories/createIcon'
 export * as Icons from './components/icons/allIcons'
 export * from './components/input/utils'
 export { AnimatedFlex, Flex, FlexProps, flexStyles, Inset, Separator } from './components/layout'

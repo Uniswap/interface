@@ -2,10 +2,6 @@ import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 import { ChainId } from 'wallet/src/constants/chains'
 
 describe(getExplorerLink, () => {
-  it('handles null chainId', () => {
-    expect(getExplorerLink(null, 'hash', ExplorerDataType.ADDRESS)).toEqual('')
-  })
-
   it('handles different link cases', () => {
     expect(getExplorerLink(ChainId.ArbitrumOne, 'hash', ExplorerDataType.TRANSACTION)).toEqual(
       'https://arbiscan.io/tx/hash'
@@ -25,12 +21,6 @@ describe(getExplorerLink, () => {
     expect(getExplorerLink(ChainId.Goerli, 'hash', ExplorerDataType.TRANSACTION)).toEqual(
       'https://goerli.etherscan.io/tx/hash'
     )
-  })
-
-  it('handles chain without explorer URL', () => {
-    expect(
-      getExplorerLink(7878 /**unassigned chainId*/, 'hash', ExplorerDataType.TRANSACTION)
-    ).toEqual('https://etherscan.io/tx/hash')
   })
 
   it('handles Optimism block special case', () => {

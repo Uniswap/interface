@@ -9,6 +9,7 @@ import { setClipboard } from 'src/utils/clipboard'
 import { openMoonpayHelpLink, openUniswapHelpLink } from 'src/utils/linking'
 import { ColorTokens, Flex, Separator, Text } from 'ui/src'
 import { FORMAT_DATE_LONG, useFormattedDate } from 'utilities/src/time/localizedDayjs'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
@@ -73,12 +74,18 @@ export default function TransactionActionsModal({
         ]
       : []
 
+    const chainInfo = CHAIN_INFO[transactionDetails.chainId]
+
     const maybeViewOnEtherscanOption = transactionDetails.hash
       ? [
           {
             key: ElementName.EtherscanView,
             onPress: onExplore,
-            render: renderOptionItem(t('View on Etherscan')),
+            render: renderOptionItem(
+              t('View on {{ blockExplorerName }}', {
+                blockExplorerName: chainInfo.explorer.name,
+              })
+            ),
           },
         ]
       : []
@@ -137,8 +144,7 @@ export default function TransactionActionsModal({
     }
     return transactionActionOptions
   }, [
-    transactionDetails.typeInfo,
-    transactionDetails.hash,
+    transactionDetails,
     onViewMoonpay,
     t,
     onExplore,
