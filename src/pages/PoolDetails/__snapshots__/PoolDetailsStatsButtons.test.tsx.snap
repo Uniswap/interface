@@ -47,7 +47,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   background-color: #FFEFFF;
   border-radius: 16px;
   border: 0;
-  color: #FC72FF;
+  color: #FF621F;
   cursor: pointer;
   display: -webkit-box;
   display: -webkit-flex;

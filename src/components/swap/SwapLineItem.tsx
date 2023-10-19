@@ -62,6 +62,18 @@ const AutoBadge = styled(ThemedText.LabelMicro).attrs({ fontWeight: 535 })`
     content: '${t`Auto`}';
   }
 `
+const NoFeeBadge = styled(ThemedText.LabelMicro).attrs({ fontWeight: 535 })`
+  background: ${({ theme }) => theme.accent1};
+  border-radius: 8px;
+  color: ${({ theme }) => theme.white};
+  font-weight: 600;
+  height: 20px;
+  padding: 0 6px;
+
+  ::after {
+    content: '${t`No Fee`}';
+  }
+`
 
 function FOTTooltipContent() {
   return (
@@ -196,13 +208,8 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
       if (!feesEnabled) return
       if (isPreview) return { Label: () => <Trans>Fee</Trans>, Value: () => <Loading /> }
       return {
-        Label: () => (
-          <>
-            <Trans>Fee</Trans> {trade.swapFee && `(${formatPercent(trade.swapFee.percent)})`}
-          </>
-        ),
-        TooltipBody: () => <SwapFeeTooltipContent hasFee={Boolean(trade.swapFee)} />,
-        Value: () => <FeeRow trade={trade} />,
+        Label: () => <Trans>Fee</Trans>,
+        Value: () => <NoFeeBadge />,
       }
     }
     case SwapLineItemType.MAXIMUM_INPUT:
