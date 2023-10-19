@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
@@ -38,20 +38,29 @@ export function ImportMnemonic(): JSX.Element {
   const [expanded, setExpanded] = useState(false)
   const [errors, setErrors] = useState<Record<number, boolean | undefined>>({})
 
-  // TODO(EXT-345): add support for pasting a full mnemonic
-  // If a user pastes a valid mnemonic at any time we replace all current input state with that mnemonic
-  // useEffect(() => {
-  //   function handlePaste({ clipboardData }: ClipboardEvent): void {
-  //     if (!clipboardData) return
-  //     const pastedText = clipboardData.getData('Text').toLowerCase()
-  //     if (!pastedText) return
-  //     const { error } = validateMnemonic(pastedText)
-  //     if (error) return
-  //     setMnemonic(pastedText.split(' '))
-  //   }
-  //   document.addEventListener('paste', handlePaste)
-  //   return () => document.removeEventListener('paste', handlePaste)
-  // }, [setMnemonic])
+  useEffect(() => {
+    const handlePaste = (event: ClipboardEvent): void | (() => void) => {
+      if (!event.clipboardData) return
+      const pastedText = event.clipboardData.getData('text').toLowerCase()
+      if (!pastedText) return
+      const { validMnemonic, error } = validateMnemonic(pastedText)
+      if (error || !validMnemonic) return
+      // We conditionally prevent default here because we want paste to work as expected in all other cases.
+      event.preventDefault()
+      const words = validMnemonic.split(' ')
+      const newMnemonic = Array(24)
+        .fill('')
+        .map((_, i) => words[i] || '')
+      setMnemonic(newMnemonic)
+      setErrors({})
+    }
+
+    window.document.addEventListener('paste', handlePaste)
+
+    return () => {
+      window.document.removeEventListener('paste', handlePaste)
+    }
+  }, [setMnemonic])
 
   const handleChange = useCallback(
     (index: number) =>
