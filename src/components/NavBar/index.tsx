@@ -27,6 +27,15 @@ const Nav = styled.nav`
   height: ${({ theme }) => theme.navHeight}px;
   z-index: 2;
 `
+const NavAnaltics = styled.a`
+  color: rgba(255, 255, 255, 0.65);
+  padding: 6px 10px;
+  text-decoration: none;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+  }
+`
 
 interface MenuItemProps {
   href: string
@@ -63,6 +72,9 @@ export const PageTabs = () => {
       <MenuItem href={`/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/tokens')}>
         <Trans>Tokens</Trans>
       </MenuItem>
+      <NavAnaltics href="https://info.uniswap.org/#/" target="_blank" rel="noreferrer">
+        <Trans>Analytics</Trans>
+      </NavAnaltics>
       <Box marginY="4">
         <MenuDropdown />
       </Box>
