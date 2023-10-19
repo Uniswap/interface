@@ -52,26 +52,12 @@ export const USDC_POLYGON = new Token(
   'USDC',
   'USD//C'
 )
-export const USDCe_POLYGON = new Token(
-  ChainId.POLYGON,
-  '0x9999f7fea5938fd3b1e26a12c3f2fb024e194f97',
-  6,
-  'USDC.e',
-  'Bridged USDC'
-)
 export const USDC_POLYGON_MUMBAI = new Token(
   ChainId.POLYGON_MUMBAI,
   '0x0fa8781a83e46826621b3bc094ea2a0212e71b23',
   6,
   'USDC',
   'USDC'
-)
-export const USDCe_POLYGON_MUMBAI = new Token(
-  ChainId.POLYGON_MUMBAI,
-  '0x0fa8781a83e46826621b3bc094ea2a0212e71b23',
-  6,
-  'USDC.e',
-  'Bridged USDC'
 )
 export const PORTAL_USDC_CELO = new Token(
   ChainId.CELO,
