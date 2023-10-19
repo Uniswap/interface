@@ -1,19 +1,14 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { LOCALE_LABEL } from 'constants/locales'
 import { useCurrencyConversionFlagEnabled } from 'featureFlags/flags/currencyConversion'
-import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import ThemeToggle from 'theme/components/ThemeToggle'
 
-import { AnalyticsToggle } from './AnalyticsToggle'
 import { GitVersionRow } from './GitVersionRow'
-import { LanguageMenuItems } from './LanguageMenu'
 import { SlideOutMenu } from './SlideOutMenu'
 import { SmallBalanceToggle } from './SmallBalanceToggle'
 import { TestnetsToggle } from './TestnetsToggle'
@@ -70,16 +65,12 @@ const SettingsButton = ({
 
 export default function SettingsMenu({
   onClose,
-  openLanguageSettings,
-  openLocalCurrencySettings,
 }: {
   onClose: () => void
   openLanguageSettings: () => void
   openLocalCurrencySettings: () => void
 }) {
   const currencyConversionEnabled = useCurrencyConversionFlagEnabled()
-  const activeLocale = useActiveLocale()
-  const activeLocalCurrency = useActiveLocalCurrency()
 
   return (
     <SlideOutMenu title={<Trans>Settings</Trans>} onClose={onClose}>
@@ -91,34 +82,8 @@ export default function SettingsMenu({
           <ToggleWrapper currencyConversionEnabled={currencyConversionEnabled}>
             <ThemeToggle />
             <SmallBalanceToggle />
-            <AnalyticsToggle />
             <TestnetsToggle />
           </ToggleWrapper>
-          {!currencyConversionEnabled && (
-            <>
-              <SectionTitle data-testid="wallet-header">
-                <Trans>Language</Trans>
-              </SectionTitle>
-              <LanguageMenuItems />
-            </>
-          )}
-
-          {currencyConversionEnabled && (
-            <Column>
-              <SettingsButton
-                title={<Trans>Language</Trans>}
-                currentState={LOCALE_LABEL[activeLocale]}
-                onClick={openLanguageSettings}
-                testId="language-settings-button"
-              />
-              <SettingsButton
-                title={<Trans>Currency</Trans>}
-                currentState={activeLocalCurrency}
-                onClick={openLocalCurrencySettings}
-                testId="local-currency-settings-button"
-              />
-            </Column>
-          )}
         </div>
         <GitVersionRow />
       </Container>

@@ -13,7 +13,6 @@ import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'r
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useAppSelector } from 'state/hooks'
-import { AppState } from 'state/reducer'
 import { RouterPreference } from 'state/routing/types'
 import { useRouterPreference, useUserOptedOutOfUniswapX } from 'state/user/hooks'
 import { StatsigProvider, StatsigUser, useGate } from 'statsig-react'
@@ -103,8 +102,8 @@ export default function App() {
 
   const routerConfig = useRouterConfig()
 
-  const originCountry = useAppSelector((state: AppState) => state.user.originCountry)
-  const renderUkBannner = Boolean(originCountry) && originCountry === 'GB'
+  //Show banner
+  const renderBanner = true
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -173,11 +172,11 @@ export default function App() {
           }}
         >
           <UserPropertyUpdater />
-          {renderUkBannner && <UkBanner />}
-          <HeaderWrapper transparent={isHeaderTransparent} bannerIsVisible={renderUkBannner} scrollY={scrollY}>
+          {renderBanner && <UkBanner />}
+          <HeaderWrapper transparent={isHeaderTransparent} bannerIsVisible={renderBanner} scrollY={scrollY}>
             <NavBar blur={isHeaderTransparent} />
           </HeaderWrapper>
-          <BodyWrapper bannerIsVisible={renderUkBannner}>
+          <BodyWrapper bannerIsVisible={renderBanner}>
             <Suspense>
               <AppChrome />
             </Suspense>

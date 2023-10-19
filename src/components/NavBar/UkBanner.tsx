@@ -1,19 +1,18 @@
-import { t, Trans } from '@lingui/macro'
-import { useOpenModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
+import { t } from '@lingui/macro'
 import styled from 'styled-components'
 import { ButtonText, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 
-export const UK_BANNER_HEIGHT = 65
-export const UK_BANNER_HEIGHT_MD = 113
-export const UK_BANNER_HEIGHT_SM = 137
+export const UK_BANNER_HEIGHT = 50
+export const UK_BANNER_HEIGHT_MD = 80
+export const UK_BANNER_HEIGHT_SM = 100
 
 const BannerWrapper = styled.div`
   position: relative;
   display: flex;
+  justify-content: center;
   background-color: ${({ theme }) => theme.surface1};
-  padding: 20px;
+  padding: 15px;
   border-bottom: 1px solid ${({ theme }) => theme.surface3};
   z-index: ${Z_INDEX.fixed};
   box-sizing: border-box;
@@ -58,24 +57,18 @@ const ReadMoreWrapper = styled(ButtonText)`
   }
 `
 
-export const bannerText = t`
-  This web application is provided as a tool for users to interact with the Uniswap Protocol on
-  their own initiative, with no endorsement or recommendation of cryptocurrency trading activities. In doing so,
-  Uniswap is not recommending that users or potential users engage in cryptoasset trading activity, and users or
-  potential users of the web application should not regard this webpage or its contents as involving any form of
-  recommendation, invitation or inducement to deal in cryptoassets.
-`
+export const bannerText = t`This is a fork of the Uniswap v3 interface, free of swap fees. All rights belong to Uniswap; we assume no extra rights or responsibilities.`
 
 export function UkBanner() {
-  const openDisclaimer = useOpenModal(ApplicationModal.UK_DISCLAIMER)
+  // const openDisclaimer = useOpenModal(ApplicationModal.UK_DISCLAIMER)
 
   return (
     <BannerWrapper>
-      <BannerTextWrapper lineHeight="24px">{t`UK disclaimer:` + ' ' + bannerText}</BannerTextWrapper>
+      <BannerTextWrapper lineHeight="24px">{bannerText}</BannerTextWrapper>
       <ReadMoreWrapper>
-        <ThemedText.BodySecondary lineHeight="24px" color="accent1" onClick={openDisclaimer}>
+        {/* <ThemedText.BodySecondary lineHeight="24px" color="accent1">
           <Trans>Read more</Trans>
-        </ThemedText.BodySecondary>
+        </ThemedText.BodySecondary> */}
       </ReadMoreWrapper>
     </BannerWrapper>
   )

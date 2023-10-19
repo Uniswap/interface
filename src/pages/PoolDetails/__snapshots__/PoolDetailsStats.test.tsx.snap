@@ -517,7 +517,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
 .c10 {
   height: 8px;
   width: 59.3015362229911%;
-  background: #FC72FF;
+  background: #FF621F;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   border-left: 1px solid #F9F9F9;

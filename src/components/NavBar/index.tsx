@@ -2,11 +2,8 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import Web3Status from 'components/Web3Status'
-import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { chainIdToBackendName } from 'graphql/data/util'
-import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
-import { useIsPoolsPage } from 'hooks/useIsPoolsPage'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
@@ -29,6 +26,15 @@ const Nav = styled.nav`
   width: 100%;
   height: ${({ theme }) => theme.navHeight}px;
   z-index: 2;
+`
+const NavAnaltics = styled.a`
+  color: rgba(255, 255, 255, 0.65);
+  padding: 6px 10px;
+  text-decoration: none;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+  }
 `
 
 interface MenuItemProps {
@@ -58,36 +64,17 @@ export const PageTabs = () => {
   const { chainId: connectedChainId } = useWeb3React()
   const chainName = chainIdToBackendName(connectedChainId)
 
-  const isPoolActive = useIsPoolsPage()
-  const isNftPage = useIsNftPage()
-
-  const shouldDisableNFTRoutes = useDisableNFTRoutes()
-  const infoExplorePageEnabled = useInfoExplorePageEnabled()
-
   return (
     <>
       <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
         <Trans>Swap</Trans>
       </MenuItem>
-      {infoExplorePageEnabled ? (
-        <MenuItem href={`/explore/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/explore')}>
-          <Trans>Explore</Trans>
-        </MenuItem>
-      ) : (
-        <MenuItem href={`/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/tokens')}>
-          <Trans>Tokens</Trans>
-        </MenuItem>
-      )}
-      {!shouldDisableNFTRoutes && (
-        <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
-          <Trans>NFTs</Trans>
-        </MenuItem>
-      )}
-      <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }} width="full">
-        <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
-          <Trans>Pools</Trans>
-        </MenuItem>
-      </Box>
+      <MenuItem href={`/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/tokens')}>
+        <Trans>Tokens</Trans>
+      </MenuItem>
+      <NavAnaltics href="https://info.uniswap.org/#/" target="_blank" rel="noreferrer">
+        <Trans>Analytics</Trans>
+      </NavAnaltics>
       <Box marginY="4">
         <MenuDropdown />
       </Box>
