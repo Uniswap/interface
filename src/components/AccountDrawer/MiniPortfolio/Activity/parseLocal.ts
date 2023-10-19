@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro'
-import { Currency,Token, CurrencyAmount, TradeType } from '@pollum-io/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@pollum-io/sdk-core'
 import { ChainId, nativeOnChain } from '@pollum-io/smart-order-router'
 import { formatCurrencyAmount } from '@uniswap/conedison/format'
 import { TransactionPartsFragment, TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
@@ -168,10 +168,8 @@ export function parseLocalActivity(
       info.type === TransactionType.ADD_LIQUIDITY_V2_POOL
     ) {
       additionalFields = parseLP(info, chainId, tokens)
-    } else if (
-      info.type === TransactionType.CLAIM_FARM 
-    ) {
-      const currency =  getCurrency(info.tokenAddress, chainId, tokens)  
+    } else if (info.type === TransactionType.CLAIM_FARM) {
+      const currency = getCurrency(info.tokenAddress, chainId, tokens)
       const descriptor = currency ? t`${info.amount} ${currency?.symbol}` : t`Unknown`
       additionalFields = {
         descriptor,
@@ -182,19 +180,15 @@ export function parseLocalActivity(
       info.type === TransactionType.WITHDRAW_FARM ||
       info.type === TransactionType.REMOVE_LIQUIDITY_GAMMA
     ) {
-        const descriptor = t`Gamma LP`
-        additionalFields = {
-          descriptor
-        }
+      const descriptor = t`Gamma LP`
+      additionalFields = {
+        descriptor,
+      }
     } else if (info.type === TransactionType.ADD_LIQUIDITY_GAMMA) {
       const currency0 = getCurrency(info.currencyId0, chainId, tokens)
       const currency1 = getCurrency(info.currencyId1, chainId, tokens)
-      const formatted0 = currency0
-        ? info.amount0
-        : undefined
-      const formatted1 = currency1
-        ? info.amount1
-        : undefined
+      const formatted0 = currency0 ? info.amount0 : undefined
+      const formatted1 = currency1 ? info.amount1 : undefined
       const descriptor =
         formatted0 && formatted1
           ? t`${formatted0} ${currency0?.symbol} and ${formatted1} ${currency1?.symbol}`
