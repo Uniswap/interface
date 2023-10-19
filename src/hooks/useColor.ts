@@ -3,9 +3,9 @@ import { DEFAULT_COLOR } from 'constants/tokenColors'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import { darken, lighten, rgb } from 'polished'
 import { useEffect, useState } from 'react'
+import { TokenFromList } from 'state/lists/tokenFromList'
 import { useTheme } from 'styled-components'
 import { getColor } from 'utils/getColor'
-import { TokenFromList } from 'state/lists/tokenFromList'
 import { hex } from 'wcag-contrast'
 
 // The WCAG AA standard color contrast threshold

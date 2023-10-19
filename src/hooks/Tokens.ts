@@ -10,8 +10,8 @@ import { useAppSelector } from 'state/hooks'
 import { isL2ChainId } from 'utils/chains'
 
 import { useAllLists, useCombinedActiveList, useCombinedTokenMapFromUrls } from '../state/lists/hooks'
-import { deserializeToken, useUserAddedTokens } from '../state/user/hooks'
 import { TokenFromList } from '../state/lists/tokenFromList'
+import { deserializeToken, useUserAddedTokens } from '../state/user/hooks'
 import { useUnsupportedTokenList } from './../state/lists/hooks'
 
 type Maybe<T> = T | null | undefined
