@@ -176,7 +176,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   "borderTopLeftRadius": 20,
                   "borderTopRightRadius": 20,
                   "borderWidth": 1,
-                  "disabled": undefined,
                   "opacity": 1,
                   "paddingBottom": 16,
                   "paddingLeft": 16,
@@ -388,7 +387,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   "borderTopLeftRadius": 20,
                   "borderTopRightRadius": 20,
                   "borderWidth": 1,
-                  "disabled": undefined,
                   "opacity": 1,
                   "paddingBottom": 16,
                   "paddingLeft": 16,
@@ -776,7 +774,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 {
                   "busy": undefined,
                   "checked": undefined,
-                  "disabled": undefined,
+                  "disabled": true,
                   "expanded": undefined,
                   "selected": undefined,
                 }
@@ -820,7 +818,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   "borderTopLeftRadius": 20,
                   "borderTopRightRadius": 20,
                   "borderWidth": 1,
-                  "disabled": true,
                   "opacity": 0.5,
                   "paddingBottom": 16,
                   "paddingLeft": 16,
@@ -988,7 +985,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 {
                   "busy": undefined,
                   "checked": undefined,
-                  "disabled": undefined,
+                  "disabled": false,
                   "expanded": undefined,
                   "selected": undefined,
                 }
@@ -1032,7 +1029,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   "borderTopLeftRadius": 20,
                   "borderTopRightRadius": 20,
                   "borderWidth": 1,
-                  "disabled": false,
                   "opacity": 1,
                   "paddingBottom": 16,
                   "paddingLeft": 16,

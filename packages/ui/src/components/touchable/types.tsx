@@ -6,4 +6,5 @@ export type TouchableAreaProps = TouchableBoxProps & {
   hapticStyle?: ImpactFeedbackStyle
   ignoreDragEvents?: boolean
   scaleTo?: number
+  disabled?: boolean
 }

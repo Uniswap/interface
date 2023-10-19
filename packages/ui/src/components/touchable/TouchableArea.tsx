@@ -34,6 +34,7 @@ export function TouchableArea({
   testID,
   activeOpacity = 0.75,
   hitSlop,
+  disabled,
   ...propsIn
 }: TouchableAreaProps): JSX.Element {
   const [rest, style] = usePropsAndStyle(propsIn)
@@ -72,7 +73,7 @@ export function TouchableArea({
         await impactAsync(hapticStyle)
       }
     },
-    [onPress, hapticFeedback, hapticStyle, ignoreDragEvents]
+    [onPress, ignoreDragEvents, hapticFeedback, hapticStyle]
   )
 
   const onPressInHandler = useMemo(() => {
@@ -112,6 +113,7 @@ export function TouchableArea({
   return (
     <AnimatedTouchableBox
       {...baseProps}
+      disabled={disabled}
       style={[scaleTo ? animatedStyle : null, style, restStyles]}>
       {children}
     </AnimatedTouchableBox>
