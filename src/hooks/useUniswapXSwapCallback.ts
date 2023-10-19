@@ -1,11 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import * as Sentry from '@sentry/react'
-import { SwapEventName } from '@uniswap/analytics-events'
+import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { DutchOrder, DutchOrderBuilder } from '@uniswap/uniswapx-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
+import { getConnection } from 'connection'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { DutchOrderTrade, TradeFillType } from 'state/routing/types'
@@ -13,6 +14,7 @@ import { trace } from 'tracing/trace'
 import { SignatureExpiredError, UserRejectedRequestError } from 'utils/errors'
 import { signTypedData } from 'utils/signing'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
+import { getWalletMeta } from 'utils/walletMeta'
 
 type DutchAuctionOrderError = { errorCode?: number; detail?: string }
 type DutchAuctionOrderSuccess = { hash: string }
@@ -54,7 +56,7 @@ export function useUniswapXSwapCallback({
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }
   allowedSlippage: Percent
 }) {
-  const { account, provider } = useWeb3React()
+  const { account, provider, connector } = useWeb3React()
   const analyticsContext = useTrace()
 
   const { data } = useCachedPortfolioBalancesQuery({ account })
@@ -122,6 +124,10 @@ export function useUniswapXSwapCallback({
             portfolioBalanceUsd,
           }),
           ...analyticsContext,
+          // TODO (WEB-2993): remove these after debugging missing user properties.
+          [CustomUserProperties.WALLET_ADDRESS]: account,
+          [CustomUserProperties.WALLET_TYPE]: getConnection(connector).getName(),
+          [CustomUserProperties.PEER_WALLET_AGENT]: provider ? getWalletMeta(provider)?.agent : undefined,
         })
 
         const res = await fetch(`${UNISWAP_API_URL}/order`, {
@@ -160,6 +166,6 @@ export function useUniswapXSwapCallback({
           response: { orderHash: body.hash, deadline: updatedOrder.info.deadline },
         }
       }),
-    [account, provider, trade, allowedSlippage, fiatValues, analyticsContext, portfolioBalanceUsd]
+    [account, provider, trade, allowedSlippage, fiatValues, portfolioBalanceUsd, analyticsContext, connector]
   )
 }
