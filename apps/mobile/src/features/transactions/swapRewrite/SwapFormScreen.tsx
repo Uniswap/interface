@@ -6,6 +6,7 @@ import { useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
+import { useSwapAnalytics } from 'src/features/transactions/swap/analytics'
 import { useShowSwapNetworkNotification } from 'src/features/transactions/swap/hooks'
 import { getReviewActionName, isWrapAction } from 'src/features/transactions/swap/utils'
 import {
@@ -75,6 +76,8 @@ function SwapFormContent(): JSX.Element {
     wrapType,
     trade,
   } = derivedSwapInfo
+
+  useSwapAnalytics(derivedSwapInfo)
 
   useShowSwapNetworkNotification(chainId)
 
