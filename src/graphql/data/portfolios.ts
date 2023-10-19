@@ -1,7 +1,7 @@
 import { WatchQueryFetchPolicy } from '@apollo/client'
 import gql from 'graphql-tag'
 
-import { TokenQuery, usePortfolioBalancesQuery } from './__generated__/types-and-hooks'
+import { TokenBalance, TokenQuery, usePortfolioBalancesQuery } from './__generated__/types-and-hooks'
 import { GQL_MAINNET_CHAINS } from './util'
 
 gql`
@@ -71,7 +71,7 @@ export function useCrossChainGqlBalances({
   address?: string
   shouldPoll?: boolean
   fetchPolicy?: WatchQueryFetchPolicy
-}) {
+}): TokenBalance[] | undefined {
   const { data: portfolioBalances } = usePortfolioBalancesQuery({
     skip: !address,
     variables: { ownerAddress: address ?? '', chains: GQL_MAINNET_CHAINS },
@@ -85,5 +85,5 @@ export function useCrossChainGqlBalances({
     (tokenBalance) =>
       tokenBalance.token?.symbol === tokenQuery.token?.symbol &&
       bridgeInfo?.some((bridgeToken) => bridgeToken.id == tokenBalance.token?.id)
-  )
+  ) as TokenBalance[] | undefined
 }
