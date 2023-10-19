@@ -1,4 +1,5 @@
 import { ethers } from 'ethers'
+import { ChainId } from 'wallet/src/constants/chains'
 
 /**
  * Base types
@@ -61,7 +62,7 @@ export interface SendTransactionRequest extends BaseDappRequest {
 
 export interface ChangeChainRequest extends BaseDappRequest {
   type: DappRequestType.ChangeChain
-  chainId: string
+  chainId: ChainId
 }
 
 export interface GetAccountRequest extends BaseDappRequest {
@@ -96,13 +97,13 @@ export interface TransactionRejectedResponse extends BaseDappResponse {
 
 export interface ChangeChainResponse extends BaseDappResponse {
   type: DappResponseType.ChainChangeResponse
-  chainId: string
+  chainId: ChainId
   providerUrl: string
 }
 
 export interface AccountResponse extends BaseDappResponse {
   type: DappResponseType.AccountResponse
   accountAddress: string // account address to be used by the dapp
-  chainId: string // current chain id (should be hexadecimal string)
+  chainId: ChainId // current chain id
   providerUrl: string // provider url of the chain for the current chain
 }

@@ -31,7 +31,8 @@ import {
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_HOUR_MS } from 'utilities/src/time/time'
 import { v4 as uuidv4 } from 'uuid'
-import { chainIdToHexadecimalString } from 'wallet/src/features/chains/utils'
+import { ChainId } from 'wallet/src/constants/chains'
+import { chainIdToHexadecimalString, toSupportedChainId } from 'wallet/src/features/chains/utils'
 
 export type EthersSendCallback = (error: unknown, response: unknown) => void
 
@@ -89,7 +90,7 @@ export class InjectedProvider extends EventEmitter {
   /**
    * The chain ID of the currently connected Ethereum chain.
    */
-  private chainId?: string
+  private chainId?: ChainId
 
   /**
    * The user's currently connected Ethereum addresses.
@@ -133,10 +134,9 @@ export class InjectedProvider extends EventEmitter {
       switch (messageData?.type) {
         case ExtensionToDappRequestType.SwitchChain: {
           const request = messageData as ExtensionChainChange
-          const chainId = chainIdToHexadecimalString(request.chainId)
-          this.chainId = chainId
+          this.chainId = request.chainId
           this.provider = new ethers.providers.JsonRpcProvider(request.providerUrl)
-          this.emit('chainChanged', chainId)
+          this.emit('chainChanged', chainIdToHexadecimalString(this.chainId))
           break
         }
         case ExtensionToDappRequestType.Disconnect: {
@@ -232,10 +232,8 @@ export class InjectedProvider extends EventEmitter {
     const functionMap: { [key: string]: any } = {
       eth_accounts: this.handleEthAccounts,
       eth_requestAccounts: this.handleEthRequestAccounts,
-      eth_chainId: () => this.chainId,
-      net_version: () =>
-        // eslint-disable-next-line radix
-        this.chainId ? `${parseInt(this.chainId)}` : undefined,
+      eth_chainId: () => this.handleEthChainId(),
+      net_version: () => this.handleEthChainId(),
       eth_getBalance: (address: string) => this.provider?.getBalance(address),
       eth_getCode: (address: string) => this.provider?.getCode(address),
       eth_getStorageAt: (address: string, position: string) =>
@@ -284,6 +282,11 @@ export class InjectedProvider extends EventEmitter {
       }
       return resolve(rpcResult)
     })
+  }
+
+  /** Returns the ChainId in a hex string which is what dapps expect. */
+  private handleEthChainId = (): string | undefined => {
+    return this.chainId ? chainIdToHexadecimalString(this.chainId) : undefined
   }
 
   /**
@@ -337,7 +340,10 @@ export class InjectedProvider extends EventEmitter {
     this.publicKeys = [accountAddress, ...(this.publicKeys || [])]
     this.chainId = chainId
     this.provider = new ethers.providers.JsonRpcProvider(providerUrl)
-    this.emit('connect', { chainId } as ProviderConnectInfo)
+    this.emit('connect', {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      chainId: chainIdToHexadecimalString(this.chainId!),
+    } as ProviderConnectInfo)
 
     return this.publicKeys
   }
@@ -419,10 +425,16 @@ export class InjectedProvider extends EventEmitter {
       throw new Error('Wallet not connected')
     }
 
+    const chainId = toSupportedChainId(parseInt(switchRequest.chainId, 16))
+    if (!chainId) {
+      // TODO(EXT-330): we should support switching to any chain
+      throw new Error('Unsupported chain')
+    }
+
     const changeChainRequest: ChangeChainRequest = {
       type: DappRequestType.ChangeChain,
       requestId: uuidv4(),
-      chainId: switchRequest.chainId,
+      chainId,
     }
 
     const { providerUrl } = await sendRequestAsync<ChangeChainResponse>(
@@ -431,7 +443,7 @@ export class InjectedProvider extends EventEmitter {
     )
 
     this.provider = new ethers.providers.JsonRpcProvider(providerUrl)
-    this.chainId = switchRequest.chainId
+    this.chainId = chainId
     return null
   }
 

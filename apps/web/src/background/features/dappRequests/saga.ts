@@ -16,7 +16,6 @@ import {
 import { call, put, select, take } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
-import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts//types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import {
@@ -160,7 +159,7 @@ export function* getAccount(requestId: string, senderTabId: number, dappUrl: str
     type: DappResponseType.AccountResponse,
     requestId,
     accountAddress: activeAccount.address,
-    chainId: chainForWalletAndDapp.toString(16),
+    chainId: chainForWalletAndDapp,
     providerUrl: provider.connection.url,
   }
   yield* call(sendMessageToSpecificTab, response, senderTabId)
@@ -247,20 +246,15 @@ async function onTransactionSentToChain(
   }, 15000)
 }
 
-export function* changeChain(requestId: string, chainId: string, senderTabId: number) {
-  const chainIdEnum = toSupportedChainId(chainId)
-  if (!chainIdEnum) {
-    throw new Error(`Invalid chainId: ${chainId}`)
-  }
-
-  const provider = yield* call(getProvider, chainIdEnum)
-  yield* call(saveLastChainForDapp, chainIdEnum, senderTabId)
+export function* changeChain(requestId: string, chainId: ChainId, senderTabId: number) {
+  const provider = yield* call(getProvider, chainId)
+  yield* call(saveLastChainForDapp, chainId, senderTabId)
 
   const response: ChangeChainResponse = {
     type: DappResponseType.ChainChangeResponse,
     requestId,
     providerUrl: provider.connection.url,
-    chainId: chainId.toString(),
+    chainId,
   }
 
   yield* call(sendMessageToSpecificTab, response, senderTabId)

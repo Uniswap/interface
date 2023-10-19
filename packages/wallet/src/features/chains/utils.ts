@@ -1,4 +1,4 @@
-import { BigNumberish } from 'ethers'
+import { BigNumber, BigNumberish } from 'ethers'
 import { logger } from 'utilities/src/logger/logger'
 import {
   ALL_SUPPORTED_CHAINS,
@@ -21,7 +21,7 @@ export function toSupportedChainId(chainId?: BigNumberish): ChainId | null {
 }
 
 export function chainIdToHexadecimalString(chainId: ChainId): string {
-  return chainId.toString(16)
+  return BigNumber.from(chainId).toHexString()
 }
 
 export const isL2Chain = (chainId?: ChainId): boolean =>

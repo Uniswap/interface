@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { BaseDappRequest } from './dappRequestTypes'
+import { BaseDappRequest, DappRequestType } from './dappRequestTypes'
 export interface DappRequestState {
   pending: DappRequestStoreItem[]
 }
@@ -20,7 +20,12 @@ const slice = createSlice({
   initialState: initialDappRequestState,
   reducers: {
     add: (state, action: PayloadAction<DappRequestStoreItem>) => {
-      state.pending.push(action.payload)
+      // According to EIP-1193 when switching the active chain, cancel all pending RPC requests and chain-specific user confirmations.
+      if (action.payload.dappRequest.type === DappRequestType.ChangeChain) {
+        state.pending = [action.payload]
+      } else {
+        state.pending.push(action.payload)
+      }
     },
     remove: (state, action: PayloadAction<string>) => {
       const requestId = action.payload
