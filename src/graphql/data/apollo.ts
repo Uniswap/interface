@@ -8,7 +8,7 @@ if (!GRAPHQL_URL) {
 
 export const apolloClient = new ApolloClient({
   connectToDevTools: true,
-  uri: GRAPHQL_URL,
+  uri: `https://apis.unipilot.io:10000/${GRAPHQL_URL}`,
   headers: {
     'Content-Type': 'application/json',
     Origin: 'https://app.uniswap.org',
