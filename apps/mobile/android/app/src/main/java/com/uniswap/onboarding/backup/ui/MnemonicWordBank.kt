@@ -54,18 +54,13 @@ private fun MnemonicWordBankCell(
   val horizontalPadding =
     if (showCompact) UniswapTheme.spacing.spacing4 else UniswapTheme.spacing.spacing8
 
-  var modifier = Modifier
-    .clip(UniswapTheme.shapes.xlarge)
-    .background(UniswapTheme.colors.surface2)
-    .padding(vertical = verticalPadding)
-    .padding(horizontal = horizontalPadding)
-
-  if (!word.used) {
-    modifier = modifier.clickable { onClick() }
-  }
-
   Box(
-    modifier = modifier,
+    modifier = Modifier
+      .clip(UniswapTheme.shapes.xlarge)
+      .background(UniswapTheme.colors.surface2)
+      .padding(vertical = verticalPadding)
+      .padding(horizontal = horizontalPadding)
+      .clickable { onClick() },
   ) {
     Text(
       text = word.text,
