@@ -3,7 +3,13 @@ import Column from 'components/Column'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
-import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
+import {
+  chainIdToBackendName,
+  getTokenDetailsURL,
+  getValidUrlChainName,
+  supportedChainIdFromGQLChain,
+} from 'graphql/data/util'
 import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { usePoolData } from 'graphql/thegraph/PoolData'
 import { useCurrency } from 'hooks/Tokens'
@@ -11,7 +17,7 @@ import useCopyClipboard from 'hooks/useCopyClipboard'
 import NotFound from 'pages/NotFound'
 import { useCallback, useReducer } from 'react'
 import { ChevronRight, Copy } from 'react-feather'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
@@ -112,8 +118,6 @@ export default function PoolDetailsPage() {
             <TokenDetailsHeader>
               <Trans>Links</Trans>
             </TokenDetailsHeader>
-            {/* {token0 && <TokenDescription tokenAddress={token0.id} chainId={chainId} />}
-            {token1 && <TokenDescription tokenAddress={token1.id} chainId={chainId} />} */}
             {chainId && (
               <LinksContainer>
                 <PoolDetailsLink address={poolAddress} chainId={chainId} tokens={[token0, token1]} />
@@ -129,10 +133,26 @@ export default function PoolDetailsPage() {
 }
 
 const TokenName = styled(ThemedText.BodyPrimary)`
+  display: none;
+
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) and (min-width: ${BREAKPOINTS.xs}px) {
+    display: block;
+  }
   ${EllipsisStyle}
 `
 
-const SymbolText = styled(ThemedText.BodySecondary)`
+const TokenTextWrapper = styled(Row)<{ isClickable?: boolean }>`
+  gap: 8px;
+  margin-right: 12px;
+  ${({ isClickable }) => isClickable && ClickableStyle}
+`
+
+const SymbolText = styled(ThemedText.BodyPrimary)`
+  flex-shrink: 0;
+
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) and (min-width: ${BREAKPOINTS.xs}px) {
+    color: ${({ theme }) => theme.neutral2};
+  }
   ${EllipsisStyle}
 `
 
@@ -163,6 +183,12 @@ const ExplorerWrapper = styled.div`
   ${ClickableStyle}
 `
 
+const ButtonsRow = styled(Row)`
+  gap: 8px;
+  flex-shrink: 0;
+  width: max-content;
+`
+
 interface PoolDetailsLinkProps {
   address: string
   chainId: number
@@ -183,9 +209,18 @@ function PoolDetailsLink({ address, chainId, tokens }: PoolDetailsLinkProps) {
   const isPool = tokens.length === 2
   const explorerUrl = getExplorerLink(chainId, address, isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN)
 
+  const navigate = useNavigate()
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
+  const chainName = chainIdToBackendName(chainId)
+  const handleTokenTextClick = useCallback(() => {
+    if (!isPool) {
+      navigate(getTokenDetailsURL({ address: tokens[0]?.id, chain: chainName, isInfoExplorePageEnabled }))
+    }
+  }, [navigate, tokens, isPool, chainName, isInfoExplorePageEnabled])
+
   return (
     <Row align="space-between">
-      <Row gap="8px" marginRight="12px">
+      <TokenTextWrapper isClickable={!isPool} onClick={handleTokenTextClick}>
         {isPool ? (
           <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} small />
         ) : (
@@ -201,8 +236,8 @@ function PoolDetailsLink({ address, chainId, tokens }: PoolDetailsLinkProps) {
             </Row>
           )}
         </SymbolText>
-      </Row>
-      <Row gap="8px">
+      </TokenTextWrapper>
+      <ButtonsRow>
         <CopyAddress onClick={copy}>
           {shortenAddress(address)}
           <StyledCopyIcon />
@@ -214,7 +249,7 @@ function PoolDetailsLink({ address, chainId, tokens }: PoolDetailsLinkProps) {
             </ExplorerWrapper>
           </ExternalLink>
         )}
-      </Row>
+      </ButtonsRow>
     </Row>
   )
 }
