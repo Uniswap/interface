@@ -19,17 +19,31 @@ const USDC_GOERLI = new Token(ChainId.GOERLI, '0x07865c6e87b9f70255377e024ace663
 const USDC_SEPOLIA = new Token(ChainId.SEPOLIA, '0x6f14C02Fc1F78322cFd7d707aB90f18baD3B54f5', 6, 'USDC', 'USD//C')
 export const USDC_OPTIMISM = new Token(
   ChainId.OPTIMISM,
-  '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+  '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85',
   6,
   'USDC',
   'USD//C'
 )
-const USDC_OPTIMISM_GOERLI = new Token(
+export const USDCe_OPTIMISM = new Token(
+  ChainId.OPTIMISM,
+  '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+  6,
+  'USDC.e',
+  'Bridged USDC'
+)
+export const USDC_OPTIMISM_GOERLI = new Token(
   ChainId.OPTIMISM_GOERLI,
-  '0x7E07E15D2a87A24492740D16f5bdF58c16db0c4E',
+  '0xe05606174bac4A6364B31bd0eCA4bf4dD368f8C6',
   6,
   'USDC',
   'USD//C'
+)
+export const USDCe_OPTIMISM_GOERLI = new Token(
+  ChainId.OPTIMISM_GOERLI,
+  '0x7E07E15D2a87A24492740D16f5bdF58c16db0c4E',
+  6,
+  'USDC.e',
+  'Bridged USDC'
 )
 export const USDC_ARBITRUM = new Token(
   ChainId.ARBITRUM_ONE,
