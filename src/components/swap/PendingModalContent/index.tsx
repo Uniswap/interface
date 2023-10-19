@@ -127,6 +127,8 @@ interface ContentArgs {
   onRetryUniswapXSignature?: () => void
 }
 
+
+
 function getPendingConfirmationContent({
   swapConfirmed,
   swapPending,
@@ -152,6 +154,7 @@ function getPendingConfirmationContent({
       ),
     }
   } else if ((swapPending || swapConfirmed) && chainId && swapResult?.type === TradeFillType.Classic) {
+    
     const explorerLink = (
       <ExternalLink
         href={getExplorerLink(chainId, swapResult.response.hash, ExplorerDataType.TRANSACTION)}

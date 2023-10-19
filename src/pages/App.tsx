@@ -26,10 +26,19 @@ import { getEnvName } from 'utils/env'
 import { getDownloadAppLink } from 'utils/openDownloadApp'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
-
+import {MixPanelTrackEvent} from "./mixpanel";
 import { RouteDefinition, routes, useRouterConfig } from './RouteDefinitions'
 
 const AppChrome = lazy(() => import('./AppChrome'))
+
+
+
+
+
+
+
+
+
 
 const BodyWrapper = styled.div<{ bannerIsVisible?: boolean }>`
   display: flex;
@@ -109,6 +118,14 @@ export default function App() {
     window.scrollTo(0, 0)
     setScrollY(0)
   }, [pathname])
+
+  useEffect(() => {
+    MixPanelTrackEvent({
+      category: "Dapp Visit DEX",
+      action: 'User Landed',
+      label: 'Wallet not connected',
+    });
+  }, []);
 
   const [searchParams] = useSearchParams()
   useEffect(() => {
