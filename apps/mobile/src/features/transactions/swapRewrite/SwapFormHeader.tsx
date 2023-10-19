@@ -128,13 +128,13 @@ export function SwapFormHeader(): JSX.Element {
                 gap="$spacing4"
                 px={customSlippageTolerance ? '$spacing8' : '$none'}
                 py="$spacing4">
-                {customSlippageTolerance && (
+                {customSlippageTolerance ? (
                   <Text color="$neutral2" variant="buttonLabel4">
                     {t('{{slippageTolerancePercent}} slippage', {
                       slippageTolerancePercent: formatPercent(customSlippageTolerance),
                     })}
                   </Text>
-                )}
+                ) : null}
                 <SettingsIcon
                   color={colors.neutral2.get()}
                   height={iconSizes.icon28}
