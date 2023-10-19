@@ -64,21 +64,21 @@ gql`
 /** Helper GQL hook to retrieve balances across chains for a given currency, for the active account. */
 export function useCrossChainGqlBalances({
   tokenQuery,
-  address,
+  account,
   fetchPolicy,
 }: {
   tokenQuery: TokenQuery
-  address?: string
+  account?: string
   fetchPolicy?: WatchQueryFetchPolicy
 }): TokenBalance[] | undefined {
   const { data: portfolioBalances } = usePortfolioBalancesQuery({
-    skip: !address,
-    variables: { ownerAddress: address ?? '', chains: GQL_MAINNET_CHAINS },
+    skip: !account,
+    variables: { ownerAddress: account ?? '', chains: GQL_MAINNET_CHAINS },
     fetchPolicy,
   })
 
   const tokenBalances = portfolioBalances?.portfolios?.[0].tokenBalances
-  const bridgeInfo = tokenQuery.token?.project?.tokens
+  const bridgeInfo = tokenQuery.token?.project?.tokens // on first load on ETH native, this sometimes doesn't load all crosschain ETH tokens??
 
   return tokenBalances?.filter(
     (tokenBalance) =>

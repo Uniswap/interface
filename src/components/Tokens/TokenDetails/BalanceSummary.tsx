@@ -64,7 +64,7 @@ const BalanceAmountsContainer = styled.div<{ isInfoTDPEnabled?: boolean }>`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  ${({ isInfoTDPEnabled }) => isInfoTDPEnabled && 'margin-left: 8px;'}
+  ${({ isInfoTDPEnabled }) => isInfoTDPEnabled && 'margin-left: 12px;'}
 `
 
 const StyledNetworkLabel = styled.div`
@@ -115,7 +115,7 @@ const Balance = (props: BalanceProps) => {
             <ThemedText.BodyPrimary>{formattedUsdGqlValue}</ThemedText.BodyPrimary>
           </BalanceItem>
           <BalanceItem>
-            <ThemedText.SubHeader>{formattedGqlBalance}</ThemedText.SubHeader>
+            <ThemedText.BodySecondary>{formattedGqlBalance}</ThemedText.BodySecondary>
           </BalanceItem>
         </BalanceAmountsContainer>
       </BalanceRow>
@@ -187,9 +187,9 @@ const PageChainBalanceSummary = ({
   const currency = gqlToCurrency(pageChainBalance.token)
   return (
     <BalanceSection>
-      <ThemedText.SubHeaderSmall color={theme.neutral1}>
+      <ThemedText.HeadlineSmall color={theme.neutral1}>
         <Trans>Your balance</Trans>
-      </ThemedText.SubHeaderSmall>
+      </ThemedText.HeadlineSmall>
       <Balance token={currency} chainId={chainId} gqlBalance={pageChainBalance} isInfoTDPEnabled={true} />
     </BalanceSection>
   )
@@ -197,10 +197,10 @@ const PageChainBalanceSummary = ({
 
 const OtherChainsBalanceSummary = ({
   otherChainBalances,
-  theme,
+  hasPageChainBalance,
 }: {
   otherChainBalances?: TokenBalance[]
-  theme: DefaultTheme
+  hasPageChainBalance: boolean
 }) => {
   const navigate = useNavigate()
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
@@ -209,9 +209,15 @@ const OtherChainsBalanceSummary = ({
   if (!hasOtherChainBalances) return null
   return (
     <BalanceSection>
-      <ThemedText.SubHeaderSmall color={theme.neutral1}>
-        <Trans>Balance on other networks</Trans>
-      </ThemedText.SubHeaderSmall>
+      {hasPageChainBalance ? (
+        <ThemedText.SubHeaderSmall>
+          <Trans>On other networks</Trans>
+        </ThemedText.SubHeaderSmall>
+      ) : (
+        <ThemedText.HeadlineSmall>
+          <Trans>Balance on other networks</Trans>
+        </ThemedText.HeadlineSmall>
+      )}
       {otherChainBalances?.map((balance) => {
         const currency = balance.token && gqlToCurrency(balance.token)
         const chainId = balance.token && supportedChainIdFromGQLChain(balance.token.chain)
@@ -245,7 +251,7 @@ export default function BalanceSummary({ token, tokenQuery }: { token: Currency;
   const connectedChainBalance = useCurrencyBalance(account, token)
   const crossChainBalances: TokenBalance[] | undefined = useCrossChainGqlBalances({
     tokenQuery,
-    address: account,
+    account,
     fetchPolicy: 'cache-and-network' as WatchQueryFetchPolicy,
   })
   const pageChainBalance = crossChainBalances?.find((tokenBalance) => tokenBalance.token?.id === tokenQuery.token?.id)
@@ -269,7 +275,7 @@ export default function BalanceSummary({ token, tokenQuery }: { token: Currency;
       {isInfoTDPEnabled && (
         <>
           <PageChainBalanceSummary pageChainBalance={pageChainBalance} chainId={token.chainId} theme={theme} />
-          <OtherChainsBalanceSummary otherChainBalances={otherChainBalances} theme={theme} />
+          <OtherChainsBalanceSummary otherChainBalances={otherChainBalances} hasPageChainBalance={!!pageChainBalance} />
         </>
       )}
     </BalancesCard>
