@@ -77,7 +77,7 @@ export type SwapFeeInfo = {
   noFeeCharged: boolean
   formattedPercent: string
   formattedAmount: string
-  formattedAmountUsd?: string
+  formattedAmountFiat?: string
 }
 
 export interface TradeQuoteResult {

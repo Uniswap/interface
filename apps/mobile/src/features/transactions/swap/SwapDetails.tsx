@@ -119,7 +119,7 @@ export function SwapDetails({
   const latestRate = getRateToDisplay(formatter, trade, showInverseRate)
 
   const swapFeeUsd = getFeeAmountUsd(trade, outputCurrencyPricePerUnitExact)
-  const swapFeeFiatFormatted = convertFiatAmountFormatted(swapFeeUsd, NumberType.PortfolioBalance)
+  const swapFeeFiatFormatted = convertFiatAmountFormatted(swapFeeUsd, NumberType.FiatGasPrice)
 
   const swapFeeInfo = trade.swapFee
     ? {

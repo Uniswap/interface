@@ -27,8 +27,8 @@ export function SwapFee({
       <Flex row alignItems="center" gap="$spacing8">
         <Flex row alignItems="center" justifyContent="space-between">
           <Text color="$neutral1" variant="body3">
-            {swapFeeInfo.formattedAmountUsd ??
-              (swapFeeInfo.noFeeCharged ? '$0.00' : swapFeeInfo.formattedAmount)}
+            {swapFeeInfo.formattedAmountFiat ??
+              (swapFeeInfo.noFeeCharged ? '$0' : swapFeeInfo.formattedAmount)}
           </Text>
         </Flex>
       </Flex>

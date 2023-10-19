@@ -266,6 +266,7 @@ const fiatTokenStatsFormatter: FormatterRule[] = [
 ]
 
 const fiatGasPriceFormatter: FormatterRule[] = [
+  { exact: 0, formatter: '$0' },
   { upperBound: 0.01, formatter: '<$0.01' },
   { upperBound: 1e6, formatter: TwoDecimalsCurrency },
   { upperBound: Infinity, formatter: ShorthandTwoDecimalsCurrency },
