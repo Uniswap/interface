@@ -1,18 +1,25 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
+import { EtherscanLogo } from 'components/Icons/Etherscan'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
-import { TokenDescription } from 'components/Tokens/TokenDetails/TokenDescription'
 import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { usePoolData } from 'graphql/thegraph/PoolData'
+import { useCurrency } from 'hooks/Tokens'
+import useCopyClipboard from 'hooks/useCopyClipboard'
 import NotFound from 'pages/NotFound'
-import { useReducer } from 'react'
+import { useCallback, useReducer } from 'react'
+import { ChevronRight, Copy } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
-import { isAddress } from 'utils'
+import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
+import { isAddress, shortenAddress } from 'utils'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
-import { PoolDetailsHeader } from './PoolDetailsHeader'
+import { DoubleCurrencyAndChainLogo, PoolDetailsHeader } from './PoolDetailsHeader'
 import { PoolDetailsStats } from './PoolDetailsStats'
 import { PoolDetailsStatsButtons } from './PoolDetailsStatsButtons'
 
@@ -65,6 +72,11 @@ const TokenDetailsHeader = styled(Text)`
   line-height: 32px;
 `
 
+const LinksContainer = styled(Column)`
+  gap: 16px;
+  width: 100%;
+`
+
 export default function PoolDetailsPage() {
   const { poolAddress, chainName } = useParams<{
     poolAddress: string
@@ -98,13 +110,111 @@ export default function PoolDetailsPage() {
         {(token0 || token1) && (
           <TokenDetailsWrapper>
             <TokenDetailsHeader>
-              <Trans>Info</Trans>
+              <Trans>Links</Trans>
             </TokenDetailsHeader>
-            {token0 && <TokenDescription tokenAddress={token0.id} chainId={chainId} />}
-            {token1 && <TokenDescription tokenAddress={token1.id} chainId={chainId} />}
+            {/* {token0 && <TokenDescription tokenAddress={token0.id} chainId={chainId} />}
+            {token1 && <TokenDescription tokenAddress={token1.id} chainId={chainId} />} */}
+            {chainId && (
+              <LinksContainer>
+                <PoolDetailsLink address={poolAddress} chainId={chainId} tokens={[token0, token1]} />
+                {token0?.id && <PoolDetailsLink address={token0.id} chainId={chainId} tokens={[token0]} />}
+                {token1?.id && <PoolDetailsLink address={token1?.id} chainId={chainId} tokens={[token1]} />}
+              </LinksContainer>
+            )}
           </TokenDetailsWrapper>
         )}
       </RightColumn>
     </PageWrapper>
+  )
+}
+
+const TokenName = styled(ThemedText.BodyPrimary)`
+  ${EllipsisStyle}
+`
+
+const SymbolText = styled(ThemedText.BodySecondary)`
+  ${EllipsisStyle}
+`
+
+const CopyAddress = styled(Row)`
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  background-color: ${({ theme }) => theme.surface3};
+  font-size: 14px;
+  font-weight: 535;
+  line-height: 16px;
+  width: max-content;
+  flex-shrink: 0;
+  ${ClickableStyle}
+`
+const StyledCopyIcon = styled(Copy)`
+  width: 16px;
+  height: 16px;
+  color: ${({ theme }) => theme.neutral2};
+  flex-shrink: 0;
+`
+
+const ExplorerWrapper = styled.div`
+  padding: 8px;
+  border-radius: 20px;
+  background-color: ${({ theme }) => theme.surface3};
+  display: flex;
+  ${ClickableStyle}
+`
+
+interface PoolDetailsLinkProps {
+  address: string
+  chainId: number
+  tokens: (Token | undefined)[]
+}
+
+function PoolDetailsLink({ address, chainId, tokens }: PoolDetailsLinkProps) {
+  const theme = useTheme()
+  const currencies = [
+    useCurrency(tokens[0]?.id, chainId) ?? undefined,
+    useCurrency(tokens[1]?.id, chainId) ?? undefined,
+  ]
+  const [, setCopied] = useCopyClipboard()
+  const copy = useCallback(() => {
+    setCopied(address)
+  }, [address, setCopied])
+
+  const isPool = tokens.length === 2
+  const explorerUrl = getExplorerLink(chainId, address, isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN)
+
+  return (
+    <Row align="space-between">
+      <Row gap="8px" marginRight="12px">
+        {isPool ? (
+          <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} small />
+        ) : (
+          <CurrencyLogo currency={currencies[0]} size="20px" />
+        )}
+        <TokenName>{isPool ? <Trans>Pool</Trans> : tokens[0]?.name}</TokenName>
+        <SymbolText>
+          {isPool ? (
+            `${tokens[0]?.symbol} / ${tokens[1]?.symbol}`
+          ) : (
+            <Row gap="4px">
+              {tokens[0]?.symbol} <ChevronRight size={16} color={theme.neutral2} />
+            </Row>
+          )}
+        </SymbolText>
+      </Row>
+      <Row gap="8px">
+        <CopyAddress onClick={copy}>
+          {shortenAddress(address)}
+          <StyledCopyIcon />
+        </CopyAddress>
+        {explorerUrl && (
+          <ExternalLink href={explorerUrl}>
+            <ExplorerWrapper>
+              <EtherscanLogo width="16px" height="16px" fill={theme.neutral2} />
+            </ExplorerWrapper>
+          </ExternalLink>
+        )}
+      </Row>
+    </Row>
   )
 }
