@@ -350,7 +350,7 @@ export default function ModalAddGammaLiquidity({
               <SubTitleContainer
                 text={`
                 The benefits of Gamma’s active liquidity management include automatic rebalancing of your liquidity to keep it in range and auto-compounding of generated swap fees to maximize capital efficiency`}
-                description="Manage Gamma Liquidity"
+                description= {lpTokenBalance == "0.0" ?  "Add Gamma Liquidity" : "Manage Gamma Liquidity" }
               />
             </ThemedText.SubHeader>
             <CloseIcon onClick={handleDismiss} />

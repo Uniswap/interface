@@ -169,10 +169,7 @@ export function parseLocalActivity(
     ) {
       additionalFields = parseLP(info, chainId, tokens)
     } else if (
-      info.type === TransactionType.CLAIM_FARM ||
-      info.type === TransactionType.DEPOSIT_FARM ||
-      info.type === TransactionType.WITHDRAW_FARM ||
-      info.type === TransactionType.REMOVE_LIQUIDITY_GAMMA
+      info.type === TransactionType.CLAIM_FARM 
     ) {
       const currency =  getCurrency(info.tokenAddress, chainId, tokens)  
       const descriptor = currency ? t`${info.amount} ${currency?.symbol}` : t`Unknown`
@@ -180,14 +177,23 @@ export function parseLocalActivity(
         descriptor,
         currencies: [currency],
       }
+    } else if (
+      info.type === TransactionType.DEPOSIT_FARM ||
+      info.type === TransactionType.WITHDRAW_FARM ||
+      info.type === TransactionType.REMOVE_LIQUIDITY_GAMMA
+    ) {
+        const descriptor = t`Gamma LP`
+        additionalFields = {
+          descriptor
+        }
     } else if (info.type === TransactionType.ADD_LIQUIDITY_GAMMA) {
       const currency0 = getCurrency(info.currencyId0, chainId, tokens)
       const currency1 = getCurrency(info.currencyId1, chainId, tokens)
       const formatted0 = currency0
-        ? formatCurrencyAmount(CurrencyAmount.fromRawAmount(currency0, info.amount0))
+        ? info.amount0
         : undefined
       const formatted1 = currency1
-        ? formatCurrencyAmount(CurrencyAmount.fromRawAmount(currency1, info.amount1))
+        ? info.amount1
         : undefined
       const descriptor =
         formatted0 && formatted1

@@ -152,14 +152,14 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
     [TransactionStatus.Failed]: t`Withdraw failed`,
   },
   [TransactionType.ADD_LIQUIDITY_GAMMA]: {
-    [TransactionStatus.Pending]: t`Adding Gamma liquidity`,
-    [TransactionStatus.Confirmed]: t`Added Gamma liquidity `,
-    [TransactionStatus.Failed]: t`Add Gamma liquidity failed`,
+    [TransactionStatus.Pending]: t`Adding Gamma Liquidity`,
+    [TransactionStatus.Confirmed]: t`Added Gamma Liquidity `,
+    [TransactionStatus.Failed]: t`Add Gamma Liquidity failed`,
   },
   [TransactionType.REMOVE_LIQUIDITY_GAMMA]: {
-    [TransactionStatus.Pending]: t`Removing Gamma liquidity`,
-    [TransactionStatus.Confirmed]: t`Removed Gamma liquidity`,
-    [TransactionStatus.Failed]: t`Remove Gamma liquidity failed`,
+    [TransactionStatus.Pending]: t`Removing`,
+    [TransactionStatus.Confirmed]: t`Removed`,
+    [TransactionStatus.Failed]: t`Remove Gamma`,
   },
 }
 const AlternateTransactionTitleTable: { [key in TransactionType]?: { [state in TransactionStatus]: string } } = {
