@@ -66,13 +66,14 @@ export const PORTAL_USDC_CELO = new Token(
   'USDCet',
   'USDC (Portal from Ethereum)'
 )
-export const USDC_BASE = new Token(
+export const USDbC_BASE = new Token(
   ChainId.BASE,
   '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA',
   6,
-  'USD Base Coin',
-  'USDbC'
+  'USDbC',
+  'USD Base Coin'
 )
+export const USDC_BASE = new Token(ChainId.BASE, '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', 6, 'USDC', 'USD Coin')
 
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
 export const DAI_ARBITRUM_ONE = new Token(
@@ -104,6 +105,7 @@ export const DAI_POLYGON = new Token(
   'DAI',
   'Dai Stablecoin'
 )
+
 export const USDT_POLYGON = new Token(
   ChainId.POLYGON,
   '0xc2132d05d31c914a87c6611c10748aeb04b58e8f',
@@ -468,6 +470,7 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in ChainId]?: s
     [ChainId.POLYGON]: USDC_POLYGON.address,
     [ChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI.address,
     [ChainId.BNB]: USDC_BSC.address,
+    [ChainId.BASE]: USDC_BASE.address,
     [ChainId.CELO]: PORTAL_USDC_CELO.address,
     [ChainId.CELO_ALFAJORES]: PORTAL_USDC_CELO.address,
     [ChainId.GOERLI]: USDC_GOERLI.address,
