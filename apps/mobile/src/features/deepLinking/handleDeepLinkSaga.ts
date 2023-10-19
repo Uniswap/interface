@@ -40,8 +40,8 @@ export enum LinkSource {
   Share = 'Share',
 }
 
-const UNISWAP_URL_SCHEME = 'uniswap://'
-export const UNISWAP_URL_SCHEME_WALLETCONNECT = 'uniswap://wc?uri='
+export const UNISWAP_URL_SCHEME = 'uniswap://'
+export const UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM = 'uniswap://wc?uri='
 const UNISWAP_URL_SCHEME_WIDGET = 'uniswap://widget/'
 export const UNISWAP_WALLETCONNECT_URL = uniswapUrls.appBaseUrl + '/wc?uri='
 const WALLETCONNECT_URI_SCHEME = 'wc:' // https://eips.ethereum.org/EIPS/eip-1328
@@ -193,9 +193,21 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
       return
     }
 
-    // Handle WC deep link via URL scheme connections (ex. uniswap://wc?uri=123))
-    if (action.payload.url.startsWith(UNISWAP_URL_SCHEME_WALLETCONNECT)) {
-      let wcUri = action.payload.url.split(UNISWAP_URL_SCHEME_WALLETCONNECT)[1]
+    // Handle WC deep link via connections in the format uniswap://wc?uri=${WC_URI}
+    // Ex: uniswap://wc?uri=wc:123@2?relay-protocol=irn&symKey=51e
+    if (action.payload.url.startsWith(UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM)) {
+      let wcUri = action.payload.url.split(UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM)[1]
+      if (!wcUri) return
+      // Decode URI to handle special characters like %3A => :
+      wcUri = decodeURIComponent(wcUri)
+      yield* call(handleWalletConnectDeepLink, wcUri)
+      return
+    }
+
+    // Handle WC deep link via connections in the format uniswap://${WC_URI}
+    // Ex: uniswap://wc:123@2?relay-protocol=irn&symKey=51e
+    if (action.payload.url.startsWith(UNISWAP_URL_SCHEME + WALLETCONNECT_URI_SCHEME)) {
+      let wcUri = action.payload.url.split(UNISWAP_URL_SCHEME)[1]
       if (!wcUri) return
       // Decode URI to handle special characters like %3A => :
       wcUri = decodeURIComponent(wcUri)

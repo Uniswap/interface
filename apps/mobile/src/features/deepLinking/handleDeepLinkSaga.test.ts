@@ -30,7 +30,8 @@ const unsupportedScreenDeepLinkPayload = {
 // WalletConnect URI has its own query parameters that should not be dropped
 const wcUri = 'wc:af098@2?relay-protocol=irn&symKey=51e'
 export const wcUniversalLinkUrl = `https://uniswap.org/app/wc?uri=${wcUri}`
-export const wcUrlSchemeUrl = `uniswap://wc?uri=${wcUri}`
+export const wcAsParamInUniwapScheme = `uniswap://wc?uri=${wcUri}`
+export const wcInUniwapScheme = `uniswap://${wcUri}`
 const invalidUrlSchemeUrl = `uniswap://invalid?param=pepe`
 
 const stateWithActiveAccountAddress = {
@@ -99,9 +100,21 @@ describe(handleDeepLink, () => {
       .silentRun()
   })
 
-  it('Handles WalletConnect connection using Uniswap URL scheme', () => {
+  it('Handles WalletConnect connection using Uniswap URL scheme with WalletConnect URI as query param', () => {
     return expectSaga(handleDeepLink, {
-      payload: { url: wcUrlSchemeUrl, coldStart: false },
+      payload: { url: wcAsParamInUniwapScheme, coldStart: false },
+      type: '',
+    })
+      .withState(stateWithActiveAccountAddress)
+      .provide([[call(waitForWcWeb3WalletIsReady), undefined]])
+      .call(handleWalletConnectDeepLink, wcUri)
+      .returns(undefined)
+      .silentRun()
+  })
+
+  it('Handles WalletConnect connection using Uniswap URL scheme with WalletConnect URI', () => {
+    return expectSaga(handleDeepLink, {
+      payload: { url: wcInUniwapScheme, coldStart: false },
       type: '',
     })
       .withState(stateWithActiveAccountAddress)
