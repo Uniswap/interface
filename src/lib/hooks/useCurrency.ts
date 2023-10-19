@@ -94,6 +94,7 @@ export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string
           symbol: tokenFromNetwork?.symbol,
           address: tokenFromNetwork?.address,
           isNative: tokenFromNetwork?.isNative,
+          chainId: tokenFromNetwork?.chainId,
         },
       })
     }
