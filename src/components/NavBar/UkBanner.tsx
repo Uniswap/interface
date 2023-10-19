@@ -57,7 +57,7 @@ const ReadMoreWrapper = styled(ButtonText)`
   }
 `
 
-export const bannerText = t`This is a forked version of UniswapV3 with no fee. The license & rights are reserved to Uniswap; we hold no additional rights or responsibilities for its use.`
+export const bannerText = t`This is a fork of the Uniswap v3 interface, free of swap fees. All rights belong to Uniswap; we assume no extra rights or responsibilities.`
 
 export function UkBanner() {
   // const openDisclaimer = useOpenModal(ApplicationModal.UK_DISCLAIMER)
