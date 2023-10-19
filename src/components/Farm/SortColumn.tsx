@@ -1,5 +1,4 @@
 import { ButtonEmpty } from 'components/Button'
-import { ChevronDown, ChevronUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 
 interface SortColumn {
@@ -40,7 +39,7 @@ export default function SortColumns({ sortColumns, selectedSort, sortDesc }: Sor
           }}
         >
           <small className={selectedSort === item.index ? '' : 'text-secondary'}>{item.text}</small>
-          {selectedSort === item.index && !sortDesc ? <ChevronUp /> : <ChevronDown />}
+          {/* {selectedSort === item.index && !sortDesc ? <ChevronUp /> : <ChevronDown />} */}
         </ButtonEmpty>
       ))}
     </SortColumnsLayout>

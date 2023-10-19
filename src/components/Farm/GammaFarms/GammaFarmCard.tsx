@@ -317,7 +317,9 @@ export function GammaFarmCard({ data, rewardData, pairData, token0, token1 }: Ga
                     <small className="weight-600">{`${tokenZero.symbol}/${tokenOne.symbol}`}</small>
                     <Box className="cursor-pointer">
                       <ButtonEmpty width="fit-content" padding="0" onClick={() => setModalOpen(true)}>
-                        <small style={{ color: theme.accentActive }}>{availableStakeAmount == "0.0" ?  "Add Gamma Liquidity" : "Manage Gamma Liquidity"}</small>
+                        <small style={{ color: theme.accentActive }}>
+                          {availableStakeAmount == '0.0' ? 'Add Gamma Liquidity' : 'Manage Gamma Liquidity'}
+                        </small>
                       </ButtonEmpty>
                     </Box>
                   </div>

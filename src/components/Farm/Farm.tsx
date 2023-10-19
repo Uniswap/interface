@@ -14,6 +14,7 @@ import { GammaPairs, GlobalConst } from './constants'
 import GammaFarmsPage from './GammaFarms/GammaFarmsPage'
 import FarmingMyFarms from './MyFarms/FarmMyFarms'
 import SearchBar from './SearchBar'
+import SortColumns from './SortColumn'
 import { buildRedirectPath, farmFilters, filterFarmStringAtom, sortColumns, tabsFarm, tabsFarmDefault } from './utils'
 
 const FarmsLayout = styled.div`
@@ -169,11 +170,11 @@ export function Farms() {
               height={50}
             />
           </TabSwitchLayout> */}
-          {/* {!isMobile && (
+          {!isMobile && (
             <TabFiltersLayout>
               <SortColumns sortColumns={sortByDesktopItems} selectedSort={sortBy} sortDesc={sortDesc} />
             </TabFiltersLayout>
-          )} */}
+          )}
         </>
       )}
 
