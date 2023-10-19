@@ -1,6 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import IPegasysPairJson from '@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/interfaces/IPegasysPair.sol/IPegasysPair.json'
 import IPegasysRouterJson from '@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json'
+import { ChainId } from '@pollum-io/smart-order-router'
 import QuoterV2Json from '@pollum-io/swap-router-contracts/artifacts/contracts/lens/QuoterV2.sol/QuoterV2.json'
 import PegasysInterfaceMulticallJson from '@pollum-io/v3-periphery/artifacts/contracts/lens/PegasysInterfaceMulticall.sol/PegasysInterfaceMulticall.json'
 import QuoterJson from '@pollum-io/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
@@ -21,6 +22,8 @@ import WETH_ABI from 'abis/weth.json'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
   ENS_REGISTRAR_ADDRESSES,
+  GAMMA_MASTERCHEF_ADDRESSES,
+  GAMMA_UNIPROXY_ADDRESSES,
   MULTICALL_ADDRESS,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
   QUOTER_ADDRESSES,
@@ -33,6 +36,9 @@ import { useMemo } from 'react'
 import { NonfungiblePositionManager, PegasysInterfaceMulticall, Quoter, QuoterV2, TickLens } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
 
+import GammaPairABI from '../abis/gamma-hypervisor.json'
+import GammaMasterChef from '../abis/gamma-masterchef.json'
+import GammaUniProxyABI from '../abis/gamma-uniorixy.json'
 import { getContract } from '../utils'
 
 const { abi: IUniswapV2PairABI } = IPegasysPairJson
@@ -65,6 +71,30 @@ export function useContract<T extends Contract = Contract>(
       return null
     }
   }, [addressOrAddressMap, ABI, provider, chainId, withSignerIfPossible, account]) as T
+}
+
+function useContracts<T extends Contract = Contract>(
+  addressOrAddressMaps: string[] | { [chainId: number]: string }[] | undefined,
+  ABI: any,
+  withSignerIfPossible = true
+): (T | null)[] {
+  const { provider, account, chainId } = useWeb3React()
+
+  return useMemo(() => {
+    if (!addressOrAddressMaps || !ABI || !provider || !chainId) return []
+    return addressOrAddressMaps.map((addressOrAddressMap) => {
+      let address: string | undefined
+      if (typeof addressOrAddressMap === 'string') address = addressOrAddressMap
+      else address = addressOrAddressMap[chainId]
+      if (!address) return null
+      try {
+        return getContract(address, ABI, provider, withSignerIfPossible && account ? account : undefined)
+      } catch (error) {
+        console.error('Failed to get contract', error)
+        return null
+      }
+    })
+  }, [addressOrAddressMaps, ABI, provider, chainId, withSignerIfPossible, account]) as (T | null)[]
 }
 
 export function useV2MigratorContract() {
@@ -140,4 +170,20 @@ export function useTickLens(): TickLens | null {
   const { chainId } = useWeb3React()
   const address = chainId ? TICK_LENS_ADDRESSES[chainId] : undefined
   return useContract(address, TickLensABI) as TickLens | null
+}
+
+export function useMasterChefContract(withSignerIfPossible?: boolean, abi?: any) {
+  return useContract(GAMMA_MASTERCHEF_ADDRESSES[ChainId.ROLLUX], abi ?? GammaMasterChef, withSignerIfPossible)
+}
+
+// export function useMasterChefContracts(withSignerIfPossible?: boolean) {
+//   return useContracts(Object.values(GAMMA_MASTERCHEF_ADDRESSES), GammaMasterChef, withSignerIfPossible)
+// }
+
+export function useGammaHypervisorContract(address?: string, withSignerIfPossible?: boolean) {
+  return useContract(address, GammaPairABI, withSignerIfPossible)
+}
+
+export function useGammaUniProxyContract(withSignerIfPossible?: boolean) {
+  return useContract(GAMMA_UNIPROXY_ADDRESSES[ChainId.ROLLUX], GammaUniProxyABI, withSignerIfPossible)
 }

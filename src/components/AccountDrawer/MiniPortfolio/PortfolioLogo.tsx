@@ -1,4 +1,5 @@
 import { Currency } from '@pollum-io/sdk-core'
+import { ChainId } from '@pollum-io/smart-order-router'
 import LoadingGifLight from 'assets/images/lightLoading.gif'
 import LoadingGif from 'assets/images/loading.gif'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
@@ -7,7 +8,6 @@ import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { LogoImage, MissingImageLogo } from 'components/Logo/AssetLogo'
 import { Unicon } from 'components/Unicon'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import useENSAvatar from 'hooks/useENSAvatar'
 import React from 'react'
@@ -40,7 +40,7 @@ const DoubleLogoContainer = styled.div`
 `
 
 type MultiLogoProps = {
-  chainId: SupportedChainId
+  chainId: ChainId
   accountAddress?: string
   currencies?: Array<Currency | undefined>
   images?: (string | undefined)[]
@@ -88,7 +88,7 @@ const L2LogoContainer = styled.div<{ $backgroundColor?: string }>`
  * Renders an image by prioritizing a list of sources, and then eventually a fallback triangle alert
  */
 export function PortfolioLogo({
-  chainId = SupportedChainId.ROLLUX,
+  chainId = ChainId.ROLLUX,
   accountAddress,
   currencies,
   images,
@@ -145,7 +145,7 @@ export function PortfolioLogo({
   }
 
   const L2Logo =
-    chainId !== SupportedChainId.ROLLUX && chainLogo ? (
+    chainId !== ChainId.ROLLUX && chainLogo ? (
       <L2LogoContainer $backgroundColor={squareLogoUrl ? theme.backgroundSurface : theme.textPrimary}>
         {squareLogoUrl ? (
           <SquareChainLogo src={chainLogo} alt="chainLogo" />

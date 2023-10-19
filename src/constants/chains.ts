@@ -25,12 +25,12 @@ export type SupportedInterfaceChain = Exclude<SupportedChainsType, ChainId.ROLLU
 /**
  * Array of all the supported chain IDs
  */
-export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = Object.values(SupportedChainId).filter(
+export const ALL_SUPPORTED_CHAIN_IDS: ChainId[] = Object.values(ChainId).filter(
   (id) => typeof id === 'number'
-) as SupportedChainId[]
+) as ChainId[]
 
-export function isSupportedChain(chainId: number | null | undefined): chainId is SupportedChainId {
-  return !!chainId && !!SupportedChainId[chainId]
+export function isSupportedChain(chainId: number | null | undefined): chainId is ChainId {
+  return !!chainId && !!ChainId[chainId]
 }
 
 export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [SupportedChainId.ROLLUX] as const

@@ -1,4 +1,4 @@
-import { SupportedChainId } from '@pollum-io/widgets'
+import { ChainId } from '@pollum-io/smart-order-router'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
@@ -8,11 +8,11 @@ import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/utils/util'
 
 import AssetLogo, { AssetLogoBaseProps } from './AssetLogo'
 
-function getChainId(token?: TokenQueryData | SearchToken | TokenData): SupportedChainId | undefined {
+function getChainId(token?: TokenQueryData | SearchToken | TokenData): ChainId | undefined {
   if (token && 'chain' in token) {
     return token?.chain ? CHAIN_NAME_TO_CHAIN_ID[token?.chain] : undefined
   } else {
-    return SupportedChainId.ROLLUX
+    return ChainId.ROLLUX
   }
 }
 

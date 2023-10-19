@@ -136,8 +136,32 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
     [TransactionStatus.Confirmed]: t`Submitted proposal`,
     [TransactionStatus.Failed]: t`Submit proposal failed`,
   },
+  [TransactionType.CLAIM_FARM]: {
+    [TransactionStatus.Pending]: t`Claiming`,
+    [TransactionStatus.Confirmed]: t`Claimed`,
+    [TransactionStatus.Failed]: t`Claim failed`,
+  },
+  [TransactionType.DEPOSIT_FARM]: {
+    [TransactionStatus.Pending]: t`Depositing`,
+    [TransactionStatus.Confirmed]: t`Deposited`,
+    [TransactionStatus.Failed]: t`Deposit failed`,
+  },
+  [TransactionType.WITHDRAW_FARM]: {
+    [TransactionStatus.Pending]: t`Withdrawing`,
+    [TransactionStatus.Confirmed]: t`Withdrew`,
+    [TransactionStatus.Failed]: t`Withdraw failed`,
+  },
+  [TransactionType.ADD_LIQUIDITY_GAMMA]: {
+    [TransactionStatus.Pending]: t`Adding Gamma Liquidity`,
+    [TransactionStatus.Confirmed]: t`Added Gamma Liquidity `,
+    [TransactionStatus.Failed]: t`Add Gamma Liquidity failed`,
+  },
+  [TransactionType.REMOVE_LIQUIDITY_GAMMA]: {
+    [TransactionStatus.Pending]: t`Removing`,
+    [TransactionStatus.Confirmed]: t`Removed`,
+    [TransactionStatus.Failed]: t`Remove Gamma`,
+  },
 }
-
 const AlternateTransactionTitleTable: { [key in TransactionType]?: { [state in TransactionStatus]: string } } = {
   [TransactionType.WRAP]: {
     [TransactionStatus.Pending]: t`Unwrapping`,

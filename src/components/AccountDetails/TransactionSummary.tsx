@@ -7,22 +7,27 @@ import { useCurrency, useToken } from '../../hooks/Tokens'
 import useENSName from '../../hooks/useENSName'
 import { VoteOption } from '../../state/governance/types'
 import {
+  AddLiquidityGammaTransactionInfo,
   AddLiquidityV2PoolTransactionInfo,
   AddLiquidityV3PoolTransactionInfo,
   ApproveTransactionInfo,
+  ClaimFarmTransactionInfo,
   ClaimTransactionInfo,
   CollectFeesTransactionInfo,
   CreateV3PoolTransactionInfo,
   DelegateTransactionInfo,
+  DepositFarmTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   ExecuteTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
   QueueTransactionInfo,
+  RemoveLiquidityGammaTransactionInfo,
   RemoveLiquidityV3TransactionInfo,
   TransactionInfo,
   TransactionType,
   VoteTransactionInfo,
+  WithdrawFarmTransactionInfo,
   WrapTransactionInfo,
 } from '../../state/transactions/types'
 
@@ -180,6 +185,33 @@ function DepositLiquidityStakingSummary() {
 
 function WithdrawLiquidityStakingSummary() {
   return <Trans>Withdraw deposited liquidity</Trans>
+}
+
+function AddLiquidityGammaSummary({ info }: { info: AddLiquidityGammaTransactionInfo }) {
+  const Text = `Add Liquidity with ${info.amount0} ${info.symbol0} and ${info.amount1} ${info.symbol1}`
+  return <div>{Text}</div>
+}
+
+function RemoveLiquidityGammaSummary({ info }: { info: RemoveLiquidityGammaTransactionInfo }) {
+  const Text = `Remove ${info.amount} ${info.symbol}`
+  return <div>{Text}</div>
+}
+
+function DepositFarmSummary({ info }: { info: DepositFarmTransactionInfo }) {
+  // not worth rendering the tokens since you can should no longer deposit liquidity in the staking contracts
+  // todo: deprecate and delete the code paths that allow this, show user more information
+  const Text = `Deposit Farm for Pool Id ${info.pid}`
+  return <div>{Text}</div>
+}
+
+function WithdrawFarmSummary({ info }: { info: WithdrawFarmTransactionInfo }) {
+  const Text = `Withdraw Farm for Pool Id ${info.pid}`
+  return <div>{Text}</div>
+}
+
+function ClaimFarmSummary({ info }: { info: ClaimFarmTransactionInfo }) {
+  const Text = `Claim Rewards for Pool Id ${info.pid}`
+  return <div>{Text}</div>
 }
 
 function MigrateLiquidityToV3Summary({
@@ -356,5 +388,23 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.SUBMIT_PROPOSAL:
       return <SubmitProposalTransactionSummary />
+
+    case TransactionType.CLAIM_FARM:
+      return <ClaimFarmSummary info={info} />
+
+    case TransactionType.WITHDRAW_FARM:
+      return <WithdrawFarmSummary info={info} />
+
+    case TransactionType.DEPOSIT_FARM:
+      return <DepositFarmSummary info={info} />
+
+    case TransactionType.ADD_LIQUIDITY_GAMMA:
+      return <AddLiquidityGammaSummary info={info} />
+
+    case TransactionType.REMOVE_LIQUIDITY_GAMMA:
+      return <RemoveLiquidityGammaSummary info={info} />
+
+    default:
+      return <div>Unknown Transaction Type</div>
   }
 }

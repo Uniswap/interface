@@ -1,10 +1,10 @@
 import { Token } from '@pollum-io/sdk-core'
-import { AddressMap } from '@pollum-io/smart-order-router'
+import { AddressMap, ChainId } from '@pollum-io/smart-order-router'
 import MulticallABI from '@pollum-io/v3-periphery/artifacts/contracts/lens/PegasysInterfaceMulticall.sol/PegasysInterfaceMulticall.json'
 import NFTPositionManagerABI from '@pollum-io/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import { useWeb3React } from '@web3-react/core'
 import { MULTICALL_ADDRESS, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES as V3NFT_ADDRESSES } from 'constants/addresses'
-import { isSupportedChain, SupportedChainId } from 'constants/chains'
+import { isSupportedChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { BaseContract } from 'ethers/lib/ethers'
 import { ContractInput, useUniswapPricesQuery } from 'graphql/data/__generated__/types-and-hooks'
@@ -13,7 +13,7 @@ import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, PegasysInterfaceMulticall } from 'types/v3'
 import { getContract } from 'utils'
-import { CurrencyKey, currencyKey, currencyKeyFromGraphQL } from 'utils/currencyKey'
+import { CurrencyKey, currencyKey } from 'utils/currencyKey'
 
 import { PositionInfo } from './cache'
 
@@ -23,7 +23,7 @@ type ContractMap<T extends BaseContract> = { [key: number]: T }
 function useContractMultichain<T extends BaseContract>(
   addressMap: AddressMap,
   ABI: any,
-  chainIds?: SupportedChainId[]
+  chainIds?: ChainId[]
 ): ContractMap<T> {
   const { chainId: walletChainId, provider: walletProvider } = useWeb3React()
 
@@ -42,11 +42,11 @@ function useContractMultichain<T extends BaseContract>(
   }, [ABI, addressMap, chainIds, walletChainId, walletProvider])
 }
 
-export function useV3ManagerContracts(chainIds: SupportedChainId[]): ContractMap<NonfungiblePositionManager> {
+export function useV3ManagerContracts(chainIds: ChainId[]): ContractMap<NonfungiblePositionManager> {
   return useContractMultichain<NonfungiblePositionManager>(V3NFT_ADDRESSES, NFTPositionManagerABI.abi, chainIds)
 }
 
-export function useInterfaceMulticallContracts(chainIds: SupportedChainId[]): ContractMap<PegasysInterfaceMulticall> {
+export function useInterfaceMulticallContracts(chainIds: ChainId[]): ContractMap<PegasysInterfaceMulticall> {
   return useContractMultichain<PegasysInterfaceMulticall>(MULTICALL_ADDRESS, MulticallABI.abi, chainIds)
 }
 
@@ -68,7 +68,7 @@ export function usePoolPriceMap(positions: PositionInfo[] | undefined) {
   const priceMap = useMemo(
     () =>
       data?.tokens?.reduce((acc: PriceMap, current) => {
-        if (current) acc[currencyKeyFromGraphQL(current)] = current.project?.markets?.[0]?.price?.value
+        // if (current) acc[currencyKeyFromGraphQL(current)] = current.project?.markets?.[0]?.price?.value
         return acc
       }, {}) ?? {},
     [data?.tokens]

@@ -2,10 +2,10 @@ import { ChainId } from '@pollum-io/smart-order-router'
 import { Connector } from '@web3-react/types'
 import { networkConnection, walletConnectV2Connection } from 'connection'
 import { getChainInfo } from 'constants/chainInfo'
-import { isSupportedChain, SupportedChainId } from 'constants/chains'
+import { isSupportedChain } from 'constants/chains'
 import { FALLBACK_URLS } from 'constants/networks'
 
-function getRpcUrl(chainId: SupportedChainId): string {
+function getRpcUrl(chainId: ChainId): string {
   switch (chainId) {
     // case SupportedChainId.MAINNET:
     // case SupportedChainId.GOERLI:

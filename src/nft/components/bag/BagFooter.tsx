@@ -267,7 +267,7 @@ const FiatValue = ({
         </>
       )}
       <ThemedText.BodySmall color="textTertiary" lineHeight="20px">
-        {`${ethNumberStandardFormatter(usdcValue?.toExact(), true)}`}
+        {ethNumberStandardFormatter(usdcValue?.toExact(), true)}
       </ThemedText.BodySmall>
     </PriceImpactContainer>
   )

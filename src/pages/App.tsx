@@ -4,11 +4,9 @@ import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
 import { lazy, Suspense, useEffect, useState } from 'react'
-import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
-import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -26,6 +24,7 @@ import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import { BodyWrapper } from './AppBody'
+import { Farm } from './Farm'
 import Landing from './Landing'
 import { LeaderBoard } from './Leaderboard'
 import MigrateV2 from './MigrateV2'
@@ -43,10 +42,7 @@ import Tokens from './Tokens'
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
 const Vote = lazy(() => import('./Vote'))
-const NftExplore = lazy(() => import('nft/pages/explore'))
-const Collection = lazy(() => import('nft/pages/collection'))
-const Profile = lazy(() => import('nft/pages/profile/profile'))
-const Asset = lazy(() => import('nft/pages/asset/Asset'))
+
 // TODO: check mobile border
 const MobileBottomBar = styled.div`
   z-index: ${Z_INDEX.sticky};
@@ -94,7 +90,6 @@ const LazyLoadSpinner = () => (
 
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
-  const [shouldDisableNFTRoutes, setShouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
 
   const { pathname } = useLocation()
   const isDarkMode = useIsDarkMode()
@@ -106,15 +101,6 @@ export default function App() {
     window.scrollTo(0, 0)
     setScrolledState(false)
   }, [pathname])
-
-  const [searchParams] = useSearchParams()
-  useEffect(() => {
-    if (searchParams.get('disableNFTs') === 'true') {
-      setShouldDisableNFTRoutes(true)
-    } else if (searchParams.get('disableNFTs') === 'false') {
-      setShouldDisableNFTRoutes(false)
-    }
-  }, [searchParams, setShouldDisableNFTRoutes])
 
   useEffect(() => {
     const scrollListener = () => {
@@ -207,55 +193,7 @@ export default function App() {
               <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
 
               <Route path="leaderboard" element={<LeaderBoard />} />
-
-              {!shouldDisableNFTRoutes && (
-                <>
-                  <Route
-                    path="/nfts"
-                    element={
-                      <Suspense fallback={null}>
-                        <NftExplore />
-                      </Suspense>
-                    }
-                  />
-
-                  <Route
-                    path="/nfts/asset/:contractAddress/:tokenId"
-                    element={
-                      <Suspense fallback={null}>
-                        <Asset />
-                      </Suspense>
-                    }
-                  />
-
-                  <Route
-                    path="/nfts/profile"
-                    element={
-                      <Suspense fallback={null}>
-                        <Profile />
-                      </Suspense>
-                    }
-                  />
-
-                  <Route
-                    path="/nfts/collection/:contractAddress"
-                    element={
-                      <Suspense fallback={null}>
-                        <Collection />
-                      </Suspense>
-                    }
-                  />
-
-                  <Route
-                    path="/nfts/collection/:contractAddress/activity"
-                    element={
-                      <Suspense fallback={null}>
-                        <Collection />
-                      </Suspense>
-                    }
-                  />
-                </>
-              )}
+              <Route path="farm" element={<Farm />} />
 
               <Route path="*" element={<Navigate to="/not-found" replace />} />
               <Route path="/not-found" element={<NotFound />} />

@@ -14,7 +14,6 @@ import { Text } from 'rebass'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { isL2ChainId } from 'utils/chains'
 
 import { ExternalLink, ThemedText } from '../../theme'
 import { CloseIcon } from '../../theme'
@@ -90,6 +89,7 @@ function ConfirmationPendingContent({
     </Wrapper>
   )
 }
+
 function TransactionSubmittedContent({
   onDismiss,
   chainId,
@@ -350,7 +350,7 @@ export default function TransactionConfirmationModal({
   // confirmation screen
   return (
     <Modal isOpen={isOpen} $scrollOverlay={true} onDismiss={onDismiss} maxHeight={90}>
-      {isL2ChainId(chainId) && (hash || attemptingTxn) ? (
+      {hash || attemptingTxn ? (
         <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
       ) : attemptingTxn ? (
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />

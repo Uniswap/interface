@@ -6,6 +6,7 @@ import { constructSameAddressMap } from '../utils/constructSameAddressMap'
 
 type AddressMap = { [chainId: number]: string }
 
+export const PSYS_ADDRESS = '0x48023b16c3e81aa7f6effbdeb35bb83f4f31a8fd'
 export const UNI_ADDRESS: AddressMap = {
   [SupportedChainId.ROLLUX_TANENBAUM]: '0x817C777DEf2Fd6ffE2492C6CD124985C78Ee9235',
   [SupportedChainId.ROLLUX]: '0x48023b16c3e81AA7F6eFFbdEB35Bb83f4f31a8fd',
@@ -67,3 +68,24 @@ export const ENS_REGISTRAR_ADDRESSES: AddressMap = {}
 export const TICK_LENS_ADDRESSES: AddressMap = {
   ...constructSameAddressMap('0x6dfd1ea91128733Dc96479b7d1b0F4bC36C31C44'),
 }
+
+// Farms address
+export const GAMMA_MASTERCHEF_ADDRESSES: AddressMap = {
+  ...constructSameAddressMap('0x70e0461e476de1211d789e9ea4ec2d3bb126d16a'),
+}
+
+export const GAMMA_UNIPROXY_ADDRESSES: AddressMap = {
+  ...constructSameAddressMap('0xFc13Ebe7FEB9595D70195E9168aA7F3acE153621'),
+}
+
+// const EMPTY: { [chainId: number]: Token } = {
+//   [ChainId.ROLLUX]: new Token(ChainId.ROLLUX, '0x0000000000000000000000000000000000000000', 0, 'EMPTY', 'EMPTY'),
+// }
+
+// const FINITE_FARMING: AddressMap = {
+//   [ChainId.ROLLUX]: '0x9923f42a02A82dA63EE0DbbC5f8E311e3DD8A1f8',
+// }
+
+// const FARMING_CENTER: AddressMap = {
+//   [ChainId.ROLLUX]: '0x7F281A8cdF66eF5e9db8434Ec6D97acc1bc01E78',
+// }

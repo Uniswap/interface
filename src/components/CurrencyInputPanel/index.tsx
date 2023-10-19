@@ -153,7 +153,7 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
   font-size: 20px;
 `
 
-const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
+export const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   background-color: transparent;
   background-color: ${({ theme }) => theme.accentActionSoft};
   border: none;

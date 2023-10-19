@@ -44,10 +44,53 @@ export enum TransactionType {
   REPAY,
   DEPLOY,
   CANCEL,
+  DEPOSIT_FARM,
+  WITHDRAW_FARM,
+  CLAIM_FARM,
+  REMOVE_LIQUIDITY_GAMMA,
+  ADD_LIQUIDITY_GAMMA,
 }
 
 interface BaseTransactionInfo {
   type: TransactionType
+}
+
+export interface RemoveLiquidityGammaTransactionInfo {
+  type: TransactionType.REMOVE_LIQUIDITY_GAMMA
+  amount: string
+  tokenAddress: string
+  symbol: string
+}
+
+export interface AddLiquidityGammaTransactionInfo {
+  type: TransactionType.ADD_LIQUIDITY_GAMMA
+  currencyId0: string
+  currencyId1: string
+  symbol0: string
+  symbol1: string
+  amount0: string
+  amount1: string
+}
+
+export interface DepositFarmTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.DEPOSIT_FARM
+  pid: number
+  amount: string
+  tokenAddress: string
+}
+
+export interface WithdrawFarmTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.WITHDRAW_FARM
+  pid: number
+  amount: string
+  tokenAddress: string
+}
+
+export interface ClaimFarmTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.CLAIM_FARM
+  pid: number
+  amount: string
+  tokenAddress: string
 }
 
 export interface VoteTransactionInfo extends BaseTransactionInfo {
@@ -196,6 +239,11 @@ export type TransactionInfo =
   | CollectFeesTransactionInfo
   | RemoveLiquidityV3TransactionInfo
   | SubmitProposalTransactionInfo
+  | DepositFarmTransactionInfo
+  | WithdrawFarmTransactionInfo
+  | ClaimFarmTransactionInfo
+  | AddLiquidityGammaTransactionInfo
+  | RemoveLiquidityGammaTransactionInfo
 
 export interface TransactionDetails {
   hash: string

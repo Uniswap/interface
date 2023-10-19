@@ -1,12 +1,12 @@
 import { Currency } from '@pollum-io/sdk-core'
-import { SupportedChainId } from 'constants/chains'
+import { ChainId } from '@pollum-io/smart-order-router'
 import { AssetActivityPartsFragment, TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 
 type Receipt = AssetActivityPartsFragment['transaction']
 
 export type Activity = {
   hash: string
-  chainId: SupportedChainId
+  chainId: ChainId
   status: TransactionStatus
   timestamp: number
   title: string
