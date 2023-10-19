@@ -1,10 +1,10 @@
 {
   "background_color": "#fff",
   "display": "standalone",
-  "homepage_url": "https://swap.a51.finance",
+  "homepage_url": "https://dex.a51.finance",
   "providedBy": {
-    "name": "Swap51",
-    "url": "https://a51.fiance"
+    "name": "Dex51",
+    "url": "https://a51.finance"
   },
   "icons": [
     {
@@ -21,10 +21,10 @@
     }
   ],
   "orientation": "portrait",
-  "name": "Swap51",
-  "description": "Swap or provide liquidity on the Swap51 Protocol",
+  "name": "Dex51",
+  "description": "Swap on the Dex51 Protocol",
   "iconPath": "./images/256x256_App_Icon_Pink.svg",
-  "short_name": "Swap51",
+  "short_name": "Dex51",
   "start_url": ".",
   "theme_color": "#FF621F"
 }

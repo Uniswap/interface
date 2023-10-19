@@ -1,7 +1,7 @@
 {
   "name": "@uniswap/interface",
   "version": "1.1.0",
-  "description": "Swap51",
+  "description": "Dex51",
   "license": "GPL-3.0-or-later",
   "scripts": {
     "ajv": "node scripts/compile-ajv-validators.js",

@@ -1,4 +1,5 @@
-import swapA51 from 'assets/images/swap-54.png'
+import dex51Dark from 'assets/svg/dex51-dark-theme.svg'
+import dex51Light from 'assets/svg/dex51-light-theme.svg'
 import React from 'react'
 import styled, { useTheme } from 'styled-components'
 
@@ -12,9 +13,11 @@ type SVGProps = React.SVGProps<SVGSVGElement> & {
   gradientId?: string
 }
 
-export const Swap51Icon = (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
-  <img src={swapA51} alt="swap-a51-logo" {...props} />
-)
+export const Dex51Icon = (props: React.ImgHTMLAttributes<HTMLImageElement>) => {
+  const theme = useTheme()
+
+  return <img src={theme.darkMode ? dex51Dark : dex51Light} alt="swap-a51-logo" {...props} />
+}
 
 export const ChevronUpIcon = ({
   secondaryColor,

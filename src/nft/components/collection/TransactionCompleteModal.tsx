@@ -7,7 +7,7 @@ import { OpacityHoverState } from 'components/Common'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Row } from 'nft/components/Flex'
-import { BackArrowIcon, ChevronUpIcon, LightningBoltIcon, Swap51Icon, TwitterIcon } from 'nft/components/icons'
+import { BackArrowIcon, ChevronUpIcon, Dex51Icon, LightningBoltIcon, TwitterIcon } from 'nft/components/icons'
 import { Overlay, stopPropagation } from 'nft/components/modals/Overlay'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile, useNativeUsdPrice, useSendTransaction, useTransactionResponse } from 'nft/hooks'
@@ -116,7 +116,7 @@ const TxCompleteModal = () => {
                 shouldLogImpression
               >
                 <Box className={styles.successModal} onClick={stopPropagation}>
-                  <Swap51Icon width="85" height="20" className={styles.uniLogo} />
+                  <Dex51Icon width="85" height="20" className={styles.uniLogo} />
                   <Box display="flex" flexWrap="wrap" width="full" height="min">
                     <h1 className={styles.title}>
                       <Trans>Complete!</Trans>

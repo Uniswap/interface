@@ -217,7 +217,7 @@ export const MenuDropdown = () => {
                 <Icon href="https://twitter.com/A51_Fi">
                   <TwitterIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.neutral2} />
                 </Icon>
-                <Icon href="https://github.com/a51finance">
+                <Icon href="https://github.com/a51finance/a51-uniswap-fork">
                   <GithubIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.neutral2} />
                 </Icon>
               </IconRow> */}

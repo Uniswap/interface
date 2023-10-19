@@ -5,7 +5,7 @@ import Web3Status from 'components/Web3Status'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
-import { GithubIconMenu, Swap51Icon, TwitterIconMenu, WorldIconMenu } from 'nft/components/icons'
+import { Dex51Icon, GithubIconMenu, TwitterIconMenu, WorldIconMenu } from 'nft/components/icons'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { ReactNode, useCallback } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
@@ -111,7 +111,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
 
   const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
 
-  const handleSwap51IconClick = useCallback(() => {
+  const handleDex51IconClick = useCallback(() => {
     if (accountDrawerOpen) {
       toggleAccountDrawer()
     }
@@ -128,12 +128,12 @@ const Navbar = ({ blur }: { blur: boolean }) => {
         <Box display="flex" height="full" flexWrap="nowrap">
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
-              <Swap51Icon
+              <Dex51Icon
                 width="85"
                 height="20"
                 data-testid="uniswap-logo"
                 className={styles.logo}
-                onClick={handleSwap51IconClick}
+                onClick={handleDex51IconClick}
               />
             </Box>
             <Box display={{ sm: 'flex', lg: 'none' }}>
@@ -162,7 +162,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
               <Icon href="https://twitter.com/A51_Fi">
                 <TwitterIconMenu className={menu.hover} width={24} height={24} color={themeVars.colors.neutral2} />
               </Icon>
-              <Icon href="https://github.com/a51finance">
+              <Icon href="https://github.com/a51finance/a51-uniswap-fork">
                 <GithubIconMenu className={menu.hover} width={24} height={24} color={themeVars.colors.neutral2} />
               </Icon>
               <Box display={{ sm: 'none', lg: 'flex' }}>
