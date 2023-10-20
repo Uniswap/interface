@@ -4,7 +4,7 @@ import { LongText } from 'src/components/text/LongText'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import StatsIcon from 'ui/src/assets/icons/chart-bar.svg'
 import { iconSizes } from 'ui/src/theme'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import { TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 

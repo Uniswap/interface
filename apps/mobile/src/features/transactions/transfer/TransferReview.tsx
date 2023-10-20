@@ -12,7 +12,7 @@ import {
   useTransferERC20Callback,
   useTransferNFTCallback,
 } from 'src/features/transactions/transfer/hooks'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'

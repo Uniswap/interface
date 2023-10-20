@@ -1,4 +1,5 @@
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { NumberType } from 'utilities/src/format/types'
 
 // Number formatting in our app should follow the guide in this doc:
 // https://www.notion.so/uniswaplabs/Number-standards-fbb9f533f10e4e22820722c2f66d23c0
@@ -298,57 +299,6 @@ const percentagesFormatter: FormatterRule[] = [
   { upperBound: Infinity, formatter: NoTrailingDecimalsPercentages },
 ]
 
-export enum NumberType {
-  // used for token quantities in non-transaction contexts (e.g. portfolio balances)
-  TokenNonTx = 'token-non-tx',
-
-  // used for token quantities in transaction contexts (e.g. swap, send)
-  TokenTx = 'token-tx',
-
-  // this formatter is used for displaying swap price conversions
-  // below the input/output amounts
-  SwapPrice = 'swap-price',
-
-  // this formatter is only used for displaying the swap trade output amount
-  // in the text input boxes. Output amounts on review screen should use the above TokenTx formatter
-  SwapTradeAmount = 'swap-trade-amount',
-
-  // fiat prices in any component that belongs in the Token Details flow (except for token stats)
-  FiatTokenDetails = 'fiat-token-details',
-
-  // fiat prices everywhere except Token Details flow
-  FiatTokenPrice = 'fiat-token-price',
-
-  // fiat values for market cap, TVL, volume in the Token Details screen
-  FiatTokenStats = 'fiat-token-stats',
-
-  // fiat price of token balances
-  FiatTokenQuantity = 'fiat-token-quantity',
-
-  // fiat gas prices
-  FiatGasPrice = 'fiat-gas-price',
-
-  // portfolio balance
-  PortfolioBalance = 'portfolio-balance',
-
-  // nft floor price denominated in a token (e.g, ETH)
-  NFTTokenFloorPrice = 'nft-token-floor-price',
-
-  // nft collection stats like number of items, holder, and sales
-  NFTCollectionStats = 'nft-collection-stats',
-
-  Percentage = 'percentage',
-}
-export type FiatNumberType = Extract<
-  NumberType,
-  | NumberType.FiatTokenPrice
-  | NumberType.FiatTokenDetails
-  | NumberType.FiatTokenStats
-  | NumberType.FiatTokenQuantity
-  | NumberType.FiatGasPrice
-  | NumberType.PortfolioBalance
->
-
 const TYPE_TO_FORMATTER_RULES = {
   [NumberType.TokenNonTx]: tokenNonTxFormatter,
   [NumberType.TokenTx]: tokenTxFormatter,
@@ -379,7 +329,6 @@ function getFormatterRule(input: number, type: NumberType): Format {
   throw new Error(`formatter for type ${type} not configured correctly`)
 }
 
-// Avoid calling directly, use localized hook instead
 export function formatNumber({
   input,
   locale,
@@ -406,7 +355,6 @@ export function formatNumber({
   return createdFormat.format(input)
 }
 
-// Avoid calling directly, use localized hook instead
 export function formatCurrencyAmount({
   amount,
   locale,
@@ -426,13 +374,6 @@ export function formatCurrencyAmount({
   })
 }
 
-export function formatPriceImpact(priceImpact: Percent | undefined): string {
-  if (!priceImpact) return '-'
-
-  return `${priceImpact.multiply(-1).toFixed(3)}%`
-}
-
-// Avoid calling directly, use localized hook instead
 export function formatNumberOrString({
   price,
   locale,
@@ -452,7 +393,6 @@ export function formatNumberOrString({
   return formatNumber({ input: price, locale, currencyCode, type, placeholder })
 }
 
-// Avoid calling directly, use localized hook instead
 export function formatPercent(rawPercentage: Maybe<number | string>, locale: string): string {
   if (rawPercentage === null || rawPercentage === undefined) return '-'
   const percentage =

@@ -8,7 +8,7 @@ import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils
 import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes } from 'ui/src/theme'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'

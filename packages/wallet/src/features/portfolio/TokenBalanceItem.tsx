@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import { Flex, getTokenValue, Icons, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'

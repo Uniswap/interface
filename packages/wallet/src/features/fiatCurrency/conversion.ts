@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { FiatNumberType } from 'utilities/src/format/format'
+import { FiatNumberType } from 'utilities/src/format/types'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { Currency, useConvertQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'

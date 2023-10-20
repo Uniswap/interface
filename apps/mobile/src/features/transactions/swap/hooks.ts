@@ -35,7 +35,7 @@ import {
   updateExactAmountToken,
 } from 'src/features/transactions/transactionState/transactionState'
 import { toStringish } from 'src/utils/number'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
 import { useAsyncData, usePrevious } from 'utilities/src/react/hooks'

@@ -8,7 +8,7 @@ import { SwapWarningModal } from 'src/features/transactions/swapRewrite/SwapWarn
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'

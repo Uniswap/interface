@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import AnimatedNumber from 'src/components/AnimatedNumber'
 import { Flex } from 'ui/src'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'

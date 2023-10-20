@@ -1,9 +1,10 @@
+// eslint-disable-next-line no-restricted-imports
 import {
   formatCurrencyAmount,
   formatNumberOrString,
   formatPercent,
-  NumberType,
-} from 'utilities/src/format/format'
+} from 'utilities/src/format/localeBased'
+import { NumberType } from 'utilities/src/format/types'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { FiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { LocalizedFormatter } from 'wallet/src/features/language/formatter'

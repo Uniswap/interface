@@ -9,7 +9,7 @@ import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollec
 import { Flex, FlexProps, Logos, Text, TouchableArea, useSporeColors } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'

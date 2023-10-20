@@ -1,11 +1,12 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback } from 'react'
+// eslint-disable-next-line no-restricted-imports
 import {
   formatCurrencyAmount,
   formatNumberOrString,
   formatPercent,
-  NumberType,
-} from 'utilities/src/format/format'
+} from 'utilities/src/format/localeBased'
+import { NumberType } from 'utilities/src/format/types'
 import { useCurrentLocale } from 'wallet/src/features/language/hooks'
 
 type FormatNumberOrStringInput = {

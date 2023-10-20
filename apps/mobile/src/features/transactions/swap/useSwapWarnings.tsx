@@ -10,7 +10,7 @@ import {
   WarningSeverity,
 } from 'src/components/modals/WarningModal/types'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/types'
-import { formatPriceImpact } from 'utilities/src/format/format'
+import { formatPriceImpact } from 'utilities/src/format/formatPriceImpact'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'

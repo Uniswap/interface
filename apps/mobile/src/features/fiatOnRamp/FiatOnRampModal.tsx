@@ -39,7 +39,7 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import { useTimeout } from 'utilities/src/time/timing'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { getNativeAddress } from 'wallet/src/constants/addresses'

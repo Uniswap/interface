@@ -117,6 +117,10 @@ module.exports = {
          {
             name: '@tamagui/core',
             message: "Please import from 'tamagui' direcly to prevent mismatches.",
+          },
+          {
+            name: 'utilities/src/format/localeBased',
+            message: "Avoid importing directly. Use localized hooks in `useFiatConverter` or `useLocalizedFormatter` instead",
           }
         ],
       },

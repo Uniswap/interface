@@ -23,7 +23,7 @@ import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils
 import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import {
   MAX_AUTO_SLIPPAGE_TOLERANCE,

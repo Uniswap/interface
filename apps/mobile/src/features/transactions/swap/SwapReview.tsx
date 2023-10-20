@@ -24,7 +24,7 @@ import {
 } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'

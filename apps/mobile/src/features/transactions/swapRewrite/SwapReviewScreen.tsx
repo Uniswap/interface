@@ -35,7 +35,7 @@ import { TransactionAmountsReview } from 'src/features/transactions/swapRewrite/
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { AnimatedFlex, Button, Flex, Icons, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'

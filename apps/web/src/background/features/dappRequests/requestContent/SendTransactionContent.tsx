@@ -3,7 +3,7 @@ import { SendTransactionRequest } from 'src/background/features/dappRequests/dap
 import { DappRequestStoreItem } from 'src/background/features/dappRequests/slice'
 import { useAppSelector } from 'src/background/store'
 import { Flex, Text } from 'ui/src'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { useTransactionGasFee, useUSDValue } from 'wallet/src/features/gas/hooks'
 import { Account } from 'wallet/src/features/wallet/accounts/types'

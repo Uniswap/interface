@@ -5,7 +5,7 @@ import { AccountList } from 'src/components/accounts/AccountList'
 import { ON_PRESS_EVENT_PAYLOAD } from 'src/test/eventFixtures'
 import { Portfolios } from 'src/test/gqlFixtures'
 import { render, screen } from 'src/test/test-utils'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import {
   AccountListDocument,
   AccountListQuery,

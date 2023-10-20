@@ -22,7 +22,7 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { fonts, iconSizes } from 'ui/src/theme'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'

@@ -1,6 +1,6 @@
 import { createElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'wallet/src/entities/assets'
 import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'

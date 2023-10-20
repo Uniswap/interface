@@ -5,7 +5,7 @@ import { useSelectTransaction } from 'src/features/transactions/hooks'
 import { TransactionPending } from 'src/features/transactions/TransactionPending/TransactionPending'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { AppTFunction } from 'ui/src/i18n/types'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import { LocalizedFormatter, useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import {

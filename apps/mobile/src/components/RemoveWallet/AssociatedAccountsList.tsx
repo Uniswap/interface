@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet } from 'react-native'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Flex, Text, useDeviceDimensions } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import {
   AccountListQuery,
   useAccountListQuery,

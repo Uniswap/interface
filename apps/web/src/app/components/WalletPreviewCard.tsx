@@ -1,7 +1,7 @@
 import { Circle, Flex, Text, Unicon, useUniconColors } from 'ui/src'
 import { CheckmarkIcon } from 'ui/src/assets/icons/CheckmarkIcon'
 import { iconSizes, validToken } from 'ui/src/theme'
-import { NumberType } from 'utilities/src/format/format'
+import { NumberType } from 'utilities/src/format/types'
 import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
