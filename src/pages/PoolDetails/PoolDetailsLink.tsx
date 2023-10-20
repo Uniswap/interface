@@ -1,5 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { ChainId } from '@uniswap/sdk-core'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
+import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
@@ -107,7 +109,13 @@ export function PoolDetailsLink({ address, chainId, tokens }: PoolDetailsLinkPro
 
   return (
     <Row align="space-between">
-      <TokenTextWrapper isClickable={!isPool} onClick={handleTokenTextClick}>
+      <TokenTextWrapper
+        data-testid={
+          isPool ? `pdp-pool-logo-${tokens[0]?.symbol}-${tokens[1]?.symbol}` : `pdp-token-logo-${tokens[0]?.symbol}`
+        }
+        isClickable={!isPool}
+        onClick={handleTokenTextClick}
+      >
         {isPool ? (
           <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} small />
         ) : (
@@ -125,14 +133,18 @@ export function PoolDetailsLink({ address, chainId, tokens }: PoolDetailsLinkPro
         </SymbolText>
       </TokenTextWrapper>
       <ButtonsRow>
-        <CopyAddress onClick={copy}>
+        <CopyAddress data-testid={`copy-address-${address}`} onClick={copy}>
           {shortenAddress(address)}
           <StyledCopyIcon />
         </CopyAddress>
         {explorerUrl && (
-          <ExternalLink href={explorerUrl}>
+          <ExternalLink href={explorerUrl} data-testid={`explorer-url-${explorerUrl}`}>
             <ExplorerWrapper>
-              <EtherscanLogo width="16px" height="16px" fill={theme.neutral2} />
+              {chainId === ChainId.MAINNET ? (
+                <EtherscanLogo width="16px" height="16px" fill={theme.neutral2} />
+              ) : (
+                <ExplorerIcon width="16px" height="16px" stroke={theme.darkMode ? 'none' : theme.neutral2} />
+              )}
             </ExplorerWrapper>
           </ExternalLink>
         )}

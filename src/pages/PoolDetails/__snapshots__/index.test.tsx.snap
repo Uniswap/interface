@@ -178,33 +178,6 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   justify-content: flex-start;
 }
 
-.c51 {
-  opacity: 0;
-  -webkit-transition: opacity 250ms ease-in;
-  transition: opacity 250ms ease-in;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c50 {
-  width: 20px;
-  height: 20px;
-  background: #22222212;
-  -webkit-transition: background-color 250ms ease-in;
-  transition: background-color 250ms ease-in;
-  box-shadow: 0 0 1px white;
-  border-radius: 50%;
-}
-
-.c49 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
 .c21 {
   background-color: transparent;
   bottom: 0;
@@ -393,6 +366,143 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   border-radius: 50%;
 }
 
+.c51 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c50 {
+  width: 20px;
+  height: 20px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
+}
+
+.c49 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c41 {
+  display: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.c38 {
+  gap: 8px;
+  margin-right: 12px;
+}
+
+.c48 {
+  gap: 8px;
+  margin-right: 12px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c48:hover {
+  opacity: 0.6;
+}
+
+.c48:active {
+  opacity: 0.4;
+}
+
+.c42 {
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.c44 {
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  background-color: #22222212;
+  font-size: 14px;
+  font-weight: 535;
+  line-height: 16px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c44:hover {
+  opacity: 0.6;
+}
+
+.c44:active {
+  opacity: 0.4;
+}
+
+.c45 {
+  width: 16px;
+  height: 16px;
+  color: #7D7D7D;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.c47 {
+  padding: 8px;
+  border-radius: 20px;
+  background-color: #22222212;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c47:hover {
+  opacity: 0.6;
+}
+
+.c47:active {
+  opacity: 0.4;
+}
+
+.c43 {
+  gap: 8px;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
 .c33 {
   color: #FF5F52;
 }
@@ -512,114 +622,16 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   width: 100%;
 }
 
-.c41 {
-  display: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+@media (max-width:1023px) and (min-width:395px) {
+  .c41 {
+    display: block;
+  }
 }
 
-.c38 {
-  gap: 8px;
-  margin-right: 12px;
-}
-
-.c48 {
-  gap: 8px;
-  margin-right: 12px;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c48:hover {
-  opacity: 0.6;
-}
-
-.c48:active {
-  opacity: 0.4;
-}
-
-.c42 {
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.c44 {
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 20px;
-  background-color: #22222212;
-  font-size: 14px;
-  font-weight: 535;
-  line-height: 16px;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c44:hover {
-  opacity: 0.6;
-}
-
-.c44:active {
-  opacity: 0.4;
-}
-
-.c45 {
-  width: 16px;
-  height: 16px;
-  color: #7D7D7D;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-}
-
-.c47 {
-  padding: 8px;
-  border-radius: 20px;
-  background-color: #22222212;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c47:hover {
-  opacity: 0.6;
-}
-
-.c47:active {
-  opacity: 0.4;
-}
-
-.c43 {
-  gap: 8px;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
+@media (max-width:1023px) and (min-width:395px) {
+  .c42 {
+    color: #7D7D7D;
+  }
 }
 
 @media (max-width:1023px) {
@@ -730,18 +742,6 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
 @media (max-width:639px) {
   .c34 {
     padding: unset;
-  }
-}
-
-@media (max-width:1023px) and (min-width:396px) {
-  .c41 {
-    display: block;
-  }
-}
-
-@media (max-width:1023px) and (min-width:396px) {
-  .c42 {
-    color: #7D7D7D;
   }
 }
 
@@ -1028,6 +1028,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
           >
             <div
               class="c0 c1 c38"
+              data-testid="pdp-pool-logo-USDC-WETH"
             >
               <div
                 class="c11"
@@ -1061,6 +1062,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
             >
               <div
                 class="c0 c1 c44"
+                data-testid="copy-address-0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
               >
                 0x88e6...5640
                 <svg
@@ -1090,6 +1092,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
               </div>
               <a
                 class="c46"
+                data-testid="explorer-url-https://etherscan.io/address/0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
                 href="https://etherscan.io/address/0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -1123,6 +1126,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
           >
             <div
               class="c0 c1 c48"
+              data-testid="pdp-token-logo-USDC"
             >
               <div
                 class="c49"
@@ -1174,6 +1178,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
             >
               <div
                 class="c0 c1 c44"
+                data-testid="copy-address-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
               >
                 0xA0b8...eB48
                 <svg
@@ -1203,6 +1208,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
               </div>
               <a
                 class="c46"
+                data-testid="explorer-url-https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
                 href="https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -1236,6 +1242,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
           >
             <div
               class="c0 c1 c48"
+              data-testid="pdp-token-logo-WETH"
             >
               <div
                 class="c49"
@@ -1287,6 +1294,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
             >
               <div
                 class="c0 c1 c44"
+                data-testid="copy-address-0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
               >
                 0xC02a...6Cc2
                 <svg
@@ -1316,6 +1324,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
               </div>
               <a
                 class="c46"
+                data-testid="explorer-url-https://etherscan.io/token/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
                 href="https://etherscan.io/token/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
                 rel="noopener noreferrer"
                 target="_blank"
