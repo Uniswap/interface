@@ -103,8 +103,8 @@ android {
         compileSdk rootProject.ext.compileSdkVersion
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1 // Updated dynamically, no need to modify
-        versionName "1.0" // Updated for flavor, no need to modify
+        versionCode 1
+        versionName "1.0"
         multiDexEnabled true
     }
     splits {
