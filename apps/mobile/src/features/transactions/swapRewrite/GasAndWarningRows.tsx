@@ -66,6 +66,15 @@ export function GasAndWarningRows(): JSX.Element {
           />
         )}
 
+        {!gasFeeUSD && !formScreenWarning && (
+          // When there are no warnings, we render two empty rows to keep the layout consistent when calculating the container height.
+          // This is used when deciding whether to show the virtual keyboard or not.
+          <Flex centered gap="$spacing8">
+            <Text variant="body3"> </Text>
+            <Text variant="body3"> </Text>
+          </Flex>
+        )}
+
         {gasFeeUSD && (
           <AnimatedFlex centered row entering={FadeIn} exiting={FadeOut} gap="$spacing4">
             <Icons.Gas color={colors.neutral2.val} size="$icon.16" />

@@ -331,9 +331,8 @@ function SwapFormContent(): JSX.Element {
         <GasAndWarningRows />
       </AnimatedFlex>
 
-      <AnimatedFlex
+      <Flex
         bottom={0}
-        entering={FadeIn}
         gap="$spacing8"
         left={0}
         opacity={isLayoutPending ? 0 : 1}
@@ -354,11 +353,14 @@ function SwapFormContent(): JSX.Element {
             />
           </AnimatedFlex>
         )}
-        <ReviewButton
-          isSwapDataLoading={isSwapDataLoading}
-          walletNeedsRestore={!!walletNeedsRestore}
-        />
-      </AnimatedFlex>
+
+        <AnimatedFlex entering={FadeIn}>
+          <ReviewButton
+            isSwapDataLoading={isSwapDataLoading}
+            walletNeedsRestore={!!walletNeedsRestore}
+          />
+        </AnimatedFlex>
+      </Flex>
     </Flex>
   )
 }
