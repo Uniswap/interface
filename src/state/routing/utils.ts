@@ -4,7 +4,7 @@ import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sd
 import { DutchOrderInfo, DutchOrderInfoJSON } from '@uniswap/uniswapx-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
-import { BIPS_BASE } from 'constants/misc'
+import { BIPS_BASE, ZERO_PERCENT } from 'constants/misc'
 import { isAvalanche, isBsc, isMatic, nativeOnChain } from 'constants/tokens'
 import { toSlippagePercent } from 'utils/slippage'
 
@@ -193,14 +193,14 @@ function getClassicTradeDetails(
 }
 
 export function transformQuickRouteToTrade(args: GetQuickQuoteArgs, data: QuickRouteResponse): PreviewTrade {
-  const { amount, tradeType, inputTax, outputTax } = args
+  const { amount, tradeType } = args
   const [currencyIn, currencyOut] = getTradeCurrencies(args, false)
   const [rawAmountIn, rawAmountOut] =
     data.tradeType === 'EXACT_IN' ? [amount, data.quote.amount] : [data.quote.amount, amount]
   const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn)
   const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut)
 
-  return new PreviewTrade({ inputAmount, outputAmount, tradeType, inputTax, outputTax })
+  return new PreviewTrade({ inputAmount, outputAmount, tradeType, inputTax: ZERO_PERCENT, outputTax: ZERO_PERCENT })
 }
 
 export async function transformRoutesToTrade(
