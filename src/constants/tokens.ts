@@ -90,13 +90,14 @@ export const DAI_OPTIMISM = new Token(
   'DAI',
   'Dai stable coin'
 )
-export const MATIC = new Token(
+export const MATIC_MAINNET = new Token(
   ChainId.MAINNET,
   '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0',
   18,
   'MATIC',
   'Polygon Matic'
 )
+const MATIC_POLYGON = new Token(ChainId.POLYGON, '0x0000000000000000000000000000000000001010', 18, 'MATIC', 'Matic')
 export const DAI_POLYGON = new Token(
   ChainId.POLYGON,
   '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
@@ -149,7 +150,13 @@ export const WBTC_OPTIMISM = new Token(
   'WBTC',
   'Wrapped BTC'
 )
-
+const MATIC_POLYGON_MUMBAI = new Token(
+  ChainId.POLYGON_MUMBAI,
+  '0x0000000000000000000000000000000000001010',
+  18,
+  'MATIC',
+  'Matic'
+)
 export const WETH_POLYGON_MUMBAI = new Token(
   ChainId.POLYGON_MUMBAI,
   '0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa',
@@ -355,25 +362,18 @@ function getCeloNativeCurrency(chainId: number) {
   }
 }
 
-export function isMatic(chainId: number): chainId is ChainId.POLYGON | ChainId.POLYGON_MUMBAI {
+export function isPolygon(chainId: number): chainId is ChainId.POLYGON | ChainId.POLYGON_MUMBAI {
   return chainId === ChainId.POLYGON_MUMBAI || chainId === ChainId.POLYGON
 }
 
-class MaticNativeCurrency extends NativeCurrency {
-  equals(other: Currency): boolean {
-    return other.isNative && other.chainId === this.chainId
-  }
-
-  get wrapped(): Token {
-    if (!isMatic(this.chainId)) throw new Error('Not matic')
-    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
-    invariant(wrapped instanceof Token)
-    return wrapped
-  }
-
-  public constructor(chainId: number) {
-    if (!isMatic(chainId)) throw new Error('Not matic')
-    super(chainId, 18, 'MATIC', 'Polygon Matic')
+function getPolygonNativeCurrency(chainId: number) {
+  switch (chainId) {
+    case ChainId.POLYGON:
+      return MATIC_POLYGON
+    case ChainId.POLYGON_MUMBAI:
+      return MATIC_POLYGON_MUMBAI
+    default:
+      throw new Error('Not polygon')
   }
 }
 
@@ -439,8 +439,8 @@ const cachedNativeCurrency: { [chainId: number]: NativeCurrency | Token } = {}
 export function nativeOnChain(chainId: number): NativeCurrency | Token {
   if (cachedNativeCurrency[chainId]) return cachedNativeCurrency[chainId]
   let nativeCurrency: NativeCurrency | Token
-  if (isMatic(chainId)) {
-    nativeCurrency = new MaticNativeCurrency(chainId)
+  if (isPolygon(chainId)) {
+    nativeCurrency = getPolygonNativeCurrency(chainId)
   } else if (isCelo(chainId)) {
     nativeCurrency = getCeloNativeCurrency(chainId)
   } else if (isBsc(chainId)) {

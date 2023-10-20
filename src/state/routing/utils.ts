@@ -5,7 +5,7 @@ import { DutchOrderInfo, DutchOrderInfoJSON } from '@uniswap/uniswapx-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { BIPS_BASE } from 'constants/misc'
-import { isAvalanche, isBsc, isMatic, nativeOnChain } from 'constants/tokens'
+import { isAvalanche, isBsc, isPolygon, nativeOnChain } from 'constants/tokens'
 import { toSlippagePercent } from 'utils/slippage'
 
 import { getApproveInfo, getWrapInfo } from './gas'
@@ -338,7 +338,7 @@ export function isExactInput(tradeType: TradeType): boolean {
 
 export function currencyAddressForSwapQuote(currency: Currency): string {
   if (currency.isNative) {
-    if (isMatic(currency.chainId)) return SwapRouterNativeAssets.MATIC
+    if (isPolygon(currency.chainId)) return SwapRouterNativeAssets.MATIC
     if (isBsc(currency.chainId)) return SwapRouterNativeAssets.BNB
     if (isAvalanche(currency.chainId)) return SwapRouterNativeAssets.AVAX
     return SwapRouterNativeAssets.ETH
