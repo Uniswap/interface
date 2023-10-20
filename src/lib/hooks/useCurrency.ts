@@ -89,7 +89,13 @@ export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string
     if (tokenFromNetwork) {
       sendAnalyticsEvent(InterfaceEventName.WALLET_PROVIDER_USED, {
         source: 'useTokenFromActiveNetwork',
-        token: tokenFromNetwork,
+        token: {
+          name: tokenFromNetwork?.name,
+          symbol: tokenFromNetwork?.symbol,
+          address: tokenFromNetwork?.address,
+          isNative: tokenFromNetwork?.isNative,
+          chainId: tokenFromNetwork?.chainId,
+        },
       })
     }
   }, [tokenFromNetwork])
