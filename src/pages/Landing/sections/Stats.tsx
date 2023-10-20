@@ -13,7 +13,7 @@ export function Stats() {
   const theme = useTheme()
   const { ref, inView, entry } = useInView({
     /* Optional options */
-    threshold: 0,
+    threshold: 0.25,
     triggerOnce: true,
   })
 

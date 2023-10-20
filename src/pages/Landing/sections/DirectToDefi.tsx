@@ -14,7 +14,7 @@ export function DirectToDefi() {
   })
   return (
     <Box direction="column" align="center" padding="0 24px">
-      <Box direction="column" gap="108px" maxWidth="1328px">
+      <SectionCol direction="column" gap="48px" maxWidth="1328px">
         <H2>Go direct to DeFi</H2>
         <Box direction="column" gap="24px">
           <RowToCol direction="row" gap="24px">
@@ -26,7 +26,7 @@ export function DirectToDefi() {
             <LiquidityCard />
           </RowToCol>
         </Box>
-      </Box>
+      </SectionCol>
     </Box>
   )
 }
@@ -36,5 +36,13 @@ const RowToCol = styled(Box)`
   flex-shrink: 1;
   @media (max-width: 768px) {
     flex-direction: column;
+  }
+`
+const SectionCol = styled(Box)`
+  flex-direction: column;
+  max-width: 1328px;
+  gap: 48px;
+  @media (max-width: 768px) {
+    gap: 24px;
   }
 `

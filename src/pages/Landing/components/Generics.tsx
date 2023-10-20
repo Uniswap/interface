@@ -81,7 +81,7 @@ export const Subheading = styled.p`
   line-height: 24px; /* 133.333% */
 `
 
-type BoxProps = {
+export type BoxProps = {
   position?: 'relative' | 'absolute' | 'fixed'
   top?: string
   left?: string
@@ -109,6 +109,7 @@ type BoxProps = {
   borderRadius?: string
   pointerEvents?: 'none' | 'auto'
   overflow?: 'visible' | 'hidden' | 'scroll' | 'auto'
+  transform?: string
 }
 
 export const Box = styled.div<BoxProps>`
@@ -146,6 +147,7 @@ export const Box = styled.div<BoxProps>`
   border-radius: ${(props) => props.borderRadius || '0'};
   pointer-events: ${(props) => props.pointerEvents || 'auto'};
   overflow: ${(props) => props.overflow || 'visible'};
+  transform: ${(props) => props.transform || 'none'};
 `
 
 export const Button = styled.button`

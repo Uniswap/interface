@@ -84,7 +84,7 @@ export function PillButton(props: PillButtonProps) {
   }
 
   return (
-    <Button whileHover="hover" initial="initial" transition={{ delayChildren: 0 }}>
+    <Button transition={{ delayChildren: 0 }}>
       <Slider variants={variants}>
         <Opacity opacity={1} variants={icnVars}>
           {props.icon}
