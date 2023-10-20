@@ -81,6 +81,10 @@ export function currencyIdToAddress(_currencyId: string): Address {
   return currencyIdParts[1]
 }
 
+function isPolygonChain(chainId: number): chainId is ChainId.Polygon | ChainId.PolygonMumbai {
+  return chainId === ChainId.PolygonMumbai || chainId === ChainId.Polygon
+}
+
 // Similar to `currencyIdToAddress`, except native addresses are `null`.
 export function currencyIdToGraphQLAddress(_currencyId?: string): Address | null {
   if (!_currencyId) return null
@@ -90,8 +94,8 @@ export function currencyIdToGraphQLAddress(_currencyId?: string): Address | null
 
   if (!chainId) return null
 
-  // backend only expects `null` for the native asset
-  if (isNativeCurrencyAddress(chainId, address)) {
+  // backend only expects `null` for the native asset, except Polygon
+  if (isNativeCurrencyAddress(chainId, address) && !isPolygonChain(chainId)) {
     return null
   }
 

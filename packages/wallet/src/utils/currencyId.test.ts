@@ -164,9 +164,9 @@ describe(currencyIdToGraphQLAddress, () => {
     expect(currencyIdToGraphQLAddress(`1-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee`)).toEqual(null)
   })
 
-  it('returns null for Polygon native asset', () => {
+  it('returns MATIC address for Polygon native asset', () => {
     expect(currencyIdToGraphQLAddress('137-0x0000000000000000000000000000000000001010')).toEqual(
-      null
+      '0x0000000000000000000000000000000000001010'
     )
   })
 
