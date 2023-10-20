@@ -1,8 +1,6 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 import { Reference, relayStylePagination } from '@apollo/client/utilities'
 
-import { Token } from './__generated__/types-and-hooks'
-
 const GRAPHQL_URL = process.env.REACT_APP_AWS_API_ENDPOINT
 if (!GRAPHQL_URL) {
   throw new Error('AWS URL MISSING FROM ENVIRONMENT')
@@ -56,10 +54,10 @@ export const apolloClient = new ApolloClient({
           tokens: {
             // cache data may be lost when replacing the tokens array
             merge(existing, incoming) {
-              if (Array.isArray(existing)) {
-                const existingTokenIds = existing?.map((token: Token) => token?.id)
-                const incomingFiltered = incoming.filter((token: Token) => !existingTokenIds?.includes(token?.id))
-                return [...existing, ...incomingFiltered]
+              if (!existing) {
+                return incoming
+              } else if (Array.isArray(existing)) {
+                return [...existing, ...incoming]
               } else {
                 return [existing, ...incoming]
               }

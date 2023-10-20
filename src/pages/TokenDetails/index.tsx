@@ -33,6 +33,7 @@ export default function TokenDetailsPage() {
     return typeof parsedQs.inputCurrency === 'string' ? (parsedQs.inputCurrency as string) : undefined
   }, [parsedQs])
 
+  console.log('useTokenQuery variables: ', detailedTokenAddress, chain)
   const { data: tokenQuery } = useTokenQuery({
     variables: {
       address: detailedTokenAddress,
@@ -40,6 +41,22 @@ export default function TokenDetailsPage() {
     },
     errorPolicy: 'all',
   })
+  console.log('tokenQuery.token.project.tokens: ', tokenQuery?.token?.project?.tokens)
+
+  // wallet code: graphql/data/utils
+  // function currencyIdToContractInput(id: CurrencyId): ContractInput {
+  //   return {
+  //     chain: toGraphQLChain(currencyIdToChain(id) ?? ChainId.Mainnet) ?? Chain.Ethereum,
+  //     address: currencyIdToGraphQLAddress(id),
+  //   }
+  // }
+
+  // const { data, refetch, networkStatus } = useTokenDetailsScreenQuery({
+  //   variables: currencyIdToContractInput(_currencyId),
+  //   pollInterval: PollingInterval.Normal,
+  //   notifyOnNetworkStatusChange: true,
+  //   returnPartialData: true,
+  // })
 
   const { data: tokenPriceQuery } = useTokenPriceQuery({
     variables: {
