@@ -1,5 +1,6 @@
 import * as StoreReview from 'expo-store-review'
 import { Alert } from 'react-native'
+import { IS_ANDROID } from 'src/constants/globals'
 import { APP_FEEDBACK_LINK } from 'src/constants/urls'
 import { hasConsecutiveRecentSwapsSelector } from 'src/features/appRating/selectors'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
@@ -24,6 +25,10 @@ const SWAP_FINALIZED_PROMPT_DELAY_MS = 3 * ONE_SECOND_MS
 export function* appRatingWatcherSaga() {
   function* processFinalizedTx(action: ReturnType<typeof finalizeTransaction>) {
     // count successful swaps
+
+    // Skip for Android until after beta
+    if (IS_ANDROID) return
+
     if (
       action.payload.typeInfo.type === TransactionType.Swap &&
       action.payload.status === TransactionStatus.Success
