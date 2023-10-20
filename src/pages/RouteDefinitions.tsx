@@ -9,10 +9,10 @@ import { isBrowserRouterEnabled } from 'utils/env'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Swap from './Swap'
 
-const Explore = lazy(() => import('pages/Explore'))
 const RedirectExplore = lazy(() => import('pages/Explore/redirects'))
 const NotFound = lazy(() => import('pages/NotFound'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
+
 interface RouterConfig {
   browserRouterEnabled?: boolean
   hash?: string
@@ -69,23 +69,19 @@ export const routes: RouteDefinition[] = [
   //   },
   // }),
 
-  createRouteDefinition({
-    path: '/tokens/:chainName',
-    getElement: (args) => {
-      return args.infoExplorePageEnabled ? <RedirectExplore /> : <Explore />
-    },
-  }),
+  // createRouteDefinition({
+  //   path: '/tokens/:chainName',
+  //   getElement: (args) => {
+  //     return args.infoExplorePageEnabled ? <RedirectExplore /> : <Explore />
+  //   },
+  // }),
   createRouteDefinition({
     path: '/tokens/:chainName/:tokenAddress',
     getElement: (args) => {
       return args.infoExplorePageEnabled ? <RedirectExplore /> : <TokenDetails />
     },
   }),
-  createRouteDefinition({
-    path: '/send',
-    getElement: () => <Navigate to={{ ...location, pathname: '/swap' }} replace />,
-  }),
-  createRouteDefinition({ path: '/swap', getElement: () => <Swap /> }),
-  createRouteDefinition({ path: '*', getElement: () => <Navigate to="/swap" replace /> }),
+  createRouteDefinition({ path: '/', getElement: () => <Swap /> }),
+  createRouteDefinition({ path: '*', getElement: () => <Navigate to="/" replace /> }),
   createRouteDefinition({ path: '/not-found', getElement: () => <NotFound /> }),
 ]
