@@ -106,10 +106,12 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
   const [value, setValue] = useState('')
 
   // We hardcode ETH as the starting currency
+  const ethCurrencyInfo = useCurrencyInfo(
+    buildCurrencyId(ChainId.Mainnet, getNativeAddress(ChainId.Mainnet))
+  )
+
   const [currency, setCurrency] = useState<FiatOnRampCurrency>({
-    currencyInfo: useCurrencyInfo(
-      buildCurrencyId(ChainId.Mainnet, getNativeAddress(ChainId.Mainnet))
-    ),
+    currencyInfo: ethCurrencyInfo,
     moonpayCurrency: {
       code: 'eth',
       type: 'crypto',
@@ -120,6 +122,14 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
       notAllowedUSStates: [],
     },
   })
+
+  // We might not have ethCurrencyInfo when this component is initially rendered.
+  // If `ethCurrencyInfo` becomes available later while currency.currencyInfo is still unset, we update the currency state accordingly.
+  useEffect(() => {
+    if (ethCurrencyInfo && !currency.currencyInfo) {
+      setCurrency({ ...currency, currencyInfo: ethCurrencyInfo })
+    }
+  }, [currency, currency.currencyInfo, ethCurrencyInfo])
 
   const {
     eligible,
