@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleSheet, TextInput, TextInputProps } from 'react-native'
-import { FadeIn, FadeOutDown } from 'react-native-reanimated'
+import { FadeIn } from 'react-native-reanimated'
 import { useShouldShowNativeKeyboard } from 'src/app/hooks'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
@@ -47,6 +47,7 @@ export function SwapFormScreen({ hideContent }: { hideContent: boolean }): JSX.E
   )
 }
 
+// eslint-disable-next-line complexity
 function SwapFormContent(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -109,13 +110,17 @@ function SwapFormContent(): JSX.Element {
 
   const resetSelection = useCallback(
     (start: number, end?: number) => {
-      if (focusOnCurrencyField === CurrencyField.INPUT) {
-        inputSelectionRef.current = { start, end }
-        inputRef.current?.setNativeProps({ selection: { start, end } })
-      } else if (focusOnCurrencyField === CurrencyField.OUTPUT) {
-        outputSelectionRef.current = { start, end }
-        outputRef.current?.setNativeProps({ selection: { start, end } })
-      }
+      // We reset the selection on the next tick because we need to wait for the native input to be updated.
+      // This is needed because of the combination of state (delayed update) + ref (instant update) to improve performance.
+      setTimeout(() => {
+        if (focusOnCurrencyField === CurrencyField.INPUT) {
+          inputSelectionRef.current = { start, end }
+          inputRef.current?.setNativeProps({ selection: { start, end } })
+        } else if (focusOnCurrencyField === CurrencyField.OUTPUT) {
+          outputSelectionRef.current = { start, end }
+          outputRef.current?.setNativeProps({ selection: { start, end } })
+        }
+      }, 0)
     },
     [focusOnCurrencyField]
   )
@@ -181,17 +186,15 @@ function SwapFormContent(): JSX.Element {
 
   const onSetMax = useCallback(
     (amount: string): void => {
-      inputRef.current?.setNativeProps({
-        selection: { start: 0, end: 0 },
-      })
       updateSwapForm({
         exactAmountFiat: undefined,
         exactAmountToken: amount,
         exactCurrencyField: CurrencyField.INPUT,
-        focusOnCurrencyField: exactCurrencyField,
+        focusOnCurrencyField: undefined,
       })
+      resetSelection(exactAmountTokenRef.current.length, exactAmountTokenRef.current.length)
     },
-    [exactCurrencyField, updateSwapForm]
+    [exactAmountTokenRef, resetSelection, updateSwapForm]
   )
 
   const onSwitchCurrencies = useCallback(() => {
@@ -242,6 +245,12 @@ function SwapFormContent(): JSX.Element {
               currencyInfo={currencies[CurrencyField.INPUT]}
               dimTextColor={exactCurrencyField === CurrencyField.OUTPUT && isSwapDataLoading}
               focus={focusOnCurrencyField === CurrencyField.INPUT}
+              isCollapsed={
+                focusOnCurrencyField
+                  ? focusOnCurrencyField !== CurrencyField.INPUT
+                  : exactCurrencyField !== CurrencyField.INPUT
+              }
+              resetSelection={resetSelection}
               showSoftInputOnFocus={showNativeKeyboard}
               usdValue={currencyAmountsUSDValue[CurrencyField.INPUT]}
               value={
@@ -277,6 +286,12 @@ function SwapFormContent(): JSX.Element {
               currencyInfo={currencies[CurrencyField.OUTPUT]}
               dimTextColor={exactCurrencyField === CurrencyField.INPUT && isSwapDataLoading}
               focus={focusOnCurrencyField === CurrencyField.OUTPUT}
+              isCollapsed={
+                focusOnCurrencyField
+                  ? focusOnCurrencyField !== CurrencyField.OUTPUT
+                  : exactCurrencyField !== CurrencyField.OUTPUT
+              }
+              resetSelection={resetSelection}
               showNonZeroBalancesOnly={false}
               showSoftInputOnFocus={showNativeKeyboard}
               usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
@@ -318,22 +333,26 @@ function SwapFormContent(): JSX.Element {
 
       <AnimatedFlex
         bottom={0}
-        exiting={FadeOutDown}
+        entering={FadeIn}
         gap="$spacing8"
         left={0}
         opacity={isLayoutPending ? 0 : 1}
         position="absolute"
         right={0}
         onLayout={onDecimalPadLayout}>
-        {!showNativeKeyboard && (
-          <DecimalPadInput
-            resetSelection={resetSelection}
-            selectionRef={focusOnCurrencyField ? selection[focusOnCurrencyField] : undefined}
-            setValue={decimalPadSetValue}
-            valueRef={
-              focusOnCurrencyField === exactCurrencyField ? exactValueRef : formattedDerivedValueRef
-            }
-          />
+        {!showNativeKeyboard && focusOnCurrencyField && (
+          <AnimatedFlex entering={FadeIn}>
+            <DecimalPadInput
+              resetSelection={resetSelection}
+              selectionRef={focusOnCurrencyField ? selection[focusOnCurrencyField] : undefined}
+              setValue={decimalPadSetValue}
+              valueRef={
+                focusOnCurrencyField === exactCurrencyField
+                  ? exactValueRef
+                  : formattedDerivedValueRef
+              }
+            />
+          </AnimatedFlex>
         )}
         <ReviewButton
           isSwapDataLoading={isSwapDataLoading}

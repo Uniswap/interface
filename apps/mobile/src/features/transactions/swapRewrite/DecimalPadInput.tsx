@@ -90,7 +90,8 @@ export const DecimalPadInput = memo(function DecimalPadInput({
       if (start === undefined || end === undefined) {
         // has no text selection, cursor is at the end of the text input
         updateValue(valueRef.current + label)
-        resetSelection?.(valueRef.current.length + 1, valueRef.current.length + 1)
+        // the ref is updated instantly, so the new length is the current length (no need to add "+1")
+        resetSelection?.(valueRef.current.length, valueRef.current.length)
       } else {
         updateValue(valueRef.current.slice(0, start) + label + valueRef.current.slice(end))
         resetSelection?.(start + 1 + prefixLength, start + 1 + prefixLength)
@@ -105,7 +106,8 @@ export const DecimalPadInput = memo(function DecimalPadInput({
     if (start === undefined || end === undefined) {
       // has no text selection, cursor is at the end of the text input
       updateValue(valueRef.current.slice(0, -1))
-      resetSelection?.(valueRef.current.length - 1, valueRef.current.length - 1)
+      // the ref is updated instantly, so the new length is the current length (no need to subtract "-1")
+      resetSelection?.(valueRef.current.length, valueRef.current.length)
     } else if (start < end) {
       // has text part selected
       updateValue(valueRef.current.slice(0, start) + valueRef.current.slice(end))

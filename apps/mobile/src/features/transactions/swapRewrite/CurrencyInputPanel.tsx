@@ -24,6 +24,7 @@ type CurrentInputPanelProps = {
   currencyBalance: Maybe<CurrencyAmount<Currency>>
   currencyInfo: Maybe<CurrencyInfo>
   dimTextColor?: boolean
+  isCollapsed: boolean
   focus?: boolean
   isOutput?: boolean
   isFiatInput?: boolean
@@ -37,6 +38,7 @@ type CurrentInputPanelProps = {
   showSoftInputOnFocus?: boolean
   usdValue: Maybe<CurrencyAmount<Currency>>
   value?: string
+  resetSelection: (start: number, end: number) => void
 } & FlexProps
 
 const MAX_INPUT_FONT_SIZE = 36
@@ -56,6 +58,7 @@ export const CurrencyInputPanel = memo(
       currencyBalance,
       currencyInfo,
       dimTextColor,
+      isCollapsed,
       focus,
       isOutput = false,
       isFiatInput = false,
@@ -67,6 +70,7 @@ export const CurrencyInputPanel = memo(
       showNonZeroBalancesOnly = true,
       showSoftInputOnFocus = false,
       usdValue,
+      resetSelection,
       value,
       ...rest
     },
@@ -97,10 +101,11 @@ export const CurrencyInputPanel = memo(
     useEffect(() => {
       if (focus && !isTextInputRefActuallyFocused) {
         inputRef.current?.focus()
+        resetSelection(value?.length ?? 0, value?.length ?? 0)
       } else if (!focus && isTextInputRefActuallyFocused) {
         inputRef.current?.blur()
       }
-    }, [focus, inputRef, isTextInputRefActuallyFocused])
+    }, [focus, inputRef, isTextInputRefActuallyFocused, resetSelection, value?.length])
 
     const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(
       MAX_CHAR_PIXEL_WIDTH,
@@ -160,7 +165,7 @@ export const CurrencyInputPanel = memo(
               flex={1}
               focusable={Boolean(currencyInfo)}
               fontFamily="$heading"
-              fontSize={focus ? fontSize : MIN_INPUT_FONT_SIZE}
+              fontSize={isCollapsed ? MIN_INPUT_FONT_SIZE : fontSize}
               maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
               // This is a hacky workaround for Android to prevent text from being cut off
               // (the text input height is greater than the font size and the input is
@@ -190,7 +195,7 @@ export const CurrencyInputPanel = memo(
           </Flex>
         </AnimatedFlex>
 
-        {currencyInfo && focus && (
+        {currencyInfo && !isCollapsed && (
           <Flex
             row
             alignContent="center"
