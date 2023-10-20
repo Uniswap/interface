@@ -74,7 +74,7 @@ const StyledNetworkLabel = styled.div`
 interface BalanceProps {
   token?: Currency
   chainId?: ChainId
-  balance?: CurrencyAmount<Currency> // todo: only used for pre-Info-project calculations, should remove after
+  balance?: CurrencyAmount<Currency> // TODO(WEB-3026): only used for pre-Info-project calculations, should remove after project goes live
   gqlBalance?: TokenBalance
   tokenSymbol?: string
   color?: string
