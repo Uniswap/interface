@@ -4,10 +4,12 @@ query SearchPopularTokens {
     address
     chain
     symbol
+    decimals
     project {
       id
       name
       logoUrl
+      safetyLevel
     }
   }
   # `topTokens` returns WETH rather than ETH
@@ -17,10 +19,12 @@ query SearchPopularTokens {
     address
     chain
     symbol
+    decimals
     project {
       id
       name
       logoUrl
+      safetyLevel
     }
   }
 }

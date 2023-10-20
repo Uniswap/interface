@@ -25,7 +25,7 @@ function _SuggestedToken({
   const { currency, logoUrl } = token.currencyInfo
   const colors = useSporeColors()
   const onPress = (): void => {
-    onSelectCurrency?.(currency, section, index)
+    onSelectCurrency?.(token.currencyInfo, section, index)
   }
   return (
     <TouchableArea

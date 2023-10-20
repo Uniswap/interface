@@ -19,7 +19,7 @@ export function renderSuggestedTokenItem({
   onSelectCurrency: OnSelectCurrency
 }): JSX.Element {
   return (
-    <Flex row flexWrap="wrap">
+    <Flex row flexWrap="wrap" pb="$spacing4" pt="$spacing12">
       {suggestedTokens.map((token) => (
         <SuggestedToken
           key={token.currencyInfo.currencyId}

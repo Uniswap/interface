@@ -1,5 +1,6 @@
 import React, { memo, useCallback, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { useAppDispatch } from 'src/app/hooks'
 import {
   usePortfolioBalancesForAddressById,
   usePortfolioTokenOptions,
@@ -8,8 +9,9 @@ import { SectionHeader, TokenSelectorList } from 'src/components/TokenSelector/T
 import { OnSelectCurrency, TokenSection } from 'src/components/TokenSelector/types'
 import { formatSearchResults, getTokenOptionsSection } from 'src/components/TokenSelector/utils'
 import { useSearchTokens } from 'src/features/dataApi/searchTokens'
+import { addToSearchHistory } from 'src/features/explore/searchHistorySlice'
+import { SearchResultType } from 'src/features/explore/SearchResult'
 import { Flex, Text } from 'ui/src'
-import { useDebounce } from 'utilities/src/time/timing'
 import { ChainId } from 'wallet/src/constants/chains'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -30,7 +32,7 @@ function EmptyResults({ searchFilter }: { searchFilter: string }): JSX.Element {
 
 function useTokenSectionsForSearchResults(
   chainFilter: ChainId | null,
-  searchFilter: string,
+  searchFilter: string | null,
   isBalancesOnlySearch: boolean
 ): GqlResult<TokenSection[]> {
   const { t } = useTranslation()
@@ -48,7 +50,7 @@ function useTokenSectionsForSearchResults(
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
     loading: portfolioTokenOptionsLoading,
-  } = usePortfolioTokenOptions(activeAccountAddress, chainFilter, searchFilter)
+  } = usePortfolioTokenOptions(activeAccountAddress, chainFilter, searchFilter ?? undefined)
 
   // Only call search endpoint if isBalancesOnlySearch is false
   const {
@@ -100,18 +102,20 @@ function useTokenSectionsForSearchResults(
 }
 
 function _TokenSelectorSearchResultsList({
-  onSelectCurrency,
+  onSelectCurrency: parentOnSelectCurrency,
   chainFilter,
   searchFilter,
+  debouncedSearchFilter,
   isBalancesOnlySearch,
 }: {
   onSelectCurrency: OnSelectCurrency
   chainFilter: ChainId | null
   searchFilter: string
+  debouncedSearchFilter: string | null
   isBalancesOnlySearch: boolean
 }): JSX.Element {
   const { t } = useTranslation()
-  const debouncedSearchFilter = useDebounce(searchFilter)
+  const dispatch = useAppDispatch()
   const {
     data: sections,
     loading,
@@ -119,8 +123,30 @@ function _TokenSelectorSearchResultsList({
     refetch,
   } = useTokenSectionsForSearchResults(chainFilter, debouncedSearchFilter, isBalancesOnlySearch)
 
+  const onSelectCurrency: OnSelectCurrency = (currencyInfo, section, index) => {
+    parentOnSelectCurrency(currencyInfo, section, index)
+    if (currencyInfo.currency.symbol && currencyInfo.currency.isToken) {
+      dispatch(
+        addToSearchHistory({
+          searchResult: {
+            type: SearchResultType.Token,
+            chainId: currencyInfo.currency.chainId,
+            address: currencyInfo.currency.address,
+            name: currencyInfo.currency.name ?? null,
+            symbol: currencyInfo.currency.symbol,
+            logoUrl: currencyInfo.logoUrl ?? null,
+            safetyLevel: currencyInfo.safetyLevel ?? null,
+          },
+        })
+      )
+    }
+  }
+
+  const userIsTyping = Boolean(searchFilter && debouncedSearchFilter !== searchFilter)
+
   const emptyElement = useMemo(
-    () => <EmptyResults searchFilter={debouncedSearchFilter} />,
+    () =>
+      debouncedSearchFilter ? <EmptyResults searchFilter={debouncedSearchFilter} /> : undefined,
     [debouncedSearchFilter]
   )
   return (
@@ -130,7 +156,7 @@ function _TokenSelectorSearchResultsList({
       emptyElement={emptyElement}
       errorText={t('Couldn’t load search results')}
       hasError={Boolean(error)}
-      loading={loading}
+      loading={userIsTyping || loading}
       refetch={refetch}
       sections={sections}
       showTokenWarnings={true}

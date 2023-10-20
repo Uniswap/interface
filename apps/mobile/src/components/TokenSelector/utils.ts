@@ -69,13 +69,15 @@ function isExactTokenOptionMatch(searchResult: TokenOption, query: string): bool
 
 export function getTokenOptionsSection(
   title: string,
-  tokenOptions?: TokenOption[]
+  tokenOptions?: TokenOption[],
+  rightElement?: JSX.Element
 ): TokenSection[] | undefined {
   return tokenOptions?.length
     ? [
         {
           title,
           data: tokenOptions,
+          rightElement,
         },
       ]
     : undefined

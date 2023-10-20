@@ -9,6 +9,7 @@ import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { useFilterCallbacks } from 'src/components/TokenSelector/hooks'
 import { NetworkFilter } from 'src/components/TokenSelector/NetworkFilter'
+import { TokenSelectorEmptySearchList } from 'src/components/TokenSelector/TokenSelectorEmptySearchList'
 import { TokenSelectorSearchResultsList } from 'src/components/TokenSelector/TokenSelectorSearchResultsList'
 import { TokenSelectorSendList } from 'src/components/TokenSelector/TokenSelectorSendList'
 import { TokenSelectorSwapInputList } from 'src/components/TokenSelector/TokenSelectorSwapInputList'
@@ -23,7 +24,9 @@ import { IS_IOS } from 'src/constants/globals'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { getClipboard } from 'src/utils/clipboard'
 import { Flex, useSporeColors } from 'ui/src'
+import { useDebounce } from 'utilities/src/time/timing'
 import { ChainId } from 'wallet/src/constants/chains'
+import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
 export enum TokenSelectorVariation {
@@ -64,6 +67,7 @@ function TokenSelectorContent({
     chainId ?? null,
     flow
   )
+  const debouncedSearchFilter = useDebounce(searchFilter)
 
   const [hasClipboardString, setHasClipboardString] = useState(false)
 
@@ -88,17 +92,21 @@ function TokenSelectorContent({
       : undefined
 
   const onSelectCurrencyCallback = useCallback(
-    (currency: Currency, section: SuggestedTokenSection | TokenSection, index: number): void => {
+    (
+      currencyInfo: CurrencyInfo,
+      section: SuggestedTokenSection | TokenSection,
+      index: number
+    ): void => {
       const searchContext: SearchContext = {
         category: section.title,
-        query: searchFilter ?? undefined,
+        query: debouncedSearchFilter ?? undefined,
         position: index + 1,
         suggestionCount: section.data.length,
       }
 
-      onSelectCurrency(currency, currencyField, searchContext)
+      onSelectCurrency(currencyInfo.currency, currencyField, searchContext)
     },
-    [currencyField, onSelectCurrency, searchFilter]
+    [currencyField, onSelectCurrency, debouncedSearchFilter]
   )
 
   const handlePaste = async (): Promise<void> => {
@@ -108,23 +116,31 @@ function TokenSelectorContent({
     }
   }
 
+  const [searchInFocus, setSearchInFocus] = useState(false)
+
   return (
     <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
       <Flex grow gap="$spacing16" pb={IS_IOS ? '$spacing16' : '$none'} px="$spacing16">
         <SearchTextInput
+          showCancelButton
           backgroundColor="$surface2"
           endAdornment={hasClipboardString ? <PasteButton inline onPress={handlePaste} /> : null}
           placeholder={t('Search tokens')}
           py="$spacing8"
           value={searchFilter ?? ''}
+          onCancel={(): void => setSearchInFocus(false)}
           onChangeText={onChangeText}
+          onFocus={(): void => setSearchInFocus(true)}
         />
 
         {isSheetReady && (
           <Flex grow>
-            {searchFilter ? (
+            {searchInFocus && !searchFilter ? (
+              <TokenSelectorEmptySearchList onSelectCurrency={onSelectCurrencyCallback} />
+            ) : searchFilter ? (
               <TokenSelectorSearchResultsList
                 chainFilter={chainFilter}
+                debouncedSearchFilter={debouncedSearchFilter}
                 isBalancesOnlySearch={variation === TokenSelectorVariation.BalancesOnly}
                 searchFilter={searchFilter}
                 onSelectCurrency={onSelectCurrencyCallback}
@@ -146,13 +162,15 @@ function TokenSelectorContent({
                 onSelectCurrency={onSelectCurrencyCallback}
               />
             ) : null}
-            <Flex position="absolute" right={0}>
-              <NetworkFilter
-                includeAllNetworks
-                selectedChain={chainFilter}
-                onPressChain={onChangeChainFilter}
-              />
-            </Flex>
+            {(!searchInFocus || searchFilter) && (
+              <Flex position="absolute" right={0}>
+                <NetworkFilter
+                  includeAllNetworks
+                  selectedChain={chainFilter}
+                  onPressChain={onChangeChainFilter}
+                />
+              </Flex>
+            )}
           </Flex>
         )}
       </Flex>

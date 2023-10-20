@@ -2,6 +2,7 @@ import { BottomSheetSectionList } from '@gorhom/bottom-sheet'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionList } from 'react-native'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Loader } from 'src/components/loading'
 import { useBottomSheetFocusHook } from 'src/components/modals/hooks'
 import { TokenOptionItem } from 'src/components/TokenSelector/TokenOptionItem'
@@ -12,13 +13,15 @@ import {
   TokenSection,
   TokenSelectorListSections,
 } from 'src/components/TokenSelector/types'
-import { Flex, Inset, Text } from 'ui/src'
+import { AnimatedFlex, Flex, Inset, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { renderSuggestedTokenItem } from './renderSuggestedTokenItem'
 import { suggestedTokensKeyExtractor } from './suggestedTokensKeyExtractor'
+
+type SectionHeaderProps = Pick<TokenSection, 'title' | 'rightElement'>
 
 function isSuggestedTokenItem(data: TokenOption | TokenOption[]): data is TokenOption[] {
   return Array.isArray(data)
@@ -43,13 +46,13 @@ function TokenOptionItemWrapper({
   onSelectCurrency: OnSelectCurrency
   section: TokenSection
   index: number
-  chainFilter: ChainId | null
+  chainFilter: Maybe<ChainId>
   showWarnings: boolean
   showTokenAddress?: boolean
 }): JSX.Element {
   const onPress = useCallback(
-    () => onSelectCurrency(tokenOption.currencyInfo.currency, section, index),
-    [index, onSelectCurrency, section, tokenOption.currencyInfo.currency]
+    () => onSelectCurrency(tokenOption.currencyInfo, section, index),
+    [index, onSelectCurrency, section, tokenOption.currencyInfo]
   )
 
   return (
@@ -72,7 +75,7 @@ function Footer(): JSX.Element {
 interface TokenSelectorListProps {
   onSelectCurrency: OnSelectCurrency
   sections?: TokenSelectorListSections
-  chainFilter: ChainId | null
+  chainFilter?: ChainId | null
   showTokenWarnings: boolean
   refetch?: () => void
   loading?: boolean
@@ -141,8 +144,8 @@ function _TokenSelectorList({
   )
 
   const renderSectionHeader = useCallback(
-    ({ section: { title } }: { section: { title: string } }): JSX.Element => (
-      <SectionHeader title={title} />
+    ({ section: { title, rightElement } }: { section: SectionHeaderProps }): JSX.Element => (
+      <SectionHeader rightElement={rightElement} title={title} />
     ),
     []
   )
@@ -178,12 +181,12 @@ function _TokenSelectorList({
   }
 
   return (
-    <Flex grow>
+    <AnimatedFlex grow entering={FadeIn} exiting={FadeOut}>
       <BottomSheetSectionList<TokenOption | TokenOption[], SuggestedTokenSection | TokenSection>
         ref={sectionListRef}
         ListEmptyComponent={emptyElement}
         ListFooterComponent={Footer}
-        bounces={false}
+        bounces={true}
         focusHook={useBottomSheetFocusHook}
         keyExtractor={key}
         keyboardDismissMode="on-drag"
@@ -194,16 +197,22 @@ function _TokenSelectorList({
         showsVerticalScrollIndicator={false}
         windowSize={4}
       />
-    </Flex>
+    </AnimatedFlex>
   )
 }
 
-export function SectionHeader({ title }: { title: string }): JSX.Element {
+export function SectionHeader({ title, rightElement }: SectionHeaderProps): JSX.Element {
   return (
-    <Flex backgroundColor="$surface1" py="$spacing16">
+    <Flex
+      row
+      backgroundColor="$surface1"
+      justifyContent="space-between"
+      pb="$spacing4"
+      pt="$spacing12">
       <Text color="$neutral2" variant="subheading2">
         {title}
       </Text>
+      {rightElement}
     </Flex>
   )
 }

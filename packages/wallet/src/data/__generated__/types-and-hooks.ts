@@ -1276,7 +1276,7 @@ export type SearchPopularNftCollectionsQuery = { __typename?: 'Query', topCollec
 export type SearchPopularTokensQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SearchPopularTokensQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, address?: string | null, chain: Chain, symbol?: string | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null } | null } | null> | null, eth?: Array<{ __typename?: 'Token', id: string, address?: string | null, chain: Chain, symbol?: string | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null } | null } | null> | null };
+export type SearchPopularTokensQuery = { __typename?: 'Query', topTokens?: Array<{ __typename?: 'Token', id: string, address?: string | null, chain: Chain, symbol?: string | null, decimals?: number | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null } | null } | null> | null, eth?: Array<{ __typename?: 'Token', id: string, address?: string | null, chain: Chain, symbol?: string | null, decimals?: number | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null } | null } | null> | null };
 
 export type NftsQueryVariables = Exact<{
   ownerAddress: Scalars['String'];
@@ -1656,10 +1656,12 @@ export const SearchPopularTokensDocument = gql`
     address
     chain
     symbol
+    decimals
     project {
       id
       name
       logoUrl
+      safetyLevel
     }
   }
   eth: tokens(contracts: [{address: null, chain: ETHEREUM}]) {
@@ -1667,10 +1669,12 @@ export const SearchPopularTokensDocument = gql`
     address
     chain
     symbol
+    decimals
     project {
       id
       name
       logoUrl
+      safetyLevel
     }
   }
 }

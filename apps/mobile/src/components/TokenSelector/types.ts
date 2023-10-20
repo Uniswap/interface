@@ -1,4 +1,3 @@
-import { Currency } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 
 export type TokenOption = {
@@ -8,7 +7,7 @@ export type TokenOption = {
 }
 
 export type OnSelectCurrency = (
-  currency: Currency,
+  currency: CurrencyInfo,
   section: SuggestedTokenSection | TokenSection,
   index: number
 ) => void
@@ -16,6 +15,7 @@ export type OnSelectCurrency = (
 export type TokenSection = {
   title: string
   data: TokenOption[]
+  rightElement?: JSX.Element
 }
 
 export type SuggestedTokenSection = {
