@@ -6,3 +6,6 @@ include ':app'
 
 apply from: new File(["node", "--print", "require.resolve('../../../node_modules/expo/package.json')"].execute(null, rootDir).text.trim(), "../scripts/autolinking.gradle")
 useExpoModules()
+
+include ':@sentry_react-native'
+project(':@sentry_react-native').projectDir = new File('../../..//node_modules/@sentry/react-native/android')

@@ -113,3 +113,4 @@ ios/WidgetsCore/Env.swift
 
 # Sentry
 ios/sentry.properties
+android/sentry.properties
