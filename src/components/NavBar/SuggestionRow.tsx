@@ -129,7 +129,7 @@ interface TokenRowProps {
 export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
   const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
   const navigate = useNavigate()
-  const { formatFiatPrice, formatPercent } = useFormatter()
+  const { formatFiatPrice, formatDelta } = useFormatter()
 
   const handleClick = useCallback(() => {
     const address = !token.address && token.standard === TokenStandard.Native ? 'NATIVE' : token.address
@@ -194,7 +194,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
               <DeltaArrow delta={token.market?.pricePercentChange?.value} />
               <ThemedText.BodySmall>
                 <DeltaText delta={token.market?.pricePercentChange?.value}>
-                  {formatPercent(Math.abs(token.market?.pricePercentChange?.value ?? 0))}
+                  {formatDelta(Math.abs(token.market?.pricePercentChange?.value ?? 0))}
                 </DeltaText>
               </ThemedText.BodySmall>
             </PriceChangeContainer>

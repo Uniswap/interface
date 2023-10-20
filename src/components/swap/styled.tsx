@@ -107,14 +107,13 @@ const UniswapXShineInner = styled.div`
 `
 
 // overflow hidden to hide the SwapMustacheShadow
-export const SwapOptInSmallContainer = styled.div<{ visible: boolean; shouldAnimate: boolean }>`
+export const SwapOptInSmallContainer = styled.div<{ visible: boolean }>`
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
   overflow: hidden;
   margin-top: -14px;
   transform: translateY(${({ visible }) => (visible ? 0 : -80)}px);
   transition: all ease 400ms;
-  animation: ${({ visible, shouldAnimate }) =>
-    !shouldAnimate ? '' : visible ? `spring-down 900ms ease forwards` : 'back-up 200ms ease forwards'};
+  animation: ${({ visible }) => (visible ? `spring-down 900ms ease forwards` : 'back-up 200ms ease forwards')};
 
   ${springDownKeyframes}
   ${backUpKeyframes}

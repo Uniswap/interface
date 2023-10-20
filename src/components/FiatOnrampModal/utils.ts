@@ -1,6 +1,6 @@
 import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import {
-  MATIC,
+  MATIC_MAINNET,
   USDC_ARBITRUM,
   USDC_MAINNET,
   USDC_OPTIMISM,
@@ -28,7 +28,7 @@ const CURRENCY_CODES: {
     [USDC_MAINNET.address.toLowerCase()]: 'usdc',
     [USDT.address.toLowerCase()]: 'usdt',
     [WBTC.address.toLowerCase()]: 'wbtc',
-    [MATIC.address.toLowerCase()]: 'polygon',
+    [MATIC_MAINNET.address.toLowerCase()]: 'polygon',
     native: 'eth',
   },
   [Chain.Arbitrum]: {

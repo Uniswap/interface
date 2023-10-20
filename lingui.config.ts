@@ -28,7 +28,6 @@ const linguiConfig = {
     'ca-ES',
     'cs-CZ',
     'da-DK',
-    'de-DE',
     'el-GR',
     'en-US',
     'es-ES',

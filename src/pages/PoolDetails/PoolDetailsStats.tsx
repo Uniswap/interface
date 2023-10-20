@@ -204,7 +204,7 @@ const StatItemText = styled(Text)`
 `
 
 function StatItem({ title, value, delta }: { title: ReactNode; value: number; delta?: number }) {
-  const { formatNumber, formatPercent } = useFormatter()
+  const { formatNumber, formatDelta } = useFormatter()
 
   return (
     <StatItemColumn>
@@ -219,7 +219,7 @@ function StatItem({ title, value, delta }: { title: ReactNode; value: number; de
         {!!delta && (
           <Row width="max-content" padding="4px 0px">
             <DeltaArrow delta={delta} />
-            <ThemedText.BodySecondary>{formatPercent(delta)}</ThemedText.BodySecondary>
+            <ThemedText.BodySecondary>{formatDelta(delta)}</ThemedText.BodySecondary>
           </Row>
         )}
       </StatsTextContainer>
