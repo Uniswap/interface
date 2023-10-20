@@ -32,7 +32,7 @@ export function initializeStore(
     const store = createStore({
       reducer: webReducer,
       additionalSagas: [webRootSaga],
-      middlewareBefore: [loggerMiddleware],
+      middlewareBefore: __DEV__ ? [loggerMiddleware] : [],
     })
 
     // https://github.com/tshaddix/webext-redux/issues/286#issuecomment-1347985776
