@@ -203,11 +203,25 @@ export enum MediaType {
 export type Mutation = {
   __typename?: 'Mutation';
   assetActivity: AssetActivity;
+  heartbeat: Status;
+  unsubscribe: Status;
 };
 
 
 export type MutationAssetActivityArgs = {
   input: AssetActivityInput;
+};
+
+
+export type MutationHeartbeatArgs = {
+  subscriptionId: Scalars['ID'];
+  type: SubscriptionType;
+};
+
+
+export type MutationUnsubscribeArgs = {
+  subscriptionId: Scalars['ID'];
+  type: SubscriptionType;
 };
 
 export type NftActivity = {
@@ -758,6 +772,7 @@ export type PortfolioTokensTotalDenominatedValueChangeArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  assetActivity?: Maybe<AssetActivity>;
   convert?: Maybe<Amount>;
   nftActivity?: Maybe<NftActivityConnection>;
   nftAssets?: Maybe<NftAssetConnection>;
@@ -777,6 +792,12 @@ export type Query = {
   tokens?: Maybe<Array<Maybe<Token>>>;
   topCollections?: Maybe<NftCollectionConnection>;
   topTokens?: Maybe<Array<Maybe<Token>>>;
+};
+
+
+export type QueryAssetActivityArgs = {
+  address: Scalars['String'];
+  transactionHash: Scalars['String'];
 };
 
 
@@ -898,6 +919,11 @@ export enum SafetyLevel {
   Verified = 'VERIFIED'
 }
 
+export type Status = {
+  __typename?: 'Status';
+  success: Scalars['Boolean'];
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   onAssetActivity?: Maybe<AssetActivity>;
@@ -908,6 +934,10 @@ export type SubscriptionOnAssetActivityArgs = {
   addresses: Array<Scalars['String']>;
   subscriptionId: Scalars['ID'];
 };
+
+export enum SubscriptionType {
+  AssetActivity = 'ASSET_ACTIVITY'
+}
 
 export type SwapOrderDetails = {
   __typename?: 'SwapOrderDetails';
