@@ -271,6 +271,8 @@ module.exports = {
               'Arbitrum',
               'blockchain',
               'validators',
+              'Naira',
+              'Hryvnia'
             ],
           },
 

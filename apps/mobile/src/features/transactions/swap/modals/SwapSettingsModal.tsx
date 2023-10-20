@@ -182,7 +182,6 @@ function SwapSettingsOptions({
 
 function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const dispatch = useAppDispatch()
   const swapProtectionSetting = useSwapProtectionSetting()
 
