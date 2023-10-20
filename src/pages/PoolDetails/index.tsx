@@ -1,7 +1,5 @@
-import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { TokenDescription } from 'components/Tokens/TokenDetails/TokenDescription'
 import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { usePoolData } from 'graphql/thegraph/PoolData'
 import NotFound from 'pages/NotFound'
@@ -95,15 +93,6 @@ export default function PoolDetailsPage() {
       <RightColumn>
         <PoolDetailsStatsButtons chainId={chainId} token0={token0} token1={token1} feeTier={poolData?.feeTier} />
         {poolData && <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} />}
-        {(token0 || token1) && (
-          <TokenDetailsWrapper>
-            <TokenDetailsHeader>
-              <Trans>Info</Trans>
-            </TokenDetailsHeader>
-            {token0 && <TokenDescription tokenAddress={token0.id} chainId={chainId} />}
-            {token1 && <TokenDescription tokenAddress={token1.id} chainId={chainId} />}
-          </TokenDetailsWrapper>
-        )}
       </RightColumn>
     </PageWrapper>
   )
