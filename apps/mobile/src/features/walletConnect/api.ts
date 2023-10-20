@@ -1,5 +1,5 @@
-import { getIosPushNotificationServiceEnvironmentAsync } from 'expo-application'
-import { getOnesignalPushTokenOrError } from 'src/features/notifications/Onesignal'
+import { IS_ANDROID } from 'src/constants/globals'
+import { getOneSignalPushToken } from 'src/features/notifications/Onesignal'
 import { logger } from 'utilities/src/logger/logger'
 import { config } from 'wallet/src/config'
 
@@ -14,15 +14,26 @@ const WC_HOSTED_PUSH_SERVER_URL = `https://echo.walletconnect.com/${config.walle
  */
 export async function registerWCClientForPushNotifications(clientId: string): Promise<void> {
   try {
-    const pushToken = await getOnesignalPushTokenOrError()
-    const apnsEnvironment = await getIosPushNotificationServiceEnvironmentAsync()
+    const pushToken = await getOneSignalPushToken()
+    if (!pushToken) {
+      logger.warn(
+        'walletConnectApi',
+        'registerWCv2ClientForPushNotifications',
+        'No OneSignal push token found'
+      )
 
+      return
+    }
+
+    // WC requests we use the `fcm` push server for Android and the `apns` server for prod iOS
+    // and `apns-sandbox` for dev iOS
+    const pushServer = IS_ANDROID ? 'fcm' : __DEV__ ? 'apns-sandbox' : 'apns'
     const request = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         client_id: clientId,
-        type: apnsEnvironment === 'production' ? 'apns' : 'apns-sandbox',
+        type: pushServer,
         token: pushToken,
       }),
     }

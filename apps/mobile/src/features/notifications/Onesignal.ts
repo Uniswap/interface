@@ -62,14 +62,7 @@ export const getOneSignalUserIdOrError = async (): Promise<string> => {
   return onesignalUserId
 }
 
-export const getOnesignalPushTokenOrError = async (): Promise<string> => {
+export const getOneSignalPushToken = async (): Promise<string | undefined> => {
   const onesignalPushToken = (await OneSignal.getDeviceState())?.pushToken
-  if (!onesignalPushToken) {
-    if (process.env.NODE_ENV === 'test') {
-      // this was very noisy in jest
-      return ''
-    }
-    throw new Error('Onesignal push token is not defined')
-  }
   return onesignalPushToken
 }
