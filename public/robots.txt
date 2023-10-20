@@ -4,7 +4,7 @@ Disallow: /static/js/
 Allow: /
 
 # Host
-Host: https://app.uniswap.org
+Host: https://dex.a51.finance
 
 # Sitemaps
-Sitemap: https://app.uniswap.org/sitemap.xml
+Sitemap: https://dex.a51.finance/sitemap.xml

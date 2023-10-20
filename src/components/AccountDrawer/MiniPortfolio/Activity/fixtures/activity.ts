@@ -12,8 +12,6 @@ import {
   TransactionType,
 } from 'graphql/data/__generated__/types-and-hooks'
 
-import { MOONPAY_SENDER_ADDRESSES } from '../../constants'
-
 const MockOrderTimestamp = 10000
 const MockRecipientAddress = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
 const MockSenderAddress = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
@@ -464,20 +462,6 @@ export const MockRemoveLiquidity = {
       {
         ...mockTokenTransferOutPartsFragment,
         direction: TransactionDirection.In,
-      },
-    ],
-  },
-} as AssetActivityPartsFragment
-
-export const MockMoonpayPurchase = {
-  ...mockAssetActivityPartsFragment,
-  details: {
-    ...commonTransactionDetailsFields,
-    type: TransactionType.Receive,
-    assetChanges: [
-      {
-        ...mockTokenTransferInPartsFragment,
-        sender: MOONPAY_SENDER_ADDRESSES[0],
       },
     ],
   },

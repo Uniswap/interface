@@ -41,16 +41,6 @@ export const getDownloadAppLink = (options: OpenDownloadAppOptions = defaultDown
     ? linkWithParams(APP_STORE_LINK, options?.appStoreParams)
     : linkWithParams(MICROSITE_LINK, options?.microSiteParams)
 
-export const getDownloadAppLinkProps = (options: OpenDownloadAppOptions = defaultDownloadAppOptions) => {
-  return {
-    href: getDownloadAppLink(options),
-    onClick(e: { preventDefault: () => void }) {
-      e.preventDefault()
-      openDownloadApp(options)
-    },
-  }
-}
-
 type AnalyticsLinkOptions = {
   element?: InterfaceElementName
   urlParamString?: string

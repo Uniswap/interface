@@ -3,7 +3,6 @@ import ms from 'ms'
 
 import {
   MockClosedUniswapXOrder,
-  MockMoonpayPurchase,
   MockNFTApproval,
   MockNFTApprovalForAll,
   MockNFTPurchase,
@@ -71,10 +70,6 @@ describe('parseRemote', () => {
     })
     it('should parse remove liquidity', () => {
       const result = parseRemoteActivities(jest.fn().mockReturnValue(100), [MockRemoveLiquidity])
-      expect(result?.['someHash']).toMatchSnapshot()
-    })
-    it('should parse moonpay purchase', () => {
-      const result = parseRemoteActivities(jest.fn().mockReturnValue('100'), [MockMoonpayPurchase])
       expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse swap order', () => {

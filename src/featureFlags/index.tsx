@@ -1,6 +1,5 @@
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { createContext, ReactNode, useCallback, useContext } from 'react'
-import { useGate } from 'statsig-react'
 
 /**
  * The value here must match the value in the statsig dashboard, if you plan to use statsig.
@@ -60,20 +59,6 @@ export function useUpdateFlag() {
   )
 }
 
-export function useUpdateConfig() {
-  const setConfigs = useUpdateAtom(dynamicConfigSettings)
-
-  return useCallback(
-    (configName: string, option: any) => {
-      setConfigs((configs) => ({
-        ...configs,
-        [configName]: option,
-      }))
-    },
-    [setConfigs]
-  )
-}
-
 export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
   // TODO: `isLoaded` to `true` so `App.tsx` will render. Later, this will be dependent on
   // flags loading from Amplitude, with a timeout.
@@ -97,11 +82,7 @@ export enum BaseVariant {
 }
 
 export function useBaseFlag(flag: string, defaultValue = BaseVariant.Control): BaseVariant {
-  const { value: statsigValue } = useGate(flag) // non-existent gates return false
   const featureFlagsContext = useFeatureFlagsContext()
-  if (statsigValue) {
-    return BaseVariant.Enabled
-  }
   switch (featureFlagsContext.flags[flag]) {
     case 'enabled':
       return BaseVariant.Enabled

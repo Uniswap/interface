@@ -1,8 +1,5 @@
-import { ChainId } from '@uniswap/sdk-core'
 import Column from 'components/Column'
-import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateConfig, useUpdateFlag } from 'featureFlags'
-import { DynamicConfigName } from 'featureFlags/dynamicConfig'
-import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
+import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
 import { useFallbackProviderEnabledFlag } from 'featureFlags/flags/fallbackProvider'
 import { useFotAdjustmentsFlag } from 'featureFlags/flags/fotAdjustments'
@@ -223,38 +220,6 @@ function FeatureFlagOption({ value, variant, featureFlag, label }: FeatureFlagPr
   )
 }
 
-interface DynamicConfigDropdownProps {
-  configName: DynamicConfigName
-  label: string
-  options: any[]
-  selected: any[]
-  parser: (opt: string) => any
-}
-
-function DynamicConfigDropdown({ configName, label, options, selected, parser }: DynamicConfigDropdownProps) {
-  const updateConfig = useUpdateConfig()
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValues = Array.from(e.target.selectedOptions, (opt) => parser(opt.value))
-    // Saved to atom as { [configName]: { [configName]: values } } to match Statsig return format
-    updateConfig(configName, { [configName]: selectedValues })
-  }
-  return (
-    <Row key={configName}>
-      <FlagInfo>
-        <FlagName>{configName}</FlagName>
-        <FlagDescription>{label}</FlagDescription>
-      </FlagInfo>
-      <select multiple onChange={handleSelectChange}>
-        {options.map((opt) => (
-          <option key={opt} value={opt} selected={selected.includes(opt)}>
-            {opt}
-          </option>
-        ))}
-      </select>
-    </Row>
-  )
-}
-
 export default function FeatureFlagModal() {
   const open = useModalIsOpen(ApplicationModal.FEATURE_FLAGS)
   const toggleModal = useToggleFeatureFlags()
@@ -310,13 +275,6 @@ export default function FeatureFlagModal() {
             value={useQuickRouteMainnetFlag()}
             featureFlag={FeatureFlag.quickRouteMainnet}
             label="Enable quick routes for Mainnet"
-          />
-          <DynamicConfigDropdown
-            selected={useQuickRouteChains()}
-            options={Object.values(ChainId).filter((v) => !isNaN(Number(v))) as ChainId[]}
-            parser={Number.parseInt}
-            configName={DynamicConfigName.quickRouteChains}
-            label="Enable quick routes for these chains"
           />
         </FeatureFlagGroup>
         <FeatureFlagGroup name="UniswapX Flags">

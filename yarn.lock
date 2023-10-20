@@ -15767,11 +15767,6 @@ js-sdsl@^4.1.4:
   resolved "https://registry.yarnpkg.com/js-sdsl/-/js-sdsl-4.4.0.tgz#8b437dbe642daa95760400b602378ed8ffea8430"
   integrity sha512-FfVSdx6pJ41Oa+CF7RDaFmTnCaFhua+SNYQX74riGOpl96x+2jQCqEfQ2bnXu/5DPCqlRuiqyvTJM0Qjz26IVg==
 
-js-sha256@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.9.0.tgz#0b89ac166583e91ef9123644bd3c5334ce9d0966"
-  integrity sha512-sga3MHh9sgQN2+pJ9VYZ+1LPwXOxuBJBA5nrR5/ofPfuiJBE2hnjsaN8se8JznOmGLN2p49Pe5U/ttafcs/apA==
-
 js-sha3@0.8.0, js-sha3@^0.8.0:
   version "0.8.0"
   resolved "https://registry.npmjs.org/js-sha3/-/js-sha3-0.8.0.tgz"
@@ -21176,22 +21171,6 @@ stats-lite@^2.2.0:
   integrity sha512-/Kz55rgUIv2KP2MKphwYT/NCuSfAlbbMRv2ZWw7wyXayu230zdtzhxxuXXcvsc6EmmhS8bSJl3uS1wmMHFumbA==
   dependencies:
     isnumber "~1.0.0"
-
-statsig-js@^4.28.1:
-  version "4.28.1"
-  resolved "https://registry.yarnpkg.com/statsig-js/-/statsig-js-4.28.1.tgz#07010f1cd51012087f3b5f7a51fe23767dd876dd"
-  integrity sha512-ZRmkWWsst06JWT9jQncLDLG1KGXnLtaHvMoeC6pLUa4n6sU0It0SpupVTeC+60wH3I/+PHU2y6C5u7bR1MFzMA==
-  dependencies:
-    js-sha256 "^0.9.0"
-    uuid "^8.3.2"
-    whatwg-fetch "^3.6.2"
-
-statsig-react@^1.22.0:
-  version "1.22.0"
-  resolved "https://registry.yarnpkg.com/statsig-react/-/statsig-react-1.22.0.tgz#3f4f1498dc78bba53d80d6eb4c9d507b2a3c16e5"
-  integrity sha512-10lg5dsEmLzS6zuIdKwrvZ9gZJAdncZlJteSmjTZSOpQZyobWBuO7TBqjGzkBv2+UQn0d+Pkoz3L4Hy2uPvhQA==
-  dependencies:
-    statsig-js "^4.28.1"
 
 statuses@2.0.1:
   version "2.0.1"

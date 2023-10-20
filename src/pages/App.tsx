@@ -1,44 +1,25 @@
-import { CustomUserProperties, getBrowser, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { getDeviceId, sendAnalyticsEvent, sendInitializationEvent, Trace, user } from 'analytics'
+import { Trace } from 'analytics'
 import ErrorBoundary from 'components/ErrorBoundary'
 import Loader from 'components/Icons/LoadingSpinner'
 import NavBar, { PageTabs } from 'components/NavBar'
 import { UK_BANNER_HEIGHT, UK_BANNER_HEIGHT_MD, UK_BANNER_HEIGHT_SM, UkBanner } from 'components/NavBar/UkBanner'
-import { FeatureFlag, useFeatureFlagsIsLoaded } from 'featureFlags'
-import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
+import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { useAtom } from 'jotai'
-import { useBag } from 'nft/hooks/useBag'
-import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useLayoutEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
-import { useAppSelector } from 'state/hooks'
-import { RouterPreference } from 'state/routing/types'
-import { useRouterPreference, useUserOptedOutOfUniswapX } from 'state/user/hooks'
-import { StatsigProvider, StatsigUser, useGate } from 'statsig-react'
 import styled from 'styled-components'
 import DarkModeQueryParamReader from 'theme/components/DarkModeQueryParamReader'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { STATSIG_DUMMY_KEY } from 'tracing'
-import { getEnvName } from 'utils/env'
 import { getDownloadAppLink } from 'utils/openDownloadApp'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
-import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
-import {MixPanelTrackEvent} from "./mixpanel";
+
+import { MixPanelTrackEvent } from './mixpanel'
 import { RouteDefinition, routes, useRouterConfig } from './RouteDefinitions'
 
 const AppChrome = lazy(() => import('./AppChrome'))
-
-
-
-
-
-
-
-
-
 
 const BodyWrapper = styled.div<{ bannerIsVisible?: boolean }>`
   display: flex;
@@ -121,11 +102,11 @@ export default function App() {
 
   useEffect(() => {
     MixPanelTrackEvent({
-      category: "Dapp Visit DEX",
+      category: 'Dapp Visit DEX',
       action: 'User Landed',
       label: 'Wallet not connected',
-    });
-  }, []);
+    })
+  }, [])
 
   const [searchParams] = useSearchParams()
   useEffect(() => {
@@ -144,17 +125,9 @@ export default function App() {
     return () => window.removeEventListener('scroll', scrollListener)
   }, [])
 
-  const isBagExpanded = useBag((state) => state.bagExpanded)
-  const isHeaderTransparent = !scrolledState && !isBagExpanded
+  const isHeaderTransparent = !scrolledState
 
   const { account } = useWeb3React()
-  const statsigUser: StatsigUser = useMemo(
-    () => ({
-      userID: getDeviceId(),
-      customIDs: { address: account ?? '' },
-    }),
-    [account]
-  )
 
   // redirect address to landing pages until implemented
   const shouldRedirectToAppInstall = pathname?.startsWith('/address/')
@@ -178,108 +151,36 @@ export default function App() {
     <ErrorBoundary>
       <DarkModeQueryParamReader />
       <Trace page={currentPage}>
-        <StatsigProvider
-          user={statsigUser}
-          // TODO: replace with proxy and cycle key
-          sdkKey={STATSIG_DUMMY_KEY}
-          waitForInitialization={false}
-          options={{
-            environment: { tier: getEnvName() },
-            api: process.env.REACT_APP_STATSIG_PROXY_URL,
-          }}
-        >
-          <UserPropertyUpdater />
-          {renderBanner && <UkBanner />}
-          <HeaderWrapper transparent={isHeaderTransparent} bannerIsVisible={renderBanner} scrollY={scrollY}>
-            <NavBar blur={isHeaderTransparent} />
-          </HeaderWrapper>
-          <BodyWrapper bannerIsVisible={renderBanner}>
-            <Suspense>
-              <AppChrome />
-            </Suspense>
-            <Suspense fallback={<Loader />}>
-              {isLoaded ? (
-                <Routes>
-                  {routes.map((route: RouteDefinition) =>
-                    route.enabled(routerConfig) ? (
-                      <Route key={route.path} path={route.path} element={route.getElement(routerConfig)}>
-                        {route.nestedPaths.map((nestedPath) => (
-                          <Route path={nestedPath} key={`${route.path}/${nestedPath}`} />
-                        ))}
-                      </Route>
-                    ) : null
-                  )}
-                </Routes>
-              ) : (
-                <Loader />
-              )}
-            </Suspense>
-          </BodyWrapper>
-          <MobileBottomBar>
-            <PageTabs />
-          </MobileBottomBar>
-        </StatsigProvider>
+        {renderBanner && <UkBanner />}
+        <HeaderWrapper transparent={isHeaderTransparent} bannerIsVisible={renderBanner} scrollY={scrollY}>
+          <NavBar blur={isHeaderTransparent} />
+        </HeaderWrapper>
+        <BodyWrapper bannerIsVisible={renderBanner}>
+          <Suspense>
+            <AppChrome />
+          </Suspense>
+          <Suspense fallback={<Loader />}>
+            {isLoaded ? (
+              <Routes>
+                {routes.map((route: RouteDefinition) =>
+                  route.enabled(routerConfig) ? (
+                    <Route key={route.path} path={route.path} element={route.getElement(routerConfig)}>
+                      {route.nestedPaths.map((nestedPath) => (
+                        <Route path={nestedPath} key={`${route.path}/${nestedPath}`} />
+                      ))}
+                    </Route>
+                  ) : null
+                )}
+              </Routes>
+            ) : (
+              <Loader />
+            )}
+          </Suspense>
+        </BodyWrapper>
+        <MobileBottomBar>
+          <PageTabs />
+        </MobileBottomBar>
       </Trace>
     </ErrorBoundary>
   )
-}
-
-function UserPropertyUpdater() {
-  const isDarkMode = useIsDarkMode()
-
-  const [routerPreference] = useRouterPreference()
-  const userOptedOutOfUniswapX = useUserOptedOutOfUniswapX()
-  const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
-  const { isLoading: isUniswapXDefaultLoading } = useGate(FeatureFlag.uniswapXDefaultEnabled)
-  const rehydrated = useAppSelector((state) => state._persist.rehydrated)
-
-  useEffect(() => {
-    // User properties *must* be set before sending corresponding event properties,
-    // so that the event contains the correct and up-to-date user properties.
-    user.set(CustomUserProperties.USER_AGENT, navigator.userAgent)
-    user.set(CustomUserProperties.BROWSER, getBrowser())
-    user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
-    user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
-    user.set(CustomUserProperties.GIT_COMMIT_HASH, process.env.REACT_APP_GIT_COMMIT_HASH ?? 'unknown')
-
-    // Service Worker analytics
-    const isServiceWorkerInstalled = Boolean(window.navigator.serviceWorker?.controller)
-    const isServiceWorkerHit = Boolean((window as any).__isDocumentCached)
-    const serviceWorkerProperty = isServiceWorkerInstalled ? (isServiceWorkerHit ? 'hit' : 'miss') : 'uninstalled'
-
-    const pageLoadProperties = { service_worker: serviceWorkerProperty }
-    sendInitializationEvent(SharedEventName.APP_LOADED, pageLoadProperties)
-    const sendWebVital =
-      (metric: string) =>
-      ({ delta }: Metric) =>
-        sendAnalyticsEvent(SharedEventName.WEB_VITALS, { ...pageLoadProperties, [metric]: delta })
-    getCLS(sendWebVital('cumulative_layout_shift'))
-    getFCP(sendWebVital('first_contentful_paint_ms'))
-    getFID(sendWebVital('first_input_delay_ms'))
-    getLCP(sendWebVital('largest_contentful_paint_ms'))
-  }, [])
-
-  useEffect(() => {
-    user.set(CustomUserProperties.DARK_MODE, isDarkMode)
-  }, [isDarkMode])
-
-  useEffect(() => {
-    if (isUniswapXDefaultLoading || !rehydrated) return
-
-    // If we're not in the transition period to UniswapX opt-out, set the router preference to whatever is specified.
-    if (!isUniswapXDefaultEnabled) {
-      user.set(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
-      return
-    }
-
-    // In the transition period, override the stored API preference to UniswapX if the user hasn't opted out.
-    if (routerPreference === RouterPreference.API && !userOptedOutOfUniswapX) {
-      user.set(CustomUserProperties.ROUTER_PREFERENCE, RouterPreference.X)
-      return
-    }
-
-    // Otherwise, the user has opted out or their preference is UniswapX/client, so set the preference to whatever is specified.
-    user.set(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
-  }, [routerPreference, isUniswapXDefaultEnabled, userOptedOutOfUniswapX, isUniswapXDefaultLoading, rehydrated])
-  return null
 }

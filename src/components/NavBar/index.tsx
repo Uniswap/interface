@@ -7,6 +7,7 @@ import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { Dex51Icon, GithubIconMenu, TwitterIconMenu, WorldIconMenu } from 'nft/components/icons'
 import { themeVars } from 'nft/css/sprinkles.css'
+import { useIsMobile } from 'nft/hooks'
 import { ReactNode, useCallback } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
@@ -24,15 +25,7 @@ const Nav = styled.nav`
   height: ${({ theme }) => theme.navHeight}px;
   z-index: 2;
 `
-const NavAnalytics = styled.a`
-  color: ${({ theme }) => theme.neutral2};
-  padding: 6px 10px;
-  text-decoration: none;
-  &:hover {
-    background-color: ${({ theme }) => theme.lightGrayOverlay};
-    border-radius: 10px;
-  }
-`
+
 const IconRow = ({ children }: { children: ReactNode }) => {
   return <Row className={menu.IconRow}>{children}</Row>
 }
@@ -95,9 +88,9 @@ export const PageTabs = () => {
       <MenuItem href={`/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/tokens')}>
         <Trans>Tokens</Trans>
       </MenuItem>
-      <NavAnalytics href="https://info.uniswap.org/#/" target="_blank" rel="noreferrer">
+      <a href="https://info.uniswap.org/#/" target="_blank" rel="noreferrer" className={styles.menuItem}>
         <Trans>Analytics</Trans>
-      </NavAnalytics>
+      </a>
       {/* <Box marginY="4">
         <MenuDropdown />
       </Box> */}
@@ -110,6 +103,8 @@ const Navbar = ({ blur }: { blur: boolean }) => {
   const isNavSearchInputVisible = useIsNavSearchInputVisible()
 
   const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
+
+  const isMobile = useIsMobile()
 
   const handleDex51IconClick = useCallback(() => {
     if (accountDrawerOpen) {
@@ -156,18 +151,22 @@ const Navbar = ({ blur }: { blur: boolean }) => {
               <Box position="relative" display={isNavSearchInputVisible ? 'none' : { sm: 'flex' }}>
                 <SearchBar />
               </Box>
-              <Icon href="https://a51.finance/">
-                <WorldIconMenu className={menu.hover} width={15} height={15} color={themeVars.colors.neutral2} />
-              </Icon>
-              <Icon href="https://twitter.com/A51_Fi">
-                <TwitterIconMenu className={menu.hover} width={24} height={24} color={themeVars.colors.neutral2} />
-              </Icon>
-              <Icon href="https://github.com/a51finance/a51-uniswap-fork">
-                <GithubIconMenu className={menu.hover} width={24} height={24} color={themeVars.colors.neutral2} />
-              </Icon>
-              <Box display={{ sm: 'none', lg: 'flex' }}>
-                <ChainSelector />
-              </Box>
+              {!isMobile && (
+                <>
+                  <Icon href="https://a51.finance/">
+                    <WorldIconMenu className={menu.hover} width={15} height={15} color={themeVars.colors.neutral2} />
+                  </Icon>
+                  <Icon href="https://twitter.com/A51_Fi">
+                    <TwitterIconMenu className={menu.hover} width={24} height={24} color={themeVars.colors.neutral2} />
+                  </Icon>
+                  <Icon href="https://github.com/a51finance/a51-uniswap-fork">
+                    <GithubIconMenu className={menu.hover} width={24} height={24} color={themeVars.colors.neutral2} />
+                  </Icon>
+                  <Box display={{ sm: 'none', lg: 'flex' }}>
+                    <ChainSelector />
+                  </Box>
+                </>
+              )}
 
               <Web3Status />
             </Row>

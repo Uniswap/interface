@@ -14,7 +14,6 @@ import { flexColumnNoWrap } from 'theme/styles'
 
 import ConnectionErrorView from './ConnectionErrorView'
 import Option from './Option'
-import PrivacyPolicyNotice from './PrivacyPolicyNotice'
 
 const Wrapper = styled.div`
   ${flexColumnNoWrap};
@@ -32,10 +31,6 @@ const OptionGrid = styled.div`
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     grid-template-columns: 1fr;
   `};
-`
-
-const PrivacyPolicyWrapper = styled.div`
-  padding: 0 4px;
 `
 
 export default function WalletModal({ openSettings }: { openSettings: () => void }) {
@@ -71,9 +66,6 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
                 <Option key={connection.getName()} connection={connection} />
               ))}
           </OptionGrid>
-          <PrivacyPolicyWrapper>
-            <PrivacyPolicyNotice />
-          </PrivacyPolicyWrapper>
         </AutoColumn>
       )}
     </Wrapper>
