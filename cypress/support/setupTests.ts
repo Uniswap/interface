@@ -16,27 +16,6 @@ beforeEach(() => {
   // Log requests to hardhat.
   cy.intercept(/:8545/, logJsonRpc)
 
-  // Mock analytics responses to avoid analytics in tests.
-  cy.intercept('https://api.uniswap.org/v1/amplitude-proxy', (req) => {
-    const requestBody = JSON.stringify(req.body)
-    const byteSize = new Blob([requestBody]).size
-    req.alias = 'amplitude'
-    req.reply(
-      JSON.stringify({
-        code: 200,
-        server_upload_time: Date.now(),
-        payload_size_bytes: byteSize,
-        events_ingested: req.body.events.length,
-      }),
-      {
-        'origin-country': 'US',
-      }
-    )
-  }).intercept('https://*.sentry.io', { statusCode: 200 })
-
-  // Mock statsig to allow us to mock flags.
-  cy.intercept(/statsig/, { statusCode: 409 })
-
   // Mock our own token list responses to avoid the latency of IPFS.
   cy.intercept('https://gateway.ipfs.io/ipns/tokens.uniswap.org', TokenListJSON)
     .intercept('https://gateway.ipfs.io/ipns/extendedtokens.uniswap.org', { statusCode: 404 })

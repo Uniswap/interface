@@ -1,7 +1,6 @@
 import '@reach/dialog/styles.css'
 import 'inter-ui'
 import 'polyfills'
-import 'tracing'
 import 'connection/eagerlyConnect'
 
 import { ApolloProvider } from '@apollo/client'

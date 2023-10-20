@@ -1,5 +1,5 @@
 {
-  "name": "@uniswap/interface",
+  "name": "dex51",
   "version": "1.1.0",
   "description": "Dex51",
   "license": "GPL-3.0-or-later",
@@ -288,7 +288,6 @@
     "rebass": "^4.0.7",
     "redux": "^4.1.2",
     "redux-persist": "^6.0.0",
-    "statsig-react": "^1.22.0",
     "styled-components": "^5.3.5",
     "tiny-invariant": "^1.2.0",
     "ua-parser-js": "^1.0.35",
