@@ -135,7 +135,7 @@ function SquareL2Logo({ chainId }: { chainId: ChainId }) {
 
   return (
     <L2LogoContainer>
-      <ChainLogo chainId={chainId} />
+      <ChainLogo chainId={chainId} size={12} />
     </L2LogoContainer>
   )
 }
