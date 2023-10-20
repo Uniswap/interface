@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { AnyAction, combineReducers } from 'redux'
 import { persistReducer, persistStore } from 'redux-persist'
+import { popupsReducer } from 'src/app/features/popups/slice'
 import { dappReducer } from 'src/background/features/dapp/slice'
 import { dappRequestReducer } from 'src/background/features/dappRequests/slice'
 import { loggerMiddleware } from 'src/background/utils/loggerMiddleware'
@@ -19,6 +20,7 @@ export const webReducers = {
   saga: monitoredSagaReducers,
   dapp: dappReducer,
   dappRequests: dappRequestReducer,
+  popups: popupsReducer,
 } as const
 
 const webReducer = persistReducer(persistConfig, combineReducers(webReducers))

@@ -21,6 +21,7 @@ export function useIsDappConnected(): boolean {
 
 /**
  * Hook used to get the dApp context. It updates whenever the current tab changes
+ * TODO(EXT-358): turn this into a react context so there is just one instance of the message handler
  **/
 export function useDappContext(): DappContext {
   const [dappUrl, setDappUrl] = useState('')

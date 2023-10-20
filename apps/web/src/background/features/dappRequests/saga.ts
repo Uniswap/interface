@@ -95,6 +95,8 @@ export function* handleRequest(requestParams: DappRequestSagaParams) {
     requestForStore.dappRequest.type !== DappRequestType.GetAccountRequest
   ) {
     // TODO(EXT-341): reject with error code 4100 (unauthorized)
+    // TODO(EXT-359): show a warning when the active account is different.
+    // Only reject if there are no wallets connected.
     yield* put(rejectRequest(requestForStore))
   } else if (
     isConnectedToDapp &&

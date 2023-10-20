@@ -2,7 +2,11 @@ import { useState } from 'react'
 import { PortfolioActionButtons } from 'src/app/features/home/PortfolioActionButtons'
 import { PortfolioHeader } from 'src/app/features/home/PortfolioHeader'
 import { NftsTab } from 'src/app/features/nfts/NftsTab'
+import { ConnectPopup } from 'src/app/features/popups/ConnectPopup'
+import { selectPopupState } from 'src/app/features/popups/selectors'
+import { closePopup, PopupName } from 'src/app/features/popups/slice'
 import { TransactionActivity } from 'src/app/features/transactions/TransactionActivity'
+import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { Tabs } from 'tamagui'
 import { Flex, Text } from 'ui/src'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
@@ -18,13 +22,24 @@ enum HomeTabs {
 export function HomeScreen(): JSX.Element {
   const address = useActiveAccountAddressWithThrow()
   const [selectedTab, setSelectedTab] = useState<HomeTabs>(HomeTabs.Tokens)
+  const dispatch = useAppDispatch()
+  const { isOpen: isConnectPopupOpen } = useAppSelector(selectPopupState(PopupName.Connect))
+
+  const onCloseConnectPopup = async (): Promise<void> => {
+    await dispatch(closePopup(PopupName.Connect))
+  }
 
   return (
     <Flex grow alignItems="center" px="$spacing16" py="$spacing8" width="100%">
       {address ? (
         <Flex grow bg="$surface1" gap="$spacing8" width="100%">
           <Flex gap="$spacing12">
-            <PortfolioHeader address={address} />
+            <Flex position="relative">
+              <PortfolioHeader address={address} />
+              {isConnectPopupOpen ? (
+                <ConnectPopup right={0} top="100%" onClose={onCloseConnectPopup} />
+              ) : null}
+            </Flex>
             <PortfolioBalance address={address} />
             <PortfolioActionButtons />
             <Tabs

@@ -1,8 +1,11 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { SwitchNetworksModal } from 'src/app/features/home/SwitchNetworksModal'
+import { ConnectPopupContent } from 'src/app/features/popups/ConnectPopup'
+import { closePopup, PopupName } from 'src/app/features/popups/slice'
 import { AppRoutes } from 'src/app/navigation/constants'
-import { useIsDappConnected } from 'src/background/features/dapp/hooks'
+import { useDappContext, useIsDappConnected } from 'src/background/features/dapp/hooks'
+import { selectWalletsByDapp } from 'src/background/features/dapp/selectors'
+import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { Flex, Icons, Popover, Text, TouchableArea, Unicon } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -15,6 +18,7 @@ type PortfolioHeaderProps = {
 
 export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const displayName = useDisplayName(address)?.name
 
@@ -23,8 +27,13 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
   }
 
   // Value does not matter, only used as a trigger to re-render the component when the dapp connection status changes
-  const [updateConnectionStatus, setUpdateConnectionStatus] = useState(false)
   const isDappConnected = useIsDappConnected()
+  const { dappUrl } = useDappContext()
+  const connectedAddresses = useAppSelector(selectWalletsByDapp(dappUrl))
+
+  const closeConnectPopup = async (): Promise<void> => {
+    await dispatch(closePopup(PopupName.Connect))
+  }
 
   return (
     <Flex row alignItems="center" justifyContent="space-between">
@@ -47,10 +56,9 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
         </Flex>
       </Flex>
       <Flex row alignItems="center" gap="$spacing16" justifyContent="space-around">
-        {isDappConnected ? (
+        {connectedAddresses.size > 0 ? (
           <Popover stayInFrame>
-            <Popover.Trigger
-              onTouchEnd={(): void => setUpdateConnectionStatus(!updateConnectionStatus)}>
+            <Popover.Trigger onPress={closeConnectPopup}>
               <Icons.Globe color="$neutral2" size="$icon.20" />
             </Popover.Trigger>
             <Popover.Content
@@ -60,7 +68,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
               pl="$spacing4"
               shadowColor="$neutral3"
               shadowRadius={POPUP_SHADOW_RADIUS}>
-              <SwitchNetworksModal />
+              {isDappConnected ? <SwitchNetworksModal /> : <ConnectPopupContent asPopover />}
             </Popover.Content>
           </Popover>
         ) : null}

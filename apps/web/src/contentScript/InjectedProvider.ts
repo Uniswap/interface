@@ -475,6 +475,8 @@ export class InjectedProvider extends EventEmitter {
 
   private handleDisconnectAccount = async (): Promise<void> => {
     this.publicKeys = null
+    this.chainId = undefined
+    this.provider = undefined
     this.emit('accountsChanged', [])
   }
 }
