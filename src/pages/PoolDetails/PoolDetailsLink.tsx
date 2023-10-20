@@ -81,6 +81,7 @@ interface PoolDetailsLinkProps {
   tokens: (Token | undefined)[]
 }
 
+// TODO: add tests
 export function PoolDetailsLink({ address, chainId, tokens }: PoolDetailsLinkProps) {
   const theme = useTheme()
   const currencies = [
