@@ -689,13 +689,6 @@ export const migrations = {
   51: function addLanguageSettings(state: any) {
     return {
       ...state,
-      modals: {
-        ...state.modals,
-        [ModalName.LanguageSelector]: {
-          isOpen: false,
-          initialState: undefined,
-        },
-      },
       languageSettings: initialLanguageState,
     }
   },
@@ -703,13 +696,6 @@ export const migrations = {
   52: function addFiatCurrencySettings(state: any) {
     return {
       ...state,
-      modals: {
-        ...state.modals,
-        [ModalName.FiatCurrencySelector]: {
-          isOpen: false,
-          initialState: undefined,
-        },
-      },
       fiatCurrencySettings: initialFiatCurrencyState,
     }
   },
