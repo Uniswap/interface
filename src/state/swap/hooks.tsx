@@ -8,6 +8,7 @@ import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
+import { MixPanelTrackEvent } from 'pages/mixpanel'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
@@ -31,6 +32,7 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
 } {
+  const { account } = useWeb3React()
   const onCurrencySelection = useCallback(
     (field: Field, currency: Currency) => {
       dispatch(
@@ -39,8 +41,14 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
           currencyId: currency.isToken ? currency.address : currency.isNative ? 'ETH' : '',
         })
       )
+      MixPanelTrackEvent({
+        category: 'Token selected Dex51',
+        action: `${currency.symbol} selected by user`,
+        label: 'Token selected',
+        account,
+      })
     },
-    [dispatch]
+    [dispatch, account]
   )
 
   const onSwitchTokens = useCallback(

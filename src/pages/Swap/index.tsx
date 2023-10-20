@@ -45,6 +45,7 @@ import { useUSDPrice } from 'hooks/useUSDPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from 'hooks/useWrapCallback'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
+import { MixPanelTrackEvent } from 'pages/mixpanel'
 import { ReactNode, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -479,6 +480,11 @@ export function Swap({
     }
     swapCallback()
       .then((result) => {
+        MixPanelTrackEvent({
+          category: 'Swap done on Dex51',
+          action: `Swap occur from ${currencies[Field.INPUT]?.symbol} to ${currencies[Field.OUTPUT]?.symbol} `,
+          account,
+        })
         setSwapState((currentState) => ({
           ...currentState,
           swapError: undefined,
@@ -492,7 +498,7 @@ export function Swap({
           swapResult: undefined,
         }))
       })
-  }, [swapCallback, preTaxStablecoinPriceImpact])
+  }, [swapCallback, preTaxStablecoinPriceImpact, currencies, account])
 
   const handleOnWrap = useCallback(async () => {
     if (!onWrap) return

@@ -1,4 +1,5 @@
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendAnalyticsEvent, user, useTrace } from 'analytics'
@@ -8,6 +9,8 @@ import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from 'constants/providers'
 import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import usePrevious from 'hooks/usePrevious'
+import { chainIdToNetworkName } from 'lib/hooks/useCurrencyLogoURIs'
+import { MixPanelTrackEvent } from 'pages/mixpanel'
 import { ReactNode, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useConnectedWallets } from 'state/wallets/hooks'
@@ -104,6 +107,14 @@ function Updater() {
         is_reconnect: isReconnect,
         peer_wallet_agent: peerWalletAgent,
         page: currentPage,
+      })
+
+      MixPanelTrackEvent({
+        category: 'Dex51 Wallet Connected',
+        action: 'Wallet connected by user',
+        label: walletType,
+        account,
+        chain: chainIdToNetworkName(chainId ?? ChainId.MAINNET),
       })
 
       addConnectedWallet({ account, walletType })
