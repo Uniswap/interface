@@ -73,6 +73,7 @@ const baseMenuItem = style([
     alignItems: 'center',
     justifyContent: 'center',
     gap: '4',
+    whiteSpace: 'nowrap',
   }),
   {
     lineHeight: '22px',
