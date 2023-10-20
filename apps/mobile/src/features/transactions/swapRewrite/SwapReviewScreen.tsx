@@ -6,7 +6,12 @@ import { Arrow } from 'src/components/icons/Arrow'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { OnShowSwapFeeInfo } from 'src/components/SwapFee/SwapFee'
-import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
+import {
+  useBiometricAppSettings,
+  useBiometricPrompt,
+  useDeviceSupportsBiometricAuth,
+  useOsBiometricAuthEnabled,
+} from 'src/features/biometrics/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
 import {
   useAcceptedTrade,
@@ -136,6 +141,11 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
 
   const { trigger: submitWithBiometrix } = useBiometricPrompt(submitTransaction)
   const { requiredForTransactions: requiresBiometrics } = useBiometricAppSettings()
+
+  // Detect auth type for icon display
+  const isBiometricAuthEnabled = useOsBiometricAuthEnabled()
+  const { touchId: isTouchIdSupported, faceId: isFaceIdSupported } =
+    useDeviceSupportsBiometricAuth()
 
   const derivedCurrencyField =
     exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
@@ -269,6 +279,15 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     !txRequest ||
     account.type === AccountType.Readonly
 
+  const submitButtonIcon =
+    isBiometricAuthEnabled && requiresBiometrics ? (
+      isFaceIdSupported ? (
+        <Icons.Faceid color="white" size="$icon.20" />
+      ) : isTouchIdSupported ? (
+        <Icons.Fingerprint color="white" size="$icon.20" />
+      ) : undefined
+    ) : undefined
+
   const currencyInInfo = currencies[CurrencyField.INPUT]
   const currencyOutInfo = currencies[CurrencyField.OUTPUT]
 
@@ -369,7 +388,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
           <Button
             fill
             disabled={submitButtonDisabled}
-            icon={<Icons.Faceid color="white" size="$icon.20" />}
+            icon={submitButtonIcon}
             size="large"
             testID={getActionElementName(wrapType)}
             onPress={onSubmitTransaction}>
