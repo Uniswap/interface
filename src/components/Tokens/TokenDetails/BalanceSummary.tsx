@@ -73,7 +73,7 @@ const StyledNetworkLabel = styled.div`
 
 interface BalanceProps {
   token?: Currency
-  chainId?: ChainId
+  chainId: ChainId
   balance?: CurrencyAmount<Currency> // TODO(WEB-3026): only used for pre-Info-project calculations, should remove after project goes live
   gqlBalance?: TokenBalance
   tokenSymbol?: string
@@ -107,7 +107,7 @@ const Balance = (props: BalanceProps) => {
   if (isInfoTDPEnabled) {
     return (
       <BalanceRow onClick={onClick}>
-        <PortfolioLogo currencies={currencies} chainId={chainId ?? ChainId.MAINNET} size="2rem" />
+        <PortfolioLogo currencies={currencies} chainId={chainId} size="2rem" />
         <BalanceAmountsContainer isInfoTDPEnabled>
           <BalanceItem>
             <ThemedText.BodyPrimary>{formattedUsdGqlValue}</ThemedText.BodyPrimary>
@@ -121,7 +121,7 @@ const Balance = (props: BalanceProps) => {
   } else {
     return (
       <BalanceRow>
-        <PortfolioLogo currencies={currencies} chainId={chainId ?? ChainId.MAINNET} size="2rem" />
+        <PortfolioLogo currencies={currencies} chainId={chainId} size="2rem" />
         <BalanceContainer>
           <BalanceAmountsContainer>
             <BalanceItem>
@@ -151,7 +151,7 @@ const ConnectedChainBalanceSummary = ({
   token: Currency
   theme: DefaultTheme
 }) => {
-  const hasConnectedChainBalance = connectedChainBalance && connectedChainBalance.greaterThan(0)
+  const hasConnectedChainBalance = chainId && connectedChainBalance && connectedChainBalance.greaterThan(0)
   if (!hasConnectedChainBalance) return null
 
   const { label: chainName, color: chainColor } = getChainInfo(asSupportedChain(chainId) ?? ChainId.MAINNET)
@@ -218,7 +218,7 @@ const OtherChainsBalanceSummary = ({
       )}
       {otherChainBalances?.map((balance) => {
         const currency = balance.token && gqlToCurrency(balance.token)
-        const chainId = balance.token && supportedChainIdFromGQLChain(balance.token.chain)
+        const chainId = (balance.token && supportedChainIdFromGQLChain(balance.token.chain)) ?? ChainId.MAINNET
         return (
           <Balance
             key={balance.id}
