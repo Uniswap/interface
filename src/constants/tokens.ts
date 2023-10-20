@@ -50,14 +50,14 @@ export const USDC_POLYGON = new Token(
   '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359',
   6,
   'USDC',
-  'USD//C'
+  'USD Coin'
 )
 export const USDC_POLYGON_MUMBAI = new Token(
   ChainId.POLYGON_MUMBAI,
   '0x0fa8781a83e46826621b3bc094ea2a0212e71b23',
   6,
   'USDC',
-  'USDC'
+  'USD Coin'
 )
 export const PORTAL_USDC_CELO = new Token(
   ChainId.CELO,
