@@ -3,7 +3,6 @@ import { OffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Ac
 import AirdropModal from 'components/AirdropModal'
 import AddressClaimModal from 'components/claim/AddressClaimModal'
 import ConnectedAccountBlocked from 'components/ConnectedAccountBlocked'
-import FiatOnrampModal from 'components/FiatOnrampModal'
 import { UkDisclaimerModal } from 'components/NavBar/UkDisclaimerModal'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import Bag from 'nft/components/bag/Bag'
@@ -27,7 +26,6 @@ export default function TopLevelModals() {
       <OffchainActivityModal />
       <TransactionCompleteModal />
       <AirdropModal />
-      <FiatOnrampModal />
       <UkDisclaimerModal />
     </>
   )
