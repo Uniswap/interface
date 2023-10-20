@@ -5,7 +5,6 @@ import { usePoolData } from 'graphql/thegraph/PoolData'
 import NotFound from 'pages/NotFound'
 import { useReducer } from 'react'
 import { useParams } from 'react-router-dom'
-import { Text } from 'rebass'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { isAddress } from 'utils'
@@ -39,28 +38,6 @@ const RightColumn = styled(Column)`
     width: 100%;
     min-width: unset;
   }
-`
-
-const TokenDetailsWrapper = styled(Column)`
-  gap: 24px;
-  padding: 20px;
-
-  @media (max-width: ${BREAKPOINTS.lg - 1}px) and (min-width: ${BREAKPOINTS.sm}px) {
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: unset;
-  }
-
-  @media (max-width: ${BREAKPOINTS.sm - 1}px) {
-    padding: unset;
-  }
-`
-
-const TokenDetailsHeader = styled(Text)`
-  width: 100%;
-  font-size: 24px;
-  font-weight: 485;
-  line-height: 32px;
 `
 
 export default function PoolDetailsPage() {
