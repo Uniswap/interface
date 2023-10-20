@@ -1031,20 +1031,16 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
               data-testid="pdp-pool-logo-USDC-WETH"
             >
               <div
-                class="c11"
+                class="c39"
               >
-                <div
-                  class="c39"
-                >
-                  <img
-                    class="c40"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                  />
-                  <img
-                    class="c40"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                  />
-                </div>
+                <img
+                  class="c40"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                />
+                <img
+                  class="c40"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                />
               </div>
               <div
                 class="c7 c41 css-1urox24"

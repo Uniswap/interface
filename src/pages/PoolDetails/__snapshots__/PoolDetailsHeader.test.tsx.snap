@@ -172,7 +172,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
 }
 
 .c12 {
-  width: 32px;
+  width: 16px;
   height: 32px;
   border-radius: 50%;
 }

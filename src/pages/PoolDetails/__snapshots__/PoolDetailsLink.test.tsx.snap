@@ -42,11 +42,11 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   justify-content: flex-start;
 }
 
-.c7 {
+.c6 {
   color: #222222;
 }
 
-.c13 {
+.c12 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -57,21 +57,15 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   font-weight: 500;
 }
 
-.c13:hover {
+.c12:hover {
   opacity: 0.6;
 }
 
-.c13:active {
+.c12:active {
   opacity: 0.4;
 }
 
 .c4 {
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c5 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -82,29 +76,29 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   left: 0;
 }
 
-.c5 img {
+.c4 img {
   width: 10px;
   height: 20px;
   object-fit: cover;
 }
 
-.c5 img:first-child {
+.c4 img:first-child {
   border-radius: 10px 0 0 10px;
   object-position: 0 0;
 }
 
-.c5 img:last-child {
+.c4 img:last-child {
   border-radius: 0 10px 10px 0;
   object-position: 100% 0;
 }
 
-.c6 {
+.c5 {
   width: 10px;
   height: 20px;
   border-radius: 50%;
 }
 
-.c8 {
+.c7 {
   display: none;
   white-space: nowrap;
   overflow: hidden;
@@ -116,7 +110,7 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   margin-right: 12px;
 }
 
-.c9 {
+.c8 {
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
@@ -125,7 +119,7 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   text-overflow: ellipsis;
 }
 
-.c11 {
+.c10 {
   gap: 8px;
   padding: 8px 12px;
   border-radius: 20px;
@@ -146,15 +140,15 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   transition-duration: 125ms;
 }
 
-.c11:hover {
+.c10:hover {
   opacity: 0.6;
 }
 
-.c11:active {
+.c10:active {
   opacity: 0.4;
 }
 
-.c12 {
+.c11 {
   width: 16px;
   height: 16px;
   color: #7D7D7D;
@@ -163,7 +157,7 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   flex-shrink: 0;
 }
 
-.c14 {
+.c13 {
   padding: 8px;
   border-radius: 20px;
   background-color: #22222212;
@@ -178,15 +172,15 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   transition-duration: 125ms;
 }
 
-.c14:hover {
+.c13:hover {
   opacity: 0.6;
 }
 
-.c14:active {
+.c13:active {
   opacity: 0.4;
 }
 
-.c10 {
+.c9 {
   gap: 8px;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
@@ -197,13 +191,13 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
 }
 
 @media (max-width:1023px) and (min-width:395px) {
-  .c8 {
+  .c7 {
     display: block;
   }
 }
 
 @media (max-width:1023px) and (min-width:395px) {
-  .c9 {
+  .c8 {
     color: #7D7D7D;
   }
 }
@@ -218,40 +212,36 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
       <div
         class="c4"
       >
-        <div
+        <img
           class="c5"
-        >
-          <img
-            class="c6"
-            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-          />
-          <img
-            class="c6"
-            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-          />
-        </div>
+          src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+        />
+        <img
+          class="c5"
+          src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+        />
       </div>
       <div
-        class="c7 c8 css-1urox24"
+        class="c6 c7 css-1urox24"
       >
         Pool
       </div>
       <div
-        class="c7 c9 css-1urox24"
+        class="c6 c8 css-1urox24"
       >
         USDC / WETH
       </div>
     </div>
     <div
-      class="c0 c2 c10"
+      class="c0 c2 c9"
     >
       <div
-        class="c0 c2 c11"
+        class="c0 c2 c10"
         data-testid="copy-address-0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
       >
         0x88e6...5640
         <svg
-          class="c12"
+          class="c11"
           fill="none"
           height="24"
           stroke="currentColor"
@@ -276,14 +266,14 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
         </svg>
       </div>
       <a
-        class="c13"
+        class="c12"
         data-testid="explorer-url-https://etherscan.io/address/0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
         href="https://etherscan.io/address/0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
         rel="noopener noreferrer"
         target="_blank"
       >
         <div
-          class="c14"
+          class="c13"
         >
           <svg
             fill="#7D7D7D"
