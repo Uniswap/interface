@@ -151,7 +151,7 @@ function TransactionSummaryLayout({
             </Flex>
           </Flex>
           {inProgress && (
-            <Flex height="100%" justifyContent="center">
+            <Flex justifyContent="center">
               <SpinningLoader disabled={queued} size={LOADING_SPINNER_SIZE} />
             </Flex>
           )}
