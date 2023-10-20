@@ -78,7 +78,7 @@ export function useCrossChainGqlBalances({
   })
 
   const tokenBalances = portfolioBalances?.portfolios?.[0].tokenBalances
-  const bridgeInfo = tokenQuery.token?.project?.tokens // on first load on ETH native, this sometimes doesn't load all crosschain ETH tokens??
+  const bridgeInfo = tokenQuery.token?.project?.tokens
 
   return tokenBalances?.filter(
     (tokenBalance) =>
