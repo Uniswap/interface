@@ -134,7 +134,7 @@ export function TokenDetailsScreen({
   )
 
   return (
-    <ReactNavigationPerformanceView interactive={isLoading} screenName={Screens.TokenDetails}>
+    <ReactNavigationPerformanceView interactive screenName={Screens.TokenDetails}>
       <Trace
         directFromPage
         logImpression

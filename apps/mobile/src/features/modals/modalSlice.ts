@@ -50,6 +50,7 @@ export type OpenModalParams =
   | SwapModalParams
   | WalletConnectModalParams
   | RestoreWalletModalParams
+export type CloseModalParams = { name: keyof ModalsState }
 
 export const initialModalState: ModalsState = {
   [ModalName.FiatOnRamp]: {
@@ -107,7 +108,7 @@ const slice = createSlice({
       state[name].isOpen = true
       state[name].initialState = initialState
     },
-    closeModal: (state, action: PayloadAction<{ name: keyof ModalsState }>) => {
+    closeModal: (state, action: PayloadAction<CloseModalParams>) => {
       const { name } = action.payload
       state[name].isOpen = false
       state[name].initialState = undefined

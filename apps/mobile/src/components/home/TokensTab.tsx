@@ -1,3 +1,4 @@
+import { useStartProfiler } from '@shopify/react-native-performance'
 import React, { forwardRef, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList } from 'react-native'
@@ -10,6 +11,7 @@ import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceLi
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
+import { Screens } from 'src/screens/Screens'
 import { Flex } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'wallet/src/data/queries'
@@ -40,8 +42,10 @@ export const TokensTab = memo(
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
     const tokenDetailsNavigation = useTokenDetailsNavigation()
+    const startProfilerTimer = useStartProfiler()
 
     const onPressToken = (currencyId: CurrencyId): void => {
+      startProfilerTimer({ source: Screens.Home })
       tokenDetailsNavigation.navigate(currencyId)
     }
 

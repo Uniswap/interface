@@ -4,6 +4,7 @@ import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
 import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { firebaseDataWatcher } from 'src/features/firebase/firebaseDataSaga'
 import { initFirebase } from 'src/features/firebase/initFirebaseSaga'
+import { modalWatcher } from 'src/features/modals/saga'
 import { notificationWatcher } from 'src/features/notifications/notificationWatcherSaga'
 import { telemetrySaga } from 'src/features/telemetry/saga'
 import {
@@ -51,6 +52,7 @@ const sagas = [
   deepLinkWatcher,
   firebaseDataWatcher,
   initFirebase,
+  modalWatcher,
   notificationWatcher,
   pendingAccountSaga,
   restoreMnemonicCompleteWatcher,
