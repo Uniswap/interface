@@ -72,7 +72,7 @@ async function getSwapTaxes(
   return { inputTax, outputTax }
 }
 
-export function useSwapTaxes(inputTokenAddress: string | undefined, outputTokenAddress: string | undefined) {
+export function useSwapTaxes(inputTokenAddress?: string, outputTokenAddress?: string) {
   const fotDetector = useFeeOnTransferDetectorContract()
   const [{ inputTax, outputTax }, setTaxes] = useState({ inputTax: ZERO_PERCENT, outputTax: ZERO_PERCENT })
   const { chainId } = useWeb3React()
