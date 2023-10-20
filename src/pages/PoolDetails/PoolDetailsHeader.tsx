@@ -119,12 +119,12 @@ function DoubleCurrencyAndChainLogo({
 const L2LogoContainer = styled.div`
   background-color: ${({ theme }) => theme.surface2};
   border-radius: 2px;
-  height: '12px';
+  height: 12px;
   left: 60%;
   position: absolute;
   top: 60%;
   outline: 2px solid ${({ theme }) => theme.surface1};
-  width: '12px';
+  width: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
