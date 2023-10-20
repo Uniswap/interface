@@ -108,7 +108,7 @@ export function usePreviewTrade(
       return TRADE_LOADING
     } else {
       return {
-        state: isFetching ? TradeState.LOADING : TradeState.VALID,
+        state: isFetching ? TradeState.LOADING : TradeState.LOADING,
         trade: tradeResult.trade,
         currentTrade: currentData?.trade,
         swapQuoteLatency: tradeResult.latencyMs,
