@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { Link as RRDLink } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
 
@@ -76,21 +77,40 @@ function Socials() {
 
   return (
     <Box gap="24px">
-      <Box as="a" href="" flex="0">
-        <Github fill={theme.neutral1} />
-      </Box>
-      <Box as="a" href="" flex="0">
-        <Twitter fill={theme.neutral1} />
-      </Box>
-      <Box as="a" href="" flex="0">
-        <Discord fill={theme.neutral1} />
-      </Box>
-      <Box as="a" href="" flex="0">
-        <Instagram fill={theme.neutral1} />
-      </Box>
+      <SocialLink href="" hoverColor="#00C32B">
+        <Github fill="inherit" />
+      </SocialLink>
+      <SocialLink hoverColor="#20BAFF">
+        <Twitter fill="inherit" />
+      </SocialLink>
+      <SocialLink hoverColor="#5F51FF">
+        <Discord fill="inherit" />
+      </SocialLink>
+      <SocialLink hoverColor="#FF0DCA">
+        <Instagram fill="inherit" />
+      </SocialLink>
     </Box>
   )
 }
+
+function WiggleLink({ ...props }) {
+  const variants = {
+    initial: { rotate: 0, scale: 1 },
+    animate: { rotate: [20, 0], scale: 1.2, transition: { type: 'spring', stiffness: 200 } },
+  }
+  return <motion.a {...props} whileHover="animate" initial="initial" variants={variants} />
+}
+
+const SocialLink = styled(WiggleLink)`
+  flex: 0;
+  fill: ${(props) => props.theme.neutral1};
+  cursor: pointer;
+  transition: fill;
+  transition-duration: 0.2s;
+  &:hover {
+    fill: ${(props) => props.hoverColor};
+  }
+`
 
 const RowToCol = styled(Box)`
   height: auto;
