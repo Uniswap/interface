@@ -74,6 +74,7 @@ export function AddressDisplay({
   horizontalGap = '$spacing12',
   showViewOnlyBadge = false,
   viewOnlyBadgeScalingFactor,
+  showNotificationsBadge = false,
   gapBetweenLines = '$none',
 }: AddressDisplayProps): JSX.Element {
   const dispatch = useAppDispatch()
@@ -115,7 +116,12 @@ export function AddressDisplay({
 
   return (
     <Flex alignItems={contentAlign} flexDirection={direction} gap={horizontalGap}>
-      {showAccountIcon && <NotificationBadge address={address}>{icon}</NotificationBadge>}
+      {showAccountIcon &&
+        (showNotificationsBadge ? (
+          <NotificationBadge address={address}>{icon}</NotificationBadge>
+        ) : (
+          icon
+        ))}
       <Flex shrink alignItems={itemAlignment} gap={gapBetweenLines}>
         <CopyButtonWrapper
           onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>

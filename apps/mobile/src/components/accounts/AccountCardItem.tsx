@@ -115,6 +115,7 @@ export function AccountCardItem({
         <Flex row alignItems="flex-start" gap="$spacing16" testID={`account_item/${address}`}>
           <Flex fill>
             <AddressDisplay
+              showNotificationsBadge
               address={address}
               captionVariant="body3"
               gapBetweenLines="$spacing2"
