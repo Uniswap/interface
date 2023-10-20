@@ -13,7 +13,10 @@ import {
   useSwapScreenContext,
 } from 'src/features/transactions/swapRewrite/contexts/SwapScreenContext'
 import { CurrencyInputPanel } from 'src/features/transactions/swapRewrite/CurrencyInputPanel'
-import { DecimalPadInput } from 'src/features/transactions/swapRewrite/DecimalPadInput'
+import {
+  DecimalPadInput,
+  DecimalPadInputRef,
+} from 'src/features/transactions/swapRewrite/DecimalPadInput'
 import { GasAndWarningRows } from 'src/features/transactions/swapRewrite/GasAndWarningRows'
 import { useParsedSwapWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
 import { SwapArrowButton } from 'src/features/transactions/swapRewrite/SwapArrowButton'
@@ -96,6 +99,7 @@ function SwapFormContent(): JSX.Element {
 
   const inputRef = useRef<TextInput>(null)
   const outputRef = useRef<TextInput>(null)
+  const decimalPadRef = useRef<DecimalPadInputRef>(null)
 
   const inputSelectionRef = useRef<TextInputProps['selection']>()
   const outputSelectionRef = useRef<TextInputProps['selection']>()
@@ -139,14 +143,14 @@ function SwapFormContent(): JSX.Element {
     [focusOnCurrencyField, isFiatInput, updateSwapForm]
   )
 
-  const onInputSelectionChange = useCallback(
-    (start: number, end: number) => (inputSelectionRef.current = { start, end }),
-    []
-  )
-  const onOutputSelectionChange = useCallback(
-    (start: number, end: number) => (outputSelectionRef.current = { start, end }),
-    []
-  )
+  const onInputSelectionChange = useCallback((start: number, end: number) => {
+    inputSelectionRef.current = { start, end }
+    decimalPadRef.current?.updateDisabledKeys()
+  }, [])
+  const onOutputSelectionChange = useCallback((start: number, end: number) => {
+    outputSelectionRef.current = { start, end }
+    decimalPadRef.current?.updateDisabledKeys()
+  }, [])
 
   const onFocusInput = useCallback(
     (): void => updateSwapForm({ focusOnCurrencyField: CurrencyField.INPUT }),
@@ -342,6 +346,7 @@ function SwapFormContent(): JSX.Element {
         {!showNativeKeyboard && focusOnCurrencyField && (
           <AnimatedFlex entering={FadeIn}>
             <DecimalPadInput
+              ref={decimalPadRef}
               resetSelection={resetSelection}
               selectionRef={focusOnCurrencyField ? selection[focusOnCurrencyField] : undefined}
               setValue={decimalPadSetValue}
