@@ -42,7 +42,6 @@ import { PendingConfirmModalState, PendingModalContent } from './PendingModalCon
 import { ErrorModalContent, PendingModalError } from './PendingModalContent/ErrorModalContent'
 import SwapModalFooter from './SwapModalFooter'
 import SwapModalHeader from './SwapModalHeader'
-import { MixPanelTrackEvent } from 'pages/mixpanel'
 
 export enum ConfirmModalState {
   REVIEWING,
@@ -297,13 +296,6 @@ export default function ConfirmSwapModal({
       onSwap: () => {
         clearSwapState()
         onConfirm()
-        MixPanelTrackEvent(
-          {
-            category:"Swap confirmed",
-            action:"User swapped",
-            label:"Swap event"
-          }
-        );
       },
       onCurrencySelection,
       allowance,
