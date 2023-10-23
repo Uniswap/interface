@@ -26,13 +26,11 @@ class MainActivity : ReactActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(null);
 
-      window.navigationBarColor = Color.TRANSPARENT
+    window.navigationBarColor = Color.TRANSPARENT
 
-      if (Build.VERSION_CODES.Q <= Build.VERSION.SDK_INT) {
-        window.isNavigationBarContrastEnforced = false
-      }
-      window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
-
+    if (Build.VERSION_CODES.Q <= Build.VERSION.SDK_INT) {
+      window.isNavigationBarContrastEnforced = false
+    }
     val sharedI18nUtilInstance = I18nUtil.getInstance()
     sharedI18nUtilInstance.allowRTL(applicationContext, true)
   }
