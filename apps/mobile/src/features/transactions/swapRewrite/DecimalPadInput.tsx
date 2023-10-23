@@ -13,26 +13,38 @@ import { DecimalPad, KeyAction, KeyLabel } from 'src/features/transactions/swapR
 type DisableKeyCondition = (value: string) => boolean
 
 type DecimalPadInputProps = {
-  valueRef: React.MutableRefObject<string>
-  selectionRef?: React.MutableRefObject<TextInputProps['selection']>
   disabled?: boolean
-  hideDecimal?: boolean
   hasCurrencyPrefix?: boolean
+  hideDecimal?: boolean
+  onReady: () => void
+  resetSelection: (start: number, end?: number) => void
+  selectionRef?: React.MutableRefObject<TextInputProps['selection']>
   setValue: (newValue: string) => void
-  resetSelection?: (start: number, end?: number) => void
+  valueRef: React.MutableRefObject<string>
 }
 
 export type DecimalPadInputRef = {
   updateDisabledKeys(): void
+  setMaxHeight(height: number): void
 }
 
 export const DecimalPadInput = memo(
   forwardRef<DecimalPadInputRef, DecimalPadInputProps>(function DecimalPadInput(
-    { valueRef, selectionRef, setValue, resetSelection, hasCurrencyPrefix, hideDecimal, disabled },
+    {
+      disabled,
+      hasCurrencyPrefix,
+      hideDecimal,
+      onReady,
+      resetSelection,
+      selectionRef,
+      setValue,
+      valueRef,
+    },
     ref
   ): JSX.Element {
     const prefixLength = hasCurrencyPrefix ? 1 : 0
     const [disabledKeys, setDisabledKeys] = useState<Partial<Record<KeyLabel, boolean>>>({})
+    const [maxHeight, setMaxHeight] = useState<number | null>(null)
 
     useEffect(() => {
       updateDisabledKeys(valueRef.current)
@@ -42,6 +54,9 @@ export const DecimalPadInput = memo(
     useImperativeHandle(ref, () => ({
       updateDisabledKeys(): void {
         updateDisabledKeys(valueRef.current)
+      },
+      setMaxHeight(height: number): void {
+        setMaxHeight(height)
       },
     }))
 
@@ -107,10 +122,10 @@ export const DecimalPadInput = memo(
           // has no text selection, cursor is at the end of the text input
           updateValue(valueRef.current + label)
           // the ref is updated instantly, so the new length is the current length (no need to add "+1")
-          resetSelection?.(valueRef.current.length, valueRef.current.length)
+          resetSelection(valueRef.current.length, valueRef.current.length)
         } else {
           updateValue(valueRef.current.slice(0, start) + label + valueRef.current.slice(end))
-          resetSelection?.(start + 1 + prefixLength, start + 1 + prefixLength)
+          resetSelection(start + 1 + prefixLength, start + 1 + prefixLength)
         }
       },
       [updateValue, resetSelection, valueRef, getCurrentSelection, prefixLength]
@@ -122,15 +137,15 @@ export const DecimalPadInput = memo(
         // has no text selection, cursor is at the end of the text input
         updateValue(valueRef.current.slice(0, -1))
         // the ref is updated instantly, so the new length is the current length (no need to subtract "-1")
-        resetSelection?.(valueRef.current.length, valueRef.current.length)
+        resetSelection(valueRef.current.length, valueRef.current.length)
       } else if (start < end) {
         // has text part selected
         updateValue(valueRef.current.slice(0, start) + valueRef.current.slice(end))
-        resetSelection?.(start + prefixLength, start + prefixLength)
+        resetSelection(start + prefixLength, start + prefixLength)
       } else if (start > 0) {
         // part of the text is not selected, but cursor moved
         updateValue(valueRef.current.slice(0, start - 1) + valueRef.current.slice(start))
-        resetSelection?.(start - 1 + prefixLength, start - 1 + prefixLength)
+        resetSelection(start - 1 + prefixLength, start - 1 + prefixLength)
       }
     }, [updateValue, resetSelection, valueRef, getCurrentSelection, prefixLength])
 
@@ -150,7 +165,7 @@ export const DecimalPadInput = memo(
       (_: KeyLabel, action: KeyAction) => {
         if (disabled || action !== KeyAction.Delete) return
         setValue('')
-        resetSelection?.(0, 0)
+        resetSelection(0, 0)
       },
       [disabled, setValue, resetSelection]
     )
@@ -160,8 +175,10 @@ export const DecimalPadInput = memo(
         disabled={disabled}
         disabledKeys={disabledKeys}
         hideDecimal={hideDecimal}
+        maxHeight={maxHeight}
         onKeyLongPress={onLongPress}
         onKeyPress={onPress}
+        onReady={onReady}
       />
     )
   })

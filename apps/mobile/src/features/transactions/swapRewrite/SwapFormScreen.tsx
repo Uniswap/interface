@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, StyleSheet, TextInput, TextInputProps } from 'react-native'
-import { FadeIn } from 'react-native-reanimated'
-import { useShouldShowNativeKeyboard } from 'src/app/hooks'
+import { LayoutChangeEvent, StyleSheet, TextInput, TextInputProps } from 'react-native'
+import { FadeIn, useAnimatedStyle, withTiming } from 'react-native-reanimated'
+import { Delay } from 'src/components/layout/Delayed'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { useSwapAnalytics } from 'src/features/transactions/swap/analytics'
@@ -50,7 +50,6 @@ export function SwapFormScreen({ hideContent }: { hideContent: boolean }): JSX.E
   )
 }
 
-// eslint-disable-next-line complexity
 function SwapFormContent(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -87,15 +86,11 @@ function SwapFormContent(): JSX.Element {
   const { walletNeedsRestore, openWalletRestoreModal } = useWalletRestore()
 
   const onRestorePress = (): void => {
-    Keyboard.dismiss()
     openWalletRestoreModal()
   }
 
   // Quote is being fetched for first time
   const isSwapDataLoading = !isWrapAction(wrapType) && trade.loading
-
-  const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
-    useShouldShowNativeKeyboard()
 
   const inputRef = useRef<TextInput>(null)
   const outputRef = useRef<TextInput>(null)
@@ -143,6 +138,42 @@ function SwapFormContent(): JSX.Element {
     [focusOnCurrencyField, isFiatInput, updateSwapForm]
   )
 
+  const reviewButtonHeightRef = useRef<number | null>(null)
+  const bottomScreenHeightRef = useRef<number | null>(null)
+  const [decimalPadReady, setDecimalPadReady] = useState(false)
+
+  const updateDecimalPadMaxHeight = useCallback(() => {
+    if (reviewButtonHeightRef.current !== null && bottomScreenHeightRef.current !== null) {
+      decimalPadRef.current?.setMaxHeight(
+        bottomScreenHeightRef.current - reviewButtonHeightRef.current
+      )
+    }
+  }, [])
+
+  const onReviewButtonLayout = useCallback(
+    (event: LayoutChangeEvent): void => {
+      reviewButtonHeightRef.current = event.nativeEvent.layout.height
+      updateDecimalPadMaxHeight()
+    },
+    [updateDecimalPadMaxHeight]
+  )
+
+  const onBottomScreenLayout = useCallback(
+    (event: LayoutChangeEvent): void => {
+      bottomScreenHeightRef.current = event.nativeEvent.layout.height
+      updateDecimalPadMaxHeight()
+    },
+    [updateDecimalPadMaxHeight]
+  )
+
+  const onDecimalPadReady = useCallback(() => setDecimalPadReady(true), [])
+
+  const decimalPadAndButtonAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(decimalPadReady ? 1 : 0, { duration: Delay.Short / 2 }),
+    }
+  })
+
   const onInputSelectionChange = useCallback((start: number, end: number) => {
     inputSelectionRef.current = { start, end }
     decimalPadRef.current?.updateDisabledKeys()
@@ -162,15 +193,17 @@ function SwapFormContent(): JSX.Element {
     [updateSwapForm]
   )
 
-  const onShowTokenSelectorInput = useCallback(
-    (): void => updateSwapForm({ selectingCurrencyField: CurrencyField.INPUT }),
-    [updateSwapForm]
-  )
+  const onShowTokenSelectorInput = useCallback((): void => {
+    updateSwapForm({
+      selectingCurrencyField: CurrencyField.INPUT,
+    })
+  }, [updateSwapForm])
 
-  const onShowTokenSelectorOutput = useCallback(
-    (): void => updateSwapForm({ selectingCurrencyField: CurrencyField.OUTPUT }),
-    [updateSwapForm]
-  )
+  const onShowTokenSelectorOutput = useCallback((): void => {
+    updateSwapForm({
+      selectingCurrencyField: CurrencyField.OUTPUT,
+    })
+  }, [updateSwapForm])
 
   const onSetExactAmountInput = useCallback(
     (amount: string): void =>
@@ -233,7 +266,7 @@ function SwapFormContent(): JSX.Element {
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
-      <AnimatedFlex entering={FadeIn} gap="$spacing2" onLayout={onInputPanelLayout}>
+      <AnimatedFlex entering={FadeIn} gap="$spacing2">
         <Trace section={SectionName.CurrencyInputPanel}>
           <Flex
             backgroundColor={
@@ -256,13 +289,13 @@ function SwapFormContent(): JSX.Element {
                   : exactCurrencyField !== CurrencyField.INPUT
               }
               resetSelection={resetSelection}
-              showSoftInputOnFocus={showNativeKeyboard}
+              showSoftInputOnFocus={false}
               usdValue={currencyAmountsUSDValue[CurrencyField.INPUT]}
               value={
                 exactCurrencyField === CurrencyField.INPUT ? exactValue : formattedDerivedValue
               }
               onPressIn={onFocusInput}
-              onSelectionChange={showNativeKeyboard ? undefined : onInputSelectionChange}
+              onSelectionChange={onInputSelectionChange}
               onSetExactAmount={onSetExactAmountInput}
               onSetMax={onSetMax}
               onShowTokenSelector={onShowTokenSelectorInput}
@@ -298,13 +331,13 @@ function SwapFormContent(): JSX.Element {
               }
               resetSelection={resetSelection}
               showNonZeroBalancesOnly={false}
-              showSoftInputOnFocus={showNativeKeyboard}
+              showSoftInputOnFocus={false}
               usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
               value={
                 exactCurrencyField === CurrencyField.OUTPUT ? exactValue : formattedDerivedValue
               }
               onPressIn={onFocusOutput}
-              onSelectionChange={showNativeKeyboard ? undefined : onOutputSelectionChange}
+              onSelectionChange={onOutputSelectionChange}
               onSetExactAmount={onSetExactAmountOutput}
               onShowTokenSelector={onShowTokenSelectorOutput}
             />
@@ -336,16 +369,22 @@ function SwapFormContent(): JSX.Element {
         <GasAndWarningRows />
       </AnimatedFlex>
 
-      <Flex
+      {/*
+        This container is used to calculate the space that the `DecimalPad` can use.
+        We position the `DecimalPad` with `position: absolute` at the bottom of the screen instead of putting it inside this container
+        in order to avoid any overflows while the `DecimalPad` is automatically resizing to find the right size for the screen.
+      */}
+      <Flex fill mt="$spacing8" onLayout={onBottomScreenLayout} />
+
+      <AnimatedFlex
         bottom={0}
         gap="$spacing8"
         left={0}
-        opacity={isLayoutPending ? 0 : 1}
         position="absolute"
         right={0}
-        onLayout={onDecimalPadLayout}>
-        {!showNativeKeyboard && focusOnCurrencyField && (
-          <AnimatedFlex entering={FadeIn}>
+        style={decimalPadAndButtonAnimatedStyle}>
+        <Flex grow justifyContent="flex-end">
+          {focusOnCurrencyField && (
             <DecimalPadInput
               ref={decimalPadRef}
               resetSelection={resetSelection}
@@ -356,17 +395,18 @@ function SwapFormContent(): JSX.Element {
                   ? exactValueRef
                   : formattedDerivedValueRef
               }
+              onReady={onDecimalPadReady}
             />
-          </AnimatedFlex>
-        )}
+          )}
+        </Flex>
 
-        <AnimatedFlex entering={FadeIn}>
+        <Flex opacity={decimalPadReady ? 1 : 0} onLayout={onReviewButtonLayout}>
           <ReviewButton
             isSwapDataLoading={isSwapDataLoading}
             walletNeedsRestore={!!walletNeedsRestore}
           />
-        </AnimatedFlex>
-      </Flex>
+        </Flex>
+      </AnimatedFlex>
     </Flex>
   )
 }

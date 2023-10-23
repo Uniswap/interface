@@ -1,7 +1,9 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
-import React, { memo, useMemo } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { LayoutChangeEvent } from 'react-native'
 import { getNumberFormatSettings } from 'react-native-localize'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { fonts } from 'ui/src/theme'
 
 // if this setting is changed in phone settings the app would be restarted
 const { decimalSeparator } = getNumberFormatSettings()
@@ -16,101 +18,161 @@ export type KeyLabel = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '.'
 type KeyProps = {
   action: KeyAction
   label: KeyLabel
-  align: 'flex-start' | 'center' | 'flex-end'
   hidden?: boolean
-  paddingTop?: '$spacing12'
 }
 
 interface DecimalPadProps {
   disabled?: boolean
   hideDecimal?: boolean
   disabledKeys?: Partial<Record<KeyLabel, boolean>>
+  maxHeight: number | null
   onKeyPress?: (label: KeyLabel, action: KeyAction) => void
   onKeyLongPress?: (label: KeyLabel, action: KeyAction) => void
+  onReady: () => void
+}
+
+type SizeMultiplier = {
+  fontSize: number
+  icon: number
+  lineHeight: number
+  padding: number
 }
 
 export const DecimalPad = memo(function DecimalPad({
   disabled = false,
   hideDecimal = false,
   disabledKeys = {},
+  maxHeight,
   onKeyPress,
   onKeyLongPress,
+  onReady,
 }: DecimalPadProps): JSX.Element {
-  const keys: KeyProps[] = useMemo(() => {
+  const currentHeightRef = useRef<number | null>(null)
+  const maxHeightRef = useRef<number | null>(maxHeight)
+  const [currentHeight, setCurrentHeight] = useState<number | null>(null)
+  const [sizeMultiplier, setSizeMultiplier] = useState<SizeMultiplier>({
+    fontSize: 1,
+    icon: 1,
+    lineHeight: 1,
+    padding: 1,
+  })
+
+  const keys: KeyProps[][] = useMemo(() => {
     return [
-      {
-        label: '1',
-        action: KeyAction.Insert,
-        align: 'center',
-        paddingTop: '$spacing12',
-      },
-      {
-        label: '2',
-        action: KeyAction.Insert,
-        align: 'center',
-        paddingTop: '$spacing12',
-      },
-      {
-        label: '3',
-        action: KeyAction.Insert,
-        align: 'center',
-        paddingTop: '$spacing12',
-      },
-      { label: '4', action: KeyAction.Insert, align: 'center' },
-      { label: '5', action: KeyAction.Insert, align: 'center' },
-      { label: '6', action: KeyAction.Insert, align: 'center' },
-      { label: '7', action: KeyAction.Insert, align: 'center' },
-      { label: '8', action: KeyAction.Insert, align: 'center' },
-      { label: '9', action: KeyAction.Insert, align: 'center' },
-      {
-        label: '.',
-        action: KeyAction.Insert,
-        hidden: hideDecimal,
-        align: 'center',
-      },
-      { label: '0', action: KeyAction.Insert, align: 'center' },
-      {
-        label: 'backspace',
-        action: KeyAction.Delete,
-        align: 'center',
-      },
+      [
+        {
+          label: '1',
+          action: KeyAction.Insert,
+        },
+        {
+          label: '2',
+          action: KeyAction.Insert,
+        },
+        {
+          label: '3',
+          action: KeyAction.Insert,
+        },
+      ],
+      [
+        { label: '4', action: KeyAction.Insert },
+        { label: '5', action: KeyAction.Insert },
+        { label: '6', action: KeyAction.Insert },
+      ],
+      [
+        { label: '7', action: KeyAction.Insert },
+        { label: '8', action: KeyAction.Insert },
+        { label: '9', action: KeyAction.Insert },
+      ],
+      [
+        {
+          label: '.',
+          action: KeyAction.Insert,
+          hidden: hideDecimal,
+        },
+        { label: '0', action: KeyAction.Insert, align: 'center' },
+        {
+          label: 'backspace',
+          action: KeyAction.Delete,
+        },
+      ],
     ]
   }, [hideDecimal])
 
+  const onLayout = useCallback((event: LayoutChangeEvent) => {
+    setCurrentHeight(event.nativeEvent.layout.height)
+  }, [])
+
+  useEffect(() => {
+    currentHeightRef.current = currentHeight
+    maxHeightRef.current = maxHeight
+
+    if (currentHeight === null || maxHeight === null) {
+      return
+    }
+
+    if (currentHeight < maxHeight) {
+      // We call `onReady` on the next tick in case the layout is still changing and `maxHeight` is now different.
+      setTimeout(() => {
+        if (
+          currentHeightRef.current !== null &&
+          maxHeightRef.current !== null &&
+          currentHeightRef.current < maxHeightRef.current
+        ) {
+          onReady()
+        }
+      }, 0)
+      return
+    }
+
+    setSizeMultiplier({
+      fontSize: sizeMultiplier.fontSize * 0.95,
+      icon: sizeMultiplier.icon * 0.97,
+      lineHeight: sizeMultiplier.lineHeight * 0.95,
+      padding: sizeMultiplier.padding * 0.8,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentHeight, maxHeight])
+
+  if (maxHeight === null) {
+    return <></>
+  }
+
   return (
-    <Flex row flexWrap="wrap">
-      {keys.map((key, i) =>
-        key.hidden ? (
-          <Flex key={i} alignItems={key.align} height="25%" width={i % 3 === 1 ? '50%' : '25%'} />
-        ) : (
-          <KeyButton
-            {...key}
-            key={i}
-            disabled={disabled || disabledKeys[key.label]}
-            index={i}
-            onLongPress={onKeyLongPress}
-            onPress={onKeyPress}
-          />
-        )
-      )}
+    <Flex onLayout={onLayout}>
+      {keys.map((row, rowIndex) => (
+        <Flex key={rowIndex} row alignItems="center">
+          {row.map((key, keyIndex) =>
+            key.hidden ? (
+              <Flex key={keyIndex} alignItems="center" width="50%" />
+            ) : (
+              <KeyButton
+                {...key}
+                key={keyIndex}
+                disabled={disabled || disabledKeys[key.label]}
+                sizeMultiplier={sizeMultiplier}
+                onLongPress={onKeyLongPress}
+                onPress={onKeyPress}
+              />
+            )
+          )}
+        </Flex>
+      ))}
     </Flex>
   )
 })
 
 type KeyButtonProps = KeyProps & {
-  index: number
   disabled?: boolean
+  sizeMultiplier: SizeMultiplier
   onPress?: (label: KeyLabel, action: KeyAction) => void
   onLongPress?: (label: KeyLabel, action: KeyAction) => void
 }
 
 const KeyButton = memo(function KeyButton({
-  index,
   action,
   disabled,
   label,
-  align,
-  paddingTop,
+  sizeMultiplier,
   onPress,
   onLongPress,
 }: KeyButtonProps): JSX.Element {
@@ -124,26 +186,32 @@ const KeyButton = memo(function KeyButton({
     onLongPress?.(label, action)
   }
 
+  const color = disabled ? '$neutral3' : '$neutral1'
+
   return (
     <TouchableArea
       hapticFeedback
       ignoreDragEvents
       activeOpacity={1}
-      alignItems={align}
+      alignItems="center"
       disabled={disabled}
       hapticStyle={ImpactFeedbackStyle.Light}
-      justifyContent="center"
-      p="$spacing16"
-      pt={paddingTop}
-      scaleTo={1.125}
+      p={16 * sizeMultiplier.padding}
+      scaleTo={1.2}
       testID={'decimal-pad-' + label}
-      width={index % 3 === 1 ? '50%' : '25%'}
+      width="33%"
       onLongPress={handleLongPress}
       onPress={handlePress}>
       {label === 'backspace' ? (
-        <Icons.BackArrow color={disabled ? '$neutral3' : '$neutral1'} size={32} />
+        <Icons.BackArrow color={color} size={24 * sizeMultiplier.icon} />
       ) : (
-        <Text color={disabled ? '$neutral3' : '$neutral1'} textAlign="center" variant="heading2">
+        <Text
+          color={color}
+          style={{
+            lineHeight: fonts.heading2.lineHeight * sizeMultiplier.lineHeight,
+            fontSize: fonts.heading2.fontSize * sizeMultiplier.fontSize,
+          }}
+          textAlign="center">
           {
             label === '.' ? decimalSeparator : label
             /* respect phone settings to show decimal separator in the numpad,

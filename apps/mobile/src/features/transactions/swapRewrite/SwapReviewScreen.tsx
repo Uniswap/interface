@@ -68,7 +68,12 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   const [showSwapProtectionModal, setShowSwapProtectionModal] = useState(false)
 
   const { approveTxRequest, gasFee, txRequest } = useSwapTxContext()
-  const { derivedSwapInfo } = useSwapFormContext()
+  const {
+    derivedSwapInfo,
+    updateSwapForm,
+    focusOnCurrencyField,
+    exactCurrencyField: ctxExactCurrencyField,
+  } = useSwapFormContext()
 
   const {
     autoSlippageTolerance,
@@ -102,8 +107,12 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   const noValidSwap = !isWrapAction(wrapType) && !trade
 
   const onPrev = useCallback(() => {
+    if (!focusOnCurrencyField) {
+      // We make sure that one of the input fields is focused (and the `DecimalPad` open) when the user goes back.
+      updateSwapForm({ focusOnCurrencyField: ctxExactCurrencyField })
+    }
     setScreen(SwapScreen.SwapForm)
-  }, [setScreen])
+  }, [ctxExactCurrencyField, focusOnCurrencyField, setScreen, updateSwapForm])
 
   const onNext = useCallback(() => {
     setScreen(SwapScreen.SwapPending)
