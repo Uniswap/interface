@@ -340,10 +340,12 @@ export class InjectedProvider extends EventEmitter {
     this.publicKeys = [accountAddress, ...(this.publicKeys || [])]
     this.chainId = chainId
     this.provider = new ethers.providers.JsonRpcProvider(providerUrl)
+
     this.emit('connect', {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       chainId: chainIdToHexadecimalString(this.chainId!),
     } as ProviderConnectInfo)
+    this.emit('accountsChanged', this.publicKeys)
 
     return this.publicKeys
   }
