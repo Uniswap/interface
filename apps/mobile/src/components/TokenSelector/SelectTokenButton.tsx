@@ -40,7 +40,7 @@ export function SelectTokenButton({
           </Flex>
         ) : (
           <Flex centered row px="$spacing12" py="$spacing4">
-            <Text color="$sporeWhite" variant="buttonLabel3">
+            <Text color="$sporeWhite" variant="buttonLabel2">
               {t('Choose token')}
             </Text>
           </Flex>

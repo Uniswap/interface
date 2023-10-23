@@ -119,10 +119,10 @@ function SwapFormContent(): JSX.Element {
       setTimeout(() => {
         if (focusOnCurrencyField === CurrencyField.INPUT) {
           inputSelectionRef.current = { start, end }
-          inputRef.current?.setNativeProps({ selection: { start, end } })
+          inputRef.current?.setNativeProps?.({ selection: { start, end } })
         } else if (focusOnCurrencyField === CurrencyField.OUTPUT) {
           outputSelectionRef.current = { start, end }
-          outputRef.current?.setNativeProps({ selection: { start, end } })
+          outputRef.current?.setNativeProps?.({ selection: { start, end } })
         }
       }, 0)
     },
@@ -202,10 +202,11 @@ function SwapFormContent(): JSX.Element {
   )
 
   const onSwitchCurrencies = useCallback(() => {
+    const newExactCurrencyField =
+      exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
     updateSwapForm({
-      exactCurrencyField:
-        exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT,
-      focusOnCurrencyField: exactCurrencyField,
+      exactCurrencyField: newExactCurrencyField,
+      focusOnCurrencyField: newExactCurrencyField,
       input: output,
       output: input,
     })

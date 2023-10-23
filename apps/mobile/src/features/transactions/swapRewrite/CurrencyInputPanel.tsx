@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { forwardRef, memo, useCallback, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   NativeSyntheticEvent,
   TextInput,
@@ -10,7 +11,7 @@ import { useDynamicFontSizing } from 'src/app/hooks'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { MaxAmountButton } from 'src/components/input/MaxAmountButton'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
-import { AnimatedFlex, Flex, FlexProps, Text, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, FlexProps, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { fonts, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { useForwardRef } from 'utilities/src/react/hooks'
@@ -76,6 +77,7 @@ export const CurrencyInputPanel = memo(
     },
     forwardedRef
   ): JSX.Element {
+    const { t } = useTranslation()
     const colors = useSporeColors()
     const { convertFiatAmountFormatted } = useFiatConverter()
     const { formatCurrencyAmount } = useLocalizedFormatter()
@@ -155,36 +157,45 @@ export const CurrencyInputPanel = memo(
             height={MAX_INPUT_FONT_SIZE}
             overflow="hidden"
             onLayout={onLayout}>
-            <AmountInput
-              ref={inputRef}
-              autoFocus={autoFocus ?? focus}
-              backgroundColor="$transparent"
-              borderWidth={0}
-              color={showInsufficientBalanceWarning ? '$statusCritical' : '$neutral1'}
-              dimTextColor={dimTextColor}
-              flex={1}
-              focusable={Boolean(currencyInfo)}
-              fontFamily="$heading"
-              fontSize={isCollapsed ? MIN_INPUT_FONT_SIZE : fontSize}
-              maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
-              // This is a hacky workaround for Android to prevent text from being cut off
-              // (the text input height is greater than the font size and the input is
-              // centered vertically, so the caret is cut off but the text is not)
-              minHeight={2 * MAX_INPUT_FONT_SIZE}
-              overflow="visible"
-              placeholder="0"
-              placeholderTextColor={colors.neutral3.val}
-              px="$none"
-              py="$none"
-              returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
-              showCurrencySign={isFiatInput}
-              showSoftInputOnFocus={showSoftInputOnFocus}
-              testID={isOutput ? 'amount-input-out' : 'amount-input-in'}
-              value={value}
-              onChangeText={onSetExactAmount}
-              onPressIn={onPressIn}
-              onSelectionChange={onSelectionChange}
-            />
+            {currencyInfo ? (
+              <AmountInput
+                ref={inputRef}
+                autoFocus={autoFocus ?? focus}
+                backgroundColor="$transparent"
+                borderWidth={0}
+                color={showInsufficientBalanceWarning ? '$statusCritical' : '$neutral1'}
+                dimTextColor={dimTextColor}
+                disabled={!currencyInfo}
+                flex={1}
+                focusable={Boolean(currencyInfo)}
+                fontFamily="$heading"
+                fontSize={isCollapsed ? MIN_INPUT_FONT_SIZE : fontSize}
+                maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
+                // This is a hacky workaround for Android to prevent text from being cut off
+                // (the text input height is greater than the font size and the input is
+                // centered vertically, so the caret is cut off but the text is not)
+                minHeight={2 * MAX_INPUT_FONT_SIZE}
+                overflow="visible"
+                placeholder="0"
+                placeholderTextColor={colors.neutral3.val}
+                px="$none"
+                py="$none"
+                returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
+                showCurrencySign={isFiatInput}
+                showSoftInputOnFocus={showSoftInputOnFocus}
+                testID={isOutput ? 'amount-input-out' : 'amount-input-in'}
+                value={value}
+                onChangeText={onSetExactAmount}
+                onPressIn={onPressIn}
+                onSelectionChange={onSelectionChange}
+              />
+            ) : (
+              <TouchableArea hapticFeedback onPress={onShowTokenSelector}>
+                <Text color="$neutral3" variant="heading3">
+                  {isOutput ? t('Receive') : t('Send')}
+                </Text>
+              </TouchableArea>
+            )}
           </Flex>
           <Flex row alignItems="center">
             <SelectTokenButton
