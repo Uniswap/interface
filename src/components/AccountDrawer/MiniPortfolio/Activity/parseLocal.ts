@@ -191,8 +191,8 @@ export function parseLocalActivity(
       const formatted1 = currency1 ? info.amount1 : undefined
       const descriptor =
         formatted0 && formatted1
-          ? t`${formatted0} ${currency0?.symbol} and ${formatted1} ${currency1?.symbol}`
-          : t`Unknown`
+          ? `${formatted0} ${currency0?.symbol} and ${formatted1} ${currency1?.symbol}`
+          : 'Unknown'
       additionalFields = {
         descriptor,
         currencies: [currency0, currency1],
