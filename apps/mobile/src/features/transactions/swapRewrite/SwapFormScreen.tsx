@@ -109,16 +109,17 @@ function SwapFormContent(): JSX.Element {
 
   const resetSelection = useCallback(
     (start: number, end?: number) => {
+      // Update refs first to have the latest selection state available in the DecimalPadInput
+      // component and property update disabled keys of the decimal pad.
+      if (focusOnCurrencyField === CurrencyField.INPUT) {
+        inputSelectionRef.current = { start, end }
+      } else if (focusOnCurrencyField === CurrencyField.OUTPUT) {
+        outputSelectionRef.current = { start, end }
+      } else return
       // We reset the selection on the next tick because we need to wait for the native input to be updated.
       // This is needed because of the combination of state (delayed update) + ref (instant update) to improve performance.
       setTimeout(() => {
-        if (focusOnCurrencyField === CurrencyField.INPUT) {
-          inputSelectionRef.current = { start, end }
-          inputRef.current?.setNativeProps?.({ selection: { start, end } })
-        } else if (focusOnCurrencyField === CurrencyField.OUTPUT) {
-          outputSelectionRef.current = { start, end }
-          outputRef.current?.setNativeProps?.({ selection: { start, end } })
-        }
+        inputRef.current?.setNativeProps?.({ selection: { start, end } })
       }, 0)
     },
     [focusOnCurrencyField]
