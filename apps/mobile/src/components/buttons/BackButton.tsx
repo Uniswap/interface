@@ -26,11 +26,12 @@ export function BackButton({
       }
   return (
     <TouchableArea
+      hapticFeedback
+      alignItems="center"
+      hitSlop={24}
       testID="buttons/back-button"
       onPress={goBack}
-      {...rest}
-      alignItems="center"
-      hitSlop={24}>
+      {...rest}>
       <BackButtonView color={color} showButtonLabel={showButtonLabel} size={size} />
     </TouchableArea>
   )

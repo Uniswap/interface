@@ -6,7 +6,7 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { Loader } from 'src/components/loading'
 import { LongText } from 'src/components/text/LongText'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
-import { Flex, FlexProps, Logos, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, FlexProps, Logos, Text, useSporeColors } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
@@ -93,15 +93,11 @@ export function NFTCollectionHeader({
           justifyContent="space-between"
           mx="$spacing24"
           pt="$spacing48">
-          <TouchableArea
-            hapticFeedback
-            backgroundColor="$sporeBlack"
-            borderRadius="$roundedFull"
-            p="$spacing12">
+          <Flex backgroundColor="$sporeBlack" borderRadius="$roundedFull" p="$spacing12">
             <Flex centered grow height={iconSizes.icon8} width={iconSizes.icon8}>
               <BackButton color="$sporeWhite" size={iconSizes.icon24} />
             </Flex>
-          </TouchableArea>
+          </Flex>
           <NFTCollectionContextMenu
             collectionAddress={collectionAddress}
             data={data}

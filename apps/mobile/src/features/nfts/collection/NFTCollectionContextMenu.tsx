@@ -5,6 +5,7 @@ import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context
 import { TripleDot } from 'src/components/icons/TripleDot'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
+import { disableOnPress } from 'src/utils/disableOnPress'
 import { getNftCollectionUrl, getTwitterLink, openUri } from 'src/utils/linking'
 import { ColorTokens, Flex, TouchableArea } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -98,7 +99,8 @@ export function NFTCollectionContextMenu({
         hapticFeedback
         backgroundColor={showButtonOutline ? '$sporeBlack' : '$transparent'}
         borderRadius="$roundedFull"
-        style={{ padding: ICON_PADDING }}>
+        style={{ padding: ICON_PADDING }}
+        onPress={disableOnPress}>
         <Flex centered grow height={ICON_SIZE} width={ICON_SIZE}>
           <TripleDot color={iconColor} size={3.5} />
         </Flex>

@@ -27,6 +27,7 @@ import { useNavigateToSwap } from 'src/features/swap/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
 import { Screens } from 'src/screens/Screens'
+import { disableOnPress } from 'src/utils/disableOnPress'
 import { useSkeletonLoading } from 'src/utils/useSkeletonLoading'
 import {
   AnimatedFlex,
@@ -276,7 +277,8 @@ function TokenDetails({
                 <TouchableArea
                   hapticFeedback
                   hitSlop={{ right: 5, left: 20, top: 20, bottom: 20 }}
-                  style={{ padding: spacing.spacing8, marginRight: -spacing.spacing8 }}>
+                  style={{ padding: spacing.spacing8, marginRight: -spacing.spacing8 }}
+                  onPress={disableOnPress}>
                   <EllipsisIcon
                     color={ellipsisColor}
                     height={iconSizes.icon16}

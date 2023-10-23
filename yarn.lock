@@ -31541,6 +31541,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-context-menu-view@patch:react-native-context-menu-view@npm%3A1.6.0#./.yarn/patches/react-native-context-menu-view-npm-1.6.0-f5f5410f50.patch::locator=universe%40workspace%3A.":
+  version: 1.6.0
+  resolution: "react-native-context-menu-view@patch:react-native-context-menu-view@npm%3A1.6.0#./.yarn/patches/react-native-context-menu-view-npm-1.6.0-f5f5410f50.patch::version=1.6.0&hash=3e2cbb&locator=universe%40workspace%3A."
+  peerDependencies:
+    react: ^16.8.1 || ^17.0.0
+    react-native: ">=0.60.0-rc.0 <1.0.x"
+  checksum: 2813e5dc43cf5f0bd3245014e10876afe51f1d6cd4b3e21334d85dca30e17b8a6361069e9a618a95474d14d03e13d5bd9e3a9dcaf7a5a22e8e4dc9daff6baf02
+  languageName: node
+  linkType: hard
+
 "react-native-device-info@npm:10.0.2":
   version: 10.0.2
   resolution: "react-native-device-info@npm:10.0.2"
