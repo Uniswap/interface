@@ -282,13 +282,13 @@ function SwapFormContent(): JSX.Element {
               currencyAmount={currencyAmounts[CurrencyField.INPUT]}
               currencyBalance={currencyBalances[CurrencyField.INPUT]}
               currencyInfo={currencies[CurrencyField.INPUT]}
-              dimTextColor={exactCurrencyField === CurrencyField.OUTPUT && isSwapDataLoading}
               focus={focusOnCurrencyField === CurrencyField.INPUT}
               isCollapsed={
                 focusOnCurrencyField
                   ? focusOnCurrencyField !== CurrencyField.INPUT
                   : exactCurrencyField !== CurrencyField.INPUT
               }
+              isLoading={exactCurrencyField === CurrencyField.OUTPUT && isSwapDataLoading}
               resetSelection={resetSelection}
               showSoftInputOnFocus={false}
               usdValue={currencyAmountsUSDValue[CurrencyField.INPUT]}
@@ -323,13 +323,13 @@ function SwapFormContent(): JSX.Element {
               currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
               currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
               currencyInfo={currencies[CurrencyField.OUTPUT]}
-              dimTextColor={exactCurrencyField === CurrencyField.INPUT && isSwapDataLoading}
               focus={focusOnCurrencyField === CurrencyField.OUTPUT}
               isCollapsed={
                 focusOnCurrencyField
                   ? focusOnCurrencyField !== CurrencyField.OUTPUT
                   : exactCurrencyField !== CurrencyField.OUTPUT
               }
+              isLoading={exactCurrencyField === CurrencyField.INPUT && isSwapDataLoading}
               resetSelection={resetSelection}
               showNonZeroBalancesOnly={false}
               showSoftInputOnFocus={false}

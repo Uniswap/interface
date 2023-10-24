@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { forwardRef, memo, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -7,6 +8,14 @@ import {
   TextInputProps,
   TextInputSelectionChangeEventData,
 } from 'react-native'
+import {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated'
 import { useDynamicFontSizing } from 'src/app/hooks'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { MaxAmountButton } from 'src/components/input/MaxAmountButton'
@@ -14,7 +23,7 @@ import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButto
 import { AnimatedFlex, Flex, FlexProps, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { fonts, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
-import { useForwardRef } from 'utilities/src/react/hooks'
+import { useForwardRef, usePrevious } from 'utilities/src/react/hooks'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
@@ -24,7 +33,7 @@ type CurrentInputPanelProps = {
   currencyAmount: Maybe<CurrencyAmount<Currency>>
   currencyBalance: Maybe<CurrencyAmount<Currency>>
   currencyInfo: Maybe<CurrencyInfo>
-  dimTextColor?: boolean
+  isLoading?: boolean
   isCollapsed: boolean
   focus?: boolean
   isOutput?: boolean
@@ -58,7 +67,7 @@ export const CurrencyInputPanel = memo(
       currencyAmount,
       currencyBalance,
       currencyInfo,
-      dimTextColor,
+      isLoading,
       isCollapsed,
       focus,
       isOutput = false,
@@ -138,24 +147,46 @@ export const CurrencyInputPanel = memo(
       [selectionChange]
     )
 
+    // We need to store the previous value, because new quote request resets `Trade`, and this value, to undefined
+    const previousValue = usePrevious(value)
+    const loadingTextValue = previousValue && previousValue !== '' ? previousValue : '0'
+
+    const loadingFlexProgress = useSharedValue(1)
+    loadingFlexProgress.value = withRepeat(
+      withSequence(
+        withTiming(0.4, { duration: 400, easing: Easing.ease }),
+        withTiming(1, { duration: 400, easing: Easing.ease })
+      ),
+      -1,
+      true
+    )
+    const loadingFlexStyle = useAnimatedStyle(
+      () => ({
+        opacity: isLoading ? loadingFlexProgress.value : 1,
+      }),
+      [isLoading]
+    )
+
     return (
       <Flex
         {...rest}
         paddingBottom="$spacing16"
         paddingTop={!focus ? '$spacing16' : '$spacing24'}
-        px="$spacing16">
+        px="$spacing16"
+        onPressIn={onPressIn}>
         <AnimatedFlex
           row
           alignItems="center"
           gap="$spacing8"
           justifyContent={!currencyInfo ? 'flex-end' : 'space-between'}>
-          <Flex
+          <AnimatedFlex
             fill
             grow
             row
             alignItems="center"
             height={MAX_INPUT_FONT_SIZE}
             overflow="hidden"
+            style={loadingFlexStyle}
             onLayout={onLayout}>
             {currencyInfo ? (
               <AmountInput
@@ -164,7 +195,6 @@ export const CurrencyInputPanel = memo(
                 backgroundColor="$transparent"
                 borderWidth={0}
                 color={showInsufficientBalanceWarning ? '$statusCritical' : '$neutral1'}
-                dimTextColor={dimTextColor}
                 disabled={!currencyInfo}
                 flex={1}
                 focusable={Boolean(currencyInfo)}
@@ -184,7 +214,7 @@ export const CurrencyInputPanel = memo(
                 showCurrencySign={isFiatInput}
                 showSoftInputOnFocus={showSoftInputOnFocus}
                 testID={isOutput ? 'amount-input-out' : 'amount-input-in'}
-                value={value}
+                value={isLoading ? loadingTextValue : value}
                 onChangeText={onSetExactAmount}
                 onPressIn={onPressIn}
                 onSelectionChange={onSelectionChange}
@@ -196,7 +226,7 @@ export const CurrencyInputPanel = memo(
                 </Text>
               </TouchableArea>
             )}
-          </Flex>
+          </AnimatedFlex>
           <Flex row alignItems="center">
             <SelectTokenButton
               selectedCurrencyInfo={currencyInfo}
