@@ -96,7 +96,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
                 <Text color="$neutral2">{t('N/A')}</Text>
               </Flex>
             ) : (
-              <Flex alignItems="flex-end" gap="$spacing4" pl="$spacing8">
+              <Flex alignItems="flex-end" pl="$spacing8">
                 <Text color="$neutral1" numberOfLines={1} variant="body1">
                   {balance}
                 </Text>
