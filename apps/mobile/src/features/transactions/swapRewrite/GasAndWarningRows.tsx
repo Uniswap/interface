@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { NetworkFeeInfoModal } from 'src/features/transactions/swap/modals/NetworkFeeInfoModal'
 import { useSwapFormContext } from 'src/features/transactions/swapRewrite/contexts/SwapFormContext'
 import { useSwapTxContext } from 'src/features/transactions/swapRewrite/contexts/SwapTxContext'
 import { useParsedSwapWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
@@ -23,6 +24,7 @@ export function GasAndWarningRows(): JSX.Element {
   const { chainId } = derivedSwapInfo
 
   const [showWarningModal, setShowWarningModal] = useState(false)
+  const [showGasInfoModal, setShowGasInfoModal] = useState(false)
 
   const { isBlocked } = useIsBlockedActiveAddress()
 
@@ -43,6 +45,8 @@ export function GasAndWarningRows(): JSX.Element {
 
   return (
     <>
+      {showGasInfoModal && <NetworkFeeInfoModal onClose={(): void => setShowGasInfoModal(false)} />}
+
       {showWarningModal && formScreenWarning && (
         <SwapWarningModal
           parsedWarning={formScreenWarning}
@@ -67,12 +71,14 @@ export function GasAndWarningRows(): JSX.Element {
         )}
 
         {gasFeeUSD && (
-          <AnimatedFlex centered row entering={FadeIn} exiting={FadeOut} gap="$spacing4">
-            <Icons.Gas color={colors.neutral2.val} size="$icon.16" />
-            <Text color="$neutral2" variant="body3">
-              {gasFeeFormatted}
-            </Text>
-          </AnimatedFlex>
+          <TouchableArea onPress={(): void => setShowGasInfoModal(true)}>
+            <AnimatedFlex centered row entering={FadeIn} exiting={FadeOut} gap="$spacing4">
+              <Icons.Gas color={colors.neutral2.val} size="$icon.16" />
+              <Text color="$neutral2" variant="body3">
+                {gasFeeFormatted}
+              </Text>
+            </AnimatedFlex>
+          </TouchableArea>
         )}
 
         {formScreenWarning && !isBlocked && (

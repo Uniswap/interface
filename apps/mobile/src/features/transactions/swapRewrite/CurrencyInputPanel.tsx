@@ -167,12 +167,20 @@ export const CurrencyInputPanel = memo(
       [isLoading]
     )
 
+    const animatePaddingdStyle = useAnimatedStyle(() => {
+      return {
+        paddingTop: withTiming(focus ? spacing.spacing24 : spacing.spacing16, {
+          duration: 100,
+        }),
+      }
+    }, [focus])
+
     return (
-      <Flex
+      <AnimatedFlex
         {...rest}
         paddingBottom="$spacing16"
-        paddingTop={!focus ? '$spacing16' : '$spacing24'}
         px="$spacing16"
+        style={animatePaddingdStyle}
         onPressIn={onPressIn}>
         <AnimatedFlex
           row
@@ -267,7 +275,7 @@ export const CurrencyInputPanel = memo(
             </Flex>
           </Flex>
         )}
-      </Flex>
+      </AnimatedFlex>
     )
   })
 )
