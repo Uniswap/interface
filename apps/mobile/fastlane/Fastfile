@@ -29,6 +29,7 @@ platform :android do
 
     # Convert the version string to the corresponding decimal number 
     # (e.g. 1.0.0 -> 10000000, where 1.000.00.00 represents major.minor.patch.build)
+    version_name = version_name.sub(/(\d+)\.(\d+)\.(\d+)/, '\1.\2\3') # removes second dot from version name string
     version_name_decimal = version_name.to_f
     major_minor_patch_number = version_name_decimal * 10000000 / 100 
 
