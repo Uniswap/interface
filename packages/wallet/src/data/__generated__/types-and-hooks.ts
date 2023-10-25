@@ -770,6 +770,20 @@ export type PortfolioTokensTotalDenominatedValueChangeArgs = {
   duration?: InputMaybe<HistoryDuration>;
 };
 
+export enum PriceFeatureSwitch {
+  TvlComparison = 'TVL_COMPARISON',
+  V3Only = 'V3_ONLY',
+  Only = 'only',
+  Prices = 'prices',
+  Use = 'use',
+  V3 = 'v3'
+}
+
+export enum PriceSource {
+  SubgraphV2 = 'SUBGRAPH_V2',
+  SubgraphV3 = 'SUBGRAPH_V3'
+}
+
 export type Query = {
   __typename?: 'Query';
   assetActivity?: Maybe<AssetActivity>;
@@ -932,6 +946,7 @@ export type Subscription = {
 
 export type SubscriptionOnAssetActivityArgs = {
   addresses: Array<Scalars['String']>;
+  chain: Chain;
   subscriptionId: Scalars['ID'];
 };
 
@@ -981,6 +996,7 @@ export type Token = IContract & {
 
 
 export type TokenMarketArgs = {
+  _fs?: InputMaybe<PriceFeatureSwitch>;
   currency?: InputMaybe<Currency>;
 };
 
@@ -1043,6 +1059,7 @@ export type TokenMarket = {
   priceHighLow?: Maybe<Amount>;
   priceHistory?: Maybe<Array<Maybe<TimestampedAmount>>>;
   pricePercentChange?: Maybe<Amount>;
+  priceSource: PriceSource;
   token: Token;
   totalValueLocked?: Maybe<Amount>;
   volume?: Maybe<Amount>;
@@ -1050,6 +1067,7 @@ export type TokenMarket = {
 
 
 export type TokenMarketPriceHighLowArgs = {
+  _fs?: InputMaybe<PriceFeatureSwitch>;
   duration: HistoryDuration;
   highLow: HighLow;
 };
@@ -1061,6 +1079,7 @@ export type TokenMarketPriceHistoryArgs = {
 
 
 export type TokenMarketPricePercentChangeArgs = {
+  _fs?: InputMaybe<PriceFeatureSwitch>;
   duration: HistoryDuration;
 };
 
@@ -1096,6 +1115,7 @@ export type TokenProjectMarketsArgs = {
 export type TokenProjectMarket = {
   __typename?: 'TokenProjectMarket';
   currency: Currency;
+  fullyDilutedValuation?: Maybe<Amount>;
   id: Scalars['ID'];
   marketCap?: Maybe<Amount>;
   price?: Maybe<Amount>;
