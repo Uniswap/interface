@@ -38,7 +38,7 @@
     "redux-persist": "6.0.0",
     "redux-saga": "1.2.2",
     "redux-saga-test-plan": "4.0.4",
-    "statsig-react-native": "4.9.2",
+    "statsig-react-native": "4.11.0",
     "tamagui": "1.74.16",
     "typed-redux-saga": "1.5.0",
     "ui": "workspace:^",
