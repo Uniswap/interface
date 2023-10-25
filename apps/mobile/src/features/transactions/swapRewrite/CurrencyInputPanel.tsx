@@ -181,7 +181,7 @@ export const CurrencyInputPanel = memo(
         paddingBottom="$spacing16"
         px="$spacing16"
         style={animatePaddingdStyle}
-        onPressIn={onPressIn}>
+        onPressIn={currencyInfo ? onPressIn : onShowTokenSelector}>
         <AnimatedFlex
           row
           alignItems="center"
