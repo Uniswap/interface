@@ -157,9 +157,9 @@ export function NFTCollectionHeader({
             ) : null}
           </Flex>
 
-          <Flex row gap="$spacing24" justifyContent="space-between">
+          <Flex row gap="$spacing8" justifyContent="space-between">
             <Flex fill alignItems="flex-start" gap="$spacing4">
-              <Text color="$neutral2" variant="subheading2">
+              <Text color="$neutral2" numberOfLines={1} variant="subheading2">
                 {t('Items')}
               </Text>
               <Text loading={loading} variant="body1">
@@ -170,7 +170,7 @@ export function NFTCollectionHeader({
               </Text>
             </Flex>
             <Flex fill alignItems="flex-start" gap="$spacing4">
-              <Text color="$neutral2" variant="subheading2">
+              <Text color="$neutral2" numberOfLines={1} variant="subheading2">
                 {t('Owners')}
               </Text>
               <Text loading={loading} variant="body1">
@@ -181,7 +181,7 @@ export function NFTCollectionHeader({
               </Text>
             </Flex>
             <Flex fill alignItems="flex-start" gap="$spacing4">
-              <Text color="$neutral2" variant="subheading2">
+              <Text color="$neutral2" numberOfLines={1} variant="subheading2">
                 {t('Floor')}
               </Text>
               <Flex row alignItems="center">
@@ -197,7 +197,7 @@ export function NFTCollectionHeader({
               </Flex>
             </Flex>
             <Flex fill alignItems="flex-start" gap="$spacing4">
-              <Text color="$neutral2" variant="subheading2">
+              <Text color="$neutral2" numberOfLines={1} variant="subheading2">
                 {t('Volume')}
               </Text>
               <Flex row alignItems="center" gap="$spacing4">
