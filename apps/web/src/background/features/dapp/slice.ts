@@ -3,9 +3,8 @@ import { ChainId } from 'wallet/src/constants/chains'
 
 export interface DappState {
   [dappUrl: string]: {
-    [walletAddress: Address]: {
-      lastChainId: ChainId
-    }
+    lastChainId: ChainId
+    connectedAddresses: Address[]
   }
 }
 
@@ -15,20 +14,27 @@ const slice = createSlice({
   name: 'dapp',
   initialState: initialDappState,
   reducers: {
+    saveDappChain(state, action: PayloadAction<{ dappUrl: string; chainId: ChainId }>) {
+      const { dappUrl, chainId } = action.payload
+
+      state[dappUrl] = {
+        lastChainId: chainId,
+        connectedAddresses: state[dappUrl]?.connectedAddresses ?? [],
+      }
+    },
     saveDappConnection(
       state,
       action: PayloadAction<{
         dappUrl: string
         walletAddress: Address
-        chainId: ChainId
+        chainId?: ChainId
       }>
     ) {
       const { dappUrl, walletAddress, chainId } = action.payload
-      state[dappUrl] ??= {}
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      state[dappUrl]![walletAddress] = {
-        lastChainId: chainId,
+      state[dappUrl] = {
+        lastChainId: chainId ?? state[dappUrl]?.lastChainId ?? ChainId.Mainnet,
+        connectedAddresses: [walletAddress, ...(state[dappUrl]?.connectedAddresses ?? [])],
       }
     },
     removeDappConnection(
@@ -37,16 +43,20 @@ const slice = createSlice({
     ) {
       const { dappUrl, walletAddress } = action.payload
 
-      if (state[dappUrl]?.[walletAddress]) {
-        delete state[dappUrl]?.[walletAddress]
-        if (!Object.keys(state[dappUrl] || {}).length) {
-          delete state[dappUrl]
-        }
+      const updatedAddresses = state[dappUrl]?.connectedAddresses?.filter(
+        (address) => address !== walletAddress
+      )
+
+      if (updatedAddresses?.length) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        state[dappUrl]!.connectedAddresses = updatedAddresses
+      } else {
+        delete state[dappUrl]
       }
     },
   },
 })
 
-export const { saveDappConnection, removeDappConnection } = slice.actions
+export const { saveDappConnection, removeDappConnection, saveDappChain } = slice.actions
 
 export const dappReducer = slice.reducer

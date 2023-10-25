@@ -1,4 +1,4 @@
-import { selectChainByDappAndWallet } from 'src/background/features/dapp/selectors'
+import { selectDappChainId } from 'src/background/features/dapp/selectors'
 import { SendTransactionRequest } from 'src/background/features/dappRequests/dappRequestTypes'
 import { DappRequestStoreItem } from 'src/background/features/dappRequests/slice'
 import { useAppSelector } from 'src/background/store'
@@ -6,14 +6,11 @@ import { Flex, Text } from 'ui/src'
 import { NumberType } from 'utilities/src/format/types'
 import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { useTransactionGasFee, useUSDValue } from 'wallet/src/features/gas/hooks'
-import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 export const SendTransactionDetails = ({
-  activeAccount,
   request,
   dappUrl,
 }: {
-  activeAccount: Account
   request: DappRequestStoreItem
   dappUrl: string
 }): JSX.Element => {
@@ -24,7 +21,7 @@ export const SendTransactionDetails = ({
   const sending = sendTransactionRequest.transaction.value
   const toAddress = sendTransactionRequest.transaction.to
 
-  const chainId = useAppSelector(selectChainByDappAndWallet(activeAccount.address, dappUrl))
+  const chainId = useAppSelector(selectDappChainId(dappUrl))
 
   const networkFee = useTransactionGasFee({
     chainId,

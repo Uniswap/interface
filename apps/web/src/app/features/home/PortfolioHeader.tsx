@@ -4,7 +4,7 @@ import { ConnectPopupContent } from 'src/app/features/popups/ConnectPopup'
 import { closePopup, PopupName } from 'src/app/features/popups/slice'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { useDappContext, useIsDappConnected } from 'src/background/features/dapp/hooks'
-import { selectWalletsByDapp } from 'src/background/features/dapp/selectors'
+import { selectDappConnectedAddresses } from 'src/background/features/dapp/selectors'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { Flex, Icons, Popover, Text, TouchableArea, Unicon } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -29,7 +29,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
   // Value does not matter, only used as a trigger to re-render the component when the dapp connection status changes
   const isDappConnected = useIsDappConnected()
   const { dappUrl } = useDappContext()
-  const connectedAddresses = useAppSelector(selectWalletsByDapp(dappUrl))
+  const connectedAddresses = useAppSelector(selectDappConnectedAddresses(dappUrl)) || []
 
   const closeConnectPopup = async (): Promise<void> => {
     await dispatch(closePopup(PopupName.Connect))
@@ -56,7 +56,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
         </Flex>
       </Flex>
       <Flex row alignItems="center" gap="$spacing16" justifyContent="space-around">
-        {connectedAddresses.size > 0 ? (
+        {connectedAddresses?.length > 0 ? (
           <Popover stayInFrame>
             <Popover.Trigger onPress={closeConnectPopup}>
               <Icons.Globe color="$neutral2" size="$icon.20" />

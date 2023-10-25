@@ -1,5 +1,5 @@
 import { useDappContext } from 'src/background/features/dapp/hooks'
-import { selectChainByDappAndWallet } from 'src/background/features/dapp/selectors'
+import { selectDappChainId } from 'src/background/features/dapp/selectors'
 import { AddressFooter } from 'src/background/features/dappRequests/requestContent/AddressFooter'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { Image } from 'tamagui'
@@ -23,8 +23,7 @@ export function DappRequestContent(): JSX.Element {
   const { dappName, dappUrl, dappIconUrl } = useDappContext()
 
   const activeAccount = useActiveAccountWithThrow()
-  const activeChainId =
-    useAppSelector(selectChainByDappAndWallet(dappUrl, activeAccount.address)) || ChainId.Mainnet
+  const activeChainId = useAppSelector(selectDappChainId(dappUrl)) || ChainId.Mainnet
 
   if (!activeAccount) {
     throw new Error('No active account')
@@ -59,9 +58,7 @@ export function DappRequestContent(): JSX.Element {
       displayDetails = <SignTypedDataDetails chainId={activeChainId} request={request} />
       break
     case DappRequestType.SendTransaction:
-      displayDetails = (
-        <SendTransactionDetails activeAccount={activeAccount} dappUrl={dappUrl} request={request} />
-      )
+      displayDetails = <SendTransactionDetails dappUrl={dappUrl} request={request} />
       break
   }
   let title = 'Confirm?'

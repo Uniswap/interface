@@ -5,7 +5,7 @@ import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { AccountItem } from 'src/app/features/accounts/AccountItem'
 import { openPopup, PopupName } from 'src/app/features/popups/slice'
 import { useDappContext } from 'src/background/features/dapp/hooks'
-import { selectWalletsByDapp } from 'src/background/features/dapp/selectors'
+import { selectDappConnectedAddresses } from 'src/background/features/dapp/selectors'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { useSagaStatus } from 'src/background/utils/useSagaStatus'
 import { Flex, Icons, ScrollView, Text, useUniconColors } from 'ui/src'
@@ -36,7 +36,7 @@ export function AccountSwitcherScreen(): JSX.Element {
     return [activeAddress, ...addresses]
   }, [accounts, activeAddress])
   const { dappUrl } = useDappContext()
-  const connectedAddresses = useAppSelector(selectWalletsByDapp(dappUrl))
+  const connectedAddresses = useAppSelector(selectDappConnectedAddresses(dappUrl)) || []
 
   const { glow } = useUniconColors(activeAddress)
 
@@ -65,7 +65,7 @@ export function AccountSwitcherScreen(): JSX.Element {
                 selected={activeAddress === address}
                 onAccountSelect={async (): Promise<void> => {
                   await dispatch(setAccountAsActive(address))
-                  if (connectedAddresses.size > 0 && !connectedAddresses.has(address)) {
+                  if (connectedAddresses.length > 0 && !connectedAddresses?.includes(address)) {
                     await dispatch(openPopup(PopupName.Connect))
                   }
                   navigate(-1)

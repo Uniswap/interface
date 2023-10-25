@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { selectChainByDappAndWallet } from 'src/background/features/dapp/selectors'
+import { selectDappConnectedAddresses } from 'src/background/features/dapp/selectors'
 import { extractBaseUrl } from 'src/background/features/dappRequests/utils'
 import { useAppSelector } from 'src/background/store'
 import { BackgroundToExtensionRequestType, BaseExtensionRequest } from 'src/types/requests'
@@ -16,7 +16,9 @@ export function useIsDappConnected(): boolean {
   const { dappUrl } = useDappContext()
   const activeAddress = useActiveAccountAddress()
 
-  return useAppSelector(selectChainByDappAndWallet(activeAddress, dappUrl)) !== undefined
+  const connectedAddresses = useAppSelector(selectDappConnectedAddresses(dappUrl)) || []
+
+  return !!activeAddress && connectedAddresses.includes(activeAddress)
 }
 
 /**

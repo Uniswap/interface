@@ -44,7 +44,8 @@ export function* dappRequestApprovalWatcher() {
               changeChain,
               request.dappRequest.requestId,
               (request.dappRequest as ChangeChainRequest).chainId,
-              request.senderTabId
+              request.senderTabId,
+              request.dappUrl
             )
             break
           case DappRequestType.SignMessage:
