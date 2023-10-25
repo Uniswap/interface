@@ -102,7 +102,7 @@ jobs:
 
   post-build:
     name: Post-build actions
-    needs: [iOS, Android]
+    needs: [iOS]
     runs-on: macos-13
     steps:
 
