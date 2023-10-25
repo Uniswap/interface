@@ -81,7 +81,7 @@
     "wcag-contrast": "^3.0.0"
   },
   "scripts": {
-    "build": "REACT_APP_SENTRY_DSN=$SENTRY_DSN npm run build:local",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider REACT_APP_SENTRY_DSN=$SENTRY_DSN npm run build:local",
     "build:local": "npm run typechain && node --max_old_space_size=1024 node_modules/.bin/craco build",
     "start": "NODE_OPTIONS=--openssl-legacy-provider craco start",
     "clean": "rm -fr src/generated/",
