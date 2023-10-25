@@ -170,7 +170,7 @@ export function parseLocalActivity(
       additionalFields = parseLP(info, chainId, tokens)
     } else if (info.type === TransactionType.CLAIM_FARM) {
       const currency = getCurrency(info.tokenAddress, chainId, tokens)
-      const descriptor = currency ? t`${info.amount} ${currency?.symbol}` : t`Unknown`
+      const descriptor = currency ? `${info.amount} ${currency?.symbol}` : t`Unknown`
       additionalFields = {
         descriptor,
         currencies: [currency],
