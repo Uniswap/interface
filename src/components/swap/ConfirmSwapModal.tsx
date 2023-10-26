@@ -23,7 +23,7 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
-import { isPreviewTrade } from 'state/routing/utils'
+import { isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
 import { Field } from 'state/swap/actions'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled from 'styled-components'
@@ -44,12 +44,12 @@ import SwapModalFooter from './SwapModalFooter'
 import SwapModalHeader from './SwapModalHeader'
 
 export enum ConfirmModalState {
-  REVIEWING,
-  WRAPPING,
-  RESETTING_TOKEN_ALLOWANCE,
-  APPROVING_TOKEN,
-  PERMITTING,
-  PENDING_CONFIRMATION,
+  REVIEWING = 'reviewing',
+  WRAPPING = 'wrapping',
+  RESETTING_TOKEN_ALLOWANCE = 'reset',
+  APPROVING_TOKEN = 'approving',
+  PERMITTING = 'permitting',
+  PENDING_CONFIRMATION = 'pending confirmation',
 }
 
 const StyledL2Badge = styled(Badge)`
@@ -244,6 +244,7 @@ function useConfirmModalState({
         setConfirmModalState(ConfirmModalState.REVIEWING)
         return
       }
+
       performStep(ConfirmModalState.PENDING_CONFIRMATION)
     }
   }, [allowance, confirmModalState, doesTradeDiffer, performStep])
@@ -433,7 +434,13 @@ export default function ConfirmSwapModal({
           <ErrorModalContent errorType={errorType} onRetry={startSwapFlow} />
         ) : (
           <ConfirmationModalContent
-            title={confirmModalState === ConfirmModalState.REVIEWING ? <Trans>Review swap</Trans> : undefined}
+            title={
+              confirmModalState === ConfirmModalState.REVIEWING ? (
+                <Trans>
+                  Review {isUniswapXTrade(trade) && trade.dutchOrderType === 'limit_order' ? 'limit order' : 'swap'}
+                </Trans>
+              ) : undefined
+            }
             onDismiss={onModalDismiss}
             topContent={modalHeader}
             bottomContent={modalBottom}

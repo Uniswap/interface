@@ -306,6 +306,8 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
 
 export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeType> {
   public readonly fillType = TradeFillType.UniswapX
+  public readonly dutchOrderType = 'dutch_auction'
+
   quoteId?: string
   requestId?: string
   wrapInfo: WrapInfo
@@ -384,6 +386,7 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
 
 export class LimitOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeType> {
   public readonly fillType = TradeFillType.UniswapX
+  public readonly dutchOrderType = 'limit_order'
   deadlineBufferSecs: number
 
   inputTax = ZERO_PERCENT

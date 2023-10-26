@@ -12,7 +12,7 @@ import { ReactNode, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { easings, useSpring } from 'react-spring'
 import { InterfaceTrade, RouterPreference } from 'state/routing/types'
-import { isClassicTrade } from 'state/routing/utils'
+import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components'
 import { Separator, ThemedText } from 'theme/components'
@@ -170,7 +170,9 @@ export default function SwapModalFooter({
                 </ThemedText.HeadlineSmall>
               ) : (
                 <ThemedText.HeadlineSmall color="deprecated_accentTextLightPrimary">
-                  <Trans>Confirm swap</Trans>
+                  <Trans>
+                    Confirm {isUniswapXTrade(trade) && trade.dutchOrderType === 'limit_order' ? 'limit order' : 'swap'}
+                  </Trans>
                 </ThemedText.HeadlineSmall>
               )}
             </ConfirmButton>
