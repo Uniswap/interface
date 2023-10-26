@@ -15,6 +15,8 @@ import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
+import { LimitOrderExpiry, LimitOrderExpiryDropdown } from './LimitOrderExpiryDropdown'
+
 // only exact-in for now
 // TODO: generalize this form for exact in vs exact out
 type LimitOrderFormState = {
@@ -22,6 +24,7 @@ type LimitOrderFormState = {
   outputToken?: Currency
   inputAmount: string // what the user types
   outputAmount: string // what the user types
+  expiry: LimitOrderExpiry
 }
 
 // only works on mainnet for now
@@ -30,11 +33,12 @@ const DEFAULT_STATE = {
   outputToken: undefined,
   inputAmount: '',
   outputAmount: '',
+  expiry: LimitOrderExpiry.OneHour,
 }
 
 export function LimitOrderForm() {
   const { account } = useWeb3React()
-  const [{ inputToken, outputToken, inputAmount, outputAmount }, setLimitOrder] =
+  const [{ inputToken, outputToken, inputAmount, outputAmount, expiry }, setLimitOrder] =
     useState<LimitOrderFormState>(DEFAULT_STATE)
 
   const userTokenBalances = useCurrencyBalances(
@@ -129,10 +133,7 @@ export function LimitOrderForm() {
           <ThemedText.SubHeaderSmall>Your price</ThemedText.SubHeaderSmall>
           {executionPrice ? <TradePrice price={executionPrice} hideUSDPrice /> : '-'}
         </PriceSection>
-        <ExpirySection>
-          <ThemedText.SubHeaderSmall>Expiry</ThemedText.SubHeaderSmall>
-          <ThemedText.BodyPrimary>Until canceled</ThemedText.BodyPrimary>
-        </ExpirySection>
+        <LimitOrderExpiryDropdown selected={expiry} onSelect={setLimitOrderField('expiry')} />
       </Row>
     </Container>
   )
@@ -161,10 +162,6 @@ const PriceSection = styled.div`
   padding: 16px;
 
   flex: 1;
-`
-
-const ExpirySection = styled(PriceSection)`
-  flex: 0.45;
 `
 
 const SwapSection = styled.div`
