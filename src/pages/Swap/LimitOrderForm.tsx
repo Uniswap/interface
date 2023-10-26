@@ -1,9 +1,12 @@
 import { InterfaceSectionName } from '@uniswap/analytics-events'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { nativeOnChain } from 'constants/tokens'
-import { useState } from 'react'
+import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
+import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 // only exact-in for now
 // TODO: generalize this form for exact in vs exact out
@@ -23,14 +26,27 @@ const DEFAULT_STATE = {
 }
 
 export function LimitOrderForm() {
+  const { account } = useWeb3React()
   const [{ inputToken, outputToken, inputAmount, outputAmount }, setLimitOrder] =
     useState<LimitOrderFormState>(DEFAULT_STATE)
+
+  const userTokenBalances = useCurrencyBalances(
+    account ?? undefined,
+    useMemo(() => [inputToken, outputToken], [inputToken, outputToken])
+  )
+
+  const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
+    () => maxAmountSpend(userTokenBalances[0]),
+    [userTokenBalances]
+  )
 
   const setLimitOrderField = (field: string) => (newValue: any) =>
     setLimitOrder((prev) => ({
       ...prev,
       [field]: newValue,
     }))
+
+  const onMax = () => setLimitOrderField('inputAmount')(maxInputAmount?.toExact())
 
   return (
     <div>
@@ -41,8 +57,7 @@ export function LimitOrderForm() {
           showMaxButton
           currency={inputToken}
           onUserInput={setLimitOrderField('inputAmount')}
-          // TODO: set max
-          onMax={() => undefined}
+          onMax={onMax}
           // TODO: show USD value
           // fiatValue={showFiatValueInput ? fiatValueInput : undefined}
           onCurrencySelect={setLimitOrderField('inputToken')}
