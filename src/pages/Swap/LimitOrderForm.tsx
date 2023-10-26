@@ -131,6 +131,7 @@ export function LimitOrderForm() {
         </PriceSection>
         <ExpirySection>
           <ThemedText.SubHeaderSmall>Expiry</ThemedText.SubHeaderSmall>
+          <ThemedText.BodyPrimary>Until canceled</ThemedText.BodyPrimary>
         </ExpirySection>
       </Row>
     </Container>
@@ -163,7 +164,7 @@ const PriceSection = styled.div`
 `
 
 const ExpirySection = styled(PriceSection)`
-  flex: 0.3;
+  flex: 0.45;
 `
 
 const SwapSection = styled.div`
