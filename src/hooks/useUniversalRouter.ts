@@ -1,5 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { Web3Provider } from '@ethersproject/providers'
 import { t } from '@lingui/macro'
+import { useWallets } from '@privy-io/react-auth'
 import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { FlatFeeOptions, SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
@@ -54,7 +56,24 @@ export function useUniversalRouterSwapCallback(
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number },
   options: SwapOptions
 ) {
-  const { account, chainId, provider, connector } = useWeb3React()
+  const { chainId, connector } = useWeb3React()
+
+  const { wallets } = useWallets()
+  const embeddedWallet = wallets.find((wallet: { walletClientType: string }) => wallet.walletClientType === 'privy')
+  const account = embeddedWallet?.address
+
+  const getWeb3Provider = async () => {
+    // Initialize your Web3.js client with the provider
+    const provider = await embeddedWallet?.getWeb3jsProvider()
+    if (provider) {
+      return new Web3Provider(provider as any)
+    }
+
+    return null
+  }
+
+  const provider = getWeb3Provider()
+
   const analyticsContext = useTrace()
   const blockNumber = useBlockNumber()
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
@@ -62,6 +81,7 @@ export function useUniversalRouterSwapCallback(
   const portfolioBalanceUsd = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
 
   return useCallback(async () => {
+    const provider = await getWeb3Provider()
     return trace('swap.send', async ({ setTraceData, setTraceStatus, setTraceError }) => {
       try {
         if (!account) throw new Error('missing account')

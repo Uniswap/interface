@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useWallets } from '@privy-io/react-auth'
 import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useConnectionReady } from 'connection/eagerlyConnect'
@@ -99,7 +100,8 @@ export type SwapInfo = {
 
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefined): SwapInfo {
-  const { account } = useWeb3React()
+  const { wallets } = useWallets()
+  const embeddedWallet = wallets.find((wallet: { walletClientType: string }) => wallet.walletClientType === 'privy')
 
   const {
     independentField,
@@ -119,10 +121,10 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
   )
 
   const recipientLookup = useENS(recipient ?? undefined)
-  const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
+  const to: string | null = (recipient === null ? embeddedWallet?.address : recipientLookup.address) ?? null
 
   const relevantTokenBalances = useCurrencyBalances(
-    account ?? undefined,
+    embeddedWallet?.address ?? undefined,
     useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
   )
 
@@ -137,7 +139,7 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
     parsedAmount,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined,
     undefined,
-    account,
+    embeddedWallet?.address,
     inputTax,
     outputTax
   )
@@ -182,7 +184,7 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
 
-    if (!account) {
+    if (!embeddedWallet?.address) {
       inputError = connectionReady ? <Trans>Connect wallet</Trans> : <Trans>Connecting wallet...</Trans>
     }
 
@@ -211,7 +213,16 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
     }
 
     return inputError
-  }, [account, currencies, parsedAmount, to, currencyBalances, trade?.trade, allowedSlippage, connectionReady])
+  }, [
+    embeddedWallet?.address,
+    currencies,
+    parsedAmount,
+    to,
+    currencyBalances,
+    trade?.trade,
+    allowedSlippage,
+    connectionReady,
+  ])
 
   return useMemo(
     () => ({

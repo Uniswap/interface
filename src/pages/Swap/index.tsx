@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { usePrivy, useWallets } from '@privy-io/react-auth'
 import {
   BrowserEvent,
   InterfaceElementName,
@@ -142,13 +143,17 @@ function largerPercentValue(a?: Percent, b?: Percent) {
 }
 
 export default function SwapPage({ className }: { className?: string }) {
-  const { chainId: connectedChainId } = useWeb3React()
+  const { wallets } = useWallets()
+  const embeddedWallet = wallets.find((wallet: { walletClientType: string }) => wallet.walletClientType === 'privy')
+  const connectedChainId = embeddedWallet?.chainId?.split(':')?.[1]
+    ? Number(embeddedWallet?.chainId?.split(':')?.[1])
+    : 421613
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   const location = useLocation()
 
   const supportedChainId = asSupportedChain(connectedChainId)
-
+  console.log(supportedChainId, 'SUPPORTED CHAIN ID')
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <PageWrapper>
@@ -189,8 +194,16 @@ export function Swap({
   disableTokenInputs?: boolean
 }) {
   const connectionReady = useConnectionReady()
-  const { account, chainId: connectedChainId, connector } = useWeb3React()
+  const { account, connector } = useWeb3React()
+
   const trace = useTrace()
+
+  const { user } = usePrivy()
+  const { wallets } = useWallets()
+  const embeddedWallet = wallets.find((wallet: { walletClientType: string }) => wallet.walletClientType === 'privy')
+  const connectedChainId = embeddedWallet?.chainId?.split(':')?.[1]
+    ? Number(embeddedWallet?.chainId?.split(':')?.[1])
+    : 421613
 
   // token warning stuff
   const prefilledInputCurrency = useCurrency(initialInputCurrencyId, chainId)
@@ -752,7 +765,7 @@ export function Swap({
             <ButtonPrimary $borderRadius="16px" disabled={true}>
               <Trans>Connecting to {getChainInfo(switchingChain)?.label}</Trans>
             </ButtonPrimary>
-          ) : connectionReady && !account ? (
+          ) : !embeddedWallet?.address ? (
             <TraceEvent
               events={[BrowserEvent.onClick]}
               name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}

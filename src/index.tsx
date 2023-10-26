@@ -5,6 +5,7 @@ import 'tracing'
 import 'connection/eagerlyConnect'
 
 import { ApolloProvider } from '@apollo/client'
+import { PrivyProvider } from '@privy-io/react-auth'
 import { FeatureFlagsProvider } from 'featureFlags'
 import { apolloClient } from 'graphql/data/apollo'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
@@ -75,7 +76,16 @@ createRoot(container).render(
                     <Updaters />
                     <ThemeProvider>
                       <ThemedGlobalStyle />
-                      <App />
+                      <PrivyProvider
+                        appId={process.env.REACT_APP_PRIVY_APP_ID as string}
+                        config={{
+                          embeddedWallets: {
+                            createOnLogin: 'all-users',
+                          },
+                        }}
+                      >
+                        <App />
+                      </PrivyProvider>
                     </ThemeProvider>
                   </BlockNumberProvider>
                 </ApolloProvider>

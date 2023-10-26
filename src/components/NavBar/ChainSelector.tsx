@@ -1,7 +1,6 @@
 import { t } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getConnection } from 'connection'
@@ -12,7 +11,6 @@ import { getChainPriority, L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS } from 
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
-import { useAtomValue } from 'jotai/utils'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Column, Row } from 'nft/components/Flex'
@@ -52,7 +50,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
 
   const theme = useTheme()
 
-  const showTestnets = useAtomValue(showTestnetsAtom)
+  const showTestnets = true //useAtomValue(showTestnetsAtom)
   const walletSupportsChain = useWalletSupportedChains()
 
   const [supportedChains, unsupportedChains] = useMemo(() => {

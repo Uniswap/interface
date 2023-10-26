@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { usePrivy, useWallets } from '@privy-io/react-auth'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, TraceEvent } from 'analytics'
@@ -135,6 +136,10 @@ const StyledConnectButton = styled.button`
 `
 
 function Web3StatusInner() {
+  const { login, logout, user } = usePrivy()
+  const { wallets } = useWallets()
+  const embeddedWallet = wallets.find((wallet: { walletClientType: string }) => wallet.walletClientType === 'privy')
+  console.log(embeddedWallet, user, 'EMBEDDED WALLET')
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const ignoreWhileSwitchingChain = useCallback(() => !switchingChain, [switchingChain])
   const connectionReady = useConnectionReady()
@@ -143,6 +148,14 @@ function Web3StatusInner() {
   const { account, connector } = useMemo(() => (activeWeb3.account ? activeWeb3 : lastWeb3), [activeWeb3, lastWeb3])
   const { ENSName, loading: ENSLoading } = useENSName(account)
   const connection = getConnection(connector)
+
+  const handleLogin = async () => {
+    login()
+  }
+
+  useEffect(() => {
+    embeddedWallet?.switchChain(421613)
+  }, [embeddedWallet])
 
   const [, toggleAccountDrawer] = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {
@@ -184,7 +197,7 @@ function Web3StatusInner() {
 
   if (!isConnectionInitialized) {
     return (
-      <Web3StatusConnecting disabled={!isConnectionInitializing} onClick={handleWalletDropdownClick}>
+      <Web3StatusConnecting disabled={!isConnectionInitializing} onClick={() => handleLogin()}>
         <IconWrapper size={24}>
           <LoaderV3 size="24px" />
         </IconWrapper>
@@ -195,7 +208,7 @@ function Web3StatusInner() {
     )
   }
 
-  if (account) {
+  if (user && embeddedWallet) {
     return (
       <TraceEvent
         events={[BrowserEvent.onClick]}
@@ -205,12 +218,12 @@ function Web3StatusInner() {
         <Web3StatusConnected
           disabled={Boolean(switchingChain)}
           data-testid="web3-status-connected"
-          onClick={handleWalletDropdownClick}
+          onClick={() => logout()}
           pending={hasPendingActivity}
           isClaimAvailable={isClaimAvailable}
         >
           {!hasPendingActivity && (
-            <StatusIcon account={account} size={24} connection={connection} showMiniIcons={false} />
+            <StatusIcon account={embeddedWallet.address} size={24} connection={connection} showMiniIcons={false} />
           )}
           {hasPendingActivity ? (
             <RowBetween>
@@ -221,7 +234,7 @@ function Web3StatusInner() {
             </RowBetween>
           ) : (
             <AddressAndChevronContainer>
-              <Text>{ENSName ?? shortenAddress(account)}</Text>
+              <Text>{ENSName ?? shortenAddress(embeddedWallet.address)}</Text>
             </AddressAndChevronContainer>
           )}
         </Web3StatusConnected>
@@ -236,11 +249,11 @@ function Web3StatusInner() {
       >
         <Web3StatusConnectWrapper
           tabIndex={0}
-          onKeyPress={(e) => e.key === 'Enter' && handleWalletDropdownClick()}
-          onClick={handleWalletDropdownClick}
+          onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+          onClick={() => handleLogin()}
         >
           <StyledConnectButton tabIndex={-1} data-testid="navbar-connect-wallet">
-            <Trans>Connect</Trans>
+            <Trans>Log In</Trans>
           </StyledConnectButton>
         </Web3StatusConnectWrapper>
       </TraceEvent>

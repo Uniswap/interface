@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
+import { useWallets } from '@privy-io/react-auth'
 import { ChainId, SUPPORTED_CHAINS, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { getTransactionStatus } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
@@ -18,7 +19,11 @@ export function useTransactionAdder(): (
   info: TransactionInfo,
   deadline?: number
 ) => void {
-  const { chainId, account } = useWeb3React()
+  const { chainId } = useWeb3React()
+  const { wallets } = useWallets()
+  const embeddedWallet = wallets.find((wallet: { walletClientType: string }) => wallet.walletClientType === 'privy')
+  const account = embeddedWallet?.address
+
   const dispatch = useAppDispatch()
 
   return useCallback(
