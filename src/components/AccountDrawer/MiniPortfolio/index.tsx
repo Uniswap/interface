@@ -14,6 +14,7 @@ import { ThemedText } from 'theme/components'
 import { ActivityTab } from './Activity'
 import { usePendingActivity } from './Activity/hooks'
 import NFTs from './NFTs'
+import Orders from './Orders'
 import Pools from './Pools'
 import { PortfolioRowWrapper } from './PortfolioRow'
 import Tokens from './Tokens'
@@ -40,7 +41,7 @@ const Nav = styled(AutoRow)`
   gap: 20px;
 `
 
-const NavItem = styled(ThemedText.SubHeader)<{ active?: boolean }>`
+const NavItem = styled(ThemedText.SubHeaderSmall)<{ active?: boolean }>`
   align-items: center;
   color: ${({ theme, active }) => (active ? theme.neutral1 : theme.neutral2)};
   cursor: pointer;
@@ -91,6 +92,12 @@ const Pages: Array<Page> = [
     title: <Trans>Activity</Trans>,
     key: 'activity',
     component: ActivityTab,
+    loggingElementName: InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_TAB,
+  },
+  {
+    title: <Trans>Orders</Trans>,
+    key: 'orders',
+    component: Orders,
     loggingElementName: InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_TAB,
   },
 ]
