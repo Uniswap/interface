@@ -1,11 +1,18 @@
 import { InterfaceSectionName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
+import TradePrice from 'components/swap/TradePrice'
 import { nativeOnChain } from 'constants/tokens'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useState } from 'react'
+import { RouterPreference, TradeState } from 'state/routing/types'
+import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import styled from 'styled-components'
+import { ThemedText } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 // only exact-in for now
@@ -48,8 +55,42 @@ export function LimitOrderForm() {
 
   const onMax = () => setLimitOrderField('inputAmount')(maxInputAmount?.toExact())
 
+  const parsedAmountIn = useMemo(() => tryParseCurrencyAmount(inputAmount, inputToken), [inputAmount, inputToken])
+  const parsedAmountOut = useMemo(() => tryParseCurrencyAmount(outputAmount, outputToken), [outputAmount, outputToken])
+
+  const fiatValueTradeInput = useUSDPrice(parsedAmountIn)
+  const fiatValueTradeOutput = useUSDPrice(parsedAmountOut)
+
+  const executionPrice = useMemo(() => {
+    if (!parsedAmountIn || !parsedAmountOut) return
+
+    return new Price(
+      parsedAmountIn.currency,
+      parsedAmountOut.currency,
+      parsedAmountIn.quotient,
+      parsedAmountOut.quotient
+    )
+  }, [parsedAmountIn, parsedAmountOut])
+
+  // TODO: add token tax stuff
+  const marketTrade = useRoutingAPITrade(
+    false /* skipFetch */,
+    // TODO: support exact out
+    TradeType.EXACT_INPUT,
+    parsedAmountIn,
+    outputToken,
+    RouterPreference.API,
+    account
+  )
+
+  const { formatCurrencyAmount } = useFormatter()
+  const formattedMarketOutputAmount =
+    marketTrade?.state !== TradeState.LOADING && marketTrade?.trade
+      ? formatCurrencyAmount({ amount: marketTrade.trade.outputAmount, type: NumberType.SwapTradeAmount })
+      : '-'
+
   return (
-    <div>
+    <Container>
       <SwapSection>
         <SwapCurrencyInputPanel
           label={`You're selling`}
@@ -58,18 +99,73 @@ export function LimitOrderForm() {
           currency={inputToken}
           onUserInput={setLimitOrderField('inputAmount')}
           onMax={onMax}
+          fiatValue={fiatValueTradeInput}
           // TODO: show USD value
           // fiatValue={showFiatValueInput ? fiatValueInput : undefined}
           onCurrencySelect={setLimitOrderField('inputToken')}
           otherCurrency={outputToken}
           showCommonBases
           id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
-          // ref={inputCurrencyNumericalInputRef}
         />
       </SwapSection>
-    </div>
+      <SwapSection>
+        <SwapCurrencyInputPanel
+          label={`You're buying (Market quote: ${formattedMarketOutputAmount})`}
+          value={outputAmount}
+          currency={outputToken ?? null}
+          showMaxButton={false}
+          onUserInput={setLimitOrderField('outputAmount')}
+          // TODO: show USD value
+          // fiatValue={showFiatValueInput ? fiatValueInput : undefined}
+          onCurrencySelect={setLimitOrderField('outputToken')}
+          otherCurrency={inputToken}
+          showCommonBases
+          fiatValue={fiatValueTradeOutput}
+          id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
+        />
+      </SwapSection>
+      <Row>
+        <PriceSection>
+          <ThemedText.SubHeaderSmall>Your price</ThemedText.SubHeaderSmall>
+          {executionPrice ? <TradePrice price={executionPrice} hideUSDPrice /> : '-'}
+        </PriceSection>
+        <ExpirySection>
+          <ThemedText.SubHeaderSmall>Expiry</ThemedText.SubHeaderSmall>
+          <ThemedText.BodyPrimary>Until canceled</ThemedText.BodyPrimary>
+        </ExpirySection>
+      </Row>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  display: flex;
+  flex-flow: column;
+  gap: 4px;
+`
+
+const Row = styled.div`
+  display: flex;
+  justify-content: stretch;
+  gap: 4px;
+`
+
+const PriceSection = styled.div`
+  background-color: ${({ theme }) => theme.surface2};
+  border-radius: 16px;
+  color: ${({ theme }) => theme.neutral2};
+  font-size: 14px;
+  font-weight: 500;
+  // height: 50px;
+  line-height: 20px;
+  padding: 16px;
+
+  flex: 1;
+`
+
+const ExpirySection = styled(PriceSection)`
+  flex: 0.45;
+`
 
 const SwapSection = styled.div`
   background-color: ${({ theme }) => theme.surface2};
