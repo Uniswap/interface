@@ -1,4 +1,5 @@
 import { MixedRouteSDK, ONE, Protocol, Trade } from '@uniswap/router-sdk'
+import { ethers, BigNumber } from 'ethers';
 import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { DutchOrderInfo, DutchOrderInfoJSON, DutchOrderTrade as IDutchOrderTrade } from '@uniswap/uniswapx-sdk'
 import { Route as V2Route } from '@uniswap/v2-sdk'
@@ -18,6 +19,9 @@ export enum QuoteMethod {
   QUICK_ROUTE = 'QUICK_ROUTE',
   CLIENT_SIDE_FALLBACK = 'CLIENT_SIDE_FALLBACK', // If client-side was used after the routing-api call failed.
 }
+
+// TODO: fetch this from SDK?
+const UNISWAPX_REACTOR = '0x6000da47483062a0d734ba3dc7576ce6a0b645c4';
 
 // This is excluded from `RouterPreference` enum because it's only used
 // internally for token -> USDC trades to get a USD value.
@@ -369,6 +373,76 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     if (this.approveInfo.needsApprove) return this.approveInfo.approveGasEstimateUSD
 
     return 0
+  }
+
+  /** For UniswapX, handling token taxes in the output amount is outsourced to quoters */
+  public get postTaxOutputAmount() {
+    return this.outputAmount
+  }
+}
+
+export class LimitOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeType> {
+  public readonly fillType = TradeFillType.UniswapX
+  deadlineBufferSecs: number
+
+  inputTax = ZERO_PERCENT
+  outputTax = ZERO_PERCENT
+  swapFee: SwapFeeInfo | undefined
+
+  constructor({
+    currencyIn,
+    currencyOut,
+    tradeType,
+    amountIn,
+    amountOut,
+    swapper,
+    deadlineBufferSecs,
+    swapFee,
+  }: {
+    currencyIn: Token
+    currencyOut: Currency
+    tradeType: TradeType
+    amountIn: CurrencyAmount<Token>
+    amountOut: CurrencyAmount<Currency>,
+    swapper: string,
+    deadlineBufferSecs: number
+    swapFee?: SwapFeeInfo
+  }) {
+    if (tradeType === TradeType.EXACT_OUTPUT) {
+      throw new Error('Exact output not yet supported for limit orders');
+    }
+
+    const now = Math.floor(Date.now() / 1000);
+    // TODO: Fetch nonce from gouda service
+    let nonce = BigNumber.from(Math.floor(Math.random() * Math.pow(10, 14)))
+    const orderInfo = {
+      reactor: UNISWAPX_REACTOR,
+      swapper,
+      nonce,
+      deadline: now + deadlineBufferSecs,
+      additionalValidationContract: ethers.constants.AddressZero,
+      additionalValidationData: '0x',
+      // decay timings dont matter at all
+      decayStartTime: now,
+      decayEndTime: now,
+      exclusiveFiller: ethers.constants.AddressZero,
+      exclusivityOverrideBps: BigNumber.from(0),
+      input: {
+        token: currencyIn.address,
+        // TODO: exact output
+        startAmount: BigNumber.from(amountIn.quotient.toString()),
+        endAmount: BigNumber.from(amountIn.quotient.toString()),
+      },
+      outputs: [{
+        token: currencyOut.isNative ? ethers.constants.AddressZero : currencyOut.address,
+        recipient: swapper,
+        startAmount: BigNumber.from(amountOut.quotient.toString()),
+        endAmount: BigNumber.from(amountOut.quotient.toString()),
+      }],
+    }
+    super({ currencyIn, currenciesOut: [currencyOut], orderInfo, tradeType })
+    this.deadlineBufferSecs = deadlineBufferSecs
+    this.swapFee = swapFee
   }
 
   /** For UniswapX, handling token taxes in the output amount is outsourced to quoters */

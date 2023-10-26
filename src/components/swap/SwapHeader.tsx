@@ -54,7 +54,7 @@ export default function SwapHeader({
         </StyledTextButton>
         <SwapBuyFiatButton />
         <StyledTextButton onClick={() => onClickTab(SwapTab.LimitOrder)}>
-          <Trans>Limit order</Trans>
+          <Trans>Limit</Trans>
         </StyledTextButton>
       </HeaderButtonContainer>
       <RowFixed>
