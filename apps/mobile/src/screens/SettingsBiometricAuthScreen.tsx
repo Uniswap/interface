@@ -71,19 +71,22 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
     const handleFaceIdTurnedOff = (): void => {
       IS_IOS
         ? Alert.alert(
+            t('{{capitalizedAuthTypeName}} is turned off', { capitalizedAuthTypeName }),
             t(
               '{{capitalizedAuthTypeName}} is currently turned off for Uniswap Wallet—you can turn it on in your system settings.',
               { capitalizedAuthTypeName }
             ),
-            '',
             [{ text: t('Settings'), onPress: openSettings }, { text: t('Cancel') }]
           )
         : Alert.alert(
+            t('{{capitalizedAuthTypeName}} is not set up', {
+              capitalizedAuthTypeName,
+              authenticationTypeName,
+            }),
             t(
               '{{capitalizedAuthTypeName}} is not set up on your device. To use {{authenticationTypeName}}, set up it first in settings.',
               { capitalizedAuthTypeName, authenticationTypeName }
             ),
-            '',
             [{ text: t('Set up'), onPress: enroll }, { text: t('Cancel') }]
           )
     }

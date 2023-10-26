@@ -31,10 +31,10 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 export const showNotificationSettingsAlert = (): void => {
   Alert.alert(
+    i18n.t('Notifications permission'),
     i18n.t(
       'To receive notifications, turn on notifications for Uniswap Wallet in your device’s settings.'
     ),
-    '',
     [
       { text: i18n.t('Settings'), onPress: openSettings },
       {
