@@ -52,11 +52,11 @@ interface ChartDeltaProps {
 
 function ChartDelta({ startingPrice, endingPrice, noColor }: ChartDeltaProps) {
   const delta = calculateDelta(startingPrice.value, endingPrice.value)
-  const { formatPercent } = useFormatter()
+  const { formatDelta } = useFormatter()
 
   return (
     <DeltaContainer>
-      {formatPercent(delta)}
+      {formatDelta(delta)}
       <DeltaArrow delta={delta} noColor={noColor} />
     </DeltaContainer>
   )

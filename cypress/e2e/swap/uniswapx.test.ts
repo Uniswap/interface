@@ -1,16 +1,35 @@
 import { ChainId, CurrencyAmount } from '@uniswap/sdk-core'
+import { CyHttpMessages } from 'cypress/types/net-stubbing'
+import { FeatureFlag } from 'featureFlags'
 
 import { DAI, nativeOnChain, USDC_MAINNET } from '../../../src/constants/tokens'
 import { getTestSelector } from '../../utils'
 
-const QuoteEndpoint = 'https://api.uniswap.org/v2/quote'
 const QuoteWhereUniswapXIsBetter = 'uniswapx/quote1.json'
 const QuoteWithEthInput = 'uniswapx/quote2.json'
 
+const QuoteEndpoint = 'https://api.uniswap.org/v2/quote'
 const OrderSubmissionEndpoint = 'https://api.uniswap.org/v2/order'
-
 const OrderStatusEndpoint =
   'https://api.uniswap.org/v2/orders?swapper=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266&orderHashes=0xa9dd6f05ad6d6c79bee654c31ede4d0d2392862711be0f3bc4a9124af24a6a19'
+
+/**
+ * Stubs quote to return a quote for non-price requests
+ * Price quotes are blocked with 409, as the backend would not accept them regardless
+ */
+function stubNonPriceQuoteWith(fixture: string) {
+  cy.intercept(QuoteEndpoint, (req: CyHttpMessages.IncomingHttpRequest) => {
+    let body = req.body
+    if (typeof body === 'string') {
+      body = JSON.parse(body)
+    }
+    if (body.intent === 'pricing') {
+      req.reply({ statusCode: 409 })
+    } else {
+      req.reply({ fixture })
+    }
+  }).as('quote')
+}
 
 /** Stubs the provider to return a tx receipt corresponding to the mock filled uniswapx order's txHash */
 function stubSwapTxReceipt() {
@@ -25,13 +44,16 @@ function stubSwapTxReceipt() {
 
 describe('UniswapX Toggle', () => {
   beforeEach(() => {
-    cy.intercept(QuoteEndpoint, { fixture: QuoteWhereUniswapXIsBetter })
-    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
+    stubNonPriceQuoteWith(QuoteWhereUniswapXIsBetter)
+    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
+      featureFlags: [{ name: FeatureFlag.uniswapXDefaultEnabled, value: false }],
+    })
   })
 
-  it('only displays uniswapx ui when setting is on', () => {
+  it('displays uniswapx ui when setting is on', () => {
     // Setup a swap
     cy.get('#swap-currency-input .token-amount-input').type('300')
+    cy.wait('@quote')
 
     // UniswapX UI should not be visible
     cy.get(getTestSelector('gas-estimate-uniswapx-icon')).should('not.exist')
@@ -46,6 +68,7 @@ describe('UniswapX Toggle', () => {
   it('prompts opt-in if UniswapX is better', () => {
     // Setup a swap
     cy.get('#swap-currency-input .token-amount-input').type('300')
+    cy.wait('@quote')
 
     // UniswapX should not display in gas estimate row before opt-in
     cy.get(getTestSelector('gas-estimate-uniswapx-icon')).should('not.exist')
@@ -69,19 +92,23 @@ describe('UniswapX Toggle', () => {
 
 describe('UniswapX Orders', () => {
   beforeEach(() => {
-    cy.intercept(QuoteEndpoint, { fixture: QuoteWhereUniswapXIsBetter })
+    stubNonPriceQuoteWith(QuoteWhereUniswapXIsBetter)
     cy.intercept(OrderSubmissionEndpoint, { fixture: 'uniswapx/orderResponse.json' })
     cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/openStatusResponse.json' })
 
     stubSwapTxReceipt()
 
     cy.hardhat().then((hardhat) => hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 3e8)))
-    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
+    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
+      featureFlags: [{ name: FeatureFlag.uniswapXDefaultEnabled, value: false }],
+    })
   })
 
   it('can swap exact-in trades using uniswapX', () => {
     // Setup a swap
     cy.get('#swap-currency-input .token-amount-input').type('300')
+    cy.wait('@quote')
+
     cy.contains('Try it now').click()
 
     // Submit uniswapx order signature
@@ -101,6 +128,8 @@ describe('UniswapX Orders', () => {
   it('can swap exact-out trades using uniswapX', () => {
     // Setup a swap
     cy.get('#swap-currency-output .token-amount-input').type('300')
+    cy.wait('@quote')
+
     cy.contains('Try it now').click()
 
     // Submit uniswapx order signature
@@ -120,6 +149,8 @@ describe('UniswapX Orders', () => {
   it('renders proper view if uniswapx order expires', () => {
     // Setup a swap
     cy.get('#swap-currency-input .token-amount-input').type('300')
+    cy.wait('@quote')
+
     cy.contains('Try it now').click()
 
     // Submit uniswapx order signature
@@ -136,6 +167,8 @@ describe('UniswapX Orders', () => {
   it('renders proper view if uniswapx order has insufficient funds', () => {
     // Setup a swap
     cy.get('#swap-currency-input .token-amount-input').type('300')
+    cy.wait('@quote')
+
     cy.contains('Try it now').click()
 
     // Submit uniswapx order signature
@@ -152,7 +185,7 @@ describe('UniswapX Orders', () => {
 
 describe('UniswapX Eth Input', () => {
   beforeEach(() => {
-    cy.intercept(QuoteEndpoint, { fixture: QuoteWithEthInput })
+    stubNonPriceQuoteWith(QuoteWithEthInput)
     cy.intercept(OrderSubmissionEndpoint, { fixture: 'uniswapx/orderResponse.json' })
     cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/openStatusResponse.json' })
 
@@ -164,12 +197,16 @@ describe('UniswapX Eth Input', () => {
 
     stubSwapTxReceipt()
 
-    cy.visit(`/swap/?inputCurrency=ETH&outputCurrency=${DAI.address}`)
+    cy.visit(`/swap/?inputCurrency=ETH&outputCurrency=${DAI.address}`, {
+      featureFlags: [{ name: FeatureFlag.uniswapXDefaultEnabled, value: false }],
+    })
   })
 
   it('can swap using uniswapX with ETH as input', () => {
     // Setup a swap
     cy.get('#swap-currency-input .token-amount-input').type('1')
+
+    cy.wait('@quote')
     cy.contains('Try it now').click()
 
     // Prompt ETH wrap to use for order
@@ -202,6 +239,8 @@ describe('UniswapX Eth Input', () => {
   it('switches swap input to WETH after wrap', () => {
     // Setup a swap
     cy.get('#swap-currency-input .token-amount-input').type('1')
+    cy.wait('@quote')
+
     cy.contains('Try it now').click()
 
     // Prompt ETH wrap and confirm
@@ -249,7 +288,9 @@ describe('UniswapX activity history', () => {
     cy.hardhat().then(async (hardhat) => {
       await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 3e8))
     })
-    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
+    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
+      featureFlags: [{ name: FeatureFlag.uniswapXDefaultEnabled, value: false }],
+    })
   })
 
   it('can view UniswapX order status progress in activity', () => {
@@ -335,7 +376,7 @@ describe('UniswapX activity history', () => {
     // Open activity history
     cy.get(getTestSelector('mini-portfolio-navbar')).contains('Activity').click()
 
-    // Ensure gql and local order have been deduped, such that there is only one swap activity listed
+    // Ensure gql and local order have been deduped, such that there is one swap activity listed
     cy.get(getTestSelector('activity-content')).contains('Swapped').should('have.length', 1)
   })
 

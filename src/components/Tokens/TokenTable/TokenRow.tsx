@@ -8,6 +8,7 @@ import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
 import { Info } from 'components/Icons/Info'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { getTokenDetailsURL, supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
@@ -113,7 +114,7 @@ const ClickableContent = styled.div<{ gap?: number }>`
   cursor: pointer;
 `
 const ClickableName = styled(ClickableContent)`
-  gap: 8px;
+  gap: 12px;
   max-width: 100%;
 `
 const StyledHeaderRow = styled(StyledTokenRow)`
@@ -441,7 +442,7 @@ interface LoadedRowProps {
 
 /* Loaded State: row component with token information */
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
-  const { formatFiatPrice, formatNumber, formatPercent } = useFormatter()
+  const { formatFiatPrice, formatNumber, formatDelta } = useFormatter()
 
   const { tokenListIndex, tokenListLength, token, sortRank } = props
   const filterString = useAtomValue(filterStringAtom)
@@ -450,7 +451,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const chainId = supportedChainIdFromGQLChain(filterNetwork)
   const timePeriod = useAtomValue(filterTimeAtom)
   const delta = token.market?.pricePercentChange?.value
-  const formattedDelta = formatPercent(delta)
+  const formattedDelta = formatDelta(delta)
 
   const exploreTokenSelectedEventProperties = {
     chain_id: chainId,
@@ -466,11 +467,13 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   // A simple 0 price indicates the price is not currently available from the api
   const price = token.market?.price?.value === 0 ? '-' : formatFiatPrice({ price: token.market?.price?.value })
 
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
+
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <div ref={ref} data-testid={`token-table-row-${token.address}`}>
       <StyledLink
-        to={getTokenDetailsURL(token)}
+        to={getTokenDetailsURL({ ...token, isInfoExplorePageEnabled })}
         onClick={() =>
           sendAnalyticsEvent(InterfaceEventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)
         }
@@ -480,7 +483,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           listNumber={sortRank}
           tokenInfo={
             <ClickableName>
-              <QueryTokenLogo token={token} />
+              <QueryTokenLogo token={token} size="32px" />
               <TokenInfoCell>
                 <TokenName data-cy="token-name">{token.name}</TokenName>
                 <TokenSymbol>{token.symbol}</TokenSymbol>

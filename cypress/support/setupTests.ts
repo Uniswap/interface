@@ -34,6 +34,9 @@ beforeEach(() => {
     )
   }).intercept('https://*.sentry.io', { statusCode: 200 })
 
+  // Mock statsig to allow us to mock flags.
+  cy.intercept(/statsig/, { statusCode: 409 })
+
   // Mock our own token list responses to avoid the latency of IPFS.
   cy.intercept('https://gateway.ipfs.io/ipns/tokens.uniswap.org', TokenListJSON)
     .intercept('https://gateway.ipfs.io/ipns/extendedtokens.uniswap.org', { statusCode: 404 })

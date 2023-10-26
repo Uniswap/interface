@@ -1902,6 +1902,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
                                       <img
                                         alt="ETH logo"
                                         class="c35"
+                                        loading="lazy"
                                         src="ethereum-logo.png"
                                       />
                                     </div>
@@ -4548,6 +4549,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
                                       <img
                                         alt="ETH logo"
                                         class="c35"
+                                        loading="lazy"
                                         src="ethereum-logo.png"
                                       />
                                     </div>

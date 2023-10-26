@@ -3,6 +3,8 @@ import { render, screen, within } from 'test-utils/render'
 
 import SwapModalFooter from './SwapModalFooter'
 
+jest.mock('../../featureFlags/flags/useFees', () => ({ useFeesEnabled: () => true }))
+
 describe('SwapModalFooter.tsx', () => {
   it('matches base snapshot, test trade exact input', () => {
     const { asFragment } = render(

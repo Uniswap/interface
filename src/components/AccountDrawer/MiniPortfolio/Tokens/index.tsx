@@ -3,6 +3,7 @@ import { TraceEvent } from 'analytics'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import Row from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
 import { getTokenDetailsURL, gqlToCurrency, logSentryErrorForUnsupportedChain } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
@@ -71,15 +72,17 @@ const TokenNameText = styled(ThemedText.SubHeader)`
 type PortfolioToken = NonNullable<TokenBalance['token']>
 
 function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: TokenBalance & { token: PortfolioToken }) {
-  const { formatPercent } = useFormatter()
+  const { formatDelta } = useFormatter()
   const percentChange = tokenProjectMarket?.pricePercentChange?.value ?? 0
 
   const navigate = useNavigate()
   const toggleWalletDrawer = useToggleAccountDrawer()
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
+
   const navigateToTokenDetails = useCallback(async () => {
-    navigate(getTokenDetailsURL(token))
+    navigate(getTokenDetailsURL({ ...token, isInfoExplorePageEnabled }))
     toggleWalletDrawer()
-  }, [navigate, token, toggleWalletDrawer])
+  }, [navigate, token, isInfoExplorePageEnabled, toggleWalletDrawer])
   const { formatNumber } = useFormatter()
 
   const currency = gqlToCurrency(token)
@@ -121,7 +124,7 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
               </ThemedText.SubHeader>
               <Row justify="flex-end">
                 <DeltaArrow delta={percentChange} />
-                <ThemedText.BodySecondary>{formatPercent(percentChange)}</ThemedText.BodySecondary>
+                <ThemedText.BodySecondary>{formatDelta(percentChange)}</ThemedText.BodySecondary>
               </Row>
             </>
           )
