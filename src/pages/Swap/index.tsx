@@ -609,7 +609,7 @@ export function Swap({
   const isDark = useIsDarkMode()
   const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
 
-  const [currentTab, setCurrentTab] = useState<SwapTab>(SwapTab.Swap)
+  const [currentTab, setCurrentTab] = useState<SwapTab>(SwapTab.LimitOrder)
 
   const swapElement = (
     <SwapWrapper isDark={isDark} className={className} id="swap-page">
