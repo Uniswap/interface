@@ -22,6 +22,7 @@ interface Window {
     isTrust?: true
     // set by the Ledger Extension Web 3 browser extension
     isLedgerConnect?: true
+    isScantastic?: true
     autoRefreshOnNetworkChange?: boolean
   }
   // set by the Phantom Wallet browser extension
