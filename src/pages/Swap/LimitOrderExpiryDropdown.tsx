@@ -34,7 +34,7 @@ export function LimitOrderExpiryDropdown({
 
   return (
     <ExpirySection>
-      <Selector onClick={() => setShowDropdown(true)}>
+      <Selector tabIndex={showDropdown ? -1 : undefined} show={!showDropdown} onClick={() => setShowDropdown(true)}>
         <ThemedText.SubHeaderSmall>Expiry</ThemedText.SubHeaderSmall>
         <SelectedOption>
           <ThemedText.BodyPrimary>{selected}</ThemedText.BodyPrimary>
@@ -116,11 +116,13 @@ const CheckIcon = styled(Check)`
   color: ${({ theme }) => theme.accent1};
 `
 
-const Selector = styled.button`
+const Selector = styled.button<{ show: boolean }>`
   padding: 17px;
   border: none;
   cursor: pointer;
   background: none;
+
+  ${({ show }) => (!show ? 'pointer-events: none;' : '')}
 
   display: flex;
   flex-flow: column;
