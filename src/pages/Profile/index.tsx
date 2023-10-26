@@ -11,7 +11,7 @@ import Tokens from 'components/AccountDrawer/MiniPortfolio/Tokens'
 import { PriceChart } from 'components/Charts/PriceChart'
 import Column from 'components/Column'
 import StatusIcon from 'components/Identicon/StatusIcon'
-import Row from 'components/Row'
+import Row, { RowBetween } from 'components/Row'
 import { usePriceHistory } from 'components/Tokens/TokenDetails/ChartSection'
 import { getConnection } from 'connection'
 import { UNI } from 'constants/tokens'
@@ -23,11 +23,43 @@ import {
 } from 'graphql/data/__generated__/types-and-hooks'
 import { GQL_MAINNET_CHAINS, TimePeriod } from 'graphql/data/util'
 import useENS from 'hooks/useENS'
+import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { CopyHelper, Separator, ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
 import { shortenAddress } from 'utils'
+
+const followingAtom = atomWithStorage<string[]>('following', [])
+function useFollowedAccounts() {
+  return useAtomValue(followingAtom)
+}
+
+function useIsFollowingAccount(account: string) {
+  return useFollowedAccounts().includes(account.toLowerCase())
+}
+
+function useToggleFollowingAccount(): (account: string) => void {
+  const updateFollowing = useUpdateAtom(followingAtom)
+  return useCallback(
+    (account: string) => {
+      updateFollowing((following) => {
+        const lowercasedAccount = account.toLowerCase()
+        const index = following.indexOf(lowercasedAccount, 0)
+        console.log('cartcrom', following, index)
+
+        if (index !== -1) {
+          const newFollowing = [...following]
+          newFollowing.splice(index, 1)
+          return newFollowing
+        } // remove if already following
+        return [...following, lowercasedAccount] // add follower if not yet following
+      })
+    },
+    [updateFollowing]
+  )
+}
 
 const Container = styled(Column)`
   /* justify-items: center; */
@@ -65,6 +97,27 @@ const CopyText = styled(CopyHelper).attrs({
   iconSize: 14,
   iconPosition: 'right',
 })``
+
+const FollowingContainer = styled.button`
+  border-radius: 20px;
+  border: 1.5px solid ${({ theme }) => theme.accent1};
+  width: 200px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: ${({ theme }) => opacify(10, theme.accent1)};
+  :hover {
+    background-color: ${({ theme }) => opacify(24, theme.accent1)};
+  }
+
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `background-color ${duration.fast} ${timing.ease}`};
+`
 
 const Pages = [
   {
@@ -116,24 +169,35 @@ export default function ProfilePage() {
   })
   const prices = usePriceHistory(tokenPriceQuery)
 
+  const isFollowingAccount = useIsFollowingAccount(account)
+  const toggleFollowingAccount = useToggleFollowingAccount()
+
   return (
     <Container>
-      <Row>
-        <StatusIcon account={account} connection={connection} showMiniIcons={false} size={80} />
-        <AccountNamesWrapper>
-          <ThemedText.SubHeader fontSize={name ? 16 : 24}>
-            <CopyText toCopy={account}>{name ? shortenAddress(account) : account}</CopyText>
-          </ThemedText.SubHeader>
-          {/* Displays smaller view of account if ENS name was rendered above */}
-          {name && (
-            <ThemedText.HeadlineLarge>
-              <CopyHelper toCopy={account} iconSize={24} iconPosition="right">
-                {name}
-              </CopyHelper>
-            </ThemedText.HeadlineLarge>
-          )}
-        </AccountNamesWrapper>
-      </Row>
+      <RowBetween>
+        <Row>
+          <StatusIcon account={account} connection={connection} showMiniIcons={false} size={80} />
+          <AccountNamesWrapper>
+            <ThemedText.SubHeader fontSize={name ? 16 : 24}>
+              <CopyText toCopy={account}>{name ? shortenAddress(account) : account}</CopyText>
+            </ThemedText.SubHeader>
+            {/* Displays smaller view of account if ENS name was rendered above */}
+            {name && (
+              <ThemedText.HeadlineLarge>
+                <CopyHelper toCopy={account} iconSize={24} iconPosition="right">
+                  {name}
+                </CopyHelper>
+              </ThemedText.HeadlineLarge>
+            )}
+          </AccountNamesWrapper>
+        </Row>
+        <FollowingContainer onClick={() => toggleFollowingAccount(account)}>
+          <ThemedText.HeadlineSmall>
+            {isFollowingAccount ? <Trans>Following</Trans> : <Trans>+ Follow</Trans>}
+          </ThemedText.HeadlineSmall>
+        </FollowingContainer>
+      </RowBetween>
+
       <Separator />
       <Row gap="20px">
         <ChartContainer>
