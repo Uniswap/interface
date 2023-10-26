@@ -77,9 +77,13 @@ export default function useWrapCallback(
   if (error) throw error
 
   return useMemo(() => {
-    if (!wethContract || !chainId || !inputCurrency || !outputCurrency) return NOT_APPLICABLE
+    if (!wethContract || !chainId || !inputCurrency || !outputCurrency) {
+      return NOT_APPLICABLE
+    }
     const weth = WRAPPED_NATIVE_CURRENCY[chainId]
-    if (!weth) return NOT_APPLICABLE
+    if (!weth) {
+      return NOT_APPLICABLE
+    }
 
     const hasInputAmount = Boolean(inputAmount?.greaterThan('0'))
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
@@ -167,6 +171,7 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
           : WrapInputError.ENTER_WRAPPED_AMOUNT,
       }
     } else {
+      console.log('final else - not applicable')
       return NOT_APPLICABLE
     }
   }, [wethContract, chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
