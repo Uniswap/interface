@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { friendsActivity, useAllFriendsBuySells } from 'components/SocialFeed/hooks'
 import { Unicon } from 'components/Unicon'
 import useENSAvatar from 'hooks/useENSAvatar'
 import { getTimeDifference } from 'nft/utils/date'
@@ -6,30 +7,6 @@ import React from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils'
-
-// Mock data for friends' activity. Should be type Activity[]
-const friendsActivity = [
-  {
-    ensName: 'friend1.eth',
-    address: '0x24791Cac57BF48328D9FE103Ce402Cfe4c0D8b07',
-    activity: 'Minted Azuki #2214',
-    timestamp: Date.now(), // 1 hour ago
-    image:
-      'https://cdn.center.app/1/0xED5AF388653567Af2F388E6224dC7C4b3241C544/2214/92acd1de09f0f5e1c12a4f1b47306a8f7393f4053a32b439f5fc7ba8b797961e.png',
-  },
-  {
-    address: '0x24791Cac57BF48328D9FE103Ce402Cfe4c0D8b07',
-    activity: 'Swapped 0.1 ETH for 100 DAI',
-    timestamp: Date.now() - 1000 * 60 * 5, // 5 min ago
-  },
-  {
-    ensName: 'friend1.eth',
-    address: '0x24791Cac57BF48328D9FE103Ce402Cfe4c0D8b07',
-    activity: 'Swapped 0.1 ETH for 100 DAI',
-    timestamp: Date.now() - 1000 * 60 * 60 * 5, // 5 hours ago
-  },
-  // More activities...
-]
 
 export const ExploreContainer = styled.div`
   width: 100%;
@@ -112,6 +89,7 @@ function PortfolioAvatar({ accountAddress }: { accountAddress: string }) {
 }
 
 const ActivityFeed = () => {
+  console.log('buysells', useAllFriendsBuySells())
   return (
     <ExploreContainer>
       <TitleContainer>
@@ -134,7 +112,7 @@ const ActivityFeed = () => {
                   </Who>
                   <ThemedText.LabelSmall>{getTimeDifference(activity.timestamp.toString())}</ThemedText.LabelSmall>
                 </CardHeader>
-                <ThemedText.BodySecondary>{activity.activity}</ThemedText.BodySecondary>
+                <ThemedText.BodySecondary>{activity.description}</ThemedText.BodySecondary>
                 {activity.image && (
                   <img src={activity.image} alt="activity image" style={{ maxHeight: '100%', maxWidth: '100%' }} />
                 )}

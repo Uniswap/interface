@@ -58,7 +58,7 @@ function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = 
 export function useAllActivities(account: string) {
   const { formatNumberOrString } = useFormatter()
   const { data, loading, refetch } = useActivityQuery({
-    variables: { account },
+    variables: { accounts: [account] },
     errorPolicy: 'all',
     fetchPolicy: 'cache-first',
   })
