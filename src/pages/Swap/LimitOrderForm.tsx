@@ -2,15 +2,17 @@ import { InterfaceSectionName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
+import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import TradePrice from 'components/swap/TradePrice'
 import { nativeOnChain } from 'constants/tokens'
+import useDebounce from 'hooks/useDebounce'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useState } from 'react'
 import { RouterPreference, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
@@ -75,6 +77,8 @@ export function LimitOrderForm() {
     )
   }, [parsedAmountIn, parsedAmountOut])
 
+  const debouncedExecutionPrice = useDebounce(executionPrice, 500)
+
   // TODO: add token tax stuff
   const marketTrade = useRoutingAPITrade(
     false /* skipFetch */,
@@ -92,6 +96,13 @@ export function LimitOrderForm() {
       ? formatCurrencyAmount({ amount: marketTrade.trade.outputAmount, type: NumberType.SwapTradeAmount })
       : '-'
 
+  const showPriceWarning =
+    marketTrade.state !== TradeState.LOADING && marketTrade?.trade && debouncedExecutionPrice
+      ? marketTrade.trade.executionPrice.greaterThan(debouncedExecutionPrice)
+      : false
+
+  const theme = useTheme()
+
   return (
     <Container>
       <SwapSection>
@@ -103,8 +114,6 @@ export function LimitOrderForm() {
           onUserInput={setLimitOrderField('inputAmount')}
           onMax={onMax}
           fiatValue={inputAmount ? fiatValueTradeInput : undefined}
-          // TODO: show USD value
-          // fiatValue={showFiatValueInput ? fiatValueInput : undefined}
           onCurrencySelect={setLimitOrderField('inputToken')}
           otherCurrency={outputToken}
           showCommonBases
@@ -118,8 +127,6 @@ export function LimitOrderForm() {
           currency={outputToken ?? null}
           showMaxButton={false}
           onUserInput={setLimitOrderField('outputAmount')}
-          // TODO: show USD value
-          // fiatValue={showFiatValueInput ? fiatValueInput : undefined}
           onCurrencySelect={setLimitOrderField('outputToken')}
           otherCurrency={inputToken}
           showCommonBases
@@ -133,6 +140,12 @@ export function LimitOrderForm() {
         </PriceSection>
         <LimitOrderExpiryDropdown selected={expiry} onSelect={setLimitOrderField('expiry')} />
       </Row>
+      {showPriceWarning && (
+        <Warning>
+          <AlertTriangleFilled fill={theme.critical} />
+          <ThemedText.BodySmall color={theme.critical}>Your order is below the market rate.</ThemedText.BodySmall>
+        </Warning>
+      )}
     </Container>
   )
 }
@@ -200,4 +213,16 @@ const SwapSection = styled.div`
 
 const OutputSwapSection = styled(SwapSection)`
   border-bottom: ${({ theme }) => `1px solid ${theme.surface1}`};
+`
+
+const Warning = styled.div`
+  border-radius: 16px;
+  padding: 12px 16px;
+  background-color: ${({ theme }) => theme.deprecated_accentFailureSoft};
+  color: ${({ theme }) => theme.critical};
+
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  gap: 4px;
 `
