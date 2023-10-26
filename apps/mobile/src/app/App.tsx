@@ -160,12 +160,18 @@ function AppOuter(): JSX.Element | null {
                 <LockScreenContextProvider>
                   <Sentry.TouchEventBoundary>
                     <DataUpdaters />
-                    <BottomSheetModalProvider>
-                      <AppModals />
-                      <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                        <AppInner />
-                      </PerformanceProfiler>
-                    </BottomSheetModalProvider>
+                    <NavigationContainer
+                      onReady={(navigationRef): void => {
+                        routingInstrumentation.registerNavigationContainer(navigationRef)
+                      }}>
+                      <BottomSheetModalProvider>
+                        <AppModals />
+                        <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                          <AppInner />
+                        </PerformanceProfiler>
+                      </BottomSheetModalProvider>
+                      <NotificationToastWrapper />
+                    </NavigationContainer>
                   </Sentry.TouchEventBoundary>
                 </LockScreenContextProvider>
               </BiometricContextProvider>
@@ -187,7 +193,17 @@ function AppInner(): JSX.Element {
     NativeModules.ThemeModule.setColorScheme(themeSetting)
   }, [themeSetting])
 
-  return <NavStack isDarkMode={isDarkMode} />
+  return (
+    <>
+      <OfflineBanner />
+      <AppStackNavigator />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+      />
+    </>
+  )
 }
 
 function DataUpdaters(): JSX.Element {
@@ -234,24 +250,6 @@ function DataUpdaters(): JSX.Element {
       <TraceUserProperties />
       <TransactionHistoryUpdater />
     </>
-  )
-}
-
-function NavStack({ isDarkMode }: { isDarkMode: boolean }): JSX.Element {
-  return (
-    <NavigationContainer
-      onReady={(navigationRef): void => {
-        routingInstrumentation.registerNavigationContainer(navigationRef)
-      }}>
-      <OfflineBanner />
-      <AppStackNavigator />
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-      />
-      <NotificationToastWrapper />
-    </NavigationContainer>
   )
 }
 
