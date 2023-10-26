@@ -1,11 +1,12 @@
 import { t } from '@lingui/macro'
 import {
   ActivityQuery,
-  TokenTransfer,
+  AssetChange,
+  TransactionDetails,
   TransactionType,
   useActivityQuery,
 } from 'graphql/data/__generated__/types-and-hooks'
-import { AssetActivity, AssetActivityDetails } from 'graphql/data/activity'
+import { AssetActivityDetails } from 'graphql/data/activity'
 import { useFollowedAccounts } from 'pages/Profile'
 
 // Mock data for friends' activity. Should be type Activity[]
@@ -55,6 +56,10 @@ const JudgmentalTransactionTitleTable: { [key in JudgmentalTransaction]: string 
 //   }
 // }
 
+function assetIsEthStablecoin(symbol: string) {
+  return symbol === 'USDT' || symbol === 'USDC' || symbol === 'DAI' || symbol === 'ETH' || symbol === 'WETH'
+}
+
 /* Returns allFriendsActivities in shape of [friend1Portfolio, friend2Portfolio]. Each portfolio contains attribute ownerAddress */
 function useAllFriendsActivites(): {
   allFriendsActivities?: ActivityQuery
@@ -79,9 +84,9 @@ export function useAllFriendsBuySells() {
   const { allFriendsActivities, loading } = useAllFriendsActivites()
   const map: {
     [ownerAddress: string]: {
-      [tokenId: string]: {
-        buys: TokenTransfer[]
-        sells: TokenTransfer[]
+      [tokenAddress: string]: {
+        buys: TransactionDetails[]
+        sells: TransactionDetails[]
       }
     }
   } = {}
@@ -89,38 +94,44 @@ export function useAllFriendsBuySells() {
 
   allFriendsActivities?.portfolios?.map((portfolio) => {
     const buySells: {
-      [tokenId: string]: {
-        buys: TokenTransfer[]
-        sells: TokenTransfer[]
+      [tokenAddress: string]: {
+        buys: TransactionDetails[]
+        sells: TransactionDetails[]
       }
     } = {}
 
-    portfolio.assetActivities &&
-      portfolio.assetActivities.forEach((tx: AssetActivity) => {
-        const details: AssetActivityDetails = tx.details
-        if (details.__typename === 'TransactionDetails' && details.type === TransactionType.Swap) {
-          details.assetChanges.forEach((assetChange) => {
-            if (assetChange.__typename === 'TokenTransfer') {
+    for (const tx of portfolio.assetActivities ?? []) {
+      const details: AssetActivityDetails = tx.details
+      if (details.__typename === 'TransactionDetails' && details.type === TransactionType.Swap) {
+        const transfers = details.assetChanges.filter((c) => c.__typename === 'TokenTransfer')
+        if (transfers.length == 2) {
+          // lol make our lives easier, ignore refund exact swaps for now
+          for (let i = 0; i < 2; i++) {
+            const assetChange = transfers[i]
+            const otherAssetChange = transfers[i === 1 ? 0 : 1] as AssetChange
+            if (assetChange.__typename === 'TokenTransfer' && otherAssetChange.__typename === 'TokenTransfer') {
               if (
-                assetChange.asset.symbol === 'ETH' ||
-                assetChange.asset.symbol === 'WETH' ||
-                assetChange.asset.symbol === 'DAI' ||
-                assetChange.asset.symbol === 'USDT' ||
-                assetChange.asset.symbol === 'USDC' // is eth or stablecoin
+                assetIsEthStablecoin(assetChange.asset.symbol ?? '') &&
+                !assetIsEthStablecoin(otherAssetChange.asset.symbol ?? '')
               ) {
-                if (!buySells[assetChange.asset.id]) {
-                  buySells[assetChange.asset.id] = { buys: [], sells: [] }
+                const otherAssetAddress = otherAssetChange.asset.address ?? 'Other'
+
+                if (!buySells[otherAssetAddress]) {
+                  buySells[otherAssetAddress] = { buys: [], sells: [] }
                 }
-                if (assetChange.direction === 'IN') {
-                  buySells[assetChange.asset.id].buys.push(assetChange as TokenTransfer)
+                if (assetChange.direction === 'OUT') {
+                  // if stablecoin goes out, it's a buy
+                  buySells[otherAssetAddress].buys.push(details as TransactionDetails)
                 } else {
-                  buySells[assetChange.asset.id].sells.push(assetChange as TokenTransfer)
+                  buySells[otherAssetAddress].sells.push(details as TransactionDetails)
                 }
+                continue
               }
             }
-          })
+          }
         }
-      })
+      }
+    }
     map[portfolio.ownerAddress] = buySells
   })
   return map

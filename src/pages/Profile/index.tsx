@@ -191,13 +191,12 @@ export default function ProfilePage() {
             )}
           </AccountNamesWrapper>
         </Row>
-        {account !== currentAccount && (
-          <FollowingContainer onClick={() => toggleFollowingAccount(account)}>
-            <ThemedText.HeadlineSmall>
-              {isFollowingAccount ? <Trans>Following</Trans> : <Trans>+ Follow</Trans>}
-            </ThemedText.HeadlineSmall>
-          </FollowingContainer>
-        )}
+
+        <FollowingContainer onClick={() => toggleFollowingAccount(account)}>
+          <ThemedText.HeadlineSmall>
+            {isFollowingAccount ? <Trans>Following</Trans> : <Trans>+ Follow</Trans>}
+          </ThemedText.HeadlineSmall>
+        </FollowingContainer>
       </RowBetween>
 
       <Separator />
