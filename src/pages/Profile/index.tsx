@@ -32,7 +32,7 @@ import { opacify } from 'theme/utils'
 import { shortenAddress } from 'utils'
 
 const followingAtom = atomWithStorage<string[]>('following', [])
-function useFollowedAccounts() {
+export function useFollowedAccounts() {
   return useAtomValue(followingAtom)
 }
 
@@ -47,7 +47,6 @@ function useToggleFollowingAccount(): (account: string) => void {
       updateFollowing((following) => {
         const lowercasedAccount = account.toLowerCase()
         const index = following.indexOf(lowercasedAccount, 0)
-        console.log('cartcrom', following, index)
 
         if (index !== -1) {
           const newFollowing = [...following]
@@ -148,6 +147,7 @@ const Pages = [
 
 export default function ProfilePage() {
   const { accountAddress = '' } = useParams()
+  const { account: currentAccount } = useWeb3React()
   const connection = getConnection(useWeb3React().connector)
   const { address: ensResolvedAddress, name } = useENS(accountAddress)
 
@@ -191,11 +191,13 @@ export default function ProfilePage() {
             )}
           </AccountNamesWrapper>
         </Row>
-        <FollowingContainer onClick={() => toggleFollowingAccount(account)}>
-          <ThemedText.HeadlineSmall>
-            {isFollowingAccount ? <Trans>Following</Trans> : <Trans>+ Follow</Trans>}
-          </ThemedText.HeadlineSmall>
-        </FollowingContainer>
+        {account !== currentAccount && (
+          <FollowingContainer onClick={() => toggleFollowingAccount(account)}>
+            <ThemedText.HeadlineSmall>
+              {isFollowingAccount ? <Trans>Following</Trans> : <Trans>+ Follow</Trans>}
+            </ThemedText.HeadlineSmall>
+          </FollowingContainer>
+        )}
       </RowBetween>
 
       <Separator />
