@@ -78,7 +78,7 @@ export const Scrim = (props: ScrimBackgroundProps) => {
   return <ScrimBackground {...props} />
 }
 
-const AccountDrawerScrollWrapper = styled.div`
+export const AccountDrawerScrollWrapper = styled.div`
   overflow: hidden;
   &:hover {
     overflow-y: auto;

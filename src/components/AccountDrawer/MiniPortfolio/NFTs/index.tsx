@@ -18,8 +18,8 @@ export default function NFTs({ account }: { account: string }) {
     DEFAULT_NFT_QUERY_AMOUNT,
     undefined,
     undefined,
-    undefined,
-    !walletDrawerOpen
+    undefined
+    // !walletDrawerOpen
   )
 
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()

@@ -13,7 +13,7 @@ import Swap from './Swap'
 
 const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
-const Profile = lazy(() => import('nft/pages/profile'))
+const NftProfile = lazy(() => import('nft/pages/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
 const AddLiquidity = lazy(() => import('pages/AddLiquidity'))
 const Explore = lazy(() => import('pages/Explore'))
@@ -32,6 +32,7 @@ const RemoveLiquidity = lazy(() => import('pages/RemoveLiquidity'))
 const RemoveLiquidityV3 = lazy(() => import('pages/RemoveLiquidity/V3'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
 const Vote = lazy(() => import('pages/Vote'))
+const Profile = lazy(() => import('pages/Profile'))
 
 // this is the same svg defined in assets/images/blue-loader.svg
 // it is defined here because the remote asset may not have had time to load when this file is executing
@@ -218,7 +219,7 @@ export const routes: RouteDefinition[] = [
     path: '/nfts/profile',
     getElement: () => (
       <Suspense fallback={null}>
-        <Profile />
+        <NftProfile />
       </Suspense>
     ),
     enabled: (args) => !args.shouldDisableNFTRoutes,
@@ -237,6 +238,15 @@ export const routes: RouteDefinition[] = [
     getElement: () => (
       <Suspense fallback={null}>
         <Collection />
+      </Suspense>
+    ),
+    enabled: (args) => !args.shouldDisableNFTRoutes,
+  }),
+  createRouteDefinition({
+    path: '/account/:accountAddress',
+    getElement: () => (
+      <Suspense fallback={null}>
+        <Profile />
       </Suspense>
     ),
     enabled: (args) => !args.shouldDisableNFTRoutes,
