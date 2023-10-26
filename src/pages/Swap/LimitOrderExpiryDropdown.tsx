@@ -70,7 +70,7 @@ const ExpirySection = styled.div`
   // height: 50px;
   line-height: 20px;
 
-  flex: 0.8;
+  flex: 0.6;
   min-height: 70px;
 
   div {

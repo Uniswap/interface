@@ -63,7 +63,6 @@ export function LimitOrderForm() {
   const parsedAmountOut = useMemo(() => tryParseCurrencyAmount(outputAmount, outputToken), [outputAmount, outputToken])
 
   const fiatValueTradeInput = useUSDPrice(parsedAmountIn)
-  const fiatValueTradeOutput = useUSDPrice(parsedAmountOut)
 
   const executionPrice = useMemo(() => {
     if (!parsedAmountIn || !parsedAmountOut) return
@@ -103,7 +102,7 @@ export function LimitOrderForm() {
           currency={inputToken}
           onUserInput={setLimitOrderField('inputAmount')}
           onMax={onMax}
-          fiatValue={fiatValueTradeInput}
+          fiatValue={inputAmount ? fiatValueTradeInput : undefined}
           // TODO: show USD value
           // fiatValue={showFiatValueInput ? fiatValueInput : undefined}
           onCurrencySelect={setLimitOrderField('inputToken')}
@@ -124,7 +123,6 @@ export function LimitOrderForm() {
           onCurrencySelect={setLimitOrderField('outputToken')}
           otherCurrency={inputToken}
           showCommonBases
-          fiatValue={fiatValueTradeOutput}
           id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
         />
       </SwapSection>
