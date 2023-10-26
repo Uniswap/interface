@@ -9,7 +9,7 @@ import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrap
 import { getConnection } from 'connection'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
-import { DutchOrderTrade, TradeFillType } from 'state/routing/types'
+import { DutchOrderTrade, LimitOrderTrade, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
 import { SignatureExpiredError, UserRejectedRequestError } from 'utils/errors'
 import { signTypedData } from 'utils/signing'
@@ -52,7 +52,7 @@ export function useUniswapXSwapCallback({
   allowedSlippage,
   fiatValues,
 }: {
-  trade?: DutchOrderTrade
+  trade?: DutchOrderTrade | LimitOrderTrade
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }
   allowedSlippage: Percent
 }) {

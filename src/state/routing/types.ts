@@ -1,10 +1,11 @@
+import { BigNumber } from '@ethersproject/bignumber'
+import { AddressZero } from '@ethersproject/constants'
 import { MixedRouteSDK, ONE, Protocol, Trade } from '@uniswap/router-sdk'
 import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { DutchOrderInfo, DutchOrderInfoJSON, DutchOrderTrade as IDutchOrderTrade } from '@uniswap/uniswapx-sdk'
 import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
 import { ZERO_PERCENT } from 'constants/misc'
-import { BigNumber, ethers } from 'ethers'
 
 export enum TradeState {
   LOADING = 'loading',
@@ -387,8 +388,15 @@ export class LimitOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
 
   inputTax = ZERO_PERCENT
   outputTax = ZERO_PERCENT
-  needsWrap: boolean
+  wrapInfo: WrapInfo
+  approveInfo: ApproveInfo
   swapFee: SwapFeeInfo | undefined
+  quoteId = undefined
+  requestId = undefined
+  slippageTolerance = new Percent(0, 1)
+
+  amountIn: CurrencyAmount<Token>
+  amountOut: CurrencyAmount<Currency>
 
   constructor({
     currencyIn,
@@ -399,7 +407,8 @@ export class LimitOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     swapper,
     deadlineBufferSecs,
     swapFee,
-    needsWrap,
+    wrapInfo,
+    approveInfo,
   }: {
     currencyIn: Token
     currencyOut: Currency
@@ -409,7 +418,8 @@ export class LimitOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     swapper: string
     deadlineBufferSecs: number
     swapFee?: SwapFeeInfo
-    needsWrap: boolean
+    wrapInfo: WrapInfo
+    approveInfo: ApproveInfo
   }) {
     if (tradeType === TradeType.EXACT_OUTPUT) {
       throw new Error('Exact output not yet supported for limit orders')
@@ -423,12 +433,12 @@ export class LimitOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
       swapper,
       nonce,
       deadline: now + deadlineBufferSecs,
-      additionalValidationContract: ethers.constants.AddressZero,
+      additionalValidationContract: AddressZero,
       additionalValidationData: '0x',
       // decay timings dont matter at all
       decayStartTime: now,
       decayEndTime: now,
-      exclusiveFiller: ethers.constants.AddressZero,
+      exclusiveFiller: AddressZero,
       exclusivityOverrideBps: BigNumber.from(0),
       input: {
         token: currencyIn.address,
@@ -438,7 +448,7 @@ export class LimitOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
       },
       outputs: [
         {
-          token: currencyOut.isNative ? ethers.constants.AddressZero : currencyOut.address,
+          token: currencyOut.isNative ? AddressZero : currencyOut.address,
           recipient: swapper,
           startAmount: BigNumber.from(amountOut.quotient.toString()),
           endAmount: BigNumber.from(amountOut.quotient.toString()),
@@ -448,12 +458,41 @@ export class LimitOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     super({ currencyIn, currenciesOut: [currencyOut], orderInfo, tradeType })
     this.deadlineBufferSecs = deadlineBufferSecs
     this.swapFee = swapFee
-    this.needsWrap = needsWrap
+    this.wrapInfo = wrapInfo
+    this.approveInfo = approveInfo
+    this.amountIn = amountIn
+    this.amountOut = amountOut
+  }
+
+  public get inputAmount(): CurrencyAmount<Token> {
+    return this.amountIn
+  }
+
+  public get outputAmount(): CurrencyAmount<Currency> {
+    return this.amountOut
   }
 
   /** For UniswapX, handling token taxes in the output amount is outsourced to quoters */
   public get postTaxOutputAmount() {
     return this.outputAmount
+  }
+
+  public get totalGasUseEstimateUSD(): number {
+    return 0
+  }
+
+  public get classicGasUseEstimateUSD(): number {
+    return 0
+  }
+
+  // no decay for limit orders
+  public get startTimeBufferSecs(): number {
+    return 0
+  }
+
+  // no decay for limit orders
+  public get auctionPeriodSecs(): number {
+    return 0
   }
 }
 
@@ -546,7 +585,7 @@ export class PreviewTrade {
   }
 }
 
-export type SubmittableTrade = ClassicTrade | DutchOrderTrade
+export type SubmittableTrade = ClassicTrade | DutchOrderTrade | LimitOrderTrade
 export type InterfaceTrade = SubmittableTrade | PreviewTrade
 
 export enum QuoteState {

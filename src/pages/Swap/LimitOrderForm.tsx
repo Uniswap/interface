@@ -1,15 +1,23 @@
+import { Trans } from '@lingui/macro'
 import { InterfaceSectionName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price, TradeType } from '@uniswap/sdk-core'
+import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
+import { ButtonError, ButtonLight } from 'components/Button'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
+import ConfirmSwapModal from 'components/swap/ConfirmSwapModal'
 import TradePrice from 'components/swap/TradePrice'
 import { nativeOnChain } from 'constants/tokens'
 import useDebounce from 'hooks/useDebounce'
+import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
+import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
+import { Text } from 'rebass'
 import { LimitOrderTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import styled, { useTheme } from 'styled-components'
@@ -59,7 +67,8 @@ function useLimitOrderTrade(
       amountIn,
       amountOut: parsedAmountOut,
       tradeType: TradeType.EXACT_INPUT,
-      needsWrap,
+      wrapInfo: { needsWrap, wrapGasEstimateUSD: 0 },
+      approveInfo: { needsApprove: false },
       swapper,
       deadlineBufferSecs: TWENTY_MINUTES_IN_S,
     })
@@ -68,6 +77,7 @@ function useLimitOrderTrade(
 
 export function LimitOrderForm() {
   const { account } = useWeb3React()
+  // const [showConfirm, setShowConfirm] = useState(false)
   const [limitOrderState, setLimitOrder] = useState<LimitOrderFormState>(DEFAULT_STATE)
 
   const { inputToken, outputToken, inputAmount, outputAmount, expiry } = limitOrderState
@@ -93,6 +103,7 @@ export function LimitOrderForm() {
   const parsedAmountOut = useMemo(() => tryParseCurrencyAmount(outputAmount, outputToken), [outputAmount, outputToken])
 
   const fiatValueTradeInput = useUSDPrice(parsedAmountIn)
+  const fiatValueTradeOutput = useUSDPrice(parsedAmountOut)
 
   const executionPrice = useMemo(() => {
     if (!parsedAmountIn || !parsedAmountOut) return
@@ -131,6 +142,76 @@ export function LimitOrderForm() {
 
   const theme = useTheme()
   const limitOrderTrade = useLimitOrderTrade(limitOrderState, parsedAmountIn, parsedAmountOut, account)
+  const toggleWalletDrawer = useToggleAccountDrawer()
+
+  // modal and loading
+  const [{ showConfirm, tradeToConfirm, swapError, swapResult }, setSwapState] = useState<{
+    showConfirm: boolean
+    tradeToConfirm?: LimitOrderTrade
+    swapError?: Error
+    swapResult?: SwapResult
+  }>({
+    showConfirm: false,
+    tradeToConfirm: undefined,
+    swapError: undefined,
+    swapResult: undefined,
+  })
+
+  const handleAcceptChanges = useCallback(() => {
+    setSwapState((currentState) => ({ ...currentState, tradeToConfirm: limitOrderTrade }))
+  }, [limitOrderTrade])
+
+  const allowance = usePermit2Allowance(
+    limitOrderTrade?.inputAmount,
+    UNIVERSAL_ROUTER_ADDRESS(1),
+    limitOrderTrade?.fillType
+  )
+
+  // the callback to execute the swap
+  const swapCallback = useSwapCallback(
+    limitOrderTrade,
+    { amountIn: undefined, amountOut: undefined },
+    new Percent(0, 1),
+    allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
+  )
+
+  const handleSwap = useCallback(() => {
+    if (!swapCallback) {
+      return
+    }
+    swapCallback()
+      .then((result) => {
+        setSwapState((currentState) => ({
+          ...currentState,
+          swapError: undefined,
+          swapResult: result,
+        }))
+      })
+      .catch((error) => {
+        setSwapState((currentState) => ({
+          ...currentState,
+          swapError: error,
+          swapResult: undefined,
+        }))
+      })
+  }, [swapCallback])
+
+  const handleConfirmDismiss = useCallback(() => {
+    setSwapState((currentState) => ({ ...currentState, showConfirm: false }))
+    // If there was a swap, we want to clear the input
+    if (swapResult) {
+      setLimitOrder(DEFAULT_STATE)
+    }
+  }, [swapResult])
+
+  const handleContinueToReview = useCallback(() => {
+    setSwapState({
+      tradeToConfirm: limitOrderTrade,
+      swapError: undefined,
+      showConfirm: true,
+      swapResult: undefined,
+    })
+  }, [limitOrderTrade])
 
   return (
     <Container>
@@ -175,7 +256,64 @@ export function LimitOrderForm() {
           <ThemedText.BodySmall color={theme.critical}>Your order is below the market rate.</ThemedText.BodySmall>
         </Warning>
       )}
+      <SubmitOrderButton
+        handleContinueToReview={handleContinueToReview}
+        trade={limitOrderTrade}
+        toggleWalletDrawer={toggleWalletDrawer}
+        account={account}
+      />
+
+      {limitOrderTrade && showConfirm && (
+        <ConfirmSwapModal
+          trade={limitOrderTrade}
+          inputCurrency={inputToken}
+          originalTrade={tradeToConfirm}
+          onAcceptChanges={handleAcceptChanges}
+          onCurrencySelection={(_, currency: Currency) => setLimitOrderField('inputToken')(currency)}
+          swapResult={swapResult}
+          allowedSlippage={new Percent(0, 100)}
+          clearSwapState={() => setLimitOrder(DEFAULT_STATE)}
+          onConfirm={handleSwap}
+          allowance={allowance}
+          swapError={swapError}
+          onDismiss={handleConfirmDismiss}
+          fiatValueInput={fiatValueTradeInput}
+          fiatValueOutput={fiatValueTradeOutput}
+        />
+      )}
     </Container>
+  )
+}
+
+function SubmitOrderButton({
+  trade,
+  account,
+  toggleWalletDrawer,
+  handleContinueToReview,
+}: {
+  trade?: LimitOrderTrade
+  account?: string
+  toggleWalletDrawer: () => void
+  handleContinueToReview: () => void
+}) {
+  if (!account) {
+    return (
+      <ButtonLight onClick={toggleWalletDrawer} fontWeight={535} $borderRadius="16px">
+        <Trans>Connect wallet</Trans>
+      </ButtonLight>
+    )
+  }
+
+  return (
+    <ButtonError
+      onClick={handleContinueToReview}
+      id="submit-order-button"
+      data-testid="submit-order-button"
+      disabled={!trade}
+      // error={!swapInputError && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
+    >
+      <Text fontSize={20}>Submit order</Text>
+    </ButtonError>
   )
 }
 

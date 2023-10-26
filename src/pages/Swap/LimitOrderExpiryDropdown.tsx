@@ -132,6 +132,7 @@ const Selector = styled.button<{ show: boolean }>`
 
 const Menu = styled.div<{ show: boolean }>`
   position: absolute;
+  z-index: 1000;
 
   background-color: ${({ theme }) => theme.surface2};
   display: ${({ show }) => (show ? 'flex' : 'none')};
