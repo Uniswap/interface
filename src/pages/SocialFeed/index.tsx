@@ -89,7 +89,7 @@ function PortfolioAvatar({ accountAddress }: { accountAddress: string }) {
 }
 
 const ActivityFeed = () => {
-  console.log('buysells', useAllFriendsBuySells())
+  console.log(useAllFriendsBuySells())
   return (
     <ExploreContainer>
       <TitleContainer>

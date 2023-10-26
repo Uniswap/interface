@@ -1,5 +1,10 @@
 import { t } from '@lingui/macro'
-import { ActivityQuery, TransactionType, useActivityQuery } from 'graphql/data/__generated__/types-and-hooks'
+import {
+  ActivityQuery,
+  TokenTransfer,
+  TransactionType,
+  useActivityQuery,
+} from 'graphql/data/__generated__/types-and-hooks'
 import { AssetActivity, AssetActivityDetails } from 'graphql/data/activity'
 import { useFollowedAccounts } from 'pages/Profile'
 
@@ -66,7 +71,6 @@ function useAllFriendsActivites(): {
     errorPolicy: 'all',
     fetchPolicy: 'cache-first',
   })
-  console.log('allfriends', allFriendsActivities)
   return { allFriendsActivities, loading, refetch }
 }
 
@@ -76,8 +80,8 @@ export function useAllFriendsBuySells() {
   const map: {
     [ownerAddress: string]: {
       [tokenId: string]: {
-        buys: AssetActivity[]
-        sells: AssetActivity[]
+        buys: TokenTransfer[]
+        sells: TokenTransfer[]
       }
     }
   } = {}
@@ -86,8 +90,8 @@ export function useAllFriendsBuySells() {
   allFriendsActivities?.portfolios?.map((portfolio) => {
     const buySells: {
       [tokenId: string]: {
-        buys: AssetActivity[]
-        sells: AssetActivity[]
+        buys: TokenTransfer[]
+        sells: TokenTransfer[]
       }
     } = {}
 
@@ -108,9 +112,9 @@ export function useAllFriendsBuySells() {
                   buySells[assetChange.asset.id] = { buys: [], sells: [] }
                 }
                 if (assetChange.direction === 'IN') {
-                  buySells[assetChange.asset.id].buys.push(tx)
+                  buySells[assetChange.asset.id].buys.push(assetChange as TokenTransfer)
                 } else {
-                  buySells[assetChange.asset.id].sells.push(tx)
+                  buySells[assetChange.asset.id].sells.push(assetChange as TokenTransfer)
                 }
               }
             }
