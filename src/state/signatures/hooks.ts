@@ -60,7 +60,7 @@ export function useAddOrder() {
   )
 }
 
-export function isFinalizedOrder(orderStatus: UniswapXOrderStatus) {
+export function isFinalizedOrder(orderStatus?: UniswapXOrderStatus) {
   return orderStatus !== UniswapXOrderStatus.OPEN
 }
 

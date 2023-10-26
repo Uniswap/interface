@@ -8,6 +8,7 @@ export type Activity = {
   status: TransactionStatus
   // TODO (UniswapX): decouple Activity from UniswapXOrderStatus once we can link UniswapXScan instead of needing data for modal
   offchainOrderStatus?: UniswapXOrderStatus
+  isLimitOrder?: boolean
   statusMessage?: string
   timestamp: number
   title: string

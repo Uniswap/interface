@@ -1,4 +1,6 @@
 import { TransactionStatus, useActivityQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { OrderQueryResponse } from 'lib/hooks/orders/types'
+import { fetchOrderStatuses } from 'lib/hooks/orders/updater'
 import { useEffect, useMemo } from 'react'
 import { usePendingOrders } from 'state/signatures/hooks'
 import { usePendingTransactions, useTransactionCanceller } from 'state/transactions/hooks'
@@ -73,6 +75,23 @@ export function useAllActivities(account: string) {
   /* Updates locally stored pendings tx's when remote data contains a conflicting cancellation tx */
   useEffect(() => {
     if (!remoteMap) return
+
+    async function getOrderDetails() {
+      if (!remoteMap) return
+      const orderHashes = Object.values(remoteMap)
+        .map((remoteActivity) => {
+          if (!remoteActivity.hash || !remoteActivity.offchainOrderStatus) return null
+          return {
+            orderHash: remoteActivity.hash,
+          }
+        })
+        .filter((orderHash) => orderHash !== null) as { orderHash: string }[]
+
+      const orderStatuses: OrderQueryResponse = await (await fetchOrderStatuses(account, orderHashes)).json()
+      console.log(orderStatuses)
+    }
+
+    getOrderDetails()
 
     Object.values(localMap).forEach((localActivity) => {
       if (!localActivity) return

@@ -6,16 +6,10 @@ import { atom, useAtom } from 'jotai'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useEffect } from 'react'
-import styled from 'styled-components'
 
 import { ActivityRow } from '../Activity/ActivityRow'
 import { useAllActivities } from '../Activity/hooks'
 import { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
-
-const ActivityGroupWrapper = styled(Column)`
-  margin-top: 16px;
-  gap: 8px;
-`
 
 const lastFetchedAtom = atom<number | undefined>(0)
 

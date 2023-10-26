@@ -11,9 +11,13 @@ if (UNISWAP_API_URL === undefined) {
   throw new Error(`UNISWAP_API_URL must be a defined environment variable`)
 }
 
-function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[]) {
+interface OrderStatusFetchParams {
+  orderHash: string
+}
+
+export function fetchOrderStatuses(account: string, orders: OrderStatusFetchParams[]) {
   const orderHashes = orders.map((order) => order.orderHash).join(',')
-  return global.fetch(`${UNISWAP_API_URL}/orders?swapper=${account}&orderHashes=${orderHashes}`)
+  return global.fetch(`https://api.uniswap.org/v2/orders?swapper=${account}&orderHashes=${orderHashes}`)
 }
 
 const OFF_CHAIN_ORDER_STATUS_POLLING = ms(`2s`)
