@@ -30,6 +30,7 @@ const PoolDetails = lazy(() => import('pages/PoolDetails'))
 const PoolFinder = lazy(() => import('pages/PoolFinder'))
 const RemoveLiquidity = lazy(() => import('pages/RemoveLiquidity'))
 const RemoveLiquidityV3 = lazy(() => import('pages/RemoveLiquidity/V3'))
+const SocialFeed = lazy(() => import('pages/SocialFeed'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
 const Vote = lazy(() => import('pages/Vote'))
 const Profile = lazy(() => import('pages/Profile'))
@@ -247,6 +248,15 @@ export const routes: RouteDefinition[] = [
     getElement: () => (
       <Suspense fallback={null}>
         <Profile />
+      </Suspense>
+    ),
+    enabled: (args) => !args.shouldDisableNFTRoutes,
+  }),
+  createRouteDefinition({
+    path: '/feed',
+    getElement: () => (
+      <Suspense fallback={null}>
+        <SocialFeed />
       </Suspense>
     ),
     enabled: (args) => !args.shouldDisableNFTRoutes,
