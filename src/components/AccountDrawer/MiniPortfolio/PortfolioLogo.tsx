@@ -118,14 +118,14 @@ function DoubleCurrencyLogo({ chainId, currencies, backupImages, size }: DoubleC
   )
 }
 
-function PortfolioAvatar({ accountAddress, size }: { accountAddress: string; size: string }) {
+export function PortfolioAvatar({ accountAddress, size }: { accountAddress: string; size: string }) {
   const { avatar, loading } = useENSAvatar(accountAddress, false)
 
   if (loading) {
     return <Loader size={size} />
   }
   if (avatar) {
-    return <ENSAvatarImg src={avatar} alt="avatar" />
+    return <ENSAvatarImg src={avatar} alt="avatar" style={{ width: size, height: size }} />
   }
   return <Unicon size={40} address={accountAddress} />
 }

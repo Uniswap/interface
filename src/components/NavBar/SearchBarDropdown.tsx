@@ -11,7 +11,7 @@ import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import useTrendingTokens from 'graphql/data/TrendingTokens'
 import { BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS } from 'graphql/data/util'
-import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
+import useENS from 'hooks/useENS'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -27,15 +27,20 @@ import { SuspendConditionally } from '../Suspense/SuspendConditionally'
 import { SuspenseWithPreviousRenderAsFallback } from '../Suspense/SuspenseWithPreviousRenderAsFallback'
 import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
-import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
+import { CollectionRow, ProfileRow, SkeletonRow, TokenRow } from './SuggestionRow'
 
-function isCollection(suggestion: GenieCollection | SearchToken | TrendingCollection) {
+function isCollection(suggestion: GenieCollection | SearchToken | TrendingCollection | Profile) {
   return (suggestion as SearchToken).decimals === undefined
+}
+
+type Profile = { address: string; name?: string; isProfile: true }
+function isProfile(suggestion: GenieCollection | SearchToken | TrendingCollection | Profile): suggestion is Profile {
+  return (suggestion as Profile).isProfile === true
 }
 
 interface SearchBarDropdownSectionProps {
   toggleOpen: () => void
-  suggestions: (GenieCollection | SearchToken)[]
+  suggestions: (GenieCollection | SearchToken | Profile)[]
   header: JSX.Element
   headerIcon?: JSX.Element
   hoveredIndex?: number
@@ -63,25 +68,38 @@ const SearchBarDropdownSection = ({
         <Box>{header}</Box>
       </Row>
       <Column gap="4">
-        {suggestions.map((suggestion, index) =>
-          isLoading || !suggestion ? (
-            <SkeletonRow key={index} />
-          ) : isCollection(suggestion) ? (
-            <CollectionRow
-              key={suggestion.address}
-              collection={suggestion as GenieCollection}
-              isHovered={hoveredIndex === index + startingIndex}
-              setHoveredIndex={setHoveredIndex}
-              toggleOpen={toggleOpen}
-              index={index + startingIndex}
-              eventProperties={{
-                position: index + startingIndex,
-                selected_search_result_name: suggestion.name,
-                selected_search_result_address: suggestion.address,
-                ...eventProperties,
-              }}
-            />
-          ) : (
+        {suggestions.map((suggestion, index) => {
+          if (isLoading || !suggestion) return <SkeletonRow key={index} />
+          if (isProfile(suggestion))
+            return (
+              <ProfileRow
+                key={index}
+                profile={suggestion}
+                isHovered={hoveredIndex === index + startingIndex}
+                setHoveredIndex={setHoveredIndex}
+                toggleOpen={toggleOpen}
+                index={index + startingIndex}
+              />
+            )
+
+          if (isCollection(suggestion))
+            return (
+              <CollectionRow
+                key={suggestion.address}
+                collection={suggestion as GenieCollection}
+                isHovered={hoveredIndex === index + startingIndex}
+                setHoveredIndex={setHoveredIndex}
+                toggleOpen={toggleOpen}
+                index={index + startingIndex}
+                eventProperties={{
+                  position: index + startingIndex,
+                  selected_search_result_name: suggestion.name,
+                  selected_search_result_address: suggestion.address,
+                  ...eventProperties,
+                }}
+              />
+            )
+          return (
             <TokenRow
               key={suggestion.address}
               token={suggestion as SearchToken}
@@ -97,7 +115,7 @@ const SearchBarDropdownSection = ({
               }}
             />
           )
-        )}
+        })}
       </Column>
     </Column>
   )
@@ -169,7 +187,6 @@ function SearchBarDropdownContents({
   const { pathname } = useLocation()
   const isNFTPage = useIsNftPage()
   const isTokenPage = pathname.includes('/tokens')
-  const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
   const { data: trendingCollections, loading: trendingCollectionsAreLoading } = useTrendingCollections(
     3,
@@ -247,6 +264,35 @@ function SearchBarDropdownContents({
     ...JSON.parse(trace),
   }
 
+  const ensResult = useENS(queryText)
+  const ensResultEthAppended = useENS(queryText + '.eth')
+  console.log('cartcrom', { ensResult, ensResultEthAppended })
+  const profileAddress = ensResult.address ?? ensResultEthAppended.address ?? undefined
+  const profileName = ensResult.name ?? ensResultEthAppended.name ?? undefined
+
+  const profileResult = profileAddress
+    ? ({
+        address: profileAddress,
+        name: profileName ?? undefined,
+        isProfile: true,
+      } as const)
+    : undefined
+
+  const ensSearchResults = profileResult ? (
+    <SearchBarDropdownSection
+      hoveredIndex={hoveredIndex}
+      startingIndex={showCollectionsFirst ? collections.length : 0}
+      setHoveredIndex={setHoveredIndex}
+      toggleOpen={toggleOpen}
+      suggestions={[profileResult]}
+      eventProperties={{
+        suggestion_type: NavBarSearchTypes.TOKEN_SUGGESTION,
+        ...eventProperties,
+      }}
+      header={<Trans>Profiles</Trans>}
+    />
+  ) : null
+
   const tokenSearchResults =
     tokens.length > 0 ? (
       <SearchBarDropdownSection
@@ -267,38 +313,11 @@ function SearchBarDropdownContents({
       </Box>
     )
 
-  const collectionSearchResults =
-    collections.length > 0 ? (
-      <SearchBarDropdownSection
-        hoveredIndex={hoveredIndex}
-        startingIndex={showCollectionsFirst ? 0 : tokens.length}
-        setHoveredIndex={setHoveredIndex}
-        toggleOpen={toggleOpen}
-        suggestions={collections}
-        eventProperties={{
-          suggestion_type: NavBarSearchTypes.COLLECTION_SUGGESTION,
-          ...eventProperties,
-        }}
-        header={<Trans>NFT collections</Trans>}
-      />
-    ) : (
-      <Box className={styles.notFoundContainer}>No NFT collections found.</Box>
-    )
-
   return hasInput ? (
     // Empty or Up to 8 combined tokens and nfts
     <Column gap="20">
-      {showCollectionsFirst ? (
-        <>
-          {collectionSearchResults}
-          {tokenSearchResults}
-        </>
-      ) : (
-        <>
-          {tokenSearchResults}
-          {collectionSearchResults}
-        </>
-      )}
+      {ensSearchResults}
+      {tokenSearchResults}
     </Column>
   ) : (
     // Recent Searches, Trending Tokens, Trending Collections
@@ -333,22 +352,6 @@ function SearchBarDropdownContents({
           header={<Trans>Popular tokens</Trans>}
           headerIcon={<TrendingArrow />}
           isLoading={!trendingTokenData}
-        />
-      )}
-      {Boolean(!isTokenPage && !shouldDisableNFTRoutes) && (
-        <SearchBarDropdownSection
-          hoveredIndex={hoveredIndex}
-          startingIndex={shortenedHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
-          setHoveredIndex={setHoveredIndex}
-          toggleOpen={toggleOpen}
-          suggestions={formattedTrendingCollections as unknown as GenieCollection[]}
-          eventProperties={{
-            suggestion_type: NavBarSearchTypes.COLLECTION_TRENDING,
-            ...eventProperties,
-          }}
-          header={<Trans>Popular NFT collections</Trans>}
-          headerIcon={<TrendingArrow />}
-          isLoading={trendingCollectionsAreLoading}
         />
       )}
     </Column>
