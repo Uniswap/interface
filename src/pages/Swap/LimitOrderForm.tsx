@@ -10,7 +10,7 @@ import { useUSDPrice } from 'hooks/useUSDPrice'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useState } from 'react'
-import { RouterPreference, TradeState } from 'state/routing/types'
+import { LimitOrderTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
@@ -38,11 +38,39 @@ const DEFAULT_STATE = {
   expiry: LimitOrderExpiry.OneHour,
 }
 
+const TWENTY_MINUTES_IN_S = 20 * 60
+
+function useLimitOrderTrade(
+  state: LimitOrderFormState,
+  parsedAmountIn?: CurrencyAmount<Currency>,
+  parsedAmountOut?: CurrencyAmount<Currency>,
+  swapper?: string
+) {
+  const { inputToken, outputToken } = state
+  return useMemo(() => {
+    if (!inputToken || !outputToken || !parsedAmountIn || !parsedAmountOut || !swapper) return undefined
+
+    const [currencyIn, needsWrap] = inputToken.isNative ? [inputToken.wrapped, true] : [inputToken, false]
+
+    const amountIn = CurrencyAmount.fromRawAmount(currencyIn, parsedAmountIn.quotient)
+    return new LimitOrderTrade({
+      currencyIn,
+      currencyOut: outputToken,
+      amountIn,
+      amountOut: parsedAmountOut,
+      tradeType: TradeType.EXACT_INPUT,
+      needsWrap,
+      swapper,
+      deadlineBufferSecs: TWENTY_MINUTES_IN_S,
+    })
+  }, [inputToken, outputToken, parsedAmountIn, parsedAmountOut, swapper])
+}
+
 export function LimitOrderForm() {
   const { account } = useWeb3React()
-  const [{ inputToken, outputToken, inputAmount, outputAmount, expiry }, setLimitOrder] =
-    useState<LimitOrderFormState>(DEFAULT_STATE)
+  const [limitOrderState, setLimitOrder] = useState<LimitOrderFormState>(DEFAULT_STATE)
 
+  const { inputToken, outputToken, inputAmount, outputAmount, expiry } = limitOrderState
   const userTokenBalances = useCurrencyBalances(
     account ?? undefined,
     useMemo(() => [inputToken, outputToken], [inputToken, outputToken])
@@ -102,6 +130,7 @@ export function LimitOrderForm() {
       : false
 
   const theme = useTheme()
+  const limitOrderTrade = useLimitOrderTrade(limitOrderState, parsedAmountIn, parsedAmountOut, account)
 
   return (
     <Container>
