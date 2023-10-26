@@ -127,6 +127,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               }
             >
               <View
+                onStartShouldSetResponder={[Function]}
                 onTouchEnd={[Function]}
                 style={
                   {

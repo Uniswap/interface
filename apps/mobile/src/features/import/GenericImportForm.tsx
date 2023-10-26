@@ -100,7 +100,14 @@ export function GenericImportForm({
 
   return (
     <Trace section={SectionName.ImportAccountForm}>
-      <Flex gap="$spacing16" onTouchEnd={handleFocus}>
+      <Flex
+        gap="$spacing16"
+        onStartShouldSetResponder={(): boolean => {
+          // Disable touch events when keyboard is visible (it prevents dismissing the keyboard
+          // when this component is pressed while the keyboard is visible)
+          return focused
+        }}
+        onTouchEnd={handleFocus}>
         <Flex
           centered
           shrink

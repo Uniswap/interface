@@ -2,6 +2,7 @@
 
 exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
 <View
+  onStartShouldSetResponder={[Function]}
   onTouchEnd={[Function]}
   style={
     {
