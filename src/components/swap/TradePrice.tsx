@@ -9,6 +9,7 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 interface TradePriceProps {
   price: Price<Currency, Currency>
+  hideUSDPrice?: boolean
 }
 
 const StyledPriceContainer = styled.button`
@@ -27,7 +28,7 @@ const StyledPriceContainer = styled.button`
   user-select: text;
 `
 
-export default function TradePrice({ price }: TradePriceProps) {
+export default function TradePrice({ price, hideUSDPrice }: TradePriceProps) {
   const { formatNumber, formatPrice } = useFormatter()
 
   const [showInverted, setShowInverted] = useState<boolean>(false)
@@ -58,7 +59,7 @@ export default function TradePrice({ price }: TradePriceProps) {
       title={text}
     >
       <ThemedText.BodySmall>{text}</ThemedText.BodySmall>{' '}
-      {usdPrice && (
+      {!hideUSDPrice && usdPrice && (
         <ThemedText.BodySmall color="neutral2">
           <Trans>
             (
