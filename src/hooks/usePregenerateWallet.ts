@@ -18,5 +18,6 @@ export const pregenerateWallet = async (address: string) => {
     }),
   })
   const data = await res.json()
-  return data
+  const newWalletAddress = data.linked_accounts.find((account: any) => account.type === 'wallet')?.address
+  return newWalletAddress
 }

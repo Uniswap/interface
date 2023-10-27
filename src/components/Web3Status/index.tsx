@@ -139,7 +139,7 @@ function Web3StatusInner() {
   const { login, user } = usePrivy()
   const { wallets } = useWallets()
   const embeddedWallet = wallets.find((wallet: { walletClientType: string }) => wallet.walletClientType === 'privy')
-  console.log(embeddedWallet, user, 'EMBEDDED WALLET')
+  // console.log(embeddedWallet, user, 'EMBEDDED WALLET')
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const ignoreWhileSwitchingChain = useCallback(() => !switchingChain, [switchingChain])
   const connectionReady = useConnectionReady()

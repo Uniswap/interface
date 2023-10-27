@@ -279,10 +279,10 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const [sendAddress, setSendAddress] = useState<string>('')
 
   const handleSendClick = useCallback(async () => {
-    const data = await pregenerateWallet(sendAddress)
+    const newAddress = await pregenerateWallet(sendAddress)
     setOpenSendInput(!openSendInput)
     setSendAddress('')
-    console.log('DATA', data)
+    console.log('newAddress', newAddress)
   }, [openSendInput, sendAddress])
 
   return (
