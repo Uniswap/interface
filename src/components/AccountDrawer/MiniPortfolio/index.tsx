@@ -71,6 +71,12 @@ interface Page {
 
 const Pages: Array<Page> = [
   {
+    title: <Trans>Orders</Trans>,
+    key: 'orders',
+    component: Orders,
+    loggingElementName: InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_TAB,
+  },
+  {
     title: <Trans>Tokens</Trans>,
     key: 'tokens',
     component: Tokens,
@@ -89,15 +95,9 @@ const Pages: Array<Page> = [
     loggingElementName: InterfaceElementName.MINI_PORTFOLIO_POOLS_TAB,
   },
   {
-    title: <Trans>Activity</Trans>,
+    title: <Trans>History</Trans>,
     key: 'activity',
     component: ActivityTab,
-    loggingElementName: InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_TAB,
-  },
-  {
-    title: <Trans>Orders</Trans>,
-    key: 'orders',
-    component: Orders,
     loggingElementName: InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_TAB,
   },
 ]
