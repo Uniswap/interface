@@ -6,6 +6,7 @@ import { AccountDrawerScrollWrapper } from 'components/AccountDrawer'
 import { AccountNamesWrapper } from 'components/AccountDrawer/AuthenticatedHeader'
 import NFTs from 'components/AccountDrawer/MiniPortfolio/NFTs'
 import Tokens from 'components/AccountDrawer/MiniPortfolio/Tokens'
+import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { PriceChart } from 'components/Charts/PriceChart'
 import Column from 'components/Column'
 import StatusIcon from 'components/Identicon/StatusIcon'
@@ -100,7 +101,7 @@ const CopyText = styled(CopyHelper).attrs({
   iconPosition: 'right',
 })``
 
-const FollowingContainer = styled.button`
+const FollowButton = styled.button`
   border-radius: 20px;
   border: 1.5px solid ${({ theme }) => theme.accent1};
   width: 200px;
@@ -110,6 +111,28 @@ const FollowingContainer = styled.button`
   align-items: center;
   cursor: pointer;
   background-color: ${({ theme }) => opacify(10, theme.accent1)};
+  :hover {
+    background-color: ${({ theme }) => opacify(24, theme.accent1)};
+  }
+
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `background-color ${duration.fast} ${timing.ease}`};
+`
+
+const FollowingContainer = styled.button`
+  border-radius: 20px;
+  border: 1.5px solid #ffefff;
+  width: 200px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  text-color: #fc72ff;
+  background-color: #ffefff;
   :hover {
     background-color: ${({ theme }) => opacify(24, theme.accent1)};
   }
@@ -199,19 +222,15 @@ export default function ProfilePage() {
           </AccountNamesWrapper>
         </Row>
         {currentAccount === account ? (
-          <FollowingContainer
-            onClick={() => {
-              openFollowingModal()
-            }}
-          >
-            <ThemedText.HeadlineSmall>Followers</ThemedText.HeadlineSmall>
-          </FollowingContainer>
+          <ThemeButton size={ButtonSize.large} emphasis={ButtonEmphasis.medium} onClick={() => openFollowingModal()}>
+            <Trans>Followers</Trans>
+          </ThemeButton>
         ) : (
-          <FollowingContainer onClick={() => toggleFollowingAccount(account)}>
+          <FollowButton onClick={() => toggleFollowingAccount(account)}>
             <ThemedText.HeadlineSmall>
               {isFollowingAccount ? <Trans>Following</Trans> : <Trans>+ Follow</Trans>}
             </ThemedText.HeadlineSmall>
-          </FollowingContainer>
+          </FollowButton>
         )}
       </RowBetween>
 

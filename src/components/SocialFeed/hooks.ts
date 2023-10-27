@@ -87,7 +87,7 @@ export function useFeed(accounts: string[], filterAddress?: string) {
   return useMemo(() => {
     const feed: (JudgementalActivity | Activity)[] = filterAddress
       ? []
-      : (Object.values(normalActivityMap ?? {}) as Activity[])
+      : (Object.values(normalActivityMap ?? {}) as Activity[]).slice(0, 40)
 
     for (const friend in friendsBuysAndSells) {
       const friendsTradedTokens = friendsBuysAndSells[friend]

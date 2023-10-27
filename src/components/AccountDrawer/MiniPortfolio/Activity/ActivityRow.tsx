@@ -115,6 +115,10 @@ const ActivityCard = styled.div`
   gap: 20px;
   padding: 20px;
   width: 100%;
+<<<<<<< Updated upstream
+=======
+  /* width: 420px; */
+>>>>>>> Stashed changes
 
   /* background-color: ${({ theme }) => theme.surface1}; */
   /* border-radius: 12px; */
@@ -151,13 +155,16 @@ function NormalFeedRow({ activity }: { activity: Activity }) {
   const shouldHide = useMemo(
     () =>
       activity.title.includes('Approv') ||
-      activity.title.includes('Contract Interaction') ||
+      activity.title.includes('Contract') ||
+      activity.descriptor?.includes('Contract') ||
+      activity.title?.includes('Swapped') ||
       activity.title.includes('Received') ||
       activity.title.includes('Unknown'),
-    [activity.title]
+    [activity.title, activity.descriptor]
   )
   if (shouldHide) return null
 
+  const hasNftLogo = activity.title.includes('Minted') && activity.logos?.[0]
   return (
     <ActivityCard>
       <CardHeader>
@@ -178,17 +185,18 @@ function NormalFeedRow({ activity }: { activity: Activity }) {
             </Link>
           )}
         </ThemedText.BodySecondary>
-        <PortfolioLogo
-          chainId={1}
-          currencies={activity.currencies}
-          images={activity.logos}
-          accountAddress={activity.otherAccount}
-        />
+        {!hasNftLogo && (
+          <PortfolioLogo
+            chainId={1}
+            currencies={activity.currencies}
+            images={activity.logos}
+            accountAddress={activity.otherAccount}
+          />
+        )}
       </RowBetween>
-
-      {/* {activity.image && (
-        <img src={activity.image} alt="activity image" style={{ maxHeight: '100%', maxWidth: '100%' }} />
-      )} */}
+      {hasNftLogo && (
+        <img src={activity.logos?.[0]} alt="activity image" style={{ maxHeight: '100%', maxWidth: '100%' }} />
+      )}
     </ActivityCard>
   )
 }
@@ -269,8 +277,8 @@ function JudgementalActivityRow({ activity }: { activity: JudgementalActivity })
 
 export function FeedRow({ activity }: { activity: Activity | JudgementalActivity }) {
   if (!isJudgementalActivity(activity)) {
-    // return <NormalFeedRow activity={activity} />
-    return null
+    return <NormalFeedRow activity={activity} />
+    // return null
   }
   return <JudgementalActivityRow activity={activity} />
 }

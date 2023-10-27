@@ -6,7 +6,7 @@ import { JudgementalActivity, useFeed } from 'components/SocialFeed/hooks'
 import { Unicon } from 'components/Unicon'
 import useENSAvatar from 'hooks/useENSAvatar'
 import { useFollowedAccounts } from 'pages/Profile'
-import React, { useMemo } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 
@@ -93,16 +93,10 @@ function PortfolioAvatar({ accountAddress }: { accountAddress: string }) {
 }
 
 export const ActivityList = ({ feed }: { feed: (Activity | JudgementalActivity)[] }) => {
-  const shortenedFeed = useMemo(() => {
-    const test = feed.slice(0, 80)
-    console.log('cartcrom', 'length', feed.length)
-    return test
-  }, [feed])
-
   return (
     <FeedContainer>
-      {shortenedFeed.map((activity) => (
-        <FeedRow key={activity.timestamp} activity={activity} />
+      {feed.map((activity, i) => (
+        <FeedRow key={i} activity={activity} />
       ))}
       {/* {friendsActivity
         .sort((a, b) => b.timestamp - a.timestamp)
