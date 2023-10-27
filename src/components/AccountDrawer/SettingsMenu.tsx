@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { usePrivy } from '@privy-io/react-auth'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { LOCALE_LABEL } from 'constants/locales'
@@ -80,11 +81,19 @@ export default function SettingsMenu({
   const currencyConversionEnabled = useCurrencyConversionFlagEnabled()
   const activeLocale = useActiveLocale()
   const activeLocalCurrency = useActiveLocalCurrency()
-
+  const { exportWallet } = usePrivy()
   return (
     <SlideOutMenu title={<Trans>Settings</Trans>} onClose={onClose}>
       <Container>
         <div>
+          <SectionTitle>
+            <Trans>Wallet</Trans>
+          </SectionTitle>
+          <ToggleWrapper>
+            <div style={{ cursor: 'pointer' }} onClick={() => exportWallet()}>
+              Export Wallet
+            </div>
+          </ToggleWrapper>
           <SectionTitle data-testid="wallet-header">
             <Trans>Preferences</Trans>
           </SectionTitle>
