@@ -4,6 +4,7 @@ import Column from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import Row from 'components/Row'
+import { JudgementalActivity } from 'components/SocialFeed/hooks'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import useENSName from 'hooks/useENSName'
 import { useCallback } from 'react'
@@ -42,7 +43,7 @@ function StatusIndicator({ activity: { status, timestamp } }: { activity: Activi
   }
 }
 
-export function ActivityRow({ activity }: { activity: Activity }) {
+function _ActivityRow({ activity }: { activity: Activity }) {
   const { chainId, title, descriptor, logos, otherAccount, currencies, hash, prefixIconSrc, offchainOrderStatus } =
     activity
   const openOffchainActivityModal = useOpenOffchainActivityModal()
@@ -89,4 +90,15 @@ export function ActivityRow({ activity }: { activity: Activity }) {
       />
     </TraceEvent>
   )
+}
+
+function isJudgementalActivity(activity: Activity | JudgementalActivity): activity is JudgementalActivity {
+  return (activity as JudgementalActivity).friend !== undefined
+}
+
+export function ActivityRow({ activity }: { activity: Activity | JudgementalActivity }) {
+  if (!isJudgementalActivity(activity)) {
+    return <_ActivityRow activity={activity} />
+  }
+  return null
 }

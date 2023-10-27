@@ -1,15 +1,18 @@
 import { t } from '@lingui/macro'
+import { parseRemoteActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
+import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import {
   ActivityQuery,
   AssetChange,
-  TransactionDetails,
   TransactionType,
   useActivityQuery,
 } from 'graphql/data/__generated__/types-and-hooks'
 import { AssetActivityDetails } from 'graphql/data/activity'
 import { useFollowedAccounts } from 'pages/Profile'
+import { useMemo } from 'react'
+import { useFormatter } from 'utils/formatNumbers'
 
-// Mock data for friends' activity. Should be type Activity[]
+// Mock data for friends' activity.
 export const friendsActivity = [
   {
     ensName: 'friend1.eth',
@@ -38,12 +41,73 @@ enum JudgmentalTransaction {
   APED_INTO,
   DUMPED,
   STILL_HODLING,
+  GAINS,
 }
 const JudgmentalTransactionTitleTable: { [key in JudgmentalTransaction]: string } = {
   [JudgmentalTransaction.GOT_RUGGED]: t`Got rugged by`,
   [JudgmentalTransaction.APED_INTO]: t`Aped into`,
   [JudgmentalTransaction.DUMPED]: t`Dumped`,
   [JudgmentalTransaction.STILL_HODLING]: t`Is still hodling`,
+  [JudgmentalTransaction.GAINS]: t`Made gains on`,
+}
+
+function getProfit(buysAndSells: ReturnType<typeof useAllFriendsBuySells>['judgementalActivityMap'][string][string]) {
+  let tokenName = ''
+
+  const { buys, sells } = buysAndSells
+  let profit = 0
+
+  for (const buy of buys) {
+    profit -= buy.USDValue
+  }
+
+  for (const sell of sells) {
+    profit += sell.USDValue
+    tokenName = sell.outputToken
+  }
+
+  console.log('cartcrom', buysAndSells, tokenName, profit)
+  return profit
+}
+
+export type JudgementalActivity = { friend: string; description: string; asset: string; timestamp: number }
+
+export function useFeed() {
+  const { judgementalActivityMap: friendsBuysAndSells, normalActivityMap } = useAllFriendsBuySells()
+
+  return useMemo(() => {
+    const feed: (JudgementalActivity | Activity)[] = Object.values(normalActivityMap ?? {}) as Activity[]
+
+    for (const friend in friendsBuysAndSells) {
+      const friendsTradedTokens = friendsBuysAndSells[friend]
+      for (const tokenAddress in friendsTradedTokens) {
+        const userSold = friendsTradedTokens[tokenAddress].currentBalanceUSD === 0
+        const profit = getProfit(friendsTradedTokens[tokenAddress])
+
+        // console.log('cartcrom', tokenAddress, profit)
+
+        const feedItemBase = { friend, timeStamp: Date.now() } // TODO(now) use time relevant to transaction
+        if (profit < -100) {
+          feed.push({
+            ...feedItemBase,
+            description: JudgmentalTransactionTitleTable[JudgmentalTransaction.GOT_RUGGED],
+            asset: tokenAddress,
+            timestamp: Date.now(),
+          })
+        } else if (profit > 200) {
+          feed.push({
+            ...feedItemBase,
+            description: JudgmentalTransactionTitleTable[JudgmentalTransaction.GAINS],
+            asset: tokenAddress,
+            timestamp: Date.now(),
+          })
+        }
+      }
+    }
+    return feed
+  }, [friendsBuysAndSells, normalActivityMap])
+
+  // console.log('cartcrom', feed)
 }
 
 // function getJudgmentalTransactionTitle(tx: TransactionDetails): string {
@@ -79,26 +143,49 @@ function useAllFriendsActivites(): {
   return { allFriendsActivities, loading, refetch }
 }
 
-// Returns all activites by ownerAddress : tokenId : [buys & sells]
-export function useAllFriendsBuySells() {
-  const { allFriendsActivities, loading } = useAllFriendsActivites()
-  const map: {
-    [ownerAddress: string]: {
-      [tokenAddress: string]: {
-        buys: TransactionDetails[]
-        sells: TransactionDetails[]
-      }
+export type BuySellMap = {
+  [ownerAddress: string]: {
+    [tokenAddress: string]: {
+      buys: SwapInfo[]
+      sells: SwapInfo[]
+      currentBalanceUSD: number
     }
-  } = {}
-  if (loading) return map
+  }
+}
+
+type SwapInfo = {
+  type: 'buy' | 'sell'
+  inputToken: string
+  outputToken: string
+  txHash: string
+  quantity: number
+  USDValue: number
+}
+
+// Returns all activites by ownerAddress : tokenId : [buys & sells]
+export function useAllFriendsBuySells(): { judgementalActivityMap: BuySellMap; normalActivityMap?: ActivityMap } {
+  const { allFriendsActivities, loading } = useAllFriendsActivites()
+  const { formatNumberOrString } = useFormatter()
+  const normalActivityMap = parseRemoteActivities(
+    formatNumberOrString,
+    allFriendsActivities?.portfolios?.[0].assetActivities
+  )
+  const map: BuySellMap = {}
+  if (loading) return { judgementalActivityMap: {}, normalActivityMap: {} }
+
+  const friendBalanceMap = allFriendsActivities?.portfolios?.reduce((acc, curr) => {
+    if (!curr) return acc
+    if (!acc[curr.ownerAddress]) acc[curr.ownerAddress] = {}
+
+    curr.tokenBalances?.forEach((balance) => {
+      acc[curr.ownerAddress][balance.token?.address ?? 'NATIVE'] = balance.denominatedValue?.value ?? 0
+    }, {})
+
+    return acc
+  }, {} as { [ownerAddress: string]: { [tokenAddress: string]: number } })
 
   allFriendsActivities?.portfolios?.map((portfolio) => {
-    const buySells: {
-      [tokenAddress: string]: {
-        buys: TransactionDetails[]
-        sells: TransactionDetails[]
-      }
-    } = {}
+    const buySells: BuySellMap[string] = {}
 
     for (const tx of portfolio.assetActivities ?? []) {
       const details: AssetActivityDetails = tx.details
@@ -117,13 +204,33 @@ export function useAllFriendsBuySells() {
                 const otherAssetAddress = otherAssetChange.asset.address ?? 'Other'
 
                 if (!buySells[otherAssetAddress]) {
-                  buySells[otherAssetAddress] = { buys: [], sells: [] }
+                  buySells[otherAssetAddress] = {
+                    buys: [],
+                    sells: [],
+                    currentBalanceUSD: friendBalanceMap?.[portfolio.ownerAddress][otherAssetAddress] ?? 0,
+                  }
                 }
                 if (assetChange.direction === 'OUT') {
                   // if stablecoin goes out, it's a buy
-                  buySells[otherAssetAddress].buys.push(details as TransactionDetails)
+                  const swapInfo = {
+                    type: 'buy',
+                    inputToken: assetChange.asset.symbol ?? '',
+                    outputToken: otherAssetChange.asset.symbol ?? '',
+                    txHash: details.hash,
+                    quantity: Number(otherAssetChange.quantity),
+                    USDValue: assetChange.transactedValue?.value ?? 0,
+                  } as const
+                  buySells[otherAssetAddress].buys.push(swapInfo)
                 } else {
-                  buySells[otherAssetAddress].sells.push(details as TransactionDetails)
+                  const swapInfo = {
+                    type: 'sell',
+                    inputToken: otherAssetChange.asset.symbol ?? '',
+                    outputToken: assetChange.asset.symbol ?? '',
+                    txHash: details.hash,
+                    quantity: Number(otherAssetChange.quantity),
+                    USDValue: assetChange.transactedValue?.value ?? 0,
+                  } as const
+                  buySells[otherAssetAddress].sells.push(swapInfo)
                 }
                 continue
               }
@@ -134,5 +241,5 @@ export function useAllFriendsBuySells() {
     }
     map[portfolio.ownerAddress] = buySells
   })
-  return map
+  return { judgementalActivityMap: map, normalActivityMap }
 }

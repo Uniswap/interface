@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { friendsActivity, useAllFriendsBuySells } from 'components/SocialFeed/hooks'
+import { ActivityRow } from 'components/AccountDrawer/MiniPortfolio/Activity/ActivityRow'
+import { friendsActivity, useFeed } from 'components/SocialFeed/hooks'
 import { Unicon } from 'components/Unicon'
 import useENSAvatar from 'hooks/useENSAvatar'
 import { getTimeDifference } from 'nft/utils/date'
@@ -89,7 +90,8 @@ function PortfolioAvatar({ accountAddress }: { accountAddress: string }) {
 }
 
 const ActivityFeed = () => {
-  console.log(useAllFriendsBuySells())
+  const feed = useFeed()
+
   return (
     <ExploreContainer>
       <TitleContainer>
@@ -98,6 +100,9 @@ const ActivityFeed = () => {
         </ThemedText.LargeHeader>
       </TitleContainer>
       <FeedContainer>
+        {feed.map((activity) => (
+          <ActivityRow key={activity.timestamp} activity={activity} />
+        ))}
         {friendsActivity
           .sort((a, b) => b.timestamp - a.timestamp)
           .map((activity, index) => {

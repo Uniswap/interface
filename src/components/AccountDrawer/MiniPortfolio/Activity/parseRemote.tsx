@@ -169,6 +169,14 @@ function parseSwap(changes: TransactionChanges, formatNumberOrString: FormatNumb
       const adjustedInput = parseFloat(sent.quantity) - parseFloat(refund?.quantity ?? '0')
       const inputAmount = formatNumberOrString({ input: adjustedInput, type: NumberType.TokenNonTx })
       const outputAmount = formatNumberOrString({ input: received.quantity, type: NumberType.TokenNonTx })
+
+      if (sent.transactedValue && sent.transactedValue?.value > 800) {
+        return {
+          title: t`Aped into`,
+          descriptor: getSwapDescriptor({ tokenIn: sent.asset, inputAmount, tokenOut: received.asset, outputAmount }),
+          currencies: [gqlToCurrency(sent.asset), gqlToCurrency(received.asset)],
+        }
+      }
       return {
         title: getSwapTitle(sent, received),
         descriptor: getSwapDescriptor({ tokenIn: sent.asset, inputAmount, tokenOut: received.asset, outputAmount }),
@@ -179,10 +187,7 @@ function parseSwap(changes: TransactionChanges, formatNumberOrString: FormatNumb
   return { title: t`Unknown Swap` }
 }
 
-/**
- * Wrap/unwrap transactions are labelled as lend transactions on the backend.
- * This function parses the transaction changes to determine if the transaction is a wrap/unwrap transaction.
- */
+/* function parses the transaction changes to determine if the transaction is a wrap/unwrap transaction. */
 function parseLend(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
   const native = changes.TokenTransfer.find((t) => t.tokenStandard === 'NATIVE')?.asset
   const erc20 = changes.TokenTransfer.find((t) => t.tokenStandard === 'ERC20')?.asset
