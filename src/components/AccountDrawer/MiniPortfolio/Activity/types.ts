@@ -1,6 +1,6 @@
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
-import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
+import { UniswapXBackendOrder, UniswapXOrderStatus } from 'lib/hooks/orders/types'
 
 export type Activity = {
   hash: string
@@ -20,6 +20,7 @@ export type Activity = {
   nonce?: number | null
   prefixIconSrc?: string
   cancelled?: boolean
+  order?: UniswapXBackendOrder
 }
 
 export type ActivityMap = { [id: string]: Activity | undefined }

@@ -331,7 +331,8 @@ export function PendingModalContent({
 
   // Return finalized-order-specifc content if available
   if (order && order.status !== UniswapXOrderStatus.OPEN) {
-    return <OrderContent order={{ status: order.status, orderHash: order.orderHash, details: order }} />
+    // @ts-ignore
+    return <OrderContent order={order} />
   }
 
   // On mainnet, we show a different icon when the transaction is submitted but pending confirmation.

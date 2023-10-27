@@ -15,9 +15,9 @@ interface OrderStatusFetchParams {
   orderHash: string
 }
 
-export function fetchOrderStatuses(account: string, orders: OrderStatusFetchParams[]) {
+export function fetchOrderStatuses(orders: OrderStatusFetchParams[]) {
   const orderHashes = orders.map((order) => order.orderHash).join(',')
-  return global.fetch(`https://api.uniswap.org/v2/orders?swapper=${account}&orderHashes=${orderHashes}`)
+  return global.fetch(`https://api.uniswap.org/v2/orders?orderHashes=${orderHashes}`)
 }
 
 const OFF_CHAIN_ORDER_STATUS_POLLING = ms(`2s`)
@@ -41,7 +41,7 @@ export default function OrderUpdater({ pendingOrders, onOrderUpdate }: UpdaterPr
       }
 
       try {
-        const pollOrderStatus = await fetchOrderStatuses(account, pendingOrders)
+        const pollOrderStatus = await fetchOrderStatuses(pendingOrders)
 
         const orderStatuses: OrderQueryResponse = await pollOrderStatus.json()
         pendingOrders.forEach((pendingOrder) => {

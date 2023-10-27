@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro'
-import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { ReactComponent as ErrorContent } from 'assets/svg/uniswapx_error.svg'
 import Column, { AutoColumn } from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
@@ -10,21 +10,18 @@ import { TradeSummary } from 'components/swap/PendingModalContent/TradeSummary'
 import { useCurrency } from 'hooks/Tokens'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
+import { UniswapXBackendOrder, UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { useCallback, useMemo } from 'react'
 import { X } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import { useOrder } from 'state/signatures/hooks'
-import { UniswapXOrderDetails } from 'state/signatures/types'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 type SelectedOrderInfo = {
   modalOpen?: boolean
-  orderHash: string
-  status: UniswapXOrderStatus
-  details?: UniswapXOrderDetails
+  order: UniswapXBackendOrder
 }
 
 const selectedOrderAtom = atom<SelectedOrderInfo | undefined>(undefined)
@@ -32,10 +29,7 @@ const selectedOrderAtom = atom<SelectedOrderInfo | undefined>(undefined)
 export function useOpenOffchainActivityModal() {
   const setSelectedOrder = useUpdateAtom(selectedOrderAtom)
 
-  return useCallback(
-    (order: { orderHash: string; status: UniswapXOrderStatus }) => setSelectedOrder({ ...order, modalOpen: true }),
-    [setSelectedOrder]
-  )
+  return useCallback((order: UniswapXBackendOrder) => setSelectedOrder({ order, modalOpen: true }), [setSelectedOrder])
 }
 
 const Wrapper = styled(AutoColumn).attrs({ gap: 'md', grow: true })`
@@ -89,44 +83,32 @@ const DescriptionText = styled(ThemedText.LabelMicro)`
 `
 
 function useOrderAmounts(
-  orderDetails?: UniswapXOrderDetails
+  order?: UniswapXBackendOrder
 ): Pick<InterfaceTrade, 'inputAmount' | 'postTaxOutputAmount'> | undefined {
-  const inputCurrency = useCurrency(orderDetails?.swapInfo?.inputCurrencyId, orderDetails?.chainId)
-  const outputCurrency = useCurrency(orderDetails?.swapInfo?.outputCurrencyId, orderDetails?.chainId)
+  const inputCurrency = useCurrency(order?.input.token, order?.chainId)
+  const outputCurrency = useCurrency(order?.outputs[0].token, order?.chainId)
 
-  if (!orderDetails) return undefined
+  if (!order) return undefined
 
   if (!inputCurrency || !outputCurrency) {
-    console.error(`Could not find token(s) for order ${orderDetails.orderHash}`)
+    console.error(`Could not find token(s) for order ${order.orderHash}`)
     return undefined
   }
 
-  const { swapInfo } = orderDetails
-
-  if (swapInfo.tradeType === TradeType.EXACT_INPUT) {
-    return {
-      inputAmount: CurrencyAmount.fromRawAmount(inputCurrency, swapInfo.inputCurrencyAmountRaw),
-      postTaxOutputAmount: CurrencyAmount.fromRawAmount(
-        outputCurrency,
-        swapInfo.settledOutputCurrencyAmountRaw ?? swapInfo.expectedOutputCurrencyAmountRaw
-      ),
-    }
-  } else {
-    return {
-      inputAmount: CurrencyAmount.fromRawAmount(inputCurrency, swapInfo.expectedInputCurrencyAmountRaw),
-      postTaxOutputAmount: CurrencyAmount.fromRawAmount(outputCurrency, swapInfo.outputCurrencyAmountRaw),
-    }
+  return {
+    inputAmount: CurrencyAmount.fromRawAmount(inputCurrency, order.input.endAmount),
+    postTaxOutputAmount: CurrencyAmount.fromRawAmount(outputCurrency, order?.outputs[0].endAmount),
   }
 }
 
-export function OrderContent({ order }: { order: SelectedOrderInfo }) {
-  const amounts = useOrderAmounts(order.details)
+export function OrderContent({ order }: { order: UniswapXBackendOrder }) {
+  const amounts = useOrderAmounts(order)
 
-  const explorerLink = order?.details?.txHash
-    ? getExplorerLink(order.details.chainId, order.details.txHash, ExplorerDataType.TRANSACTION)
+  const explorerLink = order?.orderHash
+    ? getExplorerLink(order?.chainId, order?.orderHash, ExplorerDataType.TRANSACTION)
     : undefined
 
-  switch (order.status) {
+  switch (order.orderStatus) {
     case UniswapXOrderStatus.OPEN: {
       return (
         <ContentContainer>
@@ -220,20 +202,23 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
           } to complete this swap.`}</ThemedText.LabelSmall>
         </ContentContainer>
       )
+
+    default:
+      return <div />
   }
 }
 
 /* Returns the order currently selected in the UI synced with updates from order status polling */
 function useSyncedSelectedOrder(): SelectedOrderInfo | undefined {
   const selectedOrder = useAtomValue(selectedOrderAtom)
-  const localPendingOrder = useOrder(selectedOrder?.orderHash ?? '')
+  const localPendingOrder = useOrder(selectedOrder?.order.orderHash ?? '')
 
   return useMemo(() => {
     if (!selectedOrder) return undefined
 
     return {
       ...selectedOrder,
-      status: localPendingOrder?.status ?? selectedOrder.status,
+      status: localPendingOrder?.status ?? selectedOrder.order.orderStatus,
       details: localPendingOrder,
     }
   }, [localPendingOrder, selectedOrder])
@@ -251,7 +236,7 @@ export function OffchainActivityModal() {
     <Modal isOpen={!!syncedSelectedOrder?.modalOpen} onDismiss={reset}>
       <Wrapper data-testid="offchain-activity-modal">
         <StyledXButton onClick={reset} />
-        {syncedSelectedOrder && <OrderContent order={syncedSelectedOrder} />}
+        {syncedSelectedOrder && <OrderContent order={syncedSelectedOrder.order} />}
       </Wrapper>
     </Modal>
   )

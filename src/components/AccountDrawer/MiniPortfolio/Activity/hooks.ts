@@ -1,7 +1,8 @@
 import { TransactionStatus, useActivityQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { OrderQueryResponse } from 'lib/hooks/orders/types'
+import { UniswapXBackendOrder } from 'lib/hooks/orders/types'
 import { fetchOrderStatuses } from 'lib/hooks/orders/updater'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { usePendingOrders } from 'state/signatures/hooks'
 import { usePendingTransactions, useTransactionCanceller } from 'state/transactions/hooks'
 import { useFormatter } from 'utils/formatNumbers'
@@ -33,12 +34,17 @@ function findCancelTx(localActivity: Activity, remoteMap: ActivityMap, account: 
 }
 
 /** Deduplicates local and remote activities */
-function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = {}): Array<Activity> {
+function combineActivities(
+  localMap: ActivityMap = {},
+  remoteMap: ActivityMap = {},
+  orders?: Array<UniswapXBackendOrder>
+): Array<Activity> {
   const txHashes = [...new Set([...Object.keys(localMap), ...Object.keys(remoteMap)])]
 
   return txHashes.reduce((acc: Array<Activity>, hash) => {
     const localActivity = (localMap?.[hash] ?? {}) as Activity
     const remoteActivity = (remoteMap?.[hash] ?? {}) as Activity
+    const order = orders && orders.find((order) => order.orderHash === hash)
 
     if (localActivity.cancelled) {
       // Hides misleading activities caused by cross-chain nonce collisions previously being incorrectly labelled as cancelled txs in redux
@@ -50,7 +56,9 @@ function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = 
       acc.push(localActivity)
     } else {
       // Generally prefer remote values to local value because i.e. remote swap amounts are on-chain rather than client-estimated
-      acc.push({ ...localActivity, ...remoteActivity } as Activity)
+      const activity = { ...localActivity, ...remoteActivity } as Activity
+      if (order) activity.order = order
+      acc.push(activity)
     }
 
     return acc
@@ -59,6 +67,7 @@ function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = 
 
 export function useAllActivities(account: string) {
   const { formatNumberOrString } = useFormatter()
+  const [orders, setOrders] = useState<UniswapXBackendOrder[]>()
   const { data, loading, refetch } = useActivityQuery({
     variables: { account },
     errorPolicy: 'all',
@@ -76,6 +85,16 @@ export function useAllActivities(account: string) {
   useEffect(() => {
     if (!remoteMap) return
 
+    Object.values(localMap).forEach((localActivity) => {
+      if (!localActivity) return
+
+      const cancelHash = findCancelTx(localActivity, remoteMap, account)
+
+      if (cancelHash) updateCancelledTx(localActivity.hash, localActivity.chainId, cancelHash)
+    })
+  }, [account, localMap, remoteMap, updateCancelledTx])
+
+  useEffect(() => {
     async function getOrderDetails() {
       if (!remoteMap) return
       const orderHashes = Object.values(remoteMap)
@@ -87,27 +106,20 @@ export function useAllActivities(account: string) {
         })
         .filter((orderHash) => orderHash !== null) as { orderHash: string }[]
 
-      const orderStatuses: OrderQueryResponse = await (await fetchOrderStatuses(account, orderHashes)).json()
+      const orderStatuses: OrderQueryResponse = await (await fetchOrderStatuses(orderHashes)).json()
       console.log(orderStatuses)
+      setOrders(orderStatuses.orders)
     }
 
     getOrderDetails()
-
-    Object.values(localMap).forEach((localActivity) => {
-      if (!localActivity) return
-
-      const cancelHash = findCancelTx(localActivity, remoteMap, account)
-
-      if (cancelHash) updateCancelledTx(localActivity.hash, localActivity.chainId, cancelHash)
-    })
-  }, [account, localMap, remoteMap, updateCancelledTx])
+  }, [remoteMap])
 
   const combinedActivities = useMemo(
-    () => (remoteMap ? combineActivities(localMap, remoteMap) : undefined),
-    [localMap, remoteMap]
+    () => (remoteMap ? combineActivities(localMap, remoteMap, orders) : undefined),
+    [localMap, remoteMap, orders]
   )
 
-  return { loading, activities: combinedActivities, refetch }
+  return { loading, activities: combinedActivities, refetch, orders }
 }
 
 export function usePendingActivity() {
