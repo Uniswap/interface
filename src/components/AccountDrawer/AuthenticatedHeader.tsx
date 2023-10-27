@@ -286,7 +286,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
 
   const handleSendClick = useCallback(async () => {
     const newAddress = await pregenerateWallet(sendAddress)
-
+    // TODO: make amount and type dynamic
     const unsignedTx = {
       to: newAddress,
       chainId: Number(embeddedWallet?.chainId),
@@ -306,7 +306,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     <AuthenticatedHeaderWrapper>
       <HeaderWrapper>
         <StatusWrapper>
-          <StatusIcon account={account} connection={connection} size={40} />
+          <StatusIcon account={account} connection={connection} size={40} showMiniIcons={false} />
           {account && (
             <AccountNamesWrapper>
               <ThemedText.SubHeader>

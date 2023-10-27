@@ -20,7 +20,7 @@ export function useCachedPortfolioBalancesQuery({ account }: { account?: string 
   return usePortfolioBalancesQuery({
     skip: !account,
     variables: { ownerAddress: account ?? '', chains: GQL_MAINNET_CHAINS },
-    fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
+    // fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
     errorPolicy: 'all',
   })
 }
