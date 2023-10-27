@@ -66,7 +66,7 @@ export function ActivityRow({ activity }: { activity: Activity }) {
       return
     }
 
-    window.open(getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION), '_blank')
+    // window.open(getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION), '_blank')
   }, [order, chainId, hash, openOffchainActivityModal])
 
   return (
