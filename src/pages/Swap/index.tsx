@@ -147,7 +147,7 @@ export default function SwapPage({ className }: { className?: string }) {
   const embeddedWallet = wallets.find((wallet: { walletClientType: string }) => wallet.walletClientType === 'privy')
   const connectedChainId = embeddedWallet?.chainId?.split(':')?.[1]
     ? Number(embeddedWallet?.chainId?.split(':')?.[1])
-    : 421613
+    : ChainId.MAINNET
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   const location = useLocation()
@@ -203,7 +203,7 @@ export function Swap({
   const embeddedWallet = wallets.find((wallet: { walletClientType: string }) => wallet.walletClientType === 'privy')
   const connectedChainId = embeddedWallet?.chainId?.split(':')?.[1]
     ? Number(embeddedWallet?.chainId?.split(':')?.[1])
-    : 421613
+    : ChainId.MAINNET
 
   // token warning stuff
   const prefilledInputCurrency = useCurrency(initialInputCurrencyId, chainId)

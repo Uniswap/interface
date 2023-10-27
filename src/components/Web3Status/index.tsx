@@ -153,9 +153,9 @@ function Web3StatusInner() {
     login()
   }
 
-  useEffect(() => {
-    embeddedWallet?.switchChain(421613)
-  }, [embeddedWallet])
+  // useEffect(() => {
+  //   embeddedWallet?.switchChain(421613)
+  // }, [embeddedWallet])
 
   const [, toggleAccountDrawer] = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {
