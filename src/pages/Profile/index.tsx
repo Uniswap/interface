@@ -263,7 +263,7 @@ export default function ProfilePage() {
           <AccountDrawerScrollWrapper>
             <Trans>Activity</Trans>
             <RemoveMarginWrapper>
-              <ActivityList feed={feed} />
+              <ActivityList feed={feed} hidePrice={true} />
             </RemoveMarginWrapper>
           </AccountDrawerScrollWrapper>
         </ActivityContainer>

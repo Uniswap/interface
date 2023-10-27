@@ -5,7 +5,7 @@ import { PriceChart } from 'components/Charts/PriceChart'
 import Column from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
-import Row, { RowBetween } from 'components/Row'
+import Row from 'components/Row'
 import { JudgementalActivity } from 'components/SocialFeed/hooks'
 import { usePriceHistory } from 'components/Tokens/TokenDetails/ChartSection'
 import {
@@ -15,10 +15,11 @@ import {
   useTokenPriceQuery,
 } from 'graphql/data/__generated__/types-and-hooks'
 import { TimePeriod } from 'graphql/data/util'
+import { getV2Prices } from 'graphql/thegraph/getV2Prices'
 import useENSName from 'hooks/useENSName'
 import { ClickableText } from 'pages/Pool/styled'
-import { useCallback, useMemo } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useCallback, useEffect, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils'
@@ -115,10 +116,7 @@ const ActivityCard = styled.div`
   gap: 20px;
   padding: 20px;
   width: 100%;
-<<<<<<< Updated upstream
-=======
   /* width: 420px; */
->>>>>>> Stashed changes
 
   /* background-color: ${({ theme }) => theme.surface1}; */
   /* border-radius: 12px; */
@@ -148,7 +146,7 @@ const DescriptionContainer = styled(Row)`
 function NormalFeedRow({ activity }: { activity: Activity }) {
   const { ENSName } = useENSName(activity.owner)
   const { ENSName: otherAccountENS } = useENSName(activity.otherAccount)
-  const timesince = useTimeSince(activity.timestamp)
+  const timeSince = useTimeSince(activity.timestamp)
 
   const navigate = useNavigate()
 
@@ -157,6 +155,7 @@ function NormalFeedRow({ activity }: { activity: Activity }) {
       activity.title.includes('Approv') ||
       activity.title.includes('Contract') ||
       activity.descriptor?.includes('Contract') ||
+      activity.title.includes('Sent') ||
       activity.title?.includes('Swapped') ||
       activity.title.includes('Received') ||
       activity.title.includes('Unknown'),
@@ -164,7 +163,6 @@ function NormalFeedRow({ activity }: { activity: Activity }) {
   )
   if (shouldHide) return null
 
-  const hasNftLogo = activity.title.includes('Minted') && activity.logos?.[0]
   return (
     <ActivityCard>
       <CardHeader>
@@ -174,34 +172,22 @@ function NormalFeedRow({ activity }: { activity: Activity }) {
             <ThemedText.BodyPrimary>{ENSName ?? shortenAddress(activity.owner)}</ThemedText.BodyPrimary>
           </ClickableText>
         </Who>
-        <ThemedText.LabelSmall>{timesince}</ThemedText.LabelSmall>
+        <ThemedText.LabelSmall>{timeSince}</ThemedText.LabelSmall>
       </CardHeader>
-      <RowBetween>
-        <ThemedText.BodySecondary>
-          {activity.title} {activity.descriptor}
-          {activity.otherAccount && (
-            <Link to={`/account/${otherAccountENS ?? activity.otherAccount}`}>
-              {otherAccountENS ?? activity.otherAccount}
-            </Link>
-          )}
-        </ThemedText.BodySecondary>
-        {!hasNftLogo && (
-          <PortfolioLogo
-            chainId={1}
-            currencies={activity.currencies}
-            images={activity.logos}
-            accountAddress={activity.otherAccount}
-          />
-        )}
-      </RowBetween>
-      {hasNftLogo && (
-        <img src={activity.logos?.[0]} alt="activity image" style={{ maxHeight: '100%', maxWidth: '100%' }} />
-      )}
+      <ThemedText.BodySecondary color="neutral1">
+        <DescriptionContainer gap="8px">
+          {activity.title} {activity.descriptor}{' '}
+          <PortfolioLogo size="24px" chainId={1} currencies={activity.currencies} />{' '}
+          <ClickableText onClick={() => navigate(`/account/${otherAccountENS ?? activity.otherAccount}`)}>
+            <b>{otherAccountENS ?? activity.otherAccount}</b>
+          </ClickableText>
+        </DescriptionContainer>
+      </ThemedText.BodySecondary>
     </ActivityCard>
   )
 }
 
-function JudgementChart({ activity }: { activity: JudgementalActivity }) {
+function JudgementChart({ activity, hidePrice }: { activity: JudgementalActivity; hidePrice?: boolean }) {
   const theme = useTheme()
   const { data: tokenPriceQuery } = useTokenPriceQuery({
     variables: {
@@ -213,6 +199,10 @@ function JudgementChart({ activity }: { activity: JudgementalActivity }) {
   })
 
   const prices = usePriceHistory(tokenPriceQuery)
+
+  useEffect(() => {
+    getV2Prices(activity.currency.wrapped.address).then(console.log)
+  }, [])
 
   if (!prices) return null
 
@@ -226,15 +216,17 @@ function JudgementChart({ activity }: { activity: JudgementalActivity }) {
           timePeriod={TimePeriod.YEAR}
           activity={activity.activities}
           color={activity.negative ? theme.critical : theme.success}
+          hidePrice={hidePrice}
+          backupAddress={activity.currency.wrapped.address}
         />
       )}
     </ParentSize>
   )
 }
 
-function JudgementalActivityRow({ activity }: { activity: JudgementalActivity }) {
+function JudgementalActivityRow({ activity, hidePrice }: { activity: JudgementalActivity; hidePrice?: boolean }) {
   const { ENSName } = useENSName(activity.owner)
-  const timesince = useTimeSince(activity.timestamp)
+  const timeSince = useTimeSince(activity.timestamp)
   const { formatFiatPrice } = useFormatter()
   const theme = useTheme()
   const navigate = useNavigate()
@@ -248,14 +240,11 @@ function JudgementalActivityRow({ activity }: { activity: JudgementalActivity })
             <ThemedText.BodyPrimary>{ENSName ?? shortenAddress(activity.owner)}</ThemedText.BodyPrimary>
           </ClickableText>
         </Who>
-        <ThemedText.LabelSmall>{timesince}</ThemedText.LabelSmall>
+        <ThemedText.LabelSmall>{timeSince}</ThemedText.LabelSmall>
       </CardHeader>
-      <JudgementChart activity={activity} />
+      <JudgementChart activity={activity} hidePrice={hidePrice} />
       <ThemedText.BodySecondary color="neutral1">
         <DescriptionContainer gap="8px">
-          <ClickableText>
-            <b>{ENSName ?? shortenAddress(activity.owner)}</b>
-          </ClickableText>
           {activity.description} <PortfolioLogo size="24px" chainId={1} currencies={[activity.currency]} />{' '}
           <ClickableText
             onClick={() =>
@@ -268,17 +257,18 @@ function JudgementalActivityRow({ activity }: { activity: JudgementalActivity })
           </ClickableText>
           <span style={{ color: activity.profit > 0 ? theme.success : theme.critical }}>
             ({formatFiatPrice({ price: activity.profit })})
-          </span>
+          </span>{' '}
+          {activity.hodlingTimescale}
         </DescriptionContainer>
       </ThemedText.BodySecondary>
     </ActivityCard>
   )
 }
 
-export function FeedRow({ activity }: { activity: Activity | JudgementalActivity }) {
+export function FeedRow({ activity, hidePrice }: { activity: Activity | JudgementalActivity; hidePrice?: boolean }) {
   if (!isJudgementalActivity(activity)) {
     return <NormalFeedRow activity={activity} />
     // return null
   }
-  return <JudgementalActivityRow activity={activity} />
+  return <JudgementalActivityRow activity={activity} hidePrice={hidePrice} />
 }

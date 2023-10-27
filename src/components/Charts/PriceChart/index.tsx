@@ -13,6 +13,7 @@ import { getNearestPricePoint, getTicks } from 'components/Charts/PriceChart/uti
 import { MouseoverTooltip } from 'components/Tooltip'
 import { curveCardinal } from 'd3'
 import { PricePoint, TimePeriod } from 'graphql/data/util'
+import { getV2Prices } from 'graphql/thegraph/getV2Prices'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Info } from 'react-feather'
@@ -102,11 +103,13 @@ function ChartBody({
   timePeriod,
   activity,
   color,
+  hidePrice,
 }: {
   chart: ChartModel
   timePeriod: TimePeriod
   activity: Activity[]
   color?: string
+  hidePrice?: boolean
 }) {
   const locale = useActiveLocale()
 
@@ -169,7 +172,7 @@ function ChartBody({
 
   return (
     <>
-      <ChartHeader chart={chart} crosshairPrice={crosshair?.price} />
+      {!hidePrice && <ChartHeader chart={chart} crosshairPrice={crosshair?.price} />}
       <svg data-cy="price-chart" width={dimensions.width} height={dimensions.height} style={{ minWidth: '100%' }}>
         <AnimatedInLineChart
           data={prices}
@@ -337,23 +340,45 @@ interface PriceChartProps {
   timePeriod: TimePeriod
   activity: Activity[]
   color?: string
+  hidePrice?: boolean
+  backupAddress?: string
 }
 
-export function PriceChart({ width, height, prices, timePeriod, activity, color }: PriceChartProps) {
+export function PriceChart({
+  width,
+  height,
+  prices,
+  timePeriod,
+  activity,
+  color,
+  hidePrice,
+  backupAddress,
+}: PriceChartProps) {
+  const [usedPrices, setUsedPrices] = useState(prices)
+
   const chart = useMemo(
     () =>
       buildChartModel({
         dimensions: { width, height, marginBottom: CHART_MARGIN.bottom, marginTop: CHART_MARGIN.top },
-        prices,
+        prices: usedPrices,
       }),
-    [width, height, prices]
+    [width, height, usedPrices]
   )
+
+  useEffect(() => {
+    if (chart.error && backupAddress) {
+      getV2Prices(backupAddress).then((prices) => {
+        console.log('cartcrom', prices)
+        setUsedPrices(prices)
+      })
+    }
+  }, [chart.error, backupAddress])
 
   if (chart.error !== undefined) {
     return null
   }
 
-  return <ChartBody chart={chart} timePeriod={timePeriod} activity={activity} color={color} />
+  return <ChartBody chart={chart} timePeriod={timePeriod} activity={activity} color={color} hidePrice={hidePrice} />
 }
 
 interface ActivityGlyphCircleProps extends Omit<React.ComponentProps<typeof GlyphCircle>, 'ref'> {

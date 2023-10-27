@@ -82,13 +82,19 @@ function Chart({
   const { account } = useWeb3React()
   const currency = tokenPriceQuery.token ? gqlToCurrency(tokenPriceQuery.token) : undefined
   const activity = useTokenActivity(account, currency)
-  console.log('cartcrom', activity)
 
   return (
     <ChartContainer data-testid="chart-container">
       <ParentSize>
         {({ width }) => (
-          <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} activity={activity} />
+          <PriceChart
+            prices={prices}
+            width={width}
+            height={392}
+            timePeriod={timePeriod}
+            activity={activity}
+            backupAddress={currency?.wrapped.address}
+          />
         )}
       </ParentSize>
       <TimePeriodSelector

@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { FeedRow } from 'components/AccountDrawer/MiniPortfolio/Activity/ActivityRow'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
+import LoadingSpinner from 'components/Icons/LoadingSpinner'
 import Row from 'components/Row'
 import { JudgementalActivity, useFeed } from 'components/SocialFeed/hooks'
 import { Unicon } from 'components/Unicon'
@@ -92,11 +93,18 @@ function PortfolioAvatar({ accountAddress }: { accountAddress: string }) {
   return <Unicon size={30} address={accountAddress} />
 }
 
-export const ActivityList = ({ feed }: { feed: (Activity | JudgementalActivity)[] }) => {
+export const ActivityList = ({
+  feed,
+  hidePrice,
+}: {
+  feed: (Activity | JudgementalActivity)[]
+  hidePrice?: boolean
+}) => {
   return (
     <FeedContainer>
+      {feed.length === 0 && <LoadingSpinner size="50px" />}
       {feed.map((activity, i) => (
-        <FeedRow key={i} activity={activity} />
+        <FeedRow key={i} activity={activity} hidePrice={hidePrice} />
       ))}
       {/* {friendsActivity
         .sort((a, b) => b.timestamp - a.timestamp)

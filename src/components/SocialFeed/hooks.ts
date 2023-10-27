@@ -50,7 +50,7 @@ const JudgmentalTransactionTitleTable: { [key in JudgmentalTransaction]: string 
   [JudgmentalTransaction.GOT_RUGGED]: t`Got rugged by`,
   [JudgmentalTransaction.APED_INTO]: t`Aped into`,
   [JudgmentalTransaction.DUMPED]: t`Dumped`,
-  [JudgmentalTransaction.STILL_HODLING]: t`Is still hodling`,
+  [JudgmentalTransaction.STILL_HODLING]: t`Has been hodling`,
   [JudgmentalTransaction.GAINS]: t`Made gains on`,
 }
 
@@ -79,15 +79,23 @@ export type JudgementalActivity = {
   timestamp: number
   profit: number
   activities: Activity[]
+  hodlingTimescale?: string
 }
 
+const NORMAL_FEED_LIMIT = 40
 export function useFeed(accounts: string[], filterAddress?: string) {
   const { judgementalActivityMap: friendsBuysAndSells, normalActivityMap } = useAllFriendsBuySells(accounts)
 
   return useMemo(() => {
-    const feed: (JudgementalActivity | Activity)[] = filterAddress
-      ? []
-      : (Object.values(normalActivityMap ?? {}) as Activity[]).slice(0, 40)
+    const sortedFeed = (Object.values(normalActivityMap ?? {}) as Activity[]).sort((a, b) => b.timestamp - a.timestamp)
+    const feed: (JudgementalActivity | Activity)[] = []
+    const count = 0
+    for (const item of sortedFeed) {
+      if (count < 40 || item.title.includes('Aped')) {
+        if (!filterAddress || item.currencies?.some((c) => isSameAddress(c?.wrapped.address, filterAddress)))
+          feed.push(item)
+      }
+    }
 
     for (const friend in friendsBuysAndSells) {
       const friendsTradedTokens = friendsBuysAndSells[friend]
@@ -101,6 +109,35 @@ export function useFeed(accounts: string[], filterAddress?: string) {
         // if (friend === '0x0938a82F93D5DAB110Dc6277FC236b5b082DC10F') console.log('cartcrom', { profit, tokenAddress })
 
         const feedItemBase = { isJudgmental: true, owner: friend, timeStamp: Date.now(), currency, profit } // TODO(now) use time relevant to transaction
+
+        const lastSellTimestamp = friendsTradedTokens[tokenAddress].sells.reduce((max, sell) => {
+          return Math.max(max, sell.timestamp)
+        }, 0)
+        const firstBuyTimestamp = friendsTradedTokens[tokenAddress].buys.reduce((min, buy) => {
+          return Math.min(min, buy.timestamp)
+        }, Infinity)
+        const sixMonthsAgo = Date.now() - 6 * 30 * 24 * 60 * 60 * 1000
+        const oneYearAgo = Date.now() - 12 * 30 * 24 * 60 * 60 * 1000
+        if ((currentBalanceUSD > 0 && lastSellTimestamp < sixMonthsAgo) || firstBuyTimestamp > oneYearAgo) {
+          feed.push({
+            ...feedItemBase,
+            description: JudgmentalTransactionTitleTable[JudgmentalTransaction.STILL_HODLING],
+            timestamp: lastSellTimestamp === 0 ? firstBuyTimestamp : lastSellTimestamp,
+            activities,
+            negative: true,
+            hodlingTimescale: `for ${lastSellTimestamp === 0 ? 'one year' : 'six months'} now`,
+          })
+        }
+        if (currentBalanceUSD > 0 && lastSellTimestamp !== 0 && lastSellTimestamp < oneYearAgo) {
+          feed.push({
+            ...feedItemBase,
+            description: JudgmentalTransactionTitleTable[JudgmentalTransaction.STILL_HODLING],
+            timestamp: lastSellTimestamp,
+            activities,
+            negative: true,
+            hodlingTimescale: `for one year now`,
+          })
+        }
         if (profit < -100) {
           feed.push({
             ...feedItemBase,
@@ -178,6 +215,7 @@ type SwapInfo = {
   txHash: string
   quantity: number
   USDValue: number
+  timestamp: number
 }
 
 // Returns all activites by ownerAddress : tokenId : [buys & sells]
@@ -235,6 +273,7 @@ function useAllFriendsBuySells(accounts: string[]): {
               quantity: Number(received.quantity),
               USDValue: sent.transactedValue?.value ?? 0,
               activity: parseRemoteActivity(tx, portfolio.ownerAddress, formatNumberOrString),
+              timestamp: tx.timestamp,
             } as const
             const receivedAssetAddress = received.asset.address ?? 'Other'
             if (!buySells[receivedAssetAddress]) {
@@ -262,6 +301,7 @@ function useAllFriendsBuySells(accounts: string[]): {
               txHash: details.hash,
               quantity: Number(sent.quantity),
               USDValue: received.transactedValue?.value ?? 0,
+              timestamp: tx.timestamp,
             } as const
             const sentAssetAddress = sent.asset.address ?? 'Other'
             if (!buySells[sentAssetAddress]) {
