@@ -9,7 +9,7 @@ import {
 } from 'src/app/navigation/constants'
 import { useAppSelector } from 'src/background/store'
 import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
-import { Flex, getTokenValue, Icons } from 'ui/src'
+import { Flex } from 'ui/src'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 export function OnboardingWrapper(): JSX.Element {
@@ -42,11 +42,6 @@ export function OnboardingWrapper(): JSX.Element {
   return (
     <OnboardingContextProvider>
       <Flex alignItems="center" bg="$surface1" minHeight="100vh" width="100%">
-        {!isIntroRoute && (
-          <Flex p="$spacing12">
-            <Icons.UniswapLogo size={getTokenValue('$icon.36')} />
-          </Flex>
-        )}
         <Outlet />
       </Flex>
     </OnboardingContextProvider>

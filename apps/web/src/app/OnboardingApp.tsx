@@ -2,7 +2,7 @@ import 'src/app/Global.css'
 
 import { ToastProvider, ToastViewport } from '@tamagui/toast'
 import { useEffect } from 'react'
-import { createHashRouter, RouterProvider } from 'react-router-dom'
+import { createHashRouter, Outlet, RouterProvider } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import { GraphqlProvider } from 'src/app/apollo'
 import { ErrorBoundary } from 'src/app/components/ErrorBoundary'
@@ -14,20 +14,18 @@ import { ViewMnemonic } from 'src/app/features/onboarding/create/ViewMnemonic'
 import { ImportMnemonic } from 'src/app/features/onboarding/import/ImportMnemonic'
 import { SelectWallets } from 'src/app/features/onboarding/import/SelectWallets'
 import { IntroScreen } from 'src/app/features/onboarding/IntroScreen'
-import { OnboardingStepWrapper } from 'src/app/features/onboarding/OnboardingStepWrapper'
 import { OnboardingWrapper } from 'src/app/features/onboarding/OnboardingWrapper'
 import { Password } from 'src/app/features/onboarding/Password'
 import { sendExtensionAnalyticsEvent } from 'src/app/features/telemetry'
 import { ExtensionEventName } from 'src/app/features/telemetry/constants'
 import {
   CreateOnboardingRoutes,
-  createOnboardingSteps,
   ImportOnboardingRoutes,
-  importOnboardingSteps,
   OnboardingRoutes,
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
 import { persistor, store } from 'src/onboarding/onboardingStore'
+import { Flex } from 'ui/src'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 import { uniswapUrls } from 'wallet/src/constants/urls'
@@ -48,10 +46,9 @@ const router = createHashRouter([
       {
         path: OnboardingRoutes.Create,
         element: (
-          <OnboardingStepWrapper
-            methodRoute={OnboardingRoutes.Create}
-            steps={createOnboardingSteps}
-          />
+          <Flex centered grow width="100%">
+            <Outlet />
+          </Flex>
         ),
         children: [
           {
@@ -88,10 +85,9 @@ const router = createHashRouter([
       {
         path: OnboardingRoutes.Import,
         element: (
-          <OnboardingStepWrapper
-            methodRoute={OnboardingRoutes.Import}
-            steps={importOnboardingSteps}
-          />
+          <Flex centered grow width="100%">
+            <Outlet />
+          </Flex>
         ),
         children: [
           {
