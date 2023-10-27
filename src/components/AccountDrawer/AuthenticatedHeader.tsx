@@ -203,7 +203,7 @@ const PortfolioDrawerContainer = styled(Column)`
 
 export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
   const { connector } = useWeb3React()
-  const { logout } = usePrivy()
+  const { user, logout } = usePrivy()
   const { ENSName } = useENSName(account)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
@@ -274,6 +274,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
   const percentChange = portfolio?.tokensTotalDenominatedValueChange?.percentage?.value
   const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false)
+  const usersName = user?.google?.name || user?.email?.address
 
   return (
     <AuthenticatedHeaderWrapper>
@@ -289,6 +290,11 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               {ENSName && (
                 <ThemedText.BodySmall color="neutral2">
                   <CopyText toCopy={account}>{shortenAddress(account)}</CopyText>
+                </ThemedText.BodySmall>
+              )}
+              {usersName && (
+                <ThemedText.BodySmall color="neutral2">
+                  <CopyText toCopy={usersName}>{usersName}</CopyText>
                 </ThemedText.BodySmall>
               )}
             </AccountNamesWrapper>
