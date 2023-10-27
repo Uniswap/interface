@@ -22,6 +22,7 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { getPriceImpactColor } from 'utils/prices'
 
 import { GasBreakdownTooltip, UniswapXDescription } from './GasBreakdownTooltip'
+import { FreeText } from './GasEstimateTooltip'
 import { MaxSlippageTooltip } from './MaxSlippageTooltip'
 import { RoutingTooltip, SwapRoute } from './SwapRoute'
 import TradePrice from './TradePrice'
@@ -169,7 +170,15 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
           return (
             <Row gap="4px">
               <ChainLogo chainId={chainId} />
-              {formatNumber({ input: trade.totalGasUseEstimateUSD, type: NumberType.FiatGasPrice })}
+              <s>
+                {formatNumber({
+                  input: trade.totalGasUseEstimateUSD,
+                  type: NumberType.FiatGasPrice,
+                })}
+              </s>
+              <FreeText>
+                <Trans>Free</Trans>
+              </FreeText>
             </Row>
           )
         },

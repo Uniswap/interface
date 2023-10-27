@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
@@ -24,6 +25,16 @@ const StyledGasIcon = styled(Gas)`
   }
 `
 
+export const FreeText = styled.div`
+  // Free
+  color: ${({ theme }) => theme.accent1};
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 535;
+  line-height: 20px;
+  word-wrap: break-word;
+`
+
 export default function GasEstimateTooltip({ trade, loading }: { trade?: SubmittableTrade; loading: boolean }) {
   const { chainId } = useWeb3React()
   const { formatNumber } = useFormatter()
@@ -48,12 +59,17 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Submitt
           {isUniswapXTrade(trade) ? <UniswapXRouterIcon testId="gas-estimate-uniswapx-icon" /> : <StyledGasIcon />}
           <ThemedText.BodySmall color="neutral2">
             <Row gap="xs">
-              <div>
-                {formatNumber({
-                  input: trade.totalGasUseEstimateUSD,
-                  type: NumberType.FiatGasPrice,
-                })}
-              </div>
+              <Row gap="4px">
+                <s>
+                  {formatNumber({
+                    input: trade.totalGasUseEstimateUSD,
+                    type: NumberType.FiatGasPrice,
+                  })}
+                </s>
+                <FreeText>
+                  <Trans>Free</Trans>
+                </FreeText>
+              </Row>
               {isUniswapXTrade(trade) && (
                 <div>
                   <s>
