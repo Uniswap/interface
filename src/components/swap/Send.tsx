@@ -3,20 +3,21 @@ import { parseEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { usePrivy, useWallets } from '@privy-io/react-auth'
 import { ChainId } from '@uniswap/sdk-core'
+import { ButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
+import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import Row from 'components/Row'
 import { nativeOnChain } from 'constants/tokens'
 import useENSAddress from 'hooks/useENSAddress'
 import { pregenerateWallet } from 'hooks/usePregenerateWallet'
 import { useCallback, useState } from 'react'
-import { ChevronRight } from 'react-feather'
 import styled from 'styled-components'
-import { ClickableStyle, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
 
 import { Input as NumericalInput } from '../NumericalInput'
 
 const InputWrapper = styled(Column)`
-  height: 236px;
+  height: 100px;
   padding: 32px 16px 16px 16px;
   justify-content: center;
   align-items: center;
@@ -67,23 +68,22 @@ const SendInput = styled.input`
   }
 `
 
-const SendIcon = styled(ChevronRight)<{ $disabled?: boolean }>`
-  color: ${({ theme, $disabled }) => ($disabled ? theme.neutral3 : theme.neutral2)};
-  ${({ $disabled }) => !$disabled && ClickableStyle}
-`
-
 export function Send() {
   const [sendAmount, setSendAmount] = useState('')
   const [sendAddress, setSendAddress] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const { wallets } = useWallets()
   const embeddedWallet = wallets.find((wallet: { walletClientType: string }) => wallet.walletClientType === 'privy')
   const nativeToken = nativeOnChain(
     embeddedWallet?.chainId?.split(':')?.[1] ? Number(embeddedWallet?.chainId?.split(':')?.[1]) : ChainId.MAINNET
   )
+
   const { sendTransaction } = usePrivy()
   const { address: ensAddress } = useENSAddress(sendAddress)
 
   const handleSendClick = useCallback(async () => {
+    setIsLoading(true)
+
     const inputIsAddress = isAddress(sendAddress)
     const newAddress = await pregenerateWallet(sendAddress)
     const unsignedTx = {
@@ -95,10 +95,14 @@ export function Send() {
       description: `Send ${sendAmount} ${nativeToken.symbol} to ${sendAddress}`,
       buttonText: 'Send',
     }
-    await sendTransaction(unsignedTx, uiConfig)
 
-    setSendAddress('')
-    setSendAmount('')
+    const result = await sendTransaction(unsignedTx, uiConfig)
+
+    if (result) {
+      setIsLoading(false)
+      setSendAddress('')
+      setSendAmount('')
+    }
   }, [embeddedWallet?.chainId, ensAddress, nativeToken.symbol, sendAddress, sendAmount, sendTransaction])
   return (
     <Column gap="xs">
@@ -126,9 +130,19 @@ export function Send() {
               setSendAddress(event.target.value)
             }}
           />
-          <SendIcon $disabled={!sendAddress} onClick={handleSendClick} />
         </Row>
       </AddressWrapper>
+      <Row>
+        <ButtonPrimary
+          $borderRadius="16px"
+          disabled={Boolean(!sendAddress || !sendAmount)}
+          onClick={handleSendClick}
+          fontWeight={535}
+          data-testid="send-button"
+        >
+          <Trans>{isLoading ? <LoaderV3 size="24px" /> : 'Send'}</Trans>
+        </ButtonPrimary>
+      </Row>
     </Column>
   )
 }

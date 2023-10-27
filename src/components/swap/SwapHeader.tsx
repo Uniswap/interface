@@ -18,6 +18,10 @@ const HeaderButtonContainer = styled(RowFixed)`
   gap: 16px;
 `
 
+const StyledRowButton = styled(ThemedText.SubHeader)`
+  cursor: pointer;
+`
+
 export default function SwapHeader({
   autoSlippage,
   chainId,
@@ -42,12 +46,12 @@ export default function SwapHeader({
           <Trans>Swap</Trans>
         </ThemedText.SubHeader>
         <SwapBuyFiatButton />
-        <ThemedText.SubHeader
+        <StyledRowButton
           color={swapIsActive ? 'neutral2' : 'neutral1'}
           onClick={() => setActiveTab && setActiveTab('send')}
         >
           <Trans>Send</Trans>
-        </ThemedText.SubHeader>
+        </StyledRowButton>
       </HeaderButtonContainer>
       <RowFixed>
         <SettingsTab autoSlippage={autoSlippage} chainId={chainId} trade={trade} />
