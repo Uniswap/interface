@@ -81,7 +81,7 @@ export default function SettingsMenu({
   const currencyConversionEnabled = useCurrencyConversionFlagEnabled()
   const activeLocale = useActiveLocale()
   const activeLocalCurrency = useActiveLocalCurrency()
-  const { exportWallet } = usePrivy()
+  const { exportWallet, setWalletPassword } = usePrivy()
   return (
     <SlideOutMenu title={<Trans>Settings</Trans>} onClose={onClose}>
       <Container>
@@ -92,6 +92,11 @@ export default function SettingsMenu({
           <ToggleWrapper>
             <div style={{ cursor: 'pointer' }} onClick={() => exportWallet()}>
               Export Wallet
+            </div>
+          </ToggleWrapper>
+          <ToggleWrapper>
+            <div style={{ cursor: 'pointer' }} onClick={() => setWalletPassword()}>
+              Set Wallet Password
             </div>
           </ToggleWrapper>
           <SectionTitle data-testid="wallet-header">
