@@ -35,6 +35,7 @@ type LimitOrderFormState = {
   inputAmount: string // what the user types
   outputAmount: string // what the user types
   expiry: LimitOrderExpiry
+  priceBase: string
 }
 
 // only works on mainnet for now
@@ -44,6 +45,7 @@ const DEFAULT_STATE = {
   inputAmount: '',
   outputAmount: '',
   expiry: LimitOrderExpiry.OneHour,
+  priceBase: '',
 }
 
 const TWENTY_MINUTES_IN_S = 20 * 60
@@ -77,8 +79,8 @@ function useLimitOrderTrade(
 
 export function LimitOrderForm() {
   const { account } = useWeb3React()
-  // const [showConfirm, setShowConfirm] = useState(false)
   const [limitOrderState, setLimitOrder] = useState<LimitOrderFormState>(DEFAULT_STATE)
+  const [outputAmountFixed, setOutputAmountFixed] = useState(false)
 
   const { inputToken, outputToken, inputAmount, outputAmount, expiry } = limitOrderState
   const userTokenBalances = useCurrencyBalances(
@@ -91,11 +93,20 @@ export function LimitOrderForm() {
     [userTokenBalances]
   )
 
-  const setLimitOrderField = (field: string) => (newValue: any) =>
+  const setLimitOrderField = (field: string) => (newValue: any) => {
+    if (field === 'inputAmount' || field === 'price') {
+      setOutputAmountFixed(false)
+    }
+
+    if (field === 'outputAmount') {
+      setOutputAmountFixed(true)
+    }
+
     setLimitOrder((prev) => ({
       ...prev,
       [field]: newValue,
     }))
+  }
 
   const onMax = () => setLimitOrderField('inputAmount')(maxInputAmount?.toExact())
 
@@ -119,6 +130,7 @@ export function LimitOrderForm() {
   const debouncedExecutionPrice = useDebounce(executionPrice, 500)
 
   // TODO: add token tax stuff
+  // TODO: use gas adjusted classic quote because limit orders are uniswapx orders
   const marketTrade = useRoutingAPITrade(
     false /* skipFetch */,
     // TODO: support exact out
@@ -129,6 +141,12 @@ export function LimitOrderForm() {
     account
   )
 
+  useEffect(() => {
+    if (!outputAmountFixed && marketTrade.state !== TradeState.LOADING && marketTrade.trade) {
+      setLimitOrderField('outputAmount')(marketTrade.trade.outputAmount.toSignificant(8))
+    }
+  }, [marketTrade, outputAmountFixed])
+
   const { formatCurrencyAmount } = useFormatter()
   const formattedMarketOutputAmount =
     marketTrade?.state !== TradeState.LOADING && marketTrade?.trade
@@ -137,7 +155,7 @@ export function LimitOrderForm() {
 
   const showPriceWarning =
     marketTrade.state !== TradeState.LOADING && marketTrade?.trade && debouncedExecutionPrice
-      ? marketTrade.trade.executionPrice.greaterThan(debouncedExecutionPrice)
+      ? marketTrade.trade.executionPrice.subtract(debouncedExecutionPrice).greaterThan(new Percent(1, 100))
       : false
 
   const theme = useTheme()
