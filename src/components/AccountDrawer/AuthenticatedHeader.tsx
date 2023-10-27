@@ -7,7 +7,7 @@ import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'c
 import Column from 'components/Column'
 import { Power } from 'components/Icons/Power'
 import { Settings } from 'components/Icons/Settings'
-import { AutoRow } from 'components/Row'
+import Row, { AutoRow } from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import Tooltip from 'components/Tooltip'
@@ -19,12 +19,12 @@ import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hoo
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
-import { CreditCard, Info } from 'react-feather'
+import { CreditCard, Info, Send } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import styled from 'styled-components'
-import { CopyHelper, ExternalLink, ThemedText } from 'theme/components'
+import { ClickableStyle, CopyHelper, ExternalLink, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -137,6 +137,57 @@ const HeaderWrapper = styled.div`
   align-items: flex-start;
 `
 
+const InputRow = styled(Row)`
+  gap: 8px;
+  margin-top: 8px;
+  background-color: ${({ theme }) => theme.surface2};
+  border: none;
+  outline: none;
+  border-radius: 12px;
+  border-style: solid;
+  border: 1px solid ${({ theme }) => theme.surface3};
+  padding-right: 16px;
+
+  transition: border 100ms;
+  :focus {
+    border: 1px solid ${({ theme }) => theme.surface3};
+    background-color: ${({ theme }) => theme.surface2};
+    outline: none;
+  }
+`
+
+const SendInput = styled.input`
+  background: no-repeat scroll 7px 7px;
+  background-size: 20px 20px;
+  background-position: 12px center;
+  position: relative;
+  display: flex;
+  padding: 16px;
+  height: 40px;
+  align-items: center;
+  width: 100%;
+  white-space: nowrap;
+  border: none;
+  outline: none;
+  color: ${({ theme }) => theme.neutral1};
+  -webkit-appearance: none;
+  font-weight: 485;
+
+  font-size: 16px;
+
+  ::placeholder {
+    color: ${({ theme }) => theme.neutral3};
+    font-size: 16px;
+  }
+`
+
+const SendIcon = styled(Send)<{ $disabled?: boolean }>`
+  height: 20px;
+  width: 20px;
+  color: ${({ theme, $disabled }) => ($disabled ? theme.neutral3 : theme.accent1)};
+  ${({ $disabled }) => !$disabled && ClickableStyle}
+`
+
 const CopyText = styled(CopyHelper).attrs({
   iconSize: 14,
   iconPosition: 'right',
@@ -224,6 +275,12 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
   const percentChange = portfolio?.tokensTotalDenominatedValueChange?.percentage?.value
   const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false)
+  const [openSendInput, setOpenSendInput] = useState(false)
+  const [sendAddress, setSendAddress] = useState<string>('')
+
+  const handleSendClick = useCallback(() => {
+    setOpenSendInput(!openSendInput)
+  }, [])
 
   return (
     <AuthenticatedHeaderWrapper>
@@ -326,6 +383,27 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
                 <Trans>Buy crypto</Trans>
               </>
             )}
+          </HeaderButton>
+        )}
+        {openSendInput ? (
+          <InputRow>
+            <SendInput
+              value={sendAddress}
+              placeholder="Email, phone, or wallet address"
+              onChange={(event) => {
+                setSendAddress(event.target.value)
+              }}
+            />
+            <SendIcon $disabled={!sendAddress} />
+          </InputRow>
+        ) : (
+          <HeaderButton
+            onClick={() => setOpenSendInput(!openSendInput)}
+            size={ButtonSize.medium}
+            emphasis={ButtonEmphasis.highSoft}
+          >
+            <SendIcon />
+            <Trans>Send crypto</Trans>
           </HeaderButton>
         )}
         {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (

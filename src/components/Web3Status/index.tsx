@@ -218,7 +218,7 @@ function Web3StatusInner() {
         <Web3StatusConnected
           disabled={Boolean(switchingChain)}
           data-testid="web3-status-connected"
-          onClick={() => logout()}
+          onClick={handleWalletDropdownClick}
           pending={hasPendingActivity}
           isClaimAvailable={isClaimAvailable}
         >

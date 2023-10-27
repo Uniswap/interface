@@ -1,4 +1,4 @@
-import { useWeb3React } from '@web3-react/core'
+import { useWallets } from '@privy-io/react-auth'
 import Column from 'components/Column'
 import WalletModal from 'components/WalletModal'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -22,7 +22,10 @@ enum MenuState {
 }
 
 function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
-  const { account } = useWeb3React()
+  // const { account } = useWeb3React()
+  const { wallets } = useWallets()
+  const embeddedWallet = wallets.find((wallet: { walletClientType: string }) => wallet.walletClientType === 'privy')
+  const account = embeddedWallet?.address
   const isAuthenticated = !!account
 
   const [menu, setMenu] = useState<MenuState>(MenuState.DEFAULT)

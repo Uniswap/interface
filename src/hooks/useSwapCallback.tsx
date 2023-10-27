@@ -53,7 +53,7 @@ export function useSwapCallback(
   const { wallets } = useWallets()
   const embeddedWallet = wallets.find((wallet: { walletClientType: string }) => wallet.walletClientType === 'privy')
   const account = embeddedWallet?.address
-  console.log(trade, 'TRADE')
+  // console.log(trade, 'TRADE')
 
   const uniswapXSwapCallback = useUniswapXSwapCallback({
     trade: isUniswapXTrade(trade) ? trade : undefined,
@@ -79,7 +79,7 @@ export function useSwapCallback(
     if (!account || !chainId) throw new Error('wallet must be connected to swap')
 
     const result = await swapCallback()
-    console.log(result, 'RESULT!!')
+    // console.log(result, 'RESULT!!')
 
     const swapInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo = {
       type: TransactionType.SWAP,
