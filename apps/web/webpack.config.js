@@ -158,6 +158,10 @@ const options = {
   module: {
     rules: [
       {
+        test: /\.(woff|woff2)$/,
+        use: { loader: 'file-loader' }
+      },
+      {
         test: /\.m?js$/,
         resolve: {
           fullySpecified: false, // disable the behaviour
@@ -285,6 +289,11 @@ const options = {
               )
             )
           },
+        },
+        {
+          from: 'src/assets/fonts/*.{woff,woff2,ttf}',
+          to: 'assets/fonts/[name][ext]',
+          force: true,
         },
         {
           from: 'src/assets/*.{html,png,svg}',
