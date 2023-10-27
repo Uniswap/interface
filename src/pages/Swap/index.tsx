@@ -17,8 +17,10 @@ import AddressInputPanel from 'components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { GrayCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
+import PayCurrencyInputPanel from 'components/CurrencyInputPanel/PayCurrencyInputPanel'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
+import RecipentInputPanel from 'components/RecipientInputPanel'
 import { AutoRow } from 'components/Row'
 import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from 'components/swap/ConfirmSwapModal'
@@ -26,7 +28,7 @@ import PriceImpactModal from 'components/swap/PriceImpactModal'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import { ArrowWrapper, PageWrapper, SwapWrapper } from 'components/swap/styled'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
-import SwapHeader from 'components/swap/SwapHeader'
+import SwapHeader, { Tab } from 'components/swap/SwapHeader'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { useConnectionReady } from 'connection/eagerlyConnect'
@@ -241,13 +243,15 @@ export function Swap({
   // toggle wallet when disconnected
   const toggleWalletDrawer = useToggleAccountDrawer()
 
+  const PYUSD_ADDRESS = '0x6c3ea9036406852006290770bedfcaba0e23a0e8'
+
   // swap state
   const prefilledState = useMemo(
     () => ({
       [Field.INPUT]: { currencyId: initialInputCurrencyId },
-      [Field.OUTPUT]: { currencyId: initialOutputCurrencyId },
+      [Field.OUTPUT]: { currencyId: PYUSD_ADDRESS },
     }),
-    [initialInputCurrencyId, initialOutputCurrencyId]
+    [initialInputCurrencyId]
   )
   const [state, dispatch] = useReducer(swapReducer, { ...initialSwapState, ...prefilledState })
   const { typedValue, recipient, independentField } = state
@@ -608,6 +612,8 @@ export function Swap({
   const isDark = useIsDarkMode()
   const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
 
+  const [selectedTabIndex, setSelectedTabIndex] = useState(Tab.SWAP)
+
   const swapElement = (
     <SwapWrapper isDark={isDark} className={className} id="swap-page">
       <TokenSafetyModal
@@ -618,7 +624,13 @@ export function Swap({
         onCancel={handleDismissTokenWarning}
         showCancel={true}
       />
-      <SwapHeader trade={trade} autoSlippage={autoSlippage} chainId={chainId} />
+      <SwapHeader
+        selectedTabIndex={selectedTabIndex}
+        setSelectedTabIndex={setSelectedTabIndex}
+        trade={trade}
+        autoSlippage={autoSlippage}
+        chainId={chainId}
+      />
       {trade && showConfirm && (
         <ConfirmSwapModal
           trade={trade}
@@ -838,9 +850,190 @@ export function Swap({
     </SwapWrapper>
   )
 
+  const payElement = (
+    <SwapWrapper isDark={isDark} className={className} id="swap-page">
+      <SwapHeader
+        selectedTabIndex={selectedTabIndex}
+        setSelectedTabIndex={setSelectedTabIndex}
+        trade={trade}
+        autoSlippage={autoSlippage}
+        chainId={chainId}
+      />
+      {trade && showConfirm && (
+        <ConfirmSwapModal
+          trade={trade}
+          inputCurrency={inputCurrency}
+          originalTrade={tradeToConfirm}
+          onAcceptChanges={handleAcceptChanges}
+          onCurrencySelection={onCurrencySelection}
+          swapResult={swapResult}
+          allowedSlippage={allowedSlippage}
+          clearSwapState={clearSwapState}
+          onConfirm={handleSwap}
+          allowance={allowance}
+          swapError={swapError}
+          onDismiss={handleConfirmDismiss}
+          fiatValueInput={fiatValueTradeInput}
+          fiatValueOutput={fiatValueTradeOutput}
+        />
+      )}
+      {showPriceImpactModal && showPriceImpactWarning && (
+        <PriceImpactModal
+          priceImpact={largerPriceImpact}
+          onDismiss={() => setShowPriceImpactModal(false)}
+          onContinue={() => {
+            setShowPriceImpactModal(false)
+            handleContinueToReview()
+          }}
+        />
+      )}
+      <AutoColumn gap="xs">
+        <div style={{ display: 'relative' }}>
+          <SwapSection>
+            <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
+              <PayCurrencyInputPanel
+                label={<Trans>You pay</Trans>}
+                disabled={disableTokenInputs}
+                value={formattedAmounts[Field.OUTPUT]}
+                showMaxButton={showMaxButton}
+                currency={currencies[Field.INPUT] ?? null}
+                onUserInput={handleTypeOutput}
+                onMax={handleMaxInput}
+                fiatValue={{ data: trade?.inputAmount, isLoading: false }}
+                onCurrencySelect={handleInputSelect}
+                otherCurrency={currencies[Field.OUTPUT]}
+                showCommonBases
+                id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
+                loading={independentField === Field.OUTPUT && routeIsSyncing}
+                ref={inputCurrencyNumericalInputRef}
+              />
+            </Trace>
+          </SwapSection>
+        </div>
+        <RecipentInputPanel id="recipient" value={recipient || ''} onChange={onChangeRecipient} />
+        {/* {recipient !== null && !showWrap ? (
+          <>
+            <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
+              <ArrowWrapper clickable={false}>
+                <ArrowDown size="16" color={theme.neutral2} />
+              </ArrowWrapper>
+              <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
+                <Trans>- Remove recipient</Trans>
+              </LinkStyledButton>
+            </AutoRow>
+            <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
+          </>
+        ) : null} */}
+        {showDetailsDropdown && (
+          <SwapDetailsDropdown
+            trade={trade}
+            syncing={routeIsSyncing}
+            loading={routeIsLoading}
+            allowedSlippage={allowedSlippage}
+          />
+        )}
+        {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
+        <div>
+          {swapIsUnsupported ? (
+            <ButtonPrimary $borderRadius="16px" disabled={true}>
+              <ThemedText.DeprecatedMain mb="4px">
+                <Trans>Unsupported asset</Trans>
+              </ThemedText.DeprecatedMain>
+            </ButtonPrimary>
+          ) : switchingChain ? (
+            <ButtonPrimary $borderRadius="16px" disabled={true}>
+              <Trans>Connecting to {getChainInfo(switchingChain)?.label}</Trans>
+            </ButtonPrimary>
+          ) : connectionReady && !account ? (
+            <TraceEvent
+              events={[BrowserEvent.onClick]}
+              name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
+              properties={{ received_swap_quote: getIsReviewableQuote(trade, tradeState, swapInputError) }}
+              element={InterfaceElementName.CONNECT_WALLET_BUTTON}
+            >
+              <ButtonLight onClick={toggleWalletDrawer} fontWeight={535} $borderRadius="16px">
+                <Trans>Connect wallet</Trans>
+              </ButtonLight>
+            </TraceEvent>
+          ) : chainId && chainId !== connectedChainId ? (
+            <ButtonPrimary
+              $borderRadius="16px"
+              onClick={async () => {
+                try {
+                  await switchChain(connector, chainId)
+                } catch (error) {
+                  if (didUserReject(error)) {
+                    // Ignore error, which keeps the user on the previous chain.
+                  } else {
+                    // TODO(WEB-3306): This UX could be improved to show an error state.
+                    throw error
+                  }
+                }
+              }}
+            >
+              Connect to {getChainInfo(chainId)?.label}
+            </ButtonPrimary>
+          ) : showWrap ? (
+            <ButtonPrimary
+              $borderRadius="16px"
+              disabled={Boolean(wrapInputError)}
+              onClick={handleOnWrap}
+              fontWeight={535}
+              data-testid="wrap-button"
+            >
+              {wrapInputError ? (
+                <WrapErrorText wrapInputError={wrapInputError} />
+              ) : wrapType === WrapType.WRAP ? (
+                <Trans>Wrap</Trans>
+              ) : wrapType === WrapType.UNWRAP ? (
+                <Trans>Unwrap</Trans>
+              ) : null}
+            </ButtonPrimary>
+          ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
+            <GrayCard style={{ textAlign: 'center' }}>
+              <ThemedText.DeprecatedMain mb="4px">
+                <Trans>Insufficient liquidity for this trade.</Trans>
+              </ThemedText.DeprecatedMain>
+            </GrayCard>
+          ) : (
+            <TraceEvent
+              events={[BrowserEvent.onClick]}
+              name={SharedEventName.ELEMENT_CLICKED}
+              element={InterfaceElementName.SWAP_BUTTON}
+            >
+              <ButtonError
+                onClick={() => {
+                  showPriceImpactWarning ? setShowPriceImpactModal(true) : handleContinueToReview()
+                }}
+                id="swap-button"
+                data-testid="swap-button"
+                disabled={!getIsReviewableQuote(trade, tradeState, swapInputError)}
+                error={!swapInputError && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
+              >
+                <Text fontSize={20}>
+                  {swapInputError ? (
+                    swapInputError
+                  ) : routeIsSyncing || routeIsLoading ? (
+                    <Trans>Pay</Trans>
+                  ) : priceImpactSeverity > 2 ? (
+                    <Trans>Swap anyway</Trans>
+                  ) : (
+                    <Trans>Pay</Trans>
+                  )}
+                </Text>
+              </ButtonError>
+            </TraceEvent>
+          )}
+        </div>
+      </AutoColumn>
+      {!showOptInSmall && !isUniswapXDefaultEnabled && <UniswapXOptIn isSmall={false} swapInfo={swapInfo} />}
+    </SwapWrapper>
+  )
+
   return (
     <>
-      {swapElement}
+      {selectedTabIndex === Tab.SWAP && swapElement}
+      {selectedTabIndex === Tab.PAY && payElement}
       {showOptInSmall && !isUniswapXDefaultEnabled && <UniswapXOptIn isSmall swapInfo={swapInfo} />}
     </>
   )
