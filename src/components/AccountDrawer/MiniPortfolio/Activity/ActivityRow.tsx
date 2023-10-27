@@ -1,16 +1,25 @@
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
+import ParentSize from '@visx/responsive/lib/components/ParentSize'
 import { TraceEvent } from 'analytics'
+import { PriceChart } from 'components/Charts/PriceChart'
 import Column from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import Row, { RowBetween } from 'components/Row'
 import { JudgementalActivity } from 'components/SocialFeed/hooks'
-import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { usePriceHistory } from 'components/Tokens/TokenDetails/ChartSection'
+import {
+  Chain,
+  HistoryDuration,
+  TransactionStatus,
+  useTokenPriceQuery,
+} from 'graphql/data/__generated__/types-and-hooks'
+import { TimePeriod } from 'graphql/data/util'
 import useENSName from 'hooks/useENSName'
 import { ClickableText } from 'pages/Pool/styled'
 import { useCallback, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -104,11 +113,11 @@ const ActivityCard = styled.div`
 
   gap: 20px;
   padding: 20px;
-  width: 500px;
+  /* width: 420px; */
 
-  background-color: ${({ theme }) => theme.surface1};
-  border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.surface3};
+  /* background-color: ${({ theme }) => theme.surface1}; */
+  /* border-radius: 12px; */
+  border-bottom: 1px solid ${({ theme }) => theme.surface3};
 `
 const CardHeader = styled.div`
   display: flex;
@@ -178,6 +187,37 @@ function NormalFeedRow({ activity }: { activity: Activity }) {
   )
 }
 
+function JudgementChart({ activity }: { activity: JudgementalActivity }) {
+  const theme = useTheme()
+  const { data: tokenPriceQuery } = useTokenPriceQuery({
+    variables: {
+      address: activity.currency.wrapped.address,
+      chain: Chain.Ethereum,
+      duration: HistoryDuration.Year,
+    },
+    errorPolicy: 'all',
+  })
+
+  const prices = usePriceHistory(tokenPriceQuery)
+
+  if (!prices) return null
+
+  return (
+    <ParentSize>
+      {({ width }) => (
+        <PriceChart
+          prices={prices}
+          width={width}
+          height={200}
+          timePeriod={TimePeriod.YEAR}
+          activity={activity.activities}
+          color={activity.negative ? theme.critical : theme.success}
+        />
+      )}
+    </ParentSize>
+  )
+}
+
 function JudgementalActivityRow({ activity }: { activity: JudgementalActivity }) {
   const { ENSName } = useENSName(activity.owner)
   const timesince = useTimeSince(activity.timestamp)
@@ -195,7 +235,8 @@ function JudgementalActivityRow({ activity }: { activity: JudgementalActivity })
         </Who>
         <ThemedText.LabelSmall>{timesince}</ThemedText.LabelSmall>
       </CardHeader>
-      <ThemedText.BodySecondary>
+      <JudgementChart activity={activity} />
+      <ThemedText.BodySecondary color="neutral1">
         {ENSName ?? shortenAddress(activity.owner)} {activity.description}
       </ThemedText.BodySecondary>
     </ActivityCard>

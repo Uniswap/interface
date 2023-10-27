@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
-import { parseRemoteActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
+import { parseRemoteActivities, parseRemoteActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
 import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import {
   ActivityQuery,
@@ -10,7 +10,6 @@ import {
 } from 'graphql/data/__generated__/types-and-hooks'
 import { AssetActivityDetails } from 'graphql/data/activity'
 import { gqlToCurrency } from 'graphql/data/util'
-import { useFollowedAccounts } from 'pages/Profile'
 import { useMemo } from 'react'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -71,15 +70,17 @@ function getProfit(buysAndSells: ReturnType<typeof useAllFriendsBuySells>['judge
 }
 
 export type JudgementalActivity = {
+  negative: boolean
   isJudgmental: boolean
   owner: string
   description: string
   currency: Currency
   timestamp: number
+  activities: Activity[]
 }
 
-export function useFeed() {
-  const { judgementalActivityMap: friendsBuysAndSells, normalActivityMap } = useAllFriendsBuySells()
+export function useFeed(accounts: string[]) {
+  const { judgementalActivityMap: friendsBuysAndSells, normalActivityMap } = useAllFriendsBuySells(accounts)
 
   return useMemo(() => {
     const feed: (JudgementalActivity | Activity)[] = Object.values(normalActivityMap ?? {}) as Activity[]
@@ -88,7 +89,7 @@ export function useFeed() {
       const friendsTradedTokens = friendsBuysAndSells[friend]
       console.log('cartcrom', friendsTradedTokens)
       for (const tokenAddress in friendsTradedTokens) {
-        const { currentBalanceUSD, currency } = friendsTradedTokens[tokenAddress]
+        const { currentBalanceUSD, currency, activities } = friendsTradedTokens[tokenAddress]
         const userSold = currentBalanceUSD === 0
         const profit = getProfit(friendsTradedTokens[tokenAddress])
 
@@ -102,7 +103,9 @@ export function useFeed() {
               currency.symbol
             } (${profit})`,
             currency,
-            timestamp: Date.now() / 1000,
+            timestamp: Math.max(...(activities.map((a) => a.timestamp) ?? Date.now() / 1000)),
+            activities,
+            negative: true,
           })
         } else if (profit > 200) {
           feed.push({
@@ -111,7 +114,9 @@ export function useFeed() {
               currency.symbol
             } (${profit})`,
             currency,
-            timestamp: Date.now() / 1000,
+            timestamp: Math.max(...(activities.map((a) => a.timestamp) ?? Date.now() / 1000)),
+            activities,
+            negative: false,
           })
         }
       }
@@ -137,18 +142,18 @@ function assetIsEthStablecoin(symbol: string) {
 }
 
 /* Returns allFriendsActivities in shape of [friend1Portfolio, friend2Portfolio]. Each portfolio contains attribute ownerAddress */
-function useAllFriendsActivites(): {
+function useAllFriendsActivites(accounts: string[]): {
   allFriendsActivities?: ActivityQuery
   loading: boolean
   refetch: () => Promise<any>
 } {
-  const followingAccounts = useFollowedAccounts()
+  // const followingAccounts = useFollowedAccounts()
   const {
     data: allFriendsActivities,
     loading,
     refetch,
   } = useActivityQuery({
-    variables: { accounts: followingAccounts },
+    variables: { accounts },
     errorPolicy: 'all',
     fetchPolicy: 'cache-first',
   })
@@ -161,6 +166,7 @@ type BuySellMap = {
       currency: Currency
       buys: SwapInfo[]
       sells: SwapInfo[]
+      activities: Activity[]
       currentBalanceUSD: number
     }
   }
@@ -176,8 +182,11 @@ type SwapInfo = {
 }
 
 // Returns all activites by ownerAddress : tokenId : [buys & sells]
-function useAllFriendsBuySells(): { judgementalActivityMap: BuySellMap; normalActivityMap?: ActivityMap } {
-  const { allFriendsActivities, loading } = useAllFriendsActivites()
+function useAllFriendsBuySells(accounts: string[]): {
+  judgementalActivityMap: BuySellMap
+  normalActivityMap?: ActivityMap
+} {
+  const { allFriendsActivities, loading } = useAllFriendsActivites(accounts)
   const { formatNumberOrString } = useFormatter()
 
   return useMemo(() => {
@@ -226,6 +235,7 @@ function useAllFriendsBuySells(): { judgementalActivityMap: BuySellMap; normalAc
               txHash: details.hash,
               quantity: Number(received.quantity),
               USDValue: sent.transactedValue?.value ?? 0,
+              activity: parseRemoteActivity(tx, portfolio.ownerAddress, formatNumberOrString),
             } as const
             const receivedAssetAddress = received.asset.address ?? 'Other'
             if (!buySells[receivedAssetAddress]) {
@@ -233,10 +243,13 @@ function useAllFriendsBuySells(): { judgementalActivityMap: BuySellMap; normalAc
                 currency: receivedCurrency,
                 buys: [],
                 sells: [],
+                activities: [],
                 currentBalanceUSD: friendBalanceMap?.[portfolio.ownerAddress][receivedAssetAddress] ?? 0,
               }
             }
             buySells[receivedAssetAddress].buys.push(swapInfo)
+            const activity = parseRemoteActivity(tx, portfolio.ownerAddress, formatNumberOrString)
+            if (activity) buySells[receivedAssetAddress].activities.push(activity)
           } else if (
             sent &&
             received &&
@@ -257,10 +270,13 @@ function useAllFriendsBuySells(): { judgementalActivityMap: BuySellMap; normalAc
                 currency: sentCurrency,
                 buys: [],
                 sells: [],
+                activities: [],
                 currentBalanceUSD: friendBalanceMap?.[portfolio.ownerAddress][sentAssetAddress] ?? 0,
               }
             }
             buySells[sentAssetAddress].sells.push(swapInfo)
+            const activity = parseRemoteActivity(tx, portfolio.ownerAddress, formatNumberOrString)
+            if (activity) buySells[sentAssetAddress].activities.push(activity)
           }
           // if sent is not & received is ethstablecoin => iS SELL
 

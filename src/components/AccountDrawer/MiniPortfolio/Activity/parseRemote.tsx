@@ -384,7 +384,7 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity, owner:
   }
 }
 
-function parseRemoteActivity(
+export function parseRemoteActivity(
   assetActivity: AssetActivityPartsFragment,
   owner: string,
   formatNumberOrString: FormatNumberOrStringFunctionType

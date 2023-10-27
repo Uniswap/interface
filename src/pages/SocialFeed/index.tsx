@@ -1,14 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { FeedRow } from 'components/AccountDrawer/MiniPortfolio/Activity/ActivityRow'
+import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import Row from 'components/Row'
-import { friendsActivity, useFeed } from 'components/SocialFeed/hooks'
+import { JudgementalActivity, useFeed } from 'components/SocialFeed/hooks'
 import { Unicon } from 'components/Unicon'
 import useENSAvatar from 'hooks/useENSAvatar'
-import { getTimeDifference } from 'nft/utils/date'
+import { useFollowedAccounts } from 'pages/Profile'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { shortenAddress } from 'utils'
 
 export const ExploreContainer = styled.div`
   width: 100%;
@@ -92,14 +92,46 @@ function PortfolioAvatar({ accountAddress }: { accountAddress: string }) {
   return <Unicon size={30} address={accountAddress} />
 }
 
-const ActivityFeed = () => {
-  const feed = useFeed()
+export const ActivityList = ({ feed }: { feed: (Activity | JudgementalActivity)[] }) => {
   const shortenedFeed = useMemo(() => {
     const test = feed.slice(0, 80)
     console.log('cartcrom', 'length', feed.length)
     return test
   }, [feed])
 
+  return (
+    <FeedContainer>
+      {shortenedFeed.map((activity) => (
+        <FeedRow key={activity.timestamp} activity={activity} />
+      ))}
+      {/* {friendsActivity
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .map((activity, index) => {
+          return (
+            <ActivityCard key={index}>
+              <CardHeader>
+                <Who>
+                  <PortfolioAvatar accountAddress={activity.address} />
+                  <ThemedText.BodyPrimary>
+                    {activity.ensName ?? shortenAddress(activity.address)}
+                  </ThemedText.BodyPrimary>
+                </Who>
+                <ThemedText.LabelSmall>{getTimeDifference(activity.timestamp.toString())}</ThemedText.LabelSmall>
+              </CardHeader>
+              <ThemedText.BodySecondary>{activity.description}</ThemedText.BodySecondary>
+              {activity.image && (
+                <img src={activity.image} alt="activity image" style={{ maxHeight: '100%', maxWidth: '100%' }} />
+              )}
+            </ActivityCard>
+          )
+        })} */}
+    </FeedContainer>
+  )
+}
+
+function ActivityFeed() {
+  const friends = useFollowedAccounts()
+  const feed = useFeed(friends)
   return (
     <ExploreContainer>
       <Row align="flex-start">
@@ -109,32 +141,7 @@ const ActivityFeed = () => {
           </ThemedText.LargeHeader>
         </TitleContainer>
       </Row>
-      <FeedContainer>
-        {shortenedFeed.map((activity) => (
-          <FeedRow key={activity.timestamp} activity={activity} />
-        ))}
-        {friendsActivity
-          .sort((a, b) => b.timestamp - a.timestamp)
-          .map((activity, index) => {
-            return (
-              <ActivityCard key={index}>
-                <CardHeader>
-                  <Who>
-                    <PortfolioAvatar accountAddress={activity.address} />
-                    <ThemedText.BodyPrimary>
-                      {activity.ensName ?? shortenAddress(activity.address)}
-                    </ThemedText.BodyPrimary>
-                  </Who>
-                  <ThemedText.LabelSmall>{getTimeDifference(activity.timestamp.toString())}</ThemedText.LabelSmall>
-                </CardHeader>
-                <ThemedText.BodySecondary>{activity.description}</ThemedText.BodySecondary>
-                {activity.image && (
-                  <img src={activity.image} alt="activity image" style={{ maxHeight: '100%', maxWidth: '100%' }} />
-                )}
-              </ActivityCard>
-            )
-          })}
-      </FeedContainer>
+      <ActivityList feed={feed} />
     </ExploreContainer>
   )
 }

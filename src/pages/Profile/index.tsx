@@ -4,15 +4,14 @@ import { ParentSize } from '@visx/responsive'
 import { useWeb3React } from '@web3-react/core'
 import { AccountDrawerScrollWrapper } from 'components/AccountDrawer'
 import { AccountNamesWrapper } from 'components/AccountDrawer/AuthenticatedHeader'
-import { ActivityTab } from 'components/AccountDrawer/MiniPortfolio/Activity'
 import NFTs from 'components/AccountDrawer/MiniPortfolio/NFTs'
-import Pools from 'components/AccountDrawer/MiniPortfolio/Pools'
 import Tokens from 'components/AccountDrawer/MiniPortfolio/Tokens'
 import { PriceChart } from 'components/Charts/PriceChart'
 import Column from 'components/Column'
 import StatusIcon from 'components/Identicon/StatusIcon'
 import FollowingModal from 'components/Profile/FollowingModal'
 import Row, { RowBetween } from 'components/Row'
+import { useFeed } from 'components/SocialFeed/hooks'
 import { usePriceHistory } from 'components/Tokens/TokenDetails/ChartSection'
 import { getConnection } from 'connection'
 import { UNI } from 'constants/tokens'
@@ -25,6 +24,7 @@ import {
 import { GQL_MAINNET_CHAINS, TimePeriod } from 'graphql/data/util'
 import useENS from 'hooks/useENS'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { ActivityList } from 'pages/SocialFeed'
 import { useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { useOpenModal } from 'state/application/hooks'
@@ -91,8 +91,8 @@ const ChartContainer = styled(TabContainer)`
 `
 
 const ActivityContainer = styled(TabContainer)`
-  height: 380px;
-  min-width: 360px;
+  height: 990px;
+  min-width: 400px;
 `
 
 const CopyText = styled(CopyHelper).attrs({
@@ -134,12 +134,12 @@ const Pages = [
     Component: NFTs,
     loggingElementName: InterfaceElementName.MINI_PORTFOLIO_NFT_TAB,
   },
-  {
-    title: <Trans>Pools</Trans>,
-    key: 'pools',
-    Component: Pools,
-    loggingElementName: InterfaceElementName.MINI_PORTFOLIO_POOLS_TAB,
-  },
+  // {
+  //   title: <Trans>Pools</Trans>,
+  //   key: 'pools',
+  //   Component: Pools,
+  //   loggingElementName: InterfaceElementName.MINI_PORTFOLIO_POOLS_TAB,
+  // },
   // {
   //   title:
   //   key: 'activity',
@@ -176,6 +176,8 @@ export default function ProfilePage() {
   const toggleFollowingAccount = useToggleFollowingAccount()
 
   const openFollowingModal = useOpenModal(ApplicationModal.FOLLOWING)
+
+  const feed = useFeed([account])
 
   return (
     <Container>
@@ -214,32 +216,38 @@ export default function ProfilePage() {
       </RowBetween>
 
       <Separator />
-      <Row gap="20px">
-        <ChartContainer>
-          <ParentSize>
-            {({ width }) => <PriceChart prices={prices} width={width} height={348} timePeriod={TimePeriod.WEEK} />}
-          </ParentSize>
-        </ChartContainer>
+      <Row gap="20px" align="flex-start">
+        <Column gap="lg">
+          <ChartContainer>
+            <ParentSize>
+              {({ width }) => (
+                <PriceChart prices={prices} width={width} height={348} timePeriod={TimePeriod.WEEK} activity={[]} />
+              )}
+            </ParentSize>
+          </ChartContainer>
+
+          <Row align="flex-start" gap="20px">
+            {Pages.map(({ title, key, Component }) => (
+              <TabContainer key={key}>
+                <AccountDrawerScrollWrapper>
+                  <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
+                  <RemoveMarginWrapper>
+                    <Component account={account} />
+                  </RemoveMarginWrapper>
+                </AccountDrawerScrollWrapper>
+              </TabContainer>
+            ))}
+          </Row>
+        </Column>
+
         <ActivityContainer>
           <AccountDrawerScrollWrapper>
             <Trans>Activity</Trans>
             <RemoveMarginWrapper>
-              <ActivityTab account={account} />
+              <ActivityList feed={feed} />
             </RemoveMarginWrapper>
           </AccountDrawerScrollWrapper>
         </ActivityContainer>
-      </Row>
-      <Row align="flex-start" gap="20px">
-        {Pages.map(({ title, key, Component }) => (
-          <TabContainer key={key}>
-            <AccountDrawerScrollWrapper>
-              <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
-              <RemoveMarginWrapper>
-                <Component account={account} />
-              </RemoveMarginWrapper>
-            </AccountDrawerScrollWrapper>
-          </TabContainer>
-        ))}
       </Row>
       <FollowingModal />
     </Container>
