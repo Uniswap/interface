@@ -5,7 +5,7 @@ import { friendsActivity, useFeed } from 'components/SocialFeed/hooks'
 import { Unicon } from 'components/Unicon'
 import useENSAvatar from 'hooks/useENSAvatar'
 import { getTimeDifference } from 'nft/utils/date'
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils'
@@ -94,6 +94,11 @@ function PortfolioAvatar({ accountAddress }: { accountAddress: string }) {
 
 const ActivityFeed = () => {
   const feed = useFeed()
+  const shortenedFeed = useMemo(() => {
+    const test = feed.slice(0, 80)
+    console.log('cartcrom', 'length', feed.length)
+    return test
+  }, [feed])
 
   return (
     <ExploreContainer>
@@ -105,7 +110,7 @@ const ActivityFeed = () => {
         </TitleContainer>
       </Row>
       <FeedContainer>
-        {feed.slice(0, 80).map((activity) => (
+        {shortenedFeed.map((activity) => (
           <FeedRow key={activity.timestamp} activity={activity} />
         ))}
         {friendsActivity

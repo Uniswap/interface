@@ -84,7 +84,7 @@ const Following = ({ key, address, onClick }: { key: string; address: string; on
 
   return (
     <Who key={key} onClick={onClick}>
-      <PortfolioAvatar size="20px" accountAddress={address} />
+      <PortfolioAvatar size={20} accountAddress={address} />
       <ThemedText.BodyPrimary>{name ?? shortenAddress(address)}</ThemedText.BodyPrimary>
     </Who>
   )

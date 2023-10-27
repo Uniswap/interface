@@ -95,7 +95,7 @@ export function ActivityRow({ activity }: { activity: Activity }) {
 }
 
 function isJudgementalActivity(activity: Activity | JudgementalActivity): activity is JudgementalActivity {
-  return (activity as JudgementalActivity).friend !== undefined
+  return (activity as JudgementalActivity).isJudgmental !== undefined
 }
 
 const ActivityCard = styled.div`
@@ -178,9 +178,34 @@ function NormalFeedRow({ activity }: { activity: Activity }) {
   )
 }
 
+function JudgementalActivityRow({ activity }: { activity: JudgementalActivity }) {
+  const { ENSName } = useENSName(activity.owner)
+  const timesince = useTimeSince(activity.timestamp)
+
+  const navigate = useNavigate()
+
+  return (
+    <ActivityCard>
+      <CardHeader>
+        <Who>
+          <PortfolioAvatar accountAddress={activity.owner} size={30} />
+          <ClickableText onClick={() => navigate('/account/' + ENSName ?? activity.owner)}>
+            <ThemedText.BodyPrimary>{ENSName ?? shortenAddress(activity.owner)}</ThemedText.BodyPrimary>
+          </ClickableText>
+        </Who>
+        <ThemedText.LabelSmall>{timesince}</ThemedText.LabelSmall>
+      </CardHeader>
+      <ThemedText.BodySecondary>
+        {ENSName ?? shortenAddress(activity.owner)} {activity.description}
+      </ThemedText.BodySecondary>
+    </ActivityCard>
+  )
+}
+
 export function FeedRow({ activity }: { activity: Activity | JudgementalActivity }) {
   if (!isJudgementalActivity(activity)) {
-    return <NormalFeedRow activity={activity} />
+    // return <NormalFeedRow activity={activity} />
+    return null
   }
-  return null
+  return <JudgementalActivityRow activity={activity} />
 }
