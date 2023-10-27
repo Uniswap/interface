@@ -22,18 +22,32 @@ export default function SwapHeader({
   autoSlippage,
   chainId,
   trade,
+  activeTab = 'swap',
+  setActiveTab,
 }: {
   autoSlippage: Percent
   chainId?: number
   trade?: InterfaceTrade
+  activeTab?: 'swap' | 'send'
+  setActiveTab?: (tab: 'swap' | 'send') => void
 }) {
+  const swapIsActive = activeTab === 'swap'
   return (
     <StyledSwapHeader>
       <HeaderButtonContainer>
-        <ThemedText.SubHeader>
+        <ThemedText.SubHeader
+          color={swapIsActive ? 'neutral1' : 'neutral2'}
+          onClick={() => setActiveTab && setActiveTab('swap')}
+        >
           <Trans>Swap</Trans>
         </ThemedText.SubHeader>
         <SwapBuyFiatButton />
+        <ThemedText.SubHeader
+          color={swapIsActive ? 'neutral2' : 'neutral1'}
+          onClick={() => setActiveTab && setActiveTab('send')}
+        >
+          <Trans>Send</Trans>
+        </ThemedText.SubHeader>
       </HeaderButtonContainer>
       <RowFixed>
         <SettingsTab autoSlippage={autoSlippage} chainId={chainId} trade={trade} />

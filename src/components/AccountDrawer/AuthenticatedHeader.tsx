@@ -1,6 +1,5 @@
-import { parseEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { usePrivy, useWallets } from '@privy-io/react-auth'
+import { usePrivy } from '@privy-io/react-auth'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -17,7 +16,6 @@ import { getConnection } from 'connection'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import useENSName from 'hooks/useENSName'
 import { useIsNotOriginCountry } from 'hooks/useIsNotOriginCountry'
-import { pregenerateWallet } from 'hooks/usePregenerateWallet'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
@@ -276,31 +274,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
   const percentChange = portfolio?.tokensTotalDenominatedValueChange?.percentage?.value
   const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false)
-  const [openSendInput, setOpenSendInput] = useState(false)
-  const [sendAddress, setSendAddress] = useState<string>('')
-  const { sendTransaction } = usePrivy()
-  const { wallets } = useWallets()
-  const embeddedWallet = wallets.find((wallet: { walletClientType: string }) => wallet.walletClientType === 'privy')
-
-  // Send transaction
-
-  const handleSendClick = useCallback(async () => {
-    const newAddress = await pregenerateWallet(sendAddress)
-    // TODO: make amount and type dynamic
-    const unsignedTx = {
-      to: newAddress,
-      chainId: Number(embeddedWallet?.chainId),
-      value: parseEther('0.0001').toHexString(),
-    }
-    const uiConfig = {
-      description: `Send ${0.0001} AGOR to ${sendAddress}`,
-      buttonText: 'Send',
-    }
-    await sendTransaction(unsignedTx, uiConfig)
-
-    setOpenSendInput(!openSendInput)
-    setSendAddress('')
-  }, [embeddedWallet?.chainId, openSendInput, sendAddress, sendTransaction])
 
   return (
     <AuthenticatedHeaderWrapper>
@@ -403,27 +376,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
                 <Trans>Buy crypto</Trans>
               </>
             )}
-          </HeaderButton>
-        )}
-        {openSendInput ? (
-          <InputRow>
-            <SendInput
-              value={sendAddress}
-              placeholder="Email, phone, or wallet address"
-              onChange={(event) => {
-                setSendAddress(event.target.value)
-              }}
-            />
-            <SendIcon $disabled={!sendAddress} onClick={handleSendClick} />
-          </InputRow>
-        ) : (
-          <HeaderButton
-            onClick={() => setOpenSendInput(!openSendInput)}
-            size={ButtonSize.medium}
-            emphasis={ButtonEmphasis.highSoft}
-          >
-            <SendIcon />
-            <Trans>Send crypto</Trans>
           </HeaderButton>
         )}
         {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (
