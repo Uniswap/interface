@@ -15,6 +15,7 @@ import { getConnection } from 'connection'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import useENSName from 'hooks/useENSName'
 import { useIsNotOriginCountry } from 'hooks/useIsNotOriginCountry'
+import { pregenerateWallet } from 'hooks/usePregenerateWallet'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
@@ -278,9 +279,12 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const [openSendInput, setOpenSendInput] = useState(false)
   const [sendAddress, setSendAddress] = useState<string>('')
 
-  const handleSendClick = useCallback(() => {
+  const handleSendClick = useCallback(async () => {
+    const data = await pregenerateWallet(sendAddress)
     setOpenSendInput(!openSendInput)
-  }, [])
+    setSendAddress('')
+    console.log('DATA', data)
+  }, [openSendInput, sendAddress])
 
   return (
     <AuthenticatedHeaderWrapper>
@@ -394,7 +398,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
                 setSendAddress(event.target.value)
               }}
             />
-            <SendIcon $disabled={!sendAddress} />
+            <SendIcon $disabled={!sendAddress} onClick={handleSendClick} />
           </InputRow>
         ) : (
           <HeaderButton
