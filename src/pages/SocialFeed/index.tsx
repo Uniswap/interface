@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { ActivityRow } from 'components/AccountDrawer/MiniPortfolio/Activity/ActivityRow'
+import { FeedRow } from 'components/AccountDrawer/MiniPortfolio/Activity/ActivityRow'
 import { friendsActivity, useFeed } from 'components/SocialFeed/hooks'
 import { Unicon } from 'components/Unicon'
 import useENSAvatar from 'hooks/useENSAvatar'
@@ -101,7 +101,7 @@ const ActivityFeed = () => {
       </TitleContainer>
       <FeedContainer>
         {feed.map((activity) => (
-          <ActivityRow key={activity.timestamp} activity={activity} />
+          <FeedRow key={activity.timestamp} activity={activity} />
         ))}
         {friendsActivity
           .sort((a, b) => b.timestamp - a.timestamp)

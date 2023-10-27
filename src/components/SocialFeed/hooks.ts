@@ -163,13 +163,10 @@ type SwapInfo = {
 }
 
 // Returns all activites by ownerAddress : tokenId : [buys & sells]
-export function useAllFriendsBuySells(): { judgementalActivityMap: BuySellMap; normalActivityMap?: ActivityMap } {
+function useAllFriendsBuySells(): { judgementalActivityMap: BuySellMap; normalActivityMap?: ActivityMap } {
   const { allFriendsActivities, loading } = useAllFriendsActivites()
   const { formatNumberOrString } = useFormatter()
-  const normalActivityMap = parseRemoteActivities(
-    formatNumberOrString,
-    allFriendsActivities?.portfolios?.[0].assetActivities
-  )
+  const normalActivityMap = parseRemoteActivities(formatNumberOrString, allFriendsActivities)
   const map: BuySellMap = {}
   if (loading) return { judgementalActivityMap: {}, normalActivityMap: {} }
 

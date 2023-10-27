@@ -64,10 +64,7 @@ export function useAllActivities(account: string) {
   })
 
   const localMap = useLocalActivities(account)
-  const remoteMap = useMemo(
-    () => parseRemoteActivities(formatNumberOrString, data?.portfolios?.[0].assetActivities),
-    [data?.portfolios, formatNumberOrString]
-  )
+  const remoteMap = useMemo(() => parseRemoteActivities(formatNumberOrString, data), [data, formatNumberOrString])
   const updateCancelledTx = useTransactionCanceller()
 
   /* Updates locally stored pendings tx's when remote data contains a conflicting cancellation tx */

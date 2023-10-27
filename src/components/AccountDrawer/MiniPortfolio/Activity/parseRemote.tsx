@@ -4,6 +4,7 @@ import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { nativeOnChain } from 'constants/tokens'
 import {
+  ActivityQuery,
   ActivityType,
   AssetActivityPartsFragment,
   Currency as GQLCurrency,
@@ -342,7 +343,7 @@ function getLogoSrcs(changes: TransactionChanges): Array<string | undefined> {
   return Array.from(logoSet)
 }
 
-function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activity | undefined {
+function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity, owner: string): Activity | undefined {
   // We currently only have a polling mechanism for locally-sent pending orders, so we hide remote pending orders since they won't update upon completion
   // TODO(WEB-2487): Add polling mechanism for remote orders to allow displaying remote pending orders
   if (details.orderStatus === SwapOrderStatus.Open) return undefined
@@ -367,6 +368,7 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
   }
 
   return {
+    owner,
     hash: details.hash,
     chainId: supportedChain,
     status,
@@ -384,11 +386,12 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
 
 function parseRemoteActivity(
   assetActivity: AssetActivityPartsFragment,
+  owner: string,
   formatNumberOrString: FormatNumberOrStringFunctionType
 ): Activity | undefined {
   try {
     if (assetActivity.details.__typename === 'SwapOrderDetails') {
-      return parseUniswapXOrder(assetActivity as OrderActivity)
+      return parseUniswapXOrder(assetActivity as OrderActivity, owner)
     }
 
     const changes = assetActivity.details.assetChanges.reduce(
@@ -413,6 +416,7 @@ function parseRemoteActivity(
     }
 
     const defaultFields = {
+      owner,
       hash: assetActivity.details.hash,
       chainId: supportedChain,
       status: assetActivity.details.status,
@@ -438,11 +442,13 @@ function parseRemoteActivity(
 
 export function parseRemoteActivities(
   formatNumberOrString: FormatNumberOrStringFunctionType,
-  assetActivities?: readonly AssetActivityPartsFragment[]
+  activityQuery?: ActivityQuery
 ) {
-  return assetActivities?.reduce((acc: { [hash: string]: Activity }, assetActivity) => {
-    const activity = parseRemoteActivity(assetActivity, formatNumberOrString)
-    if (activity) acc[activity.hash] = activity
+  return activityQuery?.portfolios?.reduce((acc: { [hash: string]: Activity }, portfolio) => {
+    const activitiesForCurrentOwner = portfolio.assetActivities?.map((assetActivity) =>
+      parseRemoteActivity(assetActivity, portfolio.ownerAddress, formatNumberOrString)
+    )
+    activitiesForCurrentOwner?.forEach((activity) => activity && (acc[activity.hash] = activity))
     return acc
   }, {})
 }
