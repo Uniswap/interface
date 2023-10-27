@@ -5,11 +5,11 @@ import { useWeb3React } from '@web3-react/core'
 import { AccountDrawerScrollWrapper } from 'components/AccountDrawer'
 import { AccountNamesWrapper } from 'components/AccountDrawer/AuthenticatedHeader'
 import NFTs from 'components/AccountDrawer/MiniPortfolio/NFTs'
+import { PortfolioAvatar } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import Tokens from 'components/AccountDrawer/MiniPortfolio/Tokens'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { PriceChart } from 'components/Charts/PriceChart'
 import Column from 'components/Column'
-import StatusIcon from 'components/Identicon/StatusIcon'
 import FollowingModal from 'components/Profile/FollowingModal'
 import Row, { RowBetween } from 'components/Row'
 import { useFeed } from 'components/SocialFeed/hooks'
@@ -206,7 +206,7 @@ export default function ProfilePage() {
     <Container>
       <RowBetween>
         <Row>
-          <StatusIcon account={account} connection={connection} showMiniIcons={false} size={80} />
+          <PortfolioAvatar accountAddress={account} size={80} />
           <AccountNamesWrapper>
             <ThemedText.SubHeader fontSize={name ? 16 : 24}>
               <CopyText toCopy={account}>{name ? shortenAddress(account) : account}</CopyText>

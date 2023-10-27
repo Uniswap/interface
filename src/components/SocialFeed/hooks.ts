@@ -156,7 +156,7 @@ export function useFeed(accounts: string[], filterAddress?: string) {
           feed.push({
             ...feedItemBase,
             description: JudgmentalTransactionTitleTable[JudgmentalTransaction.GOT_RUGGED],
-            timestamp: Math.max(...(activities.map((a) => a.timestamp) ?? Date.now() / 1000)),
+            timestamp: Math.max(...(activities.map((a) => a.timestamp) ?? Date.now() / 1000)) + 1,
             activities,
             negative: true,
           })
@@ -164,7 +164,7 @@ export function useFeed(accounts: string[], filterAddress?: string) {
           feed.push({
             ...feedItemBase,
             description: JudgmentalTransactionTitleTable[JudgmentalTransaction.GAINS],
-            timestamp: Math.max(...(activities.map((a) => a.timestamp) ?? Date.now() / 1000)),
+            timestamp: Math.max(...(activities.map((a) => a.timestamp) ?? Date.now() / 1000)) + 1,
             activities,
             negative: false,
           })
