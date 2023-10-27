@@ -11,6 +11,7 @@ import Tokens from 'components/AccountDrawer/MiniPortfolio/Tokens'
 import { PriceChart } from 'components/Charts/PriceChart'
 import Column from 'components/Column'
 import StatusIcon from 'components/Identicon/StatusIcon'
+import FollowingModal from 'components/Profile/FollowingModal'
 import Row, { RowBetween } from 'components/Row'
 import { usePriceHistory } from 'components/Tokens/TokenDetails/ChartSection'
 import { getConnection } from 'connection'
@@ -26,6 +27,8 @@ import useENS from 'hooks/useENS'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback } from 'react'
 import { useParams } from 'react-router-dom'
+import { useOpenModal } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components'
 import { CopyHelper, Separator, ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
@@ -172,6 +175,8 @@ export default function ProfilePage() {
   const isFollowingAccount = useIsFollowingAccount(account)
   const toggleFollowingAccount = useToggleFollowingAccount()
 
+  const openFollowingModal = useOpenModal(ApplicationModal.FOLLOWING)
+
   return (
     <Container>
       <RowBetween>
@@ -191,12 +196,21 @@ export default function ProfilePage() {
             )}
           </AccountNamesWrapper>
         </Row>
-
-        <FollowingContainer onClick={() => toggleFollowingAccount(account)}>
-          <ThemedText.HeadlineSmall>
-            {isFollowingAccount ? <Trans>Following</Trans> : <Trans>+ Follow</Trans>}
-          </ThemedText.HeadlineSmall>
-        </FollowingContainer>
+        {currentAccount === account ? (
+          <FollowingContainer
+            onClick={() => {
+              openFollowingModal()
+            }}
+          >
+            <ThemedText.HeadlineSmall>Followers</ThemedText.HeadlineSmall>
+          </FollowingContainer>
+        ) : (
+          <FollowingContainer onClick={() => toggleFollowingAccount(account)}>
+            <ThemedText.HeadlineSmall>
+              {isFollowingAccount ? <Trans>Following</Trans> : <Trans>+ Follow</Trans>}
+            </ThemedText.HeadlineSmall>
+          </FollowingContainer>
+        )}
       </RowBetween>
 
       <Separator />
@@ -227,6 +241,7 @@ export default function ProfilePage() {
           </TabContainer>
         ))}
       </Row>
+      <FollowingModal />
     </Container>
   )
 }
