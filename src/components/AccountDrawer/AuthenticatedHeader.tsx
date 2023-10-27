@@ -1,5 +1,6 @@
+import { parseEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { usePrivy } from '@privy-io/react-auth'
+import { usePrivy, useWallets } from '@privy-io/react-auth'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -277,13 +278,29 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false)
   const [openSendInput, setOpenSendInput] = useState(false)
   const [sendAddress, setSendAddress] = useState<string>('')
+  const { sendTransaction } = usePrivy()
+  const { wallets } = useWallets()
+  const embeddedWallet = wallets.find((wallet: { walletClientType: string }) => wallet.walletClientType === 'privy')
+
+  // Send transaction
 
   const handleSendClick = useCallback(async () => {
     const newAddress = await pregenerateWallet(sendAddress)
+
+    const unsignedTx = {
+      to: newAddress,
+      chainId: Number(embeddedWallet?.chainId),
+      value: parseEther('0.0001').toHexString(),
+    }
+    const uiConfig = {
+      description: `Send ${0.0001} AGOR to ${sendAddress}`,
+      buttonText: 'Send',
+    }
+    await sendTransaction(unsignedTx, uiConfig)
+
     setOpenSendInput(!openSendInput)
     setSendAddress('')
-    console.log('newAddress', newAddress)
-  }, [openSendInput, sendAddress])
+  }, [embeddedWallet?.chainId, openSendInput, sendAddress, sendTransaction])
 
   return (
     <AuthenticatedHeaderWrapper>
