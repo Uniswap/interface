@@ -266,7 +266,6 @@ function SearchBarDropdownContents({
 
   const ensResult = useENS(queryText)
   const ensResultEthAppended = useENS(queryText + '.eth')
-  console.log('cartcrom', { ensResult, ensResultEthAppended })
   const profileAddress = ensResult.address ?? ensResultEthAppended.address ?? undefined
   const profileName = ensResult.name ?? ensResultEthAppended.name ?? undefined
 

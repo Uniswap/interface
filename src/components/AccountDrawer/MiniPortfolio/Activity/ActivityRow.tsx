@@ -3,12 +3,13 @@ import { TraceEvent } from 'analytics'
 import Column from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
-import Row from 'components/Row'
+import Row, { RowBetween } from 'components/Row'
 import { JudgementalActivity } from 'components/SocialFeed/hooks'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import useENSName from 'hooks/useENSName'
-import { getTimeDifference } from 'nft/utils/date'
-import { useCallback } from 'react'
+import { ClickableText } from 'pages/Pool/styled'
+import { useCallback, useMemo } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils'
@@ -128,22 +129,48 @@ const Who = styled.div`
 function NormalFeedRow({ activity }: { activity: Activity }) {
   const { ENSName } = useENSName(activity.owner)
   const { ENSName: otherAccountENS } = useENSName(activity.otherAccount)
+  const timesince = useTimeSince(activity.timestamp)
 
-  if (activity.title.includes('Approved')) return null
+  const navigate = useNavigate()
+
+  const shouldHide = useMemo(
+    () =>
+      activity.title.includes('Approv') ||
+      activity.title.includes('Contract Interaction') ||
+      activity.title.includes('Received') ||
+      activity.title.includes('Unknown'),
+    [activity.title]
+  )
+  if (shouldHide) return null
 
   return (
     <ActivityCard>
       <CardHeader>
         <Who>
-          <PortfolioAvatar accountAddress={activity.from} size="30px" />
-          <ThemedText.BodyPrimary>{ENSName ?? shortenAddress(activity.from)}</ThemedText.BodyPrimary>
+          <PortfolioAvatar accountAddress={activity.owner} size={30} />
+          <ClickableText onClick={() => navigate('/account/' + ENSName ?? activity.owner)}>
+            <ThemedText.BodyPrimary>{ENSName ?? shortenAddress(activity.owner)}</ThemedText.BodyPrimary>
+          </ClickableText>
         </Who>
-        <ThemedText.LabelSmall>{getTimeDifference(activity.timestamp.toString())}</ThemedText.LabelSmall>
+        <ThemedText.LabelSmall>{timesince}</ThemedText.LabelSmall>
       </CardHeader>
-      <ThemedText.BodySecondary>
-        {activity.title} {activity.descriptor}
-        {otherAccountENS ?? activity.otherAccount}
-      </ThemedText.BodySecondary>
+      <RowBetween>
+        <ThemedText.BodySecondary>
+          {activity.title} {activity.descriptor}
+          {activity.otherAccount && (
+            <Link to={`/account/${otherAccountENS ?? activity.otherAccount}`}>
+              {otherAccountENS ?? activity.otherAccount}
+            </Link>
+          )}
+        </ThemedText.BodySecondary>
+        <PortfolioLogo
+          chainId={1}
+          currencies={activity.currencies}
+          images={activity.logos}
+          accountAddress={activity.otherAccount}
+        />
+      </RowBetween>
+
       {/* {activity.image && (
         <img src={activity.image} alt="activity image" style={{ maxHeight: '100%', maxWidth: '100%' }} />
       )} */}

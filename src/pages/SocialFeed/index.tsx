@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { FeedRow } from 'components/AccountDrawer/MiniPortfolio/Activity/ActivityRow'
+import Row from 'components/Row'
 import { friendsActivity, useFeed } from 'components/SocialFeed/hooks'
 import { Unicon } from 'components/Unicon'
 import useENSAvatar from 'hooks/useENSAvatar'
@@ -11,6 +12,8 @@ import { shortenAddress } from 'utils'
 
 export const ExploreContainer = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
   min-width: 320px;
   padding: 68px 12px 0px;
 
@@ -94,13 +97,15 @@ const ActivityFeed = () => {
 
   return (
     <ExploreContainer>
-      <TitleContainer>
-        <ThemedText.LargeHeader>
-          <Trans>Feed</Trans>
-        </ThemedText.LargeHeader>
-      </TitleContainer>
+      <Row align="flex-start">
+        <TitleContainer>
+          <ThemedText.LargeHeader>
+            <Trans>Feed</Trans>
+          </ThemedText.LargeHeader>
+        </TitleContainer>
+      </Row>
       <FeedContainer>
-        {feed.map((activity) => (
+        {feed.slice(0, 80).map((activity) => (
           <FeedRow key={activity.timestamp} activity={activity} />
         ))}
         {friendsActivity

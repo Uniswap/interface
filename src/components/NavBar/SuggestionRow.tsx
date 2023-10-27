@@ -232,7 +232,7 @@ export const ProfileRow = ({ profile, isHovered, setHoveredIndex, toggleOpen, in
     }
   }, [toggleOpen, isHovered, navigate, profilePath])
 
-  console.log('cartcrom2', profile)
+  // console.log('cartcrom2', profile)
 
   return (
     <Link
@@ -244,7 +244,7 @@ export const ProfileRow = ({ profile, isHovered, setHoveredIndex, toggleOpen, in
       style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
     >
       <Row style={{ width: '65%', gap: '8px' }}>
-        <PortfolioAvatar accountAddress={profile.address} size="36px" />
+        <PortfolioAvatar accountAddress={profile.address} size={36} />
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{profile.name ?? profile.address}</Box>

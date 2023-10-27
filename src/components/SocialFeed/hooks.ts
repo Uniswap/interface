@@ -43,6 +43,7 @@ enum JudgmentalTransaction {
   STILL_HODLING,
   GAINS,
 }
+
 const JudgmentalTransactionTitleTable: { [key in JudgmentalTransaction]: string } = {
   [JudgmentalTransaction.GOT_RUGGED]: t`Got rugged by`,
   [JudgmentalTransaction.APED_INTO]: t`Aped into`,
@@ -54,8 +55,8 @@ const JudgmentalTransactionTitleTable: { [key in JudgmentalTransaction]: string 
 function getProfit(buysAndSells: ReturnType<typeof useAllFriendsBuySells>['judgementalActivityMap'][string][string]) {
   let tokenName = ''
 
-  const { buys, sells } = buysAndSells
-  let profit = 0
+  const { buys, sells, currentBalanceUSD } = buysAndSells
+  let profit = currentBalanceUSD
 
   for (const buy of buys) {
     profit -= buy.USDValue
@@ -66,7 +67,7 @@ function getProfit(buysAndSells: ReturnType<typeof useAllFriendsBuySells>['judge
     tokenName = sell.outputToken
   }
 
-  console.log('cartcrom', buysAndSells, tokenName, profit)
+  // console.log('cartcrom', buysAndSells, tokenName, profit)
   return profit
 }
 
@@ -84,7 +85,7 @@ export function useFeed() {
         const userSold = friendsTradedTokens[tokenAddress].currentBalanceUSD === 0
         const profit = getProfit(friendsTradedTokens[tokenAddress])
 
-        // console.log('cartcrom', tokenAddress, profit)
+        if (friend === '0x0938a82F93D5DAB110Dc6277FC236b5b082DC10F') console.log('cartcrom', { profit, tokenAddress })
 
         const feedItemBase = { friend, timeStamp: Date.now() } // TODO(now) use time relevant to transaction
         if (profit < -100) {
@@ -104,7 +105,7 @@ export function useFeed() {
         }
       }
     }
-    return feed
+    return feed.sort((a, b) => b.timestamp - a.timestamp)
   }, [friendsBuysAndSells, normalActivityMap])
 
   // console.log('cartcrom', feed)
