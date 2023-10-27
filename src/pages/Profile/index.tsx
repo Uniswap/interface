@@ -92,7 +92,7 @@ const ChartContainer = styled(TabContainer)`
 
 const ActivityContainer = styled(TabContainer)`
   height: 990px;
-  min-width: 400px;
+  min-width: 500px;
 `
 
 const CopyText = styled(CopyHelper).attrs({

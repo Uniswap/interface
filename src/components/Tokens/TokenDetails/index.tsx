@@ -2,7 +2,9 @@ import { Trans } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
+import { AccountDrawerScrollWrapper } from 'components/AccountDrawer'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import { useFeed } from 'components/SocialFeed/hooks'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
@@ -31,6 +33,8 @@ import { QueryToken } from 'graphql/data/Token'
 import { getTokenDetailsURL, InterfaceGqlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
+import { useFollowedAccounts } from 'pages/Profile'
+import { ActivityList } from 'pages/SocialFeed'
 import { Swap } from 'pages/Swap'
 import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -59,6 +63,10 @@ const TokenTitle = styled.div`
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
     display: inline;
   }
+`
+
+const ActivityContainer = styled.div`
+  width: 100%;
 `
 
 function useOnChainToken(address: string | undefined, skip: boolean) {
@@ -195,8 +203,8 @@ export default function TokenDetails({
   )
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
-
   const [openTokenSafetyModal, setOpenTokenSafetyModal] = useState(false)
+  const feed = useFeed([...useFollowedAccounts(), useWeb3React().account ?? ''], detailedToken?.wrapped.address)
 
   const onResolveSwap = useCallback(
     (value: boolean) => {
@@ -270,6 +278,13 @@ export default function TokenDetails({
           </div>
           {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
           {!isInfoTDPEnabled && detailedToken && <BalanceSummary token={detailedToken} />}
+
+          <ActivityContainer>
+            <AccountDrawerScrollWrapper>
+              <Trans>Activity</Trans>
+              <ActivityList feed={feed} />
+            </AccountDrawerScrollWrapper>
+          </ActivityContainer>
         </RightPanel>
         {!isInfoTDPEnabled && detailedToken && <MobileBalanceSummaryFooter token={detailedToken} />}
 

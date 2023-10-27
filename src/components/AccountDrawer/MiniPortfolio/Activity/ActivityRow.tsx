@@ -22,6 +22,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils'
+import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { PortfolioAvatar, PortfolioLogo } from '../PortfolioLogo'
@@ -113,7 +114,7 @@ const ActivityCard = styled.div`
 
   gap: 20px;
   padding: 20px;
-  /* width: 420px; */
+  width: 100%;
 
   /* background-color: ${({ theme }) => theme.surface1}; */
   /* border-radius: 12px; */
@@ -133,6 +134,11 @@ const Who = styled.div`
   flex-direction: row;
   gap: 10px;
   width: 100%;
+`
+
+const DescriptionContainer = styled(Row)`
+  white-space: nowrap;
+  flex-wrap: wrap;
 `
 
 function NormalFeedRow({ activity }: { activity: Activity }) {
@@ -221,7 +227,8 @@ function JudgementChart({ activity }: { activity: JudgementalActivity }) {
 function JudgementalActivityRow({ activity }: { activity: JudgementalActivity }) {
   const { ENSName } = useENSName(activity.owner)
   const timesince = useTimeSince(activity.timestamp)
-
+  const { formatFiatPrice } = useFormatter()
+  const theme = useTheme()
   const navigate = useNavigate()
 
   return (
@@ -237,7 +244,24 @@ function JudgementalActivityRow({ activity }: { activity: JudgementalActivity })
       </CardHeader>
       <JudgementChart activity={activity} />
       <ThemedText.BodySecondary color="neutral1">
-        {ENSName ?? shortenAddress(activity.owner)} {activity.description}
+        <DescriptionContainer gap="8px">
+          <ClickableText>
+            <b>{ENSName ?? shortenAddress(activity.owner)}</b>
+          </ClickableText>
+          {activity.description} <PortfolioLogo size="24px" chainId={1} currencies={[activity.currency]} />{' '}
+          <ClickableText
+            onClick={() =>
+              navigate(
+                '/tokens/ethereum/' + (activity.currency.isNative ? 'NATIVE' : activity.currency.wrapped.address)
+              )
+            }
+          >
+            <b>{activity.currency.symbol}</b>
+          </ClickableText>
+          <span style={{ color: activity.profit > 0 ? theme.success : theme.critical }}>
+            ({formatFiatPrice({ price: activity.profit })})
+          </span>
+        </DescriptionContainer>
       </ThemedText.BodySecondary>
     </ActivityCard>
   )

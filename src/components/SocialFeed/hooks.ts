@@ -11,6 +11,7 @@ import {
 import { AssetActivityDetails } from 'graphql/data/activity'
 import { gqlToCurrency } from 'graphql/data/util'
 import { useMemo } from 'react'
+import { isSameAddress } from 'utils/addresses'
 import { useFormatter } from 'utils/formatNumbers'
 
 // Mock data for friends' activity.
@@ -76,33 +77,34 @@ export type JudgementalActivity = {
   description: string
   currency: Currency
   timestamp: number
+  profit: number
   activities: Activity[]
 }
 
-export function useFeed(accounts: string[]) {
+export function useFeed(accounts: string[], filterAddress?: string) {
   const { judgementalActivityMap: friendsBuysAndSells, normalActivityMap } = useAllFriendsBuySells(accounts)
 
   return useMemo(() => {
-    const feed: (JudgementalActivity | Activity)[] = Object.values(normalActivityMap ?? {}) as Activity[]
+    const feed: (JudgementalActivity | Activity)[] = filterAddress
+      ? []
+      : (Object.values(normalActivityMap ?? {}) as Activity[])
 
     for (const friend in friendsBuysAndSells) {
       const friendsTradedTokens = friendsBuysAndSells[friend]
       console.log('cartcrom', friendsTradedTokens)
       for (const tokenAddress in friendsTradedTokens) {
+        if (filterAddress && !isSameAddress(tokenAddress, filterAddress)) continue
         const { currentBalanceUSD, currency, activities } = friendsTradedTokens[tokenAddress]
         const userSold = currentBalanceUSD === 0
         const profit = getProfit(friendsTradedTokens[tokenAddress])
 
         // if (friend === '0x0938a82F93D5DAB110Dc6277FC236b5b082DC10F') console.log('cartcrom', { profit, tokenAddress })
 
-        const feedItemBase = { isJudgmental: true, owner: friend, timeStamp: Date.now() } // TODO(now) use time relevant to transaction
+        const feedItemBase = { isJudgmental: true, owner: friend, timeStamp: Date.now(), currency, profit } // TODO(now) use time relevant to transaction
         if (profit < -100) {
           feed.push({
             ...feedItemBase,
-            description: `${JudgmentalTransactionTitleTable[JudgmentalTransaction.GOT_RUGGED]} ${
-              currency.symbol
-            } (${profit})`,
-            currency,
+            description: JudgmentalTransactionTitleTable[JudgmentalTransaction.GOT_RUGGED],
             timestamp: Math.max(...(activities.map((a) => a.timestamp) ?? Date.now() / 1000)),
             activities,
             negative: true,
@@ -110,10 +112,7 @@ export function useFeed(accounts: string[]) {
         } else if (profit > 200) {
           feed.push({
             ...feedItemBase,
-            description: `${JudgmentalTransactionTitleTable[JudgmentalTransaction.GAINS]} ${
-              currency.symbol
-            } (${profit})`,
-            currency,
+            description: JudgmentalTransactionTitleTable[JudgmentalTransaction.GAINS],
             timestamp: Math.max(...(activities.map((a) => a.timestamp) ?? Date.now() / 1000)),
             activities,
             negative: false,
@@ -122,7 +121,7 @@ export function useFeed(accounts: string[]) {
       }
     }
     return feed.sort((a, b) => b.timestamp - a.timestamp)
-  }, [friendsBuysAndSells, normalActivityMap])
+  }, [filterAddress, friendsBuysAndSells, normalActivityMap])
 
   // console.log('cartcrom', feed)
 }
