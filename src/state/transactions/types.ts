@@ -82,6 +82,12 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
   amount: string
 }
 
+interface SendInfo extends BaseTransactionInfo {
+  type: TransactionType.SEND
+  recipient: string
+  currencyAmountRaw: string
+}
+
 interface BaseSwapTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.SWAP
   tradeType: TradeType
@@ -199,6 +205,7 @@ export type TransactionInfo =
   | CollectFeesTransactionInfo
   | RemoveLiquidityV3TransactionInfo
   | SubmitProposalTransactionInfo
+  | SendInfo
 
 export interface TransactionDetails {
   hash: string

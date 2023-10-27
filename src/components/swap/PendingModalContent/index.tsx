@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro'
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import { ColumnCenter } from 'components/Column'
@@ -89,6 +89,8 @@ export type PendingConfirmModalState = Extract<
   | ConfirmModalState.PENDING_CONFIRMATION
   | ConfirmModalState.WRAPPING
   | ConfirmModalState.RESETTING_TOKEN_ALLOWANCE
+  | ConfirmModalState.SWAP_TO_PYUSD
+  | ConfirmModalState.PENDING_SEND
 >
 
 interface PendingModalStep {
@@ -103,8 +105,10 @@ interface PendingModalContentProps {
   steps: PendingConfirmModalState[]
   currentStep: PendingConfirmModalState
   trade?: InterfaceTrade
+  inputAmount?: CurrencyAmount<Currency>
   swapResult?: SwapResult
   wrapTxHash?: string
+  sendTxHash?: string
   hideStepIndicators?: boolean
   tokenApprovalPending?: boolean
   revocationPending?: boolean
@@ -117,6 +121,8 @@ interface ContentArgs {
   trade?: InterfaceTrade
   swapConfirmed: boolean
   swapPending: boolean
+  sendPending: boolean
+  sendConfirmed: boolean
   wrapPending: boolean
   tokenApprovalPending: boolean
   revocationPending: boolean
@@ -202,6 +208,8 @@ function useStepContents(args: ContentArgs): Record<PendingConfirmModalState, Pe
     approvalCurrency,
     swapConfirmed,
     swapPending,
+    sendPending,
+    sendConfirmed,
     tokenApprovalPending,
     revocationPending,
     trade,
@@ -245,6 +253,16 @@ function useStepContents(args: ContentArgs): Record<PendingConfirmModalState, Pe
         ),
         bottomLabel: t`Proceed in your wallet`,
       },
+      [ConfirmModalState.SWAP_TO_PYUSD]: {
+        title: t`Swap to PYUSD`,
+        subtitle: t`Swapping to PYUSD can be done in one transaction.`,
+        bottomLabel: swapPending ? t`Pending...` : t`Proceed in your wallet`,
+      },
+      [ConfirmModalState.PENDING_SEND]: {
+        title: sendConfirmed ? t`Sent!` : t`Send`,
+        subtitle: t`Sending can be done in one transaction.`,
+        bottomLabel: sendPending ? t`Pending...` : t`Proceed in your wallet`,
+      },
       [ConfirmModalState.PENDING_CONFIRMATION]: getPendingConfirmationContent({
         chainId,
         swapConfirmed,
@@ -256,6 +274,8 @@ function useStepContents(args: ContentArgs): Record<PendingConfirmModalState, Pe
       }),
     }),
     [
+      sendConfirmed,
+      sendPending,
       approvalCurrency?.symbol,
       chainId,
       revocationPending,
@@ -275,8 +295,10 @@ export function PendingModalContent({
   steps,
   currentStep,
   trade,
+  inputAmount,
   swapResult,
   wrapTxHash,
+  sendTxHash,
   hideStepIndicators,
   tokenApprovalPending = false,
   revocationPending = false,
@@ -290,15 +312,19 @@ export function PendingModalContent({
 
   const swapConfirmed = swapStatus === TransactionStatus.Confirmed || order?.status === UniswapXOrderStatus.FILLED
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
+  const sendConfirmed = useIsTransactionConfirmed(sendTxHash)
 
   const swapPending = swapResult !== undefined && !swapConfirmed
-  const wrapPending = wrapTxHash != undefined && !wrapConfirmed
+  const wrapPending = wrapTxHash !== undefined && !wrapConfirmed
+  const sendPending = sendTxHash !== undefined && !sendConfirmed
 
   const stepContents = useStepContents({
     approvalCurrency: trade?.inputAmount.currency,
     swapConfirmed,
+    sendConfirmed,
     swapPending,
     wrapPending,
+    sendPending,
     tokenApprovalPending,
     revocationPending,
     swapResult,
@@ -321,10 +347,11 @@ export function PendingModalContent({
   }
 
   // On mainnet, we show a different icon when the transaction is submitted but pending confirmation.
-  const showSubmitted = swapPending && !swapConfirmed && chainId === ChainId.MAINNET
-  const showSuccess = swapConfirmed || (chainId !== ChainId.MAINNET && swapPending)
+  const showSubmitted =
+    (swapPending && !swapConfirmed) || (sendPending && !sendConfirmed && chainId === ChainId.MAINNET)
+  const showSuccess = swapConfirmed || sendConfirmed || (chainId !== ChainId.MAINNET && swapPending)
 
-  const transactionPending = revocationPending || tokenApprovalPending || wrapPending || swapPending
+  const transactionPending = revocationPending || tokenApprovalPending || wrapPending || swapPending || sendPending
 
   return (
     <PendingModalContainer gap="lg">
@@ -334,19 +361,23 @@ export function PendingModalContent({
         {/* Shown during the setup approval step as a small badge. */}
         {/* Scales up once we transition from setup approval to permit signature. */}
         {/* Fades out after the permit signature. */}
-        {currentStep !== ConfirmModalState.PENDING_CONFIRMATION && (
+        {currentStep !== ConfirmModalState.PENDING_CONFIRMATION && !sendPending && !sendConfirmed && (
           <CurrencyLoader
-            currency={trade?.inputAmount.currency}
+            currency={trade?.inputAmount.currency ?? inputAmount?.currency}
             asBadge={currentStep === ConfirmModalState.APPROVING_TOKEN}
           />
         )}
         {/* Shown only during the final step under "success" conditions, and scales in. */}
-        {currentStep === ConfirmModalState.PENDING_CONFIRMATION && showSuccess && <AnimatedEntranceConfirmationIcon />}
+        {(currentStep === ConfirmModalState.PENDING_CONFIRMATION || currentStep === ConfirmModalState.PENDING_SEND) &&
+          showSuccess && <AnimatedEntranceConfirmationIcon />}
         {/* Shown only during the final step on mainnet, when the transaction is sent but pending confirmation. */}
-        {currentStep === ConfirmModalState.PENDING_CONFIRMATION && showSubmitted && <AnimatedEntranceSubmittedIcon />}
+        {(currentStep === ConfirmModalState.PENDING_CONFIRMATION || currentStep === ConfirmModalState.PENDING_SEND) &&
+          showSubmitted && <AnimatedEntranceSubmittedIcon />}
         {/* Scales in for any step that waits for an onchain transaction, while the transaction is pending. */}
         {/* On the last step, appears while waiting for the transaction to be signed too. */}
-        {((currentStep !== ConfirmModalState.PENDING_CONFIRMATION && transactionPending) ||
+        {((currentStep !== ConfirmModalState.PENDING_CONFIRMATION &&
+          currentStep !== ConfirmModalState.PENDING_SEND &&
+          transactionPending) ||
           (currentStep === ConfirmModalState.PENDING_CONFIRMATION && !showSuccess && !showSubmitted)) && (
           <LoadingIndicatorOverlay />
         )}

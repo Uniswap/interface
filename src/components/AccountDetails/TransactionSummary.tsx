@@ -361,5 +361,8 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.SUBMIT_PROPOSAL:
       return <SubmitProposalTransactionSummary />
+
+    case TransactionType.SEND:
+      return <Trans>Sent</Trans>
   }
 }

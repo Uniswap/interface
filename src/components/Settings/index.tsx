@@ -5,6 +5,7 @@ import { Scrim } from 'components/AccountDrawer'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column, { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
+import { SwapTab } from 'components/swap/SwapHeader'
 import { isSupportedChain, isUniswapXSupportedChain, L2_CHAIN_IDS } from 'constants/chains'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -102,11 +103,13 @@ export default function SettingsTab({
   chainId,
   trade,
   hideRoutingSettings = false,
+  activeTab,
 }: {
   autoSlippage: Percent
   chainId?: number
   trade?: InterfaceTrade
   hideRoutingSettings?: boolean
+  activeTab?: SwapTab
 }) {
   const { chainId: connectedChainId } = useWeb3React()
   const showDeadlineSettings = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
@@ -125,7 +128,8 @@ export default function SettingsTab({
   useDisableScrolling(isOpen)
 
   const uniswapXEnabled = chainId && isUniswapXSupportedChain(chainId)
-  const showRoutingSettings = Boolean(uniswapXEnabled && !hideRoutingSettings)
+  const showRoutingSettings = Boolean(uniswapXEnabled && !hideRoutingSettings && activeTab !== SwapTab.PAY)
+  const showSlippageSettings = Boolean(activeTab !== SwapTab.PAY)
 
   const isChainSupported = isSupportedChain(chainId)
   const Settings = useMemo(
@@ -139,10 +143,10 @@ export default function SettingsTab({
         <AnimatedDropdown open={!isUniswapXTrade(trade)}>
           <ExpandColumn $padTop={showRoutingSettings}>
             {showRoutingSettings && <Divider />}
-            <MaxSlippageSettings autoSlippage={autoSlippage} />
+            {showSlippageSettings && <MaxSlippageSettings autoSlippage={autoSlippage} />}
             {showDeadlineSettings && (
               <>
-                <Divider />
+                {showSlippageSettings && <Divider />}
                 <TransactionDeadlineSettings />
               </>
             )}
@@ -150,7 +154,7 @@ export default function SettingsTab({
         </AnimatedDropdown>
       </>
     ),
-    [autoSlippage, showDeadlineSettings, showRoutingSettings, trade]
+    [autoSlippage, showDeadlineSettings, showRoutingSettings, showSlippageSettings, trade]
   )
 
   return (

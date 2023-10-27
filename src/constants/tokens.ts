@@ -38,6 +38,9 @@ export const USDC_ARBITRUM = new Token(
   'USDC',
   'USD//C'
 )
+
+export const PYUSD = new Token(ChainId.MAINNET, '0x6c3ea9036406852006290770bedfcaba0e23a0e8', 6, 'PYUSD', 'PayPal USD')
+
 export const USDC_ARBITRUM_GOERLI = new Token(
   ChainId.ARBITRUM_GOERLI,
   '0x8FB1E3fC51F3b789dED7557E680551d93Ea9d892',

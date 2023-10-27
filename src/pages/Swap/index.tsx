@@ -26,7 +26,7 @@ import PriceImpactModal from 'components/swap/PriceImpactModal'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import { ArrowWrapper, PageWrapper, SwapWrapper } from 'components/swap/styled'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
-import SwapHeader from 'components/swap/SwapHeader'
+import SwapHeader, { SwapTab } from 'components/swap/SwapHeader'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { useConnectionReady } from 'connection/eagerlyConnect'
@@ -66,6 +66,8 @@ import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { useIsDarkMode } from '../../theme/components/ThemeToggle'
+import { Pay } from './Pay'
+import { SwapSection } from './SwapSection'
 import { OutputTaxTooltipBody } from './TaxTooltipBody'
 import { UniswapXOptIn } from './UniswapXOptIn'
 
@@ -76,42 +78,6 @@ export const ArrowContainer = styled.div`
 
   width: 100%;
   height: 100%;
-`
-
-const SwapSection = styled.div`
-  background-color: ${({ theme }) => theme.surface2};
-  border-radius: 16px;
-  color: ${({ theme }) => theme.neutral2};
-  font-size: 14px;
-  font-weight: 500;
-  height: 120px;
-  line-height: 20px;
-  padding: 16px;
-  position: relative;
-
-  &:before {
-    box-sizing: border-box;
-    background-size: 100%;
-    border-radius: inherit;
-
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    content: '';
-    border: 1px solid ${({ theme }) => theme.surface2};
-  }
-
-  &:hover:before {
-    border-color: ${({ theme }) => theme.deprecated_stateOverlayHover};
-  }
-
-  &:focus-within:before {
-    border-color: ${({ theme }) => theme.deprecated_stateOverlayPressed};
-  }
 `
 
 const OutputSwapSection = styled(SwapSection)`
@@ -607,6 +573,30 @@ export function Swap({
   const showOptInSmall = !useScreenSize().navSearchInputVisible
   const isDark = useIsDarkMode()
   const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
+  const [activeTab, setActiveTab] = useState<SwapTab>(SwapTab.SWAP)
+
+  if (activeTab === SwapTab.PAY) {
+    return (
+      <Pay
+        swapTab={activeTab}
+        typedValue={typedValue}
+        allowance={allowance}
+        className={className}
+        trade={trade}
+        autoSlippage={autoSlippage}
+        activeTab={activeTab}
+        onSelectTab={(tab) => setActiveTab(tab)}
+        handleTypeInput={handleTypeInput}
+        handleMaxInput={handleMaxInput}
+        swapFiatValues={swapFiatValues}
+        fiatValueInput={fiatValueInput}
+        handleInputSelect={handleInputSelect}
+        handleOutputSelect={handleOutputSelect}
+        currencies={currencies}
+        formattedAmounts={formattedAmounts}
+      />
+    )
+  }
 
   const swapElement = (
     <SwapWrapper isDark={isDark} className={className} id="swap-page">
@@ -618,7 +608,13 @@ export function Swap({
         onCancel={handleDismissTokenWarning}
         showCancel={true}
       />
-      <SwapHeader trade={trade} autoSlippage={autoSlippage} chainId={chainId} />
+      <SwapHeader
+        trade={trade}
+        autoSlippage={autoSlippage}
+        chainId={chainId}
+        activeTab={activeTab}
+        onSelectTab={(tab) => setActiveTab(tab)}
+      />
       {trade && showConfirm && (
         <ConfirmSwapModal
           trade={trade}
