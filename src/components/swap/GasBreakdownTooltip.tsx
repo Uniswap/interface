@@ -73,7 +73,8 @@ function NetworkFeesDescription({ native }: { native: Currency }) {
   return (
     <ThemedText.LabelMicro>
       <Trans>
-        The fee paid to the Ethereum network to process your transaction. This must be paid in {native.symbol}.
+        With Uniswap Wallet, we’ll cover the network cost of your first 5 transactions to get you started on your web3
+        journey.
       </Trans>{' '}
       <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-">
         <Trans>Learn more</Trans>
