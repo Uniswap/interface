@@ -112,7 +112,7 @@ export function LimitOrderForm() {
 
   const parsedAmountIn = useMemo(() => tryParseCurrencyAmount(inputAmount, inputToken), [inputAmount, inputToken])
   const parsedAmountOut = useMemo(() => tryParseCurrencyAmount(outputAmount, outputToken), [outputAmount, outputToken])
-
+  const debouncedAmountOut = useDebounce(parsedAmountOut, 500)
   const fiatValueTradeInput = useUSDPrice(parsedAmountIn)
   const fiatValueTradeOutput = useUSDPrice(parsedAmountOut)
 
@@ -126,8 +126,6 @@ export function LimitOrderForm() {
       parsedAmountOut.quotient
     )
   }, [parsedAmountIn, parsedAmountOut])
-
-  const debouncedExecutionPrice = useDebounce(executionPrice, 500)
 
   // TODO: add token tax stuff
   // TODO: use gas adjusted classic quote because limit orders are uniswapx orders
@@ -154,8 +152,8 @@ export function LimitOrderForm() {
       : '-'
 
   const showPriceWarning =
-    marketTrade.state !== TradeState.LOADING && marketTrade?.trade && debouncedExecutionPrice
-      ? marketTrade.trade.executionPrice.subtract(debouncedExecutionPrice).greaterThan(new Percent(1, 100))
+    marketTrade.state !== TradeState.LOADING && marketTrade?.trade && debouncedAmountOut
+      ? marketTrade.trade.outputAmount.greaterThan(debouncedAmountOut.multiply(new Percent(102, 100)))
       : false
 
   const theme = useTheme()

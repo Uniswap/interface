@@ -138,8 +138,9 @@ function cancelOrder(order: UniswapXBackendOrder, permit2: Permit2 | null, provi
 
   if (permit2 && provider) {
     permit2
+      // @ts-ignore
       .invalidateUnorderedNonces(invalidateNonceInput.wordPos, invalidateNonceInput.bitPos)
-      .then((txn) => {
+      .then((txn: any) => {
         console.log(txn)
         provider
           .getSigner()
@@ -169,7 +170,7 @@ function cancelOrder(order: UniswapXBackendOrder, permit2: Permit2 | null, provi
             }
           })
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.log(error)
       })
   }
