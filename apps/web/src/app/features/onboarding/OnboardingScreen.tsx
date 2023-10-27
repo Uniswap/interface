@@ -2,7 +2,7 @@ import { InputError } from 'src/app/components/InputError'
 import { Button, Flex, Icons, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
-export const ONBOARDING_CONTENT_WIDTH = 450
+export const ONBOARDING_CONTENT_WIDTH = 550
 
 type OnboardingScreenProps = {
   Icon?: JSX.Element
@@ -30,7 +30,17 @@ export function OnboardingScreen({
   warningSubtitle,
 }: OnboardingScreenProps): JSX.Element {
   return (
-    <Flex alignItems="center" gap="$spacing36" width={ONBOARDING_CONTENT_WIDTH}>
+    <Flex
+      alignItems="center"
+      borderColor="$surface3"
+      borderRadius="$rounded32"
+      borderWidth="$spacing1"
+      gap="$spacing24"
+      paddingHorizontal="$spacing48"
+      paddingVertical="$spacing60"
+      shadowColor="$surface3"
+      shadowRadius={10}
+      width={ONBOARDING_CONTENT_WIDTH}>
       <Flex alignItems="center" gap="$spacing32">
         {Icon}
         <Flex alignItems="center" gap="$spacing12">
