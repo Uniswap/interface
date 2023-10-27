@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useWallets } from '@privy-io/react-auth'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -274,7 +275,11 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
     ref
   ) => {
     const [modalOpen, setModalOpen] = useState(false)
-    const { account, chainId } = useWeb3React()
+    const { wallets } = useWallets()
+    const { chainId } = useWeb3React()
+    const embeddedWallet = wallets.find((wallet: { walletClientType: string }) => wallet.walletClientType === 'privy')
+    const account = embeddedWallet?.address
+
     const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
     const theme = useTheme()
     const { formatCurrencyAmount } = useFormatter()
