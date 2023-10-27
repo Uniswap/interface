@@ -102,7 +102,6 @@ export const ActivityList = ({
 }) => {
   return (
     <FeedContainer>
-      {feed.length === 0 && <LoadingSpinner size="50px" />}
       {feed.map((activity, i) => (
         <FeedRow key={i} activity={activity} hidePrice={hidePrice} />
       ))}
@@ -143,6 +142,11 @@ function ActivityFeed() {
           </ThemedText.LargeHeader>
         </TitleContainer>
       </Row>
+      {feed.length === 0 && (
+        <FeedContainer>
+          <LoadingSpinner size="40px" />
+        </FeedContainer>
+      )}
       <ActivityList feed={feed} />
     </ExploreContainer>
   )

@@ -227,7 +227,7 @@ function JudgementChart({ activity, hidePrice }: { activity: JudgementalActivity
 function JudgementalActivityRow({ activity, hidePrice }: { activity: JudgementalActivity; hidePrice?: boolean }) {
   const { ENSName } = useENSName(activity.owner)
   const timeSince = useTimeSince(activity.timestamp)
-  const { formatFiatPrice } = useFormatter()
+  const { formatNumber } = useFormatter()
   const theme = useTheme()
   const navigate = useNavigate()
 
@@ -236,7 +236,7 @@ function JudgementalActivityRow({ activity, hidePrice }: { activity: Judgemental
       <CardHeader>
         <Who>
           <PortfolioAvatar accountAddress={activity.owner} size={30} />
-          <ClickableText onClick={() => navigate('/account/' + ENSName ?? activity.owner)}>
+          <ClickableText onClick={() => navigate('/account/' + activity.owner)}>
             <ThemedText.BodyPrimary>{ENSName ?? shortenAddress(activity.owner)}</ThemedText.BodyPrimary>
           </ClickableText>
         </Who>
@@ -256,7 +256,7 @@ function JudgementalActivityRow({ activity, hidePrice }: { activity: Judgemental
             <b>{activity.currency.symbol}</b>
           </ClickableText>
           <span style={{ color: activity.profit > 0 ? theme.success : theme.critical }}>
-            ({formatFiatPrice({ price: activity.profit })})
+            {activity.profit < 0 ? '-' : ''}(${Math.abs(activity.profit).toFixed(2)})
           </span>{' '}
           {activity.hodlingTimescale}
         </DescriptionContainer>

@@ -82,6 +82,18 @@ export type JudgementalActivity = {
   hodlingTimescale?: string
 }
 
+function shouldHideNormalActivity(activity: Activity) {
+  return (
+    activity.title.includes('Approv') ||
+    activity.title.includes('Contract') ||
+    activity.descriptor?.includes('Contract') ||
+    activity.title.includes('Sent') ||
+    activity.title?.includes('Swapped') ||
+    activity.title.includes('Received') ||
+    activity.title.includes('Unknown')
+  )
+}
+
 const NORMAL_FEED_LIMIT = 40
 export function useFeed(accounts: string[], filterAddress?: string) {
   const { judgementalActivityMap: friendsBuysAndSells, normalActivityMap } = useAllFriendsBuySells(accounts)
@@ -89,11 +101,13 @@ export function useFeed(accounts: string[], filterAddress?: string) {
   return useMemo(() => {
     const sortedFeed = (Object.values(normalActivityMap ?? {}) as Activity[]).sort((a, b) => b.timestamp - a.timestamp)
     const feed: (JudgementalActivity | Activity)[] = []
-    const count = 0
+    let count = 0
     for (const item of sortedFeed) {
-      if (count < 40 || item.title.includes('Aped')) {
-        if (!filterAddress || item.currencies?.some((c) => isSameAddress(c?.wrapped.address, filterAddress)))
+      if ((count < 40 && !shouldHideNormalActivity(item)) || item.title.includes('Aped')) {
+        if (!filterAddress || item.currencies?.some((c) => isSameAddress(c?.wrapped.address, filterAddress))) {
           feed.push(item)
+          count++
+        }
       }
     }
 
@@ -157,7 +171,7 @@ export function useFeed(accounts: string[], filterAddress?: string) {
         }
       }
     }
-    return feed.sort((a, b) => b.timestamp - a.timestamp)
+    return feed.sort((a, b) => b.timestamp - a.timestamp).slice(0, 300)
   }, [filterAddress, friendsBuysAndSells, normalActivityMap])
 
   // console.log('cartcrom', feed)
