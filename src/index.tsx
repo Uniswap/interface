@@ -79,13 +79,8 @@ createRoot(container).render(
                       <PrivyProvider
                         appId={process.env.REACT_APP_PRIVY_APP_ID as string}
                         config={{
-                          /* Replace this with your desired login methods */
-                          loginMethods: ['email', 'wallet'],
-                          /* Replace this with your desired appearance configuration */
                           appearance: {
                             theme: 'dark',
-                            accentColor: '#FC72FF',
-                            logo: 'https://raw.githubusercontent.com/Uniswap/interface/cab/icon/public/images/Logo.png',
                           },
                           embeddedWallets: {
                             createOnLogin: 'users-without-wallets',
