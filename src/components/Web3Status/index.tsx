@@ -136,7 +136,7 @@ const StyledConnectButton = styled.button`
 `
 
 function Web3StatusInner() {
-  const { login, logout, user } = usePrivy()
+  const { login, user } = usePrivy()
   const { wallets } = useWallets()
   const embeddedWallet = wallets.find((wallet: { walletClientType: string }) => wallet.walletClientType === 'privy')
   console.log(embeddedWallet, user, 'EMBEDDED WALLET')

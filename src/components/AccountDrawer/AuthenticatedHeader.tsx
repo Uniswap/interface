@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { usePrivy } from '@privy-io/react-auth'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -23,7 +24,6 @@ import { useCallback, useState } from 'react'
 import { CreditCard, Info, Send } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
-import { updateSelectedWallet } from 'state/user/reducer'
 import styled from 'styled-components'
 import { ClickableStyle, CopyHelper, ExternalLink, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils'
@@ -34,7 +34,7 @@ import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import StatusIcon from '../Identicon/StatusIcon'
 import { useCachedPortfolioBalancesQuery } from '../PrefetchBalancesWrapper/PrefetchBalancesWrapper'
-import { useToggleAccountDrawer } from '.'
+import { useAccountDrawer, useToggleAccountDrawer } from '.'
 import IconButton, { IconHoverText, IconWithConfirmTextButton } from './IconButton'
 import MiniPortfolio from './MiniPortfolio'
 import { portfolioFadeInAnimation } from './MiniPortfolio/PortfolioRow'
@@ -204,6 +204,7 @@ const PortfolioDrawerContainer = styled(Column)`
 
 export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
   const { connector } = useWeb3React()
+  const { logout } = usePrivy()
   const { ENSName } = useENSName(account)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
@@ -222,13 +223,11 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const connection = getConnection(connector)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const openNftModal = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
+  const [, toggleAccountDrawer] = useAccountDrawer()
   const disconnect = useCallback(() => {
-    if (connector && connector.deactivate) {
-      connector.deactivate()
-    }
-    connector.resetState()
-    dispatch(updateSelectedWallet({ wallet: undefined }))
-  }, [connector, dispatch])
+    logout()
+    toggleAccountDrawer()
+  }, [logout, toggleAccountDrawer])
 
   const toggleWalletDrawer = useToggleAccountDrawer()
 
