@@ -136,7 +136,7 @@ export default function FiatOnrampModal() {
   }, [fetchSignedIframeUrl])
 
   return (
-    <Modal isOpen={fiatOnrampModalOpen} onDismiss={closeModal} height={70 /* vh */}>
+    <Modal isOpen={fiatOnrampModalOpen} onDismiss={closeModal} height={72 /* vh */}>
       <Wrapper data-testid="fiat-onramp-modal" isDarkMode={isDarkMode}>
         {error && signedIframeUrl ? (
           <>
