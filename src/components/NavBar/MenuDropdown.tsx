@@ -1,5 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 //import { InterfaceElementName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
+import { useAccountDrawer } from 'components/AccountDrawer'
 //import { openDownloadApp } from 'components/AccountDrawer/DownloadButton'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
@@ -7,7 +9,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import {
-  //BarChartIcon,
+  BarChartIcon,
   DiscordIconMenu,
   EllipsisIcon,
   GithubIconMenu,
@@ -17,9 +19,10 @@ import {
 } from 'nft/components/icons'
 import { body, bodySmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import { ReactNode, useReducer, useRef } from 'react'
+import { ReactNode, useCallback, useReducer, useRef } from 'react'
+import { CreditCard } from 'react-feather'
 import { NavLink, NavLinkProps } from 'react-router-dom'
-import { useToggleModal } from 'state/application/hooks'
+import { useOpenModal, useToggleModal } from 'state/application/hooks'
 import styled, { useTheme } from 'styled-components'
 import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 
@@ -123,11 +126,24 @@ const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
 
 export const MenuDropdown = () => {
   const theme = useTheme()
+  const { account } = useWeb3React()
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   //const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
   const openFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, isOpen ? toggleOpen : undefined)
+
+  // TODO: check add analytics event
+  const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
+  const [walletDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
+
+  const handleBuyCryptoClick = useCallback(() => {
+    if (!account && !walletDrawerOpen) {
+      toggleWalletDrawer()
+    } else {
+      openFiatOnrampModal()
+    }
+  }, [account, openFiatOnrampModal, toggleWalletDrawer, walletDrawerOpen])
 
   return (
     <>
@@ -165,11 +181,20 @@ export const MenuDropdown = () => {
                     <GovernanceIcon width={24} height={24} color={theme.textPrimary} />
                   </Icon>
                   <PrimaryMenuRow.Text>
-                    <Trans>Governance</Trans>
+                    <Trans>Vote in governance</Trans>
                   </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
-                {/*
-                <PrimaryMenuRow href="https://info.uniswap.org/#/">
+                <Box onClick={handleBuyCryptoClick}>
+                  <PrimaryMenuRow close={toggleOpen}>
+                    <Icon>
+                      <CreditCard height="20px" width="20px" />
+                    </Icon>
+                    <PrimaryMenuRow.Text>
+                      <Trans>Buy crypto with credit card</Trans>
+                    </PrimaryMenuRow.Text>
+                  </PrimaryMenuRow>
+                </Box>
+                <PrimaryMenuRow href="https://defillama.com/protocol/rigoblock">
                   <Icon>
                     <BarChartIcon width={24} height={24} color={theme.textPrimary} />
                   </Icon>
@@ -177,7 +202,6 @@ export const MenuDropdown = () => {
                     <Trans>View more analytics</Trans>
                   </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
-                */}
               </Column>
               <Separator />
               <Box
