@@ -434,6 +434,14 @@ export const TagIcon = (props: SVGProps) => (
   </svg>
 )
 
+export const BarChartIcon = (props: SVGProps) => (
+  <svg fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path d="M12 20V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M6 20V4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M18 20V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+
 export const DiscordIcon = (props: SVGProps) => (
   <svg role="img" width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" {...props} fill="none">
     <path

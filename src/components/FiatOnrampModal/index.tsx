@@ -125,6 +125,17 @@ export default function FiatOnrampModal() {
     fetchSignedIframeUrl()
   }, [fetchSignedIframeUrl])
 
+  // TODO: we should be able to use the signedIframeUrl instead
+  const settings = {
+    apiKey: process.env.REACT_APP_MOONPAY_PUBLISHABLE_KEY ?? '',
+    colors: {
+      main: 'rgb(255 174 0)',
+      background: isDarkMode ? MOONPAY_DARK_BACKGROUND : theme.white,
+    },
+  }
+  const specificSettingsParams = encodeURIComponent(JSON.stringify(settings))
+  const fiatOnrampUrl = `${process.env.REACT_APP_MOONPAY_LINK}/?specificSettings=${specificSettingsParams}`
+
   return (
     <Modal isOpen={fiatOnrampModalOpen} onDismiss={closeModal} height={70 /* vh */}>
       <Wrapper data-testid="fiat-onramp-modal" isDarkMode={isDarkMode}>
@@ -142,12 +153,7 @@ export default function FiatOnrampModal() {
         ) : loading ? (
           <StyledSpinner src={Circle} alt="loading spinner" size="90px" />
         ) : (
-          <StyledIframe
-            src={process.env.REACT_APP_MOONPAY_LINK ?? ''}
-            frameBorder="0"
-            title="fiat-onramp-iframe"
-            isDarkMode={isDarkMode}
-          />
+          <StyledIframe src={fiatOnrampUrl ?? ''} frameBorder="0" title="fiat-onramp-iframe" isDarkMode={isDarkMode} />
         )}
       </Wrapper>
     </Modal>

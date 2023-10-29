@@ -76,11 +76,11 @@ export const PageTabs = () => {
         </MenuItem>
       )}
       <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
-        <Trans>Liquidity</Trans>
+        <Trans>Earn</Trans>
       </MenuItem>
       <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }} width="full">
         <MenuItem href="/stake" isActive={pathname.startsWith('/stake')}>
-          <Trans>Staking</Trans>
+          <Trans>Stake</Trans>
         </MenuItem>
       </Box>
       <Box marginY={{ sm: '4', md: 'unset' }}>
