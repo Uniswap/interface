@@ -1,5 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 //import { InterfaceElementName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
+import { useAccountDrawer } from 'components/AccountDrawer'
 //import { openDownloadApp } from 'components/AccountDrawer/DownloadButton'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
@@ -124,6 +126,7 @@ const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
 
 export const MenuDropdown = () => {
   const theme = useTheme()
+  const { account } = useWeb3React()
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   //const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
   const openFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
@@ -132,10 +135,15 @@ export const MenuDropdown = () => {
 
   // TODO: check add analytics event
   const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
+  const [walletDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
 
   const handleBuyCryptoClick = useCallback(() => {
-    openFiatOnrampModal()
-  }, [openFiatOnrampModal])
+    if (!account && !walletDrawerOpen) {
+      toggleWalletDrawer()
+    } else {
+      openFiatOnrampModal()
+    }
+  }, [account, openFiatOnrampModal, toggleWalletDrawer, walletDrawerOpen])
 
   return (
     <>
