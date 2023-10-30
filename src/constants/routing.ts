@@ -29,6 +29,7 @@ import {
   USDC_MAINNET,
   USDC_OPTIMISM,
   USDC_POLYGON,
+  USDC_POLYGON_MUMBAI,
   USDT,
   USDT_ARBITRUM_ONE,
   USDT_AVALANCHE,
@@ -74,6 +75,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   ],
   [ChainId.GOERLI]: [nativeOnChain(ChainId.GOERLI), WRAPPED_NATIVE_CURRENCY[ChainId.GOERLI] as Token],
   [ChainId.SEPOLIA]: [nativeOnChain(ChainId.SEPOLIA), WRAPPED_NATIVE_CURRENCY[ChainId.SEPOLIA] as Token],
+
   [ChainId.ARBITRUM_ONE]: [
     nativeOnChain(ChainId.ARBITRUM_ONE),
     ARB,
@@ -88,9 +90,12 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_NATIVE_CURRENCY[ChainId.ARBITRUM_GOERLI] as Token,
     USDC_ARBITRUM_GOERLI,
   ],
+
   [ChainId.OPTIMISM]: [nativeOnChain(ChainId.OPTIMISM), OP, DAI_OPTIMISM, USDC_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM],
   [ChainId.OPTIMISM_GOERLI]: [nativeOnChain(ChainId.OPTIMISM_GOERLI)],
+
   [ChainId.BASE]: [nativeOnChain(ChainId.BASE), WRAPPED_NATIVE_CURRENCY[ChainId.BASE] as Token, USDC_BASE, USDbC_BASE],
+
   [ChainId.POLYGON]: [
     nativeOnChain(ChainId.POLYGON),
     WETH_POLYGON,
@@ -102,6 +107,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   [ChainId.POLYGON_MUMBAI]: [
     nativeOnChain(ChainId.POLYGON_MUMBAI),
     WRAPPED_NATIVE_CURRENCY[ChainId.POLYGON_MUMBAI] as Token,
+    USDC_POLYGON_MUMBAI,
     WETH_POLYGON_MUMBAI,
   ],
 
@@ -109,6 +115,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   [ChainId.CELO_ALFAJORES]: [nativeOnChain(ChainId.CELO_ALFAJORES), CUSD_CELO_ALFAJORES, CEUR_CELO_ALFAJORES],
 
   [ChainId.BNB]: [nativeOnChain(ChainId.BNB), DAI_BSC, USDC_BSC, USDT_BSC, ETH_BSC, BTC_BSC, BUSD_BSC],
+
   [ChainId.AVALANCHE]: [
     nativeOnChain(ChainId.AVALANCHE),
     DAI_AVALANCHE,

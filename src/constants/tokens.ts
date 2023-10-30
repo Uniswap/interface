@@ -47,17 +47,17 @@ export const USDC_ARBITRUM_GOERLI = new Token(
 )
 export const USDC_POLYGON = new Token(
   ChainId.POLYGON,
-  '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+  '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359',
   6,
   'USDC',
-  'USD//C'
+  'USD Coin'
 )
-const USDC_POLYGON_MUMBAI = new Token(
+export const USDC_POLYGON_MUMBAI = new Token(
   ChainId.POLYGON_MUMBAI,
-  '0xe11a86849d99f524cac3e7a0ec1241828e332c62',
+  '0x0fa8781a83e46826621b3bc094ea2a0212e71b23',
   6,
   'USDC',
-  'USD//C'
+  'USD Coin'
 )
 export const PORTAL_USDC_CELO = new Token(
   ChainId.CELO,
