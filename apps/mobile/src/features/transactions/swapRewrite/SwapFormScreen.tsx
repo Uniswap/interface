@@ -1,7 +1,14 @@
+/* eslint-disable max-lines */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent, StyleSheet, TextInput, TextInputProps } from 'react-native'
-import { FadeIn, useAnimatedStyle, withTiming } from 'react-native-reanimated'
+import {
+  FadeIn,
+  interpolateColor,
+  useAnimatedStyle,
+  useDerivedValue,
+  withTiming,
+} from 'react-native-reanimated'
 import { Delay } from 'src/components/layout/Delayed'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
@@ -265,18 +272,41 @@ function SwapFormContent(): JSX.Element {
   const exactValue = isFiatInput ? exactAmountFiat : exactAmountToken
   const exactValueRef = isFiatInput ? exactAmountFiatRef : exactAmountTokenRef
 
+  // Animated background color on input panels based on focus
+  const colorTransitionProgress = useDerivedValue(() => {
+    return withTiming(focusOnCurrencyField === CurrencyField.INPUT ? 0 : 1, { duration: 250 })
+  }, [focusOnCurrencyField])
+
+  const inputBackgroundStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        colorTransitionProgress.value,
+        [0, 1],
+        [colors.surface1.val, colors.surface2.val]
+      ),
+    }
+  })
+
+  const outputBackgroundStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        colorTransitionProgress.value,
+        [0, 1],
+        [colors.surface2.val, colors.surface1.val]
+      ),
+    }
+  })
+
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
       <AnimatedFlex entering={FadeIn} gap="$spacing2">
         <Trace section={SectionName.CurrencyInputPanel}>
-          <Flex
-            backgroundColor={
-              focusOnCurrencyField === CurrencyField.INPUT ? '$surface1' : '$surface2'
-            }
+          <AnimatedFlex
             borderColor="$surface3"
             borderRadius="$rounded20"
             borderWidth={1}
-            paddingBottom="$spacing4">
+            paddingBottom="$spacing4"
+            style={inputBackgroundStyle}>
             <CurrencyInputPanel
               ref={inputRef}
               currencyAmount={currencyAmounts[CurrencyField.INPUT]}
@@ -301,22 +331,20 @@ function SwapFormContent(): JSX.Element {
               onSetMax={onSetMax}
               onShowTokenSelector={onShowTokenSelectorInput}
             />
-          </Flex>
+          </AnimatedFlex>
         </Trace>
 
         <SwitchCurrenciesButton onSwitchCurrencies={onSwitchCurrencies} />
 
         <Trace section={SectionName.CurrencyOutputPanel}>
-          <Flex
-            backgroundColor={
-              focusOnCurrencyField === CurrencyField.OUTPUT ? '$surface1' : '$surface2'
-            }
+          <AnimatedFlex
             borderColor="$surface3"
             borderRadius="$rounded20"
             borderWidth={1}
             overflow="hidden"
             paddingTop="$spacing4"
-            position="relative">
+            position="relative"
+            style={outputBackgroundStyle}>
             <CurrencyInputPanel
               ref={outputRef}
               isOutput
@@ -364,7 +392,7 @@ function SwapFormContent(): JSX.Element {
                 </Flex>
               </TouchableArea>
             )}
-          </Flex>
+          </AnimatedFlex>
         </Trace>
 
         <GasAndWarningRows />

@@ -160,7 +160,7 @@ export const CurrencyInputPanel = memo(
       -1,
       true
     )
-    const loadingFlexStyle = useAnimatedStyle(
+    const loadingOpacityStyle = useAnimatedStyle(
       () => ({
         opacity: isLoading ? loadingFlexProgress.value : 1,
       }),
@@ -170,7 +170,18 @@ export const CurrencyInputPanel = memo(
     const animatePaddingdStyle = useAnimatedStyle(() => {
       return {
         paddingTop: withTiming(focus ? spacing.spacing24 : spacing.spacing16, {
-          duration: 100,
+          duration: 300,
+        }),
+        paddingBottom: withTiming(focus ? spacing.spacing48 : spacing.spacing16, {
+          duration: 300,
+        }),
+      }
+    }, [focus])
+
+    const animatedExpandedRowStyle = useAnimatedStyle(() => {
+      return {
+        bottom: withTiming(focus ? spacing.spacing16 : -spacing.spacing24, {
+          duration: 300,
         }),
       }
     }, [focus])
@@ -178,6 +189,7 @@ export const CurrencyInputPanel = memo(
     return (
       <AnimatedFlex
         {...rest}
+        overflow="hidden"
         paddingBottom="$spacing16"
         px="$spacing16"
         style={animatePaddingdStyle}
@@ -194,7 +206,7 @@ export const CurrencyInputPanel = memo(
             alignItems="center"
             height={MAX_INPUT_FONT_SIZE}
             overflow="hidden"
-            style={loadingFlexStyle}
+            style={loadingOpacityStyle}
             onLayout={onLayout}>
             {currencyInfo ? (
               <AmountInput
@@ -244,16 +256,17 @@ export const CurrencyInputPanel = memo(
           </Flex>
         </AnimatedFlex>
 
-        {currencyInfo && !isCollapsed && (
-          <Flex
+        {currencyInfo && (
+          <AnimatedFlex
             row
-            alignContent="center"
-            alignItems="center"
             gap="$spacing8"
-            // TODO: remove this fix height when we implement "getMax" button, this is to keep entire container hieight consistent on focus change
             height={spacing.spacing36}
             justifyContent="space-between"
-            paddingTop="$spacing16">
+            left={spacing.spacing16}
+            paddingTop="$spacing16"
+            position="absolute"
+            style={animatedExpandedRowStyle}
+            width="100%">
             <Flex shrink>
               <Text color="$neutral2" numberOfLines={1} variant="body3">
                 {!isFiatInput ? (usdValue ? formattedFiatValue : '') : formattedCurrencyAmount}
@@ -264,7 +277,6 @@ export const CurrencyInputPanel = memo(
                 {formatCurrencyAmount({ value: currencyBalance, type: NumberType.TokenNonTx })}{' '}
                 {currencyInfo.currency.symbol}
               </Text>
-
               {onSetMax && (
                 <MaxAmountButton
                   currencyAmount={currencyAmount}
@@ -273,7 +285,7 @@ export const CurrencyInputPanel = memo(
                 />
               )}
             </Flex>
-          </Flex>
+          </AnimatedFlex>
         )}
       </AnimatedFlex>
     )
