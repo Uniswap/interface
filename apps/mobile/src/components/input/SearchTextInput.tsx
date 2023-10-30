@@ -132,30 +132,34 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             <Icons.Search color="$neutral2" size="$icon.20" />
           </Flex>
 
-          <Input
-            ref={ref}
-            ellipse
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoFocus={autoFocus}
-            backgroundColor="$transparent"
-            borderWidth={0}
-            f={1}
-            fontFamily="$body"
-            height="100%"
-            maxFontSizeMultiplier={fonts.body1.maxFontSizeMultiplier}
-            pl="$none"
-            placeholder={placeholder}
-            placeholderTextColor="$neutral2"
-            pr="$spacing8"
-            py="$none"
-            returnKeyType="done"
-            textContentType="none"
-            value={value}
-            onChangeText={onChangeTextInput}
-            onFocus={onTextInputFocus}
-            onSubmitEditing={onTextInputSubmitEditing}
-          />
+          <Flex grow alignSelf="stretch" mr="$spacing8" overflow="hidden">
+            <Input
+              ref={ref}
+              ellipse
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoFocus={autoFocus}
+              backgroundColor="$transparent"
+              borderWidth={0}
+              fontFamily="$body"
+              height="100%"
+              maxFontSizeMultiplier={fonts.body1.maxFontSizeMultiplier}
+              p="$none"
+              placeholder={placeholder}
+              placeholderTextColor="$neutral2"
+              position="absolute"
+              returnKeyType="done"
+              textContentType="none"
+              top={0}
+              value={value}
+              // This fixes Android TextInput issue when the width is changed
+              // (the placeholder text was wrapping in 2 lines when the width was changed)
+              width={value ? undefined : 9999}
+              onChangeText={onChangeTextInput}
+              onFocus={onTextInputFocus}
+              onSubmitEditing={onTextInputSubmitEditing}
+            />
+          </Flex>
 
           <AnimatePresence>
             {showClearButton ? (
