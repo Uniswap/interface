@@ -175,7 +175,7 @@ export function QRAnimation({
           />
         </GradientBackground>
       </AnimatedFlex>
-      <Flex grow justifyContent="space-between" px="$spacing16" py="$spacing24">
+      <Flex grow justifyContent="space-between" pb="$spacing12" pt="$spacing24" px="$spacing16">
         <Flex centered grow gap="$spacing36" mb="$spacing12" mt="$spacing12">
           <Flex centered gap="$spacing12" pt="$spacing48">
             <AnimatedFlex entering={qrSlideUpAndFadeIn}>

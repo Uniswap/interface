@@ -29,7 +29,7 @@ export function SettingsViewSeedPhraseScreen({
   }
 
   return (
-    <Screen my="$spacing24">
+    <Screen mb="$spacing12" mt="$spacing24">
       <BackHeader alignment="center" px="$spacing16">
         <Text variant="body1">{t('Recovery phrase')}</Text>
       </BackHeader>

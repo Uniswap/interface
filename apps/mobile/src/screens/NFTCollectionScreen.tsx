@@ -5,6 +5,7 @@ import React, { ReactElement, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { useAnimatedScrollHandler, useSharedValue, withTiming } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
@@ -83,6 +84,7 @@ export function NFTCollectionScreen({
   renderedInModal = false,
 }: NFTCollectionScreenProps): ReactElement {
   const { t } = useTranslation()
+  const insets = useSafeAreaInsets()
   const dimensions = useDeviceDimensions()
   const navigation = useAppStackNavigation()
 
@@ -273,6 +275,7 @@ export function NFTCollectionScreen({
                 loading={headerDataLoading}
               />
             }
+            contentContainerStyle={{ paddingBottom: insets.bottom }}
             data={gridDataWithLoadingElements}
             estimatedItemSize={ESTIMATED_ITEM_SIZE}
             estimatedListSize={{

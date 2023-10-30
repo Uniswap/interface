@@ -9,6 +9,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
       "backgroundColor": "#FFFFFF",
       "flex": 1,
       "flexDirection": "column",
+      "paddingBottom": undefined,
       "paddingLeft": undefined,
       "paddingRight": undefined,
     }
@@ -18,15 +19,10 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
     onLayout={[Function]}
     style={
       [
-        [
-          {
-            "flex": 1,
-            "justifyContent": "flex-end",
-          },
-          {
-            "marginBottom": undefined,
-          },
-        ],
+        {
+          "flex": 1,
+          "justifyContent": "flex-end",
+        },
         {
           "paddingBottom": 0,
         },
@@ -53,7 +49,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               "flexGrow": 1,
               "gap": 16,
               "minHeight": 0,
-              "paddingBottom": 16,
+              "paddingBottom": 12,
               "paddingLeft": 16,
               "paddingRight": 16,
               "paddingTop": 200,

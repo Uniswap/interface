@@ -3,6 +3,7 @@ import { default as React, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, ListRenderItemInfo, SectionList, StyleSheet } from 'react-native'
 import { FadeInDown, FadeOutUp } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { SvgProps } from 'react-native-svg'
 import { useDispatch } from 'react-redux'
 import {
@@ -34,7 +35,7 @@ import LikeSquare from 'ui/src/assets/icons/like-square.svg'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import MessageQuestion from 'ui/src/assets/icons/message-question.svg'
 import UniswapIcon from 'ui/src/assets/icons/uniswap-logo.svg'
-import { iconSizes } from 'ui/src/theme'
+import { iconSizes, spacing } from 'ui/src/theme'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { uniswapUrls } from 'wallet/src/constants/urls'
@@ -50,6 +51,7 @@ import { resetWallet, setFinishedOnboarding } from 'wallet/src/features/wallet/s
 export function SettingsScreen(): JSX.Element {
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
   const colors = useSporeColors()
+  const insets = useSafeAreaInsets()
   const { deviceSupportsBiometrics } = useBiometricContext()
   const { t } = useTranslation()
 
@@ -221,7 +223,7 @@ export function SettingsScreen(): JSX.Element {
     <HeaderScrollScreen
       alwaysShowCenterElement
       centerElement={<Text variant="body1">{t('Settings')}</Text>}>
-      <Flex px="$spacing24" py="$spacing12">
+      <Flex pb={insets.bottom - spacing.spacing16} pt="$spacing12" px="$spacing24">
         <SectionList
           ItemSeparatorComponent={renderItemSeparator}
           ListFooterComponent={<FooterSettings />}

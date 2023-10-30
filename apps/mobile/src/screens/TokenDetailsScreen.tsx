@@ -19,7 +19,6 @@ import { TokenDetailsLinks } from 'src/components/TokenDetails/TokenDetailsLinks
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import Trace from 'src/components/Trace/Trace'
-import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { useNavigateToSend } from 'src/features/send/hooks'
@@ -29,15 +28,7 @@ import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
 import { Screens } from 'src/screens/Screens'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { useSkeletonLoading } from 'src/utils/useSkeletonLoading'
-import {
-  AnimatedFlex,
-  Flex,
-  Separator,
-  Text,
-  TouchableArea,
-  useMedia,
-  useSporeColors,
-} from 'ui/src'
+import { AnimatedFlex, Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
@@ -170,7 +161,6 @@ function TokenDetails({
   showSkeleton: boolean
 }): JSX.Element {
   const colors = useSporeColors()
-  const media = useMedia()
   const insets = useSafeAreaInsets()
 
   const currencyChainId = currencyIdToChain(_currencyId) ?? ChainId.Mainnet
@@ -245,8 +235,6 @@ function TokenDetails({
     dismissWarningCallback,
     navigateToSwap,
   ])
-
-  const pb = IS_IOS && !media.short ? '$spacing16' : '$none'
 
   const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen
 
@@ -333,8 +321,7 @@ function TokenDetails({
         <AnimatedFlex
           backgroundColor="$surface1"
           entering={FadeInDown}
-          pb={pb}
-          style={{ marginBottom: IS_ANDROID ? insets.bottom : undefined }}>
+          style={{ marginBottom: insets.bottom }}>
           <TokenDetailsActionButtons
             tokenColor={tokenColor}
             onPressBuy={(): void => onPressSwap(CurrencyField.OUTPUT)}

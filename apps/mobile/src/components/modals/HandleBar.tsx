@@ -24,7 +24,8 @@ export const HandleBar = ({
     <Flex mt={IS_ANDROID ? '$spacing4' : '$none'}>
       <Flex
         alignItems="center"
-        borderRadius="$rounded24"
+        borderTopLeftRadius="$rounded24"
+        borderTopRightRadius="$rounded24"
         justifyContent="center"
         style={{
           ...containerFlexStyles,

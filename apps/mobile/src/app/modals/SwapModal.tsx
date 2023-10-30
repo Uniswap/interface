@@ -34,7 +34,7 @@ export function SwapModal(): JSX.Element {
       fullScreen
       hideHandlebar
       hideKeyboardOnDismiss
-      renderBehindInset
+      renderBehindTopInset
       backgroundColor={colors.surface1.get()}
       name={ModalName.Swap}
       onClose={onClose}>

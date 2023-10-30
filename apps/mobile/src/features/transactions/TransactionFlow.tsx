@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next'
 import { TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Screen } from 'src/components/layout/Screen'
 import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import Trace from 'src/components/Trace/Trace'
-import { IS_ANDROID } from 'src/constants/globals'
 import { ModalName, SectionName } from 'src/features/telemetry/constants'
 import { SwapSettingsModal } from 'src/features/transactions/swap/modals/SwapSettingsModal'
 import { SwapForm } from 'src/features/transactions/swap/SwapForm'
@@ -107,15 +107,12 @@ export function TransactionFlow({
 
   return (
     <TouchableWithoutFeedback>
-      <Flex style={{ marginTop: insets.top }}>
+      <Screen edges={['top']}>
         <HandleBar backgroundColor="none" />
         <AnimatedFlex grow row height="100%" style={wrapperStyle}>
-          <Flex
-            gap="$spacing16"
-            pb={IS_ANDROID ? '$spacing32' : '$spacing16'}
-            px="$spacing16"
-            style={{ marginBottom: insets.bottom }}
-            width="100%">
+          {/* Padding bottom must have a similar size to the handlebar 
+          height as 100% height doesn't include the handlebar height */}
+          <Flex gap="$spacing16" pb="$spacing24" px="$spacing16" width="100%">
             {step !== TransactionStep.SUBMITTED && (
               <HeaderContent
                 customSlippageTolerance={customSlippageTolerance}
@@ -179,7 +176,7 @@ export function TransactionFlow({
 
           {showRecipientSelector && recipientSelector ? recipientSelector : null}
         </AnimatedFlex>
-      </Flex>
+      </Screen>
     </TouchableWithoutFeedback>
   )
 }

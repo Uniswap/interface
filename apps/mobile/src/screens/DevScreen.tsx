@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import { I18nManager, ScrollView } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Switch } from 'src/components/buttons/Switch'
-import { SheetScreen } from 'src/components/layout/SheetScreen'
+import { Screen } from 'src/components/layout/Screen'
 import { resetDismissedWarnings } from 'src/features/tokens/tokensSlice'
 import { Screens } from 'src/screens/Screens'
 import { Flex, Text, TouchableArea } from 'ui/src'
+import { spacing } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -16,6 +18,7 @@ import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { resetWallet } from 'wallet/src/features/wallet/slice'
 
 export function DevScreen(): JSX.Element {
+  const insets = useSafeAreaInsets()
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccount()
   const [rtlEnabled, setRTLEnabled] = useState(I18nManager.isRTL)
@@ -59,11 +62,11 @@ export function DevScreen(): JSX.Element {
   }
 
   return (
-    <SheetScreen>
-      <Flex row justifyContent="flex-end" pb="$spacing12" pt="$spacing36" px="$spacing16">
+    <Screen edges={['top']}>
+      <Flex row justifyContent="flex-end" px="$spacing16" py="$spacing12">
         <BackButton />
       </Flex>
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + spacing.spacing12 }}>
         <Flex alignItems="center">
           <Text color="$neutral1" textAlign="center" variant="heading3">
             {`Your Account: ${activeAccount?.address || 'none'}`}
@@ -109,6 +112,6 @@ export function DevScreen(): JSX.Element {
           </Flex>
         </Flex>
       </ScrollView>
-    </SheetScreen>
+    </Screen>
   )
 }

@@ -3,6 +3,7 @@ import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItem, ListRenderItemInfo } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector } from 'src/app/hooks'
 import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
 import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
@@ -15,7 +16,7 @@ import {
   getTokensOrderByValues,
 } from 'src/features/explore/utils'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
-import { Flex, Inset, Text } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -41,6 +42,7 @@ type ExploreSectionsProps = {
 
 export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element {
   const { t } = useTranslation()
+  const insets = useSafeAreaInsets()
 
   // Top tokens sorting
   const orderBy = useAppSelector(selectTokensOrderBy)
@@ -143,7 +145,6 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
           <Loader.Token repeat={5} />
         </Flex>
       }
-      ListFooterComponent={<Inset all="$spacing12" />}
       ListHeaderComponent={
         <>
           <FavoritesSection showLoading={showLoading} />
@@ -163,6 +164,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
           </Flex>
         </>
       }
+      contentContainerStyle={{ paddingBottom: insets.bottom }}
       data={showLoading ? undefined : topTokenItems}
       keyExtractor={tokenKey}
       renderItem={renderItem}

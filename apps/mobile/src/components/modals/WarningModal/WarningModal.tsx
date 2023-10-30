@@ -1,12 +1,11 @@
 import React, { PropsWithChildren, ReactNode } from 'react'
 import { ColorValue } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { WarningColor, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Button, Flex, Icons, Text, ThemeKeys, useSporeColors } from 'ui/src'
-import { opacify, spacing } from 'ui/src/theme'
+import { opacify } from 'ui/src/theme'
 
 export type WarningModalProps = {
   onClose?: () => void
@@ -62,8 +61,6 @@ export default function WarningModal({
   const alertColor = getAlertColor(severity)
   const alertColorValue = alertColor.text as keyof typeof colors
 
-  const insets = useSafeAreaInsets()
-
   return (
     <BottomSheetModal
       backgroundColor={colors.surface1.get()}
@@ -74,8 +71,8 @@ export default function WarningModal({
       <Flex
         centered
         gap="$spacing12"
-        pb={insets.bottom === 0 ? '$spacing24' : insets.bottom + spacing.spacing12}
-        pt="$spacing24"
+        pb="$spacing12"
+        pt={hideHandlebar ? '$spacing24' : '$spacing12'}
         px="$spacing24">
         {!hideIcon && (
           <Flex

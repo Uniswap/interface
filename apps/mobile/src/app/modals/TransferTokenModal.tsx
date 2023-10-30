@@ -21,7 +21,7 @@ export function TransferTokenModal(): JSX.Element {
       fullScreen
       hideHandlebar
       hideKeyboardOnDismiss
-      renderBehindInset
+      renderBehindTopInset
       backgroundColor={colors.surface1.get()}
       name={ModalName.Send}
       onClose={onClose}>

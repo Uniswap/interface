@@ -78,7 +78,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
       {currentScreenState === ScannerModalState.WalletQr && activeAddress && (
         <WalletQRCode address={activeAddress} />
       )}
-      <Flex centered mb="$spacing36" mt="$spacing16" mx="$spacing16">
+      <Flex centered mb="$spacing12" mt="$spacing16" mx="$spacing16">
         <TouchableArea
           hapticFeedback
           borderColor={isDarkMode ? '$transparent' : '$surface3'}

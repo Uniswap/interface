@@ -10,7 +10,6 @@ import {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useDynamicFontSizing, useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { DecimalPad } from 'src/components/input/DecimalPad'
@@ -212,15 +211,13 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
     transform: [{ translateX: screenXOffset.value }],
   }))
 
-  const insets = useSafeAreaInsets()
-
   // we only show loading when there is no error text and value is not empty
   const selectTokenLoading = quoteCurrencyAmountLoading && !errorText && !!value
 
   return (
     <>
       {!showConnectingToMoonpayScreen && (
-        <AnimatedFlex row height="100%" style={wrapperStyle}>
+        <AnimatedFlex row height="100%" pb="$spacing12" style={wrapperStyle}>
           {isSheetReady && (
             <AnimatedFlex
               entering={FadeIn}
@@ -228,7 +225,6 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
               gap="$spacing16"
               pb="$spacing16"
               px="$spacing24"
-              style={{ marginBottom: insets.bottom }}
               width="100%">
               <Text variant="subheading1">{t('Buy')}</Text>
               <Flex gap="$spacing16" onLayout={onInputPanelLayout}>
@@ -300,7 +296,6 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
                 gap="$spacing8"
                 left={0}
                 opacity={isLayoutPending ? 0 : 1}
-                pb="$spacing24"
                 position="absolute"
                 px="$spacing24"
                 right={0}

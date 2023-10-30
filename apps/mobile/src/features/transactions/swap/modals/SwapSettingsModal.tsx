@@ -110,7 +110,7 @@ export function SwapSettingsModal({
       backgroundColor={colors.surface1.get()}
       name={ModalName.SwapSettings}
       onClose={onClose}>
-      <Flex gap="$spacing16" mb="$spacing28" px="$spacing24" py="$spacing12">
+      <Flex gap="$spacing16" px="$spacing24" py="$spacing12">
         <Flex row justifyContent="space-between">
           <TouchableArea onPress={(): void => setView(SwapSettingsModalView.Options)}>
             <Icons.Chevron

@@ -10,8 +10,9 @@ export function WebViewScreen({
   route,
 }: SettingsStackScreenProp<Screens.WebView> | AppStackScreenProp<Screens.WebView>): JSX.Element {
   const { headerTitle, uriLink } = route.params
+
   return (
-    <Screen edges={['top', 'left', 'right']}>
+    <Screen edges={['top', 'left', 'right', 'bottom']}>
       <BackHeader alignment="center" mb="$spacing16" pt="$spacing4" px="$spacing12">
         <Text variant="body1">{headerTitle}</Text>
       </BackHeader>

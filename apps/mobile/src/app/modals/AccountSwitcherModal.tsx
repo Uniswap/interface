@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Screen } from 'src/components/layout/Screen'
 import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { IS_ANDROID } from 'src/constants/globals'
@@ -49,13 +48,13 @@ export function AccountSwitcherModal(): JSX.Element {
       backgroundColor={colors.surface1.get()}
       name={ModalName.AccountSwitcher}
       onClose={(): Action => dispatch(closeModal({ name: ModalName.AccountSwitcher }))}>
-      <Screen bg="$surface1" noInsets={true}>
+      <Flex bg="$surface1">
         <AccountSwitcher
           onClose={(): void => {
             dispatch(closeModal({ name: ModalName.AccountSwitcher }))
           }}
         />
-      </Screen>
+      </Flex>
     </BottomSheetModal>
   )
 }
@@ -242,7 +241,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const fullScreenContentHeight = 0.89 * dimensions.fullHeight
 
   return (
-    <Flex fill $short={{ mb: '$none' }} maxHeight={fullScreenContentHeight} mb="$spacing12">
+    <Flex $short={{ mb: '$none' }} maxHeight={fullScreenContentHeight} mb="$spacing12">
       <Flex gap="$spacing16" pb="$spacing16" pt="$spacing12">
         <AddressDisplay
           showCopy
@@ -267,12 +266,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         isVisible={modalState.isOpen}
         onPress={onPressAccount}
       />
-      <TouchableArea
-        hapticFeedback
-        $short={{ mb: '$spacing24' }}
-        mb="$spacing36"
-        mt="$spacing16"
-        onPress={onPressAddWallet}>
+      <TouchableArea hapticFeedback mt="$spacing16" onPress={onPressAddWallet}>
         <Flex row alignItems="center" gap="$spacing16" ml="$spacing24">
           <Flex borderColor="$surface3" borderRadius="$roundedFull" borderWidth={1} p="$spacing8">
             <Icons.Plus color="$neutral2" size="$icon.12" strokeWidth={2} />

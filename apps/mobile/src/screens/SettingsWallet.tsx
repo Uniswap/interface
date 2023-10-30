@@ -266,7 +266,7 @@ export function SettingsWallet({
         </Flex>
       </BackHeader>
 
-      <Flex fill p="$spacing24">
+      <Flex fill p="$spacing24" pb="$spacing12">
         <Flex fill>
           <SectionList
             ItemSeparatorComponent={renderItemSeparator}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Action } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { Switch } from 'src/components/buttons/Switch'
@@ -12,10 +13,12 @@ import { setCustomEndpoint } from 'src/features/tweaks/slice'
 import { Statsig } from 'statsig-react'
 import { useExperiment } from 'statsig-react-native'
 import { Button, Flex, Text } from 'ui/src'
+import { spacing } from 'ui/src/theme'
 import { EXPERIMENT_NAMES, FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 
 export function ExperimentsModal(): JSX.Element {
+  const insets = useSafeAreaInsets()
   const dispatch = useAppDispatch()
   const customEndpoint = useAppSelector(selectCustomEndpoint)
 
@@ -43,15 +46,11 @@ export function ExperimentsModal(): JSX.Element {
   return (
     <BottomSheetModal
       fullScreen
+      renderBehindBottomInset
       name={ModalName.Experiments}
       onClose={(): Action => dispatch(closeModal({ name: ModalName.Experiments }))}>
-      <ScrollView>
-        <Flex
-          gap="$spacing16"
-          justifyContent="flex-start"
-          pb="$spacing36"
-          pt="$spacing12"
-          px="$spacing24">
+      <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + spacing.spacing12 }}>
+        <Flex gap="$spacing16" justifyContent="flex-start" pt="$spacing12" px="$spacing24">
           <Flex gap="$spacing8">
             <Flex gap="$spacing16" my="$spacing16">
               <Text variant="subheading1">⚙️ Custom GraphQL Endpoint</Text>

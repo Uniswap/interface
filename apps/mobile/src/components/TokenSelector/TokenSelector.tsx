@@ -20,7 +20,6 @@ import {
   TokenSelectorFlow,
 } from 'src/components/TokenSelector/types'
 import Trace from 'src/components/Trace/Trace'
-import { IS_IOS } from 'src/constants/globals'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { getClipboard } from 'src/utils/clipboard'
 import { Flex, useSporeColors } from 'ui/src'
@@ -120,7 +119,7 @@ function TokenSelectorContent({
 
   return (
     <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
-      <Flex grow gap="$spacing16" pb={IS_IOS ? '$spacing16' : '$none'} px="$spacing16">
+      <Flex grow gap="$spacing16" px="$spacing16">
         <SearchTextInput
           showCancelButton
           backgroundColor="$surface2"
@@ -187,6 +186,7 @@ function _TokenSelectorModal(props: TokenSelectorProps): JSX.Element {
       fullScreen
       hideKeyboardOnDismiss
       hideKeyboardOnSwipeDown
+      renderBehindBottomInset
       backgroundColor={colors.surface1.get()}
       name={ModalName.TokenSelector}
       snapPoints={['65%', '100%']}

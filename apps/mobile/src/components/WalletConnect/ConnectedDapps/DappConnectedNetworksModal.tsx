@@ -57,7 +57,7 @@ export function DappConnectedNetworkModal({
 
   return (
     <BottomSheetModal name={ModalName.WCDappConnectedNetworks} onClose={onClose}>
-      <Flex centered gap="$spacing16" mb="$spacing24" px="$spacing24" py="$spacing12">
+      <Flex centered gap="$spacing16" px="$spacing24" py="$spacing12">
         <Flex alignItems="center" gap="$spacing8">
           <DappHeaderIcon dapp={dapp} />
           <Text textAlign="center" variant="buttonLabel2">

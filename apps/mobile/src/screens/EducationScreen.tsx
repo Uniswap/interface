@@ -2,7 +2,8 @@ import React, { useMemo } from 'react'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { Carousel } from 'src/components/carousel/Carousel'
 import { educationContent } from 'src/components/education'
-import { SheetScreen } from 'src/components/layout/SheetScreen'
+import { Screen } from 'src/components/layout/Screen'
+import { IS_IOS } from 'src/constants/globals'
 import { Screens } from 'src/screens/Screens'
 
 export function EducationScreen({
@@ -20,8 +21,8 @@ export function EducationScreen({
   )
 
   return (
-    <SheetScreen>
+    <Screen edges={IS_IOS ? [] : ['top']} mt={IS_IOS ? '$spacing24' : '$spacing8'}>
       <Carousel slides={content} />
-    </SheetScreen>
+    </Screen>
   )
 }

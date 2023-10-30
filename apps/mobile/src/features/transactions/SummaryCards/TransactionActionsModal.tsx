@@ -160,7 +160,7 @@ export default function TransactionActionsModal({
       backgroundColor="statusCritical"
       name={ModalName.TransactionActions}
       onClose={handleClose}>
-      <Flex pb="$spacing24" px="$spacing12">
+      <Flex px="$spacing12">
         <ActionSheetModalContent
           header={
             <Text color="$neutral3" p="$spacing16" variant="body2">

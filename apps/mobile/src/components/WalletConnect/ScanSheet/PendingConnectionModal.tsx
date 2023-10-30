@@ -246,7 +246,8 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         borderRadius="$rounded12"
         gap="$spacing16"
         overflow="hidden"
-        py="$spacing32">
+        pb="$spacing12"
+        pt="$spacing32">
         <Flex fill alignItems="center" gap="$spacing16" justifyContent="flex-end">
           <DappHeaderIcon dapp={pendingSession.dapp} />
           <Text

@@ -5,7 +5,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { HandleBar } from 'src/components/modals/HandleBar'
-import { IS_ANDROID } from 'src/constants/globals'
 import { ModalName, SectionName } from 'src/features/telemetry/constants'
 import {
   SwapFormContextProvider,
@@ -70,7 +69,7 @@ export function SwapFlow({
   return (
     <BottomSheetModal
       hideKeyboardOnDismiss
-      renderBehindInset
+      renderBehindTopInset
       backgroundColor={colors.surface1.get()}
       fullScreen={shouldShowFullscreen}
       hideHandlebar={shouldShowFullscreen}
@@ -80,11 +79,16 @@ export function SwapFlow({
         <Flex mt={shouldShowFullscreen ? insets.top : '$spacing8'}>
           {shouldShowFullscreen && <HandleBar backgroundColor="none" />}
 
-          <AnimatedFlex grow row height="100%" style={wrapperStyle}>
+          <AnimatedFlex
+            grow
+            row
+            height={shouldShowFullscreen ? '100%' : undefined}
+            style={wrapperStyle}>
+            {/* Padding bottom must have a similar size to the handlebar 
+            height as 100% height doesn't include the handlebar height */}
             <Flex
-              pb={IS_ANDROID ? '$spacing32' : '$spacing16'}
+              pb={shouldShowFullscreen ? '$spacing24' : '$spacing12'}
               px="$spacing16"
-              style={{ marginBottom: insets.bottom }}
               width="100%">
               <SwapScreenContextProvider>
                 <SwapFormContextProvider prefilledState={modifiedPrefilledState} onClose={onClose}>

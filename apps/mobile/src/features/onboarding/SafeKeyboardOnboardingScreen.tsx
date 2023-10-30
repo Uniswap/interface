@@ -3,12 +3,11 @@ import { LinearGradient } from 'expo-linear-gradient'
 import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, ScrollView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Screen } from 'src/components/layout/Screen'
 import { IS_IOS } from 'src/constants/globals'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
 import { AnimatedFlex, Flex, flexStyles, SpaceTokens, Text, useMedia, useSporeColors } from 'ui/src'
-import { opacify } from 'ui/src/theme'
+import { opacify, spacing } from 'ui/src/theme'
 
 type OnboardingScreenProps = {
   subtitle?: string
@@ -26,7 +25,6 @@ export function SafeKeyboardOnboardingScreen({
   const headerHeight = useHeaderHeight()
   const colors = useSporeColors()
   const media = useMedia()
-  const insets = useSafeAreaInsets()
   const keyboard = useKeyboardLayout()
 
   const header = (
@@ -68,14 +66,13 @@ export function SafeKeyboardOnboardingScreen({
   // This makes sure this component behaves just like `behavior="padding"` when
   // there's enough space on the screen to show all components.
   const minHeight = compact ? keyboard.containerHeight : 0
-  const responsiveBottom = media.short ? 10 : insets.bottom
 
   return (
-    <Screen edges={['right', 'left']}>
+    <Screen edges={['right', 'left', 'bottom']}>
       <KeyboardAvoidingView
         behavior={IS_IOS ? 'padding' : undefined}
         contentContainerStyle={containerStyle}
-        style={[styles.base, { marginBottom: responsiveBottom }]}>
+        style={styles.base}>
         <ScrollView
           bounces={false}
           contentContainerStyle={flexStyles.grow}
@@ -86,9 +83,8 @@ export function SafeKeyboardOnboardingScreen({
             exiting={FadeOut}
             gap="$spacing16"
             minHeight={minHeight}
-            pb="$spacing16"
             px="$spacing16"
-            style={[containerStyle, { paddingTop: headerHeight }]}>
+            style={[containerStyle, styles.container, { paddingTop: headerHeight }]}>
             {header}
             {page}
           </AnimatedFlex>
@@ -106,6 +102,9 @@ const styles = StyleSheet.create({
   },
   compact: {
     flexGrow: 0,
+  },
+  container: {
+    paddingBottom: spacing.spacing12,
   },
   expand: {
     flexGrow: 1,

@@ -29,10 +29,9 @@ import {
   LinearGradient,
   Text,
   TouchableArea,
-  useMedia,
   useSporeColors,
 } from 'ui/src'
-import { borderRadii, spacing } from 'ui/src/theme'
+import { borderRadii } from 'ui/src/theme'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { useHighestBalanceNativeCurrencyId } from 'wallet/src/features/dataApi/balances'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -55,9 +54,6 @@ export function NavBar(): JSX.Element {
   const insets = useSafeAreaInsets()
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
-  const { short } = useMedia()
-
-  const BUTTONS_OFFSET = short ? spacing.spacing24 : spacing.none
 
   return (
     <>
@@ -83,7 +79,7 @@ export function NavBar(): JSX.Element {
         pointerEvents="box-none"
         position="absolute"
         right={0}
-        style={{ paddingBottom: insets.bottom + BUTTONS_OFFSET }}>
+        style={{ paddingBottom: insets.bottom }}>
         <Flex
           fill
           row
