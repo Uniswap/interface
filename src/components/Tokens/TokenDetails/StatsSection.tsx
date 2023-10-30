@@ -17,9 +17,13 @@ import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow'
 export const StatWrapper = styled.div`
   color: ${({ theme }) => theme.neutral2};
   font-size: 14px;
-  min-width: 168px;
+  min-width: 121px;
   flex: 1;
   padding: 24px 0px;
+
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    min-width: 168px;
+  }
 `
 const TokenStatsSection = styled.div`
   display: flex;
