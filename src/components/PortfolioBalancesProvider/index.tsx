@@ -2,8 +2,8 @@ import { useWeb3React } from '@web3-react/core'
 import { usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { GQL_MAINNET_CHAINS } from 'graphql/data/util'
 import usePrevious from 'hooks/usePrevious'
-import { atom } from 'jotai'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { atom, useAtom } from 'jotai'
+import { useUpdateAtom } from 'jotai/utils'
 import { ReactNode, useEffect } from 'react'
 
 import { usePendingActivity } from '../AccountDrawer/MiniPortfolio/Activity/hooks'
@@ -46,17 +46,20 @@ export function PortfolioBalancesProvider({ children }: { children: ReactNode })
 
 export function useCachedPortfolioBalances(params?: { freshBalancesRequired: boolean }) {
   const { account } = useWeb3React()
-  const { data, refetch, loading } = usePortfolioBalancesQuery({
-    skip: !account,
+  const [hasStaleBalances, setHasStaleBalances] = useAtom(hasUnfetchedBalancesAtom)
+
+  const { data, loading, refetch } = usePortfolioBalancesQuery({
     variables: { ownerAddress: account ?? '', chains: GQL_MAINNET_CHAINS },
     fetchPolicy: 'cache-only',
   })
-  const hasStaleBalances = useAtomValue(hasUnfetchedBalancesAtom)
 
   // Fetches new balances when existing balances are stale and the UI requires fresh balances (e.g. component goes from hidden to visible)
   useEffect(() => {
-    if (hasStaleBalances && params?.freshBalancesRequired) refetch()
-  }, [params?.freshBalancesRequired, refetch, hasStaleBalances])
+    if (hasStaleBalances && params?.freshBalancesRequired && account) {
+      refetch()
+      setHasStaleBalances(false)
+    }
+  }, [params?.freshBalancesRequired, refetch, hasStaleBalances, account, setHasStaleBalances])
 
   return { portfolio: data?.portfolios?.[0], stale: hasStaleBalances, loading }
 }
