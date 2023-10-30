@@ -1,11 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { ChainId, Currency, Fraction } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getChainInfo } from 'constants/chainInfo'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TokenQueryData } from 'graphql/data/Token'
-import { useTotalSupply } from 'hooks/useTotalSupply'
-import { ReactNode, useMemo } from 'react'
+import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
@@ -90,22 +89,19 @@ type StatsSectionProps = {
   // volume24H?: NumericStat
 }
 export default function StatsSection(props: StatsSectionProps) {
-  const { chainId, address, currency, tokenQueryData } = props
+  const { chainId, address, tokenQueryData } = props
   const { label, infoLink } = getChainInfo(chainId)
   const isInfoTDPEnabled = useInfoTDPEnabled()
 
-  const price = tokenQueryData?.project?.markets?.[0].price?.value ?? 0 // aggregated market price from CoinGecko, used to calculate FDV
-  const totalSupply = useTotalSupply(currency)
-  const FDV = useMemo(() => {
-    const priceFraction = new Fraction(price * 10 ** 18, 10 ** 18)
-    return Number.parseFloat(totalSupply?.multiply(priceFraction).toExact() ?? '0')
-  }, [price, totalSupply]) // todo(kristiehuang): ask BE team to re-implement FDV in gql
+  const tokenMarketInfo = tokenQueryData?.market
+  const tokenProjectMarketInfo = tokenQueryData?.project?.markets?.[0] // aggregated market price from CoinGecko
 
-  const marketCap = tokenQueryData?.project?.markets?.[0].marketCap?.value ?? FDV
-  const TVL = tokenQueryData?.market?.totalValueLocked?.value
-  const volume24H = tokenQueryData?.market?.volume24H?.value
-  const priceHigh52W = tokenQueryData?.market?.priceHigh52W?.value
-  const priceLow52W = tokenQueryData?.market?.priceLow52W?.value
+  const FDV = tokenProjectMarketInfo?.fullyDilutedValuation?.value
+  const marketCap = tokenProjectMarketInfo?.marketCap?.value ?? FDV
+  const TVL = tokenMarketInfo?.totalValueLocked?.value
+  const volume24H = tokenMarketInfo?.volume24H?.value
+  const priceHigh52W = tokenMarketInfo?.priceHigh52W?.value
+  const priceLow52W = tokenMarketInfo?.priceLow52W?.value
 
   const haveStats = isInfoTDPEnabled
     ? TVL || FDV || marketCap || volume24H

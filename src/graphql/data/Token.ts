@@ -64,6 +64,11 @@ gql`
             value
             currency
           }
+          fullyDilutedValuation {
+            id
+            value
+            currency
+          }
           marketCap {
             id
             value
