@@ -76,7 +76,7 @@ function NetworkCostDescription({ native }: { native: Currency }) {
   return (
     <ThemedText.LabelMicro>
       <Trans>
-        Network cost is paid in {native.symbol} on the {chainName} Network in order to transact.
+        Network cost is paid in {native.symbol} on the {chainName} network in order to transact.
       </Trans>{' '}
       <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-">
         <Trans>Learn more</Trans>
