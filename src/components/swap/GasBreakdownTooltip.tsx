@@ -31,7 +31,10 @@ const GasCostItem = ({ title, amount, itemValue }: GasCostItemProps) => {
   )
 }
 
-const GaslessSwapLabel = () => <UniswapXRouterLabel>$0</UniswapXRouterLabel>
+const GaslessSwapLabel = () => {
+  const { formatNumber } = useFormatter()
+  return <UniswapXRouterLabel>{formatNumber({ input: 0, type: NumberType.FiatGasPrice })}</UniswapXRouterLabel>
+}
 
 type GasBreakdownTooltipProps = { trade: InterfaceTrade; hideUniswapXDescription?: boolean }
 

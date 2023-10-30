@@ -255,6 +255,7 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
               <img
                 alt="UNKNOWN logo"
                 class="c11"
+                loading="lazy"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
               />
             </div>
@@ -274,6 +275,7 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
               <img
                 alt="WETH logo"
                 class="c11"
+                loading="lazy"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
               />
             </div>
@@ -506,7 +508,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
 .c9 {
   height: 8px;
   width: 40.698463777008904%;
-  background: #2172E5;
+  background: #0066d9;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   border-right: 1px solid #F9F9F9;
@@ -515,7 +517,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
 .c10 {
   height: 8px;
   width: 59.3015362229911%;
-  background: #2172E5;
+  background: #FC72FF;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   border-left: 1px solid #F9F9F9;

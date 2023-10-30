@@ -8,6 +8,7 @@ export function getNativeTokenDBAddress(chain: Chain): string | undefined {
     return undefined
   }
   switch (chain) {
+    // Celo & Polygon have precompiles for their native tokens
     case Chain.Celo:
     case Chain.Polygon:
       return nativeOnChain(pageChainId).wrapped.address

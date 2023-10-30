@@ -6,13 +6,9 @@ import { InterfaceTrade } from 'state/routing/types'
 import { isPreviewTrade } from 'state/routing/utils'
 import { Field } from 'state/swap/actions'
 import styled from 'styled-components'
-import { Divider, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
 
 import { SwapModalHeaderAmount } from './SwapModalHeaderAmount'
-
-const Rule = styled(Divider)`
-  margin: 16px 2px 24px 2px;
-`
 
 const HeaderContainer = styled(AutoColumn)`
   margin-top: 16px;
@@ -50,7 +46,7 @@ export default function SwapModalHeader({
           isLoading={isPreviewTrade(trade) && trade.tradeType === TradeType.EXACT_INPUT}
           tooltipText={
             trade.tradeType === TradeType.EXACT_INPUT ? (
-              <ThemedText.BodySmall>
+              <ThemedText.Caption>
                 <Trans>
                   Output is estimated. You will receive at least{' '}
                   <b>
@@ -58,9 +54,9 @@ export default function SwapModalHeader({
                   </b>{' '}
                   or the transaction will revert.
                 </Trans>
-              </ThemedText.BodySmall>
+              </ThemedText.Caption>
             ) : (
-              <ThemedText.BodySmall>
+              <ThemedText.Caption>
                 <Trans>
                   Input is estimated. You will sell at most{' '}
                   <b>
@@ -68,12 +64,11 @@ export default function SwapModalHeader({
                   </b>{' '}
                   or the transaction will revert.
                 </Trans>
-              </ThemedText.BodySmall>
+              </ThemedText.Caption>
             )
           }
         />
       </Column>
-      <Rule />
     </HeaderContainer>
   )
 }
