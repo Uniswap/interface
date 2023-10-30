@@ -43,6 +43,8 @@ const SWAP_DIRECTION_BUTTON_SIZE = iconSizes.icon24
 const SWAP_DIRECTION_BUTTON_INNER_PADDING = spacing.spacing8 + spacing.spacing2
 const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
 
+const ON_SELECTION_CHANGE_WAIT_TIME_MS = 500
+
 export function SwapFormScreen({ hideContent }: { hideContent: boolean }): JSX.Element {
   const { selectingCurrencyField } = useSwapFormContext()
 
@@ -63,6 +65,7 @@ function SwapFormContent(): JSX.Element {
   const { formatCurrencyAmount } = useLocalizedFormatter()
 
   const {
+    amountUpdatedTimeRef,
     derivedSwapInfo,
     exactAmountFiat,
     exactAmountFiatRef,
@@ -182,14 +185,32 @@ function SwapFormContent(): JSX.Element {
     }
   })
 
-  const onInputSelectionChange = useCallback((start: number, end: number) => {
-    inputSelectionRef.current = { start, end }
-    decimalPadRef.current?.updateDisabledKeys()
-  }, [])
-  const onOutputSelectionChange = useCallback((start: number, end: number) => {
-    outputSelectionRef.current = { start, end }
-    decimalPadRef.current?.updateDisabledKeys()
-  }, [])
+  const onInputSelectionChange = useCallback(
+    (start: number, end: number) => {
+      if (Date.now() - amountUpdatedTimeRef.current < ON_SELECTION_CHANGE_WAIT_TIME_MS) {
+        // We only want to trigger this callback when the user is manually moving the cursor,
+        // but this function is also triggered when the input value is updated,
+        // which causes issues on Android.
+        // We use `amountUpdatedTimeRef` to check if the input value was updated recently,
+        // and if so, we assume that the user is actually typing and not manually moving the cursor.
+        return
+      }
+      inputSelectionRef.current = { start, end }
+      decimalPadRef.current?.updateDisabledKeys()
+    },
+    [amountUpdatedTimeRef]
+  )
+  const onOutputSelectionChange = useCallback(
+    (start: number, end: number) => {
+      if (Date.now() - amountUpdatedTimeRef.current < ON_SELECTION_CHANGE_WAIT_TIME_MS) {
+        // See explanation in `onInputSelectionChange`.
+        return
+      }
+      outputSelectionRef.current = { start, end }
+      decimalPadRef.current?.updateDisabledKeys()
+    },
+    [amountUpdatedTimeRef]
+  )
 
   const onFocusInput = useCallback(
     (): void => updateSwapForm({ focusOnCurrencyField: CurrencyField.INPUT }),
