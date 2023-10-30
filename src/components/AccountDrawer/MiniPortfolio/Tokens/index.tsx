@@ -14,12 +14,12 @@ import { EllipsisStyle, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { splitHiddenTokens } from 'utils/splitHiddenTokens'
 
+import { useCachedPortfolioBalances } from '../../../PortfolioBalancesProvider'
 import { useToggleAccountDrawer } from '../..'
 import { hideSmallBalancesAtom } from '../../SmallBalanceToggle'
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
-import { useCachedPortfolioBalances } from '../../../PortfolioBalancesProvider'
 
 export default function Tokens() {
   const toggleAccountDrawer = useToggleAccountDrawer()
