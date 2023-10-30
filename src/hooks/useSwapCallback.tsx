@@ -63,7 +63,7 @@ export function useSwapCallback(
       slippageTolerance: allowedSlippage,
       deadline,
       permit: permitSignature,
-      ...getUniversalRouterFeeFields(trade),
+      ...getUniversalRouterFeeFields(trade), // wxc: router fee
     }
   )
 
