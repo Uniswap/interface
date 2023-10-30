@@ -135,7 +135,7 @@ export default function StatsSection(props: StatsSectionProps) {
                   title={<Trans>Market cap</Trans>}
                 />
                 <Stat
-                  dataCy="volume-1d"
+                  dataCy="volume-24h"
                   value={volume24H}
                   description={
                     <Trans>

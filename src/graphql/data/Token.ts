@@ -59,11 +59,6 @@ gql`
           address
         }
         markets(currencies: [USD]) {
-          price {
-            id
-            value
-            currency
-          }
           fullyDilutedValuation {
             id
             value
