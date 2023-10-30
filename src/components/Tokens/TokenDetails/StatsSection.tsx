@@ -121,14 +121,6 @@ export default function StatsSection(props: StatsSectionProps) {
                   title={<Trans>TVL</Trans>}
                 />
                 <Stat
-                  dataCy="fdv"
-                  value={FDV}
-                  description={HEADER_DESCRIPTIONS[TokenSortMethod.FULLY_DILUTED_VALUATION]}
-                  title={<Trans>FDV</Trans>}
-                />
-              </StatPair>
-              <StatPair>
-                <Stat
                   dataCy="market-cap"
                   value={marketCap}
                   description={
@@ -137,6 +129,14 @@ export default function StatsSection(props: StatsSectionProps) {
                     </Trans>
                   }
                   title={<Trans>Market cap</Trans>}
+                />
+              </StatPair>
+              <StatPair>
+                <Stat
+                  dataCy="fdv"
+                  value={FDV}
+                  description={HEADER_DESCRIPTIONS[TokenSortMethod.FULLY_DILUTED_VALUATION]}
+                  title={<Trans>FDV</Trans>}
                 />
                 <Stat
                   dataCy="volume-24h"
