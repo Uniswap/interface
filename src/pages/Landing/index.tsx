@@ -1,13 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { Trace, TraceEvent } from 'analytics'
+import { ReactComponent as UniswapAppLogo } from 'assets/svg/uniswap_app_logo.svg'
 import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { BaseButton } from 'components/Button'
-import { AppleLogo } from 'components/Logo/AppleLogo'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
@@ -117,6 +117,7 @@ const DownloadWalletLink = styled.a`
   line-height: 24px;
   font-weight: 535;
   text-align: center;
+  align-items: center;
 
   :hover {
     color: ${({ theme }) => theme.neutral3};
@@ -465,8 +466,8 @@ export default function Landing() {
               appStoreParams: `ct=Uniswap-Home-Page&mt=8`,
             })}
           >
-            <AppleLogo width="20" height="20" />
-            Download the Uniswap Wallet for iOS
+            <UniswapAppLogo width="20" height="20" />
+            Download the Uniswap app
           </DownloadWalletLink>
         </ContentContainer>
         <AboutContentContainer isDarkMode={isDarkMode}>
