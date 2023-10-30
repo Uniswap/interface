@@ -9,7 +9,7 @@ import { Button, Flex } from 'ui/src'
 import { validatePassword } from 'wallet/src/utils/password'
 
 export enum PasswordErrors {
-  InvalidPassword = 'InvalidPassword',
+  WeakPassword = 'WeakPassword',
   PasswordsDoNotMatch = 'PasswordsDoNotMatch',
 }
 
@@ -52,7 +52,7 @@ export function CloudBackupPasswordForm({
   const onPasswordSubmitEditing = (): void => {
     const { valid, validationErrorString } = validatePassword(password)
     if (!isConfirmation && !valid) {
-      setError(validationErrorString || PasswordErrors.InvalidPassword)
+      setError(validationErrorString || PasswordErrors.WeakPassword)
       return
     }
     if (isConfirmation && passwordToConfirm !== password) {
@@ -66,7 +66,7 @@ export function CloudBackupPasswordForm({
   const onPressNext = (): void => {
     const { valid, validationErrorString } = validatePassword(password)
     if (!isConfirmation && !valid) {
-      setError(validationErrorString || PasswordErrors.InvalidPassword)
+      setError(validationErrorString || PasswordErrors.WeakPassword)
       return
     }
     if (isConfirmation && passwordToConfirm !== password) {
@@ -80,8 +80,8 @@ export function CloudBackupPasswordForm({
   }
 
   let errorText = ''
-  if (error === PasswordErrors.InvalidPassword) {
-    errorText = t('Invalid password')
+  if (error === PasswordErrors.WeakPassword) {
+    errorText = t('Weak password')
   } else if (error === PasswordErrors.PasswordsDoNotMatch) {
     errorText = t('Passwords do not match')
   } else if (error) {
