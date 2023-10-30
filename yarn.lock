@@ -12041,7 +12041,7 @@ __metadata:
     redux-persist: 6.0.0
     redux-saga: 1.2.2
     redux-saga-test-plan: 4.0.4
-    rive-react-native: 6.0.4
+    rive-react-native: 6.1.1
     statsig-react-native: 4.11.0
     storybook: 7.0.2
     storybook-addon-apollo-client: ^4.1.4
@@ -33280,13 +33280,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rive-react-native@npm:6.0.4":
-  version: 6.0.4
-  resolution: "rive-react-native@npm:6.0.4"
+"rive-react-native@npm:6.1.1":
+  version: 6.1.1
+  resolution: "rive-react-native@npm:6.1.1"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 2d1782f19842dfdb317bfc0d81c18767d2c086f9ebd64b83920b1b1f0785b9cca96dd96cca8787432f7c88aa0acee389bc67db5883cc62ac446ea904c5279eb6
+  checksum: f410800f1728a5ad2eb0ecc38281a5bb5586f90d5130be4e1b1799c3816ada2d803fa5d1118ec43b5366540d5c6830b5c51bcbf8940c59c6ed5e6b115aafef65
   languageName: node
   linkType: hard
 

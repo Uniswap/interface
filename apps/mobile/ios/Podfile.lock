@@ -1259,10 +1259,10 @@ PODS:
   - ReactNativePerformance (4.1.2):
     - React-Core
   - RecaptchaInterop (100.0.0)
-  - rive-react-native (6.0.4):
+  - rive-react-native (6.1.1):
     - React-Core
-    - RiveRuntime (= 5.1.6)
-  - RiveRuntime (5.1.6)
+    - RiveRuntime (= 5.3.1)
+  - RiveRuntime (5.3.1)
   - RNCAsyncStorage (1.17.10):
     - React-Core
   - RNCMaskedView (0.2.9):
@@ -1765,8 +1765,8 @@ SPEC CHECKSUMS:
   ReactCommon: 08723d2ed328c5cbcb0de168f231bc7bae7f8aa1
   ReactNativePerformance: ab7dee4c4862623d72c1530a9fc71b55458edf71
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
-  rive-react-native: 2bbbdb03edbb7f1f9ffda06bf7bcd0a2f1c2a4d5
-  RiveRuntime: b019064a8668431b80389f83b5a2eb012e034c01
+  rive-react-native: 08eb103dff9217fc921e1bcd32527603d87fa933
+  RiveRuntime: 63fe0407ab96ab1796c492d1e584a3b766e80693
   RNCAsyncStorage: 0c357f3156fcb16c8589ede67cc036330b6698ca
   RNCMaskedView: 949696f25ec596bfc697fc88e6f95cf0c79669b6
   RNDeviceInfo: 0a7c1d2532aa7691f9b9925a27e43af006db4dae

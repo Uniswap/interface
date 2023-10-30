@@ -154,7 +154,7 @@
     "react-redux": "8.0.5",
     "redux-persist": "6.0.0",
     "redux-saga": "1.2.2",
-    "rive-react-native": "6.0.4",
+    "rive-react-native": "6.1.1",
     "statsig-react-native": "4.11.0",
     "typed-redux-saga": "1.5.0",
     "utilities": "workspace:^",

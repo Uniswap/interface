@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Image, Platform, ViewStyle } from 'react-native'
 import Rive, { Alignment, Fit, RiveRef } from 'rive-react-native'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { IS_ANDROID } from 'src/constants/globals'
 import { useMedia } from 'ui/src'
 import { ONBOARDING_LANDING_DARK, ONBOARDING_LANDING_LIGHT } from 'ui/src/assets'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
@@ -79,7 +78,7 @@ export const LandingBackground = (): JSX.Element | null => {
   }
 
   // Android 9 and 10 have issues with Rive, so we fallback on image
-  if (IS_ANDROID && Platform.OS === 'android' && Platform.Version < 30) {
+  if (Platform.OS === 'android' && Platform.Version < 30) {
     return <OnboardingStaticImage />
   }
 

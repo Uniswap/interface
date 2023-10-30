@@ -1,3 +1,5 @@
+import { useIsFocused } from '@react-navigation/core'
+import { useRef } from 'react'
 import { trimToLength } from 'utilities/src/primitives/string'
 import { useENSName } from 'wallet/src/features/ens/api'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
@@ -61,9 +63,22 @@ export function useNativeAccountExists(): boolean {
 }
 
 export function useActiveAccountAddressWithThrow(): Address {
+  const addressRef = useRef<string | null>(null)
+  const isFocused = useIsFocused()
   const activeAccountAddress = useAppSelector(selectActiveAccountAddress)
-  if (!activeAccountAddress) throw new Error('No active account address')
-  return activeAccountAddress
+
+  // Update the account address only when the screen is focused
+  // or the address haven't been set yet
+  // (this prevents crashes when the useActiveAccountAddressWithThrow
+  // hook is used on screen that is still kept in the navigation stack
+  // and the last/only existing account is deleted)
+  if (isFocused || !addressRef.current) {
+    addressRef.current = activeAccountAddress
+  }
+
+  if (!addressRef.current) throw new Error('No active account address')
+
+  return addressRef.current
 }
 
 export function useActiveAccountWithThrow(): Account {
