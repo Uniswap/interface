@@ -6,5 +6,6 @@ export function useFeesEnabledFlag(): BaseVariant {
 
 // wxc: router fee
 export function useFeesEnabled(): boolean {
-  return false; // useFeesEnabledFlag() === BaseVariant.Enabled
+  return false
+  // return useFeesEnabledFlag() === BaseVariant.Enabled
 }
