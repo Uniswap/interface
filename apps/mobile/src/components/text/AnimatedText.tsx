@@ -98,7 +98,7 @@ export const AnimatedText = ({ style, ...propsIn }: TextProps): JSX.Element => {
 
   return (
     <BaseAnimatedText
-      {...(props as any)}
+      {...(props as any)} // eslint-disable-line @typescript-eslint/no-explicit-any
       allowFontScaling={enableFontScaling}
       maxFontSizeMultiplier={multiplier}
       style={[styles.input, textStyles, style]}

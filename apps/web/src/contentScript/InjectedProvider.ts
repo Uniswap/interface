@@ -43,10 +43,11 @@ interface RequestArguments {
 }
 
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#rpc-errors
-interface ProviderRpcError extends Error {
-  code: number
-  data?: unknown
-}
+// TODO(EXT-341): add in proper error handling
+// interface ProviderRpcError extends Error {
+//   code: number
+//   data?: unknown
+// }
 
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect-1
 interface ProviderConnectInfo {
