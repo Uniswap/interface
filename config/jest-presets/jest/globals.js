@@ -1,3 +1,5 @@
+process.env.TZ = 'America/New_York';
+
 module.exports = {
   globals: {
     ALCHEMY_API_KEY: 123,
