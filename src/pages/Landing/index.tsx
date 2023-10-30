@@ -226,7 +226,7 @@ const LearnMoreContainer = styled.div`
   cursor: pointer;
   font-size: 20px;
   font-weight: 535;
-  margin: 36px 0;
+  margin: 18px 0 36px;
   display: flex;
   visibility: hidden;
   pointer-events: auto;
@@ -456,7 +456,6 @@ export default function Landing() {
             }}
           >
             <Trans>Learn more</Trans>
-            <LearnMoreArrow />
           </LearnMoreContainer>
 
           <DownloadWalletLink
