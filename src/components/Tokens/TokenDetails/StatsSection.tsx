@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { ChainId } from '@uniswap/sdk-core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getChainInfo } from 'constants/chainInfo'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
@@ -79,14 +79,7 @@ function Stat({
 type StatsSectionProps = {
   chainId: ChainId
   address: string
-  currency: Currency
   tokenQueryData: TokenQueryData
-  // currentPrice?: Amount
-  // marketCap?: NumericStat
-  // priceLow52W?: NumericStat
-  // priceHigh52W?: NumericStat
-  // TVL?: NumericStat
-  // volume24H?: NumericStat
 }
 export default function StatsSection(props: StatsSectionProps) {
   const { chainId, address, tokenQueryData } = props
@@ -97,7 +90,7 @@ export default function StatsSection(props: StatsSectionProps) {
   const tokenProjectMarketInfo = tokenQueryData?.project?.markets?.[0] // aggregated market price from CoinGecko
 
   const FDV = tokenProjectMarketInfo?.fullyDilutedValuation?.value
-  const marketCap = tokenProjectMarketInfo?.marketCap?.value ?? FDV
+  const marketCap = tokenProjectMarketInfo?.marketCap?.value
   const TVL = tokenMarketInfo?.totalValueLocked?.value
   const volume24H = tokenMarketInfo?.volume24H?.value
   const priceHigh52W = tokenMarketInfo?.priceHigh52W?.value

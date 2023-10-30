@@ -236,12 +236,7 @@ export default function TokenDetails({
             </TokenInfoContainer>
             <ChartSection tokenPriceQuery={tokenPriceQuery} onChangeTimePeriod={onChangeTimePeriod} />
 
-            <StatsSection
-              chainId={pageChainId}
-              address={address}
-              currency={detailedToken}
-              tokenQueryData={tokenQueryData}
-            />
+            <StatsSection chainId={pageChainId} address={address} tokenQueryData={tokenQueryData} />
             <Hr />
             <AboutSection
               address={address}
