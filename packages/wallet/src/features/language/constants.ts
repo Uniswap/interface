@@ -71,7 +71,7 @@ export const mapLanguageToLocale: Record<Language, Locale> = {
   [Language.Hindi]: Locale.HindiIndia,
   [Language.Indonesian]: Locale.IndonesianIndonesia,
   [Language.Japanese]: Locale.JapaneseJapan,
-  [Language.Malay]: Locale.FrenchFrance,
+  [Language.Malay]: Locale.MalayMalaysia,
   [Language.Portuguese]: Locale.PortuguesePortugal,
   [Language.Russian]: Locale.RussianRussia,
   [Language.Spanish]: Locale.SpanishSpain,

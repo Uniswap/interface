@@ -12022,7 +12022,7 @@ __metadata:
     react-native-pager-view: 6.0.1
     react-native-permissions: 3.6.0
     react-native-reanimated: 3.3.0
-    react-native-restart: 0.0.24
+    react-native-restart: 0.0.27
     react-native-safe-area-context: 4.5.0
     react-native-screens: 3.24.0
     react-native-splash-screen: 3.3.0
@@ -31793,13 +31793,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-restart@npm:0.0.24":
-  version: 0.0.24
-  resolution: "react-native-restart@npm:0.0.24"
+"react-native-restart@npm:0.0.27":
+  version: 0.0.27
+  resolution: "react-native-restart@npm:0.0.27"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 2ea5f1e9c31d3d705ad2061966a240db32131ad11fd227f244919f2882a1ed7a6d48aed6b7bcab59a989fb58f59ca7e1d6d5316089d011a6955975f1148160f0
+  checksum: 49cfaa954f12c37c6e34988cb47bf0626f4a2cd68ecc15be3d8d6acc7a5ca3032729545ddb66b6d3a5c30dfe626e46010e3e2148e709487354907997fde64255
   languageName: node
   linkType: hard
 

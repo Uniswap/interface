@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { I18nManager, NativeModules, StatusBar } from 'react-native'
 import { getUniqueId } from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import RNRestart from 'react-native-restart'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
@@ -54,7 +55,6 @@ import { useAccounts, useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { initializeTranslation } from 'wallet/src/i18n/i18n'
 import { SharedProvider } from 'wallet/src/provider'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
-
 if (__DEV__) {
   registerConsoleOverrides()
 }
@@ -231,7 +231,7 @@ function DataUpdaters(): JSX.Element {
   }, [accountsMap])
 
   useEffect(() => {
-    const locale = currentLanguageInfo.locale
+    const { locale } = currentLanguageInfo
     if (locale !== i18n.language) {
       i18n
         .changeLanguage(locale)
@@ -242,6 +242,18 @@ function DataUpdaters(): JSX.Element {
             'Sync of language setting state and i18n instance failed'
           )
         )
+    }
+
+    const isRtl = i18n.dir(locale) === 'rtl'
+    if (isRtl !== I18nManager.isRTL) {
+      logger.info('App', 'DataUpdaters', `Changing RTL to ${isRtl} for locale ${locale}`)
+      I18nManager.forceRTL(isRtl)
+
+      // Need to restart to apply RTL changes
+      // RNRestart requires timeout to work properly with reanimated
+      setTimeout(() => {
+        RNRestart.restart()
+      }, 1000)
     }
   }, [i18n, currentLanguageInfo])
 
