@@ -32,8 +32,8 @@ import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal 
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import StatusIcon from '../Identicon/StatusIcon'
-import { useCachedPortfolioBalancesQuery } from '../PrefetchBalancesWrapper/PrefetchBalancesWrapper'
-import { useToggleAccountDrawer } from '.'
+import { useCachedPortfolioBalances } from '../PortfolioBalancesProvider'
+import { useAccountDrawer } from '.'
 import IconButton, { IconHoverText, IconWithConfirmTextButton } from './IconButton'
 import MiniPortfolio from './MiniPortfolio'
 import { portfolioFadeInAnimation } from './MiniPortfolio/PortfolioRow'
@@ -178,23 +178,23 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     dispatch(updateSelectedWallet({ wallet: undefined }))
   }, [connector, dispatch])
 
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
 
   const navigateToProfile = useCallback(() => {
-    toggleWalletDrawer()
+    toggleAccountDrawer()
     resetSellAssets()
     setSellPageState(ProfilePageStateType.VIEWING)
     clearCollectionFilters()
     navigate('/nfts/profile')
     closeModal()
-  }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState, toggleWalletDrawer])
+  }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState, toggleAccountDrawer])
 
   const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const openFoRModalWithAnalytics = useCallback(() => {
-    toggleWalletDrawer()
+    toggleAccountDrawer()
     sendAnalyticsEvent(InterfaceEventName.FIAT_ONRAMP_WIDGET_OPENED)
     openFiatOnrampModal()
-  }, [openFiatOnrampModal, toggleWalletDrawer])
+  }, [openFiatOnrampModal, toggleAccountDrawer])
 
   const [shouldCheck, setShouldCheck] = useState(false)
   const {
@@ -218,8 +218,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const openFiatOnrampUnavailableTooltip = useCallback(() => setShow(true), [setShow])
   const closeFiatOnrampUnavailableTooltip = useCallback(() => setShow(false), [setShow])
 
-  const { data: portfolioBalances } = useCachedPortfolioBalancesQuery({ account })
-  const portfolio = portfolioBalances?.portfolios?.[0]
+  const { portfolio } = useCachedPortfolioBalances({ freshBalancesRequired: accountDrawerOpen })
   const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
   const percentChange = portfolio?.tokensTotalDenominatedValueChange?.percentage?.value

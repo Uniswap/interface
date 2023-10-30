@@ -5,6 +5,7 @@ import 'tracing'
 import 'connection/eagerlyConnect'
 
 import { ApolloProvider } from '@apollo/client'
+import { PortfolioBalancesProvider } from 'components/PortfolioBalancesProvider'
 import { FeatureFlagsProvider } from 'featureFlags'
 import { apolloClient } from 'graphql/data/apollo'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
@@ -71,13 +72,15 @@ createRoot(container).render(
             <LanguageProvider>
               <Web3Provider>
                 <ApolloProvider client={apolloClient}>
-                  <BlockNumberProvider>
-                    <Updaters />
-                    <ThemeProvider>
-                      <ThemedGlobalStyle />
-                      <App />
-                    </ThemeProvider>
-                  </BlockNumberProvider>
+                  <PortfolioBalancesProvider>
+                    <BlockNumberProvider>
+                      <Updaters />
+                      <ThemeProvider>
+                        <ThemedGlobalStyle />
+                        <App />
+                      </ThemeProvider>
+                    </BlockNumberProvider>
+                  </PortfolioBalancesProvider>
                 </ApolloProvider>
               </Web3Provider>
             </LanguageProvider>

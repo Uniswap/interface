@@ -5,7 +5,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { DutchOrder, DutchOrderBuilder } from '@uniswap/uniswapx-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
-import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
+import { useCachedPortfolioBalances } from 'components/PortfolioBalancesProvider'
 import { getConnection } from 'connection'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
@@ -59,8 +59,8 @@ export function useUniswapXSwapCallback({
   const { account, provider, connector } = useWeb3React()
   const analyticsContext = useTrace()
 
-  const { data } = useCachedPortfolioBalancesQuery({ account })
-  const portfolioBalanceUsd = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
+  const { portfolio } = useCachedPortfolioBalances()
+  const portfolioBalanceUsd = portfolio?.tokensTotalDenominatedValue?.value
 
   return useCallback(
     async () =>

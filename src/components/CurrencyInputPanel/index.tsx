@@ -5,7 +5,7 @@ import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
-import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
+import PrefetchBalancesWrapper from 'components/PortfolioBalancesProvider/PrefetchBalancesWrapper'
 import { isSupportedChain } from 'constants/chains'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
@@ -235,7 +235,7 @@ export default function CurrencyInputPanel({
                 />
               )}
 
-              <StyledPrefetchBalancesWrapper shouldFetchOnAccountUpdate={modalOpen} $fullWidth={hideInput}>
+              <StyledPrefetchBalancesWrapper $fullWidth={hideInput}>
                 <CurrencySelect
                   disabled={!chainAllowed}
                   visible={currency !== undefined}

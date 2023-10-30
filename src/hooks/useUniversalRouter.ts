@@ -6,7 +6,7 @@ import { FlatFeeOptions, SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/u
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
-import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
+import { useCachedPortfolioBalances } from 'components/PortfolioBalancesProvider'
 import { getConnection } from 'connection'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
@@ -58,8 +58,8 @@ export function useUniversalRouterSwapCallback(
   const analyticsContext = useTrace()
   const blockNumber = useBlockNumber()
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
-  const { data } = useCachedPortfolioBalancesQuery({ account })
-  const portfolioBalanceUsd = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
+  const { portfolio } = useCachedPortfolioBalances()
+  const portfolioBalanceUsd = portfolio?.tokensTotalDenominatedValue?.value
 
   return useCallback(async () => {
     return trace('swap.send', async ({ setTraceData, setTraceStatus, setTraceError }) => {

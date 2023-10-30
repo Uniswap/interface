@@ -4,7 +4,7 @@ import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-event
 import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
-import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
+import { useCachedPortfolioBalances } from 'components/PortfolioBalancesProvider'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -78,10 +78,10 @@ export function CurrencySearch({
 
   const defaultTokens = useDefaultActiveTokens(chainId)
 
-  const { data, loading: balancesAreLoading } = useCachedPortfolioBalancesQuery({ account })
+  const { portfolio, loading: balancesAreLoading } = useCachedPortfolioBalances({ freshBalancesRequired: isOpen })
   const balances: TokenBalances = useMemo(() => {
     return (
-      data?.portfolios?.[0].tokenBalances?.reduce((balanceMap, tokenBalance) => {
+      portfolio?.tokenBalances?.reduce((balanceMap, tokenBalance) => {
         if (
           tokenBalance.token?.chain &&
           supportedChainIdFromGQLChain(tokenBalance.token?.chain) === chainId &&
@@ -96,10 +96,10 @@ export function CurrencySearch({
         return balanceMap
       }, {} as TokenBalances) ?? {}
     )
-  }, [chainId, data?.portfolios])
+  }, [chainId, portfolio])
 
   const sortedTokens: Token[] = useMemo(() => {
-    const portfolioTokens = data?.portfolios?.[0].tokenBalances
+    const portfolioTokens = portfolio?.tokenBalances
       ?.map((tokenBalance) => {
         if (!tokenBalance?.token?.chain || !tokenBalance.token?.address || !tokenBalance.token?.decimals) {
           return undefined
@@ -139,7 +139,7 @@ export function CurrencySearch({
       })
       .sort(tokenComparator.bind(null, balances))
   }, [
-    data,
+    portfolio,
     defaultTokens,
     debouncedQuery,
     balancesAreLoading,

@@ -3,7 +3,7 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
-import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
+import { useCachedPortfolioBalances } from 'components/PortfolioBalancesProvider'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
@@ -129,8 +129,8 @@ export function CurrencyRow({
   const warning = currency.isNative ? null : checkWarning(currency.address)
   const isBlockedToken = !!warning && !warning.canProceed
   const blockedTokenOpacity = '0.6'
-  const { data } = useCachedPortfolioBalancesQuery({ account })
-  const portfolioBalanceUsd = data?.portfolios?.[0].tokensTotalDenominatedValue?.value
+  const { portfolio } = useCachedPortfolioBalances()
+  const portfolioBalanceUsd = portfolio?.tokensTotalDenominatedValue?.value
 
   // only show add or remove buttons if not on selected list
   return (

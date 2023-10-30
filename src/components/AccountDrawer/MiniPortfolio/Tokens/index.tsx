@@ -1,6 +1,5 @@
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { TraceEvent } from 'analytics'
-import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import Row from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
@@ -20,28 +19,29 @@ import { hideSmallBalancesAtom } from '../../SmallBalanceToggle'
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
+import { useCachedPortfolioBalances } from '../../../PortfolioBalancesProvider'
 
-export default function Tokens({ account }: { account: string }) {
-  const toggleWalletDrawer = useToggleAccountDrawer()
+export default function Tokens() {
+  const toggleAccountDrawer = useToggleAccountDrawer()
   const hideSmallBalances = useAtomValue(hideSmallBalancesAtom)
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
-  const { data } = useCachedPortfolioBalancesQuery({ account })
+  const { portfolio } = useCachedPortfolioBalances()
 
-  const tokenBalances = data?.portfolios?.[0].tokenBalances as TokenBalance[] | undefined
+  const tokenBalances = portfolio?.tokenBalances as TokenBalance[] | undefined
 
   const { visibleTokens, hiddenTokens } = useMemo(
     () => splitHiddenTokens(tokenBalances ?? [], { hideSmallBalances }),
     [hideSmallBalances, tokenBalances]
   )
 
-  if (!data) {
+  if (!portfolio) {
     return <PortfolioSkeleton />
   }
 
   if (tokenBalances?.length === 0) {
     // TODO: consider launching moonpay here instead of just closing the drawer
-    return <EmptyWalletModule type="token" onNavigateClick={toggleWalletDrawer} />
+    return <EmptyWalletModule type="token" onNavigateClick={toggleAccountDrawer} />
   }
 
   const toggleHiddenTokens = () => setShowHiddenTokens((showHiddenTokens) => !showHiddenTokens)

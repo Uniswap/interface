@@ -7,7 +7,7 @@ import { TraceEvent } from 'analytics'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
+import PrefetchBalancesWrapper from 'components/PortfolioBalancesProvider/PrefetchBalancesWrapper'
 import Tooltip from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
 import ms from 'ms'
@@ -326,7 +326,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                 />
               </div>
             )}
-            <PrefetchBalancesWrapper shouldFetchOnAccountUpdate={modalOpen}>
+            <PrefetchBalancesWrapper>
               <Tooltip
                 show={tooltipVisible && !modalOpen}
                 placement="bottom"
