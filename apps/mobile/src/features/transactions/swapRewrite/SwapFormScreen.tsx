@@ -326,7 +326,7 @@ function SwapFormContent(): JSX.Element {
             borderColor="$surface3"
             borderRadius="$rounded20"
             borderWidth={1}
-            paddingBottom="$spacing4"
+            paddingBottom={currencies[CurrencyField.INPUT] ? '$spacing4' : '$none'}
             style={inputBackgroundStyle}>
             <CurrencyInputPanel
               ref={inputRef}
@@ -363,7 +363,7 @@ function SwapFormContent(): JSX.Element {
             borderRadius="$rounded20"
             borderWidth={1}
             overflow="hidden"
-            paddingTop="$spacing4"
+            paddingTop={currencies[CurrencyField.OUTPUT] ? '$spacing4' : '$none'}
             position="relative"
             style={outputBackgroundStyle}>
             <CurrencyInputPanel
