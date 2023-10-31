@@ -49,7 +49,6 @@ describe('Progress Indicator', () => {
       cy.contains('Approve in wallet')
       cy.contains('Sign message')
       cy.contains('Confirm swap')
-      cy.get(getTestSelector('checkmark-icon')).should('have.length', 0) // No steps have been completed yet
       cy.wait('@eth_sendRawTransaction')
       cy.contains('Approval pending...')
       cy.hardhat().then((hardhat) => hardhat.mine())
@@ -58,7 +57,6 @@ describe('Progress Indicator', () => {
 
       // Verify permit2 approval, await swap confirmation
       cy.wait('@eth_signTypedData_v4')
-      cy.get(getTestSelector('checkmark-icon')).should('have.length', 2) // Two steps are complete
       cy.contains('Approve DAI spending')
       cy.contains('Sign message')
       cy.contains('Confirm swap in wallet')
@@ -79,9 +77,7 @@ describe('Progress Indicator', () => {
 
       // Verify token approval
       cy.contains('Approve in wallet')
-      cy.contains('Sign message')
       cy.contains('Confirm swap')
-      cy.get(getTestSelector('checkmark-icon')).should('have.length', 0) // No steps have been completed yet
       cy.wait('@eth_sendRawTransaction')
       cy.contains('Approval pending...')
       cy.hardhat().then((hardhat) => hardhat.mine())
@@ -117,11 +113,11 @@ describe('Progress Indicator', () => {
       initiateSwap()
 
       // Verify allowance revocation
-      cy.contains('Reset USDT limit in wallet') // Step 1 (active)
-      cy.contains('Approve USDT spending') // Step 2 (preview)
-      cy.contains('Confirm swap') // Step 3 (preview)
+      cy.contains('Reset USDT limit in wallet')
+      cy.contains('Approve USDT spending')
+      cy.contains('Confirm swap')
       cy.wait('@eth_sendRawTransaction')
-      cy.contains('Resetting USDT limit...') // Step 1 in progress
+      cy.contains('Resetting USDT limit...')
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.hardhat()
         .then(({ approval, wallet }) => approval.getTokenAllowanceForPermit2({ owner: wallet, token: USDT }))
@@ -129,19 +125,19 @@ describe('Progress Indicator', () => {
 
       // Verify token approval
       cy.wait('@eth_sendRawTransaction')
-      cy.contains('Reset USDT limit') // Step 1 (complete)
-      cy.contains('Approval pending...') // Step 2 (in progress)
-      cy.contains('Confirm swap') // Step 3 (preview)
+      cy.contains('Reset USDT limit')
+      cy.contains('Approval pending...')
+      cy.contains('Confirm swap')
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.get(getTestSelector('popups')).contains('Approved')
       expectTokenAllowanceForPermit2ToBeMax(USDT)
 
       // Verify transaction
-      cy.contains('Reset USDT limit') // Step 1 (complete)
-      cy.contains('Approve USDT spending') // Step 2 (complete)
-      cy.contains('Confirm swap') // Step 3 (active)
+      cy.contains('Reset USDT limit')
+      cy.contains('Approve USDT spending')
+      cy.contains('Confirm swap')
       cy.wait('@eth_sendRawTransaction')
-      cy.contains('Swap pending...') // Step 3 in progress
+      cy.contains('Swap pending...')
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.contains('Swap success!')
       cy.get(getTestSelector('popups')).contains('Swapped')

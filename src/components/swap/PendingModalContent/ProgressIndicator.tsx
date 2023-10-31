@@ -25,7 +25,7 @@ import { Step, StepDetails, StepStatus } from './Step'
 const StyledDivider = styled(Divider)`
   margin: 16px 0px;
 `
-const Line = styled.div`
+const StepConnector = styled.div`
   width: 2px;
   height: 24px;
   background-color: ${({ theme }) => theme.neutral3};
@@ -39,7 +39,6 @@ type ProgressIndicatorStep = Extract<
   | ConfirmModalState.WRAPPING
   | ConfirmModalState.RESETTING_TOKEN_ALLOWANCE
 >
-
 export function ProgressIndicator({
   steps,
   currentStep,
@@ -174,7 +173,7 @@ export function ProgressIndicator({
         return (
           <>
             <Step key={i} stepStatus={getStatus(step)} stepDetails={stepDetails[step]} />
-            {i !== steps.length - 1 && <Line />}
+            {i !== steps.length - 1 && <StepConnector />}
           </>
         )
       })}
