@@ -57,11 +57,6 @@ const ChartHeaderBubble = styled(LoadingBubble)`
   height: 32px;
 `
 
-const LinkColumn = styled(Column)`
-  gap: 16px;
-  padding: 20px;
-`
-
 const RightColumn = styled(Column)`
   gap: 24px;
   margin: 0 48px 0 auto;
