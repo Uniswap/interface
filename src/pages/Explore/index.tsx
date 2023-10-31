@@ -19,7 +19,7 @@ import { ThemedText } from 'theme/components'
 
 import { useExploreParams } from './redirects'
 
-const ExploreContainer = styled.div`
+export const ExploreContainer = styled.div`
   width: 100%;
   min-width: 320px;
   padding: 68px 12px 0px;

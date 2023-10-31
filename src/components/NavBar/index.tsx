@@ -55,7 +55,7 @@ const MenuItem = ({ href, dataTestId, id, isActive, children }: MenuItemProps) =
 
 export const PageTabs = () => {
   const { pathname } = useLocation()
-  const { chainId: connectedChainId } = useWeb3React()
+  const { account, chainId: connectedChainId } = useWeb3React()
   const chainName = chainIdToBackendName(connectedChainId)
 
   const isPoolActive = useIsPoolsPage()
@@ -88,6 +88,12 @@ export const PageTabs = () => {
           <Trans>Pools</Trans>
         </MenuItem>
       </Box>
+      <MenuItem href={`/account/${account}`} isActive={pathname.startsWith('/account')}>
+        <Trans>Profile</Trans>
+      </MenuItem>
+      <MenuItem href="/feed" isActive={pathname.startsWith('/feed')}>
+        <Trans>Feed</Trans>
+      </MenuItem>
       <Box marginY="4">
         <MenuDropdown />
       </Box>

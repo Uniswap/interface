@@ -4,6 +4,7 @@ import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
+import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import FadedInLineChart from 'components/Charts/FadeInLineChart'
 import { buildChartModel, ChartErrorType, ChartModel, ErroredChartModel } from 'components/Charts/PriceChart/ChartModel'
@@ -12,9 +13,11 @@ import { getNearestPricePoint, getTicks } from 'components/Charts/PriceChart/uti
 import { MouseoverTooltip } from 'components/Tooltip'
 import { curveCardinal } from 'd3'
 import { PricePoint, TimePeriod } from 'graphql/data/util'
+import { getV2Prices } from 'graphql/thegraph/getV2Prices'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Info } from 'react-feather'
+import { animated, SpringValue, useSpring } from 'react-spring'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
@@ -22,7 +25,7 @@ import { useFormatter } from 'utils/formatNumbers'
 
 import { calculateDelta, DeltaArrow } from '../../Tokens/TokenDetails/Delta'
 
-const CHART_MARGIN = { top: 100, bottom: 48, crosshair: 72 }
+const CHART_MARGIN = { top: 70, bottom: 48, crosshair: 72 }
 
 const ChartHeaderWrapper = styled.div<{ stale?: boolean }>`
   position: absolute;
@@ -75,6 +78,8 @@ function ChartHeader({ crosshairPrice, chart }: ChartHeaderProps) {
   const priceOutdated = lastValidPrice !== endingPrice
   const displayPrice = crosshairPrice ?? (priceOutdated ? lastValidPrice : endingPrice)
 
+  if (!crosshairPrice) return null
+
   const displayIsStale = priceOutdated && !crosshairPrice
   return (
     <ChartHeaderWrapper data-cy="chart-header" stale={displayIsStale}>
@@ -93,7 +98,19 @@ function ChartHeader({ crosshairPrice, chart }: ChartHeaderProps) {
   )
 }
 
-function ChartBody({ chart, timePeriod }: { chart: ChartModel; timePeriod: TimePeriod }) {
+function ChartBody({
+  chart,
+  timePeriod,
+  activity,
+  color,
+  hidePrice,
+}: {
+  chart: ChartModel
+  timePeriod: TimePeriod
+  activity: Activity[]
+  color?: string
+  hidePrice?: boolean
+}) {
   const locale = useActiveLocale()
 
   const { prices, blanks, timeScale, priceScale, dimensions } = chart
@@ -142,9 +159,20 @@ function ChartBody({ chart, timePeriod }: { chart: ChartModel; timePeriod: TimeP
   const getY = useCallback((p: PricePoint) => priceScale(p.value), [priceScale])
   const curve = useMemo(() => curveCardinal.tension(curveTension), [curveTension])
 
+  const activityAtPricePoint = useMemo(
+    () =>
+      activity?.map((activity) => ({
+        activity,
+        pricePoint: getNearestPricePoint(timeScale(activity.timestamp), prices ?? [], timeScale),
+      })),
+    [activity, prices, timeScale]
+  )
+
+  const [selectedActivity, setSelectedActivity] = useState<{ activity: Activity; pricePoint: PricePoint }>()
+
   return (
     <>
-      <ChartHeader chart={chart} crosshairPrice={crosshair?.price} />
+      {!hidePrice && <ChartHeader chart={chart} crosshairPrice={crosshair?.price} />}
       <svg data-cy="price-chart" width={dimensions.width} height={dimensions.height} style={{ minWidth: '100%' }}>
         <AnimatedInLineChart
           data={prices}
@@ -153,6 +181,7 @@ function ChartBody({ chart, timePeriod }: { chart: ChartModel; timePeriod: TimeP
           marginTop={dimensions.marginTop}
           curve={curve}
           strokeWidth={2}
+          color={color}
         />
         {blanks.map((blank, index) => (
           <FadedInLineChart
@@ -204,7 +233,7 @@ function ChartBody({ chart, timePeriod }: { chart: ChartModel; timePeriod: TimeP
               left={crosshair.x}
               top={crosshair.y + dimensions.marginTop}
               size={50}
-              fill={theme.accent1}
+              fill={color ?? theme.accent1}
               stroke={theme.surface3}
               strokeWidth={0.5}
             />
@@ -242,6 +271,27 @@ function ChartBody({ chart, timePeriod }: { chart: ChartModel; timePeriod: TimeP
           onMouseMove={setCrosshairOnHover}
           onMouseLeave={resetCrosshair}
         />
+        {activityAtPricePoint?.map(
+          ({ activity, pricePoint }, index) =>
+            pricePoint && (
+              <ActivityGlyph
+                left={timeScale(activity.timestamp)}
+                top={priceScale(pricePoint.value) + chart.dimensions.marginTop}
+                fill="#FFEFFF"
+                stroke={color ?? '#FC72FF'}
+                strokeWidth={1}
+                key={activity.title + index}
+                setSelected={(selected) => setSelectedActivity(selected ? { activity, pricePoint } : undefined)}
+              />
+            )
+        )}
+        {selectedActivity && (
+          <TextWithBackground
+            text={`${selectedActivity.activity.title} - ${selectedActivity.activity.descriptor}`}
+            x={timeScale(selectedActivity.activity.timestamp)}
+            y={priceScale(selectedActivity.pricePoint.value) + chart.dimensions.marginTop}
+          />
+        )}
       </svg>
     </>
   )
@@ -288,21 +338,143 @@ interface PriceChartProps {
   height: number
   prices?: PricePoint[]
   timePeriod: TimePeriod
+  activity: Activity[]
+  color?: string
+  hidePrice?: boolean
+  backupAddress?: string
 }
 
-export function PriceChart({ width, height, prices, timePeriod }: PriceChartProps) {
+export function PriceChart({
+  width,
+  height,
+  prices,
+  timePeriod,
+  activity,
+  color,
+  hidePrice,
+  backupAddress,
+}: PriceChartProps) {
+  const [usedPrices, setUsedPrices] = useState(prices)
+
   const chart = useMemo(
     () =>
       buildChartModel({
         dimensions: { width, height, marginBottom: CHART_MARGIN.bottom, marginTop: CHART_MARGIN.top },
-        prices,
+        prices: usedPrices,
       }),
-    [width, height, prices]
+    [width, height, usedPrices]
   )
 
+  useEffect(() => {
+    if (chart.error && backupAddress) {
+      getV2Prices(backupAddress).then((prices) => {
+        console.log('cartcrom', prices)
+        setUsedPrices(prices)
+      })
+    }
+  }, [chart.error, backupAddress])
+
   if (chart.error !== undefined) {
-    return <MissingPriceChart chart={chart} />
+    return null
   }
 
-  return <ChartBody chart={chart} timePeriod={timePeriod} />
+  return <ChartBody chart={chart} timePeriod={timePeriod} activity={activity} color={color} hidePrice={hidePrice} />
+}
+
+interface ActivityGlyphCircleProps extends Omit<React.ComponentProps<typeof GlyphCircle>, 'ref'> {
+  setSelected: (selected: boolean) => void
+}
+
+const ActivityGlyphCircle = animated(GlyphCircle)
+
+function ActivityGlyph({ setSelected, ...rest }: ActivityGlyphCircleProps) {
+  const [animatedProps, setAnimatedProps] = useSpring(() => ({
+    size: 80,
+    textOpacity: 0,
+    config: { tension: 170, friction: 26 },
+  }))
+
+  const onMouseEnter = () => {
+    setSelected(true)
+    setAnimatedProps({ size: 250, textOpacity: 1 })
+  }
+
+  const onMouseLeave = () => {
+    setSelected(false)
+    setAnimatedProps({ size: 80, textOpacity: 0 })
+  }
+
+  return <ActivityGlyphCircle {...rest} {...animatedProps} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} />
+}
+
+interface TextWithBackgroundProps {
+  text: string
+  x: number
+  y: number
+  opacity?: SpringValue<number>
+}
+
+const ACTIVITY_BOX_PADDING = 12
+const ACTIVITY_BOX_MARGIN = 16
+const ACTIVITY_FONT_SIZE = 14
+
+function TextWithBackground({ text, x, y }: TextWithBackgroundProps) {
+  const [bbox, setBbox] = useState<DOMRect | null>(null)
+  const textRef = useRef<SVGTextElement>(null)
+  const theme = useTheme()
+
+  const [{ opacity }, setAnimatedProps] = useSpring(() => ({
+    opacity: 0,
+    config: { tension: 170, friction: 26 },
+  }))
+
+  useEffect(() => {
+    setAnimatedProps({ opacity: 0.8 })
+  }, [setAnimatedProps])
+
+  useEffect(() => {
+    if (textRef.current) {
+      const currentBbox = textRef.current.getBBox()
+      setBbox(currentBbox)
+    }
+  }, [text])
+
+  const backgroundWidth = (bbox?.width ?? 0) + 2 * ACTIVITY_BOX_PADDING
+  const backgroundHeight = ACTIVITY_FONT_SIZE + 2 * ACTIVITY_BOX_PADDING
+
+  const flip = x - (backgroundWidth + ACTIVITY_BOX_MARGIN) <= 0
+
+  const backgroundX = flip ? x + ACTIVITY_BOX_MARGIN : x - backgroundWidth - ACTIVITY_BOX_MARGIN
+  const backgroundY = y - 20
+
+  const textX = x + (flip ? 1 : -1) * (ACTIVITY_BOX_MARGIN + ACTIVITY_BOX_PADDING)
+  const textY = y + 4
+
+  return (
+    <g>
+      {bbox && (
+        <animated.rect
+          x={backgroundX}
+          y={backgroundY}
+          width={backgroundWidth}
+          height={backgroundHeight}
+          fill={theme.background}
+          rx={10}
+          opacity={opacity}
+          stroke={theme.surface4}
+          strokeWidth={1}
+        />
+      )}
+      <text
+        ref={textRef}
+        x={textX}
+        y={textY}
+        textAnchor={flip ? 'start' : 'end'}
+        fontSize={ACTIVITY_FONT_SIZE}
+        fill={theme.neutral1}
+      >
+        {text}
+      </text>
+    </g>
+  )
 }

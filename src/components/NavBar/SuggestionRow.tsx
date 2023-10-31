@@ -1,6 +1,7 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { sendAnalyticsEvent } from 'analytics'
 import clsx from 'clsx'
+import { PortfolioAvatar } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkSearchTokenWarning } from 'constants/tokenSafety'
@@ -201,6 +202,73 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
           </>
         )}
       </Column>
+    </Link>
+  )
+}
+
+interface ProfileRowProps {
+  profile: { address: string; name?: string }
+  isHovered: boolean
+  setHoveredIndex: (index: number | undefined) => void
+  toggleOpen: () => void
+  index: number
+}
+
+export const ProfileRow = ({ profile, isHovered, setHoveredIndex, toggleOpen, index }: ProfileRowProps) => {
+  const navigate = useNavigate()
+
+  const profilePath = `/account/${profile.address}`
+  // Close the modal on escape
+  useEffect(() => {
+    const keyDownHandler = (event: KeyboardEvent) => {
+      if (event.key === 'Enter' && isHovered) {
+        event.preventDefault()
+        navigate(profilePath)
+      }
+    }
+    document.addEventListener('keydown', keyDownHandler)
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler)
+    }
+  }, [toggleOpen, isHovered, navigate, profilePath])
+
+  // console.log('cartcrom2', profile)
+
+  return (
+    <Link
+      to={profilePath}
+      onClick={toggleOpen}
+      onMouseEnter={() => !isHovered && setHoveredIndex(index)}
+      onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
+      className={styles.suggestionRow}
+      style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
+    >
+      <Row style={{ width: '65%', gap: '8px' }}>
+        <PortfolioAvatar accountAddress={profile.address} size={36} />
+        <Column className={styles.suggestionPrimaryContainer}>
+          <Row gap="4" width="full">
+            <Box className={styles.primaryText}>{profile.name ?? profile.address}</Box>
+          </Row>
+        </Column>
+      </Row>
+
+      {/* <Column className={styles.suggestionSecondaryContainer}>
+        {!!token.market?.price?.value && (
+          <>
+            <Row gap="4">
+              <Box className={styles.primaryText}>{formatFiatPrice({ price: token.market.price.value })}</Box>
+            </Row>
+            <PriceChangeContainer>
+              <DeltaArrow delta={token.market?.pricePercentChange?.value} />
+              <ThemedText.BodySmall>
+                <DeltaText delta={token.market?.pricePercentChange?.value}>
+                  {formatDelta(Math.abs(token.market?.pricePercentChange?.value ?? 0))}
+                </DeltaText>
+              </ThemedText.BodySmall>
+            </PriceChangeContainer>
+          </>
+        )}
+      </Column> */}
     </Link>
   )
 }

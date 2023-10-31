@@ -6,7 +6,6 @@ import { atom, useAtom } from 'jotai'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
-import { ThemedText } from 'theme/components'
 
 import { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
 import { ActivityRow } from './ActivityRow'
@@ -53,9 +52,9 @@ export function ActivityTab({ account }: { account: string }) {
       <PortfolioTabWrapper>
         {activityGroups.map((activityGroup) => (
           <ActivityGroupWrapper key={activityGroup.title}>
-            <ThemedText.SubHeader color="neutral2" marginLeft="16px">
+            {/* <ThemedText.SubHeader color="neutral2" marginLeft="16px">
               {activityGroup.title}
-            </ThemedText.SubHeader>
+            </ThemedText.SubHeader> */}
             <Column data-testid="activity-content">
               {activityGroup.transactions.map((activity) => (
                 <ActivityRow key={activity.hash} activity={activity} />

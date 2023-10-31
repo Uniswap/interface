@@ -111,13 +111,14 @@ const StatusWrapper = styled.div`
   display: inline-flex;
 `
 
-const AccountNamesWrapper = styled.div`
+export const AccountNamesWrapper = styled.div`
   overflow: hidden;
   white-space: nowrap;
   display: flex;
   width: 100%;
+  height: 100%;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   margin-left: 8px;
 `
 

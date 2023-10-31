@@ -1,6 +1,7 @@
 import { LoadingRows as BaseLoadingRows } from 'components/Loader/styled'
 import { Text } from 'rebass'
 import styled from 'styled-components'
+import { ClickableStyle } from 'theme/components'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -11,7 +12,8 @@ export const ClickableText = styled(Text)`
   :hover {
     cursor: pointer;
   }
-  color: ${({ theme }) => theme.accent1};
+  ${ClickableStyle};
+  /* color: ${({ theme }) => theme.accent1}; */
 `
 export const MaxButton = styled.button<{ width: string }>`
   padding: 0.5rem 1rem;

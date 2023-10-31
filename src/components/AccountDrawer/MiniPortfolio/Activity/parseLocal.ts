@@ -192,6 +192,7 @@ export function transactionToActivity(
     const status = getTransactionStatus(details)
 
     const defaultFields = {
+      owner: details.from,
       hash: details.hash,
       chainId,
       title: getActivityTitle(details.info.type, status),
@@ -249,6 +250,7 @@ export function signatureToActivity(
       const { title, statusMessage, status } = OrderTextTable[signature.status]
 
       return {
+        owner: signature.offerer,
         hash: signature.orderHash,
         chainId: signature.chainId,
         title,
