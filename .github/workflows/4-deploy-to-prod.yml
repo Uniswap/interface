@@ -36,6 +36,7 @@ jobs:
       - name: Pin to IPFS
         id: pinata
         uses: anantaramdas/ipfs-pinata-deploy-action@39bbda1ce1fe24c69c6f57861b8038278d53688d
+        continue-on-error: true
         with:
           pin-name: Uniswap ${{ steps.github-tag-action.outputs.new_tag }}
           path: './build'
@@ -45,6 +46,7 @@ jobs:
       - name: Convert CIDv0 to CIDv1
         id: convert-cidv0
         uses: uniswap/convert-cidv0-cidv1@v1.0.0
+        continue-on-error: true
         with:
           cidv0: ${{ steps.pinata.outputs.hash }}
 
@@ -56,16 +58,16 @@ jobs:
           tag_name: ${{ steps.github-tag-action.outputs.new_tag }}
           release_name: Release ${{ steps.github-tag-action.outputs.new_tag }}
           body: |
-            IPFS hash of the deployment:
-            - CIDv0: `${{ steps.pinata.outputs.hash }}`
-            - CIDv1: `${{ steps.convert-cidv0.outputs.cidv1 }}`
-
             The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
             You can also access the Uniswap Interface from an IPFS gateway.
             **BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
             **You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
             Your Uniswap settings are never remembered across different URLs.
+
+            IPFS hashes:
+            - CIDv0: `${{ steps.pinata.outputs.hash }}`
+            - CIDv1: `${{ steps.convert-cidv0.outputs.cidv1 }}`
 
             IPFS gateways:
             - https://${{ steps.convert-cidv0.outputs.cidv1 }}.ipfs.dweb.link/
