@@ -1,3 +1,4 @@
+import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import TokenDetails from 'components/Tokens/TokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
@@ -59,13 +60,15 @@ export default function TokenDetailsPage() {
   if (!tokenQuery) return <TokenDetailsPageSkeleton />
 
   return (
-    <TokenDetails
-      urlAddress={tokenAddress}
-      chain={chain}
-      tokenQuery={tokenQuery}
-      tokenPriceQuery={currentPriceQuery}
-      onChangeTimePeriod={setTimePeriod}
-      inputTokenAddress={parsedInputTokenAddress}
-    />
+    <PrefetchBalancesWrapper shouldFetchOnAccountUpdate={true}>
+      <TokenDetails
+        urlAddress={tokenAddress}
+        chain={chain}
+        tokenQuery={tokenQuery}
+        tokenPriceQuery={currentPriceQuery}
+        onChangeTimePeriod={setTimePeriod}
+        inputTokenAddress={parsedInputTokenAddress}
+      />
+    </PrefetchBalancesWrapper>
   )
 }

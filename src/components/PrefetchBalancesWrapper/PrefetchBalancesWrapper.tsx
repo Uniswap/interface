@@ -62,6 +62,12 @@ export default function PrefetchBalancesWrapper({
     }
   }, [account, prevAccount, shouldFetchOnAccountUpdate, fetchBalances, hasUpdatedTx, setHasUnfetchedBalances])
 
+  // Temporary workaround to fix balances on TDP - this fetches balances if shouldFetchOnAccountUpdate becomes true while hasUnfetchedBalances is true
+  // TODO(WEB-3071) remove this logic once balance provider refactor is done
+  useEffect(() => {
+    if (hasUnfetchedBalances && shouldFetchOnAccountUpdate) fetchBalances()
+  }, [fetchBalances, hasUnfetchedBalances, shouldFetchOnAccountUpdate])
+
   const onHover = useCallback(() => {
     if (hasUnfetchedBalances) fetchBalances()
   }, [fetchBalances, hasUnfetchedBalances])

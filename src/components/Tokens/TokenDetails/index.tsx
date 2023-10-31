@@ -1,9 +1,9 @@
-import { WatchQueryFetchPolicy } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
@@ -26,7 +26,6 @@ import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { Chain, TokenBalance, TokenPriceQuery, TokenQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { useCrossChainGqlBalances } from 'graphql/data/portfolios'
 import { QueryToken, TokenQueryData } from 'graphql/data/Token'
 import { getTokenDetailsURL, InterfaceGqlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
@@ -204,11 +203,17 @@ export default function TokenDetails({
     [continueSwap, setContinueSwap]
   )
 
-  const crossChainBalances: TokenBalance[] | undefined = useCrossChainGqlBalances({
-    tokenQuery,
-    account,
-    fetchPolicy: 'cache-and-network' as WatchQueryFetchPolicy,
-  })
+  const { data: balanceQuery } = useCachedPortfolioBalancesQuery({ account })
+  const crossChainBalances = useMemo(() => {
+    const tokenBalances = balanceQuery?.portfolios?.[0].tokenBalances
+    const bridgeInfo = tokenQuery.token?.project?.tokens
+
+    return tokenBalances?.filter(
+      (tokenBalance) =>
+        tokenBalance.token?.symbol === tokenQuery.token?.symbol &&
+        bridgeInfo?.some((bridgeToken) => bridgeToken.id == tokenBalance.token?.id)
+    ) as TokenBalance[] | undefined
+  }, [balanceQuery?.portfolios, tokenQuery.token?.project?.tokens, tokenQuery.token?.symbol])
 
   // address will never be undefined if token is defined; address is checked here to appease typechecker
   if (detailedToken === undefined || !address) {
