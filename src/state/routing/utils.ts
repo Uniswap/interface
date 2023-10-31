@@ -4,7 +4,7 @@ import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sd
 import { DutchOrderInfo, DutchOrderInfoJSON } from '@uniswap/uniswapx-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
-import { BIPS_BASE } from 'constants/misc'
+import { BIPS_BASE, ZERO_PERCENT } from 'constants/misc'
 import { isAvalanche, isBsc, isPolygon, nativeOnChain } from 'constants/tokens'
 import { toSlippagePercent } from 'utils/slippage'
 
@@ -177,11 +177,23 @@ function getClassicTradeDetails(
   blockNumber?: string
   routes?: RouteResult[]
   swapFee?: SwapFeeInfo
+  inputTax: Percent
+  outputTax: Percent
 } {
   const classicQuote =
     data.routing === URAQuoteType.CLASSIC ? data.quote : data.allQuotes.find(isClassicQuoteResponse)?.quote
 
-  if (!classicQuote) return {}
+  // only classic routing-api response will include token tax information
+  // TODO: request that URA also returns token tax on UniswapX quotes
+  if (!classicQuote) {
+    return {
+      inputTax: ZERO_PERCENT,
+      outputTax: ZERO_PERCENT,
+    }
+  }
+
+  const inputTax = classicQuote.route[0]?.[0]?.tokenIn.sellFeeBps
+  const outputTax = classicQuote.route[0]?.[0]?.tokenOut.buyFeeBps
 
   return {
     gasUseEstimate: classicQuote.gasUseEstimate ? parseFloat(classicQuote.gasUseEstimate) : undefined,
@@ -189,6 +201,8 @@ function getClassicTradeDetails(
     blockNumber: classicQuote.blockNumber,
     routes: computeRoutes(currencyIn, currencyOut, classicQuote.route),
     swapFee: getSwapFee(classicQuote),
+    inputTax: inputTax ? new Percent(inputTax, BIPS_BASE) : ZERO_PERCENT,
+    outputTax: outputTax ? new Percent(outputTax, BIPS_BASE) : ZERO_PERCENT,
   }
 }
 
@@ -208,27 +222,15 @@ export async function transformRoutesToTrade(
   data: URAQuoteResponse,
   quoteMethod: QuoteMethod
 ): Promise<TradeResult> {
-  const {
-    tradeType,
-    needsWrapIfUniswapX,
-    routerPreference,
-    account,
-    amount,
-    isUniswapXDefaultEnabled,
-    inputTax,
-    outputTax,
-  } = args
+  const { tradeType, needsWrapIfUniswapX, routerPreference, account, amount, isUniswapXDefaultEnabled } = args
 
   const showUniswapXTrade =
     data.routing === URAQuoteType.DUTCH_LIMIT &&
     (routerPreference === RouterPreference.X || (isUniswapXDefaultEnabled && routerPreference === RouterPreference.API))
 
   const [currencyIn, currencyOut] = getTradeCurrencies(args, showUniswapXTrade)
-  const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate, swapFee } = getClassicTradeDetails(
-    currencyIn,
-    currencyOut,
-    data
-  )
+  const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate, swapFee, inputTax, outputTax } =
+    getClassicTradeDetails(currencyIn, currencyOut, data)
 
   // If the top-level URA quote type is DUTCH_LIMIT, then UniswapX is better for the user
   const isUniswapXBetter = data.routing === URAQuoteType.DUTCH_LIMIT

@@ -2,10 +2,8 @@ import { Trans } from '@lingui/macro'
 import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useConnectionReady } from 'connection/eagerlyConnect'
-import { useFotAdjustmentsEnabled } from 'featureFlags/flags/fotAdjustments'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
-import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
@@ -81,8 +79,6 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
 export type SwapInfo = {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
-  inputTax: Percent
-  outputTax: Percent
   outputFeeFiatValue?: number
   parsedAmount?: CurrencyAmount<Currency>
   inputError?: ReactNode
@@ -112,12 +108,6 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
   const inputCurrency = useCurrency(inputCurrencyId, chainId)
   const outputCurrency = useCurrency(outputCurrencyId, chainId)
 
-  const fotAdjustmentsEnabled = useFotAdjustmentsEnabled()
-  const { inputTax, outputTax } = useSwapTaxes(
-    inputCurrency?.isToken && fotAdjustmentsEnabled ? inputCurrency.address : undefined,
-    outputCurrency?.isToken && fotAdjustmentsEnabled ? outputCurrency.address : undefined
-  )
-
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
 
@@ -137,9 +127,7 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
     parsedAmount,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined,
     undefined,
-    account,
-    inputTax,
-    outputTax
+    account
   )
 
   const { data: outputFeeFiatValue } = useUSDPrice(
@@ -222,22 +210,9 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
       trade,
       autoSlippage,
       allowedSlippage,
-      inputTax,
-      outputTax,
       outputFeeFiatValue,
     }),
-    [
-      allowedSlippage,
-      autoSlippage,
-      currencies,
-      currencyBalances,
-      inputError,
-      inputTax,
-      outputFeeFiatValue,
-      outputTax,
-      parsedAmount,
-      trade,
-    ]
+    [allowedSlippage, autoSlippage, currencies, currencyBalances, inputError, outputFeeFiatValue, parsedAmount, trade]
   )
 }
 

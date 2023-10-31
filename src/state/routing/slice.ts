@@ -69,6 +69,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     ...DEFAULT_QUERY_PARAMS,
     routingType: URAQuoteType.CLASSIC,
     recipient: account,
+    enableFeeOnTransferFeeFetching: true,
   }
 
   const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOutAddress as SwapRouterNativeAssets)

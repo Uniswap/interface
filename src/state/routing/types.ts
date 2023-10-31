@@ -71,7 +71,10 @@ export type GetQuickQuoteArgs = {
 }
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
 
-type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
+type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'> & {
+  buyFeeBps?: string
+  sellFeeBps?: string
+}
 
 export type V3PoolInRoute = {
   type: 'v3-pool'
@@ -263,30 +266,12 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     return new Price({ baseAmount: this.inputAmount, quoteAmount: this.postSwapFeeOutputAmount })
   }
 
-  public get totalTaxRate(): Percent {
-    return this.inputTax.add(this.outputTax)
-  }
-
   public get postSwapFeeOutputAmount(): CurrencyAmount<Currency> {
     // Routing api already applies the swap fee to the output amount for exact-in
     if (this.tradeType === TradeType.EXACT_INPUT) return this.outputAmount
 
     const swapFeeAmount = CurrencyAmount.fromRawAmount(this.outputAmount.currency, this.swapFee?.amount ?? 0)
     return this.outputAmount.subtract(swapFeeAmount)
-  }
-
-  public get postTaxOutputAmount() {
-    // Ideally we should calculate the final output amount by ammending the inputAmount based on the input tax and then applying the output tax,
-    // but this isn't currently possible because V2Trade reconstructs the total inputAmount based on the swap routes
-    // TODO(WEB-2761): Amend V2Trade objects in the v2-sdk to have a separate field for post-input tax routes
-    return this.postSwapFeeOutputAmount.multiply(new Fraction(ONE).subtract(this.totalTaxRate))
-  }
-
-  public minimumAmountOut(slippageTolerance: Percent, amountOut = this.outputAmount): CurrencyAmount<Currency> {
-    // Since universal-router-sdk reconstructs V2Trade objects, overriding this method does not actually change the minimumAmountOut that gets submitted on-chain
-    // Our current workaround is to add tax rate to slippage tolerance before we submit the trade to universal-router-sdk in useUniversalRouter.ts
-    // So the purpose of this override is so the UI displays the same minimum amount out as what is submitted on-chain
-    return super.minimumAmountOut(slippageTolerance.add(this.totalTaxRate), amountOut)
   }
 
   // gas estimate for maybe approve + swap
@@ -370,11 +355,6 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
 
     return 0
   }
-
-  /** For UniswapX, handling token taxes in the output amount is outsourced to quoters */
-  public get postTaxOutputAmount() {
-    return this.outputAmount
-  }
 }
 
 export class PreviewTrade {
@@ -404,17 +384,6 @@ export class PreviewTrade {
     this.tradeType = tradeType
     this.inputTax = inputTax
     this.outputTax = outputTax
-  }
-
-  public get totalTaxRate(): Percent {
-    return this.inputTax.add(this.outputTax)
-  }
-
-  public get postTaxOutputAmount() {
-    // Ideally we should calculate the final output amount by ammending the inputAmount based on the input tax and then applying the output tax,
-    // but this isn't currently possible because V2Trade reconstructs the total inputAmount based on the swap routes
-    // TODO(WEB-2761): Amend V2Trade objects in the v2-sdk to have a separate field for post-input tax routes
-    return this.outputAmount.multiply(new Fraction(ONE).subtract(this.totalTaxRate))
   }
 
   // below methods are copied from router-sdk
