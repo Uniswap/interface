@@ -2,7 +2,7 @@ import { ChainId, Currency, CurrencyAmount, Price, Token, TradeType } from '@uni
 import { useWeb3React } from '@web3-react/core'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useRef } from 'react'
-import { INTERNAL_ROUTER_PREFERENCE_PRICE } from 'state/routing/types'
+import { ClassicTrade, INTERNAL_ROUTER_PREFERENCE_PRICE } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 
 import {
@@ -10,6 +10,7 @@ import {
   DAI_OPTIMISM,
   USDC_ARBITRUM,
   USDC_AVALANCHE,
+  USDC_BASE,
   USDC_MAINNET,
   USDC_POLYGON,
   USDT_BSC,
@@ -25,6 +26,7 @@ const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
   [ChainId.CELO]: CurrencyAmount.fromRawAmount(CUSD_CELO, 10_000e18),
   [ChainId.BNB]: CurrencyAmount.fromRawAmount(USDT_BSC, 100e18),
   [ChainId.AVALANCHE]: CurrencyAmount.fromRawAmount(USDC_AVALANCHE, 10_000e6),
+  [ChainId.BASE]: CurrencyAmount.fromRawAmount(USDC_BASE, 10_000e6),
 }
 
 /**
@@ -53,7 +55,8 @@ export default function useStablecoinPrice(currency?: Currency): Price<Currency,
       return new Price(stablecoin, stablecoin, '1', '1')
     }
 
-    if (trade) {
+    // if initial quoting fails, we may end up with a DutchOrderTrade
+    if (trade && trade instanceof ClassicTrade) {
       const { numerator, denominator } = trade.routes[0].midPrice
       return new Price(currency, stablecoin, denominator, numerator)
     }

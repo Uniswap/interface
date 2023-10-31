@@ -161,7 +161,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
   const shouldShowBuyFiatButton = !isPathBlocked('/buy')
-  const { formatNumber, formatPercent } = useFormatter()
+  const { formatNumber, formatDelta } = useFormatter()
 
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
@@ -284,7 +284,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
                     {`${formatNumber({
                       input: Math.abs(absoluteChange as number),
                       type: NumberType.PortfolioBalance,
-                    })} (${formatPercent(percentChange)})`}
+                    })} (${formatDelta(percentChange)})`}
                   </ThemedText.BodySecondary>
                 </>
               )}
