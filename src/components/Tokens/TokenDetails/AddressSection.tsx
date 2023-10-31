@@ -29,7 +29,7 @@ export default function AddressSection({ address }: { address: string }) {
         <Trans>Contract address</Trans>
       </ThemedText.SubHeaderSmall>
       <ContractAddress>
-        <CopyContractAddress address={address} />
+        <CopyContractAddress address={address} truncatedAddress={`${address.slice(0, 4)}...${address.slice(-3)}`} />
       </ContractAddress>
     </ContractAddressSection>
   )

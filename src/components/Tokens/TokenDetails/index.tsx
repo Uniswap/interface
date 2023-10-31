@@ -6,7 +6,7 @@ import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioL
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
-import { BreadcrumbNavLink } from 'components/Tokens/TokenDetails/BreadcrumbNavLink'
+import { BreadcrumbNav, BreadcrumbNavLink } from 'components/Tokens/TokenDetails/BreadcrumbNavLink'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
 import MobileBalanceSummaryFooter from 'components/Tokens/TokenDetails/MobileBalanceSummaryFooter'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
@@ -33,12 +33,13 @@ import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import { Swap } from 'pages/Swap'
 import { useCallback, useMemo, useState, useTransition } from 'react'
-import { ArrowLeft } from 'react-feather'
+import { ArrowLeft, ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Field } from 'state/swap/actions'
 import { SwapState } from 'state/swap/reducer'
 import styled from 'styled-components'
-import { isAddress } from 'utils'
+import { CopyContractAddress } from 'theme/components'
+import { isAddress, shortenAddress } from 'utils'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
 import { OnChangeTimePeriod } from './ChartSection'
@@ -130,7 +131,6 @@ export default function TokenDetails({
       }, {} as { [key: string]: string | undefined }) ?? {},
     [tokenQueryData]
   )
-  const isInfoTDPEnabled = useInfoTDPEnabled()
 
   const { token: detailedToken, didFetchFromChain } = useRelevantToken(address, pageChainId, tokenQueryData)
 
@@ -139,6 +139,7 @@ export default function TokenDetails({
   const navigate = useNavigate()
 
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
+  const isInfoTDPEnabled = useInfoTDPEnabled()
 
   // Wrapping navigate in a transition prevents Suspense from unnecessarily showing fallbacks again.
   const [isPending, startTokenTransition] = useTransition()
@@ -210,6 +211,7 @@ export default function TokenDetails({
   if (detailedToken === undefined || !address) {
     return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!address} />
   }
+  const tokenSymbolName = detailedToken && (detailedToken.symbol ?? <Trans>Symbol not found</Trans>)
   return (
     <Trace
       page={InterfacePageName.TOKEN_DETAILS_PAGE}
@@ -219,15 +221,38 @@ export default function TokenDetails({
       <TokenDetailsLayout>
         {detailedToken && !isPending ? (
           <LeftPanel>
-            <BreadcrumbNavLink to={`${isInfoExplorePageEnabled ? '/explore' : ''}/tokens/${chain.toLowerCase()}`}>
-              <ArrowLeft data-testid="token-details-return-button" size={14} /> Tokens
-            </BreadcrumbNavLink>
+            {isInfoTDPEnabled ? (
+              <BreadcrumbNav isInfoTDPEnabled>
+                <BreadcrumbNavLink to={`${isInfoExplorePageEnabled ? '/explore' : ''}/tokens/${chain.toLowerCase()}`}>
+                  <Trans>Explore</Trans> <ChevronRight data-testid="token-details-return-button" size={14} />{' '}
+                  <Trans>Tokens</Trans> <ChevronRight data-testid="token-details-return-button" size={14} />
+                </BreadcrumbNavLink>{' '}
+                {tokenSymbolName}{' '}
+                {!detailedToken.isNative && (
+                  <>
+                    (
+                    <CopyContractAddress
+                      address={address}
+                      showTruncatedOnly
+                      truncatedAddress={shortenAddress(address)}
+                    />
+                    )
+                  </>
+                )}
+              </BreadcrumbNav>
+            ) : (
+              <BreadcrumbNav>
+                <BreadcrumbNavLink to={`${isInfoExplorePageEnabled ? '/explore' : ''}/tokens/${chain.toLowerCase()}`}>
+                  <ArrowLeft data-testid="token-details-return-button" size={14} /> Tokens
+                </BreadcrumbNavLink>
+              </BreadcrumbNav>
+            )}
             <TokenInfoContainer data-testid="token-info-container">
               <TokenNameCell>
                 <PortfolioLogo currencies={[detailedToken]} chainId={detailedToken.chainId} size="32px" />
                 <TokenTitle>
                   {detailedToken.name ?? <Trans>Name not found</Trans>}
-                  <TokenSymbol>{detailedToken.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
+                  <TokenSymbol>{tokenSymbolName}</TokenSymbol>
                 </TokenTitle>
               </TokenNameCell>
               <TokenActions>

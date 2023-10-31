@@ -1,5 +1,6 @@
 import { SwapSkeleton } from 'components/swap/SwapSkeleton'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
+import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { ArrowLeft } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
@@ -51,6 +52,18 @@ export const RightPanel = styled.div`
     display: flex;
   }
 `
+const BreadcrumbNav = styled.div`
+  display: flex;
+  color: ${({ theme }) => theme.neutral1};
+  font-size: 14px;
+  line-height: 20px;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 16px;
+  width: fit-content;
+  ${textFadeIn};
+  animation-duration: ${({ theme }) => theme.transition.duration.medium};
+`
 export const ChartContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -91,6 +104,9 @@ const DetailBubble = styled(LoadingBubble)`
 const SquaredBubble = styled(DetailBubble)`
   height: 32px;
   border-radius: 8px;
+`
+const NavBubble = styled(DetailBubble)`
+  width: 300px;
 `
 const TokenLogoBubble = styled(DetailBubble)`
   width: 32px;
@@ -222,13 +238,23 @@ function LoadingStats() {
 export default function TokenDetailsSkeleton() {
   const { chainName } = useParams<{ chainName?: string }>()
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
+  const isInfoTDPEnabled = useInfoTDPEnabled()
+
   return (
     <LeftPanel>
-      <BreadcrumbNavLink
-        to={(isInfoExplorePageEnabled ? '/explore' : '') + (chainName ? `/tokens/${chainName}` : `/tokens`)}
-      >
-        <ArrowLeft size={14} /> Tokens
-      </BreadcrumbNavLink>
+      {isInfoTDPEnabled ? (
+        <BreadcrumbNav>
+          <NavBubble />
+        </BreadcrumbNav>
+      ) : (
+        <BreadcrumbNav>
+          <BreadcrumbNavLink
+            to={(isInfoExplorePageEnabled ? '/explore' : '') + (chainName ? `/tokens/${chainName}` : `/tokens`)}
+          >
+            <ArrowLeft size={14} /> Tokens
+          </BreadcrumbNavLink>
+        </BreadcrumbNav>
+      )}
       <TokenInfoContainer>
         <TokenNameCell>
           <TokenLogoBubble />
