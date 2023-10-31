@@ -3,7 +3,6 @@ import { call } from '@redux-saga/core/effects'
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
-import { MethodParameters } from '@uniswap/v3-sdk'
 import { expectSaga } from 'redux-saga-test-plan'
 import { approveAndSwap, SwapParams } from 'src/features/transactions/swap/swapSaga'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -18,11 +17,6 @@ import {
 import { getProvider } from 'wallet/src/features/wallet/context'
 import { account, mockProvider } from 'wallet/src/test/fixtures'
 import { currencyId } from 'wallet/src/utils/currencyId'
-
-const methodParameters: MethodParameters = {
-  value: '0x00',
-  calldata: '0x01',
-}
 
 const CHAIN_ID = ChainId.Goerli
 const universalRouterAddress = UNIVERSAL_ROUTER_ADDRESS(CHAIN_ID)
@@ -40,7 +34,7 @@ const transactionTypeInfo: ExactInputSwapTransactionInfo = {
 
 const mockTrade = {
   inputAmount: { currency: new NativeCurrency(CHAIN_ID) },
-  quote: { amount: MaxUint256, methodParameters },
+  quote: { amount: MaxUint256 },
 } as unknown as Trade
 
 const mockApproveTxRequest = {

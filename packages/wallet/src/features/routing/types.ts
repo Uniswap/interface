@@ -55,7 +55,6 @@ export interface QuoteResult {
   gasUseEstimateQuote: string
   gasUseEstimateQuoteDecimals: string
   gasUseEstimateUSD: string
-  methodParameters?: { calldata: string; value: string }
   quote: string
   quoteDecimals: string
   quoteGasAdjusted: string
