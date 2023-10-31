@@ -8,11 +8,12 @@ import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { BaseButton } from 'components/Button'
+import { AppleLogo } from 'components/Logo/AppleLogo'
+import { useAndroidGALaunchFlagEnabled } from 'featureFlags/flags/androidGALaunch'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
 import { useEffect, useMemo, useRef } from 'react'
-import { ArrowDownCircle } from 'react-feather'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
 import { useAppSelector } from 'state/hooks'
@@ -241,11 +242,6 @@ const LearnMoreContainer = styled.div`
   }
 `
 
-const LearnMoreArrow = styled(ArrowDownCircle)`
-  margin-left: 14px;
-  size: 20px;
-`
-
 const AboutContentContainer = styled.div<{ isDarkMode: boolean }>`
   display: flex;
   flex-direction: column;
@@ -334,7 +330,10 @@ export default function Landing() {
   const isDarkMode = useIsDarkMode()
   const cardsRef = useRef<HTMLDivElement>(null)
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
+
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
+  const isAndroidGALaunched = useAndroidGALaunchFlagEnabled()
+
   const originCountry = useAppSelector((state: AppState) => state.user.originCountry)
   const renderUkSpecificText = Boolean(originCountry) && originCountry === 'GB'
   const cards = useMemo(() => {
@@ -465,8 +464,17 @@ export default function Landing() {
               appStoreParams: `ct=Uniswap-Home-Page&mt=8`,
             })}
           >
-            <UniswapAppLogo width="20" height="20" />
-            Download the Uniswap app
+            {isAndroidGALaunched ? (
+              <>
+                <UniswapAppLogo width="20" height="20" />
+                Download the Uniswap app
+              </>
+            ) : (
+              <>
+                <AppleLogo width="20" height="20" />
+                Download the Uniswap app for iOS
+              </>
+            )}
           </DownloadWalletLink>
         </ContentContainer>
         <AboutContentContainer isDarkMode={isDarkMode}>

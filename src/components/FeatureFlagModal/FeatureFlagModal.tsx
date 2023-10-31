@@ -3,6 +3,7 @@ import Column from 'components/Column'
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateConfig, useUpdateFlag } from 'featureFlags'
 import { DynamicConfigName } from 'featureFlags/dynamicConfig'
 import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
+import { useAndroidGALaunchFlag } from 'featureFlags/flags/androidGALaunch'
 import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
 import { useFallbackProviderEnabledFlag } from 'featureFlags/flags/fallbackProvider'
 import { useFotAdjustmentsFlag } from 'featureFlags/flags/fotAdjustments'
@@ -303,6 +304,12 @@ export default function FeatureFlagModal() {
           value={useProgressIndicatorV2Flag()}
           featureFlag={FeatureFlag.progressIndicatorV2}
           label="Refreshed swap progress indicator"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useAndroidGALaunchFlag()}
+          featureFlag={FeatureFlag.androidGALaunch}
+          label="Android Nov 14th GA launch"
         />
         <FeatureFlagGroup name="Quick routes">
           <FeatureFlagOption

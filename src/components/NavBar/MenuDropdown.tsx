@@ -1,7 +1,9 @@
 import { t, Trans } from '@lingui/macro'
 import { InterfaceElementName } from '@uniswap/analytics-events'
+import { ReactComponent as AppleLogo } from 'assets/svg/apple_logo.svg'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
+import { useAndroidGALaunchFlagEnabled } from 'featureFlags/flags/androidGALaunch'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -130,6 +132,8 @@ export const MenuDropdown = () => {
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, isOpen ? toggleOpen : undefined)
 
+  const isAndroidGALaunched = useAndroidGALaunchFlagEnabled()
+
   return (
     <>
       <Box position="relative" ref={ref} marginRight="4">
@@ -175,17 +179,30 @@ export const MenuDropdown = () => {
                   }
                 >
                   <PrimaryMenuRow close={toggleOpen}>
-                    <Icon>
-                      <UniswapAppLogo width="24px" height="24px" />
-                    </Icon>
-                    <div>
-                      <ThemedText.BodyPrimary>
-                        <Trans>Download Uniswap</Trans>
-                      </ThemedText.BodyPrimary>
-                      <ThemedText.LabelSmall>
-                        <Trans>Available on iOS and Android</Trans>
-                      </ThemedText.LabelSmall>
-                    </div>
+                    {isAndroidGALaunched ? (
+                      <>
+                        <Icon>
+                          <UniswapAppLogo width="24px" height="24px" />
+                        </Icon>
+                        <div>
+                          <ThemedText.BodyPrimary>
+                            <Trans>Download Uniswap</Trans>
+                          </ThemedText.BodyPrimary>
+                          <ThemedText.LabelSmall>
+                            <Trans>Available on iOS and Android</Trans>
+                          </ThemedText.LabelSmall>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <Icon>
+                          <AppleLogo width="24px" height="24px" fill={theme.neutral1} />
+                        </Icon>
+                        <PrimaryMenuRow.Text>
+                          <Trans>Download Uniswap app</Trans>
+                        </PrimaryMenuRow.Text>
+                      </>
+                    )}
                   </PrimaryMenuRow>
                 </Box>
               </Column>

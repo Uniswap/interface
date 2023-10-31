@@ -2,8 +2,10 @@ import { Trans } from '@lingui/macro'
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { ReactComponent as AppleLogo } from 'assets/svg/apple_logo.svg'
 import baseLogoUrl from 'assets/svg/base_background_icon.svg'
 import { ReactComponent as UniswapAppLogo } from 'assets/svg/uniswap_app_logo.svg'
+import { useAndroidGALaunchFlagEnabled } from 'featureFlags/flags/androidGALaunch'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { useLocation } from 'react-router-dom'
 import { useHideBaseWalletBanner } from 'state/user/hooks'
@@ -22,6 +24,8 @@ export default function BaseWalletBanner() {
   const shouldDisplay = Boolean(!hideBaseWalletBanner && !isLandingScreen && chainId === ChainId.BASE)
 
   const screenSize = useScreenSize()
+
+  const isAndroidGALaunched = useAndroidGALaunchFlagEnabled()
 
   if (isMobileSafari) return null
 
@@ -67,7 +71,7 @@ export default function BaseWalletBanner() {
                 })
               }
             >
-              <UniswapAppLogo width={14} height={14} />
+              {isAndroidGALaunched ? <UniswapAppLogo width={14} height={14} /> : <AppleLogo width={14} height={14} />}
               <ThemedText.LabelSmall color="black" marginLeft="5px">
                 {!screenSize['xs'] ? <Trans>Download</Trans> : <Trans>Download app</Trans>}
               </ThemedText.LabelSmall>
