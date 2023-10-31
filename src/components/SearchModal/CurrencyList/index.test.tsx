@@ -96,5 +96,5 @@ it('renders currency rows correctly with balances', () => {
   expect(screen.getByText('Wrapped BTC')).toBeInTheDocument()
   expect(screen.getByText('DAI')).toBeInTheDocument()
   expect(screen.getByText('USDC')).toBeInTheDocument()
-  expect(screen.getByText('2')).toBeInTheDocument()
+  expect(screen.getByText('2.00')).toBeInTheDocument()
 })
