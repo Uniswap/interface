@@ -59,6 +59,7 @@ export function LongText(props: LongTextProps): JSX.Element {
   const animatedStyle = useAnimatedStyle(
     () => ({
       height: !textLengthExceedsLimit || expanded ? 'auto' : maxVisibleHeight.value,
+      overflow: 'hidden',
     }),
     [expanded, textLengthExceedsLimit]
   )
@@ -75,13 +76,13 @@ export function LongText(props: LongTextProps): JSX.Element {
     }
   )
 
-  const onLayout = useCallback(
+  const onMarkdownLayout = useCallback(
     (event: LayoutChangeEvent) => {
-      if (!renderAsMarkdown || initialContentHeight.value !== undefined) return
+      if (initialContentHeight.value !== undefined) return
       initialContentHeight.value = event.nativeEvent.layout.height
       toggleExpanded()
     },
-    [initialContentHeight, renderAsMarkdown]
+    [initialContentHeight]
   )
 
   const onTextLayout = useCallback(
@@ -113,52 +114,50 @@ export function LongText(props: LongTextProps): JSX.Element {
 
   return (
     <Flex gap={gap}>
-      <AnimatedFlex style={animatedStyle} onLayout={onLayout}>
-        {renderAsMarkdown ? (
-          <>
-            {/* Render fake one-line markdown to properly measure the height of a single text line */}
-            <Flex
-              opacity={0}
-              pointerEvents="none"
-              position="absolute"
-              onLayout={({
-                nativeEvent: {
-                  layout: { height },
-                },
-              }): void => {
-                textLineHeight.value = height
-              }}>
-              <Markdown
-                style={{
-                  ...markdownStyle,
-                  body: {},
-                  paragraph: { ...markdownStyle.paragraph, lineHeight: fonts[variant].lineHeight },
-                }}
-                {...{ children: '' }}
-              />
-            </Flex>
+      {renderAsMarkdown ? (
+        <AnimatedFlex style={animatedStyle} onLayout={onMarkdownLayout}>
+          {/* Render fake one-line markdown to properly measure the height of a single text line */}
+          <Flex
+            opacity={0}
+            pointerEvents="none"
+            position="absolute"
+            onLayout={({
+              nativeEvent: {
+                layout: { height },
+              },
+            }): void => {
+              textLineHeight.value = height
+            }}>
             <Markdown
-              style={markdownStyle}
-              onLinkPress={(url): false => {
-                // add our own custom link handler since it has security checks that only open http/https links
-                openUri(url).catch(() => undefined)
-                return false
+              style={{
+                ...markdownStyle,
+                body: {},
+                paragraph: { ...markdownStyle.paragraph, lineHeight: fonts[variant].lineHeight },
               }}
-              // HACK: children prop no in TS definition
-              {...{ children: text }}
+              {...{ children: '.' }}
             />
-          </>
-        ) : (
-          <Text
-            numberOfLines={expanded ? undefined : initialDisplayedLines}
-            style={{ color }}
-            variant={variant}
-            onTextLayout={onTextLayout}
-            {...rest}>
-            {text}
-          </Text>
-        )}
-      </AnimatedFlex>
+          </Flex>
+          <Markdown
+            style={markdownStyle}
+            onLinkPress={(url): false => {
+              // add our own custom link handler since it has security checks that only open http/https links
+              openUri(url).catch(() => undefined)
+              return false
+            }}
+            // HACK: children prop no in TS definition
+            {...{ children: text }}
+          />
+        </AnimatedFlex>
+      ) : (
+        <Text
+          numberOfLines={expanded ? undefined : initialDisplayedLines}
+          style={{ color }}
+          variant={variant}
+          onTextLayout={onTextLayout}
+          {...rest}>
+          {text}
+        </Text>
+      )}
 
       {/* Text is removed vs hidden using opacity to ensure spacing after the element is consistent in all cases.
       This will cause mild thrash as data loads into a page but will ensure consistent spacing */}

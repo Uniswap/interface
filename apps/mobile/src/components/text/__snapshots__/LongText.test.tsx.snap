@@ -10,33 +10,22 @@ exports[`renders a LongText 1`] = `
     }
   }
 >
-  <View
-    onLayout={[Function]}
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    numberOfLines={3}
+    onTextLayout={[Function]}
     style={
       {
-        "alignItems": "stretch",
-        "flexDirection": "column",
-        "height": "auto",
+        "color": "#222222",
+        "fontFamily": "Basel-Book",
+        "fontSize": 17,
+        "lineHeight": 24,
       }
     }
+    suppressHighlighting={true}
   >
-    <Text
-      allowFontScaling={true}
-      maxFontSizeMultiplier={1.4}
-      numberOfLines={3}
-      onTextLayout={[Function]}
-      style={
-        {
-          "color": "#222222",
-          "fontFamily": "Basel-Book",
-          "fontSize": 17,
-          "lineHeight": 24,
-        }
-      }
-      suppressHighlighting={true}
-    >
-      Some very long text
-    </Text>
-  </View>
+    Some very long text
+  </Text>
 </View>
 `;
