@@ -33,12 +33,12 @@ describe('formatNumber', () => {
     expect(formatNumber({ input: 0, type: NumberType.TokenNonTx })).toBe('0')
   })
 
-  it('formats token reference numbers correctly with deutsch locale', () => {
-    mocked(useActiveLocale).mockReturnValue('de-DE')
+  it('formats token reference numbers correctly with Dutch locale', () => {
+    mocked(useActiveLocale).mockReturnValue('nl-NL')
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
-    expect(formatNumber({ input: 1234567000000000, type: NumberType.TokenNonTx })).toBe('>999\xa0Bio.')
-    expect(formatNumber({ input: 1002345, type: NumberType.TokenNonTx })).toBe('1,00\xa0Mio.')
+    expect(formatNumber({ input: 1234567000000000, type: NumberType.TokenNonTx })).toBe('>999\xa0bln.')
+    expect(formatNumber({ input: 1002345, type: NumberType.TokenNonTx })).toBe('1,00\xa0mln.')
     expect(formatNumber({ input: 1234, type: NumberType.TokenNonTx })).toBe('1.234,00')
     expect(formatNumber({ input: 0.00909, type: NumberType.TokenNonTx })).toBe('0,009')
     expect(formatNumber({ input: 0.09001, type: NumberType.TokenNonTx })).toBe('0,090')

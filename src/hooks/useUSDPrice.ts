@@ -4,7 +4,7 @@ import { nativeOnChain } from 'constants/tokens'
 import { Chain, useTokenSpotPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName, isGqlSupportedChain, PollingInterval } from 'graphql/data/util'
 import { useMemo } from 'react'
-import { INTERNAL_ROUTER_PREFERENCE_PRICE, TradeState } from 'state/routing/types'
+import { ClassicTrade, INTERNAL_ROUTER_PREFERENCE_PRICE, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
@@ -52,9 +52,14 @@ function useETHPrice(currency?: Currency): {
       return { data: undefined, isLoading: state === TradeState.LOADING }
     }
 
-    const { numerator, denominator } = trade.routes[0].midPrice
-    const price = new Price(currency, nativeOnChain(chainId), denominator, numerator)
-    return { data: price, isLoading: false }
+    // if initial quoting fails, we may end up with a DutchOrderTrade
+    if (trade && trade instanceof ClassicTrade) {
+      const { numerator, denominator } = trade.routes[0].midPrice
+      const price = new Price(currency, nativeOnChain(chainId), denominator, numerator)
+      return { data: price, isLoading: false }
+    }
+
+    return { data: undefined, isLoading: false }
   }, [chainId, currency, isSupported, state, trade])
 }
 
