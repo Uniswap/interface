@@ -1,7 +1,7 @@
-import { useIsFocused } from '@react-navigation/core'
 import { useRef } from 'react'
 import { trimToLength } from 'utilities/src/primitives/string'
 import { useENSName } from 'wallet/src/features/ens/api'
+import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { useAppSelector } from 'wallet/src/state'
