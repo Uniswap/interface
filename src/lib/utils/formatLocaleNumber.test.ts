@@ -33,7 +33,6 @@ function expectedOutput(l: SupportedLocale): string {
       return `4 000 000,123`
     case 'ca-ES':
     case 'da-DK':
-    case 'de-DE':
     case 'el-GR':
     case 'es-ES':
     case 'id-ID':

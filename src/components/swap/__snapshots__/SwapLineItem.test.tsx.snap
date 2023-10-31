@@ -246,7 +246,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
             <div
               class="c10 css-1m65e73"
             >
-              The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+              Network cost is paid in ETH on the ETHEREUM network in order to transact. 
               <a
                 class="c11"
                 href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
@@ -744,7 +744,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
           <div
             class="c9 css-obwv3p"
           >
-            Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+            This fee is applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
             <a
               class="c10"
               href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -1486,7 +1486,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             <div
               class="c10 css-1m65e73"
             >
-              The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+              Network cost is paid in ETH on the ETHEREUM network in order to transact. 
               <a
                 class="c11"
                 href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
@@ -1661,7 +1661,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             <span
               class=""
             >
-              -105566.373%
+              ~-105566.373%
             </span>
           </div>
         </div>
@@ -2157,7 +2157,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
           <div
             class="c9 css-obwv3p"
           >
-            Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+            This fee is applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
             <a
               class="c10"
               href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -2762,6 +2762,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                       <img
                         alt="ABC logo"
                         class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                       />
                     </div>
@@ -2828,6 +2829,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                                       <img
                                         alt="DEF logo"
                                         class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                       />
                                     </div>
@@ -2846,6 +2848,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                                       <img
                                         alt="ABC logo"
                                         class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                       />
                                     </div>
@@ -2887,6 +2890,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                       <img
                         alt="DEF logo"
                         class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                       />
                     </div>
@@ -3153,7 +3157,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             <div
               class="c10 css-1m65e73"
             >
-              The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+              Network cost is paid in ETH on the ETHEREUM network in order to transact. 
               <a
                 class="c11"
                 href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
@@ -3328,7 +3332,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             <span
               class=""
             >
-              -105566.373%
+              ~-105566.373%
             </span>
           </div>
         </div>
@@ -3824,7 +3828,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
           <div
             class="c9 css-obwv3p"
           >
-            Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+            This fee is applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
             <a
               class="c10"
               href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -4429,6 +4433,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                       <img
                         alt="ABC logo"
                         class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                       />
                     </div>
@@ -4495,6 +4500,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                                       <img
                                         alt="DEF logo"
                                         class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                       />
                                     </div>
@@ -4513,6 +4519,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                                       <img
                                         alt="ABC logo"
                                         class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                       />
                                     </div>
@@ -4554,6 +4561,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                       <img
                         alt="DEF logo"
                         class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                       />
                     </div>
@@ -4820,7 +4828,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             <div
               class="c10 css-1m65e73"
             >
-              The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+              Network cost is paid in ETH on the ETHEREUM network in order to transact. 
               <a
                 class="c11"
                 href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
@@ -4995,7 +5003,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             <span
               class=""
             >
-              -105566.373%
+              ~-105566.373%
             </span>
           </div>
         </div>
@@ -5491,7 +5499,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
           <div
             class="c9 css-obwv3p"
           >
-            Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+            This fee is applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
             <a
               class="c10"
               href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -6096,6 +6104,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                       <img
                         alt="ABC logo"
                         class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                       />
                     </div>
@@ -6162,6 +6171,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                                       <img
                                         alt="GHI logo"
                                         class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
                                       />
                                     </div>
@@ -6180,6 +6190,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                                       <img
                                         alt="ABC logo"
                                         class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                       />
                                     </div>
@@ -6221,6 +6232,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                       <img
                         alt="GHI logo"
                         class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
                       />
                     </div>
@@ -6487,7 +6499,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             <div
               class="c10 css-1m65e73"
             >
-              The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+              Network cost is paid in ETH on the ETHEREUM network in order to transact. 
               <a
                 class="c11"
                 href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
@@ -6870,7 +6882,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             <span
               class=""
             >
-              -105566.373%
+              ~-105566.373%
             </span>
           </div>
         </div>
@@ -7366,7 +7378,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
           <div
             class="c9 css-obwv3p"
           >
-            Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+            This fee is applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
             <a
               class="c10"
               href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -7971,6 +7983,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                       <img
                         alt="ABC logo"
                         class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                       />
                     </div>
@@ -8037,6 +8050,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                                       <img
                                         alt="DEF logo"
                                         class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                       />
                                     </div>
@@ -8055,6 +8069,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                                       <img
                                         alt="ABC logo"
                                         class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                       />
                                     </div>
@@ -8096,6 +8111,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                       <img
                         alt="DEF logo"
                         class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                       />
                     </div>
@@ -8362,7 +8378,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             <div
               class="c10 css-1m65e73"
             >
-              The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+              Network cost is paid in ETH on the ETHEREUM network in order to transact. 
               <a
                 class="c11"
                 href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
@@ -8745,7 +8761,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             <span
               class=""
             >
-              -105566.373%
+              ~-105566.373%
             </span>
           </div>
         </div>
@@ -9241,7 +9257,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
           <div
             class="c9 css-obwv3p"
           >
-            Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+            This fee is applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
             <a
               class="c10"
               href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -9846,6 +9862,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                       <img
                         alt="ABC logo"
                         class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                       />
                     </div>
@@ -9912,6 +9929,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                                       <img
                                         alt="DEF logo"
                                         class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                       />
                                     </div>
@@ -9930,6 +9948,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                                       <img
                                         alt="ABC logo"
                                         class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                       />
                                     </div>
@@ -9971,6 +9990,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                       <img
                         alt="DEF logo"
                         class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                       />
                     </div>
@@ -10204,7 +10224,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
             <div
               class="c10 css-1m65e73"
             >
-              The fee paid to the Ethereum network to process your transaction. This must be paid in ETH. 
+              Network cost is paid in ETH on the ETHEREUM network in order to transact. 
               <a
                 class="c11"
                 href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"

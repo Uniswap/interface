@@ -139,7 +139,11 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: 'explore/pools/:chainName/:poolAddress',
-    getElement: () => <PoolDetails />,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <PoolDetails />
+      </Suspense>
+    ),
     enabled: (args) => Boolean(args.infoExplorePageEnabled && args.infoPoolPageEnabled),
   }),
   createRouteDefinition({

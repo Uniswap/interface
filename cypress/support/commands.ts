@@ -74,18 +74,14 @@ Cypress.Commands.overwrite(
   }
 )
 
-Cypress.Commands.add('waitForAmplitudeEvent', (eventName, timeout = 5000 /* 5s */) => {
-  const startTime = new Date().getTime()
-
+Cypress.Commands.add('waitForAmplitudeEvent', (eventName) => {
   function checkRequest() {
-    return cy.wait('@amplitude', { timeout }).then((interception) => {
+    return cy.wait('@amplitude').then((interception) => {
       const events = interception.request.body.events
       const event = events.find((event: any) => event.event_type === eventName)
 
       if (event) {
         return cy.wrap(event)
-      } else if (new Date().getTime() - startTime > timeout) {
-        throw new Error(`Event ${eventName} not found within the specified timeout`)
       } else {
         return checkRequest()
       }

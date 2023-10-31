@@ -59,9 +59,7 @@ describe('Token explore', () => {
     // in metamask modal using plain cypress. this is a workaround.
     cy.visit('/tokens/polygon')
     cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Polygon')
-    cy.get(getTestSelector('token-table-row-NATIVE'))
-      .find(getTestSelector('name-cell'))
-      .should('include.text', 'Polygon Matic')
+    cy.get(getTestSelector('token-table-row-NATIVE')).find(getTestSelector('name-cell')).should('include.text', 'Matic')
   })
 
   it('should update when token explore table network changed', () => {

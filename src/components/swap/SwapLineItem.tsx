@@ -80,13 +80,13 @@ function FOTTooltipContent() {
 function SwapFeeTooltipContent({ hasFee }: { hasFee: boolean }) {
   const message = hasFee ? (
     <Trans>
-      Fee is applied on a few token pairs to ensure the best experience with Uniswap. It is paid in the output token and
-      has already been factored into the quote.
+      This fee is applied on select token pairs to ensure the best experience with Uniswap. It is paid in the output
+      token and has already been factored into the quote.
     </Trans>
   ) : (
     <Trans>
-      Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with
-      this swap.
+      This fee is applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated
+      with this swap.
     </Trans>
   )
   return (
@@ -103,9 +103,10 @@ function Loading({ width = 50 }: { width?: number }) {
   return <LoadingRow data-testid="loading-row" height={15} width={width} />
 }
 
-function ColoredPercentRow({ percent }: { percent: Percent }) {
-  const { formatSlippage } = useFormatter()
-  return <ColorWrapper textColor={getPriceImpactColor(percent)}>{formatSlippage(percent)}</ColorWrapper>
+function ColoredPercentRow({ percent, estimate }: { percent: Percent; estimate?: boolean }) {
+  const { formatPercent } = useFormatter()
+  const formattedPercent = (estimate ? '~' : '') + formatPercent(percent)
+  return <ColorWrapper textColor={getPriceImpactColor(percent)}>{formattedPercent}</ColorWrapper>
 }
 
 function CurrencyAmountRow({ amount }: { amount: CurrencyAmount<Currency> }) {
@@ -136,7 +137,7 @@ type LineItemData = {
 
 function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   const { trade, syncing, allowedSlippage, type } = props
-  const { formatNumber, formatSlippage } = useFormatter()
+  const { formatNumber, formatPercent } = useFormatter()
   const isAutoSlippage = useUserSlippageTolerance()[0] === SlippageTolerance.Auto
   const feesEnabled = useFeesEnabled()
 
@@ -179,7 +180,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
       return {
         Label: () => <Trans>Price impact</Trans>,
         TooltipBody: () => <Trans>The impact your trade has on the market price of this pool.</Trans>,
-        Value: () => (isPreview ? <Loading /> : <ColoredPercentRow percent={trade.priceImpact} />),
+        Value: () => (isPreview ? <Loading /> : <ColoredPercentRow percent={trade.priceImpact} estimate />),
       }
     case SwapLineItemType.MAX_SLIPPAGE:
       return {
@@ -187,7 +188,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
         TooltipBody: () => <MaxSlippageTooltip {...props} />,
         Value: () => (
           <Row gap="8px">
-            {isAutoSlippage && <AutoBadge />} {formatSlippage(allowedSlippage)}
+            {isAutoSlippage && <AutoBadge />} {formatPercent(allowedSlippage)}
           </Row>
         ),
       }
@@ -197,7 +198,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
       return {
         Label: () => (
           <>
-            <Trans>Fee</Trans> {trade.swapFee && `(${formatSlippage(trade.swapFee.percent)})`}
+            <Trans>Fee</Trans> {trade.swapFee && `(${formatPercent(trade.swapFee.percent)})`}
           </>
         ),
         TooltipBody: () => <SwapFeeTooltipContent hasFee={Boolean(trade.swapFee)} />,
