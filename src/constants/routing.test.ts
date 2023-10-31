@@ -14,7 +14,7 @@ describe('Routing', () => {
     })
     it('contains all coins for optimism', () => {
       const symbols = COMMON_BASES[ChainId.OPTIMISM].map((coin) => coin.symbol)
-      expect(symbols).toEqual(['ETH', 'OP', 'DAI', 'USDC', 'USDC.e', 'USDT', 'WBTC'])
+      expect(symbols).toEqual(['ETH', 'OP', 'DAI', 'USDC', 'USDT', 'WBTC'])
     })
     it('contains all coins for polygon', () => {
       const symbols = COMMON_BASES[ChainId.POLYGON].map((coin) => coin.symbol)
