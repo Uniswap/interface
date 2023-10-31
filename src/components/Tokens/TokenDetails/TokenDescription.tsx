@@ -110,8 +110,7 @@ export function TokenDescription({
     buyFeeString: formatPercent(buyFee),
   }
   const hasFee = Boolean(parseFloat(sellFeeString)) || Boolean(parseFloat(buyFee.toFixed(2)))
-  const sameFee = true
-  // const sameFee = sellFeeString === buyFeeString
+  const sameFee = sellFeeString === buyFeeString
 
   return (
     <TokenInfoSection>
@@ -194,9 +193,11 @@ export function TokenDescription({
                 <ThemedText.BodyPrimary>
                   {tokenQuery?.token?.symbol}&nbsp;
                   <Trans>buy fee:</Trans>&nbsp;{buyFeeString}
+                </ThemedText.BodyPrimary>{' '}
+                <ThemedText.BodyPrimary>
                   {tokenQuery?.token?.symbol}&nbsp;
                   <Trans>sell fee:</Trans>&nbsp;{sellFeeString}
-                </ThemedText.BodyPrimary>
+                </ThemedText.BodyPrimary>{' '}
               </>
             )}
           </Column>
