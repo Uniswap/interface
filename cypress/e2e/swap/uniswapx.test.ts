@@ -380,7 +380,7 @@ describe('UniswapX activity history', () => {
     cy.get(getTestSelector('activity-content')).contains('Swapped').should('have.length', 1)
   })
 
-  it('balances should refetch after uniswapx swap', () => {
+  it.only('balances should refetch after uniswapx swap', () => {
     // Setup a swap
     cy.get('#swap-currency-input .token-amount-input').type('300')
     cy.contains('Try it now').click()

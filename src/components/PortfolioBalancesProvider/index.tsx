@@ -1,14 +1,17 @@
 import { useWeb3React } from '@web3-react/core'
-import { usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { usePortfolioBalancesLazyQuery, usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { GQL_MAINNET_CHAINS } from 'graphql/data/util'
 import usePrevious from 'hooks/usePrevious'
-import { atom, useAtom } from 'jotai'
-import { useUpdateAtom } from 'jotai/utils'
-import { ReactNode, useEffect } from 'react'
+import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react'
+import noop from 'utils/noop'
 
 import { usePendingActivity } from '../AccountDrawer/MiniPortfolio/Activity/hooks'
 
-const hasUnfetchedBalancesAtom = atom<boolean>(true)
+const BalancesContext = createContext<{
+  query?: ReturnType<typeof usePortfolioBalancesQuery>
+  fetch: () => void
+  stale: boolean
+}>({} as any)
 
 /** Returns true if the number of pending activities has decreased */
 function useHasUpdatedTx() {
@@ -18,48 +21,62 @@ function useHasUpdatedTx() {
   return !!prevPendingActivityCount && pendingActivityCount < prevPendingActivityCount
 }
 
+function useHasAccountChanged() {
+  const { account } = useWeb3React()
+  const prevAccount = usePrevious(account)
+
+  return !!prevAccount && account !== prevAccount
+}
+
 export function PortfolioBalancesProvider({ children }: { children: ReactNode }) {
   const { account } = useWeb3React()
-  const setHasStaleBalances = useUpdateAtom(hasUnfetchedBalancesAtom)
+  const [stale, setStale] = useState(true)
 
-  const cachedBalances = usePortfolioBalancesQuery({
-    skip: !account,
+  const [fetch, balanceQuery] = usePortfolioBalancesLazyQuery({
     variables: { ownerAddress: account ?? '', chains: GQL_MAINNET_CHAINS },
-    fetchPolicy: 'cache-only',
-  }).data?.portfolios?.[0]
+  })
 
-  // Set stale flag to false when new balances are received
+  // Set stale flag to false when new balances are being fetched
   useEffect(() => {
-    if (cachedBalances) setHasStaleBalances(false)
-  }, [cachedBalances, setHasStaleBalances])
+    if (balanceQuery.loading === true) setStale(false)
+  }, [balanceQuery.loading, setStale])
 
   // Set stale flag to true when the user completes a transaction or switches accounts
   const hasUpdatedTx = useHasUpdatedTx()
-  const prevAccount = usePrevious(account)
+  const accountChanged = useHasAccountChanged()
   useEffect(() => {
-    const accountChanged = prevAccount !== undefined && prevAccount !== account
-    if (hasUpdatedTx || accountChanged) setHasStaleBalances(true)
-  }, [account, hasUpdatedTx, prevAccount, setHasStaleBalances])
+    if (hasUpdatedTx || accountChanged) setStale(true)
+  }, [accountChanged, hasUpdatedTx, setStale])
 
-  return <>{children}</>
+  return (
+    <BalancesContext.Provider
+      value={useMemo(() => ({ fetch, query: balanceQuery, stale }), [fetch, balanceQuery, stale])}
+    >
+      {children}
+    </BalancesContext.Provider>
+  )
+}
+
+// Used to prevent state updates in unit tests
+export function MockBalanceProvider({ children }: { children: ReactNode }) {
+  return (
+    <BalancesContext.Provider value={useMemo(() => ({ stale: false, fetch: noop }), [])}>
+      {children}
+    </BalancesContext.Provider>
+  )
 }
 
 export function useCachedPortfolioBalances(params?: { freshBalancesRequired: boolean }) {
+  const { query, fetch, stale } = useContext(BalancesContext)
   const { account } = useWeb3React()
-  const [hasStaleBalances, setHasStaleBalances] = useAtom(hasUnfetchedBalancesAtom)
-
-  const { data, loading, refetch } = usePortfolioBalancesQuery({
-    variables: { ownerAddress: account ?? '', chains: GQL_MAINNET_CHAINS },
-    fetchPolicy: 'cache-only',
-  })
 
   // Fetches new balances when existing balances are stale and the UI requires fresh balances (e.g. component goes from hidden to visible)
   useEffect(() => {
-    if (hasStaleBalances && params?.freshBalancesRequired && account) {
-      refetch()
-      setHasStaleBalances(false)
-    }
-  }, [params?.freshBalancesRequired, refetch, hasStaleBalances, account, setHasStaleBalances])
+    if (stale && params?.freshBalancesRequired && account) fetch()
+  }, [stale, params?.freshBalancesRequired, account, fetch])
 
-  return { portfolio: data?.portfolios?.[0], stale: hasStaleBalances, loading }
+  return useMemo(
+    () => ({ portfolio: query?.data?.portfolios?.[0], loading: query?.loading }),
+    [query?.data?.portfolios, query?.loading]
+  )
 }

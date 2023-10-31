@@ -3,6 +3,7 @@ import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { queries } from '@testing-library/dom'
 import { render, renderHook, RenderHookOptions, RenderOptions } from '@testing-library/react'
+import { MockBalanceProvider } from 'components/PortfolioBalancesProvider'
 import { DEFAULT_LOCALE } from 'constants/locales'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import catalog from 'locales/en-US'
@@ -36,9 +37,11 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
              * To test behavior that depends on Web3Provider, use jest.unmock('@web3-react/core')
              */}
             <MockedProvider>
-              <BlockNumberProvider>
-                <ThemeProvider>{children}</ThemeProvider>
-              </BlockNumberProvider>
+              <MockBalanceProvider>
+                <BlockNumberProvider>
+                  <ThemeProvider>{children}</ThemeProvider>
+                </BlockNumberProvider>
+              </MockBalanceProvider>
             </MockedProvider>
           </BrowserRouter>
         </QueryClientProvider>
