@@ -339,7 +339,7 @@ const statsLoadingSkeleton = (isMobile: boolean) =>
   ))
 
 const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
-  const { formatNumberOrString, formatPercent } = useFormatter()
+  const { formatNumberOrString, formatDelta } = useFormatter()
 
   const uniqueOwnersPercentage = stats?.stats?.total_supply
     ? roundWholePercentage(((stats.stats.num_owners ?? 0) / stats.stats.total_supply) * 100)
@@ -362,7 +362,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
     type: NumberType.NFTTokenFloorPrice,
   })
   // graphQL formatted %age values out of 100, whereas v3 endpoint did a decimal between 0 & 1
-  const floorChangeStr = formatPercent(Math.round(Math.abs(stats?.stats?.one_day_floor_change ?? 0)))
+  const floorChangeStr = formatDelta(Math.round(Math.abs(stats?.stats?.one_day_floor_change ?? 0)))
 
   const isBagExpanded = useBag((state) => state.bagExpanded)
   const isScreenSize = useScreenSize()

@@ -83,7 +83,7 @@ export const BelowFloorWarningModal = ({
   startListing: () => void
 }) => {
   const theme = useTheme()
-  const { formatPercent } = useFormatter()
+  const { formatDelta } = useFormatter()
   const clickContinue = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -105,7 +105,7 @@ export const BelowFloorWarningModal = ({
         <ThemedText.BodyPrimary textAlign="center">
           <Plural
             value={listingsBelowFloor.length !== 1 ? 2 : 1}
-            _1={t`One NFT is listed ${formatPercent(
+            _1={t`One NFT is listed ${formatDelta(
               (1 - (listingsBelowFloor[0][1].price ?? 0) / (listingsBelowFloor[0][0].floorPrice ?? 0)) * 100
             )} `}
             other={t`${listingsBelowFloor.length} NFTs are listed significantly `}

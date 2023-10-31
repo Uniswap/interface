@@ -57,7 +57,7 @@ export const RoyaltyTooltip = ({
   asset: WalletAsset
   fees?: number
 }) => {
-  const { formatNumberOrString, formatPercent } = useFormatter()
+  const { formatNumberOrString, formatDelta } = useFormatter()
   const maxRoyalty = Math.max(...selectedMarkets.map((market) => getRoyalty(market, asset) ?? 0))
   return (
     <RoyaltyContainer>
@@ -70,7 +70,7 @@ export const RoyaltyTooltip = ({
               <Trans>fee</Trans>
             </ThemedText.BodySmall>
           </Row>
-          <FeePercent>{formatPercent(market.fee)}</FeePercent>
+          <FeePercent>{formatDelta(market.fee)}</FeePercent>
         </FeeWrap>
       ))}
       <FeeWrap>

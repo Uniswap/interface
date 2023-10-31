@@ -126,7 +126,7 @@ export const MarketplaceRow = ({
   toggleExpandMarketplaceRows,
   rowHovered,
 }: MarketplaceRowProps) => {
-  const { formatNumberOrString, formatPercent } = useFormatter()
+  const { formatNumberOrString, formatDelta } = useFormatter()
   const setAssetListPrice = useSellAsset((state) => state.setAssetListPrice)
   const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)
   const [marketIconHovered, toggleMarketIconHovered] = useReducer((s) => !s, false)
@@ -241,7 +241,7 @@ export const MarketplaceRow = ({
         >
           <FeeWrapper>
             <ThemedText.BodyPrimary color="neutral2">
-              {fees > 0 ? `${formatPercent(fees)}${selectedMarkets.length > 1 ? t`max` : ''}` : '--%'}
+              {fees > 0 ? `${formatDelta(fees)}${selectedMarkets.length > 1 ? t`max` : ''}` : '--%'}
             </ThemedText.BodyPrimary>
           </FeeWrapper>
         </MouseoverTooltip>

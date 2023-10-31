@@ -16,7 +16,7 @@ interface PriceImpactSeverity {
 
 export function usePriceImpact(trade?: ClassicTrade): PriceImpact | undefined {
   const theme = useTheme()
-  const { formatPriceImpact } = useFormatter()
+  const { formatPercent } = useFormatter()
 
   return useMemo(() => {
     const marketPriceImpact = trade ? computeRealizedPriceImpact(trade) : undefined
@@ -34,8 +34,8 @@ export function usePriceImpact(trade?: ClassicTrade): PriceImpact | undefined {
             type: priceImpactWarning,
             color: warningColor,
           },
-          displayPercentage: () => formatPriceImpact(marketPriceImpact),
+          displayPercentage: () => formatPercent(marketPriceImpact),
         }
       : undefined
-  }, [formatPriceImpact, theme.critical, theme.deprecated_accentWarning, trade])
+  }, [formatPercent, theme.critical, theme.deprecated_accentWarning, trade])
 }
