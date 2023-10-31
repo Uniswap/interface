@@ -24,26 +24,12 @@ export const USDC_OPTIMISM = new Token(
   'USDC',
   'USD//C'
 )
-export const USDCe_OPTIMISM = new Token(
-  ChainId.OPTIMISM,
-  '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
-  6,
-  'USDC.e',
-  'Bridged USDC'
-)
 export const USDC_OPTIMISM_GOERLI = new Token(
   ChainId.OPTIMISM_GOERLI,
   '0xe05606174bac4A6364B31bd0eCA4bf4dD368f8C6',
   6,
   'USDC',
   'USD//C'
-)
-export const USDCe_OPTIMISM_GOERLI = new Token(
-  ChainId.OPTIMISM_GOERLI,
-  '0x7E07E15D2a87A24492740D16f5bdF58c16db0c4E',
-  6,
-  'USDC.e',
-  'Bridged USDC'
 )
 export const USDC_ARBITRUM = new Token(
   ChainId.ARBITRUM_ONE,
@@ -79,13 +65,6 @@ export const PORTAL_USDC_CELO = new Token(
   6,
   'USDCet',
   'USDC (Portal from Ethereum)'
-)
-export const USDbC_BASE = new Token(
-  ChainId.BASE,
-  '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA',
-  6,
-  'USDbC',
-  'USD Base Coin'
 )
 export const USDC_BASE = new Token(ChainId.BASE, '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', 6, 'USDC', 'USD Coin')
 
