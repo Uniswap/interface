@@ -100,11 +100,11 @@ export default function StatsSection(props: StatsSectionProps) {
   const priceHigh52W = tokenMarketInfo?.priceHigh52W?.value
   const priceLow52W = tokenMarketInfo?.priceLow52W?.value
 
-  const haveStats = isInfoTDPEnabled
+  const hasStats = isInfoTDPEnabled
     ? TVL || FDV || marketCap || volume24H
     : TVL || volume24H || priceLow52W || priceHigh52W
 
-  if (haveStats) {
+  if (hasStats) {
     return (
       <StatsWrapper data-testid="token-details-stats">
         <Header>

@@ -306,7 +306,8 @@ export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined>
   ),
   [TokenSortMethod.FULLY_DILUTED_VALUATION]: (
     <Trans>
-      Fully diluted valuation is the market capitalization of an asset if maximum token supply were in circulation.
+      Fully diluted valuation (FDV) is the market capitalization of an asset if maximum token supply were in
+      circulation.
     </Trans>
   ),
   [TokenSortMethod.VOLUME]: (
