@@ -112,7 +112,8 @@ export function useMoonpayFiatOnRamp({
   const parsedBaseCurrencyAmount = parseFloat(baseCurrencyAmount)
   const amountIsTooSmall = parsedBaseCurrencyAmount < minBuyAmount
   const amountIsTooLarge = parsedBaseCurrencyAmount > maxBuyAmount
-  const isBaseCurrencyAmountValid = !!baseCurrencyAmount && !amountIsTooSmall && !amountIsTooLarge
+  const isBaseCurrencyAmountValid =
+    !!parsedBaseCurrencyAmount && !amountIsTooSmall && !amountIsTooLarge
 
   const {
     data: fiatOnRampHostUrl,
