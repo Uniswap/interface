@@ -13,12 +13,11 @@ import {
 import { appSelect } from 'src/background/store'
 import { sendMessageToActiveTab, sendMessageToSpecificTab } from 'src/background/utils/messageUtils'
 import {
-  DisconnectResponse,
   ExtensionChainChange,
   ExtensionToDappRequestType,
+  UpdateConnectionRequest,
 } from 'src/types/requests'
 import { call, put, select, take } from 'typed-redux-saga'
-import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts//types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
@@ -145,7 +144,12 @@ export function* sendTransaction({
  * @param requestId
  * @param senderTabId
  */
-export function* getAccount(requestId: string, senderTabId: number, dappUrl: string | undefined) {
+export function* getAccount(
+  requestId: string,
+  senderTabId: number,
+  dappUrl: string | undefined,
+  newRequest = false
+) {
   const activeAccount = yield* appSelect(selectActiveAccount)
   if (!activeAccount) {
     throw new Error('No active account')
@@ -154,10 +158,9 @@ export function* getAccount(requestId: string, senderTabId: number, dappUrl: str
   const chainId = (yield* select(selectDappChainId(dappUrl || ''))) || ChainId.Mainnet
 
   const provider = yield* call(getProvider, chainId)
-  if (dappUrl) {
+  if (dappUrl && newRequest) {
     yield* put(
       saveDappConnection({
-        chainId,
         dappUrl,
         walletAddress: activeAccount.address,
       })
@@ -331,20 +334,21 @@ export function* handleSignTypedData({
 
 export function* extensionRequestWatcher() {
   while (true) {
-    const { payload, type } = yield* take([saveDappChain, removeDappConnection])
+    const { payload, type } = yield* take([saveDappChain, saveDappConnection, removeDappConnection])
 
     switch (type) {
       case saveDappChain.type:
         yield* call(changeChainFromExtension, payload.dappUrl, payload.chainId)
         break
+      case saveDappConnection.type:
       case removeDappConnection.type:
-        yield* call(disconnectFromExtension)
+        yield* call(updateConnectionsFromExtension, payload.dappUrl)
         break
     }
   }
 }
 
-export function* changeChainFromExtension(dappUrl: string, chainId: ChainId) {
+function* changeChainFromExtension(dappUrl: string, chainId: ChainId) {
   const provider = yield* call(getProvider, chainId)
   yield* put(saveDappChain({ dappUrl, chainId }))
 
@@ -356,25 +360,12 @@ export function* changeChainFromExtension(dappUrl: string, chainId: ChainId) {
   yield* call(sendMessageToActiveTab, response)
 }
 
-export function* disconnectFromExtension() {
-  const response: DisconnectResponse = {
-    type: ExtensionToDappRequestType.Disconnect,
+function* updateConnectionsFromExtension(dappUrl: string) {
+  const connectedWallets = (yield* select(selectDappConnectedAddresses(dappUrl))) || []
+
+  const response: UpdateConnectionRequest = {
+    type: ExtensionToDappRequestType.UpdateConnections,
+    addresses: connectedWallets,
   }
   yield* call(sendMessageToActiveTab, response)
-}
-
-export function* getCurrentTabId() {
-  // Default to first tab
-  let tabId = 0
-  const tabs = yield* call(chrome.tabs.query, {
-    currentWindow: true,
-    active: true,
-  })
-  const potentialTabId = tabs?.[0]?.id
-  if (!potentialTabId) {
-    logger.error('No tab ID', { tags: { file: 'dappRequests/saga', function: 'getCurrentTabId' } })
-  } else {
-    tabId = potentialTabId
-  }
-  return tabId
 }

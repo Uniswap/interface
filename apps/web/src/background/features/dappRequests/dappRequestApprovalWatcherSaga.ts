@@ -36,7 +36,8 @@ export function* dappRequestApprovalWatcher() {
               getAccount,
               request.dappRequest.requestId,
               request.senderTabId,
-              request.dappUrl
+              request.dappUrl,
+              request.dappRequest.type === DappRequestType.GetAccountRequest
             )
             break
           case DappRequestType.ChangeChain:

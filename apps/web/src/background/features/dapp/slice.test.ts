@@ -103,7 +103,6 @@ describe('dappSlice', () => {
       saveDappConnection({
         dappUrl: UNISWAP_URL,
         walletAddress: WALLET_ADDRESS_1,
-        chainId: ChainId.Base,
       })
     )
     expectedState = {
@@ -112,7 +111,7 @@ describe('dappSlice', () => {
         connectedAddresses: [WALLET_ADDRESS_3, WALLET_ADDRESS_2, WALLET_ADDRESS_1],
       },
       [UNISWAP_URL]: {
-        lastChainId: ChainId.Base,
+        lastChainId: ChainId.Mainnet,
         connectedAddresses: [WALLET_ADDRESS_1],
       },
     }
@@ -127,7 +126,6 @@ describe('dappSlice', () => {
       saveDappConnection({
         dappUrl: UNISWAP_URL,
         walletAddress: WALLET_ADDRESS_1,
-        chainId: ChainId.Base,
       })
     )
 
@@ -138,7 +136,7 @@ describe('dappSlice', () => {
         connectedAddresses: [WALLET_ADDRESS_3, WALLET_ADDRESS_1],
       },
       [UNISWAP_URL]: {
-        lastChainId: ChainId.Base,
+        lastChainId: ChainId.Mainnet,
         connectedAddresses: [WALLET_ADDRESS_1],
       },
     }

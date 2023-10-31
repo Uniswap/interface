@@ -27,6 +27,7 @@ import {
   BaseExtensionRequest,
   ExtensionChainChange,
   ExtensionToDappRequestType,
+  UpdateConnectionRequest,
 } from 'src/types/requests'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_HOUR_MS } from 'utilities/src/time/time'
@@ -96,7 +97,7 @@ export class InjectedProvider extends EventEmitter {
   /**
    * The user's currently connected Ethereum addresses.
    */
-  private publicKeys: string[] | null
+  private publicKeys: Address[] | null
 
   /**
    * Ethereum JSON RPC provider.
@@ -140,8 +141,9 @@ export class InjectedProvider extends EventEmitter {
           this.emit('chainChanged', chainIdToHexadecimalString(this.chainId))
           break
         }
-        case ExtensionToDappRequestType.Disconnect: {
-          await this.handleDisconnectAccount()
+        case ExtensionToDappRequestType.UpdateConnections: {
+          const request = messageData as UpdateConnectionRequest
+          await this.handleUpdatedConnections(request.addresses)
         }
       }
     }
@@ -315,7 +317,7 @@ export class InjectedProvider extends EventEmitter {
    */
   private handleEthRequestAccounts = async (): Promise<string[]> => {
     // Send request to the RPC API.
-    if (this.publicKeys) {
+    if (this.publicKeys?.length) {
       return this.publicKeys
     }
 
@@ -476,11 +478,9 @@ export class InjectedProvider extends EventEmitter {
     return response.signature
   }
 
-  private handleDisconnectAccount = async (): Promise<void> => {
-    this.publicKeys = null
-    this.chainId = undefined
-    this.provider = undefined
-    this.emit('accountsChanged', [])
+  private handleUpdatedConnections = async (addresses: Address[]): Promise<void> => {
+    this.publicKeys = addresses
+    this.emit('accountsChanged', this.publicKeys)
   }
 }
 

@@ -27,14 +27,18 @@ const slice = createSlice({
       action: PayloadAction<{
         dappUrl: string
         walletAddress: Address
-        chainId?: ChainId
       }>
     ) {
-      const { dappUrl, walletAddress, chainId } = action.payload
+      const { dappUrl, walletAddress } = action.payload
+
+      const currConnectedAddresses = state[dappUrl]?.connectedAddresses || []
+      const isConnectionNew = !currConnectedAddresses?.includes(walletAddress)
 
       state[dappUrl] = {
-        lastChainId: chainId ?? state[dappUrl]?.lastChainId ?? ChainId.Mainnet,
-        connectedAddresses: [walletAddress, ...(state[dappUrl]?.connectedAddresses ?? [])],
+        lastChainId: state[dappUrl]?.lastChainId ?? ChainId.Mainnet,
+        connectedAddresses: isConnectionNew
+          ? [walletAddress, ...currConnectedAddresses]
+          : currConnectedAddresses,
       }
     },
     removeDappConnection(

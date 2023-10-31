@@ -2,7 +2,7 @@ import { ChainId } from 'wallet/src/constants/chains'
 
 // Requests outgoing from the extension to the injected script
 export enum ExtensionToDappRequestType {
-  Disconnect = 'Disconnect',
+  UpdateConnections = 'UpdateConnections',
   SwitchChain = 'SwitchChain',
 }
 
@@ -31,8 +31,9 @@ export interface ExtensionChainChange extends BaseExtensionRequest {
   providerUrl: string
 }
 
-export interface DisconnectResponse extends BaseExtensionRequest {
-  type: ExtensionToDappRequestType.Disconnect
+export interface UpdateConnectionRequest extends BaseExtensionRequest {
+  type: ExtensionToDappRequestType.UpdateConnections
+  addresses: Address[]
 }
 
 export interface InjectAssetRequest extends BaseExtensionRequest {

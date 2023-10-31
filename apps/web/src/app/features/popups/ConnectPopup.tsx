@@ -1,6 +1,9 @@
 import { useDappContext } from 'src/background/features/dapp/hooks'
+import { saveDappConnection } from 'src/background/features/dapp/slice'
 import { Anchor, Button, Flex, FlexProps, Icons, Popover, Text, TouchableArea } from 'ui/src'
 import { fonts } from 'ui/src/theme'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useAppDispatch } from 'wallet/src/state'
 
 export function ConnectPopup({
   onClose,
@@ -33,10 +36,13 @@ export function ConnectPopupContent({
   onClose?: () => void
   asPopover?: boolean
 }): JSX.Element {
-  const { dappName, dappUrl } = useDappContext()
+  const dispatch = useAppDispatch()
 
-  const onConnect = (): void => {
-    // NEXT TODO(xtine): add connect to dapp stuff here
+  const { dappName, dappUrl } = useDappContext()
+  const activeAddress = useActiveAccountAddressWithThrow()
+
+  const onConnect = async (): Promise<void> => {
+    await dispatch(saveDappConnection({ dappUrl, walletAddress: activeAddress }))
     onClose?.()
   }
 
@@ -67,7 +73,7 @@ export function ConnectPopupContent({
         Your wallet isn't connected to this site.
       </Text>
       {asPopover ? (
-        <Popover.Close>
+        <Popover.Close onPress={onConnect}>
           <Button size="small" theme="tertiary">
             Connect
           </Button>
