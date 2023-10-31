@@ -31,7 +31,7 @@ export const CollectionAsset = ({
   renderedHeight,
   setRenderedHeight,
 }: CollectionAssetProps) => {
-  const { formatEther, formatNumberOrString } = useFormatter()
+  const { formatEther } = useFormatter()
   const bagManuallyClosed = useBag((state) => state.bagManuallyClosed)
   const addAssetsToBag = useBag((state) => state.addAssetsToBag)
   const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
@@ -90,7 +90,7 @@ export const CollectionAsset = ({
     asset.rarity,
     asset.susFlag,
     asset.tokenId,
-    formatNumberOrString,
+    formatEther,
     notForSale,
     provider,
   ])

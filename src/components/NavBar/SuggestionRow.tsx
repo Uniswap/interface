@@ -103,7 +103,7 @@ export const CollectionRow = ({
             {collection.isVerified && <VerifiedIcon className={styles.suggestionIcon} />}
           </Row>
           <Box className={styles.secondaryText}>
-            {formatNumberOrString({ input: collection?.stats?.total_supply ?? 0, type: NumberType.WholeNumber })} items
+            {formatNumberOrString({ input: collection?.stats?.total_supply, type: NumberType.WholeNumber })} items
           </Box>
         </Column>
       </Row>
