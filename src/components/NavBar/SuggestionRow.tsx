@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkSearchTokenWarning } from 'constants/tokenSafety'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { Chain, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
@@ -132,7 +133,7 @@ interface TokenRowProps {
 export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
   const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
   const navigate = useNavigate()
-  const { formatFiatPrice, formatPercent } = useFormatter()
+  const { formatFiatPrice, formatDelta } = useFormatter()
 
   const handleClick = useCallback(() => {
     const address = !token.address && token.standard === TokenStandard.Native ? 'NATIVE' : token.address
@@ -142,7 +143,9 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
 
-  const tokenDetailsPath = getTokenDetailsURL(token)
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
+
+  const tokenDetailsPath = getTokenDetailsURL({ ...token, isInfoExplorePageEnabled })
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -195,7 +198,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
               <DeltaArrow delta={token.market?.pricePercentChange?.value} />
               <ThemedText.BodySmall>
                 <DeltaText delta={token.market?.pricePercentChange?.value}>
-                  {formatPercent(Math.abs(token.market?.pricePercentChange?.value ?? 0))}
+                  {formatDelta(Math.abs(token.market?.pricePercentChange?.value ?? 0))}
                 </DeltaText>
               </ThemedText.BodySmall>
             </PriceChangeContainer>

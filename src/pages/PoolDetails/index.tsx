@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
+import { LoadingBubble } from 'components/Tokens/loading'
+import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
 import { TokenDescription } from 'components/Tokens/TokenDetails/TokenDescription'
 import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { usePoolData } from 'graphql/thegraph/PoolData'
@@ -15,19 +17,50 @@ import { isAddress } from 'utils'
 import { PoolDetailsHeader } from './PoolDetailsHeader'
 import { PoolDetailsStats } from './PoolDetailsStats'
 import { PoolDetailsStatsButtons } from './PoolDetailsStatsButtons'
+import { PoolDetailsTableSkeleton } from './PoolDetailsTableSkeleton'
+import { DetailBubble, SmallDetailBubble } from './shared'
 
 const PageWrapper = styled(Row)`
   padding: 48px;
   width: 100%;
   align-items: flex-start;
+  gap: 60px;
 
   @media (max-width: ${BREAKPOINTS.lg - 1}px) {
     flex-direction: column;
+    gap: unset;
   }
 
   @media (max-width: ${BREAKPOINTS.sm - 1}px) {
     padding: 48px 16px;
   }
+`
+
+const LeftColumn = styled(Column)`
+  gap: 24px;
+  width: 65vw;
+  overflow: hidden;
+  justify-content: flex-start;
+
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) {
+    width: 100%;
+  }
+`
+
+const HR = styled.hr`
+  border: 0.5px solid ${({ theme }) => theme.surface3};
+  margin: 16px 0px;
+  width: 100%;
+`
+
+const ChartHeaderBubble = styled(LoadingBubble)`
+  width: 180px;
+  height: 32px;
+`
+
+const LinkColumn = styled(Column)`
+  gap: 16px;
+  padding: 20px;
 `
 
 const RightColumn = styled(Column)`
@@ -79,31 +112,55 @@ export default function PoolDetailsPage() {
   const isInvalidPool = !chainName || !poolAddress || !getValidUrlChainName(chainName) || !isAddress(poolAddress)
   const poolNotFound = (!loading && !poolData) || isInvalidPool
 
-  // TODO(WEB-2814): Add skeleton once designed
-  if (loading) return null
   if (poolNotFound) return <NotFound />
   return (
     <PageWrapper>
-      <PoolDetailsHeader
-        chainId={chainId}
-        poolAddress={poolAddress}
-        token0={token0}
-        token1={token1}
-        feeTier={poolData?.feeTier}
-        toggleReversed={toggleReversed}
-      />
+      <LeftColumn>
+        <Column gap="sm">
+          <PoolDetailsHeader
+            chainId={chainId}
+            poolAddress={poolAddress}
+            token0={token0}
+            token1={token1}
+            feeTier={poolData?.feeTier}
+            toggleReversed={toggleReversed}
+            loading={loading}
+          />
+          <LoadingChart />
+        </Column>
+        <HR />
+        <ChartHeaderBubble />
+        <PoolDetailsTableSkeleton />
+      </LeftColumn>
       <RightColumn>
-        <PoolDetailsStatsButtons chainId={chainId} token0={token0} token1={token1} feeTier={poolData?.feeTier} />
-        {poolData && <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} />}
-        {(token0 || token1) && (
-          <TokenDetailsWrapper>
-            <TokenDetailsHeader>
-              <Trans>Info</Trans>
-            </TokenDetailsHeader>
-            {token0 && <TokenDescription tokenAddress={token0.id} chainId={chainId} />}
-            {token1 && <TokenDescription tokenAddress={token1.id} chainId={chainId} />}
-          </TokenDetailsWrapper>
-        )}
+        <PoolDetailsStatsButtons
+          chainId={chainId}
+          token0={token0}
+          token1={token1}
+          feeTier={poolData?.feeTier}
+          loading={loading}
+        />
+        <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} loading={loading} />
+        {(token0 || token1 || loading) &&
+          (loading ? (
+            <LinkColumn data-testid="pdp-links-loading-skeleton">
+              <DetailBubble $height={24} $width={116} />
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Row gap="8px" key={`loading-link-row-${i}`}>
+                  <SmallDetailBubble />
+                  <DetailBubble $width={117} />
+                </Row>
+              ))}
+            </LinkColumn>
+          ) : (
+            <TokenDetailsWrapper>
+              <TokenDetailsHeader>
+                <Trans>Info</Trans>
+              </TokenDetailsHeader>
+              {token0 && <TokenDescription tokenAddress={token0.id} chainId={chainId} />}
+              {token1 && <TokenDescription tokenAddress={token1.id} chainId={chainId} />}
+            </TokenDetailsWrapper>
+          ))}
       </RightColumn>
     </PageWrapper>
   )

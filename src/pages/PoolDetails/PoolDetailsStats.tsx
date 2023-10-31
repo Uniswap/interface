@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { PoolData } from 'graphql/thegraph/PoolData'
 import { useCurrency } from 'hooks/Tokens'
@@ -14,6 +15,8 @@ import { BREAKPOINTS } from 'theme'
 import { colors } from 'theme/colors'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+
+import { DetailBubble } from './shared'
 
 const HeaderText = styled(Text)`
   font-weight: 485;
@@ -90,13 +93,25 @@ const BalanceChartSide = styled.div<{ percent: number; $color: string; isLeft: b
   ${({ isLeft }) => (isLeft ? leftBarChartStyles : rightBarChartStyles)}
 `
 
+const StatSectionBubble = styled(LoadingBubble)`
+  width: 180px;
+  height: 40px;
+`
+
+const StatHeaderBubble = styled(LoadingBubble)`
+  width: 116px;
+  height: 24px;
+  border-radius: 8px;
+`
+
 interface PoolDetailsStatsProps {
-  poolData: PoolData
-  isReversed: boolean
+  poolData?: PoolData
+  isReversed?: boolean
   chainId?: number
+  loading?: boolean
 }
 
-export function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsStatsProps) {
+export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: PoolDetailsStatsProps) {
   const isScreenSize = useScreenSize()
   const screenIsNotLarge = isScreenSize['lg']
   const { formatNumber } = useFormatter()
@@ -112,25 +127,45 @@ export function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsS
   }
 
   const [token0, token1] = useMemo(() => {
-    const fullWidth = poolData?.tvlToken0 / poolData?.token0Price + poolData?.tvlToken1
-    const token0FullData = {
-      ...poolData?.token0,
-      price: poolData?.token0Price,
-      tvl: poolData?.tvlToken0,
-      color: color0,
-      percent: poolData?.tvlToken0 / poolData?.token0Price / fullWidth,
-      currency: currency0,
+    if (poolData) {
+      const fullWidth = poolData?.tvlToken0 / poolData?.token0Price + poolData?.tvlToken1
+      const token0FullData = {
+        ...poolData?.token0,
+        price: poolData?.token0Price,
+        tvl: poolData?.tvlToken0,
+        color: color0,
+        percent: poolData?.tvlToken0 / poolData?.token0Price / fullWidth,
+        currency: currency0,
+      }
+      const token1FullData = {
+        ...poolData?.token1,
+        price: poolData?.token1Price,
+        tvl: poolData?.tvlToken1,
+        color: color1,
+        percent: poolData?.tvlToken1 / fullWidth,
+        currency: currency1,
+      }
+      return isReversed ? [token1FullData, token0FullData] : [token0FullData, token1FullData]
+    } else {
+      return [undefined, undefined]
     }
-    const token1FullData = {
-      ...poolData?.token1,
-      price: poolData?.token1Price,
-      tvl: poolData?.tvlToken1,
-      color: color1,
-      percent: poolData?.tvlToken1 / fullWidth,
-      currency: currency1,
-    }
-    return isReversed ? [token1FullData, token0FullData] : [token0FullData, token1FullData]
   }, [color0, color1, currency0, currency1, isReversed, poolData])
+
+  if (loading || !token0 || !token1 || !poolData) {
+    return (
+      <StatsWrapper>
+        <HeaderText>
+          <StatHeaderBubble />
+        </HeaderText>
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Column gap="md" key={`loading-info-row-${i}`}>
+            <DetailBubble />
+            <StatSectionBubble />
+          </Column>
+        ))}
+      </StatsWrapper>
+    )
+  }
 
   return (
     <StatsWrapper>
@@ -204,7 +239,7 @@ const StatItemText = styled(Text)`
 `
 
 function StatItem({ title, value, delta }: { title: ReactNode; value: number; delta?: number }) {
-  const { formatNumber, formatPercent } = useFormatter()
+  const { formatNumber, formatDelta } = useFormatter()
 
   return (
     <StatItemColumn>
@@ -219,7 +254,7 @@ function StatItem({ title, value, delta }: { title: ReactNode; value: number; de
         {!!delta && (
           <Row width="max-content" padding="4px 0px">
             <DeltaArrow delta={delta} />
-            <ThemedText.BodySecondary>{formatPercent(delta)}</ThemedText.BodySecondary>
+            <ThemedText.BodySecondary>{formatDelta(delta)}</ThemedText.BodySecondary>
           </Row>
         )}
       </StatsTextContainer>
