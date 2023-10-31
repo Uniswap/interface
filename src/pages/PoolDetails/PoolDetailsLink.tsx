@@ -19,6 +19,7 @@ import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { DoubleCurrencyLogo } from './PoolDetailsHeader'
+import { DetailBubble, SmallDetailBubble } from './shared'
 
 const TokenName = styled(ThemedText.BodyPrimary)`
   display: none;
@@ -78,12 +79,13 @@ const ButtonsRow = styled(Row)`
 `
 
 interface PoolDetailsLinkProps {
-  address: string
-  chainId: number
+  address?: string
+  chainId?: number
   tokens: (Token | undefined)[]
+  loading?: boolean
 }
 
-export function PoolDetailsLink({ address, chainId, tokens }: PoolDetailsLinkProps) {
+export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetailsLinkProps) {
   const theme = useTheme()
   const currencies = [
     useCurrency(tokens[0]?.id, chainId) ?? undefined,
@@ -91,11 +93,12 @@ export function PoolDetailsLink({ address, chainId, tokens }: PoolDetailsLinkPro
   ]
   const [, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
-    setCopied(address)
+    address && setCopied(address)
   }, [address, setCopied])
 
   const isPool = tokens.length === 2
-  const explorerUrl = getExplorerLink(chainId, address, isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN)
+  const explorerUrl =
+    address && chainId && getExplorerLink(chainId, address, isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN)
 
   const navigate = useNavigate()
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
@@ -105,6 +108,15 @@ export function PoolDetailsLink({ address, chainId, tokens }: PoolDetailsLinkPro
       navigate(getTokenDetailsURL({ address: tokens[0]?.id, chain: chainName, isInfoExplorePageEnabled }))
     }
   }, [navigate, tokens, isPool, chainName, isInfoExplorePageEnabled])
+
+  if (loading || !address || !chainId) {
+    return (
+      <Row gap="8px" padding="6px 0px">
+        <SmallDetailBubble />
+        <DetailBubble $width={117} />
+      </Row>
+    )
+  }
 
   return (
     <Row align="space-between">

@@ -4,6 +4,7 @@ import blankTokenUrl from 'assets/svg/blank_token.svg'
 import Column from 'components/Column'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import Row from 'components/Row'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { BIPS_BASE } from 'constants/misc'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
@@ -15,6 +16,7 @@ import { ClickableStyle, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils'
 
 import { ReversedArrowsIcon } from './icons'
+import { DetailBubble } from './shared'
 
 const HeaderColumn = styled(Column)`
   gap: 36px;
@@ -35,6 +37,12 @@ const ToggleReverseArrows = styled(ReversedArrowsIcon)`
   ${ClickableStyle}
 `
 
+const IconBubble = styled(LoadingBubble)`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+`
+
 interface Token {
   id: string
   symbol: string
@@ -47,6 +55,7 @@ interface PoolDetailsHeaderProps {
   token1?: Token
   feeTier?: number
   toggleReversed: React.DispatchWithoutAction
+  loading?: boolean
 }
 
 export function PoolDetailsHeader({
@@ -56,10 +65,25 @@ export function PoolDetailsHeader({
   token1,
   feeTier,
   toggleReversed,
+  loading,
 }: PoolDetailsHeaderProps) {
   const currencies = [useCurrency(token0?.id, chainId) ?? undefined, useCurrency(token1?.id, chainId) ?? undefined]
   const chainName = chainIdToBackendName(chainId)
   const origin = `/tokens/${chainName}`
+
+  if (loading)
+    return (
+      <HeaderColumn data-testid="pdp-header-loading-skeleton">
+        <DetailBubble $width={300} />
+        <Column gap="sm">
+          <Row gap="8px">
+            <IconBubble />
+            <DetailBubble $width={137} />
+          </Row>
+        </Column>
+      </HeaderColumn>
+    )
+
   return (
     <HeaderColumn>
       <Row>
