@@ -88,6 +88,7 @@
     "g:format:deps": "syncpack format",
     "g:lint": "turbo run lint --parallel && yarn workspace wallet eslint src/i18n/locales/en-US.json",
     "g:lint:fix": "turbo run lint:fix --parallel && yarn workspace wallet eslint src/i18n/locales/en-US.json --fix",
+    "g:rm:local-packages": "rm -rf ./node_modules/utilities ./node_modules/wallet ./node_modules/ui",
     "g:rm:nodemodules": "rm -rf node_modules",
     "g:run-fast-checks": "turbo run typecheck lint build --parallel",
     "g:run-all-checks": "turbo run typecheck lint test build check:circular --parallel",
