@@ -9,7 +9,7 @@ import { textFadeIn } from 'theme/styles'
 
 import { LoadingBubble } from '../loading'
 import { AboutContainer, AboutHeader } from './About'
-import { BreadcrumbNavLink } from './BreadcrumbNavLink'
+import { BreadcrumbNav, BreadcrumbNavLink } from './BreadcrumbNavLink'
 import { StatPair, StatsWrapper, StatWrapper } from './StatsSection'
 
 const SWAP_COMPONENT_WIDTH = 360
@@ -52,15 +52,7 @@ export const RightPanel = styled.div`
     display: flex;
   }
 `
-const BreadcrumbNav = styled.div`
-  display: flex;
-  color: ${({ theme }) => theme.neutral1};
-  font-size: 14px;
-  line-height: 20px;
-  align-items: center;
-  gap: 4px;
-  margin-bottom: 16px;
-  width: fit-content;
+const AnimatedBreadcrumbNav = styled(BreadcrumbNav)`
   ${textFadeIn};
   animation-duration: ${({ theme }) => theme.transition.duration.medium};
 `
@@ -243,9 +235,9 @@ export default function TokenDetailsSkeleton() {
   return (
     <LeftPanel>
       {isInfoTDPEnabled ? (
-        <BreadcrumbNav>
+        <AnimatedBreadcrumbNav>
           <NavBubble />
-        </BreadcrumbNav>
+        </AnimatedBreadcrumbNav>
       ) : (
         <BreadcrumbNav>
           <BreadcrumbNavLink
