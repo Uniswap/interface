@@ -1,12 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { FeatureFlag } from 'featureFlags'
 
-import { DAI, USDC_MAINNET, USDT } from '../../src/constants/tokens'
+import { DAI, USDC_MAINNET, USDT } from '../../../src/constants/tokens'
 import {
   expectPermit2AllowanceForUniversalRouterToBeMax,
   expectTokenAllowanceForPermit2ToBeMax,
   getTestSelector,
-} from '../utils'
+} from '../../utils'
 
 /** Initiates a swap. */
 function initiateSwap() {
@@ -17,10 +18,12 @@ function initiateSwap() {
   cy.contains('Confirm swap').click()
 }
 
-describe('Permit2', () => {
+describe('Progress Indicator', () => {
   function setupInputs(inputToken: Token, outputToken: Token) {
     // Sets up a swap between inputToken and outputToken.
-    cy.visit(`/swap/?inputCurrency=${inputToken.address}&outputCurrency=${outputToken.address}`)
+    cy.visit(`/swap/?inputCurrency=${inputToken.address}&outputCurrency=${outputToken.address}`, {
+      featureFlags: [{ name: FeatureFlag.progressIndicatorV2, value: true }],
+    })
     cy.get('#swap-currency-input .token-amount-input').type('0.01')
   }
 
@@ -31,7 +34,7 @@ describe('Permit2', () => {
     })
   )
 
-  describe('approval process (with intermediate screens)', () => {
+  describe('approval process', () => {
     // Turn off automine so that intermediate screens are available to assert on.
     beforeEach(() => cy.hardhat({ automine: false }))
 
@@ -43,17 +46,23 @@ describe('Permit2', () => {
       cy.window().trigger('blur')
 
       // Verify token approval
-      cy.contains('Enable spending DAI on Uniswap')
+      cy.contains('Approve in wallet')
+      cy.contains('Sign message')
+      cy.contains('Confirm swap')
+      cy.get(getTestSelector('checkmark-icon')).should('have.length', 0) // No steps have been completed yet
       cy.wait('@eth_sendRawTransaction')
+      cy.contains('Approval pending...')
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.get(getTestSelector('popups')).contains('Approved')
       expectTokenAllowanceForPermit2ToBeMax(DAI)
 
-      // Verify permit2 approval
-      cy.contains('Allow DAI to be used for swapping')
+      // Verify permit2 approval, await swap confirmation
       cy.wait('@eth_signTypedData_v4')
+      cy.get(getTestSelector('checkmark-icon')).should('have.length', 2) // Two steps are complete
+      cy.contains('Approve DAI spending')
+      cy.contains('Sign message')
+      cy.contains('Confirm swap in wallet')
       cy.wait('@eth_sendRawTransaction')
-      cy.contains('Swap submitted')
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.contains('Swap success!')
       cy.get(getTestSelector('popups')).contains('Swapped')
@@ -69,8 +78,12 @@ describe('Permit2', () => {
       initiateSwap()
 
       // Verify token approval
-      cy.contains('Enable spending DAI on Uniswap')
+      cy.contains('Approve in wallet')
+      cy.contains('Sign message')
+      cy.contains('Confirm swap')
+      cy.get(getTestSelector('checkmark-icon')).should('have.length', 0) // No steps have been completed yet
       cy.wait('@eth_sendRawTransaction')
+      cy.contains('Approval pending...')
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.get(getTestSelector('popups')).contains('Approved')
       expectTokenAllowanceForPermit2ToBeMax(DAI)
@@ -104,22 +117,31 @@ describe('Permit2', () => {
       initiateSwap()
 
       // Verify allowance revocation
-      cy.contains('Reset USDT')
+      cy.contains('Reset USDT limit in wallet') // Step 1 (active)
+      cy.contains('Approve USDT spending') // Step 2 (preview)
+      cy.contains('Confirm swap') // Step 3 (preview)
       cy.wait('@eth_sendRawTransaction')
+      cy.contains('Resetting USDT limit...') // Step 1 in progress
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.hardhat()
         .then(({ approval, wallet }) => approval.getTokenAllowanceForPermit2({ owner: wallet, token: USDT }))
         .should('deep.equal', BigNumber.from(0))
 
       // Verify token approval
-      cy.contains('Enable spending USDT on Uniswap')
       cy.wait('@eth_sendRawTransaction')
+      cy.contains('Reset USDT limit') // Step 1 (complete)
+      cy.contains('Approval pending...') // Step 2 (in progress)
+      cy.contains('Confirm swap') // Step 3 (preview)
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.get(getTestSelector('popups')).contains('Approved')
       expectTokenAllowanceForPermit2ToBeMax(USDT)
 
       // Verify transaction
+      cy.contains('Reset USDT limit') // Step 1 (complete)
+      cy.contains('Approve USDT spending') // Step 2 (complete)
+      cy.contains('Confirm swap') // Step 3 (active)
       cy.wait('@eth_sendRawTransaction')
+      cy.contains('Swap pending...') // Step 3 in progress
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.contains('Swap success!')
       cy.get(getTestSelector('popups')).contains('Swapped')
