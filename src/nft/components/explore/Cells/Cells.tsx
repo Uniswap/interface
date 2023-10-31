@@ -118,11 +118,12 @@ export const EthCell = ({
 }) => {
   const { formatNumberOrString } = useFormatter()
   const denominatedValue = getDenominatedValue(denomination, false, value, usdPrice)
-  const formattedValue = denominatedValue
-    ? denomination === Denomination.ETH
-      ? formatNumberOrString({ input: denominatedValue.toString(), type: NumberType.NFTToken }) + ' ETH'
-      : formatNumberOrString({ input: denominatedValue, type: NumberType.FiatTokenStats })
-    : '-'
+  const ethDenomination = denomination === Denomination.ETH
+  const formattedValue =
+    formatNumberOrString({
+      input: denominatedValue,
+      type: ethDenomination ? NumberType.NFTToken : NumberType.FiatTokenStats,
+    }) + (ethDenomination ? ' ETH' : '')
 
   const isMobile = useIsMobile()
   const TextComponent = isMobile ? ThemedText.BodySmall : ThemedText.BodyPrimary
