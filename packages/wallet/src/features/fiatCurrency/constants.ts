@@ -11,7 +11,7 @@ export enum FiatCurrency {
   NigerianNaira = 'NGN',
   PakistaniRupee = 'PKR',
   RussianRuble = 'RUB',
-  SingaporeDollar = 'Sgd',
+  SingaporeDollar = 'SGD',
   ThaiBaht = 'THB',
   TurkishLira = 'TRY',
   UkrainianHryvnia = 'UAH',

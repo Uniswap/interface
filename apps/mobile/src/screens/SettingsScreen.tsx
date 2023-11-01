@@ -105,7 +105,7 @@ export function SettingsScreen(): JSX.Element {
                   modal: ModalName.LanguageSelector,
                   text: t('Language'),
                   currentSetting: currentLanguageInfo.name,
-                  icon: <Icons.Globe {...iconProps} />,
+                  icon: <Icons.Language {...iconProps} />,
                 },
               ] as SettingsSectionItem[])
             : []),
