@@ -22,6 +22,7 @@ export enum Language {
 // List of supported locales in app
 // comprised of two letter language code (ISO 639) combined with two letter country code (ISO 3166)
 // Matches to locale codes for languages provided by Crowdin
+// If you add a new locale here, be sure to add polyfills for it in intl.js
 export enum Locale {
   ChineseChina = 'zh-CN',
   ChineseTaiwan = 'zh-TW',
