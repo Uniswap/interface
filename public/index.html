@@ -40,8 +40,9 @@
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
     <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Book.woff2" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
-
+    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Medium.woff2" as="font" type="font/woff" crossorigin />
    
     <style>
       * {
@@ -57,9 +58,10 @@
         font-weight: 535;
         font-style: normal;
         font-display: block;
-        font-named-instance: 'Book';
+        font-named-instance: 'Medium';
         src: 
-          url(%PUBLIC_URL%/fonts/Basel-Medium.woff) format('woff');
+          url('%PUBLIC_URL%/fonts/Basel-Medium.woff2') format('woff2'),
+          url('%PUBLIC_URL%/fonts/Basel-Medium.woff') format('woff');
       }
 
       @font-face {
@@ -69,13 +71,13 @@
         font-display: block;
         font-named-instance: 'Book';
         src: 
-          url(%PUBLIC_URL%/fonts/Basel-Book.woff) format('woff');
+          url('%PUBLIC_URL%/fonts/Basel-Book2.woff') format('woff2'),
+          url('%PUBLIC_URL%/fonts/Basel-Book.woff') format('woff');
       }
 
       @supports (font-variation-settings: normal) {
         * {
           font-family: 'Basel', sans-serif;
-          
         }
       }
 
