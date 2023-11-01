@@ -18,8 +18,8 @@ import {
 } from 'react-native-reanimated'
 import { useDynamicFontSizing } from 'src/app/hooks'
 import { AmountInput } from 'src/components/input/AmountInput'
-import { MaxAmountButton } from 'src/components/input/MaxAmountButton'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
+import { MaxAmountButton } from 'src/features/transactions/swapRewrite/MaxAmountButton'
 import { AnimatedFlex, Flex, FlexProps, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { fonts, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
@@ -27,6 +27,7 @@ import { useForwardRef, usePrevious } from 'utilities/src/react/hooks'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
 type CurrentInputPanelProps = {
   autoFocus?: boolean
@@ -128,8 +129,11 @@ export const CurrencyInputPanel = memo(
     useEffect(() => {
       if (value) {
         onSetFontSize(value)
+        // Always set font size if focused to format placeholder size, we need to pass in a non-empty string to avoid formatting crash
+      } else if (focus) {
+        onSetFontSize('0')
       }
-    }, [value, onSetFontSize])
+    }, [focus, onSetFontSize, value])
 
     const handleSetMax = useCallback(
       (amount: string) => {
@@ -146,6 +150,12 @@ export const CurrencyInputPanel = memo(
       }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => selectionChange?.(start, end),
       [selectionChange]
     )
+
+    // Hide balance if panel is output, and no balance
+    const hideCurrencyBalance = isOutput && currencyBalance?.equalTo(0)
+
+    // Only show max button on output if 0 balance, always show on input
+    const showMaxButton = !isOutput || (isOutput && currencyBalance?.equalTo(0))
 
     // We need to store the previous value, because new quote request resets `Trade`, and this value, to undefined
     const previousValue = usePrevious(value)
@@ -273,14 +283,15 @@ export const CurrencyInputPanel = memo(
               </Text>
             </Flex>
             <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">
-              <Text color="$neutral2" variant="body3">
-                {formatCurrencyAmount({ value: currencyBalance, type: NumberType.TokenNonTx })}{' '}
-                {currencyInfo.currency.symbol}
-              </Text>
-              {onSetMax && (
+              {!hideCurrencyBalance && (
+                <Text color="$neutral2" variant="body3">
+                  {formatCurrencyAmount({ value: currencyBalance, type: NumberType.TokenNonTx })}{' '}
+                  {currencyInfo.currency.symbol}
+                </Text>
+              )}
+              {showMaxButton && onSetMax && (
                 <MaxAmountButton
-                  currencyAmount={currencyAmount}
-                  currencyBalance={currencyBalance}
+                  currencyField={isOutput ? CurrencyField.OUTPUT : CurrencyField.INPUT}
                   onSetMax={handleSetMax}
                 />
               )}

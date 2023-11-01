@@ -250,13 +250,27 @@ function SwapFormContent(): JSX.Element {
     [isFiatInput, updateSwapForm]
   )
 
-  const onSetMax = useCallback(
+  const onSetMaxInput = useCallback(
     (amount: string): void => {
       updateSwapForm({
         exactAmountFiat: undefined,
         exactAmountToken: amount,
         exactCurrencyField: CurrencyField.INPUT,
         focusOnCurrencyField: undefined,
+      })
+      resetSelection(exactAmountTokenRef.current.length, exactAmountTokenRef.current.length)
+    },
+    [exactAmountTokenRef, resetSelection, updateSwapForm]
+  )
+
+  // We do an exact-in trade with max input balance, but keep focus on output for better UX
+  const onSetMaxOutput = useCallback(
+    (amount: string): void => {
+      updateSwapForm({
+        exactAmountFiat: undefined,
+        exactAmountToken: amount,
+        exactCurrencyField: CurrencyField.INPUT,
+        focusOnCurrencyField: CurrencyField.OUTPUT,
       })
       resetSelection(exactAmountTokenRef.current.length, exactAmountTokenRef.current.length)
     },
@@ -349,7 +363,7 @@ function SwapFormContent(): JSX.Element {
               onPressIn={onFocusInput}
               onSelectionChange={onInputSelectionChange}
               onSetExactAmount={onSetExactAmountInput}
-              onSetMax={onSetMax}
+              onSetMax={onSetMaxInput}
               onShowTokenSelector={onShowTokenSelectorInput}
             />
           </AnimatedFlex>
@@ -389,6 +403,7 @@ function SwapFormContent(): JSX.Element {
               onPressIn={onFocusOutput}
               onSelectionChange={onOutputSelectionChange}
               onSetExactAmount={onSetExactAmountOutput}
+              onSetMax={onSetMaxOutput}
               onShowTokenSelector={onShowTokenSelectorOutput}
             />
             {walletNeedsRestore && (
