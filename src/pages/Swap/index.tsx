@@ -199,6 +199,7 @@ export function Swap({
   const [loadedInputCurrency, setLoadedInputCurrency] = useState(prefilledInputCurrency)
   const [loadedOutputCurrency, setLoadedOutputCurrency] = useState(prefilledOutputCurrency)
 
+  // console.log('app selector \n', JSON.stringify(useAppSelector((state) => state.lists)))
   useEffect(() => {
     setLoadedInputCurrency(prefilledInputCurrency)
     setLoadedOutputCurrency(prefilledOutputCurrency)
