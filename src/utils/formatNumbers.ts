@@ -1,3 +1,4 @@
+import { formatEther as ethersFormatEther } from '@ethersproject/units'
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import {
   DEFAULT_LOCAL_CURRENCY,
@@ -67,9 +68,21 @@ const THREE_DECIMALS_CURRENCY: NumberFormatOptions = {
   style: 'currency',
 }
 
+const THREE_DECIMALS_NO_TRAILING_ZEROS_CURRENCY: NumberFormatOptions = {
+  ...THREE_DECIMALS_NO_TRAILING_ZEROS,
+  currency: 'USD',
+  style: 'currency',
+}
+
 const TWO_DECIMALS_NO_TRAILING_ZEROS: NumberFormatOptions = {
   notation: 'standard',
   maximumFractionDigits: 2,
+}
+
+const TWO_DECIMALS_NO_TRAILING_ZEROS_CURRENCY: NumberFormatOptions = {
+  ...TWO_DECIMALS_NO_TRAILING_ZEROS,
+  currency: 'USD',
+  style: 'currency',
 }
 
 const TWO_DECIMALS: NumberFormatOptions = {
@@ -95,6 +108,12 @@ const SHORTHAND_TWO_DECIMALS: NumberFormatOptions = {
 const SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS: NumberFormatOptions = {
   notation: 'compact',
   maximumFractionDigits: 2,
+}
+
+const SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS_CURRENCY: NumberFormatOptions = {
+  ...SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS,
+  currency: 'USD',
+  style: 'currency',
 }
 
 const SHORTHAND_ONE_DECIMAL: NumberFormatOptions = {
@@ -317,6 +336,42 @@ const ntfCollectionStatsFormatter: FormatterRule[] = [
   { upperBound: Infinity, formatterOptions: SHORTHAND_ONE_DECIMAL },
 ]
 
+const nftTokenFormatter: FormatterRule[] = [
+  { exact: 0, hardCodedInput: { hardcodedOutput: '-' }, formatterOptions: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN },
+  {
+    upperBound: 0.0001,
+    hardCodedInput: { input: 0.0001, prefix: '<' },
+    formatterOptions: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN,
+  },
+  { upperBound: 1.0, formatterOptions: THREE_DECIMALS },
+  { upperBound: 1000, formatterOptions: TWO_DECIMALS_NO_TRAILING_ZEROS },
+  { upperBound: 1e15, formatterOptions: SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS },
+  {
+    upperBound: Infinity,
+    hardCodedInput: { input: 999_000_000_000_000, prefix: '>' },
+    formatterOptions: SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS,
+  },
+]
+
+const fiatNftTokenFormatter: FormatterRule[] = [
+  { exact: 0, hardCodedInput: { hardcodedOutput: '-' }, formatterOptions: NO_DECIMALS },
+  {
+    upperBound: 0.0001,
+    hardCodedInput: { input: 0.0001, prefix: '<' },
+    formatterOptions: ONE_SIG_FIG_CURRENCY,
+  },
+  { upperBound: 1.0, formatterOptions: THREE_DECIMALS_NO_TRAILING_ZEROS_CURRENCY },
+  { upperBound: 1000, formatterOptions: TWO_DECIMALS_NO_TRAILING_ZEROS_CURRENCY },
+  { upperBound: 1e15, formatterOptions: SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS_CURRENCY },
+  {
+    upperBound: Infinity,
+    hardCodedInput: { input: 999_000_000_000_000, prefix: '>' },
+    formatterOptions: SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS_CURRENCY,
+  },
+]
+
+const wholeNumberFormatter: FormatterRule[] = [{ upperBound: Infinity, formatterOptions: NO_DECIMALS }]
+
 export enum NumberType {
   // used for token quantities in non-transaction contexts (e.g. portfolio balances)
   TokenNonTx = 'token-non-tx',
@@ -360,6 +415,15 @@ export enum NumberType {
 
   // nft floor price with trailing zeros
   NFTTokenFloorPriceTrailingZeros = 'nft-token-floor-price-trailing-zeros',
+
+  // nft token price in currency
+  NFTToken = 'nft-token',
+
+  // nft token price in local fiat currency
+  FiatNFTToken = 'fiat-nft-token',
+
+  // whole number formatting
+  WholeNumber = 'whole-number',
 }
 
 type FormatterType = NumberType | FormatterRule[]
@@ -378,6 +442,9 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.NFTTokenFloorPrice]: ntfTokenFloorPriceFormatter,
   [NumberType.NFTTokenFloorPriceTrailingZeros]: ntfTokenFloorPriceFormatterTrailingZeros,
   [NumberType.NFTCollectionStats]: ntfCollectionStatsFormatter,
+  [NumberType.NFTToken]: nftTokenFormatter,
+  [NumberType.FiatNFTToken]: fiatNftTokenFormatter,
+  [NumberType.WholeNumber]: wholeNumberFormatter,
 }
 
 function getFormatterRule(input: number, type: FormatterType, conversionRate?: number): FormatterRule {
@@ -563,6 +630,18 @@ function formatNumberOrString({
   return formatNumber({ input, type, locale, localCurrency, conversionRate })
 }
 
+interface FormatEtherOptions {
+  input: Nullish<number | string>
+  type: FormatterType
+  locale?: SupportedLocale
+  localCurrency?: SupportedLocalCurrency
+}
+
+function formatEther({ input, type, locale, localCurrency }: FormatEtherOptions) {
+  if (input === null || input === undefined) return '-'
+  return formatNumber({ input: parseFloat(ethersFormatEther(input.toString())), type, locale, localCurrency })
+}
+
 interface FormatFiatPriceOptions {
   price: Nullish<number | string>
   type?: FormatterType
@@ -733,9 +812,20 @@ export function useFormatter() {
     [formatterLocale]
   )
 
+  const formatEtherwithLocales = useCallback(
+    (options: Omit<FormatEtherOptions, LocalesType>) =>
+      formatEther({
+        ...options,
+        locale: formatterLocale,
+        localCurrency: currencyToFormatWith,
+      }),
+    [currencyToFormatWith, formatterLocale]
+  )
+
   return useMemo(
     () => ({
       formatCurrencyAmount: formatCurrencyAmountWithLocales,
+      formatEther: formatEtherwithLocales,
       formatFiatPrice: formatFiatPriceWithLocales,
       formatNumber: formatNumberWithLocales,
       formatNumberOrString: formatNumberOrStringWithLocales,
@@ -747,6 +837,7 @@ export function useFormatter() {
     }),
     [
       formatCurrencyAmountWithLocales,
+      formatEtherwithLocales,
       formatFiatPriceWithLocales,
       formatNumberOrStringWithLocales,
       formatNumberWithLocales,
