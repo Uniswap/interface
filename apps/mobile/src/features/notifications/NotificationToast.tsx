@@ -9,7 +9,7 @@ import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-n
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
-import { AnimatedFlex, Flex, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlex, Flex, mediumShadowProps, Text, TouchableArea } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { useTimeout } from 'utilities/src/time/timing'
 import { popNotification } from 'wallet/src/features/notifications/slice'
@@ -103,35 +103,40 @@ export function NotificationToast({
   return (
     <FlingGestureHandler direction={Directions.UP} onHandlerStateChange={onFling}>
       <AnimatedFlex
-        borderColor={useSmallDisplay ? '$transparent' : '$surface2'}
-        borderRadius="$rounded16"
-        borderWidth={1}
-        left={0}
-        mx="$spacing16"
+        centered
         pointerEvents="box-none"
         position="absolute"
-        right={0}
         style={animatedStyle}
         top={0}
+        width="100%"
         zIndex="$modal">
-        {useSmallDisplay ? (
-          <NotificationContentSmall
-            icon={icon}
-            title={title}
-            onPress={onNotificationPress}
-            onPressIn={onPressIn}
-          />
-        ) : (
-          <NotificationContent
-            actionButton={
-              actionButton ? { title: actionButton.title, onPress: onActionButtonPress } : undefined
-            }
-            icon={icon}
-            title={title}
-            onPress={onNotificationPress}
-            onPressIn={onPressIn}
-          />
-        )}
+        <Flex
+          {...mediumShadowProps}
+          borderColor="$surface3"
+          borderRadius="$roundedFull"
+          borderWidth="$spacing2"
+          mx="auto">
+          {useSmallDisplay ? (
+            <NotificationContentSmall
+              icon={icon}
+              title={title}
+              onPress={onNotificationPress}
+              onPressIn={onPressIn}
+            />
+          ) : (
+            <NotificationContent
+              actionButton={
+                actionButton
+                  ? { title: actionButton.title, onPress: onActionButtonPress }
+                  : undefined
+              }
+              icon={icon}
+              title={title}
+              onPress={onNotificationPress}
+              onPressIn={onPressIn}
+            />
+          )}
+        </Flex>
       </AnimatedFlex>
     </FlingGestureHandler>
   )
