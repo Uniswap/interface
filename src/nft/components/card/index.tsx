@@ -4,8 +4,8 @@ import { MediaContainer } from 'nft/components/card/media'
 import { detailsHref, getNftDisplayComponent, useSelectAsset } from 'nft/components/card/utils'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, UniformAspectRatio, UniformAspectRatios, WalletAsset } from 'nft/types'
-import { floorFormatter } from 'nft/utils'
 import { ReactNode } from 'react'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 interface NftCardProps {
   asset: GenieAsset | WalletAsset
@@ -74,12 +74,15 @@ export const NftCard = ({
     setBagExpanded: state.setBagExpanded,
   }))
 
+  const { formatNumberOrString } = useFormatter()
   const collectionNft = 'marketplace' in asset
   const profileNft = 'asset_contract' in asset
   const tokenType = collectionNft ? asset.tokenType : profileNft ? asset.asset_contract.tokenType : undefined
   const marketplace = collectionNft ? asset.marketplace : undefined
   const listedPrice =
-    profileNft && !isDisabled && asset.floor_sell_order_price ? floorFormatter(asset.floor_sell_order_price) : undefined
+    profileNft && !isDisabled && asset.floor_sell_order_price
+      ? formatNumberOrString({ input: asset.floor_sell_order_price, type: NumberType.NFTTokenFloorPrice })
+      : undefined
 
   return (
     <Card.Container

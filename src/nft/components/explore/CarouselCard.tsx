@@ -3,7 +3,6 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { useCollection } from 'graphql/data/nft/Collection'
 import { UniswapMagentaIcon, VerifiedIcon } from 'nft/components/icons'
 import { Markets, TrendingCollection } from 'nft/types'
-import { ethNumberStandardFormatter } from 'nft/utils'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -239,6 +238,7 @@ const MARKETS_ENUM_TO_NAME = {
 
 export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
   const { data: gqlCollection, loading } = useCollection(collection.address ?? '')
+  const { formatNumber } = useFormatter()
 
   if (loading) return <LoadingCarouselCard />
 
@@ -257,7 +257,7 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
             <TableElement>
               {collection.floor && (
                 <ThemedText.SubHeaderSmall color="userThemeColor">
-                  {ethNumberStandardFormatter(collection.floor)} ETH Floor
+                  {formatNumber({ input: collection.floor, type: NumberType.NFTToken })} ETH Floor
                 </ThemedText.SubHeaderSmall>
               )}
             </TableElement>
