@@ -77,8 +77,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                     },
                     {
                       "fontFamily": "Basel-Book",
-                      "fontSize": 52,
-                      "fontWeight": "500",
+                      "fontSize": 53,
                       "lineHeight": 60,
                       "top": 1,
                     },
@@ -131,8 +130,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -153,8 +151,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -175,8 +172,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -197,8 +193,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -219,8 +214,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -241,8 +235,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -263,8 +256,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -285,8 +277,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -307,8 +298,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -329,8 +319,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -384,8 +373,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -406,8 +394,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -428,8 +415,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -450,8 +436,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -472,8 +457,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -494,8 +478,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -516,8 +499,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -538,8 +520,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -560,8 +541,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -582,8 +562,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -637,8 +616,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -659,8 +637,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -681,8 +658,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -703,8 +679,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -725,8 +700,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -747,8 +721,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -769,8 +742,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -791,8 +763,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -813,8 +784,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -835,8 +805,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -890,8 +859,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -912,8 +880,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -934,8 +901,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -956,8 +922,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -978,8 +943,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1000,8 +964,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1022,8 +985,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1044,8 +1006,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1066,8 +1027,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1088,8 +1048,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1143,8 +1102,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1165,8 +1123,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1187,8 +1144,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1209,8 +1165,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1231,8 +1186,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1253,8 +1207,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1275,8 +1228,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1297,8 +1249,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1319,8 +1270,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1341,8 +1291,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1379,8 +1328,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                     },
                     {
                       "fontFamily": "Basel-Book",
-                      "fontSize": 52,
-                      "fontWeight": "500",
+                      "fontSize": 53,
                       "lineHeight": 60,
                       "top": 1,
                     },
@@ -1433,8 +1381,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1455,8 +1402,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1477,8 +1423,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1499,8 +1444,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1521,8 +1465,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1543,8 +1486,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1565,8 +1507,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1587,8 +1528,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1609,8 +1549,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1631,8 +1570,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1686,8 +1624,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1708,8 +1645,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1730,8 +1666,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1752,8 +1687,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1774,8 +1708,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1796,8 +1729,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1818,8 +1750,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1840,8 +1771,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1862,8 +1792,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },
@@ -1884,8 +1813,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                       },
                       {
                         "fontFamily": "Basel-Book",
-                        "fontSize": 52,
-                        "fontWeight": "500",
+                        "fontSize": 53,
                         "lineHeight": 60,
                         "top": 1,
                       },

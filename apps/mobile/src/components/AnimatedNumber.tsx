@@ -13,6 +13,7 @@ import Animated, {
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
 import { Flex, useSporeColors } from 'ui/src'
 import { TextLoaderWrapper } from 'ui/src/components/text/Text'
+import { fonts } from 'ui/src/theme'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 const NUMBER_ARRAY = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -261,10 +262,9 @@ const AnimatedCharStyles = StyleSheet.create({
 
 const AnimatedFontStyles = StyleSheet.create({
   fontStyle: {
-    fontFamily: 'Basel-Book',
-    fontSize: 52,
-    fontWeight: '500',
-    lineHeight: 60,
+    fontFamily: fonts.heading1.family,
+    fontSize: fonts.heading1.fontSize,
+    lineHeight: fonts.heading1.lineHeight,
     top: 1,
   },
 })
