@@ -25,6 +25,15 @@ const StyledClosed = styled(X)`
   }
 `
 
+const NameText = styled.span`
+  font-weight: 600;
+  font-size: 18px;
+`
+
+const EmphasisText = styled.span`
+  font-style: italic;
+`
+
 interface RaceModalProps {
   isOpen: boolean
   poolAddress?: string
@@ -76,10 +85,11 @@ export default function RaceModal({ isOpen, poolAddress, poolName, onDismiss, ti
               <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
             <RowBetween>
-              <Trans>
-                Enroll &quot;{poolName}&quot; to compete for the network rewards. To race, the pool requires actively
-                staked GRG. This action only needs to be run once per each epoch.
-              </Trans>
+              <p>
+                Enroll <NameText>{poolName}</NameText> to compete for the network rewards. To race,{' '}
+                <EmphasisText>the pool requires actively staked GRG</EmphasisText>. This action only needs to be run
+                once per each epoch.
+              </p>
             </RowBetween>
             <ButtonPrimary disabled={false} onClick={onRace}>
               <ThemedText.DeprecatedMediumHeader color="white">

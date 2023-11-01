@@ -113,8 +113,8 @@ const ResponsiveRowFixed = styled(RowFixed)`
   margin-right: 4px;
 
   @media screen and (max-width: ${MEDIA_WIDTHS.deprecated_upToExtraSmall}px) {
-    margin-top: -24px;
-    margin-right: -8px;
+    margin-top: -12px;
+    margin-right: -4px;
   }
 `
 
