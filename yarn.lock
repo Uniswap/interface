@@ -11999,7 +11999,7 @@ __metadata:
     react-devtools: 4.28.0
     react-dom: 18.2.0
     react-i18next: 11.18.6
-    react-native: 0.71.11
+    react-native: 0.71.13
     react-native-apollo-devtools-client: 1.0.4
     react-native-appsflyer: 6.10.3
     react-native-asset: ^2.1.1
@@ -12238,7 +12238,7 @@ __metadata:
     npm-run-all: ^4.1.5
     react: 18.2.0
     react-dom: 18.2.0
-    react-native: 0.71.11
+    react-native: 0.71.13
     react-native-reanimated: 3.3.0
     react-native-web: 0.18.12
     react-redux: 8.0.5
@@ -31987,9 +31987,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native@npm:0.71.11":
-  version: 0.71.11
-  resolution: "react-native@npm:0.71.11"
+"react-native@npm:0.71.13":
+  version: 0.71.13
+  resolution: "react-native@npm:0.71.13"
   dependencies:
     "@jest/create-cache-key-function": ^29.2.1
     "@react-native-community/cli": 10.2.4
@@ -32000,6 +32000,7 @@ __metadata:
     "@react-native/polyfills": 2.0.0
     abort-controller: ^3.0.0
     anser: ^1.4.9
+    ansi-regex: ^5.0.0
     base64-js: ^1.1.2
     deprecated-react-native-prop-types: ^3.0.1
     event-target-shim: ^5.0.1
@@ -32029,53 +32030,7 @@ __metadata:
     react: 18.2.0
   bin:
     react-native: cli.js
-  checksum: a6f7139a167f977ef7ef5569d20cf21fddd60d88aa6f5530caadf3ab88d7c12160eaac701086a0c245b49ea8003bac8bd615cb2494ee781ffcca43c80024f8a3
-  languageName: node
-  linkType: hard
-
-"react-native@patch:react-native@npm%3A0.71.11#./.yarn/patches/react-native-npm-0.71.11-c31ec9c2e7.patch::locator=universe%40workspace%3A.":
-  version: 0.71.11
-  resolution: "react-native@patch:react-native@npm%3A0.71.11#./.yarn/patches/react-native-npm-0.71.11-c31ec9c2e7.patch::version=0.71.11&hash=d56b89&locator=universe%40workspace%3A."
-  dependencies:
-    "@jest/create-cache-key-function": ^29.2.1
-    "@react-native-community/cli": 10.2.4
-    "@react-native-community/cli-platform-android": 10.2.0
-    "@react-native-community/cli-platform-ios": 10.2.4
-    "@react-native/assets": 1.0.0
-    "@react-native/normalize-color": 2.1.0
-    "@react-native/polyfills": 2.0.0
-    abort-controller: ^3.0.0
-    anser: ^1.4.9
-    base64-js: ^1.1.2
-    deprecated-react-native-prop-types: ^3.0.1
-    event-target-shim: ^5.0.1
-    invariant: ^2.2.4
-    jest-environment-node: ^29.2.1
-    jsc-android: ^250231.0.0
-    memoize-one: ^5.0.0
-    metro-react-native-babel-transformer: 0.73.10
-    metro-runtime: 0.73.10
-    metro-source-map: 0.73.10
-    mkdirp: ^0.5.1
-    nullthrows: ^1.1.1
-    pretty-format: ^26.5.2
-    promise: ^8.3.0
-    react-devtools-core: ^4.26.1
-    react-native-codegen: ^0.71.5
-    react-native-gradle-plugin: ^0.71.19
-    react-refresh: ^0.4.0
-    react-shallow-renderer: ^16.15.0
-    regenerator-runtime: ^0.13.2
-    scheduler: ^0.23.0
-    stacktrace-parser: ^0.1.3
-    use-sync-external-store: ^1.0.0
-    whatwg-fetch: ^3.0.0
-    ws: ^6.2.2
-  peerDependencies:
-    react: 18.2.0
-  bin:
-    react-native: cli.js
-  checksum: 71c3f71c0b6af995cf0472016635a17fb41f481ff62e2ce484d33fd370d8c61a843fbbc6b3ce7adf33a3f1fd98001b9afd475a02515b4d6ca85d40ec7626361b
+  checksum: c895895b88af8a9268ea0d919d41637cabd5450b8397f4e2609095e09925f583471c27b722e78cb583f0e1fdc27f0db09610a95b4bba0bf817081132c695006d
   languageName: node
   linkType: hard
 
@@ -36744,7 +36699,7 @@ __metadata:
     fs-extra: ^11.1.1
     react: 18.2.0
     react-i18next: 11.18.6
-    react-native: 0.71.11
+    react-native: 0.71.13
     react-native-reanimated: 3.3.0
     react-native-svg: 13.9.0
     tamagui: 1.74.16
@@ -37434,7 +37389,7 @@ __metadata:
     jest-presets: "workspace:^"
     jsbi: 3.2.5
     react: 18.2.0
-    react-native: 0.71.11
+    react-native: 0.71.13
     react-native-device-info: 10.0.2
     react-test-renderer: 18.2.0
     typescript: 4.9.4
@@ -37789,7 +37744,7 @@ __metadata:
     jest-presets: "workspace:^"
     react: 18.2.0
     react-i18next: 11.18.6
-    react-native: 0.71.11
+    react-native: 0.71.13
     react-native-dotenv: 3.2.0
     react-native-fast-image: 8.6.3
     react-native-reanimated: 3.3.0
