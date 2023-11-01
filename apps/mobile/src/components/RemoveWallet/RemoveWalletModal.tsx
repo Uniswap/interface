@@ -169,7 +169,6 @@ export function RemoveWalletModal(): JSX.Element | null {
               </Button>
             )}
             <Button
-              fill
               icon={
                 inProgress ? (
                   <SpinningLoader

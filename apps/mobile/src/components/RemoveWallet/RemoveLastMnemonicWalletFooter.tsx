@@ -23,24 +23,27 @@ export function RemoveLastMnemonicWalletFooter({
         backgroundColor="$surface2"
         borderRadius="$rounded16"
         mx="$spacing16"
-        px="$spacing8"
+        px="$spacing12"
         py="$spacing12">
         <CheckBox
           checked={checkBoxAccepted}
           text={
             <Trans t={t}>
-              <Text color="$neutral1" variant="subheading2">
-                I backed up my recovery phrase
-              </Text>
-              <Text color="$neutral2" variant="body3">
-                I understand that Uniswap Labs can’t help me recover my wallets if I failed to do so
-              </Text>
+              <Flex>
+                <Text color="$neutral1" variant="subheading2">
+                  I backed up my recovery phrase
+                </Text>
+                <Text color="$neutral2" variant="body3">
+                  I understand that Uniswap Labs can’t help me recover my wallets if I failed to do
+                  so
+                </Text>
+              </Flex>
             </Trans>
           }
           onCheckPressed={onCheckPressed}
         />
       </Flex>
-      <Flex centered row gap="$spacing12" pt="$spacing12">
+      <Flex centered row>
         <Button
           fill
           disabled={!checkBoxAccepted}
