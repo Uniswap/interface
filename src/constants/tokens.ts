@@ -19,14 +19,14 @@ const USDC_GOERLI = new Token(ChainId.GOERLI, '0x07865c6e87b9f70255377e024ace663
 const USDC_SEPOLIA = new Token(ChainId.SEPOLIA, '0x6f14C02Fc1F78322cFd7d707aB90f18baD3B54f5', 6, 'USDC', 'USD//C')
 export const USDC_OPTIMISM = new Token(
   ChainId.OPTIMISM,
-  '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+  '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85',
   6,
   'USDC',
   'USD//C'
 )
-const USDC_OPTIMISM_GOERLI = new Token(
+export const USDC_OPTIMISM_GOERLI = new Token(
   ChainId.OPTIMISM_GOERLI,
-  '0x7E07E15D2a87A24492740D16f5bdF58c16db0c4E',
+  '0xe05606174bac4A6364B31bd0eCA4bf4dD368f8C6',
   6,
   'USDC',
   'USD//C'
@@ -47,17 +47,17 @@ export const USDC_ARBITRUM_GOERLI = new Token(
 )
 export const USDC_POLYGON = new Token(
   ChainId.POLYGON,
-  '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+  '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359',
   6,
   'USDC',
-  'USD//C'
+  'USD Coin'
 )
-const USDC_POLYGON_MUMBAI = new Token(
+export const USDC_POLYGON_MUMBAI = new Token(
   ChainId.POLYGON_MUMBAI,
-  '0xe11a86849d99f524cac3e7a0ec1241828e332c62',
+  '0x0fa8781a83e46826621b3bc094ea2a0212e71b23',
   6,
   'USDC',
-  'USD//C'
+  'USD Coin'
 )
 export const PORTAL_USDC_CELO = new Token(
   ChainId.CELO,
@@ -65,13 +65,6 @@ export const PORTAL_USDC_CELO = new Token(
   6,
   'USDCet',
   'USDC (Portal from Ethereum)'
-)
-export const USDbC_BASE = new Token(
-  ChainId.BASE,
-  '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA',
-  6,
-  'USDbC',
-  'USD Base Coin'
 )
 export const USDC_BASE = new Token(ChainId.BASE, '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', 6, 'USDC', 'USD Coin')
 

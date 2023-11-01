@@ -4,6 +4,7 @@ import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Row from 'components/Row'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { useSwitchChain } from 'hooks/useSwitchChain'
@@ -26,11 +27,18 @@ const PoolButton = styled(ThemeButton)`
   width: 50%;
 `
 
+const ButtonBubble = styled(LoadingBubble)`
+  height: 44px;
+  width: 175px;
+  border-radius: 900px;
+`
+
 interface PoolDetailsStatsButtonsProps {
   chainId?: number
   token0?: Token
   token1?: Token
   feeTier?: number
+  loading?: boolean
 }
 
 function findMatchingPosition(positions: PositionInfo[], token0?: Token, token1?: Token, feeTier?: number) {
@@ -45,7 +53,7 @@ function findMatchingPosition(positions: PositionInfo[], token0?: Token, token1?
   )
 }
 
-export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier }: PoolDetailsStatsButtonsProps) {
+export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, loading }: PoolDetailsStatsButtonsProps) {
   const { chainId: walletChainId, connector, account } = useWeb3React()
   const { positions: userOwnedPositions } = useMultiChainPositions(account ?? '', chainId ? [chainId] : undefined)
   const position = userOwnedPositions && findMatchingPosition(userOwnedPositions, token0, token1, feeTier)
@@ -64,7 +72,15 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier }: Po
       )
     }
   }
-  if (!currency0 || !currency1) return null
+
+  if (loading || !currency0 || !currency1)
+    return (
+      <PoolDetailsStatsButtonsRow data-testid="pdp-buttons-loading-skeleton">
+        <ButtonBubble />
+        <ButtonBubble />
+      </PoolDetailsStatsButtonsRow>
+    )
+
   return (
     <PoolDetailsStatsButtonsRow>
       <PoolButton
@@ -75,7 +91,6 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier }: Po
       >
         <Trans>Add liquidity</Trans>
       </PoolButton>
-
       <PoolButton
         size={ButtonSize.medium}
         emphasis={ButtonEmphasis.highSoft}

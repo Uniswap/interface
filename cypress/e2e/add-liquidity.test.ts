@@ -52,7 +52,7 @@ describe('Add Liquidity', () => {
 
       cy.visit('/add/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/ETH')
       cy.wait('@FeeTierDistribution')
-      cy.get('#add-liquidity-selected-fee .selected-fee-label').should('contain.text', '0.3% fee tier')
+      cy.get('#add-liquidity-selected-fee .selected-fee-label').should('contain.text', '0.30% fee tier')
       cy.get('#add-liquidity-selected-fee .selected-fee-percentage').should('contain.text', '40% select')
     })
   })

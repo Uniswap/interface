@@ -76,7 +76,6 @@ describe('PoolDetailsPage', () => {
     })
   })
 
-  // TODO replace with loading skeleton when designed
   it('nothing displayed while data is loading', () => {
     mocked(usePoolData).mockReturnValue({
       data: undefined,
@@ -86,7 +85,7 @@ describe('PoolDetailsPage', () => {
     render(<PoolDetails />)
 
     waitFor(() => {
-      expect(screen.getByText(/not found/i)).not.toBeInTheDocument()
+      expect(screen.getByTestId('pdp-links-loading-skeleton')).toBeInTheDocument()
     })
   })
 
