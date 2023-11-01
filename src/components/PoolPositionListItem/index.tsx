@@ -108,6 +108,16 @@ const ActiveDot = styled.span`
   width: 8px;
 `
 
+const ResponsiveRowFixed = styled(RowFixed)`
+  margin-top: 4px;
+  margin-right: 4px;
+
+  @media screen and (max-width: ${MEDIA_WIDTHS.deprecated_upToExtraSmall}px) {
+    margin-top: -24px;
+    margin-right: -8px;
+  }
+`
+
 interface PoolPositionListItemProps {
   positionDetails: PoolPositionDetails
   returnPage: string
@@ -183,7 +193,7 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
             </Row>
           </PrimaryPositionIdData>
           {returnPage === 'mint' ? (
-            <RowFixed gap="24px" style={{ marginRight: '4px', marginTop: '4px' }}>
+            <ResponsiveRowFixed gap="24px">
               <ButtonPrimary
                 style={{ width: 'fit-content', height: '40px' }}
                 padding="8px"
@@ -192,7 +202,7 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
               >
                 <Trans>Race</Trans>
               </ButtonPrimary>
-            </RowFixed>
+            </ResponsiveRowFixed>
           ) : (
             <RowFixed style={{ gap: '24px', marginRight: '8px' }}>
               <DataText>{(Number(irr) * 100).toFixed(1)}%</DataText>
