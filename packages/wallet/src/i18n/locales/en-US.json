@@ -395,6 +395,7 @@
   "Receive funds": "Receive funds",
   "Receive NFTs": "Receive NFTs",
   "Receive tokens": "Receive tokens",
+  "Receive tokens or NFTs": "Receive tokens or NFTs",
   "Received": "Received",
   "Received {{assetInfo}} from {{senderOrRecipient}}.": "Received {{assetInfo}} from {{senderOrRecipient}}.",
   "Recent": "Recent",

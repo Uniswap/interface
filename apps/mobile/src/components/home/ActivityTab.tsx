@@ -123,7 +123,7 @@ export const ActivityTab = memo(
     const emptyListView = (
       <Flex grow style={containerProps?.emptyContainerStyle}>
         <BaseCard.EmptyState
-          buttonLabel={isExternalProfile ? undefined : 'Receive tokens or NFTs'}
+          buttonLabel={isExternalProfile ? undefined : t('Receive tokens or NFTs')}
           description={
             isExternalProfile
               ? t('When this wallet makes transactions, they’ll appear here.')
