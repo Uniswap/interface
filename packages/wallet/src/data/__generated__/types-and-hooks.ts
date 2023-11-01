@@ -784,9 +784,17 @@ export enum PriceSource {
   SubgraphV3 = 'SUBGRAPH_V3'
 }
 
+export type PushNotification = {
+  __typename?: 'PushNotification';
+  contents: Scalars['String'];
+  id: Scalars['ID'];
+  notifyAddress: Scalars['String'];
+  signerHeader: Scalars['String'];
+  viewerHeader: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
-  assetActivity?: Maybe<AssetActivity>;
   convert?: Maybe<Amount>;
   nftActivity?: Maybe<NftActivityConnection>;
   nftAssets?: Maybe<NftAssetConnection>;
@@ -806,12 +814,7 @@ export type Query = {
   tokens?: Maybe<Array<Maybe<Token>>>;
   topCollections?: Maybe<NftCollectionConnection>;
   topTokens?: Maybe<Array<Maybe<Token>>>;
-};
-
-
-export type QueryAssetActivityArgs = {
-  address: Scalars['String'];
-  transactionHash: Scalars['String'];
+  transactionNotification?: Maybe<TransactionNotification>;
 };
 
 
@@ -924,6 +927,13 @@ export type QueryTopTokensArgs = {
   orderBy?: InputMaybe<TokenSortableField>;
   page?: InputMaybe<Scalars['Int']>;
   pageSize?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryTransactionNotificationArgs = {
+  address: Scalars['String'];
+  oldNotifications?: InputMaybe<Scalars['String']>;
+  transactionHash: Scalars['String'];
 };
 
 export enum SafetyLevel {
@@ -1074,6 +1084,7 @@ export type TokenMarketPriceHighLowArgs = {
 
 
 export type TokenMarketPriceHistoryArgs = {
+  _fs?: InputMaybe<PriceFeatureSwitch>;
   duration: HistoryDuration;
 };
 
@@ -1247,6 +1258,13 @@ export enum TransactionDirection {
   Out = 'OUT',
   Self = 'SELF'
 }
+
+export type TransactionNotification = {
+  __typename?: 'TransactionNotification';
+  hash: Scalars['String'];
+  id: Scalars['ID'];
+  push: Array<PushNotification>;
+};
 
 export enum TransactionStatus {
   Confirmed = 'CONFIRMED',

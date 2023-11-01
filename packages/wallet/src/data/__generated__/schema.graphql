@@ -2,6 +2,19 @@
 directive @defer on FIELD
 
 """
+Tells the service this field/object has access authorized by an OIDC token.
+"""
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Cognito User Pools token.
+"""
+directive @aws_cognito_user_pools(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on OBJECT | FIELD_DEFINITION
+
+"""
 Tells the service which subscriptions will be published to when this mutation is
 called. This directive is deprecated use @aws_susbscribe directive instead.
 """
@@ -13,19 +26,9 @@ directive @aws_publish(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by a Lambda Authorizer.
-"""
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
-
-"""
 Tells the service this field/object has access authorized by sigv4 signing.
 """
 directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an API key.
-"""
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
 
 """Directs the schema to enforce authorization on a field"""
 directive @aws_auth(
@@ -34,17 +37,9 @@ directive @aws_auth(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by a Cognito User Pools token.
+Tells the service this field/object has access authorized by an API key.
 """
-directive @aws_cognito_user_pools(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an OIDC token.
-"""
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
 
 """Tells the service which mutation triggers this subscription."""
 directive @aws_subscribe(
@@ -53,6 +48,11 @@ directive @aws_subscribe(
   """
   mutations: [String]
 ) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Lambda Authorizer.
+"""
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
 
 union ActivityDetails = TransactionDetails | SwapOrderDetails
 
@@ -714,6 +714,14 @@ enum PriceSource {
   SUBGRAPH_V3
 }
 
+type PushNotification {
+  id: ID!
+  contents: String!
+  notifyAddress: String!
+  viewerHeader: String!
+  signerHeader: String!
+}
+
 type Query {
   convert(fromAmount: AmountInput!, toCurrency: Currency!): Amount
   tokens(contracts: [ContractInput!]!): [Token]
@@ -735,7 +743,7 @@ type Query {
   nftRoute(chain: Chain, senderAddress: String!, nftTrades: [NftTradeInput!]!, tokenTrades: [TokenTradeInput!]): NftRouteResponse
   nftActivity(chain: Chain, filter: NftActivityFilterInput, after: String, first: Int): NftActivityConnection
   nftCollectionBalances(chain: Chain, ownerAddress: String!, after: String, first: Int, before: String, last: Int): NftCollectionBalanceConnection
-  assetActivity(address: String!, transactionHash: String!): AssetActivity
+  transactionNotification(address: String!, transactionHash: String!, oldNotifications: String): TransactionNotification
 }
 
 enum SafetyLevel {
@@ -852,7 +860,7 @@ type TokenMarket {
   totalValueLocked: Amount
   volume(duration: HistoryDuration!): Amount
   pricePercentChange(duration: HistoryDuration!, _fs: PriceFeatureSwitch): Amount
-  priceHistory(duration: HistoryDuration!): [TimestampedAmount]
+  priceHistory(duration: HistoryDuration!, _fs: PriceFeatureSwitch): [TimestampedAmount]
   priceHighLow(duration: HistoryDuration!, highLow: HighLow!, _fs: PriceFeatureSwitch): Amount
 }
 
@@ -986,6 +994,12 @@ enum TransactionDirection {
   IN
   OUT
   SELF
+}
+
+type TransactionNotification {
+  id: ID!
+  hash: String!
+  push: [PushNotification!]!
 }
 
 enum TransactionStatus {
