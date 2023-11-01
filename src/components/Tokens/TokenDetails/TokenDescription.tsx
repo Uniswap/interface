@@ -20,7 +20,7 @@ import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/c
 import { opacify } from 'theme/utils'
 import { shortenAddress } from 'utils'
 import { useFormatter } from 'utils/formatNumbers'
-import { BLOCK_EXPLORER_PREFIXES, ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 const TokenInfoSection = styled(Column)`
@@ -90,9 +90,11 @@ export function TokenDescription({
   })
   const tokenProject = tokenQuery?.token?.project
   const description = tokenProject?.description
-  const explorerUrl = isNative
-    ? BLOCK_EXPLORER_PREFIXES[chainId]
-    : getExplorerLink(chainId, tokenAddress, ExplorerDataType.TOKEN)
+  const explorerUrl = getExplorerLink(
+    chainId,
+    tokenAddress,
+    isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN
+  )
 
   const [, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {

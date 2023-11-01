@@ -1,6 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
 
-export const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
+const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
   [ChainId.MAINNET]: 'https://etherscan.io',
   [ChainId.GOERLI]: 'https://goerli.etherscan.io',
   [ChainId.SEPOLIA]: 'https://sepolia.etherscan.io',
@@ -20,6 +20,7 @@ export enum ExplorerDataType {
   TOKEN = 'token',
   ADDRESS = 'address',
   BLOCK = 'block',
+  NATIVE = 'native',
 }
 
 /**
