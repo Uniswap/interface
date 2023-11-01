@@ -147,6 +147,7 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
       <RaceModal
         isOpen={showRaceModal}
         poolAddress={positionDetails.address}
+        poolName={name}
         onDismiss={() => setShowRaceModal(false)}
         title={<Trans>Race Smart Pool</Trans>}
       />

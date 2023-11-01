@@ -28,11 +28,12 @@ const StyledClosed = styled(X)`
 interface RaceModalProps {
   isOpen: boolean
   poolAddress?: string
+  poolName?: string
   onDismiss: () => void
   title: ReactNode
 }
 
-export default function RaceModal({ isOpen, poolAddress, onDismiss, title }: RaceModalProps) {
+export default function RaceModal({ isOpen, poolAddress, poolName, onDismiss, title }: RaceModalProps) {
   const { chainId } = useWeb3React()
 
   const [currencyValue] = useState<Token>(GRG[chainId ?? 1])
@@ -51,7 +52,7 @@ export default function RaceModal({ isOpen, poolAddress, onDismiss, title }: Rac
 
   async function onRace() {
     // if callback not returned properly ignore
-    if (!raceCallback || !poolAddress || !currencyValue.isToken) return
+    if (!raceCallback || !poolAddress || !poolName || !currencyValue.isToken) return
     setAttempting(true)
 
     // try credit reward and store hash
@@ -76,8 +77,8 @@ export default function RaceModal({ isOpen, poolAddress, onDismiss, title }: Rac
             </RowBetween>
             <RowBetween>
               <Trans>
-                Enroll your Smart Pool to compete for the network incentives. You need to actively stake GRG from the
-                pool to take part.
+                Enroll &quot;{poolName}&quot; to compete for the network rewards. To race, the pool requires actively
+                staked GRG. This action only needs to be run once per each epoch.
               </Trans>
             </RowBetween>
             <ButtonPrimary disabled={false} onClick={onRace}>
