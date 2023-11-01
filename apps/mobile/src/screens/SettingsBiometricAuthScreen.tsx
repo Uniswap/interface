@@ -151,7 +151,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
   }: ListRenderItemInfo<BiometricAuthSetting>): JSX.Element => {
     return (
       <Flex row alignItems="center" justifyContent="space-between">
-        <Flex row>
+        <Flex row shrink pr="$spacing12">
           <Flex>
             <Text variant="body1">{text}</Text>
             <Text color="$neutral2" variant="body3">
@@ -159,13 +159,15 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
             </Text>
           </Flex>
         </Flex>
-        <TouchableArea
-          activeOpacity={1}
-          onPress={(): void => {
-            onValueChange(!value)
-          }}>
-          <Switch pointerEvents="none" value={value} onValueChange={onValueChange} />
-        </TouchableArea>
+        <Flex grow alignItems="flex-end">
+          <TouchableArea
+            activeOpacity={1}
+            onPress={(): void => {
+              onValueChange(!value)
+            }}>
+            <Switch pointerEvents="none" value={value} onValueChange={onValueChange} />
+          </TouchableArea>
+        </Flex>
       </Flex>
     )
   }
