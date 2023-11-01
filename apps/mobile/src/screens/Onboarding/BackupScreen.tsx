@@ -192,7 +192,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
           )}
           <Trace logPress element={ElementName.Next}>
             <Button disabled={disabled} onPress={onPressContinue}>
-              {disabled ? t('Select backup to continue') : t('Continue')}
+              {t('Continue')}
             </Button>
           </Trace>
         </Flex>

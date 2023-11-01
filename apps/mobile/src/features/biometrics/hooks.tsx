@@ -4,7 +4,6 @@ import {
   isEnrolledAsync,
   supportedAuthenticationTypesAsync,
 } from 'expo-local-authentication'
-import { useTranslation } from 'react-i18next'
 import { useAppSelector } from 'src/app/hooks'
 import { IS_ANDROID } from 'src/constants/globals'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics'
@@ -88,11 +87,10 @@ export function useBiometricAppSettings(): BiometricSettingsState {
 }
 
 export function useBiometricName(isTouchIdSupported: boolean, shouldCapitalize?: boolean): string {
-  const { t } = useTranslation()
   if (IS_ANDROID) {
     return shouldCapitalize ? 'Biometrics' : 'biometrics'
   }
 
   // iOS is always capitalized
-  return isTouchIdSupported ? t('Touch ID') : t('Face ID')
+  return isTouchIdSupported ? 'Touch ID' : 'Face ID'
 }

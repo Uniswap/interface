@@ -631,7 +631,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 }
                 suppressHighlighting={true}
               >
-                Select backup to continue
+                Continue
               </Text>
             </View>
           </View>
