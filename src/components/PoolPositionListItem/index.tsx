@@ -1,10 +1,12 @@
 import { Trans } from '@lingui/macro'
 //import Badge from 'components/Badge'
+import { ButtonPrimary } from 'components/Button'
+import RaceModal from 'components/earn/RaceModal'
 //import RangeBadge from 'components/Badge/RangeBadge'
 //import Loader from 'components/Loader'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 //import { useToken } from 'hooks/Tokens'
-//import { useMemo } from 'react'
+import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
@@ -106,6 +108,16 @@ const ActiveDot = styled.span`
   width: 8px;
 `
 
+const ResponsiveRowFixed = styled(RowFixed)`
+  margin-top: 4px;
+  margin-right: 4px;
+
+  @media screen and (max-width: ${MEDIA_WIDTHS.deprecated_upToExtraSmall}px) {
+    margin-top: -12px;
+    margin-right: -4px;
+  }
+`
+
 interface PoolPositionListItemProps {
   positionDetails: PoolPositionDetails
   returnPage: string
@@ -113,8 +125,7 @@ interface PoolPositionListItemProps {
 
 export default function PoolPositionListItem({ positionDetails, returnPage }: PoolPositionListItemProps) {
   const theme = useTheme()
-  const { name, symbol, apr, irr, userHasStake, poolDelegatedStake, poolOwnStake, userBalance, userIsOwner } =
-    positionDetails
+  const { name, apr, irr, userHasStake, poolDelegatedStake, poolOwnStake, userBalance, userIsOwner } = positionDetails
 
   //const position = useMemo(() => {
   //  return new PoolPosition({ name, symbol, pool, id })
@@ -130,54 +141,83 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
     ? `/smart-pool/${positionDetails.address}/${returnPage}/${poolStake}/${aprToString}/${poolOwnStakeString}/${irrToString}`
     : `/smart-pool/${positionDetails.address}/${returnPage}` ///${positionDetails.id}
 
+  const [showRaceModal, setShowRaceModal] = useState<boolean>(false)
+
+  const onButtonClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+      e.preventDefault()
+      setShowRaceModal(true)
+    },
+    [setShowRaceModal]
+  )
+
   return (
-    <LinkRow to={positionSummaryLink}>
-      <RowBetween>
-        <PrimaryPositionIdData>
-          <Row gap="sm" justify="flex-end">
-            <DataText>{name}</DataText>
-            {userHasStake && (
-              <LabelText color={theme.accentSuccess}>
-                <BadgeText>
-                  <Trans>active</Trans>
-                </BadgeText>
-                <ActiveDot />
-              </LabelText>
-            )}
-            {returnPage === 'mint' && Number(userBalance) > 0 && (
-              <LabelText color={theme.accentSuccess}>
-                <BadgeText>
-                  <Trans>held</Trans>
-                </BadgeText>
-                <ActiveDot />
-              </LabelText>
-            )}
-            {returnPage === 'mint' && userIsOwner && (
-              <LabelText color={theme.accentSuccess}>
-                <BadgeText>
-                  <Trans>owned</Trans>
-                </BadgeText>
-                <ActiveDot />
-              </LabelText>
-            )}
-          </Row>
-        </PrimaryPositionIdData>
-        {returnPage === 'mint' ? (
-          <DataText>{symbol}</DataText>
-        ) : (
-          <RowFixed style={{ gap: '24px', marginRight: '8px' }}>
-            <DataText>{(Number(irr) * 100).toFixed(1)}%</DataText>
-            <DataText style={{ minWidth: '50px' }}>{(Number(apr) * 100).toFixed(1)}%</DataText>
-          </RowFixed>
-        )}
-      </RowBetween>
-      <RangeLineItem>
-        <RangeText>
-          <ExtentsText>
-            <Trans>{positionDetails.address}</Trans>
-          </ExtentsText>
-        </RangeText>
-      </RangeLineItem>
-    </LinkRow>
+    <>
+      <RaceModal
+        isOpen={showRaceModal}
+        poolAddress={positionDetails.address}
+        poolName={name}
+        onDismiss={() => setShowRaceModal(false)}
+        title={<Trans>Race Smart Pool</Trans>}
+      />
+      <LinkRow to={positionSummaryLink}>
+        <RowBetween>
+          <PrimaryPositionIdData>
+            <Row gap="sm" justify="flex-end">
+              <DataText>{name}</DataText>
+              {userHasStake && (
+                <LabelText color={theme.accentSuccess}>
+                  <BadgeText>
+                    <Trans>active</Trans>
+                  </BadgeText>
+                  <ActiveDot />
+                </LabelText>
+              )}
+              {returnPage === 'mint' && Number(userBalance) > 0 && (
+                <LabelText color={theme.accentSuccess}>
+                  <BadgeText>
+                    <Trans>held</Trans>
+                  </BadgeText>
+                  <ActiveDot />
+                </LabelText>
+              )}
+              {returnPage === 'mint' && userIsOwner && (
+                <LabelText color={theme.accentSuccess}>
+                  <BadgeText>
+                    <Trans>owned</Trans>
+                  </BadgeText>
+                  <ActiveDot />
+                </LabelText>
+              )}
+            </Row>
+          </PrimaryPositionIdData>
+          {returnPage === 'mint' ? (
+            <ResponsiveRowFixed gap="24px">
+              <ButtonPrimary
+                style={{ width: 'fit-content', height: '40px' }}
+                padding="8px"
+                $borderRadius="8px"
+                onClick={onButtonClick}
+              >
+                <Trans>Race</Trans>
+              </ButtonPrimary>
+            </ResponsiveRowFixed>
+          ) : (
+            <RowFixed style={{ gap: '24px', marginRight: '8px' }}>
+              <DataText>{(Number(irr) * 100).toFixed(1)}%</DataText>
+              <DataText style={{ minWidth: '50px' }}>{(Number(apr) * 100).toFixed(1)}%</DataText>
+            </RowFixed>
+          )}
+        </RowBetween>
+        <RangeLineItem>
+          <RangeText>
+            <ExtentsText>
+              <Trans>{positionDetails.address}</Trans>
+            </ExtentsText>
+          </RangeText>
+        </RangeLineItem>
+      </LinkRow>
+    </>
   )
 }

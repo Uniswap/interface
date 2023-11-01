@@ -141,6 +141,7 @@ export const MenuDropdown = () => {
     if (!account && !walletDrawerOpen) {
       toggleWalletDrawer()
     } else {
+      toggleOpen()
       openFiatOnrampModal()
     }
   }, [account, openFiatOnrampModal, toggleWalletDrawer, walletDrawerOpen])

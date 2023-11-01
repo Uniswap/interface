@@ -1,9 +1,13 @@
 import { Interface } from '@ethersproject/abi'
+import { Contract } from '@ethersproject/contracts'
 import StakingRewardsJSON from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
+import POP_ABI from 'abis/pop.json'
+import { POP_ADDRESSES } from 'constants/addresses'
 import { GRG } from 'constants/tokens'
+import { useContract } from 'hooks/useContract'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
 import {
@@ -396,5 +400,28 @@ export function useHarvestCallback(): (poolIds: string[], isPool?: boolean) => u
       }
     },
     [account, chainId, provider, poolContract, stakingContract, stakingProxy]
+  )
+}
+
+export function usePopContract(): Contract | null {
+  return useContract(POP_ADDRESSES, POP_ABI, true)
+}
+
+export function useRaceCallback(): (poolAddress: string | undefined) => undefined | Promise<string> {
+  const { account, chainId, provider } = useWeb3React()
+  const popContract = usePopContract()
+
+  return useCallback(
+    (poolAddress: string | undefined) => {
+      if (!provider || !chainId || !account) return undefined
+      if (!popContract) throw new Error('No PoP Contract!')
+      return popContract.estimateGas.creditPopRewardToStakingProxy(poolAddress, {}).then((estimatedGasLimit) => {
+        return popContract.creditPopRewardToStakingProxy(poolAddress, {
+          value: null,
+          gasLimit: calculateGasMargin(estimatedGasLimit),
+        })
+      })
+    },
+    [account, chainId, provider, popContract]
   )
 }
