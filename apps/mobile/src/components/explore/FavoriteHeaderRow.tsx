@@ -40,7 +40,7 @@ export function FavoriteHeaderRow({
           />
         </TouchableArea>
       ) : (
-        <TouchableArea height={iconSizes.icon20} hitSlop={16} onPress={onPress}>
+        <TouchableArea hitSlop={16} onPress={onPress}>
           <Text color="$accent1" variant="buttonLabel3">
             {t('Done')}
           </Text>
