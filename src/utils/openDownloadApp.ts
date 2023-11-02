@@ -1,18 +1,21 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { sendAnalyticsEvent } from 'analytics'
-import { isIOS } from 'utils/userAgent'
+import { isAndroid, isIOS } from 'utils/userAgent'
 
 const APP_STORE_LINK = 'https://apps.apple.com/app/apple-store/id6443944476'
+const PLAY_STORE_LINK = '???' // TODO
 const MICROSITE_LINK = 'https://wallet.uniswap.org/'
 
 type OpenDownloadAppOptions = {
   element?: InterfaceElementName
   appStoreParams?: string
+  playStoreParams?: string
   microSiteParams?: string
 }
 
 const defaultDownloadAppOptions = {
   appStoreParams: `pt=123625782&ct=In-App-Banners&mt=8`,
+  playStoreParams: `???`, // TODO
 }
 
 /**
@@ -30,6 +33,8 @@ const defaultDownloadAppOptions = {
 export function openDownloadApp(options: OpenDownloadAppOptions = defaultDownloadAppOptions) {
   if (isIOS) {
     openAppStore({ element: options?.element, urlParamString: options?.appStoreParams })
+  } else if (isAndroid) {
+    openPlayStore({ element: options?.element, urlParamString: options?.playStoreParams })
   } else {
     openWalletMicrosite({ element: options?.element, urlParamString: options?.microSiteParams })
   }
@@ -39,6 +44,8 @@ export function openDownloadApp(options: OpenDownloadAppOptions = defaultDownloa
 export const getDownloadAppLink = (options: OpenDownloadAppOptions = defaultDownloadAppOptions) =>
   isIOS
     ? linkWithParams(APP_STORE_LINK, options?.appStoreParams)
+    : isAndroid
+    ? linkWithParams(PLAY_STORE_LINK, options?.playStoreParams)
     : linkWithParams(MICROSITE_LINK, options?.microSiteParams)
 
 export const getDownloadAppLinkProps = (options: OpenDownloadAppOptions = defaultDownloadAppOptions) => {
@@ -59,6 +66,11 @@ type AnalyticsLinkOptions = {
 const openAppStore = (options?: AnalyticsLinkOptions) => {
   sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_APP_DOWNLOAD_OPENED, { element: options?.element })
   window.open(linkWithParams(APP_STORE_LINK, options?.urlParamString), /* target = */ 'uniswap_wallet_appstore')
+}
+
+const openPlayStore = (options?: AnalyticsLinkOptions) => {
+  sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_APP_DOWNLOAD_OPENED, { element: options?.element }) // todo add analytics for android vs apple
+  window.open(linkWithParams(PLAY_STORE_LINK, options?.urlParamString), /* target = */ 'uniswap_wallet_playstore')
 }
 
 export const openWalletMicrosite = (options?: AnalyticsLinkOptions) => {

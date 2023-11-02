@@ -14,7 +14,7 @@ import { QRCodeSVG } from 'qrcode.react'
 import { useEffect, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
-import { isIOS } from 'utils/userAgent'
+import { isAndroid, isIOS } from 'utils/userAgent'
 
 import uniPng from '../../assets/images/uniwallet_modal_icon.png'
 import { DownloadButton } from './DownloadButton'
@@ -43,10 +43,10 @@ export default function UniwalletModal() {
   const { activationState, cancelActivation } = useActivationState()
   const [uri, setUri] = useState<string>()
 
-  // Displays the modal if not on iOS, a Uniswap Wallet Connection is pending, & qrcode URI is available
-  const open =
-    !isIOS &&
-    activationState.status === ActivationStatus.PENDING &&
+  const isAndroidLaunched = useAndroidGALaunchFlagEnabled()
+  // Displays the modal if not on iOS/Android, a Uniswap Wallet Connection is pending, & qrcode URI is available
+  const open = isAndroidLaunched ? !isIOS && !isAndroid : !isIOS
+  activationState.status === ActivationStatus.PENDING &&
     activationState.connection.type === ConnectionType.UNISWAP_WALLET_V2 &&
     !!uri
 
@@ -113,10 +113,7 @@ function InfoSection() {
         </ThemedText.SubHeaderSmall>
         <ThemedText.BodySmall color="neutral2">
           {isAndroidLaunched ? (
-            <Trans>
-              Get the Uniswap app on iOS App Store and Android Google Play to safely store your tokens and NFTs, swap
-              tokens, and connect to crypto apps.
-            </Trans>
+            <Trans>Get the Uniswap app on iOS and Android to safely store and swap tokens.</Trans>
           ) : (
             <Trans>
               Download in the App Store to safely store your tokens and NFTs, swap tokens, and connect to crypto apps.
