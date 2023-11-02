@@ -17,14 +17,14 @@ import styled, { DefaultTheme, useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-const BalancesCard = styled.div`
+const BalancesCard = styled.div<{ isInfoTDPEnabled?: boolean }>`
   border-radius: 16px;
   color: ${({ theme }) => theme.neutral1};
   display: flex;
   flex-direction: column;
   gap: 24px;
   height: fit-content;
-  padding: 16px;
+  ${({ isInfoTDPEnabled }) => !isInfoTDPEnabled && 'padding: 16px;'}
   width: 100%;
 
   // 768 hardcoded to match NFT-redesign navbar breakpoints
@@ -263,7 +263,7 @@ export default function BalanceSummary({
     return null
   }
   return (
-    <BalancesCard>
+    <BalancesCard isInfoTDPEnabled={isInfoTDPEnabled}>
       {!isInfoTDPEnabled && (
         <ConnectedChainBalanceSummary
           connectedChainBalance={connectedChainBalance}
