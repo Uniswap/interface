@@ -3,7 +3,6 @@ import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { forwardRef, memo, useCallback, useMemo } from 'react'
 import { RefreshControl } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
@@ -16,7 +15,7 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, TouchableArea, useDeviceInsets, useSporeColors } from 'ui/src'
 import { borderRadii } from 'ui/src/theme'
 import { NftsList } from 'wallet/src/components/nfts/NftsList'
 import { GQLQueries } from 'wallet/src/data/queries'
@@ -103,7 +102,7 @@ export const NftsTab = memo(
   ) {
     const colors = useSporeColors()
     const dispatch = useAppDispatch()
-    const insets = useSafeAreaInsets()
+    const insets = useDeviceInsets()
 
     const { onContentSizeChange, footerHeight, adaptiveFooter } = useAdaptiveFooter(
       containerProps?.contentContainerStyle

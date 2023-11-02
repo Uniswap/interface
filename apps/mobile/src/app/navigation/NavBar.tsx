@@ -12,7 +12,6 @@ import {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch } from 'src/app/hooks'
 import { pulseAnimation } from 'src/components/buttons/utils'
 import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
@@ -29,7 +28,7 @@ import {
   LinearGradient,
   Text,
   TouchableArea,
-  useDeviceDimensions,
+  useDeviceInsets,
   useSporeColors,
 } from 'ui/src'
 import { borderRadii, fonts } from 'ui/src/theme'
@@ -52,7 +51,7 @@ function sendSwapPressAnalyticsEvent(): void {
 }
 
 export function NavBar(): JSX.Element {
-  const insets = useSafeAreaInsets()
+  const insets = useDeviceInsets()
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
 
@@ -196,7 +195,6 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
   const { t } = useTranslation()
-  const { fullWidth } = useDeviceDimensions()
 
   const onPress = (): void => {
     dispatch(openModal({ name: ModalName.Explore }))

@@ -1,11 +1,10 @@
 import React from 'react'
 import { Image, StyleSheet } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Modal } from 'src/components/modals/Modal'
 import { IS_ANDROID } from 'src/constants/globals'
 import { useLockScreenContext } from 'src/features/authentication/lockScreenContext'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
-import { Flex, TouchableArea, useDeviceDimensions } from 'ui/src'
+import { Flex, TouchableArea, useDeviceDimensions, useDeviceInsets } from 'ui/src'
 import { UNISWAP_LOGO_LARGE } from 'ui/src/assets'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -14,7 +13,7 @@ export const SPLASH_SCREEN = { uri: 'SplashScreen' }
 export function LockScreenModal(): JSX.Element | null {
   const { isLockScreenVisible, animationType, setIsLockScreenVisible } = useLockScreenContext()
   const { trigger } = useBiometricPrompt(() => setIsLockScreenVisible(false))
-  const insets = useSafeAreaInsets()
+  const insets = useDeviceInsets()
   const dimensions = useDeviceDimensions()
   const isDarkMode = useIsDarkMode()
 

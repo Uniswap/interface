@@ -1,12 +1,11 @@
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ImageStyle } from 'react-native-fast-image'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Loader } from 'src/components/loading'
 import { LongText } from 'src/components/text/LongText'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
-import { Flex, FlexProps, Logos, Text, useSporeColors } from 'ui/src'
+import { Flex, FlexProps, Logos, Text, useDeviceInsets, useSporeColors } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
@@ -34,7 +33,7 @@ export function NFTCollectionHeader({
   const { formatNumberOrString } = useLocalizedFormatter()
 
   // Style based on device sizing
-  const { top: deviceTopPadding } = useSafeAreaInsets()
+  const { top: deviceTopPadding } = useDeviceInsets()
   const adjustedBannerHeight = deviceTopPadding + NFT_BANNER_HEIGHT
 
   const bannerImageStyle: ImageStyle = {

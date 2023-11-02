@@ -6,10 +6,9 @@ import {
   State,
 } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
-import { AnimatedFlex, Flex, mediumShadowProps, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlex, Flex, mediumShadowProps, Text, TouchableArea, useDeviceInsets } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { useTimeout } from 'utilities/src/time/timing'
 import { popNotification } from 'wallet/src/features/notifications/slice'
@@ -52,7 +51,7 @@ export function NotificationToast({
   const currentNotification = notifications?.[0]
   const hasQueuedNotification = !!notifications?.[1]
 
-  const showOffset = useSafeAreaInsets().top + spacing.spacing4
+  const showOffset = useDeviceInsets().top + spacing.spacing4
   const bannerOffset = useSharedValue(HIDE_OFFSET_Y)
 
   useEffect(() => {

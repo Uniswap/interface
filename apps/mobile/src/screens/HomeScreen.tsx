@@ -17,7 +17,6 @@ import Animated, {
   useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { SvgProps } from 'react-native-svg'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useAppDispatch } from 'src/app/hooks'
@@ -63,6 +62,7 @@ import {
   Text,
   TouchableArea,
   useDeviceDimensions,
+  useDeviceInsets,
   useMedia,
   useSporeColors,
 } from 'ui/src'
@@ -89,7 +89,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const { t } = useTranslation()
   const colors = useSporeColors()
   const media = useMedia()
-  const insets = useSafeAreaInsets()
+  const insets = useDeviceInsets()
   const dimensions = useDeviceDimensions()
   const dispatch = useAppDispatch()
 

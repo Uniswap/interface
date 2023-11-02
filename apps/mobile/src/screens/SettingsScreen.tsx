@@ -3,7 +3,6 @@ import { default as React, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, ListRenderItemInfo, SectionList, StyleSheet } from 'react-native'
 import { FadeInDown, FadeOutUp } from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { SvgProps } from 'react-native-svg'
 import { useDispatch } from 'react-redux'
 import {
@@ -25,7 +24,16 @@ import { useBiometricName, useDeviceSupportsBiometricAuth } from 'src/features/b
 import { ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { getFullAppVersion } from 'src/utils/version'
-import { AnimatedFlex, Flex, IconProps, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import {
+  AnimatedFlex,
+  Flex,
+  IconProps,
+  Icons,
+  Text,
+  TouchableArea,
+  useDeviceInsets,
+  useSporeColors,
+} from 'ui/src'
 import { AVATARS_DARK, AVATARS_LIGHT } from 'ui/src/assets'
 import BookOpenIcon from 'ui/src/assets/icons/book-open.svg'
 import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
@@ -51,7 +59,7 @@ import { resetWallet, setFinishedOnboarding } from 'wallet/src/features/wallet/s
 export function SettingsScreen(): JSX.Element {
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
   const colors = useSporeColors()
-  const insets = useSafeAreaInsets()
+  const insets = useDeviceInsets()
   const { deviceSupportsBiometrics } = useBiometricContext()
   const { t } = useTranslation()
 

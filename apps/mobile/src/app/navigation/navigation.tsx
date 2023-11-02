@@ -2,7 +2,6 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
 import React from 'react'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector } from 'src/app/hooks'
 import {
   AppStackParamList,
@@ -53,7 +52,7 @@ import { SettingsWalletEdit } from 'src/screens/SettingsWalletEdit'
 import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManageConnection'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
-import { Icons, useSporeColors } from 'ui/src'
+import { Icons, useDeviceInsets, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
@@ -165,7 +164,7 @@ const renderEmptyBackImage = (): JSX.Element => <></>
 
 export function OnboardingStackNavigator(): JSX.Element {
   const colors = useSporeColors()
-  const insets = useSafeAreaInsets()
+  const insets = useDeviceInsets()
   const seedPhraseRefactorEnabled = useFeatureFlag(FEATURE_FLAGS.SeedPhraseRefactorNative)
   const SeedPhraseInputComponent = seedPhraseRefactorEnabled
     ? SeedPhraseInputScreenV2

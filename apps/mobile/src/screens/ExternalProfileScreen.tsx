@@ -2,7 +2,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { AppStackParamList } from 'src/app/navigation/types'
 import { ActivityTab } from 'src/components/home/ActivityTab'
@@ -16,7 +15,7 @@ import { ProfileHeader } from 'src/features/externalProfile/ProfileHeader'
 import { SectionName } from 'src/features/telemetry/constants'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
@@ -33,7 +32,7 @@ export function ExternalProfileScreen({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const [tabIndex, setIndex] = useState(0)
-  const insets = useSafeAreaInsets()
+  const insets = useDeviceInsets()
 
   const displayName = useDisplayName(address)
 

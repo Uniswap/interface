@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { I18nManager, ScrollView } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { BackButton } from 'src/components/buttons/BackButton'
@@ -8,7 +7,7 @@ import { Switch } from 'src/components/buttons/Switch'
 import { Screen } from 'src/components/layout/Screen'
 import { resetDismissedWarnings } from 'src/features/tokens/tokensSlice'
 import { Screens } from 'src/screens/Screens'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea, useDeviceInsets } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -18,7 +17,7 @@ import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { resetWallet } from 'wallet/src/features/wallet/slice'
 
 export function DevScreen(): JSX.Element {
-  const insets = useSafeAreaInsets()
+  const insets = useDeviceInsets()
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccount()
   const [rtlEnabled, setRTLEnabled] = useState(I18nManager.isRTL)

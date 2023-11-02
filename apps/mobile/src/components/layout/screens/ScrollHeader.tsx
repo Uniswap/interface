@@ -7,10 +7,9 @@ import Animated, {
   SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { WithScrollToTop } from 'src/components/layout/screens/WithScrollToTop'
-import { AnimatedFlex, ColorTokens, Flex } from 'ui/src'
+import { AnimatedFlex, ColorTokens, Flex, useDeviceInsets } from 'ui/src'
 import { iconSizes, zIndices } from 'ui/src/theme'
 
 type ScrollHeaderProps = {
@@ -59,7 +58,7 @@ export function ScrollHeader({
     }
   })
 
-  const insets = useSafeAreaInsets()
+  const insets = useDeviceInsets()
   const headerRowStyles = useMemo(() => {
     return fullScreen
       ? {

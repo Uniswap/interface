@@ -1,13 +1,12 @@
 import { BottomSheetDraggableView } from '@gorhom/bottom-sheet'
 import React from 'react'
 import { View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector } from 'src/app/hooks'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { ModalName } from 'src/features/telemetry/constants'
-import { Flex, flexStyles, useSporeColors } from 'ui/src'
+import { Flex, flexStyles, useDeviceInsets, useSporeColors } from 'ui/src'
 /**
  * Wrapper view to correctly render screens within BottomSheetModal as needed. This is required
  * to enable both full screen, and bottom sheet drag gestures on a screen within a modal.
@@ -20,7 +19,7 @@ import { Flex, flexStyles, useSporeColors } from 'ui/src'
 export function ExploreModalAwareView({ children }: { children: JSX.Element }): JSX.Element {
   const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen
   const colors = useSporeColors()
-  const insets = useSafeAreaInsets()
+  const insets = useDeviceInsets()
 
   if (inModal) {
     return (

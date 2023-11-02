@@ -1,9 +1,8 @@
 import { useCallback, useEffect } from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
 import Animated, { SharedValue, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { TAB_BAR_HEIGHT } from 'src/components/layout/TabHelpers'
-import { useDeviceDimensions } from 'ui/src'
+import { useDeviceDimensions, useDeviceInsets } from 'ui/src'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 export function useAdaptiveFooter(contentContainerStyle?: StyleProp<ViewStyle>): {
@@ -12,7 +11,7 @@ export function useAdaptiveFooter(contentContainerStyle?: StyleProp<ViewStyle>):
   adaptiveFooter: JSX.Element
 } {
   const { fullHeight } = useDeviceDimensions()
-  const insets = useSafeAreaInsets()
+  const insets = useDeviceInsets()
   // Content is rendered under the navigation bar but not under the status bar
   const maxContentHeight = fullHeight - insets.top
   // Use maxContentHeight as the initial value to properly position the TabBar

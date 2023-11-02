@@ -2,7 +2,6 @@ import { ForwardedRef, forwardRef, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch } from 'src/app/hooks'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { NoTransactions } from 'src/components/icons/NoTransactions'
@@ -23,7 +22,7 @@ import {
 import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { useMostRecentSwapTx } from 'src/features/transactions/swap/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'wallet/src/data/queries'
 import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
@@ -64,7 +63,7 @@ export const ActivityTab = memo(
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
     const colors = useSporeColors()
-    const insets = useSafeAreaInsets()
+    const insets = useDeviceInsets()
 
     const { onContentSizeChange, adaptiveFooter } = useAdaptiveFooter(
       containerProps?.contentContainerStyle

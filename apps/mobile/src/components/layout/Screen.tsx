@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
-import { NativeSafeAreaViewProps, useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Flex, FlexProps } from 'ui/src'
+import { NativeSafeAreaViewProps } from 'react-native-safe-area-context'
+import { Flex, FlexProps, useDeviceInsets } from 'ui/src'
 
 type ScreenProps = FlexProps &
   // The SafeAreaView from react-native-safe-area-context also supports a `mode` prop which
@@ -16,7 +16,7 @@ function SafeAreaWithInsets({ children, edges, noInsets, ...rest }: ScreenProps)
   // This is a known issue with react-native-safe-area-context, and the solution is to use
   // the useSafeAreaInsets hook instead. See:
   // https://github.com/th3rdwave/react-native-safe-area-context/issues/114
-  const insets = useSafeAreaInsets()
+  const insets = useDeviceInsets() // useDeviceInsets uses useSafeAreaInsets internally
 
   const safeAreaStyles = useMemo(() => {
     const style: { [key: string]: number } = {}

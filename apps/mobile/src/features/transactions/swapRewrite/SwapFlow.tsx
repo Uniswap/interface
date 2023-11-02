@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { HandleBar } from 'src/components/modals/HandleBar'
@@ -19,7 +18,7 @@ import { SwapTxContextProvider } from 'src/features/transactions/swapRewrite/con
 import { SwapFormScreen } from 'src/features/transactions/swapRewrite/SwapFormScreen'
 import { SwapPendingScreen } from 'src/features/transactions/swapRewrite/SwapPendingScreen'
 import { SwapReviewScreen } from 'src/features/transactions/swapRewrite/SwapReviewScreen'
-import { AnimatedFlex, Flex, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, useDeviceInsets, useSporeColors } from 'ui/src'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import {
   CurrencyField,
@@ -56,7 +55,7 @@ export function SwapFlow({
     [prefilledState]
   )
 
-  const insets = useSafeAreaInsets()
+  const insets = useDeviceInsets()
 
   const screenXOffset = useSharedValue(0)
 

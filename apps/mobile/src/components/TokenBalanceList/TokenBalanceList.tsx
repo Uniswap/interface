@@ -3,7 +3,6 @@ import React, { ForwardedRef, forwardRef, useEffect, useMemo, useState } from 'r
 import { useTranslation } from 'react-i18next'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import {
   AnimatedBottomSheetFlatList,
@@ -20,7 +19,7 @@ import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceIt
 import { IS_ANDROID } from 'src/constants/globals'
 import { useTokenBalancesGroupedByVisibility } from 'src/features/balances/hooks'
 import { Screens } from 'src/screens/Screens'
-import { AnimatedFlex, Flex, useDeviceDimensions, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, useDeviceDimensions, useDeviceInsets, useSporeColors } from 'ui/src'
 import { zIndices } from 'ui/src/theme'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError, isNonPollingRequestInFlight, isWarmLoadingStatus } from 'wallet/src/data/utils'
@@ -60,7 +59,7 @@ export const TokenBalanceList = forwardRef<FlatList<any>, TokenBalanceListProps>
     const { t } = useTranslation()
     const colors = useSporeColors()
     const dimensions = useDeviceDimensions()
-    const insets = useSafeAreaInsets()
+    const insets = useDeviceInsets()
 
     const { onContentSizeChange, adaptiveFooter, footerHeight } = useAdaptiveFooter(
       containerProps?.contentContainerStyle
