@@ -50,6 +50,7 @@ export function SwapFlow({
             output: prefilledState.output ?? undefined,
             selectingCurrencyField: prefilledState.selectingCurrencyField,
             txId: prefilledState.txId,
+            isFiatMode: false,
           }
         : undefined,
     [prefilledState]

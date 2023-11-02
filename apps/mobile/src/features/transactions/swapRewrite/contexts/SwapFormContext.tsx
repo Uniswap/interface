@@ -25,10 +25,10 @@ export type SwapFormState = {
   output?: TradeableAsset
   selectingCurrencyField?: CurrencyField
   txId?: string
+  isFiatMode: boolean
 }
 
 type DerivedSwapFormState = {
-  isFiatInput: boolean
   derivedSwapInfo: ReturnType<typeof useDerivedSwapInfo>
 }
 
@@ -55,6 +55,7 @@ const DEFAULT_STATE: Readonly<SwapFormState> = {
   focusOnCurrencyField: CurrencyField.INPUT,
   input: ETH_TRADEABLE_ASSET,
   output: undefined,
+  isFiatMode: false,
 }
 
 export const SwapFormContext = createContext<SwapFormContextState | undefined>(undefined)
@@ -92,11 +93,6 @@ export function SwapFormContextProvider({
     [setSwapForm]
   )
 
-  const isFiatInput = useMemo<boolean>(
-    () => swapForm.exactAmountFiat !== undefined,
-    [swapForm.exactAmountFiat]
-  )
-
   const derivedSwapInfo = useDerivedSwapInfo({
     txId: swapForm.txId,
     input: swapForm.input ?? null,
@@ -105,7 +101,6 @@ export function SwapFormContextProvider({
     exactAmountToken: swapForm.exactAmountToken ?? '',
     exactAmountFiat: swapForm.exactAmountFiat,
     focusOnCurrencyField: swapForm.focusOnCurrencyField,
-    isFiatInput,
     selectingCurrencyField: swapForm.selectingCurrencyField,
     customSlippageTolerance: swapForm.customSlippageTolerance,
   })
@@ -121,7 +116,7 @@ export function SwapFormContextProvider({
       exactCurrencyField: swapForm.exactCurrencyField,
       focusOnCurrencyField: swapForm.focusOnCurrencyField,
       input: swapForm.input,
-      isFiatInput,
+      isFiatMode: swapForm.isFiatMode,
       onClose,
       output: swapForm.output,
       selectingCurrencyField: swapForm.selectingCurrencyField,
@@ -132,7 +127,6 @@ export function SwapFormContextProvider({
     }),
     [
       derivedSwapInfo,
-      isFiatInput,
       onClose,
       swapForm.customSlippageTolerance,
       swapForm.exactAmountFiat,
@@ -140,6 +134,7 @@ export function SwapFormContextProvider({
       swapForm.exactCurrencyField,
       swapForm.focusOnCurrencyField,
       swapForm.input,
+      swapForm.isFiatMode,
       swapForm.output,
       swapForm.selectingCurrencyField,
       swapForm.txId,

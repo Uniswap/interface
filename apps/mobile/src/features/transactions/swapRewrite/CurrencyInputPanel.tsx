@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { forwardRef, memo, useCallback, useEffect, useRef } from 'react'
+import { forwardRef, memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   NativeSyntheticEvent,
@@ -26,8 +26,10 @@ import { NumberType } from 'utilities/src/format/types'
 import { useForwardRef, usePrevious } from 'utilities/src/react/hooks'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 type CurrentInputPanelProps = {
   autoFocus?: boolean
@@ -38,12 +40,13 @@ type CurrentInputPanelProps = {
   isCollapsed: boolean
   focus?: boolean
   isOutput?: boolean
-  isFiatInput?: boolean
+  isFiatMode?: boolean
   onPressIn?: () => void
   onSelectionChange?: (start: number, end: number) => void
   onSetExactAmount: (amount: string) => void
-  onSetMax?: (amount: string) => void
+  onSetMax?: (amount: string, currencyField: CurrencyField) => void
   onShowTokenSelector: () => void
+  onToggleIsFiatMode: () => void
   selection?: TextInputProps['selection']
   showNonZeroBalancesOnly?: boolean
   showSoftInputOnFocus?: boolean
@@ -72,12 +75,13 @@ export const CurrencyInputPanel = memo(
       isCollapsed,
       focus,
       isOutput = false,
-      isFiatInput = false,
+      isFiatMode = false,
       onPressIn,
       onSelectionChange: selectionChange,
       onSetExactAmount,
       onSetMax,
       onShowTokenSelector,
+      onToggleIsFiatMode,
       showNonZeroBalancesOnly = true,
       showSoftInputOnFocus = false,
       usdValue,
@@ -90,15 +94,16 @@ export const CurrencyInputPanel = memo(
     const { t } = useTranslation()
     const colors = useSporeColors()
     const { convertFiatAmountFormatted } = useFiatConverter()
-    const { formatCurrencyAmount } = useLocalizedFormatter()
+    const { formatCurrencyAmount, addFiatSymbolToNumber } = useLocalizedFormatter()
     const inputRef = useRef<TextInput>(null)
+    const appFiatCurrency = useAppFiatCurrencyInfo()
 
     useForwardRef(forwardedRef, inputRef)
 
     const showInsufficientBalanceWarning =
       !isOutput && !!currencyBalance && !!currencyAmount && currencyBalance.lessThan(currencyAmount)
 
-    const formattedFiatValue = convertFiatAmountFormatted(
+    const formattedFiatValue: string = convertFiatAmountFormatted(
       usdValue?.toExact(),
       NumberType.FiatTokenQuantity
     )
@@ -135,13 +140,6 @@ export const CurrencyInputPanel = memo(
       }
     }, [focus, onSetFontSize, value])
 
-    const handleSetMax = useCallback(
-      (amount: string) => {
-        onSetMax?.(amount)
-      },
-      [onSetMax]
-    )
-
     const onSelectionChange = useCallback(
       ({
         nativeEvent: {
@@ -157,44 +155,52 @@ export const CurrencyInputPanel = memo(
     // Only show max button on output if 0 balance, always show on input
     const showMaxButton = !isOutput || (isOutput && currencyBalance?.equalTo(0))
 
+    // when there is no input value, the color should be lighter to account for $ sign when in fiat input mode
+    const emptyColor = !value ? '$neutral3' : '$neutral1'
+    const inputColor = showInsufficientBalanceWarning ? '$statusCritical' : emptyColor
+
+    // In fiat mode, show equivalent token amount. In token mode, show equivalent fiat amount
+    const inputPanelFormattedValue = useMemo((): string => {
+      const currencySymbol = currencyInfo ? getSymbolDisplayText(currencyInfo.currency.symbol) : ''
+      // handle no value case
+      if (!value) {
+        return isFiatMode
+          ? `${0} ${currencySymbol}`
+          : (addFiatSymbolToNumber({
+              value: 0,
+              currencyCode: appFiatCurrency.code,
+              currencySymbol: appFiatCurrency.symbol,
+            }).toString() as string)
+      }
+      // Handle value
+      if (isFiatMode) {
+        if (formattedCurrencyAmount) {
+          return `${formattedCurrencyAmount} ${currencySymbol}`
+        }
+      } else {
+        if (formattedFiatValue && usdValue) {
+          return formattedFiatValue
+        }
+      }
+      // Fallback for no formatted value case
+      return ''
+    }, [
+      addFiatSymbolToNumber,
+      appFiatCurrency.code,
+      appFiatCurrency.symbol,
+      currencyInfo,
+      formattedCurrencyAmount,
+      formattedFiatValue,
+      isFiatMode,
+      usdValue,
+      value,
+    ])
     // We need to store the previous value, because new quote request resets `Trade`, and this value, to undefined
     const previousValue = usePrevious(value)
     const loadingTextValue = previousValue && previousValue !== '' ? previousValue : '0'
 
-    const loadingFlexProgress = useSharedValue(1)
-    loadingFlexProgress.value = withRepeat(
-      withSequence(
-        withTiming(0.4, { duration: 400, easing: Easing.ease }),
-        withTiming(1, { duration: 400, easing: Easing.ease })
-      ),
-      -1,
-      true
-    )
-    const loadingOpacityStyle = useAnimatedStyle(
-      () => ({
-        opacity: isLoading ? loadingFlexProgress.value : 1,
-      }),
-      [isLoading]
-    )
-
-    const animatePaddingdStyle = useAnimatedStyle(() => {
-      return {
-        paddingTop: withTiming(focus ? spacing.spacing24 : spacing.spacing16, {
-          duration: 300,
-        }),
-        paddingBottom: withTiming(focus ? spacing.spacing48 : spacing.spacing16, {
-          duration: 300,
-        }),
-      }
-    }, [focus])
-
-    const animatedExpandedRowStyle = useAnimatedStyle(() => {
-      return {
-        bottom: withTiming(focus ? spacing.spacing16 : -spacing.spacing24, {
-          duration: 300,
-        }),
-      }
-    }, [focus])
+    const { animatedContainerStyle, animatedAmountInputStyle, animatedInfoRowStyle } =
+      useAnimatedContainerStyles(isLoading, focus)
 
     return (
       <AnimatedFlex
@@ -202,7 +208,7 @@ export const CurrencyInputPanel = memo(
         overflow="hidden"
         paddingBottom="$spacing16"
         px="$spacing16"
-        style={animatePaddingdStyle}
+        style={animatedContainerStyle}
         onPressIn={currencyInfo ? onPressIn : onShowTokenSelector}>
         <AnimatedFlex
           row
@@ -216,7 +222,7 @@ export const CurrencyInputPanel = memo(
             alignItems="center"
             height={MAX_INPUT_FONT_SIZE}
             overflow="hidden"
-            style={loadingOpacityStyle}
+            style={animatedAmountInputStyle}
             onLayout={onLayout}>
             {currencyInfo ? (
               <AmountInput
@@ -224,7 +230,7 @@ export const CurrencyInputPanel = memo(
                 autoFocus={autoFocus ?? focus}
                 backgroundColor="$transparent"
                 borderWidth={0}
-                color={showInsufficientBalanceWarning ? '$statusCritical' : '$neutral1'}
+                color={inputColor}
                 disabled={!currencyInfo}
                 flex={1}
                 focusable={Boolean(currencyInfo)}
@@ -241,7 +247,7 @@ export const CurrencyInputPanel = memo(
                 px="$none"
                 py="$none"
                 returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
-                showCurrencySign={isFiatInput}
+                showCurrencySign={isFiatMode}
                 showSoftInputOnFocus={showSoftInputOnFocus}
                 testID={isOutput ? 'amount-input-out' : 'amount-input-in'}
                 value={isLoading ? loadingTextValue : value}
@@ -275,13 +281,15 @@ export const CurrencyInputPanel = memo(
             left={spacing.spacing16}
             paddingTop="$spacing16"
             position="absolute"
-            style={animatedExpandedRowStyle}
+            style={animatedInfoRowStyle}
             width="100%">
-            <Flex shrink>
-              <Text color="$neutral2" numberOfLines={1} variant="body3">
-                {!isFiatInput ? (usdValue ? formattedFiatValue : '') : formattedCurrencyAmount}
-              </Text>
-            </Flex>
+            <TouchableArea onPress={onToggleIsFiatMode}>
+              <Flex shrink>
+                <Text color="$neutral2" numberOfLines={1} variant="body3">
+                  {inputPanelFormattedValue}
+                </Text>
+              </Flex>
+            </TouchableArea>
             <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">
               {!hideCurrencyBalance && (
                 <Text color="$neutral2" variant="body3">
@@ -292,7 +300,7 @@ export const CurrencyInputPanel = memo(
               {showMaxButton && onSetMax && (
                 <MaxAmountButton
                   currencyField={isOutput ? CurrencyField.OUTPUT : CurrencyField.INPUT}
-                  onSetMax={handleSetMax}
+                  onSetMax={onSetMax}
                 />
               )}
             </Flex>
@@ -302,3 +310,60 @@ export const CurrencyInputPanel = memo(
     )
   })
 )
+
+function useAnimatedContainerStyles(
+  isLoading: boolean | undefined,
+  focus: boolean | undefined
+): {
+  animatedContainerStyle: {
+    paddingTop: number
+    paddingBottom: number
+  }
+  animatedAmountInputStyle: {
+    opacity: number
+  }
+  animatedInfoRowStyle: {
+    bottom: number
+  }
+} {
+  const animatedContainerStyle = useAnimatedStyle(() => {
+    return {
+      paddingTop: withTiming(focus ? spacing.spacing24 : spacing.spacing16, {
+        duration: 300,
+      }),
+      paddingBottom: withTiming(focus ? spacing.spacing48 : spacing.spacing16, {
+        duration: 300,
+      }),
+    }
+  }, [focus])
+
+  const loadingFlexProgress = useSharedValue(1)
+  loadingFlexProgress.value = withRepeat(
+    withSequence(
+      withTiming(0.4, { duration: 400, easing: Easing.ease }),
+      withTiming(1, { duration: 400, easing: Easing.ease })
+    ),
+    -1,
+    true
+  )
+  const animatedAmountInputStyle = useAnimatedStyle(
+    () => ({
+      opacity: isLoading ? loadingFlexProgress.value : 1,
+    }),
+    [isLoading]
+  )
+
+  const animatedInfoRowStyle = useAnimatedStyle(() => {
+    return {
+      bottom: withTiming(focus ? spacing.spacing16 : -spacing.spacing24, {
+        duration: 300,
+      }),
+    }
+  }, [focus])
+
+  return {
+    animatedContainerStyle,
+    animatedAmountInputStyle,
+    animatedInfoRowStyle,
+  }
+}

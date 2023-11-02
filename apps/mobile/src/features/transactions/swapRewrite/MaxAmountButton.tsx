@@ -9,9 +9,9 @@ import { Text, TouchableArea } from 'ui/src'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
 interface MaxAmountButtonProps {
-  onSetMax: (amount: string) => void
+  onSetMax: (amount: string, currencyField: CurrencyField) => void
   style?: StyleProp<ViewStyle>
-  currencyField?: CurrencyField
+  currencyField: CurrencyField
 }
 
 export function MaxAmountButton({
@@ -38,7 +38,7 @@ export function MaxAmountButton({
 
   const onPress = (): void => {
     if (!disableMaxButton) {
-      onSetMax(maxInputAmount.toExact())
+      onSetMax(maxInputAmount.toExact(), currencyField)
     }
   }
 

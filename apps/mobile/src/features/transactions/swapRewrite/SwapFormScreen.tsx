@@ -26,6 +26,7 @@ import {
 } from 'src/features/transactions/swapRewrite/DecimalPadInput'
 import { GasAndWarningRows } from 'src/features/transactions/swapRewrite/GasAndWarningRows'
 import { useParsedSwapWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
+import { useSyncFiatAndTokenAmountUpdater } from 'src/features/transactions/swapRewrite/hooks/useSyncFiatAndTokenAmountUpdater'
 import { SwapArrowButton } from 'src/features/transactions/swapRewrite/SwapArrowButton'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -74,7 +75,7 @@ function SwapFormContent(): JSX.Element {
     exactCurrencyField,
     focusOnCurrencyField,
     input,
-    isFiatInput,
+    isFiatMode,
     output,
     updateSwapForm,
   } = useSwapFormContext()
@@ -89,8 +90,9 @@ function SwapFormContent(): JSX.Element {
     trade,
   } = derivedSwapInfo
 
+  // Updaters
+  useSyncFiatAndTokenAmountUpdater()
   useSwapAnalytics(derivedSwapInfo)
-
   useShowSwapNetworkNotification(chainId)
 
   const { walletNeedsRestore, openWalletRestoreModal } = useWalletRestore()
@@ -98,6 +100,12 @@ function SwapFormContent(): JSX.Element {
   const onRestorePress = (): void => {
     openWalletRestoreModal()
   }
+
+  const focusFieldIsInput = focusOnCurrencyField === CurrencyField.INPUT
+  const focusFieldIsOutput = focusOnCurrencyField === CurrencyField.OUTPUT
+
+  const exactFieldIsInput = exactCurrencyField === CurrencyField.INPUT
+  const exactFieldIsOutput = exactCurrencyField === CurrencyField.OUTPUT
 
   // Quote is being fetched for first time
   const isSwapDataLoading = !isWrapAction(wrapType) && trade.loading
@@ -121,9 +129,9 @@ function SwapFormContent(): JSX.Element {
     (start: number, end?: number) => {
       // Update refs first to have the latest selection state available in the DecimalPadInput
       // component and property update disabled keys of the decimal pad.
-      if (focusOnCurrencyField === CurrencyField.INPUT) {
+      if (focusFieldIsInput) {
         inputSelectionRef.current = { start, end }
-      } else if (focusOnCurrencyField === CurrencyField.OUTPUT) {
+      } else if (focusFieldIsOutput) {
         outputSelectionRef.current = { start, end }
       } else return
       // We reset the selection on the next tick because we need to wait for the native input to be updated.
@@ -132,7 +140,7 @@ function SwapFormContent(): JSX.Element {
         inputRef.current?.setNativeProps?.({ selection: { start, end } })
       }, 0)
     },
-    [focusOnCurrencyField]
+    [focusFieldIsInput, focusFieldIsOutput]
   )
 
   const decimalPadSetValue = useCallback(
@@ -141,12 +149,12 @@ function SwapFormContent(): JSX.Element {
         return
       }
       updateSwapForm({
-        exactAmountFiat: isFiatInput ? value : undefined,
-        exactAmountToken: !isFiatInput ? value : undefined,
+        exactAmountFiat: isFiatMode ? value : undefined,
+        exactAmountToken: !isFiatMode ? value : undefined,
         exactCurrencyField: focusOnCurrencyField,
       })
     },
-    [focusOnCurrencyField, isFiatInput, updateSwapForm]
+    [focusOnCurrencyField, isFiatMode, updateSwapForm]
   )
 
   const reviewButtonHeightRef = useRef<number | null>(null)
@@ -213,12 +221,18 @@ function SwapFormContent(): JSX.Element {
   )
 
   const onFocusInput = useCallback(
-    (): void => updateSwapForm({ focusOnCurrencyField: CurrencyField.INPUT }),
+    (): void =>
+      updateSwapForm({
+        focusOnCurrencyField: CurrencyField.INPUT,
+      }),
     [updateSwapForm]
   )
 
   const onFocusOutput = useCallback(
-    (): void => updateSwapForm({ focusOnCurrencyField: CurrencyField.OUTPUT }),
+    (): void =>
+      updateSwapForm({
+        focusOnCurrencyField: CurrencyField.OUTPUT,
+      }),
     [updateSwapForm]
   )
 
@@ -236,21 +250,21 @@ function SwapFormContent(): JSX.Element {
 
   const onSetExactAmountInput = useCallback(
     (amount: string): void =>
-      isFiatInput
+      isFiatMode
         ? updateSwapForm({ exactAmountFiat: amount, exactCurrencyField: CurrencyField.INPUT })
         : updateSwapForm({ exactAmountToken: amount, exactCurrencyField: CurrencyField.INPUT }),
-    [isFiatInput, updateSwapForm]
+    [isFiatMode, updateSwapForm]
   )
 
   const onSetExactAmountOutput = useCallback(
     (amount: string): void =>
-      isFiatInput
+      isFiatMode
         ? updateSwapForm({ exactAmountFiat: amount, exactCurrencyField: CurrencyField.OUTPUT })
         : updateSwapForm({ exactAmountToken: amount, exactCurrencyField: CurrencyField.OUTPUT }),
-    [isFiatInput, updateSwapForm]
+    [isFiatMode, updateSwapForm]
   )
 
-  const onSetMaxInput = useCallback(
+  const onSetMax = useCallback(
     (amount: string): void => {
       updateSwapForm({
         exactAmountFiat: undefined,
@@ -258,38 +272,39 @@ function SwapFormContent(): JSX.Element {
         exactCurrencyField: CurrencyField.INPUT,
         focusOnCurrencyField: undefined,
       })
-      resetSelection(exactAmountTokenRef.current.length, exactAmountTokenRef.current.length)
+      if (isFiatMode) {
+        resetSelection(exactAmountFiatRef.current.length, exactAmountFiatRef.current.length)
+      } else {
+        resetSelection(exactAmountTokenRef.current.length, exactAmountTokenRef.current.length)
+      }
     },
-    [exactAmountTokenRef, resetSelection, updateSwapForm]
+    [exactAmountFiatRef, exactAmountTokenRef, isFiatMode, resetSelection, updateSwapForm]
   )
 
-  // We do an exact-in trade with max input balance, but keep focus on output for better UX
-  const onSetMaxOutput = useCallback(
-    (amount: string): void => {
-      updateSwapForm({
-        exactAmountFiat: undefined,
-        exactAmountToken: amount,
-        exactCurrencyField: CurrencyField.INPUT,
-        focusOnCurrencyField: CurrencyField.OUTPUT,
-      })
+  // Reset selection based the new input value (token, or fiat), and toggle fiat mode
+  const onToggleIsFiatMode = useCallback(() => {
+    updateSwapForm({
+      isFiatMode: !isFiatMode,
+    })
+    // Need to do the opposite of previous mode, as we're selecting the new value after mode update
+    if (!isFiatMode) {
+      resetSelection(exactAmountFiatRef.current.length, exactAmountFiatRef.current.length)
+    } else {
       resetSelection(exactAmountTokenRef.current.length, exactAmountTokenRef.current.length)
-    },
-    [exactAmountTokenRef, resetSelection, updateSwapForm]
-  )
+    }
+  }, [exactAmountFiatRef, exactAmountTokenRef, isFiatMode, resetSelection, updateSwapForm])
 
   const onSwitchCurrencies = useCallback(() => {
-    const newExactCurrencyField =
-      exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
+    const newExactCurrencyField = exactFieldIsInput ? CurrencyField.OUTPUT : CurrencyField.INPUT
     updateSwapForm({
       exactCurrencyField: newExactCurrencyField,
       focusOnCurrencyField: newExactCurrencyField,
       input: output,
       output: input,
     })
-  }, [exactCurrencyField, input, output, updateSwapForm])
+  }, [exactFieldIsInput, input, output, updateSwapForm])
 
-  const derivedCurrencyField =
-    exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
+  const derivedCurrencyField = exactFieldIsInput ? CurrencyField.OUTPUT : CurrencyField.INPUT
 
   const formattedDerivedValue = formatCurrencyAmount({
     value: currencyAmounts[derivedCurrencyField],
@@ -304,13 +319,13 @@ function SwapFormContent(): JSX.Element {
     formattedDerivedValueRef.current = formattedDerivedValue
   }, [formattedDerivedValue])
 
-  const exactValue = isFiatInput ? exactAmountFiat : exactAmountToken
-  const exactValueRef = isFiatInput ? exactAmountFiatRef : exactAmountTokenRef
+  const exactValue = isFiatMode ? exactAmountFiat : exactAmountToken
+  const exactValueRef = isFiatMode ? exactAmountFiatRef : exactAmountTokenRef
 
   // Animated background color on input panels based on focus
   const colorTransitionProgress = useDerivedValue(() => {
-    return withTiming(focusOnCurrencyField === CurrencyField.INPUT ? 0 : 1, { duration: 250 })
-  }, [focusOnCurrencyField])
+    return withTiming(focusFieldIsInput ? 0 : 1, { duration: 250 })
+  }, [focusFieldIsInput])
 
   const inputBackgroundStyle = useAnimatedStyle(() => {
     return {
@@ -347,24 +362,20 @@ function SwapFormContent(): JSX.Element {
               currencyAmount={currencyAmounts[CurrencyField.INPUT]}
               currencyBalance={currencyBalances[CurrencyField.INPUT]}
               currencyInfo={currencies[CurrencyField.INPUT]}
-              focus={focusOnCurrencyField === CurrencyField.INPUT}
-              isCollapsed={
-                focusOnCurrencyField
-                  ? focusOnCurrencyField !== CurrencyField.INPUT
-                  : exactCurrencyField !== CurrencyField.INPUT
-              }
-              isLoading={exactCurrencyField === CurrencyField.OUTPUT && isSwapDataLoading}
+              focus={focusFieldIsInput}
+              isCollapsed={focusOnCurrencyField ? !focusFieldIsInput : !exactFieldIsInput}
+              isFiatMode={isFiatMode && exactFieldIsInput}
+              isLoading={!exactFieldIsInput && isSwapDataLoading}
               resetSelection={resetSelection}
               showSoftInputOnFocus={false}
               usdValue={currencyAmountsUSDValue[CurrencyField.INPUT]}
-              value={
-                exactCurrencyField === CurrencyField.INPUT ? exactValue : formattedDerivedValue
-              }
+              value={exactFieldIsInput ? exactValue : formattedDerivedValue}
               onPressIn={onFocusInput}
               onSelectionChange={onInputSelectionChange}
               onSetExactAmount={onSetExactAmountInput}
-              onSetMax={onSetMaxInput}
+              onSetMax={onSetMax}
               onShowTokenSelector={onShowTokenSelectorInput}
+              onToggleIsFiatMode={onToggleIsFiatMode}
             />
           </AnimatedFlex>
         </Trace>
@@ -386,25 +397,21 @@ function SwapFormContent(): JSX.Element {
               currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
               currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
               currencyInfo={currencies[CurrencyField.OUTPUT]}
-              focus={focusOnCurrencyField === CurrencyField.OUTPUT}
-              isCollapsed={
-                focusOnCurrencyField
-                  ? focusOnCurrencyField !== CurrencyField.OUTPUT
-                  : exactCurrencyField !== CurrencyField.OUTPUT
-              }
-              isLoading={exactCurrencyField === CurrencyField.INPUT && isSwapDataLoading}
+              focus={focusFieldIsOutput}
+              isCollapsed={focusOnCurrencyField ? !focusFieldIsOutput : !exactFieldIsOutput}
+              isFiatMode={isFiatMode && exactFieldIsOutput}
+              isLoading={!exactFieldIsOutput && isSwapDataLoading}
               resetSelection={resetSelection}
               showNonZeroBalancesOnly={false}
               showSoftInputOnFocus={false}
               usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
-              value={
-                exactCurrencyField === CurrencyField.OUTPUT ? exactValue : formattedDerivedValue
-              }
+              value={exactFieldIsOutput ? exactValue : formattedDerivedValue}
               onPressIn={onFocusOutput}
               onSelectionChange={onOutputSelectionChange}
               onSetExactAmount={onSetExactAmountOutput}
-              onSetMax={onSetMaxOutput}
+              onSetMax={onSetMax}
               onShowTokenSelector={onShowTokenSelectorOutput}
+              onToggleIsFiatMode={onToggleIsFiatMode}
             />
             {walletNeedsRestore && (
               <TouchableArea onPress={onRestorePress}>

@@ -13,7 +13,6 @@ import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
 import { iconSizes } from 'ui/src/theme'
-import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -24,19 +23,13 @@ export function SwapFormHeader(): JSX.Element {
   const { formatPercent } = useLocalizedFormatter()
   const colors = useSporeColors()
   const account = useActiveAccountWithThrow()
-  const currency = useAppFiatCurrencyInfo()
 
   const { screen } = useSwapScreenContext()
 
-  const { updateSwapForm, isFiatInput, customSlippageTolerance, derivedSwapInfo } =
-    useSwapFormContext()
+  const { updateSwapForm, customSlippageTolerance, derivedSwapInfo } = useSwapFormContext()
 
   const [showSwapSettingsModal, setShowSettingsModal] = useState(false)
   const [showViewOnlyModal, setShowViewOnlyModal] = useState(false)
-
-  const onToggleFiatInput = useCallback((): void => {
-    // TODO: implement
-  }, [])
 
   const onPressSwapSettings = useCallback((): void => {
     setShowSettingsModal(true)
@@ -60,9 +53,6 @@ export function SwapFormHeader(): JSX.Element {
 
   const isViewOnlyWallet = account?.type === AccountType.Readonly
 
-  // TODO: implement USD form input
-  const showUSDToggle = false
-
   return (
     <>
       <Flex
@@ -78,23 +68,6 @@ export function SwapFormHeader(): JSX.Element {
         </Text>
 
         <Flex row gap="$spacing4">
-          {showUSDToggle && screen === SwapScreen.SwapForm && (
-            <TouchableArea
-              hapticFeedback
-              bg={isFiatInput ? '$accent2' : '$surface2'}
-              borderRadius="$rounded16"
-              onPress={(): void => onToggleFiatInput()}>
-              <Flex row alignItems="center" flex={1} gap="$spacing4" px="$spacing8" py="$spacing4">
-                <Text color={isFiatInput ? '$accent1' : '$neutral2'} variant="buttonLabel3">
-                  {currency.symbol}
-                </Text>
-                <Text color={isFiatInput ? '$accent1' : '$neutral2'} variant="buttonLabel3">
-                  {currency.code}
-                </Text>
-              </Flex>
-            </TouchableArea>
-          )}
-
           {isViewOnlyWallet && (
             <TouchableArea
               bg="$surface2"
