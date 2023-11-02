@@ -104,7 +104,6 @@ export function useUniversalRouterSwapCallback(
             ...analyticsContext,
             client_block_number: blockNumber,
             tx,
-            error: gasError,
             isAutoSlippage,
           })
           console.warn(gasError)
