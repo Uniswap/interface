@@ -9,9 +9,14 @@ import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import styled from 'styled-components'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 export const pageTimePeriodAtom = atomWithStorage<TimePeriod>('tokenDetailsTimePeriod', TimePeriod.DAY)
+
+const StyledPrefetchBalancesWrapper = styled(PrefetchBalancesWrapper)`
+  display: contents;
+`
 
 export default function TokenDetailsPage() {
   const { tokenAddress, chainName } = useParams<{
@@ -60,7 +65,7 @@ export default function TokenDetailsPage() {
   if (!tokenQuery) return <TokenDetailsPageSkeleton />
 
   return (
-    <PrefetchBalancesWrapper shouldFetchOnAccountUpdate={true}>
+    <StyledPrefetchBalancesWrapper shouldFetchOnAccountUpdate={true}>
       <TokenDetails
         urlAddress={tokenAddress}
         chain={chain}
@@ -69,6 +74,6 @@ export default function TokenDetailsPage() {
         onChangeTimePeriod={setTimePeriod}
         inputTokenAddress={parsedInputTokenAddress}
       />
-    </PrefetchBalancesWrapper>
+    </StyledPrefetchBalancesWrapper>
   )
 }
