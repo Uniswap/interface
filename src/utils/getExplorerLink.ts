@@ -20,6 +20,7 @@ export enum ExplorerDataType {
   TOKEN = 'token',
   ADDRESS = 'address',
   BLOCK = 'block',
+  NATIVE = 'native',
 }
 
 /**

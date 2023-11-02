@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { Trace, TraceEvent } from 'analytics'
+import { ReactComponent as UniswapAppLogo } from 'assets/svg/uniswap_app_logo.svg'
 import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
@@ -8,11 +9,11 @@ import ProtocolBanner from 'components/About/ProtocolBanner'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { BaseButton } from 'components/Button'
 import { AppleLogo } from 'components/Logo/AppleLogo'
+import { useAndroidGALaunchFlagEnabled } from 'featureFlags/flags/androidGALaunch'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
 import { useEffect, useMemo, useRef } from 'react'
-import { ArrowDownCircle } from 'react-feather'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
 import { useAppSelector } from 'state/hooks'
@@ -116,6 +117,7 @@ const DownloadWalletLink = styled.a`
   line-height: 24px;
   font-weight: 535;
   text-align: center;
+  align-items: center;
 
   :hover {
     color: ${({ theme }) => theme.neutral3};
@@ -210,7 +212,7 @@ const LearnMoreContainer = styled.div`
   cursor: pointer;
   font-size: 20px;
   font-weight: 535;
-  margin: 36px 0;
+  margin: 18px 0 36px;
   display: flex;
   visibility: hidden;
   pointer-events: auto;
@@ -223,11 +225,6 @@ const LearnMoreContainer = styled.div`
   &:hover {
     opacity: 0.6;
   }
-`
-
-const LearnMoreArrow = styled(ArrowDownCircle)`
-  margin-left: 14px;
-  size: 20px;
 `
 
 const AboutContentContainer = styled.div<{ isDarkMode: boolean }>`
@@ -318,11 +315,14 @@ export default function Landing() {
   const isDarkMode = useIsDarkMode()
   const cardsRef = useRef<HTMLDivElement>(null)
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
+
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
   const cards = useMemo(
     () => MAIN_CARDS.filter((card) => !(shouldDisableNFTRoutes && card.to.startsWith('/nft'))),
     [shouldDisableNFTRoutes]
   )
+
+  const isAndroidGALaunched = useAndroidGALaunchFlagEnabled()
 
   const [accountDrawerOpen] = useAccountDrawer()
   const navigate = useNavigate()
@@ -395,7 +395,6 @@ export default function Landing() {
             }}
           >
             <Trans>Learn more</Trans>
-            <LearnMoreArrow />
           </LearnMoreContainer>
 
           <DownloadWalletLink
@@ -405,8 +404,17 @@ export default function Landing() {
               appStoreParams: `ct=Uniswap-Home-Page&mt=8`,
             })}
           >
-            <AppleLogo width="20" height="20" />
-            Download the Uniswap Wallet for iOS
+            {isAndroidGALaunched ? (
+              <>
+                <UniswapAppLogo width="20" height="20" />
+                Download the Uniswap app
+              </>
+            ) : (
+              <>
+                <AppleLogo width="20" height="20" />
+                Download the Uniswap app for iOS
+              </>
+            )}
           </DownloadWalletLink>
         </ContentContainer>
         <AboutContentContainer isDarkMode={isDarkMode}>

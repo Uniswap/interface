@@ -6,6 +6,7 @@ import { CollectionTableColumn, Denomination, TimePeriod, VolumeType } from 'nft
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { useFormatterLocales } from 'utils/formatNumbers'
 
 import CollectionTable from './CollectionTable'
 
@@ -84,6 +85,7 @@ function convertTimePeriodToHistoryDuration(timePeriod: TimePeriod): HistoryDura
 }
 
 const TrendingCollections = () => {
+  const { formatterLocalCurrency } = useFormatterLocales()
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.OneDay)
   const [isEthToggled, setEthToggled] = useState(true)
 
@@ -151,7 +153,7 @@ const TrendingCollections = () => {
           </Selector>
           <Selector active={!isEthToggled}>
             <StyledSelectorText lineHeight="20px" active={!isEthToggled}>
-              USD
+              {formatterLocalCurrency}
             </StyledSelectorText>
           </Selector>
         </Filter>
