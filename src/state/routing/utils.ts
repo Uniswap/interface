@@ -43,51 +43,6 @@ interface RouteResult {
   outputAmount: CurrencyAmount<Currency>
 }
 
-function getClassicSwapCurrenciesWithTaxInfo(
-  args: GetQuoteArgs,
-  routes: ClassicQuoteData['route']
-): [Currency, Currency] {
-  const {
-    tokenInAddress,
-    tokenInChainId,
-    tokenInDecimals,
-    tokenInSymbol,
-    tokenOutAddress,
-    tokenOutChainId,
-    tokenOutDecimals,
-    tokenOutSymbol,
-  } = args
-
-  const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(tokenInAddress as SwapRouterNativeAssets)
-  const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOutAddress as SwapRouterNativeAssets)
-
-  const tokenInInRoute = routes[0]?.[0]?.tokenIn
-  const tokenOutInRoute = routes[0]?.[routes[0]?.length - 1]?.tokenOut
-
-  const currencyIn = tokenInIsNative
-    ? nativeOnChain(tokenInChainId)
-    : parseToken({
-        address: tokenInAddress,
-        chainId: tokenInChainId,
-        decimals: tokenInDecimals,
-        symbol: tokenInSymbol,
-        buyFeeBps: tokenInInRoute.buyFeeBps,
-        sellFeeBps: tokenInInRoute.sellFeeBps,
-      })
-  const currencyOut = tokenOutIsNative
-    ? nativeOnChain(tokenOutChainId)
-    : parseToken({
-        address: tokenOutAddress,
-        chainId: tokenOutChainId,
-        decimals: tokenOutDecimals,
-        symbol: tokenOutSymbol,
-        buyFeeBps: tokenOutInRoute.buyFeeBps,
-        sellFeeBps: tokenOutInRoute.sellFeeBps,
-      })
-
-  return [currencyIn, currencyOut]
-}
-
 /**
  * Transforms a Routing API quote into an array of routes that can be used to
  * create a `Trade`.
@@ -99,7 +54,7 @@ export function computeRoutes(args: GetQuoteArgs, routes: ClassicQuoteData['rout
   const tokenOutInRoute = routes[0]?.[routes[0]?.length - 1]?.tokenOut
   if (!tokenInInRoute || !tokenOutInRoute) throw new Error('Expected both tokenIn and tokenOut to be present')
 
-  const [currencyIn, currencyOut] = getClassicSwapCurrenciesWithTaxInfo(args, routes)
+  const [currencyIn, currencyOut] = getTradeCurrencies(args, false, routes)
 
   try {
     return routes.map((route) => {
@@ -164,7 +119,11 @@ function toDutchOrderInfo(orderInfoJSON: DutchOrderInfoJSON): DutchOrderInfo {
 // Prepares the currencies used for the actual Swap (either UniswapX or Universal Router)
 // May not match `currencyIn` that the user selected because for ETH inputs in UniswapX, the actual
 // swap will use WETH.
-function getTradeCurrencies(args: GetQuoteArgs | GetQuickQuoteArgs, isUniswapXTrade: boolean): [Currency, Currency] {
+function getTradeCurrencies(
+  args: GetQuoteArgs | GetQuickQuoteArgs,
+  isUniswapXTrade: boolean,
+  routes?: ClassicQuoteData['route']
+): [Currency, Currency] {
   const {
     tokenInAddress,
     tokenInChainId,
@@ -179,9 +138,19 @@ function getTradeCurrencies(args: GetQuoteArgs | GetQuickQuoteArgs, isUniswapXTr
   const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(tokenInAddress as SwapRouterNativeAssets)
   const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOutAddress as SwapRouterNativeAssets)
 
+  const tokenInInRoute = routes?.[0]?.[0]?.tokenIn
+  const tokenOutInRoute = routes?.[0]?.[routes[0]?.length - 1]?.tokenOut
+
   const currencyIn = tokenInIsNative
     ? nativeOnChain(tokenInChainId)
-    : parseToken({ address: tokenInAddress, chainId: tokenInChainId, decimals: tokenInDecimals, symbol: tokenInSymbol })
+    : parseToken({
+        address: tokenInAddress,
+        chainId: tokenInChainId,
+        decimals: tokenInDecimals,
+        symbol: tokenInSymbol,
+        buyFeeBps: tokenInInRoute?.buyFeeBps,
+        sellFeeBps: tokenInInRoute?.sellFeeBps,
+      })
   const currencyOut = tokenOutIsNative
     ? nativeOnChain(tokenOutChainId)
     : parseToken({
@@ -189,13 +158,15 @@ function getTradeCurrencies(args: GetQuoteArgs | GetQuickQuoteArgs, isUniswapXTr
         chainId: tokenOutChainId,
         decimals: tokenOutDecimals,
         symbol: tokenOutSymbol,
+        buyFeeBps: tokenOutInRoute?.buyFeeBps,
+        sellFeeBps: tokenOutInRoute?.sellFeeBps,
       })
 
   if (!isUniswapXTrade) {
     return [currencyIn, currencyOut]
   }
 
-  return [currencyIn.isNative ? currencyIn.wrapped : currencyIn, currencyOut]
+  return [currencyIn, currencyOut]
 }
 
 function getSwapFee(data: ClassicQuoteData | URADutchOrderQuoteData): SwapFeeInfo | undefined {
