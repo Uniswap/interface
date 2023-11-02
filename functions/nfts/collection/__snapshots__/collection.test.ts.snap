@@ -41,8 +41,9 @@ exports[`should inject metadata for collections 1`] = `
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
     <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff2" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
-
+    <link rel="preload" href="/fonts/Basel-Medium.woff2" as="font" type="font/woff" crossorigin />
    
     <style>
       * {
@@ -58,9 +59,10 @@ exports[`should inject metadata for collections 1`] = `
         font-weight: 535;
         font-style: normal;
         font-display: block;
-        font-named-instance: 'Book';
+        font-named-instance: 'Medium';
         src: 
-          url(/fonts/Basel-Medium.woff) format('woff');
+          url('/fonts/Basel-Medium.woff2') format('woff2'),
+          url('/fonts/Basel-Medium.woff') format('woff');
       }
 
       @font-face {
@@ -70,13 +72,13 @@ exports[`should inject metadata for collections 1`] = `
         font-display: block;
         font-named-instance: 'Book';
         src: 
-          url(/fonts/Basel-Book.woff) format('woff');
+          url('/fonts/Basel-Book.woff') format('woff2'),
+          url('/fonts/Basel-Book.woff') format('woff');
       }
 
       @supports (font-variation-settings: normal) {
         * {
           font-family: 'Basel', sans-serif;
-          
         }
       }
 
@@ -132,7 +134,7 @@ exports[`should inject metadata for collections 1`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Azuki on Uniswap"/><meta property="og:image" content="http://127.0.0.1:3000/api/image/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c544"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Azuki on Uniswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c544"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Azuki on Uniswap"/><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c544"/><meta property="twitter:image:alt" content="Azuki on Uniswap"/></head>
+  <script defer src="/static/js/bundle.js"></script></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -189,8 +191,9 @@ exports[`should inject metadata for collections 2`] = `
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
     <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff2" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
-
+    <link rel="preload" href="/fonts/Basel-Medium.woff2" as="font" type="font/woff" crossorigin />
    
     <style>
       * {
@@ -206,9 +209,10 @@ exports[`should inject metadata for collections 2`] = `
         font-weight: 535;
         font-style: normal;
         font-display: block;
-        font-named-instance: 'Book';
+        font-named-instance: 'Medium';
         src: 
-          url(/fonts/Basel-Medium.woff) format('woff');
+          url('/fonts/Basel-Medium.woff2') format('woff2'),
+          url('/fonts/Basel-Medium.woff') format('woff');
       }
 
       @font-face {
@@ -218,13 +222,13 @@ exports[`should inject metadata for collections 2`] = `
         font-display: block;
         font-named-instance: 'Book';
         src: 
-          url(/fonts/Basel-Book.woff) format('woff');
+          url('/fonts/Basel-Book.woff') format('woff2'),
+          url('/fonts/Basel-Book.woff') format('woff');
       }
 
       @supports (font-variation-settings: normal) {
         * {
           font-family: 'Basel', sans-serif;
-          
         }
       }
 
@@ -280,7 +284,7 @@ exports[`should inject metadata for collections 2`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Bored Ape Yacht Club on Uniswap"/><meta property="og:image" content="http://127.0.0.1:3000/api/image/nfts/collection/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Bored Ape Yacht Club on Uniswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/nfts/collection/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Bored Ape Yacht Club on Uniswap"/><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/nfts/collection/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d"/><meta property="twitter:image:alt" content="Bored Ape Yacht Club on Uniswap"/></head>
+  <script defer src="/static/js/bundle.js"></script></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -337,8 +341,9 @@ exports[`should inject metadata for collections 3`] = `
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
     <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff2" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
-
+    <link rel="preload" href="/fonts/Basel-Medium.woff2" as="font" type="font/woff" crossorigin />
    
     <style>
       * {
@@ -354,9 +359,10 @@ exports[`should inject metadata for collections 3`] = `
         font-weight: 535;
         font-style: normal;
         font-display: block;
-        font-named-instance: 'Book';
+        font-named-instance: 'Medium';
         src: 
-          url(/fonts/Basel-Medium.woff) format('woff');
+          url('/fonts/Basel-Medium.woff2') format('woff2'),
+          url('/fonts/Basel-Medium.woff') format('woff');
       }
 
       @font-face {
@@ -366,13 +372,13 @@ exports[`should inject metadata for collections 3`] = `
         font-display: block;
         font-named-instance: 'Book';
         src: 
-          url(/fonts/Basel-Book.woff) format('woff');
+          url('/fonts/Basel-Book.woff') format('woff2'),
+          url('/fonts/Basel-Book.woff') format('woff');
       }
 
       @supports (font-variation-settings: normal) {
         * {
           font-family: 'Basel', sans-serif;
-          
         }
       }
 
@@ -428,7 +434,7 @@ exports[`should inject metadata for collections 3`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="CLONE X - X TAKASHI MURAKAMI on Uniswap"/><meta property="og:image" content="http://127.0.0.1:3000/api/image/nfts/collection/0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="CLONE X - X TAKASHI MURAKAMI on Uniswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/nfts/collection/0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="CLONE X - X TAKASHI MURAKAMI on Uniswap"/><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/nfts/collection/0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b"/><meta property="twitter:image:alt" content="CLONE X - X TAKASHI MURAKAMI on Uniswap"/></head>
+  <script defer src="/static/js/bundle.js"></script></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -485,8 +491,9 @@ exports[`should inject metadata for collections 4`] = `
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
     <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff2" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
-
+    <link rel="preload" href="/fonts/Basel-Medium.woff2" as="font" type="font/woff" crossorigin />
    
     <style>
       * {
@@ -502,9 +509,10 @@ exports[`should inject metadata for collections 4`] = `
         font-weight: 535;
         font-style: normal;
         font-display: block;
-        font-named-instance: 'Book';
+        font-named-instance: 'Medium';
         src: 
-          url(/fonts/Basel-Medium.woff) format('woff');
+          url('/fonts/Basel-Medium.woff2') format('woff2'),
+          url('/fonts/Basel-Medium.woff') format('woff');
       }
 
       @font-face {
@@ -514,13 +522,13 @@ exports[`should inject metadata for collections 4`] = `
         font-display: block;
         font-named-instance: 'Book';
         src: 
-          url(/fonts/Basel-Book.woff) format('woff');
+          url('/fonts/Basel-Book.woff') format('woff2'),
+          url('/fonts/Basel-Book.woff') format('woff');
       }
 
       @supports (font-variation-settings: normal) {
         * {
           font-family: 'Basel', sans-serif;
-          
         }
       }
 
@@ -576,7 +584,7 @@ exports[`should inject metadata for collections 4`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="0xed5af388653567af2f388e6224dc7c4b3241c545 on Uniswap"/><meta property="og:image" content="http://127.0.0.1:3000/api/image/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c545"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="0xed5af388653567af2f388e6224dc7c4b3241c545 on Uniswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c545"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="0xed5af388653567af2f388e6224dc7c4b3241c545 on Uniswap"/><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c545"/><meta property="twitter:image:alt" content="0xed5af388653567af2f388e6224dc7c4b3241c545 on Uniswap"/></head>
+  <script defer src="/static/js/bundle.js"></script></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
