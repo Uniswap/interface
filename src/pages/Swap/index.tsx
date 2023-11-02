@@ -293,11 +293,13 @@ export function Swap({
     currencies,
     inputError: swapInputError,
     outputFeeFiatValue,
+    inputTax,
+    outputTax,
   } = swapInfo
 
   const [inputTokenHasTax, outputTokenHasTax] = useMemo(
-    () => [Boolean(trade && trade.inputTax.greaterThan(0)), Boolean(trade && trade.outputTax.greaterThan(0))],
-    [trade]
+    () => [!inputTax.equalTo(0), !outputTax.equalTo(0)],
+    [inputTax, outputTax]
   )
 
   useEffect(() => {

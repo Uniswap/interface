@@ -4,6 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useConnectionReady } from 'connection/eagerlyConnect'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
+import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
@@ -79,6 +80,8 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
 export type SwapInfo = {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
+  inputTax: Percent
+  outputTax: Percent
   outputFeeFiatValue?: number
   parsedAmount?: CurrencyAmount<Currency>
   inputError?: ReactNode
@@ -110,6 +113,11 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
 
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
+
+  const { inputTax, outputTax } = useSwapTaxes(
+    inputCurrency?.isToken ? inputCurrency.address : undefined,
+    outputCurrency?.isToken ? outputCurrency.address : undefined
+  )
 
   const relevantTokenBalances = useCurrencyBalances(
     account ?? undefined,
@@ -211,8 +219,21 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
       autoSlippage,
       allowedSlippage,
       outputFeeFiatValue,
+      inputTax,
+      outputTax,
     }),
-    [allowedSlippage, autoSlippage, currencies, currencyBalances, inputError, outputFeeFiatValue, parsedAmount, trade]
+    [
+      allowedSlippage,
+      autoSlippage,
+      currencies,
+      currencyBalances,
+      inputError,
+      outputFeeFiatValue,
+      parsedAmount,
+      trade,
+      inputTax,
+      outputTax,
+    ]
   )
 }
 
