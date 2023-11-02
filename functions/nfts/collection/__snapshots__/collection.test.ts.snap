@@ -59,7 +59,6 @@ exports[`should inject metadata for collections 1`] = `
         font-weight: 535;
         font-style: normal;
         font-display: block;
-        font-named-instance: 'Medium';
         src: 
           url('/fonts/Basel-Medium.woff2') format('woff2'),
           url('/fonts/Basel-Medium.woff') format('woff');
@@ -70,7 +69,6 @@ exports[`should inject metadata for collections 1`] = `
         font-weight: 485;
         font-style: normal;
         font-display: block;
-        font-named-instance: 'Book';
         src: 
           url('/fonts/Basel-Book.woff') format('woff2'),
           url('/fonts/Basel-Book.woff') format('woff');
@@ -209,7 +207,6 @@ exports[`should inject metadata for collections 2`] = `
         font-weight: 535;
         font-style: normal;
         font-display: block;
-        font-named-instance: 'Medium';
         src: 
           url('/fonts/Basel-Medium.woff2') format('woff2'),
           url('/fonts/Basel-Medium.woff') format('woff');
@@ -220,7 +217,6 @@ exports[`should inject metadata for collections 2`] = `
         font-weight: 485;
         font-style: normal;
         font-display: block;
-        font-named-instance: 'Book';
         src: 
           url('/fonts/Basel-Book.woff') format('woff2'),
           url('/fonts/Basel-Book.woff') format('woff');
@@ -359,7 +355,6 @@ exports[`should inject metadata for collections 3`] = `
         font-weight: 535;
         font-style: normal;
         font-display: block;
-        font-named-instance: 'Medium';
         src: 
           url('/fonts/Basel-Medium.woff2') format('woff2'),
           url('/fonts/Basel-Medium.woff') format('woff');
@@ -370,7 +365,6 @@ exports[`should inject metadata for collections 3`] = `
         font-weight: 485;
         font-style: normal;
         font-display: block;
-        font-named-instance: 'Book';
         src: 
           url('/fonts/Basel-Book.woff') format('woff2'),
           url('/fonts/Basel-Book.woff') format('woff');
@@ -509,7 +503,6 @@ exports[`should inject metadata for collections 4`] = `
         font-weight: 535;
         font-style: normal;
         font-display: block;
-        font-named-instance: 'Medium';
         src: 
           url('/fonts/Basel-Medium.woff2') format('woff2'),
           url('/fonts/Basel-Medium.woff') format('woff');
@@ -520,7 +513,6 @@ exports[`should inject metadata for collections 4`] = `
         font-weight: 485;
         font-style: normal;
         font-display: block;
-        font-named-instance: 'Book';
         src: 
           url('/fonts/Basel-Book.woff') format('woff2'),
           url('/fonts/Basel-Book.woff') format('woff');
