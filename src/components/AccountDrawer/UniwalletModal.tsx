@@ -9,6 +9,7 @@ import { uniwalletWCV2ConnectConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { ConnectionType } from 'connection/types'
 import { UniwalletConnect as UniwalletConnectV2 } from 'connection/WalletConnectV2'
+import { useAndroidGALaunchFlagEnabled } from 'featureFlags/flags/androidGALaunch'
 import { QRCodeSVG } from 'qrcode.react'
 import { useEffect, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
@@ -102,6 +103,8 @@ const InfoSectionWrapper = styled(RowBetween)`
 `
 
 function InfoSection() {
+  const isAndroidLaunched = useAndroidGALaunchFlagEnabled()
+
   return (
     <InfoSectionWrapper>
       <AutoColumn gap="4px">
@@ -109,9 +112,16 @@ function InfoSection() {
           <Trans>Don&apos;t have Uniswap Wallet?</Trans>
         </ThemedText.SubHeaderSmall>
         <ThemedText.BodySmall color="neutral2">
-          <Trans>
-            Download in the App Store to safely store your tokens and NFTs, swap tokens, and connect to crypto apps.
-          </Trans>
+          {isAndroidLaunched ? (
+            <Trans>
+              Get the Uniswap app on iOS App Store and Android Google Play to safely store your tokens and NFTs, swap
+              tokens, and connect to crypto apps.
+            </Trans>
+          ) : (
+            <Trans>
+              Download in the App Store to safely store your tokens and NFTs, swap tokens, and connect to crypto apps.
+            </Trans>
+          )}
         </ThemedText.BodySmall>
       </AutoColumn>
       <Column>
