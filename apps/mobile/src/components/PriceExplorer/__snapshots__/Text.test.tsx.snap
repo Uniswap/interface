@@ -203,7 +203,7 @@ exports[`PriceText renders without error 1`] = `
           "lineHeight": 60,
         },
         {
-          "color": "#CECECE",
+          "color": "#222222",
         },
       ]
     }

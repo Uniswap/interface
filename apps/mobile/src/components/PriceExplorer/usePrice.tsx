@@ -5,6 +5,7 @@ import {
 } from 'react-native-wagmi-charts'
 import { numberToLocaleStringWorklet, numberToPercentWorklet } from 'src/utils/reanimated'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 
 export type ValueAndFormatted<U = number, V = string> = {
   value: Readonly<SharedValue<U>>
@@ -22,6 +23,7 @@ export function useLineChartPrice(): ValueAndFormatted {
   })
   const { data } = useLineChart()
   const currency = useAppFiatCurrencyInfo()
+  const { locale } = useCurrentLanguageInfo()
 
   const price = useDerivedValue(() => {
     if (activeCursorPrice.value) {
@@ -31,15 +33,12 @@ export function useLineChartPrice(): ValueAndFormatted {
 
     return data[data.length - 1]?.value ?? 0
   })
-
-  // TODO gary replace locale with language selection
   const priceFormatted = useDerivedValue(() => {
-    return numberToLocaleStringWorklet(price.value, 'en-US', {
+    return numberToLocaleStringWorklet(price.value, locale, {
       style: 'currency',
       currency: currency.code,
     })
   })
-
   return {
     value: price,
     formatted: priceFormatted,

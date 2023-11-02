@@ -39,7 +39,7 @@ function PortfolioValue({
     <Text
       color="$neutral2"
       loading={isLoading}
-      loadingPlaceholderText="$000.00"
+      loadingPlaceholderText="0000.00"
       variant="subheading2">
       {convertFiatAmountFormatted(portfolioValue, NumberType.PortfolioBalance)}
     </Text>

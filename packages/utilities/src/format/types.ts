@@ -13,6 +13,9 @@ export enum NumberType {
   // in the text input boxes. Output amounts on review screen should use the above TokenTx formatter
   SwapTradeAmount = 'swap-trade-amount',
 
+  // fiat number that uses standard formatting without any specific rules
+  FiatStandard = 'fiat-standard',
+
   // fiat prices in any component that belongs in the Token Details flow (except for token stats)
   FiatTokenDetails = 'fiat-token-details',
 

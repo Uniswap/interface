@@ -28,7 +28,7 @@ export function DecimalNumber({
     number === undefined || number >= decimalThreshold ? '$neutral3' : '$neutral1'
 
   return (
-    <Text loading={loading} loadingPlaceholderText="$000.00" variant={variant} {...rest}>
+    <Text loading={loading} loadingPlaceholderText="0000.00" variant={variant} {...rest}>
       {pre}
       {post && (
         <Text

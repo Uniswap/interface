@@ -1,6 +1,8 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { NumberType } from 'utilities/src/format/types'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { SwapFeeInfo } from 'wallet/src/features/routing/types'
 
 export type OnShowSwapFeeInfo = (noFee: boolean) => void
@@ -13,6 +15,8 @@ export function SwapFee({
   onShowSwapFeeInfo: OnShowSwapFeeInfo
 }): JSX.Element {
   const { t } = useTranslation()
+  const { formatNumberOrString } = useLocalizedFormatter()
+
   return (
     <Flex row alignItems="center" justifyContent="space-between">
       <TouchableArea onPress={(): void => onShowSwapFeeInfo(swapFeeInfo.noFeeCharged)}>
@@ -28,7 +32,9 @@ export function SwapFee({
         <Flex row alignItems="center" justifyContent="space-between">
           <Text color="$neutral1" variant="body3">
             {swapFeeInfo.formattedAmountFiat ??
-              (swapFeeInfo.noFeeCharged ? '$0' : swapFeeInfo.formattedAmount)}
+              (swapFeeInfo.noFeeCharged
+                ? formatNumberOrString({ value: 0, type: NumberType.FiatGasPrice })
+                : swapFeeInfo.formattedAmount)}
           </Text>
         </Flex>
       </Flex>

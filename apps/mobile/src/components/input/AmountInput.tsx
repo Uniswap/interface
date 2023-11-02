@@ -3,6 +3,7 @@ import { AppState, Keyboard, KeyboardTypeOptions, TextInput as NativeTextInput }
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { escapeRegExp } from 'utilities/src/primitives/string'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 
 const inputRegex = RegExp('^\\d*(?:\\\\[.])?\\d*$') // match escaped "." characters via in a non-capturing group
 
@@ -71,9 +72,16 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
     },
     [onChangeText, showCurrencySign]
   )
-
   const currency = useAppFiatCurrencyInfo()
-  const formattedValue = showCurrencySign ? `${currency.symbol}${value}` : value
+  const { addFiatSymbolToNumber } = useLocalizedFormatter()
+
+  const formattedValue = showCurrencySign
+    ? addFiatSymbolToNumber({
+        value,
+        currencyCode: currency.code,
+        currencySymbol: currency.symbol,
+      })
+    : value
 
   const textInputProps: TextInputProps = useMemo(
     () => ({

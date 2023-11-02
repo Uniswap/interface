@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import {
+  addFiatSymbolToNumber,
   formatCurrencyAmount,
   formatNumberOrString,
   formatPercent,
@@ -27,6 +28,12 @@ export const mockLocalizedFormatter: LocalizedFormatter = {
   },
   formatPercent(value) {
     return formatPercent(value, 'en-US')
+  },
+  addFiatSymbolToNumber(input): string {
+    return addFiatSymbolToNumber({
+      ...input,
+      locale: 'en-US',
+    })
   },
 }
 

@@ -68,1263 +68,1470 @@ exports[`PortfolioBalance renders without error 1`] = `
                 ]
               }
             >
+              <View
+                style={
+                  [
+                    {
+                      "transform": [
+                        {
+                          "translateY": -0,
+                        },
+                      ],
+                    },
+                    {
+                      "marginRight": -10,
+                      "width": 39,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  0
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  1
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  2
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  3
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  4
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  5
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  6
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  7
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  8
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  9
+                </Text>
+              </View>
+            </View>
+            <View
+              exiting={BaseAnimationMock {}}
+              layout={BaseAnimationMock {}}
+              style={
+                [
+                  {
+                    "height": 60,
+                  },
+                  {
+                    "overflow": "hidden",
+                  },
+                ]
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "transform": [
+                        {
+                          "translateY": -0,
+                        },
+                      ],
+                    },
+                    {
+                      "marginRight": -10,
+                      "width": 39,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  0
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  1
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  2
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  3
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  4
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  5
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  6
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  7
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  8
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  9
+                </Text>
+              </View>
+            </View>
+            <View
+              exiting={BaseAnimationMock {}}
+              layout={BaseAnimationMock {}}
+              style={
+                [
+                  {
+                    "height": 60,
+                  },
+                  {
+                    "overflow": "hidden",
+                  },
+                ]
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "transform": [
+                        {
+                          "translateY": -0,
+                        },
+                      ],
+                    },
+                    {
+                      "marginRight": -10,
+                      "width": 39,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  0
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  1
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  2
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  3
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  4
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  5
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  6
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  7
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  8
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  9
+                </Text>
+              </View>
+            </View>
+            <View
+              exiting={BaseAnimationMock {}}
+              layout={BaseAnimationMock {}}
+              style={
+                [
+                  {
+                    "height": 60,
+                  },
+                  {
+                    "overflow": "hidden",
+                  },
+                ]
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "transform": [
+                        {
+                          "translateY": -0,
+                        },
+                      ],
+                    },
+                    {
+                      "marginRight": -10,
+                      "width": 39,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  0
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  1
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  2
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  3
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  4
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  5
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  6
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  7
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  8
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  9
+                </Text>
+              </View>
+            </View>
+            <View
+              exiting={BaseAnimationMock {}}
+              layout={BaseAnimationMock {}}
+              style={
+                [
+                  {
+                    "height": 60,
+                  },
+                  {
+                    "overflow": "hidden",
+                  },
+                ]
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "transform": [
+                        {
+                          "translateY": -0,
+                        },
+                      ],
+                    },
+                    {
+                      "marginRight": -10,
+                      "width": 39,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  0
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  1
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  2
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  3
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  4
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  5
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  6
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  7
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  8
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  9
+                </Text>
+              </View>
+            </View>
+            <View
+              exiting={BaseAnimationMock {}}
+              layout={BaseAnimationMock {}}
+              style={
+                [
+                  {
+                    "height": 60,
+                  },
+                  {
+                    "overflow": "hidden",
+                  },
+                ]
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "transform": [
+                        {
+                          "translateY": -0,
+                        },
+                      ],
+                    },
+                    {
+                      "marginRight": -10,
+                      "width": 39,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  0
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  1
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  2
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  3
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  4
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  5
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  6
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  7
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  8
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#222222",
+                      },
+                      {
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 53,
+                        "lineHeight": 60,
+                        "top": 1,
+                      },
+                      {
+                        "height": 60,
+                      },
+                    ]
+                  }
+                >
+                  9
+                </Text>
+              </View>
+            </View>
+            <View
+              exiting={BaseAnimationMock {}}
+              layout={BaseAnimationMock {}}
+              style={
+                [
+                  {
+                    "height": 60,
+                  },
+                  {
+                    "overflow": "hidden",
+                  },
+                ]
+              }
+            >
               <Text
                 allowFontScaling={false}
                 style={
                   [
                     {
                       "color": "#222222",
-                    },
-                    {
-                      "fontFamily": "Basel-Book",
-                      "fontSize": 53,
-                      "lineHeight": 60,
-                      "top": 1,
-                    },
-                    {
-                      "height": 60,
-                    },
-                  ]
-                }
-              >
-                $
-              </Text>
-            </View>
-            <View
-              exiting={BaseAnimationMock {}}
-              layout={BaseAnimationMock {}}
-              style={
-                [
-                  {
-                    "height": 60,
-                  },
-                  {
-                    "overflow": "hidden",
-                  },
-                ]
-              }
-            >
-              <View
-                style={
-                  [
-                    {
-                      "transform": [
-                        {
-                          "translateY": -0,
-                        },
-                      ],
-                    },
-                    {
-                      "marginRight": -10,
-                      "width": 39,
-                    },
-                  ]
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  0
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  1
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  2
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  3
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  4
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  5
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  6
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  7
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  8
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  9
-                </Text>
-              </View>
-            </View>
-            <View
-              exiting={BaseAnimationMock {}}
-              layout={BaseAnimationMock {}}
-              style={
-                [
-                  {
-                    "height": 60,
-                  },
-                  {
-                    "overflow": "hidden",
-                  },
-                ]
-              }
-            >
-              <View
-                style={
-                  [
-                    {
-                      "transform": [
-                        {
-                          "translateY": -0,
-                        },
-                      ],
-                    },
-                    {
-                      "marginRight": -10,
-                      "width": 39,
-                    },
-                  ]
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  0
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  1
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  2
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  3
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  4
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  5
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  6
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  7
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  8
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  9
-                </Text>
-              </View>
-            </View>
-            <View
-              exiting={BaseAnimationMock {}}
-              layout={BaseAnimationMock {}}
-              style={
-                [
-                  {
-                    "height": 60,
-                  },
-                  {
-                    "overflow": "hidden",
-                  },
-                ]
-              }
-            >
-              <View
-                style={
-                  [
-                    {
-                      "transform": [
-                        {
-                          "translateY": -0,
-                        },
-                      ],
-                    },
-                    {
-                      "marginRight": -10,
-                      "width": 39,
-                    },
-                  ]
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  0
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  1
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  2
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  3
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  4
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  5
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  6
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  7
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  8
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  9
-                </Text>
-              </View>
-            </View>
-            <View
-              exiting={BaseAnimationMock {}}
-              layout={BaseAnimationMock {}}
-              style={
-                [
-                  {
-                    "height": 60,
-                  },
-                  {
-                    "overflow": "hidden",
-                  },
-                ]
-              }
-            >
-              <View
-                style={
-                  [
-                    {
-                      "transform": [
-                        {
-                          "translateY": -0,
-                        },
-                      ],
-                    },
-                    {
-                      "marginRight": -10,
-                      "width": 39,
-                    },
-                  ]
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  0
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  1
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  2
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  3
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  4
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  5
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  6
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  7
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  8
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  9
-                </Text>
-              </View>
-            </View>
-            <View
-              exiting={BaseAnimationMock {}}
-              layout={BaseAnimationMock {}}
-              style={
-                [
-                  {
-                    "height": 60,
-                  },
-                  {
-                    "overflow": "hidden",
-                  },
-                ]
-              }
-            >
-              <View
-                style={
-                  [
-                    {
-                      "transform": [
-                        {
-                          "translateY": -0,
-                        },
-                      ],
-                    },
-                    {
-                      "marginRight": -10,
-                      "width": 39,
-                    },
-                  ]
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  0
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  1
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  2
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  3
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  4
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  5
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  6
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  7
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  8
-                </Text>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#222222",
-                      },
-                      {
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 53,
-                        "lineHeight": 60,
-                        "top": 1,
-                      },
-                      {
-                        "height": 60,
-                      },
-                    ]
-                  }
-                >
-                  9
-                </Text>
-              </View>
-            </View>
-            <View
-              exiting={BaseAnimationMock {}}
-              layout={BaseAnimationMock {}}
-              style={
-                [
-                  {
-                    "height": 60,
-                  },
-                  {
-                    "overflow": "hidden",
-                  },
-                ]
-              }
-            >
-              <Text
-                allowFontScaling={false}
-                style={
-                  [
-                    {
-                      "color": "#CECECE",
                     },
                     {
                       "fontFamily": "Basel-Book",
@@ -1377,7 +1584,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1398,7 +1605,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1419,7 +1626,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1440,7 +1647,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1461,7 +1668,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1482,7 +1689,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1503,7 +1710,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1524,7 +1731,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1545,7 +1752,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1566,7 +1773,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1620,7 +1827,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1641,7 +1848,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1662,7 +1869,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1683,7 +1890,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1704,7 +1911,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1725,7 +1932,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1746,7 +1953,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1767,7 +1974,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1788,7 +1995,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1809,7 +2016,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#222222",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1913,7 +2120,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                 }
                 suppressHighlighting={true}
               >
-                ▲ $0.00 (0.00)%
+                ▲ 00.00 (0.00)%
               </Text>
             </View>
             <View

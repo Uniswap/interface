@@ -4,17 +4,26 @@ import { useLineChartDatetime } from 'react-native-wagmi-charts'
 import { AnimatedText } from 'src/components/text/AnimatedText'
 import { IS_ANDROID } from 'src/constants/globals'
 import { Flex, Icons, useSporeColors } from 'ui/src'
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { AnimatedDecimalNumber } from './AnimatedDecimalNumber'
 import { useLineChartPrice, useLineChartRelativeChange } from './usePrice'
 
 export function PriceText({ loading }: { loading: boolean }): JSX.Element {
   const price = useLineChartPrice()
+  const { decimalSeparator } = useAppFiatCurrencyInfo()
 
   if (loading) {
     return <AnimatedText loading loadingPlaceholderText="$10,000" variant="heading1" />
   }
 
-  return <AnimatedDecimalNumber number={price} testID="price-text" variant="heading1" />
+  return (
+    <AnimatedDecimalNumber
+      number={price}
+      separator={decimalSeparator}
+      testID="price-text"
+      variant="heading1"
+    />
+  )
 }
 
 export function RelativeChangeText({

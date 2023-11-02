@@ -35,13 +35,11 @@ const RollNumber = ({
   commonPrefixLength: number
 }): JSX.Element => {
   const colors = useSporeColors()
-  const fontColor = useSharedValue(
-    nextColor || (index > chars.length - 4 ? colors.neutral3.val : colors.neutral1.val)
-  )
+  const fontColor = useSharedValue(nextColor || colors.neutral1.val)
   const yOffset = useSharedValue(digit && Number(digit) >= 0 ? DIGIT_HEIGHT * -digit : 0)
 
   useEffect(() => {
-    const finishColor = index > chars.length - 4 ? colors.neutral3.val : colors.neutral1.val
+    const finishColor = colors.neutral1.val
     if (nextColor && index > commonPrefixLength - 1) {
       fontColor.value = withSequence(
         withTiming(nextColor, { duration: 250 }),
@@ -88,8 +86,7 @@ const RollNumber = ({
       transform: [{ translateY: yOffset.value }],
     }
   })
-
-  if (digit && Number(digit) >= 0) {
+  if (digit && !Number.isNaN(parseFloat(digit)) && Number(digit) >= 0) {
     return (
       <Animated.View
         style={[

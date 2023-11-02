@@ -31,7 +31,7 @@ export const BaseAnimatedText = ({
   style,
   text,
   loading,
-  loadingPlaceholderText = '$00.00',
+  loadingPlaceholderText = '000.00',
   ...rest
 }: TextProps): JSX.Element => {
   const animatedProps = useAnimatedProps(() => {
