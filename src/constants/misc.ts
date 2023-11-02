@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { Percent } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 
@@ -15,8 +14,6 @@ export const DEFAULT_TXN_DISMISS_MS = 10000
 export const L2_TXN_DISMISS_MS = 5000
 
 export const BIG_INT_ZERO = JSBI.BigInt(0)
-export const BIG_NUMBER_ZERO = BigNumber.from(0)
-
 export const BIPS_BASE = 10_000
 
 // one basis JSBI.BigInt

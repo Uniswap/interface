@@ -52,7 +52,7 @@ export function computeRoutes(args: GetQuoteArgs, routes: ClassicQuoteData['rout
 
   const tokenInInRoute = routes[0]?.[0]?.tokenIn
   const tokenOutInRoute = routes[0]?.[routes[0]?.length - 1]?.tokenOut
-  if (!tokenInInRoute || !tokenOutInRoute) throw new Error('Expected both tokenIn and tokenOut to be present')
+  if (!tokenInInRoute || !tokenOutInRoute) throw new Error('Expected `routes[0]` to have tokenIn and tokenOut')
 
   const [currencyIn, currencyOut] = getTradeCurrencies(args, false, routes)
 
