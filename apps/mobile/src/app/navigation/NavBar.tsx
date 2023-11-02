@@ -29,9 +29,10 @@ import {
   LinearGradient,
   Text,
   TouchableArea,
+  useDeviceDimensions,
   useSporeColors,
 } from 'ui/src'
-import { borderRadii } from 'ui/src/theme'
+import { borderRadii, fonts } from 'ui/src/theme'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { useHighestBalanceNativeCurrencyId } from 'wallet/src/features/dataApi/balances'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -89,8 +90,12 @@ export function NavBar(): JSX.Element {
           mb={IS_ANDROID ? '$spacing8' : '$none'}
           mx="$spacing24"
           pointerEvents="auto">
-          <ExploreTabBarButton />
-          <SwapFAB />
+          <Flex shrink>
+            <ExploreTabBarButton />
+          </Flex>
+          <Flex grow>
+            <SwapFAB />
+          </Flex>
         </Flex>
       </Flex>
     </>
@@ -170,7 +175,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
             />
           </Flex>
           <Text color="$sporeWhite" variant="buttonLabel2">
-            {t('Swap')}
+            Swap
           </Text>
         </AnimatedFlex>
       </TapGestureHandler>
@@ -191,6 +196,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
   const { t } = useTranslation()
+  const { fullWidth } = useDeviceDimensions()
 
   const onPress = (): void => {
     dispatch(openModal({ name: ModalName.Explore }))
@@ -245,7 +251,13 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
               shadowOpacity={isDarkMode ? 0.6 : 0.4}
               shadowRadius={borderRadii.rounded20}>
               <Icons.Search color="$neutral2" size="$icon.24" />
-              <Text color="$neutral1" variant="body1">
+              <Text
+                adjustsFontSizeToFit
+                color="$neutral1"
+                numberOfLines={1}
+                pr="$spacing48"
+                style={{ lineHeight: fonts.body1.lineHeight }}
+                variant="body1">
                 {t('Search web3')}
               </Text>
             </Flex>

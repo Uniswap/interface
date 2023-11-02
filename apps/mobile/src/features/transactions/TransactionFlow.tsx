@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Screen } from 'src/components/layout/Screen'
 import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { HandleBar } from 'src/components/modals/HandleBar'
@@ -69,7 +68,6 @@ export function TransactionFlow({
   showFiatToggle,
 }: TransactionFlowProps): JSX.Element {
   const colors = useSporeColors()
-  const insets = useSafeAreaInsets()
   const { t } = useTranslation()
   const { fullWidth } = useDeviceDimensions()
 
