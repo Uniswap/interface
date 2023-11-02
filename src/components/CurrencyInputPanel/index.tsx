@@ -12,7 +12,7 @@ import { ReactNode, useCallback, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
@@ -212,6 +212,7 @@ export default function CurrencyInputPanel({
   const { account, chainId } = useWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useTheme()
+  const { formatCurrencyAmount } = useFormatter()
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
@@ -297,7 +298,13 @@ export default function CurrencyInputPanel({
                       >
                         {Boolean(!hideBalance && currency && selectedCurrencyBalance) &&
                           (renderBalance?.(selectedCurrencyBalance as CurrencyAmount<Currency>) || (
-                            <Trans>Balance: {formatCurrencyAmount(selectedCurrencyBalance, 4)}</Trans>
+                            <Trans>
+                              Balance:{' '}
+                              {formatCurrencyAmount({
+                                amount: selectedCurrencyBalance,
+                                type: NumberType.TokenNonTx,
+                              })}
+                            </Trans>
                           ))}
                       </ThemedText.DeprecatedBody>
                       {Boolean(showMaxButton && selectedCurrencyBalance) && (

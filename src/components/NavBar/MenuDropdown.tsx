@@ -1,7 +1,9 @@
 import { t, Trans } from '@lingui/macro'
 import { InterfaceElementName } from '@uniswap/analytics-events'
+import { ReactComponent as AppleLogo } from 'assets/svg/apple_logo.svg'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
+import { useAndroidGALaunchFlagEnabled } from 'featureFlags/flags/androidGALaunch'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -20,10 +22,11 @@ import { ReactNode, useReducer, useRef } from 'react'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import { useToggleModal } from 'state/application/hooks'
 import styled, { useTheme } from 'styled-components'
+import { ThemedText } from 'theme/components'
 import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 import { openDownloadApp } from 'utils/openDownloadApp'
 
-import { ReactComponent as AppleLogo } from '../../assets/svg/apple_logo.svg'
+import { ReactComponent as UniswapAppLogo } from '../../assets/svg/uniswap_app_logo.svg'
 import { ApplicationModal } from '../../state/application/reducer'
 import * as styles from './MenuDropdown.css'
 import { NavDropdown } from './NavDropdown'
@@ -129,6 +132,8 @@ export const MenuDropdown = () => {
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, isOpen ? toggleOpen : undefined)
 
+  const isAndroidGALaunched = useAndroidGALaunchFlagEnabled()
+
   return (
     <>
       <Box position="relative" ref={ref} marginRight="4">
@@ -138,7 +143,7 @@ export const MenuDropdown = () => {
 
         {isOpen && (
           <NavDropdown top={{ sm: 'unset', lg: '56' }} bottom={{ sm: '50', lg: 'unset' }} right="0">
-            <Column gap="16">
+            <Column gap="8">
               <Column paddingX="8" gap="4">
                 <Box display={{ sm: 'none', lg: 'flex', xxl: 'none' }}>
                   <PrimaryMenuRow to="/pool" close={toggleOpen}>
@@ -147,22 +152,6 @@ export const MenuDropdown = () => {
                     </Icon>
                     <PrimaryMenuRow.Text>
                       <Trans>Pool</Trans>
-                    </PrimaryMenuRow.Text>
-                  </PrimaryMenuRow>
-                </Box>
-                <Box
-                  onClick={() =>
-                    openDownloadApp({
-                      element: InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON,
-                    })
-                  }
-                >
-                  <PrimaryMenuRow close={toggleOpen}>
-                    <Icon>
-                      <AppleLogo width="24px" height="24px" fill={theme.neutral1} />
-                    </Icon>
-                    <PrimaryMenuRow.Text>
-                      <Trans>Download Uniswap Wallet</Trans>
                     </PrimaryMenuRow.Text>
                   </PrimaryMenuRow>
                 </Box>
@@ -182,6 +171,40 @@ export const MenuDropdown = () => {
                     <Trans>View more analytics</Trans>
                   </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
+                <Box
+                  onClick={() =>
+                    openDownloadApp({
+                      element: InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON,
+                    })
+                  }
+                >
+                  <PrimaryMenuRow close={toggleOpen}>
+                    {isAndroidGALaunched ? (
+                      <>
+                        <Icon>
+                          <UniswapAppLogo width="24px" height="24px" />
+                        </Icon>
+                        <div>
+                          <ThemedText.BodyPrimary>
+                            <Trans>Download Uniswap</Trans>
+                          </ThemedText.BodyPrimary>
+                          <ThemedText.LabelSmall>
+                            <Trans>Available on iOS and Android</Trans>
+                          </ThemedText.LabelSmall>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <Icon>
+                          <AppleLogo width="24px" height="24px" fill={theme.neutral1} />
+                        </Icon>
+                        <PrimaryMenuRow.Text>
+                          <Trans>Download Uniswap app</Trans>
+                        </PrimaryMenuRow.Text>
+                      </>
+                    )}
+                  </PrimaryMenuRow>
+                </Box>
               </Column>
               <Separator />
               <Box

@@ -3,9 +3,10 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { getRoyalty } from 'nft/components/profile/list/utils'
 import { ListingMarket, WalletAsset } from 'nft/types'
-import { formatEth, getMarketplaceIcon } from 'nft/utils'
+import { getMarketplaceIcon } from 'nft/utils'
 import styled, { css } from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const FeeWrap = styled(Row)`
   margin-bottom: 4px;
@@ -56,7 +57,8 @@ export const RoyaltyTooltip = ({
   asset: WalletAsset
   fees?: number
 }) => {
-  const maxRoyalty = Math.max(...selectedMarkets.map((market) => getRoyalty(market, asset) ?? 0)).toFixed(2)
+  const { formatNumberOrString, formatDelta } = useFormatter()
+  const maxRoyalty = Math.max(...selectedMarkets.map((market) => getRoyalty(market, asset) ?? 0))
   return (
     <RoyaltyContainer>
       {selectedMarkets.map((market) => (
@@ -68,7 +70,7 @@ export const RoyaltyTooltip = ({
               <Trans>fee</Trans>
             </ThemedText.BodySmall>
           </Row>
-          <FeePercent>{market.fee}%</FeePercent>
+          <FeePercent>{formatDelta(market.fee)}</FeePercent>
         </FeeWrap>
       ))}
       <FeeWrap>
@@ -85,7 +87,7 @@ export const RoyaltyTooltip = ({
           <Trans>Max fees</Trans>
         </ThemedText.BodySmall>
         <ThemedText.BodySmall lineHeight="16px" color={fees ? 'neutral1' : 'neutral2'}>
-          {fees ? formatEth(fees) : '-'} ETH
+          {fees ? formatNumberOrString({ input: fees, type: NumberType.NFTToken }) : '-'} ETH
         </ThemedText.BodySmall>
       </MaxFeeContainer>
     </RoyaltyContainer>

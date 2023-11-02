@@ -14,6 +14,7 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { useIsUserAddedToken } from '../../../hooks/Tokens'
 import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
@@ -67,7 +68,16 @@ const WarningContainer = styled.div`
 `
 
 function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
-  return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
+  const { formatNumberOrString } = useFormatter()
+
+  return (
+    <StyledBalanceText title={balance.toExact()}>
+      {formatNumberOrString({
+        input: balance.toExact(),
+        type: NumberType.TokenNonTx,
+      })}
+    </StyledBalanceText>
+  )
 }
 
 const TagContainer = styled.div`
