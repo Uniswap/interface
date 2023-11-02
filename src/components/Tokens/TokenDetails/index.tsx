@@ -224,8 +224,7 @@ export default function TokenDetails({
             {isInfoTDPEnabled ? (
               <BreadcrumbNav isInfoTDPEnabled>
                 <BreadcrumbNavLink to={`${isInfoExplorePageEnabled ? '/explore' : ''}/tokens/${chain.toLowerCase()}`}>
-                  <Trans>Explore</Trans> <ChevronRight data-testid="token-details-return-button" size={14} />{' '}
-                  <Trans>Tokens</Trans> <ChevronRight data-testid="token-details-return-button" size={14} />
+                  <Trans>Explore</Trans> <ChevronRight size={14} /> <Trans>Tokens</Trans> <ChevronRight size={14} />
                 </BreadcrumbNavLink>{' '}
                 {tokenSymbolName}{' '}
                 {!detailedToken.isNative && (

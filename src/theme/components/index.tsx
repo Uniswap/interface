@@ -244,29 +244,16 @@ export function CopyLinkIcon({ toCopy }: { toCopy: string }) {
 }
 
 const FullAddress = styled.span<{ showTruncated?: boolean }>`
-  ${({ showTruncated }) =>
-    showTruncated
-      ? css`
-          display: none;
-        `
-      : css`
-          @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-            display: none;
-          }
-        `};
+  ${({ showTruncated }) => showTruncated && 'display: none;'}
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+    display: none;
+  }
 `
 const TruncatedAddress = styled.span<{ showTruncated?: boolean }>`
-  ${({ showTruncated: truncatedOnly }) =>
-    truncatedOnly
-      ? css`
-          display: flex;
-        `
-      : css`
-          display: none;
-          @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-            display: flex;
-          }
-        `};
+  display: ${({ showTruncated }) => (showTruncated ? 'flex' : 'none')};
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+    display: flex;
+  }
 `
 
 const CopyAddressRow = styled.div<{ isClicked: boolean }>`

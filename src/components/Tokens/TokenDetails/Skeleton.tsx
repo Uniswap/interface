@@ -235,9 +235,7 @@ export default function TokenDetailsSkeleton() {
   return (
     <LeftPanel>
       {isInfoTDPEnabled ? (
-        <AnimatedBreadcrumbNav>
-          <NavBubble />
-        </AnimatedBreadcrumbNav>
+        <NavBubble />
       ) : (
         <BreadcrumbNav>
           <BreadcrumbNavLink
