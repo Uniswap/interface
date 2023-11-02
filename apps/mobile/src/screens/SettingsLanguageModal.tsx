@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Action } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
@@ -9,8 +9,17 @@ import { Flex, ScrollView, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Check } from 'ui/src/components/icons'
 import { logger } from 'utilities/src/logger/logger'
 import { Language, ORDERED_LANGUAGES } from 'wallet/src/features/language/constants'
-import { useCurrentLanguage, useLanguageInfo } from 'wallet/src/features/language/hooks'
+import {
+  LanguageInfo,
+  useCurrentLanguage,
+  useLanguageInfo,
+} from 'wallet/src/features/language/hooks'
 import { setCurrentLanguage } from 'wallet/src/features/language/slice'
+import {
+  EditAccountAction,
+  editAccountActions,
+} from 'wallet/src/features/wallet/accounts/editAccountSaga'
+import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 export function SettingsLanguageModal(): JSX.Element {
   const dispatch = useAppDispatch()
@@ -33,8 +42,35 @@ export function SettingsLanguageModal(): JSX.Element {
 }
 
 function LanguageSelection({ onClose }: { onClose: () => void }): JSX.Element {
-  const { t } = useTranslation()
+  const { i18n, t } = useTranslation()
+  const dispatch = useAppDispatch()
+  const accounts = useAccounts()
+  const addresses = Object.keys(accounts)
   const selectedLanguge = useCurrentLanguage()
+
+  const changeLanguage = (language: Language): ((languageInfo: LanguageInfo) => void) => {
+    return (languageInfo: LanguageInfo): void => {
+      const { locale } = languageInfo
+      i18n
+        .changeLanguage(locale)
+        .then(() => {
+          dispatch(setCurrentLanguage(language))
+          addresses.forEach((address): void => {
+            dispatch(
+              editAccountActions.trigger({
+                type: EditAccountAction.UpdateLanguage,
+                address,
+                locale,
+              })
+            )
+          })
+          onClose()
+        })
+        .catch(() => {
+          logger.warn('SettingsLanguageModal', 'LanguageOption', 'Failed to change language')
+        })
+    }
+  }
 
   return (
     <Flex pb="$spacing32" px="$spacing16">
@@ -45,7 +81,7 @@ function LanguageSelection({ onClose }: { onClose: () => void }): JSX.Element {
         <LanguageOption
           active={selectedLanguge === language}
           language={language}
-          onPress={onClose}
+          onPress={changeLanguage(language)}
         />
       ))}
     </Flex>
@@ -55,26 +91,13 @@ function LanguageSelection({ onClose }: { onClose: () => void }): JSX.Element {
 interface LanguageOptionProps {
   active?: boolean
   language: Language
-  onPress: () => void
+  onPress: (languageInfo: LanguageInfo) => void
 }
 
 function LanguageOption({ active, language, onPress }: LanguageOptionProps): JSX.Element {
-  const dispatch = useAppDispatch()
-  const { i18n } = useTranslation()
   const colors = useSporeColors()
-  const { name, originName, locale } = useLanguageInfo(language)
-
-  const changeLanguage = useCallback(() => {
-    i18n
-      .changeLanguage(locale)
-      .then(() => {
-        dispatch(setCurrentLanguage(language))
-        onPress()
-      })
-      .catch(() => {
-        logger.warn('SettingsLanguageModal', 'LanguageOption', 'Failed to change language')
-      })
-  }, [i18n, language, locale, dispatch, onPress])
+  const languageInfo = useLanguageInfo(language)
+  const { name, originName } = languageInfo
 
   return (
     <TouchableArea
@@ -82,7 +105,7 @@ function LanguageOption({ active, language, onPress }: LanguageOptionProps): JSX
       flexDirection="row"
       px="$spacing12"
       py="$spacing12"
-      onPress={changeLanguage}>
+      onPress={(): void => onPress(languageInfo)}>
       <Flex row gap="$spacing12">
         <Flex grow row gap="$spacing12">
           <Text variant="subheading1">{originName}</Text>

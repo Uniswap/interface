@@ -27,6 +27,7 @@ interface AccountMetadata {
   type?: AccountType
   avatar?: string
   testnetsEnabled?: boolean
+  locale?: string
 }
 
 // Can't merge with `editAccountSaga` because it can't handle simultaneous actions
@@ -50,6 +51,9 @@ function* editAccountDataInFirebase(actionData: ReturnType<typeof editAccountAct
       break
     case EditAccountAction.ToggleTestnetSettings:
       yield* call(updateFirebaseMetadata, address, { testnetsEnabled: payload.enabled })
+      break
+    case EditAccountAction.UpdateLanguage:
+      yield* call(updateFirebaseMetadata, address, { locale: payload.locale })
       break
     default:
       break

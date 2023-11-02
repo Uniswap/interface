@@ -19,6 +19,7 @@ export enum EditAccountAction {
   ToggleTestnetSettings = 'ToggleTestnetSettings',
   ToggleShowSmallBalances = 'ToggleShowSmallBalances',
   ToggleShowSpamTokens = 'ToggleShowSpamTokenss',
+  UpdateLanguage = 'UpdateLanguage',
   // May need a reorder action here eventually
 }
 interface EditParamsBase {
@@ -64,6 +65,11 @@ export interface ToggleShowSpamTokensParams extends EditParamsBase {
   enabled: boolean
 }
 
+export interface UpdateLanguageParams extends EditParamsBase {
+  type: EditAccountAction.UpdateLanguage
+  locale: string
+}
+
 export type EditAccountParams =
   | AddBackupMethodParams
   | RemoveBackupMethodParams
@@ -73,6 +79,7 @@ export type EditAccountParams =
   | ToggleTestnetSettingsParams
   | ToggleShowSmallBalancesParams
   | ToggleShowSpamTokensParams
+  | UpdateLanguageParams
 
 function* editAccount(params: EditAccountParams) {
   const { type, address } = params
