@@ -26,6 +26,7 @@ import {
   SubmittableTrade,
   SwapFeeInfo,
   SwapRouterNativeAssets,
+  TokenInRoute,
   TradeFillType,
   TradeResult,
   URADutchOrderQuoteData,
@@ -49,11 +50,6 @@ interface RouteResult {
  */
 export function computeRoutes(args: GetQuoteArgs, routes: ClassicQuoteData['route']): RouteResult[] | undefined {
   if (routes.length === 0) return []
-
-  const tokenInInRoute = routes[0]?.[0]?.tokenIn
-  const tokenOutInRoute = routes[0]?.[routes[0]?.length - 1]?.tokenOut
-  if (!tokenInInRoute || !tokenOutInRoute) throw new Error('Expected `routes[0]` to have tokenIn and tokenOut')
-
   const [currencyIn, currencyOut] = getTradeCurrencies(args, false, routes)
 
   try {
@@ -138,8 +134,8 @@ function getTradeCurrencies(
   const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(tokenInAddress as SwapRouterNativeAssets)
   const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOutAddress as SwapRouterNativeAssets)
 
-  const tokenInInRoute = routes?.[0]?.[0]?.tokenIn
-  const tokenOutInRoute = routes?.[0]?.[routes[0]?.length - 1]?.tokenOut
+  const serializedTokenIn = routes?.[0]?.[0]?.tokenIn
+  const serializedTokenOut = routes?.[0]?.[routes[0]?.length - 1]?.tokenOut
 
   const currencyIn = tokenInIsNative
     ? nativeOnChain(tokenInChainId)
@@ -148,8 +144,8 @@ function getTradeCurrencies(
         chainId: tokenInChainId,
         decimals: tokenInDecimals,
         symbol: tokenInSymbol,
-        buyFeeBps: tokenInInRoute?.buyFeeBps,
-        sellFeeBps: tokenInInRoute?.sellFeeBps,
+        buyFeeBps: serializedTokenIn?.buyFeeBps,
+        sellFeeBps: serializedTokenIn?.sellFeeBps,
       })
   const currencyOut = tokenOutIsNative
     ? nativeOnChain(tokenOutChainId)
@@ -158,8 +154,8 @@ function getTradeCurrencies(
         chainId: tokenOutChainId,
         decimals: tokenOutDecimals,
         symbol: tokenOutSymbol,
-        buyFeeBps: tokenOutInRoute?.buyFeeBps,
-        sellFeeBps: tokenOutInRoute?.sellFeeBps,
+        buyFeeBps: serializedTokenOut?.buyFeeBps,
+        sellFeeBps: serializedTokenOut?.sellFeeBps,
       })
 
   if (!isUniswapXTrade) {
@@ -310,14 +306,7 @@ export async function transformQuoteToTrade(
   return { state: QuoteState.SUCCESS, trade: classicTrade }
 }
 
-function parseToken({
-  address,
-  chainId,
-  decimals,
-  symbol,
-  buyFeeBps,
-  sellFeeBps,
-}: ClassicQuoteData['route'][0][0]['tokenIn']): Token {
+function parseToken({ address, chainId, decimals, symbol, buyFeeBps, sellFeeBps }: TokenInRoute): Token {
   const buyFeeBpsBN = buyFeeBps ? BigNumber.from(buyFeeBps) : undefined
   const sellFeeBpsBN = sellFeeBps ? BigNumber.from(sellFeeBps) : undefined
   return new Token(chainId, address, parseInt(decimals.toString()), symbol, undefined, false, buyFeeBpsBN, sellFeeBpsBN)
