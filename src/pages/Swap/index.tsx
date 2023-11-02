@@ -296,7 +296,7 @@ export function Swap({
   } = swapInfo
 
   const [inputTokenHasTax, outputTokenHasTax] = useMemo(
-    () => [!trade?.inputTax.equalTo(0), !trade?.outputTax.equalTo(0)],
+    () => [Boolean(trade && trade.inputTax.greaterThan(0)), Boolean(trade && trade.outputTax.greaterThan(0))],
     [trade]
   )
 
