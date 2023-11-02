@@ -10,7 +10,6 @@ import { TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
 import { gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
-import React from 'react'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled, { DefaultTheme, useTheme } from 'styled-components'
@@ -18,7 +17,6 @@ import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const BalancesCard = styled.div<{ isInfoTDPEnabled?: boolean }>`
-  border-radius: 16px;
   color: ${({ theme }) => theme.neutral1};
   display: flex;
   flex-direction: column;
