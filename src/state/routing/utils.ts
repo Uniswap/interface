@@ -166,7 +166,7 @@ function getTradeCurrencies(
     return [currencyIn, currencyOut]
   }
 
-  return [currencyIn, currencyOut]
+  return [currencyIn.isNative ? currencyIn.wrapped : currencyIn, currencyOut]
 }
 
 function getSwapFee(data: ClassicQuoteData | URADutchOrderQuoteData): SwapFeeInfo | undefined {
