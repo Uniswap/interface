@@ -7,6 +7,7 @@ import { useAppDispatch } from 'src/app/hooks'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { AccountIcon } from 'src/components/AccountIcon'
 import RemoveButton from 'src/components/explore/RemoveButton'
+import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, flexStyles, Text, TouchableArea } from 'ui/src'
 import { borderRadii, iconSizes, imageSizes } from 'ui/src/theme'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
@@ -71,6 +72,7 @@ export default function FavoriteWalletCard({
         borderRadius="$rounded16"
         hapticStyle={ImpactFeedbackStyle.Light}
         m="$spacing4"
+        onLongPress={disableOnPress}
         onPress={(): void => {
           navigate(address)
         }}

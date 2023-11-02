@@ -15,6 +15,7 @@ import { useNFTMenu } from 'src/features/nfts/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
+import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, TouchableArea, useSporeColors } from 'ui/src'
 import { borderRadii } from 'ui/src/theme'
 import { NftsList } from 'wallet/src/components/nfts/NftsList'
@@ -58,6 +59,7 @@ function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Elemen
           hapticFeedback
           activeOpacity={1}
           hapticStyle={ImpactFeedbackStyle.Light}
+          onLongPress={disableOnPress}
           onPress={onPressItem}>
           <Flex
             alignItems="center"

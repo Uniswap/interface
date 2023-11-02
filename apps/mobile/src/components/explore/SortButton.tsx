@@ -8,6 +8,7 @@ import {
 } from 'src/features/explore/utils'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
+import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
@@ -79,7 +80,8 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
         borderRadius="$roundedFull"
         flexDirection="row"
         px="$spacing16"
-        py="$spacing8">
+        py="$spacing8"
+        onLongPress={disableOnPress}>
         <Flex row gap="$spacing4">
           {orderBy === TokenSortableField.Volume || orderBy === TokenSortableField.TotalValueLocked}
           <Text color="$neutral2" variant="buttonLabel3">

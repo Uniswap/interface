@@ -100,6 +100,7 @@ export function NFTCollectionContextMenu({
         backgroundColor={showButtonOutline ? '$sporeBlack' : '$transparent'}
         borderRadius="$roundedFull"
         style={{ padding: ICON_PADDING }}
+        onLongPress={disableOnPress}
         onPress={disableOnPress}>
         <Flex centered grow height={ICON_SIZE} width={ICON_SIZE}>
           <TripleDot color={iconColor} size={3.5} />

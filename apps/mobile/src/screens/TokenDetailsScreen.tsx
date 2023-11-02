@@ -266,6 +266,7 @@ function TokenDetails({
                   hapticFeedback
                   hitSlop={{ right: 5, left: 20, top: 20, bottom: 20 }}
                   style={{ padding: spacing.spacing8, marginRight: -spacing.spacing8 }}
+                  onLongPress={disableOnPress}
                   onPress={disableOnPress}>
                   <EllipsisIcon
                     color={ellipsisColor}

@@ -8,6 +8,7 @@ import { TripleDot } from 'src/components/icons/TripleDot'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { setClipboard } from 'src/utils/clipboard'
+import { disableOnPress } from 'src/utils/disableOnPress'
 import { ExplorerDataType, getExplorerLink, getProfileUrl, openUri } from 'src/utils/linking'
 import { Flex, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -83,7 +84,8 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
         backgroundColor="$surface3"
         borderRadius="$roundedFull"
         opacity={0.8}
-        p="$spacing8">
+        p="$spacing8"
+        onLongPress={disableOnPress}>
         <Flex centered grow height={iconSizes.icon16} width={iconSizes.icon16}>
           <TripleDot color="$sporeWhite" size={3.5} />
         </Flex>

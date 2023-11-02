@@ -11,6 +11,7 @@ import { WalletSearchResult } from 'src/features/explore/SearchResult'
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
+import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { imageSizes } from 'ui/src/theme'
 import { useENSAvatar, useENSName } from 'wallet/src/features/ens/api'
@@ -86,6 +87,7 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
         hapticFeedback
         hapticStyle={ImpactFeedbackStyle.Light}
         testID={`wallet-item-${address}`}
+        onLongPress={disableOnPress}
         onPress={onPress}
         onPressIn={async (): Promise<void> => {
           await preload(address)

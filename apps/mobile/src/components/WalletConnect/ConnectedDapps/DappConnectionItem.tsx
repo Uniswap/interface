@@ -12,6 +12,7 @@ import { NetworkLogos } from 'src/components/WalletConnect/NetworkLogos'
 import { ElementName } from 'src/features/telemetry/constants'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { removeSession, WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
+import { disableOnPress } from 'src/utils/disableOnPress'
 import { AnimatedTouchableArea, Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
@@ -95,6 +96,7 @@ export function DappConnectionItem({
               justifyContent="center"
               width={iconSizes.icon28}
               zIndex="$tooltip"
+              onLongPress={disableOnPress}
               onPress={onDisconnect}>
               <Flex backgroundColor="$surface1" borderRadius="$rounded12" height={2} width={14} />
             </AnimatedTouchableArea>
@@ -116,6 +118,7 @@ export function DappConnectionItem({
           hapticFeedback
           hapticStyle={ImpactFeedbackStyle.Medium}
           testID={ElementName.WCDappNetworks}
+          onLongPress={disableOnPress}
           onPress={(): void => onPressChangeNetwork(session)}>
           <NetworkLogos
             negativeGap

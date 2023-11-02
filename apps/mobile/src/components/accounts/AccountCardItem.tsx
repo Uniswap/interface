@@ -9,6 +9,7 @@ import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { setClipboard } from 'src/utils/clipboard'
+import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
@@ -111,6 +112,7 @@ export function AccountCardItem({
         pb="$spacing12"
         pt="$spacing8"
         px="$spacing24"
+        onLongPress={disableOnPress}
         onPress={(): void => onPress(address)}>
         <Flex row alignItems="flex-start" gap="$spacing16" testID={`account_item/${address}`}>
           <Flex fill>

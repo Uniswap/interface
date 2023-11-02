@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
+import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { borderRadii } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
@@ -71,6 +72,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
         minHeight={TOKEN_BALANCE_ITEM_HEIGHT}
         px="$spacing24"
         py="$spacing8"
+        onLongPress={disableOnPress}
         onPress={onPress}>
         <Flex row shrink alignItems="center" gap="$spacing12" overflow="hidden">
           <TokenLogo

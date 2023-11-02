@@ -7,6 +7,7 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, SectionName } from 'src/features/telemetry/constants'
+import { disableOnPress } from 'src/utils/disableOnPress'
 import { AnimatedFlex, Flex, Text, TouchableArea } from 'ui/src'
 import { NumberType } from 'utilities/src/format/types'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
@@ -107,6 +108,7 @@ export const TokenItem = memo(function _TokenItem({
         hapticFeedback
         hapticStyle={ImpactFeedbackStyle.Light}
         testID={`token-item-${name}`}
+        onLongPress={disableOnPress}
         onPress={onPress}>
         <AnimatedFlex grow row gap="$spacing12" px="$spacing24" py="$spacing8">
           <Flex centered row gap="$spacing4" overflow="hidden">

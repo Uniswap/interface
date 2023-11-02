@@ -9,6 +9,7 @@ import RemoveButton from 'src/components/explore/RemoveButton'
 import { Loader } from 'src/components/loading'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { SectionName } from 'src/features/telemetry/constants'
+import { disableOnPress } from 'src/utils/disableOnPress'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { AnimatedTouchableArea, Flex, Text } from 'ui/src'
 import { borderRadii, imageSizes } from 'ui/src/theme'
@@ -106,6 +107,7 @@ function FavoriteTokenCard({
         hapticStyle={ImpactFeedbackStyle.Light}
         m="$spacing4"
         testID={`token-box-${token?.symbol}`}
+        onLongPress={disableOnPress}
         onPress={onPress}>
         <BaseCard.Shadow>
           <Flex alignItems="flex-start" gap="$spacing8">

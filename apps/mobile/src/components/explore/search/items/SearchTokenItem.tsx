@@ -10,6 +10,7 @@ import { addToSearchHistory } from 'src/features/explore/searchHistorySlice'
 import { SearchResultType, TokenSearchResult } from 'src/features/explore/SearchResult'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName, SectionName } from 'src/features/telemetry/constants'
+import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
@@ -71,6 +72,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
         hapticFeedback
         hapticStyle={ImpactFeedbackStyle.Light}
         testID={ElementName.SearchTokenItem}
+        onLongPress={disableOnPress}
         onPress={onPress}>
         <Flex row alignItems="center" gap="$spacing12" px="$spacing8" py="$spacing12">
           <TokenLogo chainId={chainId} symbol={symbol} url={logoUrl ?? undefined} />
