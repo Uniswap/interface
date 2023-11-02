@@ -8,7 +8,7 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { getTotalEthValue } from 'nft/components/profile/list/utils'
 import { useSellAsset } from 'nft/hooks'
-import { formatEth, generateTweetForList, pluralize } from 'nft/utils'
+import { generateTweetForList, pluralize } from 'nft/utils'
 import { useMemo } from 'react'
 import { Twitter, X } from 'react-feather'
 import styled, { css, useTheme } from 'styled-components'
@@ -77,6 +77,7 @@ const TweetRow = styled(Row)`
 
 export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) => {
   const theme = useTheme()
+  const { formatNumberOrString } = useFormatter()
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
@@ -109,7 +110,9 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
           <Trans>Proceeds if sold</Trans>
         </ThemedText.SubHeader>
         <ProceedsColumn>
-          <ThemedText.SubHeader>{formatEth(totalEthListingValue)} ETH</ThemedText.SubHeader>
+          <ThemedText.SubHeader>
+            {formatNumberOrString({ input: totalEthListingValue, type: NumberType.NFTToken })} ETH
+          </ThemedText.SubHeader>
           {usdcValue && (
             <ThemedText.BodySmall lineHeight="20px" color="neutral2">
               {formatCurrencyAmount({

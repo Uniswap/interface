@@ -20,7 +20,6 @@ import {
   OP,
   PORTAL_ETH_CELO,
   PORTAL_USDC_CELO,
-  USDbC_BASE,
   USDC_ARBITRUM,
   USDC_ARBITRUM_GOERLI,
   USDC_AVALANCHE,
@@ -28,6 +27,7 @@ import {
   USDC_BSC,
   USDC_MAINNET,
   USDC_OPTIMISM,
+  USDC_OPTIMISM_GOERLI,
   USDC_POLYGON,
   USDC_POLYGON_MUMBAI,
   USDT,
@@ -92,9 +92,9 @@ export const COMMON_BASES: ChainCurrencyList = {
   ],
 
   [ChainId.OPTIMISM]: [nativeOnChain(ChainId.OPTIMISM), OP, DAI_OPTIMISM, USDC_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM],
-  [ChainId.OPTIMISM_GOERLI]: [nativeOnChain(ChainId.OPTIMISM_GOERLI)],
+  [ChainId.OPTIMISM_GOERLI]: [nativeOnChain(ChainId.OPTIMISM_GOERLI), USDC_OPTIMISM_GOERLI],
 
-  [ChainId.BASE]: [nativeOnChain(ChainId.BASE), WRAPPED_NATIVE_CURRENCY[ChainId.BASE] as Token, USDC_BASE, USDbC_BASE],
+  [ChainId.BASE]: [nativeOnChain(ChainId.BASE), WRAPPED_NATIVE_CURRENCY[ChainId.BASE] as Token, USDC_BASE],
 
   [ChainId.POLYGON]: [
     nativeOnChain(ChainId.POLYGON),

@@ -7,9 +7,9 @@ import { PoolState, usePool } from 'hooks/usePools'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import * as useV3Positions from 'hooks/useV3Positions'
 import { mocked } from 'test-utils/mocked'
-import { fireEvent, render, screen } from 'test-utils/render'
+import { fireEvent, render, renderHook, screen } from 'test-utils/render'
 import { PositionDetails } from 'types/position'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { useFormatter } from 'utils/formatNumbers'
 
 import PositionPage from './PositionPage'
 
@@ -68,13 +68,14 @@ describe('position page', () => {
       return [USDC_AMOUNT, WETH_AMOUNT]
     })
 
+    const { formatCurrencyAmount } = renderHook(() => useFormatter()).result.current
     render(<PositionPage />)
 
     const collectFeesButton = screen.queryByTestId('collect-fees-button') as HTMLButtonElement
     expect(collectFeesButton).toBeInTheDocument()
     expect(screen.getByText('Collect fees')).toBeInTheDocument()
-    expect(screen.getByText(formatCurrencyAmount(USDC_AMOUNT, 4))).toBeInTheDocument()
-    expect(screen.getByText(formatCurrencyAmount(WETH_AMOUNT, 4))).toBeInTheDocument()
+    expect(screen.getByText(formatCurrencyAmount({ amount: USDC_AMOUNT }))).toBeInTheDocument()
+    expect(screen.getByText(formatCurrencyAmount({ amount: WETH_AMOUNT }))).toBeInTheDocument()
     fireEvent.click(collectFeesButton)
     expect(screen.getByText('Collecting fees will withdraw currently available fees for you.')).toBeInTheDocument()
     const modalCollectFeesButton = screen.queryByTestId('modal-collect-fees-button') as HTMLButtonElement
