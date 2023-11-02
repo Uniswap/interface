@@ -153,14 +153,19 @@ export const ProfileHeader = memo(function ProfileHeader({
               borderRadius="$rounded20"
               borderWidth={1}
               height={46}
-              p="$spacing12"
+              justifyContent="center"
+              px="$spacing12"
               shadowColor={isDarkMode ? '$surface2' : '$neutral3'}
               style={styles.buttonShadow}
               testID={ElementName.Send}
               onPress={onPressSend}>
               <Flex row alignItems="center" gap="$spacing8">
                 <Icons.SendAction color="$neutral2" size="$icon.20" />
-                <Text color="$neutral2" lineHeight={20} variant="buttonLabel2">
+                <Text
+                  allowFontScaling={true}
+                  color="$neutral2"
+                  maxFontSizeMultiplier={1.2}
+                  variant="buttonLabel2">
                   {t('Send')}
                 </Text>
               </Flex>
