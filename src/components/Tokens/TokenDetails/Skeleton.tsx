@@ -52,10 +52,6 @@ export const RightPanel = styled.div`
     display: flex;
   }
 `
-const AnimatedBreadcrumbNav = styled(BreadcrumbNav)`
-  ${textFadeIn};
-  animation-duration: ${({ theme }) => theme.transition.duration.medium};
-`
 export const ChartContainer = styled.div`
   display: flex;
   flex-direction: column;
