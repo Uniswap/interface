@@ -100,6 +100,7 @@ export function BottomSheetModal({
   backgroundColor,
   blurredBackground = false,
   dismissOnBackPress = true,
+  disableSwipe = false,
   isDismissible = true,
   renderBehindTopInset = false,
   renderBehindBottomInset = false,
@@ -279,7 +280,7 @@ export function BottomSheetModal({
       animatedPosition={animatedPosition}
       backgroundStyle={backgroundStyle}
       contentHeight={animatedContentHeight}
-      enableContentPanningGesture={isDismissible}
+      enableContentPanningGesture={isDismissible && !disableSwipe}
       enableHandlePanningGesture={isDismissible}
       handleComponent={renderHandleBar}
       handleHeight={animatedHandleHeight}

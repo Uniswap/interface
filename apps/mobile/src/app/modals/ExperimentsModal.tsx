@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Action } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { Switch } from 'src/components/buttons/Switch'
@@ -12,13 +11,13 @@ import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import { setCustomEndpoint } from 'src/features/tweaks/slice'
 import { Statsig } from 'statsig-react'
 import { useExperiment } from 'statsig-react-native'
-import { Button, Flex, Text } from 'ui/src'
+import { Button, Flex, Text, useDeviceInsets } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { EXPERIMENT_NAMES, FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 
 export function ExperimentsModal(): JSX.Element {
-  const insets = useSafeAreaInsets()
+  const insets = useDeviceInsets()
   const dispatch = useAppDispatch()
   const customEndpoint = useAppSelector(selectCustomEndpoint)
 

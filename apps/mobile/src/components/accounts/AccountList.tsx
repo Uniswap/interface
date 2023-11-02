@@ -2,8 +2,8 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { ComponentProps, default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
 import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
+import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { opacify, spacing } from 'ui/src/theme'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -117,7 +117,7 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
         start={{ x: 0, y: 1 }}
         style={ListSheet.topGradient}
       />
-      <ScrollView
+      <VirtualizedList
         bounces={false}
         scrollEnabled={accountsWithPortfolioValue.length >= MIN_ACCOUNTS_TO_ENABLE_SCROLL}
         showsVerticalScrollIndicator={false}>
@@ -133,7 +133,7 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
             {viewOnlyAccounts.map(renderAccountCardItem)}
           </>
         )}
-      </ScrollView>
+      </VirtualizedList>
       <LinearGradient
         colors={[opacify(0, colors.surface1.val), colors.surface1.val]}
         end={{ x: 0, y: 1 }}

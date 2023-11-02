@@ -23,6 +23,7 @@ import {
   Text,
   TouchableArea,
   useDeviceDimensions,
+  useDeviceInsets,
   useSporeColors,
 } from 'ui/src'
 import { spacing } from 'ui/src/theme'
@@ -64,6 +65,7 @@ export function AccountSwitcherModal(): JSX.Element {
  * TODO [MOB-259] Once testing works with the BottomSheetModal stop exporting this component.
  */
 export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Element | null {
+  const insets = useDeviceInsets()
   const dimensions = useDeviceDimensions()
   const { t } = useTranslation()
   const activeAccountAddress = useActiveAccountAddress()
@@ -238,10 +240,11 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     return null
   }
 
-  const fullScreenContentHeight = 0.89 * dimensions.fullHeight
+  const fullScreenContentHeight =
+    dimensions.fullHeight - insets.top - insets.bottom - spacing.spacing36 // approximate bottom sheet handle height + padding bottom
 
   return (
-    <Flex $short={{ mb: '$none' }} maxHeight={fullScreenContentHeight} mb="$spacing12">
+    <Flex $short={{ pb: '$none' }} maxHeight={fullScreenContentHeight} pb="$spacing12">
       <Flex gap="$spacing16" pb="$spacing16" pt="$spacing12">
         <AddressDisplay
           showCopy
