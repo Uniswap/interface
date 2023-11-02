@@ -256,8 +256,9 @@ export default function BalanceSummary({
 
   const pageChainBalance = crossChainBalances?.find((tokenBalance) => tokenBalance.token?.id === tokenQueryId)
   const otherChainBalances = crossChainBalances?.filter((tokenBalance) => tokenBalance.token?.id !== tokenQueryId)
+  const hasBalances = pageChainBalance && otherChainBalances && Boolean(otherChainBalances.length)
 
-  if (!account) {
+  if (!account || !hasBalances) {
     return null
   }
   return (
