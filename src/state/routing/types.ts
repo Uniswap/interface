@@ -51,8 +51,6 @@ export interface GetQuoteArgs {
   userOptedOutOfUniswapX: boolean
   isUniswapXDefaultEnabled: boolean
   sendPortionEnabled: boolean
-  inputTax: Percent
-  outputTax: Percent
 }
 
 export type GetQuickQuoteArgs = {
@@ -71,7 +69,7 @@ export type GetQuickQuoteArgs = {
 }
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
 
-type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'> & {
+export type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'> & {
   buyFeeBps?: string
   sellFeeBps?: string
 }
@@ -204,8 +202,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   isUniswapXBetter: boolean | undefined
   requestId: string | undefined
   quoteMethod: QuoteMethod
-  inputTax: Percent
-  outputTax: Percent
   swapFee: SwapFeeInfo | undefined
 
   constructor({
@@ -215,8 +211,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     requestId,
     quoteMethod,
     approveInfo,
-    inputTax,
-    outputTax,
     swapFee,
     ...routes
   }: {
@@ -227,8 +221,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     requestId?: string
     quoteMethod: QuoteMethod
     approveInfo: ApproveInfo
-    inputTax: Percent
-    outputTax: Percent
     swapFee?: SwapFeeInfo
     v2Routes: {
       routev2: V2Route<Currency, Currency>
@@ -254,8 +246,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     this.requestId = requestId
     this.quoteMethod = quoteMethod
     this.approveInfo = approveInfo
-    this.inputTax = inputTax
-    this.outputTax = outputTax
     this.swapFee = swapFee
   }
 

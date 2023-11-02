@@ -3,7 +3,6 @@ import { ChainId, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { V3Route } from '@uniswap/smart-order-router'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
-import { ZERO_PERCENT } from 'constants/misc'
 import { nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import JSBI from 'jsbi'
@@ -49,8 +48,6 @@ export const TEST_TRADE_EXACT_INPUT = new ClassicTrade({
   gasUseEstimateUSD: 1.0,
   approveInfo: { needsApprove: false },
   quoteMethod: QuoteMethod.CLIENT_SIDE_FALLBACK,
-  inputTax: ZERO_PERCENT,
-  outputTax: ZERO_PERCENT,
 })
 
 export const TEST_TRADE_EXACT_INPUT_API = new ClassicTrade({
@@ -66,8 +63,6 @@ export const TEST_TRADE_EXACT_INPUT_API = new ClassicTrade({
   gasUseEstimateUSD: 1.0,
   approveInfo: { needsApprove: false },
   quoteMethod: QuoteMethod.ROUTING_API,
-  inputTax: ZERO_PERCENT,
-  outputTax: ZERO_PERCENT,
 })
 
 export const TEST_TRADE_EXACT_OUTPUT = new ClassicTrade({
@@ -82,8 +77,6 @@ export const TEST_TRADE_EXACT_OUTPUT = new ClassicTrade({
   tradeType: TradeType.EXACT_OUTPUT,
   quoteMethod: QuoteMethod.CLIENT_SIDE_FALLBACK,
   approveInfo: { needsApprove: false },
-  inputTax: ZERO_PERCENT,
-  outputTax: ZERO_PERCENT,
 })
 
 export const TEST_ALLOWED_SLIPPAGE = new Percent(2, 100)
@@ -127,11 +120,29 @@ export const TEST_DUTCH_TRADE_ETH_INPUT = new DutchOrderTrade({
   slippageTolerance: new Percent(5, 100),
 })
 
+const SELL_FEE_TOKEN = new Token(
+  1,
+  '0x0000000000000000000000000000000000000001',
+  18,
+  'ABC',
+  'Abc',
+  false,
+  undefined,
+  BigNumber.from(300)
+)
+const TEST_POOL_FOT_1 = new Pool(
+  SELL_FEE_TOKEN,
+  TEST_TOKEN_2,
+  FeeAmount.HIGH,
+  '2437312313659959819381354528',
+  '10272714736694327408',
+  -69633
+)
 export const TEST_TRADE_FEE_ON_SELL = new ClassicTrade({
   v3Routes: [
     {
-      routev3: new V3Route([TEST_POOL_12], TEST_TOKEN_1, TEST_TOKEN_2),
-      inputAmount: toCurrencyAmount(TEST_TOKEN_1, 1000),
+      routev3: new V3Route([TEST_POOL_FOT_1], SELL_FEE_TOKEN, TEST_TOKEN_2),
+      inputAmount: toCurrencyAmount(SELL_FEE_TOKEN, 1000),
       outputAmount: toCurrencyAmount(TEST_TOKEN_2, 1000),
     },
   ],
@@ -140,14 +151,30 @@ export const TEST_TRADE_FEE_ON_SELL = new ClassicTrade({
   gasUseEstimateUSD: 1.0,
   approveInfo: { needsApprove: false },
   quoteMethod: QuoteMethod.ROUTING_API,
-  inputTax: new Percent(3, 100),
-  outputTax: ZERO_PERCENT,
 })
 
+const BUY_FEE_TOKEN = new Token(
+  1,
+  '0x0000000000000000000000000000000000000001',
+  18,
+  'ABC',
+  'Abc',
+  false,
+  BigNumber.from(300),
+  undefined
+)
+const TEST_POOL_FOT_2 = new Pool(
+  TEST_TOKEN_1,
+  BUY_FEE_TOKEN,
+  FeeAmount.HIGH,
+  '2437312313659959819381354528',
+  '10272714736694327408',
+  -69633
+)
 export const TEST_TRADE_FEE_ON_BUY = new ClassicTrade({
   v3Routes: [
     {
-      routev3: new V3Route([TEST_POOL_12], TEST_TOKEN_1, TEST_TOKEN_2),
+      routev3: new V3Route([TEST_POOL_FOT_2], TEST_TOKEN_1, BUY_FEE_TOKEN),
       inputAmount: toCurrencyAmount(TEST_TOKEN_1, 1000),
       outputAmount: toCurrencyAmount(TEST_TOKEN_2, 1000),
     },
@@ -157,8 +184,6 @@ export const TEST_TRADE_FEE_ON_BUY = new ClassicTrade({
   gasUseEstimateUSD: 1.0,
   approveInfo: { needsApprove: false },
   quoteMethod: QuoteMethod.ROUTING_API,
-  inputTax: ZERO_PERCENT,
-  outputTax: new Percent(3, 100),
 })
 
 export const PREVIEW_EXACT_IN_TRADE = new PreviewTrade({

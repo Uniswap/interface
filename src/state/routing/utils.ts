@@ -4,7 +4,7 @@ import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sd
 import { DutchOrderInfo, DutchOrderInfoJSON } from '@uniswap/uniswapx-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
-import { BIPS_BASE, ZERO_PERCENT } from 'constants/misc'
+import { BIG_NUMBER_ZERO, BIPS_BASE } from 'constants/misc'
 import { isAvalanche, isBsc, isPolygon, nativeOnChain } from 'constants/tokens'
 import { toSlippagePercent } from 'utils/slippage'
 
@@ -43,20 +43,63 @@ interface RouteResult {
   outputAmount: CurrencyAmount<Currency>
 }
 
+function getClassicSwapCurrenciesWithTaxInfo(
+  args: GetQuoteArgs,
+  routes: ClassicQuoteData['route']
+): [Currency, Currency] {
+  const {
+    tokenInAddress,
+    tokenInChainId,
+    tokenInDecimals,
+    tokenInSymbol,
+    tokenOutAddress,
+    tokenOutChainId,
+    tokenOutDecimals,
+    tokenOutSymbol,
+  } = args
+
+  const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(tokenInAddress as SwapRouterNativeAssets)
+  const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOutAddress as SwapRouterNativeAssets)
+
+  const tokenInInRoute = routes[0]?.[0]?.tokenIn
+  const tokenOutInRoute = routes[0]?.[routes[0]?.length - 1]?.tokenOut
+
+  const currencyIn = tokenInIsNative
+    ? nativeOnChain(tokenInChainId)
+    : parseToken({
+        address: tokenInAddress,
+        chainId: tokenInChainId,
+        decimals: tokenInDecimals,
+        symbol: tokenInSymbol,
+        buyFeeBps: tokenInInRoute.buyFeeBps,
+        sellFeeBps: tokenInInRoute.sellFeeBps,
+      })
+  const currencyOut = tokenOutIsNative
+    ? nativeOnChain(tokenOutChainId)
+    : parseToken({
+        address: tokenOutAddress,
+        chainId: tokenOutChainId,
+        decimals: tokenOutDecimals,
+        symbol: tokenOutSymbol,
+        buyFeeBps: tokenOutInRoute.buyFeeBps,
+        sellFeeBps: tokenOutInRoute.sellFeeBps,
+      })
+
+  return [currencyIn, currencyOut]
+}
+
 /**
  * Transforms a Routing API quote into an array of routes that can be used to
  * create a `Trade`.
  */
-export function computeRoutes(
-  currencyIn: Currency,
-  currencyOut: Currency,
-  routes: ClassicQuoteData['route']
-): RouteResult[] | undefined {
+export function computeRoutes(args: GetQuoteArgs, routes: ClassicQuoteData['route']): RouteResult[] | undefined {
   if (routes.length === 0) return []
 
-  const tokenIn = routes[0]?.[0]?.tokenIn
-  const tokenOut = routes[0]?.[routes[0]?.length - 1]?.tokenOut
-  if (!tokenIn || !tokenOut) throw new Error('Expected both tokenIn and tokenOut to be present')
+  const tokenInInRoute = routes[0]?.[0]?.tokenIn
+  const tokenOutInRoute = routes[0]?.[routes[0]?.length - 1]?.tokenOut
+  if (!tokenInInRoute || !tokenOutInRoute) throw new Error('Expected both tokenIn and tokenOut to be present')
+
+  const [currencyIn, currencyOut] = getClassicSwapCurrenciesWithTaxInfo(args, routes)
 
   try {
     return routes.map((route) => {
@@ -168,8 +211,7 @@ function getSwapFee(data: ClassicQuoteData | URADutchOrderQuoteData): SwapFeeInf
 }
 
 function getClassicTradeDetails(
-  currencyIn: Currency,
-  currencyOut: Currency,
+  args: GetQuoteArgs,
   data: URAQuoteResponse
 ): {
   gasUseEstimate?: number
@@ -177,32 +219,20 @@ function getClassicTradeDetails(
   blockNumber?: string
   routes?: RouteResult[]
   swapFee?: SwapFeeInfo
-  inputTax: Percent
-  outputTax: Percent
 } {
   const classicQuote =
     data.routing === URAQuoteType.CLASSIC ? data.quote : data.allQuotes.find(isClassicQuoteResponse)?.quote
 
-  // only classic routing-api response will include token tax information
-  // TODO: request that URA also returns token tax on UniswapX quotes
   if (!classicQuote) {
-    return {
-      inputTax: ZERO_PERCENT,
-      outputTax: ZERO_PERCENT,
-    }
+    return {}
   }
-
-  const inputTax = classicQuote.route[0]?.[0]?.tokenIn.sellFeeBps
-  const outputTax = classicQuote.route[0]?.[0]?.tokenOut.buyFeeBps
 
   return {
     gasUseEstimate: classicQuote.gasUseEstimate ? parseFloat(classicQuote.gasUseEstimate) : undefined,
     gasUseEstimateUSD: classicQuote.gasUseEstimateUSD ? parseFloat(classicQuote.gasUseEstimateUSD) : undefined,
     blockNumber: classicQuote.blockNumber,
-    routes: computeRoutes(currencyIn, currencyOut, classicQuote.route),
+    routes: computeRoutes(args, classicQuote.route),
     swapFee: getSwapFee(classicQuote),
-    inputTax: inputTax ? new Percent(inputTax, BIPS_BASE) : ZERO_PERCENT,
-    outputTax: outputTax ? new Percent(outputTax, BIPS_BASE) : ZERO_PERCENT,
   }
 }
 
@@ -217,7 +247,7 @@ export function transformQuickRouteToTrade(args: GetQuickQuoteArgs, data: QuickR
   return new PreviewTrade({ inputAmount, outputAmount, tradeType, inputTax, outputTax })
 }
 
-export async function transformRoutesToTrade(
+export async function transformQuoteToTrade(
   args: GetQuoteArgs,
   data: URAQuoteResponse,
   quoteMethod: QuoteMethod
@@ -227,10 +257,9 @@ export async function transformRoutesToTrade(
   const showUniswapXTrade =
     data.routing === URAQuoteType.DUTCH_LIMIT &&
     (routerPreference === RouterPreference.X || (isUniswapXDefaultEnabled && routerPreference === RouterPreference.API))
-
   const [currencyIn, currencyOut] = getTradeCurrencies(args, showUniswapXTrade)
-  const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate, swapFee, inputTax, outputTax } =
-    getClassicTradeDetails(currencyIn, currencyOut, data)
+
+  const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate, swapFee } = getClassicTradeDetails(args, data)
 
   // If the top-level URA quote type is DUTCH_LIMIT, then UniswapX is better for the user
   const isUniswapXBetter = data.routing === URAQuoteType.DUTCH_LIMIT
@@ -274,8 +303,6 @@ export async function transformRoutesToTrade(
     isUniswapXBetter,
     requestId: data.quote.requestId,
     quoteMethod,
-    inputTax,
-    outputTax,
     swapFee,
   })
 
@@ -312,8 +339,26 @@ export async function transformRoutesToTrade(
   return { state: QuoteState.SUCCESS, trade: classicTrade }
 }
 
-function parseToken({ address, chainId, decimals, symbol }: ClassicQuoteData['route'][0][0]['tokenIn']): Token {
-  return new Token(chainId, address, parseInt(decimals.toString()), symbol)
+function parseToken({
+  address,
+  chainId,
+  decimals,
+  symbol,
+  buyFeeBps,
+  sellFeeBps,
+}: ClassicQuoteData['route'][0][0]['tokenIn']): Token {
+  const buyFeeBpsBN = buyFeeBps ? BigNumber.from(buyFeeBps) : BIG_NUMBER_ZERO
+  const sellFeeBpsBN = sellFeeBps ? BigNumber.from(sellFeeBps) : BIG_NUMBER_ZERO
+  return new Token(
+    chainId,
+    address,
+    parseInt(decimals.toString()),
+    symbol,
+    undefined,
+    undefined,
+    buyFeeBpsBN,
+    sellFeeBpsBN
+  )
 }
 
 function parsePool({ fee, sqrtRatioX96, liquidity, tickCurrent, tokenIn, tokenOut }: V3PoolInRoute): Pool {
