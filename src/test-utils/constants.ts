@@ -155,10 +155,10 @@ export const TEST_TRADE_FEE_ON_SELL = new ClassicTrade({
 
 const BUY_FEE_TOKEN = new Token(
   1,
-  '0x0000000000000000000000000000000000000001',
+  '0x0000000000000000000000000000000000000002',
   18,
-  'ABC',
-  'Abc',
+  'DEF',
+  'Def',
   false,
   BigNumber.from(300),
   undefined
@@ -176,7 +176,7 @@ export const TEST_TRADE_FEE_ON_BUY = new ClassicTrade({
     {
       routev3: new V3Route([TEST_POOL_FOT_2], TEST_TOKEN_1, BUY_FEE_TOKEN),
       inputAmount: toCurrencyAmount(TEST_TOKEN_1, 1000),
-      outputAmount: toCurrencyAmount(TEST_TOKEN_2, 1000),
+      outputAmount: toCurrencyAmount(BUY_FEE_TOKEN, 1000),
     },
   ],
   v2Routes: [],

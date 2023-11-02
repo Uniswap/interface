@@ -1,14 +1,24 @@
 import { ChainId, Currency, Token, TradeType } from '@uniswap/sdk-core'
+import { BIG_NUMBER_ZERO } from 'constants/misc'
 import { nativeOnChain } from 'constants/tokens'
 
 import { GetQuoteArgs, PoolType, RouterPreference, TokenInRoute } from './types'
 import { computeRoutes } from './utils'
 
-const USDC = new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC')
+const USDC = new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', undefined, false)
 const USDC_IN_ROUTE = toTokenInRoute(USDC)
-const DAI = new Token(1, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 6, 'DAI')
+const DAI = new Token(1, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 6, 'DAI', undefined, false)
 const DAI_IN_ROUTE = toTokenInRoute(DAI)
-const MKR = new Token(1, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 6, 'MKR')
+const MKR = new Token(
+  1,
+  '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2',
+  6,
+  'MKR',
+  undefined,
+  false,
+  BIG_NUMBER_ZERO,
+  BIG_NUMBER_ZERO
+)
 const MKR_IN_ROUTE = toTokenInRoute(MKR)
 
 const ETH = nativeOnChain(ChainId.MAINNET)
@@ -51,8 +61,8 @@ function toTokenInRoute(token: Token): TokenInRoute {
     chainId: token.chainId,
     symbol: token.symbol,
     decimals: token.decimals,
-    buyFeeBps: '0',
-    sellFeeBps: '0',
+    buyFeeBps: token.buyFeeBps?.toString(),
+    sellFeeBps: token.sellFeeBps?.toString(),
   }
 }
 

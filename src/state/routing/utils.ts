@@ -4,7 +4,7 @@ import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sd
 import { DutchOrderInfo, DutchOrderInfoJSON } from '@uniswap/uniswapx-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
-import { BIG_NUMBER_ZERO, BIPS_BASE } from 'constants/misc'
+import { BIPS_BASE } from 'constants/misc'
 import { isAvalanche, isBsc, isPolygon, nativeOnChain } from 'constants/tokens'
 import { toSlippagePercent } from 'utils/slippage'
 
@@ -318,18 +318,9 @@ function parseToken({
   buyFeeBps,
   sellFeeBps,
 }: ClassicQuoteData['route'][0][0]['tokenIn']): Token {
-  const buyFeeBpsBN = buyFeeBps ? BigNumber.from(buyFeeBps) : BIG_NUMBER_ZERO
-  const sellFeeBpsBN = sellFeeBps ? BigNumber.from(sellFeeBps) : BIG_NUMBER_ZERO
-  return new Token(
-    chainId,
-    address,
-    parseInt(decimals.toString()),
-    symbol,
-    undefined,
-    undefined,
-    buyFeeBpsBN,
-    sellFeeBpsBN
-  )
+  const buyFeeBpsBN = buyFeeBps ? BigNumber.from(buyFeeBps) : undefined
+  const sellFeeBpsBN = sellFeeBps ? BigNumber.from(sellFeeBps) : undefined
+  return new Token(chainId, address, parseInt(decimals.toString()), symbol, undefined, false, buyFeeBpsBN, sellFeeBpsBN)
 }
 
 function parsePool({ fee, sqrtRatioX96, liquidity, tickCurrent, tokenIn, tokenOut }: V3PoolInRoute): Pool {

@@ -6882,7 +6882,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             <span
               class=""
             >
-              ~-105566.373%
+              ~-108834.406%
             </span>
           </div>
         </div>
@@ -7165,14 +7165,14 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                 <div
                   class="c3 css-obwv3p"
                 >
-                  0.000000000000000952 DEF
+                  0.00000000000000098 DEF
                 </div>
               </div>
               <div
                 class="c13"
               />
               <div>
-                If the price moves so that you will receive less than 0.000000000000000952 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+                If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
                 <a
                   class="c14"
                   href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
@@ -7549,7 +7549,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
           <div
             class="c3 c6 css-142zc9n"
           >
-            0.000000000000000952 DEF
+            0.00000000000000098 DEF
           </div>
         </div>
       </div>
@@ -8761,7 +8761,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             <span
               class=""
             >
-              ~-105566.373%
+              ~-108834.406%
             </span>
           </div>
         </div>
@@ -9044,14 +9044,14 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                 <div
                   class="c3 css-obwv3p"
                 >
-                  0.000000000000000952 DEF
+                  0.00000000000000098 DEF
                 </div>
               </div>
               <div
                 class="c13"
               />
               <div>
-                If the price moves so that you will receive less than 0.000000000000000952 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+                If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
                 <a
                   class="c14"
                   href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
@@ -9428,7 +9428,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
           <div
             class="c3 c6 css-142zc9n"
           >
-            0.000000000000000952 DEF
+            0.00000000000000098 DEF
           </div>
         </div>
       </div>
