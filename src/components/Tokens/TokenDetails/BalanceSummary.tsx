@@ -240,11 +240,11 @@ const OtherChainsBalanceSummary = ({
 
 export default function BalanceSummary({
   token,
-  crossChainBalances,
+  multiChainBalances,
   tokenQueryId,
 }: {
   token: Currency
-  crossChainBalances?: TokenBalance[]
+  multiChainBalances?: TokenBalance[]
   tokenQueryId?: string
 }) {
   const { account, chainId: connectedChainId } = useWeb3React()
@@ -254,8 +254,8 @@ export default function BalanceSummary({
 
   const connectedChainBalance = useCurrencyBalance(account, token)
 
-  const pageChainBalance = crossChainBalances?.find((tokenBalance) => tokenBalance.token?.id === tokenQueryId)
-  const otherChainBalances = crossChainBalances?.filter((tokenBalance) => tokenBalance.token?.id !== tokenQueryId)
+  const pageChainBalance = multiChainBalances?.find((tokenBalance) => tokenBalance.token?.id === tokenQueryId)
+  const otherChainBalances = multiChainBalances?.filter((tokenBalance) => tokenBalance.token?.id !== tokenQueryId)
   const hasBalances = pageChainBalance && otherChainBalances && Boolean(otherChainBalances.length)
 
   if (!account || !hasBalances) {

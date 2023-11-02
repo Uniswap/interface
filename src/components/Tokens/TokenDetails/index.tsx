@@ -207,7 +207,7 @@ export default function TokenDetails({
   )
 
   const { data: balanceQuery } = useCachedPortfolioBalancesQuery({ account })
-  const crossChainBalances = useMemo(() => {
+  const multiChainBalances = useMemo(() => {
     const tokenBalances = balanceQuery?.portfolios?.[0].tokenBalances
     const bridgeInfo = tokenQuery.token?.project?.tokens
 
@@ -284,7 +284,7 @@ export default function TokenDetails({
           {detailedToken && tokenQuery && (
             <BalanceSummary
               token={detailedToken}
-              crossChainBalances={crossChainBalances}
+              multiChainBalances={multiChainBalances}
               tokenQueryId={tokenQuery.token?.id}
             />
           )}
@@ -300,7 +300,7 @@ export default function TokenDetails({
         {detailedToken && (
           <MobileBalanceSummaryFooter
             token={detailedToken}
-            pageChainBalance={crossChainBalances?.find(
+            pageChainBalance={multiChainBalances?.find(
               (tokenBalance) => tokenBalance.token?.id === tokenQuery.token?.id
             )}
           />
