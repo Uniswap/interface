@@ -67,7 +67,8 @@ export default function BaseWalletBanner() {
               onClick={() =>
                 openDownloadApp({
                   element: InterfaceElementName.UNISWAP_WALLET_BANNER_DOWNLOAD_BUTTON,
-                  appStoreParams: 'pt=123625782&ct=base-app-banner&mt=8', // todo update with correct playstore params
+                  appStoreParams: 'pt=123625782&ct=base-app-banner&mt=8',
+                  playStoreParams: '???', // todo update with correct playstore params
                 })
               }
             >

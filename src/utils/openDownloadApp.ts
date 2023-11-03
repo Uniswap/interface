@@ -64,12 +64,12 @@ type AnalyticsLinkOptions = {
 }
 
 const openAppStore = (options?: AnalyticsLinkOptions) => {
-  sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_APP_DOWNLOAD_OPENED, { element: options?.element })
+  sendAnalyticsEvent(InterfaceEventName.UNISWAP_IOS_APP_DOWNLOAD_OPENED, { element: options?.element })
   window.open(linkWithParams(APP_STORE_LINK, options?.urlParamString), /* target = */ 'uniswap_wallet_appstore')
 }
 
 const openPlayStore = (options?: AnalyticsLinkOptions) => {
-  sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_APP_DOWNLOAD_OPENED, { element: options?.element }) // todo add analytics for android vs apple
+  sendAnalyticsEvent(InterfaceEventName.UNISWAP_ANDROID_APP_DOWNLOAD_OPENED, { element: options?.element })
   window.open(linkWithParams(PLAY_STORE_LINK, options?.urlParamString), /* target = */ 'uniswap_wallet_playstore')
 }
 
