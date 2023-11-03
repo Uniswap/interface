@@ -97,7 +97,7 @@ module.exports = {
     'react/display-name': 'error',
     'react/react-in-jsx-scope': 'off',
     'no-restricted-imports': [
-      2,
+      'error',
       {
         paths: [
           {
@@ -120,7 +120,12 @@ module.exports = {
           },
           {
             name: 'utilities/src/format/localeBased',
-            message: "Avoid importing directly. Use localized hooks in `useFiatConverter` or `useLocalizedFormatter` instead",
+            message: "Avoid importing directly. Use localized hooks in `useFiatConverter` or `useLocalizedFormatter` instead.",
+          },
+          {
+            name: 'react-native-safe-area-context',
+            importNames: ["useSafeAreaInsets"],
+            message: "Use our internal `useDeviceInsets` hook instead.",
           }
         ],
       },

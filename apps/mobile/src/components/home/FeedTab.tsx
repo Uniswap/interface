@@ -2,7 +2,6 @@ import { ForwardedRef, forwardRef, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { NoTransactions } from 'src/components/icons/NoTransactions'
@@ -15,7 +14,7 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'wallet/src/data/queries'
 import { useFormattedTransactionDataForFeed } from 'wallet/src/features/activity/hooks'
@@ -46,7 +45,7 @@ export const FeedTab = memo(
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
     const colors = useSporeColors()
-    const insets = useSafeAreaInsets()
+    const insets = useDeviceInsets()
 
     const watchedWalletsSet = useAppSelector(selectWatchedAddressSet)
     const watchedWalletsList = useMemo(() => Array.from(watchedWalletsSet), [watchedWalletsSet])

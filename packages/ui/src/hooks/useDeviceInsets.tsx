@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { spacing } from 'ui/src/theme'
 

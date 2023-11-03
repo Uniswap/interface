@@ -1,3 +1,7 @@
+const eslintConfig = require('eslint-config-custom')
+
+const noRestrictedImportsPaths = eslintConfig.rules['no-restricted-imports']?.[1]?.paths ?? []
+
 module.exports = {
   root: true,
   extends: ['custom'],
@@ -20,37 +24,19 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  overrides: [
-    {
-      files: ['*.ts', '*.tsx', '*.js', '*.jsx'],
-      rules: {},
-    },
-    {
-      files: ['*.ts', '*.tsx'],
-      rules: {},
-    },
-    {
-      files: ['*.js', '*.jsx'],
-      rules: {},
-    },
-
-    {
-      files: ['*.ts', '*.tsx'],
-      rules: {
-        'no-restricted-imports': [
-          2,
+  rules: {
+    'no-restricted-imports': [
+      'error',
+      {
+        paths: [
+          ...noRestrictedImportsPaths,
           {
-            paths: [
-              {
-                name: 'ui/src',
-                message:
-                  'Avoid importing directly from ui/src from within the ui package which causes circular imports.',
-              },
-            ],
+            name: 'ui/src',
+            message:
+              'Avoid importing directly from ui/src from within the ui package which causes circular imports.',
           },
         ],
       },
-    },
-  ],
-  rules: {},
+    ],
+  },
 };
