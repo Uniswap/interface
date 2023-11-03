@@ -1,35 +1,36 @@
-import {
-  createContext,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useContext,
-  useMemo,
-  useState,
-} from 'react'
+import { createContext, ReactNode, useCallback, useContext, useMemo, useRef, useState } from 'react'
 
 export enum SwapScreen {
   SwapForm,
   SwapReview,
+  SwapReviewHoldingToSwap,
   SwapPending,
 }
 
 type SwapScreenContextState = {
   screen: SwapScreen
-  setScreen: Dispatch<SetStateAction<SwapScreen>>
+  screenRef: React.MutableRefObject<SwapScreen>
+  setScreen: (screen: SwapScreen) => void
 }
 
 export const SwapScreenContext = createContext<SwapScreenContextState | undefined>(undefined)
 
 export function SwapScreenContextProvider({ children }: { children: ReactNode }): JSX.Element {
+  const screenRef = useRef<SwapScreen>(SwapScreen.SwapForm)
   const [screen, setScreen] = useState<SwapScreen>(SwapScreen.SwapForm)
+
+  const wrappedSetScreen = useCallback((_screen: SwapScreen) => {
+    screenRef.current = _screen
+    setScreen(_screen)
+  }, [])
 
   const state = useMemo<SwapScreenContextState>(
     (): SwapScreenContextState => ({
       screen,
-      setScreen,
+      screenRef,
+      setScreen: wrappedSetScreen,
     }),
-    [screen]
+    [screen, wrappedSetScreen]
   )
 
   return <SwapScreenContext.Provider value={state}>{children}</SwapScreenContext.Provider>

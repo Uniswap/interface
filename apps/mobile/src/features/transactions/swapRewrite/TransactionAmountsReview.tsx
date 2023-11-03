@@ -3,37 +3,90 @@ import { useTranslation } from 'react-i18next'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/types'
 import { Flex, Icons, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { NumberType } from 'utilities/src/format/types'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
+import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 export function TransactionAmountsReview({
   acceptedDerivedSwapInfo,
-  currencyInInfo,
-  currencyOutInfo,
-  formattedFiatAmountIn,
-  formattedFiatAmountOut,
-  formattedTokenAmountIn,
-  formattedTokenAmountOut,
   newTradeRequiresAcceptance,
 }: {
   acceptedDerivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
-  currencyInInfo: CurrencyInfo
-  currencyOutInfo: CurrencyInfo
-  formattedFiatAmountIn: string
-  formattedFiatAmountOut: string
-  formattedTokenAmountIn: string
-  formattedTokenAmountOut: string
   newTradeRequiresAcceptance: boolean
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const { convertFiatAmountFormatted } = useFiatConverter()
+  const { formatCurrencyAmount, formatNumberOrString } = useLocalizedFormatter()
 
-  const { exactCurrencyField } = acceptedDerivedSwapInfo
+  const {
+    currencies,
+    currencyAmounts,
+    currencyAmountsUSDValue,
+    exactAmountToken,
+    exactCurrencyField,
+  } = acceptedDerivedSwapInfo
+
+  const currencyInInfo = currencies[CurrencyField.INPUT]
+  const currencyOutInfo = currencies[CurrencyField.OUTPUT]
+
+  const usdAmountIn =
+    exactCurrencyField === CurrencyField.INPUT
+      ? currencyAmountsUSDValue[CurrencyField.INPUT]?.toExact()
+      : acceptedDerivedSwapInfo?.currencyAmountsUSDValue[CurrencyField.INPUT]?.toExact()
+
+  const usdAmountOut =
+    exactCurrencyField === CurrencyField.OUTPUT
+      ? currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact()
+      : acceptedDerivedSwapInfo?.currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact()
+
+  const formattedFiatAmountIn = convertFiatAmountFormatted(
+    usdAmountIn,
+    NumberType.FiatTokenQuantity
+  )
+  const formattedFiatAmountOut = convertFiatAmountFormatted(
+    usdAmountOut,
+    NumberType.FiatTokenQuantity
+  )
+
+  const derivedCurrencyField =
+    exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
+
+  const derivedAmount = formatCurrencyAmount({
+    value: acceptedDerivedSwapInfo?.currencyAmounts[derivedCurrencyField],
+    type: NumberType.TokenTx,
+  })
+
+  const formattedExactAmountToken = formatNumberOrString({
+    value: exactAmountToken,
+    type: NumberType.TokenTx,
+  })
+
+  const [formattedTokenAmountIn, formattedTokenAmountOut] =
+    exactCurrencyField === CurrencyField.INPUT
+      ? [formattedExactAmountToken, derivedAmount]
+      : [derivedAmount, formattedExactAmountToken]
 
   const shouldDimInput = newTradeRequiresAcceptance && exactCurrencyField === CurrencyField.OUTPUT
   const shouldDimOutput = newTradeRequiresAcceptance && exactCurrencyField === CurrencyField.INPUT
+
+  if (
+    !currencyInInfo ||
+    !currencyOutInfo ||
+    !currencyAmounts[CurrencyField.INPUT] ||
+    !currencyAmounts[CurrencyField.OUTPUT] ||
+    !acceptedDerivedSwapInfo.currencyAmounts[CurrencyField.INPUT] ||
+    !acceptedDerivedSwapInfo.currencyAmounts[CurrencyField.OUTPUT]
+  ) {
+    // This should never happen. It's just to keep TS happy.
+    throw new Error(
+      'Missing required props in `derivedSwapInfo` to render `TransactionAmountsReview` screen.'
+    )
+  }
 
   return (
     <Flex $short={{ gap: '$spacing8' }} gap="$spacing16" ml="$spacing12" mr="$spacing12">

@@ -14,7 +14,7 @@ import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
-export function GasAndWarningRows(): JSX.Element {
+export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolean }): JSX.Element {
   const colors = useSporeColors()
   const { convertFiatAmountFormatted } = useFiatConverter()
 
@@ -112,8 +112,8 @@ export function GasAndWarningRows(): JSX.Element {
         This is used when calculating the size of the `DecimalPad`.
         */}
 
-        {!gasFeeUSD && <EmptyRow />}
-        {!formScreenWarning && <EmptyRow />}
+        {!gasFeeUSD && renderEmptyRows && <EmptyRow />}
+        {!formScreenWarning && renderEmptyRows && <EmptyRow />}
       </Flex>
     </>
   )

@@ -28,7 +28,7 @@ export function SwapModal(): JSX.Element {
   }, [appDispatch])
 
   return shouldShowSwapRewrite ? (
-    <SwapFlowRewrite prefilledState={modalState.initialState} onClose={onClose} />
+    <SwapFlowRewrite />
   ) : (
     <BottomSheetModal
       fullScreen

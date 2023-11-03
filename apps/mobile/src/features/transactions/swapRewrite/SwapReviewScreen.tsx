@@ -1,5 +1,5 @@
 import { notificationAsync } from 'expo-haptics'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
 import { Arrow } from 'src/components/icons/Arrow'
@@ -35,14 +35,17 @@ import {
   useSwapScreenContext,
 } from 'src/features/transactions/swapRewrite/contexts/SwapScreenContext'
 import { useSwapTxContext } from 'src/features/transactions/swapRewrite/contexts/SwapTxContext'
+import { GasAndWarningRows } from 'src/features/transactions/swapRewrite/GasAndWarningRows'
+import { HoldToSwapProgressBar } from 'src/features/transactions/swapRewrite/HoldToSwapProgressBar'
 import { useParsedSwapWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
+import {
+  HOLD_TO_SWAP_TIMEOUT,
+  SwapFormButtonEmptySpace,
+} from 'src/features/transactions/swapRewrite/SwapFormButton'
 import { TransactionAmountsReview } from 'src/features/transactions/swapRewrite/TransactionAmountsReview'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
-import { AnimatedFlex, Button, Flex, Icons, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Button, Flex, Icons, Separator, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { NumberType } from 'utilities/src/format/types'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -51,10 +54,6 @@ import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const { convertFiatAmountFormatted } = useFiatConverter()
-  const { formatCurrencyAmount, formatNumberOrString } = useLocalizedFormatter()
-
-  const { setScreen } = useSwapScreenContext()
 
   const account = useActiveAccountWithThrow()
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -67,7 +66,10 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   const [shouldSubmitTx, setShouldSubmitTx] = useState(false)
   const [showSwapProtectionModal, setShowSwapProtectionModal] = useState(false)
 
+  const { screen, screenRef, setScreen } = useSwapScreenContext()
+
   const { approveTxRequest, gasFee, txRequest } = useSwapTxContext()
+
   const {
     derivedSwapInfo,
     updateSwapForm,
@@ -82,8 +84,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     currencyAmounts,
     currencyAmountsUSDValue,
     customSlippageTolerance,
-    exactAmountToken,
-    exactCurrencyField,
     trade: { trade: trade },
     txId,
     wrapType,
@@ -146,7 +146,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     }
 
     isWrapAction(wrapType) ? onWrap() : onSwap()
-  }, [warningAcknowledged, reviewScreenWarning, showWarningModal, wrapType, onWrap, onSwap])
+  }, [reviewScreenWarning, showWarningModal, warningAcknowledged, wrapType, onWrap, onSwap])
 
   const { trigger: submitWithBiometrix } = useBiometricPrompt(submitTransaction)
   const { requiredForTransactions: requiresBiometrics } = useBiometricAppSettings()
@@ -155,43 +155,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   const isBiometricAuthEnabled = useOsBiometricAuthEnabled()
   const { touchId: isTouchIdSupported, faceId: isFaceIdSupported } =
     useDeviceSupportsBiometricAuth()
-
-  const derivedCurrencyField =
-    exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
-
-  const derivedAmount = formatCurrencyAmount({
-    value: acceptedDerivedSwapInfo?.currencyAmounts[derivedCurrencyField],
-    type: NumberType.TokenTx,
-  })
-
-  const formattedExactAmountToken = formatNumberOrString({
-    value: exactAmountToken,
-    type: NumberType.TokenTx,
-  })
-
-  const [formattedTokenAmountIn, formattedTokenAmountOut] =
-    exactCurrencyField === CurrencyField.INPUT
-      ? [formattedExactAmountToken, derivedAmount]
-      : [derivedAmount, formattedExactAmountToken]
-
-  const usdAmountIn =
-    exactCurrencyField === CurrencyField.INPUT
-      ? currencyAmountsUSDValue[CurrencyField.INPUT]?.toExact()
-      : acceptedDerivedSwapInfo?.currencyAmountsUSDValue[CurrencyField.INPUT]?.toExact()
-
-  const usdAmountOut =
-    exactCurrencyField === CurrencyField.OUTPUT
-      ? currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact()
-      : acceptedDerivedSwapInfo?.currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact()
-
-  const formattedFiatAmountIn = convertFiatAmountFormatted(
-    usdAmountIn,
-    NumberType.FiatTokenQuantity
-  )
-  const formattedFiatAmountOut = convertFiatAmountFormatted(
-    usdAmountOut,
-    NumberType.FiatTokenQuantity
-  )
 
   const onSubmitTransaction = useCallback(async () => {
     await notificationAsync()
@@ -202,6 +165,41 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
       submitTransaction()
     }
   }, [requiresBiometrics, submitTransaction, submitWithBiometrix])
+
+  const holdToSwapTimeoutStartTime = useRef<number>()
+
+  // This is the timeout that counts how long the user has been pressing the button for "hold to swap" and then auto-submits the transaction.
+  useEffect(() => {
+    if (screen !== SwapScreen.SwapReviewHoldingToSwap) {
+      return
+    }
+
+    if (newTradeRequiresAcceptance) {
+      // If while the user is pressing the button, we get a worse quote,
+      // we show them the regular Review screen and they must "accept" the new quote.
+      setScreen(SwapScreen.SwapReview)
+      return
+    }
+
+    const now = Date.now()
+
+    if (holdToSwapTimeoutStartTime.current === undefined) {
+      holdToSwapTimeoutStartTime.current = now
+    }
+
+    const millisecondsLeft = HOLD_TO_SWAP_TIMEOUT - (now - holdToSwapTimeoutStartTime.current)
+
+    const timeout = setTimeout(async () => {
+      if (screenRef.current !== SwapScreen.SwapReviewHoldingToSwap) {
+        return
+      }
+
+      setScreen(SwapScreen.SwapReview)
+      await onSubmitTransaction()
+    }, millisecondsLeft)
+
+    return () => clearTimeout(timeout)
+  }, [newTradeRequiresAcceptance, onSubmitTransaction, screen, screenRef, setScreen])
 
   const onConfirmWarning = useCallback(() => {
     setWarningAcknowledged(true)
@@ -312,7 +310,24 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     throw new Error('Missing required props in `derivedSwapInfo` to render `SwapReview` screen.')
   }
 
-  return (
+  return screen === SwapScreen.SwapReviewHoldingToSwap ? (
+    <Flex>
+      <HoldToSwapProgressBar />
+
+      <AnimatedFlex entering={FadeIn} gap="$spacing2">
+        <TransactionAmountsReview
+          acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
+          newTradeRequiresAcceptance={newTradeRequiresAcceptance}
+        />
+
+        <Separator mb="$spacing12" mt="$spacing16" />
+
+        <GasAndWarningRows renderEmptyRows={false} />
+
+        <SwapFormButtonEmptySpace />
+      </AnimatedFlex>
+    </Flex>
+  ) : (
     <>
       {showWarningModal && reviewScreenWarning?.warning.title && (
         <WarningModal
@@ -348,12 +363,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
       <AnimatedFlex entering={FadeIn} gap="$spacing16">
         <TransactionAmountsReview
           acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
-          currencyInInfo={currencyInInfo}
-          currencyOutInfo={currencyOutInfo}
-          formattedFiatAmountIn={formattedFiatAmountIn}
-          formattedFiatAmountOut={formattedFiatAmountOut}
-          formattedTokenAmountIn={formattedTokenAmountIn}
-          formattedTokenAmountOut={formattedTokenAmountOut}
           newTradeRequiresAcceptance={newTradeRequiresAcceptance}
         />
 

@@ -14,28 +14,22 @@ import Trace from 'src/components/Trace/Trace'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { useSwapAnalytics } from 'src/features/transactions/swap/analytics'
 import { useShowSwapNetworkNotification } from 'src/features/transactions/swap/hooks'
-import { getReviewActionName, isWrapAction } from 'src/features/transactions/swap/utils'
-import {
-  SwapScreen,
-  useSwapScreenContext,
-} from 'src/features/transactions/swapRewrite/contexts/SwapScreenContext'
+import { isWrapAction } from 'src/features/transactions/swap/utils'
 import { CurrencyInputPanel } from 'src/features/transactions/swapRewrite/CurrencyInputPanel'
 import {
   DecimalPadInput,
   DecimalPadInputRef,
 } from 'src/features/transactions/swapRewrite/DecimalPadInput'
 import { GasAndWarningRows } from 'src/features/transactions/swapRewrite/GasAndWarningRows'
-import { useParsedSwapWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
 import { useSyncFiatAndTokenAmountUpdater } from 'src/features/transactions/swapRewrite/hooks/useSyncFiatAndTokenAmountUpdater'
 import { SwapArrowButton } from 'src/features/transactions/swapRewrite/SwapArrowButton'
+import { SwapFormButtonEmptySpace } from 'src/features/transactions/swapRewrite/SwapFormButton'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { createTransactionId } from 'wallet/src/features/transactions/utils'
-import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { useSwapFormContext } from './contexts/SwapFormContext'
 import { SwapFormHeader } from './SwapFormHeader'
 import { TokenSelector } from './TokenSelector'
@@ -438,14 +432,15 @@ function SwapFormContent(): JSX.Element {
           </AnimatedFlex>
         </Trace>
 
-        <GasAndWarningRows />
+        <GasAndWarningRows renderEmptyRows />
       </AnimatedFlex>
 
       {/*
-        This container is used to calculate the space that the `DecimalPad` can use.
-        We position the `DecimalPad` with `position: absolute` at the bottom of the screen instead of putting it inside this container
-        in order to avoid any overflows while the `DecimalPad` is automatically resizing to find the right size for the screen.
-      */}
+          This container is used to calculate the space that the `DecimalPad` can use.
+          We position the `DecimalPad` with `position: absolute` at the bottom of the screen instead of
+          putting it inside this container in order to avoid any overflows while the `DecimalPad`
+          is automatically resizing to find the right size for the screen.
+          */}
       <Flex fill mt="$spacing8" onLayout={onBottomScreenLayout} />
 
       <AnimatedFlex
@@ -472,60 +467,13 @@ function SwapFormContent(): JSX.Element {
           )}
         </Flex>
 
-        <Flex opacity={decimalPadReady ? 1 : 0} onLayout={onReviewButtonLayout}>
-          <ReviewButton
-            isSwapDataLoading={isSwapDataLoading}
-            walletNeedsRestore={!!walletNeedsRestore}
-          />
-        </Flex>
+        {/*
+          This doesn't really render the button. The button is rendered on the `Footer` of the `BottomSheet`.
+          We use this component to fill up the space that will be used by the `Footer` in order to calculate the space that the `DecimalPad` can use.
+        */}
+        <SwapFormButtonEmptySpace onLayout={onReviewButtonLayout} />
       </AnimatedFlex>
     </Flex>
-  )
-}
-
-function ReviewButton({
-  isSwapDataLoading,
-  walletNeedsRestore,
-}: {
-  isSwapDataLoading: boolean
-  walletNeedsRestore: boolean
-}): JSX.Element {
-  const { t } = useTranslation()
-
-  const { setScreen } = useSwapScreenContext()
-  const { derivedSwapInfo, updateSwapForm } = useSwapFormContext()
-
-  const { wrapType, trade } = derivedSwapInfo
-
-  const { isBlocked, isBlockedLoading } = useIsBlockedActiveAddress()
-
-  const noValidSwap = !isWrapAction(wrapType) && !trade.trade
-
-  const { blockingWarning } = useParsedSwapWarnings()
-
-  const reviewButtonDisabled =
-    isSwapDataLoading ||
-    noValidSwap ||
-    !!blockingWarning ||
-    isBlocked ||
-    isBlockedLoading ||
-    walletNeedsRestore
-
-  const onReview = useCallback(() => {
-    updateSwapForm({ txId: createTransactionId() })
-    setScreen(SwapScreen.SwapReview)
-  }, [setScreen, updateSwapForm])
-
-  return (
-    <Trace logPress element={ElementName.SwapReview}>
-      <Button
-        disabled={reviewButtonDisabled}
-        size="large"
-        testID={ElementName.ReviewSwap}
-        onPress={onReview}>
-        {getReviewActionName(t, wrapType)}
-      </Button>
-    </Trace>
   )
 }
 

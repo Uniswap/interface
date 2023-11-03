@@ -59,6 +59,8 @@ type Props = PropsWithChildren<{
   onClose?: () => void
   snapPoints?: Array<string | number>
   stackBehavior?: ComponentProps<typeof BaseModal>['stackBehavior']
+  containerComponent?: ComponentProps<typeof BaseModal>['containerComponent']
+  footerComponent?: ComponentProps<typeof BaseModal>['footerComponent']
   fullScreen?: boolean
   backgroundColor?: string
   blurredBackground?: boolean
@@ -95,6 +97,8 @@ export function BottomSheetModal({
   onClose,
   snapPoints = CONTENT_HEIGHT_SNAP_POINTS,
   stackBehavior = 'push',
+  containerComponent,
+  footerComponent,
   fullScreen,
   hideHandlebar,
   backgroundColor,
@@ -237,11 +241,9 @@ export function BottomSheetModal({
   const background = blurredBackground ? { backgroundComponent: renderBlurredBg } : undefined
   const backdrop = { backdropComponent: renderBackdrop }
 
-  const backgroundStyle = hideHandlebar
-    ? bottomSheetStyle.modalTransparent
-    : {
-        backgroundColor: backgroundColorValue,
-      }
+  const backgroundStyle = {
+    backgroundColor: backgroundColorValue,
+  }
 
   const bottomSheetViewStyles: StyleProp<ViewStyle> = [{ backgroundColor: backgroundColorValue }]
 
@@ -279,9 +281,11 @@ export function BottomSheetModal({
       activeOffsetY={IS_ANDROID ? [-DRAG_ACTIVATION_OFFSET, DRAG_ACTIVATION_OFFSET] : undefined}
       animatedPosition={animatedPosition}
       backgroundStyle={backgroundStyle}
+      containerComponent={containerComponent}
       contentHeight={animatedContentHeight}
       enableContentPanningGesture={isDismissible && !disableSwipe}
       enableHandlePanningGesture={isDismissible}
+      footerComponent={footerComponent}
       handleComponent={renderHandleBar}
       handleHeight={animatedHandleHeight}
       snapPoints={animatedSnapPoints}

@@ -109,6 +109,7 @@ export function SwapFormContextProvider({
     (): SwapFormContextState => ({
       amountUpdatedTimeRef,
       customSlippageTolerance: swapForm.customSlippageTolerance,
+      derivedSwapInfo,
       exactAmountFiat: swapForm.exactAmountFiat,
       exactAmountFiatRef,
       exactAmountToken: swapForm.exactAmountToken,
@@ -123,11 +124,8 @@ export function SwapFormContextProvider({
       setSwapForm,
       txId: swapForm.txId,
       updateSwapForm,
-      derivedSwapInfo,
     }),
     [
-      derivedSwapInfo,
-      onClose,
       swapForm.customSlippageTolerance,
       swapForm.exactAmountFiat,
       swapForm.exactAmountToken,
@@ -138,7 +136,9 @@ export function SwapFormContextProvider({
       swapForm.output,
       swapForm.selectingCurrencyField,
       swapForm.txId,
+      onClose,
       updateSwapForm,
+      derivedSwapInfo,
     ]
   )
 

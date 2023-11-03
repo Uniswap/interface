@@ -1,9 +1,20 @@
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
+import { BottomSheetFooter } from '@gorhom/bottom-sheet'
+import React, {
+  ComponentProps,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { TouchableWithoutFeedback } from 'react-native'
-import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
+import { FadeIn } from 'react-native-reanimated'
+import { useAppSelector } from 'src/app/hooks'
 import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { HandleBar } from 'src/components/modals/HandleBar'
+import { selectModalState } from 'src/features/modals/selectModalState'
 import { ModalName, SectionName } from 'src/features/telemetry/constants'
 import {
   SwapFormContextProvider,
@@ -15,94 +26,125 @@ import {
   useSwapScreenContext,
 } from 'src/features/transactions/swapRewrite/contexts/SwapScreenContext'
 import { SwapTxContextProvider } from 'src/features/transactions/swapRewrite/contexts/SwapTxContext'
+import { useOnCloseSwapModal } from 'src/features/transactions/swapRewrite/hooks/useOnCloseSwapModal'
+import { SwapFormButton } from 'src/features/transactions/swapRewrite/SwapFormButton'
 import { SwapFormScreen } from 'src/features/transactions/swapRewrite/SwapFormScreen'
 import { SwapPendingScreen } from 'src/features/transactions/swapRewrite/SwapPendingScreen'
 import { SwapReviewScreen } from 'src/features/transactions/swapRewrite/SwapReviewScreen'
-import { AnimatedFlex, Flex, useDeviceInsets, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, LinearGradient, useDeviceInsets, useSporeColors } from 'ui/src'
+import { opacify } from 'ui/src/theme'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import {
   CurrencyField,
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
 
-export function SwapFlow({
-  prefilledState,
-  onClose,
-}: {
-  prefilledState?: TransactionState
-  onClose: () => void
-}): JSX.Element {
+export function SwapFlow(): JSX.Element {
   const colors = useSporeColors()
 
-  // We need this additional `screen` state outside of the `SwapScreenContext` because the `SwapScreenContextProvider` needs to be inside the `BottomSheetModal`.
+  // We need this additional `screen` state outside of the `SwapScreenContext` because the `SwapScreenContextProvider` needs to be inside the `BottomSheetModal`'s `Container`.
   const [screen, setScreen] = useState<SwapScreen>(SwapScreen.SwapForm)
 
-  const modifiedPrefilledState = useMemo(
-    (): SwapFormState | undefined =>
-      prefilledState
-        ? {
-            customSlippageTolerance: prefilledState.customSlippageTolerance,
-            exactAmountFiat: prefilledState.exactAmountFiat,
-            exactAmountToken: prefilledState.exactAmountToken,
-            exactCurrencyField: prefilledState.exactCurrencyField,
-            focusOnCurrencyField: getFocusOnCurrencyField(prefilledState),
-            input: prefilledState.input ?? undefined,
-            output: prefilledState.output ?? undefined,
-            selectingCurrencyField: prefilledState.selectingCurrencyField,
-            txId: prefilledState.txId,
-            isFiatMode: false,
-          }
-        : undefined,
-    [prefilledState]
-  )
+  const onCloseSwapModal = useOnCloseSwapModal()
 
   const insets = useDeviceInsets()
 
-  const screenXOffset = useSharedValue(0)
-
-  const wrapperStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: screenXOffset.value }],
-  }))
-
   const shouldShowFullscreen = screen === SwapScreen.SwapForm || screen === SwapScreen.SwapPending
+
+  const hideHandlebar = shouldShowFullscreen || screen === SwapScreen.SwapReviewHoldingToSwap
 
   return (
     <BottomSheetModal
       hideKeyboardOnDismiss
       renderBehindTopInset
       backgroundColor={colors.surface1.get()}
+      containerComponent={Container}
+      footerComponent={Footer}
       fullScreen={shouldShowFullscreen}
-      hideHandlebar={shouldShowFullscreen}
+      hideHandlebar={hideHandlebar}
       name={ModalName.Swap}
-      onClose={onClose}>
+      onClose={onCloseSwapModal}>
       <TouchableWithoutFeedback>
         <Flex mt={shouldShowFullscreen ? insets.top : '$spacing8'}>
           {shouldShowFullscreen && <HandleBar backgroundColor="none" />}
 
-          <AnimatedFlex
-            grow
-            row
-            height={shouldShowFullscreen ? '100%' : undefined}
-            style={wrapperStyle}>
-            {/* Padding bottom must have a similar size to the handlebar 
-            height as 100% height doesn't include the handlebar height */}
-            <Flex
-              pb={shouldShowFullscreen ? '$spacing24' : '$spacing12'}
-              px="$spacing16"
-              width="100%">
-              <SwapScreenContextProvider>
-                <SwapFormContextProvider prefilledState={modifiedPrefilledState} onClose={onClose}>
-                  <SwapTxContextProvider>
-                    <CurrentScreen screen={screen} setScreen={setScreen} />
-                  </SwapTxContextProvider>
-                </SwapFormContextProvider>
-              </SwapScreenContextProvider>
+          <AnimatedFlex grow row height={shouldShowFullscreen ? '100%' : undefined}>
+            <Flex px="$spacing16" width="100%">
+              <CurrentScreen screen={screen} setScreen={setScreen} />
             </Flex>
           </AnimatedFlex>
         </Flex>
       </TouchableWithoutFeedback>
     </BottomSheetModal>
   )
+}
+
+function Container({ children }: { children?: ReactNode }): JSX.Element {
+  const onCloseSwapModal = useOnCloseSwapModal()
+  const { initialState } = useAppSelector(selectModalState(ModalName.Swap))
+
+  const prefilledState = useMemo(
+    (): SwapFormState | undefined =>
+      initialState
+        ? {
+            customSlippageTolerance: initialState.customSlippageTolerance,
+            exactAmountFiat: initialState.exactAmountFiat,
+            exactAmountToken: initialState.exactAmountToken,
+            exactCurrencyField: initialState.exactCurrencyField,
+            focusOnCurrencyField: getFocusOnCurrencyField(initialState),
+            input: initialState.input ?? undefined,
+            output: initialState.output ?? undefined,
+            selectingCurrencyField: initialState.selectingCurrencyField,
+            txId: initialState.txId,
+            isFiatMode: false,
+          }
+        : undefined,
+    [initialState]
+  )
+
+  return (
+    <SwapScreenContextProvider>
+      <SwapFormContextProvider prefilledState={prefilledState} onClose={onCloseSwapModal}>
+        <SwapTxContextProvider>{children}</SwapTxContextProvider>
+      </SwapFormContextProvider>
+    </SwapScreenContextProvider>
+  )
+}
+
+function Footer({
+  animatedFooterPosition,
+}: {
+  animatedFooterPosition: ComponentProps<typeof BottomSheetFooter>['animatedFooterPosition']
+}): JSX.Element {
+  const { screen } = useSwapScreenContext()
+  const colors = useSporeColors()
+  const insets = useDeviceInsets()
+
+  if (screen === SwapScreen.SwapForm || screen === SwapScreen.SwapReviewHoldingToSwap) {
+    return (
+      <BottomSheetFooter animatedFooterPosition={animatedFooterPosition}>
+        <AnimatedFlex entering={FadeIn} pb={insets.bottom} position="relative" pt="$spacing24">
+          <SwapFormButton />
+
+          {/*
+            This gradient adds a background behind the footer so that the content is hidden behind it
+            when the user is moving the sheet, while the footer stays in place.
+          */}
+          <Flex bottom={0} left={0} position="absolute" right={0} top={0} zIndex={-1}>
+            <LinearGradient
+              colors={[opacify(0, colors.background.val), colors.background.val]}
+              end={[0, 0.15]}
+              height="100%"
+              start={[0, 0]}
+              width="100%"
+            />
+          </Flex>
+        </AnimatedFlex>
+      </BottomSheetFooter>
+    )
+  }
+
+  return <></>
 }
 
 function CurrentScreen({
@@ -112,11 +154,11 @@ function CurrentScreen({
   screen: SwapScreen
   setScreen: Dispatch<SetStateAction<SwapScreen>>
 }): JSX.Element {
-  const { screen: contextScreen } = useSwapScreenContext()
+  const { screen: contextScreen, screenRef: contextScreenRef } = useSwapScreenContext()
 
   useEffect(() => {
     setScreen(contextScreen)
-  }, [contextScreen, setScreen])
+  }, [contextScreen, contextScreenRef, setScreen])
 
   switch (screen) {
     case SwapScreen.SwapForm:
@@ -126,6 +168,7 @@ function CurrentScreen({
         </Trace>
       )
     case SwapScreen.SwapReview:
+    case SwapScreen.SwapReviewHoldingToSwap:
       return (
         <Trace logImpression section={SectionName.SwapReview}>
           <SwapReviewScreenDelayedRender />
