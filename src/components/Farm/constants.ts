@@ -265,6 +265,19 @@ export const GammaPairs = {
         hypervisor: '0xb5a638528c2e15dd3475f57fd063ccffb587943c',
       },
     ],
+    '0x4200000000000000000000000000000000000006-0xaa1c53afd099e415208f47fcfa2c880f659e6904': [
+      {
+        type: Presets.GAMMA_NARROW,
+        title: 'Narrow',
+        address: '0xb0631942b2d862ccf9c4b753c1ef068e6bec1cfb',
+        token0Address: '0x4200000000000000000000000000000000000006',
+        token1Address: '0xaa1c53afd099e415208f47fcfa2c880f659e6904',
+        ableToFarm: true,
+        feerTier: 3000,
+        pid: 4,
+        hypervisor: '0x05c731f5f922835796c49412a30615c46cca4d9e',
+      },
+    ],
   },
 }
 
