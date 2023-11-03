@@ -1,0 +1,2062 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TransactionsTable displays swap transaction 1`] = `
+<DocumentFragment>
+  .c7 {
+  color: #7D7D7D;
+}
+
+.c13 {
+  color: #222222;
+}
+
+.c14 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c14:hover {
+  opacity: 0.6;
+}
+
+.c14:active {
+  opacity: 0.4;
+}
+
+.c0 {
+  border: 1px solid #22222212;
+  border-radius: 20px;
+}
+
+.c1 {
+  overflow: auto;
+}
+
+.c2 {
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  -webkit-scrollbar-width: none;
+  -moz-scrollbar-width: none;
+  -ms-scrollbar-width: none;
+  scrollbar-width: none;
+}
+
+.c2::-webkit-scrollbar {
+  display: none;
+}
+
+.c9 {
+  max-height: 550px;
+  overflow-y: auto;
+}
+
+.c3 {
+  border-collapse: collapse;
+  box-sizing: border-box;
+}
+
+.c4 {
+  display: table;
+  width: 100%;
+}
+
+.c10 {
+  display: table;
+  width: 100%;
+}
+
+.c11:hover {
+  background: #22222212;
+}
+
+.c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 12px 16px;
+  white-space: nowrap;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c8 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 12px 16px;
+  white-space: nowrap;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+}
+
+.c5 {
+  min-width: 0px;
+  padding: 8px;
+  border-bottom: 1px solid #22222212;
+}
+
+.c12 {
+  min-width: 0px;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.c15 {
+  color: #7D7D7D;
+  stroke: #7D7D7D;
+}
+
+<div
+    class="c0"
+  >
+    <div
+      class="c1"
+    >
+      <div
+        class="c2"
+      >
+        <table
+          class="c3"
+        >
+          <thead
+            class="c4"
+          >
+            <tr>
+              <th
+                class="c5"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    Time
+                  </div>
+                </div>
+              </th>
+              <th
+                class="c5"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    Type
+                  </div>
+                </div>
+              </th>
+              <th
+                class="c5"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    $BITCOIN
+                  </div>
+                </div>
+              </th>
+              <th
+                class="c5"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    For
+                  </div>
+                </div>
+              </th>
+              <th
+                class="c5"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    USD
+                  </div>
+                </div>
+              </th>
+              <th
+                class="c5"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    Maker
+                  </div>
+                </div>
+              </th>
+              <th
+                class="c5"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    Tx
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+      <div
+        class="c9"
+      >
+        <table
+          class="c3"
+        >
+          <tbody
+            class="c10"
+          >
+            <tr
+              class="c11"
+            >
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    09/06, 05:09pm
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    Buy
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    6,084.98
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    39,037.94 DORKL
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    $1,000.00
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    0x...15Cc
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <a
+                    class="c14 c15"
+                    data-testid="https://etherscan.io/tx/0xc3e8878f48b4c5048fef4988136b1cad4401b77f36f0e034e4e97929df85fb5e"
+                    href="https://etherscan.io/tx/0xc3e8878f48b4c5048fef4988136b1cad4401b77f36f0e034e4e97929df85fb5e"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <svg
+                      fill="none"
+                      height="16px"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="16px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                      />
+                      <polyline
+                        points="15 3 21 3 21 9"
+                      />
+                      <line
+                        x1="10"
+                        x2="21"
+                        y1="14"
+                        y2="3"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="c11"
+            >
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    09/06, 05:04pm
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    Buy
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    10,107.51
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    0.49139 ETH
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    $797.76
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    0x...0066
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <a
+                    class="c14 c15"
+                    data-testid="https://etherscan.io/tx/0x5120390377de7dd7089086160ed5bf766de15900a6e145c2c53cfe356892b7c9"
+                    href="https://etherscan.io/tx/0x5120390377de7dd7089086160ed5bf766de15900a6e145c2c53cfe356892b7c9"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <svg
+                      fill="none"
+                      height="16px"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="16px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                      />
+                      <polyline
+                        points="15 3 21 3 21 9"
+                      />
+                      <line
+                        x1="10"
+                        x2="21"
+                        y1="14"
+                        y2="3"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="c11"
+            >
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    09/06, 05:03pm
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    Sell
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    81,044.46
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    4.00 ETH
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    $6,493.95
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    0x...0717
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <a
+                    class="c14 c15"
+                    data-testid="https://etherscan.io/tx/0x4bd29f92922020ee2582f7d88ac1f791de1ad0d20b1939fb079c231acd255c66"
+                    href="https://etherscan.io/tx/0x4bd29f92922020ee2582f7d88ac1f791de1ad0d20b1939fb079c231acd255c66"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <svg
+                      fill="none"
+                      height="16px"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="16px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                      />
+                      <polyline
+                        points="15 3 21 3 21 9"
+                      />
+                      <line
+                        x1="10"
+                        x2="21"
+                        y1="14"
+                        y2="3"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="c11"
+            >
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    09/06, 05:02pm
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    Buy
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    10,951.03
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    72,944.07 DORKL
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    $0.00
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    0x...aE13
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <a
+                    class="c14 c15"
+                    data-testid="https://etherscan.io/tx/0x6e9c656fa12f9e99e9785a16eb3348a766b74513a3bbc74d6a6e252ff8eca61b"
+                    href="https://etherscan.io/tx/0x6e9c656fa12f9e99e9785a16eb3348a766b74513a3bbc74d6a6e252ff8eca61b"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <svg
+                      fill="none"
+                      height="16px"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="16px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                      />
+                      <polyline
+                        points="15 3 21 3 21 9"
+                      />
+                      <line
+                        x1="10"
+                        x2="21"
+                        y1="14"
+                        y2="3"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="c11"
+            >
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    09/06, 05:02pm
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    Sell
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    80,552.97
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    4.00 ETH
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    $6,493.95
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    0x...0717
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <a
+                    class="c14 c15"
+                    data-testid="https://etherscan.io/tx/0x96fc13ceb5986180b6f98583db42b704b7d1e355daaa66f4c3b824fa79ae951a"
+                    href="https://etherscan.io/tx/0x96fc13ceb5986180b6f98583db42b704b7d1e355daaa66f4c3b824fa79ae951a"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <svg
+                      fill="none"
+                      height="16px"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="16px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                      />
+                      <polyline
+                        points="15 3 21 3 21 9"
+                      />
+                      <line
+                        x1="10"
+                        x2="21"
+                        y1="14"
+                        y2="3"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="c11"
+            >
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    09/06, 04:59pm
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    Sell
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    80,678.39
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    4.00 ETH
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    $6,493.95
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    0x...0717
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <a
+                    class="c14 c15"
+                    data-testid="https://etherscan.io/tx/0x09632a33668315747a76de5515377d5feb5ed1c91adf9c860132fd286b474219"
+                    href="https://etherscan.io/tx/0x09632a33668315747a76de5515377d5feb5ed1c91adf9c860132fd286b474219"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <svg
+                      fill="none"
+                      height="16px"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="16px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                      />
+                      <polyline
+                        points="15 3 21 3 21 9"
+                      />
+                      <line
+                        x1="10"
+                        x2="21"
+                        y1="14"
+                        y2="3"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="c11"
+            >
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    09/06, 04:59pm
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    Sell
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    5,280.84
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    0.26043 ETH
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    $422.81
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    0x...571D
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <a
+                    class="c14 c15"
+                    data-testid="https://etherscan.io/tx/0xf3afbe78dc5ba0dd5e1f3c7a256b21c5978a48c86e3fca36470a96b1671294a0"
+                    href="https://etherscan.io/tx/0xf3afbe78dc5ba0dd5e1f3c7a256b21c5978a48c86e3fca36470a96b1671294a0"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <svg
+                      fill="none"
+                      height="16px"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="16px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                      />
+                      <polyline
+                        points="15 3 21 3 21 9"
+                      />
+                      <line
+                        x1="10"
+                        x2="21"
+                        y1="14"
+                        y2="3"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="c11"
+            >
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    09/06, 04:59pm
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    Buy
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    5,280.84
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    36,473.08 DORKL
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    $0.00
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    0x...571D
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <a
+                    class="c14 c15"
+                    data-testid="https://etherscan.io/tx/0xf3afbe78dc5ba0dd5e1f3c7a256b21c5978a48c86e3fca36470a96b1671294a0"
+                    href="https://etherscan.io/tx/0xf3afbe78dc5ba0dd5e1f3c7a256b21c5978a48c86e3fca36470a96b1671294a0"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <svg
+                      fill="none"
+                      height="16px"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="16px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                      />
+                      <polyline
+                        points="15 3 21 3 21 9"
+                      />
+                      <line
+                        x1="10"
+                        x2="21"
+                        y1="14"
+                        y2="3"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="c11"
+            >
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    09/06, 04:59pm
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    Sell
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    80,804.09
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    4.00 ETH
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    $6,493.95
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    0x...0717
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <a
+                    class="c14 c15"
+                    data-testid="https://etherscan.io/tx/0x50304f0a8c781064275697fefd78f91d91f897eed03db77f50124c9d5a57ba34"
+                    href="https://etherscan.io/tx/0x50304f0a8c781064275697fefd78f91d91f897eed03db77f50124c9d5a57ba34"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <svg
+                      fill="none"
+                      height="16px"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="16px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                      />
+                      <polyline
+                        points="15 3 21 3 21 9"
+                      />
+                      <line
+                        x1="10"
+                        x2="21"
+                        y1="14"
+                        y2="3"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="c11"
+            >
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    09/06, 04:58pm
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    Sell
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    55,626.01
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    2.75 ETH
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    $4,464.59
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    0x...3fEA
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <a
+                    class="c14 c15"
+                    data-testid="https://etherscan.io/tx/0xe7b79fa34d179530344505bf622cd0fbf7981226de3ea7a0718a2409e6fd77f4"
+                    href="https://etherscan.io/tx/0xe7b79fa34d179530344505bf622cd0fbf7981226de3ea7a0718a2409e6fd77f4"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <svg
+                      fill="none"
+                      height="16px"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="16px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                      />
+                      <polyline
+                        points="15 3 21 3 21 9"
+                      />
+                      <line
+                        x1="10"
+                        x2="21"
+                        y1="14"
+                        y2="3"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="c11"
+            >
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    09/06, 04:57pm
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    Sell
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    40,492.89
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    2.00 ETH
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    $3,246.98
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    0x...Dda8
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <a
+                    class="c14 c15"
+                    data-testid="https://etherscan.io/tx/0x616747cc56f563560b92cb28abf566dd556d795dd397b6124b40712cd0fb7843"
+                    href="https://etherscan.io/tx/0x616747cc56f563560b92cb28abf566dd556d795dd397b6124b40712cd0fb7843"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <svg
+                      fill="none"
+                      height="16px"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="16px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                      />
+                      <polyline
+                        points="15 3 21 3 21 9"
+                      />
+                      <line
+                        x1="10"
+                        x2="21"
+                        y1="14"
+                        y2="3"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="c11"
+            >
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    09/06, 04:57pm
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    Sell
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    40,524.76
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    2.00 ETH
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    $3,246.98
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    0x...0717
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <a
+                    class="c14 c15"
+                    data-testid="https://etherscan.io/tx/0x46b924ac0e9ecdae1dacfe93c8b0edd22d44ff5a439ae40b43e9e2e9a2da6ce8"
+                    href="https://etherscan.io/tx/0x46b924ac0e9ecdae1dacfe93c8b0edd22d44ff5a439ae40b43e9e2e9a2da6ce8"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <svg
+                      fill="none"
+                      height="16px"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="16px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                      />
+                      <polyline
+                        points="15 3 21 3 21 9"
+                      />
+                      <line
+                        x1="10"
+                        x2="21"
+                        y1="14"
+                        y2="3"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="c11"
+            >
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    09/06, 04:54pm
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    Buy
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    6,781.92
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    0.33332 ETH
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    $541.14
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    0x...aE13
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <a
+                    class="c14 c15"
+                    data-testid="https://etherscan.io/tx/0xe027f9356e88ace19bca4f863771a1d85bc445929fc66dead7504915437bfbce"
+                    href="https://etherscan.io/tx/0xe027f9356e88ace19bca4f863771a1d85bc445929fc66dead7504915437bfbce"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <svg
+                      fill="none"
+                      height="16px"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="16px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                      />
+                      <polyline
+                        points="15 3 21 3 21 9"
+                      />
+                      <line
+                        x1="10"
+                        x2="21"
+                        y1="14"
+                        y2="3"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="c11"
+            >
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c7 css-1urox24"
+                  >
+                    09/06, 04:54pm
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    Sell
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    6,781.92
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    188,486.36 SPX
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    $0.00
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <div
+                    class="c13 css-1urox24"
+                  >
+                    0x...aE13
+                  </div>
+                </div>
+              </td>
+              <td
+                class="c12"
+                width="0"
+              >
+                <div
+                  class="c8"
+                >
+                  <a
+                    class="c14 c15"
+                    data-testid="https://etherscan.io/tx/0xe027f9356e88ace19bca4f863771a1d85bc445929fc66dead7504915437bfbce"
+                    href="https://etherscan.io/tx/0xe027f9356e88ace19bca4f863771a1d85bc445929fc66dead7504915437bfbce"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <svg
+                      fill="none"
+                      height="16px"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="16px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                      />
+                      <polyline
+                        points="15 3 21 3 21 9"
+                      />
+                      <line
+                        x1="10"
+                        x2="21"
+                        y1="14"
+                        y2="3"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
