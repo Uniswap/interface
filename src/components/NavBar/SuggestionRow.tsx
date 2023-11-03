@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkSearchTokenWarning } from 'constants/tokenSafety'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { Chain, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
@@ -12,13 +13,11 @@ import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { vars } from 'nft/css/sprinkles.css'
 import { GenieCollection } from 'nft/types'
-import { ethNumberStandardFormatter } from 'nft/utils/currency'
-import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { useFormatter } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { DeltaArrow, DeltaText } from '../Tokens/TokenDetails/Delta'
 import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
@@ -48,6 +47,8 @@ export const CollectionRow = ({
   index,
   eventProperties,
 }: CollectionRowProps) => {
+  const { formatNumberOrString } = useFormatter()
+
   const [brokenImage, setBrokenImage] = useState(false)
   const [loaded, setLoaded] = useState(false)
 
@@ -101,13 +102,17 @@ export const CollectionRow = ({
             <Box className={styles.primaryText}>{collection.name}</Box>
             {collection.isVerified && <VerifiedIcon className={styles.suggestionIcon} />}
           </Row>
-          <Box className={styles.secondaryText}>{putCommas(collection?.stats?.total_supply ?? 0)} items</Box>
+          <Box className={styles.secondaryText}>
+            {formatNumberOrString({ input: collection?.stats?.total_supply, type: NumberType.WholeNumber })} items
+          </Box>
         </Column>
       </Row>
       {collection.stats?.floor_price ? (
         <Column className={styles.suggestionSecondaryContainer}>
           <Row gap="4">
-            <Box className={styles.primaryText}>{ethNumberStandardFormatter(collection.stats?.floor_price)} ETH</Box>
+            <Box className={styles.primaryText}>
+              {formatNumberOrString({ input: collection.stats?.floor_price, type: NumberType.NFTToken })} ETH
+            </Box>
           </Row>
           <Box className={styles.secondaryText}>Floor</Box>
         </Column>
@@ -128,7 +133,7 @@ interface TokenRowProps {
 export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
   const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
   const navigate = useNavigate()
-  const { formatFiatPrice } = useFormatter()
+  const { formatFiatPrice, formatDelta } = useFormatter()
 
   const handleClick = useCallback(() => {
     const address = !token.address && token.standard === TokenStandard.Native ? 'NATIVE' : token.address
@@ -138,7 +143,9 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
 
-  const tokenDetailsPath = getTokenDetailsURL(token)
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
+
+  const tokenDetailsPath = getTokenDetailsURL({ ...token, isInfoExplorePageEnabled })
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -191,7 +198,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
               <DeltaArrow delta={token.market?.pricePercentChange?.value} />
               <ThemedText.BodySmall>
                 <DeltaText delta={token.market?.pricePercentChange?.value}>
-                  {Math.abs(token.market?.pricePercentChange?.value ?? 0).toFixed(2)}%
+                  {formatDelta(Math.abs(token.market?.pricePercentChange?.value ?? 0))}
                 </DeltaText>
               </ThemedText.BodySmall>
             </PriceChangeContainer>

@@ -22,7 +22,7 @@ export function FiatValue({
   fiatValue: { data?: number; isLoading: boolean }
   priceImpact?: Percent
 }) {
-  const { formatNumber, formatPriceImpact } = useFormatter()
+  const { formatNumber, formatPercent } = useFormatter()
 
   const priceImpactColor = useMemo(() => {
     if (!priceImpact) return undefined
@@ -54,7 +54,7 @@ export function FiatValue({
           <MouseoverTooltip
             text={<Trans>The estimated difference between the USD values of input and output amounts.</Trans>}
           >
-            (<Trans>{formatPriceImpact(priceImpact)}</Trans>)
+            (<Trans>{formatPercent(priceImpact.multiply(-1))}</Trans>)
           </MouseoverTooltip>
         </ThemedText.BodySmall>
       )}

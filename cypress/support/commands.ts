@@ -24,7 +24,7 @@ declare global {
     }
     interface VisitOptions {
       serviceWorker?: true
-      featureFlags?: Array<FeatureFlag>
+      featureFlags?: Array<{ name: FeatureFlag; value: boolean }>
       /**
        * Initial user state.
        * @default {@type import('../utils/user-state').CONNECTED_WALLET_USER_STATE}
@@ -59,7 +59,10 @@ Cypress.Commands.overwrite(
 
             // Set feature flags, if configured.
             if (options?.featureFlags) {
-              const featureFlags = options.featureFlags.reduce((flags, flag) => ({ ...flags, [flag]: 'enabled' }), {})
+              const featureFlags = options.featureFlags.reduce(
+                (flags, flag) => ({ ...flags, [flag.name]: flag.value ? 'enabled' : 'control' }),
+                {}
+              )
               win.localStorage.setItem('featureFlags', JSON.stringify(featureFlags))
             }
 
@@ -71,18 +74,14 @@ Cypress.Commands.overwrite(
   }
 )
 
-Cypress.Commands.add('waitForAmplitudeEvent', (eventName, timeout = 5000 /* 5s */) => {
-  const startTime = new Date().getTime()
-
+Cypress.Commands.add('waitForAmplitudeEvent', (eventName) => {
   function checkRequest() {
-    return cy.wait('@amplitude', { timeout }).then((interception) => {
+    return cy.wait('@amplitude').then((interception) => {
       const events = interception.request.body.events
       const event = events.find((event: any) => event.event_type === eventName)
 
       if (event) {
         return cy.wrap(event)
-      } else if (new Date().getTime() - startTime > timeout) {
-        throw new Error(`Event ${eventName} not found within the specified timeout`)
       } else {
         return checkRequest()
       }

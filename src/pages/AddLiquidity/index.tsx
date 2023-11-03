@@ -28,6 +28,7 @@ import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { WrongChainError } from 'utils/errors'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
 import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
@@ -154,6 +155,11 @@ function AddLiquidity() {
     existingPosition
   )
 
+  const { formatPrice } = useFormatter()
+  const formattedPrice = formatPrice({
+    price: invertPrice ? price?.invert() : price,
+    type: NumberType.TokenTx,
+  })
   const { onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput, onStartPriceInput } =
     useV3MintActionHandlers(noLiquidity)
 
@@ -765,12 +771,7 @@ function AddLiquidity() {
                                 Current price:
                               </ThemedText.DeprecatedMain>
                               <ThemedText.DeprecatedBody fontWeight={535} fontSize={20} color="text1">
-                                {price && (
-                                  <HoverInlineText
-                                    maxCharacters={20}
-                                    text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
-                                  />
-                                )}
+                                {price && <HoverInlineText maxCharacters={20} text={formattedPrice} />}
                               </ThemedText.DeprecatedBody>
                               {baseCurrency && (
                                 <ThemedText.DeprecatedBody color="text2" fontSize={12}>

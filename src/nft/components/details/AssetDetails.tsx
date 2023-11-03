@@ -10,15 +10,14 @@ import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { Center } from 'nft/components/Flex'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { ActivityEventType, CollectionInfoForAsset, GenieAsset } from 'nft/types'
-import { formatEth } from 'nft/utils/currency'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
-import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Link as RouterLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { shortenAddress } from 'utils/addresses'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import AssetActivity, { LoadingAssetActivity } from './AssetActivity'
 import * as styles from './AssetDetails.css'
@@ -243,6 +242,7 @@ interface AssetDetailsProps {
 }
 
 export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
+  const { formatNumberOrString } = useFormatter()
   const [dominantColor] = useState<[number, number, number]>([0, 0, 0])
 
   const { rarityProvider } = useMemo(
@@ -281,7 +281,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   )
 
   const weiPrice = gqlPriceData?.[0]?.price
-  const formattedPrice = weiPrice ? formatEth(parseFloat(weiPrice)) : undefined
+  const formattedPrice = weiPrice
+    ? formatNumberOrString({ input: parseFloat(weiPrice), type: NumberType.NFTToken })
+    : undefined
 
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
   const Filter = useCallback(
@@ -359,7 +361,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                 }
                 placement="top"
               >
-                <RarityWrap>Rarity: {putCommas(rarity.score)}</RarityWrap>
+                <RarityWrap>
+                  Rarity: {formatNumberOrString({ input: rarity.score, type: NumberType.WholeNumber })}
+                </RarityWrap>
               </MouseoverTooltip>
             ) : null
           }

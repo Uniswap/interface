@@ -20,7 +20,7 @@ interface PriceImpactWarningProps {
 }
 
 export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningProps) {
-  const { formatPriceImpact } = useFormatter()
+  const { formatPercent } = useFormatter()
   const theme = useTheme()
 
   return (
@@ -41,7 +41,7 @@ export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningPr
               </ThemedText.DeprecatedSubHeader>
             </RowFixed>
             <ThemedText.DeprecatedLabel textAlign="right" fontSize={14} color="critical">
-              {formatPriceImpact(priceImpact)}
+              ~{formatPercent(priceImpact)}
             </ThemedText.DeprecatedLabel>
           </RowBetween>
         </MouseoverTooltip>

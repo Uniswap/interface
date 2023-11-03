@@ -117,7 +117,8 @@ export function gqlToCurrency(token: {
 }): Currency | undefined {
   const chainId = supportedChainIdFromGQLChain(token.chain)
   if (!chainId) return undefined
-  if (token.standard === TokenStandard.Native || !token.address) return nativeOnChain(chainId)
+  if (token.standard === TokenStandard.Native || token.address === 'NATIVE' || !token.address)
+    return nativeOnChain(chainId)
   else return new Token(chainId, token.address, token.decimals ?? 18, token.symbol, token.name)
 }
 
@@ -206,15 +207,17 @@ export function getTokenDetailsURL({
   address,
   chain,
   inputAddress,
+  isInfoExplorePageEnabled,
 }: {
   address?: string | null
   chain: Chain
   inputAddress?: string | null
+  isInfoExplorePageEnabled: boolean
 }) {
   const chainName = chain.toLowerCase()
   const tokenAddress = address ?? NATIVE_CHAIN_ID
   const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
-  return `/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
+  return (isInfoExplorePageEnabled ? '/explore' : '') + `/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
 }
 
 export function unwrapToken<

@@ -9,12 +9,13 @@ import { Break } from 'components/earn/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import RateToggle from 'components/RateToggle'
 import { RowBetween, RowFixed } from 'components/Row'
+import { BIPS_BASE } from 'constants/misc'
 import JSBI from 'jsbi'
 import { ReactNode, useCallback, useState } from 'react'
 import { Bound } from 'state/mint/v3/actions'
 import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { useFormatter } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 export const PositionPreview = ({
@@ -31,7 +32,7 @@ export const PositionPreview = ({
   ticksAtLimit: { [bound: string]: boolean | undefined }
 }) => {
   const theme = useTheme()
-  const { formatTickPrice } = useFormatter()
+  const { formatCurrencyAmount, formatDelta, formatPrice, formatTickPrice } = useFormatter()
 
   const currency0 = unwrappedToken(position.pool.token0)
   const currency1 = unwrappedToken(position.pool.token1)
@@ -86,7 +87,9 @@ export const PositionPreview = ({
               <ThemedText.DeprecatedLabel ml="8px">{currency0?.symbol}</ThemedText.DeprecatedLabel>
             </RowFixed>
             <RowFixed>
-              <ThemedText.DeprecatedLabel mr="8px">{position.amount0.toSignificant(4)}</ThemedText.DeprecatedLabel>
+              <ThemedText.DeprecatedLabel mr="8px">
+                {formatCurrencyAmount({ amount: position.amount0 })}
+              </ThemedText.DeprecatedLabel>
             </RowFixed>
           </RowBetween>
           <RowBetween>
@@ -95,7 +98,9 @@ export const PositionPreview = ({
               <ThemedText.DeprecatedLabel ml="8px">{currency1?.symbol}</ThemedText.DeprecatedLabel>
             </RowFixed>
             <RowFixed>
-              <ThemedText.DeprecatedLabel mr="8px">{position.amount1.toSignificant(4)}</ThemedText.DeprecatedLabel>
+              <ThemedText.DeprecatedLabel mr="8px">
+                {formatCurrencyAmount({ amount: position.amount1 })}
+              </ThemedText.DeprecatedLabel>
             </RowFixed>
           </RowBetween>
           <Break />
@@ -104,7 +109,7 @@ export const PositionPreview = ({
               <Trans>Fee tier</Trans>
             </ThemedText.DeprecatedLabel>
             <ThemedText.DeprecatedLabel>
-              <Trans>{position?.pool?.fee / 10000}%</Trans>
+              <Trans>{formatDelta(position?.pool?.fee / BIPS_BASE)}</Trans>
             </ThemedText.DeprecatedLabel>
           </RowBetween>
         </AutoColumn>
@@ -172,7 +177,10 @@ export const PositionPreview = ({
             <ThemedText.DeprecatedMain fontSize="12px">
               <Trans>Current price</Trans>
             </ThemedText.DeprecatedMain>
-            <ThemedText.DeprecatedMediumHeader>{`${price.toSignificant(5)} `}</ThemedText.DeprecatedMediumHeader>
+            <ThemedText.DeprecatedMediumHeader>{`${formatPrice({
+              price,
+              type: NumberType.TokenTx,
+            })} `}</ThemedText.DeprecatedMediumHeader>
             <ThemedText.DeprecatedMain textAlign="center" fontSize="12px">
               <Trans>
                 {quoteCurrency.symbol} per {baseCurrency.symbol}

@@ -16,6 +16,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Box } from 'rebass'
 import styled, { keyframes } from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { useFormatter } from 'utils/formatNumbers'
 
 import { FeeOption } from './FeeOption'
 import { FeeTierPercentageBadge } from './FeeTierPercentageBadge'
@@ -62,6 +63,7 @@ export default function FeeSelector({
 }) {
   const { chainId } = useWeb3React()
   const trace = useTrace()
+  const { formatDelta } = useFormatter()
 
   const { isLoading, isError, largestUsageFeeTier, distributions } = useFeeTierDistribution(currencyA, currencyB)
 
@@ -161,7 +163,7 @@ export default function FeeSelector({
               ) : (
                 <>
                   <ThemedText.DeprecatedLabel className="selected-fee-label">
-                    <Trans>{FEE_AMOUNT_DETAIL[feeAmount].label}% fee tier</Trans>
+                    <Trans>{formatDelta(parseFloat(FEE_AMOUNT_DETAIL[feeAmount].label))} fee tier</Trans>
                   </ThemedText.DeprecatedLabel>
                   <Box style={{ width: 'fit-content', marginTop: '8px' }} className="selected-fee-percentage">
                     {distributions && (

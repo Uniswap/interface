@@ -43,6 +43,24 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   gap: 4px;
 }
 
+.c21 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c4 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -91,7 +109,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   justify-content: flex-start;
 }
 
-.c17 {
+.c16 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -160,6 +178,28 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   user-select: text;
 }
 
+.c20 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c19 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+.c22 {
+  background: #22222212;
+  border-radius: 8px;
+  color: #7D7D7D;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.c22::after {
+  content: 'Auto';
+}
+
 .c5 {
   padding: 0;
   -webkit-align-items: center;
@@ -178,7 +218,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   transition: transform 0.1s linear;
 }
 
-.c16 {
+.c17 {
   padding-top: 12px;
 }
 
@@ -281,117 +321,158 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
     >
       <div>
         <div
-          class="c16"
+          class="c16 c17"
           data-testid="advanced-swap-details"
         >
           <div
-            class="c17"
-          >
-            <div
-              class="c18"
-            />
+            class="c18"
+          />
+          <div>
             <div
               class="c2 c3 c4"
             >
               <div
-                class="c12"
+                class="c9 c19 css-142zc9n"
+                data-testid="swap-li-label"
               >
-                <div>
-                  <div
-                    class="c14 css-142zc9n"
-                  >
-                    Network fee
-                  </div>
-                </div>
+                Price impact
               </div>
               <div
                 class="c12"
               >
                 <div>
                   <div
-                    class="c9 css-142zc9n"
+                    class="c9 c20 css-142zc9n"
                   >
-                    ~$1.00
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="c2 c3 c4"
-            >
-              <div
-                class="c12"
-              >
-                <div>
-                  <div
-                    class="c14 css-142zc9n"
-                  >
-                    Price Impact
-                  </div>
-                </div>
-              </div>
-              <div
-                class="c9 css-142zc9n"
-              >
-                105566.373%
-              </div>
-            </div>
-            <div
-              class="c2 c3 c4"
-            >
-              <div
-                class="c2 c3 c6"
-              >
-                <div
-                  class="c12"
-                >
-                  <div>
-                    <div
-                      class="c14 css-142zc9n"
+                    <span
+                      class=""
                     >
-                      Minimum output
+                      ~-105566.373%
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c9 c19 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Max. slippage
+              </div>
+              <div
+                class="c12"
+              >
+                <div>
+                  <div
+                    class="c9 c20 css-142zc9n"
+                  >
+                    <div
+                      class="c2 c21"
+                    >
+                      <div
+                        class="c14 c22 css-1lgneq0"
+                      />
+                       2%
                     </div>
                   </div>
                 </div>
               </div>
-              <div
-                class="c9 css-142zc9n"
-              >
-                0.00000000000000098 DEF
-              </div>
             </div>
+          </div>
+          <div>
             <div
               class="c2 c3 c4"
             >
               <div
-                class="c2 c3 c6"
+                class="c9 c19 css-142zc9n"
+                data-testid="swap-li-label"
               >
-                <div
-                  class="c12"
-                >
-                  <div>
+                Fee 
+              </div>
+              <div
+                class="c12"
+              >
+                <div>
+                  <div
+                    class="c9 c20 css-142zc9n"
+                  >
+                    0 DEF
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c9 c19 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Network cost
+              </div>
+              <div
+                class="c12"
+              >
+                <div>
+                  <div
+                    class="c9 c20 css-142zc9n"
+                  >
                     <div
-                      class="c14 css-142zc9n"
+                      class="c2 c10"
                     >
-                      Expected output
+                      <svg
+                        aria-labelledby="titleID"
+                        height="16"
+                        width="16"
+                      >
+                        <title
+                          id="titleID"
+                        >
+                          Ethereum logo
+                        </title>
+                        <rect
+                          fill="#F9F9F9"
+                          height="16"
+                          rx="4"
+                          width="16"
+                        />
+                        <rect
+                          fill="#6B8AFF33"
+                          height="16"
+                          rx="4"
+                          width="16"
+                        />
+                        <svg
+                          height="16"
+                          width="16"
+                        >
+                          ethereum.svg
+                        </svg>
+                      </svg>
+                      $1.00
                     </div>
                   </div>
                 </div>
               </div>
-              <div
-                class="c9 css-142zc9n"
-              >
-                0.000000000000001 DEF
-              </div>
             </div>
-            <div
-              class="c18"
-            />
+          </div>
+          <div
+            class="c18"
+          />
+          <div>
             <div
               class="c2 c3 c4"
             >
               <div
-                class="c14 css-142zc9n"
+                class="c9 c19 css-142zc9n"
+                data-testid="swap-li-label"
               >
                 Order routing
               </div>
@@ -400,9 +481,13 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
               >
                 <div>
                   <div
-                    class="c9 css-142zc9n"
+                    class="c9 c20 css-142zc9n"
                   >
-                    Uniswap Client
+                    <div
+                      class="css-142zc9n"
+                    >
+                      Uniswap Client
+                    </div>
                   </div>
                 </div>
               </div>

@@ -20,7 +20,7 @@ import { ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { useFormatter } from 'utils/formatNumbers'
 
-import { calculateDelta, DeltaArrow, formatDelta } from '../../Tokens/TokenDetails/Delta'
+import { calculateDelta, DeltaArrow } from '../../Tokens/TokenDetails/Delta'
 
 const CHART_MARGIN = { top: 100, bottom: 48, crosshair: 72 }
 
@@ -52,6 +52,8 @@ interface ChartDeltaProps {
 
 function ChartDelta({ startingPrice, endingPrice, noColor }: ChartDeltaProps) {
   const delta = calculateDelta(startingPrice.value, endingPrice.value)
+  const { formatDelta } = useFormatter()
+
   return (
     <DeltaContainer>
       {formatDelta(delta)}

@@ -1,30 +1,60 @@
+import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
+import { LoadingBubble } from 'components/Tokens/loading'
+import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
 import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { usePoolData } from 'graphql/thegraph/PoolData'
 import NotFound from 'pages/NotFound'
 import { useReducer } from 'react'
 import { useParams } from 'react-router-dom'
+import { Text } from 'rebass'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { isAddress } from 'utils'
 
 import { PoolDetailsHeader } from './PoolDetailsHeader'
+import { PoolDetailsLink } from './PoolDetailsLink'
 import { PoolDetailsStats } from './PoolDetailsStats'
 import { PoolDetailsStatsButtons } from './PoolDetailsStatsButtons'
+import { PoolDetailsTableSkeleton } from './PoolDetailsTableSkeleton'
 
 const PageWrapper = styled(Row)`
   padding: 48px;
   width: 100%;
   align-items: flex-start;
+  gap: 60px;
 
   @media (max-width: ${BREAKPOINTS.lg - 1}px) {
     flex-direction: column;
+    gap: unset;
   }
 
   @media (max-width: ${BREAKPOINTS.sm - 1}px) {
     padding: 48px 16px;
   }
+`
+
+const LeftColumn = styled(Column)`
+  gap: 24px;
+  width: 65vw;
+  overflow: hidden;
+  justify-content: flex-start;
+
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) {
+    width: 100%;
+  }
+`
+
+const HR = styled.hr`
+  border: 0.5px solid ${({ theme }) => theme.surface3};
+  margin: 16px 0px;
+  width: 100%;
+`
+
+const ChartHeaderBubble = styled(LoadingBubble)`
+  width: 180px;
+  height: 32px;
 `
 
 const RightColumn = styled(Column)`
@@ -38,6 +68,33 @@ const RightColumn = styled(Column)`
     width: 100%;
     min-width: unset;
   }
+`
+
+const TokenDetailsWrapper = styled(Column)`
+  gap: 24px;
+  padding: 20px;
+
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) and (min-width: ${BREAKPOINTS.sm}px) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: unset;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm - 1}px) {
+    padding: unset;
+  }
+`
+
+const TokenDetailsHeader = styled(Text)`
+  width: 100%;
+  font-size: 24px;
+  font-weight: 485;
+  line-height: 32px;
+`
+
+const LinksContainer = styled(Column)`
+  gap: 16px;
+  width: 100%;
 `
 
 export default function PoolDetailsPage() {
@@ -54,22 +111,45 @@ export default function PoolDetailsPage() {
   const isInvalidPool = !chainName || !poolAddress || !getValidUrlChainName(chainName) || !isAddress(poolAddress)
   const poolNotFound = (!loading && !poolData) || isInvalidPool
 
-  // TODO(WEB-2814): Add skeleton once designed
-  if (loading) return null
   if (poolNotFound) return <NotFound />
   return (
     <PageWrapper>
-      <PoolDetailsHeader
-        chainId={chainId}
-        poolAddress={poolAddress}
-        token0={token0}
-        token1={token1}
-        feeTier={poolData?.feeTier}
-        toggleReversed={toggleReversed}
-      />
+      <LeftColumn>
+        <Column gap="sm">
+          <PoolDetailsHeader
+            chainId={chainId}
+            poolAddress={poolAddress}
+            token0={token0}
+            token1={token1}
+            feeTier={poolData?.feeTier}
+            toggleReversed={toggleReversed}
+            loading={loading}
+          />
+          <LoadingChart />
+        </Column>
+        <HR />
+        <ChartHeaderBubble />
+        <PoolDetailsTableSkeleton />
+      </LeftColumn>
       <RightColumn>
-        <PoolDetailsStatsButtons chainId={chainId} token0={token0} token1={token1} feeTier={poolData?.feeTier} />
-        {poolData && <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} />}
+        <PoolDetailsStatsButtons
+          chainId={chainId}
+          token0={token0}
+          token1={token1}
+          feeTier={poolData?.feeTier}
+          loading={loading}
+        />
+        <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} loading={loading} />
+        <TokenDetailsWrapper>
+          <TokenDetailsHeader>
+            <Trans>Links</Trans>
+          </TokenDetailsHeader>
+          <LinksContainer>
+            <PoolDetailsLink address={poolAddress} chainId={chainId} tokens={[token0, token1]} loading={loading} />
+            <PoolDetailsLink address={token0?.id} chainId={chainId} tokens={[token0]} loading={loading} />
+            <PoolDetailsLink address={token1?.id} chainId={chainId} tokens={[token1]} loading={loading} />
+          </LinksContainer>
+        </TokenDetailsWrapper>
       </RightColumn>
     </PageWrapper>
   )

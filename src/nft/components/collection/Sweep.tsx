@@ -1,16 +1,17 @@
 import 'rc-slider/assets/index.css'
 
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatEther, parseEther } from '@ethersproject/units'
+import { formatEther as ethersFormatEther, parseEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { SweepFetcherParams, useSweepNftAssets } from 'graphql/data/nft/Asset'
 import { useBag, useCollectionFilters } from 'nft/hooks'
 import { GenieAsset, isPooledMarket, Markets } from 'nft/types'
-import { calcPoolPrice, formatWeiToDecimal, isInSameSudoSwapPool } from 'nft/utils'
+import { calcPoolPrice, isInSameSudoSwapPool } from 'nft/utils'
 import { default as Slider } from 'rc-slider'
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const SweepContainer = styled.div`
   display: flex;
@@ -160,6 +161,7 @@ interface SweepProps {
 
 export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
   const theme = useTheme()
+  const { formatEther } = useFormatter()
 
   const [isItemsToggled, toggleSweep] = useReducer((state) => !state, true)
   const [sweepAmount, setSweepAmount] = useState<string>('')
@@ -374,8 +376,12 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
           <StyledSlider
             defaultValue={0}
             min={0}
-            max={isItemsToggled ? sortedAssets?.length ?? 0 : parseFloat(formatEther(sortedAssetsTotalEth).toString())}
-            value={isItemsToggled ? sweepItemsInBag.length : parseFloat(formatWeiToDecimal(sweepEthPrice.toString()))}
+            max={
+              isItemsToggled
+                ? sortedAssets?.length ?? 0
+                : parseFloat(ethersFormatEther(sortedAssetsTotalEth).toString())
+            }
+            value={isItemsToggled ? sweepItemsInBag.length : parseFloat(ethersFormatEther(sweepEthPrice.toString()))}
             step={isItemsToggled ? 1 : 0.01}
             trackStyle={{
               top: '3px',
@@ -424,9 +430,10 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
         </SweepSubContainer>
       </SweepLeftmostContainer>
       <SweepRightmostContainer>
-        <ThemedText.SubHeader font-size="14px">{`${formatWeiToDecimal(
-          sweepEthPrice.toString()
-        )} ETH`}</ThemedText.SubHeader>
+        <ThemedText.SubHeader font-size="14px">{`${formatEther({
+          input: sweepEthPrice.toString(),
+          type: NumberType.NFTToken,
+        })} ETH`}</ThemedText.SubHeader>
         <NftDisplay nfts={sweepItemsInBag} />
       </SweepRightmostContainer>
     </SweepContainer>

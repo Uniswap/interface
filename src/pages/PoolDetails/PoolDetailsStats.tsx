@@ -2,17 +2,21 @@ import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
-import { DeltaArrow, formatDelta } from 'components/Tokens/TokenDetails/Delta'
+import { LoadingBubble } from 'components/Tokens/loading'
+import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { PoolData } from 'graphql/thegraph/PoolData'
 import { useCurrency } from 'hooks/Tokens'
 import { useColor } from 'hooks/useColor'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { ReactNode, useMemo } from 'react'
 import { Text } from 'rebass'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
+import { colors } from 'theme/colors'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+
+import { DetailBubble } from './shared'
 
 const HeaderText = styled(Text)`
   font-weight: 485;
@@ -89,43 +93,79 @@ const BalanceChartSide = styled.div<{ percent: number; $color: string; isLeft: b
   ${({ isLeft }) => (isLeft ? leftBarChartStyles : rightBarChartStyles)}
 `
 
+const StatSectionBubble = styled(LoadingBubble)`
+  width: 180px;
+  height: 40px;
+`
+
+const StatHeaderBubble = styled(LoadingBubble)`
+  width: 116px;
+  height: 24px;
+  border-radius: 8px;
+`
+
 interface PoolDetailsStatsProps {
-  poolData: PoolData
-  isReversed: boolean
+  poolData?: PoolData
+  isReversed?: boolean
   chainId?: number
+  loading?: boolean
 }
 
-export function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsStatsProps) {
+export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: PoolDetailsStatsProps) {
   const isScreenSize = useScreenSize()
   const screenIsNotLarge = isScreenSize['lg']
   const { formatNumber } = useFormatter()
+  const theme = useTheme()
 
   const currency0 = useCurrency(poolData?.token0?.id, chainId) ?? undefined
   const currency1 = useCurrency(poolData?.token1?.id, chainId) ?? undefined
 
-  const color0 = useColor(currency0?.wrapped)
-  const color1 = useColor(currency1?.wrapped)
+  const color0 = useColor(currency0?.wrapped, theme.surface2, theme.darkMode)
+  let color1 = useColor(currency1?.wrapped, theme.surface2, theme.darkMode)
+  if (color0 === color1 && color0 === theme.accent1) {
+    color1 = colors.blue400
+  }
 
   const [token0, token1] = useMemo(() => {
-    const fullWidth = poolData?.tvlToken0 / poolData?.token0Price + poolData?.tvlToken1
-    const token0FullData = {
-      ...poolData?.token0,
-      price: poolData?.token0Price,
-      tvl: poolData?.tvlToken0,
-      color: color0,
-      percent: poolData?.tvlToken0 / poolData?.token0Price / fullWidth,
-      currency: currency0,
+    if (poolData) {
+      const fullWidth = poolData?.tvlToken0 / poolData?.token0Price + poolData?.tvlToken1
+      const token0FullData = {
+        ...poolData?.token0,
+        price: poolData?.token0Price,
+        tvl: poolData?.tvlToken0,
+        color: color0,
+        percent: poolData?.tvlToken0 / poolData?.token0Price / fullWidth,
+        currency: currency0,
+      }
+      const token1FullData = {
+        ...poolData?.token1,
+        price: poolData?.token1Price,
+        tvl: poolData?.tvlToken1,
+        color: color1,
+        percent: poolData?.tvlToken1 / fullWidth,
+        currency: currency1,
+      }
+      return isReversed ? [token1FullData, token0FullData] : [token0FullData, token1FullData]
+    } else {
+      return [undefined, undefined]
     }
-    const token1FullData = {
-      ...poolData?.token1,
-      price: poolData?.token1Price,
-      tvl: poolData?.tvlToken1,
-      color: color1,
-      percent: poolData?.tvlToken1 / fullWidth,
-      currency: currency1,
-    }
-    return isReversed ? [token1FullData, token0FullData] : [token0FullData, token1FullData]
   }, [color0, color1, currency0, currency1, isReversed, poolData])
+
+  if (loading || !token0 || !token1 || !poolData) {
+    return (
+      <StatsWrapper>
+        <HeaderText>
+          <StatHeaderBubble />
+        </HeaderText>
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Column gap="md" key={`loading-info-row-${i}`}>
+            <DetailBubble />
+            <StatSectionBubble />
+          </Column>
+        ))}
+      </StatsWrapper>
+    )
+  }
 
   return (
     <StatsWrapper>
@@ -199,7 +239,7 @@ const StatItemText = styled(Text)`
 `
 
 function StatItem({ title, value, delta }: { title: ReactNode; value: number; delta?: number }) {
-  const { formatNumber } = useFormatter()
+  const { formatNumber, formatDelta } = useFormatter()
 
   return (
     <StatItemColumn>

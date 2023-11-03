@@ -1,5 +1,120 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`PoolDetailsHeader loading skeleton is shown 1`] = `
+<DocumentFragment>
+  .c5 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c2 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+  width: 50%;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c3 {
+  height: 16px;
+  width: 300px;
+}
+
+.c8 {
+  height: 16px;
+  width: 137px;
+}
+
+.c1 {
+  gap: 36px;
+}
+
+.c7 {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+<div
+    class="c0 c1"
+    data-testid="pdp-header-loading-skeleton"
+  >
+    <div
+      class="c2 c3"
+    />
+    <div
+      class="c4"
+    >
+      <div
+        class="c5 c6"
+      >
+        <div
+          class="c2 c7"
+        />
+        <div
+          class="c2 c8"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
 exports[`PoolDetailsHeader renders header text correctly 1`] = `
 <DocumentFragment>
   .c2 {
@@ -172,7 +287,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
 }
 
 .c12 {
-  width: 32px;
+  width: 16px;
   height: 32px;
   border-radius: 50%;
 }

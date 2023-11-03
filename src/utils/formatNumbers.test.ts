@@ -33,12 +33,12 @@ describe('formatNumber', () => {
     expect(formatNumber({ input: 0, type: NumberType.TokenNonTx })).toBe('0')
   })
 
-  it('formats token reference numbers correctly with deutsch locale', () => {
-    mocked(useActiveLocale).mockReturnValue('de-DE')
+  it('formats token reference numbers correctly with Dutch locale', () => {
+    mocked(useActiveLocale).mockReturnValue('nl-NL')
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
-    expect(formatNumber({ input: 1234567000000000, type: NumberType.TokenNonTx })).toBe('>999\xa0Bio.')
-    expect(formatNumber({ input: 1002345, type: NumberType.TokenNonTx })).toBe('1,00\xa0Mio.')
+    expect(formatNumber({ input: 1234567000000000, type: NumberType.TokenNonTx })).toBe('>999\xa0bln.')
+    expect(formatNumber({ input: 1002345, type: NumberType.TokenNonTx })).toBe('1,00\xa0mln.')
     expect(formatNumber({ input: 1234, type: NumberType.TokenNonTx })).toBe('1.234,00')
     expect(formatNumber({ input: 0.00909, type: NumberType.TokenNonTx })).toBe('0,009')
     expect(formatNumber({ input: 0.09001, type: NumberType.TokenNonTx })).toBe('0,090')
@@ -188,7 +188,7 @@ describe('formatNumber', () => {
     expect(formatNumber({ input: 1234567.891, type: NumberType.FiatGasPrice })).toBe('$1.23M')
     expect(formatNumber({ input: 18.448, type: NumberType.FiatGasPrice })).toBe('$18.45')
     expect(formatNumber({ input: 0.0099, type: NumberType.FiatGasPrice })).toBe('<$0.01')
-    expect(formatNumber({ input: 0, type: NumberType.FiatGasPrice })).toBe('$0.00')
+    expect(formatNumber({ input: 0, type: NumberType.FiatGasPrice })).toBe('$0')
   })
 
   it('formats gas prices correctly with portugese locale and thai baht currency', () => {
@@ -199,7 +199,7 @@ describe('formatNumber', () => {
     expect(formatNumber({ input: 1234567.891, type: NumberType.FiatGasPrice })).toBe('฿\xa01,23\xa0mi')
     expect(formatNumber({ input: 18.448, type: NumberType.FiatGasPrice })).toBe('฿\xa018,45')
     expect(formatNumber({ input: 0.0099, type: NumberType.FiatGasPrice })).toBe('<฿\xa00,01')
-    expect(formatNumber({ input: 0, type: NumberType.FiatGasPrice })).toBe('฿\xa00,00')
+    expect(formatNumber({ input: 0, type: NumberType.FiatGasPrice })).toBe('฿\xa00')
   })
 
   it('formats USD token quantities prices correctly', () => {
@@ -356,71 +356,37 @@ describe('formatUSDPrice', () => {
   })
 })
 
-describe('formatPriceImpact', () => {
+describe('formatPercent', () => {
   beforeEach(() => {
     mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
     mocked(useCurrencyConversionFlagEnabled).mockReturnValue(true)
   })
 
   it('should correctly format undefined', () => {
-    const { formatPriceImpact } = renderHook(() => useFormatter()).result.current
+    const { formatPercent } = renderHook(() => useFormatter()).result.current
 
-    expect(formatPriceImpact(undefined)).toBe('-')
+    expect(formatPercent(undefined)).toBe('-')
   })
 
-  it('correctly formats a percent with 3 significant digits', () => {
-    const { formatPriceImpact } = renderHook(() => useFormatter()).result.current
+  it('correctly formats a percent with no trailing digits', () => {
+    const { formatPercent } = renderHook(() => useFormatter()).result.current
 
-    expect(formatPriceImpact(new Percent(-1, 100000))).toBe('0.001%')
-    expect(formatPriceImpact(new Percent(-1, 1000))).toBe('0.100%')
-    expect(formatPriceImpact(new Percent(-1, 100))).toBe('1.000%')
-    expect(formatPriceImpact(new Percent(-1, 10))).toBe('10.000%')
-    expect(formatPriceImpact(new Percent(-1, 1))).toBe('100.000%')
+    expect(formatPercent(new Percent(1, 100000))).toBe('0.001%')
+    expect(formatPercent(new Percent(1, 1000))).toBe('0.1%')
+    expect(formatPercent(new Percent(1, 100))).toBe('1%')
+    expect(formatPercent(new Percent(1, 10))).toBe('10%')
+    expect(formatPercent(new Percent(1, 1))).toBe('100%')
   })
 
-  it('correctly formats a percent with 3 significant digits with french locale', () => {
+  it('correctly formats a percent with french locale', () => {
     mocked(useActiveLocale).mockReturnValue('fr-FR')
-    const { formatPriceImpact } = renderHook(() => useFormatter()).result.current
+    const { formatPercent } = renderHook(() => useFormatter()).result.current
 
-    expect(formatPriceImpact(new Percent(-1, 100000))).toBe('0,001%')
-    expect(formatPriceImpact(new Percent(-1, 1000))).toBe('0,100%')
-    expect(formatPriceImpact(new Percent(-1, 100))).toBe('1,000%')
-    expect(formatPriceImpact(new Percent(-1, 10))).toBe('10,000%')
-    expect(formatPriceImpact(new Percent(-1, 1))).toBe('100,000%')
-  })
-})
-
-describe('formatSlippage', () => {
-  beforeEach(() => {
-    mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
-    mocked(useCurrencyConversionFlagEnabled).mockReturnValue(true)
-  })
-
-  it('should correctly format undefined', () => {
-    const { formatSlippage } = renderHook(() => useFormatter()).result.current
-
-    expect(formatSlippage(undefined)).toBe('-')
-  })
-
-  it('correctly formats a percent with 3 significant digits', () => {
-    const { formatSlippage } = renderHook(() => useFormatter()).result.current
-
-    expect(formatSlippage(new Percent(1, 100000))).toBe('0.001%')
-    expect(formatSlippage(new Percent(1, 1000))).toBe('0.100%')
-    expect(formatSlippage(new Percent(1, 100))).toBe('1.000%')
-    expect(formatSlippage(new Percent(1, 10))).toBe('10.000%')
-    expect(formatSlippage(new Percent(1, 1))).toBe('100.000%')
-  })
-
-  it('correctly formats a percent with 3 significant digits with french locale', () => {
-    mocked(useActiveLocale).mockReturnValue('fr-FR')
-    const { formatSlippage } = renderHook(() => useFormatter()).result.current
-
-    expect(formatSlippage(new Percent(1, 100000))).toBe('0,001%')
-    expect(formatSlippage(new Percent(1, 1000))).toBe('0,100%')
-    expect(formatSlippage(new Percent(1, 100))).toBe('1,000%')
-    expect(formatSlippage(new Percent(1, 10))).toBe('10,000%')
-    expect(formatSlippage(new Percent(1, 1))).toBe('100,000%')
+    expect(formatPercent(new Percent(1, 100000))).toBe('0,001%')
+    expect(formatPercent(new Percent(1, 1000))).toBe('0,1%')
+    expect(formatPercent(new Percent(1, 100))).toBe('1%')
+    expect(formatPercent(new Percent(1, 10))).toBe('10%')
+    expect(formatPercent(new Percent(1, 1))).toBe('100%')
   })
 })
 
@@ -458,5 +424,39 @@ describe('formatReviewSwapCurrencyAmount', () => {
 
     const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000000') // 2,000,000 USDC
     expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2000000')
+  })
+})
+
+describe('formatDelta', () => {
+  beforeEach(() => {
+    mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
+    mocked(useCurrencyConversionFlagEnabled).mockReturnValue(true)
+  })
+
+  it.each([[null], [undefined], [Infinity], [NaN]])('should correctly format %p', (value) => {
+    const { formatDelta } = renderHook(() => useFormatter()).result.current
+
+    expect(formatDelta(value)).toBe('-')
+  })
+
+  it('correctly formats a percent with 2 decimal places', () => {
+    const { formatDelta } = renderHook(() => useFormatter()).result.current
+
+    expect(formatDelta(0)).toBe('0.00%')
+    expect(formatDelta(0.1)).toBe('0.10%')
+    expect(formatDelta(1)).toBe('1.00%')
+    expect(formatDelta(10)).toBe('10.00%')
+    expect(formatDelta(100)).toBe('100.00%')
+  })
+
+  it('correctly formats a percent with 2 decimal places in french locale', () => {
+    mocked(useActiveLocale).mockReturnValue('fr-FR')
+    const { formatDelta } = renderHook(() => useFormatter()).result.current
+
+    expect(formatDelta(0)).toBe('0,00%')
+    expect(formatDelta(0.1)).toBe('0,10%')
+    expect(formatDelta(1)).toBe('1,00%')
+    expect(formatDelta(10)).toBe('10,00%')
+    expect(formatDelta(100)).toBe('100,00%')
   })
 })

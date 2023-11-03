@@ -2,6 +2,7 @@ import { t, Trans } from '@lingui/macro'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedL2ChainId } from 'constants/chains'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
@@ -37,12 +38,6 @@ const BottomSection = styled(AutoColumn)`
 
 const ConfirmedIcon = styled(ColumnCenter)<{ inline?: boolean }>`
   padding: ${({ inline }) => (inline ? '20px 0' : '32px 0;')};
-`
-
-const StyledLogo = styled.img`
-  height: 16px;
-  width: 16px;
-  margin-left: 6px;
 `
 
 const ConfirmationModalContentWrapper = styled(AutoColumn)`
@@ -193,10 +188,14 @@ export function ConfirmationModalContent({
         </Row>
         {topContent()}
       </AutoColumn>
-      {bottomContent && <BottomSection gap="12px">{bottomContent()}</BottomSection>}
+      {bottomContent && <BottomSection gap="16px">{bottomContent()}</BottomSection>}
     </Wrapper>
   )
 }
+
+const StyledL2Badge = styled(Badge)`
+  padding: 6px 8px;
+`
 
 function L2Content({
   onDismiss,
@@ -230,12 +229,12 @@ function L2Content({
       <AutoColumn>
         {!inline && (
           <RowBetween mb="16px">
-            <Badge>
-              <RowFixed>
-                <StyledLogo src={info.logoUrl} style={{ margin: '0 8px 0 0' }} />
-                {info.label}
+            <StyledL2Badge>
+              <RowFixed gap="sm">
+                <ChainLogo chainId={chainId} />
+                <ThemedText.SubHeaderSmall>{info.label}</ThemedText.SubHeaderSmall>
               </RowFixed>
-            </Badge>
+            </StyledL2Badge>
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
         )}

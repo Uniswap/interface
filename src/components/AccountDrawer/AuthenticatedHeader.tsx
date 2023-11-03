@@ -9,12 +9,11 @@ import { Power } from 'components/Icons/Power'
 import { Settings } from 'components/Icons/Settings'
 import { AutoRow } from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { DeltaArrow, formatDelta } from 'components/Tokens/TokenDetails/Delta'
+import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import Tooltip from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import useENSName from 'hooks/useENSName'
-import { useIsNotOriginCountry } from 'hooks/useIsNotOriginCountry'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
@@ -26,6 +25,7 @@ import { updateSelectedWallet } from 'state/user/reducer'
 import styled from 'styled-components'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils'
+import { isPathBlocked } from 'utils/blockedPaths'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from '../../state/application/hooks'
@@ -160,8 +160,8 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
-  const shouldShowBuyFiatButton = useIsNotOriginCountry('GB')
-  const { formatNumber } = useFormatter()
+  const shouldShowBuyFiatButton = !isPathBlocked('/buy')
+  const { formatNumber, formatDelta } = useFormatter()
 
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
 

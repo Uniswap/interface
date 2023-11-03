@@ -7,18 +7,13 @@ import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { CancelListingIcon, VerifiedIcon } from 'nft/components/icons'
 import { useBag, useNativeUsdPrice, useProfilePageState, useSellAsset, useUsdPriceofNftAsset } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, ProfilePageStateType, WalletAsset } from 'nft/types'
-import {
-  ethNumberStandardFormatter,
-  formatEthPrice,
-  generateTweetForAsset,
-  getMarketplaceIcon,
-  timeLeft,
-} from 'nft/utils'
+import { generateTweetForAsset, getMarketplaceIcon, timeLeft } from 'nft/utils'
 import { useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils/addresses'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const TWITTER_WIDTH = 560
 const TWITTER_HEIGHT = 480
@@ -213,6 +208,7 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const selectSellAsset = useSellAsset((state) => state.selectSellAsset)
   const resetSellAssets = useSellAsset((state) => state.reset)
+  const { formatEther, formatNumberOrString } = useFormatter()
 
   const listing = asset.sellOrders && asset.sellOrders.length > 0 ? asset.sellOrders[0] : undefined
   const expirationDate = listing?.endAt ? new Date(listing.endAt) : undefined
@@ -249,11 +245,15 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
         {listing ? (
           <>
             <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
-              {formatEthPrice(asset.priceInfo?.ETHPrice)} ETH
+              {formatEther({
+                input: asset.priceInfo?.ETHPrice,
+                type: NumberType.NFTToken,
+              })}{' '}
+              ETH
             </ThemedText.MediumHeader>
             {USDPrice && (
               <ThemedText.BodySecondary lineHeight="24px">
-                {ethNumberStandardFormatter(USDPrice, true, true)}
+                {formatNumberOrString({ input: USDPrice, type: NumberType.FiatNFTToken })}
               </ThemedText.BodySecondary>
             )}
           </>
@@ -311,6 +311,7 @@ const NotForSale = ({ collectionName, collectionUrl }: { collectionName: string;
 
 export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps) => {
   const { account } = useWeb3React()
+  const { formatEther, formatNumberOrString } = useFormatter()
 
   const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
   const expirationDate = cheapestOrder?.endAt ? new Date(cheapestOrder.endAt) : undefined
@@ -376,11 +377,11 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
           </HeaderRow>
           <PriceRow>
             <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
-              {formatEthPrice(asset.priceInfo.ETHPrice)} ETH
+              {formatEther({ input: asset.priceInfo.ETHPrice, type: NumberType.NFTToken })} ETH
             </ThemedText.MediumHeader>
             {USDPrice && (
               <ThemedText.BodySecondary lineHeight="24px">
-                {ethNumberStandardFormatter(USDPrice, true, true)}
+                {formatNumberOrString({ input: USDPrice, type: NumberType.FiatNFTToken })}
               </ThemedText.BodySecondary>
             )}
           </PriceRow>

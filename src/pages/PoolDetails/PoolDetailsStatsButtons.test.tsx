@@ -26,6 +26,13 @@ describe('PoolDetailsStatsButton', () => {
     mocked(useMultiChainPositions).mockReturnValue(useMultiChainPositionsReturnValue)
   })
 
+  it('loading skeleton shown correctly', () => {
+    const { asFragment } = render(<PoolDetailsStatsButtons {...mockProps} loading={true} />)
+    expect(asFragment()).toMatchSnapshot()
+
+    expect(screen.getByTestId('pdp-buttons-loading-skeleton')).toBeVisible()
+  })
+
   it('renders both buttons correctly', () => {
     const { asFragment } = render(<PoolDetailsStatsButtons {...mockProps} />)
     expect(asFragment()).toMatchSnapshot()

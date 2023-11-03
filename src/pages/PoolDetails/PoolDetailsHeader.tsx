@@ -2,8 +2,10 @@ import { Trans } from '@lingui/macro'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
 import Column from 'components/Column'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import Row from 'components/Row'
-import { getChainInfo } from 'constants/chainInfo'
+import { LoadingBubble } from 'components/Tokens/loading'
+import { BIPS_BASE } from 'constants/misc'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
@@ -14,6 +16,7 @@ import { ClickableStyle, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils'
 
 import { ReversedArrowsIcon } from './icons'
+import { DetailBubble } from './shared'
 
 const HeaderColumn = styled(Column)`
   gap: 36px;
@@ -34,6 +37,12 @@ const ToggleReverseArrows = styled(ReversedArrowsIcon)`
   ${ClickableStyle}
 `
 
+const IconBubble = styled(LoadingBubble)`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+`
+
 interface Token {
   id: string
   symbol: string
@@ -46,6 +55,7 @@ interface PoolDetailsHeaderProps {
   token1?: Token
   feeTier?: number
   toggleReversed: React.DispatchWithoutAction
+  loading?: boolean
 }
 
 export function PoolDetailsHeader({
@@ -55,10 +65,25 @@ export function PoolDetailsHeader({
   token1,
   feeTier,
   toggleReversed,
+  loading,
 }: PoolDetailsHeaderProps) {
   const currencies = [useCurrency(token0?.id, chainId) ?? undefined, useCurrency(token1?.id, chainId) ?? undefined]
   const chainName = chainIdToBackendName(chainId)
   const origin = `/tokens/${chainName}`
+
+  if (loading)
+    return (
+      <HeaderColumn data-testid="pdp-header-loading-skeleton">
+        <DetailBubble $width={300} />
+        <Column gap="sm">
+          <Row gap="8px">
+            <IconBubble />
+            <DetailBubble $width={137} />
+          </Row>
+        </Column>
+      </HeaderColumn>
+    )
+
   return (
     <HeaderColumn>
       <Row>
@@ -88,7 +113,7 @@ export function PoolDetailsHeader({
             {token0?.symbol} / {token1?.symbol}
           </ThemedText.HeadlineSmall>
         </Row>
-        {!!feeTier && <FeeTier>{feeTier / 10000}%</FeeTier>}
+        {!!feeTier && <FeeTier>{feeTier / BIPS_BASE}%</FeeTier>}
         <ToggleReverseArrows data-testid="toggle-tokens-reverse-arrows" onClick={toggleReversed} />
       </Row>
     </HeaderColumn>
@@ -100,7 +125,6 @@ const StyledLogoParentContainer = styled.div`
   top: 0;
   left: 0;
 `
-
 function DoubleCurrencyAndChainLogo({
   chainId,
   currencies,
@@ -116,8 +140,8 @@ function DoubleCurrencyAndChainLogo({
   )
 }
 
-const L2LogoContainer = styled.div<{ hasSquareLogo?: boolean }>`
-  background-color: ${({ theme, hasSquareLogo }) => (hasSquareLogo ? theme.surface2 : theme.neutral1)};
+const L2LogoContainer = styled.div`
+  background-color: ${({ theme }) => theme.surface2};
   border-radius: 2px;
   height: 12px;
   left: 60%;
@@ -130,64 +154,55 @@ const L2LogoContainer = styled.div<{ hasSquareLogo?: boolean }>`
   justify-content: center;
 `
 
-const StyledChainLogo = styled.img`
-  height: 12px;
-  width: 12px;
-`
-
-const SquareChainLogo = styled.img`
-  height: 100%;
-  width: 100%;
-`
-
 function SquareL2Logo({ chainId }: { chainId: ChainId }) {
   if (chainId === ChainId.MAINNET) return null
-  const { squareLogoUrl, logoUrl } = getChainInfo(chainId)
-
-  const chainLogo = squareLogoUrl ?? logoUrl
 
   return (
-    <L2LogoContainer hasSquareLogo={!!squareLogoUrl}>
-      {squareLogoUrl ? (
-        <SquareChainLogo src={chainLogo} alt="chainLogo" />
-      ) : (
-        <StyledChainLogo src={chainLogo} alt="chainLogo" />
-      )}
+    <L2LogoContainer>
+      <ChainLogo chainId={chainId} size={12} />
     </L2LogoContainer>
   )
 }
 
-function DoubleCurrencyLogo({ chainId, currencies }: { chainId: number; currencies: Array<Currency | undefined> }) {
+export function DoubleCurrencyLogo({
+  chainId,
+  currencies,
+  small,
+}: {
+  chainId: number
+  currencies: Array<Currency | undefined>
+  small?: boolean
+}) {
   const [src, nextSrc] = useTokenLogoSource(currencies?.[0]?.wrapped.address, chainId, currencies?.[0]?.isNative)
   const [src2, nextSrc2] = useTokenLogoSource(currencies?.[1]?.wrapped.address, chainId, currencies?.[1]?.isNative)
 
-  return <DoubleLogo logo1={src} onError1={nextSrc} logo2={src2} onError2={nextSrc2} />
+  return <DoubleLogo logo1={src} onError1={nextSrc} logo2={src2} onError2={nextSrc2} small={small} />
 }
 
-const DoubleLogoContainer = styled.div`
+const DoubleLogoContainer = styled.div<{ small?: boolean }>`
   display: flex;
   gap: 2px;
   position: relative;
   top: 0;
   left: 0;
   img {
-    width: 16px;
-    height: 32px;
+    width: ${({ small }) => (small ? '10px' : '16px')};
+    height: ${({ small }) => (small ? '20px' : '32px')};
     object-fit: cover;
   }
   img:first-child {
-    border-radius: 16px 0 0 16px;
+    border-radius: ${({ small }) => (small ? '10px 0 0 10px' : '16px 0 0 16px')};
     object-position: 0 0;
   }
   img:last-child {
-    border-radius: 0 16px 16px 0;
+    border-radius: ${({ small }) => (small ? '0 10px 10px 0' : '0 16px 16px 0')};
     object-position: 100% 0;
   }
 `
 
-const CircleLogoImage = styled.img`
-  width: 32px;
-  height: 32px;
+const CircleLogoImage = styled.img<{ small?: boolean }>`
+  width: ${({ small }) => (small ? '10px' : '16px')};
+  height: ${({ small }) => (small ? '20px' : '32px')};
   border-radius: 50%;
 `
 
@@ -196,13 +211,14 @@ interface DoubleLogoProps {
   logo2?: string
   onError1?: () => void
   onError2?: () => void
+  small?: boolean
 }
 
-function DoubleLogo({ logo1, onError1, logo2, onError2 }: DoubleLogoProps) {
+function DoubleLogo({ logo1, onError1, logo2, onError2, small }: DoubleLogoProps) {
   return (
-    <DoubleLogoContainer>
-      <CircleLogoImage src={logo1 ?? blankTokenUrl} onError={onError1} />
-      <CircleLogoImage src={logo2 ?? blankTokenUrl} onError={onError2} />
+    <DoubleLogoContainer small={small}>
+      <CircleLogoImage src={logo1 ?? blankTokenUrl} onError={onError1} small={small} />
+      <CircleLogoImage src={logo2 ?? blankTokenUrl} onError={onError2} small={small} />
     </DoubleLogoContainer>
   )
 }
