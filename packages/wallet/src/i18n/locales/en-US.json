@@ -604,6 +604,7 @@
   "Vietnamese": "Vietnamese",
   "Vietnamese Dong": "Vietnamese Dong",
   "View": "View",
+  "View {{ tokenSymbol }}": "View {{ tokenSymbol }}",
   "View all": "View all",
   "View in private": "View in private",
   "View less": "View less",
