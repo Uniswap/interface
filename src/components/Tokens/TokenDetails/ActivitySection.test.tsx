@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Token } from '@uniswap/sdk-core'
+import { ChainId, Token } from '@uniswap/sdk-core'
 import { render } from 'test-utils/render'
 
 import { ActivitySection } from './ActivitySection'
@@ -15,14 +15,14 @@ const mockToken = new Token(
 
 describe('ActivitySection', () => {
   it('has Pools and Transactions tabs', () => {
-    render(<ActivitySection referenceToken={mockToken} />)
+    render(<ActivitySection chainId={ChainId.MAINNET} referenceToken={mockToken} />)
 
     expect(screen.getByText('Pools')).toBeInTheDocument()
     expect(screen.getByText('Transactions')).toBeInTheDocument()
   })
 
   it('lets user navigate between tabs', async () => {
-    render(<ActivitySection referenceToken={mockToken} />)
+    render(<ActivitySection chainId={ChainId.MAINNET} referenceToken={mockToken} />)
     expect(screen).not.toContain('Tx')
 
     const transactionsTab = screen.getByText('Transactions')
