@@ -25,6 +25,7 @@ import { AppStackScreenProp } from 'src/app/navigation/types'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { pulseAnimation } from 'src/components/buttons/utils'
 import { ActivityTab, ACTIVITY_TAB_DATA_DEPENDENCIES } from 'src/components/home/ActivityTab'
+import { FeedTab, FEED_TAB_DATA_DEPENDENCIES } from 'src/components/home/FeedTab'
 import { NftsTab, NFTS_TAB_DATA_DEPENDENCIES } from 'src/components/home/NftsTab'
 import { TokensTab, TOKENS_TAB_DATA_DEPENDENCIES } from 'src/components/home/TokensTab'
 import { Screen } from 'src/components/layout/Screen'
@@ -72,6 +73,8 @@ import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval, useTimeout } from 'utilities/src/time/timing'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -93,6 +96,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const dimensions = useDeviceDimensions()
   const dispatch = useAppDispatch()
 
+  const showFeedTab = useFeatureFlag(FEATURE_FLAGS.FeedTab)
   // opens the wallet restore modal if recovery phrase is missing after the app is opened
   useWalletRestore({ openModalImmediately: true })
 
@@ -107,14 +111,21 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const tokensTitle = t('Tokens')
   const nftsTitle = t('NFTs')
   const activityTitle = t('Activity')
-  const routes = useMemo(
-    () => [
+  const feedTitle = t('Feed')
+
+  const routes = useMemo(() => {
+    const tabs = [
       { key: SectionName.HomeTokensTab, title: tokensTitle },
       { key: SectionName.HomeNFTsTab, title: nftsTitle },
       { key: SectionName.HomeActivityTab, title: activityTitle },
-    ],
-    [tokensTitle, nftsTitle, activityTitle]
-  )
+    ]
+
+    if (showFeedTab) {
+      tabs.push({ key: SectionName.HomeFeedTab, title: feedTitle })
+    }
+
+    return tabs
+  }, [tokensTitle, nftsTitle, activityTitle, feedTitle, showFeedTab])
 
   useEffect(
     function syncTabIndex() {
@@ -150,9 +161,12 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     (event) => (nftsTabScrollValue.value = event.contentOffset.y)
   )
   const activityTabScrollValue = useSharedValue(0)
-
   const activityTabScrollHandler = useAnimatedScrollHandler(
     (event) => (activityTabScrollValue.value = event.contentOffset.y)
+  )
+  const feedTabScrollValue = useSharedValue(0)
+  const feedTabScrollHandler = useAnimatedScrollHandler(
+    (event) => (feedTabScrollValue.value = event.contentOffset.y)
   )
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -161,14 +175,18 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const nftsTabScrollRef = useAnimatedRef<FlashList<any>>()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const activityTabScrollRef = useAnimatedRef<FlatList<any>>()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const feedTabScrollRef = useAnimatedRef<FlatList<any>>()
 
   const currentScrollValue = useDerivedValue(() => {
     if (tabIndex === HomeScreenTabIndex.Tokens) {
       return tokensTabScrollValue.value
     } else if (tabIndex === HomeScreenTabIndex.NFTs) {
       return nftsTabScrollValue.value
+    } else if (tabIndex === HomeScreenTabIndex.Activity) {
+      return activityTabScrollValue.value
     }
-    return activityTabScrollValue.value
+    return feedTabScrollValue.value
   }, [tabIndex])
 
   // clear the notification indicator if the user is on the activity tab
@@ -184,9 +202,11 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     nftsTabScrollValue.value = 0
     tokensTabScrollValue.value = 0
     activityTabScrollValue.value = 0
+    feedTabScrollValue.value = 0
     nftsTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
     tokensTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
     activityTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
+    feedTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
   }, [
     activeAccount,
     activityTabScrollRef,
@@ -195,6 +215,8 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     nftsTabScrollValue,
     tokensTabScrollRef,
     tokensTabScrollValue,
+    feedTabScrollRef,
+    feedTabScrollValue,
   ])
 
   // Need to create a derived value for tab index so it can be referenced from a static ref
@@ -237,10 +259,13 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       { list: tokensTabScrollRef, position: tokensTabScrollValue, index: 0 },
       { list: nftsTabScrollRef, position: nftsTabScrollValue, index: 1 },
       { list: activityTabScrollRef, position: activityTabScrollValue, index: 2 },
+      { list: feedTabScrollRef, position: feedTabScrollValue, index: 3 },
     ],
     [
       activityTabScrollRef,
       activityTabScrollValue,
+      feedTabScrollRef,
+      feedTabScrollValue,
       nftsTabScrollRef,
       nftsTabScrollValue,
       tokensTabScrollRef,
@@ -428,6 +453,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
         ...TOKENS_TAB_DATA_DEPENDENCIES,
         ...NFTS_TAB_DATA_DEPENDENCIES,
         ...ACTIVITY_TAB_DATA_DEPENDENCIES,
+        ...FEED_TAB_DATA_DEPENDENCIES,
       ],
     })
     // Artificially delay 0.5 second to show the refresh animation
@@ -482,6 +508,18 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
               onRefresh={onRefreshHomeData}
             />
           )
+        case SectionName.HomeFeedTab:
+          return (
+            <FeedTab
+              ref={feedTabScrollRef}
+              containerProps={sharedProps}
+              headerHeight={headerHeight}
+              owner={activeAccount?.address}
+              refreshing={refreshing}
+              scrollHandler={feedTabScrollHandler}
+              onRefresh={onRefreshHomeData}
+            />
+          )
       }
       return null
     },
@@ -489,6 +527,8 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       activeAccount?.address,
       activityTabScrollHandler,
       activityTabScrollRef,
+      feedTabScrollHandler,
+      feedTabScrollRef,
       nftsTabScrollHandler,
       nftsTabScrollRef,
       sharedProps,

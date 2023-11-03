@@ -23,7 +23,7 @@ import {
 } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccountWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 const LOADING_SPINNER_SIZE = 20
 
@@ -45,6 +45,8 @@ function TransactionSummaryLayout({
   const dispatch = useAppDispatch()
 
   const { status, addedTime, hash, chainId, typeInfo } = transaction
+
+  const walletDisplayName = useDisplayName(transaction.ownerAddress)
 
   title = title ?? getTransactionSummaryTitle(transaction, t) ?? ''
 
@@ -129,9 +131,16 @@ function TransactionSummaryLayout({
           <Flex grow shrink>
             <Flex grow>
               <Flex grow row alignItems="center" gap="$spacing4" justifyContent="space-between">
-                <Text color="$neutral2" numberOfLines={1} variant="body1">
-                  {title}
-                </Text>
+                <Flex row alignItems="center" gap="$spacing4">
+                  {walletDisplayName?.name ? (
+                    <Text color="$accent1" numberOfLines={1} variant="body1">
+                      {walletDisplayName.name}
+                    </Text>
+                  ) : null}
+                  <Text color="$neutral2" numberOfLines={1} variant="body1">
+                    {title}
+                  </Text>
+                </Flex>
                 {!inProgress && rightBlock}
               </Flex>
               <Flex grow row gap="$spacing16">

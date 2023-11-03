@@ -12,6 +12,7 @@ export enum FEATURE_FLAGS {
   DisableGoogleDriveBackup = 'disable-google-drive-backup',
   CurrencyConversion = 'currency_conversion',
   LanguageSelection = 'language-selection',
+  FeedTab = 'feed-tab',
 }
 
 /**

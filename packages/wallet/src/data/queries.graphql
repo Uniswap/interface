@@ -637,6 +637,101 @@ query TransactionList($address: String!) {
   }
 }
 
+query FeedTransactionList($addresses: [String!]!) {
+  portfolios(
+    ownerAddresses: $addresses
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+  ) {
+    id
+    ownerAddress
+    assetActivities(
+      pageSize: 30
+      page: 1
+      chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+    ) {
+      id
+      timestamp
+      chain
+      details {
+        ... on TransactionDetails {
+          to
+          type
+          hash
+          from
+          status
+          assetChanges {
+            __typename
+            ... on TokenTransfer {
+              id
+              asset {
+                id
+                symbol
+                address
+                decimals
+                chain
+                project {
+                  id
+                  isSpam
+                  spamCode
+                }
+              }
+              tokenStandard
+              quantity
+              sender
+              recipient
+              direction
+              transactedValue {
+                id
+                currency
+                value
+              }
+            }
+            ... on NftTransfer {
+              id
+              asset {
+                id
+                name
+                isSpam
+                nftContract {
+                  id
+                  chain
+                  address
+                }
+                tokenId
+                image {
+                  id
+                  url
+                }
+                collection {
+                  id
+                  name
+                }
+              }
+              nftStandard
+              sender
+              recipient
+              direction
+            }
+            ... on TokenApproval {
+              id
+              asset {
+                id
+                symbol
+                decimals
+                address
+                chain
+              }
+              tokenStandard
+              approvedAddress
+              quantity
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 query TopTokens(
   $chain: Chain
   $page: Int = 1
@@ -811,10 +906,13 @@ query Tokens($contracts: [ContractInput!]!) {
   }
 }
 
-  query Convert($fromCurrency: Currency!, $toCurrency: Currency!) {
-    convert(fromAmount: { currency: $fromCurrency, value: 1.0 }, toCurrency: $toCurrency) {
-      id
-      value
-      currency
-    }
+query Convert($fromCurrency: Currency!, $toCurrency: Currency!) {
+  convert(
+    fromAmount: { currency: $fromCurrency, value: 1.0 }
+    toCurrency: $toCurrency
+  ) {
+    id
+    value
+    currency
   }
+}

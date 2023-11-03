@@ -23,6 +23,7 @@ export type TransactionListQueryResponse = NonNullable<
 >[0]
 
 export interface TransactionDetails extends TransactionId {
+  ownerAddress?: Address
   from: Address
 
   // Specific info for the tx type

@@ -10,6 +10,7 @@ import {
   Amount,
   Chain,
   Currency,
+  FeedTransactionListQuery,
   TokenStandard,
   TransactionListQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -114,6 +115,38 @@ export function parseDataResponseToTransactionDetails(
     }, [])
   }
   return undefined
+}
+
+/**
+ * Transforms api txn data to formatted TransactionDetails array
+ * @param data Feed transaction history data response
+ */
+export function parseDataResponseToFeedTransactionDetails(
+  data: FeedTransactionListQuery,
+  hideSpamTokens?: boolean
+): TransactionDetails[] | undefined {
+  const allTransactions: TransactionDetails[] = []
+
+  for (const portfolio of data.portfolios ?? []) {
+    if (portfolio?.assetActivities) {
+      const transactions = portfolio.assetActivities.reduce((accum: TransactionDetails[], t) => {
+        if (t?.details?.__typename === 'TransactionDetails') {
+          const parsed = extractTransactionDetails(t as TransactionListQueryResponse)
+          const isSpam = parsed?.typeInfo.isSpam
+
+          if (parsed && !(hideSpamTokens && isSpam)) {
+            accum.push({ ...parsed, ownerAddress: portfolio.ownerAddress })
+          }
+        }
+        return accum
+      }, [])
+      allTransactions.push(...transactions)
+    }
+  }
+
+  const sortedTransactions = allTransactions.sort((a, b) => b.addedTime - a.addedTime)
+
+  return sortedTransactions
 }
 
 /**

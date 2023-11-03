@@ -1371,22 +1371,32 @@ exports[`ActivityTab renders without error 2`] = `
                     }
                   }
                 >
-                  <Text
-                    allowFontScaling={true}
-                    maxFontSizeMultiplier={1.4}
-                    numberOfLines={1}
+                  <View
                     style={
                       {
-                        "color": "#7D7D7D",
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 19,
-                        "lineHeight": 24,
+                        "alignItems": "center",
+                        "flexDirection": "row",
+                        "gap": 4,
                       }
                     }
-                    suppressHighlighting={true}
                   >
-                    Approved
-                  </Text>
+                    <Text
+                      allowFontScaling={true}
+                      maxFontSizeMultiplier={1.4}
+                      numberOfLines={1}
+                      style={
+                        {
+                          "color": "#7D7D7D",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 19,
+                          "lineHeight": 24,
+                        }
+                      }
+                      suppressHighlighting={true}
+                    >
+                      Approved
+                    </Text>
+                  </View>
                   <Text
                     allowFontScaling={true}
                     maxFontSizeMultiplier={1.4}
@@ -1717,22 +1727,32 @@ exports[`ActivityTab renders without error 2`] = `
                     }
                   }
                 >
-                  <Text
-                    allowFontScaling={true}
-                    maxFontSizeMultiplier={1.4}
-                    numberOfLines={1}
+                  <View
                     style={
                       {
-                        "color": "#7D7D7D",
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 19,
-                        "lineHeight": 24,
+                        "alignItems": "center",
+                        "flexDirection": "row",
+                        "gap": 4,
                       }
                     }
-                    suppressHighlighting={true}
                   >
-                    Approved
-                  </Text>
+                    <Text
+                      allowFontScaling={true}
+                      maxFontSizeMultiplier={1.4}
+                      numberOfLines={1}
+                      style={
+                        {
+                          "color": "#7D7D7D",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 19,
+                          "lineHeight": 24,
+                        }
+                      }
+                      suppressHighlighting={true}
+                    >
+                      Approved
+                    </Text>
+                  </View>
                   <Text
                     allowFontScaling={true}
                     maxFontSizeMultiplier={1.4}
