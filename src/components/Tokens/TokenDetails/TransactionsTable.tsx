@@ -1,15 +1,17 @@
 import { Trans } from '@lingui/macro'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import { Token } from '@uniswap/sdk-core'
+import { ChainId, Token } from '@uniswap/sdk-core'
 import { Table, TableCell } from 'components/Table'
 import { mockSwapData } from 'components/Tokens/TokenDetails/mockData'
 import { getLocaleTimeString } from 'components/Tokens/TokenDetails/utils'
+import { DEFAULT_LOCALE } from 'constants/locales'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ExternalLink as ExternalLinkIcon } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const StyledExternalLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.neutral2};
@@ -31,11 +33,10 @@ interface SwapLeg {
   amount: number
 }
 
-export function TransactionsTable({ referenceToken }: { referenceToken: Token }) {
+export function TransactionsTable({ chainId, referenceToken }: { chainId: ChainId; referenceToken: Token }) {
+  const theme = useTheme()
   const locale = useActiveLocale()
   const { formatNumber } = useFormatter()
-  const theme = useTheme()
-  console.log(referenceToken)
 
   const columnHelper = createColumnHelper<SwapTransaction>()
   const columns: ColumnDef<SwapTransaction, any>[] = [
@@ -51,7 +52,7 @@ export function TransactionsTable({ referenceToken }: { referenceToken: Token })
       cell: (timestamp) => (
         <TableCell>
           <ThemedText.BodySecondary>
-            {getLocaleTimeString(Number(timestamp.getValue()), locale ?? 'en-US')}
+            {getLocaleTimeString(Number(timestamp.getValue()), locale ?? DEFAULT_LOCALE)}
           </ThemedText.BodySecondary>
         </TableCell>
       ),
@@ -151,7 +152,7 @@ export function TransactionsTable({ referenceToken }: { referenceToken: Token })
         </TableCell>
       ),
     }),
-    columnHelper.accessor((row) => `https://etherscan.io/tx/${row.hash}`, {
+    columnHelper.accessor((row) => getExplorerLink(chainId, row.hash, ExplorerDataType.TRANSACTION), {
       id: 'etherscan-link',
       header: () => (
         <TableCell alignRight>
@@ -160,9 +161,9 @@ export function TransactionsTable({ referenceToken }: { referenceToken: Token })
           </ThemedText.BodySecondary>
         </TableCell>
       ),
-      cell: (etherscanURL) => (
+      cell: (explorerLink) => (
         <TableCell alignRight>
-          <StyledExternalLink href={etherscanURL.getValue()} data-testid={etherscanURL.getValue()}>
+          <StyledExternalLink href={explorerLink.getValue()} data-testid={explorerLink.getValue()}>
             <ExternalLinkIcon size="16px" stroke={theme.neutral1} />
           </StyledExternalLink>
         </TableCell>

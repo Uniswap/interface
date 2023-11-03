@@ -254,7 +254,7 @@ export default function TokenDetails({
             {infoTokenDetailsPageEnabled && (
               <>
                 <DividerLine />
-                <ActivitySection referenceToken={detailedToken.wrapped} />
+                <ActivitySection chainId={pageChainId} referenceToken={detailedToken.wrapped} />
               </>
             )}
           </LeftPanel>

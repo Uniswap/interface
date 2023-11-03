@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/react'
-import { Token } from '@uniswap/sdk-core'
+import { ChainId, Token } from '@uniswap/sdk-core'
 import { render } from 'test-utils/render'
 
 import { TransactionsTable } from './TransactionsTable'
@@ -17,8 +17,9 @@ describe('TransactionsTable', () => {
     window.innerWidth = 1280
     const txHash = '0xc3e8878f48b4c5048fef4988136b1cad4401b77f36f0e034e4e97929df85fb5e'
 
-    render(<TransactionsTable referenceToken={mockToken} />)
+    const { asFragment } = render(<TransactionsTable chainId={ChainId.MAINNET} referenceToken={mockToken} />)
 
+    expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText('09/06, 05:09pm')).toBeInTheDocument()
     expect(screen.getAllByText('Buy')[0]).toBeInTheDocument()
     expect(screen.getByText('6,084.98')).toBeInTheDocument()
