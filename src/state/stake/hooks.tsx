@@ -1,5 +1,6 @@
 import { Interface } from '@ethersproject/abi'
 import { Contract } from '@ethersproject/contracts'
+import type { TransactionResponse } from '@ethersproject/providers'
 import StakingRewardsJSON from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -20,6 +21,8 @@ import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { StakeStatus, useStakingContract, useStakingProxyContract } from 'state/governance/hooks'
 import { usePoolExtendedContract } from 'state/pool/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 import { DAI, UNI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
@@ -411,17 +414,28 @@ export function useRaceCallback(): (poolAddress: string | undefined) => undefine
   const { account, chainId, provider } = useWeb3React()
   const popContract = usePopContract()
 
+  // state for pending and submitted txn views
+  const addTransaction = useTransactionAdder()
+
   return useCallback(
     (poolAddress: string | undefined) => {
       if (!provider || !chainId || !account) return undefined
       if (!popContract) throw new Error('No PoP Contract!')
       return popContract.estimateGas.creditPopRewardToStakingProxy(poolAddress, {}).then((estimatedGasLimit) => {
-        return popContract.creditPopRewardToStakingProxy(poolAddress, {
-          value: null,
-          gasLimit: calculateGasMargin(estimatedGasLimit),
-        })
+        return popContract
+          .creditPopRewardToStakingProxy(poolAddress, {
+            value: null,
+            gasLimit: calculateGasMargin(estimatedGasLimit),
+          })
+          .then((response: TransactionResponse) => {
+            addTransaction(response, {
+              type: TransactionType.CLAIM,
+              recipient: account,
+            })
+            return response.hash
+          })
       })
     },
-    [account, chainId, provider, popContract]
+    [account, chainId, provider, popContract, addTransaction]
   )
 }

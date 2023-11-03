@@ -7,6 +7,7 @@ import styled from 'styled-components'
 
 import { GRG } from '../../constants/tokens'
 import { useRaceCallback } from '../../state/stake/hooks'
+import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
 import { ThemedText } from '../../theme'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn } from '../Column'
@@ -51,6 +52,10 @@ export default function RaceModal({ isOpen, poolAddress, poolName, onDismiss, ti
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
+
+  const transaction = useTransaction(hash)
+  const confirmed = useIsTransactionConfirmed(hash)
+  const transactionSuccess = transaction?.receipt?.status === 1
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {
@@ -112,7 +117,13 @@ export default function RaceModal({ isOpen, poolAddress, poolName, onDismiss, ti
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify="center">
             <ThemedText.DeprecatedLargeHeader>
-              <Trans>Transaction Submitted</Trans>
+              {!confirmed ? (
+                <Trans>Transaction Submitted</Trans>
+              ) : transactionSuccess ? (
+                <Trans>Transaction Confirmed</Trans>
+              ) : (
+                <Trans>Transaction Error</Trans>
+              )}
             </ThemedText.DeprecatedLargeHeader>
           </AutoColumn>
         </SubmittedView>

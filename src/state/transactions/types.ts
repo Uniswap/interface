@@ -44,6 +44,7 @@ export enum TransactionType {
   REPAY,
   DEPLOY,
   CANCEL,
+  SELL,
 }
 
 interface BaseTransactionInfo {
@@ -131,8 +132,8 @@ export interface ClaimTransactionInfo {
 
 export interface CreateV3PoolTransactionInfo {
   type: TransactionType.CREATE_V3_POOL
-  baseCurrencyId: string
-  quoteCurrencyId: string
+  baseCurrencyId?: string
+  quoteCurrencyId?: string
 }
 
 export interface AddLiquidityV3PoolTransactionInfo {
@@ -180,6 +181,14 @@ interface SubmitProposalTransactionInfo {
   type: TransactionType.SUBMIT_PROPOSAL
 }
 
+export interface BuySmartPoolTransactionInfo {
+  type: TransactionType.BUY
+}
+
+export interface SellSmartPoolTransactionInfo {
+  type: TransactionType.SELL
+}
+
 export type TransactionInfo =
   | ApproveTransactionInfo
   | ExactOutputSwapTransactionInfo
@@ -199,6 +208,8 @@ export type TransactionInfo =
   | CollectFeesTransactionInfo
   | RemoveLiquidityV3TransactionInfo
   | SubmitProposalTransactionInfo
+  | BuySmartPoolTransactionInfo
+  | SellSmartPoolTransactionInfo
 
 export interface TransactionDetails {
   hash: string

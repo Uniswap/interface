@@ -14,6 +14,7 @@ import { GRG } from '../../constants/tokens'
 import useENS from '../../hooks/useENS'
 //import { useTokenBalance } from '../../state/connection/hooks'
 import { useCreateCallback } from '../../state/pool/hooks'
+import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
 import { ThemedText } from '../../theme'
 import { ButtonGray, ButtonPrimary } from '../Button'
 //import { ButtonError } from '../Button'
@@ -134,6 +135,10 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
 
+  const transaction = useTransaction(hash)
+  const confirmed = useIsTransactionConfirmed(hash)
+  const transactionSuccess = transaction?.receipt?.status === 1
+
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {
     setHash(undefined)
@@ -246,9 +251,19 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
       {hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify="center">
-            <ThemedText.DeprecatedLargeHeader>
-              <Trans>Transaction Submitted</Trans>
-            </ThemedText.DeprecatedLargeHeader>
+            {!confirmed ? (
+              <ThemedText.DeprecatedLargeHeader>
+                <Trans>Transaction Submitted</Trans>
+              </ThemedText.DeprecatedLargeHeader>
+            ) : transactionSuccess ? (
+              <ThemedText.DeprecatedLargeHeader>
+                <Trans>Transaction Success</Trans>
+              </ThemedText.DeprecatedLargeHeader>
+            ) : (
+              <ThemedText.DeprecatedLargeHeader>
+                <Trans>Transaction Failed</Trans>
+              </ThemedText.DeprecatedLargeHeader>
+            )}
           </AutoColumn>
         </SubmittedView>
       )}
