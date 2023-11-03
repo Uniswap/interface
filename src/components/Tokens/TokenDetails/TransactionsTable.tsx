@@ -168,5 +168,6 @@ export function TransactionsTable({ referenceToken }: { referenceToken: TokenInf
       ),
     }),
   ]
+  // TODO: use live data
   return <Table columns={columns} data={mockSwapData} />
 }
