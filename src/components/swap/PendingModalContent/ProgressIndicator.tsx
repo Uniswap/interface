@@ -66,9 +66,10 @@ export function ProgressIndicator({
   const nativeCurrency = useNativeCurrency(chainId)
 
   const swapStatus = useSwapTransactionStatus(swapResult)
-  const order = useOrder(swapResult?.type === TradeFillType.UniswapX ? swapResult.response.orderHash : '')
+  const uniswapXOrder = useOrder(swapResult?.type === TradeFillType.UniswapX ? swapResult.response.orderHash : '')
 
-  const swapConfirmed = swapStatus === TransactionStatus.Confirmed || order?.status === UniswapXOrderStatus.FILLED
+  const swapConfirmed =
+    swapStatus === TransactionStatus.Confirmed || uniswapXOrder?.status === UniswapXOrderStatus.FILLED
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
 
   const swapPending = swapResult !== undefined && !swapConfirmed
@@ -162,8 +163,12 @@ export function ProgressIndicator({
   }
 
   // Return finalized-order-specifc content if available
-  if (order && order.status !== UniswapXOrderStatus.OPEN) {
-    return <OrderContent order={{ status: order.status, orderHash: order.orderHash, details: order }} />
+  if (uniswapXOrder && uniswapXOrder.status !== UniswapXOrderStatus.OPEN) {
+    return (
+      <OrderContent
+        order={{ status: uniswapXOrder.status, orderHash: uniswapXOrder.orderHash, details: uniswapXOrder }}
+      />
+    )
   }
 
   return (

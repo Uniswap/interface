@@ -310,8 +310,9 @@ export default function ConfirmSwapModal({
     })
 
   const swapStatus = useSwapTransactionStatus(swapResult)
-  const order = useOrder(swapResult?.type === TradeFillType.UniswapX ? swapResult.response.orderHash : '')
-  const swapConfirmed = swapStatus === TransactionStatus.Confirmed || order?.status === UniswapXOrderStatus.FILLED
+  const uniswapXOrder = useOrder(swapResult?.type === TradeFillType.UniswapX ? swapResult.response.orderHash : '')
+  const swapConfirmed =
+    swapStatus === TransactionStatus.Confirmed || uniswapXOrder?.status === UniswapXOrderStatus.FILLED
   const showProgressIndicatorV2 = useProgressIndicatorV2Flag() === BaseVariant.Enabled
 
   // Swap was reverted onchain.
