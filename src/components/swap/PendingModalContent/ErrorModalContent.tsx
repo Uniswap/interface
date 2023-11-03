@@ -14,6 +14,7 @@ export enum PendingModalError {
   PERMIT_ERROR,
   CONFIRMATION_ERROR,
   WRAP_ERROR,
+  TOKEN_WHITELIST_ERROR,
 }
 
 interface ErrorModalContentProps {
@@ -49,6 +50,28 @@ function getErrorContent(errorType: PendingModalError) {
     case PendingModalError.WRAP_ERROR:
       return {
         title: <Trans>Wrap failed</Trans>,
+      }
+    case PendingModalError.TOKEN_WHITELIST_ERROR:
+      return {
+        title: <Trans>Token not whitelisted</Trans>,
+        label: (
+          <Trans>
+            <a
+              href="https://github.com/RigoBlock/token-whitelists/issues/new?assignees=gabririgo&labels=token+request&projects=&template=token-request.md&title=Add+%7BTOKEN_SYMBOL%7D%3A+%7BTOKEN_NAME%7D"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Make a request
+            </a>{' '}
+            to get the token whitelisted
+          </Trans>
+        ),
+        tooltipText: (
+          <Trans>
+            Rigoblock provides an extra security feature that allows only whitelisted tokens to be swapped. However,
+            having a token whitelisted is very easy, just make a request!
+          </Trans>
+        ),
       }
   }
 }

@@ -21,8 +21,13 @@ import { PermitSignature } from './usePermitAllowance'
 
 /** Thrown when gas estimation fails. This class of error usually requires an emulator to determine the root cause. */
 class GasEstimationError extends Error {
-  constructor() {
-    super(t`Your swap is expected to fail.`)
+  constructor(message: any) {
+    super(
+      message.reason === 'execution reverted: AUNISWAP_TOKEN_NOT_WHITELISTED_ERROR'
+        ? swapErrorToUserReadableMessage(message)
+        : t`Your swap is expected to fail.`
+    )
+    this.name = 'GasEstimationError'
   }
 }
 
@@ -92,7 +97,7 @@ export function useUniversalRouterSwapCallback(
             error: gasError,
           })
           console.warn(gasError)
-          throw new GasEstimationError()
+          throw new GasEstimationError(gasError)
         }
         const gasLimit = calculateGasMargin(gasEstimate)
         setTraceData('gasLimit', gasLimit.toNumber())
