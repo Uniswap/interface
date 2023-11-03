@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import { TokenInfo } from '@uniswap/token-lists'
+import { Token } from '@uniswap/sdk-core'
 import { Table, TableCell } from 'components/Table'
 import { mockSwapData } from 'components/Tokens/TokenDetails/mockData'
 import { getLocaleTimeString } from 'components/Tokens/TokenDetails/utils'
@@ -31,10 +31,11 @@ interface SwapLeg {
   amount: number
 }
 
-export function TransactionsTable({ referenceToken }: { referenceToken: TokenInfo }) {
+export function TransactionsTable({ referenceToken }: { referenceToken: Token }) {
   const locale = useActiveLocale()
   const { formatNumber } = useFormatter()
   const theme = useTheme()
+  console.log(referenceToken)
 
   const columnHelper = createColumnHelper<SwapTransaction>()
   const columns: ColumnDef<SwapTransaction, any>[] = [

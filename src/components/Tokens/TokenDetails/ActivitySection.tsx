@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { TokenInfo } from '@uniswap/token-lists'
+import { Token } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import { useState } from 'react'
 import styled from 'styled-components'
@@ -24,7 +24,7 @@ enum ActivityTab {
   Pools,
   Transactions,
 }
-export function ActivitySection({ tokenInfo }: { tokenInfo: TokenInfo }) {
+export function ActivitySection({ referenceToken }: { referenceToken: Token }) {
   const [activityInView, setActivityInView] = useState(ActivityTab.Pools)
   return (
     <Container>
@@ -40,7 +40,7 @@ export function ActivitySection({ tokenInfo }: { tokenInfo: TokenInfo }) {
         </Tab>
       </Row>
       {activityInView === ActivityTab.Transactions ? (
-        <TransactionsTable referenceToken={tokenInfo} />
+        <TransactionsTable referenceToken={referenceToken} />
       ) : (
         <>Pools Table</>
       )}

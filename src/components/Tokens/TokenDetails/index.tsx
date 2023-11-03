@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { TokenInfo } from '@uniswap/token-lists'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -255,7 +254,7 @@ export default function TokenDetails({
             {infoTokenDetailsPageEnabled && (
               <>
                 <DividerLine />
-                <ActivitySection tokenInfo={detailedToken as TokenInfo} />
+                <ActivitySection referenceToken={detailedToken.wrapped} />
               </>
             )}
           </LeftPanel>
