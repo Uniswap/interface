@@ -67,6 +67,8 @@ export function swapErrorToUserReadableMessage(error: any): string {
       return t`This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
     case 'TF':
       return t`The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
+    case 'AUNISWAP_TOKEN_NOT_WHITELISTED_ERROR':
+      return t`The token you are trying to buy is not whitelisted yet. Make a token whitelisting request.`
     default:
       if (reason?.indexOf('undefined is not an object') !== -1) {
         console.error(error, reason)

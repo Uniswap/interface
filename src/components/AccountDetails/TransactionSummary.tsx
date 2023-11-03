@@ -206,10 +206,12 @@ function CreateV3PoolSummary({ info: { quoteCurrencyId, baseCurrencyId } }: { in
   const baseCurrency = useCurrency(baseCurrencyId)
   const quoteCurrency = useCurrency(quoteCurrencyId)
 
-  return (
+  return quoteCurrencyId && baseCurrencyId ? (
     <Trans>
       Create {baseCurrency?.symbol}/{quoteCurrency?.symbol} V3 pool
     </Trans>
+  ) : (
+    <Trans>Create smart pool</Trans>
   )
 }
 
@@ -309,6 +311,14 @@ function SwapSummary({ info }: { info: ExactInputSwapTransactionInfo | ExactOutp
   }
 }
 
+function BuySmartPoolSummary() {
+  return <Trans>Buy smart pool</Trans>
+}
+
+function SellSmartPoolSummary() {
+  return <Trans>Sell smart pool</Trans>
+}
+
 export function TransactionSummary({ info }: { info: TransactionInfo }) {
   switch (info.type) {
     case TransactionType.ADD_LIQUIDITY_V3_POOL:
@@ -361,5 +371,11 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.SUBMIT_PROPOSAL:
       return <SubmitProposalTransactionSummary />
+
+    case TransactionType.BUY:
+      return <BuySmartPoolSummary />
+
+    case TransactionType.SELL:
+      return <SellSmartPoolSummary />
   }
 }

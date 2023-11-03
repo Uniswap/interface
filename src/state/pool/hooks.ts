@@ -225,9 +225,7 @@ export function useCreateCallback(): (
           .createPool(name, symbol, baseCurrency, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
-              // TODO: define correct transaction type
-              type: TransactionType.DELEGATE,
-              delegatee: baseCurrency,
+              type: TransactionType.CREATE_V3_POOL,
             })
             return response.hash
           })

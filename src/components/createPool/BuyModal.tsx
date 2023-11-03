@@ -10,7 +10,7 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 //import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { PoolInfo, useDerivedPoolInfo } from '../../state/buy/hooks'
 import { usePoolExtendedContract } from '../../state/pool/hooks'
-import { useTransactionAdder } from '../../state/transactions/hooks'
+import { useIsTransactionConfirmed, useTransaction, useTransactionAdder } from '../../state/transactions/hooks'
 import { TransactionType } from '../../state/transactions/types'
 import { CloseIcon, ThemedText } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
@@ -51,6 +51,10 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
     setAttempting(false)
     onDismiss()
   }, [onDismiss])
+
+  const transaction = useTransaction(hash)
+  const confirmed = useIsTransactionConfirmed(hash)
+  const transactionSuccess = transaction?.receipt?.status === 1
 
   const { parsedAmount, error } = useDerivedPoolInfo(typedValue, userBaseTokenBalance?.currency, userBaseTokenBalance)
 
@@ -102,10 +106,9 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
               gasLimit: calculateGasMargin(estimatedGasLimit),
             }).then((response: TransactionResponse) => {
               addTransaction(response, {
-                // TODO: define correct transaction type
-                type: TransactionType.DELEGATE,
-                delegatee: poolInfo.recipient,
+                type: TransactionType.BUY,
               })
+              setAttempting(false)
               setHash(response.hash)
               return response.hash
             })
@@ -206,17 +209,36 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
           </AutoColumn>
         </LoadingView>
       )}
-      {attempting && hash && (
+      {hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify="center">
-            <ThemedText.DeprecatedLargeHeader>
-              <Trans>Transaction Submitted</Trans>
-            </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedBody fontSize={20}>
-              <Trans>
-                Deposited {parsedAmount?.toSignificant(4)} {userBaseTokenBalance?.currency?.symbol}
-              </Trans>
-            </ThemedText.DeprecatedBody>
+            {!confirmed ? (
+              <>
+                <ThemedText.DeprecatedLargeHeader>
+                  <Trans>Transaction Submitted</Trans>
+                </ThemedText.DeprecatedLargeHeader>
+                <ThemedText.DeprecatedBody fontSize={20}>
+                  <Trans>
+                    Depositing {parsedAmount?.toSignificant(4)} {userBaseTokenBalance?.currency?.symbol}
+                  </Trans>
+                </ThemedText.DeprecatedBody>
+              </>
+            ) : transactionSuccess ? (
+              <>
+                <ThemedText.DeprecatedLargeHeader>
+                  <Trans>Transaction Success</Trans>
+                </ThemedText.DeprecatedLargeHeader>
+                <ThemedText.DeprecatedBody fontSize={20}>
+                  <Trans>
+                    Deposited {parsedAmount?.toSignificant(4)} {userBaseTokenBalance?.currency?.symbol}
+                  </Trans>
+                </ThemedText.DeprecatedBody>
+              </>
+            ) : (
+              <ThemedText.DeprecatedLargeHeader>
+                <Trans>Transaction Failed</Trans>
+              </ThemedText.DeprecatedLargeHeader>
+            )}
           </AutoColumn>
         </SubmittedView>
       )}

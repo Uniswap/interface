@@ -129,9 +129,9 @@ function parseMigrateCreateV3(
   chainId: ChainId,
   tokens: ChainTokenMap
 ): Partial<Activity> {
-  const baseCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
+  const baseCurrency = getCurrency(lp.baseCurrencyId ?? '', chainId, tokens)
   const baseSymbol = baseCurrency?.symbol ?? t`Unknown`
-  const quoteCurrency = getCurrency(lp.quoteCurrencyId, chainId, tokens)
+  const quoteCurrency = getCurrency(lp.quoteCurrencyId ?? '', chainId, tokens)
   const quoteSymbol = quoteCurrency?.symbol ?? t`Unknown`
   const descriptor = t`${baseSymbol} and ${quoteSymbol}`
 
@@ -182,7 +182,9 @@ export function transactionToActivity(
     } else if (info.type === TransactionType.COLLECT_FEES) {
       additionalFields = parseCollectFees(info, chainId, tokens)
     } else if (info.type === TransactionType.MIGRATE_LIQUIDITY_V3 || info.type === TransactionType.CREATE_V3_POOL) {
-      additionalFields = parseMigrateCreateV3(info, chainId, tokens)
+      if (info.baseCurrencyId && info.quoteCurrencyId) {
+        additionalFields = parseMigrateCreateV3(info, chainId, tokens)
+      }
     }
 
     const activity = { ...defaultFields, ...additionalFields }

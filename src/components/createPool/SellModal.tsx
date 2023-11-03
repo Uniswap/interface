@@ -8,7 +8,7 @@ import styled from 'styled-components'
 
 import { PoolInfo, useDerivedPoolInfo } from '../../state/buy/hooks'
 import { usePoolExtendedContract } from '../../state/pool/hooks'
-import { useTransactionAdder } from '../../state/transactions/hooks'
+import { useIsTransactionConfirmed, useTransaction, useTransactionAdder } from '../../state/transactions/hooks'
 import { TransactionType } from '../../state/transactions/types'
 import { CloseIcon, ThemedText } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
@@ -44,6 +44,11 @@ export default function SellModal({ isOpen, onDismiss, poolInfo, userBaseTokenBa
   const addTransaction = useTransactionAdder()
   const [attempting, setAttempting] = useState<boolean>(false)
   const [hash, setHash] = useState<string | undefined>()
+
+  const transaction = useTransaction(hash)
+  const confirmed = useIsTransactionConfirmed(hash)
+  const transactionSuccess = transaction?.receipt?.status === 1
+
   const wrappedOnDismiss = useCallback(() => {
     setHash(undefined)
     setAttempting(false)
@@ -99,10 +104,9 @@ export default function SellModal({ isOpen, onDismiss, poolInfo, userBaseTokenBa
           gasLimit: calculateGasMargin(estimatedGasLimit),
         }).then((response: TransactionResponse) => {
           addTransaction(response, {
-            // TODO: define correct transaction type
-            type: TransactionType.DELEGATE,
-            delegatee: poolInfo.recipient,
+            type: TransactionType.SELL,
           })
+          setAttempting(false)
           setHash(response.hash)
           return response.hash
         })
@@ -179,17 +183,36 @@ export default function SellModal({ isOpen, onDismiss, poolInfo, userBaseTokenBa
           </AutoColumn>
         </LoadingView>
       )}
-      {attempting && hash && (
+      {hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify="center">
-            <ThemedText.DeprecatedLargeHeader>
-              <Trans>Transaction Submitted</Trans>
-            </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedBody fontSize={20}>
-              <Trans>
-                Sold {parsedAmount?.toSignificant(4)} {poolInfo?.pool.symbol}
-              </Trans>
-            </ThemedText.DeprecatedBody>
+            {!confirmed ? (
+              <>
+                <ThemedText.DeprecatedLargeHeader>
+                  <Trans>Transaction Submitted</Trans>
+                </ThemedText.DeprecatedLargeHeader>
+                <ThemedText.DeprecatedBody fontSize={20}>
+                  <Trans>
+                    Selling {parsedAmount?.toSignificant(4)} {poolInfo?.pool.symbol}
+                  </Trans>
+                </ThemedText.DeprecatedBody>
+              </>
+            ) : transactionSuccess ? (
+              <>
+                <ThemedText.DeprecatedLargeHeader>
+                  <Trans>Transaction Success</Trans>
+                </ThemedText.DeprecatedLargeHeader>
+                <ThemedText.DeprecatedBody fontSize={20}>
+                  <Trans>
+                    Sold {parsedAmount?.toSignificant(4)} {poolInfo?.pool.symbol}
+                  </Trans>
+                </ThemedText.DeprecatedBody>
+              </>
+            ) : (
+              <ThemedText.DeprecatedLargeHeader>
+                <Trans>Transaction Failed</Trans>
+              </ThemedText.DeprecatedLargeHeader>
+            )}
           </AutoColumn>
         </SubmittedView>
       )}

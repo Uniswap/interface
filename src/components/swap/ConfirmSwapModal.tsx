@@ -297,6 +297,7 @@ export default function ConfirmSwapModal({
     })
 
   const swapStatus = useSwapTransactionStatus(swapResult)
+  const [whitelistedTokenError, setWhitelistedTokenError] = useState<PendingModalError>()
 
   // Swap was reverted onchain.
   const swapReverted = swapStatus === TransactionStatus.Failed
@@ -307,6 +308,12 @@ export default function ConfirmSwapModal({
     // Reset the modal state if the user rejected the swap.
     if (swapError && !swapFailed) {
       onCancel()
+    }
+    let errorMessage: any = swapError?.toString()
+    errorMessage = errorMessage?.substr(0, 'Error: The token you are trying to buy is not whitelisted'.length)
+    if (errorMessage === 'Error: The token you are trying to buy is not whitelisted') {
+      console.log(errorMessage, 'tre')
+      setWhitelistedTokenError(errorMessage)
     }
   }, [onCancel, swapError, swapFailed])
 
@@ -411,7 +418,11 @@ export default function ConfirmSwapModal({
       <Modal isOpen $scrollOverlay onDismiss={onModalDismiss} maxHeight={90}>
         {approvalError || swapFailed ? (
           <ErrorModalContent
-            errorType={approvalError ?? PendingModalError.CONFIRMATION_ERROR}
+            errorType={
+              approvalError ?? whitelistedTokenError
+                ? PendingModalError.TOKEN_WHITELIST_ERROR
+                : PendingModalError.CONFIRMATION_ERROR
+            }
             onRetry={startSwapFlow}
           />
         ) : (
