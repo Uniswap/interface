@@ -5,6 +5,7 @@ import styled from 'styled-components'
 const Wrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.surface3};
   border-radius: 20px;
+  overflow: hidden;
 `
 const TableContainer = styled.div`
   overflow: auto; // Enable horizontal scroll on full table
