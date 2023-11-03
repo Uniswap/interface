@@ -32,6 +32,7 @@ exports[`TransactionsTable displays swap transaction 1`] = `
 .c0 {
   border: 1px solid #22222212;
   border-radius: 20px;
+  overflow: hidden;
 }
 
 .c1 {
