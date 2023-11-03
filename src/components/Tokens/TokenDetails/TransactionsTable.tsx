@@ -1,33 +1,34 @@
+import { Trans } from '@lingui/macro'
+import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { TokenInfo } from '@uniswap/token-lists'
-import { Table } from 'components/Table'
-import { Cell } from 'components/Table/Cells'
+import { Table, TableCell } from 'components/Table'
+import { mockSwapData } from 'components/Tokens/TokenDetails/mockData'
+import { getLocaleTimeString } from 'components/Tokens/TokenDetails/utils'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useMemo } from 'react'
 import { ExternalLink as ExternalLinkIcon } from 'react-feather'
-import { Column } from 'react-table'
-import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { mockSwapData } from './mockData'
-import { Swap, SwapAction, SwapInOut } from './types'
-import { getLocaleTimeString, getSwapType } from './utils'
 
 const StyledExternalLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.neutral2};
   stroke: ${({ theme }) => theme.neutral2};
 `
 
-enum ColumnHeader {
-  Time = 'Time',
-  Type = 'Type',
-  Amount = 'Amount',
-  For = 'For',
-  USD = 'USD',
-  Maker = 'Maker',
-  Txn = 'Txn',
+interface SwapTransaction {
+  hash: string
+  timestamp: number
+  input: SwapLeg
+  output: SwapLeg
+  usdValue: number
+  makerAddress: string
+}
+
+interface SwapLeg {
+  address: string
+  symbol: string
+  amount: number
 }
 
 export function TransactionsTable({ referenceToken }: { referenceToken: TokenInfo }) {
@@ -35,160 +36,137 @@ export function TransactionsTable({ referenceToken }: { referenceToken: TokenInf
   const { formatNumber } = useFormatter()
   const theme = useTheme()
 
-  const columns: Column<Swap>[] = useMemo(() => {
-    const getColor = (action: SwapAction) => (action === SwapAction.Buy ? theme.success : theme.critical)
-    return [
+  const columnHelper = createColumnHelper<SwapTransaction>()
+  const columns: ColumnDef<SwapTransaction, any>[] = [
+    columnHelper.accessor((row) => row.timestamp, {
+      id: 'timestamp',
+      header: () => (
+        <TableCell>
+          <ThemedText.BodySecondary>
+            <Trans>Time</Trans>
+          </ThemedText.BodySecondary>
+        </TableCell>
+      ),
+      cell: (timestamp) => (
+        <TableCell>
+          <ThemedText.BodySecondary>
+            {getLocaleTimeString(Number(timestamp.getValue()), locale ?? 'en-US')}
+          </ThemedText.BodySecondary>
+        </TableCell>
+      ),
+    }),
+    columnHelper.accessor((row) => row.output.address, {
+      id: 'swap-type',
+      header: () => (
+        <TableCell>
+          <ThemedText.BodySecondary>
+            <Trans>Type</Trans>
+          </ThemedText.BodySecondary>
+        </TableCell>
+      ),
+      cell: (outputTokenAddress) => (
+        <TableCell>
+          <ThemedText.BodyPrimary>
+            {String(outputTokenAddress.getValue()).toLowerCase() === referenceToken.address.toLowerCase()
+              ? 'Buy'
+              : 'Sell'}
+          </ThemedText.BodyPrimary>
+        </TableCell>
+      ),
+    }),
+    columnHelper.accessor(
+      (row) =>
+        row.input.address.toLowerCase() === referenceToken.address.toLowerCase() ? row.input.amount : row.output.amount,
       {
-        Header: (
-          <Cell justifyContent="flex-start">
-            <ThemedText.BodySecondary>{ColumnHeader.Time}</ThemedText.BodySecondary>
-          </Cell>
+        id: 'reference-amount',
+        header: () => (
+          <TableCell alignRight>
+            <ThemedText.BodySecondary>${referenceToken.symbol}</ThemedText.BodySecondary>
+          </TableCell>
         ),
-        accessor: (swap) => swap,
-        Cell: ({ value }: { value: { timestamp: number; transactionHash: string } }) => (
-          <Cell justifyContent="flex-start">
+        cell: (inputTokenAmount) => (
+          <TableCell alignRight>
+            <ThemedText.BodyPrimary>
+              {formatNumber({ input: inputTokenAmount.getValue(), type: NumberType.TokenTx })}
+            </ThemedText.BodyPrimary>
+          </TableCell>
+        ),
+      }
+    ),
+    columnHelper.accessor(
+      (row) => {
+        const nonReferenceSwapLeg =
+          row.input.address.toLowerCase() === referenceToken.address.toLowerCase() ? row.output : row.input
+        return `${formatNumber({
+          input: nonReferenceSwapLeg.amount,
+          type: NumberType.TokenTx,
+        })} ${nonReferenceSwapLeg.symbol}`
+      },
+      {
+        id: 'non-reference-amount',
+        header: () => (
+          <TableCell alignRight>
             <ThemedText.BodySecondary>
-              {getLocaleTimeString(value.timestamp, locale ?? 'en-US')}
+              <Trans>For</Trans>
             </ThemedText.BodySecondary>
-          </Cell>
+          </TableCell>
         ),
-        disableSortBy: true,
-        id: ColumnHeader.Time,
-      },
-      {
-        Header: (
-          <Cell justifyContent="flex-start">
-            <ThemedText.BodySecondary>{ColumnHeader.Type}</ThemedText.BodySecondary>
-          </Cell>
+        cell: (swapOutput) => (
+          <TableCell alignRight>
+            <ThemedText.BodyPrimary>{swapOutput.getValue()}</ThemedText.BodyPrimary>
+          </TableCell>
         ),
-        accessor: (swap) => swap,
-        Cell: ({ value }: { value: { input: SwapInOut } }) => {
-          const swapType = getSwapType(value.input.contractAddress, referenceToken.address)
-          return (
-            <Cell justifyContent="flex-start">
-              <Text color={getColor(swapType)}>{swapType}</Text>
-            </Cell>
-          )
-        },
-        disableSortBy: true,
-        id: ColumnHeader.Type,
-      },
-      {
-        Header: (
-          <Cell>
-            <ThemedText.BodySecondary>{`$${referenceToken.symbol}`}</ThemedText.BodySecondary>
-          </Cell>
-        ),
-        accessor: (swap) => swap,
-        Cell: ({ value }: { value: { input: SwapInOut; output: SwapInOut } }) => {
-          const swapType = getSwapType(value.input.contractAddress, referenceToken.address)
-          const token = swapType === SwapAction.Buy ? value.output : value.input
-          return (
-            <Cell>
-              <Text color={getColor(swapType)}>
-                {`${formatNumber({ input: token.amount, type: NumberType.TokenTx })}`}
-              </Text>
-            </Cell>
-          )
-        },
-        disableSortBy: true,
-        id: ColumnHeader.Amount,
-      },
-      {
-        Header: (
-          <Cell>
-            <ThemedText.BodySecondary>{ColumnHeader.For}</ThemedText.BodySecondary>
-          </Cell>
-        ),
-        accessor: (swap) => swap,
-        Cell: ({ value }: { value: { input: SwapInOut; output: SwapInOut } }) => {
-          const swapType = getSwapType(value.input.contractAddress, referenceToken.address)
-          const token = swapType === SwapAction.Buy ? value.input : value.output
-          return (
-            <Cell>
-              <Text color={getColor(swapType)}>
-                {`${formatNumber({ input: token.amount, type: NumberType.TokenTx })} ${token.symbol}`}
-              </Text>
-            </Cell>
-          )
-        },
-        disableSortBy: true,
-        id: ColumnHeader.For,
-      },
-      {
-        Header: (
-          <Cell>
-            <ThemedText.BodySecondary>{ColumnHeader.USD}</ThemedText.BodySecondary>
-          </Cell>
-        ),
-        accessor: (swap) => swap,
-        Cell: ({ value }: { value: { input: SwapInOut; usdValue: number } }) => {
-          const swapType = getSwapType(value.input.contractAddress, referenceToken.address)
-          return (
-            <Cell>
-              <Text color={getColor(swapType)}>
-                {formatNumber({ input: value.usdValue, type: NumberType.PortfolioBalance })}
-              </Text>
-            </Cell>
-          )
-        },
-        disableSortBy: true,
-        id: ColumnHeader.USD,
-      },
-      {
-        Header: (
-          <Cell>
-            <ThemedText.BodySecondary>{ColumnHeader.Maker}</ThemedText.BodySecondary>
-          </Cell>
-        ),
-        accessor: 'maker',
-        Cell: ({ value }: { value: string }) => (
-          <Cell>
-            <ThemedText.BodySecondary>{shortenAddress(value, 0)}</ThemedText.BodySecondary>
-          </Cell>
-        ),
-        disableSortBy: true,
-        id: ColumnHeader.Maker,
-      },
-      {
-        Header: (
-          <Cell>
-            <ThemedText.BodySecondary>{ColumnHeader.Txn}</ThemedText.BodySecondary>
-          </Cell>
-        ),
-        accessor: 'transactionHash',
-        Cell: ({ value }: { value: string }) => {
-          const href = `https://etherscan.io/tx/${value}`
-          return (
-            <Cell>
-              <StyledExternalLink href={href} data-testid={href} color={theme.neutral2}>
-                <ExternalLinkIcon size="16px" />
-              </StyledExternalLink>
-            </Cell>
-          )
-        },
-        disableSortBy: true,
-        id: ColumnHeader.Txn,
-      },
-    ]
-  }, [
-    referenceToken.symbol,
-    referenceToken.address,
-    theme.success,
-    theme.critical,
-    theme.neutral2,
-    locale,
-    formatNumber,
-  ])
-  return (
-    <Table
-      columns={columns}
-      data={mockSwapData}
-      smallHiddenColumns={[ColumnHeader.For, ColumnHeader.Txn, ColumnHeader.USD]}
-      mediumHiddenColumns={[ColumnHeader.For, ColumnHeader.Txn]}
-      largeHiddenColumns={[ColumnHeader.For]}
-      extraLargeHiddenColumns={[]}
-      dataTestId="transactions-table"
-    />
-  )
+      }
+    ),
+    columnHelper.accessor((row) => row.usdValue, {
+      id: 'usd-value',
+      header: () => (
+        <TableCell alignRight>
+          <ThemedText.BodySecondary>
+            <Trans>USD</Trans>
+          </ThemedText.BodySecondary>
+        </TableCell>
+      ),
+      cell: (usd) => (
+        <TableCell alignRight>
+          <ThemedText.BodyPrimary>
+            {formatNumber({ input: usd.getValue(), type: NumberType.FiatTokenPrice })}
+          </ThemedText.BodyPrimary>
+        </TableCell>
+      ),
+    }),
+    columnHelper.accessor((row) => row.makerAddress, {
+      id: 'maker-address',
+      header: () => (
+        <TableCell alignRight>
+          <ThemedText.BodySecondary>
+            <Trans>Maker</Trans>
+          </ThemedText.BodySecondary>
+        </TableCell>
+      ),
+      cell: (makerAddress) => (
+        <TableCell alignRight>
+          <ThemedText.BodyPrimary>{shortenAddress(makerAddress.getValue(), 0)}</ThemedText.BodyPrimary>
+        </TableCell>
+      ),
+    }),
+    columnHelper.accessor((row) => `https://etherscan.io/tx/${row.hash}`, {
+      id: 'etherscan-link',
+      header: () => (
+        <TableCell alignRight>
+          <ThemedText.BodySecondary>
+            <Trans>Tx</Trans>
+          </ThemedText.BodySecondary>
+        </TableCell>
+      ),
+      cell: (etherscanURL) => (
+        <TableCell alignRight>
+          <StyledExternalLink href={etherscanURL.getValue()} data-testid={etherscanURL.getValue()}>
+            <ExternalLinkIcon size="16px" stroke={theme.neutral1} />
+          </StyledExternalLink>
+        </TableCell>
+      ),
+    }),
+  ]
+  return <Table columns={columns} data={mockSwapData} />
 }

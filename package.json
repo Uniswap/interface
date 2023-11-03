@@ -189,6 +189,7 @@
     "@sentry/react": "^7.45.0",
     "@sentry/tracing": "^7.45.0",
     "@sentry/types": "^7.45.0",
+    "@tanstack/react-table": "^8.10.7",
     "@types/react-window-infinite-loader": "^1.0.6",
     "@uniswap/analytics": "1.5.0",
     "@uniswap/analytics-events": "^2.24.0",

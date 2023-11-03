@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { TokenInfo } from '@uniswap/token-lists'
-import { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
 import { useState } from 'react'
 import styled, { css } from 'styled-components'
@@ -23,14 +22,19 @@ const InactiveTab = styled(ThemedText.BodySecondary)`
 `
 
 enum ActivityTab {
-  Transactions = 'Transactions',
   Pools = 'Pools',
+  Transactions = 'Transactions',
 }
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`
 
 export function ActivitySection({ tokenInfo }: { tokenInfo: TokenInfo }) {
-  const [activityInView, setActivityInView] = useState(ActivityTab.Transactions)
+  const [activityInView, setActivityInView] = useState(ActivityTab.Pools)
   return (
-    <AutoColumn>
+    <Container>
       <Row gap="24px" marginBottom="12px">
         {Object.values(ActivityTab).map((activity, index) =>
           activity === activityInView ? (
@@ -49,6 +53,6 @@ export function ActivitySection({ tokenInfo }: { tokenInfo: TokenInfo }) {
       ) : (
         <>Pools Table</>
       )}
-    </AutoColumn>
+    </Container>
   )
 }

@@ -1,5 +1,4 @@
-import { SwapAction } from './types'
-import { getLocaleTimeString, getSwapType } from './utils'
+import { getLocaleTimeString } from './utils'
 
 describe('getLocaleTimeString', () => {
   beforeEach(() => {
@@ -76,22 +75,5 @@ describe('getLocaleTimeString', () => {
     const localeTimeString = getLocaleTimeString(eventTime)
 
     expect(localeTimeString).toBe('09/13, 06:42pm')
-  })
-})
-
-describe('getSwapType', () => {
-  const ADDRESS_1 = '0x0000000000000000000000000000000000000001'
-  const ADDRESS_2 = '0x0000000000000000000000000000000000000002'
-
-  it('identifies selling when input token is same as reference token', () => {
-    const swapType = getSwapType(ADDRESS_1, ADDRESS_1)
-
-    expect(swapType).toBe(SwapAction.Sell)
-  })
-
-  it('identifies buying when input token is different from reference token', () => {
-    const swapType = getSwapType(ADDRESS_1, ADDRESS_2)
-
-    expect(swapType).toBe(SwapAction.Buy)
   })
 })

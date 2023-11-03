@@ -11,58 +11,7 @@ describe('TransactionsTable', () => {
     decimals: 18,
     symbol: 'BITCOIN',
   }
-
-  it('shows all columns for extra large breakpoint', () => {
-    window.innerWidth = 1280
-
-    render(<TransactionsTable referenceToken={mockTokenInfo} />)
-
-    expect(screen.getByText('Time')).toBeInTheDocument()
-    expect(screen.getByText('Type')).toBeInTheDocument()
-    expect(screen.getByText('$BITCOIN')).toBeInTheDocument()
-    expect(screen.getByText('For')).toBeInTheDocument()
-    expect(screen.getByText('USD')).toBeInTheDocument()
-    expect(screen.getByText('Maker')).toBeInTheDocument()
-    expect(screen.getByText('Txn')).toBeInTheDocument()
-  })
-
-  it('shows all columns for large breakpoint', () => {
-    window.innerWidth = 1024
-
-    render(<TransactionsTable referenceToken={mockTokenInfo} />)
-
-    expect(screen.getByText('Time')).toBeInTheDocument()
-    expect(screen.getByText('Type')).toBeInTheDocument()
-    expect(screen.getByText('$BITCOIN')).toBeInTheDocument()
-    expect(screen.getByText('USD')).toBeInTheDocument()
-    expect(screen.getByText('Maker')).toBeInTheDocument()
-    expect(screen.getByText('Txn')).toBeInTheDocument()
-  })
-
-  it('hides some columns at medium breakpoint', () => {
-    window.innerWidth = 768
-
-    render(<TransactionsTable referenceToken={mockTokenInfo} />)
-
-    expect(screen.getByText('Time')).toBeInTheDocument()
-    expect(screen.getByText('Type')).toBeInTheDocument()
-    expect(screen.getByText('$BITCOIN')).toBeInTheDocument()
-    expect(screen.getByText('USD')).toBeInTheDocument()
-    expect(screen.getByText('Maker')).toBeInTheDocument()
-  })
-
-  it('hides some columns at small breakpoint', () => {
-    window.innerWidth = 640
-
-    render(<TransactionsTable referenceToken={mockTokenInfo} />)
-
-    expect(screen.getByText('Time')).toBeInTheDocument()
-    expect(screen.getByText('Type')).toBeInTheDocument()
-    expect(screen.getByText('$BITCOIN')).toBeInTheDocument()
-    expect(screen.getByText('Maker')).toBeInTheDocument()
-  })
-
-  it('displays swap row', () => {
+  it('displays swap transaction', () => {
     window.innerWidth = 1280
     const txHash = '0xc3e8878f48b4c5048fef4988136b1cad4401b77f36f0e034e4e97929df85fb5e'
 

@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render } from 'test-utils/render'
 
@@ -20,13 +20,13 @@ describe('ActivitySection', () => {
     expect(screen.getByText('Transactions')).toBeInTheDocument()
   })
 
-  it('lets user navigate between tabs', () => {
+  it('lets user navigate between tabs', async () => {
     render(<ActivitySection tokenInfo={mockTokenInfo} />)
-    // expect(screen.getByTestId('pools-table')).toBeInTheDocument()
+    expect(screen).not.toContain('Tx')
 
     const transactionsTab = screen.getByText('Transactions')
     userEvent.click(transactionsTab)
 
-    expect(screen.getByTestId('transactions-table')).toBeInTheDocument()
+    await waitFor(() => expect(screen.getByText('Tx')).toBeInTheDocument())
   })
 })

@@ -1,5 +1,3 @@
-import { SwapAction } from './types'
-
 /**
  * Displays the time as a human-readable string.
  *
@@ -35,18 +33,4 @@ export function getLocaleTimeString(timestamp: number, locale = 'en-US') {
   } else {
     return `${secondsPassed} ${secondsPassed === 1 ? 'second' : 'seconds'} ago`
   }
-}
-
-/**
- * Determine the type of swap by comparing the address of the input token
- * to the address of the current token detail page. If they're the same,
- * then the TDP token is the input and is hence being sold. If they're not
- * the same, then the TDP token is the output and is hence being bought.
- *
- * @param {number} inputTokenAddress - Address of the token that was provided as input to the swap.
- * @param {number} referenceTokenAddress - Address of the token being displayed on TDP.
- * @returns {SwapAction} Swap action type indicating whether the swap was a Buy or Sell of the TDP token.
- */
-export function getSwapType(inputTokenAddress: string, referenceTokenAddress: string) {
-  return inputTokenAddress.toLowerCase() === referenceTokenAddress.toLowerCase() ? SwapAction.Sell : SwapAction.Buy
 }
