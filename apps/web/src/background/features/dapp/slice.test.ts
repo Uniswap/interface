@@ -37,11 +37,13 @@ describe('dappSlice', () => {
   })
 
   it('should save dapp chain correctly', () => {
+    store.dispatch(saveDappConnection({ dappUrl: OPENSEA_URL, walletAddress: WALLET_ADDRESS_1 }))
     store.dispatch(saveDappChain({ dappUrl: OPENSEA_URL, chainId: ChainId.Mainnet }))
     let expectedState: DappState = {
       [OPENSEA_URL]: {
         lastChainId: ChainId.Mainnet,
-        connectedAddresses: [],
+        connectedAddresses: [WALLET_ADDRESS_1],
+        activeConnectedAddress: WALLET_ADDRESS_1,
       },
     }
 
@@ -52,20 +54,24 @@ describe('dappSlice', () => {
     expectedState = {
       [OPENSEA_URL]: {
         lastChainId: ChainId.Optimism,
+        activeConnectedAddress: WALLET_ADDRESS_1,
         connectedAddresses: [WALLET_ADDRESS_1],
       },
     }
     expect(store.getState()).toEqual(expectedState)
 
+    store.dispatch(saveDappConnection({ dappUrl: UNISWAP_URL, walletAddress: WALLET_ADDRESS_1 }))
     store.dispatch(saveDappChain({ dappUrl: UNISWAP_URL, chainId: ChainId.Base }))
     expectedState = {
       [OPENSEA_URL]: {
         lastChainId: ChainId.Optimism,
+        activeConnectedAddress: WALLET_ADDRESS_1,
         connectedAddresses: [WALLET_ADDRESS_1],
       },
       [UNISWAP_URL]: {
         lastChainId: ChainId.Base,
-        connectedAddresses: [],
+        activeConnectedAddress: WALLET_ADDRESS_1,
+        connectedAddresses: [WALLET_ADDRESS_1],
       },
     }
     expect(store.getState()).toEqual(expectedState)
@@ -76,6 +82,7 @@ describe('dappSlice', () => {
     let expectedState: DappState = {
       [OPENSEA_URL]: {
         lastChainId: ChainId.Mainnet,
+        activeConnectedAddress: WALLET_ADDRESS_1,
         connectedAddresses: [WALLET_ADDRESS_1],
       },
     }
@@ -85,7 +92,8 @@ describe('dappSlice', () => {
     expectedState = {
       [OPENSEA_URL]: {
         lastChainId: ChainId.Mainnet,
-        connectedAddresses: [WALLET_ADDRESS_2, WALLET_ADDRESS_1],
+        activeConnectedAddress: WALLET_ADDRESS_2,
+        connectedAddresses: [WALLET_ADDRESS_1, WALLET_ADDRESS_2],
       },
     }
     expect(store.getState()).toEqual(expectedState)
@@ -94,7 +102,8 @@ describe('dappSlice', () => {
     expectedState = {
       [OPENSEA_URL]: {
         lastChainId: ChainId.Mainnet,
-        connectedAddresses: [WALLET_ADDRESS_3, WALLET_ADDRESS_2, WALLET_ADDRESS_1],
+        activeConnectedAddress: WALLET_ADDRESS_3,
+        connectedAddresses: [WALLET_ADDRESS_1, WALLET_ADDRESS_2, WALLET_ADDRESS_3],
       },
     }
     expect(store.getState()).toEqual(expectedState)
@@ -108,10 +117,12 @@ describe('dappSlice', () => {
     expectedState = {
       [OPENSEA_URL]: {
         lastChainId: ChainId.Mainnet,
-        connectedAddresses: [WALLET_ADDRESS_3, WALLET_ADDRESS_2, WALLET_ADDRESS_1],
+        activeConnectedAddress: WALLET_ADDRESS_3,
+        connectedAddresses: [WALLET_ADDRESS_1, WALLET_ADDRESS_2, WALLET_ADDRESS_3],
       },
       [UNISWAP_URL]: {
         lastChainId: ChainId.Mainnet,
+        activeConnectedAddress: WALLET_ADDRESS_1,
         connectedAddresses: [WALLET_ADDRESS_1],
       },
     }
@@ -133,10 +144,12 @@ describe('dappSlice', () => {
     let expectedState: DappState = {
       [OPENSEA_URL]: {
         lastChainId: ChainId.Mainnet,
-        connectedAddresses: [WALLET_ADDRESS_3, WALLET_ADDRESS_1],
+        activeConnectedAddress: WALLET_ADDRESS_1,
+        connectedAddresses: [WALLET_ADDRESS_1, WALLET_ADDRESS_3],
       },
       [UNISWAP_URL]: {
         lastChainId: ChainId.Mainnet,
+        activeConnectedAddress: WALLET_ADDRESS_1,
         connectedAddresses: [WALLET_ADDRESS_1],
       },
     }
@@ -146,7 +159,8 @@ describe('dappSlice', () => {
     expectedState = {
       [OPENSEA_URL]: {
         lastChainId: ChainId.Mainnet,
-        connectedAddresses: [WALLET_ADDRESS_3, WALLET_ADDRESS_1],
+        activeConnectedAddress: WALLET_ADDRESS_1,
+        connectedAddresses: [WALLET_ADDRESS_1, WALLET_ADDRESS_3],
       },
     }
     expect(store.getState()).toEqual(expectedState)
@@ -155,6 +169,7 @@ describe('dappSlice', () => {
     expectedState = {
       [OPENSEA_URL]: {
         lastChainId: ChainId.Mainnet,
+        activeConnectedAddress: WALLET_ADDRESS_1,
         connectedAddresses: [WALLET_ADDRESS_1],
       },
     }

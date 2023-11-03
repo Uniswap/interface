@@ -4,11 +4,13 @@ import { ethers, providers } from 'ethers'
 import {
   selectDappChainId,
   selectDappConnectedAddresses,
+  selectDappOrderedConnectedAddresses,
 } from 'src/background/features/dapp/selectors'
 import {
   removeDappConnection,
   saveDappChain,
   saveDappConnection,
+  updateDappConnectedAddress,
 } from 'src/background/features/dapp/slice'
 import { appSelect } from 'src/background/store'
 import { sendMessageToActiveTab, sendMessageToSpecificTab } from 'src/background/utils/messageUtils'
@@ -155,9 +157,6 @@ export function* getAccount(
     throw new Error('No active account')
   }
 
-  const chainId = (yield* select(selectDappChainId(dappUrl || ''))) || ChainId.Mainnet
-
-  const provider = yield* call(getProvider, chainId)
   if (dappUrl && newRequest) {
     yield* put(
       saveDappConnection({
@@ -167,10 +166,15 @@ export function* getAccount(
     )
   }
 
+  const chainId = (dappUrl && (yield* select(selectDappChainId(dappUrl)))) || ChainId.Mainnet
+  const provider = yield* call(getProvider, chainId)
+  const connectedWallets =
+    (dappUrl && (yield* select(selectDappOrderedConnectedAddresses(dappUrl)))) || []
+
   const response: AccountResponse = {
     type: DappResponseType.AccountResponse,
     requestId,
-    accountAddress: activeAccount.address,
+    connectedAddresses: connectedWallets,
     chainId,
     providerUrl: provider.connection.url,
   }
@@ -334,7 +338,12 @@ export function* handleSignTypedData({
 
 export function* extensionRequestWatcher() {
   while (true) {
-    const { payload, type } = yield* take([saveDappChain, saveDappConnection, removeDappConnection])
+    const { payload, type } = yield* take([
+      saveDappChain,
+      saveDappConnection,
+      removeDappConnection,
+      updateDappConnectedAddress,
+    ])
 
     switch (type) {
       case saveDappChain.type:
@@ -342,6 +351,7 @@ export function* extensionRequestWatcher() {
         break
       case saveDappConnection.type:
       case removeDappConnection.type:
+      case updateDappConnectedAddress.type:
         yield* call(updateConnectionsFromExtension, payload.dappUrl)
         break
     }
@@ -361,7 +371,7 @@ function* changeChainFromExtension(dappUrl: string, chainId: ChainId) {
 }
 
 function* updateConnectionsFromExtension(dappUrl: string) {
-  const connectedWallets = (yield* select(selectDappConnectedAddresses(dappUrl))) || []
+  const connectedWallets = (yield* select(selectDappOrderedConnectedAddresses(dappUrl))) || []
 
   const response: UpdateConnectionRequest = {
     type: ExtensionToDappRequestType.UpdateConnections,

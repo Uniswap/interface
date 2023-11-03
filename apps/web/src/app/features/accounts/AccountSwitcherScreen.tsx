@@ -6,6 +6,7 @@ import { AccountItem } from 'src/app/features/accounts/AccountItem'
 import { openPopup, PopupName } from 'src/app/features/popups/slice'
 import { useDappContext } from 'src/background/features/dapp/hooks'
 import { selectDappConnectedAddresses } from 'src/background/features/dapp/selectors'
+import { updateDappConnectedAddress } from 'src/background/features/dapp/slice'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { useSagaStatus } from 'src/background/utils/useSagaStatus'
 import { Flex, Icons, ScrollView, Text, useUniconColors } from 'ui/src'
@@ -65,6 +66,8 @@ export function AccountSwitcherScreen(): JSX.Element {
                 selected={activeAddress === address}
                 onAccountSelect={async (): Promise<void> => {
                   await dispatch(setAccountAsActive(address))
+                  await dispatch(updateDappConnectedAddress({ dappUrl, address }))
+
                   if (connectedAddresses.length > 0 && !connectedAddresses?.includes(address)) {
                     await dispatch(openPopup(PopupName.Connect))
                   }

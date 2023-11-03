@@ -339,8 +339,8 @@ export class InjectedProvider extends EventEmitter {
       throw new Error('Transaction rejected')
     }
 
-    const { accountAddress, chainId, providerUrl } = response
-    this.publicKeys = [accountAddress, ...(this.publicKeys || [])]
+    const { connectedAddresses, chainId, providerUrl } = response
+    this.publicKeys = connectedAddresses
     this.chainId = chainId
     this.provider = new ethers.providers.JsonRpcProvider(providerUrl)
 
