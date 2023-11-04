@@ -402,6 +402,7 @@ export default function ConfirmSwapModal({
           showAcceptChanges={showAcceptChanges}
           onAcceptChanges={onAcceptChanges}
           swapErrorMessage={swapFailed ? swapError?.message : undefined}
+          allowance={allowance}
         />
       )
     } else if (showProgressIndicatorV2 && !swapConfirmed && pendingModalSteps.length > 1) {
