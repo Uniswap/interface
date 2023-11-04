@@ -132,14 +132,14 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
   //}, [name, symbol, pool, id])
 
   //const positionSummaryLink = '/smart-pool/' + positionDetails.pool '/' + positionDetails.id
-  // TODO: also add poolOwnStake to url and che if adding ''/'' to mint page is ok
-  const poolStake = poolDelegatedStake ? (Number(poolDelegatedStake) / 1e18).toFixed(0) : ''
-  const aprToString = apr ? (Number(apr) * 100).toFixed(2) : ''
-  const poolOwnStakeString = poolOwnStake ? (Number(poolOwnStake) / 1e18).toFixed(0) : ''
-  const irrToString = irr ? (Number(irr) * 100).toFixed(2) : ''
-  const positionSummaryLink = poolStake
-    ? `/smart-pool/${positionDetails.address}/${returnPage}/${poolStake}/${aprToString}/${poolOwnStakeString}/${irrToString}`
-    : `/smart-pool/${positionDetails.address}/${returnPage}` ///${positionDetails.id}
+  const poolStake = poolDelegatedStake ? (Number(poolDelegatedStake) / 1e18).toFixed(0) : 'NaN'
+  const aprToString = apr ? (Number(apr) * 100).toFixed(2) : 'NaN'
+  const poolOwnStakeString = poolOwnStake ? (Number(poolOwnStake) / 1e18).toFixed(0) : 'NaN'
+  const irrToString = irr ? (Number(irr) * 100).toFixed(2) : 'NaN'
+  const positionSummaryLink =
+    poolStake !== 'NaN'
+      ? `/smart-pool/${positionDetails.address}/${returnPage}/${poolStake}/${aprToString}/${poolOwnStakeString}/${irrToString}`
+      : `/smart-pool/${positionDetails.address}/${returnPage}` ///${positionDetails.id}
 
   const [showRaceModal, setShowRaceModal] = useState<boolean>(false)
 
