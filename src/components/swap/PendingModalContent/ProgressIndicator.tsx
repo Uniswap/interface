@@ -1,5 +1,4 @@
 import { t } from '@lingui/macro'
-import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import Column from 'components/Column'
@@ -9,6 +8,7 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import { SupportArticleURL } from 'constants/supportArticles'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { useBlockConfirmationTime } from 'hooks/useBlockConfirmationTime'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -65,6 +65,16 @@ export function ProgressIndicator({
 }) {
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
+  // Dynamic estimation of transaction wait time based on confirmation of previous block
+  const { blockConfirmationTime } = useBlockConfirmationTime()
+  const [estimatedTransactionTime, setEstimatedTransactionTime] = useState<number>()
+  useEffect(() => {
+    // Value continuously updates as new blocks get confirmed
+    // Only set step timers once to prevent resetting
+    if (blockConfirmationTime && !estimatedTransactionTime) {
+      setEstimatedTransactionTime(blockConfirmationTime)
+    }
+  }, [blockConfirmationTime, estimatedTransactionTime])
 
   const swapStatus = useSwapTransactionStatus(swapResult)
   const uniswapXOrder = useOrder(swapResult?.type === TradeFillType.UniswapX ? swapResult.response.orderHash : '')
@@ -97,7 +107,6 @@ export function ProgressIndicator({
     }
   }
 
-  // TODO: update timeToEnd with dynamic value, calculated as approx. the most recent block confirmation time
   const stepDetails: Record<ProgressIndicatorStep, StepDetails> = useMemo(
     () => ({
       [ConfirmModalState.WRAPPING]: {
@@ -106,7 +115,7 @@ export function ProgressIndicator({
         previewTitle: t`Wrap ${nativeCurrency.symbol}`,
         actionRequiredTitle: t`Wrap  ${nativeCurrency.symbol} in wallet`,
         inProgressTitle: t`Wrapping  ${nativeCurrency.symbol}...`,
-        timeToEnd: chainId === ChainId.MAINNET ? 20 : 10,
+        timeToEnd: estimatedTransactionTime,
         delayedTitle: t`Longer than expected...`,
         learnMoreLinkText: t`Why do I have to wrap my ${nativeCurrency.symbol}?`,
         learnMoreLinkHref: SupportArticleURL.WETH_EXPLAINER,
@@ -117,7 +126,7 @@ export function ProgressIndicator({
         previewTitle: t`Reset ${trade?.inputAmount.currency.symbol} limit`,
         actionRequiredTitle: t`Reset ${trade?.inputAmount.currency.symbol} limit in wallet`,
         inProgressTitle: t`Resetting ${trade?.inputAmount.currency.symbol} limit...`,
-        timeToEnd: chainId === ChainId.MAINNET ? 20 : 10,
+        timeToEnd: estimatedTransactionTime,
         delayedTitle: t`Longer than expected...`,
       },
       [ConfirmModalState.APPROVING_TOKEN]: {
@@ -126,7 +135,7 @@ export function ProgressIndicator({
         previewTitle: t`Approve ${trade?.inputAmount.currency.symbol} spending`,
         actionRequiredTitle: t`Approve in wallet`,
         inProgressTitle: t`Approval pending...`,
-        timeToEnd: chainId === ChainId.MAINNET ? 20 : 10,
+        timeToEnd: estimatedTransactionTime,
         delayedTitle: t`Longer than expected...`,
         learnMoreLinkText: t`Why do I have to approve a token?`,
         learnMoreLinkHref: SupportArticleURL.APPROVALS_EXPLAINER,
@@ -145,7 +154,7 @@ export function ProgressIndicator({
         previewTitle: t`Confirm swap`,
         actionRequiredTitle: t`Confirm swap in wallet`,
         inProgressTitle: t`Swap pending...`,
-        timeToEnd: chainId === ChainId.MAINNET ? 20 : 10,
+        timeToEnd: estimatedTransactionTime,
         delayedEndTitle: t`Longer than expected...`,
         ...(trade?.fillType === TradeFillType.UniswapX
           ? {
@@ -155,7 +164,7 @@ export function ProgressIndicator({
           : {}),
       },
     }),
-    [chainId, inputTokenColor, nativeCurrency.symbol, trade]
+    [inputTokenColor, nativeCurrency.symbol, trade, estimatedTransactionTime]
   )
 
   // TODO: update single-step content; currently falling back to v1 experience

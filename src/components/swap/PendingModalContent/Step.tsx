@@ -16,7 +16,7 @@ export interface StepDetails {
   delayedEndTitle?: string
   timerValueInSeconds?: number
   timeToStart?: number
-  timeToEnd?: number
+  timeToEnd?: number | null
   learnMoreLinkText?: string
   learnMoreLinkHref?: string
 }
