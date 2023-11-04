@@ -135,7 +135,7 @@ export function ProgressIndicator({
         previewTitle: t`Approve ${trade?.inputAmount.currency.symbol} spending`,
         actionRequiredTitle: t`Approve in wallet`,
         inProgressTitle: t`Approval pending...`,
-        timeToEnd: 2,
+        timeToEnd: estimatedTransactionTime,
         delayedEndTitle: t`Longer than expected...`,
         learnMoreLinkText: t`Why do I have to approve a token?`,
         learnMoreLinkHref: SupportArticleURL.APPROVALS_EXPLAINER,
@@ -186,7 +186,7 @@ export function ProgressIndicator({
       {steps.map((step, i) => {
         return (
           <>
-            <Step key={i} stepStatus={getStatus(step)} stepDetails={stepDetails[step]} />
+            <Step key={`progress-indicator-step-${i}`} stepStatus={getStatus(step)} stepDetails={stepDetails[step]} />
             {i !== steps.length - 1 && <StepConnector />}
           </>
         )

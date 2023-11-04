@@ -11,10 +11,8 @@ export interface StepDetails {
   previewTitle: string
   actionRequiredTitle: string | ReactElement
   inProgressTitle?: string
-  delayedTitle?: string
   delayedStartTitle?: string
   delayedEndTitle?: string
-  timerValueInSeconds?: number
   timeToStart?: number
   timeToEnd?: number | null
   learnMoreLinkText?: string
@@ -60,13 +58,13 @@ const innerRingAnimation = keyframes`
     opacity: 0.3;
   }
 `
-const Ring = styled.div<{ width: string; color: string; animation: Keyframes }>`
+const Ring = styled.div<{ $borderWidth: string; $borderColor: string; $animation: Keyframes }>`
   position: absolute;
   width: 24px;
   height: 24px;
-  border: ${({ width }) => width} solid ${({ color }) => color};
+  border: ${({ $borderWidth }) => $borderWidth} solid ${({ $borderColor }) => $borderColor};
   border-radius: 50%;
-  animation: ${({ animation }) => animation} 2s linear infinite;
+  animation: ${({ $animation }) => $animation} 2s linear infinite;
 `
 const IconWrapper = styled.div<{ isActive: boolean }>`
   width: 24px;
@@ -80,8 +78,8 @@ function RippleAnimation({ rippleColor }: { rippleColor?: string }) {
   }
   return (
     <div data-testid="icon-ripple-animation">
-      <Ring width="1px" color={rippleColor} animation={innerRingAnimation} />
-      <Ring width="0.5px" color={rippleColor} animation={outerRingAnimation} />
+      <Ring $borderWidth="1px" $borderColor={rippleColor} $animation={innerRingAnimation} />
+      <Ring $borderWidth="0.5px" $borderColor={rippleColor} $animation={outerRingAnimation} />
     </div>
   )
 }
@@ -113,16 +111,16 @@ function Title({
     case StepStatus.PREVIEW:
       return <ThemedText.BodySecondary>{stepDetails.previewTitle}</ThemedText.BodySecondary>
     case StepStatus.ACTIVE:
-      return isTimeRemaining ? (
-        <ThemedText.BodyPrimary>{stepDetails.actionRequiredTitle}</ThemedText.BodyPrimary>
-      ) : (
-        <ThemedText.BodyPrimary>{stepDetails.delayedStartTitle}</ThemedText.BodyPrimary>
+      return (
+        <ThemedText.BodyPrimary>
+          {isTimeRemaining ? stepDetails.actionRequiredTitle : stepDetails.delayedStartTitle}
+        </ThemedText.BodyPrimary>
       )
     case StepStatus.IN_PROGRESS:
-      return isTimeRemaining ? (
-        <ThemedText.BodyPrimary>{stepDetails.inProgressTitle}</ThemedText.BodyPrimary>
-      ) : (
-        <ThemedText.BodyPrimary>{stepDetails.delayedEndTitle}</ThemedText.BodyPrimary>
+      return (
+        <ThemedText.BodyPrimary>
+          {isTimeRemaining ? stepDetails.inProgressTitle : stepDetails.delayedEndTitle}
+        </ThemedText.BodyPrimary>
       )
     case StepStatus.COMPLETE:
       return <ThemedText.BodySecondary>{stepDetails.previewTitle}</ThemedText.BodySecondary>
@@ -145,31 +143,23 @@ function Timer({ secondsRemaining }: { secondsRemaining: number }) {
 }
 
 export function Step({ stepStatus, stepDetails }: { stepStatus: StepStatus; stepDetails: StepDetails }) {
-  // Timer is shown in three cases:
+  // Timer is shown in two cases:
   // (1) User has a specified amount of time to perform a required action. Timer starts running as soon as the step becomes active.
-  // (2) Step has an estimated amount of time in which it should be completed. Timer is set but not running when step becomes active.
-  // (3) Step has an estimated amount of time in which it should be completed. Timer starts running when step is in progress.
-  const isTimed =
-    (stepStatus === StepStatus.ACTIVE && Boolean(stepDetails.timeToStart)) ||
-    (stepStatus === StepStatus.ACTIVE && Boolean(stepDetails.timeToEnd)) ||
-    (stepStatus === StepStatus.IN_PROGRESS && Boolean(stepDetails.timeToEnd))
-  const [secondsRemaining, setSecondsRemaining] = useState(0)
-
+  // (2) Step has an estimated amount of time in which it should be completed. Timer starts running when step is in progress.
+  const [secondsRemaining, setSecondsRemaining] = useState<number | null>(null)
   useEffect(() => {
-    if (stepStatus === StepStatus.ACTIVE && Boolean(stepDetails.timeToStart)) {
-      setSecondsRemaining(stepDetails.timeToStart ?? 0)
-    } else if (stepStatus === StepStatus.ACTIVE && Boolean(stepDetails.timeToEnd)) {
-      setSecondsRemaining(stepDetails.timeToEnd ?? 0)
-      return
-    } else if (stepStatus === StepStatus.IN_PROGRESS) {
-      setSecondsRemaining(stepDetails.timeToEnd ?? 0)
+    if (stepStatus === StepStatus.ACTIVE && stepDetails?.timeToStart) {
+      setSecondsRemaining(stepDetails.timeToStart)
+    } else if (stepStatus === StepStatus.IN_PROGRESS && stepDetails?.timeToEnd) {
+      setSecondsRemaining(stepDetails.timeToEnd)
     } else {
+      setSecondsRemaining(null)
       return
     }
 
     const timer = setInterval(() => {
       setSecondsRemaining((prevSecondsRemaining) => {
-        if (prevSecondsRemaining > 0) {
+        if (prevSecondsRemaining && prevSecondsRemaining > 0) {
           return prevSecondsRemaining - 1
         }
         clearInterval(timer)
@@ -184,9 +174,13 @@ export function Step({ stepStatus, stepDetails }: { stepStatus: StepStatus; step
     <RowBetween>
       <Row align="center" gap="12px">
         <Icon stepStatus={stepStatus} icon={stepDetails.icon} rippleColor={stepDetails.rippleColor} />
-        <Title stepStatus={stepStatus} stepDetails={stepDetails} isTimeRemaining={!isTimed || secondsRemaining > 0} />
+        <Title
+          stepStatus={stepStatus}
+          stepDetails={stepDetails}
+          isTimeRemaining={secondsRemaining === null || secondsRemaining > 0}
+        />
       </Row>
-      {isTimed && <Timer secondsRemaining={secondsRemaining} />}
+      {secondsRemaining !== null && <Timer secondsRemaining={secondsRemaining} />}
       {stepStatus === StepStatus.COMPLETE && <CheckMark />}
     </RowBetween>
   )
