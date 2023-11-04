@@ -56,11 +56,7 @@ function getErrorContent(errorType: PendingModalError) {
         title: <Trans>Token not whitelisted</Trans>,
         label: (
           <Trans>
-            <a
-              href="https://docs.rigoblock.com/governance/token-whitelists"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href="https://docs.rigoblock.com/governance/token-whitelists" target="_blank" rel="noreferrer">
               Make a request
             </a>{' '}
             to have the token whitelisted
