@@ -24,9 +24,23 @@ import { anonymizeLink } from '../../utils/anonymizeLink'
 
 export { ThemedText } from './text'
 
+export const ClickableStyle = css`
+  text-decoration: none;
+  cursor: pointer;
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
+
+  :hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+  :active {
+    opacity: ${({ theme }) => theme.opacity.click};
+  }
+`
+
 export const CloseIcon = styled(X)<{ onClick: () => void }>`
   color: ${({ theme }) => theme.neutral1};
   cursor: pointer;
+  ${ClickableStyle}
 `
 
 // A button that triggers some onClick result, but looks like a link.
@@ -78,19 +92,6 @@ export const EllipsisStyle = css`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-`
-
-export const ClickableStyle = css`
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: ${({ theme }) => theme.transition.duration.fast};
-
-  :hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-  :active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
 `
 
 const LinkStyle = css`
