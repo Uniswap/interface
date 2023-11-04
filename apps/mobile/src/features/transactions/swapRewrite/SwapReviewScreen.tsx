@@ -3,13 +3,13 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
 import { Arrow } from 'src/components/icons/Arrow'
+import { BiometricsIcon } from 'src/components/icons/BiometricsIcon'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { OnShowSwapFeeInfo } from 'src/components/SwapFee/SwapFee'
 import {
   useBiometricAppSettings,
   useBiometricPrompt,
-  useDeviceSupportsBiometricAuth,
   useOsBiometricAuthEnabled,
 } from 'src/features/biometrics/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -44,7 +44,7 @@ import {
 } from 'src/features/transactions/swapRewrite/SwapFormButton'
 import { TransactionAmountsReview } from 'src/features/transactions/swapRewrite/TransactionAmountsReview'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
-import { AnimatedFlex, Button, Flex, Icons, Separator, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Button, Flex, Separator, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
@@ -153,8 +153,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
 
   // Detect auth type for icon display
   const isBiometricAuthEnabled = useOsBiometricAuthEnabled()
-  const { touchId: isTouchIdSupported, faceId: isFaceIdSupported } =
-    useDeviceSupportsBiometricAuth()
 
   const onSubmitTransaction = useCallback(async () => {
     await notificationAsync()
@@ -287,13 +285,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     account.type === AccountType.Readonly
 
   const submitButtonIcon =
-    isBiometricAuthEnabled && requiresBiometrics ? (
-      isFaceIdSupported ? (
-        <Icons.Faceid color="white" size="$icon.20" />
-      ) : isTouchIdSupported ? (
-        <Icons.Fingerprint color="white" size="$icon.20" />
-      ) : undefined
-    ) : undefined
+    isBiometricAuthEnabled && requiresBiometrics ? <BiometricsIcon /> : undefined
 
   const currencyInInfo = currencies[CurrencyField.INPUT]
   const currencyOutInfo = currencies[CurrencyField.OUTPUT]
