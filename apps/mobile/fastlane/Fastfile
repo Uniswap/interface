@@ -76,10 +76,11 @@ platform :android do
     aab_path = "./android/app/build/outputs/bundle/#{flavor}Release/app-#{flavor}-release.aab"
 
     upload_to_play_store(
+      version_name: "#{version_name} (#{next_version_code.to_i.to_s})",
       track: 'internal', 
       aab: aab_path,
       skip_upload_apk: true, # only uplaod aab, not apk
-      release_status: 'draft',
+      release_status: 'completed',
       json_key_data: json_key_data, 
       package_name: package_name
     )

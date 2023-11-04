@@ -63,9 +63,11 @@ def reactNativeArchitectures() {
 }
 
 boolean isCI = System.getenv('CI') != null
-if (isCI) {
+boolean sentryPropertiesAvailable = System.getenv('SENTRY_AUTH_TOKEN') != null && System.getenv('SENTRY_PROJECT') != null && System.getenv('SENTRY_ORG') != null
+
+if (isCI && sentryPropertiesAvailable) {
   project.ext.sentryCli = [
-    logLevel: "info"
+    logLevel: "info",
   ]
 
   apply from: "../../../../node_modules/@sentry/react-native/sentry.gradle"

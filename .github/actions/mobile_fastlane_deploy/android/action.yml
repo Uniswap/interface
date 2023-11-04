@@ -138,6 +138,7 @@ runs:
         MOONPAY_WIDGET_API_URL: ${{ inputs.moonpay-widget-api-url }}
         ONESIGNAL_APP_ID: ${{ inputs.onesignal-app-id }}
         QUICKNODE_BNB_RPC_URL: ${{ inputs.quicknode-bnb-rpc-url }}
+        SENTRY_AUTH_TOKEN: ${{ inputs.sentry-auth-token }}
         SENTRY_DSN: ${{ inputs.sentry-dsn }}
         SENTRY_ORG: ${{ inputs.sentry-org }}
         SENTRY_PROJECT: ${{ inputs.sentry-project }}
