@@ -3,7 +3,6 @@ import { act, render, screen } from 'test-utils/render'
 
 import { Step, StepStatus } from './Step'
 
-// TODO: re-enable snapshot tests
 describe('Step in swap confirmation flow', () => {
   const stepDetails = {
     icon: <Swap />,
@@ -16,9 +15,8 @@ describe('Step in swap confirmation flow', () => {
   }
 
   it('displays an upcoming step', () => {
-    const { asFragment } = render(<Step stepStatus={StepStatus.PREVIEW} stepDetails={stepDetails} />)
+    render(<Step stepStatus={StepStatus.PREVIEW} stepDetails={stepDetails} />)
 
-    // expect(asFragment()).toMatchSnapshot()
     // Icon is shown and grayed out
     expect(screen.getByTestId('step-icon')).toHaveStyleRule('filter', 'grayscale(1)')
     // No ripple animation
@@ -31,9 +29,8 @@ describe('Step in swap confirmation flow', () => {
   })
 
   it('displays an active step, awaiting user action - not timed and no ETA', () => {
-    const { asFragment } = render(<Step stepStatus={StepStatus.ACTIVE} stepDetails={stepDetails} />)
+    render(<Step stepStatus={StepStatus.ACTIVE} stepDetails={stepDetails} />)
 
-    // expect(asFragment()).toMatchSnapshot()
     // Icon is shown and not grayed out
     expect(screen.getByTestId('step-icon')).toHaveStyleRule('filter', 'grayscale(0)')
     // Ripple animation is active
@@ -50,7 +47,7 @@ describe('Step in swap confirmation flow', () => {
     const DELAYED_START_TITLE = 'Confirmation timed out. Please retry.'
     jest.useFakeTimers()
 
-    const { asFragment } = render(
+    render(
       <Step
         stepStatus={StepStatus.ACTIVE}
         stepDetails={{
@@ -61,7 +58,6 @@ describe('Step in swap confirmation flow', () => {
       />
     )
 
-    // expect(asFragment()).toMatchSnapshot()
     // Icon is shown and not grayed out
     expect(screen.getByTestId('step-icon')).toHaveStyleRule('filter', 'grayscale(0)')
     // Ripple animation is active
@@ -87,7 +83,7 @@ describe('Step in swap confirmation flow', () => {
     const DELAYED_END_TITLE = 'Longer than expected...'
     jest.useFakeTimers()
 
-    const { asFragment } = render(
+    render(
       <Step
         stepStatus={StepStatus.ACTIVE}
         stepDetails={{
@@ -98,7 +94,6 @@ describe('Step in swap confirmation flow', () => {
       />
     )
 
-    // expect(asFragment()).toMatchSnapshot()
     // Icon is shown and not grayed out
     expect(screen.getByTestId('step-icon')).toHaveStyleRule('filter', 'grayscale(0)')
     // Ripple animation is active
@@ -120,7 +115,7 @@ describe('Step in swap confirmation flow', () => {
     const DELAYED_END_TITLE = 'Longer than expected...'
     jest.useFakeTimers()
 
-    const { asFragment } = render(
+    render(
       <Step
         stepStatus={StepStatus.IN_PROGRESS}
         stepDetails={{
@@ -131,7 +126,6 @@ describe('Step in swap confirmation flow', () => {
       />
     )
 
-    // expect(asFragment()).toMatchSnapshot()
     // Loader icon is shown
     expect(screen.getByTestId('loader-icon')).toHaveAttribute('fill', stepDetails.rippleColor)
     // Action Required title is shown
@@ -151,9 +145,8 @@ describe('Step in swap confirmation flow', () => {
   })
 
   it('displays checkmark once step is complete', () => {
-    const { asFragment } = render(<Step stepStatus={StepStatus.COMPLETE} stepDetails={stepDetails} />)
+    render(<Step stepStatus={StepStatus.COMPLETE} stepDetails={stepDetails} />)
 
-    // expect(asFragment()).toMatchSnapshot()
     expect(screen.getByTestId('step-icon')).toBeInTheDocument()
     expect(screen.getByText(stepDetails.previewTitle)).toBeInTheDocument()
     expect(screen.queryByTestId('step-timer')).not.toBeInTheDocument()

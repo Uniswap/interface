@@ -167,7 +167,6 @@ export function ProgressIndicator({
     [inputTokenColor, nativeCurrency.symbol, trade, estimatedTransactionTime]
   )
 
-  // TODO: update single-step content; currently falling back to v1 experience
   if (steps.length === 0) {
     return null
   }
