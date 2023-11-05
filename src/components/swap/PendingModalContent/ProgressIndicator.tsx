@@ -5,7 +5,6 @@ import Column from 'components/Column'
 import { Sign } from 'components/Icons/Sign'
 import { Swap } from 'components/Icons/Swap'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import Row from 'components/Row'
 import { SupportArticleURL } from 'constants/supportArticles'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { useBlockConfirmationTime } from 'hooks/useBlockConfirmationTime'
@@ -24,13 +23,19 @@ import { ConfirmModalState } from '../ConfirmSwapModal'
 import { Step, StepDetails, StepStatus } from './Step'
 
 const StyledDivider = styled(Divider)`
-  margin: 16px 0px;
+  margin: 20px 0px;
 `
 const StepConnector = styled.div`
   width: 2px;
   height: 24px;
   background-color: ${({ theme }) => theme.neutral3};
   margin: 4px 11px;
+`
+const ExternalLinkContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  padding-top: 16px;
+  padding-bottom: 4px;
 `
 type ProgressIndicatorStep = Extract<
   ConfirmModalState,
@@ -192,11 +197,11 @@ export function ProgressIndicator({
         )
       })}
       {!!stepDetails[currentStep].learnMoreLinkHref && (
-        <Row justify="center" width="100%" padding="16px">
+        <ExternalLinkContainer>
           <ExternalLink href={stepDetails[currentStep].learnMoreLinkHref || ''}>
             {stepDetails[currentStep].learnMoreLinkText}
           </ExternalLink>
-        </Row>
+        </ExternalLinkContainer>
       )}
     </Column>
   )

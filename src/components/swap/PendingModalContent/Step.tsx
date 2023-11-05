@@ -86,21 +86,21 @@ function Title({
 }) {
   switch (stepStatus) {
     case StepStatus.PREVIEW:
-      return <ThemedText.BodySecondary>{stepDetails.previewTitle}</ThemedText.BodySecondary>
+      return <ThemedText.LabelSmall>{stepDetails.previewTitle}</ThemedText.LabelSmall>
     case StepStatus.ACTIVE:
       return (
-        <ThemedText.BodyPrimary>
+        <ThemedText.BodySmall>
           {isTimeRemaining ? stepDetails.actionRequiredTitle : stepDetails.delayedStartTitle}
-        </ThemedText.BodyPrimary>
+        </ThemedText.BodySmall>
       )
     case StepStatus.IN_PROGRESS:
       return (
-        <ThemedText.BodyPrimary>
+        <ThemedText.BodySmall>
           {isTimeRemaining ? stepDetails.inProgressTitle : stepDetails.delayedEndTitle}
-        </ThemedText.BodyPrimary>
+        </ThemedText.BodySmall>
       )
     case StepStatus.COMPLETE:
-      return <ThemedText.BodySecondary>{stepDetails.previewTitle}</ThemedText.BodySecondary>
+      return <ThemedText.LabelSmall>{stepDetails.previewTitle}</ThemedText.LabelSmall>
     default:
       return null
   }
@@ -113,9 +113,9 @@ function Timer({ secondsRemaining }: { secondsRemaining: number }) {
   const secondsText = seconds < 10 ? `0${seconds}` : seconds
   const timerText = `${minutesText}:${secondsText}`
   return (
-    <ThemedText.BodySecondary paddingRight="8px" data-testid="step-timer">
+    <ThemedText.LabelSmall paddingRight="8px" data-testid="step-timer">
       {timerText}
-    </ThemedText.BodySecondary>
+    </ThemedText.LabelSmall>
   )
 }
 
