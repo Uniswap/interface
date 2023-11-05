@@ -26,36 +26,14 @@ export enum StepStatus {
   COMPLETE,
 }
 
-const outerRingAnimation = keyframes`
-  0% {
-    transform: scale(1.4);
-    opacity: 0.25;
-  }
-  50% {
-    transform: scale(1.4);
-    opacity: 0.75;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0;
-  }
-`
-const innerRingAnimation = keyframes`
+const ringAnimation = keyframes`
   0% {
     transform: scale(1);
-    opacity: 0.25;
-  }
-  30% {
-    transform: scale(1.3);
     opacity: 1;
   }
-  60% {
-    transform: scale(1.3);
-    opacity: 0.4;
-  }
   100% {
-    transform: scale(1);
-    opacity: 0.3;
+    transform: scale(1.5);
+    opacity: 0;
   }
 `
 const Ring = styled.div<{ $borderWidth: string; $borderColor: string; $animation: Keyframes }>`
@@ -64,7 +42,7 @@ const Ring = styled.div<{ $borderWidth: string; $borderColor: string; $animation
   height: 24px;
   border: ${({ $borderWidth }) => $borderWidth} solid ${({ $borderColor }) => $borderColor};
   border-radius: 50%;
-  animation: ${({ $animation }) => $animation} 2s linear infinite;
+  animation: ${({ $animation }) => $animation} 1.5s linear infinite;
 `
 const IconWrapper = styled.div<{ isActive: boolean }>`
   width: 24px;
@@ -78,8 +56,7 @@ function RippleAnimation({ rippleColor }: { rippleColor?: string }) {
   }
   return (
     <div data-testid="icon-ripple-animation">
-      <Ring $borderWidth="1px" $borderColor={rippleColor} $animation={innerRingAnimation} />
-      <Ring $borderWidth="0.5px" $borderColor={rippleColor} $animation={outerRingAnimation} />
+      <Ring $borderWidth="0.5px" $borderColor={rippleColor} $animation={ringAnimation} />
     </div>
   )
 }
