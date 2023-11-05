@@ -5,6 +5,7 @@ import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components'
 
+import { MODAL_TRANSITION_DURATION } from '../../components/Modal'
 import { GRG } from '../../constants/tokens'
 import { useRaceCallback } from '../../state/stake/hooks'
 import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
@@ -60,10 +61,13 @@ export default function RaceModal({ isOpen, poolAddress, poolName, onDismiss, ti
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {
-    setHash(undefined)
-    setErrorReason(undefined)
-    setAttempting(false)
     onDismiss()
+    setTimeout(() => {
+      // Reset local state after the modal dismiss animation finishes, to avoid UI flicker as it dismisses
+      setHash(undefined)
+      setErrorReason(undefined)
+      setAttempting(false)
+    }, MODAL_TRANSITION_DURATION)
   }
 
   async function onRace() {
