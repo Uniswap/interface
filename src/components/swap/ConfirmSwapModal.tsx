@@ -484,7 +484,7 @@ export default function ConfirmSwapModal({
 
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
-      <Modal isOpen $scrollOverlay onDismiss={onModalDismiss} maxHeight={90}>
+      <Modal isOpen $scrollOverlay onDismiss={onModalDismiss} maxHeight={90} $topOffset={160}>
         <ConfirmationModalContent
           title={
             confirmModalState === ConfirmModalState.REVIEWING && !errorType ? <Trans>Review swap</Trans> : undefined
