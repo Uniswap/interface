@@ -11,17 +11,17 @@ const LastUpdatedText = styled.span`
   color: ${({ theme }) => theme.textTertiary};
 `
 
-const LAST_UPDATED_DATE = '6.7.23'
+const LAST_UPDATED_DATE = '2 Oct 23'
 
 export default function PrivacyPolicyNotice() {
   return (
     <ThemedText.Caption color="textSecondary">
-      <Trans>By connecting a wallet, you agree to Uniswap Labs&apos;</Trans>{' '}
-      <StyledLink href="https://uniswap.org/terms-of-service/">
+      <Trans>By connecting a wallet, you agree to RigoBlock&apos;s</Trans>{' '}
+      <StyledLink href="https://rigoblock.com/legal">
         <Trans>Terms of Service</Trans>{' '}
       </StyledLink>
       <Trans>and consent to its</Trans>{' '}
-      <StyledLink href="https://uniswap.org/privacy-policy">
+      <StyledLink href="https://rigoblock.com/legal">
         <Trans>Privacy Policy.</Trans>
       </StyledLink>
       <LastUpdatedText>

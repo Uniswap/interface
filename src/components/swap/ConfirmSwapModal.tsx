@@ -342,8 +342,9 @@ export default function ConfirmSwapModal({
     setTimeout(() => {
       // Reset local state after the modal dismiss animation finishes, to avoid UI flicker as it dismisses
       onCancel()
+      setWhitelistedTokenError(undefined)
     }, MODAL_TRANSITION_DURATION)
-  }, [onCancel, onDismiss, priceUpdate, showAcceptChanges, trade])
+  }, [onCancel, onDismiss, priceUpdate, setWhitelistedTokenError, showAcceptChanges, trade])
 
   const modalHeader = useCallback(() => {
     if (confirmModalState !== ConfirmModalState.REVIEWING && !showAcceptChanges) {
