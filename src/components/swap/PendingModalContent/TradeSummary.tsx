@@ -13,14 +13,14 @@ export function TradeSummary({ trade }: { trade: Pick<InterfaceTrade, 'inputAmou
   return (
     <Row gap="sm" justify="center" align="center">
       <CurrencyLogo currency={trade.inputAmount.currency} size="16px" />
-      <ThemedText.LabelSmall color="neutral1">
+      <ThemedText.SubHeader color="neutral1">
         {formatReviewSwapCurrencyAmount(trade.inputAmount)} {trade.inputAmount.currency.symbol}
-      </ThemedText.LabelSmall>
+      </ThemedText.SubHeader>
       <ArrowRight color={theme.neutral1} size="12px" />
       <CurrencyLogo currency={trade.postTaxOutputAmount.currency} size="16px" />
-      <ThemedText.LabelSmall color="neutral1">
+      <ThemedText.SubHeader color="neutral1">
         {formatReviewSwapCurrencyAmount(trade.postTaxOutputAmount)} {trade.postTaxOutputAmount.currency.symbol}
-      </ThemedText.LabelSmall>
+      </ThemedText.SubHeader>
     </Row>
   )
 }

@@ -179,13 +179,15 @@ export function ConfirmationModalContent({
   return (
     <Wrapper>
       <AutoColumn gap="sm">
-        <Row>
+        <RowBetween>
           {headerContent?.()}
-          <Row justify="center" marginLeft="24px">
-            <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
-          </Row>
+          {title && (
+            <Row justify="center" marginLeft="24px">
+              <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
+            </Row>
+          )}
           <CloseIcon onClick={onDismiss} data-testid="confirmation-close-icon" />
-        </Row>
+        </RowBetween>
         {topContent()}
       </AutoColumn>
       {bottomContent && <BottomSection gap="16px">{bottomContent()}</BottomSection>}

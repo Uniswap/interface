@@ -139,7 +139,7 @@ function getPendingConfirmationContent({
   ContentArgs,
   'swapConfirmed' | 'swapPending' | 'trade' | 'chainId' | 'swapResult' | 'swapError' | 'onRetryUniswapXSignature'
 >): PendingModalStep {
-  const title = swapPending ? t`Swap submitted` : swapConfirmed ? t`Swap success!` : t`Confirm Swap`
+  const title = swapPending ? t`Swap submitted` : swapConfirmed ? t`Swap success` : t`Confirm Swap`
   const tradeSummary = trade ? <TradeSummary trade={trade} /> : null
   if (swapPending && trade?.fillType === TradeFillType.UniswapX) {
     return {
@@ -164,14 +164,14 @@ function getPendingConfirmationContent({
       // On Mainnet, we show a "submitted" state while the transaction is pending confirmation.
       return {
         title,
-        subtitle: chainId === ChainId.MAINNET ? explorerLink : tradeSummary,
-        bottomLabel: chainId === ChainId.MAINNET ? t`Transaction pending...` : explorerLink,
+        subtitle: tradeSummary,
+        bottomLabel: explorerLink,
       }
     } else {
       return {
         title,
-        subtitle: explorerLink,
-        bottomLabel: null,
+        subtitle: tradeSummary,
+        bottomLabel: explorerLink,
       }
     }
   } else if (swapError instanceof SignatureExpiredError) {
@@ -369,9 +369,9 @@ export function PendingModalContent({
                   key={step}
                   ref={step === currentStep ? currentStepContainerRef : undefined}
                 >
-                  <ThemedText.SubHeaderLarge width="100%" textAlign="center" data-testid="pending-modal-content-title">
+                  <ThemedText.SubHeader width="100%" textAlign="center" data-testid="pending-modal-content-title">
                     {stepContents[step].title}
-                  </ThemedText.SubHeaderLarge>
+                  </ThemedText.SubHeader>
                   <ThemedText.LabelSmall textAlign="center">{stepContents[step].subtitle}</ThemedText.LabelSmall>
                 </StepTitleAnimationContainer>
               )

@@ -7,8 +7,8 @@ import { useRef } from 'react'
 import styled, { css, keyframes, useTheme } from 'styled-components'
 
 export const LogoContainer = styled.div`
-  height: 48px;
-  width: 48px;
+  height: 64px;
+  width: 64px;
   position: relative;
   display: flex;
   border-radius: 50%;
@@ -186,8 +186,8 @@ function SubmittedIcon({ className }: { className?: string }) {
 
 const IconCss = css`
   position: absolute;
-  height: 48px;
-  width: 48px;
+  height: 64px;
+  width: 64px;
 `
 
 export const AnimatedEntranceConfirmationIcon = styled(ConfirmedIcon)`

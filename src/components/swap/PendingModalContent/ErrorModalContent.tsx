@@ -1,13 +1,16 @@
 import { Trans } from '@lingui/macro'
 import { ButtonPrimary } from 'components/Button'
 import { ColumnCenter } from 'components/Column'
-import QuestionHelper from 'components/QuestionHelper'
-import Row from 'components/Row'
+import { SupportArticleURL } from 'constants/supportArticles'
+import { SwapResult } from 'hooks/useSwapCallback'
 import { AlertTriangle } from 'react-feather'
-import { useTheme } from 'styled-components'
-import { ThemedText } from 'theme/components'
+import { InterfaceTrade, TradeFillType } from 'state/routing/types'
+import styled, { useTheme } from 'styled-components'
+import { ExternalLink, ThemedText } from 'theme/components'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { PendingModalContainer } from '.'
+import { TradeSummary } from './TradeSummary'
 
 export enum PendingModalError {
   TOKEN_APPROVAL_ERROR,
@@ -18,61 +21,106 @@ export enum PendingModalError {
 
 interface ErrorModalContentProps {
   errorType: PendingModalError
+  trade?: InterfaceTrade
+  swapResult?: SwapResult
   onRetry: () => void
 }
 
-function getErrorContent(errorType: PendingModalError) {
+function getErrorContent(errorType: PendingModalError, swapResult?: SwapResult) {
   switch (errorType) {
     case PendingModalError.TOKEN_APPROVAL_ERROR:
       return {
         title: <Trans>Token approval failed</Trans>,
-        label: <Trans>Why are approvals required?</Trans>,
-        tooltipText: (
+        message: (
           <Trans>
             This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30
             days.
           </Trans>
         ),
+        supportArticleURL: SupportArticleURL.APPROVALS_EXPLAINER,
       }
     case PendingModalError.PERMIT_ERROR:
       return {
         title: <Trans>Permit approval failed</Trans>,
-        label: <Trans>Why are permits required?</Trans>,
-        tooltipText: (
-          <Trans>Permit2 allows token approvals to be shared and managed across different applications.</Trans>
-        ),
+        message: <Trans>Permit2 allows token approvals to be shared and managed across different applications.</Trans>,
+        supportArticleURL: SupportArticleURL.APPROVALS_EXPLAINER,
       }
     case PendingModalError.CONFIRMATION_ERROR:
       return {
         title: <Trans>Swap failed</Trans>,
+        message: <Trans>Try using higher than normal slippage and gas to ensure your transaction is completed.</Trans>,
+        supportArticleURL:
+          swapResult?.type === TradeFillType.UniswapX
+            ? SupportArticleURL.UNISWAP_X_FAILURE
+            : SupportArticleURL.TRANSACTION_FAILURE,
       }
     case PendingModalError.WRAP_ERROR:
       return {
         title: <Trans>Wrap failed</Trans>,
+        message: (
+          <Trans>
+            Swaps on the Uniswap Protocol can start and end with ETH. However, during the swap all ETH is wrapped into
+            WETH.
+          </Trans>
+        ),
+        supportArticleURL: SupportArticleURL.WETH_EXPLAINER,
+      }
+    default:
+      return {
+        title: <Trans>Unknown Error</Trans>,
+        message: (
+          <Trans>
+            Your swap could not be executed. Please check your network connection and your slippage settings.
+          </Trans>
+        ),
       }
   }
 }
 
-export function ErrorModalContent({ errorType, onRetry }: ErrorModalContentProps) {
+const Container = styled(PendingModalContainer)`
+  margin: 0px;
+`
+const Section = styled(ColumnCenter)`
+  padding: 8px 16px;
+`
+export function ErrorModalContent({ errorType, trade, swapResult, onRetry }: ErrorModalContentProps) {
   const theme = useTheme()
-
-  const { title, label, tooltipText } = getErrorContent(errorType)
+  const { title, message, supportArticleURL } = getErrorContent(errorType, swapResult)
 
   return (
-    <PendingModalContainer gap="lg">
-      <AlertTriangle data-testid="pending-modal-failure-icon" strokeWidth={1} color={theme.critical} size="48px" />
-      <ColumnCenter gap="md">
-        <ThemedText.HeadlineSmall>{title}</ThemedText.HeadlineSmall>
-        <Row justify="center">
-          {label && <ThemedText.BodySmall color="neutral2">{label}</ThemedText.BodySmall>}
-          {tooltipText && <QuestionHelper text={tooltipText} />}
-        </Row>
-      </ColumnCenter>
-      <Row justify="center">
-        <ButtonPrimary marginX="24px" marginBottom="16px" onClick={onRetry}>
-          <Trans>Retry</Trans>
+    <Container gap="md">
+      <Section gap="md">
+        <AlertTriangle
+          data-testid="pending-modal-failure-icon"
+          strokeWidth={1}
+          stroke={theme.surface1}
+          fill={theme.critical}
+          size="64px"
+        />
+        <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
+        {trade && <TradeSummary trade={trade} />}
+        <ThemedText.BodyPrimary>
+          {message}{' '}
+          {supportArticleURL && (
+            <ExternalLink href={supportArticleURL}>
+              <Trans>Learn more</Trans>
+            </ExternalLink>
+          )}
+        </ThemedText.BodyPrimary>
+      </Section>
+      <Section>
+        <ButtonPrimary onClick={onRetry}>
+          <Trans>Try again</Trans>
         </ButtonPrimary>
-      </Row>
-    </PendingModalContainer>
+        {swapResult && swapResult.type === TradeFillType.Classic && (
+          <ExternalLink
+            href={getExplorerLink(swapResult.response.chainId, swapResult.response.hash, ExplorerDataType.TRANSACTION)}
+            color="neutral2"
+          >
+            <Trans>View on Explorer</Trans>
+          </ExternalLink>
+        )}
+      </Section>
+    </Container>
   )
 }

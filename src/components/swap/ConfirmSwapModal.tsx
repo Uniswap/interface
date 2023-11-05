@@ -12,6 +12,7 @@ import Badge from 'components/Badge'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { RowFixed } from 'components/Row'
+import { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { BaseVariant } from 'featureFlags'
 import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicatorV2'
@@ -41,7 +42,6 @@ import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
-import { ConfirmationModalContent } from '../TransactionConfirmationModal'
 import { RESET_APPROVAL_TOKENS } from './constants'
 import { PendingConfirmModalState, PendingModalContent } from './PendingModalContent'
 import { ErrorModalContent, PendingModalError } from './PendingModalContent/ErrorModalContent'
@@ -420,21 +420,31 @@ export default function ConfirmSwapModal({
           onRetryUniswapXSignature={onConfirm}
         />
       )
+    } else if (errorType) {
+      return (
+        <ErrorModalContent
+          errorType={PendingModalError.CONFIRMATION_ERROR}
+          trade={trade}
+          swapResult={swapResult}
+          onRetry={startSwapFlow}
+        />
+      )
+    } else {
+      return (
+        <PendingModalContent
+          hideStepIndicators={pendingModalSteps.length === 1}
+          steps={pendingModalSteps}
+          currentStep={confirmModalState}
+          trade={trade}
+          swapResult={swapResult}
+          wrapTxHash={wrapTxHash}
+          tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
+          revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
+          swapError={swapError}
+          onRetryUniswapXSignature={onConfirm}
+        />
+      )
     }
-    return (
-      <PendingModalContent
-        hideStepIndicators={pendingModalSteps.length === 1}
-        steps={pendingModalSteps}
-        currentStep={confirmModalState}
-        trade={trade}
-        swapResult={swapResult}
-        wrapTxHash={wrapTxHash}
-        tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
-        revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
-        swapError={swapError}
-        onRetryUniswapXSignature={onConfirm}
-      />
-    )
   }, [
     confirmModalState,
     showAcceptChanges,
@@ -454,6 +464,7 @@ export default function ConfirmSwapModal({
     swapConfirmed,
     onConfirm,
     inputTokenColor,
+    errorType,
   ])
 
   const l2Badge = () => {
@@ -474,17 +485,15 @@ export default function ConfirmSwapModal({
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <Modal isOpen $scrollOverlay onDismiss={onModalDismiss} maxHeight={90}>
-        {errorType ? (
-          <ErrorModalContent errorType={errorType} onRetry={startSwapFlow} />
-        ) : (
-          <ConfirmationModalContent
-            title={confirmModalState === ConfirmModalState.REVIEWING ? <Trans>Review swap</Trans> : undefined}
-            onDismiss={onModalDismiss}
-            topContent={modalHeader}
-            bottomContent={modalBottom}
-            headerContent={l2Badge}
-          />
-        )}
+        <ConfirmationModalContent
+          title={
+            confirmModalState === ConfirmModalState.REVIEWING && !errorType ? <Trans>Review swap</Trans> : undefined
+          }
+          onDismiss={onModalDismiss}
+          topContent={modalHeader}
+          bottomContent={modalBottom}
+          headerContent={l2Badge}
+        />
       </Modal>
     </Trace>
   )
