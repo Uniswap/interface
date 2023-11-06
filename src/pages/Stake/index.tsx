@@ -272,16 +272,14 @@ export default function Stake() {
         </DataRow>
 
         <MainContentWrapper>
-          {loading || loadingPools ? (
-            <Loader style={{ margin: 'auto' }} />
-          ) : orderedPools?.length > 0 ? (
+          {orderedPools?.length > 0 ? (
             <InfiniteScroll
               next={fetchMoreData}
               hasMore={!!hasMore}
               loader={
-                loadingPools ? (
+                orderedPools?.length !== items?.length ? (
                   <Center paddingY="20">
-                    <h4>Loading...</h4>
+                    <Loader style={{ margin: 'auto' }} />
                   </Center>
                 ) : null
               }
@@ -290,6 +288,12 @@ export default function Stake() {
             >
               <PoolPositionList positions={items} filterByOperator={false} />
             </InfiniteScroll>
+          ) : loading || loadingPools ? (
+            <Loader style={{ margin: 'auto' }} />
+          ) : !account ? (
+            <OutlineCard>
+              <Trans>Please connect your wallet to view smart pools.</Trans>
+            </OutlineCard>
           ) : orderedPools?.length === 0 ? (
             <OutlineCard>
               <Trans>No pool found</Trans>
