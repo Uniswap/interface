@@ -82,21 +82,16 @@ function useStartBlock(chainId: number | undefined): number | undefined {
 /**
  * Need pool events to get list of pools by owner.
  */
-function useFormattedPoolCreatedLogs(
-  contract: Contract | null,
-  account: string | undefined,
-  fromBlock: number
-): PoolRegisteredLog[] | undefined {
+function useFormattedPoolCreatedLogs(contract: Contract | null, fromBlock: number): PoolRegisteredLog[] | undefined {
   // create filters for Registered events
   const filter = useMemo(() => {
     const logFilter = contract?.filters?.Registered()
-    // we do not poll events until account is connected
-    if (!account || !logFilter) return undefined
+    if (!logFilter) return undefined
     return {
       ...logFilter,
       fromBlock,
     }
-  }, [account, contract, fromBlock])
+  }, [contract, fromBlock])
 
   const useLogsResult = useLogs(filter)
 
@@ -120,7 +115,7 @@ function useFormattedPoolCreatedLogs(
 }
 
 export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolean } {
-  const { account, chainId } = useWeb3React()
+  const { chainId } = useWeb3React()
   const registry = useRegistryContract()
   const blockNumber = useBlockNumber()
 
@@ -145,22 +140,12 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
     registryStartBlock = 1
   }
 
-  // we want to be able to filter by account
-  const formattedLogsV1: PoolRegisteredLog[] | undefined = useFormattedPoolCreatedLogs(
-    registry,
-    account,
-    registryStartBlock
-  )
+  const formattedLogsV1: PoolRegisteredLog[] | undefined = useFormattedPoolCreatedLogs(registry, registryStartBlock)
 
   const poolsFromList = usePoolsFromList(registry, chainId)
 
   // early return until events are fetched
   return useMemo(() => {
-    // prevent display if wallet not connected
-    if (!account) {
-      return { loading: false }
-    }
-
     // we append pools from url and filter for duplicates in case the rpc endpoint is down or slow.
     // eslint-disable-next-line
     const pools: PoolRegisteredLog[] = ([...(formattedLogsV1 ?? []), ...(poolsFromList ?? [])])
@@ -174,7 +159,7 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
     }
 
     return { data: uniquePools, loading: false }
-  }, [account, formattedLogsV1, registry, poolsFromList])
+  }, [formattedLogsV1, registry, poolsFromList])
 }
 
 // Bsc endpoints have eth_getLogs limit, so we query pools before recent history from pools list endpoint

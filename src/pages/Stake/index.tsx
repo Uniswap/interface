@@ -103,7 +103,6 @@ export default function Stake() {
   const toggleWalletDrawer = useToggleAccountDrawer()
   const freeStakeBalance = useFreeStakeBalance()
   const hasFreeStake = JSBI.greaterThan(freeStakeBalance ? freeStakeBalance.quotient : JSBI.BigInt(0), JSBI.BigInt(0))
-
   const poolAddresses = allPools?.map((p) => p.pool)
   const poolIds = allPools?.map((p) => p.id)
   const { stakingPools, loading: loadingPools } = useStakingPools(poolAddresses, poolIds)
@@ -273,11 +272,7 @@ export default function Stake() {
         </DataRow>
 
         <MainContentWrapper>
-          {!account ? (
-            <OutlineCard>
-              <Trans>Please connect your wallet</Trans>
-            </OutlineCard>
-          ) : loading || loadingPools ? (
+          {loading || loadingPools ? (
             <Loader style={{ margin: 'auto' }} />
           ) : orderedPools?.length > 0 ? (
             <InfiniteScroll
