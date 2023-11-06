@@ -108,17 +108,18 @@ export function CurrencySearch({
           return undefined
         }
 
+        const tokenChainId = supportedChainIdFromGQLChain(tokenBalance.token?.chain) ?? ChainId.MAINNET
+        if (tokenChainId !== chainId) {
+          return undefined
+        }
+
         const portfolioToken = new Token(
-          supportedChainIdFromGQLChain(tokenBalance.token?.chain) ?? ChainId.MAINNET,
+          tokenChainId,
           tokenBalance.token?.address,
           tokenBalance.token?.decimals,
           tokenBalance.token?.symbol,
           tokenBalance.token?.name
         )
-
-        if (portfolioToken.chainId !== chainId) {
-          return undefined
-        }
 
         return portfolioToken
       })
