@@ -45,7 +45,6 @@ export function WalletEmptyState(): JSX.Element {
     () => ({
       [ActionOption.Buy]: {
         title: t('Buy Crypto'),
-        badgeText: t('Popular'),
         blurb: t('You’ll need ETH to get started. Buy with a card or bank.'),
         elementName: ElementName.EmptyStateBuy,
         icon: (
@@ -152,14 +151,7 @@ export function WalletEmptyState(): JSX.Element {
   )
 }
 
-const ActionCard = ({
-  title,
-  blurb,
-  onPress,
-  icon,
-  badgeText,
-  elementName,
-}: ActionCardItem): JSX.Element => (
+const ActionCard = ({ title, blurb, onPress, icon, elementName }: ActionCardItem): JSX.Element => (
   <Trace logPress element={elementName}>
     <TouchableArea backgroundColor="$surface2" borderRadius="$rounded20" onPress={onPress}>
       <Flex centered row gap="$spacing16" p="$spacing16">
@@ -167,18 +159,6 @@ const ActionCard = ({
         <Flex shrink gap="$spacing4">
           <Flex row alignItems="center" gap="$spacing8">
             <Text variant="subheading2">{title}</Text>
-            {badgeText && (
-              <Flex
-                centered
-                backgroundColor="$DEP_magentaDark"
-                borderRadius="$rounded8"
-                px="$spacing8"
-                py="$spacing4">
-                <Text color="$accent1" variant="buttonLabel4">
-                  {badgeText}
-                </Text>
-              </Flex>
-            )}
           </Flex>
           <Text color="$neutral2" variant="body2">
             {blurb}
