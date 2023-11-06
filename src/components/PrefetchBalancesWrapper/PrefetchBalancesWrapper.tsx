@@ -15,6 +15,7 @@ function useHasUpdatedTx() {
   return !!prevPendingActivityCount && pendingActivityCount < prevPendingActivityCount
 }
 
+// TODO(WEB-3004) - Add useCachedPortfolioBalanceUsd to simplify usage of useCachedPortfolioBalancesQuery
 export function useCachedPortfolioBalancesQuery({ account }: { account?: string }) {
   return usePortfolioBalancesQuery({
     skip: !account,

@@ -4,11 +4,11 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { EventCell } from 'nft/components/collection/ActivityCells'
 import { ActivityEvent } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
-import { formatEth } from 'nft/utils/currency'
 import { getTimeDifference } from 'nft/utils/date'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { shortenAddress } from 'utils'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const TR = styled.tr`
   border-bottom: ${({ theme }) => `1px solid ${theme.surface3}`};
@@ -148,12 +148,15 @@ export const LoadingAssetActivity = ({ rowCount }: { rowCount: number }) => {
 }
 
 const AssetActivity = ({ events }: { events?: ActivityEvent[] }) => {
+  const { formatNumberOrString } = useFormatter()
   return (
     <ActivityTable>
       {events &&
         events.map((event, index) => {
           const { eventTimestamp, eventType, fromAddress, marketplace, price, toAddress, transactionHash } = event
-          const formattedPrice = price ? formatEth(parseFloat(price ?? '')) : null
+          const formattedPrice = price
+            ? formatNumberOrString({ input: parseFloat(price), type: NumberType.NFTToken })
+            : null
           if (!eventType) return null
           return (
             <TR key={index}>

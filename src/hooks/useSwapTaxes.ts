@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import FOT_DETECTOR_ABI from 'abis/fee-on-transfer-detector.json'
 import { FeeOnTransferDetector } from 'abis/types'
 import { sendAnalyticsEvent } from 'analytics'
-import { ZERO_PERCENT } from 'constants/misc'
+import { BIPS_BASE, ZERO_PERCENT } from 'constants/misc'
 import { useEffect, useState } from 'react'
 
 import { useContract } from './useContract'
@@ -20,7 +20,10 @@ function useFeeOnTransferDetectorContract(): FeeOnTransferDetector | null {
     if (contract && account) {
       sendAnalyticsEvent(InterfaceEventName.WALLET_PROVIDER_USED, {
         source: 'useFeeOnTransferDetectorContract',
-        contract,
+        contract: {
+          name: 'FeeOnTransferDetector',
+          address: FEE_ON_TRANSFER_DETECTOR_ADDRESS,
+        },
       })
     }
   }, [account, contract])
@@ -53,8 +56,8 @@ async function getSwapTaxes(
 
       addresses.forEach((address, index) => {
         const { sellFeeBps, buyFeeBps } = data[index]
-        const sellTax = new Percent(sellFeeBps.toNumber(), 10000)
-        const buyTax = new Percent(buyFeeBps.toNumber(), 10000)
+        const sellTax = new Percent(sellFeeBps.toNumber(), BIPS_BASE)
+        const buyTax = new Percent(buyFeeBps.toNumber(), BIPS_BASE)
 
         FEE_CACHE[address] = { sellTax, buyTax }
       })
@@ -69,7 +72,7 @@ async function getSwapTaxes(
   return { inputTax, outputTax }
 }
 
-export function useSwapTaxes(inputTokenAddress: string | undefined, outputTokenAddress: string | undefined) {
+export function useSwapTaxes(inputTokenAddress?: string, outputTokenAddress?: string) {
   const fotDetector = useFeeOnTransferDetectorContract()
   const [{ inputTax, outputTax }, setTaxes] = useState({ inputTax: ZERO_PERCENT, outputTax: ZERO_PERCENT })
   const { chainId } = useWeb3React()

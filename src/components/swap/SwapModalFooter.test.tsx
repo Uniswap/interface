@@ -6,6 +6,8 @@ import { render, screen, within } from 'test-utils/render'
 
 import SwapModalFooter from './SwapModalFooter'
 
+jest.mock('../../featureFlags/flags/useFees', () => ({ useFeesEnabled: () => true }))
+
 describe('SwapModalFooter.tsx', () => {
   const mockAllowance: Allowance = {
     state: AllowanceState.REQUIRED,
@@ -53,7 +55,7 @@ describe('SwapModalFooter.tsx', () => {
       )
     ).toBeInTheDocument()
     expect(
-      screen.getByText('The fee paid to the Ethereum network to process your transaction. This must be paid in ETH.')
+      screen.getByText('Network cost is paid in ETH on the ETHEREUM network in order to transact.')
     ).toBeInTheDocument()
     expect(screen.getByText('The impact your trade has on the market price of this pool.')).toBeInTheDocument()
   })

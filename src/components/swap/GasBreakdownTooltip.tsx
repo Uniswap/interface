@@ -4,6 +4,7 @@ import { AutoColumn } from 'components/Column'
 import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/UniswapXRouterLabel'
 import Row from 'components/Row'
 import { nativeOnChain } from 'constants/tokens'
+import { chainIdToBackendName } from 'graphql/data/util'
 import { ReactNode } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
@@ -31,7 +32,10 @@ const GasCostItem = ({ title, amount, itemValue }: GasCostItemProps) => {
   )
 }
 
-const GaslessSwapLabel = () => <UniswapXRouterLabel>$0</UniswapXRouterLabel>
+const GaslessSwapLabel = () => {
+  const { formatNumber } = useFormatter()
+  return <UniswapXRouterLabel>{formatNumber({ input: 0, type: NumberType.FiatGasPrice })}</UniswapXRouterLabel>
+}
 
 type GasBreakdownTooltipProps = { trade: InterfaceTrade; hideUniswapXDescription?: boolean }
 
@@ -40,7 +44,7 @@ export function GasBreakdownTooltip({ trade, hideUniswapXDescription }: GasBreak
   const inputCurrency = trade.inputAmount.currency
   const native = nativeOnChain(inputCurrency.chainId)
 
-  if (isPreviewTrade(trade)) return <NetworkFeesDescription native={native} />
+  if (isPreviewTrade(trade)) return <NetworkCostDescription native={native} />
 
   const swapEstimate = !isUniswapX ? trade.gasUseEstimateUSD : undefined
   const approvalEstimate = trade.approveInfo.needsApprove ? trade.approveInfo.approveGasEstimateUSD : undefined
@@ -48,7 +52,7 @@ export function GasBreakdownTooltip({ trade, hideUniswapXDescription }: GasBreak
   const showEstimateDetails = Boolean(wrapEstimate || approvalEstimate)
 
   const description =
-    isUniswapX && !hideUniswapXDescription ? <UniswapXDescription /> : <NetworkFeesDescription native={native} />
+    isUniswapX && !hideUniswapXDescription ? <UniswapXDescription /> : <NetworkCostDescription native={native} />
 
   if (!showEstimateDetails) return description
 
@@ -66,11 +70,13 @@ export function GasBreakdownTooltip({ trade, hideUniswapXDescription }: GasBreak
   )
 }
 
-function NetworkFeesDescription({ native }: { native: Currency }) {
+function NetworkCostDescription({ native }: { native: Currency }) {
+  const chainName = chainIdToBackendName(native.chainId)
+
   return (
     <ThemedText.LabelMicro>
       <Trans>
-        The fee paid to the Ethereum network to process your transaction. This must be paid in {native.symbol}.
+        Network cost is paid in {native.symbol} on the {chainName} network in order to transact.
       </Trans>{' '}
       <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-">
         <Trans>Learn more</Trans>

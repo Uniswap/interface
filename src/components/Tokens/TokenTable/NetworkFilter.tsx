@@ -1,6 +1,7 @@
 import Badge from 'components/Badge'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { getChainInfo } from 'constants/chainInfo'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import {
   BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS,
   BACKEND_SUPPORTED_CHAINS,
@@ -8,6 +9,7 @@ import {
   validateUrlChainParam,
 } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { useExploreParams } from 'pages/Explore/redirects'
 import { useRef } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -48,14 +50,14 @@ const InternalLinkMenuItem = styled(InternalMenuItem)<{ disabled?: boolean }>`
       pointer-events: none;
     `}
 `
-const MenuTimeFlyout = styled.span`
-  min-width: 240px;
+const MenuTimeFlyout = styled.span<{ isInfoExplorePageEnabled: boolean }>`
+  min-width: ${({ isInfoExplorePageEnabled }) => (isInfoExplorePageEnabled ? '150px' : '240px')};
   max-height: 350px;
   overflow: auto;
   background-color: ${({ theme }) => theme.surface1};
   box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
   border: 0.5px solid ${({ theme }) => theme.surface3};
-  border-radius: 12px;
+  border-radius: 12px 0px 0px 12px;
   padding: 8px;
   display: flex;
   flex-direction: column;
@@ -63,7 +65,32 @@ const MenuTimeFlyout = styled.span`
   position: absolute;
   top: 48px;
   z-index: 100;
-  left: 0px;
+
+  scrollbar-width: thin;
+  scrollbar-color: ${({ theme }) => `${theme.surface3} transparent`};
+
+  // safari and chrome scrollbar styling
+  ::-webkit-scrollbar {
+    background: transparent;
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.surface3};
+    border-radius: 8px;
+  }
+
+  ${({ isInfoExplorePageEnabled }) =>
+    isInfoExplorePageEnabled
+      ? css`
+          right: 0px;
+          @media screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+            left: 0px;
+          }
+        `
+      : css`
+          left: 0px;
+        `}
 `
 const StyledMenu = styled.div`
   display: flex;
@@ -96,8 +123,8 @@ const CheckContainer = styled.div`
   display: flex;
   flex-direction: flex-end;
 `
-const NetworkFilterOption = styled(FilterOption)`
-  min-width: 156px;
+const NetworkFilterOption = styled(FilterOption)<{ isInfoExplorePageEnabled: boolean }>`
+  ${({ isInfoExplorePageEnabled }) => !isInfoExplorePageEnabled && 'min-width: 156px;'}
 `
 const Tag = styled(Badge)`
   background-color: ${({ theme }) => theme.surface2};
@@ -114,6 +141,9 @@ export default function NetworkFilter() {
   const toggleMenu = useToggleModal(ApplicationModal.NETWORK_FILTER)
   useOnClickOutside(node, open ? toggleMenu : undefined)
   const navigate = useNavigate()
+  const { tab } = useExploreParams()
+
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
   const currentChainName = validateUrlChainParam(useParams().chainName)
   const chainId = supportedChainIdFromGQLChain(currentChainName)
@@ -123,6 +153,7 @@ export default function NetworkFilter() {
   return (
     <StyledMenu ref={node}>
       <NetworkFilterOption
+        isInfoExplorePageEnabled={isInfoExplorePageEnabled}
         onClick={toggleMenu}
         aria-label="networkFilter"
         active={open}
@@ -130,7 +161,7 @@ export default function NetworkFilter() {
       >
         <StyledMenuContent>
           <NetworkLabel>
-            <ChainLogo chainId={chainId} size={20} /> {chainInfo.label}
+            <ChainLogo chainId={chainId} size={20} /> {!isInfoExplorePageEnabled && chainInfo.label}
           </NetworkLabel>
           <Chevron open={open}>
             {open ? (
@@ -142,7 +173,7 @@ export default function NetworkFilter() {
         </StyledMenuContent>
       </NetworkFilterOption>
       {open && (
-        <MenuTimeFlyout>
+        <MenuTimeFlyout isInfoExplorePageEnabled={isInfoExplorePageEnabled}>
           {BACKEND_SUPPORTED_CHAINS.map((network) => {
             const chainId = supportedChainIdFromGQLChain(network)
             const chainInfo = getChainInfo(chainId)
@@ -151,7 +182,9 @@ export default function NetworkFilter() {
                 key={network}
                 data-testid={`tokens-network-filter-option-${network.toLowerCase()}`}
                 onClick={() => {
-                  navigate(`/tokens/${network.toLowerCase()}`)
+                  isInfoExplorePageEnabled
+                    ? navigate(`/explore/${tab}/${network.toLowerCase()}`)
+                    : navigate(`/tokens/${network.toLowerCase()}`)
                   toggleMenu()
                 }}
               >

@@ -1,4 +1,5 @@
 import { SwapSkeleton } from 'components/swap/SwapSkeleton'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { ArrowLeft } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
@@ -40,10 +41,10 @@ export const LeftPanel = styled.div`
   max-width: 780px;
   overflow: hidden;
 `
-export const RightPanel = styled.div`
+export const RightPanel = styled.div<{ isInfoTDPEnabled?: boolean }>`
   display: none;
   flex-direction: column;
-  gap: 20px;
+  gap: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? 40 : 20)}px;
   width: ${SWAP_COMPONENT_WIDTH}px;
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
@@ -220,9 +221,12 @@ function LoadingStats() {
 /* Loading State: row component with loading bubbles */
 export default function TokenDetailsSkeleton() {
   const { chainName } = useParams<{ chainName?: string }>()
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
   return (
     <LeftPanel>
-      <BreadcrumbNavLink to={chainName ? `/tokens/${chainName}` : `/explore`}>
+      <BreadcrumbNavLink
+        to={(isInfoExplorePageEnabled ? '/explore' : '') + (chainName ? `/tokens/${chainName}` : `/tokens`)}
+      >
         <ArrowLeft size={14} /> Tokens
       </BreadcrumbNavLink>
       <TokenInfoContainer>
