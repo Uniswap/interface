@@ -17,7 +17,7 @@ import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { useIsUserAddedToken } from '../../../hooks/Tokens'
-import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
+import { TokenFromList } from '../../../state/lists/tokenFromList'
 import Column, { AutoColumn } from '../../Column'
 import CurrencyLogo from '../../Logo/CurrencyLogo'
 import Row, { RowFixed } from '../../Row'
@@ -86,7 +86,7 @@ const TagContainer = styled.div`
 `
 
 function TokenTags({ currency }: { currency: Currency }) {
-  if (!(currency instanceof WrappedTokenInfo)) {
+  if (!(currency instanceof TokenFromList)) {
     return null
   }
 
@@ -247,7 +247,7 @@ export default function CurrencyList({
 }: {
   height: number
   currencies: Currency[]
-  otherListTokens?: WrappedTokenInfo[]
+  otherListTokens?: TokenFromList[]
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency, hasWarning?: boolean) => void
   otherCurrency?: Currency | null
