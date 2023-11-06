@@ -2,7 +2,7 @@ import React, { ComponentProps, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
-import { getReviewActionName, isWrapAction } from 'src/features/transactions/swap/utils'
+import { isWrapAction } from 'src/features/transactions/swap/utils'
 import { useSwapFormContext } from 'src/features/transactions/swapRewrite/contexts/SwapFormContext'
 import {
   SwapScreen,
@@ -85,7 +85,7 @@ export function SwapFormButton(): JSX.Element {
           onLongPress={onLongPressHoldToSwap}
           onPress={onPress}
           onResponderRelease={onReleaseHoldToSwap}>
-          {isHoldToSwapPressed ? t('Hold to swap') : getReviewActionName(t, wrapType)}
+          {isHoldToSwapPressed ? t('Hold to swap') : t('Review')}
         </Button>
       </Trace>
     </Flex>

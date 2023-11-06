@@ -54,7 +54,7 @@ export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolea
         />
       )}
 
-      <Flex gap="$spacing16" mt="$spacing16">
+      <Flex gap="$spacing16" mt="$spacing24">
         {isBlocked && (
           // TODO: review design of this warning.
           <BlockedAddressWarning
@@ -71,7 +71,7 @@ export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolea
         )}
 
         {gasFeeUSD && (
-          <TouchableArea onPress={(): void => setShowGasInfoModal(true)}>
+          <TouchableArea hapticFeedback onPress={(): void => setShowGasInfoModal(true)}>
             <AnimatedFlex centered row entering={FadeIn} exiting={FadeOut} gap="$spacing4">
               <Icons.Gas color={colors.neutral2.val} size="$icon.16" />
               <Text color="$neutral2" variant="body3">

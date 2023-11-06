@@ -49,6 +49,7 @@ export function MaxAmountButton({
         currencyField === CurrencyField.INPUT ? ElementName.SetMaxInput : ElementName.SetMaxOutput
       }>
       <TouchableArea
+        hapticFeedback
         backgroundColor="$accentSoft"
         borderRadius="$rounded8"
         disabled={disableMaxButton}

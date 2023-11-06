@@ -22,11 +22,7 @@ import { useSwapAnalytics } from 'src/features/transactions/swap/analytics'
 import { useShowSwapNetworkNotification } from 'src/features/transactions/swap/hooks'
 import { SwapArrowButton } from 'src/features/transactions/swap/SwapArrowButton'
 import { isPriceImpactWarning } from 'src/features/transactions/swap/useSwapWarnings'
-import {
-  getRateToDisplay,
-  getReviewActionName,
-  isWrapAction,
-} from 'src/features/transactions/swap/utils'
+import { getRateToDisplay, isWrapAction } from 'src/features/transactions/swap/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -468,7 +464,7 @@ function _SwapForm({
               size="large"
               testID={ElementName.ReviewSwap}
               onPress={onReview}>
-              {getReviewActionName(t, wrapType)}
+              {t('Review')}
             </Button>
           </Trace>
         </AnimatedFlex>

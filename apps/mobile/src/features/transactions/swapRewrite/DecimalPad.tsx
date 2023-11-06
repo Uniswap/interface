@@ -147,8 +147,8 @@ export const DecimalPad = memo(function DecimalPad({
             ) : (
               <KeyButton
                 {...key}
-                key={keyIndex}
                 disabled={disabled || disabledKeys[key.label]}
+                index={keyIndex}
                 sizeMultiplier={sizeMultiplier}
                 onLongPress={onKeyLongPress}
                 onPress={onKeyPress}
@@ -162,6 +162,7 @@ export const DecimalPad = memo(function DecimalPad({
 })
 
 type KeyButtonProps = KeyProps & {
+  index: number
   disabled?: boolean
   sizeMultiplier: SizeMultiplier
   onPress?: (label: KeyLabel, action: KeyAction) => void
@@ -169,6 +170,7 @@ type KeyButtonProps = KeyProps & {
 }
 
 const KeyButton = memo(function KeyButton({
+  index,
   action,
   disabled,
   label,
@@ -199,7 +201,7 @@ const KeyButton = memo(function KeyButton({
       p={16 * sizeMultiplier.padding}
       scaleTo={1.2}
       testID={'decimal-pad-' + label}
-      width="33%"
+      width={index % 3 === 1 ? '50%' : '25%'}
       onLongPress={handleLongPress}
       onPress={handlePress}>
       {label === 'backspace' ? (

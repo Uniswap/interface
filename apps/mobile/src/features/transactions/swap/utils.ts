@@ -157,17 +157,6 @@ export const getActionElementName = (wrapType: WrapType): ElementName => {
   }
 }
 
-export const getReviewActionName = (t: AppTFunction, wrapType: WrapType): string => {
-  switch (wrapType) {
-    case WrapType.Unwrap:
-      return t('Review unwrap')
-    case WrapType.Wrap:
-      return t('Review wrap')
-    default:
-      return t('Review swap')
-  }
-}
-
 export function sumGasFees(gasFee1?: string | undefined, gasFee2?: string): string | undefined {
   if (!gasFee1 || !gasFee2) return gasFee1 || gasFee2
 

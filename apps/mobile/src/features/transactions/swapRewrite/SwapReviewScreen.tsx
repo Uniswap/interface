@@ -22,7 +22,6 @@ import { FeeOnTransferInfoModal } from 'src/features/transactions/swap/modals/Fe
 import { NetworkFeeInfoModal } from 'src/features/transactions/swap/modals/NetworkFeeInfoModal'
 import { SlippageInfoModal } from 'src/features/transactions/swap/modals/SlippageInfoModal'
 import { SwapFeeInfoModal } from 'src/features/transactions/swap/modals/SwapFeeInfoModal'
-import { SwapProtectionInfoModal } from 'src/features/transactions/swap/modals/SwapProtectionModal'
 import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
 import {
   getActionElementName,
@@ -64,7 +63,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   const [showFOTInfoModal, setShowFOTInfoModal] = useState(false)
   const [warningAcknowledged, setWarningAcknowledged] = useState(false)
   const [shouldSubmitTx, setShouldSubmitTx] = useState(false)
-  const [showSwapProtectionModal, setShowSwapProtectionModal] = useState(false)
 
   const { screen, screenRef, setScreen } = useSwapScreenContext()
 
@@ -230,14 +228,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     setShowSlippageModal(false)
   }, [])
 
-  const onShowSwapProtectionModal = useCallback(() => {
-    setShowSwapProtectionModal(true)
-  }, [])
-
-  const onCloseSwapProtectionModal = useCallback(() => {
-    setShowSwapProtectionModal(false)
-  }, [])
-
   const onShowFOTInfo = useCallback(() => {
     setShowFOTInfoModal(true)
   }, [])
@@ -344,8 +334,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
         />
       )}
 
-      {showSwapProtectionModal && <SwapProtectionInfoModal onClose={onCloseSwapProtectionModal} />}
-
       {showFOTInfoModal && <FeeOnTransferInfoModal onClose={onCloseFOTInfo} />}
 
       {showNetworkFeeInfoModal && <NetworkFeeInfoModal onClose={onCloseNetworkFeeInfo} />}
@@ -382,7 +370,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
             onShowNetworkFeeInfo={onShowNetworkFeeInfo}
             onShowSlippageModal={onShowSlippageModal}
             onShowSwapFeeInfo={onShowSwapFeeInfo}
-            onShowSwapProtectionModal={onShowSwapProtectionModal}
             onShowWarning={onShowWarning}
           />
         )}
