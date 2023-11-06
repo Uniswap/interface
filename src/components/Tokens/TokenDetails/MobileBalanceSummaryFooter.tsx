@@ -30,7 +30,6 @@ const Wrapper = styled.div<{ isInfoTDPEnabled?: boolean }>`
   ${({ isInfoTDPEnabled }) =>
     isInfoTDPEnabled
       ? css`
-          border-bottom: none;
           border-radius: 20px;
           bottom: 56px;
           margin: 8px;
