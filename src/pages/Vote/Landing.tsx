@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
@@ -94,6 +95,8 @@ export default function Landing() {
   const theme = useTheme()
   const [hideCancelled, setHideCancelled] = useState(true)
 
+  const { account } = useWeb3React()
+
   // toggle for showing delegation modal
   const showDelegateModal = useModalIsOpen(ApplicationModal.DELEGATE)
   const toggleDelegateModal = useToggleDelegateModal()
@@ -160,7 +163,7 @@ export default function Landing() {
               <AutoRow gap="6px" justify="flex-end">
                 {loadingProposals || loadingAvailableVotes ? (
                   <Loader />
-                ) : (
+                ) : account ? (
                   <ButtonPrimary
                     style={{ width: 'fit-content', height: '40px' }}
                     padding="8px"
@@ -175,7 +178,7 @@ export default function Landing() {
                       ''
                     )}
                   </ButtonPrimary>
-                )}
+                ) : null}
                 <ButtonPrimary
                   as={Link}
                   to="/create-proposal"
