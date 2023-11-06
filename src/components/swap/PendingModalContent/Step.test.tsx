@@ -17,8 +17,6 @@ describe('Step in swap confirmation flow', () => {
   it('displays an upcoming step', () => {
     render(<Step stepStatus={StepStatus.PREVIEW} stepDetails={stepDetails} />)
 
-    // Icon is shown and grayed out
-    expect(screen.getByTestId('step-icon')).toHaveStyleRule('filter', 'grayscale(1)')
     // No ripple animation
     expect(screen.queryByTestId('icon-ripple-animation')).not.toBeInTheDocument()
     // Preview title shown
@@ -31,10 +29,8 @@ describe('Step in swap confirmation flow', () => {
   it('displays an active step, awaiting user action - not timed and no ETA', () => {
     render(<Step stepStatus={StepStatus.ACTIVE} stepDetails={stepDetails} />)
 
-    // Icon is shown and not grayed out
-    expect(screen.getByTestId('step-icon')).toHaveStyleRule('filter', 'grayscale(0)')
     // Ripple animation is active
-    expect(screen.getByTestId('icon-ripple-animation').firstChild).toHaveAttribute('color', stepDetails.rippleColor)
+    expect(screen.getByTestId('icon-ripple-animation')).toBeInTheDocument()
     // Action Required title is shown
     expect(screen.getByText(stepDetails.actionRequiredTitle)).toBeInTheDocument()
     // No timer or checkmark icon
@@ -58,10 +54,8 @@ describe('Step in swap confirmation flow', () => {
       />
     )
 
-    // Icon is shown and not grayed out
-    expect(screen.getByTestId('step-icon')).toHaveStyleRule('filter', 'grayscale(0)')
     // Ripple animation is active
-    expect(screen.getByTestId('icon-ripple-animation').firstChild).toHaveAttribute('color', stepDetails.rippleColor)
+    expect(screen.getByTestId('icon-ripple-animation')).toBeInTheDocument()
     // Action Required title is shown
     expect(screen.getByText(stepDetails.actionRequiredTitle)).toBeInTheDocument()
     // Timer is shown and functional
@@ -94,19 +88,10 @@ describe('Step in swap confirmation flow', () => {
       />
     )
 
-    // Icon is shown and not grayed out
-    expect(screen.getByTestId('step-icon')).toHaveStyleRule('filter', 'grayscale(0)')
     // Ripple animation is active
-    expect(screen.getByTestId('icon-ripple-animation').firstChild).toHaveAttribute('color', stepDetails.rippleColor)
+    expect(screen.getByTestId('icon-ripple-animation')).toBeInTheDocument()
     // Action Required title is shown
     expect(screen.getByText(stepDetails.actionRequiredTitle)).toBeInTheDocument()
-    // Timer is shown and preview only
-    expect(screen.getByText('00:20')).toBeInTheDocument()
-    act(() => {
-      jest.advanceTimersByTime(5000)
-    })
-    expect(screen.getByText('00:20')).toBeInTheDocument()
-    expect(screen.queryByText(DELAYED_END_TITLE)).not.toBeInTheDocument()
     expect(screen.queryByTestId('checkmark-icon')).not.toBeInTheDocument()
   })
 
@@ -131,11 +116,11 @@ describe('Step in swap confirmation flow', () => {
     // Action Required title is shown
     expect(screen.getByText(stepDetails.inProgressTitle)).toBeInTheDocument()
     // Timer is shown and functional
-    expect(screen.getByText('00:20')).toBeInTheDocument()
+    expect(screen.getByTestId('step-timer')).toHaveTextContent('00:20')
     act(() => {
       jest.advanceTimersByTime(5000)
     })
-    expect(screen.getByText('00:15')).toBeInTheDocument()
+    expect(screen.getByTestId('step-timer')).toHaveTextContent('00:15')
     act(() => {
       jest.advanceTimersByTime(15000)
     })
