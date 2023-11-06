@@ -45,8 +45,9 @@ export default function UniwalletModal() {
 
   const isAndroidGALaunched = useAndroidGALaunchFlagEnabled()
   // Displays the modal if not on iOS/Android, a Uniswap Wallet Connection is pending, & qrcode URI is available
+  const onLaunchedMobilePlatform = isIOS || (isAndroidGALaunched && isAndroid)
   const open =
-    (isAndroidGALaunched ? !isIOS && !isAndroid : !isIOS) &&
+    !onLaunchedMobilePlatform &&
     activationState.status === ActivationStatus.PENDING &&
     activationState.connection.type === ConnectionType.UNISWAP_WALLET_V2 &&
     !!uri
