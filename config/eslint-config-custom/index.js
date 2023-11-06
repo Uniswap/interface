@@ -233,7 +233,7 @@ module.exports = {
         // disable rule that shouldn't be applied to json files
         '@typescript-eslint/no-unused-expressions': 0,
         'spellcheck/spell-checker': [
-          'warn',
+          'error',
           {
             comments: false,
             strings: true,

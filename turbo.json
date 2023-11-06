@@ -8,8 +8,16 @@
       "outputs": []
     },
     "check:circular": {},
-    "lint": {},
-    "lint:fix": {},
+    "lint": {
+      "dependsOn": [
+        "typecheck"
+      ]
+    },
+    "lint:fix": {
+      "dependsOn": [
+        "typecheck"
+      ]
+    },
     "//#staged:lint:fix": {
       "outputs": []
     },
