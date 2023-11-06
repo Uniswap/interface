@@ -12,7 +12,7 @@ import {
   useBiometricPrompt,
   useOsBiometricAuthEnabled,
 } from 'src/features/biometrics/hooks'
-import { ModalName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import {
   useAcceptedTrade,
   useSwapCallback,
@@ -23,11 +23,7 @@ import { NetworkFeeInfoModal } from 'src/features/transactions/swap/modals/Netwo
 import { SlippageInfoModal } from 'src/features/transactions/swap/modals/SlippageInfoModal'
 import { SwapFeeInfoModal } from 'src/features/transactions/swap/modals/SwapFeeInfoModal'
 import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
-import {
-  getActionElementName,
-  getActionName,
-  isWrapAction,
-} from 'src/features/transactions/swap/utils'
+import { isWrapAction } from 'src/features/transactions/swap/utils'
 import { useSwapFormContext } from 'src/features/transactions/swapRewrite/contexts/SwapFormContext'
 import {
   SwapScreen,
@@ -35,12 +31,9 @@ import {
 } from 'src/features/transactions/swapRewrite/contexts/SwapScreenContext'
 import { useSwapTxContext } from 'src/features/transactions/swapRewrite/contexts/SwapTxContext'
 import { GasAndWarningRows } from 'src/features/transactions/swapRewrite/GasAndWarningRows'
-import { HoldToSwapProgressBar } from 'src/features/transactions/swapRewrite/HoldToSwapProgressBar'
+import { HOLD_TO_SWAP_TIMEOUT } from 'src/features/transactions/swapRewrite/HoldToSwapProgressCircle'
 import { useParsedSwapWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
-import {
-  HOLD_TO_SWAP_TIMEOUT,
-  SwapFormButtonEmptySpace,
-} from 'src/features/transactions/swapRewrite/SwapFormButton'
+import { SwapFormButtonEmptySpace } from 'src/features/transactions/swapRewrite/SwapFormButton'
 import { TransactionAmountsReview } from 'src/features/transactions/swapRewrite/TransactionAmountsReview'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { AnimatedFlex, Button, Flex, Separator, useSporeColors } from 'ui/src'
@@ -343,8 +336,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
 
       {screen === SwapScreen.SwapReviewHoldingToSwap ? (
         <Flex>
-          <HoldToSwapProgressBar />
-
           <AnimatedFlex entering={FadeIn} gap="$spacing2">
             <TransactionAmountsReview
               acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
@@ -424,9 +415,9 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
                 disabled={submitButtonDisabled}
                 icon={submitButtonIcon}
                 size="large"
-                testID={getActionElementName(wrapType)}
+                testID={ElementName.Swap}
                 onPress={onSubmitTransaction}>
-                {getActionName(t, wrapType)}
+                {t('Swap')}
               </Button>
             </Flex>
           </AnimatedFlex>

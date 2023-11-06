@@ -51,8 +51,6 @@ export function SwapFlow(): JSX.Element {
 
   const shouldShowFullscreen = screen === SwapScreen.SwapForm || screen === SwapScreen.SwapPending
 
-  const hideHandlebar = shouldShowFullscreen || screen === SwapScreen.SwapReviewHoldingToSwap
-
   return (
     <BottomSheetModal
       hideKeyboardOnDismiss
@@ -61,7 +59,7 @@ export function SwapFlow(): JSX.Element {
       containerComponent={Container}
       footerComponent={Footer}
       fullScreen={shouldShowFullscreen}
-      hideHandlebar={hideHandlebar}
+      hideHandlebar={shouldShowFullscreen}
       name={ModalName.Swap}
       onClose={onCloseSwapModal}>
       <TouchableWithoutFeedback>

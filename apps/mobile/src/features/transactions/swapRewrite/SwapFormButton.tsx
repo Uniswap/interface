@@ -8,6 +8,7 @@ import {
   SwapScreen,
   useSwapScreenContext,
 } from 'src/features/transactions/swapRewrite/contexts/SwapScreenContext'
+import { HoldToSwapProgressCircle } from 'src/features/transactions/swapRewrite/HoldToSwapProgressCircle'
 import { useParsedSwapWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { Button, Flex, Icons, Text } from 'ui/src'
@@ -70,9 +71,8 @@ export function SwapFormButton(): JSX.Element {
 
       <Trace logPress element={ElementName.SwapReview}>
         <Button
-          borderColor={isHoldToSwapPressed ? '#FF9EFF' : '$transparent'}
-          borderWidth={isHoldToSwapPressed ? 1 : 0}
           disabled={reviewButtonDisabled || isHoldToSwapPressed}
+          icon={isHoldToSwapPressed ? <HoldToSwapProgressCircle /> : undefined}
           size="large"
           testID={ElementName.ReviewSwap}
           width="100%"
