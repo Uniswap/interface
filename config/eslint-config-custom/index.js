@@ -241,6 +241,9 @@ module.exports = {
             lang: 'en_US',
             // NOTE: react-i18next uses ’ over ' for apostrophes
             skipWords: [
+              'abcabcabc',
+              'abc',
+              'aaa',
               'They’re',
               '’s',
               'device’s',
