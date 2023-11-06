@@ -262,6 +262,7 @@ module.exports = {
               'don’t',
               'eth',
               'etherscan',
+              'favorited',
               'haven’t',
               'isn’t',
               'it’s',
