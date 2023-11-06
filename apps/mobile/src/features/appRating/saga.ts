@@ -26,7 +26,7 @@ export function* appRatingWatcherSaga() {
   function* processFinalizedTx(action: ReturnType<typeof finalizeTransaction>) {
     // count successful swaps
 
-    // Skip for Android until after beta
+    // TODO(MOB-1814): Remove once Android goes live
     if (IS_ANDROID) return
 
     if (

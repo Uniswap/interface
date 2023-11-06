@@ -3,7 +3,7 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import { TradeType } from '@uniswap/sdk-core'
 import { BigNumberish, providers } from 'ethers'
 import appsFlyer from 'react-native-appsflyer'
-import { call, delay, fork, put, race, select, take } from 'typed-redux-saga'
+import { call, delay, fork, put, race, take } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
@@ -358,8 +358,8 @@ function* finalizeTransaction({
   yield* refetchGQLQueries({ transaction, apolloClient })
 
   if (transaction.typeInfo.type === TransactionType.Swap) {
-    const hasDoneASwap = (yield* select(selectSwapTransactionsCount)) > 0
-    if (!hasDoneASwap) {
+    const hasDoneOneSwap = (yield* appSelect(selectSwapTransactionsCount)) === 1
+    if (hasDoneOneSwap) {
       // Only log event if it's a user's first ever swap
       yield* call([appsFlyer, appsFlyer.logEvent], 'swap_completed', {})
     }
