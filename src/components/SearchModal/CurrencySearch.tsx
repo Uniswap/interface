@@ -116,8 +116,8 @@ export function CurrencySearch({
           tokenBalance.token?.name
         )
 
-        if (portfolioToken.chainId === chainId) {
-          return portfolioToken
+        if (portfolioToken.chainId !== chainId) {
+          return undefined
         }
 
         return portfolioToken
