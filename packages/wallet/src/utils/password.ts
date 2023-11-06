@@ -10,7 +10,7 @@ export function validatePassword(password: string): PasswordValidationResult {
     score,
     feedback: { warning },
   } = zxcvbn(password)
-  if (score >= 4) {
+  if (score >= 3) {
     return { valid: true }
   }
   return {
