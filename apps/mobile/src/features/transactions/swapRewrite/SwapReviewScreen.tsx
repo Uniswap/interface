@@ -70,9 +70,10 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
 
   const {
     derivedSwapInfo,
-    updateSwapForm,
-    focusOnCurrencyField,
     exactCurrencyField: ctxExactCurrencyField,
+    focusOnCurrencyField,
+    isSubmitting,
+    updateSwapForm,
   } = useSwapFormContext()
 
   const {
@@ -114,7 +115,8 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
 
   const onNext = useCallback(() => {
     setScreen(SwapScreen.SwapPending)
-  }, [setScreen])
+    updateSwapForm({ isSubmitting: false })
+  }, [setScreen, updateSwapForm])
 
   const { wrapCallback: onWrap } = useWrapCallback(
     currencyAmounts[CurrencyField.INPUT],
@@ -146,13 +148,24 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     isWrapAction(wrapType) ? onWrap() : onSwap()
   }, [reviewScreenWarning, showWarningModal, warningAcknowledged, wrapType, onWrap, onSwap])
 
-  const { trigger: submitWithBiometrix } = useBiometricPrompt(submitTransaction)
+  const onSubmitTransactionFailed = useCallback(() => {
+    setScreen(SwapScreen.SwapReview)
+    updateSwapForm({ isSubmitting: false })
+  }, [setScreen, updateSwapForm])
+
+  const { trigger: submitWithBiometrix } = useBiometricPrompt(
+    submitTransaction,
+    onSubmitTransactionFailed
+  )
+
   const { requiredForTransactions: requiresBiometrics } = useBiometricAppSettings()
 
   // Detect auth type for icon display
   const isBiometricAuthEnabled = useOsBiometricAuthEnabled()
 
   const onSubmitTransaction = useCallback(async () => {
+    updateSwapForm({ isSubmitting: true })
+
     await notificationAsync()
 
     if (requiresBiometrics) {
@@ -160,13 +173,23 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     } else {
       submitTransaction()
     }
-  }, [requiresBiometrics, submitTransaction, submitWithBiometrix])
+  }, [requiresBiometrics, submitTransaction, submitWithBiometrix, updateSwapForm])
+
+  const submitButtonDisabled =
+    noValidSwap ||
+    !!blockingWarning ||
+    newTradeRequiresAcceptance ||
+    !gasFee.value ||
+    !!gasFee.error ||
+    !txRequest ||
+    account.type === AccountType.Readonly ||
+    isSubmitting
 
   const holdToSwapTimeoutStartTime = useRef<number>()
 
   // This is the timeout that counts how long the user has been pressing the button for "hold to swap" and then auto-submits the transaction.
   useEffect(() => {
-    if (screen !== SwapScreen.SwapReviewHoldingToSwap) {
+    if (isSubmitting || screen !== SwapScreen.SwapReviewHoldingToSwap) {
       return
     }
 
@@ -190,12 +213,27 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
         return
       }
 
-      setScreen(SwapScreen.SwapReview)
+      if (submitButtonDisabled) {
+        // If the submit button became disabled while the user was "holding to swap",
+        // we do not submit the transaction and we simply show them the regular Review screen.
+        setScreen(SwapScreen.SwapReview)
+        return
+      }
+
       await onSubmitTransaction()
     }, millisecondsLeft)
 
     return () => clearTimeout(timeout)
-  }, [newTradeRequiresAcceptance, onSubmitTransaction, screen, screenRef, setScreen])
+  }, [
+    isSubmitting,
+    newTradeRequiresAcceptance,
+    onSubmitTransaction,
+    screen,
+    screenRef,
+    setScreen,
+    submitButtonDisabled,
+    updateSwapForm,
+  ])
 
   const onConfirmWarning = useCallback(() => {
     setWarningAcknowledged(true)
@@ -207,10 +245,14 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   }, [wrapType, onWrap, onSwap, shouldSubmitTx])
 
   const onCancelWarning = useCallback(() => {
+    if (shouldSubmitTx) {
+      onSubmitTransactionFailed()
+    }
+
     setShowWarningModal(false)
     setWarningAcknowledged(false)
     setShouldSubmitTx(false)
-  }, [])
+  }, [onSubmitTransactionFailed, shouldSubmitTx])
 
   const onShowWarning = useCallback(() => {
     setShowWarningModal(true)
@@ -265,15 +307,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     )
   }
 
-  const submitButtonDisabled =
-    noValidSwap ||
-    !!blockingWarning ||
-    newTradeRequiresAcceptance ||
-    !gasFee.value ||
-    !!gasFee.error ||
-    !txRequest ||
-    account.type === AccountType.Readonly
-
   const submitButtonIcon =
     isBiometricAuthEnabled && requiresBiometrics ? <BiometricsIcon /> : undefined
 
@@ -292,24 +325,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     throw new Error('Missing required props in `derivedSwapInfo` to render `SwapReview` screen.')
   }
 
-  return screen === SwapScreen.SwapReviewHoldingToSwap ? (
-    <Flex>
-      <HoldToSwapProgressBar />
-
-      <AnimatedFlex entering={FadeIn} gap="$spacing2">
-        <TransactionAmountsReview
-          acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
-          newTradeRequiresAcceptance={newTradeRequiresAcceptance}
-        />
-
-        <Separator mb="$spacing12" mt="$spacing16" />
-
-        <GasAndWarningRows renderEmptyRows={false} />
-
-        <SwapFormButtonEmptySpace />
-      </AnimatedFlex>
-    </Flex>
-  ) : (
+  return (
     <>
       {showWarningModal && reviewScreenWarning?.warning.title && (
         <WarningModal
@@ -325,74 +341,97 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
         />
       )}
 
-      {showSlippageModal && acceptedTrade && (
-        <SlippageInfoModal
-          autoSlippageTolerance={autoSlippageTolerance}
-          isCustomSlippage={!!customSlippageTolerance}
-          trade={acceptedTrade}
-          onClose={onCloseSlippageModal}
-        />
-      )}
+      {screen === SwapScreen.SwapReviewHoldingToSwap ? (
+        <Flex>
+          <HoldToSwapProgressBar />
 
-      {showFOTInfoModal && <FeeOnTransferInfoModal onClose={onCloseFOTInfo} />}
+          <AnimatedFlex entering={FadeIn} gap="$spacing2">
+            <TransactionAmountsReview
+              acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
+              newTradeRequiresAcceptance={newTradeRequiresAcceptance}
+            />
 
-      {showNetworkFeeInfoModal && <NetworkFeeInfoModal onClose={onCloseNetworkFeeInfo} />}
+            <Separator mb="$spacing12" mt="$spacing16" />
 
-      {showSwapFeeInfoModal && <SwapFeeInfoModal noFee={noSwapFee} onClose={onCloseSwapFeeInfo} />}
+            <GasAndWarningRows renderEmptyRows={false} />
 
-      <AnimatedFlex entering={FadeIn} gap="$spacing16">
-        <TransactionAmountsReview
-          acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
-          newTradeRequiresAcceptance={newTradeRequiresAcceptance}
-        />
-
-        {isWrapAction(wrapType) ? (
-          <TransactionDetails
-            chainId={chainId}
-            gasFee={gasFee}
-            warning={reviewScreenWarning?.warning}
-            onShowNetworkFeeInfo={onShowNetworkFeeInfo}
-            onShowSwapFeeInfo={onShowSwapFeeInfo}
-            onShowWarning={onShowWarning}
-          />
-        ) : (
-          <SwapDetails
-            acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
-            autoSlippageTolerance={autoSlippageTolerance}
-            customSlippageTolerance={customSlippageTolerance}
-            derivedSwapInfo={derivedSwapInfo}
-            gasFee={gasFee}
-            newTradeRequiresAcceptance={newTradeRequiresAcceptance}
-            outputCurrencyPricePerUnitExact={outputCurrencyPricePerUnitExact}
-            warning={reviewScreenWarning?.warning}
-            onAcceptTrade={onAcceptTrade}
-            onShowFOTInfo={onShowFOTInfo}
-            onShowNetworkFeeInfo={onShowNetworkFeeInfo}
-            onShowSlippageModal={onShowSlippageModal}
-            onShowSwapFeeInfo={onShowSwapFeeInfo}
-            onShowWarning={onShowWarning}
-          />
-        )}
-
-        <Flex row gap="$spacing8">
-          <Button
-            icon={<Arrow color={colors.neutral1.get()} direction="w" size={iconSizes.icon24} />}
-            size="large"
-            theme="tertiary"
-            onPress={onPrev}
-          />
-
-          <Button
-            fill
-            disabled={submitButtonDisabled}
-            icon={submitButtonIcon}
-            size="large"
-            testID={getActionElementName(wrapType)}
-            onPress={onSubmitTransaction}>
-            {getActionName(t, wrapType)}
-          </Button>
+            <SwapFormButtonEmptySpace />
+          </AnimatedFlex>
         </Flex>
-      </AnimatedFlex>
+      ) : (
+        <>
+          {showSlippageModal && acceptedTrade && (
+            <SlippageInfoModal
+              autoSlippageTolerance={autoSlippageTolerance}
+              isCustomSlippage={!!customSlippageTolerance}
+              trade={acceptedTrade}
+              onClose={onCloseSlippageModal}
+            />
+          )}
+
+          {showFOTInfoModal && <FeeOnTransferInfoModal onClose={onCloseFOTInfo} />}
+
+          {showNetworkFeeInfoModal && <NetworkFeeInfoModal onClose={onCloseNetworkFeeInfo} />}
+
+          {showSwapFeeInfoModal && (
+            <SwapFeeInfoModal noFee={noSwapFee} onClose={onCloseSwapFeeInfo} />
+          )}
+
+          <AnimatedFlex entering={FadeIn} gap="$spacing16">
+            <TransactionAmountsReview
+              acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
+              newTradeRequiresAcceptance={newTradeRequiresAcceptance}
+            />
+
+            {isWrapAction(wrapType) ? (
+              <TransactionDetails
+                chainId={chainId}
+                gasFee={gasFee}
+                warning={reviewScreenWarning?.warning}
+                onShowNetworkFeeInfo={onShowNetworkFeeInfo}
+                onShowSwapFeeInfo={onShowSwapFeeInfo}
+                onShowWarning={onShowWarning}
+              />
+            ) : (
+              <SwapDetails
+                acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
+                autoSlippageTolerance={autoSlippageTolerance}
+                customSlippageTolerance={customSlippageTolerance}
+                derivedSwapInfo={derivedSwapInfo}
+                gasFee={gasFee}
+                newTradeRequiresAcceptance={newTradeRequiresAcceptance}
+                outputCurrencyPricePerUnitExact={outputCurrencyPricePerUnitExact}
+                warning={reviewScreenWarning?.warning}
+                onAcceptTrade={onAcceptTrade}
+                onShowFOTInfo={onShowFOTInfo}
+                onShowNetworkFeeInfo={onShowNetworkFeeInfo}
+                onShowSlippageModal={onShowSlippageModal}
+                onShowSwapFeeInfo={onShowSwapFeeInfo}
+                onShowWarning={onShowWarning}
+              />
+            )}
+
+            <Flex row gap="$spacing8">
+              <Button
+                icon={<Arrow color={colors.neutral1.get()} direction="w" size={iconSizes.icon24} />}
+                size="large"
+                theme="tertiary"
+                onPress={onPrev}
+              />
+
+              <Button
+                fill
+                disabled={submitButtonDisabled}
+                icon={submitButtonIcon}
+                size="large"
+                testID={getActionElementName(wrapType)}
+                onPress={onSubmitTransaction}>
+                {getActionName(t, wrapType)}
+              </Button>
+            </Flex>
+          </AnimatedFlex>
+        </>
+      )}
     </>
   )
 }

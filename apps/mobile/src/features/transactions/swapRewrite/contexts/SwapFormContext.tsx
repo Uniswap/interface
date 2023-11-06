@@ -26,6 +26,7 @@ export type SwapFormState = {
   selectingCurrencyField?: CurrencyField
   txId?: string
   isFiatMode: boolean
+  isSubmitting: boolean
 }
 
 type DerivedSwapFormState = {
@@ -56,6 +57,7 @@ const DEFAULT_STATE: Readonly<SwapFormState> = {
   input: ETH_TRADEABLE_ASSET,
   output: undefined,
   isFiatMode: false,
+  isSubmitting: false,
 }
 
 export const SwapFormContext = createContext<SwapFormContextState | undefined>(undefined)
@@ -118,6 +120,7 @@ export function SwapFormContextProvider({
       focusOnCurrencyField: swapForm.focusOnCurrencyField,
       input: swapForm.input,
       isFiatMode: swapForm.isFiatMode,
+      isSubmitting: swapForm.isSubmitting,
       onClose,
       output: swapForm.output,
       selectingCurrencyField: swapForm.selectingCurrencyField,
@@ -133,6 +136,7 @@ export function SwapFormContextProvider({
       swapForm.focusOnCurrencyField,
       swapForm.input,
       swapForm.isFiatMode,
+      swapForm.isSubmitting,
       swapForm.output,
       swapForm.selectingCurrencyField,
       swapForm.txId,

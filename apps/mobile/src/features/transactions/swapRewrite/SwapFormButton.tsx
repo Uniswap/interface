@@ -1,4 +1,4 @@
-import React, { ComponentProps, useCallback, useEffect } from 'react'
+import React, { ComponentProps, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -20,7 +20,7 @@ export function SwapFormButton(): JSX.Element {
   const { t } = useTranslation()
 
   const { screen, setScreen } = useSwapScreenContext()
-  const { derivedSwapInfo, updateSwapForm } = useSwapFormContext()
+  const { derivedSwapInfo, isSubmitting, updateSwapForm } = useSwapFormContext()
   const { blockingWarning } = useParsedSwapWarnings()
 
   const { wrapType, trade } = derivedSwapInfo
@@ -40,7 +40,7 @@ export function SwapFormButton(): JSX.Element {
     isBlockedLoading ||
     walletNeedsRestore
 
-  const isHoldToSwapPressed = screen === SwapScreen.SwapReviewHoldingToSwap
+  const isHoldToSwapPressed = screen === SwapScreen.SwapReviewHoldingToSwap || isSubmitting
 
   const onReview = useCallback(
     (nextScreen: SwapScreen) => {
@@ -59,16 +59,10 @@ export function SwapFormButton(): JSX.Element {
   }, [onReview])
 
   const onReleaseHoldToSwap = useCallback(() => {
-    if (isHoldToSwapPressed) {
+    if (isHoldToSwapPressed && !isSubmitting) {
       setScreen(SwapScreen.SwapForm)
     }
-  }, [isHoldToSwapPressed, setScreen])
-
-  useEffect(() => {
-    if (reviewButtonDisabled && isHoldToSwapPressed) {
-      onReleaseHoldToSwap()
-    }
-  }, [isHoldToSwapPressed, onReleaseHoldToSwap, reviewButtonDisabled, screen])
+  }, [isHoldToSwapPressed, isSubmitting, setScreen])
 
   return (
     <Flex alignItems="center" gap="$spacing16" marginHorizontal="$spacing16">

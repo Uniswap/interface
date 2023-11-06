@@ -97,6 +97,7 @@ function Container({ children }: { children?: ReactNode }): JSX.Element {
             selectingCurrencyField: initialState.selectingCurrencyField,
             txId: initialState.txId,
             isFiatMode: false,
+            isSubmitting: false,
           }
         : undefined,
     [initialState]
