@@ -1,4 +1,5 @@
 import { ChainId, WETH9 } from '@uniswap/sdk-core'
+import { FeatureFlag } from 'featureFlags'
 
 import { ARB, UNI } from '../../src/constants/tokens'
 import { getTestSelector } from '../utils'
@@ -14,8 +15,9 @@ describe('Token details', () => {
 
   it('Uniswap token should have all information populated', () => {
     // Uniswap token
-    cy.visit(`/tokens/ethereum/${UNI_ADDRESS}`)
-
+    cy.visit(`/tokens/ethereum/${UNI_ADDRESS}`, {
+      featureFlags: [{ name: FeatureFlag.infoTDP, value: false }],
+    })
     // Price chart should be filled in
     cy.get('[data-cy="chart-header"]').should('include.text', '$')
     cy.get('[data-cy="price-chart"]').should('exist')
@@ -45,6 +47,22 @@ describe('Token details', () => {
 
     // Contract address should be displayed
     cy.contains(UNI_ADDRESS).should('exist')
+  })
+
+  it('Uniswap token should have correct stats boxes if infoTDP flag on', () => {
+    // Uniswap token
+    cy.visit(`/tokens/ethereum/${UNI_ADDRESS}`, {
+      featureFlags: [{ name: FeatureFlag.infoTDP, value: true }],
+    })
+
+    // Stats should have: TVL, FDV, market cap, 24H volume
+    cy.get(getTestSelector('token-details-stats')).should('exist')
+    cy.get(getTestSelector('token-details-stats')).within(() => {
+      cy.get('[data-cy="tvl"]').should('include.text', '$')
+      cy.get('[data-cy="fdv"]').should('include.text', '$')
+      cy.get('[data-cy="market-cap"]').should('include.text', '$')
+      cy.get('[data-cy="volume-24h"]').should('include.text', '$')
+    })
   })
 
   it('token with warning and low trading volume should have all information populated', () => {

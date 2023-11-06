@@ -58,6 +58,18 @@ gql`
           chain
           address
         }
+        markets(currencies: [USD]) {
+          fullyDilutedValuation {
+            id
+            value
+            currency
+          }
+          marketCap {
+            id
+            value
+            currency
+          }
+        }
       }
     }
   }
