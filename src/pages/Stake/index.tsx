@@ -288,9 +288,9 @@ export default function Stake() {
             >
               <PoolPositionList positions={items} filterByOperator={false} />
             </InfiniteScroll>
-          ) : loading || loadingPools ? (
+          ) : (loading || loadingPools) && account ? (
             <Loader style={{ margin: 'auto' }} />
-          ) : !account ? (
+          ) : !account || (!account && orderedPools?.length === 0) ? (
             <OutlineCard>
               <Trans>Please connect your wallet to view smart pools.</Trans>
             </OutlineCard>
