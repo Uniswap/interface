@@ -43,10 +43,10 @@ export default function UniwalletModal() {
   const { activationState, cancelActivation } = useActivationState()
   const [uri, setUri] = useState<string>()
 
-  const isAndroidLaunched = useAndroidGALaunchFlagEnabled()
+  const isAndroidGALaunched = useAndroidGALaunchFlagEnabled()
   // Displays the modal if not on iOS/Android, a Uniswap Wallet Connection is pending, & qrcode URI is available
   const open =
-    (isAndroidLaunched ? !isIOS && !isAndroid : !isIOS) &&
+    (isAndroidGALaunched ? !isIOS && !isAndroid : !isIOS) &&
     activationState.status === ActivationStatus.PENDING &&
     activationState.connection.type === ConnectionType.UNISWAP_WALLET_V2 &&
     !!uri
@@ -104,7 +104,7 @@ const InfoSectionWrapper = styled(RowBetween)`
 `
 
 function InfoSection() {
-  const isAndroidLaunched = useAndroidGALaunchFlagEnabled()
+  const isAndroidGALaunched = useAndroidGALaunchFlagEnabled()
 
   return (
     <InfoSectionWrapper>
@@ -113,7 +113,7 @@ function InfoSection() {
           <Trans>Don&apos;t have Uniswap Wallet?</Trans>
         </ThemedText.SubHeaderSmall>
         <ThemedText.BodySmall color="neutral2">
-          {isAndroidLaunched ? (
+          {isAndroidGALaunched ? (
             <Trans>Get the Uniswap app on iOS and Android to safely store and swap tokens.</Trans>
           ) : (
             <Trans>

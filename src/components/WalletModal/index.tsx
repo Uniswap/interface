@@ -41,7 +41,7 @@ const PrivacyPolicyWrapper = styled.div`
 
 export default function WalletModal({ openSettings }: { openSettings: () => void }) {
   const { connector, chainId } = useWeb3React()
-  const isAndroidLaunched = useAndroidGALaunchFlagEnabled()
+  const isAndroidGALaunched = useAndroidGALaunchFlagEnabled()
 
   const { activationState } = useActivationState()
   const fallbackProviderEnabled = useFallbackProviderEnabled()
@@ -68,7 +68,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         <AutoColumn gap="16px">
           <OptionGrid data-testid="option-grid">
             {connections
-              .filter((connection) => connection.shouldDisplay(isAndroidLaunched))
+              .filter((connection) => connection.shouldDisplay(isAndroidGALaunched))
               .map((connection) => (
                 <Option key={connection.getName()} connection={connection} />
               ))}

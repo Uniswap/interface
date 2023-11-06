@@ -149,8 +149,8 @@ export const uniwalletWCV2ConnectConnection: Connection = {
   hooks: web3WCV2UniwalletConnectHooks,
   type: ConnectionType.UNISWAP_WALLET_V2,
   getIcon: () => UNIWALLET_ICON,
-  shouldDisplay: (isAndroidLaunched) =>
-    Boolean(!getIsInjectedMobileBrowser() && (isAndroidLaunched ? !isNonSupportedPhone : !isNonIOSPhone)),
+  shouldDisplay: (isAndroidGALaunched) =>
+    Boolean(!getIsInjectedMobileBrowser() && (isAndroidGALaunched ? !isNonSupportedPhone : !isNonIOSPhone)),
 }
 
 const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(
