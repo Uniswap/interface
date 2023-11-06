@@ -1,23 +1,20 @@
-import { isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { darken } from 'polished'
-import { ReactNode, useCallback, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
+import { MODAL_TRANSITION_DURATION } from '../../components/Modal'
 import { isSupportedChain } from '../../constants/chains'
-import { ZERO_ADDRESS } from '../../constants/misc'
 import { GRG } from '../../constants/tokens'
-import useENS from '../../hooks/useENS'
 //import { useTokenBalance } from '../../state/connection/hooks'
 import { useCreateCallback } from '../../state/pool/hooks'
 import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
 import { ThemedText } from '../../theme'
 import { ButtonGray, ButtonPrimary } from '../Button'
-//import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../Logo/CurrencyLogo'
 import Modal from '../Modal'
@@ -104,8 +101,14 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
   const [typedName, setTypedName] = useState('')
   const [typedSymbol, setTypedSymbol] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
-  // TODO: check if should use network base currency default instead of GRG, check if should not fallback to mainnet
-  const [currencyValue, setCurrencyValue] = useState<Currency>(GRG[chainId ?? 1])
+  const [currencyValue, setCurrencyValue] = useState<Currency>()
+
+  // update currency at initialization or on chain switch
+  useEffect(() => {
+    if (chainId && currencyValue?.chainId !== chainId) {
+      setCurrencyValue(GRG[chainId])
+    }
+  }, [chainId, currencyValue, setCurrencyValue])
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
@@ -127,8 +130,6 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
     setTypedSymbol(typedSymbol.toUpperCase())
   }, [])
 
-  const { address: parsedAddress } = useENS(currencyValue.isNative ? ZERO_ADDRESS : currencyValue.address)
-
   const createCallback = useCreateCallback()
 
   // monitor call to help UI loading state
@@ -141,19 +142,24 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {
-    setHash(undefined)
-    setAttempting(false)
     onDismiss()
+    setTimeout(() => {
+      setHash(undefined)
+      setAttempting(false)
+      setTypedName('')
+      setTypedSymbol('')
+      setCurrencyValue(undefined)
+    }, MODAL_TRANSITION_DURATION)
   }
 
   async function onCreate() {
     setAttempting(true)
 
     // if callback not returned properly ignore
-    if (!account || !chainId || !createCallback || !parsedAddress) return
+    if (!account || !chainId || !createCallback) return
 
     // try delegation and store hash
-    const hash = await createCallback(typedName, typedSymbol, parsedAddress)?.catch((error) => {
+    const hash = await createCallback(typedName, typedSymbol, currencyValue)?.catch((error) => {
       setAttempting(false)
       console.log(error)
     })
@@ -214,13 +220,14 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
               </Aligner>
             </CurrencySelect>
             <ButtonPrimary
-              disabled={
+              disabled={Boolean(
                 typedName === '' ||
-                typedName.length > 32 ||
-                typedSymbol === '' ||
-                typedSymbol.length > 5 ||
-                !isAddress(parsedAddress ?? '')
-              }
+                  typedName.length < 4 ||
+                  typedName.length > 31 ||
+                  typedSymbol === '' ||
+                  typedSymbol.length < 3 ||
+                  typedSymbol.length > 5
+              )}
               onClick={onCreate}
             >
               <ThemedText.DeprecatedMediumHeader color="white">
