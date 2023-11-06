@@ -342,9 +342,11 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
               newTradeRequiresAcceptance={newTradeRequiresAcceptance}
             />
 
-            <Separator mb="$spacing12" mt="$spacing16" />
+            <Separator mb="$spacing24" mt="$spacing16" />
 
-            <GasAndWarningRows renderEmptyRows={false} />
+            <Flex mb="$spacing8">
+              <GasAndWarningRows renderEmptyRows={false} />
+            </Flex>
 
             <SwapFormButtonEmptySpace />
           </AnimatedFlex>

@@ -432,7 +432,9 @@ function SwapFormContent(): JSX.Element {
           </AnimatedFlex>
         </Trace>
 
-        <GasAndWarningRows renderEmptyRows />
+        <Flex mt="$spacing24">
+          <GasAndWarningRows renderEmptyRows />
+        </Flex>
       </AnimatedFlex>
 
       {/*
