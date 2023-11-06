@@ -8,10 +8,12 @@ import { SupportedL2ChainId } from 'constants/chains'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
+import { animated, useSpring, UseSpringProps } from 'react-spring'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { CloseIcon, CustomLightSpinner } from 'theme/components'
+import useResizeObserver from 'use-resize-observer'
 import { isL2ChainId } from 'utils/chains'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -28,6 +30,17 @@ const Wrapper = styled.div`
   border-radius: 20px;
   outline: 1px solid ${({ theme }) => theme.surface3};
   width: 100%;
+  padding: 16px;
+`
+
+const AnimatedWrapper = styled(animated.div)`
+  overflow: hidden;
+  width: 100%;
+  min-width: min-content;
+  will-change: height;
+  background-color: ${({ theme }) => theme.surface1};
+  border-radius: 20px;
+  outline: 1px solid ${({ theme }) => theme.surface3};
   padding: 16px;
 `
 
@@ -192,6 +205,60 @@ export function ConfirmationModalContent({
       </AutoColumn>
       {bottomContent && <BottomSection gap="16px">{bottomContent()}</BottomSection>}
     </Wrapper>
+  )
+}
+
+export function AnimatedConfirmationModalContent({
+  title,
+  bottomContent,
+  onDismiss,
+  topContent,
+  headerContent,
+  springProps,
+}: {
+  title: ReactNode
+  onDismiss: () => void
+  topContent: () => ReactNode
+  bottomContent?: () => ReactNode
+  headerContent?: () => ReactNode
+  springProps?: UseSpringProps
+}) {
+  const { ref, height } = useResizeObserver()
+
+  const animationProps = useSpring({
+    height: height ? height + 32 : 'auto',
+    config: {
+      mass: 1.2,
+      tension: 300,
+      friction: 30,
+      clamp: true,
+      velocity: 0.01,
+    },
+    ...springProps,
+  })
+
+  return (
+    <AnimatedWrapper
+      style={{
+        ...animationProps,
+      }}
+    >
+      <div ref={ref}>
+        <AutoColumn gap="sm">
+          <Row width="100%" minHeight="50px">
+            <Row justify="left">{headerContent?.()}</Row>
+            <Row justify="center">
+              <ThemedText.SubHeader justifySelf="center">{title}</ThemedText.SubHeader>
+            </Row>
+            <Row justify="right">
+              <CloseIcon onClick={onDismiss} data-testid="confirmation-close-icon" />
+            </Row>
+          </Row>
+          {topContent()}
+          {bottomContent && <BottomSection gap="16px">{bottomContent()}</BottomSection>}
+        </AutoColumn>
+      </div>
+    </AnimatedWrapper>
   )
 }
 

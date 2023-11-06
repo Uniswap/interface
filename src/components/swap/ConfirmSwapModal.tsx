@@ -12,7 +12,7 @@ import Badge from 'components/Badge'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { RowFixed } from 'components/Row'
-import { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import { AnimatedConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { BaseVariant } from 'featureFlags'
 import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicatorV2'
@@ -485,7 +485,7 @@ export default function ConfirmSwapModal({
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <Modal isOpen $scrollOverlay onDismiss={onModalDismiss} maxHeight={90} $topOffset={160}>
-        <ConfirmationModalContent
+        <AnimatedConfirmationModalContent
           title={
             confirmModalState === ConfirmModalState.REVIEWING && !errorType ? <Trans>Review swap</Trans> : undefined
           }
