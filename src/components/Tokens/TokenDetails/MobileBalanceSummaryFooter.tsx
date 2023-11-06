@@ -7,7 +7,7 @@ import { TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
 import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -15,10 +15,6 @@ const Wrapper = styled.div<{ isInfoTDPEnabled?: boolean }>`
   align-content: center;
   align-items: center;
   border: 1px solid ${({ theme }) => theme.surface3};
-  border-bottom: none;
-  background-color: ${({ theme }) => theme.surface1};
-  border-radius: 20px 20px 0px 0px;
-  bottom: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '56px' : '52px')};
   color: ${({ theme }) => theme.neutral2};
   display: flex;
   flex-direction: row;
@@ -28,9 +24,27 @@ const Wrapper = styled.div<{ isInfoTDPEnabled?: boolean }>`
   justify-content: space-between;
   left: 0;
   line-height: 20px;
-  padding: 12px 16px;
   position: fixed;
-  width: 100%;
+
+  ${({ isInfoTDPEnabled }) =>
+    isInfoTDPEnabled
+      ? css`
+          border-bottom: none;
+          background-color: ${({ theme }) => theme.surface2};
+          border-radius: 20px;
+          bottom: 56px;
+          margin: 8px;
+          padding: 12px 32px;
+          width: calc(100vw - 16px);
+        `
+      : css`
+          border-bottom: none;
+          background-color: ${({ theme }) => theme.surface1};
+          border-radius: 20px 20px 0px 0px;
+          bottom: 52px;
+          padding: 12px 16px;
+          width: 100%;
+        `}
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     bottom: 0px;
