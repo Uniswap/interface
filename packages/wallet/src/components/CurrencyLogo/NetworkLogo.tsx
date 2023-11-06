@@ -31,8 +31,8 @@ function _NetworkLogo({
   const { logo } = CHAIN_INFO[chainId]
   const borderRadius = shape === 'circle' ? size / 2 : SQUARE_BORDER_RADIUS
   return logo ? (
-    <Flex style={[{ borderRadius }, styles.iconWrapper]}>
-      <Image source={logo} style={[style.image, { width: size, height: size }]} />
+    <Flex style={{ borderRadius, ...styles.iconWrapper }}>
+      <Image source={logo} style={{ ...style.image, width: size, height: size }} />
     </Flex>
   ) : null
 }
