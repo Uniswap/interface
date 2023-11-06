@@ -5,6 +5,7 @@ import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
+import { TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -20,6 +21,7 @@ import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
 import { UserAddedToken } from 'types/tokens'
+import { splitHiddenTokens } from 'utils/splitHiddenTokens'
 
 import { useDefaultActiveTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
 import { isAddress } from '../../utils'
@@ -99,18 +101,26 @@ export function CurrencySearch({
   }, [chainId, data?.portfolios])
 
   const sortedTokens: Token[] = useMemo(() => {
-    const portfolioTokens = data?.portfolios?.[0].tokenBalances
-      ?.map((tokenBalance) => {
+    const portfolioTokenBalances = data?.portfolios?.[0].tokenBalances as TokenBalance[] | undefined
+    const portfolioTokens = splitHiddenTokens(portfolioTokenBalances ?? [])
+      .visibleTokens.map((tokenBalance) => {
         if (!tokenBalance?.token?.chain || !tokenBalance.token?.address || !tokenBalance.token?.decimals) {
           return undefined
         }
-        return new Token(
+
+        const portfolioToken = new Token(
           supportedChainIdFromGQLChain(tokenBalance.token?.chain) ?? ChainId.MAINNET,
           tokenBalance.token?.address,
           tokenBalance.token?.decimals,
           tokenBalance.token?.symbol,
           tokenBalance.token?.name
         )
+
+        if (portfolioToken.chainId === chainId) {
+          return portfolioToken
+        }
+
+        return portfolioToken
       })
       .filter((token) => !!token) as Token[]
 
