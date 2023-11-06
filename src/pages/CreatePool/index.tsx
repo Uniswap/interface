@@ -1,4 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Loader from 'components/Icons/LoadingSpinner'
 import styled from 'styled-components'
 
@@ -68,6 +72,9 @@ const WrapSmall = styled(RowBetween)`
 `
 
 export default function CreatePool() {
+  const { account } = useWeb3React()
+  const toggleWalletDrawer = useToggleAccountDrawer()
+
   const showDelegateModal = useModalIsOpen(ApplicationModal.CREATE)
   const toggleCreateModal = useToggleCreateModal()
 
@@ -106,14 +113,30 @@ export default function CreatePool() {
               <Trans>Pools</Trans>
             </ThemedText.DeprecatedMediumHeader>
             <RowFixed gap="8px" style={{ marginRight: '4px' }}>
-              <ButtonPrimary
-                style={{ width: 'fit-content', height: '40px' }}
-                padding="8px"
-                $borderRadius="8px"
-                onClick={toggleCreateModal}
-              >
-                <Trans>Create Pool</Trans>
-              </ButtonPrimary>
+              {account ? (
+                <ButtonPrimary
+                  style={{ width: 'fit-content', height: '40px' }}
+                  padding="8px"
+                  $borderRadius="8px"
+                  onClick={toggleCreateModal}
+                >
+                  <Trans>Create Pool</Trans>
+                </ButtonPrimary>
+              ) : (
+                <TraceEvent
+                  events={[BrowserEvent.onClick]}
+                  name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
+                  properties={{ received_swap_quote: false }}
+                  element={InterfaceElementName.CONNECT_WALLET_BUTTON}
+                >
+                  <ButtonPrimary
+                    style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
+                    onClick={toggleWalletDrawer}
+                  >
+                    <Trans>Connect Wallet</Trans>
+                  </ButtonPrimary>
+                </TraceEvent>
+              )}
             </RowFixed>
           </WrapSmall>
         </DataRow>
