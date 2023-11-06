@@ -292,7 +292,7 @@ export default function Stake() {
             <Loader style={{ margin: 'auto' }} />
           ) : !account || (!account && orderedPools?.length === 0) ? (
             <OutlineCard>
-              <Trans>Please connect your wallet to view smart pools.</Trans>
+              <Trans>Please connect your wallet to view smart pools</Trans>
             </OutlineCard>
           ) : orderedPools?.length === 0 ? (
             <OutlineCard>
