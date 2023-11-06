@@ -96,7 +96,7 @@ export default function Stake() {
   // we retrieve logs again as we want to be able to load pools when switching chain from stake page.
   const { data: allPools, loading } = useAllPoolsData()
 
-  const { chainId } = useWeb3React()
+  const { account, chainId } = useWeb3React()
   const freeStakeBalance = useFreeStakeBalance()
   const hasFreeStake = JSBI.greaterThan(freeStakeBalance ? freeStakeBalance.quotient : JSBI.BigInt(0), JSBI.BigInt(0))
 
@@ -254,7 +254,7 @@ export default function Stake() {
         </DataRow>
 
         <MainContentWrapper>
-          {!allPools ? (
+          {!account ? (
             <OutlineCard>
               <Trans>Please connect your wallet</Trans>
             </OutlineCard>

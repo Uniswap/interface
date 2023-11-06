@@ -143,15 +143,15 @@ export default function CreatePool() {
 
         <MainContentWrapper>
           {/* TODO: check why on some mobile wallets pool list not rendered */}
-          {!allPools ? (
+          {!account ? (
             <OutlineCard>
               <Trans>Please connect your wallet</Trans>
             </OutlineCard>
           ) : loadingPools ? (
             <Loader style={{ margin: 'auto' }} />
-          ) : allPools?.length > 0 ? (
+          ) : allPools && allPools?.length > 0 ? (
             <PoolPositionList positions={allPools} filterByOperator={true} />
-          ) : allPools?.length === 0 ? (
+          ) : allPools && allPools?.length === 0 ? (
             <OutlineCard>
               <Trans>No pool found, create your own!</Trans>
             </OutlineCard>
