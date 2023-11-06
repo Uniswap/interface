@@ -4,13 +4,14 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { parseBytes32String } from '@ethersproject/strings'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
 import RB_POOL_FACTORY_ABI from 'abis/rb-pool-factory.json'
 import RB_REGISTRY_ABI from 'abis/rb-registry.json'
 import { RB_FACTORY_ADDRESSES, RB_REGISTRY_ADDRESSES } from 'constants/addresses'
 import { POOLS_LIST } from 'constants/lists'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { GRG } from 'constants/tokens'
 import { useContract } from 'hooks/useContract'
 import { useTotalSupply } from 'hooks/useTotalSupply'
@@ -81,21 +82,16 @@ function useStartBlock(chainId: number | undefined): number | undefined {
 /**
  * Need pool events to get list of pools by owner.
  */
-function useFormattedPoolCreatedLogs(
-  contract: Contract | null,
-  account: string | undefined,
-  fromBlock: number
-): PoolRegisteredLog[] | undefined {
+function useFormattedPoolCreatedLogs(contract: Contract | null, fromBlock: number): PoolRegisteredLog[] | undefined {
   // create filters for Registered events
   const filter = useMemo(() => {
     const logFilter = contract?.filters?.Registered()
-    // we do not poll events until account is connected
-    if (!account || !logFilter) return undefined
+    if (!logFilter) return undefined
     return {
       ...logFilter,
       fromBlock,
     }
-  }, [account, contract, fromBlock])
+  }, [contract, fromBlock])
 
   const useLogsResult = useLogs(filter)
 
@@ -119,7 +115,7 @@ function useFormattedPoolCreatedLogs(
 }
 
 export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolean } {
-  const { account, chainId } = useWeb3React()
+  const { chainId } = useWeb3React()
   const registry = useRegistryContract()
   const blockNumber = useBlockNumber()
 
@@ -144,22 +140,12 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
     registryStartBlock = 1
   }
 
-  // we want to be able to filter by account
-  const formattedLogsV1: PoolRegisteredLog[] | undefined = useFormattedPoolCreatedLogs(
-    registry,
-    account,
-    registryStartBlock
-  )
+  const formattedLogsV1: PoolRegisteredLog[] | undefined = useFormattedPoolCreatedLogs(registry, registryStartBlock)
 
   const poolsFromList = usePoolsFromList(registry, chainId)
 
   // early return until events are fetched
   return useMemo(() => {
-    // prevent display if wallet not connected
-    if (!account) {
-      return { loading: false }
-    }
-
     // we append pools from url and filter for duplicates in case the rpc endpoint is down or slow.
     // eslint-disable-next-line
     const pools: PoolRegisteredLog[] = ([...(formattedLogsV1 ?? []), ...(poolsFromList ?? [])])
@@ -173,7 +159,7 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
     }
 
     return { data: uniquePools, loading: false }
-  }, [account, formattedLogsV1, registry, poolsFromList])
+  }, [formattedLogsV1, registry, poolsFromList])
 }
 
 // Bsc endpoints have eth_getLogs limit, so we query pools before recent history from pools list endpoint
@@ -206,23 +192,24 @@ export function usePoolsFromList(
 export function useCreateCallback(): (
   name: string | undefined,
   symbol: string | undefined,
-  baseCurrency: string | undefined
+  currencyValue: Currency | undefined
 ) => undefined | Promise<string> {
   const { account, chainId, provider } = useWeb3React()
   const addTransaction = useTransactionAdder()
   const factoryContract = usePoolFactoryContract()
 
   return useCallback(
-    (name: string | undefined, symbol: string | undefined, baseCurrency: string | undefined) => {
+    (name: string | undefined, symbol: string | undefined, currencyValue: Currency | undefined) => {
+      const parsedAddress = currencyValue?.isNative ? ZERO_ADDRESS : currencyValue?.address
       // TODO: check name and symbol assertions
-      //if (!provider || !chainId || !account || name === '' || symbol === '' || !isAddress(baseCurrency ?? ''))
-      if (!provider || !chainId || !account || !name || !symbol || !isAddress(baseCurrency ?? '')) return undefined
+      //if (!provider || !chainId || !account || name === '' || symbol === '' || !isAddress(parsedAddress ?? ''))
+      if (!provider || !chainId || !account || !name || !symbol || !parsedAddress || !isAddress(parsedAddress ?? ''))
+        return undefined
+      if (currencyValue?.chainId !== chainId) throw new Error('User Switched Wallet On Open Create Modal')
       if (!factoryContract) throw new Error('No Factory Contract!')
-      // TODO: check correctness of asserting is address before returning on no address
-      if (!baseCurrency) return
-      return factoryContract.estimateGas.createPool(name, symbol, baseCurrency, {}).then((estimatedGasLimit) => {
+      return factoryContract.estimateGas.createPool(name, symbol, parsedAddress, {}).then((estimatedGasLimit) => {
         return factoryContract
-          .createPool(name, symbol, baseCurrency, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .createPool(name, symbol, parsedAddress, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
               type: TransactionType.CREATE_V3_POOL,

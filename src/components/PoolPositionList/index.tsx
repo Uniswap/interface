@@ -86,15 +86,15 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           irr: positions[i].irr,
           poolOwnStake: positions[i].poolOwnStake,
           poolDelegatedStake: positions[i].poolDelegatedStake,
-          userHasStake: positions[i].userHasStake,
+          userHasStake: positions[i].userHasStake ?? false,
           address: poolAddresses[i],
           decimals,
           symbol,
           name,
           chainId,
           shouldDisplay,
-          userIsOwner: owner === account,
-          userBalance: userBalances[i].result,
+          userIsOwner: account ? owner === account : false,
+          userBalance: account ? userBalances[i].result : undefined,
         }
       })
       .filter((p) => p && p.shouldDisplay)

@@ -1,6 +1,9 @@
 import { Trans } from '@lingui/macro'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Loader from 'components/Icons/LoadingSpinner'
 import { GRG } from 'constants/tokens'
 import JSBI from 'jsbi'
@@ -96,10 +99,10 @@ export default function Stake() {
   // we retrieve logs again as we want to be able to load pools when switching chain from stake page.
   const { data: allPools, loading } = useAllPoolsData()
 
-  const { chainId } = useWeb3React()
+  const { account, chainId } = useWeb3React()
+  const toggleWalletDrawer = useToggleAccountDrawer()
   const freeStakeBalance = useFreeStakeBalance()
   const hasFreeStake = JSBI.greaterThan(freeStakeBalance ? freeStakeBalance.quotient : JSBI.BigInt(0), JSBI.BigInt(0))
-
   const poolAddresses = allPools?.map((p) => p.pool)
   const poolIds = allPools?.map((p) => p.id)
   const { stakingPools, loading: loadingPools } = useStakingPools(poolAddresses, poolIds)
@@ -249,25 +252,34 @@ export default function Stake() {
                   <Trans>Unstake</Trans>
                 </ButtonPrimary>
               )}
+              {!account && (
+                <TraceEvent
+                  events={[BrowserEvent.onClick]}
+                  name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
+                  properties={{ received_swap_quote: false }}
+                  element={InterfaceElementName.CONNECT_WALLET_BUTTON}
+                >
+                  <ButtonPrimary
+                    style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
+                    onClick={toggleWalletDrawer}
+                  >
+                    <Trans>Connect Wallet</Trans>
+                  </ButtonPrimary>
+                </TraceEvent>
+              )}
             </RowFixed>
           </WrapSmall>
         </DataRow>
 
         <MainContentWrapper>
-          {!allPools ? (
-            <OutlineCard>
-              <Trans>Please connect your wallet</Trans>
-            </OutlineCard>
-          ) : loading || loadingPools ? (
-            <Loader style={{ margin: 'auto' }} />
-          ) : orderedPools?.length > 0 ? (
+          {orderedPools?.length > 0 ? (
             <InfiniteScroll
               next={fetchMoreData}
               hasMore={!!hasMore}
               loader={
-                loadingPools ? (
+                orderedPools?.length !== items?.length ? (
                   <Center paddingY="20">
-                    <h4>Loading...</h4>
+                    <Loader style={{ margin: 'auto' }} />
                   </Center>
                 ) : null
               }
@@ -276,6 +288,12 @@ export default function Stake() {
             >
               <PoolPositionList positions={items} filterByOperator={false} />
             </InfiniteScroll>
+          ) : (loading || loadingPools) && account ? (
+            <Loader style={{ margin: 'auto' }} />
+          ) : !account || (!account && orderedPools?.length === 0) ? (
+            <OutlineCard>
+              <Trans>Please connect your wallet to view smart pools</Trans>
+            </OutlineCard>
           ) : orderedPools?.length === 0 ? (
             <OutlineCard>
               <Trans>No pool found</Trans>
