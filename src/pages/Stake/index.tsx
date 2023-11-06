@@ -1,6 +1,9 @@
 import { Trans } from '@lingui/macro'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Loader from 'components/Icons/LoadingSpinner'
 import { GRG } from 'constants/tokens'
 import JSBI from 'jsbi'
@@ -97,6 +100,7 @@ export default function Stake() {
   const { data: allPools, loading } = useAllPoolsData()
 
   const { account, chainId } = useWeb3React()
+  const toggleWalletDrawer = useToggleAccountDrawer()
   const freeStakeBalance = useFreeStakeBalance()
   const hasFreeStake = JSBI.greaterThan(freeStakeBalance ? freeStakeBalance.quotient : JSBI.BigInt(0), JSBI.BigInt(0))
 
@@ -248,6 +252,21 @@ export default function Stake() {
                 >
                   <Trans>Unstake</Trans>
                 </ButtonPrimary>
+              )}
+              {!account && (
+                <TraceEvent
+                  events={[BrowserEvent.onClick]}
+                  name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
+                  properties={{ received_swap_quote: false }}
+                  element={InterfaceElementName.CONNECT_WALLET_BUTTON}
+                >
+                  <ButtonPrimary
+                    style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
+                    onClick={toggleWalletDrawer}
+                  >
+                    <Trans>Connect Wallet</Trans>
+                  </ButtonPrimary>
+                </TraceEvent>
               )}
             </RowFixed>
           </WrapSmall>
