@@ -14,6 +14,7 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 const Wrapper = styled.div<{ isInfoTDPEnabled?: boolean }>`
   align-content: center;
   align-items: center;
+  background-color: ${({ theme }) => theme.surface1};
   border: 1px solid ${({ theme }) => theme.surface3};
   color: ${({ theme }) => theme.neutral2};
   display: flex;
@@ -30,7 +31,6 @@ const Wrapper = styled.div<{ isInfoTDPEnabled?: boolean }>`
     isInfoTDPEnabled
       ? css`
           border-bottom: none;
-          background-color: ${({ theme }) => theme.surface2};
           border-radius: 20px;
           bottom: 56px;
           margin: 8px;
@@ -39,7 +39,6 @@ const Wrapper = styled.div<{ isInfoTDPEnabled?: boolean }>`
         `
       : css`
           border-bottom: none;
-          background-color: ${({ theme }) => theme.surface1};
           border-radius: 20px 20px 0px 0px;
           bottom: 52px;
           padding: 12px 16px;
