@@ -283,7 +283,8 @@ export const CurrencyInputPanel = memo(
               position="absolute"
               style={animatedInfoRowStyle}
               width="100%">
-              <TouchableArea onPress={onToggleIsFiatMode}>
+              {/* TODO: enable this when fiat mode is ready to be integrated */}
+              <TouchableArea disabled={true} onPress={onToggleIsFiatMode}>
                 <Flex shrink>
                   <Text color="$neutral2" numberOfLines={1} variant="body3">
                     {inputPanelFormattedValue}

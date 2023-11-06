@@ -266,13 +266,9 @@ function SwapFormContent(): JSX.Element {
         exactCurrencyField: CurrencyField.INPUT,
         focusOnCurrencyField: undefined,
       })
-      if (isFiatMode) {
-        resetSelection(exactAmountFiatRef.current.length, exactAmountFiatRef.current.length)
-      } else {
-        resetSelection(exactAmountTokenRef.current.length, exactAmountTokenRef.current.length)
-      }
+      resetSelection(0, 0)
     },
-    [exactAmountFiatRef, exactAmountTokenRef, isFiatMode, resetSelection, updateSwapForm]
+    [resetSelection, updateSwapForm]
   )
 
   // Reset selection based the new input value (token, or fiat), and toggle fiat mode
