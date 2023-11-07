@@ -18,6 +18,7 @@
     tools:replace="android:fullBackupContent"
     android:fullBackupContent="@xml/backup_rules"
     android:dataExtractionRules="@xml/data_extraction_rules"
+    android:localeConfig="@xml/locales_config"
     android:theme="@style/AppTheme">
     <activity
       android:name=".MainActivity"

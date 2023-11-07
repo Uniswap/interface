@@ -15,7 +15,6 @@ export interface ModalsState {
   [ModalName.Explore]: AppModalState<ExploreModalState>
   [ModalName.FiatCurrencySelector]: AppModalState<undefined>
   [ModalName.FiatOnRamp]: AppModalState<undefined>
-  [ModalName.LanguageSelector]: AppModalState<undefined>
   [ModalName.RemoveWallet]: AppModalState<RemoveWalletModalState>
   [ModalName.RestoreWallet]: AppModalState<undefined>
   [ModalName.Send]: AppModalState<TransactionState>

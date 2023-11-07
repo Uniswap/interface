@@ -51,7 +51,6 @@ import { useCurrentAppearanceSetting, useIsDarkMode } from 'wallet/src/features/
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 import { AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { resetWallet, setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
@@ -63,7 +62,6 @@ export function SettingsScreen(): JSX.Element {
   const { deviceSupportsBiometrics } = useBiometricContext()
   const { t } = useTranslation()
 
-  const languageSelectionEnabled = useFeatureFlag(FEATURE_FLAGS.LanguageSelection)
   const currencyConversionEnabled = useFeatureFlag(FEATURE_FLAGS.CurrencyConversion)
 
   // check if device supports biometric authentication, if not, hide option
@@ -72,7 +70,6 @@ export function SettingsScreen(): JSX.Element {
 
   const authenticationTypeName = useBiometricName(isTouchIdSupported, true)
   const currentAppearanceSetting = useCurrentAppearanceSetting()
-  const currentLanguageInfo = useCurrentLanguageInfo()
   const currentFiatCurrencyInfo = useAppFiatCurrencyInfo()
 
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
@@ -107,16 +104,6 @@ export function SettingsScreen(): JSX.Element {
                 : t('Light mode'),
             icon: <ContrastIcon {...svgProps} />,
           },
-          ...(languageSelectionEnabled
-            ? ([
-                {
-                  modal: ModalName.LanguageSelector,
-                  text: t('Language'),
-                  currentSetting: currentLanguageInfo.name,
-                  icon: <Icons.Language {...iconProps} />,
-                },
-              ] as SettingsSectionItem[])
-            : []),
           ...(currencyConversionEnabled
             ? ([
                 {
@@ -211,8 +198,6 @@ export function SettingsScreen(): JSX.Element {
     isTouchIdSupported,
     isFaceIdSupported,
     authenticationTypeName,
-    languageSelectionEnabled,
-    currentLanguageInfo,
     currentFiatCurrencyInfo,
     currencyConversionEnabled,
   ])

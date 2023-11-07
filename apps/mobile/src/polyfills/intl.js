@@ -11,6 +11,7 @@ require('@formatjs/intl-locale/polyfill').default
 
 require('@formatjs/intl-pluralrules/polyfill').default
 
+// https://github.com/formatjs/formatjs/blob/main/packages/intl-pluralrules/supported-locales.generated.ts
 require('@formatjs/intl-pluralrules/locale-data/zh').default
 require('@formatjs/intl-pluralrules/locale-data/nl').default
 require('@formatjs/intl-pluralrules/locale-data/en').default
@@ -36,6 +37,7 @@ if (IS_ANDROID) {
   require('@formatjs/intl-numberformat/polyfill').default
 }
 
+// https://github.com/formatjs/formatjs/blob/main/packages/intl-numberformat/supported-locales.generated.ts
 require('@formatjs/intl-numberformat/locale-data/zh-Hans').default
 require('@formatjs/intl-numberformat/locale-data/zh-Hant').default
 require('@formatjs/intl-numberformat/locale-data/nl').default
@@ -48,6 +50,8 @@ require('@formatjs/intl-numberformat/locale-data/ms').default
 require('@formatjs/intl-numberformat/locale-data/pt').default
 require('@formatjs/intl-numberformat/locale-data/ru').default
 require('@formatjs/intl-numberformat/locale-data/es').default
+require('@formatjs/intl-numberformat/locale-data/es-US').default
+require('@formatjs/intl-numberformat/locale-data/es-419').default
 require('@formatjs/intl-numberformat/locale-data/th').default
 require('@formatjs/intl-numberformat/locale-data/tr').default
 require('@formatjs/intl-numberformat/locale-data/uk').default
@@ -56,6 +60,7 @@ require('@formatjs/intl-numberformat/locale-data/vi').default
 
 require('@formatjs/intl-datetimeformat/polyfill').default
 
+// https://github.com/formatjs/formatjs/blob/main/packages/intl-datetimeformat/supported-locales.generated.ts
 require('@formatjs/intl-datetimeformat/locale-data/zh-Hans').default
 require('@formatjs/intl-datetimeformat/locale-data/zh-Hant').default
 require('@formatjs/intl-datetimeformat/locale-data/nl').default
@@ -68,6 +73,8 @@ require('@formatjs/intl-datetimeformat/locale-data/ms').default
 require('@formatjs/intl-datetimeformat/locale-data/pt').default
 require('@formatjs/intl-datetimeformat/locale-data/ru').default
 require('@formatjs/intl-datetimeformat/locale-data/es').default
+require('@formatjs/intl-datetimeformat/locale-data/es-US').default
+require('@formatjs/intl-datetimeformat/locale-data/es-419').default
 require('@formatjs/intl-datetimeformat/locale-data/th').default
 require('@formatjs/intl-datetimeformat/locale-data/tr').default
 require('@formatjs/intl-datetimeformat/locale-data/uk').default
@@ -76,6 +83,7 @@ require('@formatjs/intl-datetimeformat/locale-data/vi').default
 
 require('@formatjs/intl-relativetimeformat/polyfill').default
 
+// https://github.com/formatjs/formatjs/blob/main/packages/intl-relativetimeformat/supported-locales.generated.ts
 require('@formatjs/intl-relativetimeformat/locale-data/zh-Hans').default
 require('@formatjs/intl-relativetimeformat/locale-data/zh-Hant').default
 require('@formatjs/intl-relativetimeformat/locale-data/nl').default
@@ -88,6 +96,8 @@ require('@formatjs/intl-relativetimeformat/locale-data/ms').default
 require('@formatjs/intl-relativetimeformat/locale-data/pt').default
 require('@formatjs/intl-relativetimeformat/locale-data/ru').default
 require('@formatjs/intl-relativetimeformat/locale-data/es').default
+require('@formatjs/intl-relativetimeformat/locale-data/es-US').default
+require('@formatjs/intl-relativetimeformat/locale-data/es-419').default
 require('@formatjs/intl-relativetimeformat/locale-data/th').default
 require('@formatjs/intl-relativetimeformat/locale-data/tr').default
 require('@formatjs/intl-relativetimeformat/locale-data/uk').default

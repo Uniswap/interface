@@ -2,6 +2,7 @@ import { ApolloProvider } from '@apollo/client'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
+import { getLocales } from 'expo-localization'
 import { default as React, StrictMode, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { I18nManager, NativeModules, StatusBar } from 'react-native'
@@ -47,13 +48,20 @@ import { config } from 'wallet/src/config'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useCurrentAppearanceSetting, useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
-import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
+import { Language, Locale, mapLocaleToLanguage } from 'wallet/src/features/language/constants'
+import { useCurrentLanguage, useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
+import { setCurrentLanguage } from 'wallet/src/features/language/slice'
 import { useTrmQuery } from 'wallet/src/features/trm/api'
+import {
+  EditAccountAction,
+  editAccountActions,
+} from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useAccounts, useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { initializeTranslation } from 'wallet/src/i18n/i18n'
 import { SharedProvider } from 'wallet/src/provider'
+import { useAppDispatch } from 'wallet/src/state'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 if (__DEV__) {
   registerConsoleOverrides()
@@ -210,8 +218,6 @@ function DataUpdaters(): JSX.Element {
   const activeAccount = useActiveAccount()
   const favoriteTokens: CurrencyId[] = useAppSelector(selectFavoriteTokens)
   const accountsMap: Record<string, Account> = useAccounts()
-  const currentLanguageInfo = useCurrentLanguageInfo()
-  const { i18n } = useTranslation()
 
   useTrmQuery(
     activeAccount && activeAccount.type === AccountType.SignerMnemonic
@@ -230,6 +236,25 @@ function DataUpdaters(): JSX.Element {
     setAccountAddressesUserDefaults(Object.values(accountsMap))
   }, [accountsMap])
 
+  useI18NDataUpdaters()
+
+  return (
+    <>
+      <TraceUserProperties />
+      <TransactionHistoryUpdater />
+    </>
+  )
+}
+
+function useI18NDataUpdaters(): void {
+  const currentLanguage = useCurrentLanguage()
+  const currentLanguageInfo = useCurrentLanguageInfo()
+  const { i18n } = useTranslation()
+  const dispatch = useAppDispatch()
+  const accounts = useAccounts()
+
+  // Effect hook used to keep redux state synced with i18next, primarily on app start
+  // And to force app restart if RTL is flipped
   useEffect(() => {
     const { locale } = currentLanguageInfo
     if (locale !== i18n.language) {
@@ -257,12 +282,38 @@ function DataUpdaters(): JSX.Element {
     }
   }, [i18n, currentLanguageInfo])
 
-  return (
-    <>
-      <TraceUserProperties />
-      <TransactionHistoryUpdater />
-    </>
-  )
+  // Effect hook used to sync app language with system OS language
+  useEffect(() => {
+    const locales = getLocales()
+    for (const locale of locales) {
+      const mappedLanguageFromTag =
+        locale.languageTag in Locale ? mapLocaleToLanguage[locale.languageTag as Locale] : undefined
+      const mappedLanguageFromCode = locale.languageCode as Maybe<Language>
+      // Prefer languageTag as it's more specific, falls back to languageCode
+      const mappedLanguage = mappedLanguageFromTag || mappedLanguageFromCode
+
+      if (mappedLanguage) {
+        if (mappedLanguage !== currentLanguage) {
+          dispatch(setCurrentLanguage(mappedLanguage))
+        }
+        break
+      }
+    }
+  }, [currentLanguage, dispatch, i18n])
+
+  // Effect hook used to keep language in sync with firestore
+  useEffect(() => {
+    const addresses = Object.keys(accounts)
+    addresses.forEach((address) => {
+      dispatch(
+        editAccountActions.trigger({
+          type: EditAccountAction.UpdateLanguage,
+          address,
+          locale: currentLanguageInfo.locale,
+        })
+      )
+    })
+  }, [accounts, currentLanguageInfo.locale, dispatch])
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

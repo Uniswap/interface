@@ -699,4 +699,11 @@ export const migrations = {
       fiatCurrencySettings: initialFiatCurrencyState,
     }
   },
+
+  53: function updateLanguageSettings(state: any) {
+    return {
+      ...state,
+      languageSettings: initialLanguageState,
+    }
+  },
 }

@@ -27,7 +27,7 @@ export interface SettingsSectionItemComponent {
   isHidden?: boolean
 }
 
-type SettingsModal = Extract<ModalName, ModalName.LanguageSelector | ModalName.FiatCurrencySelector>
+type SettingsModal = Extract<ModalName, ModalName.FiatCurrencySelector>
 export interface SettingsSectionItem {
   screen?: keyof SettingsStackParamList | typeof Screens.OnboardingStack
   modal?: SettingsModal

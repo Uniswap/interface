@@ -361,7 +361,7 @@ export const v51Schema = {
   ...v50Schema,
   modals: {
     ...v50Schema.modals,
-    [ModalName.LanguageSelector]: {
+    ['language-selector']: {
       isOpen: false,
       initialState: undefined,
     },
@@ -381,6 +381,15 @@ export const v52Schema = {
   fiatCurrencySettings: initialFiatCurrencyState,
 }
 
+const v53SchemaIntermediate = {
+  ...v52Schema,
+  languageSettings: initialLanguageState,
+  modals: { ...v52Schema.modals, ['language-selector']: undefined },
+}
+delete v53SchemaIntermediate.modals['language-selector']
+
+export const v53Schema = v53SchemaIntermediate
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v52Schema => v52Schema
+export const getSchema = (): typeof v53Schema => v53Schema

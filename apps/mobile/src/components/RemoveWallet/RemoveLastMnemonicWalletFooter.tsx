@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { CheckBox } from 'src/components/buttons/CheckBox'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -28,17 +28,16 @@ export function RemoveLastMnemonicWalletFooter({
         <CheckBox
           checked={checkBoxAccepted}
           text={
-            <Trans t={t}>
-              <Flex>
-                <Text color="$neutral1" variant="subheading2">
-                  I backed up my recovery phrase
-                </Text>
-                <Text color="$neutral2" variant="body3">
-                  I understand that Uniswap Labs can’t help me recover my wallets if I failed to do
-                  so
-                </Text>
-              </Flex>
-            </Trans>
+            <Flex>
+              <Text color="$neutral1" variant="subheading2">
+                {t('I backed up my recovery phrase')}
+              </Text>
+              <Text color="$neutral2" variant="body3">
+                {t(
+                  'I understand that Uniswap Labs can’t help me recover my wallets if I failed to do so'
+                )}
+              </Text>
+            </Flex>
           }
           onCheckPressed={onCheckPressed}
         />

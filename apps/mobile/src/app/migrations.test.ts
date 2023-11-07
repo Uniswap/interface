@@ -51,6 +51,7 @@ import {
   v4Schema,
   v50Schema,
   v51Schema,
+  v52Schema,
   v5Schema,
   v6Schema,
   v7Schema,
@@ -1223,5 +1224,12 @@ describe('Redux state migrations', () => {
     const v52 = migrations[52](v51Stub)
 
     expect(v52.fiatCurrencySettings).not.toBeUndefined()
+  })
+
+  it('mgirates from v52 to 53', () => {
+    const v52Stub = { ...v52Schema }
+    const v53 = migrations[53](v52Stub)
+
+    expect(v53.languageSettings).not.toBeUndefined()
   })
 })

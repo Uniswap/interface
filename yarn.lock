@@ -11975,6 +11975,7 @@ __metadata:
     expo-linear-gradient: 12.3.0
     expo-linking: 4.0.1
     expo-local-authentication: 13.0.2
+    expo-localization: ~14.1.1
     expo-modules-core: 1.5.8
     expo-screen-capture: 4.2.0
     expo-store-review: ~6.2.1
@@ -20019,6 +20020,17 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: 79e2e8324b39ddeabb2237cb0150bb1e960e0e679925cb8185adecb9f91cd5aad84d9d625251a80de6f6ceb96ce52db18657cdbb49f7887723615fe4ce085ce1
+  languageName: node
+  linkType: hard
+
+"expo-localization@npm:~14.1.1":
+  version: 14.1.1
+  resolution: "expo-localization@npm:14.1.1"
+  dependencies:
+    rtl-detect: ^1.0.2
+  peerDependencies:
+    expo: "*"
+  checksum: c449a590ff20ec49b21bcbdef3c4dc1566945cd82341662ff48d098f37cf943a1bc8af614a74dd306abe5b076e99488a1e296e64ba246fdf3257fc47e71fa7ae
   languageName: node
   linkType: hard
 
@@ -33281,6 +33293,13 @@ __metadata:
   version: 3.2.1
   resolution: "rsvp@npm:3.2.1"
   checksum: e2ac49cbe35b8c2701b07698066d7cd8004115b070f3352d45759dfcd820fa57e687230331ba41f5a40e1871789cbf122de6e73559598777a0b18b66953dc09b
+  languageName: node
+  linkType: hard
+
+"rtl-detect@npm:^1.0.2":
+  version: 1.1.2
+  resolution: "rtl-detect@npm:1.1.2"
+  checksum: 4a43a1e5df0617eb86d5485640b318787d12b86acf53d840a3b2ff701ee941e95479d4e9ae97e907569ec763d1c47218cb87639bc87bcdad60a85747e5270cf0
   languageName: node
   linkType: hard
 

@@ -20,8 +20,8 @@ import zhCN from './locales/translations/zh-CN.json'
 import zhTW from './locales/translations/zh-TW.json'
 
 export const resources = {
-  'zh-CN': { translation: zhCN },
-  'zh-TW': { translation: zhTW },
+  'zh-Hans': { translation: zhCN },
+  'zh-Hant': { translation: zhTW },
   'nl-NL': { translation: nlNL },
   'en-US': { translation: enUS },
   'fr-FR': { translation: frFR },
@@ -32,6 +32,8 @@ export const resources = {
   'pt-PT': { translation: ptPT },
   'ru-RU': { translation: ruRU },
   'es-ES': { translation: esES },
+  'es-US': { translation: esES },
+  'es-419': { translation: esES },
   'th-TH': { translation: thTH },
   'tr-TR': { translation: trTR },
   'uk-UA': { translation: ukUA },
