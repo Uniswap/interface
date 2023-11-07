@@ -154,6 +154,8 @@ const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<Coinba
       onError,
     })
 )
+// url as per Coinbase docs https://docs.cloud.coinbase.com/wallet-sdk/docs/deep-link-into-dapp-browser
+const coinbaseProjectUrl = 'https%3A%2F%2Fapp.rigoblock.com'
 const coinbaseWalletConnection: Connection = {
   getName: () => 'Coinbase Wallet',
   connector: web3CoinbaseWallet,
@@ -165,7 +167,7 @@ const coinbaseWalletConnection: Connection = {
   // If on a mobile browser that isn't the coinbase wallet browser, deeplink to the coinbase wallet app
   overrideActivate: () => {
     if (isMobile && !getIsInjectedMobileBrowser()) {
-      window.open('https://go.cb-w.com/mtUDhEZPy1', 'cbwallet')
+      window.open(`https://go.cb-w.com/dapp?cb_url=${coinbaseProjectUrl}`, 'cbwallet')
       return true
     }
     return false
