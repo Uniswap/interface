@@ -713,7 +713,11 @@ export function Swap({
                   disabled: inputTokenHasTax || outputTokenHasTax,
                   // Focus the input currency panel if the user tries to type into the disabled output currency panel
                   onDisabledClick: () => inputCurrencyNumericalInputRef.current?.focus(),
-                  disabledTooltipBody: <OutputTaxTooltipBody currencySymbol={currencies[Field.OUTPUT]?.symbol} />,
+                  disabledTooltipBody: (
+                    <OutputTaxTooltipBody
+                      currencySymbol={currencies[inputTokenHasTax ? Field.INPUT : Field.OUTPUT]?.symbol}
+                    />
+                  ),
                 }}
               />
             </Trace>
