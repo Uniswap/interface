@@ -27,8 +27,7 @@ import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { Chain, TokenQuery, TokenQueryData } from 'graphql/data/Token'
-import { QueryToken } from 'graphql/data/Token'
-import { getTokenDetailsURL, InterfaceGqlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { getTokenDetailsURL, gqlToCurrency, InterfaceGqlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import { Swap } from 'pages/Swap'
@@ -43,6 +42,7 @@ import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
 import { OnChangeTimePeriod } from './ChartSection'
 import InvalidTokenDetails from './InvalidTokenDetails'
+import { TokenDescription } from './TokenDescription'
 
 const TokenSymbol = styled.span`
   text-transform: uppercase;
@@ -82,7 +82,7 @@ function useRelevantToken(
   const queryToken = useMemo(() => {
     if (!address) return undefined
     if (address === NATIVE_CHAIN_ID) return nativeOnChain(pageChainId)
-    if (tokenQueryData) return new QueryToken(address, tokenQueryData)
+    if (tokenQueryData) return gqlToCurrency(tokenQueryData)
     return undefined
   }, [pageChainId, address, tokenQueryData])
   // fetches on-chain token if query data is missing and page chain matches global chain (else fetch won't work)
@@ -236,14 +236,7 @@ export default function TokenDetails({
             </TokenInfoContainer>
             <ChartSection tokenPriceQuery={tokenPriceQuery} onChangeTimePeriod={onChangeTimePeriod} />
 
-            <StatsSection
-              chainId={pageChainId}
-              address={address}
-              TVL={tokenQueryData?.market?.totalValueLocked?.value}
-              volume24H={tokenQueryData?.market?.volume24H?.value}
-              priceHigh52W={tokenQueryData?.market?.priceHigh52W?.value}
-              priceLow52W={tokenQueryData?.market?.priceLow52W?.value}
-            />
+            <StatsSection chainId={pageChainId} address={address} tokenQueryData={tokenQueryData} />
             <Hr />
             <AboutSection
               address={address}
@@ -258,7 +251,7 @@ export default function TokenDetails({
           <TokenDetailsSkeleton />
         )}
 
-        <RightPanel onClick={() => isBlockedToken && setOpenTokenSafetyModal(true)}>
+        <RightPanel isInfoTDPEnabled={isInfoTDPEnabled} onClick={() => isBlockedToken && setOpenTokenSafetyModal(true)}>
           <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
             <Swap
               chainId={pageChainId}
@@ -270,6 +263,14 @@ export default function TokenDetails({
           </div>
           {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
           {!isInfoTDPEnabled && detailedToken && <BalanceSummary token={detailedToken} />}
+          {isInfoTDPEnabled && (
+            <TokenDescription
+              tokenAddress={address}
+              chainId={pageChainId}
+              isNative={detailedToken?.isNative}
+              characterCount={200}
+            />
+          )}
         </RightPanel>
         {!isInfoTDPEnabled && detailedToken && <MobileBalanceSummaryFooter token={detailedToken} />}
 
