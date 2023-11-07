@@ -179,8 +179,8 @@ export function usePoolsFromList(
   return useMemo(() => {
     //if (poolsLoading || poolsError) return undefined
     const poolIds = result.map((call) => {
-      const result = call.result as CallStateResult
-      return result[0]
+      const result = call?.result as CallStateResult
+      return result?.[0]
     })
     return pools?.map((p, i) => {
       const pool = p.address
