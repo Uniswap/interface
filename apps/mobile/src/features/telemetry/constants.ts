@@ -184,6 +184,7 @@ export const enum ElementName {
   OnboardingImportSeedPhrase = 'onboarding-import-seed-phrase',
   OnboardingImportWatchedAccount = 'onboarding-import-watched-account',
   QRCodeModalToggle = 'qr-code-modal-toggle',
+  Receive = 'receive',
   RecoveryHelpButton = 'recovery-help-button',
   Remove = 'remove',
   RestoreFromCloud = 'restore-from-cloud',

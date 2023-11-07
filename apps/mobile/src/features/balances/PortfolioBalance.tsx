@@ -61,7 +61,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
         loading={isWarmLoading || isLoading}
         negativeChangeColor={isWarmLoading ? '$neutral2' : '$statusCritical'}
         positiveChangeColor={isWarmLoading ? '$neutral2' : '$statusSuccess'}
-        variant="body1"
+        variant="body3"
       />
     </Flex>
   )

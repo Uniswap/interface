@@ -18,8 +18,13 @@ import { usePrevious } from 'utilities/src/react/hooks'
 
 const NUMBER_ARRAY = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 const NUMBER_WIDTH_ARRAY = [29, 20, 29, 29, 29, 29, 29, 29, 29, 29] // width of digits in a font
-const DIGIT_HEIGHT = 60
+const DIGIT_HEIGHT = 44
 const ADDITIONAL_WIDTH_FOR_ANIMATIONS = 10
+
+// TODO: remove need to manually define width of each character
+const NUMBER_WIDTH_ARRAY_SCALED = NUMBER_WIDTH_ARRAY.map(
+  (width) => width * (fonts.heading2.fontSize / fonts.heading1.fontSize)
+)
 
 const RollNumber = ({
   digit,
@@ -92,7 +97,8 @@ const RollNumber = ({
         style={[
           animatedWrapperStyle,
           {
-            width: (NUMBER_WIDTH_ARRAY[Number(digit)] || 0) + ADDITIONAL_WIDTH_FOR_ANIMATIONS,
+            width:
+              (NUMBER_WIDTH_ARRAY_SCALED[Number(digit)] || 0) + ADDITIONAL_WIDTH_FOR_ANIMATIONS,
             marginRight: -ADDITIONAL_WIDTH_FOR_ANIMATIONS,
           },
         ]}>
@@ -259,9 +265,9 @@ const AnimatedCharStyles = StyleSheet.create({
 
 const AnimatedFontStyles = StyleSheet.create({
   fontStyle: {
-    fontFamily: fonts.heading1.family,
-    fontSize: fonts.heading1.fontSize,
-    lineHeight: fonts.heading1.lineHeight,
+    fontFamily: fonts.heading2.family,
+    fontSize: fonts.heading2.fontSize,
+    lineHeight: fonts.heading2.lineHeight,
     top: 1,
   },
 })

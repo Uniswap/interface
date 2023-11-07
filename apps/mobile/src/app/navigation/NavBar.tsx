@@ -89,10 +89,10 @@ export function NavBar(): JSX.Element {
           mb={IS_ANDROID ? '$spacing8' : '$none'}
           mx="$spacing24"
           pointerEvents="auto">
-          <Flex shrink>
+          <Flex grow>
             <ExploreTabBarButton />
           </Flex>
-          <Flex grow>
+          <Flex>
             <SwapFAB />
           </Flex>
         </Flex>
@@ -255,7 +255,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
                 pr="$spacing48"
                 style={{ lineHeight: fonts.body1.lineHeight }}
                 variant="body1">
-                {t('Search web3')}
+                {t('Search')}
               </Text>
             </Flex>
           </BlurView>

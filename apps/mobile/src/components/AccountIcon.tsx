@@ -14,9 +14,9 @@ export interface AccountIconProps {
   address: string
   avatarUri?: string | null
   showBackground?: boolean // Display images with solid background.
+  showBorder?: boolean // Display thin border around image
+  backgroundPadding?: number
 }
-
-const INSET_PADDING = spacing.spacing16
 
 export function AccountIcon({
   size,
@@ -24,8 +24,12 @@ export function AccountIcon({
   address,
   avatarUri,
   showBackground,
+  showBorder,
+  backgroundPadding,
   viewOnlyBadgeScalingFactor = 0.45,
 }: AccountIconProps): JSX.Element {
+  const INSET_PADDING = backgroundPadding ?? spacing.spacing16
+
   // If background, add padding and center Unicons. Leave ENS avatars as is.
   const shouldShowUniconInsetPadding = !avatarUri && showBackground
 
@@ -35,26 +39,26 @@ export function AccountIcon({
   // Color for gradient background.
   const { gradientStart: uniconColor } = useUniconColors(address)
 
-  const iconPadding = size * 0.15
+  const iconPadding = size * 0.1
   const iconEyeContainerSize = size * viewOnlyBadgeScalingFactor
   const iconEyeSize = iconEyeContainerSize - iconPadding
 
   const defaultImage = (
     <>
       <Unicon address={address} size={adjustedIconSize} />
-      {showBackground ? <UniconGradient color={uniconColor} size={size} /> : null}
+      {showBackground && !showBorder ? <UniconGradient color={uniconColor} size={size} /> : null}
     </>
   )
 
   return (
     <Flex
       backgroundColor={showBackground ? '$surface1' : '$transparent'}
-      borderColor={showBackground ? '$surface1' : '$transparent'}
+      borderColor={showBackground ? '$surface1' : showBorder ? '$surface3' : '$transparent'}
       borderRadius="$roundedFull"
-      borderWidth={showBackground ? 2 : 0}
+      borderWidth={showBackground ? 2 : showBorder ? 1 : 0}
       position="relative"
       style={{
-        padding: shouldShowUniconInsetPadding ? INSET_PADDING : spacing.none,
+        padding: shouldShowUniconInsetPadding || showBorder ? INSET_PADDING : spacing.none,
       }}>
       {avatarUri ? (
         <RemoteImage
@@ -82,7 +86,7 @@ export function AccountIcon({
           shadowOpacity={0.2}
           shadowRadius={10}
           width={iconEyeContainerSize}>
-          <Icons.Eye color="$neutral1" size={iconEyeSize} />
+          <Icons.Eye color="$neutral2" size={iconEyeSize} />
         </Flex>
       )}
     </Flex>

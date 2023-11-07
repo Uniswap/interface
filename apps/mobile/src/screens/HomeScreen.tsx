@@ -60,15 +60,15 @@ import { hideSplashScreen } from 'src/utils/splashScreen'
 import {
   AnimatedFlex,
   Flex,
-  Text,
   TouchableArea,
   useDeviceDimensions,
   useDeviceInsets,
   useMedia,
   useSporeColors,
 } from 'ui/src'
+import ReceiveIcon from 'ui/src/assets/icons/arrow-down-circle-filled.svg'
 import BuyIcon from 'ui/src/assets/icons/buy.svg'
-import ScanIcon from 'ui/src/assets/icons/scan-receive.svg'
+import ScanIcon from 'ui/src/assets/icons/scan-home.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -287,13 +287,22 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     )
   }, [dispatch])
   const onPressSend = useCallback(() => dispatch(openModal({ name: ModalName.Send })), [dispatch])
+  const onPressReceive = useCallback(
+    () =>
+      dispatch(
+        openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
+      ),
+    [dispatch]
+  )
 
   // hide fiat onramp banner when active account isn't a signer account.
   const showFiatOnRamp = activeAccount.type === AccountType.SignerMnemonic
   // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
   const buyLabel = t('Buy')
   const sendLabel = t('Send')
+  const receiveLabel = t('Receive')
   const scanLabel = t('Scan')
+
   const actions = useMemo(
     (): QuickAction[] => [
       ...(showFiatOnRamp
@@ -318,6 +327,13 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
         onPress: onPressSend,
       },
       {
+        Icon: ReceiveIcon,
+        label: receiveLabel,
+        name: ElementName.Receive,
+        sentryLabel: 'ReceiveActionButton',
+        onPress: onPressReceive,
+      },
+      {
         Icon: ScanIcon,
         label: scanLabel,
         name: ElementName.WalletConnectScan,
@@ -325,14 +341,22 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
         onPress: onPressScan,
       },
     ],
-    [showFiatOnRamp, buyLabel, sendLabel, scanLabel, onPressBuy, onPressScan, onPressSend]
+    [
+      showFiatOnRamp,
+      buyLabel,
+      sendLabel,
+      scanLabel,
+      receiveLabel,
+      onPressBuy,
+      onPressScan,
+      onPressSend,
+      onPressReceive,
+    ]
   )
   const contentHeader = useMemo(() => {
     return (
       <Flex bg="$surface1" gap="$spacing12" pb="$spacing16" px="$spacing24">
-        <Flex pb="$spacing12">
-          <AccountHeader />
-        </Flex>
+        <AccountHeader />
         <Flex pb="$spacing4">
           <PortfolioBalance owner={activeAccount.address} />
         </Flex>
@@ -581,6 +605,7 @@ type QuickAction = {
   sentryLabel: string
   onPress: () => void
 }
+
 function QuickActions({ actions }: { actions: QuickAction[] }): JSX.Element {
   return (
     <Flex centered row gap="$spacing8">
@@ -603,7 +628,6 @@ function QuickActions({ actions }: { actions: QuickAction[] }): JSX.Element {
 function ActionButton({
   eventName,
   name,
-  label,
   Icon,
   onPress,
   flex,
@@ -627,7 +651,8 @@ function ActionButton({
     }),
     [scale]
   )
-
+  const media = useMedia()
+  const iconSize = media.short ? iconSizes.icon24 : iconSizes.icon28
   const onGestureEvent = useAnimatedGestureHandler<TapGestureHandlerGestureEvent>({
     onStart: () => {
       cancelAnimation(scale)
@@ -644,28 +669,18 @@ function ActionButton({
         <TapGestureHandler onGestureEvent={onGestureEvent}>
           <AnimatedFlex
             centered
-            row
+            fill
             backgroundColor="$DEP_backgroundActionButton"
-            borderRadius="$roundedFull"
-            gap="$none"
-            px="$spacing12"
-            style={[
-              animatedStyle,
-              // eslint-disable-next-line react-native/no-inline-styles
-              {
-                // doing specific padding here because we need exact styles and spacing12 vs 16 either too small/big
-                paddingVertical: 14.5,
-              },
-            ]}>
+            borderRadius="$rounded20"
+            gap="$spacing8"
+            p="$spacing16"
+            style={animatedStyle}>
             <Icon
               color={colors.accent1.get()}
-              height={iconSizes.icon20 * iconScale}
+              height={iconSize * iconScale}
               strokeWidth={2}
-              width={iconSizes.icon20 * iconScale}
+              width={iconSize * iconScale}
             />
-            <Text color="$accent1" marginLeft="$spacing8" variant="buttonLabel2">
-              {label}
-            </Text>
           </AnimatedFlex>
         </TapGestureHandler>
       </TouchableArea>

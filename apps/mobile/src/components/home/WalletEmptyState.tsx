@@ -6,11 +6,9 @@ import Trace from 'src/components/Trace/Trace'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { openUri } from 'src/utils/linking'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import BookIcon from 'ui/src/assets/icons/book.svg'
-import DollarSign from 'ui/src/assets/icons/dollar.svg'
 import PaperStackIcon from 'ui/src/assets/icons/paper-stack.svg'
-import ScanIcon from 'ui/src/assets/icons/scan-receive.svg'
 import { colors as rawColors, iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
@@ -30,7 +28,7 @@ enum ActionOption {
   Buy = 'Buy',
   Import = 'Import',
   Learn = 'Learn',
-  Scan = 'Scan',
+  Receive = 'Receive',
 }
 
 export function WalletEmptyState(): JSX.Element {
@@ -44,7 +42,7 @@ export function WalletEmptyState(): JSX.Element {
   const options: { [key in ActionOption]: ActionCardItem } = useMemo(
     () => ({
       [ActionOption.Buy]: {
-        title: t('Buy Crypto'),
+        title: t('Buy crypto'),
         blurb: t('You’ll need ETH to get started. Buy with a card or bank.'),
         elementName: ElementName.EmptyStateBuy,
         icon: (
@@ -53,20 +51,14 @@ export function WalletEmptyState(): JSX.Element {
             icon={
               <IconContainer
                 backgroundColor={rawColors.green200}
-                icon={
-                  <DollarSign
-                    color={rawColors.green200}
-                    height={iconSizes.icon20}
-                    width={iconSizes.icon20}
-                  />
-                }
+                icon={<Icons.Buy color={rawColors.green200} size="$icon.20" />}
               />
             }
           />
         ),
         onPress: () => dispatch(openModal({ name: ModalName.FiatOnRamp })),
       },
-      [ActionOption.Scan]: {
+      [ActionOption.Receive]: {
         title: t('Receive funds'),
         blurb: t('Transfer tokens from another wallet or crypto exchange.'),
         elementName: ElementName.EmptyStateReceive,
@@ -76,13 +68,7 @@ export function WalletEmptyState(): JSX.Element {
             icon={
               <IconContainer
                 backgroundColor={rawColors.gold300}
-                icon={
-                  <ScanIcon
-                    color={rawColors.gold300}
-                    height={iconSizes.icon16}
-                    width={iconSizes.icon16}
-                  />
-                }
+                icon={<Icons.ArrowDownCircleFilled color={rawColors.gold300} size="$icon.20" />}
               />
             }
           />
@@ -139,8 +125,8 @@ export function WalletEmptyState(): JSX.Element {
 
   // Order options based on view only status
   const sortedOptions = isViewOnly
-    ? [options.Import, options.Learn, options.Scan]
-    : [...(!isViewOnly ? [options.Buy] : []), options.Scan, options.Learn]
+    ? [options.Import, options.Learn, options.Receive]
+    : [...(!isViewOnly ? [options.Buy] : []), options.Receive, options.Learn]
 
   return (
     <Flex gap="$spacing8">
