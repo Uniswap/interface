@@ -5,6 +5,7 @@ import { Table, TableCell } from 'components/Table'
 import { mockSwapData } from 'components/Tokens/TokenDetails/mockData'
 import { getLocaleTimeString } from 'components/Tokens/TokenDetails/utils'
 import { DEFAULT_LOCALE } from 'constants/locales'
+import { useTokenTransactions } from 'graphql/thegraph/TokenTransactions'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ExternalLink as ExternalLinkIcon } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
@@ -37,6 +38,8 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: ChainI
   const theme = useTheme()
   const locale = useActiveLocale()
   const { formatNumber } = useFormatter()
+  const { transactions, loading, loadMore } = useTokenTransactions(referenceToken.address, chainId)
+  console.log('transactions', transactions)
 
   const columnHelper = createColumnHelper<SwapTransaction>()
   const columns: ColumnDef<SwapTransaction, any>[] = [
