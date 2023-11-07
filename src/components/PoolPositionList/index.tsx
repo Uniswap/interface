@@ -67,6 +67,8 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
   const PoolInterface = new Interface(POOL_EXTENDED_ABI)
 
   const accountArg = useMemo(() => [account ?? undefined], [account])
+  // notice: if RPC endpoint is not available the following calls will result in empty poolsWithStats. However,
+  //  we do not want to return pools with partial data, so will prompt user to connect or return error.
   const userBalances = useMultipleContractSingleData(poolAddresses, PoolInterface, 'balanceOf', accountArg)
   const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'getPool')
   // TODO: if we initiate this in state, we can later query from state instead of making rpc call
@@ -167,7 +169,18 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
             />
           )
         })
-      ) : (
+      ) : !filterByOperator && !account ? (
+        <>
+          <DesktopHeader>
+            <div>
+              <Trans>Could not retrieve pools. Try again by connecting your wallet.</Trans>
+            </div>
+          </DesktopHeader>
+          <MobileHeader>
+            <Trans>Could not retrieve pools. Try again by connecting your wallet.</Trans>
+          </MobileHeader>
+        </>
+      ) : account ? (
         <>
           <DesktopHeader>
             <div>
@@ -176,6 +189,17 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           </DesktopHeader>
           <MobileHeader>
             <Trans>You don&apos;t have a smart pool. Create yours or buy an existing one.</Trans>
+          </MobileHeader>
+        </>
+      ) : (
+        <>
+          <DesktopHeader>
+            <div>
+              <Trans>Could not retrieve pools. RPC endpoint is down.</Trans>
+            </div>
+          </DesktopHeader>
+          <MobileHeader>
+            <Trans>Could not retrieve pools. RPC endpoint is down.</Trans>
           </MobileHeader>
         </>
       )}
