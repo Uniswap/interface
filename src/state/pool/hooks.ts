@@ -167,9 +167,13 @@ export function usePoolsFromList(
   regitry: Contract | null,
   chainId: number | undefined
 ): PoolRegisteredLog[] | undefined {
-  const poolsFromList = usePoolsFromUrl(POOLS_LIST, Number(chainId))
-  const poolAddresses = useMemo(() => (poolsFromList ? poolsFromList.map((p) => [p.address]) : []), [poolsFromList])
-  const result = useSingleContractMultipleData(regitry, 'getPoolIdFromAddress', poolAddresses)
+  const poolsFromList = usePoolsFromUrl(POOLS_LIST)
+  const pools = useMemo(
+    () => poolsFromList?.filter((n) => n.chainId === Number(chainId ?? 1)),
+    [chainId, poolsFromList]
+  )
+  const poolAddresses = useMemo(() => pools?.map((p) => [p.address]), [pools])
+  const result = useSingleContractMultipleData(regitry, 'getPoolIdFromAddress', poolAddresses ?? [])
   const poolsLoading = useMemo(() => result.some(({ loading }) => loading), [result])
   const poolsError = useMemo(() => result.some(({ error }) => error), [result])
   return useMemo(() => {
@@ -178,7 +182,7 @@ export function usePoolsFromList(
       const result = call.result as CallStateResult
       return result[0]
     })
-    return poolsFromList?.map((p, i) => {
+    return pools?.map((p, i) => {
       const pool = p.address
       const name = p.name
       const symbol = p.symbol
@@ -186,7 +190,7 @@ export function usePoolsFromList(
 
       return { pool, name, symbol, id }
     })
-  }, [poolsFromList, poolsLoading, poolsError, result])
+  }, [pools, poolsLoading, poolsError, result])
 }
 
 export function useCreateCallback(): (

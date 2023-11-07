@@ -54,10 +54,10 @@ export function usePoolMapFromUrl(urls: string[] | undefined): TokenAddressMap {
 }
 
 // TODO: define TokenInfo | undefined returned type
-export function usePoolsFromUrl(urls: string[] | undefined, chainId: number | undefined) {
+export function usePoolsFromUrl(urls: string[] | undefined) {
   const lists = usePoolsList()
   return useMemo(() => {
     if (!urls) return []
-    return lists[urls[0]]?.current?.tokens?.filter((n) => n.chainId === chainId)
-  }, [lists, urls, chainId])
+    return lists[urls[0]]?.current?.tokens
+  }, [lists, urls])
 }
