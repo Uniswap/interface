@@ -1,45 +1,24 @@
-import walletBannerPhoneImageSrc from 'assets/images/wallet_banner_phone_image.png'
-import { BaseButton } from 'components/Button'
+import { ButtonText } from 'components/Button'
 import { OpacityHoverState } from 'components/Common'
-import Row from 'components/Row'
 import { X } from 'react-feather'
 import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
 export const PopupContainer = styled.div<{ show: boolean }>`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
   ${({ show }) => !show && 'display: none'};
 
-  background: url(${walletBannerPhoneImageSrc});
-  background-repeat: no-repeat;
-  background-position: top 18px right 15px;
-  background-size: 166px;
-
-  :hover {
-    background-size: 170px;
-  }
-  transition: background-size ${({ theme }) => theme.transition.duration.medium}
-    ${({ theme }) => theme.transition.timing.inOut};
-
-  background-color: ${({ theme }) => theme.chain_84531};
+  background-color: ${({ theme }) => theme.surface2};
   color: ${({ theme }) => theme.neutral1};
   position: fixed;
   z-index: ${Z_INDEX.sticky};
 
-  padding: 24px 16px 16px;
-
   border-radius: 20px;
   bottom: 20px;
   right: 20px;
-  width: 390px;
-  height: 164px;
+  width: 359px;
+  height: 92px;
 
-  border: 1px solid ${({ theme }) => theme.surface3};
-
-  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
+  border: 1.3px solid ${({ theme }) => theme.surface3};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     bottom: 62px;
@@ -50,35 +29,50 @@ export const PopupContainer = styled.div<{ show: boolean }>`
     width: unset;
     right: 10px;
     left: 10px;
-    height: 144px;
   }
 
   user-select: none;
 `
-
-export const BaseBackgroundImage = styled.img`
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 138px;
-  width: 138px;
-`
-export const ButtonRow = styled(Row)`
-  gap: 16px;
-`
 export const StyledXButton = styled(X)`
   cursor: pointer;
   position: absolute;
-  top: 21px;
-  right: 17px;
+  top: 8px;
+  right: 8px;
+  padding: 4px;
+  border-radius: 50%;
 
-  color: ${({ theme }) => theme.white};
+  background-color: ${({ theme }) => theme.surface5};
+  color: ${({ theme }) => theme.neutral2};
   ${OpacityHoverState};
 `
 
-export const BannerButton = styled(BaseButton)`
-  height: 40px;
-  border-radius: 16px;
-  padding: 10px;
-  ${OpacityHoverState};
+export const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 20px;
+`
+export const Thumbnail = styled.img`
+  width: 82px;
+`
+export const TextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  color: ${({ theme }) => theme.neutral2};
+  padding: 10px 16px 16px;
+  line-height: 16px;
+  width: 245px;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    width: 245px;
+  }
+`
+export const DownloadButton = styled(ButtonText)`
+  line-height: 16px;
+  font-size: 14px;
+  color: ${({ theme }) => theme.accent1};
 `
