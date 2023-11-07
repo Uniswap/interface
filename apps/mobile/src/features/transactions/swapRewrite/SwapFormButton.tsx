@@ -78,7 +78,8 @@ export function SwapFormButton(): JSX.Element {
           width="100%"
           onLongPress={onLongPressHoldToSwap}
           onPress={onPress}
-          onResponderRelease={onReleaseHoldToSwap}>
+          onResponderRelease={onReleaseHoldToSwap}
+          onResponderTerminate={onReleaseHoldToSwap}>
           {isHoldToSwapPressed ? t('Hold to swap') : t('Review')}
         </Button>
       </Trace>
