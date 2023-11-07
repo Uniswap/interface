@@ -66,10 +66,14 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
   const poolAddresses = positions.map((p) => p.pool)
   const PoolInterface = new Interface(POOL_EXTENDED_ABI)
 
-  const accountArg = useMemo(() => [account ?? undefined], [account])
   // notice: if RPC endpoint is not available the following calls will result in empty poolsWithStats. However,
   //  we do not want to return pools with partial data, so will prompt user to connect or return error.
-  const userBalances = useMultipleContractSingleData(poolAddresses, PoolInterface, 'balanceOf', accountArg)
+  const userBalances = useMultipleContractSingleData(
+    poolAddresses,
+    PoolInterface,
+    'balanceOf',
+    useMemo(() => [account], [account])
+  )
   const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'getPool')
   // TODO: if we initiate this in state, we can later query from state instead of making rpc call
   //  in 1) swap and 2) each pool url, we could also store poolId at that point
