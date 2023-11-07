@@ -66,8 +66,14 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
   const poolAddresses = positions.map((p) => p.pool)
   const PoolInterface = new Interface(POOL_EXTENDED_ABI)
 
-  const accountArg = useMemo(() => [account ?? undefined], [account])
-  const userBalances = useMultipleContractSingleData(poolAddresses, PoolInterface, 'balanceOf', accountArg)
+  // notice: if RPC endpoint is not available the following calls will result in empty poolsWithStats. However,
+  //  we do not want to return pools with partial data, so will prompt user to connect or return error.
+  const userBalances = useMultipleContractSingleData(
+    poolAddresses,
+    PoolInterface,
+    'balanceOf',
+    useMemo(() => [account], [account])
+  )
   const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'getPool')
   // TODO: if we initiate this in state, we can later query from state instead of making rpc call
   //  in 1) swap and 2) each pool url, we could also store poolId at that point
@@ -82,16 +88,16 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           : true
         return {
           ...result,
-          apr: positions[i].apr,
-          irr: positions[i].irr,
-          poolOwnStake: positions[i].poolOwnStake,
-          poolDelegatedStake: positions[i].poolDelegatedStake,
-          userHasStake: positions[i].userHasStake ?? false,
+          apr: positions?.[i]?.apr,
+          irr: positions?.[i]?.irr,
+          poolOwnStake: positions?.[i]?.poolOwnStake,
+          poolDelegatedStake: positions?.[i]?.poolDelegatedStake,
+          userHasStake: positions?.[i]?.userHasStake ?? false,
           address: poolAddresses[i],
           decimals,
           symbol,
           name,
-          chainId,
+          chainId: chainId ?? 1,
           shouldDisplay,
           userIsOwner: account ? owner === account : false,
           userBalance: account ? userBalances[i].result : undefined,
@@ -157,7 +163,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           </RowFixed>
         )}
       </MobileHeader>
-      {poolsWithStats.length !== 0 ? (
+      {poolsWithStats.length > 0 ? (
         poolsWithStats.map((p: any) => {
           return (
             <PoolPositionListItem
@@ -167,7 +173,18 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
             />
           )
         })
-      ) : (
+      ) : !filterByOperator && !account ? (
+        <>
+          <DesktopHeader>
+            <div>
+              <Trans>Could not retrieve pools. Try again by connecting your wallet.</Trans>
+            </div>
+          </DesktopHeader>
+          <MobileHeader>
+            <Trans>Could not retrieve pools. Try again by connecting your wallet.</Trans>
+          </MobileHeader>
+        </>
+      ) : account ? (
         <>
           <DesktopHeader>
             <div>
@@ -176,6 +193,17 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           </DesktopHeader>
           <MobileHeader>
             <Trans>You don&apos;t have a smart pool. Create yours or buy an existing one.</Trans>
+          </MobileHeader>
+        </>
+      ) : (
+        <>
+          <DesktopHeader>
+            <div>
+              <Trans>Could not retrieve pools. RPC endpoint is down.</Trans>
+            </div>
+          </DesktopHeader>
+          <MobileHeader>
+            <Trans>Could not retrieve pools. RPC endpoint is down.</Trans>
           </MobileHeader>
         </>
       )}

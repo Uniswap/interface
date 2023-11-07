@@ -167,18 +167,22 @@ export function usePoolsFromList(
   regitry: Contract | null,
   chainId: number | undefined
 ): PoolRegisteredLog[] | undefined {
-  const poolsFromList = usePoolsFromUrl(POOLS_LIST, Number(chainId))
-  const poolAddresses = useMemo(() => (poolsFromList ? poolsFromList.map((p) => [p.address]) : []), [poolsFromList])
-  const result = useSingleContractMultipleData(regitry, 'getPoolIdFromAddress', poolAddresses)
-  const poolsLoading = useMemo(() => result.some(({ loading }) => loading), [result])
-  const poolsError = useMemo(() => result.some(({ error }) => error), [result])
+  const poolsFromList = usePoolsFromUrl(POOLS_LIST)
+  const pools = useMemo(
+    () => poolsFromList?.filter((n) => n.chainId === Number(chainId ?? 1)),
+    [chainId, poolsFromList]
+  )
+  const poolAddresses = useMemo(() => pools?.map((p) => [p.address]), [pools])
+  const result = useSingleContractMultipleData(regitry, 'getPoolIdFromAddress', poolAddresses ?? [])
+  //const poolsLoading = useMemo(() => result.some(({ loading }) => loading), [result])
+  //const poolsError = useMemo(() => result.some(({ error }) => error), [result])
   return useMemo(() => {
-    if (poolsLoading || poolsError) return undefined
+    //if (poolsLoading || poolsError) return undefined
     const poolIds = result.map((call) => {
-      const result = call.result as CallStateResult
-      return result[0]
+      const result = call?.result as CallStateResult
+      return result?.[0]
     })
-    return poolsFromList?.map((p, i) => {
+    return pools?.map((p, i) => {
       const pool = p.address
       const name = p.name
       const symbol = p.symbol
@@ -186,7 +190,7 @@ export function usePoolsFromList(
 
       return { pool, name, symbol, id }
     })
-  }, [poolsFromList, poolsLoading, poolsError, result])
+  }, [pools, /*poolsLoading, poolsError,*/ result])
 }
 
 export function useCreateCallback(): (
@@ -348,7 +352,7 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
         const result = call.result as CallStateResult
         return {
           id,
-          operatorShare: result[0].operatorShare,
+          operatorShare: result?.[0].operatorShare,
         }
       })
     }
@@ -362,7 +366,7 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
         const result = call.result as CallStateResult
         return {
           id,
-          delegatedStake: result[0].nextEpochBalance,
+          delegatedStake: result?.[0].nextEpochBalance,
         }
       })
     }
@@ -376,7 +380,7 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
         const result = call.result as CallStateResult
         return {
           id,
-          poolOwnStake: result[0].nextEpochBalance,
+          poolOwnStake: result?.[0].nextEpochBalance,
         }
       })
     }

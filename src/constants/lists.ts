@@ -1,9 +1,9 @@
 export const UNI_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
 export const UNI_EXTENDED_LIST = 'https://gateway.ipfs.io/ipns/extendedtokens.uniswap.org'
 const UNI_UNSUPPORTED_LIST = 'https://gateway.ipfs.io/ipns/unsupportedtokens.uniswap.org'
-export const RB_LIST = 'https://tokens.rigoblock.com'
+export const RB_LIST = 'https://gateway.ipfs.io/ipns/tokens.rigoblock.com'
 // pools list is returned separately from token lists
-const RB_POOLS_LIST = 'https://pools.rigoblock.com'
+const RB_POOLS_LIST = 'https://gateway.ipfs.io/ipns/pools.rigoblock.com'
 const AAVE_LIST = 'tokenlist.aave.eth'
 const BA_LIST = 'https://raw.githubusercontent.com/The-Blockchain-Association/sec-notice-list/master/ba-sec-list.json'
 // TODO(WEB-2282): Re-enable CMC list once we have a better solution for handling large lists.
