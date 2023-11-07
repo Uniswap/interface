@@ -8,7 +8,10 @@ import {
   SwapScreen,
   useSwapScreenContext,
 } from 'src/features/transactions/swapRewrite/contexts/SwapScreenContext'
-import { HoldToSwapProgressCircle } from 'src/features/transactions/swapRewrite/HoldToSwapProgressCircle'
+import {
+  HoldToSwapProgressCircle,
+  PROGRESS_CIRCLE_SIZE,
+} from 'src/features/transactions/swapRewrite/HoldToSwapProgressCircle'
 import { useParsedSwapWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { Button, Flex, Icons, Text } from 'ui/src'
@@ -71,8 +74,8 @@ export function SwapFormButton(): JSX.Element {
 
       <Trace logPress element={ElementName.SwapReview}>
         <Button
-          disabled={reviewButtonDisabled || isHoldToSwapPressed}
-          icon={isHoldToSwapPressed ? <HoldToSwapProgressCircle /> : undefined}
+          backgroundColor={isHoldToSwapPressed ? '$accent2' : '$accent1'}
+          disabled={reviewButtonDisabled && !isHoldToSwapPressed}
           size="large"
           testID={ElementName.ReviewSwap}
           width="100%"
@@ -80,7 +83,24 @@ export function SwapFormButton(): JSX.Element {
           onPress={onPress}
           onResponderRelease={onReleaseHoldToSwap}
           onResponderTerminate={onReleaseHoldToSwap}>
-          {isHoldToSwapPressed ? t('Hold to swap') : t('Review')}
+          {isHoldToSwapPressed ? (
+            <Flex row gap="$spacing4" px="$spacing4">
+              <HoldToSwapProgressCircle />
+
+              <Text
+                color="$accent1"
+                flex={1}
+                pr={PROGRESS_CIRCLE_SIZE}
+                textAlign="center"
+                variant="buttonLabel1">
+                {t('Hold to swap')}
+              </Text>
+            </Flex>
+          ) : (
+            <Text color="$white" variant="buttonLabel1">
+              {t('Review')}
+            </Text>
+          )}
         </Button>
       </Trace>
     </Flex>

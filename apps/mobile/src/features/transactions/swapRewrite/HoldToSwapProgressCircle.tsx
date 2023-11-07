@@ -10,16 +10,17 @@ import { iconSizes } from 'ui/src/theme'
 
 export const HOLD_TO_SWAP_TIMEOUT = 3000
 
-const BACKGROUND_STROKE_COLOR = '#F16EF4'
-const STROKE_COLOR = '#FFFFFF'
+const BACKGROUND_STROKE_COLOR = '#F4D9F5'
+const STROKE_COLOR = '#F16EF4'
 const STROKE_WIDTH = 4
 const WIDTH = iconSizes.icon20
-const WIDTH_WITH_STROKE = WIDTH + STROKE_WIDTH
 const CIRCLE_LENGTH = WIDTH * Math.PI
 
+export const PROGRESS_CIRCLE_SIZE = WIDTH + STROKE_WIDTH
+
 const CIRCLE_PROPS = {
-  cx: WIDTH_WITH_STROKE / 2,
-  cy: WIDTH_WITH_STROKE / 2,
+  cx: PROGRESS_CIRCLE_SIZE / 2,
+  cy: PROGRESS_CIRCLE_SIZE / 2,
   r: WIDTH / 2,
   strokeDasharray: CIRCLE_LENGTH,
   strokeLinecap: 'round',
@@ -55,9 +56,9 @@ export function HoldToSwapProgressCircle(): JSX.Element {
   return (
     <Svg
       fill="none"
-      height={WIDTH_WITH_STROKE}
-      viewBox={`0 0 ${WIDTH_WITH_STROKE} ${WIDTH_WITH_STROKE}`}
-      width={WIDTH_WITH_STROKE}>
+      height={PROGRESS_CIRCLE_SIZE}
+      viewBox={`0 0 ${PROGRESS_CIRCLE_SIZE} ${PROGRESS_CIRCLE_SIZE}`}
+      width={PROGRESS_CIRCLE_SIZE}>
       <Circle {...CIRCLE_PROPS} stroke={BACKGROUND_STROKE_COLOR} />
       <AnimatedCircle animatedProps={animatedProps} {...CIRCLE_PROPS} stroke={STROKE_COLOR} />
     </Svg>
