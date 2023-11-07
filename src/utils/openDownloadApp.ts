@@ -2,20 +2,11 @@ import { AppDownloadPlatform, InterfaceElementName, InterfaceEventName } from '@
 import { sendAnalyticsEvent } from 'analytics'
 import { isAndroid, isIOS } from 'utils/userAgent'
 
-const APP_STORE_LINK = 'https://apps.apple.com/app/apple-store/id6443944476'
-const PLAY_STORE_LINK = 'playstorewoohoo' // TODO
-const MICROSITE_LINK = 'https://wallet.uniswap.org/'
+// OneLink will direct to App/Play Store or microsite depending on platform
+const APP_DOWNLOAD_LINK = 'https://uniswapwallet.onelink.me/8q3y/79gveilz'
 
 type OpenDownloadAppOptions = {
   element?: InterfaceElementName
-  appStoreParams?: string
-  playStoreParams?: string
-  microSiteParams?: string
-}
-
-const defaultDownloadAppOptions = {
-  appStoreParams: `pt=123625782&ct=In-App-Banners&mt=8`,
-  playStoreParams: `???`, // TODO
 }
 
 /**
@@ -34,31 +25,21 @@ export function openDownloadApp(options: OpenDownloadAppOptions = defaultDownloa
   if (isIOS) {
     openAppStore({
       element: options?.element,
-      urlParamString: options?.appStoreParams,
       appPlatform: AppDownloadPlatform.IOS,
     })
   } else if (isAndroid) {
     openPlayStore({
       element: options?.element,
-      urlParamString: options?.playStoreParams,
       appPlatform: AppDownloadPlatform.ANDROID,
     })
   } else {
-    openWalletMicrosite({ element: options?.element, urlParamString: options?.microSiteParams })
+    openWalletMicrosite({ element: options?.element })
   }
 }
 
-// if you need this by itself can add export, not used externally for now
-export const getDownloadAppLink = (options: OpenDownloadAppOptions = defaultDownloadAppOptions) =>
-  isIOS
-    ? linkWithParams(APP_STORE_LINK, options?.appStoreParams)
-    : isAndroid
-    ? linkWithParams(PLAY_STORE_LINK, options?.playStoreParams)
-    : linkWithParams(MICROSITE_LINK, options?.microSiteParams)
-
 export const getDownloadAppLinkProps = (options: OpenDownloadAppOptions = defaultDownloadAppOptions) => {
   return {
-    href: getDownloadAppLink(options),
+    href: APP_DOWNLOAD_LINK,
     onClick(e: { preventDefault: () => void }) {
       e.preventDefault()
       openDownloadApp(options)
@@ -68,7 +49,6 @@ export const getDownloadAppLinkProps = (options: OpenDownloadAppOptions = defaul
 
 type AnalyticsLinkOptions = {
   element?: InterfaceElementName
-  urlParamString?: string
   appPlatform?: AppDownloadPlatform
 }
 
@@ -77,7 +57,7 @@ const openAppStore = (options?: AnalyticsLinkOptions) => {
     element: options?.element,
     appPlatform: options?.appPlatform,
   })
-  window.open(linkWithParams(APP_STORE_LINK, options?.urlParamString), /* target = */ 'uniswap_wallet_appstore')
+  window.open(APP_DOWNLOAD_LINK, /* target = */ 'uniswap_wallet_appstore')
 }
 
 const openPlayStore = (options?: AnalyticsLinkOptions) => {
@@ -85,12 +65,12 @@ const openPlayStore = (options?: AnalyticsLinkOptions) => {
     element: options?.element,
     appPlatform: options?.appPlatform,
   })
-  window.open(linkWithParams(PLAY_STORE_LINK, options?.urlParamString), /* target = */ 'uniswap_wallet_playstore')
+  window.open(APP_DOWNLOAD_LINK, /* target = */ 'uniswap_wallet_playstore')
 }
 
 export const openWalletMicrosite = (options?: AnalyticsLinkOptions) => {
   sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_MICROSITE_OPENED, { element: options?.element })
-  window.open(linkWithParams(MICROSITE_LINK, options?.urlParamString), /* target = */ 'uniswap_wallet_microsite')
+  window.open(APP_DOWNLOAD_LINK, /* target = */ 'uniswap_wallet_microsite')
 }
 
 const linkWithParams = (link: string, params?: string) => link + (params ? `?${params}` : '')
