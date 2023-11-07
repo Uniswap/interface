@@ -26,31 +26,28 @@ export function NetworkFee({
   const gasFeeFormatted = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatTokenPrice)
 
   return (
-    <Flex row alignItems="center" justifyContent="space-between">
-      <TouchableArea onPress={onShowNetworkFeeInfo}>
-        <Flex centered row gap="$spacing4">
-          <Text color="$neutral2" variant="body3">
+    <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
+      <TouchableArea flexShrink={1} onPress={onShowNetworkFeeInfo}>
+        <Flex row shrink alignItems="center" gap="$spacing4">
+          <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body3">
             {t('Network cost')}
+            &nbsp;
+            <Icons.InfoCircleFilled color="$neutral3" size="$icon.16" />
           </Text>
-          <Icons.InfoCircleFilled color="$neutral3" size="$icon.16" />
         </Flex>
       </TouchableArea>
       <Flex row alignItems="center" gap="$spacing8">
         <InlineNetworkPill chainId={chainId} />
         {gasFee.loading ? (
           <SpinningLoader size={iconSizes.icon16} />
+        ) : gasFee.error ? (
+          <Text color="$neutral2" variant="body3">
+            {t('N/A')}
+          </Text>
         ) : (
-          <Flex row alignItems="center" justifyContent="space-between">
-            {gasFee.error ? (
-              <Text color="$neutral2" variant="body3">
-                {t('N/A')}
-              </Text>
-            ) : (
-              <Text color="$neutral1" variant="body3">
-                {gasFeeFormatted}
-              </Text>
-            )}
-          </Flex>
+          <Text color="$neutral1" variant="body3">
+            {gasFeeFormatted}
+          </Text>
         )}
       </Flex>
     </Flex>

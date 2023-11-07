@@ -109,7 +109,7 @@ export function SwapDetails({
   const latestUSDPrice = useUSDCPrice(
     showInverseRate ? latestPrice.quoteCurrency : latestPrice.baseCurrency
   )
-  const latesetFiatPriceFormatted = convertFiatAmountFormatted(
+  const latestFiatPriceFormatted = convertFiatAmountFormatted(
     latestUSDPrice?.toSignificant(),
     NumberType.FiatTokenPrice
   )
@@ -190,7 +190,7 @@ export function SwapDetails({
               {shouldShowSwapRewrite ? latestRate : acceptedRate}
               <Text color="$neutral2" variant="body3">
                 {/* {usdcPrice && ` (${priceFormatted})`} */}
-                {shouldShowSwapRewrite && latestUSDPrice && ` (${latesetFiatPriceFormatted})`}
+                {shouldShowSwapRewrite && latestUSDPrice && ` (${latestFiatPriceFormatted})`}
 
                 {!shouldShowSwapRewrite && acceptedUSDPrice && ` (${acceptedFiatPriceFormatted})`}
               </Text>
@@ -198,13 +198,14 @@ export function SwapDetails({
           </TouchableOpacity>
         </Flex>
       </Flex>
-      <Flex row alignItems="center" justifyContent="space-between">
-        <TouchableArea onPress={onShowSlippageModal}>
-          <Flex centered row gap="$spacing4">
-            <Text color="$neutral2" variant="body3">
+      <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
+        <TouchableArea flexShrink={1} onPress={onShowSlippageModal}>
+          <Flex row alignItems="center" gap="$spacing4">
+            <Text color="$neutral2" numberOfLines={3} variant="body3">
               {t('Max slippage')}
+              &nbsp;
+              <InfoCircleFilled color="$neutral3" size="$icon.16" />
             </Text>
-            <InfoCircleFilled color="$neutral3" size="$icon.16" />
           </Flex>
         </TouchableArea>
         <Flex centered row gap="$spacing8">

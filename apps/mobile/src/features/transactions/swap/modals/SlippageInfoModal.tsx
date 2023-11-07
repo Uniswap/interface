@@ -76,8 +76,8 @@ export function SlippageInfoModal({
           px="$spacing16"
           py="$spacing12"
           width="100%">
-          <Flex fill row justifyContent="space-between">
-            <Text color="$neutral2" variant="body2">
+          <Flex fill row alignItems="center" gap="$spacing12" justifyContent="space-between">
+            <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body2">
               {t('Max slippage')}
             </Text>
             <Flex row gap="$spacing8">
@@ -95,8 +95,8 @@ export function SlippageInfoModal({
               </Text>
             </Flex>
           </Flex>
-          <Flex fill row justifyContent="space-between">
-            <Text color="$neutral2" variant="body2">
+          <Flex fill row alignItems="center" gap="$spacing12" justifyContent="space-between">
+            <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body2">
               {tradeType === TradeType.EXACT_INPUT ? t('Receive at least') : t('Spend at most')}
             </Text>
             <Text color="$neutral1" textAlign="center" variant="subheading2">
