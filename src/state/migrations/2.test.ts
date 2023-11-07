@@ -17,6 +17,7 @@ const previousState: PersistAppStateV2 = {
     tokens: {},
     pairs: {},
     timestamp: Date.now(),
+    hideAndroidAnnouncementBanner: false,
     hideBaseWalletBanner: false,
   },
   _persist: {

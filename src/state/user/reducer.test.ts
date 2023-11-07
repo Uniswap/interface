@@ -5,6 +5,7 @@ import reducer, {
   addSerializedPair,
   addSerializedToken,
   initialState,
+  updateHideAndroidAnnouncementBanner,
   updateHideBaseWalletBanner,
   updateHideClosedPositions,
   updateSelectedWallet,
@@ -74,6 +75,13 @@ describe('swap reducer', () => {
     it('updates the userHideClosedPositions', () => {
       store.dispatch(updateHideClosedPositions({ userHideClosedPositions: true }))
       expect(store.getState().userHideClosedPositions).toEqual(true)
+    })
+  })
+
+  describe('updateHideAndroidAnnouncementBanner', () => {
+    it('updates the updateHideAndroidAnnouncementBanner', () => {
+      store.dispatch(updateHideAndroidAnnouncementBanner({ hideAndroidAnnouncementBanner: true }))
+      expect(store.getState().hideAndroidAnnouncementBanner).toEqual(true)
     })
   })
 

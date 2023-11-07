@@ -15,6 +15,7 @@ import { useDefaultActiveTokens } from '../../hooks/Tokens'
 import {
   addSerializedPair,
   addSerializedToken,
+  updateHideAndroidAnnouncementBanner,
   updateHideBaseWalletBanner,
   updateHideClosedPositions,
   updateUserDeadline,
@@ -215,6 +216,17 @@ export function useHideBaseWalletBanner(): [boolean, () => void] {
   }, [dispatch])
 
   return [hideBaseWalletBanner, toggleHideBaseWalletBanner]
+}
+
+export function useHideAndroidAnnouncementBanner(): [boolean, () => void] {
+  const dispatch = useAppDispatch()
+  const hideAndroidAnnouncementBanner = useAppSelector((state) => state.user.hideAndroidAnnouncementBanner)
+
+  const toggleHideAndroidAnnouncementBanner = useCallback(() => {
+    dispatch(updateHideAndroidAnnouncementBanner({ hideAndroidAnnouncementBanner: true }))
+  }, [dispatch])
+
+  return [hideAndroidAnnouncementBanner, toggleHideAndroidAnnouncementBanner]
 }
 
 export function useUserDisabledUniswapX(): boolean {

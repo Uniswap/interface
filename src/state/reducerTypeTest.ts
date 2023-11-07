@@ -87,7 +87,9 @@ interface ExpectedUserState {
     }
   }
   timestamp: number
+  hideAndroidAnnouncementBanner: boolean
   hideBaseWalletBanner: boolean
+
   showSurveyPopup?: boolean
   disabledUniswapX?: boolean
   optedOutOfUniswapX?: boolean
