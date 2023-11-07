@@ -25,16 +25,16 @@ class TokenSafetyLookupTable {
     this.initialized = true
 
     // Initialize extended tokens first
-    lists.byUrl[UNI_EXTENDED_LIST].current?.tokens.forEach((token) => {
+    lists.byUrl[UNI_EXTENDED_LIST]?.current?.tokens.forEach((token) => {
       this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_EXTENDED
     })
 
     // Initialize default tokens second, so that any tokens on both default and extended will display as default (no warning)
-    lists.byUrl[UNI_LIST].current?.tokens.forEach((token) => {
+    lists.byUrl[UNI_LIST]?.current?.tokens.forEach((token) => {
       this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_DEFAULT
     })
 
-    lists.byUrl[RB_LIST].current?.tokens.forEach((token) => {
+    lists.byUrl[RB_LIST]?.current?.tokens.forEach((token) => {
       this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.RB_DEFAULT
     })
 
