@@ -128,11 +128,11 @@ export default function Stake() {
     if (!allPools || !stakingPools) return []
     return allPools
       .map((p, i) => {
-        const apr = stakingPools?.[i].apr
-        const irr = stakingPools?.[i].irr
-        const poolOwnStake = stakingPools?.[i].poolOwnStake
-        const poolDelegatedStake = stakingPools[i].delegatedStake
-        const userHasStake = userStakeBalances?.[i].hasStake
+        const apr = stakingPools?.[i]?.apr
+        const irr = stakingPools?.[i]?.irr
+        const poolOwnStake = stakingPools?.[i]?.poolOwnStake
+        const poolDelegatedStake = stakingPools[i]?.delegatedStake
+        const userHasStake = userStakeBalances?.[i]?.hasStake
         return {
           ...p,
           irr,
