@@ -175,6 +175,7 @@ export const MenuDropdown = () => {
                   onClick={() =>
                     openDownloadApp({
                       element: InterfaceElementName.UNISWAP_WALLET_NAVBAR_MENU_DOWNLOAD_BUTTON,
+                      isAndroidGALaunched,
                     })
                   }
                 >
