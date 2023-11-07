@@ -186,7 +186,7 @@ export function usePoolsFromList(
       const pool = p.address
       const name = p.name
       const symbol = p.symbol
-      const id = poolIds[i] ?? 'NaN'
+      const id = poolIds[i]
 
       return { pool, name, symbol, id }
     })
@@ -352,7 +352,7 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
         const result = call.result as CallStateResult
         return {
           id,
-          operatorShare: result[0].operatorShare,
+          operatorShare: result?.[0].operatorShare,
         }
       })
     }
@@ -366,7 +366,7 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
         const result = call.result as CallStateResult
         return {
           id,
-          delegatedStake: result[0].nextEpochBalance,
+          delegatedStake: result?.[0].nextEpochBalance,
         }
       })
     }
@@ -380,7 +380,7 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
         const result = call.result as CallStateResult
         return {
           id,
-          poolOwnStake: result[0].nextEpochBalance,
+          poolOwnStake: result?.[0].nextEpochBalance,
         }
       })
     }
