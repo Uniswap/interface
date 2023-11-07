@@ -131,7 +131,7 @@ export default function Stake() {
         const apr = stakingPools?.[i]?.apr
         const irr = stakingPools?.[i]?.irr
         const poolOwnStake = stakingPools?.[i]?.poolOwnStake
-        const poolDelegatedStake = stakingPools[i]?.delegatedStake
+        const poolDelegatedStake = stakingPools?.[i]?.delegatedStake
         const userHasStake = userStakeBalances?.[i]?.hasStake
         return {
           ...p,

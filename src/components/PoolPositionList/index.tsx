@@ -84,16 +84,16 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           : true
         return {
           ...result,
-          apr: positions[i].apr,
-          irr: positions[i].irr,
-          poolOwnStake: positions[i].poolOwnStake,
-          poolDelegatedStake: positions[i].poolDelegatedStake,
-          userHasStake: positions[i].userHasStake ?? false,
+          apr: positions?.[i]?.apr,
+          irr: positions?.[i]?.irr,
+          poolOwnStake: positions?.[i]?.poolOwnStake,
+          poolDelegatedStake: positions?.[i]?.poolDelegatedStake,
+          userHasStake: positions?.[i]?.userHasStake ?? false,
           address: poolAddresses[i],
           decimals,
           symbol,
           name,
-          chainId,
+          chainId: chainId ?? 1,
           shouldDisplay,
           userIsOwner: account ? owner === account : false,
           userBalance: account ? userBalances[i].result : undefined,
@@ -159,7 +159,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           </RowFixed>
         )}
       </MobileHeader>
-      {poolsWithStats.length !== 0 ? (
+      {poolsWithStats.length > 0 ? (
         poolsWithStats.map((p: any) => {
           return (
             <PoolPositionListItem
