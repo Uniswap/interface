@@ -83,7 +83,7 @@ export function ExploreScreen(): JSX.Element {
           ref={textInputRef}
           showCancelButton
           backgroundColor={isSearchMode ? contrastBackgroundColor : searchBarBackgroundColor}
-          placeholder={t('Search tokens, NFTs, and wallets')}
+          placeholder={t('Search tokens and wallets')}
           showShadow={!isSearchMode}
           value={searchQuery}
           onCancel={onSearchCancel}

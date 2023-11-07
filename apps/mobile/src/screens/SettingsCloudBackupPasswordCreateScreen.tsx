@@ -65,14 +65,10 @@ export function SettingsCloudBackupPasswordCreateScreen({
             name={ModalName.CloudBackupInfo}>
             <Flex px="$spacing16" py="$spacing12">
               <Flex centered gap="$spacing16">
-                <Flex
-                  borderColor="$accent1"
-                  borderRadius="$rounded12"
-                  borderWidth={1}
-                  p="$spacing12">
-                  <Icons.OSDynamicCloudIcon color="$accent1" size="$icon.20" />
+                <Flex backgroundColor="$accentSoft" borderRadius="$rounded12" p="$spacing12">
+                  <Icons.OSDynamicCloudIcon color="$accent1" size="$icon.24" />
                 </Flex>
-                <Text textAlign="center" variant="buttonLabel2">
+                <Text textAlign="center" variant="subheading1">
                   {IS_ANDROID
                     ? t('Back up recovery phrase to Google Drive?')
                     : t('Back up recovery phrase to iCloud?')}
@@ -80,10 +76,10 @@ export function SettingsCloudBackupPasswordCreateScreen({
                 <Text color="$neutral2" textAlign="center" variant="body2">
                   {IS_ANDROID
                     ? t(
-                        'It looks like you haven’t backed up your recovery phrase to Google Drive yet. By doing so, you can recover your wallet just by being logged into Google Drive on any device.'
+                        'You haven’t backed up your recovery phrase to Google Drive yet. By doing so, you can recover your wallet just by being logged into Google Drive on any device.'
                       )
                     : t(
-                        'It looks like you haven’t backed up your recovery phrase to iCloud yet. By doing so, you can recover your wallet just by being logged into iCloud on any device.'
+                        'You haven’t backed up your recovery phrase to iCloud yet. By doing so, you can recover your wallet just by being logged into iCloud on any device.'
                       )}
                 </Text>
               </Flex>
@@ -95,7 +91,7 @@ export function SettingsCloudBackupPasswordCreateScreen({
                   fill
                   testID={ElementName.Confirm}
                   onPress={(): void => setShowCloudBackupInfoModal(false)}>
-                  {t('Back up')}
+                  {t('Continue')}
                 </Button>
               </Flex>
             </Flex>

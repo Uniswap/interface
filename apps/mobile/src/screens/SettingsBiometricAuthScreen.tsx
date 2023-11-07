@@ -152,7 +152,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
     return (
       <Flex row alignItems="center" justifyContent="space-between">
         <Flex row shrink pr="$spacing12">
-          <Flex>
+          <Flex gap="$spacing4">
             <Text variant="body1">{text}</Text>
             <Text color="$neutral2" variant="body3">
               {subText}

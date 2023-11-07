@@ -81,7 +81,7 @@ function FiatCurrencyOption({ active, currency, onPress }: FiatCurrencyOptionPro
             {code}
           </Text>
         </Flex>
-        {active && <Check color={colors.accent1.val} size="$icon.16" />}
+        {active && <Check color={colors.accent1.val} size="$icon.24" />}
       </Flex>
     </TouchableArea>
   )

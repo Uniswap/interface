@@ -21,7 +21,6 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
 import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
-import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import PaperIcon from 'ui/src/assets/icons/paper-stack.svg'
 import { iconSizes } from 'ui/src/theme'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -140,11 +139,11 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   if (!googleDriveDisabled) {
     options.push(
       <OptionCard
-        blurb={t('Safe, simple, and all you need to save is your password.')}
+        blurb={t('Encrypt your recovery phrase with a secure password')}
         disabled={hasCloudBackup}
         elementName={ElementName.AddCloudBackup}
         icon={<Icons.OSDynamicCloudIcon color="$accent1" size="$icon.16" />}
-        title={IS_ANDROID ? t('Backup with Google Drive') : t('Backup with iCloud')}
+        title={IS_ANDROID ? t('Google Drive backup') : t('iCloud backup')}
         onPress={onPressCloudBackup}
       />
     )
@@ -152,11 +151,11 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   if (isCreatingNew) {
     options.push(
       <OptionCard
-        blurb={t('Top-notch security with no third parties. You’re in control.')}
+        blurb={t('Save your recovery phrase in a safe location')}
         disabled={hasManualBackup}
         elementName={ElementName.AddManualBackup}
         icon={<PaperIcon color={colors.accent1.get()} height={iconSizes.icon16} />}
-        title={t('Backup with recovery phrase')}
+        title={t('Manual backup')}
         onPress={onPressManualBackup}
       />
     )
@@ -164,37 +163,23 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
 
   return (
     <OnboardingScreen
-      subtitle={t(
-        'Remember, backups are your lifeline. They’re your ticket back in if something goes wrong.'
-      )}
+      subtitle={t('Backup let you restore your wallet if you delete the app or lose your device')}
       title={screenTitle}>
       <Flex grow justifyContent="space-between">
         <Flex gap="$spacing12">{options}</Flex>
         <Flex gap="$spacing12" justifyContent="flex-end">
-          <TouchableArea alignSelf="center" py="$none" onPress={onPressEducationButton}>
-            <Flex centered row gap="$spacing4">
-              <InfoCircle
-                color={colors.neutral2.get()}
-                height={iconSizes.icon24}
-                width={iconSizes.icon24}
-              />
-              <Text color="$neutral1" variant="subheading2">
-                {t('Learn about wallet safety and recovery')}
-              </Text>
-            </Flex>
+          <TouchableArea alignSelf="center" py="$spacing8" onPress={onPressEducationButton}>
+            <Text color="$neutral2" variant="buttonLabel3">
+              {t('Learn more')}
+            </Text>
           </TouchableArea>
           {showSkipOption && (
             <Trace logPress element={ElementName.Next}>
               <Button theme="tertiary" onPress={onPressNext}>
-                {t('I already backed up')}
+                {t('Skip for now')}
               </Button>
             </Trace>
           )}
-          <Trace logPress element={ElementName.Next}>
-            <Button disabled={disabled} onPress={onPressContinue}>
-              {t('Continue')}
-            </Button>
-          </Trace>
         </Flex>
       </Flex>
     </OnboardingScreen>

@@ -65,7 +65,7 @@ export function TokenBalances({
         </Flex>
       )}
       {hasOtherChainBalances && otherChainBalances ? (
-        <Flex>
+        <Flex gap="$spacing8">
           <Text color="$neutral2" variant="subheading2">
             {t('Balances on other networks')}
           </Text>
@@ -104,17 +104,19 @@ export function CurrentChainBalance({
 
   return (
     <Flex row>
-      <Flex fill gap="$spacing4">
+      <Flex fill gap="$spacing8">
         <Text color="$neutral2" variant="subheading2">
           {isReadonly ? t('{{owner}}’s balance', { owner: displayName }) : t('Your balance')}
         </Text>
-        <Text variant="subheading1">
-          {convertFiatAmountFormatted(balance.balanceUSD, NumberType.FiatTokenDetails)}
-        </Text>
-        <Text color="$neutral2" variant="body2">
-          {formatNumberOrString({ value: balance.quantity, type: NumberType.TokenNonTx })}{' '}
-          {getSymbolDisplayText(balance.currencyInfo.currency.symbol)}
-        </Text>
+        <Flex fill gap="$spacing4">
+          <Text variant="heading3">
+            {convertFiatAmountFormatted(balance.balanceUSD, NumberType.FiatTokenDetails)}
+          </Text>
+          <Text color="$neutral2" variant="body2">
+            {formatNumberOrString({ value: balance.quantity, type: NumberType.TokenNonTx })}{' '}
+            {getSymbolDisplayText(balance.currencyInfo.currency.symbol)}
+          </Text>
+        </Flex>
       </Flex>
       <Flex alignItems="flex-end" justifyContent="center">
         <SendButton color={colors.neutral1.get()} size={iconSizes.icon28} onPress={onPressSend} />

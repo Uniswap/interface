@@ -291,22 +291,19 @@ function MoonpayCtaButton({
       pressEvent={MobileEventName.FiatOnRampWidgetOpened}
       properties={properties}>
       <Button
+        color={!isLoading && !eligible ? '$neutral2' : '$white'}
         disabled={disabled}
         icon={
           isLoading ? (
             <SpinningLoader color="$sporeWhite" />
           ) : !eligible ? (
-            <Icons.InformationIcon />
+            <Icons.InfoCircleFilled color="$neutral3" />
           ) : undefined
         }
         size="large"
-        theme={!isLoading && !eligible ? 'secondary' : 'primary'}
+        theme={!isLoading && !eligible ? 'tertiary' : 'primary'}
         onPress={onPress}>
-        {isLoading
-          ? undefined
-          : eligible
-          ? t('Continue to checkout')
-          : t('Not supported in region')}
+        {isLoading ? undefined : eligible ? t('Continue') : t('Not supported')}
       </Button>
     </Trace>
   )

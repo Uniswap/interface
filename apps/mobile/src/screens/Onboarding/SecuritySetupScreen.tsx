@@ -164,7 +164,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
           </Trace>
           <Trace logPress element={ElementName.Enable}>
             <Button theme="primary" onPress={onPressEnableSecurity}>
-              {t('Turn on {{authenticationTypeName}}', {
+              {t('Enable', {
                 authenticationTypeName,
               })}
             </Button>

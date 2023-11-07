@@ -137,7 +137,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
         </Trace>
         <Trace logPress element={ElementName.Enable}>
           <Button testID="turn-on-notifications" onPress={onPressEnableNotifications}>
-            {t('Turn on notifications')}
+            {t('Enable')}
           </Button>
         </Trace>
       </Flex>

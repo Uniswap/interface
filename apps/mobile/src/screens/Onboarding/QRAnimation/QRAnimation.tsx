@@ -287,7 +287,7 @@ export function QRAnimation({
               textAlign="center"
               variant="body2">
               {isNewWallet
-                ? t('This is your personal bank vault for tokens, NFTs, and all your trades.')
+                ? t('Your personal space for tokens, NFTs, and all your trades.')
                 : t(
                     'Check out your tokens and NFTs, follow crypto wallets, and stay up to date on the go.'
                   )}

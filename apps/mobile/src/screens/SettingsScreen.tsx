@@ -98,7 +98,7 @@ export function SettingsScreen(): JSX.Element {
             text: t('Appearance'),
             currentSetting:
               currentAppearanceSetting === 'system'
-                ? t('Device settings')
+                ? t('Device')
                 : currentAppearanceSetting === 'dark'
                 ? t('Dark mode')
                 : t('Light mode'),
@@ -138,18 +138,18 @@ export function SettingsScreen(): JSX.Element {
             screen: Screens.WebView,
             screenProps: {
               uriLink: APP_FEEDBACK_LINK,
-              headerTitle: t('Send Feedback'),
+              headerTitle: t('Send feedback'),
             },
-            text: t('Send Feedback'),
+            text: t('Send feedback'),
             icon: <LikeSquare {...svgProps} />,
           },
           {
             screen: Screens.WebView,
             screenProps: {
               uriLink: uniswapUrls.helpUrl,
-              headerTitle: t('Get Help'),
+              headerTitle: t('Get help'),
             },
-            text: t('Get Help'),
+            text: t('Get help'),
             icon: <MessageQuestion {...svgProps} />,
           },
         ],
@@ -161,18 +161,18 @@ export function SettingsScreen(): JSX.Element {
             screen: Screens.WebView,
             screenProps: {
               uriLink: uniswapUrls.privacyPolicyUrl,
-              headerTitle: t('Privacy Policy'),
+              headerTitle: t('Privacy policy'),
             },
-            text: t('Privacy Policy'),
+            text: t('Privacy policy'),
             icon: <LockIcon {...svgProps} />,
           },
           {
             screen: Screens.WebView,
             screenProps: {
               uriLink: uniswapUrls.termsOfServiceUrl,
-              headerTitle: t('Terms of Service'),
+              headerTitle: t('Terms of service'),
             },
-            text: t('Terms of Service'),
+            text: t('Terms of service'),
             icon: <BookOpenIcon {...svgProps} />,
           },
         ],
@@ -183,7 +183,7 @@ export function SettingsScreen(): JSX.Element {
         data: [
           {
             screen: Screens.Dev,
-            text: t('Dev Options'),
+            text: t('Dev options'),
             icon: <UniswapIcon {...svgProps} />,
           },
           { component: <OnboardingRow iconProps={svgProps} /> },

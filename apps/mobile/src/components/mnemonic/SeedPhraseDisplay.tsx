@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { usePrevious } from 'react-native-wagmi-charts'
 import { HiddenMnemonicWordView } from 'src/components/mnemonic/HiddenMnemonicWordView'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
+import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -86,14 +87,13 @@ export function SeedPhraseDisplay({
       {showSeedPhraseViewWarningModal && (
         <WarningModal
           hideHandlebar
-          caption={t(
-            'Please only view your recovery phrase in a private place. Anyone who knows your recovery phrase can access your wallet and funds.'
-          )}
-          closeText={t('Go back')}
+          caption={t('Anyone who knows your recovery phrase can access your wallet and funds.')}
+          closeText={t('Close')}
           confirmText={t('View')}
           isDismissible={false}
           modalName={ModalName.ViewSeedPhraseWarning}
-          title={t('Be careful')}
+          severity={WarningSeverity.High}
+          title={t('View this in a private place')}
           onCancel={(): void => {
             setShowSeedPhraseViewWarningModal(false)
             if (!showSeedPhrase) {
@@ -108,7 +108,7 @@ export function SeedPhraseDisplay({
           caption={t(
             'Anyone who gains access to your photos can access your wallet. We recommend that you write down your words instead.'
           )}
-          confirmText={t('OK')}
+          confirmText={t('Close')}
           modalName={ModalName.ScreenshotWarning}
           title={t('Screenshots aren’t secure')}
           onConfirm={(): void => setShowScreenShotWarningModal(false)}

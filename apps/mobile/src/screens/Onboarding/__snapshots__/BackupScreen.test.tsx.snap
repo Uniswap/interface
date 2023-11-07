@@ -94,7 +94,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
           }
           suppressHighlighting={true}
         >
-          Remember, backups are your lifeline. They’re your ticket back in if something goes wrong.
+          Backup let you restore your wallet if you delete the app or lose your device
         </Text>
       </View>
       <View
@@ -316,7 +316,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         }
                         suppressHighlighting={true}
                       >
-                        Backup with iCloud
+                        iCloud backup
                       </Text>
                     </View>
                     <Text
@@ -332,7 +332,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       }
                       suppressHighlighting={true}
                     >
-                      Safe, simple, and all you need to save is your password.
+                      Encrypt your recovery phrase with a secure password
                     </Text>
                   </View>
                 </View>
@@ -475,7 +475,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         }
                         suppressHighlighting={true}
                       >
-                        Backup with recovery phrase
+                        Manual backup
                       </Text>
                     </View>
                     <Text
@@ -491,7 +491,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       }
                       suppressHighlighting={true}
                     >
-                      Top-notch security with no third parties. You’re in control.
+                      Save your recovery phrase in a safe location
                     </Text>
                   </View>
                 </View>
@@ -548,90 +548,26 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 {
                   "alignSelf": "center",
                   "opacity": 1,
-                  "paddingBottom": 0,
-                  "paddingTop": 0,
+                  "paddingBottom": 8,
+                  "paddingTop": 8,
                 }
               }
-            >
-              <View
-                style={
-                  {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "gap": 4,
-                    "justifyContent": "center",
-                  }
-                }
-              >
-                <svg
-                  color="#7D7D7D"
-                  data-file-name="SvgInfoCircle"
-                  height={24}
-                  width={24}
-                />
-                <Text
-                  allowFontScaling={true}
-                  maxFontSizeMultiplier={1.4}
-                  style={
-                    {
-                      "color": "#222222",
-                      "fontFamily": "Basel-Book",
-                      "fontSize": 17,
-                      "lineHeight": 24,
-                    }
-                  }
-                  suppressHighlighting={true}
-                >
-                  Learn about wallet safety and recovery
-                </Text>
-              </View>
-            </View>
-            <View
-              pointerEvents="none"
-              style={
-                {
-                  "alignItems": "center",
-                  "backgroundColor": "#FC72FF",
-                  "borderBottomColor": "transparent",
-                  "borderBottomLeftRadius": 16,
-                  "borderBottomRightRadius": 16,
-                  "borderBottomWidth": 1,
-                  "borderLeftColor": "transparent",
-                  "borderLeftWidth": 1,
-                  "borderRightColor": "transparent",
-                  "borderRightWidth": 1,
-                  "borderStyle": "solid",
-                  "borderTopColor": "transparent",
-                  "borderTopLeftRadius": 16,
-                  "borderTopRightRadius": 16,
-                  "borderTopWidth": 1,
-                  "flexDirection": "row",
-                  "gap": 8,
-                  "height": "auto",
-                  "justifyContent": "center",
-                  "opacity": 0.4,
-                  "paddingBottom": 12,
-                  "paddingLeft": 12,
-                  "paddingRight": 12,
-                  "paddingTop": 12,
-                }
-              }
-              userSelect="none"
             >
               <Text
+                allowFontScaling={true}
                 maxFontSizeMultiplier={1.2}
                 style={
                   {
-                    "color": "#FFFFFF",
+                    "color": "#7D7D7D",
                     "fontFamily": "Basel-Medium",
-                    "fontSize": 19,
+                    "fontSize": 17,
                     "fontWeight": "500",
                     "lineHeight": 24,
                   }
                 }
                 suppressHighlighting={true}
               >
-                Continue
+                Learn more
               </Text>
             </View>
           </View>
@@ -736,7 +672,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
           }
           suppressHighlighting={true}
         >
-          Remember, backups are your lifeline. They’re your ticket back in if something goes wrong.
+          Backup let you restore your wallet if you delete the app or lose your device
         </Text>
       </View>
       <View
@@ -958,7 +894,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         }
                         suppressHighlighting={true}
                       >
-                        Backup with iCloud
+                        iCloud backup
                       </Text>
                     </View>
                     <Text
@@ -974,7 +910,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       }
                       suppressHighlighting={true}
                     >
-                      Safe, simple, and all you need to save is your password.
+                      Encrypt your recovery phrase with a secure password
                     </Text>
                   </View>
                 </View>
@@ -1117,7 +1053,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         }
                         suppressHighlighting={true}
                       >
-                        Backup with recovery phrase
+                        Manual backup
                       </Text>
                     </View>
                     <Text
@@ -1133,7 +1069,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       }
                       suppressHighlighting={true}
                     >
-                      Top-notch security with no third parties. You’re in control.
+                      Save your recovery phrase in a safe location
                     </Text>
                   </View>
                 </View>
@@ -1190,99 +1126,26 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 {
                   "alignSelf": "center",
                   "opacity": 1,
-                  "paddingBottom": 0,
-                  "paddingTop": 0,
-                }
-              }
-            >
-              <View
-                style={
-                  {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "gap": 4,
-                    "justifyContent": "center",
-                  }
-                }
-              >
-                <svg
-                  color="#7D7D7D"
-                  data-file-name="SvgInfoCircle"
-                  height={24}
-                  width={24}
-                />
-                <Text
-                  allowFontScaling={true}
-                  maxFontSizeMultiplier={1.4}
-                  style={
-                    {
-                      "color": "#222222",
-                      "fontFamily": "Basel-Book",
-                      "fontSize": 17,
-                      "lineHeight": 24,
-                    }
-                  }
-                  suppressHighlighting={true}
-                >
-                  Learn about wallet safety and recovery
-                </Text>
-              </View>
-            </View>
-            <View
-              cancelable={true}
-              disabled={false}
-              focusable={true}
-              minPressDuration={0}
-              onBlur={[Function]}
-              onFocus={[Function]}
-              onMouseEnter={[Function]}
-              onMouseLeave={[Function]}
-              onPress={[Function]}
-              onPressIn={[Function]}
-              onPressOut={[Function]}
-              style={
-                {
-                  "alignItems": "center",
-                  "backgroundColor": "#FC72FF",
-                  "borderBottomColor": "transparent",
-                  "borderBottomLeftRadius": 16,
-                  "borderBottomRightRadius": 16,
-                  "borderBottomWidth": 1,
-                  "borderLeftColor": "transparent",
-                  "borderLeftWidth": 1,
-                  "borderRightColor": "transparent",
-                  "borderRightWidth": 1,
-                  "borderStyle": "solid",
-                  "borderTopColor": "transparent",
-                  "borderTopLeftRadius": 16,
-                  "borderTopRightRadius": 16,
-                  "borderTopWidth": 1,
-                  "flexDirection": "row",
-                  "gap": 8,
-                  "height": "auto",
-                  "justifyContent": "center",
-                  "opacity": 1,
-                  "paddingBottom": 12,
-                  "paddingLeft": 12,
-                  "paddingRight": 12,
-                  "paddingTop": 12,
+                  "paddingBottom": 8,
+                  "paddingTop": 8,
                 }
               }
             >
               <Text
+                allowFontScaling={true}
                 maxFontSizeMultiplier={1.2}
                 style={
                   {
-                    "color": "#FFFFFF",
+                    "color": "#7D7D7D",
                     "fontFamily": "Basel-Medium",
-                    "fontSize": 19,
+                    "fontSize": 17,
                     "fontWeight": "500",
                     "lineHeight": 24,
                   }
                 }
                 suppressHighlighting={true}
               >
-                Continue
+                Learn more
               </Text>
             </View>
           </View>

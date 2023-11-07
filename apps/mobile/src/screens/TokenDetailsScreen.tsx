@@ -317,8 +317,10 @@ function TokenDetails({
               <TokenDetailsTextPlaceholders />
             ) : (
               <>
-                <TokenDetailsStats data={data} tokenColor={tokenColor} />
-                <TokenDetailsLinks currencyId={_currencyId} data={data} />
+                <Flex gap="$spacing24">
+                  <TokenDetailsStats data={data} tokenColor={tokenColor} />
+                  <TokenDetailsLinks currencyId={_currencyId} data={data} />
+                </Flex>
               </>
             )}
           </Flex>

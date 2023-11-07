@@ -47,6 +47,19 @@ exports[`renders a currency logo with network logo 1`] = `
     style={
       {
         "alignItems": "stretch",
+        "borderBottomColor": "#FFFFFF",
+        "borderBottomLeftRadius": 8,
+        "borderBottomRightRadius": 8,
+        "borderBottomWidth": 2,
+        "borderLeftColor": "#FFFFFF",
+        "borderLeftWidth": 2,
+        "borderRightColor": "#FFFFFF",
+        "borderRightWidth": 2,
+        "borderStyle": "solid",
+        "borderTopColor": "#FFFFFF",
+        "borderTopLeftRadius": 8,
+        "borderTopRightRadius": 8,
+        "borderTopWidth": 2,
         "bottom": 0,
         "boxSizing": "border-box",
         "display": "flex",
@@ -56,14 +69,7 @@ exports[`renders a currency logo with network logo 1`] = `
         "minHeight": 0,
         "minWidth": 0,
         "position": "absolute",
-        "right": 0,
-        "shadowColor": "rgba(0,0,0,0.10)",
-        "shadowOffset": {
-          "height": 2,
-          "width": 0,
-        },
-        "shadowOpacity": 0.1,
-        "shadowRadius": 2,
+        "right": -3,
       }
     }
   />

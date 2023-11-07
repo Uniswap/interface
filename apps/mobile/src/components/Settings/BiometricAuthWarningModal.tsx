@@ -27,7 +27,7 @@ export function BiometricAuthWarningModal({
       closeText={t('Back')}
       confirmText={t('Skip')}
       modalName={ModalName.FaceIDWarning}
-      severity={WarningSeverity.Medium}
+      severity={WarningSeverity.Low}
       title={t('Are you sure?')}
       onClose={onClose}
       onConfirm={onConfirm}

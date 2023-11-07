@@ -83,7 +83,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
 
   return (
     <SafeKeyboardOnboardingScreen
-      subtitle={t('This is a way to keep track of your wallet. Only you will see this.')}
+      subtitle={t('This nickname is only visible to you')}
       title={t('Give your wallet a nickname')}>
       {pendingAccount ? (
         <CustomizationSection
@@ -96,7 +96,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
       )}
       <Flex justifyContent="flex-end">
         <Trace logPress element={ElementName.Continue}>
-          <Button onPress={onPressNext}>{t('Create Wallet')}</Button>
+          <Button onPress={onPressNext}>{t('Create wallet')}</Button>
         </Trace>
       </Flex>
     </SafeKeyboardOnboardingScreen>

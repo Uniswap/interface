@@ -3,7 +3,7 @@ import { Flex, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { isSVGUri, uriToHttp } from 'utilities/src/format/urls'
 import { STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
-import { SHADOW_OFFSET, style, THIN_BORDER } from 'wallet/src/components/CurrencyLogo/styles'
+import { style, THIN_BORDER } from 'wallet/src/components/CurrencyLogo/styles'
 import { ChainId } from 'wallet/src/constants/chains'
 import { RemoteSvg } from 'wallet/src/features/images/RemoteSvg'
 import { NetworkLogo } from './NetworkLogo'
@@ -89,13 +89,12 @@ export function TokenLogo({
       )}
       {showNetworkLogo && (
         <Flex
+          borderColor="$surface1"
+          borderRadius={8}
+          borderWidth={2}
           bottom={0}
           position="absolute"
-          right={0}
-          shadowColor="black"
-          shadowOffset={SHADOW_OFFSET}
-          shadowOpacity={0.1}
-          shadowRadius={2}>
+          right={-3}>
           <NetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
         </Flex>
       )}

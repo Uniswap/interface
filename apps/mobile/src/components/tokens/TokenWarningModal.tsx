@@ -6,16 +6,12 @@ import { getTokenSafetyHeaderText } from 'src/components/tokens/utils'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useTokenSafetyLevelColors } from 'src/features/tokens/safetyHooks'
-import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
-import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import ExternalLinkIcon from 'ui/src/assets/icons/external-link.svg'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes, imageSizes, opacify, ThemeNames } from 'ui/src/theme'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
-import { ChainId } from 'wallet/src/constants/chains'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
-import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
 function getTokenSafetyBodyText(safetyLevel: Maybe<SafetyLevel>, t: AppTFunction): string {
   switch (safetyLevel) {
@@ -49,7 +45,6 @@ interface Props {
  */
 export default function TokenWarningModal({
   isVisible,
-  currencyId,
   safetyLevel,
   disableAccept,
   tokenLogoUrl,
@@ -59,11 +54,6 @@ export default function TokenWarningModal({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const warningColor = useTokenSafetyLevelColors(safetyLevel)
-
-  const chainId = currencyIdToChain(currencyId) ?? ChainId.Mainnet
-  const address = currencyIdToAddress(currencyId)
-
-  const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
 
   // always hide accept button if blocked token
   const hideAcceptButton = disableAccept || safetyLevel === SafetyLevel.Blocked
@@ -89,7 +79,7 @@ export default function TokenWarningModal({
               }}>
               <WarningIcon safetyLevel={safetyLevel} width={iconSizes.icon24} />
             </Flex>
-            <Text variant="buttonLabel2">{getTokenSafetyHeaderText(safetyLevel, t)}</Text>
+            <Text variant="subheading1">{getTokenSafetyHeaderText(safetyLevel, t)}</Text>
           </Flex>
         ) : (
           <TokenLogo size={imageSizes.image48} url={tokenLogoUrl} />
@@ -100,29 +90,6 @@ export default function TokenWarningModal({
           </Text>
           <LearnMoreLink url={uniswapUrls.helpArticleUrls.tokenWarning} />
         </Flex>
-        <TouchableArea
-          alignItems="center"
-          bg="$accent2"
-          borderRadius="$rounded16"
-          flexDirection="row"
-          mx="$spacing48"
-          px="$spacing12"
-          py="$spacing8"
-          onPress={(): Promise<void> => openUri(explorerLink)}>
-          <Text
-            color="$accent1"
-            ellipsizeMode="tail"
-            mx="$spacing8"
-            numberOfLines={1}
-            variant="buttonLabel4">
-            {explorerLink}
-          </Text>
-          <ExternalLinkIcon
-            color={colors.accent1.val}
-            height={iconSizes.icon16}
-            width={iconSizes.icon16}
-          />
-        </TouchableArea>
         <Flex centered row gap="$spacing16" mt="$spacing16">
           <Button fill testID={ElementName.Cancel} theme="tertiary" onPress={onClose}>
             {closeButtonText}
