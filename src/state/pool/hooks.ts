@@ -174,10 +174,10 @@ export function usePoolsFromList(
   )
   const poolAddresses = useMemo(() => pools?.map((p) => [p.address]), [pools])
   const result = useSingleContractMultipleData(regitry, 'getPoolIdFromAddress', poolAddresses ?? [])
-  const poolsLoading = useMemo(() => result.some(({ loading }) => loading), [result])
-  const poolsError = useMemo(() => result.some(({ error }) => error), [result])
+  //const poolsLoading = useMemo(() => result.some(({ loading }) => loading), [result])
+  //const poolsError = useMemo(() => result.some(({ error }) => error), [result])
   return useMemo(() => {
-    if (poolsLoading || poolsError) return undefined
+    //if (poolsLoading || poolsError) return undefined
     const poolIds = result.map((call) => {
       const result = call.result as CallStateResult
       return result[0]
@@ -186,11 +186,11 @@ export function usePoolsFromList(
       const pool = p.address
       const name = p.name
       const symbol = p.symbol
-      const id = poolIds[i]
+      const id = poolIds[i] ?? 'NaN'
 
       return { pool, name, symbol, id }
     })
-  }, [pools, poolsLoading, poolsError, result])
+  }, [pools, /*poolsLoading, poolsError,*/ result])
 }
 
 export function useCreateCallback(): (
