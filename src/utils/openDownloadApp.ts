@@ -10,6 +10,8 @@ const APP_DOWNLOAD_LINKS: Partial<{ [key in InterfaceElementName]: string }> = {
   [InterfaceElementName.UNISWAP_WALLET_BANNER_DOWNLOAD_BUTTON]: 'https://uniswapwallet.onelink.me/8q3y/jh9orof3',
 }
 
+export const MICROSITE_LINK = 'https://wallet.uniswap.org/'
+
 type OpenDownloadAppOptions = {
   element: InterfaceElementName
   isAndroidGALaunched: boolean
