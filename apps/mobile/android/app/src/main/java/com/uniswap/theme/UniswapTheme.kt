@@ -9,14 +9,16 @@ import androidx.compose.runtime.remember
 
 @Composable
 fun UniswapTheme(
-  darkTheme: Boolean = isSystemInDarkTheme(),
+  darkTheme: Boolean? = null,
   content: @Composable () -> Unit
 ) {
+  val isDarkTheme = darkTheme ?: isSystemInDarkTheme()
+
   val customSpacing = CustomSpacing()
   val customTypography = CustomTypography()
   val customShapes = CustomShapes()
-  val customColors = remember {
-    if (darkTheme) darkCustomColors else lightCustomColors
+  val customColors = remember(isDarkTheme) {
+    if (isDarkTheme) darkCustomColors else lightCustomColors
   }
 
   CompositionLocalProvider(
@@ -26,7 +28,7 @@ fun UniswapTheme(
     LocalCustomColors provides customColors,
   ) {
     MaterialTheme(
-      colors = if (darkTheme) DarkColors else LightColors
+      colors = if (isDarkTheme) DarkColors else LightColors
     ) {
       ProvideTextStyle(value = customTypography.body1) {
         content()

@@ -23,6 +23,9 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.ContentAlpha
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -32,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
@@ -74,7 +78,8 @@ fun SeedPhraseInput(viewModel: SeedPhraseInputViewModel, onHelpTextPress: () -> 
         .focusRequester(focusRequester),
       value = viewModel.input,
       onValueChange = { viewModel.handleInputChange(it) },
-      textStyle = UniswapTheme.typography.body1.copy(textAlign = TextAlign.Center),
+      cursorBrush = SolidColor(LocalContentColor.current.copy(ContentAlpha.high)),
+      textStyle = UniswapTheme.typography.body1.copy(textAlign = TextAlign.Center, color = UniswapTheme.colors.neutral1),
     ) { innerTextField ->
       Box(
         modifier = Modifier
