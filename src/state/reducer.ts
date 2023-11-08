@@ -12,6 +12,7 @@ import logs from './logs/slice'
 import { customCreateMigrate, migrations } from './migrations'
 import mint from './mint/reducer'
 import mintV3 from './mint/v3/reducer'
+import { quickRouteApi } from './routing/quickRouteSlice'
 import { routingApi } from './routing/slice'
 import signatures from './signatures/reducer'
 import transactions from './transactions/reducer'
@@ -35,6 +36,7 @@ const appReducer = combineReducers({
   multicall: multicall.reducer,
   logs,
   [routingApi.reducerPath]: routingApi.reducer,
+  [quickRouteApi.reducerPath]: quickRouteApi.reducer,
   ...persistedReducers,
 })
 
@@ -42,7 +44,7 @@ export type AppState = ReturnType<typeof appReducer>
 
 const persistConfig: PersistConfig<AppState> = {
   key: 'interface',
-  version: 0, // see migrations.ts for more details about this version
+  version: 2, // see migrations.ts for more details about this version
   storage: localForage.createInstance({
     name: 'redux',
   }),

@@ -82,9 +82,11 @@ export function useCollectionSearch(queryOrAddress: string): useCollectionSearch
   const isName = !isAddress(queryOrAddress.toLowerCase())
   const queryResult = useCollectionQuerySearch(queryOrAddress, /* skip= */ !isName)
   const addressResult = useCollection(queryOrAddress, /* skip= */ isName)
+  const invalidCollectionAddress =
+    blocklistedCollections.includes(queryOrAddress) || !addressResult.data.stats?.total_supply
   return isName
     ? queryResult
-    : blocklistedCollections.includes(queryOrAddress)
+    : invalidCollectionAddress
     ? { data: [], loading: false }
     : { data: [addressResult.data], loading: addressResult.loading }
 }

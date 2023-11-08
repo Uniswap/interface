@@ -17,7 +17,7 @@ exports[`should inject metadata for valid tokens 1`] = `
     <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#FC72FF" />
+    <meta name="theme-color" content="#fff" />
     <meta
       http-equiv="Content-Security-Policy"
       
@@ -37,31 +37,46 @@ exports[`should inject metadata for valid tokens 1`] = `
     -->
     <link rel="manifest" href="/manifest.json" />
 
-    <link rel="preload" href="/fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preconnect" href="https://api.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
+    <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff2" as="font" type="font/woff2" crossorigin />
+   
     <style>
       * {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Basel', sans-serif;
         box-sizing: border-box;
       }
 
       /**
-          Explicitly load Inter var from public/ so it does not block LCP's critical path.
+          Explicitly load Basel var from public/ so it does not block LCP's critical path.
         */
       @font-face {
-        font-family: 'Inter custom';
-        font-weight: 100 900;
+        font-family: 'Basel';
+        font-weight: 535;
         font-style: normal;
         font-display: block;
-        font-named-instance: 'Regular';
-        src: url(/fonts/Inter-roman.var.woff2) format('woff2 supports variations(gvar)'),
-          url(/fonts/Inter-roman.var.woff2) format('woff2-variations'),
-          url(/fonts/Inter-roman.var.woff2) format('woff2');
+        src: 
+          url('/fonts/Basel-Medium.woff2') format('woff2'),
+          url('/fonts/Basel-Medium.woff') format('woff');
+      }
+
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 485;
+        font-style: normal;
+        font-display: block;
+        src: 
+          url('/fonts/Basel-Book.woff') format('woff2'),
+          url('/fonts/Basel-Book.woff') format('woff');
       }
 
       @supports (font-variation-settings: normal) {
         * {
-          font-family: 'Inter custom', sans-serif;
+          font-family: 'Basel', sans-serif;
         }
       }
 
@@ -77,9 +92,11 @@ exports[`should inject metadata for valid tokens 1`] = `
 
       html {
         font-size: 16px;
+        font-weight: 485;
         font-variant: none;
         font-smooth: always;
-        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility !important;
+        -webkit-font-smoothing: antialiased !important;
         -moz-osx-font-smoothing: grayscale;
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
       }
@@ -105,13 +122,13 @@ exports[`should inject metadata for valid tokens 1`] = `
 
       @media (prefers-color-scheme: dark) {
         html {
-          background: linear-gradient(180deg, #202738 0%, #070816 100%);
+          background: linear-gradient(rgb(19, 19, 19) 0%, rgb(19, 19, 19) 100%);
         }
       }
 
       @media (prefers-color-scheme: light) {
         html {
-          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0) 0%, rgba(255, 255, 255, 0) 100%), rgb(255, 255, 255);
         }
       }
     </style>
@@ -148,7 +165,7 @@ exports[`should inject metadata for valid tokens 2`] = `
     <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#FC72FF" />
+    <meta name="theme-color" content="#fff" />
     <meta
       http-equiv="Content-Security-Policy"
       
@@ -168,31 +185,46 @@ exports[`should inject metadata for valid tokens 2`] = `
     -->
     <link rel="manifest" href="/manifest.json" />
 
-    <link rel="preload" href="/fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preconnect" href="https://api.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
+    <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff2" as="font" type="font/woff2" crossorigin />
+   
     <style>
       * {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Basel', sans-serif;
         box-sizing: border-box;
       }
 
       /**
-          Explicitly load Inter var from public/ so it does not block LCP's critical path.
+          Explicitly load Basel var from public/ so it does not block LCP's critical path.
         */
       @font-face {
-        font-family: 'Inter custom';
-        font-weight: 100 900;
+        font-family: 'Basel';
+        font-weight: 535;
         font-style: normal;
         font-display: block;
-        font-named-instance: 'Regular';
-        src: url(/fonts/Inter-roman.var.woff2) format('woff2 supports variations(gvar)'),
-          url(/fonts/Inter-roman.var.woff2) format('woff2-variations'),
-          url(/fonts/Inter-roman.var.woff2) format('woff2');
+        src: 
+          url('/fonts/Basel-Medium.woff2') format('woff2'),
+          url('/fonts/Basel-Medium.woff') format('woff');
+      }
+
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 485;
+        font-style: normal;
+        font-display: block;
+        src: 
+          url('/fonts/Basel-Book.woff') format('woff2'),
+          url('/fonts/Basel-Book.woff') format('woff');
       }
 
       @supports (font-variation-settings: normal) {
         * {
-          font-family: 'Inter custom', sans-serif;
+          font-family: 'Basel', sans-serif;
         }
       }
 
@@ -208,9 +240,11 @@ exports[`should inject metadata for valid tokens 2`] = `
 
       html {
         font-size: 16px;
+        font-weight: 485;
         font-variant: none;
         font-smooth: always;
-        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility !important;
+        -webkit-font-smoothing: antialiased !important;
         -moz-osx-font-smoothing: grayscale;
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
       }
@@ -236,13 +270,13 @@ exports[`should inject metadata for valid tokens 2`] = `
 
       @media (prefers-color-scheme: dark) {
         html {
-          background: linear-gradient(180deg, #202738 0%, #070816 100%);
+          background: linear-gradient(rgb(19, 19, 19) 0%, rgb(19, 19, 19) 100%);
         }
       }
 
       @media (prefers-color-scheme: light) {
         html {
-          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0) 0%, rgba(255, 255, 255, 0) 100%), rgb(255, 255, 255);
         }
       }
     </style>
@@ -279,7 +313,7 @@ exports[`should inject metadata for valid tokens 3`] = `
     <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#FC72FF" />
+    <meta name="theme-color" content="#fff" />
     <meta
       http-equiv="Content-Security-Policy"
       
@@ -299,31 +333,46 @@ exports[`should inject metadata for valid tokens 3`] = `
     -->
     <link rel="manifest" href="/manifest.json" />
 
-    <link rel="preload" href="/fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preconnect" href="https://api.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
+    <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff2" as="font" type="font/woff2" crossorigin />
+   
     <style>
       * {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Basel', sans-serif;
         box-sizing: border-box;
       }
 
       /**
-          Explicitly load Inter var from public/ so it does not block LCP's critical path.
+          Explicitly load Basel var from public/ so it does not block LCP's critical path.
         */
       @font-face {
-        font-family: 'Inter custom';
-        font-weight: 100 900;
+        font-family: 'Basel';
+        font-weight: 535;
         font-style: normal;
         font-display: block;
-        font-named-instance: 'Regular';
-        src: url(/fonts/Inter-roman.var.woff2) format('woff2 supports variations(gvar)'),
-          url(/fonts/Inter-roman.var.woff2) format('woff2-variations'),
-          url(/fonts/Inter-roman.var.woff2) format('woff2');
+        src: 
+          url('/fonts/Basel-Medium.woff2') format('woff2'),
+          url('/fonts/Basel-Medium.woff') format('woff');
+      }
+
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 485;
+        font-style: normal;
+        font-display: block;
+        src: 
+          url('/fonts/Basel-Book.woff') format('woff2'),
+          url('/fonts/Basel-Book.woff') format('woff');
       }
 
       @supports (font-variation-settings: normal) {
         * {
-          font-family: 'Inter custom', sans-serif;
+          font-family: 'Basel', sans-serif;
         }
       }
 
@@ -339,9 +388,11 @@ exports[`should inject metadata for valid tokens 3`] = `
 
       html {
         font-size: 16px;
+        font-weight: 485;
         font-variant: none;
         font-smooth: always;
-        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility !important;
+        -webkit-font-smoothing: antialiased !important;
         -moz-osx-font-smoothing: grayscale;
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
       }
@@ -367,13 +418,13 @@ exports[`should inject metadata for valid tokens 3`] = `
 
       @media (prefers-color-scheme: dark) {
         html {
-          background: linear-gradient(180deg, #202738 0%, #070816 100%);
+          background: linear-gradient(rgb(19, 19, 19) 0%, rgb(19, 19, 19) 100%);
         }
       }
 
       @media (prefers-color-scheme: light) {
         html {
-          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0) 0%, rgba(255, 255, 255, 0) 100%), rgb(255, 255, 255);
         }
       }
     </style>
@@ -410,7 +461,7 @@ exports[`should inject metadata for valid tokens 4`] = `
     <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#FC72FF" />
+    <meta name="theme-color" content="#fff" />
     <meta
       http-equiv="Content-Security-Policy"
       
@@ -430,31 +481,46 @@ exports[`should inject metadata for valid tokens 4`] = `
     -->
     <link rel="manifest" href="/manifest.json" />
 
-    <link rel="preload" href="/fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preconnect" href="https://api.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
+    <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff2" as="font" type="font/woff2" crossorigin />
+   
     <style>
       * {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Basel', sans-serif;
         box-sizing: border-box;
       }
 
       /**
-          Explicitly load Inter var from public/ so it does not block LCP's critical path.
+          Explicitly load Basel var from public/ so it does not block LCP's critical path.
         */
       @font-face {
-        font-family: 'Inter custom';
-        font-weight: 100 900;
+        font-family: 'Basel';
+        font-weight: 535;
         font-style: normal;
         font-display: block;
-        font-named-instance: 'Regular';
-        src: url(/fonts/Inter-roman.var.woff2) format('woff2 supports variations(gvar)'),
-          url(/fonts/Inter-roman.var.woff2) format('woff2-variations'),
-          url(/fonts/Inter-roman.var.woff2) format('woff2');
+        src: 
+          url('/fonts/Basel-Medium.woff2') format('woff2'),
+          url('/fonts/Basel-Medium.woff') format('woff');
+      }
+
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 485;
+        font-style: normal;
+        font-display: block;
+        src: 
+          url('/fonts/Basel-Book.woff') format('woff2'),
+          url('/fonts/Basel-Book.woff') format('woff');
       }
 
       @supports (font-variation-settings: normal) {
         * {
-          font-family: 'Inter custom', sans-serif;
+          font-family: 'Basel', sans-serif;
         }
       }
 
@@ -470,9 +536,11 @@ exports[`should inject metadata for valid tokens 4`] = `
 
       html {
         font-size: 16px;
+        font-weight: 485;
         font-variant: none;
         font-smooth: always;
-        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility !important;
+        -webkit-font-smoothing: antialiased !important;
         -moz-osx-font-smoothing: grayscale;
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
       }
@@ -498,13 +566,13 @@ exports[`should inject metadata for valid tokens 4`] = `
 
       @media (prefers-color-scheme: dark) {
         html {
-          background: linear-gradient(180deg, #202738 0%, #070816 100%);
+          background: linear-gradient(rgb(19, 19, 19) 0%, rgb(19, 19, 19) 100%);
         }
       }
 
       @media (prefers-color-scheme: light) {
         html {
-          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0) 0%, rgba(255, 255, 255, 0) 100%), rgb(255, 255, 255);
         }
       }
     </style>

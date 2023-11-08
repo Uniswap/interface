@@ -9,6 +9,7 @@ ignore:
   - "**/styled.tsx"
   - "**/constants/**/*"
   - "constants/**/*"
+  - "src/dev/*"
 
 coverage:
   status:

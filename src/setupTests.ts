@@ -7,6 +7,7 @@ import 'polyfills'
 import type { createPopper } from '@popperjs/core'
 import { useWeb3React } from '@web3-react/core'
 import failOnConsole from 'jest-fail-on-console'
+import { disableNetConnect, restore as restoreNetConnect } from 'nock'
 import { Readable } from 'stream'
 import { toBeVisible } from 'test-utils/matchers'
 import { mocked } from 'test-utils/mocked'
@@ -74,12 +75,32 @@ jest.mock('@web3-react/core', () => {
   }
 })
 
+jest.mock('connection/eagerlyConnect', () => {
+  return {
+    useConnectionReady: () => true,
+  }
+})
+
 jest.mock('state/routing/slice', () => {
   const routingSlice = jest.requireActual('state/routing/slice')
   return {
     ...routingSlice,
     // Prevents unit tests from logging errors from failed getQuote queries
     useGetQuoteQuery: () => ({
+      isError: false,
+      data: undefined,
+      error: undefined,
+      currentData: undefined,
+    }),
+  }
+})
+
+jest.mock('state/routing/quickRouteSlice', () => {
+  const quickRouteSlice = jest.requireActual('state/routing/quickRouteSlice')
+  return {
+    ...quickRouteSlice,
+    // Prevents unit tests from logging errors from failed getQuote queries
+    useGetQuickRouteQuery: () => ({
       isError: false,
       data: undefined,
       error: undefined,
@@ -96,6 +117,15 @@ beforeEach(() => {
 
   // Mock useWeb3React to return a chainId of 1 by default.
   mocked(useWeb3React).mockReturnValue({ chainId: 1 } as ReturnType<typeof useWeb3React>)
+
+  // Disable network connections by default.
+  disableNetConnect()
+})
+
+afterEach(() => {
+  // Without this, nock causes a memory leak and the tests will fail on CI.
+  // https://github.com/nock/nock/issues/1817
+  restoreNetConnect()
 })
 
 /**

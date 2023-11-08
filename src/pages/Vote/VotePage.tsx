@@ -16,6 +16,7 @@ import { ArrowLeft } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
 
 import { ButtonPrimary } from '../../components/Button'
 import { GrayCard } from '../../components/Card'
@@ -50,7 +51,6 @@ import {
   useUserVotesAsOfBlock,
 } from '../../state/governance/hooks'
 import { VoteOption } from '../../state/governance/types'
-import { ExternalLink, StyledInternalLink, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
@@ -69,7 +69,7 @@ const PageWrapper = styled(AutoColumn)`
 `
 
 const ProposalInfo = styled(AutoColumn)`
-  background: ${({ theme }) => theme.backgroundSurface};
+  background: ${({ theme }) => theme.surface1};
   border-radius: 12px;
   padding: 1.5rem;
   position: relative;
@@ -82,10 +82,10 @@ const ArrowWrapper = styled(StyledInternalLink)`
   align-items: center;
   gap: 8px;
   height: 24px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 
   a {
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.neutral1};
     text-decoration: none;
   }
   :hover {
@@ -102,7 +102,7 @@ const CardWrapper = styled.div`
 const StyledDataCard = styled(DataCard)`
   width: 100%;
   background: none;
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  background-color: ${({ theme }) => theme.surface1};
   height: fit-content;
   z-index: 2;
 `
@@ -112,14 +112,14 @@ const ProgressWrapper = styled.div`
   margin-top: 1rem;
   height: 4px;
   border-radius: 4px;
-  background-color: ${({ theme }) => theme.deprecated_bg3};
+  background-color: ${({ theme }) => theme.surface2};
   position: relative;
 `
 
 const Progress = styled.div<{ status: 'for' | 'against'; percentageString?: string }>`
   height: 4px;
   border-radius: 4px;
-  background-color: ${({ theme, status }) => (status === 'for' ? theme.accentSuccess : theme.accentFailure)};
+  background-color: ${({ theme, status }) => (status === 'for' ? theme.success : theme.critical)};
   width: ${({ percentageString }) => percentageString ?? '0%'};
 `
 
@@ -283,7 +283,7 @@ export default function VotePage() {
           <DelegateModal
             isOpen={showDelegateModal}
             onDismiss={toggleDelegateModal}
-            title={<Trans>Unlock Votes</Trans>}
+            title={<Trans>Unlock votes</Trans>}
           />
           <QueueModal isOpen={showQueueModal} onDismiss={toggleQueueModal} proposalId={proposalData?.id} />
           <ExecuteModal isOpen={showExecuteModal} onDismiss={toggleExecuteModal} proposalId={proposalData?.id} />
@@ -346,7 +346,7 @@ export default function VotePage() {
                     toggleVoteModal()
                   }}
                 >
-                  <Trans>Vote For</Trans>
+                  <Trans>Vote for</Trans>
                 </ButtonPrimary>
                 <ButtonPrimary
                   padding="8px"
@@ -356,7 +356,7 @@ export default function VotePage() {
                     toggleVoteModal()
                   }}
                 >
-                  <Trans>Vote Against</Trans>
+                  <Trans>Vote against</Trans>
                 </ButtonPrimary>
               </RowFixed>
             )}
@@ -402,14 +402,14 @@ export default function VotePage() {
                 <CardSection>
                   <AutoColumn gap="md">
                     <WrapSmall>
-                      <ThemedText.DeprecatedBlack fontWeight={600}>
+                      <ThemedText.DeprecatedBlack fontWeight={535}>
                         <Trans>For</Trans>
                       </ThemedText.DeprecatedBlack>
                       {proposalData && (
-                        <ThemedText.DeprecatedBlack fontWeight={600}>
+                        <ThemedText.DeprecatedBlack fontWeight={535}>
                           {proposalData.forCount.toFixed(0, { groupSeparator: ',' })}
                           {quorumAmount && (
-                            <span style={{ fontWeight: 400 }}>{` / ${quorumAmount.toExact({
+                            <span style={{ fontWeight: 485 }}>{` / ${quorumAmount.toExact({
                               groupSeparator: ',',
                             })}`}</span>
                           )}
@@ -431,11 +431,11 @@ export default function VotePage() {
                 <CardSection>
                   <AutoColumn gap="md">
                     <WrapSmall>
-                      <ThemedText.DeprecatedBlack fontWeight={600}>
+                      <ThemedText.DeprecatedBlack fontWeight={535}>
                         <Trans>Against</Trans>
                       </ThemedText.DeprecatedBlack>
                       {proposalData && (
-                        <ThemedText.DeprecatedBlack fontWeight={600}>
+                        <ThemedText.DeprecatedBlack fontWeight={535}>
                           {proposalData.againstCount.toFixed(0, { groupSeparator: ',' })}
                         </ThemedText.DeprecatedBlack>
                       )}
@@ -453,7 +453,7 @@ export default function VotePage() {
               </StyledDataCard>
             </CardWrapper>
             <AutoColumn gap="md">
-              <ThemedText.DeprecatedMediumHeader fontWeight={600}>
+              <ThemedText.DeprecatedMediumHeader fontWeight={535}>
                 <Trans>Details</Trans>
               </ThemedText.DeprecatedMediumHeader>
               {proposalData?.details?.map((d, i) => {
@@ -474,7 +474,7 @@ export default function VotePage() {
               })}
             </AutoColumn>
             <AutoColumn gap="md">
-              <ThemedText.DeprecatedMediumHeader fontWeight={600}>
+              <ThemedText.DeprecatedMediumHeader fontWeight={535}>
                 <Trans>Description</Trans>
               </ThemedText.DeprecatedMediumHeader>
               <MarkDownWrapper>
@@ -487,7 +487,7 @@ export default function VotePage() {
               </MarkDownWrapper>
             </AutoColumn>
             <AutoColumn gap="md">
-              <ThemedText.DeprecatedMediumHeader fontWeight={600}>
+              <ThemedText.DeprecatedMediumHeader fontWeight={535}>
                 <Trans>Proposer</Trans>
               </ThemedText.DeprecatedMediumHeader>
               <ProposerAddressLink

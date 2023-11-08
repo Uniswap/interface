@@ -28,7 +28,20 @@ module.exports = {
     {
       files: ['**/*.ts', '**/*.tsx'],
       rules: {
-        '@typescript-eslint/no-restricted-imports': ['error', restrictedImports],
+        '@typescript-eslint/no-restricted-imports': [
+          'error',
+          {
+            ...restrictedImports,
+            paths: [
+              ...restrictedImports.paths,
+              {
+                name: '@uniswap/smart-order-router',
+                message: 'Only import types, unless you are in the client-side SOR, to preserve lazy-loading.',
+                allowTypeImports: true,
+              },
+            ],
+          },
+        ],
         'import/no-restricted-paths': [
           'error',
           {
@@ -55,6 +68,13 @@ module.exports = {
                 message: 'Default import from zustand is deprecated. Import `{ create }` instead.',
               },
             ],
+          },
+        ],
+        'no-restricted-syntax': [
+          'error',
+          {
+            selector: ':matches(ExportAllDeclaration)',
+            message: 'Barrel exports bloat the bundle size by preventing tree-shaking.',
           },
         ],
       },

@@ -117,8 +117,9 @@ export function gqlToCurrency(token: {
 }): Currency | undefined {
   const chainId = supportedChainIdFromGQLChain(token.chain)
   if (!chainId) return undefined
-  if (token.standard === TokenStandard.Native || !token.address) return nativeOnChain(chainId)
-  else return new Token(chainId, token.address, token.decimals ?? 18, token.name, token.symbol)
+  if (token.standard === TokenStandard.Native || token.address === 'NATIVE' || !token.address)
+    return nativeOnChain(chainId)
+  else return new Token(chainId, token.address, token.decimals ?? 18, token.symbol, token.name)
 }
 
 const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
@@ -130,6 +131,15 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
   bnb: Chain.Bnb,
   avalanche: Chain.Avalanche,
   base: Chain.Base,
+}
+
+/**
+ * @param chainName parsed in chain name from url query parameter
+ * @returns if chainName is a valid chain name, returns the backend chain name, otherwise returns undefined
+ */
+export function getValidUrlChainName(chainName: string | undefined): Chain | undefined {
+  const validChainName = chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
+  return validChainName ? validChainName : undefined
 }
 
 /**
@@ -184,27 +194,30 @@ export function logSentryErrorForUnsupportedChain({
 
 export const BACKEND_SUPPORTED_CHAINS = [
   Chain.Ethereum,
-  Chain.Polygon,
   Chain.Arbitrum,
   Chain.Optimism,
-  Chain.Celo,
+  Chain.Polygon,
   Chain.Base,
+  Chain.Bnb,
+  Chain.Celo,
 ] as const
-export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.BNB, ChainId.AVALANCHE] as const
+export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.AVALANCHE] as const
 
 export function getTokenDetailsURL({
   address,
   chain,
   inputAddress,
+  isInfoExplorePageEnabled,
 }: {
   address?: string | null
   chain: Chain
   inputAddress?: string | null
+  isInfoExplorePageEnabled: boolean
 }) {
   const chainName = chain.toLowerCase()
   const tokenAddress = address ?? NATIVE_CHAIN_ID
   const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
-  return `/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
+  return (isInfoExplorePageEnabled ? '/explore' : '') + `/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
 }
 
 export function unwrapToken<

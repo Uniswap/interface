@@ -8,7 +8,8 @@ import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useEffect, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
-import { BREAKPOINTS, ThemedText } from 'theme'
+import { BREAKPOINTS } from 'theme'
+import { ThemedText } from 'theme/components'
 
 import { ActivityTab } from './Activity'
 import { usePendingActivity } from './Activity/hooks'
@@ -30,7 +31,7 @@ const Wrapper = styled(Column)`
 
   ${PortfolioRowWrapper} {
     &:hover {
-      background: ${({ theme }) => theme.hoverDefault};
+      background: ${({ theme }) => theme.deprecated_hoverDefault};
     }
   }
 `
@@ -41,14 +42,14 @@ const Nav = styled(AutoRow)`
 
 const NavItem = styled(ThemedText.SubHeader)<{ active?: boolean }>`
   align-items: center;
-  color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textTertiary)};
+  color: ${({ theme, active }) => (active ? theme.neutral1 : theme.neutral2)};
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} color`};
 
   &:hover {
-    ${({ theme, active }) => !active && `color: ${theme.textSecondary}`};
+    ${({ theme, active }) => !active && `color: ${theme.neutral2}`};
   }
 `
 
@@ -137,7 +138,7 @@ export default function MiniPortfolio({ account }: { account: string }) {
                         <LoaderV2 />
                       ) : (
                         <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <circle cx="4" cy="4" r="4" fill={theme.accentAction} />
+                          <circle cx="4" cy="4" r="4" fill={theme.accent1} />
                         </svg>
                       )}
                     </>

@@ -4,12 +4,14 @@ import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ReactComponent as AppleLogo } from 'assets/svg/apple_logo.svg'
 import baseLogoUrl from 'assets/svg/base_background_icon.svg'
+import { ReactComponent as UniswapAppLogo } from 'assets/svg/uniswap_app_logo.svg'
+import { useAndroidGALaunchFlagEnabled } from 'featureFlags/flags/androidGALaunch'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { useLocation } from 'react-router-dom'
 import { useHideBaseWalletBanner } from 'state/user/hooks'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 import { openDownloadApp, openWalletMicrosite } from 'utils/openDownloadApp'
-import { isIOS, isMobileSafari } from 'utils/userAgent'
+import { isAndroid, isIOS, isMobileSafari } from 'utils/userAgent'
 
 import { BannerButton, BaseBackgroundImage, ButtonRow, PopupContainer, StyledXButton } from './styled'
 
@@ -22,6 +24,8 @@ export default function BaseWalletBanner() {
   const shouldDisplay = Boolean(!hideBaseWalletBanner && !isLandingScreen && chainId === ChainId.BASE)
 
   const screenSize = useScreenSize()
+
+  const isAndroidGALaunched = useAndroidGALaunchFlagEnabled()
 
   if (isMobileSafari) return null
 
@@ -56,31 +60,40 @@ export default function BaseWalletBanner() {
       </ThemedText.HeadlineMedium>
 
       <ButtonRow>
-        {isIOS ? (
+        {isIOS || (isAndroidGALaunched && isAndroid) ? (
           <>
             <BannerButton
               backgroundColor="white"
               onClick={() =>
                 openDownloadApp({
                   element: InterfaceElementName.UNISWAP_WALLET_BANNER_DOWNLOAD_BUTTON,
-                  appStoreParams: 'pt=123625782&ct=base-app-banner&mt=8',
+                  isAndroidGALaunched,
                 })
               }
             >
-              <AppleLogo width={14} height={14} />
+              {isAndroidGALaunched ? <UniswapAppLogo width={14} height={14} /> : <AppleLogo width={14} height={14} />}
               <ThemedText.LabelSmall color="black" marginLeft="5px">
                 {!screenSize['xs'] ? <Trans>Download</Trans> : <Trans>Download app</Trans>}
               </ThemedText.LabelSmall>
             </BannerButton>
 
-            <BannerButton backgroundColor="black" onClick={() => openWalletMicrosite()}>
+            <BannerButton
+              backgroundColor="black"
+              onClick={() =>
+                openWalletMicrosite({ element: InterfaceElementName.UNISWAP_WALLET_BANNER_DOWNLOAD_BUTTON })
+              }
+            >
               <ThemedText.LabelSmall color="white">
                 <Trans>Learn more</Trans>
               </ThemedText.LabelSmall>
             </BannerButton>
           </>
         ) : (
-          <BannerButton backgroundColor="white" width="125px" onClick={() => openWalletMicrosite()}>
+          <BannerButton
+            backgroundColor="white"
+            width="125px"
+            onClick={() => openWalletMicrosite({ element: InterfaceElementName.UNISWAP_WALLET_BANNER_DOWNLOAD_BUTTON })}
+          >
             <ThemedText.LabelSmall color="black">
               <Trans>Learn more</Trans>
             </ThemedText.LabelSmall>

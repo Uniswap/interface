@@ -16,14 +16,15 @@ import { X } from 'react-feather'
 import { useOrder } from 'state/signatures/hooks'
 import { useTransaction } from 'state/transactions/hooks'
 import styled from 'styled-components'
-import { EllipsisStyle, ThemedText } from 'theme'
+import { EllipsisStyle, ThemedText } from 'theme/components'
+import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const StyledClose = styled(X)<{ $padding: number }>`
   position: absolute;
   right: ${({ $padding }) => `${$padding}px`};
   top: ${({ $padding }) => `${$padding}px`};
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
 
   :hover {
     cursor: pointer;
@@ -32,12 +33,12 @@ const StyledClose = styled(X)<{ $padding: number }>`
 const PopupContainer = styled.div<{ padded?: boolean }>`
   display: inline-block;
   width: 100%;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
   position: relative;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: ${({ theme }) => theme.deepShadow};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
   transition: ${({ theme }) => `visibility ${theme.transition.duration.fast} ease-in-out`};
 
   padding: ${({ padded }) => (padded ? '20px 35px 20px 20px' : '2px 0px')};
@@ -73,11 +74,11 @@ export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: ChainI
       <RowNoFlex gap="12px">
         <PopupAlertTriangle />
         <ColumnContainer gap="sm">
-          <ThemedText.SubHeader color="textSecondary">
+          <ThemedText.SubHeader color="neutral2">
             <Trans>Failed to switch networks</Trans>
           </ThemedText.SubHeader>
 
-          <ThemedText.BodySmall color="textSecondary">
+          <ThemedText.BodySmall color="neutral2">
             <Trans>To use Uniswap on {chainInfo.label}, switch the network in your wallet’s settings.</Trans>
           </ThemedText.BodySmall>
         </ColumnContainer>
@@ -115,7 +116,7 @@ function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupConte
         }
         title={<ThemedText.SubHeader>{activity.title}</ThemedText.SubHeader>}
         descriptor={
-          <Descriptor color="textSecondary">
+          <Descriptor color="neutral2">
             {activity.descriptor}
             {ENSName ?? activity.otherAccount}
           </Descriptor>
@@ -137,9 +138,10 @@ export function TransactionPopupContent({
 }) {
   const transaction = useTransaction(hash)
   const tokens = useAllTokensMultichain()
+  const { formatNumber } = useFormatter()
   if (!transaction) return null
 
-  const activity = transactionToActivity(transaction, chainId, tokens)
+  const activity = transactionToActivity(transaction, chainId, tokens, formatNumber)
 
   if (!activity) return null
 
@@ -153,9 +155,10 @@ export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: s
   const order = useOrder(orderHash)
   const tokens = useAllTokensMultichain()
   const openOffchainActivityModal = useOpenOffchainActivityModal()
+  const { formatNumber } = useFormatter()
   if (!order) return null
 
-  const activity = signatureToActivity(order, tokens)
+  const activity = signatureToActivity(order, tokens, formatNumber)
 
   if (!activity) return null
 

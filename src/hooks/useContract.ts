@@ -1,4 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
+import { InterfaceEventName } from '@uniswap/analytics-events'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
   ChainId,
@@ -26,9 +27,11 @@ import ERC721_ABI from 'abis/erc721.json'
 import ERC1155_ABI from 'abis/erc1155.json'
 import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Erc721, Erc1155, Weth } from 'abis/types'
 import WETH_ABI from 'abis/weth.json'
-import { RPC_PROVIDERS } from 'constants/providers'
+import { sendAnalyticsEvent } from 'analytics'
+import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import { useMemo } from 'react'
+import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
+import { useEffect, useMemo } from 'react'
 import { NonfungiblePositionManager, TickLens, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
@@ -67,17 +70,19 @@ function useMainnetContract<T extends Contract = Contract>(address: string | und
   const { chainId } = useWeb3React()
   const isMainnet = chainId === ChainId.MAINNET
   const contract = useContract(isMainnet ? address : undefined, ABI, false)
+  const providers = useFallbackProviderEnabled() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
+
   return useMemo(() => {
     if (isMainnet) return contract
     if (!address) return null
-    const provider = RPC_PROVIDERS[ChainId.MAINNET]
+    const provider = providers[ChainId.MAINNET]
     try {
       return getContract(address, ABI, provider)
     } catch (error) {
       console.error('Failed to get mainnet contract', error)
       return null
     }
-  }, [address, ABI, contract, isMainnet]) as T
+  }, [isMainnet, contract, address, providers, ABI]) as T
 }
 
 export function useV2MigratorContract() {
@@ -145,11 +150,26 @@ export function useMainnetInterfaceMulticall() {
 }
 
 export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean): NonfungiblePositionManager | null {
-  return useContract<NonfungiblePositionManager>(
+  const { account, chainId } = useWeb3React()
+  const contract = useContract<NonfungiblePositionManager>(
     NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
     NFTPositionManagerABI,
     withSignerIfPossible
   )
+  useEffect(() => {
+    if (contract && account) {
+      sendAnalyticsEvent(InterfaceEventName.WALLET_PROVIDER_USED, {
+        source: 'useV3NFTPositionManagerContract',
+        contract: {
+          name: 'V3NonfungiblePositionManager',
+          address: contract.address,
+          withSignerIfPossible,
+          chainId,
+        },
+      })
+    }
+  }, [account, chainId, contract, withSignerIfPossible])
+  return contract
 }
 
 export function useTickLens(): TickLens | null {

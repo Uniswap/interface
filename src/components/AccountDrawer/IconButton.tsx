@@ -7,7 +7,7 @@ import { TRANSITION_DURATIONS } from '../../theme/styles'
 import Row from '../Row'
 
 export const IconHoverText = styled.span`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   position: absolute;
   top: 28px;
   border-radius: 8px;
@@ -22,7 +22,7 @@ const getWidthTransition = ({ theme }: { theme: DefaultTheme }) =>
   `width ${theme.transition.timing.inOut} ${theme.transition.duration.fast}`
 
 const IconStyles = css<{ hideHorizontal?: boolean }>`
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  background-color: ${({ theme }) => theme.surface1};
   transition: ${getWidthTransition};
   border-radius: 12px;
   display: flex;
@@ -32,9 +32,9 @@ const IconStyles = css<{ hideHorizontal?: boolean }>`
   overflow: hidden;
   height: 32px;
   width: ${({ hideHorizontal }) => (hideHorizontal ? '0px' : '32px')};
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral2};
   :hover {
-    background-color: ${({ theme }) => theme.hoverState};
+    background-color: ${({ theme }) => theme.surface2};
     transition: ${({
       theme: {
         transition: { duration, timing },
@@ -46,7 +46,7 @@ const IconStyles = css<{ hideHorizontal?: boolean }>`
     }
   }
   :active {
-    background-color: ${({ theme }) => theme.backgroundSurface};
+    background-color: ${({ theme }) => theme.surface1};
     transition: background-color ${({ theme }) => theme.transition.duration.fast} linear, ${getWidthTransition};
   }
 `
@@ -62,10 +62,12 @@ const IconBlockButton = styled.button`
 `
 
 const IconWrapper = styled.span`
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
   margin: auto;
   display: flex;
+  align-items: center;
+  justify-content: center;
 `
 interface BaseProps {
   Icon: Icon
@@ -90,7 +92,7 @@ const IconBlock = forwardRef<HTMLAnchorElement | HTMLDivElement, IconBlockProps>
 const IconButton = ({ Icon, ...rest }: IconButtonProps | IconLinkProps) => (
   <IconBlock {...rest}>
     <IconWrapper>
-      <Icon strokeWidth={1.5} size={16} />
+      <Icon size={24} />
     </IconWrapper>
   </IconBlock>
 )
@@ -108,6 +110,7 @@ const TextWrapper = styled.div`
   flex-shrink: 0;
   overflow: hidden;
   min-width: min-content;
+  font-weight: 485;
 `
 
 const TextHide = styled.div`
@@ -151,7 +154,10 @@ export const IconWithConfirmTextButton = ({
   const dimensions = (() => {
     // once opened, we avoid updating it to prevent constant resize loop
     if (!showText) {
-      dimensionsRef.current = { frame: frameObserver.width || 0, innerText: hiddenObserver.width || 0 }
+      dimensionsRef.current = {
+        frame: frameObserver.width || 0,
+        innerText: hiddenObserver.width || 0,
+      }
     }
     return dimensionsRef.current
   })()
@@ -231,7 +237,7 @@ export const IconWithConfirmTextButton = ({
     >
       <Row height="100%" gap="xs">
         <IconWrapper>
-          <Icon strokeWidth={1.5} size={16} />
+          <Icon width={24} height={24} />
         </IconWrapper>
 
         {/* this outer div is so we can cut it off but keep the inner text width full-width so we can measure it */}

@@ -19,21 +19,14 @@ const USDC_GOERLI = new Token(ChainId.GOERLI, '0x07865c6e87b9f70255377e024ace663
 const USDC_SEPOLIA = new Token(ChainId.SEPOLIA, '0x6f14C02Fc1F78322cFd7d707aB90f18baD3B54f5', 6, 'USDC', 'USD//C')
 export const USDC_OPTIMISM = new Token(
   ChainId.OPTIMISM,
-  '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+  '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85',
   6,
   'USDC',
   'USD//C'
 )
-const USDC_OPTIMISM_GOERLI = new Token(
+export const USDC_OPTIMISM_GOERLI = new Token(
   ChainId.OPTIMISM_GOERLI,
-  '0x7E07E15D2a87A24492740D16f5bdF58c16db0c4E',
-  6,
-  'USDC',
-  'USD//C'
-)
-export const BRIDGED_USDC_ARBITRUM = new Token(
-  ChainId.ARBITRUM_ONE,
-  '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
+  '0xe05606174bac4A6364B31bd0eCA4bf4dD368f8C6',
   6,
   'USDC',
   'USD//C'
@@ -54,17 +47,17 @@ export const USDC_ARBITRUM_GOERLI = new Token(
 )
 export const USDC_POLYGON = new Token(
   ChainId.POLYGON,
-  '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+  '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359',
   6,
   'USDC',
-  'USD//C'
+  'USD Coin'
 )
-const USDC_POLYGON_MUMBAI = new Token(
+export const USDC_POLYGON_MUMBAI = new Token(
   ChainId.POLYGON_MUMBAI,
-  '0xe11a86849d99f524cac3e7a0ec1241828e332c62',
+  '0x0fa8781a83e46826621b3bc094ea2a0212e71b23',
   6,
   'USDC',
-  'USD//C'
+  'USD Coin'
 )
 export const PORTAL_USDC_CELO = new Token(
   ChainId.CELO,
@@ -73,13 +66,7 @@ export const PORTAL_USDC_CELO = new Token(
   'USDCet',
   'USDC (Portal from Ethereum)'
 )
-export const USDC_BASE = new Token(
-  ChainId.BASE,
-  '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA',
-  6,
-  'USD Base Coin',
-  'USDbC'
-)
+export const USDC_BASE = new Token(ChainId.BASE, '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', 6, 'USDC', 'USD Coin')
 
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
 export const DAI_ARBITRUM_ONE = new Token(
@@ -96,6 +83,14 @@ export const DAI_OPTIMISM = new Token(
   'DAI',
   'Dai stable coin'
 )
+export const MATIC_MAINNET = new Token(
+  ChainId.MAINNET,
+  '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0',
+  18,
+  'MATIC',
+  'Polygon Matic'
+)
+const MATIC_POLYGON = new Token(ChainId.POLYGON, '0x0000000000000000000000000000000000001010', 18, 'MATIC', 'Matic')
 export const DAI_POLYGON = new Token(
   ChainId.POLYGON,
   '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
@@ -103,6 +98,7 @@ export const DAI_POLYGON = new Token(
   'DAI',
   'Dai Stablecoin'
 )
+
 export const USDT_POLYGON = new Token(
   ChainId.POLYGON,
   '0xc2132d05d31c914a87c6611c10748aeb04b58e8f',
@@ -147,7 +143,13 @@ export const WBTC_OPTIMISM = new Token(
   'WBTC',
   'Wrapped BTC'
 )
-
+const MATIC_POLYGON_MUMBAI = new Token(
+  ChainId.POLYGON_MUMBAI,
+  '0x0000000000000000000000000000000000001010',
+  18,
+  'MATIC',
+  'Matic'
+)
 export const WETH_POLYGON_MUMBAI = new Token(
   ChainId.POLYGON_MUMBAI,
   '0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa',
@@ -185,12 +187,12 @@ export const PORTAL_ETH_CELO = new Token(
   'ETH',
   'Portal Ether'
 )
-export const CMC02_CELO = new Token(
+export const WBTC_CELO = new Token(
   ChainId.CELO,
-  '0x32A9FE697a32135BFd313a6Ac28792DaE4D9979d',
+  '0xd71Ffd0940c920786eC4DbB5A12306669b5b81EF',
   18,
-  'cMCO2',
-  'Celo Moss Carbon Credit'
+  'WBTC',
+  'Wrapped BTC'
 )
 const CELO_CELO_ALFAJORES = new Token(
   ChainId.CELO_ALFAJORES,
@@ -260,6 +262,8 @@ export const ARB = new Token(ChainId.ARBITRUM_ONE, '0x912CE59144191C1204E64559FE
 
 export const OP = new Token(ChainId.OPTIMISM, '0x4200000000000000000000000000000000000042', 18, 'OP', 'Optimism')
 
+export const LDO = new Token(ChainId.MAINNET, '0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32', 18, 'LDO', 'Lido DAO Token')
+
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
   ...(WETH9 as Record<ChainId, Token>),
   [ChainId.OPTIMISM]: new Token(
@@ -277,13 +281,6 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'Wrapped Ether'
   ),
   [ChainId.BASE]: new Token(ChainId.BASE, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether'),
-  [ChainId.BASE_GOERLI]: new Token(
-    ChainId.BASE_GOERLI,
-    '0x4200000000000000000000000000000000000006',
-    18,
-    'WETH',
-    'Wrapped Ether'
-  ),
   [ChainId.ARBITRUM_ONE]: new Token(
     ChainId.ARBITRUM_ONE,
     '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
@@ -358,25 +355,18 @@ function getCeloNativeCurrency(chainId: number) {
   }
 }
 
-export function isMatic(chainId: number): chainId is ChainId.POLYGON | ChainId.POLYGON_MUMBAI {
+export function isPolygon(chainId: number): chainId is ChainId.POLYGON | ChainId.POLYGON_MUMBAI {
   return chainId === ChainId.POLYGON_MUMBAI || chainId === ChainId.POLYGON
 }
 
-class MaticNativeCurrency extends NativeCurrency {
-  equals(other: Currency): boolean {
-    return other.isNative && other.chainId === this.chainId
-  }
-
-  get wrapped(): Token {
-    if (!isMatic(this.chainId)) throw new Error('Not matic')
-    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
-    invariant(wrapped instanceof Token)
-    return wrapped
-  }
-
-  public constructor(chainId: number) {
-    if (!isMatic(chainId)) throw new Error('Not matic')
-    super(chainId, 18, 'MATIC', 'Polygon Matic')
+function getPolygonNativeCurrency(chainId: number) {
+  switch (chainId) {
+    case ChainId.POLYGON:
+      return MATIC_POLYGON
+    case ChainId.POLYGON_MUMBAI:
+      return MATIC_POLYGON_MUMBAI
+    default:
+      throw new Error('Not polygon')
   }
 }
 
@@ -442,8 +432,8 @@ const cachedNativeCurrency: { [chainId: number]: NativeCurrency | Token } = {}
 export function nativeOnChain(chainId: number): NativeCurrency | Token {
   if (cachedNativeCurrency[chainId]) return cachedNativeCurrency[chainId]
   let nativeCurrency: NativeCurrency | Token
-  if (isMatic(chainId)) {
-    nativeCurrency = new MaticNativeCurrency(chainId)
+  if (isPolygon(chainId)) {
+    nativeCurrency = getPolygonNativeCurrency(chainId)
   } else if (isCelo(chainId)) {
     nativeCurrency = getCeloNativeCurrency(chainId)
   } else if (isBsc(chainId)) {
@@ -466,13 +456,14 @@ export function getSwapCurrencyId(currency: Currency): string {
 export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in ChainId]?: string } } = {
   USDC: {
     [ChainId.MAINNET]: USDC_MAINNET.address,
-    [ChainId.ARBITRUM_ONE]: BRIDGED_USDC_ARBITRUM.address,
+    [ChainId.ARBITRUM_ONE]: USDC_ARBITRUM.address,
     [ChainId.ARBITRUM_GOERLI]: USDC_ARBITRUM_GOERLI.address,
     [ChainId.OPTIMISM]: USDC_OPTIMISM.address,
     [ChainId.OPTIMISM_GOERLI]: USDC_OPTIMISM_GOERLI.address,
     [ChainId.POLYGON]: USDC_POLYGON.address,
     [ChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI.address,
     [ChainId.BNB]: USDC_BSC.address,
+    [ChainId.BASE]: USDC_BASE.address,
     [ChainId.CELO]: PORTAL_USDC_CELO.address,
     [ChainId.CELO_ALFAJORES]: PORTAL_USDC_CELO.address,
     [ChainId.GOERLI]: USDC_GOERLI.address,

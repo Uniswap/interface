@@ -5,13 +5,14 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { RowsCollpsedIcon, RowsExpandedIcon } from 'nft/components/icons'
 import { getRoyalty, useHandleGlobalPriceToggle, useSyncPriceWithGlobalMethod } from 'nft/components/profile/list/utils'
 import { useSellAsset } from 'nft/hooks'
+import { useNativeUsdPrice } from 'nft/hooks/useUsdPrice'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
-import { formatEth, formatUsdPrice } from 'nft/utils/currency'
-import { fetchPrice } from 'nft/utils/fetchPrice'
 import { Dispatch, DispatchWithoutAction, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import styled from 'styled-components'
-import { BREAKPOINTS, ThemedText } from 'theme'
+import { BREAKPOINTS } from 'theme'
+import { ThemedText } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { PriceTextInput } from './PriceTextInput'
 import { RoyaltyTooltip } from './RoyaltyTooltip'
@@ -65,7 +66,7 @@ const MarketIcon = styled.div<{ index: number }>`
   border-radius: 4px;
   z-index: ${({ index }) => 2 - index};
   margin-left: ${({ index }) => `${index === 0 ? 0 : -8}px`};
-  outline: 1px solid ${({ theme }) => theme.backgroundInteractive};
+  outline: 1px solid ${({ theme }) => theme.surface3};
 `
 
 const ExpandMarketIconWrapper = styled.div`
@@ -125,6 +126,7 @@ export const MarketplaceRow = ({
   toggleExpandMarketplaceRows,
   rowHovered,
 }: MarketplaceRowProps) => {
+  const { formatNumberOrString, formatDelta } = useFormatter()
   const setAssetListPrice = useSellAsset((state) => state.setAssetListPrice)
   const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)
   const [marketIconHovered, toggleMarketIconHovered] = useReducer((s) => !s, false)
@@ -182,13 +184,18 @@ export const MarketplaceRow = ({
   return (
     <Row onMouseEnter={toggleMarketRowHovered} onMouseLeave={toggleMarketRowHovered}>
       <FloorPriceInfo>
-        <ThemedText.BodyPrimary color="textSecondary" lineHeight="24px">
-          {asset.floorPrice ? `${asset.floorPrice.toFixed(3)} ETH` : '-'}
+        <ThemedText.BodyPrimary color="neutral2" lineHeight="24px">
+          {formatNumberOrString({
+            input: asset.floorPrice,
+            type: NumberType.NFTToken,
+          }) + asset.floorPrice
+            ? ' ETH'
+            : ''}
         </ThemedText.BodyPrimary>
       </FloorPriceInfo>
       <LastPriceInfo>
-        <ThemedText.BodyPrimary color="textSecondary" lineHeight="24px">
-          {asset.lastPrice ? `${asset.lastPrice.toFixed(3)} ETH` : '-'}
+        <ThemedText.BodyPrimary color="neutral2" lineHeight="24px">
+          {asset.lastPrice ? `${formatNumberOrString({ input: asset.lastPrice, type: NumberType.NFTToken })} ETH` : '-'}
         </ThemedText.BodyPrimary>
       </LastPriceInfo>
 
@@ -233,8 +240,8 @@ export const MarketplaceRow = ({
           placement="left"
         >
           <FeeWrapper>
-            <ThemedText.BodyPrimary color="textSecondary">
-              {fees > 0 ? `${fees.toFixed(2)}${selectedMarkets.length > 1 ? t`% max` : '%'}` : '--%'}
+            <ThemedText.BodyPrimary color="neutral2">
+              {fees > 0 ? `${formatDelta(fees)}${selectedMarkets.length > 1 ? t`max` : ''}` : '--%'}
             </ThemedText.BodyPrimary>
           </FeeWrapper>
         </MouseoverTooltip>
@@ -248,21 +255,17 @@ export const MarketplaceRow = ({
 }
 
 const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
-  const [ethConversion, setEthConversion] = useState(3000)
-  useEffect(() => {
-    fetchPrice().then((price) => {
-      setEthConversion(price ?? 0)
-    })
-  }, [])
+  const { formatNumberOrString } = useFormatter()
+  const ethUsdPrice = useNativeUsdPrice()
 
   return (
     <Row width="100%" justify="flex-end">
-      <ThemedText.BodyPrimary lineHeight="24px" color={ethPrice ? 'textPrimary' : 'textSecondary'} textAlign="right">
+      <ThemedText.BodyPrimary lineHeight="24px" color={ethPrice ? 'neutral1' : 'neutral2'} textAlign="right">
         {ethPrice !== 0 ? (
           <Column>
-            <span>{formatEth(ethPrice)} ETH</span>
-            <ThemedText.BodyPrimary color="textSecondary">
-              {formatUsdPrice(ethPrice * ethConversion)}
+            <span>{formatNumberOrString({ input: ethPrice, type: NumberType.NFTToken })} ETH</span>
+            <ThemedText.BodyPrimary color="neutral2">
+              {formatNumberOrString({ input: ethPrice * ethUsdPrice, type: NumberType.FiatNFTToken })}
             </ThemedText.BodyPrimary>
           </Column>
         ) : (

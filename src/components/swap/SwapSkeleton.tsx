@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { ArrowContainer } from 'pages/Swap'
 import { ArrowDown } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 import { ArrowWrapper } from './styled'
 
@@ -20,20 +20,20 @@ const LoadingWrapper = styled.div`
   justify-content: space-between;
 
   padding: 8px;
-  border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
+  border: ${({ theme }) => `1px solid ${theme.surface3}`};
   border-radius: 16px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
 `
 
 const Blob = styled.div<{ width?: number; radius?: number }>`
-  background-color: ${({ theme }) => theme.backgroundModule};
+  background-color: ${({ theme }) => theme.surface2};
   border-radius: ${({ radius }) => (radius ?? 4) + 'px'};
   height: 56px;
   width: ${({ width }) => (width ? width + 'px' : '100%')};
 `
 
 const ModuleBlob = styled(Blob)`
-  background-color: ${({ theme }) => theme.backgroundOutline};
+  background-color: ${({ theme }) => theme.surface3};
   height: 36px;
 `
 
@@ -50,7 +50,7 @@ const Row = styled.div`
 const InputColumn = styled.div`
   display: flex;
   flex-flow: column;
-  background-color: ${({ theme }) => theme.backgroundModule};
+  background-color: ${({ theme }) => theme.surface2};
   border-radius: 16px;
   display: flex;
   gap: 30px;
@@ -96,7 +96,7 @@ export function SwapSkeleton() {
       <OutputWrapper>
         <StyledArrowWrapper clickable={false}>
           <ArrowContainer>
-            <ArrowDown size="16" color={theme.textTertiary} />
+            <ArrowDown size="16" color={theme.neutral3} />
           </ArrowContainer>
         </StyledArrowWrapper>
         <InputColumn>

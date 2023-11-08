@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { Trace, TraceEvent } from 'analytics'
+import { ReactComponent as UniswapAppLogo } from 'assets/svg/uniswap_app_logo.svg'
 import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
@@ -8,13 +9,12 @@ import ProtocolBanner from 'components/About/ProtocolBanner'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { BaseButton } from 'components/Button'
 import { AppleLogo } from 'components/Logo/AppleLogo'
+import { useAndroidGALaunchFlagEnabled } from 'featureFlags/flags/androidGALaunch'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import Swap from 'pages/Swap'
-import { RedirectPathToSwapOnly } from 'pages/Swap/redirects'
 import { parse } from 'qs'
 import { useEffect, useMemo, useRef } from 'react'
-import { ArrowDownCircle } from 'react-feather'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
 import { useAppSelector } from 'state/hooks'
 import styled, { css } from 'styled-components'
@@ -97,7 +97,7 @@ const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   width: 100%;
   padding: 0 0 40px;
   max-width: min(720px, 90%);
-  min-height: 500px;
+  min-height: 535px;
   z-index: ${Z_INDEX.under_dropdown};
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
   height: ${({ theme }) => `calc(100vh - ${theme.navHeight + theme.mobileBottomBarHeight}px)`};
@@ -107,11 +107,28 @@ const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   }
 `
 
+const DownloadWalletLink = styled.a`
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 24px;
+  color: ${({ theme }) => theme.neutral2};
+  text-decoration: none;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  align-items: center;
+
+  :hover {
+    color: ${({ theme }) => theme.neutral3};
+  }
+`
+
 const TitleText = styled.h1<{ isDarkMode: boolean }>`
   color: transparent;
   font-size: 36px;
   line-height: 44px;
-  font-weight: 700;
+  font-weight: 535;
   text-align: center;
   margin: 0 0 24px;
   ${({ isDarkMode }) =>
@@ -137,12 +154,12 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
 `
 
 const SubText = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 16px;
   line-height: 24px;
-  font-weight: 500;
+  font-weight: 535;
   text-align: center;
-  max-width: 600px;
+  max-width: 500px;
   margin: 0 0 32px;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
@@ -175,7 +192,7 @@ const ButtonCTA = styled(LandingButton)`
 const ButtonCTAText = styled.p`
   margin: 0px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 535;
   white-space: nowrap;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
@@ -191,11 +208,11 @@ const ActionsContainer = styled.span`
 
 const LearnMoreContainer = styled.div`
   align-items: center;
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.neutral3};
   cursor: pointer;
   font-size: 20px;
-  font-weight: 600;
-  margin: 36px 0;
+  font-weight: 535;
+  margin: 18px 0 36px;
   display: flex;
   visibility: hidden;
   pointer-events: auto;
@@ -208,11 +225,6 @@ const LearnMoreContainer = styled.div`
   &:hover {
     opacity: 0.6;
   }
-`
-
-const LearnMoreArrow = styled(ArrowDownCircle)`
-  margin-left: 14px;
-  size: 20px;
 `
 
 const AboutContentContainer = styled.div<{ isDarkMode: boolean }>`
@@ -291,7 +303,7 @@ const LinkCss = css`
 const LandingSwap = styled(Swap)`
   ${SwapCss}
   &:hover {
-    border: 1px solid ${({ theme }) => theme.accentAction};
+    border: 1px solid ${({ theme }) => theme.accent1};
   }
 `
 
@@ -303,11 +315,14 @@ export default function Landing() {
   const isDarkMode = useIsDarkMode()
   const cardsRef = useRef<HTMLDivElement>(null)
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
+
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
   const cards = useMemo(
     () => MAIN_CARDS.filter((card) => !(shouldDisableNFTRoutes && card.to.startsWith('/nft'))),
     [shouldDisableNFTRoutes]
   )
+
+  const isAndroidGALaunched = useAndroidGALaunchFlagEnabled()
 
   const [accountDrawerOpen] = useAccountDrawer()
   const navigate = useNavigate()
@@ -319,9 +334,11 @@ export default function Landing() {
     }
   }, [accountDrawerOpen, navigate])
 
-  const queryParams = parse(useLocation().search, { ignoreQueryPrefix: true })
+  const location = useLocation()
+  const queryParams = parse(location.search, { ignoreQueryPrefix: true })
+
   if (selectedWallet && !queryParams.intro) {
-    return <RedirectPathToSwapOnly />
+    return <Navigate to={{ ...location, pathname: '/swap' }} replace />
   }
 
   return (
@@ -378,18 +395,25 @@ export default function Landing() {
             }}
           >
             <Trans>Learn more</Trans>
-            <LearnMoreArrow />
           </LearnMoreContainer>
 
           <DownloadWalletLink
             {...getDownloadAppLinkProps({
-              // landing page specific tracking params
-              microSiteParams: `utm_source=home_page&utm_medium=webapp&utm_campaign=wallet_microsite&utm_id=1`,
-              appStoreParams: `ct=Uniswap-Home-Page&mt=8`,
+              element: InterfaceElementName.UNISWAP_WALLET_LANDING_PAGE_DOWNLOAD_BUTTON,
+              isAndroidGALaunched,
             })}
           >
-            <AppleLogo width="20" height="20" />
-            Download the Uniswap Wallet for iOS
+            {isAndroidGALaunched ? (
+              <>
+                <UniswapAppLogo width="20" height="20" />
+                Download the Uniswap app
+              </>
+            ) : (
+              <>
+                <AppleLogo width="20" height="20" />
+                Download the Uniswap app for iOS
+              </>
+            )}
           </DownloadWalletLink>
         </ContentContainer>
         <AboutContentContainer isDarkMode={isDarkMode}>
@@ -402,7 +426,7 @@ export default function Landing() {
               />
             ))}
           </CardGrid>
-          <CardGrid cols={3}>
+          <CardGrid cols={MORE_CARDS.length}>
             {MORE_CARDS.map(({ darkIcon, lightIcon, ...card }) => (
               <Card {...card} icon={isDarkMode ? darkIcon : lightIcon} key={card.title} type={CardType.Secondary} />
             ))}
@@ -414,18 +438,3 @@ export default function Landing() {
     </Trace>
   )
 }
-
-const DownloadWalletLink = styled.a`
-  display: inline-flex;
-  gap: 8px;
-  color: ${({ theme }) => theme.textSecondary};
-  text-decoration: none;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 500;
-  text-align: center;
-
-  :hover {
-    color: ${({ theme }) => theme.textTertiary};
-  }
-`

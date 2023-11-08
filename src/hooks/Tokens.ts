@@ -10,7 +10,7 @@ import { useAppSelector } from 'state/hooks'
 import { isL2ChainId } from 'utils/chains'
 
 import { useAllLists, useCombinedActiveList, useCombinedTokenMapFromUrls } from '../state/lists/hooks'
-import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
+import { TokenFromList } from '../state/lists/tokenFromList'
 import { deserializeToken, useUserAddedTokens } from '../state/user/hooks'
 import { useUnsupportedTokenList } from './../state/lists/hooks'
 
@@ -112,7 +112,7 @@ export function useUnsupportedTokens(): { [address: string]: Token } {
 
     const listUrl = getChainInfo(chainId).defaultListUrl
 
-    const { current: list } = listsByUrl[listUrl]
+    const list = listsByUrl[listUrl]?.current
     if (!list) {
       return {}
     }
@@ -138,7 +138,7 @@ export function useUnsupportedTokens(): { [address: string]: Token } {
   return { ...unsupportedTokens, ...l2InferredBlockedTokens }
 }
 
-export function useSearchInactiveTokenLists(search: string | undefined, minResults = 10): WrappedTokenInfo[] {
+export function useSearchInactiveTokenLists(search: string | undefined, minResults = 10): TokenFromList[] {
   const lists = useAllLists()
   const inactiveUrls = DEFAULT_INACTIVE_LIST_URLS
   const { chainId } = useWeb3React()
@@ -146,7 +146,7 @@ export function useSearchInactiveTokenLists(search: string | undefined, minResul
   return useMemo(() => {
     if (!search || search.trim().length === 0) return []
     const tokenFilter = getTokenFilter(search)
-    const result: WrappedTokenInfo[] = []
+    const result: TokenFromList[] = []
     const addressSet: { [address: string]: true } = {}
     for (const url of inactiveUrls) {
       const list = lists[url]?.current
@@ -154,7 +154,7 @@ export function useSearchInactiveTokenLists(search: string | undefined, minResul
       for (const tokenInfo of list.tokens) {
         if (tokenInfo.chainId === chainId && tokenFilter(tokenInfo)) {
           try {
-            const wrapped: WrappedTokenInfo = new WrappedTokenInfo(tokenInfo, list)
+            const wrapped: TokenFromList = new TokenFromList(tokenInfo, list)
             if (!(wrapped.address in activeTokens) && !addressSet[wrapped.address]) {
               addressSet[wrapped.address] = true
               result.push(wrapped)
@@ -190,7 +190,7 @@ export function useToken(tokenAddress?: string | null): Token | null | undefined
   return useTokenFromMapOrNetwork(tokens, tokenAddress)
 }
 
-export function useCurrency(currencyId: Maybe<string>, chainId?: ChainId): Currency | null | undefined {
+export function useCurrency(currencyId: Maybe<string>, chainId?: ChainId): Currency | undefined {
   const { chainId: connectedChainId } = useWeb3React()
   const tokens = useDefaultActiveTokens(chainId ?? connectedChainId)
   return useCurrencyFromMap(tokens, chainId ?? connectedChainId, currencyId)

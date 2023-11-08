@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 import UniswapXRouterLabel, { UnswapXRouterLabelProps } from '../RouterLabel/UniswapXRouterLabel'
 
@@ -13,7 +13,7 @@ export default function UniswapXBrandMark({ fontWeight, ...props }: UniswapXBran
       <ThemedText.BodySecondary
         fontSize="inherit"
         {...(fontWeight === 'bold' && {
-          fontWeight: '500',
+          fontWeight: '535',
         })}
       >
         <Trans>UniswapX</Trans>

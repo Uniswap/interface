@@ -3,7 +3,8 @@ import { Column, Row } from 'nft/components/Flex'
 import { body, bodySmall } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
 import { useBagTotalEthPrice, useBagTotalUsdPrice } from 'nft/hooks/useBagTotalEthPrice'
-import { ethNumberStandardFormatter, formatWeiToDecimal, roundAndPluralize } from 'nft/utils'
+import { roundAndPluralize } from 'nft/utils'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import * as styles from './MobileHoverBag.css'
 export const MobileHoverBag = () => {
@@ -11,6 +12,7 @@ export const MobileHoverBag = () => {
   const toggleBag = useBag((state) => state.toggleBag)
   const totalEthPrice = useBagTotalEthPrice()
   const totalUsdPrice = useBagTotalUsdPrice()
+  const { formatEther, formatNumberOrString } = useFormatter()
 
   const shouldShowBag = itemsInBag.length > 0
 
@@ -44,13 +46,15 @@ export const MobileHoverBag = () => {
           })}
         </Box>
         <Column>
-          <Box className={body} fontWeight="semibold">
+          <Box className={body} fontWeight="medium">
             {roundAndPluralize(itemsInBag.length, 'NFT')}
           </Box>
           <Row gap="8">
-            <Box className={body}>{`${formatWeiToDecimal(totalEthPrice.toString())}`} ETH</Box>
-            <Box color="textSecondary" className={bodySmall}>
-              {ethNumberStandardFormatter(totalUsdPrice, true)}
+            <Box className={body}>
+              {`${formatEther({ input: totalEthPrice.toString(), type: NumberType.NFTToken })}`} ETH
+            </Box>
+            <Box color="neutral2" className={bodySmall}>
+              {formatNumberOrString({ input: totalUsdPrice, type: NumberType.FiatNFTToken })}
             </Box>
           </Row>
         </Column>

@@ -1,7 +1,7 @@
 import { SwapEventTimestampTracker, SwapEventType } from './SwapEventTimestampTracker'
 
 jest.mock('./utils', () => ({
-  calculateElapsedTimeWithPerformanceMark: (mark: string) => {
+  calculateElapsedTimeWithPerformanceMarkMs: (mark: string) => {
     switch (mark) {
       case SwapEventType.FIRST_SWAP_ACTION:
         return 100

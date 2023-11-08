@@ -1,5 +1,7 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+// This file is lazy-loaded, so the import of smart-order-router is intentional.
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { routeAmountsToString, SwapRoute } from '@uniswap/smart-order-router'
 import { Pool } from '@uniswap/v3-sdk'
 import { QuoteResult, QuoteState, URAQuoteType } from 'state/routing/types'

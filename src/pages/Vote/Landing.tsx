@@ -24,7 +24,7 @@ import { useTokenBalance } from 'state/connection/hooks'
 import { ProposalData, ProposalState } from 'state/governance/hooks'
 import { useAllProposalData, useUserDelegatee, useUserVotes } from 'state/governance/hooks'
 import styled, { useTheme } from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme'
+import { ExternalLink, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -60,14 +60,14 @@ const Proposal = styled(Button)`
   text-align: left;
   outline: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   text-decoration: none;
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  background-color: ${({ theme }) => theme.surface1};
   &:focus {
-    background-color: ${({ theme }) => darken(0.05, theme.deprecated_bg1)};
+    background-color: ${({ theme }) => darken(0.05, theme.surface1)};
   }
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundInteractive};
+    background-color: ${({ theme }) => theme.surface3};
   }
 `
 
@@ -77,7 +77,7 @@ const ProposalNumber = styled.span`
 `
 
 const ProposalTitle = styled.span`
-  font-weight: 600;
+  font-weight: 535;
   flex: 1;
   max-width: 420px;
   white-space: initial;
@@ -98,7 +98,7 @@ const WrapSmall = styled(RowBetween)`
 `
 
 const TextButton = styled(ThemedText.DeprecatedMain)`
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accent1};
   :hover {
     cursor: pointer;
     text-decoration: underline;
@@ -111,11 +111,11 @@ const AddressButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accent1};
 `
 
 const StyledExternalLink = styled(ExternalLink)`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 
 export default function Landing() {
@@ -150,7 +150,7 @@ export default function Landing() {
           <DelegateModal
             isOpen={showDelegateModal}
             onDismiss={toggleDelegateModal}
-            title={showUnlockVoting ? <Trans>Unlock Votes</Trans> : <Trans>Update Delegation</Trans>}
+            title={showUnlockVoting ? <Trans>Unlock votes</Trans> : <Trans>Update delegation</Trans>}
           />
           <TopSection gap="md">
             <VoteCard>
@@ -159,8 +159,8 @@ export default function Landing() {
               <CardSection>
                 <AutoColumn gap="md">
                   <RowBetween>
-                    <ThemedText.DeprecatedWhite fontWeight={600}>
-                      <Trans>Uniswap Governance</Trans>
+                    <ThemedText.DeprecatedWhite fontWeight={535}>
+                      <Trans>Uniswap governance</Trans>
                     </ThemedText.DeprecatedWhite>
                   </RowBetween>
                   <RowBetween>
@@ -203,10 +203,10 @@ export default function Landing() {
                     $borderRadius="8px"
                     onClick={toggleDelegateModal}
                   >
-                    <Trans>Unlock Voting</Trans>
+                    <Trans>Unlock voting</Trans>
                   </ButtonPrimary>
                 ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
-                  <ThemedText.DeprecatedBody fontWeight={500} mr="6px">
+                  <ThemedText.DeprecatedBody fontWeight={535} mr="6px">
                     <Trans>
                       <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
                     </Trans>
@@ -215,7 +215,7 @@ export default function Landing() {
                   userDelegatee &&
                   userDelegatee !== ZERO_ADDRESS &&
                   JSBI.notEqual(JSBI.BigInt(0), uniBalance?.quotient) ? (
-                  <ThemedText.DeprecatedBody fontWeight={500} mr="6px">
+                  <ThemedText.DeprecatedBody fontWeight={535} mr="6px">
                     <Trans>
                       <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
                     </Trans>
@@ -229,7 +229,7 @@ export default function Landing() {
                   style={{ width: 'fit-content', borderRadius: '8px', height: '40px' }}
                   padding="8px"
                 >
-                  <Trans>Create Proposal</Trans>
+                  <Trans>Create proposal</Trans>
                 </ButtonPrimary>
               </AutoRow>
             </WrapSmall>
@@ -238,7 +238,7 @@ export default function Landing() {
                 <div />
                 {userDelegatee && userDelegatee !== ZERO_ADDRESS ? (
                   <RowFixed>
-                    <ThemedText.DeprecatedBody fontWeight={500} mr="4px">
+                    <ThemedText.DeprecatedBody fontWeight={535} mr="4px">
                       <Trans>Delegated to:</Trans>
                     </ThemedText.DeprecatedBody>
                     <AddressButton>
@@ -266,7 +266,7 @@ export default function Landing() {
                 <RowBetween></RowBetween>
                 <RowBetween>
                   <ThemedText.DeprecatedMain>
-                    <Trans>Show Cancelled</Trans>
+                    <Trans>Show cancelled</Trans>
                   </ThemedText.DeprecatedMain>
                   <Toggle
                     isActive={!hideCancelled}

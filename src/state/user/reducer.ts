@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { deletePersistedConnectionMeta, getPersistedConnectionMeta } from 'connection/meta'
 
 import { ConnectionType } from '../../connection/types'
 import { SupportedLocale } from '../../constants/locales'
@@ -6,6 +7,7 @@ import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { RouterPreference } from '../../state/routing/types'
 import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 
+const selectedWallet = getPersistedConnectionMeta()?.type
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
@@ -45,11 +47,15 @@ export interface UserState {
   }
 
   timestamp: number
-  URLWarningVisible: boolean
   hideBaseWalletBanner: boolean
+  // legacy field indicating the user disabled UniswapX during the opt-in period, or dismissed the UniswapX opt-in modal.
   disabledUniswapX?: boolean
+  // temporary field indicating the user disabled UniswapX during the transition to the opt-out model
+  optedOutOfUniswapX?: boolean
   // undefined means has not gone through A/B split yet
   showSurveyPopup?: boolean
+
+  originCountry?: string
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -57,7 +63,7 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  selectedWallet: undefined,
+  selectedWallet,
   userLocale: null,
   userRouterPreference: RouterPreference.API,
   userHideClosedPositions: false,
@@ -67,9 +73,9 @@ export const initialState: UserState = {
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
-  URLWarningVisible: true,
   hideBaseWalletBanner: false,
   showSurveyPopup: undefined,
+  originCountry: undefined,
 }
 
 const userSlice = createSlice({
@@ -77,11 +83,16 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     updateSelectedWallet(state, { payload: { wallet } }) {
+      if (!wallet) {
+        deletePersistedConnectionMeta()
+      }
       state.selectedWallet = wallet
     },
     updateUserLocale(state, action) {
-      state.userLocale = action.payload.userLocale
-      state.timestamp = currentTimestamp()
+      if (action.payload.userLocale !== state.userLocale) {
+        state.userLocale = action.payload.userLocale
+        state.timestamp = currentTimestamp()
+      }
     },
     updateUserSlippageTolerance(state, action) {
       state.userSlippageTolerance = action.payload.userSlippageTolerance
@@ -103,6 +114,9 @@ const userSlice = createSlice({
     updateDisabledUniswapX(state, action) {
       state.disabledUniswapX = action.payload.disabledUniswapX
     },
+    updateOptedOutOfUniswapX(state, action) {
+      state.optedOutOfUniswapX = action.payload.optedOutOfUniswapX
+    },
     addSerializedToken(state, { payload: { serializedToken } }) {
       if (!state.tokens) {
         state.tokens = {}
@@ -122,12 +136,16 @@ const userSlice = createSlice({
       }
       state.timestamp = currentTimestamp()
     },
+    setOriginCountry(state, { payload: country }) {
+      state.originCountry = country
+    },
   },
 })
 
 export const {
   addSerializedPair,
   addSerializedToken,
+  setOriginCountry,
   updateSelectedWallet,
   updateHideClosedPositions,
   updateUserRouterPreference,
@@ -136,5 +154,6 @@ export const {
   updateUserSlippageTolerance,
   updateHideBaseWalletBanner,
   updateDisabledUniswapX,
+  updateOptedOutOfUniswapX,
 } = userSlice.actions
 export default userSlice.reducer

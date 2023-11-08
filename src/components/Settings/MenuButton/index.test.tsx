@@ -3,7 +3,7 @@ import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
-import { lightTheme } from 'theme/colors'
+import { lightDeprecatedTheme } from 'theme/deprecatedColors'
 import noop from 'utils/noop'
 
 import MenuButton from '.'
@@ -30,7 +30,7 @@ describe('MenuButton', () => {
     renderButton()
     expect(screen.getByTestId('settings-icon-with-slippage')).toHaveStyleRule(
       'background-color',
-      lightTheme.accentWarningSoft
+      lightDeprecatedTheme.deprecated_accentWarningSoft
     )
   })
 })

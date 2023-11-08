@@ -22,7 +22,7 @@ describe('Routing', () => {
     })
     it('contains all coins for celo', () => {
       const symbols = COMMON_BASES[ChainId.CELO].map((coin) => coin.symbol)
-      expect(symbols).toEqual(['CELO', 'cEUR', 'cUSD', 'ETH', 'USDCet', 'cMCO2'])
+      expect(symbols).toEqual(['CELO', 'cEUR', 'cUSD', 'ETH', 'USDCet', 'WBTC'])
     })
     it('contains all coins for bsc', () => {
       const symbols = COMMON_BASES[ChainId.BNB].map((coin) => coin.symbol)

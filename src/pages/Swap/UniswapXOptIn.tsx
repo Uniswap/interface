@@ -15,8 +15,9 @@ import {
   UniswapXShine,
 } from 'components/swap/styled'
 import { formatCommonPropertiesForTrade } from 'lib/utils/analytics'
-import { PropsWithChildren, useEffect, useRef, useState } from 'react'
+import { PropsWithChildren, useRef, useState } from 'react'
 import { X } from 'react-feather'
+import { useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useAppDispatch } from 'state/hooks'
 import { RouterPreference } from 'state/routing/types'
@@ -25,7 +26,7 @@ import { SwapInfo } from 'state/swap/hooks'
 import { useRouterPreference, useUserDisabledUniswapX } from 'state/user/hooks'
 import { updateDisabledUniswapX } from 'state/user/reducer'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 export const UniswapXOptIn = (props: { swapInfo: SwapInfo; isSmall: boolean }) => {
   const {
@@ -73,20 +74,11 @@ const OptInContents = ({
   const dispatch = useAppDispatch()
   const [showYoureIn, setShowYoureIn] = useState(false)
   const isVisible = isOnClassic
-
-  // adding this as we need to mount and then set shouldAnimate = true after it mounts to avoid a flicker on initial mount
-  const [shouldAnimate, setShouldAnimate] = useState(false)
-
-  useEffect(() => {
-    if (!isVisible || shouldAnimate) return
-    // delay visible animation a bit
-    const tm = setTimeout(() => setShouldAnimate(true), 350)
-    return () => clearTimeout(tm)
-  }, [isVisible, shouldAnimate])
+  const location = useLocation()
 
   const tryItNowElement = (
     <ThemedText.BodySecondary
-      color="accentAction"
+      color="accent1"
       fontSize={14}
       fontWeight="500"
       onClick={() => {
@@ -115,14 +107,14 @@ const OptInContents = ({
 
   const containerRef = useRef<HTMLDivElement>()
 
-  if (isSmall) {
+  if (isSmall || location.pathname.includes('/tokens/')) {
     return (
-      <SwapOptInSmallContainer ref={containerRef as any} visible={isVisible} shouldAnimate={shouldAnimate}>
+      <SwapOptInSmallContainer ref={containerRef as any} visible={isVisible}>
         <SwapMustache>
           <UniswapXShine />
           <SwapMustacheShadow />
           <Row justify="space-between" align="center" flexWrap="wrap">
-            <Text fontSize={14} fontWeight={400} lineHeight="20px">
+            <Text fontSize={14} fontWeight={485} lineHeight="20px">
               <Trans>Try gas free swaps with the</Trans>
               <br />
               <UniswapXBrandMark fontWeight="bold" style={{ transform: `translateY(1px)`, margin: '0 2px' }} />{' '}
@@ -153,7 +145,7 @@ const OptInContents = ({
         />
 
         <Column>
-          <Text fontSize={14} fontWeight={400} lineHeight="20px">
+          <Text fontSize={14} fontWeight={485} lineHeight="20px">
             <Trans>Try the</Trans>{' '}
             <UniswapXBrandMark fontWeight="bold" style={{ transform: `translateY(2px)`, margin: '0 1px' }} />{' '}
             <Trans>Beta</Trans>
@@ -177,7 +169,7 @@ const OptInContents = ({
       {/* second popover: you're in! */}
       <UniswapXOptInPopover visible={showYoureIn}>
         <UniswapXRouterLabel disableTextGradient>
-          <Text fontSize={14} fontWeight={500} lineHeight="20px">
+          <Text fontSize={14} fontWeight={535} lineHeight="20px">
             <Trans>You&apos;re in!</Trans>
           </Text>
         </UniswapXRouterLabel>
@@ -207,7 +199,7 @@ const UniswapXOptInPopover = (props: PropsWithChildren<{ visible: boolean; shiny
 }
 
 const CloseIcon = styled(X)`
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.neutral3};
   cursor: pointer;
   position: absolute;
   top: 14px;

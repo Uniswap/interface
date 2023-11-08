@@ -3,9 +3,10 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { getRoyalty } from 'nft/components/profile/list/utils'
 import { ListingMarket, WalletAsset } from 'nft/types'
-import { formatEth, getMarketplaceIcon } from 'nft/utils'
+import { getMarketplaceIcon } from 'nft/utils'
 import styled, { css } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const FeeWrap = styled(Row)`
   margin-bottom: 4px;
@@ -20,7 +21,7 @@ const RoyaltyContainer = styled(Column)`
 const iconStyles = css`
   width: 16px;
   height: 16px;
-  outline: 1px solid ${({ theme }) => theme.backgroundInteractive};
+  outline: 1px solid ${({ theme }) => theme.surface3};
   margin-right: 8px;
 `
 
@@ -35,16 +36,16 @@ const CollectionIcon = styled.img`
   ${iconStyles}
 `
 
-const FeePercent = styled(ThemedText.Caption)`
+const FeePercent = styled(ThemedText.BodySmall)`
   line-height: 16px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   white-space: nowrap;
 `
 
 const MaxFeeContainer = styled(Row)`
   justify-content: space-between;
   padding-top: 12px;
-  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-top: 1px solid ${({ theme }) => theme.surface3};
 `
 
 export const RoyaltyTooltip = ({
@@ -56,37 +57,38 @@ export const RoyaltyTooltip = ({
   asset: WalletAsset
   fees?: number
 }) => {
-  const maxRoyalty = Math.max(...selectedMarkets.map((market) => getRoyalty(market, asset) ?? 0)).toFixed(2)
+  const { formatNumberOrString, formatDelta } = useFormatter()
+  const maxRoyalty = Math.max(...selectedMarkets.map((market) => getRoyalty(market, asset) ?? 0))
   return (
     <RoyaltyContainer>
       {selectedMarkets.map((market) => (
         <FeeWrap key={asset.collection?.address ?? '' + asset.tokenId + market.name + 'fee'}>
           <Row>
             <MarketIcon>{getMarketplaceIcon(market.name, '16')}</MarketIcon>
-            <ThemedText.Caption lineHeight="16px" marginRight="12px">
+            <ThemedText.BodySmall lineHeight="16px" marginRight="12px">
               {market.name}&nbsp;
               <Trans>fee</Trans>
-            </ThemedText.Caption>
+            </ThemedText.BodySmall>
           </Row>
-          <FeePercent>{market.fee}%</FeePercent>
+          <FeePercent>{formatDelta(market.fee)}</FeePercent>
         </FeeWrap>
       ))}
       <FeeWrap>
         <Row>
           <CollectionIcon src={asset.collection?.imageUrl} />
-          <ThemedText.Caption lineHeight="16px" marginRight="12px">
+          <ThemedText.BodySmall lineHeight="16px" marginRight="12px">
             <Trans>Max creator royalties</Trans>
-          </ThemedText.Caption>
+          </ThemedText.BodySmall>
         </Row>
         <FeePercent>{maxRoyalty}%</FeePercent>
       </FeeWrap>
       <MaxFeeContainer>
-        <ThemedText.Caption lineHeight="16px">
+        <ThemedText.BodySmall lineHeight="16px">
           <Trans>Max fees</Trans>
-        </ThemedText.Caption>
-        <ThemedText.Caption lineHeight="16px" color={fees ? 'textPrimary' : 'textSecondary'}>
-          {fees ? formatEth(fees) : '-'} ETH
-        </ThemedText.Caption>
+        </ThemedText.BodySmall>
+        <ThemedText.BodySmall lineHeight="16px" color={fees ? 'neutral1' : 'neutral2'}>
+          {fees ? formatNumberOrString({ input: fees, type: NumberType.NFTToken }) : '-'} ETH
+        </ThemedText.BodySmall>
       </MaxFeeContainer>
     </RoyaltyContainer>
   )

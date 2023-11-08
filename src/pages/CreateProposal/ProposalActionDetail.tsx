@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import AddressInputPanel from 'components/AddressInputPanel'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import React from 'react'
 import styled from 'styled-components'
 
 import { ProposalAction } from './ProposalActionSelector'
@@ -13,10 +12,16 @@ enum ProposalActionDetailField {
 }
 
 const ProposalActionDetailContainer = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
   margin-top: 10px;
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  grid-gap: 10px;
+  > * {
+    width: 100%;
+  }
+  > :not(:last-child) {
+    margin-bottom: 10px;
+  }
 `
 
 export const ProposalActionDetail = ({
@@ -74,8 +79,8 @@ export const ProposalActionDetail = ({
             showMaxButton={false}
             showCommonBases={false}
             showCurrencyAmount={false}
-            disableNonToken={true}
-            hideBalance={true}
+            disableNonToken
+            hideBalance
             id="currency-input"
           />
         ) : null

@@ -1,34 +1,34 @@
-import { Plural, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Percent, TradeType } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { Percent } from '@uniswap/sdk-core'
 import { TraceEvent } from 'analytics'
+import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import SpinningLoader from 'components/Loader/SpinningLoader'
 import { SwapResult } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { ReactNode } from 'react'
+import ms from 'ms'
+import { ReactNode, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
+import { easings, useSpring } from 'react-spring'
 import { InterfaceTrade, RouterPreference } from 'state/routing/types'
-import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
+import { isClassicTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
-import { formatNumber, formatPriceImpact, NumberType } from 'utils/formatNumbers'
-import { formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
+import { Separator, ThemedText } from 'theme/components'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
-import { getPriceImpactWarning } from 'utils/prices'
 
+import { ReactComponent as ExpandoIconClosed } from '../../assets/svg/expando-icon-closed.svg'
+import { ReactComponent as ExpandoIconOpened } from '../../assets/svg/expando-icon-opened.svg'
 import { ButtonError, SmallButtonPrimary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
-import { GasBreakdownTooltip } from './GasBreakdownTooltip'
 import { SwapCallbackError, SwapShowAcceptChanges } from './styled'
-import { Label } from './SwapModalHeaderAmount'
+import { SwapLineItemProps, SwapLineItemType } from './SwapLineItem'
+import SwapLineItem from './SwapLineItem'
 
 const DetailsContainer = styled(Column)`
-  padding: 0 8px;
+  padding-bottom: 8px;
 `
 
 const StyledAlertTriangle = styled(AlertTriangle)`
@@ -38,13 +38,44 @@ const StyledAlertTriangle = styled(AlertTriangle)`
 
 const ConfirmButton = styled(ButtonError)`
   height: 56px;
-  margin-top: 10px;
 `
 
-const DetailRowValue = styled(ThemedText.BodySmall)`
-  text-align: right;
-  overflow-wrap: break-word;
+const DropdownControllerWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: -6px;
+
+  padding: 0 16px;
+  min-width: fit-content;
+  white-space: nowrap;
 `
+
+const DropdownButton = styled.button`
+  padding: 0;
+  margin-top: 16px;
+  height: 28px;
+  text-decoration: none;
+  display: flex;
+  background: none;
+  border: none;
+  align-items: center;
+  cursor: pointer;
+`
+
+function DropdownController({ open, onClick }: { open: boolean; onClick: () => void }) {
+  return (
+    <DropdownButton onClick={onClick}>
+      <Separator />
+      <DropdownControllerWrapper>
+        <ThemedText.BodySmall color="neutral2">
+          {open ? <Trans>Show less</Trans> : <Trans>Show more</Trans>}
+        </ThemedText.BodySmall>
+        {open ? <ExpandoIconOpened /> : <ExpandoIconClosed />}
+      </DropdownControllerWrapper>
+      <Separator />
+    </DropdownButton>
+  )
+}
 
 export default function SwapModalFooter({
   trade,
@@ -57,6 +88,7 @@ export default function SwapModalFooter({
   fiatValueOutput,
   showAcceptChanges,
   onAcceptChanges,
+  isLoading,
 }: {
   trade: InterfaceTrade
   swapResult?: SwapResult
@@ -68,102 +100,34 @@ export default function SwapModalFooter({
   fiatValueOutput: { data?: number; isLoading: boolean }
   showAcceptChanges: boolean
   onAcceptChanges: () => void
+  isLoading: boolean
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const [routerPreference] = useRouterPreference()
   const routes = isClassicTrade(trade) ? getRoutingDiagramEntries(trade) : undefined
   const theme = useTheme()
-  const { chainId } = useWeb3React()
-  const nativeCurrency = useNativeCurrency(chainId)
+  const [showMore, setShowMore] = useState(false)
 
-  const label = `${trade.executionPrice.baseCurrency?.symbol} `
-  const labelInverted = `${trade.executionPrice.quoteCurrency?.symbol}`
-  const formattedPrice = formatTransactionAmount(priceToPreciseFloat(trade.executionPrice))
-  const txCount = getTransactionCount(trade)
+  const lineItemProps = { trade, allowedSlippage, syncing: false }
 
   return (
     <>
+      <DropdownController open={showMore} onClick={() => setShowMore(!showMore)} />
       <DetailsContainer gap="md">
-        <ThemedText.BodySmall>
-          <Row align="flex-start" justify="space-between" gap="sm">
-            <Label>
-              <Trans>Exchange rate</Trans>
-            </Label>
-            <DetailRowValue>{`1 ${labelInverted} = ${formattedPrice ?? '-'} ${label}`}</DetailRowValue>
-          </Row>
-        </ThemedText.BodySmall>
-        <ThemedText.BodySmall>
-          <Row align="flex-start" justify="space-between" gap="sm">
-            <MouseoverTooltip
-              text={
-                <Trans>
-                  The fee paid to miners who process your transaction. This must be paid in ${nativeCurrency.symbol}.
-                </Trans>
-              }
-            >
-              <Label cursor="help">
-                <Plural value={txCount} one="Network fee" other="Network fees" />
-              </Label>
-            </MouseoverTooltip>
-            <MouseoverTooltip placement="right" size={TooltipSize.Small} text={<GasBreakdownTooltip trade={trade} />}>
-              <DetailRowValue>{formatNumber(trade.totalGasUseEstimateUSD, NumberType.FiatGasPrice)}</DetailRowValue>
-            </MouseoverTooltip>
-          </Row>
-        </ThemedText.BodySmall>
-        {isClassicTrade(trade) && (
-          <ThemedText.BodySmall>
-            <Row align="flex-start" justify="space-between" gap="sm">
-              <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
-                <Label cursor="help">
-                  <Trans>Price impact</Trans>
-                </Label>
-              </MouseoverTooltip>
-              <DetailRowValue color={getPriceImpactWarning(trade.priceImpact)}>
-                {trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-'}
-              </DetailRowValue>
-            </Row>
-          </ThemedText.BodySmall>
-        )}
-        <ThemedText.BodySmall>
-          <Row align="flex-start" justify="space-between" gap="sm">
-            <MouseoverTooltip
-              text={
-                trade.tradeType === TradeType.EXACT_INPUT ? (
-                  <Trans>
-                    The minimum amount you are guaranteed to receive. If the price slips any further, your transaction
-                    will revert.
-                  </Trans>
-                ) : (
-                  <Trans>
-                    The maximum amount you are guaranteed to spend. If the price slips any further, your transaction
-                    will revert.
-                  </Trans>
-                )
-              }
-            >
-              <Label cursor="help">
-                {trade.tradeType === TradeType.EXACT_INPUT ? (
-                  <Trans>Minimum received</Trans>
-                ) : (
-                  <Trans>Maximum sent</Trans>
-                )}
-              </Label>
-            </MouseoverTooltip>
-            <DetailRowValue>
-              {trade.tradeType === TradeType.EXACT_INPUT
-                ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
-                : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
-            </DetailRowValue>
-          </Row>
-        </ThemedText.BodySmall>
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.EXCHANGE_RATE} />
+        <ExpandableLineItems {...lineItemProps} open={showMore} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.OUTPUT_TOKEN_FEE_ON_TRANSFER} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.SWAP_FEE} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.NETWORK_COST} />
       </DetailsContainer>
       {showAcceptChanges ? (
         <SwapShowAcceptChanges data-testid="show-accept-changes">
           <RowBetween>
             <RowFixed>
               <StyledAlertTriangle size={20} />
-              <ThemedText.DeprecatedMain color={theme.accentAction}>
+              <ThemedText.DeprecatedMain color={theme.accent1}>
                 <Trans>Price updated</Trans>
               </ThemedText.DeprecatedMain>
             </RowFixed>
@@ -197,9 +161,18 @@ export default function SwapModalFooter({
               $borderRadius="12px"
               id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
             >
-              <ThemedText.HeadlineSmall color="accentTextLightPrimary">
-                <Trans>Confirm swap</Trans>
-              </ThemedText.HeadlineSmall>
+              {isLoading ? (
+                <ThemedText.HeadlineSmall color="neutral2">
+                  <Row>
+                    <SpinningLoader />
+                    <Trans>Finalizing quote...</Trans>
+                  </Row>
+                </ThemedText.HeadlineSmall>
+              ) : (
+                <ThemedText.HeadlineSmall color="deprecated_accentTextLightPrimary">
+                  <Trans>Confirm swap</Trans>
+                </ThemedText.HeadlineSmall>
+              )}
             </ConfirmButton>
           </TraceEvent>
 
@@ -207,5 +180,45 @@ export default function SwapModalFooter({
         </AutoRow>
       )}
     </>
+  )
+}
+
+function AnimatedLineItem(props: SwapLineItemProps & { open: boolean; delay: number }) {
+  const { open, delay } = props
+
+  const animatedProps = useSpring({
+    animatedOpacity: open ? 1 : 0,
+    config: { duration: ms('300ms'), easing: easings.easeOutSine },
+    delay,
+  })
+
+  return <SwapLineItem {...props} {...animatedProps} />
+}
+
+function ExpandableLineItems(props: { trade: InterfaceTrade; allowedSlippage: Percent; open: boolean }) {
+  const { open, trade, allowedSlippage } = props
+
+  if (!trade) return null
+
+  const lineItemProps = { trade, allowedSlippage, syncing: false, open }
+
+  return (
+    <AnimatedDropdown
+      open={open}
+      springProps={{
+        marginTop: open ? 0 : -12,
+        config: {
+          duration: ms('200ms'),
+          easing: easings.easeOutSine,
+        },
+      }}
+    >
+      <Column gap="md">
+        <AnimatedLineItem {...lineItemProps} type={SwapLineItemType.PRICE_IMPACT} delay={ms('50ms')} />
+        <AnimatedLineItem {...lineItemProps} type={SwapLineItemType.MAX_SLIPPAGE} delay={ms('100ms')} />
+        <AnimatedLineItem {...lineItemProps} type={SwapLineItemType.MINIMUM_OUTPUT} delay={ms('120ms')} />
+        <AnimatedLineItem {...lineItemProps} type={SwapLineItemType.MAXIMUM_INPUT} delay={ms('120ms')} />
+      </Column>
+    </AnimatedDropdown>
   )
 }

@@ -20,11 +20,11 @@ export const bagContainer = style([
     width: 'full',
     height: 'full',
     right: '0',
-    background: 'backgroundSurface',
+    background: 'surface1',
     borderLeftStyle: 'solid',
-    borderColor: 'backgroundOutline',
+    borderColor: 'surface3',
     borderWidth: '1px',
-    color: 'textPrimary',
+    color: 'neutral1',
   }),
   {
     '@media': {
