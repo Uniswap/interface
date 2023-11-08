@@ -108,7 +108,7 @@ export default function useClassicAutoSlippageTolerance(trade?: ClassicTrade): P
     if (outputDollarValue && dollarCostToUse) {
       // optimize for highest possible slippage without getting MEV'd
       // so set slippage % such that the difference between expected amount out and minimum amount out < gas fee to sandwich the trade
-      const fraction = dollarCostToUse.asFraction.divide(outputDollarValue)
+      const fraction = dollarCostToUse.asFraction.divide(outputDollarValue.asFraction)
       const result = new Percent(fraction.numerator, fraction.denominator)
       if (result.greaterThan(MAX_AUTO_SLIPPAGE_TOLERANCE)) {
         return MAX_AUTO_SLIPPAGE_TOLERANCE
