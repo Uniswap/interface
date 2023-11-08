@@ -10,6 +10,7 @@ import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import TokenTable from 'components/Tokens/TokenTable/TokenTable'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { ExploreTab } from 'constants/explore'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useResetAtom } from 'jotai/utils'
 import { useEffect, useMemo, useState } from 'react'
@@ -112,11 +113,6 @@ const SearchContainer = styled(FiltersContainer)<{ isInfoExplorePageEnabled: boo
     ${({ isInfoExplorePageEnabled }) => isInfoExplorePageEnabled && 'justify-content: flex-end;'}
   }
 `
-export enum ExploreTab {
-  Tokens = 'tokens',
-  Pools = 'pools',
-  Transactions = 'transactions',
-}
 
 interface Page {
   title: React.ReactNode

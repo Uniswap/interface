@@ -1,6 +1,7 @@
+import { ExploreTab } from 'constants/explore'
 import { Navigate, useParams } from 'react-router-dom'
 
-import Explore, { ExploreTab } from '.'
+import Explore from '.'
 
 // useParams struggles to distinguish between /explore/:chainId and /explore/:tab
 export function useExploreParams(): {
