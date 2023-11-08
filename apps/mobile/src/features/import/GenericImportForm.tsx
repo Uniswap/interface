@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import {
   Keyboard,
   LayoutChangeEvent,
@@ -52,7 +51,6 @@ export function GenericImportForm({
   textAlign,
   inputAlignment = 'center',
 }: Props): JSX.Element {
-  const { t } = useTranslation()
   const colors = useSporeColors()
   const [focused, setFocused] = useState(false)
   const [layout, setLayout] = useState<LayoutRectangle | null>()

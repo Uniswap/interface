@@ -30,24 +30,44 @@ export function AccountIcon({
 }: AccountIconProps): JSX.Element {
   const INSET_PADDING = backgroundPadding ?? spacing.spacing16
 
-  // If background, add padding and center Unicons. Leave ENS avatars as is.
-  const shouldShowUniconInsetPadding = !avatarUri && showBackground
-
   // If Unicon and background, reduce size to account for added padding.
-  const adjustedIconSize = shouldShowUniconInsetPadding ? size - INSET_PADDING * 2 : size
+  const smallIconSize = showBackground ? size - INSET_PADDING * 2 : size
+  const adjustedIconSize = showBackground && !avatarUri ? size - INSET_PADDING * 2 : size
 
   // Color for gradient background.
-  const { gradientStart: uniconColor } = useUniconColors(address)
+  const { gradientEnd: uniconColor } = useUniconColors(address)
 
   const iconPadding = size * 0.1
   const iconEyeContainerSize = size * viewOnlyBadgeScalingFactor
   const iconEyeSize = iconEyeContainerSize - iconPadding
 
   const defaultImage = (
-    <>
+    <Flex
+      centered
+      borderRadius="$roundedFull"
+      height={size}
+      style={{
+        padding: showBackground || showBorder ? INSET_PADDING : spacing.none,
+      }}
+      width={size}>
       <Unicon address={address} size={adjustedIconSize} />
       {showBackground && !showBorder ? <UniconGradient color={uniconColor} size={size} /> : null}
-    </>
+    </Flex>
+  )
+
+  // We need a deciated fallback with smaller size, because the non-null avatarUri breaks padding
+  const fallbackImage = (
+    <Flex
+      centered
+      borderRadius="$roundedFull"
+      height={size}
+      style={{
+        padding: showBackground || showBorder ? INSET_PADDING : spacing.none,
+      }}
+      width={size}>
+      <Unicon address={address} size={smallIconSize} />
+      {showBackground && !showBorder ? <UniconGradient color={uniconColor} size={size} /> : null}
+    </Flex>
   )
 
   return (
@@ -56,14 +76,11 @@ export function AccountIcon({
       borderColor={showBackground ? '$surface1' : showBorder ? '$surface3' : '$transparent'}
       borderRadius="$roundedFull"
       borderWidth={showBackground ? 2 : showBorder ? 1 : 0}
-      position="relative"
-      style={{
-        padding: shouldShowUniconInsetPadding || showBorder ? INSET_PADDING : spacing.none,
-      }}>
+      position="relative">
       {avatarUri ? (
         <RemoteImage
           borderRadius={adjustedIconSize}
-          fallback={defaultImage}
+          fallback={fallbackImage}
           height={adjustedIconSize}
           uri={avatarUri}
           width={adjustedIconSize}
@@ -75,16 +92,14 @@ export function AccountIcon({
         <Flex
           alignItems="center"
           backgroundColor="$surface2"
+          borderColor="$surface1"
           borderRadius="$roundedFull"
-          bottom={-2}
+          borderWidth={2}
+          bottom={-4}
           height={iconEyeContainerSize}
           justifyContent="center"
           position="absolute"
-          right={-2}
-          shadowColor="$sporeBlack"
-          shadowOffset={{ width: 0, height: 0 }}
-          shadowOpacity={0.2}
-          shadowRadius={10}
+          right={-4}
           width={iconEyeContainerSize}>
           <Icons.Eye color="$neutral2" size={iconEyeSize} />
         </Flex>
@@ -99,8 +114,8 @@ const UniconGradient = ({ color, size }: { color: string; size: number }): JSX.E
     <Svg height={size} style={UniconGradientStyles.svg} width={size}>
       <Defs>
         <RadialGradientSVG cy="-0.1" id="background" rx="0.8" ry="1.1">
-          <Stop offset="0" stopColor={color} stopOpacity="0.6" />
-          <Stop offset="1" stopColor={color} stopOpacity="0" />
+          <Stop offset="0" stopColor={color} stopOpacity="0.2" />
+          <Stop offset="1" stopColor={color} stopOpacity="0.2" />
         </RadialGradientSVG>
       </Defs>
       <Rect

@@ -10,7 +10,7 @@ import { Screens } from 'src/screens/Screens'
 import { setClipboard } from 'src/utils/clipboard'
 import { isDevBuild } from 'src/utils/version'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
-import { iconSizes, spacing } from 'ui/src/theme'
+import { spacing } from 'ui/src/theme'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
@@ -53,21 +53,20 @@ export function AccountHeader(): JSX.Element {
   }
 
   const walletHasName = displayName?.type !== 'address'
-  const iconPadding = spacing.spacing8
-  const iconSize = !avatar ? iconSizes.icon36 : 52
+  const iconPadding = spacing.spacing12
+  const iconSize = 52
 
   return (
     <Flex gap="$spacing12" overflow="scroll" testID="account-header" width="100%">
       {account?.type === AccountType.Readonly && (
         <Flex centered row bg="$surface2" br="$rounded12" gap="$spacing8" p="$spacing8">
-          <Icons.Eye color="$neutral2" size="$icon.20" />
           <Text color="$neutral2" variant="body3">
             {t('This is a view-only wallet')}
           </Text>
         </Flex>
       )}
       {activeAddress && (
-        <Flex ai="center" gap="$spacing12" width="100%">
+        <Flex ai="flex-start" gap="$spacing12" width="100%">
           <Flex row jc="space-between" width="100%">
             <TouchableArea
               hapticFeedback
@@ -87,10 +86,10 @@ export function AccountHeader(): JSX.Element {
                 address={activeAddress}
                 avatarUri={avatar}
                 backgroundPadding={iconPadding}
-                showBorder={!avatar}
+                showBackground={true}
+                showBorder={false}
                 showViewOnlyBadge={account?.type === AccountType.Readonly}
                 size={iconSize}
-                viewOnlyBadgeScalingFactor={avatar ? 0.4 : 0.55}
               />
             </TouchableArea>
             <TouchableArea hapticFeedback hitSlop={20} onPress={onPressSettings}>
@@ -114,17 +113,18 @@ export function AccountHeader(): JSX.Element {
               </TouchableArea>
             </Flex>
           ) : (
-            <Flex row alignItems="center" gap="$spacing4">
-              <Text
-                adjustsFontSizeToFit
-                color="$neutral1"
-                flexGrow={1}
-                numberOfLines={1}
-                variant="body2">
-                {sanitizeAddressText(shortenAddress(activeAddress))}
-              </Text>
-              <Icons.CopyAlt color="$neutral3" size="$icon.16" />
-            </Flex>
+            <TouchableArea hapticFeedback hitSlop={20} onPress={onPressCopyAddress}>
+              <Flex centered row shrink gap="$spacing4">
+                <Text
+                  adjustsFontSizeToFit
+                  color="$neutral1"
+                  numberOfLines={1}
+                  variant="subheading2">
+                  {sanitizeAddressText(shortenAddress(activeAddress))}
+                </Text>
+                <Icons.CopyAlt color="$neutral1" size="$icon.16" />
+              </Flex>
+            </TouchableArea>
           )}
         </Flex>
       )}

@@ -114,15 +114,6 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
     navigate({ name: OnboardingScreens.BackupManual, params, merge: true })
   }
 
-  const onPressContinue = (): void => {
-    navigation.navigate({
-      name: OnboardingScreens.Notifications,
-      params,
-      merge: true,
-    })
-  }
-
-  const disabled = !activeAccountBackups || activeAccountBackups.length < 1
   const showSkipOption =
     !activeAccountBackups?.length &&
     (params?.importType === ImportType.SeedPhrase || params?.importType === ImportType.Restore)
