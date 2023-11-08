@@ -286,8 +286,13 @@ function useI18NDataUpdaters(): void {
   useEffect(() => {
     const locales = getLocales()
     for (const locale of locales) {
-      const mappedLanguageFromTag =
-        locale.languageTag in Locale ? mapLocaleToLanguage[locale.languageTag as Locale] : undefined
+      // Normalizes language tags like 'zh-Hans-ch' to 'zh-Hans' that could happen on Android
+      const normalizedLangaugeTag = locale.languageTag.split('-').slice(0, 2).join('-')
+      const mappedLanguageFromTag = (Object.values(Locale) as string[]).includes(
+        normalizedLangaugeTag
+      )
+        ? mapLocaleToLanguage[normalizedLangaugeTag as Locale]
+        : undefined
       const mappedLanguageFromCode = locale.languageCode as Maybe<Language>
       // Prefer languageTag as it's more specific, falls back to languageCode
       const mappedLanguage = mappedLanguageFromTag || mappedLanguageFromCode
