@@ -19,6 +19,7 @@ describe(tryLocalAuthenticate, () => {
   it('checks enrollement', async () => {
     mockedHasHardwareAsync.mockResolvedValue(true)
     mockedIsEnrolledAsync.mockResolvedValue(false)
+    mockedAuthenticateAsync.mockResolvedValue({ success: false, error: '' })
 
     const status = await tryLocalAuthenticate()
 

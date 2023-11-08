@@ -62,16 +62,14 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
 
   const onPressEnableSecurity = useCallback(async () => {
     const authStatus = await tryLocalAuthenticate({
-      disableDeviceFallback: true,
+      // Temporary disabled due to the android AppState forground -> background triggers of biometrics popup with pin fallback
+      disableDeviceFallback: Platform.OS === 'android' ? true : false,
       cancelLabel: 'Cancel',
     })
 
     const authTypeCapitalized =
       authenticationTypeName.charAt(0).toUpperCase() + authenticationTypeName.slice(1)
 
-    // TODO - change the way we handle the Unsupported case (there is no point in redirecting
-    // to settings if the device does not support biometrics - maybe use some fallback method
-    // like PIN or password and display different screen than this in the app)
     if (
       authStatus === BiometricAuthenticationStatus.Unsupported ||
       authStatus === BiometricAuthenticationStatus.MissingEnrollment

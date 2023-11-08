@@ -50,7 +50,9 @@ export function useBiometricCheck(): void {
     if (
       requiredForAppAccess &&
       authenticationStatus !== BiometricAuthenticationStatus.Authenticating &&
-      authenticationStatus !== BiometricAuthenticationStatus.Rejected
+      authenticationStatus !== BiometricAuthenticationStatus.Rejected &&
+      authenticationStatus !== BiometricAuthenticationStatus.Lockout &&
+      authenticationStatus !== BiometricAuthenticationStatus.UserCancel
     ) {
       setIsLockScreenVisible(false)
     }

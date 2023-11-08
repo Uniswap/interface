@@ -36,6 +36,11 @@ export function useBiometricPrompt<T = undefined>(
       successCallback?.(params)
     } else {
       failureCallback?.()
+      if (
+        biometricAuthenticationRejected(authStatus) ||
+        biometricAuthenticationCanceledByUser(authStatus)
+      )
+        await trigger()
     }
   }
 
@@ -44,6 +49,16 @@ export function useBiometricPrompt<T = undefined>(
 
 export function biometricAuthenticationSuccessful(status: BiometricAuthenticationStatus): boolean {
   return status === BiometricAuthenticationStatus.Authenticated
+}
+
+export function biometricAuthenticationRejected(status: BiometricAuthenticationStatus): boolean {
+  return status === BiometricAuthenticationStatus.Rejected
+}
+
+export function biometricAuthenticationCanceledByUser(
+  status: BiometricAuthenticationStatus
+): boolean {
+  return status === BiometricAuthenticationStatus.UserCancel
 }
 
 export function biometricAuthenticationDisabledByOS(
