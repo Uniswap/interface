@@ -1428,6 +1428,7 @@ export type TopTokensQuery = { __typename?: 'Query', topTokens?: Array<{ __typen
 
 export type SearchTokensQueryVariables = Exact<{
   searchQuery: Scalars['String'];
+  chains?: InputMaybe<Array<Chain> | Chain>;
 }>;
 
 
@@ -2900,8 +2901,8 @@ export type TopTokensQueryHookResult = ReturnType<typeof useTopTokensQuery>;
 export type TopTokensLazyQueryHookResult = ReturnType<typeof useTopTokensLazyQuery>;
 export type TopTokensQueryResult = Apollo.QueryResult<TopTokensQuery, TopTokensQueryVariables>;
 export const SearchTokensDocument = gql`
-    query SearchTokens($searchQuery: String!) {
-  searchTokens(searchQuery: $searchQuery) {
+    query SearchTokens($searchQuery: String!, $chains: [Chain!]) {
+  searchTokens(searchQuery: $searchQuery, chains: $chains) {
     id
     chain
     address
@@ -2930,6 +2931,7 @@ export const SearchTokensDocument = gql`
  * const { data, loading, error } = useSearchTokensQuery({
  *   variables: {
  *      searchQuery: // value for 'searchQuery'
+ *      chains: // value for 'chains'
  *   },
  * });
  */

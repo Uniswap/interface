@@ -9,13 +9,14 @@ import {
   SearchTokensQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { gqlTokenToCurrencyInfo } from 'wallet/src/features/dataApi/utils'
-import { useSearchTokens } from './searchTokens'
+import { ALL_GQL_CHAINS, useSearchTokens } from './searchTokens'
 
 const mock: MockedResponse<SearchTokensQuery> = {
   request: {
     query: SearchTokensDocument,
     variables: {
       searchQuery: '',
+      chains: ALL_GQL_CHAINS,
     },
   },
   result: {
@@ -47,15 +48,15 @@ describe(useTokenProjects, () => {
 
     const data = result.current.data
     expect(data).toEqual([
-      gqlTokenToCurrencyInfo(SearchTokens[0]!, null),
-      gqlTokenToCurrencyInfo(SearchTokens[1]!, null),
-      gqlTokenToCurrencyInfo(SearchTokens[2]!, null),
-      gqlTokenToCurrencyInfo(SearchTokens[3]!, null),
-      gqlTokenToCurrencyInfo(SearchTokens[4]!, null),
-      gqlTokenToCurrencyInfo(SearchTokens[5]!, null),
-      gqlTokenToCurrencyInfo(SearchTokens[6]!, null),
-      gqlTokenToCurrencyInfo(SearchTokens[7]!, null),
-      gqlTokenToCurrencyInfo(SearchTokens[8]!, null),
+      gqlTokenToCurrencyInfo(SearchTokens[0]!),
+      gqlTokenToCurrencyInfo(SearchTokens[1]!),
+      gqlTokenToCurrencyInfo(SearchTokens[2]!),
+      gqlTokenToCurrencyInfo(SearchTokens[3]!),
+      gqlTokenToCurrencyInfo(SearchTokens[4]!),
+      gqlTokenToCurrencyInfo(SearchTokens[5]!),
+      gqlTokenToCurrencyInfo(SearchTokens[6]!),
+      gqlTokenToCurrencyInfo(SearchTokens[7]!),
+      gqlTokenToCurrencyInfo(SearchTokens[8]!),
     ])
   })
 })

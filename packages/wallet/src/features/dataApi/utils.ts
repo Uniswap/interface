@@ -106,13 +106,10 @@ export function buildCurrency({
 }
 
 export function gqlTokenToCurrencyInfo(
-  token: NonNullable<NonNullable<TopTokensQuery['topTokens']>[0]>,
-  chainFilter?: ChainId | null
+  token: NonNullable<NonNullable<TopTokensQuery['topTokens']>[0]>
 ): CurrencyInfo | null {
   const { chain, address, decimals, symbol, project } = token
   const chainId = fromGraphQLChain(chain)
-
-  if (chainFilter && chainFilter !== chainId) return null
 
   const currency = buildCurrency({
     chainId,

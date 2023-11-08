@@ -758,8 +758,8 @@ query TopTokens(
   }
 }
 
-query SearchTokens($searchQuery: String!) {
-  searchTokens(searchQuery: $searchQuery) {
+query SearchTokens($searchQuery: String!, $chains: [Chain!]) {
+  searchTokens(searchQuery: $searchQuery, chains: $chains) {
     id
     chain
     address
