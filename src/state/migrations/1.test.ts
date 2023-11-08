@@ -16,7 +16,6 @@ const previousState: PersistAppStateV1 = {
     pairs: {},
     timestamp: Date.now(),
     hideAndroidAnnouncementBanner: false,
-    hideBaseWalletBanner: false,
   },
   _persist: {
     version: 0,
@@ -45,7 +44,6 @@ describe('migration to v1', () => {
     expect(result?.user?.pairs).toEqual({})
     expect(result?.user?.timestamp).toEqual(previousState.user?.timestamp)
     expect(result?.user?.hideAndroidAnnouncementBanner).toEqual(false)
-    expect(result?.user?.hideBaseWalletBanner).toEqual(false)
   })
 
   it('should not migrate a non-default value', async () => {

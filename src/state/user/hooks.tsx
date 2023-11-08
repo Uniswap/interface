@@ -16,7 +16,6 @@ import {
   addSerializedPair,
   addSerializedToken,
   updateHideAndroidAnnouncementBanner,
-  updateHideBaseWalletBanner,
   updateHideClosedPositions,
   updateUserDeadline,
   updateUserLocale,
@@ -205,17 +204,6 @@ export function usePairAdder(): (pair: Pair) => void {
     },
     [dispatch]
   )
-}
-
-export function useHideBaseWalletBanner(): [boolean, () => void] {
-  const dispatch = useAppDispatch()
-  const hideBaseWalletBanner = useAppSelector((state) => state.user.hideBaseWalletBanner)
-
-  const toggleHideBaseWalletBanner = useCallback(() => {
-    dispatch(updateHideBaseWalletBanner({ hideBaseWalletBanner: true }))
-  }, [dispatch])
-
-  return [hideBaseWalletBanner, toggleHideBaseWalletBanner]
 }
 
 export function useHideAndroidAnnouncementBanner(): [boolean, () => void] {
