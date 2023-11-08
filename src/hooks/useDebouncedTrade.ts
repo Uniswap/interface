@@ -10,7 +10,6 @@ import { useRouterPreference } from 'state/user/hooks'
 
 import useAutoRouterSupported from './useAutoRouterSupported'
 import useDebounce from './useDebounce'
-import useIsWindowVisible from './useIsWindowVisible'
 
 // Prevents excessive quote requests between keystrokes.
 const DEBOUNCE_TIME = 350
@@ -71,7 +70,6 @@ export function useDebouncedTrade(
 } {
   const { chainId } = useWeb3React()
   const autoRouterSupported = useAutoRouterSupported()
-  const isWindowVisible = useIsWindowVisible()
 
   const inputs = useMemo<[CurrencyAmount<Currency> | undefined, Currency | undefined]>(
     () => [amountSpecified, otherCurrency],
@@ -94,7 +92,7 @@ export function useDebouncedTrade(
 
   const [routerPreference] = useRouterPreference()
 
-  const skipBothFetches = !autoRouterSupported || !isWindowVisible || isWrap
+  const skipBothFetches = !autoRouterSupported || isWrap
   const skipRoutingFetch = skipBothFetches || isDebouncing
 
   const skipPreviewTradeFetch = skipBothFetches || isPreviewTradeDebouncing

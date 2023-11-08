@@ -2,6 +2,7 @@ import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { ZERO_PERCENT } from 'constants/misc'
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import ms from 'ms'
 import { useMemo } from 'react'
@@ -92,9 +93,11 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     inputTax,
     outputTax,
   })
+  // skip all pricing and quote requests if the window is not focused
+  const isWindowVisible = useIsWindowVisible()
 
   const { isError, data: tradeResult, error, currentData } = useGetQuoteQueryState(queryArgs)
-  useGetQuoteQuery(skipFetch ? skipToken : queryArgs, {
+  useGetQuoteQuery(skipFetch || !isWindowVisible ? skipToken : queryArgs, {
     // Price-fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms(`1m`) : AVERAGE_L1_BLOCK_TIME,
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
