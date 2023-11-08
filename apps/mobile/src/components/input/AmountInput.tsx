@@ -1,8 +1,8 @@
 import React, { forwardRef, useCallback, useEffect, useMemo } from 'react'
 import { AppState, Keyboard, KeyboardTypeOptions, TextInput as NativeTextInput } from 'react-native'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
+import { useMoonpayFiatCurrencySupportInfo } from 'src/features/fiatOnRamp/hooks'
 import { escapeRegExp } from 'utilities/src/primitives/string'
-import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 
 const inputRegex = RegExp('^\\d*(?:\\\\[.])?\\d*$') // match escaped "." characters via in a non-capturing group
@@ -72,7 +72,8 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
     },
     [onChangeText, showCurrencySign]
   )
-  const currency = useAppFiatCurrencyInfo()
+
+  const { moonpaySupportedFiatCurrency: currency } = useMoonpayFiatCurrencySupportInfo()
   const { addFiatSymbolToNumber } = useLocalizedFormatter()
 
   const formattedValue = showCurrencySign

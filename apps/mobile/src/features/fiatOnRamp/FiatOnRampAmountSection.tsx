@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   LayoutChangeEvent,
   NativeSyntheticEvent,
@@ -11,6 +12,7 @@ import { useDynamicFontSizing } from 'src/app/hooks'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Pill } from 'src/components/text/Pill'
+import { useMoonpayFiatCurrencySupportInfo } from 'src/features/fiatOnRamp/hooks'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { ColorTokens, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -27,6 +29,8 @@ const MIN_INPUT_FONT_SIZE = 32
 // if font changes from `fontFamily.sansSerif.regular` or `MAX_INPUT_FONT_SIZE`
 // changes from 36 then width value must be adjusted
 const MAX_CHAR_PIXEL_WIDTH = 40
+
+const PREDEFINED_AMOUNTS = [100, 300, 1000]
 
 type OnChangeAmount = (amount: string) => void
 
@@ -46,6 +50,7 @@ interface Props {
   quoteCurrencyAmountReady: boolean
   selectTokenLoading: boolean
   onTokenSelectorPress: () => void
+  predefinedAmountsSupported: boolean
 }
 
 export function FiatOnRampAmountSection({
@@ -64,7 +69,9 @@ export function FiatOnRampAmountSection({
   quoteCurrencyAmountReady,
   selectTokenLoading,
   onTokenSelectorPress,
+  predefinedAmountsSupported,
 }: Props): JSX.Element {
+  const { t } = useTranslation()
   const {
     onLayout: onInputLayout,
     fontSize,
@@ -86,6 +93,8 @@ export function FiatOnRampAmountSection({
     setSelection({ start, end })
   }
 
+  const { appFiatCurrencySupportedInMoonpay, moonpaySupportedFiatCurrency } =
+    useMoonpayFiatCurrencySupportInfo()
   const { formatNumberOrString } = useLocalizedFormatter()
 
   return (
@@ -108,7 +117,11 @@ export function FiatOnRampAmountSection({
           maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
           minHeight={MAX_INPUT_FONT_SIZE}
           mt="$spacing48"
-          placeholder={formatNumberOrString({ value: 0, type: NumberType.FiatStandard })}
+          placeholder={formatNumberOrString({
+            value: 0,
+            type: NumberType.FiatStandard,
+            currencyCode: moonpaySupportedFiatCurrency.code,
+          })}
           placeholderTextColor="$neutral3"
           px="$none"
           py="$none"
@@ -138,16 +151,25 @@ export function FiatOnRampAmountSection({
             </Text>
           )}
         </Flex>
-        <Flex centered row gap="$spacing12" pb="$spacing16">
-          {['100', '300', '1000'].map((amount) => (
-            <PredefinedAmount
-              key={amount}
-              amount={amount}
-              currentAmount={value}
-              onPress={onChangeValue(onChoosePredifendAmount)}
-            />
-          ))}
-        </Flex>
+        {predefinedAmountsSupported ? (
+          <Flex centered row gap="$spacing12" pb="$spacing4">
+            {PREDEFINED_AMOUNTS.map((amount) => (
+              <PredefinedAmount
+                key={amount}
+                amount={amount}
+                currentAmount={value}
+                onPress={onChoosePredifendAmount}
+              />
+            ))}
+          </Flex>
+        ) : null}
+        {!appFiatCurrencySupportedInMoonpay ? (
+          <Flex centered>
+            <Text color="$neutral3" variant="body3">
+              {t('Only available to purchase in USD')}
+            </Text>
+          </Flex>
+        ) : null}
       </Flex>
     </Flex>
   )
@@ -194,23 +216,33 @@ function SelectTokenButton({
   )
 }
 
+// Predefined amount is only supported for certain currencies
 function PredefinedAmount({
   amount,
   onPress,
   currentAmount,
 }: {
-  amount: string
+  amount: number
   currentAmount: string
   onPress: (amount: string) => void
 }): JSX.Element {
   const colors = useSporeColors()
-  const highlighted = currentAmount === amount
+  const { moonpaySupportedFiatCurrency } = useMoonpayFiatCurrencySupportInfo()
+  const { addFiatSymbolToNumber } = useLocalizedFormatter()
+  const formattedAmount = addFiatSymbolToNumber({
+    value: amount,
+    currencyCode: moonpaySupportedFiatCurrency.code,
+    currencySymbol: moonpaySupportedFiatCurrency.symbol,
+  })
+
+  const highlighted = currentAmount === formattedAmount
+
   return (
-    <TouchableOpacity onPress={(): void => onPress(amount)}>
+    <TouchableOpacity onPress={(): void => onPress(amount.toString())}>
       <Pill
         backgroundColor={highlighted ? '$DEP_backgroundActionButton' : '$surface2'}
         foregroundColor={colors[highlighted ? 'accent1' : 'neutral2'].val}
-        label={`$${amount}`}
+        label={formattedAmount}
         px="$spacing16"
         textVariant="buttonLabel3"
       />

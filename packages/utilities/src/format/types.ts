@@ -50,4 +50,5 @@ export type FiatNumberType = Extract<
   | NumberType.FiatTokenQuantity
   | NumberType.FiatGasPrice
   | NumberType.PortfolioBalance
+  | NumberType.FiatStandard
 >

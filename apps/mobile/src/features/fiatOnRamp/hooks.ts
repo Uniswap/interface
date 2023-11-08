@@ -5,6 +5,12 @@ import { Delay } from 'src/components/layout/Delayed'
 import { ColorTokens, useSporeColors } from 'ui/src'
 import { useDebounce } from 'utilities/src/time/timing'
 import { ChainId } from 'wallet/src/constants/chains'
+import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
+import {
+  FiatCurrencyInfo,
+  useAppFiatCurrencyInfo,
+  useFiatCurrencyInfo,
+} from 'wallet/src/features/fiatCurrency/hooks'
 import {
   useFiatOnRampBuyQuoteQuery,
   useFiatOnRampIpAddressQuery,
@@ -13,6 +19,7 @@ import {
   useFiatOnRampWidgetUrlQuery,
 } from 'wallet/src/features/fiatOnRamp/api'
 import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
+import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
 import { addTransaction } from 'wallet/src/features/transactions/slice'
 import {
   TransactionDetails,
@@ -51,10 +58,67 @@ export function useFiatOnRampTransactionCreator(ownerAddress: string): {
   return { externalTransactionId: externalTransactionId.current, dispatchAddTransaction }
 }
 
-// TODO: remove this when we support other fiat currencies for purchasing on moonpay
-const MOONPAY_BASE_CURRENCY_CODE = 'usd'
 const MOONPAY_FEES_INCLUDED = true
+// MoonPay supported fiat currencies (https://support.moonpay.com/hc/en-gb/articles/360011931457-Which-fiat-currencies-are-supported-)
+const MOONPAY_FIAT_CURRENCY_CODES = [
+  'aud', // Australian Dollar
+  'bgn', // Bulgarian Lev
+  'brl', // Brazilian Real
+  'cad', // Canadian Dollar
+  'chf', // Swiss Franc
+  'cny', // Chinese Yuan
+  'cop', // Colombia Peso
+  'czk', // Czech Koruna
+  'dkk', // Danish Krone
+  'dop', // Dominican Peso
+  'egp', // Egyptian Pound
+  'eur', // Euro
+  'gbp', // Pound Sterling
+  'hkd', // Hong Kong Dollar
+  'idr', // Indonesian Rupiah
+  'ils', // Israeli New Shekel
+  'jpy', // Japanese Yen
+  'jod', // Jordanian Dollar
+  'kes', // Kenyan Shilling
+  'krw', // South Korean Won
+  'kwd', // Kuwaiti Dinar
+  'lkr', // Sri Lankan Rupee
+  'mad', // Moroccan Dirham
+  'mxn', // Mexican Peso
+  'ngn', // Nigerian Naira
+  'nok', // Norwegian Krone
+  'nzd', // New Zealand Dollar
+  'omr', // Omani Rial
+  'pen', // Peruvian Sol
+  'pkr', // Pakistani Rupee
+  'pln', // Polish Złoty
+  'ron', // Romanian Leu
+  'sek', // Swedish Krona
+  'thb', // Thai Baht
+  'try', // Turkish Lira
+  'twd', // Taiwan Dollar
+  'usd', // US Dollar
+  'vnd', // Vietnamese Dong
+  'zar', // South African Rand
+]
 
+export function useMoonpayFiatCurrencySupportInfo(): {
+  appFiatCurrencySupportedInMoonpay: boolean
+  moonpaySupportedFiatCurrency: FiatCurrencyInfo
+} {
+  // Not all the currencies are supported by MoonPay, so we need to fallback to USD if the currency is not supported
+  const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
+  const fallbackCurrencyInfo = useFiatCurrencyInfo(FiatCurrency.UnitedStatesDollar)
+  const appFiatCurrencyCode = appFiatCurrencyInfo.code.toLowerCase()
+
+  const appFiatCurrencySupported = MOONPAY_FIAT_CURRENCY_CODES.includes(appFiatCurrencyCode)
+  const currency = appFiatCurrencySupported ? appFiatCurrencyInfo : fallbackCurrencyInfo
+
+  return {
+    appFiatCurrencySupportedInMoonpay: appFiatCurrencySupported,
+    moonpaySupportedFiatCurrency: currency,
+  }
+}
 /**
  * Hook to provide data from Moonpay for Fiat On Ramp Input Amount screen.
  */
@@ -89,12 +153,16 @@ export function useMoonpayFiatOnRamp({
   const { externalTransactionId, dispatchAddTransaction } =
     useFiatOnRampTransactionCreator(activeAccountAddress)
 
+  const { moonpaySupportedFiatCurrency: baseCurrency } = useMoonpayFiatCurrencySupportInfo()
+  const baseCurrencyCode = baseCurrency.code.toLowerCase()
+  const baseCurrencySymbol = baseCurrency.symbol
+
   const {
     data: limitsData,
     isLoading: limitsLoading,
     isError: limitsLoadingQueryError,
   } = useFiatOnRampLimitsQuery({
-    baseCurrencyCode: MOONPAY_BASE_CURRENCY_CODE,
+    baseCurrencyCode,
     quoteCurrencyCode,
     areFeesIncluded: MOONPAY_FEES_INCLUDED,
   })
@@ -128,6 +196,7 @@ export function useMoonpayFiatOnRamp({
       externalTransactionId,
       amount: baseCurrencyAmount,
       currencyCode: quoteCurrencyCode,
+      baseCurrencyCode,
     }
   )
   const {
@@ -136,7 +205,7 @@ export function useMoonpayFiatOnRamp({
     isError: buyQuoteLoadingQueryError,
   } = useFiatOnRampBuyQuoteQuery(
     {
-      baseCurrencyCode: MOONPAY_BASE_CURRENCY_CODE,
+      baseCurrencyCode,
       baseCurrencyAmount: debouncedBaseCurrencyAmount,
       quoteCurrencyCode,
       areFeesIncluded: MOONPAY_FEES_INCLUDED,
@@ -173,15 +242,27 @@ export function useMoonpayFiatOnRamp({
 
   const quoteCurrencyAmountReady = isBaseCurrencyAmountValid && !quoteCurrencyAmountLoading
 
+  const { addFiatSymbolToNumber } = useLocalizedFormatter()
+  const minBuyAmountWithFiatSymbol = addFiatSymbolToNumber({
+    value: minBuyAmount,
+    currencyCode: baseCurrencyCode,
+    currencySymbol: baseCurrencySymbol,
+  })
+  const maxBuyAmountWithFiatSymbol = addFiatSymbolToNumber({
+    value: maxBuyAmount,
+    currencyCode: baseCurrencyCode,
+    currencySymbol: baseCurrencySymbol,
+  })
+
   let errorText, errorColor: ColorTokens | undefined
   if (isError) {
     errorText = t('Something went wrong.')
     errorColor = '$DEP_accentWarning'
   } else if (amountIsTooSmall) {
-    errorText = t('${{amount}} minimum', { amount: minBuyAmount })
+    errorText = t('{{amount}} minimum', { amount: minBuyAmountWithFiatSymbol })
     errorColor = '$statusCritical'
   } else if (amountIsTooLarge) {
-    errorText = t('${{amount}} maximum', { amount: maxBuyAmount })
+    errorText = t('{{amount}} maximum', { amount: maxBuyAmountWithFiatSymbol })
     errorColor = '$statusCritical'
   }
 

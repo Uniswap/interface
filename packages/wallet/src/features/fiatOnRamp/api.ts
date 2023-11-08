@@ -156,14 +156,16 @@ export const fiatOnRampApi = createApi({
         ownerAddress: Address
         amount: string
         currencyCode: string
+        baseCurrencyCode: string
       }
     >({
-      query: ({ ownerAddress, amount, currencyCode, ...rest }) => ({
+      query: ({ ownerAddress, amount, currencyCode, baseCurrencyCode, ...rest }) => ({
         url: config.moonpayWidgetApiUrl,
         body: {
           ...rest,
           defaultCurrencyCode: 'eth',
           currencyCode,
+          baseCurrencyCode,
           baseCurrencyAmount: amount,
           redirectURL: `${uniswapUrls.appBaseUrl}/?screen=transaction&fiatOnRamp=true&userAddress=${ownerAddress}`,
           walletAddresses: JSON.stringify(

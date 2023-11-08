@@ -19,7 +19,10 @@ import { FiatOnRampTokenSelector } from 'src/components/TokenSelector/FiatOnRamp
 import Trace from 'src/components/Trace/Trace'
 import { FiatOnRampAmountSection } from 'src/features/fiatOnRamp/FiatOnRampAmountSection'
 import { FiatOnRampConnectingView } from 'src/features/fiatOnRamp/FiatOnRampConnecting'
-import { useMoonpayFiatOnRamp } from 'src/features/fiatOnRamp/hooks'
+import {
+  useMoonpayFiatCurrencySupportInfo,
+  useMoonpayFiatOnRamp,
+} from 'src/features/fiatOnRamp/hooks'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
@@ -38,6 +41,8 @@ import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 const MOONPAY_UNSUPPORTED_REGION_HELP_URL =
   'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-'
+
+const PREDEFINED_AMOUNTS_SUPPORTED_CURRENCIES = ['USD', 'EUR', 'GBP', 'AUD', 'CAD', 'SGD']
 
 const CONNECTING_TIMEOUT = 2000
 
@@ -99,6 +104,16 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
       notAllowedUSStates: [],
     },
   })
+
+  const { appFiatCurrencySupportedInMoonpay, moonpaySupportedFiatCurrency } =
+    useMoonpayFiatCurrencySupportInfo()
+
+  // We only support predefined amounts for certain currencies.
+  // If the user's app fiat currency is not supported in Moonpay,
+  // we fallback to USD (which does allow for predefined amounts)
+  const predefinedAmountsSupported =
+    PREDEFINED_AMOUNTS_SUPPORTED_CURRENCIES.includes(moonpaySupportedFiatCurrency.code) ||
+    !appFiatCurrencySupportedInMoonpay
 
   // We might not have ethCurrencyInfo when this component is initially rendered.
   // If `ethCurrencyInfo` becomes available later while currency.currencyInfo is still unset, we update the currency state accordingly.
@@ -195,6 +210,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
                 errorColor={errorColor}
                 errorText={errorText}
                 inputRef={inputRef}
+                predefinedAmountsSupported={predefinedAmountsSupported}
                 quoteAmount={quoteAmount}
                 quoteCurrencyAmountReady={quoteCurrencyAmountReady}
                 selectTokenLoading={selectTokenLoading}
@@ -228,6 +244,9 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
                   />
                 )}
                 <MoonpayCtaButton
+                  continueButtonText={
+                    appFiatCurrencySupportedInMoonpay ? t('Continue to checkout') : t('Checkout')
+                  }
                   disabled={!buttonEnabled}
                   eligible={eligible}
                   isLoading={isLoading}
@@ -259,7 +278,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
           amount={formatNumberOrString({
             value,
             type: NumberType.FiatTokenPrice,
-            currencyCode: 'usd', // TODO remove hard-coded USD after adding support for more currencies
+            currencyCode: moonpaySupportedFiatCurrency.code,
           })}
           quoteCurrencyCode={currency.currencyInfo?.currency.symbol}
         />
@@ -274,9 +293,11 @@ interface MoonpayCtaButtonProps {
   eligible: boolean
   disabled: boolean
   properties: Record<string, unknown>
+  continueButtonText: string
 }
 
 function MoonpayCtaButton({
+  continueButtonText,
   isLoading,
   eligible,
   disabled,
@@ -303,7 +324,7 @@ function MoonpayCtaButton({
         size="large"
         theme={!isLoading && !eligible ? 'tertiary' : 'primary'}
         onPress={onPress}>
-        {isLoading ? undefined : eligible ? t('Continue') : t('Not supported')}
+        {isLoading ? undefined : eligible ? continueButtonText : t('Not supported in region')}
       </Button>
     </Trace>
   )
