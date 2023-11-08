@@ -6059,10 +6059,10 @@
     "@typescript-eslint/types" "5.59.1"
     eslint-visitor-keys "^3.3.0"
 
-"@uniswap/analytics-events@^2.25.0":
-  version "2.25.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-2.25.0.tgz#06f2d81342b2e4dc516bdfa1222ddaa7c274ac04"
-  integrity sha512-0syw7gZtoHXSCVb+zV464L+Zgy1ICnGDOrbK2xoVtpiQ8rBjUXPWvcKuaiNPfTsS9tIZNtqOmEyZEjWwvFSLUw==
+"@uniswap/analytics-events@^2.28.0":
+  version "2.28.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-2.28.0.tgz#344fbbe3e120b7f8100e4d540004847f7147cf6e"
+  integrity sha512-j650l315p9W5dbVPzHRu485omyZw+I6jU/ZGpzuz4OdrJIp8yCl57LTLFfmMsZGwmJYDlOxY2fB6Jrbc2lUvUA==
 
 "@uniswap/analytics@1.5.0":
   version "1.5.0"
@@ -6149,10 +6149,10 @@
     "@uniswap/v2-sdk" "^3.2.0"
     "@uniswap/v3-sdk" "^3.10.0"
 
-"@uniswap/sdk-core@>= 3", "@uniswap/sdk-core@^4", "@uniswap/sdk-core@^4.0.0", "@uniswap/sdk-core@^4.0.2", "@uniswap/sdk-core@^4.0.3", "@uniswap/sdk-core@^4.0.6":
-  version "4.0.6"
-  resolved "https://registry.yarnpkg.com/@uniswap/sdk-core/-/sdk-core-4.0.6.tgz#7b6d562f54293bbe0a9d101fb84e619db325f7b6"
-  integrity sha512-6GzCVfnOiJtvo91zlF/VjnC2OEbBRThVclzrh7+Zmo8dBovXwSlXwqn3RkSWACn/XEOzAKH70TficfOWm6mWJA==
+"@uniswap/sdk-core@4.0.7", "@uniswap/sdk-core@>= 3", "@uniswap/sdk-core@^4", "@uniswap/sdk-core@^4.0.0", "@uniswap/sdk-core@^4.0.2", "@uniswap/sdk-core@^4.0.3", "@uniswap/sdk-core@^4.0.6":
+  version "4.0.7"
+  resolved "https://registry.npmjs.org/@uniswap/sdk-core/-/sdk-core-4.0.7.tgz#90dfd070d7e44494234618af398da158363ae827"
+  integrity sha512-jscx7KUIWzQatcL5PHY6xy0gEL9IGQcL5h/obxzX9foP2KoNk9cq66Ia8I2Kvpa7zBcPOeW1hU0hJNBq6CzcIQ==
   dependencies:
     "@ethersproject/address" "^5.0.2"
     big.js "^5.2.2"

@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { InterfaceElementName } from '@uniswap/analytics-events'
+import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { WalletConnect as WalletConnectv2 } from '@web3-react/walletconnect-v2'
 import { sendAnalyticsEvent } from 'analytics'
 import Column, { AutoColumn } from 'components/Column'
@@ -9,11 +9,12 @@ import { uniwalletWCV2ConnectConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { ConnectionType } from 'connection/types'
 import { UniwalletConnect as UniwalletConnectV2 } from 'connection/WalletConnectV2'
+import { useAndroidGALaunchFlagEnabled } from 'featureFlags/flags/androidGALaunch'
 import { QRCodeSVG } from 'qrcode.react'
 import { useEffect, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
-import { isIOS } from 'utils/userAgent'
+import { isAndroid, isIOS } from 'utils/userAgent'
 
 import uniPng from '../../assets/images/uniwallet_modal_icon.png'
 import { DownloadButton } from './DownloadButton'
@@ -42,9 +43,11 @@ export default function UniwalletModal() {
   const { activationState, cancelActivation } = useActivationState()
   const [uri, setUri] = useState<string>()
 
-  // Displays the modal if not on iOS, a Uniswap Wallet Connection is pending, & qrcode URI is available
+  const isAndroidGALaunched = useAndroidGALaunchFlagEnabled()
+  // Displays the modal if not on iOS/Android, a Uniswap Wallet Connection is pending, & qrcode URI is available
+  const onLaunchedMobilePlatform = isIOS || (isAndroidGALaunched && isAndroid)
   const open =
-    !isIOS &&
+    !onLaunchedMobilePlatform &&
     activationState.status === ActivationStatus.PENDING &&
     activationState.connection.type === ConnectionType.UNISWAP_WALLET_V2 &&
     !!uri
@@ -57,7 +60,7 @@ export default function UniwalletModal() {
   }, [])
 
   useEffect(() => {
-    if (open) sendAnalyticsEvent('Uniswap wallet modal opened')
+    if (open) sendAnalyticsEvent(InterfaceEventName.UNIWALLET_CONNECT_MODAL_OPENED)
   }, [open])
 
   const theme = useTheme()
@@ -102,6 +105,8 @@ const InfoSectionWrapper = styled(RowBetween)`
 `
 
 function InfoSection() {
+  const isAndroidGALaunched = useAndroidGALaunchFlagEnabled()
+
   return (
     <InfoSectionWrapper>
       <AutoColumn gap="4px">
@@ -109,9 +114,13 @@ function InfoSection() {
           <Trans>Don&apos;t have Uniswap Wallet?</Trans>
         </ThemedText.SubHeaderSmall>
         <ThemedText.BodySmall color="neutral2">
-          <Trans>
-            Download in the App Store to safely store your tokens and NFTs, swap tokens, and connect to crypto apps.
-          </Trans>
+          {isAndroidGALaunched ? (
+            <Trans>Get the Uniswap app on iOS and Android to safely store and swap tokens.</Trans>
+          ) : (
+            <Trans>
+              Download in the App Store to safely store your tokens and NFTs, swap tokens, and connect to crypto apps.
+            </Trans>
+          )}
         </ThemedText.BodySmall>
       </AutoColumn>
       <Column>

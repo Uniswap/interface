@@ -57,7 +57,7 @@ const MenuTimeFlyout = styled.span<{ isInfoExplorePageEnabled: boolean }>`
   background-color: ${({ theme }) => theme.surface1};
   box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
   border: 0.5px solid ${({ theme }) => theme.surface3};
-  border-radius: 12px;
+  border-radius: 12px 0px 0px 12px;
   padding: 8px;
   display: flex;
   flex-direction: column;
@@ -65,6 +65,20 @@ const MenuTimeFlyout = styled.span<{ isInfoExplorePageEnabled: boolean }>`
   position: absolute;
   top: 48px;
   z-index: 100;
+
+  scrollbar-width: thin;
+  scrollbar-color: ${({ theme }) => `${theme.surface3} transparent`};
+
+  // safari and chrome scrollbar styling
+  ::-webkit-scrollbar {
+    background: transparent;
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.surface3};
+    border-radius: 8px;
+  }
 
   ${({ isInfoExplorePageEnabled }) =>
     isInfoExplorePageEnabled

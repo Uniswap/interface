@@ -4,6 +4,7 @@ import { atomWithReset } from 'jotai/utils'
 import { useCallback } from 'react'
 
 export enum TokenSortMethod {
+  FULLY_DILUTED_VALUATION = 'FDV',
   PRICE = 'Price',
   PERCENT_CHANGE = 'Change',
   TOTAL_VALUE_LOCKED = 'TVL',

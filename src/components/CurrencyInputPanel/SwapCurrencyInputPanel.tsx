@@ -382,7 +382,9 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
             <FiatRow>
               <RowBetween>
                 <LoadingOpacityContainer $loading={loading}>
-                  {fiatValue && <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />}
+                  {fiatValue && (
+                    <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} testId={`fiat-value-${id}`} />
+                  )}
                 </LoadingOpacityContainer>
                 {account ? (
                   <RowFixed style={{ height: '16px' }}>

@@ -166,6 +166,9 @@
     "wrangler": "^3.7.0",
     "yarn-deduplicate": "^6.0.0"
   },
+  "resolutions": {
+    "@uniswap/sdk-core": "4.0.7"
+  },
   "dependencies": {
     "@apollo/client": "^3.7.2",
     "@coinbase/wallet-sdk": "^3.6.4",
@@ -194,14 +197,14 @@
     "@types/react-helmet": "^6.1.7",
     "@types/react-window-infinite-loader": "^1.0.6",
     "@uniswap/analytics": "1.5.0",
-    "@uniswap/analytics-events": "^2.25.0",
+    "@uniswap/analytics-events": "^2.28.0",
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",
     "@uniswap/merkle-distributor": "^1.0.1",
     "@uniswap/permit2-sdk": "^1.2.0",
     "@uniswap/redux-multicall": "^1.1.8",
     "@uniswap/router-sdk": "^1.6.0",
-    "@uniswap/sdk-core": "^4.0.3",
+    "@uniswap/sdk-core": "4.0.7",
     "@uniswap/smart-order-router": "^3.15.0",
     "@uniswap/token-lists": "^1.0.0-beta.33",
     "@uniswap/uniswapx-sdk": "^1.4.1",
