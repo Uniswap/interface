@@ -37,5 +37,4 @@ export const ORDERED_CURRENCIES: FiatCurrency[] = [
   FiatCurrency.ThaiBaht,
   FiatCurrency.TurkishLira,
   FiatCurrency.UkrainianHryvnia,
-  FiatCurrency.VietnameseDong,
 ]
