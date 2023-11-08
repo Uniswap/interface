@@ -81,6 +81,9 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     wrapType,
   } = derivedSwapInfo
 
+  const isWrap = isWrapAction(wrapType)
+  const noValidSwap = !isWrap && !trade
+
   const outputCurrencyPricePerUnitExact =
     currencyAmountsUSDValue[CurrencyField.OUTPUT] && currencyAmounts[CurrencyField.OUTPUT]
       ? (
@@ -91,12 +94,16 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
 
   const { blockingWarning, reviewScreenWarning } = useParsedSwapWarnings()
 
-  const { onAcceptTrade, acceptedDerivedSwapInfo, newTradeRequiresAcceptance } = useAcceptedTrade({
+  const {
+    onAcceptTrade,
+    acceptedDerivedSwapInfo: swapAcceptedDerivedSwapInfo,
+    newTradeRequiresAcceptance,
+  } = useAcceptedTrade({
     derivedSwapInfo,
   })
-  const acceptedTrade = acceptedDerivedSwapInfo?.trade.trade
 
-  const noValidSwap = !isWrapAction(wrapType) && !trade
+  const acceptedDerivedSwapInfo = isWrap ? derivedSwapInfo : swapAcceptedDerivedSwapInfo
+  const acceptedTrade = acceptedDerivedSwapInfo?.trade.trade
 
   const onPrev = useCallback(() => {
     if (!focusOnCurrencyField) {
@@ -138,8 +145,8 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
       return
     }
 
-    isWrapAction(wrapType) ? onWrap() : onSwap()
-  }, [reviewScreenWarning, showWarningModal, warningAcknowledged, wrapType, onWrap, onSwap])
+    isWrap ? onWrap() : onSwap()
+  }, [reviewScreenWarning, showWarningModal, warningAcknowledged, isWrap, onWrap, onSwap])
 
   const onSubmitTransactionFailed = useCallback(() => {
     setScreen(SwapScreen.SwapReview)
@@ -233,9 +240,9 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     setShowWarningModal(false)
 
     if (shouldSubmitTx) {
-      isWrapAction(wrapType) ? onWrap() : onSwap()
+      isWrap ? onWrap() : onSwap()
     }
-  }, [wrapType, onWrap, onSwap, shouldSubmitTx])
+  }, [shouldSubmitTx, isWrap, onWrap, onSwap])
 
   const onCancelWarning = useCallback(() => {
     if (shouldSubmitTx) {
@@ -288,7 +295,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     setShowSwapFeeInfoModal(false)
   }, [])
 
-  if (hideContent || !acceptedTrade || !trade) {
+  if (hideContent || !acceptedDerivedSwapInfo || (!isWrap && (!acceptedTrade || !trade))) {
     // We forcefully hide the content via `hideContent` to allow the bottom sheet to animate faster while still allowing all API requests to trigger ASAP.
     // A missing `acceptedTrade` or `trade` can happen when the user leaves the app and comes back to the review screen after 1 minute when the TTL for the quote has expired.
     // When that happens, we remove the quote from the cache before refetching, so there's no `trade`.
@@ -376,7 +383,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
               newTradeRequiresAcceptance={newTradeRequiresAcceptance}
             />
 
-            {isWrapAction(wrapType) ? (
+            {isWrap ? (
               <TransactionDetails
                 chainId={chainId}
                 gasFee={gasFee}
