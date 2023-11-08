@@ -65,6 +65,21 @@ export const apolloClient = new ApolloClient({
           },
         },
       },
+      PortfolioBalances: {
+        fields: {
+          tokens: {
+            merge(existing, incoming) {
+              if (!existing) {
+                return incoming
+              } else if (Array.isArray(existing)) {
+                return [...existing, ...incoming]
+              } else {
+                return [existing, ...incoming]
+              }
+            },
+          },
+        },
+      },
     },
   }),
   defaultOptions: {
