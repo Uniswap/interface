@@ -117,7 +117,7 @@ describe('Swap errors', () => {
     })
   })
 
-  it('inability to fetch usd quote', () => {
+  it('insufficient liquidity', () => {
     cy.intercept('POST', 'https://api.uniswap.org/v2/quote', {
       statusCode: 404,
       fixture: 'insufficientLiquidity.json',
