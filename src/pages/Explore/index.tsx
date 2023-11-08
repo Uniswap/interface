@@ -5,6 +5,7 @@ import { Trace } from 'analytics'
 import NetworkFilter from 'components/Explore/NetworkFilter'
 import SearchBar from 'components/Explore/SearchBar'
 import TimeSelector from 'components/Explore/TimeSelector'
+import PoolTable from 'components/Pools/PoolTable/PoolTable'
 import { AutoRow } from 'components/Row'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
@@ -130,7 +131,7 @@ const Pages: Array<Page> = [
   {
     title: <Trans>Pools</Trans>,
     key: ExploreTab.Pools,
-    component: TokenTable,
+    component: PoolTable,
     loggingElementName: InterfaceElementName.EXPLORE_POOLS_TAB,
   },
   {
