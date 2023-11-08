@@ -37,11 +37,6 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
   left: 0;
 }
 
-.c4 {
-  height: 14px;
-  width: 14px;
-}
-
 .c2 {
   width: 40px;
   height: 40px;
@@ -49,8 +44,7 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
 }
 
 .c3 {
-  background-color: #0D111C;
-  border-radius: 2px;
+  border-radius: 4px;
   height: 16px;
   left: 60%;
   position: absolute;
@@ -84,17 +78,41 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
       />
       <img
         class="c2"
-        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8/logo.png"
+        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xaf88d065e77c8cC2239327C5EDb3A432268e5831/logo.png"
       />
     </div>
     <div
       class="c3"
     >
-      <img
-        alt="chainLogo"
-        class="c4"
-        src="arbitrum_logo.svg"
-      />
+      <svg
+        aria-labelledby="titleID"
+        height="16"
+        width="16"
+      >
+        <title
+          id="titleID"
+        >
+          Arbitrum logo
+        </title>
+        <rect
+          fill="#F9F9F9"
+          height="16"
+          rx="4"
+          width="16"
+        />
+        <rect
+          fill="#00A3FF33"
+          height="16"
+          rx="4"
+          width="16"
+        />
+        <svg
+          height="16"
+          width="16"
+        >
+          arbitrum.svg
+        </svg>
+      </svg>
     </div>
   </div>
 </div>

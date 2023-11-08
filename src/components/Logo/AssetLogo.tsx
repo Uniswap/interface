@@ -1,5 +1,4 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { getChainInfo } from 'constants/chainInfo'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import React, { useState } from 'react'
 import styled from 'styled-components'
@@ -7,10 +6,10 @@ import styled from 'styled-components'
 export const MissingImageLogo = styled.div<{ size?: string }>`
   --size: ${({ size }) => size};
   border-radius: 100px;
-  color: ${({ theme }) => theme.textPrimary};
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  color: ${({ theme }) => theme.neutral1};
+  background-color: ${({ theme }) => theme.surface3};
   font-size: calc(var(--size) / 3);
-  font-weight: 500;
+  font-weight: 535;
   height: ${({ size }) => size ?? '24px'};
   line-height: ${({ size }) => size ?? '24px'};
   text-align: center;
@@ -31,7 +30,7 @@ const LogoImage = styled.img<{ size: string; imgLoaded?: boolean }>`
 const LogoImageWrapper = styled.div<{ size: string; imgLoaded?: boolean }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
-  background: ${({ theme, imgLoaded }) => (imgLoaded ? 'none' : theme.backgroundInteractive)};
+  background: ${({ theme, imgLoaded }) => (imgLoaded ? 'none' : theme.surface3)};
   transition: background-color ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.in}`};
   box-shadow: 0 0 1px white;
   border-radius: 50%;
@@ -42,26 +41,12 @@ export type AssetLogoBaseProps = {
   backupImg?: string | null
   size?: string
   style?: React.CSSProperties
-  hideL2Icon?: boolean
 }
 type AssetLogoProps = AssetLogoBaseProps & { isNative?: boolean; address?: string | null; chainId?: number }
 
 const LogoContainer = styled.div`
   position: relative;
   display: flex;
-`
-
-const L2NetworkLogo = styled.div<{ networkUrl?: string; parentSize: string }>`
-  --size: ${({ parentSize }) => `calc(${parentSize} / 2)`};
-  width: var(--size);
-  height: var(--size);
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  background: url(${({ networkUrl }) => networkUrl});
-  background-repeat: no-repeat;
-  background-size: ${({ parentSize }) => `calc(${parentSize} / 2) calc(${parentSize} / 2)`};
-  display: ${({ networkUrl }) => !networkUrl && 'none'};
 `
 
 /**
@@ -75,10 +60,8 @@ export default function AssetLogo({
   backupImg,
   size = '24px',
   style,
-  hideL2Icon = false,
 }: AssetLogoProps) {
   const [src, nextSrc] = useTokenLogoSource(address, chainId, isNative, backupImg)
-  const L2Icon = getChainInfo(chainId)?.circleLogoUrl
   const [imgLoaded, setImgLoaded] = useState(() => {
     const img = document.createElement('img')
     img.src = src ?? ''
@@ -96,6 +79,7 @@ export default function AssetLogo({
             onLoad={() => void setImgLoaded(true)}
             onError={nextSrc}
             imgLoaded={imgLoaded}
+            loading="lazy"
           />
         </LogoImageWrapper>
       ) : (
@@ -104,7 +88,6 @@ export default function AssetLogo({
           {symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
         </MissingImageLogo>
       )}
-      {!hideL2Icon && <L2NetworkLogo networkUrl={L2Icon} parentSize={size} />}
     </LogoContainer>
   )
 }

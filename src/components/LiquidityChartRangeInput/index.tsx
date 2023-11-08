@@ -3,7 +3,6 @@ import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { AutoColumn, ColumnCenter } from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
-import { format } from 'd3'
 import { useColor } from 'hooks/useColor'
 import { saturate } from 'polished'
 import { ReactNode, useCallback, useMemo } from 'react'
@@ -11,8 +10,9 @@ import { BarChart2, CloudOff, Inbox } from 'react-feather'
 import { batch } from 'react-redux'
 import { Bound } from 'state/mint/v3/actions'
 import styled, { useTheme } from 'styled-components'
+import { ThemedText } from 'theme/components'
+import { useFormatter } from 'utils/formatNumbers'
 
-import { ThemedText } from '../../theme'
 import { Chart } from './Chart'
 import { useDensityChartData } from './hooks'
 import { ZoomLevels } from './types'
@@ -142,6 +142,7 @@ export default function LiquidityChartRangeInput({
       : undefined
   }, [isSorted, priceLower, priceUpper])
 
+  const { formatDelta } = useFormatter()
   const brushLabelValue = useCallback(
     (d: 'w' | 'e', x: number) => {
       if (!price) return ''
@@ -151,9 +152,9 @@ export default function LiquidityChartRangeInput({
 
       const percent = (x < price ? -1 : 1) * ((Math.max(x, price) - Math.min(x, price)) / price) * 100
 
-      return price ? `${format(Math.abs(percent) > 1 ? '.2~s' : '.2~f')(percent)}%` : ''
+      return price ? `${(Math.sign(percent) < 0 ? '-' : '') + formatDelta(percent)}` : ''
     },
-    [isSorted, price, ticksAtLimit]
+    [formatDelta, isSorted, price, ticksAtLimit]
   )
 
   const isUninitialized = !currencyA || !currencyB || (formattedData === undefined && !isLoading)
@@ -163,19 +164,19 @@ export default function LiquidityChartRangeInput({
       {isUninitialized ? (
         <InfoBox
           message={<Trans>Your position will appear here.</Trans>}
-          icon={<Inbox size={56} stroke={theme.textPrimary} />}
+          icon={<Inbox size={56} stroke={theme.neutral1} />}
         />
       ) : isLoading ? (
-        <InfoBox icon={<Loader size="40px" stroke={theme.deprecated_text4} />} />
+        <InfoBox icon={<Loader size="40px" stroke={theme.neutral2} />} />
       ) : error ? (
         <InfoBox
           message={<Trans>Liquidity data not available.</Trans>}
-          icon={<CloudOff size={56} stroke={theme.deprecated_text4} />}
+          icon={<CloudOff size={56} stroke={theme.neutral2} />}
         />
       ) : !formattedData || formattedData.length === 0 || !price ? (
         <InfoBox
           message={<Trans>There is no liquidity data.</Trans>}
-          icon={<BarChart2 size={56} stroke={theme.deprecated_text4} />}
+          icon={<BarChart2 size={56} stroke={theme.neutral2} />}
         />
       ) : (
         <ChartWrapper>
@@ -185,12 +186,12 @@ export default function LiquidityChartRangeInput({
             margins={{ top: 10, right: 2, bottom: 20, left: 0 }}
             styles={{
               area: {
-                selection: theme.accentAction,
+                selection: theme.accent1,
               },
               brush: {
                 handle: {
-                  west: saturate(0.1, tokenAColor) ?? theme.accentFailure,
-                  east: saturate(0.1, tokenBColor) ?? theme.accentAction,
+                  west: saturate(0.1, tokenAColor) ?? theme.critical,
+                  east: saturate(0.1, tokenBColor) ?? theme.accent1,
                 },
               },
             }}

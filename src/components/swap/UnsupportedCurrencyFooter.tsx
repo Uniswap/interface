@@ -9,7 +9,7 @@ import Modal from 'components/Modal'
 import { AutoRow, RowBetween } from 'components/Row'
 import { useState } from 'react'
 import styled from 'styled-components'
-import { CloseIcon, ExternalLink, ThemedText } from 'theme'
+import { CloseIcon, ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 
 import { useUnsupportedTokens } from '../../hooks/Tokens'
@@ -25,8 +25,8 @@ const DetailsFooter = styled.div<{ show: boolean }>`
   max-width: 400px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
-  color: ${({ theme }) => theme.textSecondary};
-  background-color: ${({ theme }) => theme.deprecated_advancedBG};
+  color: ${({ theme }) => theme.neutral2};
+  background-color: ${({ theme }) => theme.surface2};
   z-index: ${Z_INDEX.deprecated_zero};
 
   transform: ${({ show }) => (show ? 'translateY(0%)' : 'translateY(-100%)')};
@@ -72,7 +72,7 @@ export default function UnsupportedCurrencyFooter({
           <AutoColumn gap="lg">
             <RowBetween>
               <ThemedText.DeprecatedMediumHeader>
-                <Trans>Unsupported Assets</Trans>
+                <Trans>Unsupported assets</Trans>
               </ThemedText.DeprecatedMediumHeader>
               <CloseIcon onClick={() => setShowDetails(false)} data-testid="close-icon" />
             </RowBetween>
@@ -85,7 +85,7 @@ export default function UnsupportedCurrencyFooter({
                     <AutoColumn gap="10px">
                       <AutoRow gap="5px" align="center">
                         <CurrencyLogo currency={token} size="24px" />
-                        <ThemedText.DeprecatedBody fontWeight={500}>{token.symbol}</ThemedText.DeprecatedBody>
+                        <ThemedText.DeprecatedBody fontWeight={535}>{token.symbol}</ThemedText.DeprecatedBody>
                       </AutoRow>
                       {chainId && (
                         <ExternalLink href={getExplorerLink(chainId, token.address, ExplorerDataType.ADDRESS)}>
@@ -98,7 +98,7 @@ export default function UnsupportedCurrencyFooter({
               )
             })}
             <AutoColumn gap="lg">
-              <ThemedText.DeprecatedBody fontWeight={500}>
+              <ThemedText.DeprecatedBody fontWeight={535}>
                 <Trans>
                   Some assets are not available through this interface because they may not work well with the smart
                   contracts or we are unable to allow trading for legal reasons.

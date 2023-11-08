@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
-import { CopyContractAddress, ThemedText } from 'theme'
+import { CopyContractAddress, ThemedText } from 'theme/components'
 
 const ContractAddressSection = styled.div`
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 0.9em;
   gap: 4px;
   padding: 4px 0px;
@@ -13,7 +13,7 @@ const ContractAddressSection = styled.div`
 
 const ContractAddress = styled.button`
   display: flex;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   gap: 10px;
   align-items: center;
   background: transparent;

@@ -1,17 +1,20 @@
 import { t, Trans } from '@lingui/macro'
-import { ReactComponent as Settings } from 'assets/svg/settings.svg'
+import { Settings } from 'components/Icons/Settings'
 import Row from 'components/Row'
+import { InterfaceTrade } from 'state/routing/types'
+import { isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
+import { useFormatter } from 'utils/formatNumbers'
 import validateUserSlippageTolerance, { SlippageValidationResult } from 'utils/validateUserSlippageTolerance'
 
 const Icon = styled(Settings)`
   height: 24px;
   width: 24px;
   > * {
-    fill: ${({ theme }) => theme.textSecondary};
+    fill: ${({ theme }) => theme.neutral2};
   }
 `
 
@@ -37,17 +40,18 @@ const IconContainer = styled(Row)`
 
 const IconContainerWithSlippage = styled(IconContainer)<{ displayWarning?: boolean }>`
   div {
-    color: ${({ theme, displayWarning }) => (displayWarning ? theme.accentWarning : theme.textSecondary)};
+    color: ${({ theme, displayWarning }) => (displayWarning ? theme.deprecated_accentWarning : theme.neutral2)};
   }
 
   background-color: ${({ theme, displayWarning }) =>
-    displayWarning ? theme.accentWarningSoft : theme.backgroundModule};
+    displayWarning ? theme.deprecated_accentWarningSoft : theme.surface2};
 `
 
-const ButtonContent = () => {
+const ButtonContent = ({ trade }: { trade?: InterfaceTrade }) => {
   const [userSlippageTolerance] = useUserSlippageTolerance()
+  const { formatPercent } = useFormatter()
 
-  if (userSlippageTolerance === SlippageTolerance.Auto) {
+  if (userSlippageTolerance === SlippageTolerance.Auto || isUniswapXTrade(trade)) {
     return (
       <IconContainer>
         <Icon />
@@ -59,9 +63,9 @@ const ButtonContent = () => {
 
   return (
     <IconContainerWithSlippage data-testid="settings-icon-with-slippage" gap="sm" displayWarning={isInvalidSlippage}>
-      <ThemedText.Caption>
-        <Trans>{userSlippageTolerance.toFixed(2)}% slippage</Trans>
-      </ThemedText.Caption>
+      <ThemedText.BodySmall>
+        <Trans>{formatPercent(userSlippageTolerance)} slippage</Trans>
+      </ThemedText.BodySmall>
       <Icon />
     </IconContainerWithSlippage>
   )
@@ -71,10 +75,12 @@ export default function MenuButton({
   disabled,
   onClick,
   isActive,
+  trade,
 }: {
   disabled: boolean
   onClick: () => void
   isActive: boolean
+  trade?: InterfaceTrade
 }) {
   return (
     <Button
@@ -85,7 +91,7 @@ export default function MenuButton({
       data-testid="open-settings-dialog-button"
       aria-label={t`Transaction Settings`}
     >
-      <ButtonContent />
+      <ButtonContent trade={trade} />
     </Button>
   )
 }

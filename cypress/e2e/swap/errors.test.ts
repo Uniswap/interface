@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { InterfaceSectionName } from '@uniswap/analytics-events'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../../src/constants/misc'
@@ -125,6 +126,6 @@ describe('Swap errors', () => {
 
     cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${WBTC.address}`)
     cy.get('#swap-currency-output .token-amount-input').type('12').should('have.value', '12')
-    cy.get(getTestSelector('fiat-value-output-panel')).contains('-')
+    cy.get(getTestSelector(`fiat-value-${InterfaceSectionName.CURRENCY_OUTPUT_PANEL}`)).contains('-')
   })
 })

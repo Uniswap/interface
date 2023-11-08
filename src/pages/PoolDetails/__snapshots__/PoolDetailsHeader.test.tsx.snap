@@ -1,0 +1,388 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PoolDetailsHeader loading skeleton is shown 1`] = `
+<DocumentFragment>
+  .c5 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c2 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+  width: 50%;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c3 {
+  height: 16px;
+  width: 300px;
+}
+
+.c8 {
+  height: 16px;
+  width: 137px;
+}
+
+.c1 {
+  gap: 36px;
+}
+
+.c7 {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+<div
+    class="c0 c1"
+    data-testid="pdp-header-loading-skeleton"
+  >
+    <div
+      class="c2 c3"
+    />
+    <div
+      class="c4"
+    >
+      <div
+        class="c5 c6"
+      >
+        <div
+          class="c2 c7"
+        />
+        <div
+          class="c2 c8"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`PoolDetailsHeader renders header text correctly 1`] = `
+<DocumentFragment>
+  .c2 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c8 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 18px;
+}
+
+.c9 {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c5 {
+  color: #7D7D7D;
+}
+
+.c6 {
+  color: #222222;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c1 {
+  gap: 36px;
+}
+
+.c4 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c4:hover {
+  opacity: 0.6;
+}
+
+.c4:active {
+  opacity: 0.4;
+}
+
+.c13 {
+  background: #F9F9F9;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.c14 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c14:hover {
+  opacity: 0.6;
+}
+
+.c14:active {
+  opacity: 0.4;
+}
+
+.c10 {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c11 img {
+  width: 16px;
+  height: 32px;
+  object-fit: cover;
+}
+
+.c11 img:first-child {
+  border-radius: 16px 0 0 16px;
+  object-position: 0 0;
+}
+
+.c11 img:last-child {
+  border-radius: 0 16px 16px 0;
+  object-position: 100% 0;
+}
+
+.c12 {
+  width: 16px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+<div
+    class="c0 c1"
+  >
+    <div
+      class="c2 c3"
+    >
+      <a
+        class="c4"
+        href="/tokens/ETHEREUM"
+      >
+        <div
+          class="c5 css-1urox24"
+        >
+          Explore
+        </div>
+      </a>
+      <div
+        class="c5 css-1urox24"
+      >
+         &gt; 
+      </div>
+      <a
+        class="c4"
+        href="/tokens/ETHEREUM"
+      >
+        <div
+          class="c5 css-1urox24"
+        >
+          Pool
+        </div>
+      </a>
+      <div
+        class="c5 css-1urox24"
+      >
+         &gt; 
+      </div>
+      <div
+        class="c6 css-1urox24"
+      >
+        USDC / WETH (0x88e6...5640)
+      </div>
+    </div>
+    <div
+      class="c2 c7"
+    >
+      <div
+        class="c8 c9"
+        width="max-content"
+      >
+        <div
+          class="c10"
+        >
+          <div
+            class="c11"
+          >
+            <img
+              class="c12"
+              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+            />
+            <img
+              class="c12"
+              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+            />
+          </div>
+        </div>
+        <div
+          class="c6 css-1jyz67g"
+        >
+          USDC / WETH
+        </div>
+      </div>
+      <div
+        class="c5 c13 css-1m65e73"
+      >
+        0.05%
+      </div>
+      <svg
+        class="c14"
+        data-testid="toggle-tokens-reverse-arrows"
+        fill="none"
+        height="20"
+        viewBox="0 0 20 20"
+        width="20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M18.125 10V12.5C18.125 14.2233 16.7225 15.625 15 15.625H4.0092L5.4425 17.0583C5.68667 17.3025 5.68667 17.6983 5.4425 17.9425C5.32084 18.0642 5.16081 18.1258 5.00081 18.1258C4.84081 18.1258 4.68079 18.065 4.55912 17.9425L2.05912 15.4425C2.00162 15.385 1.9559 15.3159 1.92424 15.2393C1.8609 15.0868 1.8609 14.9143 1.92424 14.7618C1.9559 14.6851 2.00162 14.6158 2.05912 14.5583L4.55912 12.0583C4.80329 11.8141 5.19915 11.8141 5.44332 12.0583C5.68749 12.3025 5.68749 12.6983 5.44332 12.9425L4.01001 14.3758H15C16.0333 14.3758 16.875 13.535 16.875 12.5008V10.0008C16.875 9.65581 17.155 9.37581 17.5 9.37581C17.845 9.37581 18.125 9.655 18.125 10ZM2.5 10.625C2.845 10.625 3.125 10.345 3.125 10V7.5C3.125 6.46583 3.96667 5.625 5 5.625H15.9908L14.5575 7.05831C14.3133 7.30247 14.3133 7.69834 14.5575 7.9425C14.6792 8.06417 14.8392 8.12581 14.9992 8.12581C15.1592 8.12581 15.3192 8.065 15.4409 7.9425L17.9409 5.4425C17.9984 5.385 18.0441 5.31592 18.0758 5.23926C18.1391 5.08676 18.1391 4.91426 18.0758 4.76176C18.0441 4.68509 17.9984 4.61581 17.9409 4.55831L15.4409 2.05831C15.1967 1.81414 14.8008 1.81414 14.5567 2.05831C14.3125 2.30247 14.3125 2.69834 14.5567 2.9425L15.99 4.37581H5C3.2775 4.37581 1.875 5.77748 1.875 7.50081V10.0008C1.875 10.345 2.155 10.625 2.5 10.625Z"
+          fill="#5E5E5E"
+        />
+      </svg>
+    </div>
+  </div>
+</DocumentFragment>
+`;

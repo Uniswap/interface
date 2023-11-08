@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useTrace } from 'analytics'
 import clsx from 'clsx'
 import Badge from 'components/Badge'
-import { getChainInfo } from 'constants/chainInfo'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import { HistoryDuration, SafetyLevel } from 'graphql/data/__generated__/types-and-hooks'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { SearchToken } from 'graphql/data/SearchTokens'
@@ -20,7 +20,7 @@ import { GenieCollection, TrendingCollection } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
 import { SuspendConditionally } from '../Suspense/SuspendConditionally'
@@ -57,12 +57,12 @@ const SearchBarDropdownSection = ({
   eventProperties,
 }: SearchBarDropdownSectionProps) => {
   return (
-    <Column gap="12" data-testid="searchbar-dropdown">
-      <Row paddingX="16" paddingY="4" gap="8" color="gray300" className={subheadSmall} style={{ lineHeight: '20px' }}>
+    <Column gap="4" data-testid="searchbar-dropdown">
+      <Row paddingX="16" paddingY="4" gap="8" color="neutral2" className={subheadSmall} style={{ lineHeight: '20px' }}>
         {headerIcon ? headerIcon : null}
         <Box>{header}</Box>
       </Row>
-      <Column gap="12">
+      <Column gap="4">
         {suggestions.map((suggestion, index) =>
           isLoading || !suggestion ? (
             <SkeletonRow key={index} />
@@ -107,15 +107,10 @@ function isKnownToken(token: SearchToken) {
   return token.project?.safetyLevel == SafetyLevel.Verified || token.project?.safetyLevel == SafetyLevel.MediumWarning
 }
 
-const ChainLogo = styled.img`
-  height: 20px;
-  width: 20px;
-  margin-right: 8px;
-`
 const ChainComingSoonBadge = styled(Badge)`
   align-items: center;
-  background-color: ${({ theme }) => theme.backgroundModule};
-  color: ${({ theme }) => theme.textSecondary};
+  background-color: ${({ theme }) => theme.surface2};
+  color: ${({ theme }) => theme.neutral2};
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -123,6 +118,7 @@ const ChainComingSoonBadge = styled(Badge)`
   padding: 8px;
   margin: 16px 16px 4px;
   width: calc(100% - 32px);
+  gap: 8px;
 `
 
 interface SearchBarDropdownProps {
@@ -138,7 +134,6 @@ export const SearchBarDropdown = (props: SearchBarDropdownProps) => {
   const { isLoading } = props
   const { chainId } = useWeb3React()
   const showChainComingSoonBadge = chainId && BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(chainId) && !isLoading
-  const logoUri = getChainInfo(chainId)?.logoUrl
 
   return (
     <Column overflow="hidden" className={clsx(styles.searchBarDropdownNft, styles.searchBarScrollable)}>
@@ -150,8 +145,8 @@ export const SearchBarDropdown = (props: SearchBarDropdownProps) => {
         </SuspenseWithPreviousRenderAsFallback>
         {showChainComingSoonBadge && (
           <ChainComingSoonBadge>
-            <ChainLogo src={logoUri} />
-            <ThemedText.BodySmall color="textSecondary" fontSize="14px" fontWeight="400" lineHeight="20px">
+            <ChainLogo chainId={chainId} size={20} />
+            <ThemedText.BodySmall color="neutral2" fontSize="14px" fontWeight="400" lineHeight="20px">
               <ComingSoonText chainId={chainId} />
             </ThemedText.BodySmall>
           </ChainComingSoonBadge>
@@ -246,7 +241,11 @@ function SearchBarDropdownContents({
 
   const trace = JSON.stringify(useTrace({ section: InterfaceSectionName.NAVBAR_SEARCH }))
 
-  const eventProperties = { total_suggestions: totalSuggestions, query_text: queryText, ...JSON.parse(trace) }
+  const eventProperties = {
+    total_suggestions: totalSuggestions,
+    query_text: queryText,
+    ...JSON.parse(trace),
+  }
 
   const tokenSearchResults =
     tokens.length > 0 ? (
@@ -280,7 +279,7 @@ function SearchBarDropdownContents({
           suggestion_type: NavBarSearchTypes.COLLECTION_SUGGESTION,
           ...eventProperties,
         }}
-        header={<Trans>NFT Collections</Trans>}
+        header={<Trans>NFT collections</Trans>}
       />
     ) : (
       <Box className={styles.notFoundContainer}>No NFT collections found.</Box>
@@ -358,8 +357,6 @@ function SearchBarDropdownContents({
 
 function ComingSoonText({ chainId }: { chainId: ChainId }) {
   switch (chainId) {
-    case ChainId.BNB:
-      return <Trans>Coming soon: search and explore tokens on BNB Chain</Trans>
     case ChainId.AVALANCHE:
       return <Trans>Coming soon: search and explore tokens on Avalanche Chain</Trans>
     default:

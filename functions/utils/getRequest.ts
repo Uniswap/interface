@@ -4,13 +4,13 @@ import { Data } from './cache'
 
 export async function getMetadataRequest(
   res: Promise<Response>,
-  url: string,
+  request: Request,
   getData: () => Promise<Data | undefined>
 ) {
   try {
-    const cachedData = await getRequest(url, getData, (data): data is Data => true)
+    const cachedData = await getRequest(request.url, getData, (data): data is Data => true)
     if (cachedData) {
-      return new HTMLRewriter().on('head', new MetaTagInjector(cachedData)).transform(await res)
+      return new HTMLRewriter().on('head', new MetaTagInjector(cachedData, request)).transform(await res)
     } else {
       return res
     }

@@ -21,11 +21,12 @@ const TableHeader = styled.div`
   padding-top: 24px;
   padding-bottom: 24px;
   z-index: 3;
-  background-color: ${({ theme }) => theme.backgroundBackdrop};
-  color: ${({ theme }) => theme.textSecondary};
+  background-color: ${({ theme }) => theme.surface2};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 14px;
   font-weight: normal;
   line-height: 20px;
+  border-radius: 12px;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     padding-left: 48px;
@@ -81,16 +82,16 @@ const DropdownPromptContainer = styled(Column)`
 
 const DropdownPrompt = styled(Row)`
   gap: 4px;
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  background-color: ${({ theme }) => theme.surface3};
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 535;
   font-size: 12px;
   line-height: 16px;
   border-radius: 4px;
   padding: 2px 6px;
   width: min-content;
   white-space: nowrap;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 
   &:hover {
     opacity: ${({ theme }) => theme.opacity.hover};
@@ -100,7 +101,7 @@ const DropdownPrompt = styled(Row)`
 const DropdownChevron = styled(ChevronDown)<{ isOpen: boolean }>`
   height: 16px;
   width: 16px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   transform: ${({ isOpen }) => isOpen && 'rotate(180deg)'};
   transition: ${({
     theme: {
@@ -140,7 +141,7 @@ const RowDivider = styled.hr`
   border-width: 0.5px;
   border-style: solid;
   margin: 0;
-  border-color: ${({ theme }) => theme.backgroundInteractive};
+  border-color: ${({ theme }) => theme.surface3};
 `
 
 export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingMarket[] }) => {
@@ -198,10 +199,10 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
       prompt = <Trans>Floor price</Trans>
       break
     case SetPriceMethod.LAST_PRICE:
-      prompt = <Trans>Last Price</Trans>
+      prompt = <Trans>Last price</Trans>
       break
     case SetPriceMethod.SAME_PRICE:
-      prompt = <Trans>Same Price</Trans>
+      prompt = <Trans>Same price</Trans>
       break
     default:
       break

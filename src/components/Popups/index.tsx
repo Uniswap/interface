@@ -1,10 +1,8 @@
-import { ChainId } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { useActivePopups } from 'state/application/hooks'
 import styled from 'styled-components'
-import { MEDIA_WIDTHS } from 'theme'
+import { Z_INDEX } from 'theme/zIndex'
 
-import { useActivePopups } from '../../state/application/hooks'
-import { useURLWarningVisible } from '../../state/user/hooks'
+import { useAccountDrawer } from '../AccountDrawer'
 import { AutoColumn } from '../Column'
 import ClaimPopup from './ClaimPopup'
 import PopupItem from './PopupItem'
@@ -14,6 +12,8 @@ const MobilePopupWrapper = styled.div`
   max-width: 100%;
   margin: 0 auto;
   display: none;
+  padding-left: 20px;
+  padding-right: 20px;
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     display: block;
@@ -33,40 +33,31 @@ const MobilePopupInner = styled.div`
   }
 `
 
-const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToMedium + 1}px) and (max-width: ${
-  MEDIA_WIDTHS.deprecated_upToMedium + 500
-}px)`
-
-const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean; xlPadding: boolean }>`
+const FixedPopupColumn = styled(AutoColumn)<{
+  drawerOpen: boolean
+}>`
   position: fixed;
-  top: ${({ extraPadding }) => (extraPadding ? '72px' : '64px')};
+  top: ${({ drawerOpen }) => `${64 + (drawerOpen ? -50 : 0)}px`};
   right: 1rem;
   max-width: 348px !important;
   width: 100%;
-  z-index: 3;
+  z-index: ${Z_INDEX.modal};
+  transition: ${({ theme }) => `top ${theme.transition.timing.inOut} ${theme.transition.duration.slow}`};
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     display: none;
   `};
-
-  ${StopOverflowQuery} {
-    top: ${({ extraPadding, xlPadding }) => (xlPadding ? '72px' : extraPadding ? '72px' : '64px')};
-  }
 `
 
 export default function Popups() {
+  const [isAccountDrawerOpen] = useAccountDrawer()
+
   // get all popups
   const activePopups = useActivePopups()
 
-  const urlWarningActive = useURLWarningVisible()
-
-  // need extra padding if network is not L1 Ethereum
-  const { chainId } = useWeb3React()
-  const isNotOnMainnet = Boolean(chainId && chainId !== ChainId.MAINNET)
-
   return (
     <>
-      <FixedPopupColumn gap="20px" extraPadding={urlWarningActive} xlPadding={isNotOnMainnet} data-testid="popups">
+      <FixedPopupColumn gap="20px" drawerOpen={isAccountDrawerOpen} data-testid="popups">
         <ClaimPopup />
         {activePopups.map((item) => (
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />

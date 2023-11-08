@@ -13,6 +13,7 @@ import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { ReactNode, useMemo } from 'react'
 import { Text } from 'rebass'
 import { useTheme } from 'styled-components'
+import { BackArrowLink, StyledInternalLink, ThemedText } from 'theme/components'
 
 import { LightCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -21,7 +22,6 @@ import { AutoRow } from '../../components/Row'
 import { Dots } from '../../components/swap/styled'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/connection/hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
-import { BackArrowLink, StyledInternalLink, ThemedText } from '../../theme'
 import { BodyWrapper } from '../AppBody'
 
 function EmptyState({ message }: { message: ReactNode }) {
@@ -122,14 +122,14 @@ export default function MigrateV2() {
           <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
             <BackArrowLink to="/pools" />
             <ThemedText.DeprecatedMediumHeader>
-              <Trans>Migrate V2 Liquidity</Trans>
+              <Trans>Migrate V2 liquidity</Trans>
             </ThemedText.DeprecatedMediumHeader>
             <div>
               <QuestionHelper text={<Trans>Migrate your liquidity tokens from Uniswap V2 to Uniswap V3.</Trans>} />
             </div>
           </AutoRow>
 
-          <ThemedText.DeprecatedBody style={{ marginBottom: 8, fontWeight: 400 }}>
+          <ThemedText.DeprecatedBody style={{ marginBottom: 8, fontWeight: 485 }}>
             <Trans>
               For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into
               Uniswap V3.
@@ -138,13 +138,13 @@ export default function MigrateV2() {
 
           {!account ? (
             <LightCard padding="40px">
-              <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
+              <ThemedText.DeprecatedBody color={theme.neutral3} textAlign="center">
                 <Trans>Connect to a wallet to view your V2 liquidity.</Trans>
               </ThemedText.DeprecatedBody>
             </LightCard>
           ) : v2IsLoading ? (
             <LightCard padding="40px">
-              <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
+              <ThemedText.DeprecatedBody color={theme.neutral3} textAlign="center">
                 <Dots>
                   <Trans>Loading</Trans>
                 </Dots>
@@ -170,7 +170,7 @@ export default function MigrateV2() {
               })}
             </>
           ) : (
-            <EmptyState message={<Trans>No V2 Liquidity found.</Trans>} />
+            <EmptyState message={<Trans>No V2 liquidity found.</Trans>} />
           )}
 
           <AutoColumn justify="center" gap="md">

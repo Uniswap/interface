@@ -5,7 +5,6 @@ import { Provider as EIP1193Provider } from '@web3-react/types'
 import { sendAnalyticsEvent, user } from 'analytics'
 import { connections, getConnection } from 'connection'
 import { Connection, ConnectionType } from 'connection/types'
-import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
 import store from 'state'
@@ -14,6 +13,7 @@ import { mocked } from 'test-utils/mocked'
 import Web3Provider from '.'
 
 jest.mock('analytics', () => ({
+  useTrace: jest.fn(),
   sendAnalyticsEvent: jest.fn(),
   user: { set: jest.fn(), postInsert: jest.fn() },
 }))
@@ -33,7 +33,6 @@ jest.mock('connection', () => {
 
   return { ConnectionType, getConnection: jest.fn(), connections: [mockConnection] }
 })
-jest.mock('hooks/useEagerlyConnect', () => jest.fn())
 
 jest.unmock('@web3-react/core')
 
@@ -59,7 +58,6 @@ describe('Web3Provider', () => {
     await act(async () => {
       await result
     })
-    expect(useEagerlyConnect).toHaveBeenCalled()
     expect(result).toBeTruthy()
   })
 
@@ -70,6 +68,7 @@ describe('Web3Provider', () => {
       const mockConnection = connections[0]
       mockProvider = mockConnection.connector.provider as MockEIP1193Provider
       mocked(getConnection).mockReturnValue(mockConnection)
+      jest.spyOn(console, 'warn').mockImplementation()
     })
 
     it('sends event when the active account changes', async () => {
@@ -87,7 +86,7 @@ describe('Web3Provider', () => {
 
       // Assert
       expect(sendAnalyticsEvent).toHaveBeenCalledTimes(1)
-      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
+      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECTED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: '0x0000000000000000000000000000000000000000',
         wallet_type: 'test',
@@ -123,7 +122,7 @@ describe('Web3Provider', () => {
 
       // Assert
       expect(sendAnalyticsEvent).toHaveBeenCalledTimes(3)
-      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
+      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECTED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: '0x0000000000000000000000000000000000000000',
         wallet_type: 'test',

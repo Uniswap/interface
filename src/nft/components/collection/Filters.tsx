@@ -66,7 +66,7 @@ export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait
         {Object.entries(traitsByGroup).length > 0 && (
           <Box
             as="span"
-            color="textSecondary"
+            color="neutral2"
             paddingLeft="8"
             marginTop="12"
             marginBottom="12"

@@ -1,13 +1,12 @@
 import { OpacityHoverState } from 'components/Common'
 import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
-import ms from 'ms'
+import { useNativeUsdPrice } from 'nft/hooks'
 import { CollectionTableColumn, Denomination, TimePeriod, VolumeType } from 'nft/types'
-import { fetchPrice } from 'nft/utils'
 import { useMemo, useState } from 'react'
-import { useQuery } from 'react-query'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
+import { useFormatterLocales } from 'utils/formatNumbers'
 
 import CollectionTable from './CollectionTable'
 
@@ -27,10 +26,10 @@ const ExploreContainer = styled.div`
 `
 
 const StyledHeader = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   font-size: 36px;
   line-height: 44px;
-  font-weight: 500;
+  font-weight: 535;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     font-size: 20px;
@@ -52,7 +51,7 @@ const FiltersRow = styled.div`
 
 const Filter = styled.div`
   display: flex;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
   border-radius: 16px;
   padding: 4px;
 `
@@ -60,14 +59,14 @@ const Filter = styled.div`
 const Selector = styled.div<{ active: boolean }>`
   padding: 8px 12px;
   border-radius: 12px;
-  background: ${({ active, theme }) => (active ? theme.backgroundInteractive : 'none')};
+  background: ${({ active, theme }) => (active ? theme.surface3 : 'none')};
   cursor: pointer;
 
   ${OpacityHoverState}
 `
 
 const StyledSelectorText = styled(ThemedText.SubHeader)<{ active: boolean }>`
-  color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
+  color: ${({ theme, active }) => (active ? theme.neutral1 : theme.neutral2)};
 `
 
 function convertTimePeriodToHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
@@ -86,6 +85,7 @@ function convertTimePeriodToHistoryDuration(timePeriod: TimePeriod): HistoryDura
 }
 
 const TrendingCollections = () => {
+  const { formatterLocalCurrency } = useFormatterLocales()
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.OneDay)
   const [isEthToggled, setEthToggled] = useState(true)
 
@@ -94,12 +94,7 @@ const TrendingCollections = () => {
     convertTimePeriodToHistoryDuration(timePeriod)
   )
 
-  const { data: usdPrice } = useQuery(['fetchPrice', {}], () => fetchPrice(), {
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchInterval: ms(`1m`),
-  })
+  const ethUsdPrice = useNativeUsdPrice()
 
   const trendingCollectionColumns = useMemo(() => {
     if (!trendingCollectionsAreLoading && trendingCollections) {
@@ -126,10 +121,10 @@ const TrendingCollections = () => {
         sales: d.sales,
         totalSupply: d.totalSupply,
         denomination: isEthToggled ? Denomination.ETH : Denomination.USD,
-        usdPrice,
+        usdPrice: ethUsdPrice,
       }))
     } else return [] as CollectionTableColumn[]
-  }, [trendingCollections, trendingCollectionsAreLoading, isEthToggled, usdPrice])
+  }, [trendingCollections, trendingCollectionsAreLoading, isEthToggled, ethUsdPrice])
 
   return (
     <ExploreContainer>
@@ -158,7 +153,7 @@ const TrendingCollections = () => {
           </Selector>
           <Selector active={!isEthToggled}>
             <StyledSelectorText lineHeight="20px" active={!isEthToggled}>
-              USD
+              {formatterLocalCurrency}
             </StyledSelectorText>
           </Selector>
         </Filter>

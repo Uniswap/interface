@@ -7,10 +7,6 @@ import { navDimensions } from '../nft/css/sprinkles.css'
 import { darkTheme, lightTheme } from './colors'
 import { darkDeprecatedTheme, lightDeprecatedTheme } from './deprecatedColors'
 
-// todo - remove and replace imports with a new path
-export * from './components'
-export * from './components/text'
-
 export const MEDIA_WIDTHS = {
   deprecated_upToExtraSmall: 500,
   deprecated_upToSmall: 720,
@@ -89,7 +85,7 @@ function getSettings(darkMode: boolean) {
 
     navHeight: navDimensions.height,
     navVerticalPad: navDimensions.verticalPad,
-    mobileBottomBarHeight: 52,
+    mobileBottomBarHeight: 48,
     maxWidth: MAX_CONTENT_WIDTH,
 
     // deprecated - please use hardcoded exported values instead of
@@ -118,7 +114,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 
 export const ThemedGlobalStyle = createGlobalStyle`
   html {
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.neutral1};
     background-color: ${({ theme }) => theme.background} !important;
   }
 
@@ -127,7 +123,7 @@ export const ThemedGlobalStyle = createGlobalStyle`
   }
 
   a {
-    color: ${({ theme }) => theme.accentAction}; 
+    color: ${({ theme }) => theme.accent1}; 
   }
 
   :root {

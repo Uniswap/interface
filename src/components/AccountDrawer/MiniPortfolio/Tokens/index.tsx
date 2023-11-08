@@ -1,8 +1,9 @@
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { TraceEvent } from 'analytics'
-import { useCachedPortfolioBalancesQuery } from 'components/AccountDrawer/PrefetchBalancesWrapper'
+import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import Row from 'components/Row'
-import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
+import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
 import { getTokenDetailsURL, gqlToCurrency, logSentryErrorForUnsupportedChain } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
@@ -10,12 +11,11 @@ import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletConten
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { EllipsisStyle, ThemedText } from 'theme'
-import { formatNumber, NumberType } from 'utils/formatNumbers'
+import { EllipsisStyle, ThemedText } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { splitHiddenTokens } from 'utils/splitHiddenTokens'
 
 import { useToggleAccountDrawer } from '../..'
-import { PortfolioArrow } from '../../AuthenticatedHeader'
 import { hideSmallBalancesAtom } from '../../SmallBalanceToggle'
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
@@ -72,14 +72,18 @@ const TokenNameText = styled(ThemedText.SubHeader)`
 type PortfolioToken = NonNullable<TokenBalance['token']>
 
 function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: TokenBalance & { token: PortfolioToken }) {
+  const { formatDelta } = useFormatter()
   const percentChange = tokenProjectMarket?.pricePercentChange?.value ?? 0
 
   const navigate = useNavigate()
   const toggleWalletDrawer = useToggleAccountDrawer()
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
+
   const navigateToTokenDetails = useCallback(async () => {
-    navigate(getTokenDetailsURL(token))
+    navigate(getTokenDetailsURL({ ...token, isInfoExplorePageEnabled }))
     toggleWalletDrawer()
-  }, [navigate, token, toggleWalletDrawer])
+  }, [navigate, token, isInfoExplorePageEnabled, toggleWalletDrawer])
+  const { formatNumber } = useFormatter()
 
   const currency = gqlToCurrency(token)
   if (!currency) {
@@ -101,7 +105,11 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
         title={<TokenNameText>{token?.name}</TokenNameText>}
         descriptor={
           <TokenBalanceText>
-            {formatNumber(quantity, NumberType.TokenNonTx)} {token?.symbol}
+            {formatNumber({
+              input: quantity,
+              type: NumberType.TokenNonTx,
+            })}{' '}
+            {token?.symbol}
           </TokenBalanceText>
         }
         onClick={navigateToTokenDetails}
@@ -109,10 +117,13 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
           denominatedValue && (
             <>
               <ThemedText.SubHeader>
-                {formatNumber(denominatedValue?.value, NumberType.PortfolioBalance)}
+                {formatNumber({
+                  input: denominatedValue?.value,
+                  type: NumberType.PortfolioBalance,
+                })}
               </ThemedText.SubHeader>
               <Row justify="flex-end">
-                <PortfolioArrow change={percentChange} size={20} strokeWidth={1.75} />
+                <DeltaArrow delta={percentChange} />
                 <ThemedText.BodySecondary>{formatDelta(percentChange)}</ThemedText.BodySecondary>
               </Row>
             </>

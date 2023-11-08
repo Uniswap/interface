@@ -4,14 +4,14 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { EventCell } from 'nft/components/collection/ActivityCells'
 import { ActivityEvent } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
-import { formatEth } from 'nft/utils/currency'
 import { getTimeDifference } from 'nft/utils/date'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { shortenAddress } from 'utils'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const TR = styled.tr`
-  border-bottom: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
+  border-bottom: ${({ theme }) => `1px solid ${theme.surface3}`};
   width: 100%;
 
   &:last-child {
@@ -20,8 +20,8 @@ const TR = styled.tr`
 `
 
 const TH = styled.th`
-  color: ${({ theme }) => theme.textSecondary};
-  font-weight: 600;
+  color: ${({ theme }) => theme.neutral2};
+  font-weight: 535;
   font-size: 14px;
   line-height: 20px;
   width: 20%;
@@ -72,7 +72,7 @@ const PriceContainer = styled.div`
 `
 
 const Link = styled.a`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   text-decoration: none;
 
   ${OpacityHoverState}
@@ -148,12 +148,15 @@ export const LoadingAssetActivity = ({ rowCount }: { rowCount: number }) => {
 }
 
 const AssetActivity = ({ events }: { events?: ActivityEvent[] }) => {
+  const { formatNumberOrString } = useFormatter()
   return (
     <ActivityTable>
       {events &&
         events.map((event, index) => {
           const { eventTimestamp, eventType, fromAddress, marketplace, price, toAddress, transactionHash } = event
-          const formattedPrice = price ? formatEth(parseFloat(price ?? '')) : null
+          const formattedPrice = price
+            ? formatNumberOrString({ input: parseFloat(price), type: NumberType.NFTToken })
+            : null
           if (!eventType) return null
           return (
             <TR key={index}>

@@ -6,7 +6,7 @@ import { AutoColumn } from 'components/Column'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import styled, { keyframes } from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
 
 import { Input as NumericalInput } from '../NumericalInput'
 
@@ -34,14 +34,14 @@ const SmallButton = styled(ButtonGray)`
 `
 
 const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boolean }>`
-  border-color: ${({ active, theme }) => active && theme.accentAction};
+  border-color: ${({ active, theme }) => active && theme.deprecated_stateOverlayPressed};
   padding: 12px;
-  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.accentAction)} 0.8s linear;
+  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.accent1)} 0.8s linear;
 `
 
 const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
   background-color: transparent;
-  font-weight: 500;
+  font-weight: 535;
   text-align: left;
   width: 100%;
 
@@ -55,13 +55,14 @@ const InputColumn = styled(AutoColumn)`
 `
 
 const InputTitle = styled(ThemedText.DeprecatedSmall)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 535;
 `
 
 const ButtonLabel = styled(ThemedText.DeprecatedWhite)<{ disabled: boolean }>`
-  color: ${({ theme, disabled }) => (disabled ? theme.textSecondary : theme.textPrimary)} !important;
+  color: ${({ theme, disabled }) => (disabled ? theme.neutral2 : theme.neutral1)} !important;
+  display: flex;
 `
 
 interface StepCounterProps {

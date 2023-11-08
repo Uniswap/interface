@@ -7,12 +7,12 @@ import { useUpdateInputAndWarnings } from 'nft/components/profile/list/utils'
 import { body } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
-import { formatEth } from 'nft/utils/currency'
 import { Dispatch, useRef, useState } from 'react'
 import { AlertTriangle, Link } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { colors } from 'theme/colors'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { WarningType } from './shared'
 
@@ -23,7 +23,7 @@ const PriceTextInputWrapper = styled(Column)`
 
 const InputWrapper = styled(Row)<{ borderColor: string }>`
   height: 48px;
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.neutral3};
   padding: 12px;
   border: 2px solid;
   border-radius: 8px;
@@ -33,7 +33,7 @@ const InputWrapper = styled(Row)<{ borderColor: string }>`
 `
 
 const CurrencyWrapper = styled.div<{ listPrice?: number }>`
-  color: ${({ listPrice, theme }) => (listPrice ? theme.textPrimary : theme.textSecondary)};
+  color: ${({ listPrice, theme }) => (listPrice ? theme.neutral1 : theme.neutral2)};
 `
 
 const GlobalPriceIcon = styled.div`
@@ -42,7 +42,7 @@ const GlobalPriceIcon = styled.div`
   position: absolute;
   bottom: 32px;
   right: -10px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
   border-radius: 50%;
   height: 28px;
   width: 28px;
@@ -59,7 +59,7 @@ const WarningMessage = styled(Row)<{ $color: string }>`
   width: max-content;
   position: absolute;
   right: 0;
-  font-weight: 600;
+  font-weight: 535;
   font-size: 10px;
   line-height: 12px;
   color: ${({ $color }) => $color};
@@ -71,7 +71,7 @@ const WarningMessage = styled(Row)<{ $color: string }>`
 
 const WarningAction = styled.div`
   cursor: pointer;
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accent1};
 `
 
 const getWarningMessage = (warning: WarningType) => {
@@ -104,6 +104,7 @@ export const PriceTextInput = ({
   globalOverride,
   asset,
 }: PriceTextInputProps) => {
+  const { formatNumberOrString, formatDelta } = useFormatter()
   const [warningType, setWarningType] = useState(WarningType.NONE)
   const removeSellAsset = useSellAsset((state) => state.removeSellAsset)
   const showResolveIssues = useSellAsset((state) => state.showResolveIssues)
@@ -117,10 +118,10 @@ export const PriceTextInput = ({
     (warningType === WarningType.BELOW_FLOOR && percentBelowFloor >= 20)
       ? colors.red400
       : warningType === WarningType.BELOW_FLOOR
-      ? theme.accentWarning
+      ? theme.deprecated_accentWarning
       : isGlobalPrice || !!listPrice
-      ? theme.accentAction
-      : theme.textSecondary
+      ? theme.accent1
+      : theme.neutral2
 
   const setPrice = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!listPrice && event.target.value.includes('.') && parseFloat(event.target.value) === 0) {
@@ -140,7 +141,7 @@ export const PriceTextInput = ({
           pattern="[0-9]"
           borderStyle="none"
           className={body}
-          color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
+          color={{ placeholder: 'neutral2', default: 'neutral1' }}
           placeholder="0"
           backgroundColor="none"
           width={{ sm: '54', md: '68' }}
@@ -159,10 +160,14 @@ export const PriceTextInput = ({
           <WarningRow>
             <AlertTriangle height={16} width={16} color={warningColor} />
             <span>
-              {warningType === WarningType.BELOW_FLOOR && `${percentBelowFloor.toFixed(0)}% `}
+              {warningType === WarningType.BELOW_FLOOR && `${formatDelta(percentBelowFloor)} `}
               {getWarningMessage(warningType)}
               &nbsp;
-              {warningType === WarningType.ALREADY_LISTED && `${formatEth(asset?.floor_sell_order_price ?? 0)} ETH`}
+              {warningType === WarningType.ALREADY_LISTED &&
+                `${formatNumberOrString({
+                  input: asset?.floor_sell_order_price ?? 0,
+                  type: NumberType.NFTToken,
+                })} ETH`}
             </span>
             <WarningAction
               onClick={() => {

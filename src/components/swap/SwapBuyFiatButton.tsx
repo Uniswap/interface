@@ -7,7 +7,8 @@ import { ButtonText } from 'components/Button'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { ExternalLink } from 'theme'
+import { ExternalLink } from 'theme/components'
+import { isPathBlocked } from 'utils/blockedPaths'
 
 import { useFiatOnrampAvailability, useOpenModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -25,8 +26,9 @@ enum BuyFiatFlowState {
 }
 
 const StyledTextButton = styled(ButtonText)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   gap: 4px;
+  font-weight: 485;
   &:focus {
     text-decoration: none;
   }
@@ -38,6 +40,7 @@ const StyledTextButton = styled(ButtonText)`
 export default function SwapBuyFiatButton() {
   const { account } = useWeb3React()
   const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
+  const shouldShowBuyFiatButton = !isPathBlocked('/buy')
   const [checkFiatRegionAvailability, setCheckFiatRegionAvailability] = useState(false)
   const {
     available: fiatOnrampAvailable,
@@ -95,6 +98,10 @@ export default function SwapBuyFiatButton() {
 
   const fiatOnRampsUnavailableTooltipDisabled =
     !fiatOnrampAvailabilityChecked || (fiatOnrampAvailabilityChecked && fiatOnrampAvailable)
+
+  if (!shouldShowBuyFiatButton) {
+    return null
+  }
 
   return (
     <MouseoverTooltip

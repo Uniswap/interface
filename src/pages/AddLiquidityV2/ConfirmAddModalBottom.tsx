@@ -1,12 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk-core'
 import { Text } from 'rebass'
+import { ThemedText } from 'theme/components'
 
 import { ButtonPrimary } from '../../components/Button'
 import CurrencyLogo from '../../components/Logo/CurrencyLogo'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { Field } from '../../state/mint/actions'
-import { ThemedText } from '../../theme'
 
 export function ConfirmAddModalBottom({
   noLiquidity,
@@ -69,8 +69,8 @@ export function ConfirmAddModalBottom({
         </ThemedText.DeprecatedBody>
       </RowBetween>
       <ButtonPrimary style={{ margin: '20px 0 0 0' }} onClick={onAdd}>
-        <Text fontWeight={500} fontSize={20}>
-          {noLiquidity ? <Trans>Create Pool & Supply</Trans> : <Trans>Confirm Supply</Trans>}
+        <Text fontWeight={535} fontSize={20}>
+          {noLiquidity ? <Trans>Create pool & supply</Trans> : <Trans>Confirm supply</Trans>}
         </Text>
       </ButtonPrimary>
     </>

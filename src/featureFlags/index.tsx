@@ -7,25 +7,34 @@ import { useGate } from 'statsig-react'
  */
 export enum FeatureFlag {
   traceJsonRpc = 'traceJsonRpc',
-  permit2 = 'permit2',
-  fiatOnRampButtonOnSwap = 'fiat_on_ramp_button_on_swap_page',
   debounceSwapQuote = 'debounce_swap_quote',
-  uniswapXEnabled = 'uniswapx_enabled', // enables sending dutch_limit config to routing-api
+  fallbackProvider = 'fallback_provider',
   uniswapXSyntheticQuote = 'uniswapx_synthetic_quote',
-  forceUniswapXOn = 'uniswapx_force_on', // forces routing-api's feature flag for uniswapx to turn on as well
   uniswapXEthOutputEnabled = 'uniswapx_eth_output_enabled',
+  uniswapXExactOutputEnabled = 'uniswapx_exact_output_enabled',
   multichainUX = 'multichain_ux',
   currencyConversion = 'currency_conversion',
+  fotAdjustedmentsEnabled = 'fot_dynamic_adjustments_enabled',
+  infoExplore = 'info_explore',
+  infoTDP = 'info_tdp',
+  infoPoolPage = 'info_pool_page',
+  infoLiveViews = 'info_live_views',
+  uniswapXDefaultEnabled = 'uniswapx_default_enabled',
+  quickRouteMainnet = 'enable_quick_route_mainnet',
+  progressIndicatorV2 = 'progress_indicator_v2',
+  feesEnabled = 'fees_enabled',
+  androidGALaunch = 'android_ga_launch',
 }
 
 interface FeatureFlagsContextType {
   isLoaded: boolean
   flags: Record<string, string>
+  configs: Record<string, any>
 }
 
-const FeatureFlagContext = createContext<FeatureFlagsContextType>({ isLoaded: false, flags: {} })
+const FeatureFlagContext = createContext<FeatureFlagsContextType>({ isLoaded: false, flags: {}, configs: {} })
 
-function useFeatureFlagsContext(): FeatureFlagsContextType {
+export function useFeatureFlagsContext(): FeatureFlagsContextType {
   const context = useContext(FeatureFlagContext)
   if (!context) {
     throw Error('Feature flag hooks can only be used by children of FeatureFlagProvider.')
@@ -34,8 +43,9 @@ function useFeatureFlagsContext(): FeatureFlagsContextType {
   }
 }
 
-/* update and save feature flag settings */
+/* update and save feature flag & dynamic config settings */
 export const featureFlagSettings = atomWithStorage<Record<string, string>>('featureFlags', {})
+export const dynamicConfigSettings = atomWithStorage<Record<string, any>>('dynamicConfigs', {})
 
 export function useUpdateFlag() {
   const setFeatureFlags = useUpdateAtom(featureFlagSettings)
@@ -51,13 +61,29 @@ export function useUpdateFlag() {
   )
 }
 
+export function useUpdateConfig() {
+  const setConfigs = useUpdateAtom(dynamicConfigSettings)
+
+  return useCallback(
+    (configName: string, option: any) => {
+      setConfigs((configs) => ({
+        ...configs,
+        [configName]: option,
+      }))
+    },
+    [setConfigs]
+  )
+}
+
 export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
-  // TODO(vm): `isLoaded` to `true` so `App.tsx` will render. Later, this will be dependent on
+  // TODO: `isLoaded` to `true` so `App.tsx` will render. Later, this will be dependent on
   // flags loading from Amplitude, with a timeout.
   const featureFlags = useAtomValue(featureFlagSettings)
+  const dynamicConfigs = useAtomValue(dynamicConfigSettings)
   const value = {
     isLoaded: true,
     flags: featureFlags,
+    configs: dynamicConfigs,
   }
   return <FeatureFlagContext.Provider value={value}>{children}</FeatureFlagContext.Provider>
 }

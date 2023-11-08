@@ -2,57 +2,65 @@ import { t } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
+import { BaseButton } from 'components/Button'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
 import { WalletConnectV2 } from 'connection/WalletConnectV2'
 import { getChainInfo } from 'constants/chainInfo'
-import {
-  getChainPriority,
-  L1_CHAIN_IDS,
-  L2_CHAIN_IDS,
-  TESTNET_CHAIN_IDS,
-  UniWalletSupportedChains,
-} from 'constants/chains'
+import { getChainPriority, L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { useAtomValue } from 'jotai/utils'
-import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
-import { Column, Row } from 'nft/components/Flex'
+import { Column } from 'nft/components/Flex'
 import { useIsMobile } from 'nft/hooks'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
-import { useTheme } from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import { getSupportedChainIdsFromWalletConnectSession } from 'utils/getSupportedChainIdsFromWalletConnectSession'
 
-import * as styles from './ChainSelector.css'
 import ChainSelectorRow from './ChainSelectorRow'
 import { NavDropdown } from './NavDropdown'
 
 const NETWORK_SELECTOR_CHAINS = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
 
-interface ChainSelectorProps {
-  leftAlign?: boolean
-}
+const ChainSelectorWrapper = styled.div`
+  position: relative;
+`
+
+const ChainSelectorButton = styled(BaseButton)<{ isOpen: boolean }>`
+  display: flex;
+  background: ${({ theme, isOpen }) => (isOpen ? theme.accent2 : 'none')};
+  padding: 10px 8px;
+  gap: 4px;
+  border-radius: 12px;
+  height: 40px;
+  color: ${({ theme }) => theme.neutral1};
+  transition: ${({ theme }) =>
+    `${theme.transition.duration.medium} ${theme.transition.timing.ease} background-color, ${theme.transition.duration.medium} ${theme.transition.timing.ease} margin`};
+
+  &:hover {
+    background-color: ${({ theme }) => theme.deprecated_stateOverlayHover};
+  }
+`
 
 function useWalletSupportedChains(): ChainId[] {
   const { connector } = useWeb3React()
-
   const connectionType = getConnection(connector).type
 
   switch (connectionType) {
     case ConnectionType.WALLET_CONNECT_V2:
-      return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnectV2).provider?.session)
     case ConnectionType.UNISWAP_WALLET_V2:
-      return UniWalletSupportedChains
+      return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnectV2).provider?.session)
     default:
       return NETWORK_SELECTOR_CHAINS
   }
 }
 
-export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
+export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
   const { chainId } = useWeb3React()
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const isMobile = useIsMobile()
@@ -136,29 +144,22 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const chevronProps = {
     height: 20,
     width: 20,
-    color: theme.textSecondary,
+    color: theme.neutral2,
   }
 
   return (
-    <Box position="relative" ref={ref}>
+    <ChainSelectorWrapper ref={ref}>
       <MouseoverTooltip text={t`Your wallet's current network is unsupported.`} disabled={isSupported}>
-        <Row
-          data-testid="chain-selector"
-          as="button"
-          gap="8"
-          className={styles.ChainSelector}
-          background={isOpen ? 'accentActiveSoft' : 'none'}
-          onClick={() => setIsOpen(!isOpen)}
-        >
+        <ChainSelectorButton data-testid="chain-selector" onClick={() => setIsOpen(!isOpen)} isOpen={isOpen}>
           {!isSupported ? (
-            <AlertTriangle size={20} color={theme.textSecondary} />
+            <AlertTriangle size={20} color={theme.neutral2} />
           ) : (
-            <img src={info.logoUrl} alt={info.label} className={styles.Image} data-testid="chain-selector-logo" />
+            <ChainLogo chainId={chainId} size={20} testId="chain-selector-logo" />
           )}
           {isOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
-        </Row>
+        </ChainSelectorButton>
       </MouseoverTooltip>
       {isOpen && (isMobile ? <Portal>{dropdown}</Portal> : <>{dropdown}</>)}
-    </Box>
+    </ChainSelectorWrapper>
   )
 }

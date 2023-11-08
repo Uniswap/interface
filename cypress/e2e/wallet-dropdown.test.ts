@@ -32,11 +32,11 @@ describe('Wallet Dropdown', () => {
       }
 
       cy.get(getTestSelector('wallet-language-item')).contains('Afrikaans').click({ force: true })
-      cy.location('hash').should('match', /\?lng=af-ZA$/)
+      cy.location('search').should('match', /\?lng=af-ZA$/)
       cy.contains('Uniswap available in: English')
 
       cy.get(getTestSelector('wallet-language-item')).contains('English').click({ force: true })
-      cy.location('hash').should('match', /\?lng=en-US$/)
+      cy.location('search').should('match', /\?lng=en-US$/)
       cy.contains('Uniswap available in: English').should('not.exist')
     })
   }
@@ -49,11 +49,39 @@ describe('Wallet Dropdown', () => {
     })
     itChangesTheme()
     itChangesLocale()
+
+    it('should not show buy crypto button in uk', () => {
+      cy.document().then((doc) => {
+        const meta = document.createElement('meta')
+        meta.setAttribute('property', 'x:blocked-paths')
+        meta.setAttribute('content', '/,/nfts,/buy')
+        doc.head.appendChild(meta)
+      })
+      cy.get(getTestSelector('wallet-buy-crypto')).should('not.exist')
+    })
+  })
+
+  describe('do not render buy button when /buy is blocked', () => {
+    beforeEach(() => {
+      cy.document().then((doc) => {
+        const meta = document.createElement('meta')
+        meta.setAttribute('property', 'x:blocked-paths')
+        meta.setAttribute('content', '/buy')
+        doc.head.appendChild(meta)
+      })
+      cy.visit('/')
+      cy.get(getTestSelector('web3-status-connected')).click()
+      cy.get(getTestSelector('wallet-settings')).click()
+    })
+
+    it('should not render buy button', () => {
+      cy.get(getTestSelector('wallet-buy-crypto')).should('not.exist')
+    })
   })
 
   describe('should change locale with feature flag', () => {
     beforeEach(() => {
-      cy.visit('/', { featureFlags: [FeatureFlag.currencyConversion] })
+      cy.visit('/', { featureFlags: [{ name: FeatureFlag.currencyConversion, value: true }] })
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
     })
@@ -115,7 +143,7 @@ describe('Wallet Dropdown', () => {
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
       cy.get(getTestSelector('theme-auto')).click()
-      cy.get(getTestSelector('wallet-header')).should('have.css', 'color', 'rgb(152, 161, 192)')
+      cy.get(getTestSelector('wallet-header')).should('have.css', 'color', 'rgb(155, 155, 155)')
     })
 
     it('should properly use light system theme when auto theme setting is selected', () => {
@@ -123,7 +151,7 @@ describe('Wallet Dropdown', () => {
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
       cy.get(getTestSelector('theme-auto')).click()
-      cy.get(getTestSelector('wallet-header')).should('have.css', 'color', 'rgb(119, 128, 160)')
+      cy.get(getTestSelector('wallet-header')).should('have.css', 'color', 'rgb(125, 125, 125)')
     })
   })
 
@@ -142,6 +170,36 @@ describe('Wallet Dropdown', () => {
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.root().click(15, 40)
       cy.get(getTestSelector('wallet-settings')).should('not.be.visible')
+    })
+  })
+
+  describe('local currency', () => {
+    it('loads local currency from the query param', () => {
+      cy.visit('/', { featureFlags: [{ name: FeatureFlag.currencyConversion, value: true }] })
+      cy.get(getTestSelector('web3-status-connected')).click()
+      cy.get(getTestSelector('wallet-settings')).click()
+      cy.contains('USD')
+
+      cy.visit('/?cur=AUD', { featureFlags: [{ name: FeatureFlag.currencyConversion, value: true }] })
+      cy.get(getTestSelector('web3-status-connected')).click()
+      cy.get(getTestSelector('wallet-settings')).click()
+      cy.contains('AUD')
+    })
+
+    it('loads local currency from menu', () => {
+      cy.visit('/', { featureFlags: [{ name: FeatureFlag.currencyConversion, value: true }] })
+      cy.get(getTestSelector('web3-status-connected')).click()
+      cy.get(getTestSelector('wallet-settings')).click()
+      cy.contains('USD')
+
+      cy.get(getTestSelector('local-currency-settings-button')).click()
+      cy.get(getTestSelector('wallet-local-currency-item')).contains('AUD').click({ force: true })
+      cy.location('search').should('match', /\?cur=AUD$/)
+      cy.contains('AUD')
+
+      cy.get(getTestSelector('wallet-local-currency-item')).contains('USD').click({ force: true })
+      cy.location('search').should('match', /\?cur=USD$/)
+      cy.contains('USD')
     })
   })
 })

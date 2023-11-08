@@ -8,10 +8,10 @@ import { NftCard } from 'nft/components/card'
 import { detailsHref } from 'nft/components/card/utils'
 import { VerifiedIcon } from 'nft/components/icons'
 import { WalletAsset } from 'nft/types'
-import { floorFormatter } from 'nft/utils'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { ThemedText } from 'theme'
+import { ThemedText } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const FloorPrice = styled(Row)`
   opacity: 0;
@@ -83,6 +83,8 @@ export function NFT({
 }
 
 function NFTDetails({ asset }: { asset: WalletAsset }) {
+  const { formatNumberOrString } = useFormatter()
+
   return (
     <Box overflow="hidden" width="full" flexWrap="nowrap">
       <Row gap="4px">
@@ -90,9 +92,11 @@ function NFTDetails({ asset }: { asset: WalletAsset }) {
         {asset.collectionIsVerified && <Verified />}
       </Row>
       <FloorPrice>
-        <ThemedText.Caption color="textSecondary">
-          {asset.floorPrice ? `${floorFormatter(asset.floorPrice)} ETH` : ' '}
-        </ThemedText.Caption>
+        <ThemedText.BodySmall color="neutral2">
+          {asset.floorPrice
+            ? `${formatNumberOrString({ input: asset.floorPrice, type: NumberType.NFTTokenFloorPrice })} ETH`
+            : ' '}
+        </ThemedText.BodySmall>
       </FloorPrice>
     </Box>
   )

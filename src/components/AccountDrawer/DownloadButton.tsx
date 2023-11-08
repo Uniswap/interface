@@ -1,7 +1,8 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
+import { useAndroidGALaunchFlagEnabled } from 'featureFlags/flags/androidGALaunch'
 import { PropsWithChildren, useCallback } from 'react'
 import styled from 'styled-components'
-import { ClickableStyle } from 'theme'
+import { ClickableStyle } from 'theme/components'
 import { openDownloadApp } from 'utils/openDownloadApp'
 
 const StyledButton = styled.button<{ padded?: boolean; branded?: boolean }>`
@@ -14,13 +15,13 @@ const StyledButton = styled.button<{ padded?: boolean; branded?: boolean }>`
   padding: 8px 24px;
   border: none;
   white-space: nowrap;
-  background: ${({ theme, branded }) => (branded ? theme.promotionalGradient : theme.backgroundInteractive)};
+  background: ${({ theme, branded }) => (branded ? theme.accent1 : theme.surface3)};
   border-radius: 12px;
 
-  font-weight: 600;
+  font-weight: 535;
   font-size: 14px;
   line-height: 16px;
-  color: ${({ theme, branded }) => (branded ? theme.accentTextLightPrimary : theme.textPrimary)};
+  color: ${({ theme, branded }) => (branded ? theme.deprecated_accentTextLightPrimary : theme.neutral1)};
 `
 
 function BaseButton({ onClick, branded, children }: PropsWithChildren<{ onClick?: () => void; branded?: boolean }>) {
@@ -31,7 +32,7 @@ function BaseButton({ onClick, branded, children }: PropsWithChildren<{ onClick?
   )
 }
 
-// Launches App Store if on an iOS device, else navigates to Uniswap Wallet microsite
+// Launches App/Play Store if on an iOS/Android device, else navigates to Uniswap Wallet microsite
 export function DownloadButton({
   onClick,
   text = 'Download',
@@ -41,11 +42,12 @@ export function DownloadButton({
   text?: string
   element: InterfaceElementName
 }) {
+  const isAndroidGALaunched = useAndroidGALaunchFlagEnabled()
   const onButtonClick = useCallback(() => {
     // handles any actions required by the parent, i.e. cancelling wallet connection attempt or dismissing an ad
     onClick?.()
-    openDownloadApp({ element })
-  }, [element, onClick])
+    openDownloadApp({ element, isAndroidGALaunched })
+  }, [element, isAndroidGALaunched, onClick])
 
   return (
     <BaseButton branded onClick={onButtonClick}>

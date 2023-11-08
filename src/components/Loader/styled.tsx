@@ -14,9 +14,9 @@ const shimmerMixin = css`
   animation-fill-mode: both;
   background: linear-gradient(
     to left,
-    ${({ theme }) => theme.deprecated_bg1} 25%,
-    ${({ theme }) => theme.backgroundInteractive} 50%,
-    ${({ theme }) => theme.deprecated_bg1} 75%
+    ${({ theme }) => theme.surface1} 25%,
+    ${({ theme }) => theme.surface3} 50%,
+    ${({ theme }) => theme.surface1} 75%
   );
   background-size: 400%;
   will-change: background-position;
@@ -32,9 +32,16 @@ export const LoadingRows = styled.div`
   }
 `
 
+export const LoadingRow = styled.div<{ height: number; width: number }>`
+  ${shimmerMixin}
+  border-radius: 12px;
+  height: ${({ height }) => height}px;
+  width: ${({ width }) => width}px;
+`
+
 export const loadingOpacityMixin = css<{ $loading: boolean }>`
   filter: ${({ $loading }) => ($loading ? 'grayscale(1)' : 'none')};
-  opacity: ${({ $loading }) => ($loading ? '0.4' : '1')};
+  opacity: ${({ $loading }) => ($loading ? '0.6' : '1')};
   transition: ${({ $loading, theme }) =>
     $loading ? 'none' : `opacity ${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
 `

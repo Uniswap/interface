@@ -12,7 +12,7 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.show ? 1 : 0)};
   transition: visibility 150ms linear, opacity 150ms linear;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
 `
 
 const ReferenceElement = styled.div`
@@ -33,9 +33,9 @@ export const Arrow = styled.div`
     z-index: 9998;
 
     content: '';
-    border: 1px solid ${({ theme }) => theme.backgroundInteractive};
+    border: 1px solid ${({ theme }) => theme.surface3};
     transform: rotate(45deg);
-    background: ${({ theme }) => theme.backgroundSurface};
+    background: ${({ theme }) => theme.surface1};
   }
 
   &.arrow-top {
@@ -112,7 +112,7 @@ export default function Popover({
     [placement, offsetX, offsetY, arrowElement]
   )
 
-  const { styles, update, attributes } = usePopper(referenceElement, popperElement, options)
+  const { styles, update, attributes } = usePopper(referenceElement, show ? popperElement : null, options)
 
   const updateCallback = useCallback(() => {
     update && update()

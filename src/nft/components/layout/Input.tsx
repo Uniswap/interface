@@ -1,19 +1,24 @@
-import { isNumber } from 'nft/utils/numbers'
 import { FormEvent, forwardRef } from 'react'
 
 import { Box, BoxProps } from '../Box'
+
+const isNumber = (s: string): boolean => {
+  const reg = /^-?\d+\.?\d*$/
+  return reg.test(s) && !isNaN(parseFloat(s)) && isFinite(parseFloat(s))
+}
 
 export const Input = forwardRef<HTMLInputElement, BoxProps>((props, ref) => (
   <Box
     ref={ref}
     as="input"
-    borderColor={{ default: 'backgroundOutline', focus: 'textSecondary' }}
+    borderColor={{ default: 'surface3', focus: 'neutral3' }}
     borderWidth="1px"
     borderStyle="solid"
     borderRadius="12"
     padding="12"
     fontSize="14"
-    color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
+    fontWeight="book"
+    color={{ placeholder: 'neutral2', default: 'neutral1' }}
     backgroundColor="transparent"
     {...props}
   />
@@ -29,8 +34,8 @@ export const NumericInput = forwardRef<HTMLInputElement, BoxProps>((props, ref) 
       inputMode="decimal"
       autoComplete="off"
       type="text"
-      borderColor={{ default: 'backgroundOutline', focus: 'textSecondary' }}
-      color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
+      borderColor={{ default: 'surface3', focus: 'neutral2' }}
+      color={{ placeholder: 'neutral2', default: 'neutral1' }}
       onInput={(v: FormEvent<HTMLInputElement>) => {
         if (v.currentTarget.value === '.') {
           v.currentTarget.value = '0.'

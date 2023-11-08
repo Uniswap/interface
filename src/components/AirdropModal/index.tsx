@@ -10,14 +10,14 @@ import Loader from 'components/Icons/LoadingSpinner'
 import { useContract } from 'hooks/useContract'
 import { ChevronRightIcon } from 'nft/components/icons'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
-import { CollectionRewardsFetcher } from 'nft/queries/genie/GetAirdorpMerkle'
+import { CollectionRewardsFetcher } from 'nft/queries/genie'
 import { Airdrop, Rewards } from 'nft/types/airdrop'
 import { useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components'
-import { CloseIcon, ThemedText } from 'theme'
+import { CloseIcon, ThemedText } from 'theme/components'
 
 import Modal from '../Modal'
 
@@ -32,7 +32,7 @@ const Body = styled.div`
 
 const ClaimButton = styled(ThemeButton)`
   width: 100%;
-  background-color: ${({ theme }) => theme.accentAction};
+  background-color: ${({ theme }) => theme.accent1};
   border-radius: 12px;
   color: ${({ theme }) => theme.white};
 `
@@ -62,7 +62,7 @@ const StyledImage = styled.img`
 `
 
 const USDCLabel = styled.div`
-  font-weight: 700;
+  font-weight: 535;
   font-size: 36px;
   line-height: 44px;
   margin-top: 8px;
@@ -84,7 +84,7 @@ const RewardsDetailsContainer = styled.div`
 
 const CurrencyText = styled.span`
   color: white;
-  font-weight: 500;
+  font-weight: 535;
   font-size: 12px;
   line-height: 14.5px;
 `
@@ -99,7 +99,7 @@ const ClaimContainer = styled.div`
 `
 
 const SuccessText = styled.div`
-  font-weight: 400;
+  font-weight: 485;
   font-size: 16px;
   line-height: 24px;
   margin-top: 24px;
@@ -128,8 +128,8 @@ const SyledCloseIcon = styled(CloseIcon)`
 
 const Error = styled.div`
   display: flex;
-  color: ${({ theme }) => theme.accentCritical};
-  font-weight: 500;
+  color: ${({ theme }) => theme.critical};
+  font-weight: 535;
   line-height: 24px;
   border-radius: 16px;
   padding: 12px 20px;
@@ -156,12 +156,12 @@ const RewardsInformationText = styled.span`
   display: inline-block;
   font-size: 14px;
   line-height: 20px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   margin-bottom: 28px;
 `
 
 const MainHeader = styled.span`
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
   line-height: 20px;
   color: ${({ theme }) => theme.white};

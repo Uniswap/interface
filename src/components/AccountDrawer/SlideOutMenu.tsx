@@ -2,7 +2,7 @@ import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import { ArrowLeft } from 'react-feather'
 import styled from 'styled-components'
-import { ClickableStyle, ThemedText } from 'theme'
+import { ClickableStyle, ThemedText } from 'theme/components'
 
 const Menu = styled(Column)`
   width: 100%;
@@ -27,7 +27,7 @@ const StyledArrow = styled(ArrowLeft)`
 `
 
 const Header = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 
   display: flex;
   justify-content: space-between;

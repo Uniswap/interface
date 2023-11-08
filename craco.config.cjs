@@ -5,7 +5,6 @@ const { execSync } = require('child_process')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
-const TerserPlugin = require('terser-webpack-plugin')
 const { IgnorePlugin, ProvidePlugin } = require('webpack')
 const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
 
@@ -131,6 +130,12 @@ module.exports = {
         },
       })
 
+      // Retain source maps for node_modules packages:
+      webpackConfig.module.rules[0] = {
+        ...webpackConfig.module.rules[0],
+        exclude: /node_modules/,
+      }
+
       // Configure webpack transpilation (create-react-app specifies transpilation rules in a oneOf):
       webpackConfig.module.rules[1].oneOf = webpackConfig.module.rules[1].oneOf.map((rule) => {
         if (rule.loader && rule.loader.match(/babel-loader/)) {
@@ -140,18 +145,20 @@ module.exports = {
         return rule
       })
 
+      // Run terser compression on node_modules before tree-shaking, so that tree-shaking is more effective.
+      // This works by eliminating dead code, so that webpack can identify unused imports and tree-shake them;
+      // it is only necessary for node_modules - it is done through linting for our own source code -
+      // see https://medium.com/engineering-housing/dead-code-elimination-and-tree-shaking-at-housing-part-1-307a94b30f23#7e03:
+      webpackConfig.module.rules.push({
+        enforce: 'post',
+        test: /node_modules.*\.(js)$/,
+        loader: path.join(__dirname, 'scripts/terser-loader.js'),
+        options: { compress: true, mangle: false },
+      })
+
       // Configure webpack optimization:
       webpackConfig.optimization = Object.assign(
         webpackConfig.optimization,
-        {
-          minimize: isProduction,
-          minimizer: [
-            new TerserPlugin({
-              minify: TerserPlugin.swcMinify,
-              parallel: require('os').cpus().length,
-            }),
-          ],
-        },
         isProduction
           ? {
               splitChunks: {
@@ -169,13 +176,6 @@ module.exports = {
 
       // Configure webpack resolution. webpackConfig.cache is unused with swc-loader, but the resolver can still cache:
       webpackConfig.resolve = Object.assign(webpackConfig.resolve, { unsafeCache: true })
-
-      webpackConfig.ignoreWarnings = [
-        // Source mappings for a package will fail if the package does not provide them, but the build will still succeed,
-        // so it is unnecessary (and bothersome) to log it. This should be turned off when debugging missing sourcemaps.
-        // See https://webpack.js.org/loaders/source-map-loader#ignoring-warnings.
-        /Failed to parse source map/,
-      ]
 
       return webpackConfig
     },

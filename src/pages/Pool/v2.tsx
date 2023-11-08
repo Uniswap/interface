@@ -11,6 +11,7 @@ import { ChevronsRight } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
+import { ExternalLink, HideSmall, ThemedText } from 'theme/components'
 
 import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import Card from '../../components/Card'
@@ -25,7 +26,6 @@ import { useV2Pairs } from '../../hooks/useV2Pairs'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/connection/hooks'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
-import { ExternalLink, HideSmall, ThemedText } from '../../theme'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -78,7 +78,7 @@ const ResponsiveButtonSecondary = styled(ButtonSecondary)`
 `
 
 const EmptyProposals = styled.div`
-  border: 1px solid ${({ theme }) => theme.deprecated_text4};
+  border: 1px solid ${({ theme }) => theme.neutral2};
   padding: 16px 12px;
   border-radius: 12px;
   display: flex;
@@ -149,7 +149,7 @@ export default function Pool() {
             <CardSection>
               <AutoColumn gap="md">
                 <RowBetween>
-                  <ThemedText.DeprecatedWhite fontWeight={600}>
+                  <ThemedText.DeprecatedWhite fontWeight={535}>
                     <Trans>Liquidity provider rewards</Trans>
                   </ThemedText.DeprecatedWhite>
                 </RowBetween>
@@ -192,13 +192,13 @@ export default function Pool() {
                       <Trans>Create a pair</Trans>
                     </ResponsiveButtonSecondary>
                     <ResponsiveButtonPrimary id="find-pool-button" as={Link} to="/pools/v2/find" padding="6px 8px">
-                      <Text fontWeight={500} fontSize={16}>
-                        <Trans>Import Pool</Trans>
+                      <Text fontWeight={535} fontSize={16}>
+                        <Trans>Import pool</Trans>
                       </Text>
                     </ResponsiveButtonPrimary>
                     <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/v2/ETH" padding="6px 8px">
-                      <Text fontWeight={500} fontSize={16}>
-                        <Trans>Add V2 Liquidity</Trans>
+                      <Text fontWeight={535} fontSize={16}>
+                        <Trans>Add V2 liquidity</Trans>
                       </Text>
                     </ResponsiveButtonPrimary>
                   </ButtonRow>
@@ -206,13 +206,13 @@ export default function Pool() {
 
                 {!account ? (
                   <Card padding="40px">
-                    <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
+                    <ThemedText.DeprecatedBody color={theme.neutral3} textAlign="center">
                       <Trans>Connect to a wallet to view your liquidity.</Trans>
                     </ThemedText.DeprecatedBody>
                   </Card>
                 ) : v2IsLoading ? (
                   <EmptyProposals>
-                    <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
+                    <ThemedText.DeprecatedBody color={theme.neutral3} textAlign="center">
                       <Dots>
                         <Trans>Loading</Trans>
                       </Dots>
@@ -257,13 +257,13 @@ export default function Pool() {
                         }}
                       >
                         <ChevronsRight size={16} style={{ marginRight: '8px' }} />
-                        <Trans>Migrate Liquidity to V3</Trans>
+                        <Trans>Migrate liquidity to V3</Trans>
                       </ButtonOutlined>
                     </RowFixed>
                   </>
                 ) : (
                   <EmptyProposals>
-                    <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
+                    <ThemedText.DeprecatedBody color={theme.neutral3} textAlign="center">
                       <Trans>No liquidity found.</Trans>
                     </ThemedText.DeprecatedBody>
                   </EmptyProposals>
