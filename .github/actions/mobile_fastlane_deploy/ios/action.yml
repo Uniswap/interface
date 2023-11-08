@@ -133,12 +133,11 @@ runs:
         command: gem uninstall -a --no-executables cocoapods && gem install cocoapods -v 1.13.0 && gem update xcodeproj
 
     - uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed
-      name: 📀 Cache Pods
+      name: 📀 Retrieve or Store Pods Cache
       id: pods-cache
       with:
-        path: tests/ios/Pods
+        path: ./apps/mobile/ios/Pods
         key: ${{ runner.os }}-pods-v2-${{ hashFiles('**/Podfile.lock') }}
-        restore-keys: ${{ runner.os }}-pods-v2
 
     - name: 🗄️ Copy over env variables
       uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
