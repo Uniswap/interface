@@ -316,7 +316,7 @@ export default function SwapCurrencyInputPanel({
                   <FiatValue
                     fiatValue={fiatValue}
                     priceImpact={priceImpact}
-                    testId={`fiat-value-${id === InterfaceSectionName.CURRENCY_INPUT_PANEL ? 'input' : 'output'}-panel`}
+                    testId={`fiat-value-${id}`}
                   />
                 )}
               </LoadingOpacityContainer>
