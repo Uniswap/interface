@@ -9,10 +9,11 @@ CODEOWNERS
 
 apps/mobile/fastlane
 apps/mobile/ios/GoogleServiceInfo
+apps/mobile/android/app/google-services.json
 apps/mobile/.storybook
 apps/mobile/codecov.yml
 apps/mobile/scripts
-apps/mobile/android
+apps/mobile
 .crowdin.yml
 
 apps/web
