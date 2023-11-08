@@ -6,11 +6,20 @@ import { useHideAndroidAnnouncementBanner } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { openDownloadApp } from 'utils/openDownloadApp'
-import { isAndroid, isIOS, isMobileSafari } from 'utils/userAgent'
+import { isMobileSafari } from 'utils/userAgent'
 
+import androidAnnouncementBannerQR from '../../../assets/images/androidAnnouncementBannerQR.png'
 import darkAndroidThumbnail from '../../../assets/images/AndroidWallet-Thumbnail-Dark.png'
 import lightAndroidThumbnail from '../../../assets/images/AndroidWallet-Thumbnail-Light.png'
-import { Container, DownloadButton, PopupContainer, StyledXButton, TextContainer, Thumbnail } from './styled'
+import {
+  Container,
+  DownloadButton,
+  PopupContainer,
+  StyledQrCode,
+  StyledXButton,
+  TextContainer,
+  Thumbnail,
+} from './styled'
 
 export default function AndroidAnnouncementBanner() {
   const [hideAndroidAnnouncementBanner, toggleHideAndroidAnnouncementBanner] = useHideAndroidAnnouncementBanner()
@@ -21,7 +30,6 @@ export default function AndroidAnnouncementBanner() {
   const isDarkMode = useIsDarkMode()
 
   const isAndroidGALaunched = useAndroidGALaunchFlagEnabled()
-  const onLaunchedMobilePlatform = isIOS || (isAndroidGALaunched && isAndroid)
 
   if (!isAndroidGALaunched || isMobileSafari) return null
 
@@ -34,7 +42,7 @@ export default function AndroidAnnouncementBanner() {
             <Trans>Uniswap on Android</Trans>
           </ThemedText.BodySmall>
           <ThemedText.LabelMicro>
-            <Trans>Available now - download from the Google Play store today</Trans>
+            <Trans>Available now - download from the Google Play Store today</Trans>
           </ThemedText.LabelMicro>
           <DownloadButton
             onClick={() =>
@@ -47,6 +55,7 @@ export default function AndroidAnnouncementBanner() {
             <Trans>Download now</Trans>
           </DownloadButton>
         </TextContainer>
+        <StyledQrCode src={androidAnnouncementBannerQR} alt="App OneLink QR code" />
         <StyledXButton
           data-testid="uniswap-wallet-banner"
           size={20}

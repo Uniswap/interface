@@ -2,6 +2,7 @@ import { ButtonText } from 'components/Button'
 import { OpacityHoverState } from 'components/Common'
 import { X } from 'react-feather'
 import styled from 'styled-components'
+import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
 export const PopupContainer = styled.div<{ show: boolean }>`
@@ -15,17 +16,16 @@ export const PopupContainer = styled.div<{ show: boolean }>`
   border-radius: 20px;
   bottom: 20px;
   right: 20px;
-  width: 359px;
+  width: 360px;
   height: 92px;
 
   border: 1.3px solid ${({ theme }) => theme.surface3};
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${BREAKPOINTS.md}px) {
     bottom: 62px;
   }
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    background-position: top 32px right -10px;
+  @media only screen and (max-width: ${BREAKPOINTS.xs}px) {
     width: unset;
     right: 10px;
     left: 10px;
@@ -36,23 +36,30 @@ export const PopupContainer = styled.div<{ show: boolean }>`
 export const StyledXButton = styled(X)`
   cursor: pointer;
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: -30px;
+  right: 0px;
   padding: 4px;
   border-radius: 50%;
 
   background-color: ${({ theme }) => theme.surface5};
   color: ${({ theme }) => theme.neutral2};
   ${OpacityHoverState};
+
+  @media only screen and (max-width: ${BREAKPOINTS.xs}px) {
+    top: 8px;
+    right: 8px;
+  }
 `
 
 export const Container = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+  align-items: center;
   height: 100%;
   overflow: hidden;
   border-radius: 20px;
+  gap: 16px;
 `
 export const Thumbnail = styled.img`
   width: 82px;
@@ -63,12 +70,23 @@ export const TextContainer = styled.div`
   align-items: flex-start;
   gap: 2px;
   color: ${({ theme }) => theme.neutral2};
-  padding: 10px 16px 16px;
+  padding: 10px 0px 10px;
   line-height: 16px;
-  width: 245px;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    width: 245px;
+  @media only screen and (max-width: ${BREAKPOINTS.xs}px) {
+    width: 220px;
+  }
+`
+export const StyledQrCode = styled.img`
+  padding: 6px;
+  border-radius: 8px;
+  width: 60px;
+  height: 60px;
+  background-color: ${({ theme }) => theme.white};
+  margin-right: 16px;
+
+  @media only screen and (max-width: ${BREAKPOINTS.xs}px) {
+    display: none;
   }
 `
 export const DownloadButton = styled(ButtonText)`
