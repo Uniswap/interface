@@ -111,11 +111,11 @@ function InfoSection() {
     <InfoSectionWrapper>
       <AutoColumn gap="4px">
         <ThemedText.SubHeaderSmall color="neutral1">
-          <Trans>Don&apos;t have Uniswap Wallet?</Trans>
+          <Trans>Don&apos;t have a Uniswap wallet?</Trans>
         </ThemedText.SubHeaderSmall>
         <ThemedText.BodySmall color="neutral2">
           {isAndroidGALaunched ? (
-            <Trans>Get the Uniswap app on iOS and Android to safely store and swap tokens.</Trans>
+            <Trans>Safely store and swap tokens with the Uniswap app. Available on iOS and Android.</Trans>
           ) : (
             <Trans>
               Download in the App Store to safely store your tokens and NFTs, swap tokens, and connect to crypto apps.

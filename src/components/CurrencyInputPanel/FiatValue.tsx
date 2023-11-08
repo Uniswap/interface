@@ -18,9 +18,11 @@ const FiatLoadingBubble = styled(LoadingBubble)`
 export function FiatValue({
   fiatValue,
   priceImpact,
+  testId,
 }: {
   fiatValue: { data?: number; isLoading: boolean }
   priceImpact?: Percent
+  testId?: string
 }) {
   const { formatNumber, formatPercent } = useFormatter()
 
@@ -39,7 +41,7 @@ export function FiatValue({
 
   return (
     <Row gap="sm">
-      <ThemedText.BodySmall color="neutral2">
+      <ThemedText.BodySmall color="neutral2" data-testid={testId}>
         {fiatValue.data ? (
           formatNumber({
             input: fiatValue.data,
