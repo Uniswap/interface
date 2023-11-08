@@ -33,7 +33,7 @@ const ChainSelectorWrapper = styled.div`
 
 const ChainSelectorButton = styled(BaseButton)<{ isOpen: boolean }>`
   display: flex;
-  background: ${({ theme, isOpen }) => (isOpen ? theme.accent2 : `none`)};
+  background: ${({ theme, isOpen }) => (isOpen ? theme.accent2 : 'none')};
   padding: 10px 8px;
   gap: 4px;
   border-radius: 12px;
