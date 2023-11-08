@@ -110,6 +110,7 @@ type SwapTabBarButtonProps = {
 }
 
 const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonProps) {
+  const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
   const isDarkMode = useIsDarkMode()
@@ -173,7 +174,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
             />
           </Flex>
           <Text color="$sporeWhite" variant="buttonLabel2">
-            Swap
+            {t('Swap')}
           </Text>
         </AnimatedFlex>
       </TapGestureHandler>
