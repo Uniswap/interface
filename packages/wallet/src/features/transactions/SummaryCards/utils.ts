@@ -2,11 +2,6 @@ import { createElement, useMemo, useState } from 'react'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { TXN_HISTORY_LOADER_ICON_SIZE } from 'ui/src/loading/TransactionLoader'
 import { iconSizes } from 'ui/src/theme'
-import {
-  FORMAT_DATE_MONTH_DAY,
-  FORMAT_TIME_SHORT,
-  useLocalizedDayjs,
-} from 'utilities/src/time/localizedDayjs'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
 import {
@@ -15,6 +10,11 @@ import {
   LoadingItem,
   SectionHeader,
 } from 'wallet/src/features/activity/utils'
+import {
+  FORMAT_DATE_MONTH_DAY,
+  FORMAT_TIME_SHORT,
+  useLocalizedDayjs,
+} from 'wallet/src/features/language/localizedDayjs'
 import {
   NFTTradeType,
   TransactionDetails,

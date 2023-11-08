@@ -1,10 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
 import dayjs from 'dayjs'
-import {
-  FORMAT_DATE_MONTH,
-  FORMAT_DATE_MONTH_YEAR,
-  LocalizedDayjs,
-} from 'utilities/src/time/localizedDayjs'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import {
   Amount,
@@ -15,6 +10,11 @@ import {
   TransactionListQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import {
+  FORMAT_DATE_MONTH,
+  FORMAT_DATE_MONTH_YEAR,
+  LocalizedDayjs,
+} from 'wallet/src/features/language/localizedDayjs'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
 import {

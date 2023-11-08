@@ -1,6 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
-import { useTranslation } from 'react-i18next'
 
 import 'dayjs/locale/en'
 import 'dayjs/locale/es'
@@ -19,7 +18,8 @@ import 'dayjs/locale/ur'
 import 'dayjs/locale/vi'
 import 'dayjs/locale/zh-cn'
 import 'dayjs/locale/zh-tw'
-import { useMemo } from 'react'
+import { Locale } from 'wallet/src/features/language/constants'
+import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 
 dayjs.extend(localizedFormat)
 
@@ -43,37 +43,52 @@ export const FORMAT_DATE_TIME_FULL = 'LLLL'
 
 export type LocalizedDayjs = typeof dayjs
 
+// Supported ones found here https://github.com/iamkun/dayjs/tree/dev/src/locale
+const mapLocaleToSupportedDayjsLocale: Record<Locale, string> = {
+  [Locale.ChineseSimplified]: 'zh-cn',
+  [Locale.ChineseTraditional]: 'zh-tw',
+  [Locale.DutchNetherlands]: 'nl',
+  [Locale.EnglishUnitedStates]: 'en-us',
+  [Locale.FrenchFrance]: 'fr',
+  [Locale.HindiIndia]: 'hi',
+  [Locale.IndonesianIndonesia]: 'id',
+  [Locale.JapaneseJapan]: 'ja',
+  [Locale.MalayMalaysia]: 'ms',
+  [Locale.PortuguesePortugal]: 'pt',
+  [Locale.RussianRussia]: 'ru',
+  [Locale.SpanishSpain]: 'es-es',
+  [Locale.SpanishLatam]: 'es-mx',
+  [Locale.SpanishUnitedStates]: 'es-us',
+  [Locale.ThaiThailand]: 'th',
+  [Locale.TurkishTurkey]: 'tr',
+  [Locale.UkrainianUkraine]: 'uk',
+  [Locale.UrduPakistan]: 'ur',
+  [Locale.VietnameseVietnam]: 'vi',
+}
+
 /**
- * Utility hook to ensure that the date formatted by dayjs is up to date with the current locale
+ * Utility hook to ensure that the date formatted by dayjs is up to date with the current locale.
+ * Does not currently lead to rerender when language is changed, but this isn't needed when language is controlled
+ * in system settings.s
  * @returns dayjs instance for ease of use, same as instance imported from library
  */
 export function useLocalizedDayjs(): LocalizedDayjs {
-  const { i18n } = useTranslation()
-  dayjs().locale(i18n.language)
-
-  return useMemo<LocalizedDayjs>((): LocalizedDayjs => {
-    // Create a clone of dayjs to ensure that all hooks that specify the dayjs instance
-    // as a dependency are re-run when the locale changes (locale is set globally on dayjs
-    // and will be used by all instances)
-    const dayjsClone = ((...args: Parameters<LocalizedDayjs>) => dayjs(...args)) as LocalizedDayjs
-    // Assign dayjs methods to the clone so that it can be used as a dayjs instance
-    Object.assign(dayjsClone, dayjs)
-    return dayjsClone
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [i18n.language])
+  const { locale } = useCurrentLanguageInfo()
+  dayjs.locale(mapLocaleToSupportedDayjsLocale[locale])
+  return dayjs
 }
 
 export function useFormattedDate(date: Dayjs, format: DateFormat): string {
-  const { i18n } = useTranslation()
-  return date.locale(i18n.language).format(format).toString()
+  const { locale } = useCurrentLanguageInfo()
+  return date.locale(mapLocaleToSupportedDayjsLocale[locale]).format(format).toString()
 }
 
 export function useFormattedTime(date: Dayjs, format: TimeFormat): string {
-  const { i18n } = useTranslation()
-  return date.locale(i18n.language).format(format).toString()
+  const { locale } = useCurrentLanguageInfo()
+  return date.locale(mapLocaleToSupportedDayjsLocale[locale]).format(format).toString()
 }
 
 export function useFormattedDateTime(date: Dayjs, format: DateTimeFormat): string {
-  const { i18n } = useTranslation()
-  return date.locale(i18n.language).format(format).toString()
+  const { locale } = useCurrentLanguageInfo()
+  return date.locale(locale).format(format).toString()
 }

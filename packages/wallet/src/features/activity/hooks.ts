@@ -1,6 +1,5 @@
 import { ApolloError, NetworkStatus } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
-import { useLocalizedDayjs } from 'utilities/src/time/localizedDayjs'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import {
@@ -8,6 +7,7 @@ import {
   useTransactionListQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
+import { useLocalizedDayjs } from 'wallet/src/features/language/localizedDayjs'
 import {
   formatTransactionsByDate,
   parseDataResponseToFeedTransactionDetails,
