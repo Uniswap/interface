@@ -17,6 +17,7 @@ import AddressInputPanel from 'components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { GrayCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
+import ConfirmSwapModalV2 from 'components/ConfirmSwapModalV2'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { AutoRow } from 'components/Row'
@@ -33,6 +34,7 @@ import { useConnectionReady } from 'connection/eagerlyConnect'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { getSwapCurrencyId, TOKEN_SHORTHANDS } from 'constants/tokens'
+import { useNewSwapFlow } from 'featureFlags/flags/progressIndicatorV2'
 import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
 import { useCurrency, useDefaultActiveTokens } from 'hooks/Tokens'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
@@ -607,6 +609,7 @@ export function Swap({
   const showOptInSmall = !useScreenSize().navSearchInputVisible
   const isDark = useIsDarkMode()
   const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
+  const isNewSwapFlowEnabled = useNewSwapFlow()
 
   const swapElement = (
     <SwapWrapper isDark={isDark} className={className} id="swap-page">
@@ -619,7 +622,25 @@ export function Swap({
         showCancel={true}
       />
       <SwapHeader trade={trade} autoSlippage={autoSlippage} chainId={chainId} />
-      {trade && showConfirm && (
+      {trade && showConfirm && isNewSwapFlowEnabled && (
+        <ConfirmSwapModalV2
+          trade={trade}
+          inputCurrency={inputCurrency}
+          originalTrade={tradeToConfirm}
+          onAcceptChanges={handleAcceptChanges}
+          onCurrencySelection={onCurrencySelection}
+          swapResult={swapResult}
+          allowedSlippage={allowedSlippage}
+          clearSwapState={clearSwapState}
+          onConfirm={handleSwap}
+          allowance={allowance}
+          swapError={swapError}
+          onDismiss={handleConfirmDismiss}
+          fiatValueInput={fiatValueTradeInput}
+          fiatValueOutput={fiatValueTradeOutput}
+        />
+      )}
+      {trade && showConfirm && !isNewSwapFlowEnabled && (
         <ConfirmSwapModal
           trade={trade}
           inputCurrency={inputCurrency}
