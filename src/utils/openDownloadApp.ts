@@ -62,7 +62,7 @@ const openDownloadStore = (options: AnalyticsLinkOptions) => {
   window.open(APP_DOWNLOAD_LINKS[options.element], /* target = */ options.linkTarget)
 }
 
-export const openWalletMicrosite = (options: AnalyticsLinkOptions) => {
+const openWalletMicrosite = (options: AnalyticsLinkOptions) => {
   sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_MICROSITE_OPENED, { element: options.element })
   window.open(APP_DOWNLOAD_LINKS[options.element], /* target = */ 'uniswap_wallet_microsite')
 }
