@@ -9,7 +9,6 @@ import { checkWarning } from 'constants/tokenSafety'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
-import { Check } from 'react-feather'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -17,7 +16,7 @@ import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { useIsUserAddedToken } from '../../../hooks/Tokens'
-import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
+import { TokenFromList } from '../../../state/lists/tokenFromList'
 import Column, { AutoColumn } from '../../Column'
 import CurrencyLogo from '../../Logo/CurrencyLogo'
 import Row, { RowFixed } from '../../Row'
@@ -28,13 +27,6 @@ import { scrollbarStyle } from './index.css'
 function currencyKey(currency: Currency): string {
   return currency.isToken ? currency.address : 'ETHER'
 }
-
-const CheckIcon = styled(Check)`
-  height: 20px;
-  width: 20px;
-  margin-left: 4px;
-  color: ${({ theme }) => theme.accent1};
-`
 
 const StyledBalanceText = styled(Text)`
   white-space: nowrap;
@@ -86,7 +78,7 @@ const TagContainer = styled.div`
 `
 
 function TokenTags({ currency }: { currency: Currency }) {
-  if (!(currency instanceof WrappedTokenInfo)) {
+  if (!(currency instanceof TokenFromList)) {
     return null
   }
 
@@ -181,17 +173,10 @@ export function CurrencyRow({
             <TokenTags currency={currency} />
           </RowFixed>
         </Column>
-        {showCurrencyAmount ? (
+        {showCurrencyAmount && (
           <RowFixed style={{ justifySelf: 'flex-end' }}>
             {account ? balance ? <Balance balance={balance} /> : <Loader /> : null}
-            {isSelected && <CheckIcon />}
           </RowFixed>
-        ) : (
-          isSelected && (
-            <RowFixed style={{ justifySelf: 'flex-end' }}>
-              <CheckIcon />
-            </RowFixed>
-          )
         )}
       </MenuItem>
     </TraceEvent>
@@ -247,7 +232,7 @@ export default function CurrencyList({
 }: {
   height: number
   currencies: Currency[]
-  otherListTokens?: WrappedTokenInfo[]
+  otherListTokens?: TokenFromList[]
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency, hasWarning?: boolean) => void
   otherCurrency?: Currency | null

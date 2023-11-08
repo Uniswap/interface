@@ -12,7 +12,6 @@ import { useAllLists } from 'state/lists/hooks'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { acceptListUpdate } from './actions'
-import { shouldAcceptVersionUpdate } from './utils'
 
 export default function Updater(): null {
   const { provider } = useWeb3React()
@@ -61,7 +60,7 @@ export default function Updater(): null {
     })
   }, [dispatch, fetchList, lists, rehydrated])
 
-  // automatically update lists if versions are minor/patch
+  // automatically update lists for every version update
   useEffect(() => {
     Object.keys(lists).forEach((listUrl) => {
       const list = lists[listUrl]
@@ -71,13 +70,7 @@ export default function Updater(): null {
           case VersionUpgrade.NONE:
             throw new Error('unexpected no version bump')
           case VersionUpgrade.PATCH:
-          case VersionUpgrade.MINOR: {
-            if (shouldAcceptVersionUpdate(listUrl, list.current, list.pendingUpdate, bump)) {
-              dispatch(acceptListUpdate(listUrl))
-            }
-            break
-          }
-          // update any active or inactive lists
+          case VersionUpgrade.MINOR:
           case VersionUpgrade.MAJOR:
             dispatch(acceptListUpdate(listUrl))
         }

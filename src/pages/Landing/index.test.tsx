@@ -34,3 +34,10 @@ describe('disable nft on landing page', () => {
     )
   })
 })
+
+describe('Uniswap wallet app download link', () => {
+  it('renders onelink app download', () => {
+    const { container } = render(<Landing />)
+    expect(container.innerHTML.includes('https://uniswapwallet.onelink.me/8q3y/79gveilz')).toBeTruthy()
+  })
+})
