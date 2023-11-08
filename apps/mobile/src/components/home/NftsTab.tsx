@@ -1,90 +1,23 @@
 import { FlashList } from '@shopify/flash-list'
-import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { forwardRef, memo, useCallback, useMemo } from 'react'
 import { RefreshControl } from 'react-native'
-import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { TabProps, TAB_BAR_HEIGHT } from 'src/components/layout/TabHelpers'
+import { NftView } from 'src/components/NFT/NftView'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { IS_ANDROID } from 'src/constants/globals'
 import { openModal } from 'src/features/modals/modalSlice'
-import { useNFTMenu } from 'src/features/nfts/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
-import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, TouchableArea, useDeviceInsets, useSporeColors } from 'ui/src'
-import { borderRadii } from 'ui/src/theme'
+import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
 import { NftsList } from 'wallet/src/components/nfts/NftsList'
 import { GQLQueries } from 'wallet/src/data/queries'
-import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
-import {
-  ESTIMATED_NFT_LIST_ITEM_SIZE,
-  MAX_NFT_IMAGE_SIZE,
-} from 'wallet/src/features/nfts/constants'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 
 export const NFTS_TAB_DATA_DEPENDENCIES = [GQLQueries.NftsTab]
-
-function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Element {
-  const navigation = useAppStackNavigation()
-  const onPressItem = useCallback(() => {
-    navigation.navigate(Screens.NFTItem, {
-      owner,
-      address: item.contractAddress ?? '',
-      tokenId: item.tokenId ?? '',
-      isSpam: item.isSpam,
-      fallbackData: item,
-    })
-  }, [item, navigation, owner])
-
-  const { menuActions, onContextMenuPress } = useNFTMenu({
-    contractAddress: item.contractAddress,
-    tokenId: item.tokenId,
-    owner,
-    isSpam: item.isSpam,
-  })
-
-  return (
-    <Flex fill justifyContent="flex-start" m="$spacing4">
-      <ContextMenu
-        actions={menuActions}
-        disabled={menuActions.length === 0}
-        style={{ borderRadius: borderRadii.rounded16 }}
-        onPress={onContextMenuPress}>
-        <TouchableArea
-          hapticFeedback
-          activeOpacity={1}
-          hapticStyle={ImpactFeedbackStyle.Light}
-          onLongPress={disableOnPress}
-          onPress={onPressItem}>
-          <Flex
-            alignItems="center"
-            aspectRatio={1}
-            backgroundColor="$surface3"
-            borderRadius="$rounded12"
-            overflow="hidden"
-            width="100%">
-            <NFTViewer
-              autoplay
-              showSvgPreview
-              contractAddress={item.contractAddress}
-              imageDimensions={item.imageDimensions}
-              limitGIFSize={ESTIMATED_NFT_LIST_ITEM_SIZE}
-              maxHeight={MAX_NFT_IMAGE_SIZE}
-              placeholderContent={item.name || item.collectionName}
-              squareGridView={true}
-              tokenId={item.tokenId}
-              uri={item.imageUrl}
-            />
-          </Flex>
-        </TouchableArea>
-      </ContextMenu>
-    </Flex>
-  )
-}
 
 export const NftsTab = memo(
   forwardRef<FlashList<unknown>, TabProps>(function _NftsTab(
@@ -103,6 +36,7 @@ export const NftsTab = memo(
     const colors = useSporeColors()
     const dispatch = useAppDispatch()
     const insets = useDeviceInsets()
+    const navigation = useAppStackNavigation()
 
     const { onContentSizeChange, footerHeight, adaptiveFooter } = useAdaptiveFooter(
       containerProps?.contentContainerStyle
@@ -117,8 +51,20 @@ export const NftsTab = memo(
     }
 
     const renderNFTItem = useCallback(
-      (item: NFTItem) => <NftView item={item} owner={owner} />,
-      [owner]
+      (item: NFTItem) => {
+        const onPressNft = (): void => {
+          navigation.navigate(Screens.NFTItem, {
+            owner,
+            address: item.contractAddress ?? '',
+            tokenId: item.tokenId ?? '',
+            isSpam: item.isSpam,
+            fallbackData: item,
+          })
+        }
+
+        return <NftView item={item} owner={owner} onPress={onPressNft} />
+      },
+      [owner, navigation]
     )
 
     const refreshControl = useMemo(() => {
