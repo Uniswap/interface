@@ -5,20 +5,10 @@
   <locale android:name="en"/>
   <locale android:name="zh-Hans"/>
   <locale android:name="zh-Hant"/>
-  <locale android:name="nl"/>
   <locale android:name="fr"/>
-  <locale android:name="hi"/>
-  <locale android:name="id"/>
   <locale android:name="ja"/>
-  <locale android:name="ms"/>
   <locale android:name="pt"/>
-  <locale android:name="ru"/>
   <locale android:name="es-ES"/>
   <locale android:name="es-US"/>
   <locale android:name="es-419"/>
-  <locale android:name="th"/>
-  <locale android:name="tr"/>
-  <locale android:name="uk"/>
-  <locale android:name="ur"/>
-  <locale android:name="vi"/>
 </locale-config>
