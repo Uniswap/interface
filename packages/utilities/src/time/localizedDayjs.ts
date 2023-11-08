@@ -2,6 +2,25 @@ import dayjs, { Dayjs } from 'dayjs'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
 import { useTranslation } from 'react-i18next'
 
+import 'dayjs/locale/en'
+import 'dayjs/locale/es'
+import 'dayjs/locale/fr'
+import 'dayjs/locale/hi'
+import 'dayjs/locale/id'
+import 'dayjs/locale/ja'
+import 'dayjs/locale/ms-my'
+import 'dayjs/locale/nl'
+import 'dayjs/locale/pt'
+import 'dayjs/locale/ru'
+import 'dayjs/locale/th'
+import 'dayjs/locale/tr'
+import 'dayjs/locale/uk'
+import 'dayjs/locale/ur'
+import 'dayjs/locale/vi'
+import 'dayjs/locale/zh-cn'
+import 'dayjs/locale/zh-tw'
+import { useMemo } from 'react'
+
 dayjs.extend(localizedFormat)
 
 export type DateFormat = 'l' | 'll' | 'LL'
@@ -30,8 +49,18 @@ export type LocalizedDayjs = typeof dayjs
  */
 export function useLocalizedDayjs(): LocalizedDayjs {
   const { i18n } = useTranslation()
-  dayjs.locale(i18n.language)
-  return dayjs
+  dayjs().locale(i18n.language)
+
+  return useMemo<LocalizedDayjs>((): LocalizedDayjs => {
+    // Create a clone of dayjs to ensure that all hooks that specify the dayjs instance
+    // as a dependency are re-run when the locale changes (locale is set globally on dayjs
+    // and will be used by all instances)
+    const dayjsClone = ((...args: Parameters<LocalizedDayjs>) => dayjs(...args)) as LocalizedDayjs
+    // Assign dayjs methods to the clone so that it can be used as a dayjs instance
+    Object.assign(dayjsClone, dayjs)
+    return dayjsClone
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [i18n.language])
 }
 
 export function useFormattedDate(date: Dayjs, format: DateFormat): string {
