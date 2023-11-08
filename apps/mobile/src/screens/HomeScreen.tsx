@@ -472,19 +472,20 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const onRefreshHomeData = useCallback(async () => {
     setRefreshing(true)
+
     await apolloClient?.refetchQueries({
       include: [
         ...TOKENS_TAB_DATA_DEPENDENCIES,
         ...NFTS_TAB_DATA_DEPENDENCIES,
         ...ACTIVITY_TAB_DATA_DEPENDENCIES,
-        ...FEED_TAB_DATA_DEPENDENCIES,
+        ...(showFeedTab ? FEED_TAB_DATA_DEPENDENCIES : []),
       ],
     })
+
     // Artificially delay 0.5 second to show the refresh animation
-    setTimeout(() => {
-      setRefreshing(false)
-    }, 500)
-  }, [])
+    const timeout = setTimeout(() => setRefreshing(false), 500)
+    return () => clearTimeout(timeout)
+  }, [showFeedTab])
 
   const renderTab = useCallback(
     ({
