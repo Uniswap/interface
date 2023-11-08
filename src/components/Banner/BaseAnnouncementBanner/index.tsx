@@ -11,7 +11,7 @@ import { useLocation } from 'react-router-dom'
 import { useHideBaseWalletBanner } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
 import { openDownloadApp, openWalletMicrosite } from 'utils/openDownloadApp'
-import { isIOS, isMobileSafari } from 'utils/userAgent'
+import { isAndroid, isIOS, isMobileSafari } from 'utils/userAgent'
 
 import { BannerButton, BaseBackgroundImage, ButtonRow, PopupContainer, StyledXButton } from './styled'
 
@@ -60,14 +60,14 @@ export default function BaseWalletBanner() {
       </ThemedText.HeadlineMedium>
 
       <ButtonRow>
-        {isIOS ? (
+        {isIOS || (isAndroidGALaunched && isAndroid) ? (
           <>
             <BannerButton
               backgroundColor="white"
               onClick={() =>
                 openDownloadApp({
                   element: InterfaceElementName.UNISWAP_WALLET_BANNER_DOWNLOAD_BUTTON,
-                  appStoreParams: 'pt=123625782&ct=base-app-banner&mt=8',
+                  isAndroidGALaunched,
                 })
               }
             >
@@ -77,14 +77,23 @@ export default function BaseWalletBanner() {
               </ThemedText.LabelSmall>
             </BannerButton>
 
-            <BannerButton backgroundColor="black" onClick={() => openWalletMicrosite()}>
+            <BannerButton
+              backgroundColor="black"
+              onClick={() =>
+                openWalletMicrosite({ element: InterfaceElementName.UNISWAP_WALLET_BANNER_DOWNLOAD_BUTTON })
+              }
+            >
               <ThemedText.LabelSmall color="white">
                 <Trans>Learn more</Trans>
               </ThemedText.LabelSmall>
             </BannerButton>
           </>
         ) : (
-          <BannerButton backgroundColor="white" width="125px" onClick={() => openWalletMicrosite()}>
+          <BannerButton
+            backgroundColor="white"
+            width="125px"
+            onClick={() => openWalletMicrosite({ element: InterfaceElementName.UNISWAP_WALLET_BANNER_DOWNLOAD_BUTTON })}
+          >
             <ThemedText.LabelSmall color="black">
               <Trans>Learn more</Trans>
             </ThemedText.LabelSmall>

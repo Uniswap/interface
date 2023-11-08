@@ -26,6 +26,6 @@ export interface Connection {
   hooks: Web3ReactHooks
   type: ConnectionType
   getIcon?(isDarkMode: boolean): string
-  shouldDisplay(): boolean
+  shouldDisplay(isAndroidGALaunched?: boolean): boolean
   overrideActivate?: (chainId?: ChainId) => boolean
 }

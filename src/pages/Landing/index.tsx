@@ -399,9 +399,8 @@ export default function Landing() {
 
           <DownloadWalletLink
             {...getDownloadAppLinkProps({
-              // landing page specific tracking params
-              microSiteParams: `utm_source=home_page&utm_medium=webapp&utm_campaign=wallet_microsite&utm_id=1`,
-              appStoreParams: `ct=Uniswap-Home-Page&mt=8`,
+              element: InterfaceElementName.UNISWAP_WALLET_LANDING_PAGE_DOWNLOAD_BUTTON,
+              isAndroidGALaunched,
             })}
           >
             {isAndroidGALaunched ? (

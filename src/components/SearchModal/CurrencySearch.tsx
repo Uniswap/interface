@@ -155,6 +155,7 @@ export function CurrencySearch({
     debouncedQuery,
     balancesAreLoading,
     balances,
+    chainId,
     onlyShowCurrenciesWithBalance,
     selectedCurrency,
     otherSelectedCurrency,
