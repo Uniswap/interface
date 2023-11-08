@@ -2,6 +2,7 @@ import { skipToken } from '@reduxjs/toolkit/query/react'
 import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { ZERO_PERCENT } from 'constants/misc'
 import { useQuickRouteMainnetEnabled } from 'featureFlags/flags/quickRouteMainnet'
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useMemo } from 'react'
 
 import { useGetQuickRouteQuery, useGetQuickRouteQueryState } from './quickRouteSlice'
@@ -78,9 +79,10 @@ export function usePreviewTrade(
     inputTax,
     outputTax,
   })
+  const isWindowVisible = useIsWindowVisible()
 
   const { isError, data: tradeResult, error, currentData } = useGetQuickRouteQueryState(queryArgs)
-  useGetQuickRouteQuery(skipFetch ? skipToken : queryArgs, {
+  useGetQuickRouteQuery(skipFetch || !isWindowVisible ? skipToken : queryArgs, {
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
     refetchOnMountOrArgChange: 2 * 60,
   })
