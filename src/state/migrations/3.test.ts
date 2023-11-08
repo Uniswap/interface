@@ -38,7 +38,7 @@ const previousState: PersistAppStateV3 = {
     },
     pairs: {},
     timestamp: Date.now(),
-    hideBaseWalletBanner: false,
+    hideAndroidAnnouncementBanner: false,
   },
   _persist: {
     version: 2,

@@ -34,7 +34,8 @@ export function openDownloadApp({ element, isAndroidGALaunched }: OpenDownloadAp
   } else if (isAndroidGALaunched && isAndroid) {
     openDownloadStore({ element, appPlatform: AppDownloadPlatform.ANDROID, linkTarget: 'uniswap_wallet_playstore' })
   } else {
-    openWalletMicrosite({ element })
+    sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_MICROSITE_OPENED, { element })
+    window.open(APP_DOWNLOAD_LINKS[element], /* target = */ 'uniswap_wallet_microsite')
   }
 }
 
@@ -60,9 +61,4 @@ const openDownloadStore = (options: AnalyticsLinkOptions) => {
     appPlatform: options?.appPlatform,
   })
   window.open(APP_DOWNLOAD_LINKS[options.element], /* target = */ options.linkTarget)
-}
-
-export const openWalletMicrosite = (options: AnalyticsLinkOptions) => {
-  sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_MICROSITE_OPENED, { element: options.element })
-  window.open(APP_DOWNLOAD_LINKS[options.element], /* target = */ 'uniswap_wallet_microsite')
 }
