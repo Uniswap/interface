@@ -58,7 +58,7 @@ export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolea
         Do not add any margins directly to this container, as this component is used in 2 different places.
         Adjust the margin in the parent component instead.
       */}
-      <Flex gap="$spacing16">
+      <Flex $short={{ gap: '$spacing8' }} gap="$spacing16">
         {isBlocked && (
           // TODO: review design of this warning.
           <BlockedAddressWarning

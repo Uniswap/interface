@@ -264,7 +264,7 @@ function SwapFormContent(): JSX.Element {
         exactAmountFiat: undefined,
         exactAmountToken: amount,
         exactCurrencyField: CurrencyField.INPUT,
-        focusOnCurrencyField: undefined,
+        focusOnCurrencyField: CurrencyField.INPUT,
       })
       resetSelection(0, 0)
     },
@@ -428,7 +428,7 @@ function SwapFormContent(): JSX.Element {
           </AnimatedFlex>
         </Trace>
 
-        <Flex mt="$spacing24">
+        <Flex $short={{ mt: '$spacing8' }} mt="$spacing24">
           <GasAndWarningRows renderEmptyRows />
         </Flex>
       </AnimatedFlex>
@@ -442,6 +442,7 @@ function SwapFormContent(): JSX.Element {
       <Flex fill mt="$spacing8" onLayout={onBottomScreenLayout} />
 
       <AnimatedFlex
+        $short={{ gap: '$none' }}
         bottom={0}
         gap="$spacing8"
         left={0}
