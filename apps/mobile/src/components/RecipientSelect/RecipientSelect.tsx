@@ -74,6 +74,9 @@ export function _RecipientSelect({
         mt="$spacing16"
         px="$spacing16"
         width="100%">
+        <Flex row px="$spacing8">
+          <Text variant="subheading1">{t('Send')}</Text>
+        </Flex>
         <SearchBar
           autoFocus
           backgroundColor="$surface2"
