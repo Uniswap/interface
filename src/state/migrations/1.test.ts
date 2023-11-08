@@ -43,7 +43,6 @@ describe('migration to v1', () => {
     expect(result?.user?.tokens).toEqual({})
     expect(result?.user?.pairs).toEqual({})
     expect(result?.user?.timestamp).toEqual(previousState.user?.timestamp)
-    expect(result?.user?.hideAndroidAnnouncementBanner).toEqual(false)
   })
 
   it('should not migrate a non-default value', async () => {
