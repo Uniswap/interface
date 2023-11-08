@@ -1,6 +1,7 @@
-import React, { ComponentProps, ReactNode } from 'react'
+import React, { ComponentProps, ReactNode, useContext, useMemo } from 'react'
 import { Trans } from 'react-i18next'
-import { Pressable } from 'react-native'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
+import { runOnJS } from 'react-native-reanimated'
 import { OnboardingStackBaseParams, useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { CloseButton } from 'src/components/buttons/CloseButton'
 import { CarouselContext } from 'src/components/carousel/Carousel'
@@ -16,38 +17,46 @@ function Page({
   params: OnboardingStackBaseParams
 }): JSX.Element {
   const { fullWidth } = useDeviceDimensions()
+  const { goToPrev, goToNext } = useContext(CarouselContext)
   const navigation = useOnboardingStackNavigation()
   const onDismiss = (): void => {
     navigation.navigate(OnboardingScreens.Backup, params)
   }
 
+  const gesture = useMemo(
+    () =>
+      Gesture.Tap().onEnd(({ absoluteX }) => {
+        if (absoluteX < fullWidth * 0.33) {
+          runOnJS(goToPrev)()
+        } else {
+          runOnJS(goToNext)()
+        }
+      }),
+    [goToPrev, goToNext, fullWidth]
+  )
+
   return (
-    <CarouselContext.Consumer>
-      {(context): JSX.Element => (
-        <Pressable
-          onPress={(event): void =>
-            event.nativeEvent.locationX < fullWidth * 0.33 ? context.goToPrev() : context.goToNext()
-          }>
-          <Flex centered gap="$spacing16">
-            <Flex
-              row
-              alignItems="center"
-              justifyContent="space-between"
-              px="$spacing24"
-              width={fullWidth}>
-              <Text color="$neutral2" variant="subheading2">
-                <Trans>What’s a recovery phrase?</Trans>
-              </Text>
-              <CloseButton color="$neutral2" onPress={onDismiss} />
-            </Flex>
-            <Flex flex={0.2} />
-            <Flex flex={0.8} px="$spacing24">
-              <CustomHeadingText>{text}</CustomHeadingText>
-            </Flex>
+    <Flex fill>
+      <GestureDetector gesture={gesture}>
+        <Flex centered gap="$spacing16">
+          <Flex
+            row
+            alignItems="center"
+            justifyContent="space-between"
+            px="$spacing24"
+            width={fullWidth}>
+            <Text color="$neutral2" variant="subheading2">
+              <Trans>What’s a recovery phrase?</Trans>
+            </Text>
+            <CloseButton color="$neutral2" onPress={onDismiss} />
           </Flex>
-        </Pressable>
-      )}
-    </CarouselContext.Consumer>
+          <Flex flex={0.2} />
+          <Flex flex={0.8} px="$spacing24">
+            <CustomHeadingText>{text}</CustomHeadingText>
+          </Flex>
+        </Flex>
+      </GestureDetector>
+    </Flex>
   )
 }
 
