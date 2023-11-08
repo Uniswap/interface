@@ -14,7 +14,7 @@ export const PopupContainer = styled.div<{ show: boolean }>`
   z-index: ${Z_INDEX.sticky};
 
   border-radius: 20px;
-  bottom: 20px;
+  bottom: 40px;
   right: 20px;
   width: 360px;
   height: 92px;
@@ -78,10 +78,10 @@ export const TextContainer = styled.div`
   }
 `
 export const StyledQrCode = styled.img`
-  padding: 6px;
+  padding: 2px;
   border-radius: 8px;
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   background-color: ${({ theme }) => theme.white};
   margin-right: 16px;
 
