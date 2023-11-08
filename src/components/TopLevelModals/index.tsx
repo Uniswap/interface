@@ -36,7 +36,7 @@ export default function TopLevelModals() {
       <AirdropModal />
       <FiatOnrampModal />
       <UkDisclaimerModal />
-      {false && <DevFlagsBox />}
+      {shouldShowDevFlags && <DevFlagsBox />}
     </>
   )
 }

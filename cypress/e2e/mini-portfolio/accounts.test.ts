@@ -48,7 +48,7 @@ describe('Mini Portfolio account drawer', () => {
 
   it('fetches account information', () => {
     // Open the mini portfolio
-    cy.intercept(/graphql/, { fixture: 'mini-portfolio/tokens.json' })
+    cy.intercept(/graphql\/tokens/, { fixture: 'mini-portfolio/tokens.json' })
     cy.get(getTestSelector('web3-status-connected')).click()
 
     // Verify that wallet state loads correctly
