@@ -31,7 +31,7 @@ function BaseButton({ onClick, branded, children }: PropsWithChildren<{ onClick?
   )
 }
 
-// Launches App Store if on an iOS device, Android Google Play if on Android, else navigates to Uniswap Wallet microsite
+// Launches App Store if on an iOS device, else navigates to Uniswap Wallet microsite
 export function DownloadButton({
   onClick,
   text = 'Download',
