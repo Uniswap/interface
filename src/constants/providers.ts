@@ -21,7 +21,10 @@ export const RPC_PROVIDERS: { [key in SupportedInterfaceChain]: StaticJsonRpcPro
   [ChainId.SEPOLIA]: providerFactory(ChainId.SEPOLIA),
   [ChainId.OPTIMISM]: providerFactory(ChainId.OPTIMISM),
   [ChainId.OPTIMISM_GOERLI]: providerFactory(ChainId.OPTIMISM_GOERLI),
-  [ChainId.ARBITRUM_ONE]: providerFactory(ChainId.ARBITRUM_ONE),
+  [ChainId.ARBITRUM_ONE]: new AppRpcProvider(ChainId.ARBITRUM_ONE, [
+    providerFactory(ChainId.ARBITRUM_ONE),
+    providerFactory(ChainId.ARBITRUM_ONE, 1),
+  ]),
   [ChainId.ARBITRUM_GOERLI]: providerFactory(ChainId.ARBITRUM_GOERLI),
   [ChainId.POLYGON]: providerFactory(ChainId.POLYGON),
   [ChainId.POLYGON_MUMBAI]: providerFactory(ChainId.POLYGON_MUMBAI),
