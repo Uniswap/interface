@@ -125,17 +125,17 @@ android {
       dev {
         isDefault(true)
         applicationIdSuffix ".dev"
-        versionName "1.16"
+        versionName "1.17"
         dimension "variant"
       }
       beta {
         applicationIdSuffix ".beta"
-        versionName "1.16"
+        versionName "1.17"
         dimension "variant"
       }
       prod {
         dimension "variant"
-        versionName "1.16"
+        versionName "1.17"
       }
     }
 
