@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import Column from 'components/Column'
 import { HeaderRow, LoadedRow, LoadingRow } from 'components/Tokens/TokenTable/TokenRow'
 import { ExploreTab } from 'constants/explore'
 import { PAGE_SIZE, SparklineMap, TopToken } from 'graphql/data/TopTokens'
@@ -7,23 +7,17 @@ import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components'
 
-const GridContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
+const GridContainer = styled(Column)`
+  max-width: ${({ theme }) => theme.maxWidth};
   background-color: ${({ theme }) => theme.surface1};
 
   margin-left: auto;
   margin-right: auto;
   border-radius: 12px;
-  justify-content: center;
-  align-items: center;
   border: 1px solid ${({ theme }) => theme.surface3};
 `
 
-const DataContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+const DataContainer = styled(Column)`
   gap: 4px;
   height: 100%;
   width: 100%;
@@ -139,6 +133,7 @@ export function ExploreTable({ tab, ...args }: ExploreTableProps[ExploreTab]) {
   let rows
 
   switch (tab) {
+    // TODO(WEB-2751): Update Token Table Styles
     case ExploreTab.Tokens: {
       const { tokens, loadingTokens, sparklineMap, tokenSortRank } = args as ExploreTableProps[ExploreTab.Tokens]
       loading = loadingTokens
