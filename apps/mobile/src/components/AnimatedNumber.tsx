@@ -267,6 +267,7 @@ const AnimatedFontStyles = StyleSheet.create({
   fontStyle: {
     fontFamily: fonts.heading2.family,
     fontSize: fonts.heading2.fontSize,
+    fontWeight: 500,
     lineHeight: fonts.heading2.lineHeight,
     top: 1,
   },

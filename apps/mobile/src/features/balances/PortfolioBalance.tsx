@@ -56,7 +56,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
       />
       <RelativeChange
         absoluteChange={absoluteChange}
-        arrowSize="$icon.20"
+        arrowSize="$icon.16"
         change={portfolioChange?.percentage?.value}
         loading={isWarmLoading || isLoading}
         negativeChangeColor={isWarmLoading ? '$neutral2' : '$statusCritical'}

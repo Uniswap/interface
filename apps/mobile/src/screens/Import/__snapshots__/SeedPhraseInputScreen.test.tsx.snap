@@ -176,7 +176,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                     <TextInput
                       autoCapitalize="none"
                       autoComplete="off"
-                      autoCorrect={true}
+                      autoCorrect={false}
                       autoFocus={true}
                       blurOnSubmit={true}
                       editable={true}

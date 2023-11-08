@@ -7,7 +7,6 @@ exports[`AccountHeader renders without error 1`] = `
       "alignItems": "stretch",
       "flexDirection": "column",
       "gap": 12,
-      "marginTop": 16,
       "overflow": "scroll",
       "width": "100%",
     }
@@ -396,7 +395,7 @@ exports[`AccountHeader renders without error 1`] = `
               "color": "#222222",
               "flexShrink": 1,
               "fontFamily": "Basel-Book",
-              "fontSize": 17,
+              "fontSize": 19,
               "lineHeight": 24,
             }
           }
@@ -458,8 +457,8 @@ exports[`AccountHeader renders without error 1`] = `
               {
                 "color": "#CECECE",
                 "fontFamily": "Basel-Book",
-                "fontSize": 15,
-                "lineHeight": 16,
+                "fontSize": 17,
+                "lineHeight": 24,
               }
             }
             suppressHighlighting={true}

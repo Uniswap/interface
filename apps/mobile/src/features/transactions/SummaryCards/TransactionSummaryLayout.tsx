@@ -140,7 +140,7 @@ function TransactionSummaryLayout({
                       {walletDisplayName.name}
                     </Text>
                   ) : null}
-                  <Text color="$neutral2" numberOfLines={1} variant="body1">
+                  <Text color="$neutral2" numberOfLines={1} variant="body2">
                     {title}
                   </Text>
                 </Flex>
@@ -148,7 +148,7 @@ function TransactionSummaryLayout({
               </Flex>
               <Flex grow row gap="$spacing16">
                 <Flex grow shrink>
-                  <Text color="$neutral1" variant="subheading2">
+                  <Text color="$neutral1" variant="body2">
                     {caption}
                   </Text>
                 </Flex>

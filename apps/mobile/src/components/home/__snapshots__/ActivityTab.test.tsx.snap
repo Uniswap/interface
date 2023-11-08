@@ -1388,7 +1388,7 @@ exports[`ActivityTab renders without error 2`] = `
                         {
                           "color": "#7D7D7D",
                           "fontFamily": "Basel-Book",
-                          "fontSize": 19,
+                          "fontSize": 17,
                           "lineHeight": 24,
                         }
                       }
@@ -1744,7 +1744,7 @@ exports[`ActivityTab renders without error 2`] = `
                         {
                           "color": "#7D7D7D",
                           "fontFamily": "Basel-Book",
-                          "fontSize": 19,
+                          "fontSize": 17,
                           "lineHeight": 24,
                         }
                       }

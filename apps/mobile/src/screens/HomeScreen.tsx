@@ -355,9 +355,9 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   )
   const contentHeader = useMemo(() => {
     return (
-      <Flex bg="$surface1" gap="$spacing12" pb="$spacing16" px="$spacing24">
+      <Flex bg="$surface1" gap="$spacing8" pb="$spacing16" px="$spacing24">
         <AccountHeader />
-        <Flex pb="$spacing4">
+        <Flex pb="$spacing8">
           <PortfolioBalance owner={activeAccount.address} />
         </Flex>
         <QuickActions actions={actions} sentry-label="QuickActions" />
@@ -608,7 +608,7 @@ type QuickAction = {
 
 function QuickActions({ actions }: { actions: QuickAction[] }): JSX.Element {
   return (
-    <Flex centered row gap="$spacing8">
+    <Flex centered row gap="$spacing12">
       {actions.map((action) => (
         <ActionButton
           Icon={action.Icon}
@@ -672,7 +672,6 @@ function ActionButton({
             fill
             backgroundColor="$DEP_backgroundActionButton"
             borderRadius="$rounded20"
-            gap="$spacing8"
             p="$spacing16"
             style={animatedStyle}>
             <Icon

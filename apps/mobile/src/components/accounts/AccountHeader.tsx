@@ -57,7 +57,7 @@ export function AccountHeader(): JSX.Element {
   const iconSize = !avatar ? iconSizes.icon36 : 52
 
   return (
-    <Flex gap="$spacing12" mt="$spacing16" overflow="scroll" testID="account-header" width="100%">
+    <Flex gap="$spacing12" overflow="scroll" testID="account-header" width="100%">
       {account?.type === AccountType.Readonly && (
         <Flex centered row bg="$surface2" br="$rounded12" gap="$spacing8" p="$spacing8">
           <Icons.Eye color="$neutral2" size="$icon.20" />
@@ -100,13 +100,13 @@ export function AccountHeader(): JSX.Element {
           {walletHasName ? (
             <Flex row ai="center" gap="$spacing8" justifyContent="space-between">
               <TouchableArea hapticFeedback hitSlop={20} onPress={onPressAccountHeader}>
-                <Text color="$neutral1" flexShrink={1} numberOfLines={1} variant="subheading2">
+                <Text color="$neutral1" flexShrink={1} numberOfLines={1} variant="subheading1">
                   {displayName?.name}
                 </Text>
               </TouchableArea>
               <TouchableArea hapticFeedback flexGrow={1} hitSlop={20} onPress={onPressCopyAddress}>
                 <Flex row alignItems="center" gap="$spacing4">
-                  <Text color="$neutral3" numberOfLines={1} variant="body3">
+                  <Text color="$neutral3" numberOfLines={1} variant="body2">
                     {sanitizeAddressText(shortenAddress(activeAddress))}
                   </Text>
                   <Icons.CopyAlt color="$neutral3" size="$icon.16" />
@@ -114,14 +114,17 @@ export function AccountHeader(): JSX.Element {
               </TouchableArea>
             </Flex>
           ) : (
-            <Text
-              adjustsFontSizeToFit
-              color="$neutral1"
-              flexGrow={1}
-              numberOfLines={1}
-              variant="subheading2">
-              {sanitizeAddressText(shortenAddress(activeAddress))}
-            </Text>
+            <Flex row alignItems="center" gap="$spacing4">
+              <Text
+                adjustsFontSizeToFit
+                color="$neutral1"
+                flexGrow={1}
+                numberOfLines={1}
+                variant="body2">
+                {sanitizeAddressText(shortenAddress(activeAddress))}
+              </Text>
+              <Icons.CopyAlt color="$neutral3" size="$icon.16" />
+            </Flex>
           )}
         </Flex>
       )}

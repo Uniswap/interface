@@ -250,7 +250,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
               <Icons.Search color="$neutral2" size="$icon.24" />
               <Text
                 adjustsFontSizeToFit
-                color="$neutral1"
+                color="$neutral2"
                 numberOfLines={1}
                 pr="$spacing48"
                 style={{ lineHeight: fonts.body1.lineHeight }}
