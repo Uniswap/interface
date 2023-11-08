@@ -2,15 +2,14 @@ import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { TraceEvent } from 'analytics'
 import searchIcon from 'assets/svg/search.svg'
-import xIcon from 'assets/svg/x.svg'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import useDebounce from 'hooks/useDebounce'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
-import { filterStringAtom } from '../state'
+import { MEDIUM_MEDIA_BREAKPOINT } from '../Tokens/constants'
+import { filterStringAtom } from '../Tokens/state'
 const ICON_SIZE = '20px'
 
 const SearchBarContainer = styled.div<{ isInfoExplorePageEnabled: boolean }>`
@@ -55,7 +54,6 @@ const SearchInput = styled.input<{ isInfoExplorePageEnabled: boolean; isOpen?: b
     appearance: none;
     height: ${ICON_SIZE};
     width: ${ICON_SIZE};
-    background-image: url(${xIcon});
     margin-right: 10px;
     background-size: ${ICON_SIZE} ${ICON_SIZE};
     cursor: pointer;
