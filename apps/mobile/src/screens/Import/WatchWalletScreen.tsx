@@ -177,7 +177,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           errorMessage={errorText}
           inputSuffix={isAddress || hasSuffixIncluded ? undefined : '.eth'}
           liveCheck={showLiveCheck}
-          placeholderLabel="address or ENS"
+          placeholderLabel="Enter address or ENS"
           showSuccess={Boolean(isValid)}
           value={value}
           onChange={onChange}

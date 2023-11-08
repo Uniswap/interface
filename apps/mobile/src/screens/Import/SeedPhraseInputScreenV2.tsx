@@ -13,6 +13,7 @@ import {
   InputValidatedEvent,
   MnemonicStoredEvent,
   SeedPhraseInput,
+  StringKey,
   useSeedPhraseInputRef,
 } from 'src/screens/Import/SeedPhraseInput'
 import { OnboardingScreens } from 'src/screens/Screens'
@@ -86,9 +87,17 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
       {/* <Flex gap={itemSpacing}> */}
       <SeedPhraseInput
         ref={seedPhraseInputRef}
-        helpText={
-          isRestoringMnemonic ? t('Try searching again') : t('How do I find my recovery phrase?')
-        }
+        strings={{
+          [StringKey.HelpText]: isRestoringMnemonic
+            ? t('Try searching again')
+            : t('How do I find my recovery phrase?'),
+          [StringKey.InputPlaceholder]: t('Enter recovery phrase'),
+          [StringKey.PasteButton]: t('Paste'),
+          [StringKey.ErrorInvalidWord]: t('Invalid word: '),
+          [StringKey.ErrorPhraseLength]: t('Recovery phrase must be 12-24 words'),
+          [StringKey.ErrorWrongPhrase]: t('Wrong recovery phrase'),
+          [StringKey.ErrorInvalidPhrase]: t('Invalid phrase'),
+        }}
         targetMnemonicId={targetMnemonicId}
         onHelpTextPress={isRestoringMnemonic ? onPressTryAgainButton : onPressRecoveryHelpButton}
         onInputValidated={(e: NativeSyntheticEvent<InputValidatedEvent>): void =>

@@ -19,7 +19,7 @@ interface Props {
   value: string | undefined
   errorMessage: string | undefined
   onChange: (text: string | undefined) => void
-  placeholderLabel: string | undefined
+  placeholderLabel: string
   onSubmit?: () => void
   showSuccess?: boolean // show success indicator
   inputSuffix?: string //text to auto to end of input string
@@ -159,23 +159,13 @@ export function GenericImportForm({
                 numberOfLines={1}
                 style={styles.placeholderLabelStyle}
                 variant="body1">
-                {t('Type or')}
+                {placeholderLabel}
               </Text>
               <PasteButton
                 afterClipboardReceived={afterPasteButtonPress}
                 beforePress={beforePasteButtonPress}
                 onPress={onChange}
               />
-              {placeholderLabel && (
-                <Text
-                  adjustsFontSizeToFit
-                  color="$neutral2"
-                  numberOfLines={1}
-                  style={styles.placeholderLabelStyle}
-                  variant="body1">
-                  {placeholderLabel}
-                </Text>
-              )}
             </Flex>
           )}
         </Flex>

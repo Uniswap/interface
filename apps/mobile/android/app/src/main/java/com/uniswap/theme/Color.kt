@@ -183,11 +183,11 @@ data class CustomColors(
 val lightCustomColors = CustomColors(
   surface1 = Color(0xFFFFFFFF),
   surface2 = Color(0xFFF9F9F9),
-  surface3 = Color(0x2222220D),
-  surface4 = Color(0xFFFFFFA3),
-  surface5 = Color(0x0000000A),
+  surface3 = Color(0x0D222222),
+  surface4 = Color(0xA3FFFFFF),
+  surface5 = Color(0x0A000000),
 
-  scrim = Color(0x00000099),
+  scrim = Color(0x99000000),
 
   neutral1 = Color(0xFF222222),
   neutral2 = Color(0xFF7D7D7D),
@@ -204,11 +204,11 @@ val lightCustomColors = CustomColors(
 val darkCustomColors = CustomColors(
   surface1 = Color(0xFF131313),
   surface2 = Color(0xFF1B1B1B),
-  surface3 = Color(0xFFFFFF1F),
-  surface4 = Color(0xFFFFFF33),
-  surface5 = Color(0x0000000A),
+  surface3 = Color(0x1FFFFFFF),
+  surface4 = Color(0x33FFFFFF),
+  surface5 = Color(0x0A000000),
 
-  scrim = Color(0x00000099),
+  scrim = Color(0x99000000),
 
   neutral1 = Color(0xFFFFFFFF),
   neutral2 = Color(0xFF9B9B9B),

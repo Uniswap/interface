@@ -13,9 +13,19 @@ export type MnemonicStoredEvent = {
 export type InputValidatedEvent = {
   canSubmit: boolean
 }
+
+export enum StringKey {
+  HelpText = 'helpText',
+  InputPlaceholder = 'inputPlaceholder',
+  PasteButton = 'pasteButton',
+  ErrorInvalidWord = 'errorInvalidWord',
+  ErrorPhraseLength = 'errorPhaseLength',
+  ErrorWrongPhrase = 'errorWrongPhrase',
+  ErrorInvalidPhrase = 'errorInvalidPhrase',
+}
 interface NativeSeedPhraseInputProps {
   targetMnemonicId?: string
-  helpText: string
+  strings: Record<StringKey, string>
   onHelpTextPress: () => void
   onInputValidated: (e: NativeSyntheticEvent<InputValidatedEvent>) => void
   onMnemonicStored: (e: NativeSyntheticEvent<MnemonicStoredEvent>) => void

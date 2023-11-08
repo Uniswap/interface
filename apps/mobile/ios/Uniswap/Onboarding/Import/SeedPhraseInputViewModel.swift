@@ -23,11 +23,42 @@ class SeedPhraseInputViewModel: ObservableObject {
     case wrongRecoveryPhrase
   }
   
+  struct ReactNativeStrings {
+    var helpText: String
+    var inputPlaceholder: String
+    var pasteButton: String
+    var errorInvalidWord: String
+    var errorPhraseLength: String
+    var errorWrongPhrase: String
+    var errorInvalidPhrase: String
+  }
+  
   let rnEthersRS = RNEthersRS()
   
   // Following block of variables will come from RN
   @Published var targetMnemonicId: String? = nil
-  @Published var helpText: String = ""
+  @Published var rawRNStrings: Dictionary<String, String> = Dictionary<String, String>() {
+    didSet {
+      strings = ReactNativeStrings(
+        helpText: rawRNStrings["helpText"] ?? "",
+        inputPlaceholder: rawRNStrings["inputPlaceholder"] ?? "",
+        pasteButton: rawRNStrings["pasteButton"] ?? "", 
+        errorInvalidWord: rawRNStrings["errorInvalidWord"] ?? "",
+        errorPhraseLength: rawRNStrings["errorPhaseLength"] ?? "",
+        errorWrongPhrase: rawRNStrings["errorWrongPhrase"] ?? "",
+        errorInvalidPhrase: rawRNStrings["errorInvalidPhrase"] ?? ""
+      )
+    }
+  }
+  @Published var strings: ReactNativeStrings = ReactNativeStrings(
+    helpText: "",
+    inputPlaceholder: "",
+    pasteButton: "",
+    errorInvalidWord: "",
+    errorPhraseLength: "",
+    errorWrongPhrase: "", 
+    errorInvalidPhrase: ""
+  )
   @Published var onHelpTextPress: RCTDirectEventBlock = { _ in }
   @Published var onInputValidated: RCTDirectEventBlock = { _ in }
   @Published var onMnemonicStored: RCTDirectEventBlock = { _ in }

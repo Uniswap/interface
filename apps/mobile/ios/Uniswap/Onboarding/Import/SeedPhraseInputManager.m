@@ -10,7 +10,7 @@
 @interface RCT_EXTERN_MODULE(SeedPhraseInputManager, RCTViewManager)
 
 RCT_EXPORT_VIEW_PROPERTY(targetMnemonicId, NSString?)
-RCT_EXPORT_VIEW_PROPERTY(helpText, NSString)
+RCT_EXPORT_VIEW_PROPERTY(strings, NSDictionary)
 RCT_EXPORT_VIEW_PROPERTY(onHelpTextPress, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onInputValidated, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onMnemonicStored, RCTDirectEventBlock);

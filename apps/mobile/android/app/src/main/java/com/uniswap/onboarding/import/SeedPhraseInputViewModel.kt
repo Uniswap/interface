@@ -30,9 +30,27 @@ class SeedPhraseInputViewModel(
     object InvalidPhrase: MnemonicError
   }
 
+  data class ReactNativeStrings(
+    val helpText: String,
+    val inputPlaceholder: String,
+    val pasteButton: String,
+    val errorInvalidWord: String,
+    val errorPhraseLength: String,
+    val errorWrongPhrase: String,
+    val errorInvalidPhrase: String,
+  )
+
   // Sourced externally from RN
   var mnemonicIdForRecovery by mutableStateOf<String?>(null)
-  var helpText: String by mutableStateOf("")
+  var rnStrings by mutableStateOf(ReactNativeStrings(
+    helpText = "",
+    inputPlaceholder = "",
+    pasteButton = "",
+    errorInvalidWord = "",
+    errorPhraseLength = "",
+    errorWrongPhrase = "",
+    errorInvalidPhrase = "",
+  ))
 
   var input by mutableStateOf(TextFieldValue(""))
     private set

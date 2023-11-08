@@ -7,6 +7,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -18,8 +20,13 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Colors
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
@@ -39,6 +46,8 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -79,7 +88,15 @@ fun SeedPhraseInput(viewModel: SeedPhraseInputViewModel, onHelpTextPress: () -> 
       value = viewModel.input,
       onValueChange = { viewModel.handleInputChange(it) },
       cursorBrush = SolidColor(LocalContentColor.current.copy(ContentAlpha.high)),
-      textStyle = UniswapTheme.typography.body1.copy(textAlign = TextAlign.Center, color = UniswapTheme.colors.neutral1),
+      textStyle = UniswapTheme.typography.body1.copy(
+        textAlign = TextAlign.Start,
+        color = UniswapTheme.colors.neutral1
+      ),
+      keyboardOptions = KeyboardOptions(
+        keyboardType = KeyboardType.Text,
+        autoCorrect = false,
+        capitalization = KeyboardCapitalization.None
+      )
     ) { innerTextField ->
       Box(
         modifier = Modifier
@@ -88,36 +105,43 @@ fun SeedPhraseInput(viewModel: SeedPhraseInputViewModel, onHelpTextPress: () -> 
           .padding(UniswapTheme.spacing.spacing16),
         contentAlignment = Alignment.Center,
       ) {
-        if (viewModel.input.text.isEmpty()) {
-          SeedPhrasePlaceholder(viewModel, focusRequester)
+        val isEmpty = viewModel.input.text.isEmpty()
+
+        Box(
+          contentAlignment = Alignment.CenterStart,
+          modifier = if (isEmpty) Modifier else Modifier.fillMaxWidth()
+        ) {
+          if (isEmpty) {
+            SeedPhrasePlaceholder(viewModel, focusRequester)
+          }
+          innerTextField()
         }
-        innerTextField()
       }
     }
 
+    Spacer(modifier = Modifier.height(UniswapTheme.spacing.spacing4))
     SeedPhraseError(viewModel)
     SeedPhraseRecovery(viewModel, onHelpTextPress)
   }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun SeedPhrasePlaceholder(
   viewModel: SeedPhraseInputViewModel,
   focusRequester: FocusRequester
 ) {
 
-  Row(
-    modifier = Modifier
-      .fillMaxWidth()
-      .height(IntrinsicSize.Max),
+  FlowRow(
+    modifier = Modifier.height(IntrinsicSize.Max),
     horizontalArrangement = Arrangement.Center,
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Text(
-      "Enter your recovery phrase",
+      viewModel.rnStrings.inputPlaceholder,
       color = UniswapTheme.colors.neutral2,
     )
-    Spacer(modifier = Modifier.width(UniswapTheme.spacing.spacing4))
+    Spacer(modifier = Modifier.width(UniswapTheme.spacing.spacing8))
     SeedPhrasePasteButton(viewModel, focusRequester)
   }
 }
@@ -130,7 +154,7 @@ private fun SeedPhrasePasteButton(
 
   val clipboardManager = LocalClipboardManager.current
 
-  OutlinedButton(
+  Button(
     onClick = {
       clipboardManager.getText()?.toString()?.let {
         viewModel.handleInputChange(
@@ -139,31 +163,38 @@ private fun SeedPhrasePasteButton(
         focusRequester.requestFocus()
       }
     },
-    colors = ButtonDefaults.outlinedButtonColors(
+    colors = ButtonDefaults.buttonColors(
       contentColor = UniswapTheme.colors.neutral2,
-      backgroundColor = Color.Transparent
+      backgroundColor = UniswapTheme.colors.surface3,
     ),
-    shape = UniswapTheme.shapes.buttonSmall,
-    contentPadding = PaddingValues(8.dp),
+    shape = UniswapTheme.shapes.buttonMedium,
+    contentPadding = PaddingValues(
+      top = UniswapTheme.spacing.spacing8,
+      bottom = UniswapTheme.spacing.spacing8,
+      start = UniswapTheme.spacing.spacing4,
+      end = UniswapTheme.spacing.spacing8
+    ),
   ) {
     Icon(
       painterResource(id = R.drawable.uniswap_icon_paste),
       contentDescription = null,
     )
     Spacer(modifier = Modifier.width(UniswapTheme.spacing.spacing4))
-    Text("Paste", style = UniswapTheme.typography.body1)
+    Text(viewModel.rnStrings.pasteButton, style = UniswapTheme.typography.buttonLabel4)
   }
 }
 
 @Composable
 private fun SeedPhraseError(viewModel: SeedPhraseInputViewModel) {
   val status = viewModel.status
+  val rnStrings = viewModel.rnStrings
+
   if (status is Error) {
     val text = when (val error = status.error) {
-      is InvalidWord -> "Invalid word: ${error.word}"
-      is NotEnoughWords, TooManyWords -> "Recovery phrase must be 12-24 words"
-      is WrongRecoveryPhrase -> "Wrong recovery phrase"
-      is InvalidPhrase -> "Invalid phrase"
+      is InvalidWord -> "${rnStrings.errorInvalidWord} ${error.word}"
+      is NotEnoughWords, TooManyWords -> rnStrings.errorPhraseLength
+      is WrongRecoveryPhrase -> rnStrings.errorWrongPhrase
+      is InvalidPhrase -> rnStrings.errorInvalidPhrase
     }
     Row(horizontalArrangement = Arrangement.spacedBy(UniswapTheme.spacing.spacing4)) {
       Icon(
@@ -180,7 +211,7 @@ private fun SeedPhraseError(viewModel: SeedPhraseInputViewModel) {
 private fun SeedPhraseRecovery(viewModel: SeedPhraseInputViewModel, onHelpTextPress: () -> Unit) {
   val interactionSource = remember { MutableInteractionSource() }
   Text(
-    viewModel.helpText,
+    viewModel.rnStrings.helpText,
     color = UniswapTheme.colors.accent1,
     modifier = Modifier.clickable(
       interactionSource = interactionSource,

@@ -10,6 +10,7 @@ import androidx.core.view.updateLayoutParams
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableArray
+import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
@@ -22,6 +23,7 @@ import com.google.gson.reflect.TypeToken
 import com.uniswap.R
 import com.uniswap.RnEthersRs
 import com.uniswap.theme.UniswapComponent
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.serialization.json.Json
 
@@ -36,6 +38,8 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
 
   private lateinit var viewModel: SeedPhraseInputViewModel
   private lateinit var context: ThemedReactContext
+
+  private var rnStrings = MutableStateFlow(emptyMap<String, String>())
 
   override fun createViewInstance(reactContext: ThemedReactContext): ComposeView {
     context = reactContext
@@ -112,11 +116,18 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
     viewModel.mnemonicIdForRecovery = mnemonicId
   }
 
-  @ReactProp(name = "helpText")
-  fun setHelpText(view: View, helpText: String) {
-    viewModel.helpText = helpText
+  @ReactProp(name = "strings")
+  fun setStrings(view: View, strings: ReadableMap) {
+    viewModel.rnStrings = SeedPhraseInputViewModel.ReactNativeStrings(
+      helpText = strings.getString("helpText") ?: "",
+      inputPlaceholder = strings.getString("inputPlaceholder") ?: "",
+      pasteButton = strings.getString("pasteButton") ?: "",
+      errorInvalidWord = strings.getString("errorInvalidWord") ?: "",
+      errorPhraseLength = strings.getString("errorPhraseLength") ?: "",
+      errorWrongPhrase = strings.getString("errorWrongPhrase") ?: "",
+      errorInvalidPhrase = strings.getString("errorInvalidPhrase") ?: "",
+    )
   }
-
 
   companion object {
     private const val REACT_CLASS = "SeedPhraseInput"

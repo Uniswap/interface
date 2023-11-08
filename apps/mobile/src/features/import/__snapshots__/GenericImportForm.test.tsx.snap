@@ -137,7 +137,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         }
         suppressHighlighting={true}
       >
-        Type or
+        seed phrase
       </Text>
       <View
         cancelable={true}
@@ -289,24 +289,6 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
           Paste
         </Text>
       </View>
-      <Text
-        adjustsFontSizeToFit={true}
-        allowFontScaling={true}
-        maxFontSizeMultiplier={1.4}
-        numberOfLines={1}
-        style={
-          {
-            "color": "#7D7D7D",
-            "flexShrink": 1,
-            "fontFamily": "Basel-Book",
-            "fontSize": 19,
-            "lineHeight": 24,
-          }
-        }
-        suppressHighlighting={true}
-      >
-        seed phrase
-      </Text>
     </View>
   </View>
   <View

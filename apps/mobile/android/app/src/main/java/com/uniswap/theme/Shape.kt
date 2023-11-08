@@ -9,6 +9,7 @@ data class CustomShapes(
   val large: RoundedCornerShape = RoundedCornerShape(24.dp),
   val xlarge: RoundedCornerShape = RoundedCornerShape(100.dp),
   val buttonSmall: RoundedCornerShape = RoundedCornerShape(12.dp),
+  val buttonMedium: RoundedCornerShape = RoundedCornerShape(16.dp),
 )
 
 val LocalCustomShapes = staticCompositionLocalOf {
