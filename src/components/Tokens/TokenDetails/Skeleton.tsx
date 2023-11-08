@@ -1,7 +1,8 @@
+import { Trans } from '@lingui/macro'
 import { SwapSkeleton } from 'components/swap/SwapSkeleton'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
-import { ArrowLeft } from 'react-feather'
+import { ArrowLeft, ChevronRight } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
@@ -94,7 +95,7 @@ const SquaredBubble = styled(DetailBubble)`
   border-radius: 8px;
 `
 const NavBubble = styled(DetailBubble)`
-  width: 300px;
+  width: 169px;
 `
 const TokenLogoBubble = styled(DetailBubble)`
   width: 32px;
@@ -231,7 +232,12 @@ export default function TokenDetailsSkeleton() {
   return (
     <LeftPanel>
       {isInfoTDPEnabled ? (
-        <NavBubble />
+        <BreadcrumbNav isInfoTDPEnabled>
+          <BreadcrumbNavLink to={`${isInfoExplorePageEnabled ? '/explore' : ''}/tokens/${chainName}`}>
+            <Trans>Explore</Trans> <ChevronRight size={14} /> <Trans>Tokens</Trans> <ChevronRight size={14} />
+          </BreadcrumbNavLink>{' '}
+          <NavBubble />
+        </BreadcrumbNav>
       ) : (
         <BreadcrumbNav>
           <BreadcrumbNavLink
