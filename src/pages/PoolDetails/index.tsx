@@ -13,11 +13,11 @@ import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { isAddress } from 'utils'
 
-import { PoolDetailsHeader } from './PoolDetailsHeader'
-import { PoolDetailsLink } from './PoolDetailsLink'
-import { PoolDetailsStats } from './PoolDetailsStats'
-import { PoolDetailsStatsButtons } from './PoolDetailsStatsButtons'
-import { PoolDetailsTableSkeleton } from './PoolDetailsTableSkeleton'
+import { PoolDetailsHeader } from '../../components/Pools/PoolDetails/PoolDetailsHeader'
+import { PoolDetailsLink } from '../../components/Pools/PoolDetails/PoolDetailsLink'
+import { PoolDetailsStats } from '../../components/Pools/PoolDetails/PoolDetailsStats'
+import { PoolDetailsStatsButtons } from '../../components/Pools/PoolDetails/PoolDetailsStatsButtons'
+import { PoolDetailsTableSkeleton } from '../../components/Pools/PoolDetails/PoolDetailsTableSkeleton'
 
 const PageWrapper = styled(Row)`
   padding: 48px;
