@@ -47,7 +47,7 @@ beforeEach(() => {
   mocked(useUniswapXExactOutputEnabled).mockReturnValue(false)
   mocked(useUniswapXDefaultEnabled).mockReturnValue(false)
   mocked(useFeesEnabled).mockReturnValue(true)
-  // @ts-ignore
+  // @ts-ignore we dont use the response from this hook in useRoutingAPITrade so fine to mock as undefined
   mocked(useGetQuoteQuery).mockReturnValue(undefined)
   mocked(useGetQuoteQueryState).mockReturnValue({
     refetch: jest.fn(),
