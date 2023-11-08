@@ -82,7 +82,7 @@
   "Backing up to Google Drive...": "Backing up to Google Drive...",
   "Backing up to iCloud...": "Backing up to iCloud...",
   "Backup {{backupIndex}}": "Backup {{backupIndex}}",
-  "Backup let you restore your wallet if you delete the app or lose your device": "Backup let you restore your wallet if you delete the app or lose your device",
+  "Backups let you restore your wallet if you delete the app or lose your device": "Backups let you restore your wallet if you delete the app or lose your device",
   "Balance": "Balance",
   "Balances on other networks": "Balances on other networks",
   "Be careful: this {{ requestType }} may transfer assets": "Be careful: this {{ requestType }} may transfer assets",

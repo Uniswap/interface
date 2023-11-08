@@ -94,7 +94,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
           }
           suppressHighlighting={true}
         >
-          Backup let you restore your wallet if you delete the app or lose your device
+          Backups let you restore your wallet if you delete the app or lose your device
         </Text>
       </View>
       <View
@@ -672,7 +672,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
           }
           suppressHighlighting={true}
         >
-          Backup let you restore your wallet if you delete the app or lose your device
+          Backups let you restore your wallet if you delete the app or lose your device
         </Text>
       </View>
       <View

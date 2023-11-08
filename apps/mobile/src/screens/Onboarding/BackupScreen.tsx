@@ -163,7 +163,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
 
   return (
     <OnboardingScreen
-      subtitle={t('Backup let you restore your wallet if you delete the app or lose your device')}
+      subtitle={t('Backups let you restore your wallet if you delete the app or lose your device')}
       title={screenTitle}>
       <Flex grow justifyContent="space-between">
         <Flex gap="$spacing12">{options}</Flex>
