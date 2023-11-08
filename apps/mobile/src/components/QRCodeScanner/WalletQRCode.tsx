@@ -47,7 +47,7 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
         entering={FadeIn}
         exiting={FadeOut}
         gap="$spacing24"
-        mb="$spacing48"
+        mb="$spacing8"
         mx="$spacing60"
         py="$spacing24">
         <AddressDisplay

@@ -67,7 +67,6 @@ export function SlippageInfoModal({
                 'If the price slips any further, your transaction will revert. Below is the maximum amount you would need to spend.'
               )}{' '}
         </Text>
-        <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapSlippage} />
         <Flex
           fill
           bg="$surface2"
@@ -116,6 +115,7 @@ export function SlippageInfoModal({
             </Text>
           </Flex>
         ) : null}
+        <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapSlippage} />
         <Flex centered row gap="$spacing12" pt="$spacing12">
           <Button fill testID="slippage-info-close" theme="secondary" onPress={onClose}>
             {t('Close')}

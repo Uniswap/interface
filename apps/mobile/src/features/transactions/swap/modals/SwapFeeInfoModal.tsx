@@ -40,7 +40,7 @@ export function SwapFeeInfoModal({
       title={t('Swap fee')}
       onClose={onClose}>
       <TouchableArea onPress={onPressLearnMore}>
-        <Text color="$magentaVibrant" variant="body1">
+        <Text color="$magentaVibrant" variant="buttonLabel3">
           {t('Learn more')}
         </Text>
       </TouchableArea>
