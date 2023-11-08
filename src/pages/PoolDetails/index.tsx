@@ -1,5 +1,10 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
+import { PoolDetailsHeader } from 'components/Pools/PoolDetails/PoolDetailsHeader'
+import { PoolDetailsLink } from 'components/Pools/PoolDetails/PoolDetailsLink'
+import { PoolDetailsStats } from 'components/Pools/PoolDetails/PoolDetailsStats'
+import { PoolDetailsStatsButtons } from 'components/Pools/PoolDetails/PoolDetailsStatsButtons'
+import { PoolDetailsTableSkeleton } from 'components/Pools/PoolDetails/PoolDetailsTableSkeleton'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
@@ -12,12 +17,6 @@ import { Text } from 'rebass'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { isAddress } from 'utils'
-
-import { PoolDetailsHeader } from '../../components/Pools/PoolDetails/PoolDetailsHeader'
-import { PoolDetailsLink } from '../../components/Pools/PoolDetails/PoolDetailsLink'
-import { PoolDetailsStats } from '../../components/Pools/PoolDetails/PoolDetailsStats'
-import { PoolDetailsStatsButtons } from '../../components/Pools/PoolDetails/PoolDetailsStatsButtons'
-import { PoolDetailsTableSkeleton } from '../../components/Pools/PoolDetails/PoolDetailsTableSkeleton'
 
 const PageWrapper = styled(Row)`
   padding: 48px;
