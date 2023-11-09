@@ -156,6 +156,30 @@ export enum Currency {
   Vnd = 'VND'
 }
 
+export type DescriptionTranslations = {
+  __typename?: 'DescriptionTranslations';
+  descriptionEnUs?: Maybe<Scalars['String']>;
+  descriptionEs419?: Maybe<Scalars['String']>;
+  descriptionEsEs?: Maybe<Scalars['String']>;
+  descriptionEsUs?: Maybe<Scalars['String']>;
+  descriptionFrFr?: Maybe<Scalars['String']>;
+  descriptionHiIn?: Maybe<Scalars['String']>;
+  descriptionIdId?: Maybe<Scalars['String']>;
+  descriptionJaJp?: Maybe<Scalars['String']>;
+  descriptionMsMy?: Maybe<Scalars['String']>;
+  descriptionNlNl?: Maybe<Scalars['String']>;
+  descriptionPtPt?: Maybe<Scalars['String']>;
+  descriptionRuRu?: Maybe<Scalars['String']>;
+  descriptionThTh?: Maybe<Scalars['String']>;
+  descriptionTrTr?: Maybe<Scalars['String']>;
+  descriptionUkUa?: Maybe<Scalars['String']>;
+  descriptionUrPk?: Maybe<Scalars['String']>;
+  descriptionViVn?: Maybe<Scalars['String']>;
+  descriptionZhHans?: Maybe<Scalars['String']>;
+  descriptionZhHant?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+};
+
 export type Dimensions = {
   __typename?: 'Dimensions';
   height?: Maybe<Scalars['Float']>;
@@ -1090,6 +1114,7 @@ export type TokenMarketVolumeArgs = {
 export type TokenProject = {
   __typename?: 'TokenProject';
   description?: Maybe<Scalars['String']>;
+  descriptionTranslations?: Maybe<DescriptionTranslations>;
   homepageUrl?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   isSpam?: Maybe<Scalars['Boolean']>;
@@ -1378,10 +1403,16 @@ export type TokenQuery = { __typename?: 'Query', token?: { __typename?: 'Token',
 export type TokenDetailsScreenQueryVariables = Exact<{
   chain: Chain;
   address?: InputMaybe<Scalars['String']>;
+  includeSpanish?: InputMaybe<Scalars['Boolean']>;
+  includeFrench?: InputMaybe<Scalars['Boolean']>;
+  includeJapanese?: InputMaybe<Scalars['Boolean']>;
+  includePortuguese?: InputMaybe<Scalars['Boolean']>;
+  includeChineseSimplified?: InputMaybe<Scalars['Boolean']>;
+  includeChineseTraditional?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
-export type TokenDetailsScreenQuery = { __typename?: 'Query', token?: { __typename?: 'Token', address?: string | null, chain: Chain, symbol?: string | null, name?: string | null, market?: { __typename?: 'TokenMarket', id: string, volume?: { __typename?: 'Amount', id: string, value: number } | null, price?: { __typename?: 'Amount', id: string, value: number } | null, priceHigh52W?: { __typename?: 'Amount', id: string, value: number } | null, priceLow52W?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, description?: string | null, homepageUrl?: string | null, twitterName?: string | null, safetyLevel?: SafetyLevel | null, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null, priceHigh52W?: { __typename?: 'Amount', id: string, value: number } | null, priceLow52W?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null, tokens: Array<{ __typename?: 'Token', chain: Chain, address?: string | null }> } | null } | null };
+export type TokenDetailsScreenQuery = { __typename?: 'Query', token?: { __typename?: 'Token', address?: string | null, chain: Chain, symbol?: string | null, name?: string | null, market?: { __typename?: 'TokenMarket', id: string, volume?: { __typename?: 'Amount', id: string, value: number } | null, price?: { __typename?: 'Amount', id: string, value: number } | null, priceHigh52W?: { __typename?: 'Amount', id: string, value: number } | null, priceLow52W?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, description?: string | null, homepageUrl?: string | null, twitterName?: string | null, safetyLevel?: SafetyLevel | null, logoUrl?: string | null, descriptionTranslations?: { __typename?: 'DescriptionTranslations', descriptionEsEs?: string | null, descriptionFrFr?: string | null, descriptionJaJp?: string | null, descriptionPtPt?: string | null, descriptionZhHans?: string | null, descriptionZhHant?: string | null } | null, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number } | null, marketCap?: { __typename?: 'Amount', id: string, value: number } | null, priceHigh52W?: { __typename?: 'Amount', id: string, value: number } | null, priceLow52W?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null, tokens: Array<{ __typename?: 'Token', chain: Chain, address?: string | null }> } | null } | null };
 
 export type TokenProjectsQueryVariables = Exact<{
   contracts: Array<ContractInput> | ContractInput;
@@ -2460,7 +2491,7 @@ export type TokenQueryHookResult = ReturnType<typeof useTokenQuery>;
 export type TokenLazyQueryHookResult = ReturnType<typeof useTokenLazyQuery>;
 export type TokenQueryResult = Apollo.QueryResult<TokenQuery, TokenQueryVariables>;
 export const TokenDetailsScreenDocument = gql`
-    query TokenDetailsScreen($chain: Chain!, $address: String) {
+    query TokenDetailsScreen($chain: Chain!, $address: String, $includeSpanish: Boolean = false, $includeFrench: Boolean = false, $includeJapanese: Boolean = false, $includePortuguese: Boolean = false, $includeChineseSimplified: Boolean = false, $includeChineseTraditional: Boolean = false) {
   token(chain: $chain, address: $address) {
     address
     chain
@@ -2489,6 +2520,14 @@ export const TokenDetailsScreenDocument = gql`
       id
       name
       description
+      descriptionTranslations {
+        descriptionEsEs @include(if: $includeSpanish)
+        descriptionFrFr @include(if: $includeFrench)
+        descriptionJaJp @include(if: $includeJapanese)
+        descriptionPtPt @include(if: $includePortuguese)
+        descriptionZhHans @include(if: $includeChineseSimplified)
+        descriptionZhHant @include(if: $includeChineseTraditional)
+      }
       homepageUrl
       twitterName
       safetyLevel
@@ -2535,6 +2574,12 @@ export const TokenDetailsScreenDocument = gql`
  *   variables: {
  *      chain: // value for 'chain'
  *      address: // value for 'address'
+ *      includeSpanish: // value for 'includeSpanish'
+ *      includeFrench: // value for 'includeFrench'
+ *      includeJapanese: // value for 'includeJapanese'
+ *      includePortuguese: // value for 'includePortuguese'
+ *      includeChineseSimplified: // value for 'includeChineseSimplified'
+ *      includeChineseTraditional: // value for 'includeChineseTraditional'
  *   },
  * });
  */
