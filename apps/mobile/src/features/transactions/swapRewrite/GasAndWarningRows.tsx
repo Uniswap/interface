@@ -10,13 +10,13 @@ import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
 export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolean }): JSX.Element {
   const colors = useSporeColors()
-  const { convertFiatAmountFormatted } = useFiatConverter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const { gasFee } = useSwapTxContext()
   const { derivedSwapInfo } = useSwapFormContext()

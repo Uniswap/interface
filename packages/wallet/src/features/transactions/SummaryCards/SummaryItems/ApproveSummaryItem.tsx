@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { NumberType } from 'utilities/src/format/types'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'wallet/src/entities/assets'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import {
   SummaryItemProps,
@@ -28,7 +28,7 @@ export function ApproveSummaryItem({
   transaction: TransactionDetails & { typeInfo: ApproveTransactionInfo }
 }): JSX.Element {
   const { t } = useTranslation()
-  const { formatNumberOrString } = useLocalizedFormatter()
+  const { formatNumberOrString } = useLocalizationContext()
   const currencyInfo = useCurrencyInfo(
     buildCurrencyId(transaction.chainId, transaction.typeInfo.tokenAddress)
   )

@@ -3,7 +3,10 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useEffect, useRef } from 'react'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { NumberType } from 'utilities/src/format/types'
-import { LocalizedFormatter, useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import {
+  LocalizationContextState,
+  useLocalizationContext,
+} from 'wallet/src/features/language/LocalizationContext'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { SwapTradeBaseProperties } from 'wallet/src/telemetry/types'
@@ -13,7 +16,7 @@ import { DerivedSwapInfo } from './types'
 
 // hook-based analytics because this one is data-lifecycle dependent
 export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
-  const formatter = useLocalizedFormatter()
+  const formatter = useLocalizationContext()
   const {
     trade: { trade },
   } = derivedSwapInfo
@@ -50,7 +53,7 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
 }
 
 export function getBaseTradeAnalyticsProperties(
-  formatter: LocalizedFormatter,
+  formatter: LocalizationContextState,
   trade: Trade<Currency, Currency, TradeType>
 ): SwapTradeBaseProperties {
   const portionAmount = trade.quote?.portionAmount
@@ -85,7 +88,7 @@ export function getBaseTradeAnalyticsProperties(
 
 export function getBaseTradeAnalyticsPropertiesFromSwapInfo(
   derivedSwapInfo: DerivedSwapInfo,
-  formatter: LocalizedFormatter
+  formatter: LocalizationContextState
 ): SwapTradeBaseProperties {
   const { chainId, currencyAmounts } = derivedSwapInfo
   const inputCurrencyAmount = currencyAmounts[CurrencyField.INPUT]

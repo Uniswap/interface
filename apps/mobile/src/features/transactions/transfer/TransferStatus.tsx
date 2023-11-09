@@ -7,7 +7,10 @@ import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { NumberType } from 'utilities/src/format/types'
 import { FiatCurrencyInfo, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { LocalizedFormatter, useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import {
+  LocalizationContextState,
+  useLocalizationContext,
+} from 'wallet/src/features/language/LocalizationContext'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import {
   TransactionDetails,
@@ -24,7 +27,7 @@ type TransferStatusProps = {
 
 const getTextFromTransferStatus = (
   t: AppTFunction,
-  formatter: LocalizedFormatter,
+  formatter: LocalizationContextState,
   fiatCurrencyInfo: FiatCurrencyInfo,
   derivedTransferInfo: DerivedTransferInfo,
   recipient: string | undefined,
@@ -94,7 +97,7 @@ export function TransferStatus({
   onTryAgain,
 }: TransferStatusProps): JSX.Element | null {
   const { t } = useTranslation()
-  const formatter = useLocalizedFormatter()
+  const formatter = useLocalizationContext()
   const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
   const activeAddress = useActiveAccountAddressWithThrow()
 

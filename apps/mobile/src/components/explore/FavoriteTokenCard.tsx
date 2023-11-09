@@ -24,7 +24,7 @@ import { useFavoriteTokenCardQuery } from 'wallet/src/data/__generated__/types-a
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { removeFavoriteToken } from 'wallet/src/features/favorites/slice'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 114
@@ -43,7 +43,7 @@ function FavoriteTokenCard({
 }: FavoriteTokenCardProps): JSX.Element {
   const dispatch = useAppDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
-  const { convertFiatAmountFormatted } = useFiatConverter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const { data, networkStatus, startPolling, stopPolling } = useFavoriteTokenCardQuery({
     variables: currencyIdToContractInput(currencyId),

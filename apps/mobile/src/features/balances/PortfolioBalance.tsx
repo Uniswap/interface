@@ -6,7 +6,7 @@ import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
 import { usePortfolioBalancesQuery } from 'wallet/src/data/__generated__/types-and-hooks'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 interface PortfolioBalanceProps {
   owner: Address
@@ -26,7 +26,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
       setIsWarmLoading(false)
     },
   })
-  const { convertFiatAmount, convertFiatAmountFormatted } = useFiatConverter()
+  const { convertFiatAmount, convertFiatAmountFormatted } = useLocalizationContext()
 
   const [isWarmLoading, setIsWarmLoading] = useState(false)
   const isLoading = loading && !data

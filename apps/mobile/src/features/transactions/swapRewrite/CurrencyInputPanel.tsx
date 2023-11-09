@@ -24,9 +24,8 @@ import { fonts, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { useForwardRef, usePrevious } from 'utilities/src/react/hooks'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
@@ -91,8 +90,9 @@ export const CurrencyInputPanel = memo(
     forwardedRef
   ): JSX.Element {
     const colors = useSporeColors()
-    const { convertFiatAmountFormatted } = useFiatConverter()
-    const { formatCurrencyAmount, addFiatSymbolToNumber } = useLocalizedFormatter()
+    const { convertFiatAmountFormatted, formatCurrencyAmount, addFiatSymbolToNumber } =
+      useLocalizationContext()
+
     const inputRef = useRef<TextInput>(null)
     const appFiatCurrency = useAppFiatCurrencyInfo()
 

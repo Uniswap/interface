@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { NumberType } from 'utilities/src/format/types'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { SwapFeeInfo } from 'wallet/src/features/routing/types'
 
 export type OnShowSwapFeeInfo = (noFee: boolean) => void
@@ -15,7 +15,7 @@ export function SwapFee({
   onShowSwapFeeInfo: OnShowSwapFeeInfo
 }): JSX.Element {
   const { t } = useTranslation()
-  const { formatNumberOrString } = useLocalizedFormatter()
+  const { formatNumberOrString } = useLocalizationContext()
 
   return (
     <Flex row alignItems="center" justifyContent="space-between">

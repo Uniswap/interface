@@ -2,7 +2,7 @@ import { Circle, Flex, Text, Unicon, useUniconColors } from 'ui/src'
 import { CheckmarkIcon } from 'ui/src/assets/icons/CheckmarkIcon'
 import { iconSizes, validToken } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
 interface Props {
@@ -24,7 +24,7 @@ export default function WalletPreviewCard({
   hideSelectionCircle,
   ...rest
 }: Props): JSX.Element {
-  const { convertFiatAmountFormatted } = useFiatConverter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
   const unselectedBorderColor = '$surface3'
 
   const balanceFormatted = convertFiatAmountFormatted(balance, NumberType.FiatTokenQuantity)

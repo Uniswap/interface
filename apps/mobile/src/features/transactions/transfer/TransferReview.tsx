@@ -15,7 +15,7 @@ import {
 import { NumberType } from 'utilities/src/format/types'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
@@ -40,7 +40,7 @@ export function TransferReview({
   warnings,
 }: TransferFormProps): JSX.Element | null {
   const { t } = useTranslation()
-  const { formatCurrencyAmount, formatNumberOrString } = useLocalizedFormatter()
+  const { formatCurrencyAmount, formatNumberOrString } = useLocalizationContext()
   const account = useActiveAccountWithThrow()
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [showNetworkFeeInfoModal, setShowNetworkFeeInfoModal] = useState(false)

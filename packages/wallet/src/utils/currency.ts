@@ -1,12 +1,12 @@
 import { Currency } from '@uniswap/sdk-core'
-import { LocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export function getFormattedCurrencyAmount(
   currency: Maybe<Currency>,
   currencyAmountRaw: string,
-  formatter: LocalizedFormatter,
+  formatter: LocalizationContextState,
   isApproximateAmount = false
 ): string {
   const currencyAmount = getCurrencyAmount({

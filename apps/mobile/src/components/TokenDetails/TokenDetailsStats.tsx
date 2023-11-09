@@ -6,7 +6,7 @@ import StatsIcon from 'ui/src/assets/icons/chart-bar.svg'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 function StatsRow({
   label,
@@ -51,7 +51,7 @@ export function TokenDetailsMarketData({
   tokenColor?: Nullable<string>
 }): JSX.Element {
   const { t } = useTranslation()
-  const { convertFiatAmountFormatted } = useFiatConverter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
 
   return (
     <Flex gap="$spacing8">

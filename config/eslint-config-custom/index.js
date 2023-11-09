@@ -120,7 +120,15 @@ module.exports = {
           },
           {
             name: 'utilities/src/format/localeBased',
-            message: "Avoid importing directly. Use localized hooks in `useFiatConverter` or `useLocalizedFormatter` instead.",
+            message: "Use via `useLocalizationContext` instead.",
+          },
+          {
+            name: 'wallet/src/features/fiatCurrency/conversion',
+            message: "Use via `useLocalizationContext` instead.",
+          },
+          {
+            name: 'wallet/src/features/language/formatter',
+            message: "Use via `useLocalizationContext` instead.",
           },
           {
             name: 'react-native-safe-area-context',

@@ -8,7 +8,7 @@ import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
 import { iconSizes } from 'ui/src/theme'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { TransactionFlowProps, TransactionStep } from './types'
@@ -39,7 +39,7 @@ export function HeaderContent({
   const { t } = useTranslation()
   const { onToggleFiatInput } = useTokenFormActionHandlers(dispatch)
   const currency = useAppFiatCurrencyInfo()
-  const { formatPercent } = useLocalizedFormatter()
+  const { formatPercent } = useLocalizationContext()
 
   const onPressSwapSettings = (): void => {
     setShowSettingsModal(true)

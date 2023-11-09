@@ -1,8 +1,7 @@
 import { useEffect } from 'react'
 import { useSwapFormContext } from 'src/features/transactions/swapRewrite/contexts/SwapFormContext'
 import { NumberType } from 'utilities/src/format/types'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
 import { currencyIdToChain } from 'wallet/src/utils/currencyId'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
@@ -31,8 +30,7 @@ export function useSyncFiatAndTokenAmountUpdater(): void {
   const exactCurrency = derivedSwapInfo.currencies[exactCurrencyField]
 
   const usdPriceOfCurrency = useUSDCPrice(exactCurrency?.currency ?? undefined)
-  const { formatCurrencyAmount } = useLocalizedFormatter()
-  const { convertFiatAmount } = useFiatConverter()
+  const { convertFiatAmount, formatCurrencyAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount().amount
   const chainId = currencyIdToChain(exactCurrency?.currencyId ?? '')
 

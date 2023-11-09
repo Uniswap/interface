@@ -35,7 +35,7 @@ import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { useENS } from 'wallet/src/features/ens/useENS'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useNFT } from 'wallet/src/features/nfts/hooks'
 import {
   AppErrorNotification,
@@ -191,7 +191,7 @@ export function SwapNotification({
 }: {
   notification: SwapTxNotification
 }): JSX.Element {
-  const formatter = useLocalizedFormatter()
+  const formatter = useLocalizationContext()
   const inputCurrencyInfo = useCurrencyInfo(inputCurrencyId)
   const outputCurrencyInfo = useCurrencyInfo(outputCurrencyId)
   const title = formSwapNotificationTitle(
@@ -249,7 +249,7 @@ export function WrapNotification({
 }: {
   notification: WrapTxNotification
 }): JSX.Element {
-  const formatter = useLocalizedFormatter()
+  const formatter = useLocalizationContext()
   const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)
   const wrappedCurrencyInfo = useWrappedNativeCurrencyInfo(chainId)
   const inputCurrencyInfo = unwrapped ? wrappedCurrencyInfo : nativeCurrencyInfo
@@ -314,7 +314,7 @@ export function TransferCurrencyNotification({
 }: {
   notification: TransferCurrencyTxNotification
 }): JSX.Element {
-  const formatter = useLocalizedFormatter()
+  const formatter = useLocalizationContext()
   const {
     address,
     assetType,

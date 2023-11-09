@@ -16,8 +16,7 @@ import { Flex, FlexProps, SpaceTokens, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 type CurrentInputPanelProps = {
   currencyInfo: Maybe<CurrencyInfo>
@@ -115,8 +114,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
 
   const { t } = useTranslation()
   const inputRef = useRef<TextInput>(null)
-  const { convertFiatAmountFormatted } = useFiatConverter()
-  const { formatCurrencyAmount } = useLocalizedFormatter()
+  const { convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
 
   const insufficientBalanceWarning = warnings.find(
     (warning) => warning.type === WarningLabel.InsufficientFunds

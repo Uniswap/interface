@@ -11,7 +11,7 @@ import { iconSizes, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useExtractedColors } from 'wallet/src/utils/colors'
 import { NFTCollectionData } from './types'
 
@@ -30,7 +30,7 @@ export function NFTCollectionHeader({
 }): ReactElement {
   const colors = useSporeColors()
   const { t } = useTranslation()
-  const { formatNumberOrString } = useLocalizedFormatter()
+  const { formatNumberOrString } = useLocalizationContext()
 
   // Style based on device sizing
   const { top: deviceTopPadding } = useDeviceInsets()

@@ -13,7 +13,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { ChainId } from 'wallet/src/constants/chains'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 import {
   buildCurrencyId,
@@ -48,7 +48,7 @@ export const TokenItem = memo(function _TokenItem({
 }: TokenItemProps) {
   const { t } = useTranslation()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
-  const { convertFiatAmountFormatted } = useFiatConverter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const {
     name,

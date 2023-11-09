@@ -1,7 +1,7 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
-import { LocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
 import { WalletConnectNotification } from 'wallet/src/features/notifications/types'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
@@ -65,7 +65,7 @@ export const formApproveNotificationTitle = (
 }
 
 export const formSwapNotificationTitle = (
-  formatter: LocalizedFormatter,
+  formatter: LocalizationContextState,
   txStatus: TransactionStatus,
   inputCurrency: Maybe<Currency>,
   outputCurrency: Maybe<Currency>,
@@ -117,7 +117,7 @@ export const formSwapNotificationTitle = (
 }
 
 export const formWrapNotificationTitle = (
-  formatter: LocalizedFormatter,
+  formatter: LocalizationContextState,
   txStatus: TransactionStatus,
   inputCurrency: Maybe<Currency>,
   outputCurrency: Maybe<Currency>,
@@ -162,7 +162,7 @@ export const formWrapNotificationTitle = (
 }
 
 export const formTransferCurrencyNotificationTitle = (
-  formatter: LocalizedFormatter,
+  formatter: LocalizationContextState,
   txType: TransactionType,
   txStatus: TransactionStatus,
   currency: Maybe<Currency>,

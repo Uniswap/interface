@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { FiatNumberType } from 'utilities/src/format/types'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { Currency, useConvertQuery } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -6,7 +6,7 @@ import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { getFiatCurrencyCode, useAppFiatCurrency } from 'wallet/src/features/fiatCurrency/hooks'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 
 type SupportedServerCurrency = Extract<
   Currency,
@@ -99,11 +99,12 @@ const SOURCE_CURRENCY = Currency.Usd // Assuming all currency data comes from US
  * conversion logic is needed, please add them here.
  * @returns set of localized fiat currency conversion functions
  */
-export function useFiatConverter(): FiatConverter {
+export function useFiatConverter({
+  formatNumberOrString,
+}: Pick<LocalizationContextState, 'formatNumberOrString'>): FiatConverter {
   const featureEnabled = useFeatureFlag(FEATURE_FLAGS.CurrencyConversion)
   const appCurrency = useAppFiatCurrency()
   const toCurrency = mapFiatCurrencyToServerCurrency[appCurrency]
-  const { formatNumberOrString } = useLocalizedFormatter()
 
   const { data: latestConversion, previousData: prevConversion } = useConvertQuery({
     variables: {
@@ -155,8 +156,11 @@ export function useFiatConverter(): FiatConverter {
     [convertFiatAmountInner, formatNumberOrString]
   )
 
-  return {
-    convertFiatAmount: featureEnabled ? convertFiatAmountInner : convertFiatAmountDefault,
-    convertFiatAmountFormatted: convertFiatAmountFormattedInner,
-  }
+  return useMemo(
+    () => ({
+      convertFiatAmount: featureEnabled ? convertFiatAmountInner : convertFiatAmountDefault,
+      convertFiatAmountFormatted: convertFiatAmountFormattedInner,
+    }),
+    [convertFiatAmountFormattedInner, convertFiatAmountInner, featureEnabled]
+  )
 }

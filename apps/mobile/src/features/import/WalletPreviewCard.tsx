@@ -7,7 +7,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { useENS } from 'wallet/src/features/ens/useENS'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
 interface Props {
@@ -33,7 +33,7 @@ export default function WalletPreviewCard({
 }: Props): JSX.Element {
   const { name: ensName } = useENS(ChainId.Mainnet, address)
   const isDarkMode = useIsDarkMode()
-  const { convertFiatAmountFormatted } = useFiatConverter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const balanceFormatted = convertFiatAmountFormatted(balance, NumberType.FiatTokenQuantity)
   const unselectedBorderColor = isDarkMode ? '$transparent' : '$surface3'

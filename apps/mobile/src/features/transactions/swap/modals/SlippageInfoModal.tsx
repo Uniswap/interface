@@ -10,7 +10,7 @@ import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { uniswapUrls } from 'wallet/src/constants/urls'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
@@ -29,7 +29,7 @@ export function SlippageInfoModal({
 }: SlippageInfoModalProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const { formatCurrencyAmount, formatPercent } = useLocalizedFormatter()
+  const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
 
   const { slippageTolerance, tradeType } = trade
   const showSlippageWarning = autoSlippageTolerance && slippageTolerance > autoSlippageTolerance

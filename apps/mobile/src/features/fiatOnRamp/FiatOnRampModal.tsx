@@ -34,7 +34,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { useTimeout } from 'utilities/src/time/timing'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { ANIMATE_SPRING_CONFIG } from 'wallet/src/features/transactions/utils'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
@@ -69,7 +69,7 @@ export function FiatOnRampModal(): JSX.Element {
 function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
   const { t } = useTranslation()
   const { fullWidth } = useDeviceDimensions()
-  const { formatNumberOrString } = useLocalizedFormatter()
+  const { formatNumberOrString } = useLocalizationContext()
   const inputRef = useRef<TextInput>(null)
 
   const { isSheetReady } = useBottomSheetContext()

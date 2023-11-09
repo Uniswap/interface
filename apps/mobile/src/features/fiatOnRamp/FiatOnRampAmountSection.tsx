@@ -20,7 +20,7 @@ import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 const MAX_INPUT_FONT_SIZE = 56
@@ -95,7 +95,7 @@ export function FiatOnRampAmountSection({
 
   const { appFiatCurrencySupportedInMoonpay, moonpaySupportedFiatCurrency } =
     useMoonpayFiatCurrencySupportInfo()
-  const { formatNumberOrString } = useLocalizedFormatter()
+  const { formatNumberOrString } = useLocalizationContext()
 
   return (
     <Flex gap="$spacing16" onLayout={onInputPanelLayout}>
@@ -228,7 +228,7 @@ function PredefinedAmount({
 }): JSX.Element {
   const colors = useSporeColors()
   const { moonpaySupportedFiatCurrency } = useMoonpayFiatCurrencySupportInfo()
-  const { addFiatSymbolToNumber } = useLocalizedFormatter()
+  const { addFiatSymbolToNumber } = useLocalizationContext()
   const formattedAmount = addFiatSymbolToNumber({
     value: amount,
     currencyCode: moonpaySupportedFiatCurrency.code,

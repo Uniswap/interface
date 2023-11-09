@@ -5,9 +5,8 @@ import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { ChainId } from 'wallet/src/constants/chains'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useNativeCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
@@ -20,8 +19,7 @@ export function SpendingDetails({
   chainId: ChainId
 }): JSX.Element {
   const { t } = useTranslation()
-  const { convertFiatAmountFormatted } = useFiatConverter()
-  const { formatCurrencyAmount } = useLocalizedFormatter()
+  const { convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
 
   const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)
   const nativeCurrencyAmount = nativeCurrencyInfo

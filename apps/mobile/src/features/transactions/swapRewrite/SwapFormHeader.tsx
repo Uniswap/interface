@@ -13,14 +13,14 @@ import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
 import { iconSizes } from 'ui/src/theme'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useSwapFormContext } from './contexts/SwapFormContext'
 
 export function SwapFormHeader(): JSX.Element {
   const { t } = useTranslation()
-  const { formatPercent } = useLocalizedFormatter()
+  const { formatPercent } = useLocalizationContext()
   const colors = useSporeColors()
   const account = useActiveAccountWithThrow()
 

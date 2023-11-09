@@ -1,6 +1,6 @@
 import { createElement, useMemo } from 'react'
 import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import {
   useNativeCurrencyInfo,
   useWrappedNativeCurrencyInfo,
@@ -19,7 +19,7 @@ export function WrapSummaryItem({
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: WrapTransactionInfo }
 }): JSX.Element {
-  const formatter = useLocalizedFormatter()
+  const formatter = useLocalizationContext()
   const { unwrapped } = transaction.typeInfo
 
   const nativeCurrencyInfo = useNativeCurrencyInfo(transaction.chainId)

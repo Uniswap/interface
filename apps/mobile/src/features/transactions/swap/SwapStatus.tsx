@@ -7,8 +7,10 @@ import { TransactionPending } from 'src/features/transactions/TransactionPending
 import { AppTFunction } from 'ui/src/i18n/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
-
-import { LocalizedFormatter, useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import {
+  LocalizationContextState,
+  useLocalizationContext,
+} from 'wallet/src/features/language/LocalizationContext'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import {
@@ -35,7 +37,7 @@ type SwapStatusText = {
 const getTextFromTxStatus = (
   t: AppTFunction,
   derivedSwapInfo: DerivedSwapInfo,
-  formatter: LocalizedFormatter,
+  formatter: LocalizationContextState,
   transactionDetails?: TransactionDetails
 ): SwapStatusText => {
   if (derivedSwapInfo.wrapType === WrapType.NotApplicable) {
@@ -48,7 +50,7 @@ const getTextFromTxStatus = (
 const getTextFromWrapStatus = (
   t: AppTFunction,
   derivedSwapInfo: DerivedSwapInfo,
-  formatter: LocalizedFormatter,
+  formatter: LocalizationContextState,
   transactionDetails?: TransactionDetails
 ): SwapStatusText => {
   const { wrapType } = derivedSwapInfo
@@ -131,7 +133,7 @@ const getTextFromWrapStatus = (
 const getTextFromSwapStatus = (
   t: AppTFunction,
   derivedSwapInfo: DerivedSwapInfo,
-  formatter: LocalizedFormatter,
+  formatter: LocalizationContextState,
   transactionDetails?: TransactionDetails
 ): SwapStatusText => {
   // transactionDetails may not been added to the store yet
@@ -201,7 +203,7 @@ export function SwapStatus({ derivedSwapInfo, onNext, onTryAgain }: SwapStatusPr
     toSupportedChainId(currencies[CurrencyField.INPUT]?.currency.chainId) ?? ChainId.Mainnet
   const activeAddress = useActiveAccountAddressWithThrow()
   const transaction = useSelectTransaction(activeAddress, chainId, txId)
-  const formatter = useLocalizedFormatter()
+  const formatter = useLocalizationContext()
 
   const { title, description } = useMemo(() => {
     return getTextFromTxStatus(t, derivedSwapInfo, formatter, transaction)

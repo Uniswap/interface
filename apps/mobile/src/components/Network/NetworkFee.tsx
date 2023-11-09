@@ -6,9 +6,9 @@ import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { ChainId } from 'wallet/src/constants/chains'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 export function NetworkFee({
   chainId,
@@ -20,7 +20,7 @@ export function NetworkFee({
   onShowNetworkFeeInfo?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const { convertFiatAmountFormatted } = useFiatConverter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const gasFeeUSD = useUSDValue(chainId, gasFee.value ?? undefined)
   const gasFeeFormatted = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatTokenPrice)

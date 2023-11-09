@@ -4,7 +4,7 @@ import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxS
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { useENS } from 'wallet/src/features/ens/useENS'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import {
   SummaryItemProps,
@@ -34,7 +34,7 @@ export function TransferTokenSummaryItem({
   }
 }): JSX.Element {
   const { t } = useTranslation()
-  const formatter = useLocalizedFormatter()
+  const formatter = useLocalizationContext()
 
   const currencyInfo = useCurrencyInfo(
     transaction.typeInfo.assetType === AssetType.Currency

@@ -32,7 +32,7 @@ import {
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
 import { useSwapProtectionSetting } from 'wallet/src/features/wallet/hooks'
 import { setSwapProtectionSetting, SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -146,7 +146,7 @@ function SwapSettingsOptions({
   chainId: ChainId
 }): JSX.Element {
   const { t } = useTranslation()
-  const { formatPercent } = useLocalizedFormatter()
+  const { formatPercent } = useLocalizationContext()
   const isMevBlockerFeatureEnabled = useFeatureFlag(FEATURE_FLAGS.MevBlocker)
 
   return (
@@ -471,7 +471,7 @@ function BottomLabel({
 }): JSX.Element | null {
   const colors = useSporeColors()
   const { t } = useTranslation()
-  const { formatCurrencyAmount } = useLocalizedFormatter()
+  const { formatCurrencyAmount } = useLocalizationContext()
   const slippageTolerancePercent = slippageToleranceToPercent(slippageTolerance)
 
   if (inputWarning) {

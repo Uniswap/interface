@@ -11,8 +11,7 @@ import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
@@ -36,8 +35,7 @@ function _TokenOptionItem({
 
   const [showWarningModal, setShowWarningModal] = useState(false)
   const { tokenWarningDismissed, dismissWarningCallback } = useTokenWarningDismissed(currencyId)
-  const { convertFiatAmountFormatted } = useFiatConverter()
-  const { formatNumberOrString } = useLocalizedFormatter()
+  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   const balance = convertFiatAmountFormatted(balanceUSD, NumberType.FiatTokenPrice)
 

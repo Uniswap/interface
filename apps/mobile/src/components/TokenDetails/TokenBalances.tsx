@@ -9,8 +9,7 @@ import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
@@ -99,8 +98,7 @@ export function CurrentChainBalance({
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const { convertFiatAmountFormatted } = useFiatConverter()
-  const { formatNumberOrString } = useLocalizedFormatter()
+  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   return (
     <Flex row>
@@ -132,8 +130,7 @@ function OtherChainBalance({
   balance: PortfolioBalance
   navigate: (currencyId: CurrencyId) => void
 }): JSX.Element {
-  const { convertFiatAmountFormatted } = useFiatConverter()
-  const { formatNumberOrString } = useLocalizedFormatter()
+  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   return (
     <Trace logPress pressEvent={MobileEventName.TokenDetailsOtherChainButtonPressed}>

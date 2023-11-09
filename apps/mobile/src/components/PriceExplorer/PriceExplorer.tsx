@@ -16,7 +16,7 @@ import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensi
 import { invokeImpact } from 'src/utils/haptic'
 import { Flex } from 'ui/src'
 import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { TokenSpotData, useTokenPriceHistory } from './usePriceHistory'
 
@@ -54,7 +54,7 @@ export function PriceExplorer({
 }): JSX.Element {
   const { data, loading, error, refetch, setDuration, selectedDuration } =
     useTokenPriceHistory(currencyId)
-  const { convertFiatAmount } = useFiatConverter()
+  const { convertFiatAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount().amount
   const convertedPriceHistory = useMemo(
     (): TLineChartData | undefined =>

@@ -3,9 +3,8 @@ import { Flex, getTokenValue, Icons, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
@@ -26,8 +25,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   const { quantity, relativeChange24, balanceUSD, currencyInfo } = portfolioBalance
   const { currency } = currencyInfo
   const colors = useSporeColors()
-  const { convertFiatAmountFormatted } = useFiatConverter()
-  const { formatNumberOrString } = useLocalizedFormatter()
+  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   const balanceFormatted = convertFiatAmountFormatted(balanceUSD, NumberType.FiatTokenQuantity)
 

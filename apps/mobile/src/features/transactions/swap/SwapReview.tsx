@@ -25,7 +25,7 @@ import { TransactionDetails } from 'src/features/transactions/TransactionDetails
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
 import { NumberType } from 'utilities/src/format/types'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -53,7 +53,7 @@ export function SwapReview({
   exactValue,
 }: SwapFormProps): JSX.Element | null {
   const { t } = useTranslation()
-  const { formatNumberOrString, formatCurrencyAmount } = useLocalizedFormatter()
+  const { formatNumberOrString, formatCurrencyAmount } = useLocalizationContext()
   const account = useActiveAccountWithThrow()
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [showNetworkFeeInfoModal, setShowNetworkFeeInfoModal] = useState(false)

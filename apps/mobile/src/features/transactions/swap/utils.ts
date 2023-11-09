@@ -13,7 +13,7 @@ import { AppTFunction } from 'ui/src/i18n/types'
 import { NumberType } from 'utilities/src/format/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
-import { LocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import {
@@ -119,7 +119,7 @@ export function requireAcceptNewTrade(oldTrade: Maybe<Trade>, newTrade: Maybe<Tr
 }
 
 export const getRateToDisplay = (
-  formatter: LocalizedFormatter,
+  formatter: LocalizationContextState,
   trade: Trade,
   showInverseRate: boolean
 ): string => {

@@ -19,7 +19,7 @@ import {
   useFiatOnRampWidgetUrlQuery,
 } from 'wallet/src/features/fiatOnRamp/api'
 import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { addTransaction } from 'wallet/src/features/transactions/slice'
 import {
   TransactionDetails,
@@ -242,7 +242,7 @@ export function useMoonpayFiatOnRamp({
 
   const quoteCurrencyAmountReady = isBaseCurrencyAmountValid && !quoteCurrencyAmountLoading
 
-  const { addFiatSymbolToNumber } = useLocalizedFormatter()
+  const { addFiatSymbolToNumber } = useLocalizationContext()
   const minBuyAmountWithFiatSymbol = addFiatSymbolToNumber({
     value: minBuyAmount,
     currencyCode: baseCurrencyCode,

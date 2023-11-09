@@ -6,8 +6,7 @@ import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
@@ -20,8 +19,8 @@ export function TransactionAmountsReview({
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const { convertFiatAmountFormatted } = useFiatConverter()
-  const { formatCurrencyAmount, formatNumberOrString } = useLocalizedFormatter()
+  const { convertFiatAmountFormatted, formatCurrencyAmount, formatNumberOrString } =
+    useLocalizationContext()
 
   const {
     currencies,

@@ -45,10 +45,9 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult, GasSpeed, SimulatedGasEstimationInfo } from 'wallet/src/features/gas/types'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useOnChainCurrencyBalance } from 'wallet/src/features/portfolio/api'
@@ -253,8 +252,7 @@ export function useUSDTokenUpdater(
 ): void {
   const price = useUSDCPrice(exactCurrency)
   const shouldUseUSDRef = useRef(isFiatInput)
-  const { formatCurrencyAmount } = useLocalizedFormatter()
-  const { convertFiatAmount } = useFiatConverter()
+  const { convertFiatAmount, formatCurrencyAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount().amount
 
   useEffect(() => {
@@ -584,7 +582,7 @@ export function useSwapTxAndGasInfo({
   derivedSwapInfo: DerivedSwapInfo
   skipGasFeeQuery: boolean
 }): SwapTxAndGasInfo {
-  const formatter = useLocalizedFormatter()
+  const formatter = useLocalizationContext()
   const { chainId, wrapType, currencyAmounts, currencies, exactCurrencyField } = derivedSwapInfo
 
   const tokenApprovalInfo = useTokenApprovalInfo(
@@ -737,7 +735,7 @@ export function useSwapCallback(
 ): () => void {
   const appDispatch = useAppDispatch()
   const account = useActiveAccount()
-  const formatter = useLocalizedFormatter()
+  const formatter = useLocalizationContext()
 
   const swapStartTimestamp = useAppSelector(selectSwapStartTimestamp)
 

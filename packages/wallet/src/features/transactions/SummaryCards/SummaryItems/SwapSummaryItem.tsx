@@ -2,7 +2,7 @@ import { TradeType } from '@uniswap/sdk-core'
 import { createElement, useMemo } from 'react'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 import {
@@ -32,7 +32,7 @@ export function SwapSummaryItem({
   const { typeInfo } = transaction
   const inputCurrencyInfo = useCurrencyInfo(typeInfo.inputCurrencyId)
   const outputCurrencyInfo = useCurrencyInfo(typeInfo.outputCurrencyId)
-  const formatter = useLocalizedFormatter()
+  const formatter = useLocalizationContext()
 
   const caption = useMemo(() => {
     if (!inputCurrencyInfo || !outputCurrencyInfo) {

@@ -3,7 +3,7 @@ import { AppState, Keyboard, KeyboardTypeOptions, TextInput as NativeTextInput }
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { useMoonpayFiatCurrencySupportInfo } from 'src/features/fiatOnRamp/hooks'
 import { escapeRegExp } from 'utilities/src/primitives/string'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 const inputRegex = RegExp('^\\d*(?:\\\\[.])?\\d*$') // match escaped "." characters via in a non-capturing group
 
@@ -74,7 +74,7 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
   )
 
   const { moonpaySupportedFiatCurrency: currency } = useMoonpayFiatCurrencySupportInfo()
-  const { addFiatSymbolToNumber } = useLocalizedFormatter()
+  const { addFiatSymbolToNumber } = useLocalizationContext()
 
   const formattedValue = showCurrencySign
     ? addFiatSymbolToNumber({

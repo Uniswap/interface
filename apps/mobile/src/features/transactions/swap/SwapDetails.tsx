@@ -16,9 +16,8 @@ import { InfoCircleFilled } from 'ui/src/components/icons'
 import { NumberType } from 'utilities/src/format/types'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -79,8 +78,9 @@ export function SwapDetails({
 }: SwapDetailsProps): JSX.Element {
   const { t } = useTranslation()
   const [showInverseRate, setShowInverseRate] = useState(false)
-  const { convertFiatAmountFormatted } = useFiatConverter()
-  const formatter = useLocalizedFormatter()
+
+  const formatter = useLocalizationContext()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const shouldShowSwapRewrite = useFeatureFlag(FEATURE_FLAGS.SwapRewrite)
 
@@ -239,7 +239,7 @@ function AcceptNewQuoteRow({
   setShowInverseRate: React.Dispatch<React.SetStateAction<boolean>>
 }): JSX.Element {
   const { t } = useTranslation()
-  const { formatCurrencyAmount } = useLocalizedFormatter()
+  const { formatCurrencyAmount } = useLocalizationContext()
 
   const shouldShowSwapRewrite = useFeatureFlag(FEATURE_FLAGS.SwapRewrite)
 

@@ -3,211 +3,311 @@
 
 import { NumberType } from 'utilities/src/format/types'
 
+const numberFormatCache: Record<string, Intl.NumberFormat> = {}
+
+function getNumberFormat({
+  name,
+  locale,
+  props,
+}: {
+  name: string
+  locale: Parameters<typeof Intl.NumberFormat>[0]
+  props: Parameters<typeof Intl.NumberFormat>[1]
+}): Intl.NumberFormat {
+  const key = `${locale}--${props?.currency ?? 'NONE'}--${name}}`
+
+  let format = numberFormatCache[key]
+
+  if (format) {
+    return format
+  }
+
+  format = new Intl.NumberFormat(locale, props)
+  numberFormatCache[key] = format
+  return format
+}
+
 export const StandardCurrency: FormatCreator = {
   createFormat(locale, currencyCode) {
-    return new Intl.NumberFormat(locale, {
-      notation: 'standard',
-      style: 'currency',
-      currency: currencyCode,
+    return getNumberFormat({
+      name: 'StandardCurrency',
+      locale,
+      props: {
+        notation: 'standard',
+        style: 'currency',
+        currency: currencyCode,
+      },
     })
   },
 }
 
 export const SmallestNumCurrency: FormatCreator = {
   createFormat(locale, currencyCode) {
-    return new Intl.NumberFormat(locale, {
-      notation: 'standard',
-      maximumFractionDigits: 20, // max allowed digits
-      currency: currencyCode,
-      style: 'currency',
+    return getNumberFormat({
+      name: 'SmallestNumCurrency',
+      locale,
+      props: {
+        notation: 'standard',
+        maximumFractionDigits: 20, // max allowed digits
+        currency: currencyCode,
+        style: 'currency',
+      },
     })
   },
 }
 
 export const FiveDecimalsMaxTwoDecimalsMin: FormatCreator = {
   createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat(locale, {
-      notation: 'standard',
-      maximumFractionDigits: 5,
-      minimumFractionDigits: 2,
+    return getNumberFormat({
+      name: 'FiveDecimalsMaxTwoDecimalsMin',
+      locale,
+      props: {
+        notation: 'standard',
+        maximumFractionDigits: 5,
+        minimumFractionDigits: 2,
+      },
     })
   },
 }
 
 export const FiveDecimalsMaxTwoDecimalsMinNoCommas: FormatCreator = {
   createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat(locale, {
-      notation: 'standard',
-      maximumFractionDigits: 5,
-      minimumFractionDigits: 2,
-      useGrouping: false,
+    return getNumberFormat({
+      name: 'FiveDecimalsMaxTwoDecimalsMinNoCommas',
+      locale,
+      props: {
+        notation: 'standard',
+        maximumFractionDigits: 5,
+        minimumFractionDigits: 2,
+        useGrouping: false,
+      },
     })
   },
 }
 
 export const NoDecimals: FormatCreator = {
   createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat(locale, {
-      notation: 'standard',
-      maximumFractionDigits: 0,
-      minimumFractionDigits: 0,
+    return getNumberFormat({
+      name: 'NoDecimals',
+      locale,
+      props: {
+        notation: 'standard',
+        maximumFractionDigits: 0,
+        minimumFractionDigits: 0,
+      },
     })
   },
 }
 
 export const ThreeDecimals: FormatCreator = {
   createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat(locale, {
-      notation: 'standard',
-      maximumFractionDigits: 3,
-      minimumFractionDigits: 3,
+    return getNumberFormat({
+      name: 'ThreeDecimals',
+      locale,
+      props: {
+        notation: 'standard',
+        maximumFractionDigits: 3,
+        minimumFractionDigits: 3,
+      },
     })
   },
 }
 
 export const ThreeDecimalsCurrency: FormatCreator = {
   createFormat: (locale: string, currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat(locale, {
-      notation: 'standard',
-      maximumFractionDigits: 3,
-      minimumFractionDigits: 3,
-      currency: currencyCode,
-      style: 'currency',
+    return getNumberFormat({
+      name: 'ThreeDecimalsCurrency',
+      locale,
+      props: {
+        notation: 'standard',
+        maximumFractionDigits: 3,
+        minimumFractionDigits: 3,
+        currency: currencyCode,
+        style: 'currency',
+      },
     })
   },
 }
 
 export const TwoDecimalsCurrency: FormatCreator = {
   createFormat: (locale: string, currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat(locale, {
-      notation: 'standard',
-      maximumFractionDigits: 2,
-      minimumFractionDigits: 2,
-      currency: currencyCode,
-      style: 'currency',
+    return getNumberFormat({
+      name: 'TwoDecimalsCurrency',
+      locale,
+      props: {
+        notation: 'standard',
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+        currency: currencyCode,
+        style: 'currency',
+      },
     })
   },
 }
 
 export const ShorthandTwoDecimalsCurrency: FormatCreator = {
   createFormat: (locale: string, currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat(locale, {
-      notation: 'compact',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-      currency: currencyCode,
-      style: 'currency',
+    return getNumberFormat({
+      name: 'ShorthandTwoDecimalsCurrency',
+      locale,
+      props: {
+        notation: 'compact',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        currency: currencyCode,
+        style: 'currency',
+      },
     })
   },
 }
 
 export const ShorthandOneDecimalsCurrency: FormatCreator = {
   createFormat: (locale: string, currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat(locale, {
-      notation: 'compact',
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
-      currency: currencyCode,
-      style: 'currency',
+    return getNumberFormat({
+      name: 'ShorthandOneDecimalsCurrency',
+      locale,
+      props: {
+        notation: 'compact',
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+        currency: currencyCode,
+        style: 'currency',
+      },
     })
   },
 }
 
 export const ThreeSigFigsCurrency: FormatCreator = {
   createFormat: (locale: string, currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat(locale, {
-      notation: 'standard',
-      minimumSignificantDigits: 3,
-      maximumSignificantDigits: 3,
-      currency: currencyCode,
-      style: 'currency',
+    return getNumberFormat({
+      name: 'ThreeSigFigsCurrency',
+      locale,
+      props: {
+        notation: 'standard',
+        minimumSignificantDigits: 3,
+        maximumSignificantDigits: 3,
+        currency: currencyCode,
+        style: 'currency',
+      },
     })
   },
 }
 
 export const TwoDecimals: FormatCreator = {
   createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat(locale, {
-      notation: 'standard',
-      maximumFractionDigits: 2,
-      minimumFractionDigits: 2,
+    return getNumberFormat({
+      name: 'TwoDecimals',
+      locale,
+      props: {
+        notation: 'standard',
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+      },
     })
   },
 }
 
 export const ShorthandOneDecimal: FormatCreator = {
   createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat(locale, {
-      notation: 'compact',
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
+    return getNumberFormat({
+      name: 'ShorthandOneDecimal',
+      locale,
+      props: {
+        notation: 'compact',
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      },
     })
   },
 }
 
 export const ShorthandTwoDecimals: FormatCreator = {
   createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat(locale, {
-      notation: 'compact',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+    return getNumberFormat({
+      name: 'ShorthandTwoDecimals',
+      locale,
+      props: {
+        notation: 'compact',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
     })
   },
 }
 
 export const SixSigFigsTwoDecimals: FormatCreator = {
   createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat(locale, {
-      notation: 'standard',
-      maximumSignificantDigits: 6,
-      minimumSignificantDigits: 3,
-      maximumFractionDigits: 2,
-      minimumFractionDigits: 2,
+    return getNumberFormat({
+      name: 'SixSigFigsTwoDecimals',
+      locale,
+      props: {
+        notation: 'standard',
+        maximumSignificantDigits: 6,
+        minimumSignificantDigits: 3,
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+      },
     })
   },
 }
 
 export const SixSigFigsNoCommas: FormatCreator = {
   createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat(locale, {
-      notation: 'standard',
-      maximumSignificantDigits: 6,
-      useGrouping: false,
+    return getNumberFormat({
+      name: 'SixSigFigsNoCommas',
+      locale,
+      props: {
+        notation: 'standard',
+        maximumSignificantDigits: 6,
+        useGrouping: false,
+      },
     })
   },
 }
 
 export const SixSigFigsTwoDecimalsNoCommas: FormatCreator = {
   createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat(locale, {
-      notation: 'standard',
-      maximumSignificantDigits: 6,
-      minimumSignificantDigits: 3,
-      maximumFractionDigits: 2,
-      minimumFractionDigits: 2,
-      useGrouping: false,
+    return getNumberFormat({
+      name: 'SixSigFigsTwoDecimalsNoCommas',
+      locale,
+      props: {
+        notation: 'standard',
+        maximumSignificantDigits: 6,
+        minimumSignificantDigits: 3,
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+        useGrouping: false,
+      },
     })
   },
 }
 
 export const NoTrailingDecimalsPercentages: FormatCreator = {
   createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat(locale, {
-      notation: 'standard',
-      style: 'percent',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2,
+    return getNumberFormat({
+      name: 'NoTrailingDecimalsPercentages',
+      locale,
+      props: {
+        notation: 'standard',
+        style: 'percent',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      },
     })
   },
 }
 
 export const TwoDecimalsPercentages: FormatCreator = {
   createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
-    return new Intl.NumberFormat(locale, {
-      notation: 'standard',
-      style: 'percent',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+    return getNumberFormat({
+      name: 'TwoDecimalsPercentages',
+      locale,
+      props: {
+        notation: 'standard',
+        style: 'percent',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
     })
   },
 }

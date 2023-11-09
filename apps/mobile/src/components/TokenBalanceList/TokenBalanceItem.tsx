@@ -11,8 +11,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
-import { useFiatConverter } from 'wallet/src/features/fiatCurrency/conversion'
-import { useLocalizedFormatter } from 'wallet/src/features/language/formatter'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
@@ -32,8 +31,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   const { quantity, currencyInfo, relativeChange24, balanceUSD } = portfolioBalance
   const { currency, currencyId, isSpam } = currencyInfo
   const { t } = useTranslation()
-  const { convertFiatAmountFormatted } = useFiatConverter()
-  const { formatNumberOrString } = useLocalizedFormatter()
+  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   const onPress = (): void => {
     onPressToken?.(currencyInfo.currencyId)

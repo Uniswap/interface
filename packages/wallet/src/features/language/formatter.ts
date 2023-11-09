@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 // eslint-disable-next-line no-restricted-imports
 import {
   addFiatSymbolToNumber,
@@ -68,10 +68,18 @@ export function useLocalizedFormatter(): LocalizedFormatter {
     [locale]
   )
 
-  return {
-    formatNumberOrString: formatNumberOrStringInner,
-    formatCurrencyAmount: formatCurrencyAmountInner,
-    formatPercent: formatPercentInner,
-    addFiatSymbolToNumber: addFiatSymbolToNumberInner,
-  }
+  return useMemo(
+    () => ({
+      formatNumberOrString: formatNumberOrStringInner,
+      formatCurrencyAmount: formatCurrencyAmountInner,
+      formatPercent: formatPercentInner,
+      addFiatSymbolToNumber: addFiatSymbolToNumberInner,
+    }),
+    [
+      formatNumberOrStringInner,
+      formatCurrencyAmountInner,
+      formatPercentInner,
+      addFiatSymbolToNumberInner,
+    ]
+  )
 }

@@ -50,6 +50,7 @@ import { useCurrentAppearanceSetting, useIsDarkMode } from 'wallet/src/features/
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
 import { Language, Locale, mapLocaleToLanguage } from 'wallet/src/features/language/constants'
 import { useCurrentLanguage, useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
+import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
 import { setCurrentLanguage } from 'wallet/src/features/language/slice'
 import { useTrmQuery } from 'wallet/src/features/trm/api'
 import {
@@ -163,27 +164,29 @@ function AppOuter(): JSX.Element | null {
       <PersistGate loading={null} persistor={persistor}>
         <ErrorBoundary>
           <GestureHandlerRootView style={flexStyles.fill}>
-            <WalletContextProvider>
-              <BiometricContextProvider>
-                <LockScreenContextProvider>
-                  <Sentry.TouchEventBoundary>
-                    <DataUpdaters />
-                    <NavigationContainer
-                      onReady={(navigationRef): void => {
-                        routingInstrumentation.registerNavigationContainer(navigationRef)
-                      }}>
-                      <BottomSheetModalProvider>
-                        <AppModals />
-                        <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                          <AppInner />
-                        </PerformanceProfiler>
-                      </BottomSheetModalProvider>
-                      <NotificationToastWrapper />
-                    </NavigationContainer>
-                  </Sentry.TouchEventBoundary>
-                </LockScreenContextProvider>
-              </BiometricContextProvider>
-            </WalletContextProvider>
+            <LocalizationContextProvider>
+              <WalletContextProvider>
+                <BiometricContextProvider>
+                  <LockScreenContextProvider>
+                    <Sentry.TouchEventBoundary>
+                      <DataUpdaters />
+                      <NavigationContainer
+                        onReady={(navigationRef): void => {
+                          routingInstrumentation.registerNavigationContainer(navigationRef)
+                        }}>
+                        <BottomSheetModalProvider>
+                          <AppModals />
+                          <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                            <AppInner />
+                          </PerformanceProfiler>
+                        </BottomSheetModalProvider>
+                        <NotificationToastWrapper />
+                      </NavigationContainer>
+                    </Sentry.TouchEventBoundary>
+                  </LockScreenContextProvider>
+                </BiometricContextProvider>
+              </WalletContextProvider>
+            </LocalizationContextProvider>
           </GestureHandlerRootView>
         </ErrorBoundary>
       </PersistGate>
