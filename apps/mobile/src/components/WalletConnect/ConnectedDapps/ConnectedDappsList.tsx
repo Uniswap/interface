@@ -1,13 +1,20 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { useAppDispatch } from 'src/app/hooks'
 import { BackButton } from 'src/components/buttons/BackButton'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { DappConnectedNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappConnectedNetworksModal'
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
-import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
+import { openModal } from 'src/features/modals/modalSlice'
+import { ModalName } from 'src/features/telemetry/constants'
+import {
+  removePendingSession,
+  WalletConnectSession,
+} from 'src/features/walletConnect/walletConnectSlice'
 import { AnimatedFlex, Flex, Text, TouchableArea, useDeviceDimensions } from 'ui/src'
-import { iconSizes, spacing } from 'ui/src/theme'
+import { spacing } from 'ui/src/theme'
 
 type ConnectedDappsProps = {
   sessions: WalletConnectSession[]
@@ -15,10 +22,19 @@ type ConnectedDappsProps = {
 }
 
 export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps): JSX.Element {
+  const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const { fullHeight } = useDeviceDimensions()
   const [isEditing, setIsEditing] = useState(false)
   const [selectedSession, setSelectedSession] = useState<WalletConnectSession>()
+
+  const onPressScan = useCallback(() => {
+    // in case we received a pending session from a previous scan after closing modal
+    dispatch(removePendingSession())
+    dispatch(
+      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr })
+    )
+  }, [dispatch])
 
   return (
     <>
@@ -29,26 +45,36 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
           justifyContent="space-between"
           pb="$spacing12"
           px="$spacing16">
-          <Flex grow width={iconSizes.icon40}>
+          <Flex alignItems="flex-start" flexBasis="10%">
             {backButton ?? <BackButton />}
           </Flex>
-          <Text color="$neutral1" numberOfLines={1} variant="body1">
-            {t('Manage connections')}
-          </Text>
-          <TouchableArea
-            flexGrow={1}
-            width={iconSizes.icon40}
-            onPress={(): void => {
-              setIsEditing(!isEditing)
-            }}>
-            <Text
-              color={isEditing ? '$accent1' : '$neutral2'}
-              numberOfLines={1}
-              textAlign="right"
-              variant="subheading2">
-              {isEditing ? t('Done') : t('Edit')}
+          <Flex alignItems="center" flexBasis="80%">
+            <Text color="$neutral1" numberOfLines={1} variant="body1">
+              {t('Manage connections')}
             </Text>
-          </TouchableArea>
+          </Flex>
+          <Flex alignItems="flex-end" flexBasis="10%">
+            {sessions.length > 0 ? (
+              <TouchableArea
+                onPress={(): void => {
+                  setIsEditing(!isEditing)
+                }}>
+                <Text
+                  color={isEditing ? '$accent1' : '$neutral2'}
+                  numberOfLines={1}
+                  textAlign="right"
+                  variant="subheading2">
+                  {isEditing ? t('Done') : t('Edit')}
+                </Text>
+              </TouchableArea>
+            ) : (
+              <TouchableArea onPress={onPressScan}>
+                <Text color="$accent1" numberOfLines={1} textAlign="right" variant="subheading2">
+                  {t('Scan')}
+                </Text>
+              </TouchableArea>
+            )}
+          </Flex>
         </Flex>
 
         {sessions.length > 0 ? (
