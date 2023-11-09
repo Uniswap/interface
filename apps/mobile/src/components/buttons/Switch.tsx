@@ -22,6 +22,7 @@ export function Switch({ value, onValueChange, disabled, ...rest }: Props): JSX.
   return (
     <Flex>
       <BaseSwitch
+        disabled={disabled}
         ios_backgroundColor="transparent"
         // TODO(MOB-1226): pull colors from dark/light theme with Tamagui
         thumbColor={value ? colors.accent1.get() : falseThumbColor}
