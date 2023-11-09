@@ -23,8 +23,8 @@ export function RemoveLastMnemonicWalletFooter({
         backgroundColor="$surface2"
         borderRadius="$rounded16"
         mx="$spacing16"
-        px="$spacing12"
-        py="$spacing12">
+        p="$spacing12"
+        width="100%">
         <CheckBox
           checked={checkBoxAccepted}
           text={

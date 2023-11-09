@@ -153,13 +153,10 @@ export const useModalContent = ({
         title: (
           <Trans t={t}>
             <Text color="$neutral1" variant="body1">
-              You’re removing {/* https://react.i18next.com/latest/trans-component#interpolation */}
-              {/* @ts-expect-error: react-i18next uses this ^ syntax and it's not canonic */}
-              <Text color="neutral2" variant="body1">
+              You’re removing{' '}
+              <Text color="$neutral2" variant="body1">
                 {{ wallet: displayName?.name }}
               </Text>
-              {/* This `Text` above is redundant, but we need it so we can reuse */}
-              {/* the same translation key, as when the account name should be highlighted. */}
             </Text>
           </Trans>
         ),
