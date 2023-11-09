@@ -155,7 +155,7 @@ function CustomizationSection({
             onFocus={(): void => setFocused(true)}
           />
           <AnimatePresence>
-            {focused && (
+            {!focused && (
               <Button
                 fadeIn
                 fadeOut
