@@ -74,6 +74,7 @@ export function SwapFormButton(): JSX.Element {
 
       <Trace logPress element={ElementName.SwapReview}>
         <Button
+          hapticFeedback
           backgroundColor={isHoldToSwapPressed ? '$accent2' : '$accent1'}
           disabled={reviewButtonDisabled && !isHoldToSwapPressed}
           size="large"

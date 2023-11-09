@@ -1,7 +1,6 @@
 /* eslint-disable complexity */
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { forwardRef, memo, useCallback, useEffect, useMemo, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 import {
   NativeSyntheticEvent,
   TextInput,
@@ -91,7 +90,6 @@ export const CurrencyInputPanel = memo(
     },
     forwardedRef
   ): JSX.Element {
-    const { t } = useTranslation()
     const colors = useSporeColors()
     const { convertFiatAmountFormatted } = useFiatConverter()
     const { formatCurrencyAmount, addFiatSymbolToNumber } = useLocalizedFormatter()
@@ -258,7 +256,7 @@ export const CurrencyInputPanel = memo(
               ) : (
                 <TouchableArea hapticFeedback onPress={onShowTokenSelector}>
                   <Text color="$neutral3" variant="heading3">
-                    {isOutput ? t('Receive') : t('Send')}
+                    0
                   </Text>
                 </TouchableArea>
               )}
