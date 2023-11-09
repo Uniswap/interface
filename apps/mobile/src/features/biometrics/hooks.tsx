@@ -36,11 +36,6 @@ export function useBiometricPrompt<T = undefined>(
       successCallback?.(params)
     } else {
       failureCallback?.()
-      if (
-        biometricAuthenticationRejected(authStatus) ||
-        biometricAuthenticationCanceledByUser(authStatus)
-      )
-        await trigger()
     }
   }
 
