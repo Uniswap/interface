@@ -343,7 +343,8 @@ function convertSmallSciNotationToDecimal(value: number): string {
 export function numberToLocaleStringWorklet(
   value: number,
   locale: Language = 'en-US',
-  options: OptionsType = {}
+  options: OptionsType = {},
+  symbol?: string
 ): string {
   'worklet'
   if (locale && locale.length < 2) {
@@ -374,11 +375,11 @@ export function numberToLocaleStringWorklet(
 
   if (options && options.currency && options.style === 'currency') {
     const format = currencyFormats[<string>mapMatch(currencyFormatMap, locale)]
-    const symbol = currencySymbols[options.currency.toLowerCase()]
+    const targetSymbol = symbol ?? currencySymbols[options.currency.toLowerCase()]
     if (format) {
       sNum = renderFormat(format, {
         num: sNum,
-        code: options.currencyDisplay === 'code' || !symbol ? options.currency : symbol,
+        code: options.currencyDisplay === 'code' || !targetSymbol ? options.currency : targetSymbol,
       })
     }
   }

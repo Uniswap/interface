@@ -105,13 +105,13 @@ export function useLanguageInfo(language: Language): LanguageInfo {
       },
       [Language.SpanishLatam]: {
         name: t('Spanish (Latin America)'),
-        originName: t('Spanish (Latin America)', { lng: getLocale(Language.SpanishSpain) }),
-        locale: getLocale(Language.SpanishSpain),
+        originName: t('Spanish (Latin America)', { lng: getLocale(Language.SpanishLatam) }),
+        locale: getLocale(Language.SpanishLatam),
       },
       [Language.SpanishUnitedStates]: {
         name: t('Spanish (US)'),
-        originName: t('Spanish (US)', { lng: getLocale(Language.SpanishSpain) }),
-        locale: getLocale(Language.SpanishSpain),
+        originName: t('Spanish (US)', { lng: getLocale(Language.SpanishUnitedStates) }),
+        locale: getLocale(Language.SpanishUnitedStates),
       },
       [Language.Thai]: {
         name: t('Thai'),

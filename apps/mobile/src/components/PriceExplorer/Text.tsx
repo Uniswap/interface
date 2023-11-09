@@ -5,6 +5,7 @@ import { AnimatedText } from 'src/components/text/AnimatedText'
 import { IS_ANDROID } from 'src/constants/globals'
 import { Flex, Icons, useSporeColors } from 'ui/src'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import { useCurrentLocale } from 'wallet/src/features/language/hooks'
 import { AnimatedDecimalNumber } from './AnimatedDecimalNumber'
 import { useLineChartPrice, useLineChartRelativeChange } from './usePrice'
 
@@ -80,8 +81,9 @@ export function RelativeChangeText({
 }
 
 export function DatetimeText({ loading }: { loading: boolean }): JSX.Element | null {
+  const locale = useCurrentLocale()
   // `datetime` when scrubbing the chart
-  const datetime = useLineChartDatetime()
+  const datetime = useLineChartDatetime({ locale })
 
   if (loading) return null
 

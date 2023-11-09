@@ -2,6 +2,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import {
   FormatterRule,
   StandardCurrency,
+  TwoDecimalsCurrency,
   TYPE_TO_FORMATTER_RULES,
 } from 'utilities/src/format/localeBasedFormats'
 import { NumberType } from 'utilities/src/format/types'
@@ -134,11 +135,7 @@ export function getFiatCurrencyComponents(
   locale: string,
   currencyCode: string
 ): FiatCurrencyComponents {
-  const format = new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency: currencyCode,
-    minimumFractionDigits: 2,
-  })
+  const format = TwoDecimalsCurrency.createFormat(locale, currencyCode)
 
   // See MDN for official docs https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/formatToParts
   // Returns something like [{"type":"currency","value":"$"},{"type":"integer","value":"1"}]

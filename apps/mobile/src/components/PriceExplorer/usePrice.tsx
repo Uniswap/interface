@@ -22,7 +22,7 @@ export function useLineChartPrice(): ValueAndFormatted {
     precision: 18,
   })
   const { data } = useLineChart()
-  const currency = useAppFiatCurrencyInfo()
+  const currencyInfo = useAppFiatCurrencyInfo()
   const { locale } = useCurrentLanguageInfo()
 
   const price = useDerivedValue(() => {
@@ -34,10 +34,15 @@ export function useLineChartPrice(): ValueAndFormatted {
     return data[data.length - 1]?.value ?? 0
   })
   const priceFormatted = useDerivedValue(() => {
-    return numberToLocaleStringWorklet(price.value, locale, {
-      style: 'currency',
-      currency: currency.code,
-    })
+    return numberToLocaleStringWorklet(
+      price.value,
+      locale,
+      {
+        style: 'currency',
+        currency: currencyInfo.code,
+      },
+      currencyInfo.symbol
+    )
   })
   return {
     value: price,
