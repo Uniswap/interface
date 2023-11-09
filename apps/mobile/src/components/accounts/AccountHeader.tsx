@@ -55,9 +55,9 @@ export function AccountHeader(): JSX.Element {
   const iconSize = 52
 
   return (
-    <Flex gap="$spacing12" overflow="scroll" testID="account-header" width="100%">
+    <Flex gap="$spacing12" overflow="scroll" pt="$spacing8" testID="account-header" width="100%">
       {account?.type === AccountType.Readonly && (
-        <Flex centered row bg="$surface2" br="$rounded12" gap="$spacing8" p="$spacing8">
+        <Flex centered row bg="$surface2" br="$rounded12" gap="$spacing8" p="$spacing12">
           <Text color="$neutral2" variant="body3">
             {t('This is a view-only wallet')}
           </Text>

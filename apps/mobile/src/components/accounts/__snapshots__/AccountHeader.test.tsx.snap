@@ -8,6 +8,7 @@ exports[`AccountHeader renders without error 1`] = `
       "flexDirection": "column",
       "gap": 12,
       "overflow": "scroll",
+      "paddingTop": 8,
       "width": "100%",
     }
   }
