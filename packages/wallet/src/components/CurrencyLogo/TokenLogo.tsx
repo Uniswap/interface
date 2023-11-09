@@ -92,7 +92,7 @@ export function TokenLogo({
           borderColor="$surface1"
           borderRadius={8}
           borderWidth={2}
-          bottom={0}
+          bottom={-2}
           position="absolute"
           right={-3}>
           <NetworkLogo chainId={chainId} size={size * STATUS_RATIO} />

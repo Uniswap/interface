@@ -60,7 +60,7 @@ exports[`renders a currency logo with network logo 1`] = `
         "borderTopLeftRadius": 8,
         "borderTopRightRadius": 8,
         "borderTopWidth": 2,
-        "bottom": 0,
+        "bottom": -2,
         "boxSizing": "border-box",
         "display": "flex",
         "flexBasis": "auto",
