@@ -1,4 +1,5 @@
 import { ParentSize } from '@visx/responsive'
+import { VolumeChart } from 'components/Charts/VolumeChart'
 import { ChartContainer, LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
 import { TokenPriceQuery } from 'graphql/data/TokenPrice'
 import { isPricePoint, PricePoint } from 'graphql/data/util'
@@ -7,7 +8,6 @@ import { useAtomValue } from 'jotai/utils'
 import { pageTimePeriodAtom } from 'pages/TokenDetails'
 import { startTransition, Suspense, useMemo } from 'react'
 
-import { PriceChart } from '../../Charts/PriceChart'
 import TimePeriodSelector from './TimeSelector'
 
 function usePriceHistory(tokenPriceData: TokenPriceQuery): PricePoint[] | undefined {
@@ -60,7 +60,8 @@ function Chart({
   return (
     <ChartContainer data-testid="chart-container">
       <ParentSize>
-        {({ width }) => <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} />}
+        {/* {({ width }) => <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} />} */}
+        {({ width }) => <VolumeChart prices={prices} width={width} height={392} timePeriod={timePeriod} />}
       </ParentSize>
       <TimePeriodSelector
         currentTimePeriod={timePeriod}
