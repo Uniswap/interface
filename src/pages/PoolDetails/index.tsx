@@ -1,4 +1,10 @@
+import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
+import { PoolDetailsHeader } from 'components/Pools/PoolDetails/PoolDetailsHeader'
+import { PoolDetailsLink } from 'components/Pools/PoolDetails/PoolDetailsLink'
+import { PoolDetailsStats } from 'components/Pools/PoolDetails/PoolDetailsStats'
+import { PoolDetailsStatsButtons } from 'components/Pools/PoolDetails/PoolDetailsStatsButtons'
+import { PoolDetailsTableSkeleton } from 'components/Pools/PoolDetails/PoolDetailsTableSkeleton'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
@@ -7,15 +13,10 @@ import { usePoolData } from 'graphql/thegraph/PoolData'
 import NotFound from 'pages/NotFound'
 import { useReducer } from 'react'
 import { useParams } from 'react-router-dom'
+import { Text } from 'rebass'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { isAddress } from 'utils'
-
-import { PoolDetailsHeader } from './PoolDetailsHeader'
-import { PoolDetailsStats } from './PoolDetailsStats'
-import { PoolDetailsStatsButtons } from './PoolDetailsStatsButtons'
-import { PoolDetailsTableSkeleton } from './PoolDetailsTableSkeleton'
-import { DetailBubble, SmallDetailBubble } from './shared'
 
 const PageWrapper = styled(Row)`
   padding: 48px;
@@ -55,11 +56,6 @@ const ChartHeaderBubble = styled(LoadingBubble)`
   height: 32px;
 `
 
-const LinkColumn = styled(Column)`
-  gap: 16px;
-  padding: 20px;
-`
-
 const RightColumn = styled(Column)`
   gap: 24px;
   margin: 0 48px 0 auto;
@@ -71,6 +67,33 @@ const RightColumn = styled(Column)`
     width: 100%;
     min-width: unset;
   }
+`
+
+const TokenDetailsWrapper = styled(Column)`
+  gap: 24px;
+  padding: 20px;
+
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) and (min-width: ${BREAKPOINTS.sm}px) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: unset;
+  }
+
+  @media (max-width: ${BREAKPOINTS.sm - 1}px) {
+    padding: unset;
+  }
+`
+
+const TokenDetailsHeader = styled(Text)`
+  width: 100%;
+  font-size: 24px;
+  font-weight: 485;
+  line-height: 32px;
+`
+
+const LinksContainer = styled(Column)`
+  gap: 16px;
+  width: 100%;
 `
 
 export default function PoolDetailsPage() {
@@ -116,19 +139,16 @@ export default function PoolDetailsPage() {
           loading={loading}
         />
         <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} loading={loading} />
-        {(token0 || token1 || loading) &&
-          (loading ? (
-            <LinkColumn data-testid="pdp-links-loading-skeleton">
-              <DetailBubble $height={24} $width={116} />
-              {Array.from({ length: 3 }).map((_, i) => (
-                <Row gap="8px" key={`loading-link-row-${i}`}>
-                  <SmallDetailBubble />
-                  <DetailBubble $width={117} />
-                </Row>
-              ))}
-            </LinkColumn>
-          ) : null)}
-        {/* TODO(WEB-2985) replace with new Token Links component */}
+        <TokenDetailsWrapper>
+          <TokenDetailsHeader>
+            <Trans>Links</Trans>
+          </TokenDetailsHeader>
+          <LinksContainer>
+            <PoolDetailsLink address={poolAddress} chainId={chainId} tokens={[token0, token1]} loading={loading} />
+            <PoolDetailsLink address={token0?.id} chainId={chainId} tokens={[token0]} loading={loading} />
+            <PoolDetailsLink address={token1?.id} chainId={chainId} tokens={[token1]} loading={loading} />
+          </LinksContainer>
+        </TokenDetailsWrapper>
       </RightColumn>
     </PageWrapper>
   )

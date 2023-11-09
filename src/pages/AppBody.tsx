@@ -19,7 +19,6 @@ export const BodyWrapper = styled.main<BodyWrapperProps>`
   margin-left: auto;
   margin-right: auto;
   z-index: ${Z_INDEX.default};
-  font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
 `
 
 /**

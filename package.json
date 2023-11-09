@@ -129,7 +129,7 @@
     "cypress": "12.12.0",
     "cypress-hardhat": "^2.5.0",
     "env-cmd": "^10.1.0",
-    "eslint": "^7.11.0",
+    "eslint": "8.44.0",
     "eslint-plugin-import": "^2.27",
     "eslint-plugin-rulesdir": "^0.2.2",
     "hardhat": "^2.14.0",
@@ -157,7 +157,6 @@
     "terser": "^5.19.4",
     "terser-webpack-plugin": "^5.3.9",
     "ts-jest": "^29.1.1",
-    "ts-transform-graphql-tag": "^0.2.1",
     "tsafe": "^1.6.4",
     "typechain": "^5.0.0",
     "typescript": "^4.9.4",
@@ -165,6 +164,9 @@
     "webpack-retry-chunk-load-plugin": "^3.1.1",
     "wrangler": "^3.7.0",
     "yarn-deduplicate": "^6.0.0"
+  },
+  "resolutions": {
+    "@uniswap/sdk-core": "4.0.7"
   },
   "dependencies": {
     "@apollo/client": "^3.7.2",
@@ -194,14 +196,14 @@
     "@types/react-helmet": "^6.1.7",
     "@types/react-window-infinite-loader": "^1.0.6",
     "@uniswap/analytics": "1.5.0",
-    "@uniswap/analytics-events": "^2.25.0",
+    "@uniswap/analytics-events": "^2.28.0",
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",
     "@uniswap/merkle-distributor": "^1.0.1",
     "@uniswap/permit2-sdk": "^1.2.0",
     "@uniswap/redux-multicall": "^1.1.8",
     "@uniswap/router-sdk": "^1.7.1",
-    "@uniswap/sdk-core": "^4.0.3",
+    "@uniswap/sdk-core": "4.0.7",
     "@uniswap/smart-order-router": "^3.15.0",
     "@uniswap/token-lists": "^1.0.0-beta.33",
     "@uniswap/uniswapx-sdk": "^1.4.1",
