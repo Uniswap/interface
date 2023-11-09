@@ -189,6 +189,7 @@
   "Enter a value larger than 0": "Enter a value larger than 0",
   "Enter a value less than {{ maxSlippageTolerance }}": "Enter a value less than {{ maxSlippageTolerance }}",
   "Enter a wallet address": "Enter a wallet address",
+  "Enter address or ENS": "Enter address or ENS",
   "Enter an Ethereum wallet address (starting with 0x) or ENS name (ending in .eth).": "Enter an Ethereum wallet address (starting with 0x) or ENS name (ending in .eth).",
   "Enter password": "Enter password",
   "Enter recovery phrase": "Enter recovery phrase",
