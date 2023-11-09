@@ -104,7 +104,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         pattern="^[0-9]*[.,]?[0-9]*$"
         placeholder={placeholder || '0'}
         minLength={1}
-        maxLength={79}
+        maxLength={50}
         spellCheck="false"
       />
     )
