@@ -11,7 +11,7 @@ import { useMemo } from 'react'
 import { ClassicTrade } from 'state/routing/types'
 
 import useGasPrice from './useGasPrice'
-import { useStablecoinAmountFromFiatValue, useStablecoinValue } from './useStablecoinPrice'
+import { useStablecoinAmountFromFiatValue } from './useStablecoinPrice'
 import { useUSDPrice } from './useUSDPrice'
 
 const DEFAULT_AUTO_SLIPPAGE = new Percent(5, 1000) // 0.5%
@@ -77,7 +77,8 @@ const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(5, 100) // 5%
 export default function useClassicAutoSlippageTolerance(trade?: ClassicTrade): Percent {
   const { chainId } = useWeb3React()
   const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)
-  const outputDollarValue = useStablecoinValue(trade?.outputAmount)
+  const outputUSD = useUSDPrice(trade?.outputAmount)
+  const outputDollarValue = useStablecoinAmountFromFiatValue(outputUSD.data)
 
   const nativeGasPrice = useGasPrice()
   const gasEstimate = guesstimateGas(trade)
