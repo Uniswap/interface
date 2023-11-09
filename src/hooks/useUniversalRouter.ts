@@ -96,7 +96,6 @@ export function useUniversalRouterSwapCallback(
         let gasEstimate: BigNumber
         try {
           gasEstimate = await provider.estimateGas(tx)
-          console.log(tx)
         } catch (gasError) {
           setTraceStatus('failed_precondition')
           setTraceError(gasError)
