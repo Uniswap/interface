@@ -2,10 +2,11 @@ import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Action } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
+import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-import { Flex, ScrollView, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Check } from 'ui/src/components/icons'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'wallet/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
@@ -13,33 +14,32 @@ import { setCurrentFiatCurrency } from 'wallet/src/features/fiatCurrency/slice'
 
 export function SettingsFiatCurrencyModal(): JSX.Element {
   const dispatch = useAppDispatch()
+  const { t } = useTranslation()
 
   return (
     <BottomSheetModal
-      disableSwipe
       fullScreen
       name={ModalName.FiatCurrencySelector}
       onClose={(): Action => dispatch(closeModal({ name: ModalName.FiatCurrencySelector }))}>
-      <ScrollView>
+      <Text pb="$spacing12" textAlign="center" variant="subheading1">
+        {t('Local currency')}
+      </Text>
+      <VirtualizedList showsVerticalScrollIndicator={false}>
         <FiatCurrencySelection
           onClose={(): void => {
             dispatch(closeModal({ name: ModalName.FiatCurrencySelector }))
           }}
         />
-      </ScrollView>
+      </VirtualizedList>
     </BottomSheetModal>
   )
 }
 
 function FiatCurrencySelection({ onClose }: { onClose: () => void }): JSX.Element {
-  const { t } = useTranslation()
   const selectedCurrency = useAppFiatCurrency()
 
   return (
     <Flex pb="$spacing32" px="$spacing16">
-      <Text pb="$spacing12" textAlign="center" variant="subheading1">
-        {t('Local currency')}
-      </Text>
       {ORDERED_CURRENCIES.map((currency) => (
         <FiatCurrencyOption
           active={selectedCurrency === currency}

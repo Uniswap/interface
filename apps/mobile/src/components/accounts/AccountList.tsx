@@ -109,7 +109,7 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
   )
 
   return (
-    <Flex shrink position="relative">
+    <Flex shrink>
       {/* TODO(MOB-646): attempt to switch gradients to react-native-svg#LinearGradient and avoid new clear color */}
       <LinearGradient
         colors={[opacify(0, colors.surface1.val), colors.surface1.val]}

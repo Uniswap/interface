@@ -53,7 +53,6 @@ function useModalBackHandler(modalRef: React.RefObject<BaseModal>, enabled: bool
 }
 
 type Props = PropsWithChildren<{
-  disableSwipe?: boolean
   hideHandlebar?: boolean
   name: ModalName
   onClose?: () => void
@@ -104,7 +103,6 @@ export function BottomSheetModal({
   backgroundColor,
   blurredBackground = false,
   dismissOnBackPress = true,
-  disableSwipe = false,
   isDismissible = true,
   renderBehindTopInset = false,
   renderBehindBottomInset = false,
@@ -283,7 +281,7 @@ export function BottomSheetModal({
       backgroundStyle={backgroundStyle}
       containerComponent={containerComponent}
       contentHeight={animatedContentHeight}
-      enableContentPanningGesture={isDismissible && !disableSwipe}
+      enableContentPanningGesture={isDismissible}
       enableHandlePanningGesture={isDismissible}
       footerComponent={footerComponent}
       handleComponent={renderHandleBar}
