@@ -13,7 +13,8 @@ const forkingConfig = {
 const forks = {
   [ChainId.MAINNET]: {
     url: `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
-    blockNumber: UNIVERSAL_ROUTER_CREATION_BLOCK(ChainId.MAINNET),
+    // Temporarily hardcoding this to fix e2e tests as we investigate source of swap tests failing on older blocknumbers
+    blockNumber: 18537387,
     ...forkingConfig,
   },
   [ChainId.POLYGON]: {
