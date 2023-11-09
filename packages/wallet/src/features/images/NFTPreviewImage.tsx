@@ -15,7 +15,7 @@ export function NFTPreviewImage({
 }: NFTPreviewProps): JSX.Element | null {
   const { data, loading } = useNftPreviewUri(contractAddress, tokenId)
 
-  const imageUrl = data?.previews.image_medium_url
+  const imageUrl = data?.previews?.image_medium_url
 
   if (imageUrl || loading) {
     return (

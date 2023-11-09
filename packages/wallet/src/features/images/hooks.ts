@@ -39,7 +39,7 @@ type PreviewsResponse = {
     image_opengraph_url: string | null
     blurhash: string | null
     predominant_color: string | null
-  }
+  } | null
 }
 
 export function useNftPreviewUri(
