@@ -11975,7 +11975,7 @@ __metadata:
     expo-linear-gradient: 12.3.0
     expo-linking: 4.0.1
     expo-local-authentication: 13.0.2
-    expo-localization: ~14.1.1
+    expo-localization: 14.1.1
     expo-modules-core: 1.5.8
     expo-screen-capture: 4.2.0
     expo-store-review: ~6.2.1
@@ -20023,7 +20023,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-localization@npm:~14.1.1":
+"expo-localization@npm:14.1.1":
   version: 14.1.1
   resolution: "expo-localization@npm:14.1.1"
   dependencies:
@@ -36715,6 +36715,7 @@ __metadata:
     eslint: 8.44.0
     ethers: 5.7.2
     expo-haptics: 12.0.1
+    expo-localization: 14.1.1
     fs-extra: ^11.1.1
     react: 18.2.0
     react-i18next: 11.18.6
