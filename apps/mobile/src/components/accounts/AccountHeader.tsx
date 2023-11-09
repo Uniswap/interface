@@ -1,6 +1,5 @@
 import { impactAsync, ImpactFeedbackStyle, selectionAsync } from 'expo-haptics'
 import React, { useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AccountIcon } from 'src/components/AccountIcon'
@@ -22,7 +21,6 @@ import {
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 export function AccountHeader(): JSX.Element {
-  const { t } = useTranslation()
   const activeAddress = useAppSelector(selectActiveAccountAddress)
   const account = useAppSelector(selectActiveAccount)
   const dispatch = useAppDispatch()
@@ -56,13 +54,6 @@ export function AccountHeader(): JSX.Element {
 
   return (
     <Flex gap="$spacing12" overflow="scroll" pt="$spacing8" testID="account-header" width="100%">
-      {account?.type === AccountType.Readonly && (
-        <Flex centered row bg="$surface2" br="$rounded12" gap="$spacing8" p="$spacing12">
-          <Text color="$neutral2" variant="body3">
-            {t('This is a view-only wallet')}
-          </Text>
-        </Flex>
-      )}
       {activeAddress && (
         <Flex ai="flex-start" gap="$spacing12" width="100%">
           <Flex row jc="space-between" width="100%">

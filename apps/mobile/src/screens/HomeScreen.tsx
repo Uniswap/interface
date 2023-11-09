@@ -60,6 +60,7 @@ import { hideSplashScreen } from 'src/utils/splashScreen'
 import {
   AnimatedFlex,
   Flex,
+  Text,
   TouchableArea,
   useDeviceDimensions,
   useDeviceInsets,
@@ -295,8 +296,8 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     [dispatch]
   )
 
-  // hide fiat onramp banner when active account isn't a signer account.
-  const showFiatOnRamp = activeAccount.type === AccountType.SignerMnemonic
+  // Hide actions when active account isn't a signer account.
+  const isSignerAccount = activeAccount.type === AccountType.SignerMnemonic
   // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
   const buyLabel = t('Buy')
   const sendLabel = t('Send')
@@ -305,19 +306,15 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const actions = useMemo(
     (): QuickAction[] => [
-      ...(showFiatOnRamp
-        ? [
-            {
-              Icon: BuyIcon,
-              eventName: MobileEventName.FiatOnRampQuickActionButtonPressed,
-              iconScale: 1.2,
-              label: buyLabel,
-              name: ElementName.Buy,
-              sentryLabel: 'BuyActionButton',
-              onPress: onPressBuy,
-            },
-          ]
-        : []),
+      {
+        Icon: BuyIcon,
+        eventName: MobileEventName.FiatOnRampQuickActionButtonPressed,
+        iconScale: 1.2,
+        label: buyLabel,
+        name: ElementName.Buy,
+        sentryLabel: 'BuyActionButton',
+        onPress: onPressBuy,
+      },
       {
         Icon: SendIcon,
         iconScale: 1.1,
@@ -342,7 +339,6 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       },
     ],
     [
-      showFiatOnRamp,
       buyLabel,
       sendLabel,
       scanLabel,
@@ -353,6 +349,8 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       onPressReceive,
     ]
   )
+
+  const viewOnlyLabel = t('This is a view-only wallet')
   const contentHeader = useMemo(() => {
     return (
       <Flex bg="$surface1" gap="$spacing8" pb="$spacing16" px="$spacing24">
@@ -360,10 +358,18 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
         <Flex pb="$spacing8">
           <PortfolioBalance owner={activeAccount.address} />
         </Flex>
-        <QuickActions actions={actions} sentry-label="QuickActions" />
+        {isSignerAccount ? (
+          <QuickActions actions={actions} sentry-label="QuickActions" />
+        ) : (
+          <Flex centered row bg="$surface2" br="$rounded12" minHeight={40} p="$spacing8">
+            <Text color="$neutral2" variant="body2">
+              {viewOnlyLabel}
+            </Text>
+          </Flex>
+        )}
       </Flex>
     )
-  }, [activeAccount.address, actions])
+  }, [activeAccount.address, isSignerAccount, viewOnlyLabel, actions])
 
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
