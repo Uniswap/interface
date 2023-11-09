@@ -13,6 +13,7 @@ type SupportedServerCurrency = Extract<
   | Currency.Aud
   | Currency.Brl
   | Currency.Cad
+  | Currency.Cny
   | Currency.Eur
   | Currency.Gbp
   | Currency.Hkd
@@ -33,6 +34,7 @@ const mapServerCurrencyToFiatCurrency: Record<Currency, FiatCurrency | undefined
   [Currency.Aud]: FiatCurrency.AustrialianDollor,
   [Currency.Brl]: FiatCurrency.BrazilianReal,
   [Currency.Cad]: FiatCurrency.CanadianDollar,
+  [Currency.Cny]: FiatCurrency.ChineseYuan,
   [Currency.Eur]: FiatCurrency.Euro,
   [Currency.Gbp]: FiatCurrency.BritishPound,
   [Currency.Hkd]: FiatCurrency.HongKongDollar,
@@ -55,6 +57,7 @@ const mapFiatCurrencyToServerCurrency: Record<FiatCurrency, SupportedServerCurre
   [FiatCurrency.AustrialianDollor]: Currency.Aud,
   [FiatCurrency.BrazilianReal]: Currency.Brl,
   [FiatCurrency.CanadianDollar]: Currency.Cad,
+  [FiatCurrency.ChineseYuan]: Currency.Cny,
   [FiatCurrency.Euro]: Currency.Eur,
   [FiatCurrency.BritishPound]: Currency.Gbp,
   [FiatCurrency.HongKongDollar]: Currency.Hkd,

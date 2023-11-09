@@ -2,17 +2,30 @@
 directive @defer on FIELD
 
 """
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
+
+"""
 Tells the service this field/object has access authorized by an OIDC token.
 """
 directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by a Cognito User Pools token.
+Tells the service this field/object has access authorized by a Lambda Authorizer.
 """
-directive @aws_cognito_user_pools(
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
+
+"""Directs the schema to enforce authorization on a field"""
+directive @aws_auth(
   """List of cognito user pool groups which have access on this field"""
   cognito_groups: [String]
-) on OBJECT | FIELD_DEFINITION
+) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by sigv4 signing.
+"""
+directive @aws_iam on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service which subscriptions will be published to when this mutation is
@@ -25,22 +38,6 @@ directive @aws_publish(
   subscriptions: [String]
 ) on FIELD_DEFINITION
 
-"""
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""Directs the schema to enforce authorization on a field"""
-directive @aws_auth(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an API key.
-"""
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
-
 """Tells the service which mutation triggers this subscription."""
 directive @aws_subscribe(
   """
@@ -50,9 +47,12 @@ directive @aws_subscribe(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by a Lambda Authorizer.
+Tells the service this field/object has access authorized by a Cognito User Pools token.
 """
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
+directive @aws_cognito_user_pools(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on OBJECT | FIELD_DEFINITION
 
 union ActivityDetails = TransactionDetails | SwapOrderDetails
 
@@ -169,6 +169,7 @@ enum Currency {
   AUD
   BRL
   CAD
+  CNY
   ETH
   EUR
   GBP
@@ -700,15 +701,6 @@ type Portfolio {
   assetActivities(page: Int, pageSize: Int, includeOffChain: Boolean, chains: [Chain!]): [AssetActivity]
 }
 
-enum PriceFeatureSwitch {
-  V3_ONLY
-  only
-  use
-  v3
-  prices
-  TVL_COMPARISON
-}
-
 enum PriceSource {
   SUBGRAPH_V2
   SUBGRAPH_V3
@@ -799,7 +791,7 @@ type Token implements IContract {
   name: String
   symbol: String
   project: TokenProject
-  market(currency: Currency, _fs: PriceFeatureSwitch): TokenMarket
+  market(currency: Currency): TokenMarket
 }
 
 type TokenAmount {
@@ -859,9 +851,9 @@ type TokenMarket {
   priceSource: PriceSource!
   totalValueLocked: Amount
   volume(duration: HistoryDuration!): Amount
-  pricePercentChange(duration: HistoryDuration!, _fs: PriceFeatureSwitch): Amount
-  priceHistory(duration: HistoryDuration!, _fs: PriceFeatureSwitch): [TimestampedAmount]
-  priceHighLow(duration: HistoryDuration!, highLow: HighLow!, _fs: PriceFeatureSwitch): Amount
+  pricePercentChange(duration: HistoryDuration!): Amount
+  priceHistory(duration: HistoryDuration!): [TimestampedAmount]
+  priceHighLow(duration: HistoryDuration!, highLow: HighLow!): Amount
 }
 
 type TokenProject {

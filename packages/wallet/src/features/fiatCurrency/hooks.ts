@@ -50,6 +50,7 @@ export function useFiatCurrencyName(currency: FiatCurrency): string {
       [FiatCurrency.AustrialianDollor]: t('Australian Dollar'),
       [FiatCurrency.BrazilianReal]: t('Brazilian Real'),
       [FiatCurrency.CanadianDollar]: t('Canadian Dollar'),
+      [FiatCurrency.ChineseYuan]: t('Chinese Yuan'),
       [FiatCurrency.Euro]: t('Euro'),
       [FiatCurrency.BritishPound]: t('British Pound'),
       [FiatCurrency.HongKongDollar]: t('Hong Kong Dollar'),

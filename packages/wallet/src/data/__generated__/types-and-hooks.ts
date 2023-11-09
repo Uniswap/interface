@@ -136,6 +136,7 @@ export enum Currency {
   Aud = 'AUD',
   Brl = 'BRL',
   Cad = 'CAD',
+  Cny = 'CNY',
   Eth = 'ETH',
   Eur = 'EUR',
   Gbp = 'GBP',
@@ -770,15 +771,6 @@ export type PortfolioTokensTotalDenominatedValueChangeArgs = {
   duration?: InputMaybe<HistoryDuration>;
 };
 
-export enum PriceFeatureSwitch {
-  TvlComparison = 'TVL_COMPARISON',
-  V3Only = 'V3_ONLY',
-  Only = 'only',
-  Prices = 'prices',
-  Use = 'use',
-  V3 = 'v3'
-}
-
 export enum PriceSource {
   SubgraphV2 = 'SUBGRAPH_V2',
   SubgraphV3 = 'SUBGRAPH_V3'
@@ -1006,7 +998,6 @@ export type Token = IContract & {
 
 
 export type TokenMarketArgs = {
-  _fs?: InputMaybe<PriceFeatureSwitch>;
   currency?: InputMaybe<Currency>;
 };
 
@@ -1077,20 +1068,17 @@ export type TokenMarket = {
 
 
 export type TokenMarketPriceHighLowArgs = {
-  _fs?: InputMaybe<PriceFeatureSwitch>;
   duration: HistoryDuration;
   highLow: HighLow;
 };
 
 
 export type TokenMarketPriceHistoryArgs = {
-  _fs?: InputMaybe<PriceFeatureSwitch>;
   duration: HistoryDuration;
 };
 
 
 export type TokenMarketPricePercentChangeArgs = {
-  _fs?: InputMaybe<PriceFeatureSwitch>;
   duration: HistoryDuration;
 };
 
