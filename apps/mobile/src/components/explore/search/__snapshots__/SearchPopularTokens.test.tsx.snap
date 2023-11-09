@@ -836,7 +836,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
                     numberOfLines={1}
                     style={
                       {
-                        "color": "#CECECE",
+                        "color": "#7D7D7D",
                         "fontFamily": "Basel-Book",
                         "fontSize": 17,
                         "lineHeight": 24,
