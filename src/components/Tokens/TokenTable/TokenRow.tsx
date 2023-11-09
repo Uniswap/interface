@@ -400,7 +400,7 @@ function TokenRow({
 }
 
 /* Header Row: top header row component for table */
-export function HeaderRow() {
+export function TokenHeaderRow() {
   return (
     <TokenRow
       header={true}

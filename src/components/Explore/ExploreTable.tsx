@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
-import { HeaderRow, LoadedRow, LoadingRow } from 'components/Tokens/TokenTable/TokenRow'
+import { LoadedRow, LoadingRow, TokenHeaderRow } from 'components/Tokens/TokenTable/TokenRow'
 import { ExploreTab } from 'constants/explore'
 import { PAGE_SIZE, SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { ReactNode } from 'react'
@@ -39,7 +39,7 @@ const NoDataDisplay = styled.div`
 function NoDataState({ message }: { message: ReactNode }) {
   return (
     <GridContainer>
-      <HeaderRow />
+      <TokenHeaderRow />
       <NoDataDisplay>{message}</NoDataDisplay>
     </GridContainer>
   )
@@ -58,7 +58,7 @@ const LoadingRows = ({ rowCount }: { rowCount: number }) => (
 function LoadingTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
   return (
     <GridContainer>
-      <HeaderRow />
+      <TokenHeaderRow />
       <DataContainer>
         <LoadingRows rowCount={rowCount} />
       </DataContainer>
@@ -130,6 +130,7 @@ export function ExploreTable({ tab }: ExploreTableProps[ExploreTab.Transactions]
 export function ExploreTable({ tab, ...args }: ExploreTableProps[ExploreTab]) {
   let loading
   let data
+  let header
   let rows
 
   switch (tab) {
@@ -138,6 +139,7 @@ export function ExploreTable({ tab, ...args }: ExploreTableProps[ExploreTab]) {
       const { tokens, loadingTokens, sparklineMap, tokenSortRank } = args as ExploreTableProps[ExploreTab.Tokens]
       loading = loadingTokens
       data = tokens
+      header = <TokenHeaderRow />
       rows = data?.map(
         (token, index) =>
           token?.address && (
@@ -168,7 +170,7 @@ export function ExploreTable({ tab, ...args }: ExploreTableProps[ExploreTab]) {
   } else {
     return (
       <GridContainer>
-        <HeaderRow />
+        {header}
         <DataContainer>{rows}</DataContainer>
       </GridContainer>
     )

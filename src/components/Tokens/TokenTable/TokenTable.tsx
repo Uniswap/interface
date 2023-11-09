@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
-import { HeaderRow, LoadedRow, LoadingRow } from './TokenRow'
+import { LoadedRow, LoadingRow, TokenHeaderRow } from './TokenRow'
 
 const GridContainer = styled.div`
   display: flex;
@@ -50,7 +50,7 @@ const NoTokenDisplay = styled.div`
 function NoTokensState({ message }: { message: ReactNode }) {
   return (
     <GridContainer>
-      <HeaderRow />
+      <TokenHeaderRow />
       <NoTokenDisplay>{message}</NoTokenDisplay>
     </GridContainer>
   )
@@ -69,7 +69,7 @@ const LoadingRows = ({ rowCount }: { rowCount: number }) => (
 function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
   return (
     <GridContainer>
-      <HeaderRow />
+      <TokenHeaderRow />
       <TokenDataContainer>
         <LoadingRows rowCount={rowCount} />
       </TokenDataContainer>
@@ -113,7 +113,7 @@ export default function TokenTable() {
   } else {
     return (
       <GridContainer>
-        <HeaderRow />
+        <TokenHeaderRow />
         <TokenDataContainer>
           {tokens.map(
             (token, index) =>
