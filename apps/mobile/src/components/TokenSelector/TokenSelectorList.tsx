@@ -192,6 +192,7 @@ function _TokenSelectorList({
         renderSectionHeader={renderSectionHeader}
         sections={sections ?? []}
         showsVerticalScrollIndicator={false}
+        stickySectionHeadersEnabled={true}
         windowSize={4}
       />
     </AnimatedFlex>
