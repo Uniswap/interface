@@ -79,8 +79,6 @@ const MOCK_ARGS: GetQuoteArgs = {
   uniswapXExactOutputEnabled: false,
   isUniswapXDefaultEnabled: false,
   sendPortionEnabled: true,
-  inputTax: ZERO_PERCENT,
-  outputTax: ZERO_PERCENT,
 }
 
 describe('#useRoutingAPITrade ExactIn', () => {
