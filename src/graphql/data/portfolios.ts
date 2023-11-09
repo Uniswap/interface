@@ -36,11 +36,6 @@ gql`
             id
             logoUrl
             isSpam
-            tokens {
-              id
-              chain
-              address
-            }
           }
         }
         token {
