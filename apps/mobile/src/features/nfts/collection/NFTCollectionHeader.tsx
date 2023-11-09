@@ -92,10 +92,8 @@ export function NFTCollectionHeader({
           justifyContent="space-between"
           mx="$spacing24"
           pt="$spacing48">
-          <Flex backgroundColor="$sporeBlack" borderRadius="$roundedFull" p="$spacing12">
-            <Flex centered grow height={iconSizes.icon8} width={iconSizes.icon8}>
-              <BackButton color="$sporeWhite" size={iconSizes.icon24} />
-            </Flex>
+          <Flex backgroundColor="$scrim" borderRadius="$roundedFull" p="$spacing4">
+            <BackButton color="$sporeWhite" mr="$spacing1" size={iconSizes.icon24} />
           </Flex>
           <NFTCollectionContextMenu
             collectionAddress={collectionAddress}
