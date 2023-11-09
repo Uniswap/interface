@@ -6,6 +6,8 @@ import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
 import { usePortfolioBalancesQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
+import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 interface PortfolioBalanceProps {
@@ -26,6 +28,8 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
       setIsWarmLoading(false)
     },
   })
+  const currency = useAppFiatCurrency()
+  const currencyComponents = useAppFiatCurrencyInfo()
   const { convertFiatAmount, convertFiatAmountFormatted } = useLocalizationContext()
 
   const [isWarmLoading, setIsWarmLoading] = useState(false)
@@ -45,6 +49,10 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
     NumberType.PortfolioBalance
   )
   const { amount: absoluteChange } = convertFiatAmount(portfolioChange?.absolute?.value)
+  // TODO gary re-enabling this for USD/Euros only, replace with more scalable approach
+  const shouldFadePortfolioDecimals =
+    (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) &&
+    currencyComponents.symbolAtFront
 
   return (
     <Flex gap="$spacing4">
@@ -52,6 +60,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
         colorIndicationDuration={2000}
         loading={isWarmLoading || isLoading}
         loadingPlaceholderText="000000.00"
+        shouldFadeDecimals={shouldFadePortfolioDecimals}
         value={totalBalance}
       />
       <RelativeChange

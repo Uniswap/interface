@@ -32,19 +32,25 @@ const RollNumber = ({
   index,
   chars,
   commonPrefixLength,
+  shouldFadeDecimals,
 }: {
   chars: string[]
   digit?: string
   nextColor?: string
   index: number
   commonPrefixLength: number
+  shouldFadeDecimals: boolean
 }): JSX.Element => {
   const colors = useSporeColors()
-  const fontColor = useSharedValue(nextColor || colors.neutral1.val)
+  const fontColor = useSharedValue(
+    nextColor ||
+      (shouldFadeDecimals && index > chars.length - 4 ? colors.neutral3.val : colors.neutral1.val)
+  )
   const yOffset = useSharedValue(digit && Number(digit) >= 0 ? DIGIT_HEIGHT * -digit : 0)
 
   useEffect(() => {
-    const finishColor = colors.neutral1.val
+    const finishColor =
+      shouldFadeDecimals && index > chars.length - 4 ? colors.neutral3.val : colors.neutral1.val
     if (nextColor && index > commonPrefixLength - 1) {
       fontColor.value = withSequence(
         withTiming(nextColor, { duration: 250 }),
@@ -62,6 +68,7 @@ const RollNumber = ({
     colors.neutral1,
     commonPrefixLength,
     fontColor,
+    shouldFadeDecimals,
   ])
 
   const animatedFontStyle = useAnimatedStyle(() => {
@@ -121,11 +128,13 @@ const Char = ({
   chars,
   nextColor,
   commonPrefixLength,
+  shouldFadeDecimals,
 }: {
   index: number
   chars: string[]
   nextColor?: string
   commonPrefixLength: number
+  shouldFadeDecimals: boolean
 }): JSX.Element => {
   return (
     <Animated.View
@@ -139,6 +148,7 @@ const Char = ({
         digit={chars[index]}
         index={index}
         nextColor={nextColor}
+        shouldFadeDecimals={shouldFadeDecimals}
       />
     </Animated.View>
   )
@@ -157,11 +167,13 @@ const AnimatedNumber = ({
   loading = false,
   loadingPlaceholderText,
   colorIndicationDuration,
+  shouldFadeDecimals,
 }: {
   loadingPlaceholderText: string
   loading: boolean | 'no-shimmer'
   value?: string
   colorIndicationDuration: number
+  shouldFadeDecimals: boolean
 }): JSX.Element => {
   const prevValue = usePrevious(value)
   const [chars, setChars] = useState<string[]>()
@@ -205,6 +217,7 @@ const AnimatedNumber = ({
               commonPrefixLength={commonPrefixLength}
               index={index}
               nextColor={nextColor}
+              shouldFadeDecimals={shouldFadeDecimals}
             />
           ))}
         </Flex>
@@ -242,6 +255,7 @@ const AnimatedNumber = ({
           commonPrefixLength={commonPrefixLength}
           index={index}
           nextColor={nextColor}
+          shouldFadeDecimals={shouldFadeDecimals}
         />
       ))}
     </Flex>
