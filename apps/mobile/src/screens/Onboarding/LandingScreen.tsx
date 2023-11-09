@@ -93,7 +93,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
               </Text>
             </TouchableArea>
           </Trace>
-          <Flex $short={{ pb: '$spacing16' }} mx="$spacing24" py="$spacing12">
+          <Flex $short={{ py: '$none', mx: '$spacing12' }} mx="$spacing24" py="$spacing12">
             <Text color="$neutral2" mx="$spacing4" textAlign="center" variant="buttonLabel4">
               <Trans t={t}>
                 By continuing, I agree to the{' '}
