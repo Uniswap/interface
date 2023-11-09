@@ -7,14 +7,15 @@ import { Flex, Icons } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 
+// Determines view only icon size in relation to Account Icon size
+const EYE_ICON_SCALING_FACTOR = 0.4
+
 export interface AccountIconProps {
   size: number
   showViewOnlyBadge?: boolean
-  viewOnlyBadgeScalingFactor?: number
   address: string
   avatarUri?: string | null
   showBackground?: boolean // Display images with solid background.
-  showBorder?: boolean // Display thin border around image
   backgroundPadding?: number
 }
 
@@ -24,69 +25,42 @@ export function AccountIcon({
   address,
   avatarUri,
   showBackground,
-  showBorder,
-  backgroundPadding,
-  viewOnlyBadgeScalingFactor = 0.45,
+  backgroundPadding = spacing.spacing12,
 }: AccountIconProps): JSX.Element {
-  const INSET_PADDING = backgroundPadding ?? spacing.spacing16
+  // add padding to unicon if background is displayed
+  const uniconPadding = showBackground ? backgroundPadding : spacing.none
 
-  // If Unicon and background, reduce size to account for added padding.
-  const smallIconSize = showBackground ? size - INSET_PADDING * 2 : size
-  const adjustedIconSize = showBackground && !avatarUri ? size - INSET_PADDING * 2 : size
+  // adjust unicon size to account for potential padding
+  const uniconSize = size - uniconPadding * 2
+
+  // scale eye icon to be a portion of container size
+  const eyeIconSize = size * EYE_ICON_SCALING_FACTOR
 
   // Color for gradient background.
   const { gradientEnd: uniconColor } = useUniconColors(address)
 
-  const iconPadding = size * 0.1
-  const iconEyeContainerSize = size * viewOnlyBadgeScalingFactor
-  const iconEyeSize = iconEyeContainerSize - iconPadding
-
-  const defaultImage = (
-    <Flex
-      centered
-      borderRadius="$roundedFull"
-      height={size}
-      style={{
-        padding: showBackground || showBorder ? INSET_PADDING : spacing.none,
-      }}
-      width={size}>
-      <Unicon address={address} size={adjustedIconSize} />
-      {showBackground && !showBorder ? <UniconGradient color={uniconColor} size={size} /> : null}
-    </Flex>
-  )
-
-  // We need a deciated fallback with smaller size, because the non-null avatarUri breaks padding
-  const fallbackImage = (
-    <Flex
-      centered
-      borderRadius="$roundedFull"
-      height={size}
-      style={{
-        padding: showBackground || showBorder ? INSET_PADDING : spacing.none,
-      }}
-      width={size}>
-      <Unicon address={address} size={smallIconSize} />
-      {showBackground && !showBorder ? <UniconGradient color={uniconColor} size={size} /> : null}
+  const uniconImage = (
+    <Flex centered borderRadius="$roundedFull" height={size} padding={uniconPadding} width={size}>
+      <Unicon address={address} size={uniconSize} />
+      {showBackground ? <UniconGradient color={uniconColor} size={size} /> : null}
     </Flex>
   )
 
   return (
     <Flex
       backgroundColor={showBackground ? '$surface1' : '$transparent'}
-      borderColor={showBackground ? '$surface1' : showBorder ? '$surface3' : '$transparent'}
       borderRadius="$roundedFull"
-      borderWidth={showBackground ? 2 : showBorder ? 1 : 0}
       position="relative">
       {avatarUri ? (
         <RemoteImage
-          borderRadius={adjustedIconSize}
-          fallback={fallbackImage}
-          height={adjustedIconSize}
+          borderRadius={size}
+          fallback={uniconImage}
+          height={size}
           uri={avatarUri}
-          width={adjustedIconSize}
+          width={size}
         />
       ) : (
-        defaultImage
+        uniconImage
       )}
       {showViewOnlyBadge && (
         <Flex
@@ -96,12 +70,10 @@ export function AccountIcon({
           borderRadius="$roundedFull"
           borderWidth={2}
           bottom={-4}
-          height={iconEyeContainerSize}
           justifyContent="center"
           position="absolute"
-          right={-4}
-          width={iconEyeContainerSize}>
-          <Icons.Eye color="$neutral2" size={iconEyeSize} />
+          right={-4}>
+          <Icons.Eye color="$neutral2" size={eyeIconSize} />
         </Flex>
       )}
     </Flex>

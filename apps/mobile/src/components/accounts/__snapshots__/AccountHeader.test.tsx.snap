@@ -76,19 +76,10 @@ exports[`AccountHeader renders without error 1`] = `
             {
               "alignItems": "stretch",
               "backgroundColor": "#FFFFFF",
-              "borderBottomColor": "#FFFFFF",
               "borderBottomLeftRadius": 999999,
               "borderBottomRightRadius": 999999,
-              "borderBottomWidth": 2,
-              "borderLeftColor": "#FFFFFF",
-              "borderLeftWidth": 2,
-              "borderRightColor": "#FFFFFF",
-              "borderRightWidth": 2,
-              "borderStyle": "solid",
-              "borderTopColor": "#FFFFFF",
               "borderTopLeftRadius": 999999,
               "borderTopRightRadius": 999999,
-              "borderTopWidth": 2,
               "flexDirection": "column",
               "position": "relative",
             }
@@ -105,7 +96,10 @@ exports[`AccountHeader renders without error 1`] = `
                 "flexDirection": "column",
                 "height": 52,
                 "justifyContent": "center",
-                "padding": 12,
+                "paddingBottom": 12,
+                "paddingLeft": 12,
+                "paddingRight": 12,
+                "paddingTop": 12,
                 "width": 52,
               }
             }

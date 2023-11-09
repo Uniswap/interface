@@ -10,7 +10,6 @@ import { Screens } from 'src/screens/Screens'
 import { setClipboard } from 'src/utils/clipboard'
 import { isDevBuild } from 'src/utils/version'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
-import { spacing } from 'ui/src/theme'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
@@ -53,7 +52,6 @@ export function AccountHeader(): JSX.Element {
   }
 
   const walletHasName = displayName?.type !== 'address'
-  const iconPadding = spacing.spacing12
   const iconSize = 52
 
   return (
@@ -85,9 +83,7 @@ export function AccountHeader(): JSX.Element {
               <AccountIcon
                 address={activeAddress}
                 avatarUri={avatar}
-                backgroundPadding={iconPadding}
                 showBackground={true}
-                showBorder={false}
                 showViewOnlyBadge={account?.type === AccountType.Readonly}
                 size={iconSize}
               />

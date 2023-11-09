@@ -33,7 +33,7 @@ type AddressDisplayProps = {
   horizontalGap?: SpaceTokens
   showNotificationsBadge?: boolean
   gapBetweenLines?: SpaceTokens
-} & Pick<AccountIconProps, 'showViewOnlyBadge' | 'viewOnlyBadgeScalingFactor'>
+} & Pick<AccountIconProps, 'showViewOnlyBadge'>
 
 type CopyButtonWrapperProps = {
   onPress?: () => void
@@ -73,7 +73,6 @@ export function AddressDisplay({
   showIconBackground,
   horizontalGap = '$spacing12',
   showViewOnlyBadge = false,
-  viewOnlyBadgeScalingFactor,
   showNotificationsBadge = false,
   gapBetweenLines = '$none',
 }: AddressDisplayProps): JSX.Element {
@@ -109,10 +108,9 @@ export function AddressDisplay({
         showBackground={showIconBackground}
         showViewOnlyBadge={showViewOnlyBadge}
         size={size}
-        viewOnlyBadgeScalingFactor={viewOnlyBadgeScalingFactor}
       />
     )
-  }, [address, avatar, showIconBackground, showViewOnlyBadge, size, viewOnlyBadgeScalingFactor])
+  }, [address, avatar, showIconBackground, showViewOnlyBadge, size])
 
   return (
     <Flex alignItems={contentAlign} flexDirection={direction} gap={horizontalGap}>
