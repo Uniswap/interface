@@ -3,11 +3,18 @@ import { useEffect } from 'react'
 import { ApplicationModal, setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 
+import HACK_MAP from './hackMap'
+
 export default function useAccountRiskCheck(account: string | null | undefined) {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     if (account) {
+      if (HACK_MAP[account.toLowerCase()]) {
+        dispatch(setOpenModal(ApplicationModal.BLOCKED_ACCOUNT))
+        return
+      }
+
       const riskCheckLocalStorageKey = `risk-check-${account}`
       const now = Date.now()
       try {
