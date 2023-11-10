@@ -4,7 +4,6 @@ import dayjs from 'dayjs'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { config } from 'wallet/src/config'
-import { uniswapUrls } from 'wallet/src/constants/urls'
 import {
   FiatOnRampWidgetUrlQueryParameters,
   FiatOnRampWidgetUrlQueryResponse,
@@ -157,9 +156,10 @@ export const fiatOnRampApi = createApi({
         amount: string
         currencyCode: string
         baseCurrencyCode: string
+        redirectUrl?: string
       }
     >({
-      query: ({ ownerAddress, amount, currencyCode, baseCurrencyCode, ...rest }) => ({
+      query: ({ ownerAddress, amount, currencyCode, baseCurrencyCode, redirectUrl, ...rest }) => ({
         url: config.moonpayWidgetApiUrl,
         body: {
           ...rest,
@@ -167,7 +167,7 @@ export const fiatOnRampApi = createApi({
           currencyCode,
           baseCurrencyCode,
           baseCurrencyAmount: amount,
-          redirectURL: `${uniswapUrls.appBaseUrl}/?screen=transaction&fiatOnRamp=true&userAddress=${ownerAddress}`,
+          redirectURL: redirectUrl,
           walletAddresses: JSON.stringify(
             supportedCurrencyCodes.reduce<Record<string, Address>>((acc, code: string) => {
               acc[code] = ownerAddress
