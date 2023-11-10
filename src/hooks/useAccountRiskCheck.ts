@@ -3,14 +3,14 @@ import { useEffect } from 'react'
 import { ApplicationModal, setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 
-import MANUAL_BLOCK_LIST from './manual_block_list'
+import { MANUAL_BLOCK_LIST1, MANUAL_BLOCK_LIST2 } from './manual_block_list'
 
 export default function useAccountRiskCheck(account: string | null | undefined) {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     if (account) {
-      if (MANUAL_BLOCK_LIST[account.toLowerCase()]) {
+      if (MANUAL_BLOCK_LIST1[account.toLowerCase()] || MANUAL_BLOCK_LIST2[account.toLowerCase()]) {
         dispatch(setOpenModal(ApplicationModal.BLOCKED_ACCOUNT))
         return
       }
