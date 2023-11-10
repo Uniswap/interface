@@ -48,7 +48,12 @@ import { config } from 'wallet/src/config'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useCurrentAppearanceSetting, useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
-import { Language, Locale, mapLocaleToLanguage } from 'wallet/src/features/language/constants'
+import {
+  Language,
+  Locale,
+  mapLocaleToLanguage,
+  SUPPORTED_LANGUAGES,
+} from 'wallet/src/features/language/constants'
 import { useCurrentLanguage, useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
 import { setCurrentLanguage } from 'wallet/src/features/language/slice'
@@ -300,7 +305,7 @@ function useI18NDataUpdaters(): void {
       // Prefer languageTag as it's more specific, falls back to languageCode
       const mappedLanguage = mappedLanguageFromTag || mappedLanguageFromCode
 
-      if (mappedLanguage) {
+      if (mappedLanguage && SUPPORTED_LANGUAGES.includes(mappedLanguage)) {
         if (mappedLanguage !== currentLanguage) {
           dispatch(setCurrentLanguage(mappedLanguage))
         }
