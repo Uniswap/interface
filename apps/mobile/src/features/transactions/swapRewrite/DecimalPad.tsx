@@ -1,12 +1,9 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
-import { getNumberFormatSettings } from 'react-native-localize'
 import { Flex, Icons, Text, TouchableArea, useMedia } from 'ui/src'
 import { fonts } from 'ui/src/theme'
-
-// if this setting is changed in phone settings the app would be restarted
-const { decimalSeparator } = getNumberFormatSettings()
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
 export enum KeyAction {
   Insert = 'insert',
@@ -179,6 +176,7 @@ const KeyButton = memo(function KeyButton({
   onLongPress,
 }: KeyButtonProps): JSX.Element {
   const media = useMedia()
+  const { decimalSeparator } = useAppFiatCurrencyInfo()
 
   const handlePress = (): void => {
     if (disabled) return
