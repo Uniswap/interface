@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { CurrencyAmount } from '@uniswap/sdk-core'
+import { FeatureFlag } from 'featureFlags'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../../src/constants/misc'
 import { DAI, USDC_MAINNET } from '../../../src/constants/tokens'
@@ -63,7 +64,9 @@ describe('Swap errors', () => {
   })
 
   it('slippage failure', () => {
-    cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
+    cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
+      featureFlags: [{ name: FeatureFlag.uniswapXDefaultEnabled, value: false }],
+    })
     cy.hardhat({ automine: false }).then(async (hardhat) => {
       await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 500e6))
       await hardhat.mine()
@@ -86,6 +89,7 @@ describe('Swap errors', () => {
       cy.get(getTestSelector('open-settings-dialog-button')).click()
       cy.get(getTestSelector('max-slippage-settings')).click()
       cy.get(getTestSelector('slippage-input')).clear().type('0.01')
+      cy.get(getTestSelector('toggle-uniswap-x-button')).click() // turn off uniswapx
       cy.get('body').click('topRight') // close modal
       cy.get(getTestSelector('slippage-input')).should('not.exist')
 
