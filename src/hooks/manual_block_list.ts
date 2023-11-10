@@ -1,4 +1,4 @@
-const HACK_MAP: { [key in string]: any } = {
+const MANUAL_BLOCK_LIST: { [key in string]: any } = {
   '0x8a9fdbe274ba4f056c361d969d2c534970ff4a31': {},
   '0xf2f295fbf24ad61dad89b879be252a1d3b9de796': {},
   '0x5b4f20612399cceb4d762f2a210283d0535e881e': {},
@@ -665,4 +665,4 @@ const HACK_MAP: { [key in string]: any } = {
   '0x48ad24857d829a163ab63cbc2d861852ea272e70': {},
 }
 
-export default HACK_MAP
+export default MANUAL_BLOCK_LIST
