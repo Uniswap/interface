@@ -141,7 +141,7 @@ function CustomizationSection({
             fontSize={inputSize}
             maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
             maxLength={NICKNAME_MAX_LENGTH}
-            placeholder="Nickname"
+            placeholder={t('Nickname')}
             placeholderTextColor="$neutral3"
             style={IS_ANDROID ? styles.noHorizontalPadding : {}}
             testID="customize/name"
