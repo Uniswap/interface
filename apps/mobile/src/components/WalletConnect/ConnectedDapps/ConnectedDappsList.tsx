@@ -45,15 +45,15 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
           justifyContent="space-between"
           pb="$spacing12"
           px="$spacing16">
-          <Flex alignItems="flex-start" flexBasis="10%">
+          <Flex alignItems="flex-start" flexBasis="15%">
             {backButton ?? <BackButton />}
           </Flex>
-          <Flex alignItems="center" flexBasis="80%">
+          <Flex alignItems="center" flexBasis="70%">
             <Text color="$neutral1" numberOfLines={1} variant="body1">
               {t('Manage connections')}
             </Text>
           </Flex>
-          <Flex alignItems="flex-end" flexBasis="10%">
+          <Flex alignItems="flex-end" flexBasis="15%">
             {sessions.length > 0 ? (
               <TouchableArea
                 onPress={(): void => {
