@@ -54,7 +54,7 @@ import {
   mapLocaleToLanguage,
   SUPPORTED_LANGUAGES,
 } from 'wallet/src/features/language/constants'
-import { useCurrentLanguage, useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
+import { useCurrentLanguage, useCurrentLocale } from 'wallet/src/features/language/hooks'
 import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
 import { setCurrentLanguage } from 'wallet/src/features/language/slice'
 import { useTrmQuery } from 'wallet/src/features/trm/api'
@@ -256,7 +256,7 @@ function DataUpdaters(): JSX.Element {
 
 function useI18NDataUpdaters(): void {
   const currentLanguage = useCurrentLanguage()
-  const currentLanguageInfo = useCurrentLanguageInfo()
+  const currentLocale = useCurrentLocale()
   const { i18n } = useTranslation()
   const dispatch = useAppDispatch()
   const accounts = useAccounts()
@@ -264,10 +264,9 @@ function useI18NDataUpdaters(): void {
   // Effect hook used to keep redux state synced with i18next, primarily on app start
   // And to force app restart if RTL is flipped
   useEffect(() => {
-    const { locale } = currentLanguageInfo
-    if (locale !== i18n.language) {
+    if (currentLocale !== i18n.language) {
       i18n
-        .changeLanguage(locale)
+        .changeLanguage(currentLocale)
         .catch(() =>
           logger.warn(
             'App',
@@ -277,9 +276,9 @@ function useI18NDataUpdaters(): void {
         )
     }
 
-    const isRtl = i18n.dir(locale) === 'rtl'
+    const isRtl = i18n.dir(currentLocale) === 'rtl'
     if (isRtl !== I18nManager.isRTL) {
-      logger.info('App', 'DataUpdaters', `Changing RTL to ${isRtl} for locale ${locale}`)
+      logger.info('App', 'DataUpdaters', `Changing RTL to ${isRtl} for locale ${currentLocale}`)
       I18nManager.forceRTL(isRtl)
 
       // Need to restart to apply RTL changes
@@ -288,18 +287,16 @@ function useI18NDataUpdaters(): void {
         RNRestart.restart()
       }, 1000)
     }
-  }, [i18n, currentLanguageInfo])
+  }, [i18n, currentLocale])
 
   // Effect hook used to sync app language with system OS language
   useEffect(() => {
     const locales = getLocales()
     for (const locale of locales) {
       // Normalizes language tags like 'zh-Hans-ch' to 'zh-Hans' that could happen on Android
-      const normalizedLangaugeTag = locale.languageTag.split('-').slice(0, 2).join('-')
-      const mappedLanguageFromTag = (Object.values(Locale) as string[]).includes(
-        normalizedLangaugeTag
-      )
-        ? mapLocaleToLanguage[normalizedLangaugeTag as Locale]
+      const normalizedLanguageTag = locale.languageTag.split('-').slice(0, 2).join('-') as Locale
+      const mappedLanguageFromTag = Object.values(Locale).includes(normalizedLanguageTag)
+        ? mapLocaleToLanguage[normalizedLanguageTag]
         : undefined
       const mappedLanguageFromCode = locale.languageCode as Maybe<Language>
       // Prefer languageTag as it's more specific, falls back to languageCode
@@ -322,11 +319,11 @@ function useI18NDataUpdaters(): void {
         editAccountActions.trigger({
           type: EditAccountAction.UpdateLanguage,
           address,
-          locale: currentLanguageInfo.locale,
+          locale: currentLocale,
         })
       )
     })
-  }, [accounts, currentLanguageInfo.locale, dispatch])
+  }, [accounts, currentLocale, dispatch])
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

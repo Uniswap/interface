@@ -34,7 +34,7 @@ export function getLocale(language: Language): Locale {
 
 /**
  * Returns all relevant info for the target language, including the translated name of
- * that langauge in that language (not a typo).
+ * that language in that language (not a typo).
  * @param language target language
  * @returns all relevant language info
  */
