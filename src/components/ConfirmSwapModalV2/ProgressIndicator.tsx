@@ -45,7 +45,7 @@ type ProgressIndicatorStep = Extract<
   | ConfirmModalState.WRAPPING
   | ConfirmModalState.RESETTING_TOKEN_ALLOWANCE
 >
-export function ProgressIndicator({
+export default function ProgressIndicator({
   steps,
   currentStep,
   trade,

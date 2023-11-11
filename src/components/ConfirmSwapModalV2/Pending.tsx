@@ -63,7 +63,7 @@ const StepTitleAnimationContainer = styled(Column)<{ disableEntranceAnimation?: 
   }
 `
 
-export function Pending({
+export default function Pending({
   trade,
   swapResult,
   wrapTxHash,
