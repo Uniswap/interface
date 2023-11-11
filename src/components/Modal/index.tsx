@@ -1,6 +1,6 @@
 import { DialogContent, DialogOverlay } from '@reach/dialog'
 import React from 'react'
-import { animated, useSpring, useTransition } from 'react-spring'
+import { animated, easings, useSpring, useTransition } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 import styled, { css } from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
@@ -12,6 +12,7 @@ export const MODAL_TRANSITION_DURATION = 200
 const AnimatedDialogOverlay = animated(DialogOverlay)
 
 const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ $scrollOverlay?: boolean }>`
+  will-change: transform, opacity;
   &[data-reach-dialog-overlay] {
     z-index: ${Z_INDEX.modalBackdrop};
     background-color: transparent;
@@ -89,6 +90,7 @@ interface ModalProps {
   children?: React.ReactNode
   $scrollOverlay?: boolean
   hideBorder?: boolean
+  slideIn?: boolean
 }
 
 export default function Modal({
@@ -103,12 +105,20 @@ export default function Modal({
   onSwipe = onDismiss,
   $scrollOverlay,
   hideBorder = false,
+  slideIn,
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, {
     config: { duration: MODAL_TRANSITION_DURATION },
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
+  })
+
+  const slideTransition = useTransition(isOpen, {
+    config: { duration: MODAL_TRANSITION_DURATION, easing: easings.easeInOutCubic },
+    from: { transform: 'translateY(40px)' },
+    enter: { transform: 'translateY(0px)' },
+    leave: { transform: 'translateY(40px)' },
   })
 
   const [{ y }, set] = useSpring(() => ({ y: 0, config: { mass: 1, tension: 210, friction: 20 } }))
@@ -135,24 +145,31 @@ export default function Modal({
               unstable_lockFocusAcrossFrames={false}
               $scrollOverlay={$scrollOverlay}
             >
-              <StyledDialogContent
-                {...(isMobile
-                  ? {
-                      ...bind(),
-                      style: { transform: y.interpolate((y) => `translateY(${(y as number) > 0 ? y : 0}px)`) },
-                    }
-                  : {})}
-                aria-label="dialog"
-                $minHeight={height ?? minHeight}
-                $maxHeight={height ?? maxHeight}
-                $scrollOverlay={$scrollOverlay}
-                $hideBorder={hideBorder}
-                $maxWidth={maxWidth}
-              >
-                {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
-                {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}
-                {children}
-              </StyledDialogContent>
+              {slideTransition(
+                (styles, item) =>
+                  item && (
+                    <StyledDialogContent
+                      {...(isMobile
+                        ? {
+                            ...bind(),
+                            style: { transform: y.interpolate((y) => `translateY(${(y as number) > 0 ? y : 0}px)`) },
+                          }
+                        : slideIn
+                        ? { style: styles }
+                        : {})}
+                      aria-label="dialog"
+                      $minHeight={height ?? minHeight}
+                      $maxHeight={height ?? maxHeight}
+                      $scrollOverlay={$scrollOverlay}
+                      $hideBorder={hideBorder}
+                      $maxWidth={maxWidth}
+                    >
+                      {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
+                      {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}
+                      {children}
+                    </StyledDialogContent>
+                  )
+              )}
             </StyledDialogOverlay>
           )
       )}
