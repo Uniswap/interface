@@ -17,12 +17,12 @@ jobs:
         with:
           ref: ${{ github.ref }}
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
-          
+
       - name: 📲 Setup for Fastlane Deploy
         uses: ./.github/actions/mobile_fastlane_deploy/setup
         with:
           branch: ${{ github.ref }}
-          
+
       - name: 📲 Fastlane Deploy iOS Beta 🍎
         uses: ./.github/actions/mobile_fastlane_deploy/ios
         with:
@@ -59,7 +59,7 @@ jobs:
           uniswap-api-key: ${{ secrets.UNISWAP_API_KEY }}
           url-to-fastlane-certificates-repo: ${{ secrets.URL_TO_FASTLANE_CERTIFICATES_REPO }}
           walletconnect-project-id: ${{ secrets.WALLETCONNECT_PROJECT_ID }}
-
+  
   android:
     name: Android
     runs-on: macos-13-large
@@ -67,7 +67,13 @@ jobs:
     steps:
       - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
         with:
+          fetch-depth: 0
           ref: ${{ github.ref }}
+
+      - name: 📲 Setup for Fastlane Deploy
+        uses: ./.github/actions/mobile_fastlane_deploy/setup
+        with:
+          branch: ${{ github.ref }}
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
 
       - name: 📲 Fastlane Deploy Android Beta 🤖
@@ -77,7 +83,11 @@ jobs:
           android-flavor: beta
           android-json-key-data: ${{ secrets.ANDROID_JSON_KEY_DATA }}
           android-keystore: ${{ secrets.ANDROID_BETA_KEYSTORE }}
+          android-keystore-alias: ${{ secrets.ANDROID_BETA_KEYSTORE_ALIAS }}
+          android-keystore-file: ${{ secrets.ANDROID_BETA_KEYSTORE_FILE }}
+          android-key-password: ${{ secrets.ANDROID_BETA_KEY_PASSWORD }}
           android-package-name: ${{ secrets.ANDROID_BETA_PACKAGE_NAME }}
+          android-store-password: ${{ secrets.ANDROID_BETA_STORE_PASSWORD }}
           appsflyer-api-key: ${{ secrets.APPSFLYER_API_KEY }}
           appsflyer-app-id: ${{ secrets.APPSFLYER_APP_ID }}
           branch: ${{ github.ref }}
@@ -99,7 +109,6 @@ jobs:
           statsig-api-key: ${{ secrets.STATSIG_API_KEY }}
           statsig-proxy-url: ${{ secrets.STATSIG_PROXY_URL }}
           uniswap-api-key: ${{ secrets.UNISWAP_API_KEY }}
-          url-to-fastlane-certificates-repo: ${{ secrets.URL_TO_FASTLANE_CERTIFICATES_REPO }}
           walletconnect-project-id: ${{ secrets.WALLETCONNECT_PROJECT_ID }}
 
   post-build:
