@@ -18,12 +18,15 @@ const TableHeadContainer = styled.div`
   }
   -ms-overflow-style: none;
   scrollbar-width: none;
+  overscroll-behavior: none;
 `
 const TableBodyContainer = styled.div`
   max-height: 550px;
   overflow-y: auto; // Enable vertical scroll only on table body
+  overscroll-behavior: none;
 `
 const TableSection = styled.table`
+  display: block;
   border-collapse: collapse;
   box-sizing: border-box;
 `

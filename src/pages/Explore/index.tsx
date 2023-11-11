@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { TraceEvent } from 'analytics'
 import { Trace } from 'analytics'
+import { PoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { AutoRow } from 'components/Row'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
@@ -134,7 +135,7 @@ const Pages: Array<Page> = [
   {
     title: <Trans>Pools</Trans>,
     key: ExploreTab.Pools,
-    component: TokenTable,
+    component: PoolTable,
     loggingElementName: InterfaceElementName.EXPLORE_POOLS_TAB,
   },
   {
