@@ -5,14 +5,9 @@ import { useUSDPrice } from 'hooks/useUSDPrice'
 import { InterfaceTrade } from 'state/routing/types'
 import { isPreviewTrade } from 'state/routing/utils'
 import { Field } from 'state/swap/actions'
-import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 
 import { SwapModalHeaderAmount } from './SwapModalHeaderAmount'
-
-const HeaderContainer = styled(AutoColumn)`
-  margin-top: 16px;
-`
 
 export default function SwapModalHeader({
   trade,
@@ -27,7 +22,7 @@ export default function SwapModalHeader({
   const fiatValueOutput = useUSDPrice(trade.postTaxOutputAmount)
 
   return (
-    <HeaderContainer gap="sm">
+    <AutoColumn gap="sm">
       <Column gap="lg">
         <SwapModalHeaderAmount
           field={Field.INPUT}
@@ -69,6 +64,6 @@ export default function SwapModalHeader({
           }
         />
       </Column>
-    </HeaderContainer>
+    </AutoColumn>
   )
 }
