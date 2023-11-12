@@ -63,7 +63,7 @@ function RippleAnimation({ rippleColor }: { rippleColor?: string }) {
 
 function Icon({ stepStatus, icon, rippleColor }: { stepStatus: StepStatus; icon: ReactElement; rippleColor?: string }) {
   if (stepStatus === StepStatus.IN_PROGRESS) {
-    return <LoaderV3 size="24px" fill={rippleColor} data-testid="loader-icon" />
+    return <LoaderV3 size="24px" stroke={rippleColor} fill={rippleColor} data-testid="loader-icon" />
   }
   return (
     <div>
@@ -106,17 +106,17 @@ function Title({
   }
 }
 
+const MonospacedTimer = styled(ThemedText.LabelSmall)`
+  font-variant-numeric: tabular-nums;
+  padding-right: 8px;
+`
 function Timer({ secondsRemaining }: { secondsRemaining: number }) {
   const minutes = Math.floor(secondsRemaining / 60)
   const seconds = secondsRemaining % 60
   const minutesText = minutes < 10 ? `0${minutes}` : minutes
   const secondsText = seconds < 10 ? `0${seconds}` : seconds
   const timerText = `${minutesText}:${secondsText}`
-  return (
-    <ThemedText.LabelSmall paddingRight="8px" data-testid="step-timer">
-      {timerText}
-    </ThemedText.LabelSmall>
-  )
+  return <MonospacedTimer data-testid="step-timer">{timerText}</MonospacedTimer>
 }
 
 export function Step({ stepStatus, stepDetails }: { stepStatus: StepStatus; stepDetails: StepDetails }) {
