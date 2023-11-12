@@ -95,8 +95,12 @@ export default function Pending({
   const currentStepContainerRef = useRef<HTMLDivElement>(null)
   useUnmountingAnimation(currentStepContainerRef, () => AnimationType.EXITING)
 
-  // Return finalized-order-specifc content if available
-  if (uniswapXOrder && uniswapXOrder.status !== UniswapXOrderStatus.OPEN) {
+  // Handle special statuses for UniswapX orders
+  if (
+    uniswapXOrder &&
+    uniswapXOrder.status !== UniswapXOrderStatus.OPEN &&
+    uniswapXOrder.status !== UniswapXOrderStatus.FILLED
+  ) {
     return (
       <OrderContent
         order={{ status: uniswapXOrder.status, orderHash: uniswapXOrder.orderHash, details: uniswapXOrder }}
@@ -104,15 +108,27 @@ export default function Pending({
     )
   }
 
+  const explorerLink = (() => {
+    let txHash
+    if (swapResult && swapResult.type === TradeFillType.Classic) {
+      txHash = swapResult.response.hash
+    } else if (uniswapXOrder && uniswapXOrder.status === UniswapXOrderStatus.FILLED) {
+      txHash = uniswapXOrder.orderHash
+    } else {
+      return
+    }
+    return getExplorerLink(chainId || ChainId.MAINNET, txHash, ExplorerDataType.TRANSACTION)
+  })()
+
   return (
     <Container gap="lg">
       <LogoContainer>
-        {/* Shown only during the final step under "success" conditions, and scales in. */}
+        {/* Shown only during the final step under "success" conditions, and scales in */}
         {showSuccess && <AnimatedEntranceConfirmationIcon />}
-        {/* Shown only during the final step on mainnet, when the transaction is sent but pending confirmation. */}
+        {/* Shown only during the final step on mainnet, when the transaction is sent but pending confirmation */}
         {showSubmitted && <AnimatedEntranceSubmittedIcon />}
-        {/* Scales in for any step that waits for an onchain transaction, while the transaction is pending. */}
-        {/* On the last step, appears while waiting for the transaction to be signed too. */}
+        {/* Scales in for any step that waits for an onchain transaction, while the transaction is pending */}
+        {/* On the last step, appears while waiting for the transaction to be signed too */}
         {!showSuccess && !showSubmitted && <LoadingIndicatorOverlay />}
       </LogoContainer>
       <HeaderContainer gap="md" $disabled={transactionPending}>
@@ -128,25 +144,30 @@ export default function Pending({
             )}
           </StepTitleAnimationContainer>
         </AnimationWrapper>
-        {swapResult && swapResult.type === TradeFillType.Classic && (
+        {/* Display while waiting for user to make final submission by confirming in wallet */}
+        {!swapPending && !swapConfirmed && (
+          <Row justify="center" marginTop="32px" minHeight="24px">
+            <ThemedText.BodySmall color="neutral2">{t`Proceed in your wallet`}</ThemedText.BodySmall>
+          </Row>
+        )}
+        {/* Display while UniswapX order is being filled */}
+        {uniswapXOrder && uniswapXOrder.status === UniswapXOrderStatus.OPEN && (
           <Row justify="center" marginTop="32px" minHeight="24px">
             <ThemedText.BodySmall color="neutral2">
-              <ExternalLink
-                href={getExplorerLink(
-                  chainId || ChainId.MAINNET,
-                  swapResult.response.hash,
-                  ExplorerDataType.TRANSACTION
-                )}
-                color="neutral2"
-              >
-                <Trans>View on Explorer</Trans>
+              <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
+                <Trans>Learn more about swapping with UniswapX</Trans>
               </ExternalLink>
             </ThemedText.BodySmall>
           </Row>
         )}
-        {!swapPending && !swapConfirmed && (
+        {/* Display after submitting Classic swap or after filling UniswapX order */}
+        {explorerLink && (
           <Row justify="center" marginTop="32px" minHeight="24px">
-            <ThemedText.BodySmall color="neutral2">{t`Proceed in your wallet`}</ThemedText.BodySmall>
+            <ThemedText.BodySmall color="neutral2">
+              <ExternalLink href={explorerLink} color="neutral2">
+                <Trans>View on Explorer</Trans>
+              </ExternalLink>
+            </ThemedText.BodySmall>
           </Row>
         )}
       </HeaderContainer>
