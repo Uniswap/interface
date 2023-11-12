@@ -1,21 +1,24 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { TraceEvent } from 'analytics'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
 import SpinningLoader from 'components/Loader/SpinningLoader'
+import { SupportArticleURL } from 'constants/supportArticles'
+import { useNewSwapFlow } from 'featureFlags/flags/progressIndicatorV2'
+import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import ms from 'ms'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { easings, useSpring } from 'react-spring'
 import { InterfaceTrade, RouterPreference } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components'
-import { Separator, ThemedText } from 'theme/components'
+import { ExternalLink, Separator, ThemedText } from 'theme/components'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
 
@@ -62,6 +65,23 @@ const DropdownButton = styled.button`
   cursor: pointer;
 `
 
+const HelpLink = styled(ExternalLink)`
+  width: 100%;
+  text-align: center;
+  margin-top: 16px;
+  margin-bottom: 4px;
+`
+
+interface CallToAction {
+  buttonText: string
+  helpLink?: HelpLink
+}
+
+interface HelpLink {
+  text: string
+  url: string
+}
+
 function DropdownController({ open, onClick }: { open: boolean; onClick: () => void }) {
   return (
     <DropdownButton onClick={onClick}>
@@ -79,6 +99,7 @@ function DropdownController({ open, onClick }: { open: boolean; onClick: () => v
 
 export default function SwapModalFooter({
   trade,
+  allowance,
   allowedSlippage,
   swapResult,
   onConfirm,
@@ -91,6 +112,7 @@ export default function SwapModalFooter({
   isLoading,
 }: {
   trade: InterfaceTrade
+  allowance?: Allowance
   swapResult?: SwapResult
   allowedSlippage: Percent
   onConfirm: () => void
@@ -108,8 +130,33 @@ export default function SwapModalFooter({
   const routes = isClassicTrade(trade) ? getRoutingDiagramEntries(trade) : undefined
   const theme = useTheme()
   const [showMore, setShowMore] = useState(false)
+  const showDynamicCallToAction = useNewSwapFlow()
 
   const lineItemProps = { trade, allowedSlippage, syncing: false }
+
+  const callToAction: CallToAction = useMemo(() => {
+    if (allowance && allowance.state === AllowanceState.REQUIRED && allowance.needsSetupApproval) {
+      return {
+        buttonText: t`Approve and swap`,
+        helpLink: {
+          text: t`Why do I have to approve a token?`,
+          url: SupportArticleURL.APPROVALS_EXPLAINER,
+        },
+      }
+    } else if (allowance && allowance.state === AllowanceState.REQUIRED && allowance.needsPermitSignature) {
+      return {
+        buttonText: t`Sign and swap`,
+        helpLink: {
+          text: t`Why are signatures required?`,
+          url: SupportArticleURL.APPROVALS_EXPLAINER,
+        },
+      }
+    } else {
+      return {
+        buttonText: t`Confirm swap`,
+      }
+    }
+  }, [allowance])
 
   return (
     <>
@@ -170,10 +217,13 @@ export default function SwapModalFooter({
                 </ThemedText.HeadlineSmall>
               ) : (
                 <ThemedText.HeadlineSmall color="deprecated_accentTextLightPrimary">
-                  <Trans>Confirm swap</Trans>
+                  {showDynamicCallToAction ? callToAction.buttonText : <Trans>Confirm swap</Trans>}
                 </ThemedText.HeadlineSmall>
               )}
             </ConfirmButton>
+            {showDynamicCallToAction && callToAction.helpLink && (
+              <HelpLink href={callToAction.helpLink.url}>{callToAction.helpLink.text}</HelpLink>
+            )}
           </TraceEvent>
 
           {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
