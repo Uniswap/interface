@@ -7,6 +7,7 @@ import { RESET_APPROVAL_TOKENS } from 'components/swap/constants'
 import { PendingConfirmModalState } from 'components/swap/PendingModalContent'
 import { PendingModalError } from 'components/swap/PendingModalContent/ErrorModalContent'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { Field } from 'state/swap/actions'
@@ -14,6 +15,7 @@ import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import invariant from 'tiny-invariant'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import { useMaxAmountIn } from './useMaxAmountIn'
 import { Allowance, AllowanceState } from './usePermit2Allowance'
@@ -22,17 +24,17 @@ import useWrapCallback from './useWrapCallback'
 
 export function useConfirmModalState({
   trade,
+  originalTrade,
   allowedSlippage,
   onSwap,
   allowance,
-  doesTradeDiffer,
   onCurrencySelection,
 }: {
   trade: InterfaceTrade
+  originalTrade?: InterfaceTrade
   allowedSlippage: Percent
   onSwap: () => void
   allowance: Allowance
-  doesTradeDiffer: boolean
   onCurrencySelection: (field: Field, currency: Currency) => void
 }) {
   const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.REVIEWING)
@@ -199,6 +201,7 @@ export function useConfirmModalState({
     )
   }
 
+  const doesTradeDiffer = originalTrade && tradeMeaningfullyDiffers(trade, originalTrade, allowedSlippage)
   useEffect(() => {
     // Automatically triggers the next phase if the local modal state still thinks we're in the approval phase,
     // but the allowance has been set. This will automaticaly trigger the swap.
@@ -217,5 +220,23 @@ export function useConfirmModalState({
     setApprovalError(undefined)
   }
 
-  return { startSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps, wrapTxHash }
+  const [lastExecutionPrice, setLastExecutionPrice] = useState(trade?.executionPrice)
+  const [priceUpdate, setPriceUpdate] = useState<number>()
+  useEffect(() => {
+    if (lastExecutionPrice && !trade.executionPrice.equalTo(lastExecutionPrice)) {
+      setPriceUpdate(getPriceUpdateBasisPoints(lastExecutionPrice, trade.executionPrice))
+      setLastExecutionPrice(trade.executionPrice)
+    }
+  }, [lastExecutionPrice, setLastExecutionPrice, trade])
+
+  return {
+    startSwapFlow,
+    onCancel,
+    confirmModalState,
+    doesTradeDiffer,
+    approvalError,
+    pendingModalSteps,
+    priceUpdate,
+    wrapTxHash,
+  }
 }
