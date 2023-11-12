@@ -37,7 +37,7 @@ const CloseIcon = styled(X)<{ onClick: () => void }>`
   cursor: pointer;
   ${ClickableStyle}
 `
-export function Head({
+export default function Head({
   confirmModalState,
   onDismiss,
 }: {
@@ -45,7 +45,7 @@ export function Head({
   onDismiss: () => void
 }) {
   return (
-    <Row width="100%" minHeight="50px" align="flex-start">
+    <Row width="100%" minHeight="40px" align="flex-start">
       <Row justify="left">
         <L2Badge confirmModalState={confirmModalState} />
       </Row>
