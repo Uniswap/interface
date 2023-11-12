@@ -1,6 +1,5 @@
 import { t } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import Column from 'components/Column'
 import { Sign } from 'components/Icons/Sign'
 import { Swap } from 'components/Icons/Swap'
@@ -8,6 +7,7 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { SupportArticleURL } from 'constants/supportArticles'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { useBlockConfirmationTime } from 'hooks/useBlockConfirmationTime'
+import { useColor } from 'hooks/useColor'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -54,7 +54,6 @@ export default function ProgressIndicator({
   tokenApprovalPending = false,
   revocationPending = false,
   swapError,
-  inputTokenColor,
   onRetryUniswapXSignature,
 }: {
   steps: ProgressIndicatorStep[]
@@ -65,11 +64,12 @@ export default function ProgressIndicator({
   tokenApprovalPending?: boolean
   revocationPending?: boolean
   swapError?: Error | string
-  inputTokenColor?: string
   onRetryUniswapXSignature?: () => void
 }) {
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
+  const inputTokenColor = useColor(trade?.inputAmount.currency.wrapped)
+
   // Dynamic estimation of transaction wait time based on confirmation of previous block
   const { blockConfirmationTime } = useBlockConfirmationTime()
   const [estimatedTransactionTime, setEstimatedTransactionTime] = useState<number>()
@@ -92,6 +92,7 @@ export default function ProgressIndicator({
   const wrapPending = wrapTxHash != undefined && !wrapConfirmed
   const transactionPending = revocationPending || tokenApprovalPending || wrapPending || swapPending
 
+  // Retry logic for UniswapX orders when a signature expires
   const [signatureExpiredErrorId, setSignatureExpiredErrorId] = useState('')
   useEffect(() => {
     if (swapError instanceof SignatureExpiredError && swapError.id !== signatureExpiredErrorId) {
@@ -165,6 +166,7 @@ export default function ProgressIndicator({
           ? {
               timeToStart: trade.order.info.deadline - Math.floor(Date.now() / 1000),
               delayedStartTitle: t`Confirmation timed out. Please retry.`,
+              timeToEnd: 60, // TODO: dynamically update UniswapX estimated fill time
             }
           : {}),
       },
@@ -174,15 +176,6 @@ export default function ProgressIndicator({
 
   if (steps.length === 0) {
     return null
-  }
-
-  // Return finalized-order-specifc content if available
-  if (uniswapXOrder && uniswapXOrder.status !== UniswapXOrderStatus.OPEN) {
-    return (
-      <OrderContent
-        order={{ status: uniswapXOrder.status, orderHash: uniswapXOrder.orderHash, details: uniswapXOrder }}
-      />
-    )
   }
 
   return (
