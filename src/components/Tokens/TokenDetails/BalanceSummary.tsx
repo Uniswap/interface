@@ -256,7 +256,7 @@ export default function BalanceSummary({
 
   const pageChainBalance = multiChainBalances?.find((tokenBalance) => tokenBalance.token?.id === tokenQueryId)
   const otherChainBalances = multiChainBalances?.filter((tokenBalance) => tokenBalance.token?.id !== tokenQueryId)
-  const hasBalances = pageChainBalance && otherChainBalances && Boolean(otherChainBalances.length)
+  const hasBalances = pageChainBalance || Boolean(otherChainBalances?.length)
 
   if (!account || !hasBalances) {
     return null

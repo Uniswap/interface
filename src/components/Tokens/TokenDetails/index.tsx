@@ -219,6 +219,7 @@ export default function TokenDetails({
     ) as TokenBalance[] | undefined
   }, [balanceQuery?.portfolios, tokenQuery.token?.project?.tokens, tokenQuery.token?.symbol])
 
+  console.log('should even show??', Boolean(detailedToken && tokenQuery))
   // address will never be undefined if token is defined; address is checked here to appease typechecker
   if (detailedToken === undefined || !address) {
     return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!address} />
