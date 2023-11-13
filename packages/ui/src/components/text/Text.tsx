@@ -4,7 +4,7 @@ import { GetProps, styled, Text as TamaguiText } from 'tamagui'
 import { withAnimated } from 'ui/src/components/factories/animated'
 import { Flex } from 'ui/src/components/layout'
 import { HiddenFromScreenReaders } from 'ui/src/components/text/HiddenFromScreenReaders'
-import { Shimmer } from 'ui/src/loading/Shimmer'
+import { Skeleton } from 'ui/src/loading/Skeleton'
 import { fonts } from 'ui/src/theme/fonts'
 
 export const DEFAULT_FONT_SCALE = 1
@@ -156,7 +156,7 @@ export const TextLoaderWrapper = ({
 }: { loadingShimmer?: boolean } & PropsWithChildren<unknown>): JSX.Element => {
   const inner = <TextPlaceholder>{children}</TextPlaceholder>
   if (loadingShimmer) {
-    return <Shimmer>{inner}</Shimmer>
+    return <Skeleton>{inner}</Skeleton>
   }
 
   return inner

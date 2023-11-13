@@ -10,16 +10,12 @@ import Reanimated, {
 } from 'react-native-reanimated'
 import { LinearGradient } from 'tamagui/linear-gradient'
 import { Flex } from 'ui/src/components/layout/Flex'
+import { SkeletonProps } from './SkeletonProps'
 
 const SHIMMER_DURATION = 2000 // 2 seconds
 
-type Props = {
-  children: JSX.Element
-  contrast?: boolean
-}
-
 // inspired by tutorial found here: https://github.com/kadikraman/skeleton-loader
-export function Shimmer({ children, contrast }: Props): JSX.Element {
+export function Skeleton({ children, contrast, disabled }: SkeletonProps): JSX.Element {
   const [layout, setLayout] = useState<LayoutRectangle | null>()
   const xPosition = useSharedValue(0)
 
@@ -42,6 +38,10 @@ export function Shimmer({ children, contrast }: Props): JSX.Element {
       },
     ],
   }))
+
+  if (disabled) {
+    return children
+  }
 
   if (!layout) {
     return (

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Image } from 'react-native'
-import { Flex } from 'ui/src'
-import { Loader } from 'ui/src/loading'
+import { Flex, Loader } from 'ui/src'
 import { ImageUriProps } from 'wallet/src/features/images/ImageUri'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 

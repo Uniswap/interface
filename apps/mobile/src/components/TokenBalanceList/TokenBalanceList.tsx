@@ -15,7 +15,7 @@ import {
 } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { HiddenTokensRow } from 'src/components/TokenBalanceList/HiddenTokensRow'
-import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
+import { TokenBalanceItemContextMenu } from 'src/components/TokenBalanceList/TokenBalanceItemContextMenu'
 import { IS_ANDROID } from 'src/constants/globals'
 import { useTokenBalancesGroupedByVisibility } from 'src/features/balances/hooks'
 import { Screens } from 'src/screens/Screens'
@@ -25,6 +25,7 @@ import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError, isNonPollingRequestInFlight, isWarmLoadingStatus } from 'wallet/src/data/utils'
 import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
+import { TokenBalanceItem } from 'wallet/src/features/portfolio/TokenBalanceItem'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 type TokenBalanceListProps = TabProps & {
@@ -195,11 +196,14 @@ export const TokenBalanceList = forwardRef<FlatList<any>, TokenBalanceListProps>
                 )
               } else if (isPortfolioBalance(item)) {
                 return (
-                  <TokenBalanceItem
-                    isWarmLoading={isWarmLoading}
-                    portfolioBalance={item}
-                    onPressToken={onPressToken}
-                  />
+                  <TokenBalanceItemContextMenu portfolioBalance={item}>
+                    <TokenBalanceItem
+                      padded
+                      isLoading={isWarmLoading}
+                      portfolioBalance={item}
+                      onPressToken={onPressToken}
+                    />
+                  </TokenBalanceItemContextMenu>
                 )
               }
               return null
