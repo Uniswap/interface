@@ -12,6 +12,8 @@ export function getNativeTokenDBAddress(chain: Chain): string | undefined {
     case Chain.Celo:
       return nativeOnChain(pageChainId).wrapped.address
     case Chain.Polygon:
+      // Like Celo, native MATIC does have a ERC20 precompile, but we use WMATIC in routing/pools
+      // So instead of returning nativeOnChain().wrapped.address, should directly use the precompile address here
       return MATIC_POLYGON.address
     case Chain.Ethereum:
     case Chain.Arbitrum:
