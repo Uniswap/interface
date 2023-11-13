@@ -26,7 +26,7 @@ const TableBodyContainer = styled.div`
   overscroll-behavior: none;
 `
 const TableSection = styled.table`
-  display: block;
+  width: 100%;
   border-collapse: collapse;
   box-sizing: border-box;
 `
