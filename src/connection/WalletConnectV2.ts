@@ -3,7 +3,7 @@ import { URI_AVAILABLE, WalletConnect, WalletConnectConstructorArgs } from '@web
 import { sendAnalyticsEvent } from 'analytics'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS } from 'constants/chains'
 import { Z_INDEX } from 'theme/zIndex'
-import { isIOS } from 'utils/userAgent'
+import { isAndroid, isIOS } from 'utils/userAgent'
 
 import { RPC_URLS } from '../constants/networks'
 
@@ -83,7 +83,7 @@ export class UniwalletConnect extends WalletConnectV2 {
       this.events.emit(UniwalletConnect.UNI_URI_AVAILABLE, `https://uniswap.org/app/wc?uri=${uri}`)
 
       // Opens deeplink to Uniswap Wallet if on iOS
-      if (isIOS) {
+      if (isIOS || isAndroid) {
         // Using window.location.href to open the deep link ensures smooth navigation and leverages OS handling for installed apps,
         // avoiding potential popup blockers or inconsistent behavior associated with window.open
         window.location.href = `uniswap://wc?uri=${encodeURIComponent(uri)}`
