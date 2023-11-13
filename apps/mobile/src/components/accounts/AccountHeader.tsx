@@ -85,7 +85,11 @@ export function AccountHeader(): JSX.Element {
           </Flex>
           {walletHasName ? (
             <Flex row ai="center" gap="$spacing8" justifyContent="space-between">
-              <TouchableArea hapticFeedback hitSlop={20} onPress={onPressAccountHeader}>
+              <TouchableArea
+                hapticFeedback
+                flexShrink={1}
+                hitSlop={20}
+                onPress={onPressAccountHeader}>
                 <Text color="$neutral1" flexShrink={1} numberOfLines={1} variant="subheading1">
                   {displayName?.name}
                 </Text>

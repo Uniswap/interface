@@ -466,6 +466,7 @@ exports[`AccountHeader renders without error 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           {
+            "flexShrink": 1,
             "opacity": 1,
           }
         }
