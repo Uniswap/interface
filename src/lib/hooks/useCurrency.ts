@@ -68,9 +68,12 @@ export function useTokenFromActiveNetwork(tokenAddress: string | undefined): Tok
     // If the token is on another chain, we cannot fetch it on-chain, and it is invalid.
     if (typeof tokenAddress !== 'string' || !isSupportedChain(chainId) || !formattedAddress) return undefined
     if (isLoading || !chainId) return null
+    if (!decimals?.result?.[0] && parsedSymbol === UNKNOWN_TOKEN_SYMBOL && parsedName === UNKNOWN_TOKEN_NAME) {
+      return undefined
+    }
 
     return new Token(chainId, formattedAddress, parsedDecimals, parsedSymbol, parsedName)
-  }, [chainId, tokenAddress, formattedAddress, isLoading, parsedDecimals, parsedSymbol, parsedName])
+  }, [tokenAddress, chainId, formattedAddress, isLoading, decimals?.result, parsedDecimals, parsedSymbol, parsedName])
 }
 
 type TokenMap = { [address: string]: Token }

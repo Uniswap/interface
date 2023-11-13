@@ -2087,7 +2087,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
                   class="c71"
                 >
                   <img
-                    alt="UNKNOWN logo"
+                    alt="USDC logo"
                     class="c72"
                     loading="lazy"
                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
