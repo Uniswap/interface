@@ -1,9 +1,36 @@
 import userEvent from '@testing-library/user-event'
+import store from 'state'
+import { addSerializedToken } from 'state/user/reducer'
 import { act, render, screen } from 'test-utils/render'
 
 import { PoolDetailsHeader } from './PoolDetailsHeader'
 
 describe('PoolDetailsHeader', () => {
+  beforeEach(() => {
+    store.dispatch(
+      addSerializedToken({
+        serializedToken: {
+          chainId: 1,
+          address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+          symbol: 'USDC',
+          name: 'USD Coin',
+          decimals: 6,
+        },
+      })
+    )
+    store.dispatch(
+      addSerializedToken({
+        serializedToken: {
+          chainId: 1,
+          address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+          symbol: 'WETH',
+          name: 'Wrapped Ether',
+          decimals: 18,
+        },
+      })
+    )
+  })
+
   const mockProps = {
     chainId: 1,
     poolAddress: '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640',
