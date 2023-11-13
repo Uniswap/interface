@@ -72,13 +72,13 @@ describe('useUserSlippageTolerance', () => {
 })
 
 describe('useRouterPreference', () => {
-  it('returns `auto` by default', () => {
+  it('returns `x` by default', () => {
     const {
       result: {
         current: [routerPreference],
       },
     } = renderHook(() => useRouterPreference())
-    expect(routerPreference).toBe(RouterPreference.API)
+    expect(routerPreference).toBe(RouterPreference.X)
   })
 })
 
