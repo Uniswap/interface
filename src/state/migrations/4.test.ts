@@ -11,6 +11,7 @@ const previousState: PersistAppStateV4 = {
   user: {
     userRouterPreference: RouterPreference.API,
     optedOutOfUniswapX: false,
+    disabledUniswapX: false,
     userLocale: null,
     userHideClosedPositions: false,
     userSlippageTolerance: SlippageTolerance.Auto,
@@ -40,6 +41,7 @@ describe('migration to v4', () => {
     )
     const result: any = await migrator(previousState, 4)
     expect(result?.user?.userRouterPreference).toEqual(RouterPreference.X)
+    expect(result?.user?.disabledUniswapX).toBeUndefined()
     expect(result?._persist.version).toEqual(4)
   })
 
