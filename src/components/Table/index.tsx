@@ -19,16 +19,18 @@ const TableHeadContainer = styled.div`
   -ms-overflow-style: none;
   scrollbar-width: none;
   overscroll-behavior: none;
+  margin-right: 16px; // accounts for the scrollbar padding in the table body
 `
 const TableBodyContainer = styled.div`
   max-height: 550px;
   overflow-y: auto; // Enable vertical scroll only on table body
   overscroll-behavior: none;
 `
-const TableSection = styled.table`
-  width: 100%;
+const TableSection = styled.table<{ tableLoaded?: boolean }>`
   border-collapse: collapse;
   box-sizing: border-box;
+  // Only set table width to 100% after the cell widths have been calculated
+  width: ${({ tableLoaded }) => tableLoaded && '100%'};
 `
 const TableHead = styled.thead`
   display: table;
@@ -65,12 +67,14 @@ export function Table<Data extends object>({ columns, data }: { columns: ColumnD
   const bodyRef = useRef<HTMLTableElement>(null)
   const [headerWidths, setHeaderWidths] = useState<number[]>(new Array(columns.length).fill(0))
   const [dataWidths, setDataWidths] = useState<number[]>(new Array(columns.length).fill(0))
+  const [tableLoaded, setTableLoaded] = useState(false)
 
   useLayoutEffect(() => {
     const ths = document.querySelectorAll('thead th')
     const tds = document.querySelectorAll('tbody tr:first-child td')
     setHeaderWidths(Array.from(ths).map((th) => (th as HTMLElement).offsetWidth))
     setDataWidths(Array.from(tds).map((td) => (td as HTMLElement).offsetWidth))
+    setTableLoaded(true)
   }, [])
 
   const syncScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -91,7 +95,7 @@ export function Table<Data extends object>({ columns, data }: { columns: ColumnD
     <Wrapper>
       <TableContainer onScroll={(e: React.UIEvent<HTMLDivElement>) => syncScroll(e)}>
         <TableHeadContainer ref={headRef} onScroll={(e: React.UIEvent<HTMLDivElement>) => syncScroll(e)}>
-          <TableSection>
+          <TableSection tableLoaded={tableLoaded}>
             <TableHead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
@@ -106,7 +110,7 @@ export function Table<Data extends object>({ columns, data }: { columns: ColumnD
           </TableSection>
         </TableHeadContainer>
         <TableBodyContainer ref={bodyRef} onScroll={(e: React.UIEvent<HTMLDivElement>) => syncScroll(e)}>
-          <TableSection>
+          <TableSection tableLoaded={tableLoaded}>
             <TableBody>
               {table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
