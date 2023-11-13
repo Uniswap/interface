@@ -77,7 +77,8 @@ export default function ProgressIndicator({
     // Value continuously updates as new blocks get confirmed
     // Only set step timers once to prevent resetting
     if (blockConfirmationTime && !estimatedTransactionTime) {
-      setEstimatedTransactionTime(blockConfirmationTime)
+      // Add buffer to account for variable confirmation
+      setEstimatedTransactionTime(Math.ceil(blockConfirmationTime * 1.2))
     }
   }, [blockConfirmationTime, estimatedTransactionTime])
 
@@ -183,10 +184,10 @@ export default function ProgressIndicator({
       <StyledDivider />
       {steps.map((step, i) => {
         return (
-          <>
-            <Step key={`progress-indicator-step-${i}`} stepStatus={getStatus(step)} stepDetails={stepDetails[step]} />
+          <div key={`progress-indicator-step-${i}`}>
+            <Step stepStatus={getStatus(step)} stepDetails={stepDetails[step]} />
             {i !== steps.length - 1 && <StepConnector />}
-          </>
+          </div>
         )
       })}
       {!!stepDetails[currentStep].learnMoreLinkHref && (
