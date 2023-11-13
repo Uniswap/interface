@@ -24,6 +24,7 @@ import { SlippageInfoModal } from 'src/features/transactions/swap/modals/Slippag
 import { SwapFeeInfoModal } from 'src/features/transactions/swap/modals/SwapFeeInfoModal'
 import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
+import { useSwapBottomSheetModalContext } from 'src/features/transactions/swapRewrite/contexts/SwapBottomSheetModalContext'
 import { useSwapFormContext } from 'src/features/transactions/swapRewrite/contexts/SwapFormContext'
 import {
   SwapScreen,
@@ -33,7 +34,10 @@ import { useSwapTxContext } from 'src/features/transactions/swapRewrite/contexts
 import { GasAndWarningRows } from 'src/features/transactions/swapRewrite/GasAndWarningRows'
 import { HOLD_TO_SWAP_TIMEOUT } from 'src/features/transactions/swapRewrite/HoldToSwapProgressCircle'
 import { useParsedSwapWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
-import { SwapFormButtonEmptySpace } from 'src/features/transactions/swapRewrite/SwapFormButton'
+import {
+  SwapBottomSheetModalFooterContainer,
+  SwapBottomSheetModalInnerContainer,
+} from 'src/features/transactions/swapRewrite/SwapBottomSheetModal'
 import { TransactionAmountsReview } from 'src/features/transactions/swapRewrite/TransactionAmountsReview'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { AnimatedFlex, Button, Flex, Separator, useSporeColors } from 'ui/src'
@@ -56,6 +60,8 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   const [showFOTInfoModal, setShowFOTInfoModal] = useState(false)
   const [warningAcknowledged, setWarningAcknowledged] = useState(false)
   const [shouldSubmitTx, setShouldSubmitTx] = useState(false)
+
+  const { handleContentLayout, bottomSheetViewStyles } = useSwapBottomSheetModalContext()
 
   const { screen, screenRef, setScreen } = useSwapScreenContext()
 
@@ -327,110 +333,117 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
 
   return (
     <>
-      {showWarningModal && reviewScreenWarning?.warning.title && (
-        <WarningModal
-          caption={reviewScreenWarning.warning.message}
-          closeText={blockingWarning ? undefined : t('Cancel')}
-          confirmText={blockingWarning ? t('OK') : t('Confirm')}
-          modalName={ModalName.SwapWarning}
-          severity={reviewScreenWarning.warning.severity}
-          title={reviewScreenWarning.warning.title}
-          onCancel={onCancelWarning}
-          onClose={onCloseWarning}
-          onConfirm={onConfirmWarning}
-        />
-      )}
+      <SwapBottomSheetModalInnerContainer
+        bottomSheetViewStyles={bottomSheetViewStyles}
+        fullscreen={false}
+        onLayout={handleContentLayout}>
+        {showWarningModal && reviewScreenWarning?.warning.title && (
+          <WarningModal
+            caption={reviewScreenWarning.warning.message}
+            closeText={blockingWarning ? undefined : t('Cancel')}
+            confirmText={blockingWarning ? t('OK') : t('Confirm')}
+            modalName={ModalName.SwapWarning}
+            severity={reviewScreenWarning.warning.severity}
+            title={reviewScreenWarning.warning.title}
+            onCancel={onCancelWarning}
+            onClose={onCloseWarning}
+            onConfirm={onConfirmWarning}
+          />
+        )}
 
-      {screen === SwapScreen.SwapReviewHoldingToSwap ? (
-        <Flex>
-          <AnimatedFlex entering={FadeIn} gap="$spacing2">
-            <TransactionAmountsReview
-              acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
-              newTradeRequiresAcceptance={newTradeRequiresAcceptance}
-            />
-
-            <Separator mb="$spacing24" mt="$spacing16" />
-
-            <Flex mb="$spacing8">
-              <GasAndWarningRows renderEmptyRows={false} />
-            </Flex>
-
-            <SwapFormButtonEmptySpace />
-          </AnimatedFlex>
-        </Flex>
-      ) : (
-        <>
-          {showSlippageModal && acceptedTrade && (
-            <SlippageInfoModal
-              autoSlippageTolerance={autoSlippageTolerance}
-              isCustomSlippage={!!customSlippageTolerance}
-              trade={acceptedTrade}
-              onClose={onCloseSlippageModal}
-            />
-          )}
-
-          {showFOTInfoModal && <FeeOnTransferInfoModal onClose={onCloseFOTInfo} />}
-
-          {showNetworkFeeInfoModal && <NetworkFeeInfoModal onClose={onCloseNetworkFeeInfo} />}
-
-          {showSwapFeeInfoModal && (
-            <SwapFeeInfoModal noFee={noSwapFee} onClose={onCloseSwapFeeInfo} />
-          )}
-
-          <AnimatedFlex entering={FadeIn} gap="$spacing16">
-            <TransactionAmountsReview
-              acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
-              newTradeRequiresAcceptance={newTradeRequiresAcceptance}
-            />
-
-            {isWrap ? (
-              <TransactionDetails
-                chainId={chainId}
-                gasFee={gasFee}
-                warning={reviewScreenWarning?.warning}
-                onShowNetworkFeeInfo={onShowNetworkFeeInfo}
-                onShowSwapFeeInfo={onShowSwapFeeInfo}
-                onShowWarning={onShowWarning}
-              />
-            ) : (
-              <SwapDetails
+        {screen === SwapScreen.SwapReviewHoldingToSwap ? (
+          <Flex>
+            <AnimatedFlex entering={FadeIn} gap="$spacing2">
+              <TransactionAmountsReview
                 acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
-                autoSlippageTolerance={autoSlippageTolerance}
-                customSlippageTolerance={customSlippageTolerance}
-                derivedSwapInfo={derivedSwapInfo}
-                gasFee={gasFee}
                 newTradeRequiresAcceptance={newTradeRequiresAcceptance}
-                outputCurrencyPricePerUnitExact={outputCurrencyPricePerUnitExact}
-                warning={reviewScreenWarning?.warning}
-                onAcceptTrade={onAcceptTrade}
-                onShowFOTInfo={onShowFOTInfo}
-                onShowNetworkFeeInfo={onShowNetworkFeeInfo}
-                onShowSlippageModal={onShowSlippageModal}
-                onShowSwapFeeInfo={onShowSwapFeeInfo}
-                onShowWarning={onShowWarning}
+              />
+
+              <Separator mb="$spacing24" mt="$spacing16" />
+
+              <Flex mb="$spacing8">
+                <GasAndWarningRows renderEmptyRows={false} />
+              </Flex>
+            </AnimatedFlex>
+          </Flex>
+        ) : (
+          <>
+            {showSlippageModal && acceptedTrade && (
+              <SlippageInfoModal
+                autoSlippageTolerance={autoSlippageTolerance}
+                isCustomSlippage={!!customSlippageTolerance}
+                trade={acceptedTrade}
+                onClose={onCloseSlippageModal}
               />
             )}
 
-            <Flex row gap="$spacing8">
-              <Button
-                icon={<Arrow color={colors.neutral1.get()} direction="w" size={iconSizes.icon24} />}
-                size="large"
-                theme="tertiary"
-                onPress={onPrev}
+            {showFOTInfoModal && <FeeOnTransferInfoModal onClose={onCloseFOTInfo} />}
+
+            {showNetworkFeeInfoModal && <NetworkFeeInfoModal onClose={onCloseNetworkFeeInfo} />}
+
+            {showSwapFeeInfoModal && (
+              <SwapFeeInfoModal noFee={noSwapFee} onClose={onCloseSwapFeeInfo} />
+            )}
+
+            <AnimatedFlex entering={FadeIn} gap="$spacing16">
+              <TransactionAmountsReview
+                acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
+                newTradeRequiresAcceptance={newTradeRequiresAcceptance}
               />
 
-              <Button
-                fill
-                disabled={submitButtonDisabled}
-                icon={submitButtonIcon}
-                size="large"
-                testID={ElementName.Swap}
-                onPress={onSubmitTransaction}>
-                {t('Swap')}
-              </Button>
-            </Flex>
-          </AnimatedFlex>
-        </>
+              {isWrap ? (
+                <TransactionDetails
+                  chainId={chainId}
+                  gasFee={gasFee}
+                  warning={reviewScreenWarning?.warning}
+                  onShowNetworkFeeInfo={onShowNetworkFeeInfo}
+                  onShowSwapFeeInfo={onShowSwapFeeInfo}
+                  onShowWarning={onShowWarning}
+                />
+              ) : (
+                <SwapDetails
+                  acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
+                  autoSlippageTolerance={autoSlippageTolerance}
+                  customSlippageTolerance={customSlippageTolerance}
+                  derivedSwapInfo={derivedSwapInfo}
+                  gasFee={gasFee}
+                  newTradeRequiresAcceptance={newTradeRequiresAcceptance}
+                  outputCurrencyPricePerUnitExact={outputCurrencyPricePerUnitExact}
+                  warning={reviewScreenWarning?.warning}
+                  onAcceptTrade={onAcceptTrade}
+                  onShowFOTInfo={onShowFOTInfo}
+                  onShowNetworkFeeInfo={onShowNetworkFeeInfo}
+                  onShowSlippageModal={onShowSlippageModal}
+                  onShowSwapFeeInfo={onShowSwapFeeInfo}
+                  onShowWarning={onShowWarning}
+                />
+              )}
+            </AnimatedFlex>
+          </>
+        )}
+      </SwapBottomSheetModalInnerContainer>
+
+      {screen !== SwapScreen.SwapReviewHoldingToSwap && (
+        <SwapBottomSheetModalFooterContainer>
+          <Flex row gap="$spacing8">
+            <Button
+              icon={<Arrow color={colors.neutral1.get()} direction="w" size={iconSizes.icon24} />}
+              size="large"
+              theme="tertiary"
+              onPress={onPrev}
+            />
+
+            <Button
+              fill
+              disabled={submitButtonDisabled}
+              icon={submitButtonIcon}
+              size="large"
+              testID={ElementName.Swap}
+              onPress={onSubmitTransaction}>
+              {t('Swap')}
+            </Button>
+          </Flex>
+        </SwapBottomSheetModalFooterContainer>
       )}
     </>
   )

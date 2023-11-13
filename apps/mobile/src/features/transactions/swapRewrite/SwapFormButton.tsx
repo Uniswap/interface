@@ -1,4 +1,4 @@
-import React, { ComponentProps, useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -69,7 +69,7 @@ export function SwapFormButton(): JSX.Element {
   }, [isHoldToSwapPressed, isSubmitting, setScreen])
 
   return (
-    <Flex alignItems="center" gap="$spacing16" marginHorizontal="$spacing16">
+    <Flex alignItems="center" gap="$spacing16">
       {!isHoldToSwapPressed && <HoldToInstantSwapRow />}
 
       <Trace logPress element={ElementName.SwapReview}>
@@ -117,30 +117,6 @@ function HoldToInstantSwapRow(): JSX.Element {
       <Text color="$neutral3" variant="body3">
         {t('Hold to instant swap')}
       </Text>
-    </Flex>
-  )
-}
-
-// This component is used to calculate how much space we need to reserve for the absolutely positioned footer in the `SwapForm` screen.
-// This is easier to maintain that just hardcoding the height of the footer, given that it automatically accounts for font size changes.
-export function SwapFormButtonEmptySpace({
-  onLayout,
-}: {
-  onLayout?: ComponentProps<typeof Flex>['onLayout']
-}): JSX.Element {
-  const { screen } = useSwapScreenContext()
-
-  return (
-    <Flex
-      accessibilityElementsHidden
-      alignItems="center"
-      gap="$spacing16"
-      mt="$spacing16"
-      opacity={0}
-      onLayout={onLayout}>
-      {screen !== SwapScreen.SwapReviewHoldingToSwap && <HoldToInstantSwapRow />}
-
-      <Button children="X" disabled size="large" width="100%" />
     </Flex>
   )
 }

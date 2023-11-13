@@ -1,9 +1,9 @@
-/* eslint-disable max-lines */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent, StyleSheet, TextInput, TextInputProps } from 'react-native'
 import {
   FadeIn,
+  FadeOut,
   interpolateColor,
   useAnimatedStyle,
   useDerivedValue,
@@ -15,6 +15,7 @@ import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { useSwapAnalytics } from 'src/features/transactions/swap/analytics'
 import { useShowSwapNetworkNotification } from 'src/features/transactions/swap/hooks'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
+import { useSwapBottomSheetModalContext } from 'src/features/transactions/swapRewrite/contexts/SwapBottomSheetModalContext'
 import { CurrencyInputPanel } from 'src/features/transactions/swapRewrite/CurrencyInputPanel'
 import {
   DecimalPadInput,
@@ -23,7 +24,7 @@ import {
 import { GasAndWarningRows } from 'src/features/transactions/swapRewrite/GasAndWarningRows'
 import { useSyncFiatAndTokenAmountUpdater } from 'src/features/transactions/swapRewrite/hooks/useSyncFiatAndTokenAmountUpdater'
 import { SwapArrowButton } from 'src/features/transactions/swapRewrite/SwapArrowButton'
-import { SwapFormButtonEmptySpace } from 'src/features/transactions/swapRewrite/SwapFormButton'
+import { SwapBottomSheetModalInnerContainer } from 'src/features/transactions/swapRewrite/SwapBottomSheetModal'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -41,16 +42,20 @@ const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
 const ON_SELECTION_CHANGE_WAIT_TIME_MS = 500
 
 export function SwapFormScreen({ hideContent }: { hideContent: boolean }): JSX.Element {
+  const { handleContentLayout, bottomSheetViewStyles } = useSwapBottomSheetModalContext()
   const { selectingCurrencyField } = useSwapFormContext()
 
   return (
-    <>
+    <SwapBottomSheetModalInnerContainer
+      fullscreen
+      bottomSheetViewStyles={bottomSheetViewStyles}
+      onLayout={handleContentLayout}>
       <SwapFormHeader />
 
       {!hideContent && <SwapFormContent />}
 
       {!hideContent && !!selectingCurrencyField && <TokenSelector />}
-    </>
+    </SwapBottomSheetModalInnerContainer>
   )
 }
 
@@ -151,33 +156,11 @@ function SwapFormContent(): JSX.Element {
     [focusOnCurrencyField, isFiatMode, updateSwapForm]
   )
 
-  const reviewButtonHeightRef = useRef<number | null>(null)
-  const bottomScreenHeightRef = useRef<number | null>(null)
-  const [decimalPadReady, setDecimalPadReady] = useState(false)
+  const [decimalPadReady, setDecimalPadReady] = useState(true)
 
-  const updateDecimalPadMaxHeight = useCallback(() => {
-    if (reviewButtonHeightRef.current !== null && bottomScreenHeightRef.current !== null) {
-      decimalPadRef.current?.setMaxHeight(
-        bottomScreenHeightRef.current - reviewButtonHeightRef.current
-      )
-    }
+  const onBottomScreenLayout = useCallback((event: LayoutChangeEvent): void => {
+    decimalPadRef.current?.setMaxHeight(event.nativeEvent.layout.height)
   }, [])
-
-  const onReviewButtonLayout = useCallback(
-    (event: LayoutChangeEvent): void => {
-      reviewButtonHeightRef.current = event.nativeEvent.layout.height
-      updateDecimalPadMaxHeight()
-    },
-    [updateDecimalPadMaxHeight]
-  )
-
-  const onBottomScreenLayout = useCallback(
-    (event: LayoutChangeEvent): void => {
-      bottomScreenHeightRef.current = event.nativeEvent.layout.height
-      updateDecimalPadMaxHeight()
-    },
-    [updateDecimalPadMaxHeight]
-  )
 
   const onDecimalPadReady = useCallback(() => setDecimalPadReady(true), [])
 
@@ -339,7 +322,7 @@ function SwapFormContent(): JSX.Element {
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
-      <AnimatedFlex entering={FadeIn} gap="$spacing2">
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing2">
         <Trace section={SectionName.CurrencyInputPanel}>
           <AnimatedFlex
             borderColor="$surface3"
@@ -465,12 +448,6 @@ function SwapFormContent(): JSX.Element {
             />
           )}
         </Flex>
-
-        {/*
-          This doesn't really render the button. The button is rendered on the `Footer` of the `BottomSheet`.
-          We use this component to fill up the space that will be used by the `Footer` in order to calculate the space that the `DecimalPad` can use.
-        */}
-        <SwapFormButtonEmptySpace onLayout={onReviewButtonLayout} />
       </AnimatedFlex>
     </Flex>
   )
