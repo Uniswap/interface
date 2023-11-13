@@ -113,6 +113,7 @@ export default function ConfirmSwapModalV2({
   let showPreview, showDetails, showProgressIndicator, showConfirming, showSuccess, showError
   if (errorType) {
     // When any type of error is encountered (except for SignatureExpiredError, which has special retry logic)
+    showError = true
   } else if (swapConfirmed) {
     showSuccess = true
   } else if (confirmModalState === ConfirmModalState.REVIEWING || showAcceptChanges) {
@@ -150,7 +151,6 @@ export default function ConfirmSwapModalV2({
     }, MODAL_TRANSITION_DURATION)
   }, [confirmModalState, doesTradeDiffer, onCancel, onDismiss, priceUpdate, trade])
 
-  // TODO CTA
   return (
     <SwapModal confirmModalState={confirmModalState} onDismiss={onModalDismiss}>
       {/* Head section displays L2 badge, title, and close icon */}
