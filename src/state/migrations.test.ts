@@ -3,6 +3,7 @@ import { persistStore } from 'redux-persist'
 import { createDefaultStore } from 'state'
 
 import { initialState as initialListsState } from './lists/reducer'
+import { RouterPreference } from './routing/types'
 import { initialState as initialSignaturesState } from './signatures/reducer'
 import { initialState as initialTransactionsState } from './transactions/reducer'
 import { initialState as initialUserState } from './user/reducer'
@@ -70,7 +71,10 @@ describe('redux migrations', () => {
       'redux_localstorage_simple_transactions',
       JSON.stringify({ 1: { test: { info: 'transactions' } } })
     )
-    localStorage.setItem('redux_localstorage_simple_user', JSON.stringify({ test: 'user' }))
+    localStorage.setItem(
+      'redux_localstorage_simple_user',
+      JSON.stringify({ test: 'user', userRouterPreference: 'auto' })
+    )
     localStorage.setItem('redux_localstorage_simple_lists', JSON.stringify({ test: 'lists' }))
     localStorage.setItem('redux_localstorage_simple_signatures', JSON.stringify({ test: 'signatures' }))
 
@@ -97,6 +101,7 @@ describe('redux migrations', () => {
       },
       user: {
         test: 'user',
+        userRouterPreference: RouterPreference.X,
       },
       signatures: {
         test: 'signatures',
