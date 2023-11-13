@@ -16,7 +16,7 @@ describe('Add Liquidity', () => {
     cy.contains('0.05% fee tier')
   })
 
-  it.only('clears the token selection when chain changes', () => {
+  it('clears the token selection when chain changes', () => {
     cy.visit('/add/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/ETH/500')
     cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'UNI')
     cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'ETH')
