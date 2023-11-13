@@ -230,9 +230,6 @@ export async function transformRoutesToTrade(
     data
   )
 
-  // If the top-level URA quote type is DUTCH_LIMIT, then UniswapX is better for the user
-  const isUniswapXBetter = data.routing === URAQuoteType.DUTCH_LIMIT
-
   // Some sus javascript float math but it's ok because its just an estimate for display purposes
   const usdCostPerGas = gasUseEstimateUSD && gasUseEstimate ? gasUseEstimateUSD / gasUseEstimate : undefined
 
@@ -269,7 +266,6 @@ export async function transformRoutesToTrade(
     gasUseEstimateUSD,
     approveInfo,
     blockNumber,
-    isUniswapXBetter,
     requestId: data.quote.requestId,
     quoteMethod,
     inputTax,
@@ -277,9 +273,9 @@ export async function transformRoutesToTrade(
     swapFee,
   })
 
-  // During the opt-in period, only return UniswapX quotes if the user has turned on the setting,
-  // even if it is the better quote.
-  if (isUniswapXBetter && (routerPreference === RouterPreference.X || isUniswapXDefaultEnabled)) {
+  // If the top-level URA quote type is DUTCH_LIMIT, then UniswapX is better for the user
+  const isUniswapXBetter = data.routing === URAQuoteType.DUTCH_LIMIT
+  if (isUniswapXBetter) {
     const orderInfo = toDutchOrderInfo(data.quote.orderInfo)
     const swapFee = getSwapFee(data.quote)
     const wrapInfo = await getWrapInfo(needsWrapIfUniswapX, account, currencyIn.chainId, amount, usdCostPerGas)

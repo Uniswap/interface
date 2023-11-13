@@ -8,7 +8,7 @@ import { useFeesEnabled } from 'featureFlags/flags/useFees'
 import { useMemo } from 'react'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
-import { useUserDisabledUniswapX, useUserOptedOutOfUniswapX } from 'state/user/hooks'
+import { useUserOptedOutOfUniswapX } from 'state/user/hooks'
 
 /**
  * Returns query arguments for the Routing API query or undefined if the
@@ -35,7 +35,6 @@ export function useRoutingAPIArguments({
   outputTax: Percent
 }): GetQuoteArgs | SkipToken {
   const uniswapXForceSyntheticQuotes = useUniswapXSyntheticQuoteEnabled()
-  const userDisabledUniswapX = useUserDisabledUniswapX()
   const userOptedOutOfUniswapX = useUserOptedOutOfUniswapX()
   const uniswapXEthOutputEnabled = useUniswapXEthOutputEnabled()
   const uniswapXExactOutputEnabled = useUniswapXExactOutputEnabled()
@@ -64,7 +63,6 @@ export function useRoutingAPIArguments({
             tradeType,
             needsWrapIfUniswapX: tokenIn.isNative,
             uniswapXForceSyntheticQuotes,
-            userDisabledUniswapX,
             userOptedOutOfUniswapX,
             uniswapXEthOutputEnabled,
             uniswapXExactOutputEnabled,
@@ -82,7 +80,6 @@ export function useRoutingAPIArguments({
       tradeType,
       uniswapXExactOutputEnabled,
       uniswapXForceSyntheticQuotes,
-      userDisabledUniswapX,
       userOptedOutOfUniswapX,
       uniswapXEthOutputEnabled,
       isUniswapXDefaultEnabled,

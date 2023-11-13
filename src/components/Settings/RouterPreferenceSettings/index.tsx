@@ -7,7 +7,7 @@ import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
 import { useAppDispatch } from 'state/hooks'
 import { RouterPreference } from 'state/routing/types'
 import { useRouterPreference, useUserOptedOutOfUniswapX } from 'state/user/hooks'
-import { updateDisabledUniswapX, updateOptedOutOfUniswapX } from 'state/user/reducer'
+import { updateOptedOutOfUniswapX } from 'state/user/reducer'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 
@@ -52,13 +52,8 @@ export default function RouterPreferenceSettings() {
         isActive={uniswapXInEffect}
         toggle={() => {
           if (uniswapXInEffect) {
-            if (isUniswapXDefaultEnabled) {
-              // We need to remember if a opts out of UniswapX, so we don't request UniswapX quotes.
-              dispatch(updateOptedOutOfUniswapX({ optedOutOfUniswapX: true }))
-            } else {
-              // We need to remember if a user disables Uniswap X, so we don't show the opt-in flow again.
-              dispatch(updateDisabledUniswapX({ disabledUniswapX: true }))
-            }
+            // We need to remember if a opts out of UniswapX, so we don't request UniswapX quotes.
+            dispatch(updateOptedOutOfUniswapX({ optedOutOfUniswapX: true }))
           }
           setRouterPreference(uniswapXInEffect ? RouterPreference.API : RouterPreference.X)
         }}

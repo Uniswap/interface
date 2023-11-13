@@ -119,25 +119,6 @@ export const SwapOptInSmallContainer = styled.div<{ visible: boolean }>`
   ${backUpKeyframes}
 `
 
-export const UniswapXOptInLargeContainerPositioner = styled.div`
-  position: absolute;
-  top: 211px;
-  right: ${-320 - 15}px;
-  width: 320px;
-  align-items: center;
-  min-height: 170px;
-  display: flex;
-  pointer-events: none;
-`
-
-export const UniswapXOptInLargeContainer = styled.div<{ visible: boolean }>`
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
-  transform: ${({ visible }) => `translateY(${visible ? 0 : -6}px)`};
-  transition: all ease-in 300ms;
-  transition-delay: ${({ visible }) => (visible ? '350ms' : '0')};
-  pointer-events: ${({ visible }) => (visible ? 'auto' : 'none')};
-`
-
 export const SwapMustache = styled.main`
   position: relative;
   background: ${({ theme }) => theme.surface1};

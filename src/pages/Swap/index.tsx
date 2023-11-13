@@ -33,7 +33,6 @@ import { useConnectionReady } from 'connection/eagerlyConnect'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { getSwapCurrencyId, TOKEN_SHORTHANDS } from 'constants/tokens'
-import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
 import { useCurrency, useDefaultActiveTokens } from 'hooks/Tokens'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
@@ -64,10 +63,8 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
-import { useScreenSize } from '../../hooks/useScreenSize'
 import { useIsDarkMode } from '../../theme/components/ThemeToggle'
 import { OutputTaxTooltipBody } from './TaxTooltipBody'
-import { UniswapXOptIn } from './UniswapXOptIn'
 
 export const ArrowContainer = styled.div`
   display: inline-flex;
@@ -604,9 +601,7 @@ export function Swap({
   const inputCurrency = currencies[Field.INPUT] ?? undefined
   const switchChain = useSwitchChain()
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
-  const showOptInSmall = !useScreenSize().navSearchInputVisible
   const isDark = useIsDarkMode()
-  const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
 
   const swapElement = (
     <SwapWrapper isDark={isDark} className={className} id="swap-page">
@@ -838,14 +833,8 @@ export function Swap({
           )}
         </div>
       </AutoColumn>
-      {!showOptInSmall && !isUniswapXDefaultEnabled && <UniswapXOptIn isSmall={false} swapInfo={swapInfo} />}
     </SwapWrapper>
   )
 
-  return (
-    <>
-      {swapElement}
-      {showOptInSmall && !isUniswapXDefaultEnabled && <UniswapXOptIn isSmall swapInfo={swapInfo} />}
-    </>
-  )
+  return <>{swapElement}</>
 }
