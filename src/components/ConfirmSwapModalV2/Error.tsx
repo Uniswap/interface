@@ -77,7 +77,7 @@ function getErrorContent(errorType: PendingModalError, swapResult?: SwapResult) 
 }
 
 const Container = styled(ColumnCenter)`
-  margin: 48px 0 8px;
+  margin: 8px 0px;
 `
 const Section = styled(ColumnCenter)`
   padding: 8px 16px;
@@ -87,7 +87,7 @@ export default function Error({ errorType, trade, swapResult, onRetry }: ErrorMo
   const { title, message, supportArticleURL } = getErrorContent(errorType, swapResult)
 
   return (
-    <Container gap="lg">
+    <Container gap="md">
       <Section gap="md">
         <AlertTriangle
           data-testid="pending-modal-failure-icon"
