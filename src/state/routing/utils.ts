@@ -208,20 +208,9 @@ export async function transformRoutesToTrade(
   data: URAQuoteResponse,
   quoteMethod: QuoteMethod
 ): Promise<TradeResult> {
-  const {
-    tradeType,
-    needsWrapIfUniswapX,
-    routerPreference,
-    account,
-    amount,
-    isUniswapXDefaultEnabled,
-    inputTax,
-    outputTax,
-  } = args
+  const { tradeType, needsWrapIfUniswapX, routerPreference, account, amount, inputTax, outputTax } = args
 
-  const showUniswapXTrade =
-    data.routing === URAQuoteType.DUTCH_LIMIT &&
-    (routerPreference === RouterPreference.X || (isUniswapXDefaultEnabled && routerPreference === RouterPreference.API))
+  const showUniswapXTrade = data.routing === URAQuoteType.DUTCH_LIMIT && routerPreference === RouterPreference.X
 
   const [currencyIn, currencyOut] = getTradeCurrencies(args, showUniswapXTrade)
   const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate, swapFee } = getClassicTradeDetails(

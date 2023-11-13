@@ -1,6 +1,5 @@
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
 import { useUniswapXEthOutputEnabled } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXExactOutputEnabled } from 'featureFlags/flags/uniswapXExactOutput'
 import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
@@ -38,7 +37,6 @@ export function useRoutingAPIArguments({
   const userOptedOutOfUniswapX = useUserOptedOutOfUniswapX()
   const uniswapXEthOutputEnabled = useUniswapXEthOutputEnabled()
   const uniswapXExactOutputEnabled = useUniswapXExactOutputEnabled()
-  const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
 
   const feesEnabled = useFeesEnabled()
   // Don't enable fee logic if this is a quote for pricing
@@ -66,7 +64,6 @@ export function useRoutingAPIArguments({
             userOptedOutOfUniswapX,
             uniswapXEthOutputEnabled,
             uniswapXExactOutputEnabled,
-            isUniswapXDefaultEnabled,
             sendPortionEnabled,
             inputTax,
             outputTax,
@@ -82,7 +79,6 @@ export function useRoutingAPIArguments({
       uniswapXForceSyntheticQuotes,
       userOptedOutOfUniswapX,
       uniswapXEthOutputEnabled,
-      isUniswapXDefaultEnabled,
       sendPortionEnabled,
       inputTax,
       outputTax,

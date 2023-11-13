@@ -15,7 +15,6 @@ import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicatorV2'
 import { useQuickRouteMainnetFlag } from 'featureFlags/flags/quickRouteMainnet'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
-import { useUniswapXDefaultEnabledFlag } from 'featureFlags/flags/uniswapXDefault'
 import { useUniswapXEthOutputFlag } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXExactOutputFlag } from 'featureFlags/flags/uniswapXExactOutput'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
@@ -344,12 +343,6 @@ export default function FeatureFlagModal() {
             value={useUniswapXExactOutputFlag()}
             featureFlag={FeatureFlag.uniswapXExactOutputEnabled}
             label="Enable exact output for UniswapX orders"
-          />
-          <FeatureFlagOption
-            variant={BaseVariant}
-            value={useUniswapXDefaultEnabledFlag()}
-            featureFlag={FeatureFlag.uniswapXDefaultEnabled}
-            label="Enable UniswapX by default"
           />
         </FeatureFlagGroup>
         <FeatureFlagGroup name="Info Site Migration">
