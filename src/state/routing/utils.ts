@@ -204,14 +204,14 @@ function getClassicTradeDetails(
 }
 
 export function transformQuickRouteToTrade(args: GetQuickQuoteArgs, data: QuickRouteResponse): PreviewTrade {
-  const { amount, tradeType, inputTax, outputTax } = args
+  const { amount, tradeType } = args
   const [currencyIn, currencyOut] = getTradeCurrencies(args, false)
   const [rawAmountIn, rawAmountOut] =
     data.tradeType === 'EXACT_IN' ? [amount, data.quote.amount] : [data.quote.amount, amount]
   const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn)
   const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut)
 
-  return new PreviewTrade({ inputAmount, outputAmount, tradeType, inputTax, outputTax })
+  return new PreviewTrade({ inputAmount, outputAmount, tradeType })
 }
 
 export async function transformQuoteToTrade(

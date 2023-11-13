@@ -67,8 +67,8 @@ export type GetQuickQuoteArgs = {
   inputTax: Percent
   outputTax: Percent
 }
-// from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
 
+// from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
 export type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'> & {
   buyFeeBps?: string
   sellFeeBps?: string
@@ -353,27 +353,19 @@ export class PreviewTrade {
   public readonly tradeType: TradeType
   public readonly inputAmount: CurrencyAmount<Currency>
   public readonly outputAmount: CurrencyAmount<Currency>
-  inputTax: Percent
-  outputTax: Percent
 
   constructor({
     inputAmount,
     outputAmount,
     tradeType,
-    inputTax,
-    outputTax,
   }: {
     inputAmount: CurrencyAmount<Currency>
     outputAmount: CurrencyAmount<Currency>
     tradeType: TradeType
-    inputTax: Percent
-    outputTax: Percent
   }) {
     this.inputAmount = inputAmount
     this.outputAmount = outputAmount
     this.tradeType = tradeType
-    this.inputTax = inputTax
-    this.outputTax = outputTax
   }
 
   // below methods are copied from router-sdk
@@ -397,6 +389,26 @@ export class PreviewTrade {
       const slippageAdjustedAmountIn = new Fraction(ONE).add(slippageTolerance).multiply(amountIn.quotient).quotient
       return CurrencyAmount.fromRawAmount(amountIn.currency, slippageAdjustedAmountIn)
     }
+  }
+
+  /**
+   * Returns the sell tax of the input token
+   */
+  public get inputTax(): Percent {
+    const inputCurrency = this.inputAmount.currency
+    if (inputCurrency.isNative || !inputCurrency.wrapped.sellFeeBps) return ZERO_PERCENT
+
+    return new Percent(inputCurrency.wrapped.sellFeeBps.toNumber(), 10000)
+  }
+
+  /**
+   * Returns the buy tax of the output token
+   */
+  public get outputTax(): Percent {
+    const outputCurrency = this.outputAmount.currency
+    if (outputCurrency.isNative || !outputCurrency.wrapped.buyFeeBps) return ZERO_PERCENT
+
+    return new Percent(outputCurrency.wrapped.buyFeeBps.toNumber(), 10000)
   }
 
   private _executionPrice: Price<Currency, Currency> | undefined
