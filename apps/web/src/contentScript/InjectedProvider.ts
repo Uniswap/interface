@@ -121,9 +121,6 @@ export class InjectedProvider extends EventEmitter {
     this.isUniswapWallet = true
     this.publicKeys = null
 
-    // TODO(EXT-346): pass in an initial state here that's read from local storage so that the dapp doesn't have to wait for a round trip call to initialize
-    // When that is done emit a 'connected' event
-
     this.initExtensionToDappOneWayListener()
   }
 

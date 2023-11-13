@@ -6,7 +6,7 @@ import {
   DappRequestType,
 } from 'src/background/features/dappRequests/dappRequestTypes'
 import { addRequest } from 'src/background/features/dappRequests/saga'
-import { sendRejectionToContentScript } from 'src/background/utils/messageUtils'
+import { isValidMessage, sendRejectionToContentScript } from 'src/background/utils/messageUtils'
 import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
 import { PortName } from 'src/types'
 import { BackgroundToExtensionRequestType } from 'src/types/requests'
@@ -18,6 +18,7 @@ import { initializeStore, WebState } from './store'
 
 const INACTIVITY_ALARM_NAME = 'inactivity'
 const INACTIVITY_TIMEOUT_MINUTES = 20
+const extensionId = chrome.runtime.id
 
 let store: ReturnType<typeof createStore> | undefined
 
@@ -116,8 +117,11 @@ async function maybeOpenOnboarding(): Promise<void> {
   }
 }
 
-function notOnboardedMessageListener(request: unknown, sender: chrome.runtime.MessageSender): void {
-  sendRejectionToContentScript((request as BaseDappRequest).requestId, sender.tab?.id)
+function notOnboardedMessageListener(
+  request: BaseDappRequest,
+  sender: chrome.runtime.MessageSender
+): void {
+  sendRejectionToContentScript(request.requestId, sender.tab?.id)
 }
 
 function initMessageBridge(dispatch: Dispatch<AnyAction>): void {
@@ -129,14 +133,14 @@ function initMessageBridge(dispatch: Dispatch<AnyAction>): void {
 
   chrome.runtime.onMessage.addListener(
     (
-      request: unknown,
+      request,
       sender: chrome.runtime.MessageSender,
       _sendResponse: (response: BaseDappResponse) => void
     ) => {
       // Validates this is a known request before casting.
       if (
-        !('type' in (request as Partial<BaseDappRequest>)) ||
-        !Object.values(DappRequestType).includes((request as BaseDappRequest).type)
+        sender.id !== extensionId ||
+        !isValidMessage<BaseDappRequest>(Object.values(DappRequestType), request)
       ) {
         return
       }
@@ -150,7 +154,7 @@ function initMessageBridge(dispatch: Dispatch<AnyAction>): void {
       // Dispatches a saga action which will handle side effects as well
       dispatch(
         addRequest({
-          dappRequest: request as BaseDappRequest,
+          dappRequest: request,
           senderTabId: sender.tab?.id || 0,
         })
       )

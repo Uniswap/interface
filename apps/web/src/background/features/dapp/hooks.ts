@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { selectDappConnectedAddresses } from 'src/background/features/dapp/selectors'
 import { extractBaseUrl } from 'src/background/features/dappRequests/utils'
 import { useAppSelector } from 'src/background/store'
-import { BackgroundToExtensionRequestType, BaseExtensionRequest } from 'src/types/requests'
+import { isValidMessage } from 'src/background/utils/messageUtils'
+import { BackgroundToExtensionRequestType } from 'src/types/requests'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 type DappContext = {
@@ -44,13 +45,23 @@ export function useDappContext(): DappContext {
 
     updateDappInfo()
 
-    const tabUpdatedListener = (request: BaseExtensionRequest): void => {
-      if (request?.type === BackgroundToExtensionRequestType.TabActivated) {
+    const extensionId = chrome.runtime.id
+
+    function tabChangedHandler(message: unknown, sender: chrome.runtime.MessageSender): void {
+      if (
+        sender.id === extensionId &&
+        isValidMessage<{ type: BackgroundToExtensionRequestType }>(
+          Object.values(BackgroundToExtensionRequestType),
+          message
+        ) &&
+        message.type === BackgroundToExtensionRequestType.TabActivated
+      ) {
         updateDappInfo()
       }
     }
 
-    chrome.runtime.onMessage.addListener(tabUpdatedListener)
+    chrome.runtime.onMessage.addListener(tabChangedHandler)
+    return () => chrome.runtime.onMessage.removeListener(tabChangedHandler)
   }, [setDappIconUrl, setDappUrl, setDappName])
 
   return { dappUrl, dappName, dappIconUrl }

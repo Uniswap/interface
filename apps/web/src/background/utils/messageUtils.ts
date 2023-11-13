@@ -40,3 +40,13 @@ export function sendRejectionToContentScript(
   }
   sendMessageToSpecificTab(response, senderTabId)
 }
+
+function isMessageWithType(message: unknown): message is Message & { type: string } {
+  return !!message && typeof message === 'object' && 'type' in message
+}
+
+export function isValidMessage<T>(typeValues: string[], message: unknown): message is T {
+  if (!isMessageWithType(message)) return false
+
+  return typeValues.includes(message.type)
+}
