@@ -26,7 +26,7 @@ export const migration3 = (state: PersistAppStateV3 | undefined) => {
     }
     for (const [chainId, address] of Object.entries(USDCe_ADDRESSES)) {
       const chainIdKey = Number(chainId) as ChainId
-      if (state.user.tokens[chainIdKey]?.[address]) {
+      if (state.user.tokens?.[chainIdKey]?.[address]) {
         state.user.tokens[chainIdKey][address] = serializeToken(
           new Token(chainIdKey, address, 6, 'USDC.e', 'Bridged USDC')
         )
@@ -40,7 +40,7 @@ export const migration3 = (state: PersistAppStateV3 | undefined) => {
       'USDbC',
       'USD Base Coin'
     )
-    if (state.user.tokens[ChainId.BASE]?.[USDbC_BASE.address]) {
+    if (state.user.tokens?.[ChainId.BASE]?.[USDbC_BASE.address]) {
       state.user.tokens[ChainId.BASE][USDbC_BASE.address] = serializeToken(USDbC_BASE)
     }
     return {
