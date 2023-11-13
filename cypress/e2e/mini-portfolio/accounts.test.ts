@@ -59,10 +59,9 @@ describe('Mini Portfolio account drawer', () => {
     cy.get(getTestSelector('mini-portfolio-navbar')).contains('NFTs').click()
     cy.get(getTestSelector('mini-portfolio-page')).contains('I Got Plenty')
 
-    // Skip this for now, someone sent test account an NFT on block 17445713 that causes this test to fail
-    // cy.intercept(/graphql/, { fixture: 'mini-portfolio/pools.json' })
-    // cy.get(getTestSelector('mini-portfolio-navbar')).contains('Pools').click()
-    // cy.get(getTestSelector('mini-portfolio-page')).contains('No pools yet')
+    cy.intercept(/graphql/, { fixture: 'mini-portfolio/pools.json' })
+    cy.get(getTestSelector('mini-portfolio-navbar')).contains('Pools').click()
+    cy.get(getTestSelector('mini-portfolio-page')).contains('No pools yet')
 
     cy.intercept(/graphql/, { fixture: 'mini-portfolio/full_activity.json' })
     cy.get(getTestSelector('mini-portfolio-navbar')).contains('Activity').click()
