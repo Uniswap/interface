@@ -190,6 +190,4 @@ export const PREVIEW_EXACT_IN_TRADE = new PreviewTrade({
   inputAmount: toCurrencyAmount(TEST_TOKEN_1, 1000),
   outputAmount: toCurrencyAmount(TEST_TOKEN_2, 1000),
   tradeType: TradeType.EXACT_INPUT,
-  inputTax: new Percent(0, 100),
-  outputTax: new Percent(0, 100),
 })
