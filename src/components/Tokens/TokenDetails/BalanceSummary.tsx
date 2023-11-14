@@ -6,13 +6,13 @@ import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain } from 'constants/chains'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
-import { TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
-import { gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { Chain, TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
+import { getTokenDetailsURL, gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styled, { DefaultTheme, useTheme } from 'styled-components'
+import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -74,16 +74,14 @@ interface BalanceProps {
   chainId: ChainId
   balance?: CurrencyAmount<Currency> // TODO(WEB-3026): only used for pre-Info-project calculations, should remove after project goes live
   gqlBalance?: TokenBalance
-  tokenSymbol?: string
-  color?: string
-  chainName?: string
   onClick?: () => void
-  isInfoTDPEnabled?: boolean
 }
 const Balance = (props: BalanceProps) => {
-  const { token, chainId, balance, gqlBalance, tokenSymbol, color, chainName, onClick, isInfoTDPEnabled } = props
+  const { token, chainId, balance, gqlBalance, onClick } = props
   const { formatCurrencyAmount, formatNumber } = useFormatter()
+  const { label: chainName, color } = getChainInfo(asSupportedChain(chainId) ?? ChainId.MAINNET)
   const currencies = useMemo(() => [token], [token])
+  const isInfoTDPEnabled = useInfoExplorePageEnabled()
 
   const formattedBalance = formatCurrencyAmount({
     amount: balance,
@@ -124,7 +122,7 @@ const Balance = (props: BalanceProps) => {
           <BalanceAmountsContainer>
             <BalanceItem>
               <ThemedText.SubHeader>
-                {formattedBalance} {tokenSymbol}
+                {formattedBalance} {token?.symbol}
               </ThemedText.SubHeader>
             </BalanceItem>
             <BalanceItem>
@@ -140,32 +138,19 @@ const Balance = (props: BalanceProps) => {
 
 const ConnectedChainBalanceSummary = ({
   connectedChainBalance,
-  chainId,
-  token,
-  theme,
 }: {
   connectedChainBalance?: CurrencyAmount<Currency>
-  chainId?: ChainId
-  token: Currency
-  theme: DefaultTheme
 }) => {
-  const hasConnectedChainBalance = chainId && connectedChainBalance && connectedChainBalance.greaterThan(0)
-  if (!hasConnectedChainBalance) return null
-
-  const { label: chainName, color: chainColor } = getChainInfo(asSupportedChain(chainId) ?? ChainId.MAINNET)
+  const { chainId: connectedChainId } = useWeb3React()
+  if (!connectedChainId || !connectedChainBalance || !connectedChainBalance.greaterThan(0)) return null
+  const token = connectedChainBalance.currency
+  const { label: chainName } = getChainInfo(asSupportedChain(connectedChainId) ?? ChainId.MAINNET)
   return (
     <BalanceSection>
-      <ThemedText.SubHeaderSmall color={theme.neutral1}>
+      <ThemedText.SubHeaderSmall color="neutral1">
         <Trans>Your balance on {chainName}</Trans>
       </ThemedText.SubHeaderSmall>
-      <Balance
-        token={token}
-        chainId={token.chainId}
-        balance={connectedChainBalance}
-        tokenSymbol={token.symbol}
-        color={chainColor}
-        chainName={chainName}
-      />
+      <Balance token={token} chainId={token.chainId} balance={connectedChainBalance} />
     </BalanceSection>
   )
 }
@@ -173,20 +158,18 @@ const ConnectedChainBalanceSummary = ({
 const PageChainBalanceSummary = ({
   pageChainBalance,
   chainId,
-  theme,
 }: {
   pageChainBalance?: TokenBalance
   chainId: ChainId
-  theme: DefaultTheme
 }) => {
   if (!pageChainBalance || !pageChainBalance.token) return null
   const currency = gqlToCurrency(pageChainBalance.token)
   return (
     <BalanceSection>
-      <ThemedText.HeadlineSmall color={theme.neutral1}>
+      <ThemedText.HeadlineSmall color="neutral1">
         <Trans>Your balance</Trans>
       </ThemedText.HeadlineSmall>
-      <Balance token={currency} chainId={chainId} gqlBalance={pageChainBalance} isInfoTDPEnabled={true} />
+      <Balance token={currency} chainId={chainId} gqlBalance={pageChainBalance} />
     </BalanceSection>
   )
 }
@@ -225,12 +208,13 @@ const OtherChainsBalanceSummary = ({
             gqlBalance={balance}
             onClick={() =>
               navigate(
-                `${isInfoExplorePageEnabled ? '/explore' : ''}/tokens/${balance.token?.chain.toLowerCase()}/${
-                  balance.token?.address ?? 'NATIVE'
-                }`
+                getTokenDetailsURL({
+                  address: balance.token?.address,
+                  chain: balance.token?.chain ?? Chain.Ethereum,
+                  isInfoExplorePageEnabled,
+                })
               )
             }
-            isInfoTDPEnabled={true}
           />
         )
       })}
@@ -239,20 +223,19 @@ const OtherChainsBalanceSummary = ({
 }
 
 export default function BalanceSummary({
-  token,
+  currency,
   multiChainBalances,
   tokenQueryId,
 }: {
-  token: Currency
+  currency: Currency
   multiChainBalances?: TokenBalance[]
   tokenQueryId?: string
 }) {
-  const { account, chainId: connectedChainId } = useWeb3React()
-  const theme = useTheme()
+  const { account } = useWeb3React()
 
   const isInfoTDPEnabled = useInfoTDPEnabled()
 
-  const connectedChainBalance = useCurrencyBalance(account, token)
+  const connectedChainBalance = useCurrencyBalance(account, currency)
 
   const pageChainBalance = multiChainBalances?.find((tokenBalance) => tokenBalance.token?.id === tokenQueryId)
   const otherChainBalances = multiChainBalances?.filter((tokenBalance) => tokenBalance.token?.id !== tokenQueryId)
@@ -263,17 +246,10 @@ export default function BalanceSummary({
   }
   return (
     <BalancesCard isInfoTDPEnabled={isInfoTDPEnabled}>
-      {!isInfoTDPEnabled && (
-        <ConnectedChainBalanceSummary
-          connectedChainBalance={connectedChainBalance}
-          chainId={connectedChainId}
-          token={token}
-          theme={theme}
-        />
-      )}
+      {!isInfoTDPEnabled && <ConnectedChainBalanceSummary connectedChainBalance={connectedChainBalance} />}
       {isInfoTDPEnabled && (
         <>
-          <PageChainBalanceSummary pageChainBalance={pageChainBalance} chainId={token.chainId} theme={theme} />
+          <PageChainBalanceSummary pageChainBalance={pageChainBalance} chainId={currency.chainId} />
           <OtherChainsBalanceSummary otherChainBalances={otherChainBalances} hasPageChainBalance={!!pageChainBalance} />
         </>
       )}

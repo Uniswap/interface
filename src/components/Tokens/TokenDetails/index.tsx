@@ -301,7 +301,7 @@ export default function TokenDetails({
           {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
           {detailedToken && tokenQuery && (
             <BalanceSummary
-              token={detailedToken}
+              currency={detailedToken}
               multiChainBalances={multiChainBalances}
               tokenQueryId={tokenQuery.token?.id}
             />
