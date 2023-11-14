@@ -87,7 +87,8 @@
     "react-native@0.71.11": "patch:react-native@npm%3A0.71.11#./.yarn/patches/react-native-npm-0.71.11-c31ec9c2e7.patch",
     "expo-local-authentication@13.0.2": "patch:expo-local-authentication@npm%3A13.0.2#./.yarn/patches/expo-local-authentication-npm-13.0.2-e7639a51e4.patch",
     "@gorhom/bottom-sheet@4.4.7": "patch:@gorhom/bottom-sheet@npm%3A4.4.7#./.yarn/patches/@gorhom-bottom-sheet-npm-4.4.7-1316853536.patch",
-    "react-native-context-menu-view@1.6.0": "patch:react-native-context-menu-view@npm%3A1.6.0#./.yarn/patches/react-native-context-menu-view-npm-1.6.0-f5f5410f50.patch"
+    "react-native-context-menu-view@1.6.0": "patch:react-native-context-menu-view@npm%3A1.6.0#./.yarn/patches/react-native-context-menu-view-npm-1.6.0-f5f5410f50.patch",
+    "multiformats@^9.4.2": "patch:multiformats@npm%3A9.4.2#./.yarn/patches/multiformats-npm-9.4.2-44b8a13c1d.patch"
   },
   "scripts": {
     "contracts:compile": "typechain --target ethers-v5 --out-dir packages/wallet/src/abis/types './packages/wallet/src/abis/**/*.json'",

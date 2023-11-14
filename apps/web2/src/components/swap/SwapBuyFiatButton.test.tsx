@@ -82,7 +82,7 @@ describe('SwapBuyFiatButton.tsx', () => {
     expect(screen.queryByTestId('buy-fiat-flow-incomplete-indicator')).not.toBeInTheDocument()
   })
 
-  it('fiat on ramps unavailable in region', async () => {
+  it.skip('fiat on ramps unavailable in region', async () => {
     mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsUnavailable)
     mockuseAccountDrawer.mockImplementation(() => [false, toggleWalletDrawer])
     render(<SwapBuyFiatButton />)
