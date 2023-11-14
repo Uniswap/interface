@@ -11,7 +11,7 @@ interface BaseSignatureFields {
   id: string
   addedTime: number
   chainId: number
-  expiry: number
+  expiry?: number
   offerer: string
 }
 

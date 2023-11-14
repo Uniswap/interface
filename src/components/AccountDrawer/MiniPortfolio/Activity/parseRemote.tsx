@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro'
-import { ChainId, Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, UNI_ADDRESSES } from '@uniswap/sdk-core'
+import { ChainId, Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, TradeType, UNI_ADDRESSES } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { nativeOnChain } from 'constants/tokens'
@@ -18,10 +18,17 @@ import {
   TransactionDetailsPartsFragment,
 } from 'graphql/data/__generated__/types-and-hooks'
 import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
+import store from 'state'
+import { addSignature } from 'state/signatures/reducer'
+import { SignatureType } from 'state/signatures/types'
+import { TransactionType } from 'state/transactions/types'
 import { isAddress } from 'utils'
 import { isSameAddress } from 'utils/addresses'
+import { currencyId } from 'utils/currencyId'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { MOONPAY_SENDER_ADDRESSES, OrderStatusTable, OrderTextTable } from '../constants'
@@ -338,9 +345,51 @@ function getLogoSrcs(changes: TransactionChanges): Array<string | undefined> {
 }
 
 function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activity | undefined {
-  // We currently only have a polling mechanism for locally-sent pending orders, so we hide remote pending orders since they won't update upon completion
-  // TODO(WEB-2487): Add polling mechanism for remote orders to allow displaying remote pending orders
-  if (details.orderStatus === SwapOrderStatus.Open) return undefined
+  const supportedChain = supportedChainIdFromGQLChain(chain)
+  if (!supportedChain) {
+    logSentryErrorForUnsupportedChain({
+      extras: { details },
+      errorMessage: 'Invalid activity from unsupported chain received from GQL',
+    })
+    return undefined
+  }
+
+  if (details.orderStatus === SwapOrderStatus.Open) {
+    const inputCurrency = gqlToCurrency(details.inputToken)
+    const outputCurrency = gqlToCurrency(details.outputToken)
+    try {
+      store.dispatch(
+        addSignature({
+          type: SignatureType.SIGN_UNISWAPX_ORDER,
+          offerer: details.offerer,
+          id: details.hash,
+          chainId: supportedChain,
+          orderHash: details.hash,
+          // todo: get this from the backend
+          expiry: undefined,
+          swapInfo: {
+            type: TransactionType.SWAP,
+            inputCurrencyId: currencyId(inputCurrency),
+            outputCurrencyId: currencyId(outputCurrency),
+            isUniswapXOrder: true,
+            // This doesn't affect the display, but we don't know this value from the remote activity.
+            tradeType: TradeType.EXACT_INPUT,
+            inputCurrencyAmountRaw:
+              tryParseCurrencyAmount(details.inputTokenQuantity, inputCurrency)?.quotient.toString() ?? '0',
+            expectedOutputCurrencyAmountRaw:
+              tryParseCurrencyAmount(details.outputTokenQuantity, outputCurrency)?.quotient.toString() ?? '0',
+            minimumOutputCurrencyAmountRaw:
+              tryParseCurrencyAmount(details.outputTokenQuantity, outputCurrency)?.quotient.toString() ?? '0',
+          },
+          status: UniswapXOrderStatus.OPEN,
+          addedTime: Date.now(),
+        })
+      )
+    } catch (e) {
+      // order already exists locally
+    }
+    return undefined
+  }
 
   const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity, orderStatus } = details
   const uniswapXOrderStatus = OrderStatusTable[orderStatus]
@@ -351,15 +400,6 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
     tokenOut: outputToken,
     outputAmount: outputTokenQuantity,
   })
-
-  const supportedChain = supportedChainIdFromGQLChain(chain)
-  if (!supportedChain) {
-    logSentryErrorForUnsupportedChain({
-      extras: { details },
-      errorMessage: 'Invalid activity from unsupported chain received from GQL',
-    })
-    return undefined
-  }
 
   return {
     hash: details.hash,
