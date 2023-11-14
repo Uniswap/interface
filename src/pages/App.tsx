@@ -13,7 +13,7 @@ import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-rou
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useAppSelector } from 'state/hooks'
 import { AppState } from 'state/reducer'
-import { useRouterPreference, useUserOptedOutOfUniswapX } from 'state/user/hooks'
+import { useRouterPreference } from 'state/user/hooks'
 import { StatsigProvider, StatsigUser } from 'statsig-react'
 import styled from 'styled-components'
 import DarkModeQueryParamReader from 'theme/components/DarkModeQueryParamReader'
@@ -210,7 +210,6 @@ function UserPropertyUpdater() {
   const isDarkMode = useIsDarkMode()
 
   const [routerPreference] = useRouterPreference()
-  const userOptedOutOfUniswapX = useUserOptedOutOfUniswapX()
   const rehydrated = useAppSelector((state) => state._persist.rehydrated)
 
   useEffect(() => {
@@ -246,6 +245,6 @@ function UserPropertyUpdater() {
   useEffect(() => {
     if (!rehydrated) return
     user.set(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
-  }, [routerPreference, userOptedOutOfUniswapX, rehydrated])
+  }, [routerPreference, rehydrated])
   return null
 }

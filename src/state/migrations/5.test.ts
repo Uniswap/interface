@@ -44,6 +44,7 @@ describe('migration to v5', () => {
     const result: any = await migrator(previousState, 5)
     expect(result?.user?.userRouterPreference).toEqual(RouterPreference.X)
     expect(result?.user?.disabledUniswapX).toBeUndefined()
+    expect(result?.user?.optedOutOfUniswapX).toBeUndefined()
     expect(result?._persist.version).toEqual(5)
   })
 
@@ -69,5 +70,6 @@ describe('migration to v5', () => {
       5
     )
     expect(result?.user?.userRouterPreference).toEqual(RouterPreference.API)
+    expect(result?.user?.optedOutOfUniswapX).toBeUndefined()
   })
 })

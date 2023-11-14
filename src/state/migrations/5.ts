@@ -4,7 +4,7 @@ import { UserState } from 'state/user/reducer'
 
 export type PersistAppStateV5 = {
   _persist: PersistState
-} & { user?: UserState & { disabledUniswapX?: boolean } }
+} & { user?: UserState & { disabledUniswapX?: boolean; optedOutOfUniswapX?: boolean } }
 
 /**
  * Migration to migrate users to UniswapX by default.
@@ -14,8 +14,12 @@ export const migration5 = (state: PersistAppStateV5 | undefined) => {
   if (state?.user && 'disabledUniswapX' in state.user) {
     delete state.user['disabledUniswapX']
   }
+  const userOptedOutOfUniswapX = state?.user?.optedOutOfUniswapX
+  if (state?.user && 'optedOutOfUniswapX' in state.user) {
+    delete state.user['optedOutOfUniswapX']
+  }
   // If the the user has previously disabled UniswapX *during the opt-out rollout period*, we respect that preference.
-  if (state?.user && !state.user?.optedOutOfUniswapX) {
+  if (state?.user && !userOptedOutOfUniswapX) {
     return {
       ...state,
       user: {

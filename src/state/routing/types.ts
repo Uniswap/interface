@@ -45,8 +45,6 @@ export interface GetQuoteArgs {
   uniswapXForceSyntheticQuotes: boolean
   uniswapXEthOutputEnabled: boolean
   uniswapXExactOutputEnabled: boolean
-  // temporary field indicating the user disabled UniswapX during the transition to the opt-out model
-  userOptedOutOfUniswapX: boolean
   sendPortionEnabled: boolean
   inputTax: Percent
   outputTax: Percent

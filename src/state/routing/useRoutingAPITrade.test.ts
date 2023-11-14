@@ -11,7 +11,7 @@ import { useFeesEnabled } from 'featureFlags/flags/useFees'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import ms from 'ms'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
-import { useRouterPreference, useUserOptedOutOfUniswapX } from 'state/user/hooks'
+import { useRouterPreference } from 'state/user/hooks'
 import { ETH_MAINNET } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 
@@ -39,7 +39,6 @@ beforeEach(() => {
   mocked(useIsWindowVisible).mockReturnValue(true)
   mocked(useRouterPreference).mockReturnValue([RouterPreference.API, () => undefined])
   mocked(useUniswapXSyntheticQuoteEnabled).mockReturnValue(false)
-  mocked(useUserOptedOutOfUniswapX).mockReturnValue(false)
   mocked(useUniswapXEthOutputEnabled).mockReturnValue(false)
   mocked(useUniswapXExactOutputEnabled).mockReturnValue(false)
   mocked(useFeesEnabled).mockReturnValue(true)
@@ -69,7 +68,6 @@ const MOCK_ARGS: GetQuoteArgs = {
   tradeType: TradeType.EXACT_INPUT,
   needsWrapIfUniswapX: USDCAmount.currency.isNative,
   uniswapXForceSyntheticQuotes: false,
-  userOptedOutOfUniswapX: false,
   uniswapXEthOutputEnabled: false,
   uniswapXExactOutputEnabled: false,
   sendPortionEnabled: true,

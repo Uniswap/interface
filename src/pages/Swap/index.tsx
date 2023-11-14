@@ -603,7 +603,7 @@ export function Swap({
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const isDark = useIsDarkMode()
 
-  const swapElement = (
+  return (
     <SwapWrapper isDark={isDark} className={className} id="swap-page">
       <TokenSafetyModal
         isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
@@ -835,6 +835,4 @@ export function Swap({
       </AutoColumn>
     </SwapWrapper>
   )
-
-  return <>{swapElement}</>
 }
