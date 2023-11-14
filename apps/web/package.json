@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "browserslist": "last 2 chrome versions",
   "dependencies": {
+    "@ethersproject/abi": "5.7.0",
     "@svgr/webpack": "8.0.1",
     "@tamagui/toast": "1.74.16",
     "@types/uuid": "9.0.1",
