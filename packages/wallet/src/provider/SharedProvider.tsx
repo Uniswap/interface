@@ -1,7 +1,8 @@
 import { Store } from '@reduxjs/toolkit'
 import { ReactNode } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
-import { TamaguiProvider } from './tamagui-provider'
+import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
+import { TamaguiProvider } from './TamaguiProvider'
 
 interface SharedProviderProps {
   children: ReactNode
@@ -13,7 +14,9 @@ interface SharedProviderProps {
 export function SharedProvider({ reduxStore, children }: SharedProviderProps): JSX.Element {
   return (
     <ReduxProvider store={reduxStore}>
-      <TamaguiProvider>{children}</TamaguiProvider>
+      <LocalizationContextProvider>
+        <TamaguiProvider>{children}</TamaguiProvider>
+      </LocalizationContextProvider>
     </ReduxProvider>
   )
 }

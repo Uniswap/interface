@@ -55,7 +55,6 @@ import {
   SUPPORTED_LANGUAGES,
 } from 'wallet/src/features/language/constants'
 import { useCurrentLanguage, useCurrentLocale } from 'wallet/src/features/language/hooks'
-import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
 import { setCurrentLanguage } from 'wallet/src/features/language/slice'
 import { useTrmQuery } from 'wallet/src/features/trm/api'
 import {
@@ -66,7 +65,7 @@ import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useAccounts, useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { initializeTranslation } from 'wallet/src/i18n/i18n'
-import { SharedProvider } from 'wallet/src/provider'
+import { SharedProvider } from 'wallet/src/provider/SharedProvider'
 import { useAppDispatch } from 'wallet/src/state'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 if (__DEV__) {
@@ -138,13 +137,11 @@ function App(): JSX.Element | null {
       <StrictMode>
         <StatsigProvider {...statSigOptions}>
           <SafeAreaProvider>
-            <SharedProvider reduxStore={store}>
-              <AnalyticsNavigationContextProvider
-                shouldLogScreen={shouldLogScreen}
-                useIsPartOfNavigationTree={useIsPartOfNavigationTree}>
-                <AppOuter />
-              </AnalyticsNavigationContextProvider>
-            </SharedProvider>
+            <AnalyticsNavigationContextProvider
+              shouldLogScreen={shouldLogScreen}
+              useIsPartOfNavigationTree={useIsPartOfNavigationTree}>
+              <AppOuter />
+            </AnalyticsNavigationContextProvider>
           </SafeAreaProvider>
         </StatsigProvider>
       </StrictMode>
@@ -165,11 +162,11 @@ function AppOuter(): JSX.Element | null {
   }
 
   return (
-    <ApolloProvider client={client}>
-      <PersistGate loading={null} persistor={persistor}>
-        <ErrorBoundary>
-          <GestureHandlerRootView style={flexStyles.fill}>
-            <LocalizationContextProvider>
+    <ErrorBoundary>
+      <ApolloProvider client={client}>
+        <SharedProvider reduxStore={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <GestureHandlerRootView style={flexStyles.fill}>
               <WalletContextProvider>
                 <BiometricContextProvider>
                   <LockScreenContextProvider>
@@ -191,11 +188,11 @@ function AppOuter(): JSX.Element | null {
                   </LockScreenContextProvider>
                 </BiometricContextProvider>
               </WalletContextProvider>
-            </LocalizationContextProvider>
-          </GestureHandlerRootView>
-        </ErrorBoundary>
-      </PersistGate>
-    </ApolloProvider>
+            </GestureHandlerRootView>
+          </PersistGate>
+        </SharedProvider>
+      </ApolloProvider>
+    </ErrorBoundary>
   )
 }
 

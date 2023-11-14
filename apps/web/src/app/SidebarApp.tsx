@@ -21,7 +21,7 @@ import { AppRoutes, SettingsRoutes, SettingsWalletRoutes } from 'src/app/navigat
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 import { uniswapUrls } from 'wallet/src/constants/urls'
-import { SharedProvider } from 'wallet/src/provider'
+import { SharedProvider } from 'wallet/src/provider/SharedProvider'
 import { Store } from 'webext-redux'
 import { MainContent, WebNavigation } from './navigation'
 
@@ -85,16 +85,16 @@ function App({ store }: { store: Store }): JSX.Element {
 
   return (
     <Trace>
-      <SharedProvider reduxStore={store}>
-        <GraphqlProvider>
+      <GraphqlProvider>
+        <SharedProvider reduxStore={store}>
           <TraceUserProperties />
           <ToastProvider>
             <RouterProvider router={router} />
             <ToastViewport bottom={0} flexDirection="column" left={0} name="popup" right={0} />
             <BottomToast />
           </ToastProvider>
-        </GraphqlProvider>
-      </SharedProvider>
+        </SharedProvider>
+      </GraphqlProvider>
     </Trace>
   )
 }

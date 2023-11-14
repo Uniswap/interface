@@ -1,6 +1,6 @@
 import renderer from 'react-test-renderer'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
-import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
+import { TamaguiProvider } from 'wallet/src/provider/TamaguiProvider'
 import { arbitrumDaiCurrencyInfo, uniCurrencyInfo } from 'wallet/src/test/fixtures'
 
 jest.mock('ui/src/assets/', () => 'ethereum-logo.png')

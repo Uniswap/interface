@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { PropsWithChildren, ReactNode } from 'react'
 // eslint-disable-next-line no-restricted-imports
 import {
   addFiatSymbolToNumber,
@@ -82,6 +83,11 @@ export const mockFiatConverter: LocalizationContextState = {
 }
 
 export const MockLocalizationContext = {
+  LocalizationContextProvider: function MockedLocalizationContextProvider({
+    children,
+  }: PropsWithChildren): ReactNode {
+    return children
+  },
   useLocalizationContext: (): LocalizationContextState => ({
     convertFiatAmount: mockFiatConverter.convertFiatAmount,
     convertFiatAmountFormatted: mockFiatConverter.convertFiatAmountFormatted,

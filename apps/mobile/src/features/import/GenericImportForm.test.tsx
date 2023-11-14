@@ -1,7 +1,7 @@
 import React from 'react'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { render, screen } from 'src/test/test-utils'
-import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
+import { TamaguiProvider } from 'wallet/src/provider/TamaguiProvider'
 import { noOpFunction } from 'wallet/src/test/utils'
 
 describe(GenericImportForm, () => {
