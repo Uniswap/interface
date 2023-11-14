@@ -17,6 +17,15 @@ const TableWrapper = styled.div`
   margin: 0 auto;
 `
 
+interface TopPool {
+  hash: string
+  transactions: number
+  tvl: number
+  oneDayVolume: number
+  sevenDayVolume: number
+  turnover: number
+}
+
 export function PoolTable() {
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
   const chainId = supportedChainIdFromGQLChain(chainName)
