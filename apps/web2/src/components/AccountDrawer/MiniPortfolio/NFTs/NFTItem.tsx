@@ -105,7 +105,7 @@ function NFTDetails({ asset }: { asset: WalletAsset }) {
 const BADGE_SIZE = '18px'
 function Verified() {
   return (
-    <Row width="unset" flexShrink="0">
+    <Row width="unset" flexShrink={0}>
       <VerifiedIcon height={BADGE_SIZE} width={BADGE_SIZE} />
     </Row>
   )

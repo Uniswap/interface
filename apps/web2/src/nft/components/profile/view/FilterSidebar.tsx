@@ -233,6 +233,7 @@ const CollectionSelect = ({
           )}
           <ItemsContainer>
             <AutoSizer disableWidth>
+              {/* @ts-ignore TODO-MIGRATION complaining on any type */}
               {({ height }) => (
                 <InfiniteLoader isItemLoaded={isItemLoaded} itemCount={itemCount} loadMoreItems={loadMoreItems}>
                   {({

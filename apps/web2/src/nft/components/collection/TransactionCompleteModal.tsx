@@ -206,7 +206,7 @@ const TxCompleteModal = () => {
                       <p className={styles.subtitle}>Instant Refund</p>
                       <p className={styles.interStd}>
                         Uniswap returned{' '}
-                        <span style={{ fontWeight: '535' }}>
+                        <span style={{ fontWeight: 535 }}>
                           {formatEther({
                             input: totalRefundValue.toString(),
                             type: NumberType.NFTToken,

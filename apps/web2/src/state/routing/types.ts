@@ -201,7 +201,9 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   isUniswapXBetter: boolean | undefined
   requestId: string | undefined
   quoteMethod: QuoteMethod
+  // @ts-ignore
   inputTax: Percent
+  // @ts-ignore
   outputTax: Percent
   swapFee: SwapFeeInfo | undefined
 

@@ -314,7 +314,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
           <ThemedText.SubHeaderSmall style={{ userSelect: 'none' }}>{label}</ThemedText.SubHeaderSmall>
           <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}>
             {!hideInput && (
-              <div style={{ display: 'flex', flexGrow: '1' }} onClick={handleDisabledNumericalInputClick}>
+              <div style={{ display: 'flex', flexGrow: 1 }} onClick={handleDisabledNumericalInputClick}>
                 <StyledNumericalInput
                   className="token-amount-input"
                   value={value}

@@ -6,7 +6,7 @@
     "@svgr/webpack": "8.0.1",
     "@tamagui/toast": "1.74.16",
     "@types/uuid": "9.0.1",
-    "@uniswap/analytics-events": "2.15.0",
+    "@uniswap/analytics-events": "2.28.0",
     "burnt": "0.11.4",
     "dotenv-webpack": "8.0.1",
     "eth-rpc-errors": "4.0.3",

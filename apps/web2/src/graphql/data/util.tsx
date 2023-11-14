@@ -1,4 +1,4 @@
-import { QueryResult } from '@apollo/client'
+import { OperationVariables, QueryResult } from '@apollo/client'
 import * as Sentry from '@sentry/react'
 import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
@@ -17,7 +17,7 @@ export enum PollingInterval {
 }
 
 // Polls a query only when the current component is mounted, as useQuery's pollInterval prop will continue to poll after unmount
-export function usePollQueryWhileMounted<T, K>(queryResult: QueryResult<T, K>, interval: PollingInterval) {
+export function usePollQueryWhileMounted<T, K extends OperationVariables>(queryResult: QueryResult<T, K>, interval: PollingInterval) {
   const { startPolling, stopPolling } = queryResult
 
   useEffect(() => {

@@ -6,7 +6,7 @@
   "scripts": {
     "ajv": "node scripts/compile-ajv-validators.js",
     "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
-    "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/types/v3 \"./node_modules/@uniswap/**/artifacts/contracts/**/*[!dbg].json\"",
+    "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/types/v3 \"../../node_modules/@uniswap/**/artifacts/contracts/**/*[!dbg].json\"",
     "contracts": "yarn contracts:compile:abi && yarn contracts:compile:v3",
     "graphql:fetch": "node scripts/fetch-schema.js",
     "graphql:generate:data": "graphql-codegen --config graphql.data.codegen.config.ts",

@@ -165,6 +165,7 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
         style={{ height: `${Math.min(TRAIT_ROW_HEIGHT * searchedTraits.length, styles.MAX_FILTER_DROPDOWN_HEIGHT)}px` }}
       >
         <AutoSizer disableWidth>
+          {/* @ts-ignore TODO-MIGRATION complaining on any type */}
           {({ height }) => (
             <FixedSizeList
               height={height}
