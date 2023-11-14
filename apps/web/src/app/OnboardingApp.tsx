@@ -29,7 +29,8 @@ import { Flex } from 'ui/src'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 import { uniswapUrls } from 'wallet/src/constants/urls'
-import { SharedProvider } from 'wallet/src/provider/SharedProvider'
+import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
+import { SharedProvider } from 'wallet/src/provider'
 
 const EXTENSION_ORIGIN_APPLICATION = 'extension'
 
@@ -131,14 +132,16 @@ function OnboardingApp(): JSX.Element {
   return (
     <Trace>
       <PersistGate persistor={persistor}>
-        <GraphqlProvider>
-          <SharedProvider reduxStore={store}>
-            <ToastProvider>
-              <RouterProvider router={router} />
-              <ToastViewport left={0} name="onboarding" right={0} top={0} />
-            </ToastProvider>
-          </SharedProvider>
-        </GraphqlProvider>
+        <SharedProvider reduxStore={store}>
+          <GraphqlProvider>
+            <LocalizationContextProvider>
+              <ToastProvider>
+                <RouterProvider router={router} />
+                <ToastViewport left={0} name="onboarding" right={0} top={0} />
+              </ToastProvider>
+            </LocalizationContextProvider>
+          </GraphqlProvider>
+        </SharedProvider>
       </PersistGate>
     </Trace>
   )

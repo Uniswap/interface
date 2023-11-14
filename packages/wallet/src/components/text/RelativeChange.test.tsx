@@ -1,7 +1,7 @@
 import renderer from 'react-test-renderer'
 import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { Locale } from 'wallet/src/features/language/constants'
-import { TamaguiProvider } from 'wallet/src/provider/TamaguiProvider'
+import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
 import { MockLocalizationContext } from 'wallet/src/test/utils'
 import { RelativeChange } from './RelativeChange'
 

@@ -14,7 +14,7 @@ import type { AppStore } from 'src/app/store'
 import { persistedReducer } from 'src/app/store'
 import { setupCache } from 'wallet/src/data/cache'
 import { getErrorLink } from 'wallet/src/data/links'
-import { SharedProvider } from 'wallet/src/provider/SharedProvider'
+import { SharedProvider } from 'wallet/src/provider'
 
 // This type interface extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
