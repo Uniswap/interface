@@ -31,8 +31,7 @@
     "test:cloud": "yarn jest functions --config=functions/jest.config.json",
     "cypress:open": "cypress open --browser chrome --e2e",
     "cypress:run": "cypress run --browser chrome --e2e",
-    "deduplicate": "yarn-deduplicate --strategy=highest",
-    "postinstall": "yarn patch-package"
+    "deduplicate": "yarn-deduplicate --strategy=highest"
   },
   "husky": {
     "hooks": {

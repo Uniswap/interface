@@ -51255,6 +51255,7 @@ __metadata:
     i18next-parser: 8.6.0
     is-ci: ^3.0.1
     lint-staged: ^13.1.0
+    patch-package: ^7.0.0
     prettier: latest
     prompts: 2.4.2
     semantic-release: ^20.1.0
