@@ -46,3 +46,6 @@ packages/wallet/src/i18n/locales/*_old.json
 
 # JetBrains
 .idea/
+
+# compiled types
+packages/wallet/src/types/
