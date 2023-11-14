@@ -11,6 +11,7 @@ import { useInfoExploreFlag } from 'featureFlags/flags/infoExplore'
 import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
 import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
 import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
+import { useLimitsEnabledFlag } from 'featureFlags/flags/limits'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicatorV2'
 import { useQuickRouteMainnetFlag } from 'featureFlags/flags/quickRouteMainnet'
@@ -274,6 +275,12 @@ export default function FeatureFlagModal() {
           value={useFeesEnabledFlag()}
           featureFlag={FeatureFlag.feesEnabled}
           label="Enable Swap Fees"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useLimitsEnabledFlag()}
+          featureFlag={FeatureFlag.limitsEnabled}
+          label="Enable Limits"
         />
         <FeatureFlagOption
           variant={BaseVariant}
