@@ -32,6 +32,14 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
 }
 
 .c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
   position: relative;
   top: 0;
   left: 0;
@@ -46,9 +54,9 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
 .c3 {
   border-radius: 4px;
   height: 16px;
-  left: 60%;
+  left: 70%;
   position: absolute;
-  top: 60%;
+  top: 70%;
   outline: 2px solid #FFFFFF;
   width: 16px;
   display: -webkit-box;
@@ -150,6 +158,14 @@ exports[`PortfolioLogo renders without L2 icon 1`] = `
 }
 
 .c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
   position: relative;
   top: 0;
   left: 0;
