@@ -43,7 +43,7 @@ export default function PrefetchBalancesWrapper({
     if (account) {
       // Backend takes 0.5-1sec to get the updated portfolio value after a transaction
       // This timeout is an interim solution while we're working on a websocket that'll ping the client when connected account gets changes
-      // TODO(@zzmp): remove this timeout after websocket is implemented
+      // TODO(WEB-3131): remove this timeout after websocket is implemented
       setTimeout(() => {
         prefetchPortfolioBalances({ variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS } })
         setHasUnfetchedBalances(false)
