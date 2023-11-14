@@ -1,0 +1,38 @@
+diff --git a/src/charts/line/ChartPath.tsx b/src/charts/line/ChartPath.tsx
+index 3807c185c9456d2976c305df94574ff7d948b32a..5cf985422cf49120f943c98084b08c16faf452d9 100644
+--- a/src/charts/line/ChartPath.tsx
++++ b/src/charts/line/ChartPath.tsx
+@@ -18,7 +18,6 @@ const BACKGROUND_COMPONENTS = [
+   'LineChartHighlight',
+   'LineChartHorizontalLine',
+   'LineChartGradient',
+-  'LineChartDot',
+   'LineChartTooltip',
+ ];
+ const FOREGROUND_COMPONENTS = ['LineChartHighlight', 'LineChartDot'];
+@@ -166,10 +165,25 @@ export function LineChartPathWrapper({
+         <View style={StyleSheet.absoluteFill}>
+           <AnimatedSVG animatedProps={svgProps} height={height}>
+             <LineChartPath color={color} width={strokeWidth} {...pathProps} />
++          </AnimatedSVG>
++        </View>
++        
++      </LineChartPathContext.Provider>
++      <LineChartPathContext.Provider
++        value={{
++          color,
++          isInactive: false,
++          isTransitionEnabled: pathProps.isTransitionEnabled ?? true,
++        }}
++      >
++        <View style={StyleSheet.absoluteFill}>
++          <AnimatedSVG animatedProps={svgProps} height={height}>
+             {foregroundChildren}
+           </AnimatedSVG>
+         </View>
++        
+       </LineChartPathContext.Provider>
++
+     </>
+   );
+ }

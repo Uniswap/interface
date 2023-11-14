@@ -31928,6 +31928,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-wagmi-charts@patch:react-native-wagmi-charts@npm%3A2.3.0#./.yarn/patches/react-native-wagmi-charts-npm-2.3.0-8e836a8f3c.patch::locator=universe%40workspace%3A.":
+  version: 2.3.0
+  resolution: "react-native-wagmi-charts@patch:react-native-wagmi-charts@npm%3A2.3.0#./.yarn/patches/react-native-wagmi-charts-npm-2.3.0-8e836a8f3c.patch::version=2.3.0&hash=947134&locator=universe%40workspace%3A."
+  dependencies:
+    d3-interpolate-path: ^2.2.3
+    d3-scale: ^2
+    d3-shape: ^3.0.1
+    react-keyed-flatten-children: ^1.3.0
+    react-native-redash: ^16.1.1
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-gesture-handler: "*"
+    react-native-reanimated: "*"
+    react-native-svg: "*"
+  checksum: 0e3e3ef77c5fcf60c793d69fba50a7a7cbf43170176b995742fd06b200518755c92f23d9c8685c8c4c4c34d018da73b9bc647623fac052a8d52a788cf0123337
+  languageName: node
+  linkType: hard
+
 "react-native-web-internals@npm:1.74.16":
   version: 1.74.16
   resolution: "react-native-web-internals@npm:1.74.16"
