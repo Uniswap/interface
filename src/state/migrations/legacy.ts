@@ -108,12 +108,12 @@ function legacyUserMigrations(state: any): UserState {
 
   // If `userRouterPreference` is not present, reset to default
   if (typeof result.userRouterPreference !== 'string') {
-    result.userRouterPreference = RouterPreference.API
+    result.userRouterPreference = RouterPreference.X
   }
 
-  // If `userRouterPreference` is `AUTO`, migrate to `API`
+  // If `userRouterPreference` is `AUTO`, migrate to `X`
   if ((result.userRouterPreference as string) === 'auto') {
-    result.userRouterPreference = RouterPreference.API
+    result.userRouterPreference = RouterPreference.X
   }
 
   //If `buyFiatFlowCompleted` is present, delete it using filtering
