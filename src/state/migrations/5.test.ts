@@ -48,7 +48,7 @@ describe('migration to v5', () => {
     expect(result?._persist.version).toEqual(5)
   })
 
-  it('should not migrate if user disabled during rollout', async () => {
+  it('should not migrate routerPreference if user disabled during rollout', async () => {
     const migrator = createMigrate(
       {
         1: migration1,
@@ -71,5 +71,28 @@ describe('migration to v5', () => {
     )
     expect(result?.user?.userRouterPreference).toEqual(RouterPreference.API)
     expect(result?.user?.optedOutOfUniswapX).toBeUndefined()
+    expect(result?._persist.version).toEqual(5)
+  })
+
+  it('should not migrate user if user does not exist', async () => {
+    const migrator = createMigrate(
+      {
+        1: migration1,
+        2: migration2,
+        3: migration3,
+        4: migration4,
+        5: migration5,
+      },
+      { debug: false }
+    )
+    const result: any = await migrator(
+      {
+        ...previousState,
+        user: undefined,
+      } as PersistAppStateV5,
+      5
+    )
+    expect(result?.user).toBeUndefined()
+    expect(result?._persist.version).toEqual(5)
   })
 })

@@ -10,6 +10,7 @@ export type PersistAppStateV5 = {
  * Migration to migrate users to UniswapX by default.
  */
 export const migration5 = (state: PersistAppStateV5 | undefined) => {
+  if (!state) return state
   // Remove a previously-persisted variable
   if (state?.user && 'disabledUniswapX' in state.user) {
     delete state.user['disabledUniswapX']
@@ -32,5 +33,11 @@ export const migration5 = (state: PersistAppStateV5 | undefined) => {
       },
     }
   }
-  return state
+  return {
+    ...state,
+    _persist: {
+      ...state._persist,
+      version: 5,
+    },
+  }
 }
