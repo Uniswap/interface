@@ -118,7 +118,7 @@ module.exports = {
           // This is necessary because create-react-app guards against external imports.
           // See https://sandroroth.com/blog/vanilla-extract-cra#production-build.
           if (plugin instanceof ModuleScopePlugin) {
-            plugin.allowedPaths.push(path.join(__dirname, 'node_modules/@vanilla-extract/webpack-plugin'))
+            plugin.allowedPaths.push(path.join(__dirname, '..', '..', 'node_modules/@vanilla-extract/webpack-plugin'))
           }
 
           return plugin
