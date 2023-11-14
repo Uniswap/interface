@@ -114,7 +114,9 @@ export function TokenDetailsScreen({
     variables: {
       ...currencyIdToContractInput(_currencyId),
       includeSpanish:
-        language in [Language.SpanishSpain, Language.SpanishLatam, Language.SpanishUnitedStates],
+        language === Language.SpanishSpain ||
+        language === Language.SpanishLatam ||
+        language === Language.SpanishUnitedStates,
       includeFrench: language === Language.French,
       includeJapanese: language === Language.Japanese,
       includePortuguese: language === Language.Portuguese,
