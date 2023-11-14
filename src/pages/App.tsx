@@ -23,8 +23,9 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { STATSIG_DUMMY_KEY } from 'tracing'
+import { isPathBlocked } from 'utils/blockedPaths'
 import { getEnvName } from 'utils/env'
-import { getDownloadAppLink } from 'utils/openDownloadApp'
+import { MICROSITE_LINK } from 'utils/openDownloadApp'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
@@ -144,7 +145,7 @@ export default function App() {
   const shouldRedirectToAppInstall = pathname?.startsWith('/address/')
   useLayoutEffect(() => {
     if (shouldRedirectToAppInstall) {
-      window.location.href = getDownloadAppLink()
+      window.location.href = MICROSITE_LINK
     }
   }, [shouldRedirectToAppInstall])
 
@@ -152,8 +153,7 @@ export default function App() {
     return null
   }
 
-  const blockedPaths = document.querySelector('meta[property="x:blocked-paths"]')?.getAttribute('content')?.split(',')
-  const shouldBlockPath = blockedPaths?.includes(pathname) ?? false
+  const shouldBlockPath = isPathBlocked(pathname)
   if (shouldBlockPath && pathname !== '/swap') {
     return <Navigate to="/swap" replace />
   }

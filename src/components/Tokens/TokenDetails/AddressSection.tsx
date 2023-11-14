@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
 import { CopyContractAddress, ThemedText } from 'theme/components'
+import { shortenAddress } from 'utils/addresses'
 
 const ContractAddressSection = styled.div`
   display: flex;
@@ -29,7 +30,7 @@ export default function AddressSection({ address }: { address: string }) {
         <Trans>Contract address</Trans>
       </ThemedText.SubHeaderSmall>
       <ContractAddress>
-        <CopyContractAddress address={address} />
+        <CopyContractAddress address={address} truncatedAddress={shortenAddress(address, 2, 3)} />
       </ContractAddress>
     </ContractAddressSection>
   )

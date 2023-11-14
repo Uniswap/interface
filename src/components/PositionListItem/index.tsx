@@ -173,7 +173,7 @@ export default function PositionListItem({
   tickLower,
   tickUpper,
 }: PositionListItemProps) {
-  const { formatTickPrice } = useFormatter()
+  const { formatDelta, formatTickPrice } = useFormatter()
 
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
@@ -216,7 +216,7 @@ export default function PositionListItem({
           </ThemedText.SubHeader>
 
           <FeeTierText>
-            <Trans>{new Percent(feeAmount, 1_000_000).toSignificant()}%</Trans>
+            <Trans>{formatDelta(parseFloat(new Percent(feeAmount, 1_000_000).toSignificant()))}</Trans>
           </FeeTierText>
         </PrimaryPositionIdData>
         <RangeBadge removed={removed} inRange={!outOfRange} />

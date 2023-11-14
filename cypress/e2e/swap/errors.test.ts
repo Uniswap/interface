@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { InterfaceSectionName } from '@uniswap/analytics-events'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../../src/constants/misc'
@@ -115,5 +116,19 @@ describe('Swap errors', () => {
       cy.get(getTestSelector('popups')).contains('Swap failed')
       getBalance(DAI).should('be.closeTo', initialBalance + 200, 1)
     })
+  })
+
+  it('insufficient liquidity', () => {
+    // The API response is too variable so stubbing a 404.
+    cy.intercept('POST', 'https://api.uniswap.org/v2/quote', {
+      statusCode: 404,
+      fixture: 'insufficientLiquidity.json',
+    })
+
+    cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
+    cy.get('#swap-currency-output .token-amount-input').type('100000000000000').should('have.value', '100000000000000') // 100 trillion
+    cy.contains('Insufficient liquidity for this trade.')
+    cy.get('#swap-button').should('not.exist')
+    cy.get(getTestSelector(`fiat-value-${InterfaceSectionName.CURRENCY_OUTPUT_PANEL}`)).contains('-')
   })
 })

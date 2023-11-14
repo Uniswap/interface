@@ -243,13 +243,14 @@ export function CopyLinkIcon({ toCopy }: { toCopy: string }) {
   )
 }
 
-const FullAddress = styled.span`
+const FullAddress = styled.span<{ showTruncated?: boolean }>`
+  ${({ showTruncated }) => showTruncated && 'display: none;'}
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: none;
   }
 `
-const TruncatedAddress = styled.span`
-  display: none;
+const TruncatedAddress = styled.span<{ showTruncated?: boolean }>`
+  display: ${({ showTruncated }) => (showTruncated ? 'flex' : 'none')};
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: flex;
   }
@@ -273,7 +274,15 @@ const CopyContractAddressWrapper = styled.div`
   display: flex;
 `
 
-export function CopyContractAddress({ address }: { address: string }) {
+export function CopyContractAddress({
+  address,
+  showTruncatedOnly,
+  truncatedAddress,
+}: {
+  address: string
+  showTruncatedOnly?: boolean
+  truncatedAddress?: string
+}) {
   const [isCopied, setCopied] = useCopyClipboard()
   const [tooltipX, setTooltipX] = useState<number | undefined>()
   const copy = useCallback(
@@ -284,12 +293,11 @@ export function CopyContractAddress({ address }: { address: string }) {
     [address, setCopied]
   )
 
-  const truncated = `${address.slice(0, 4)}...${address.slice(-3)}`
   return (
     <CopyContractAddressWrapper onClick={copy}>
       <CopyAddressRow isClicked={isCopied}>
-        <FullAddress>{address}</FullAddress>
-        <TruncatedAddress>{truncated}</TruncatedAddress>
+        <FullAddress showTruncated={showTruncatedOnly}>{address}</FullAddress>
+        <TruncatedAddress showTruncated={showTruncatedOnly}>{truncatedAddress}</TruncatedAddress>
         <Copy size={14} />
       </CopyAddressRow>
       {isCopied && <Tooltip isCopyContractTooltip tooltipX={tooltipX} />}

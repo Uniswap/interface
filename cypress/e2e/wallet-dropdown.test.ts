@@ -49,6 +49,34 @@ describe('Wallet Dropdown', () => {
     })
     itChangesTheme()
     itChangesLocale()
+
+    it('should not show buy crypto button in uk', () => {
+      cy.document().then((doc) => {
+        const meta = document.createElement('meta')
+        meta.setAttribute('property', 'x:blocked-paths')
+        meta.setAttribute('content', '/,/nfts,/buy')
+        doc.head.appendChild(meta)
+      })
+      cy.get(getTestSelector('wallet-buy-crypto')).should('not.exist')
+    })
+  })
+
+  describe('do not render buy button when /buy is blocked', () => {
+    beforeEach(() => {
+      cy.document().then((doc) => {
+        const meta = document.createElement('meta')
+        meta.setAttribute('property', 'x:blocked-paths')
+        meta.setAttribute('content', '/buy')
+        doc.head.appendChild(meta)
+      })
+      cy.visit('/')
+      cy.get(getTestSelector('web3-status-connected')).click()
+      cy.get(getTestSelector('wallet-settings')).click()
+    })
+
+    it('should not render buy button', () => {
+      cy.get(getTestSelector('wallet-buy-crypto')).should('not.exist')
+    })
   })
 
   describe('should change locale with feature flag', () => {

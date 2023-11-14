@@ -1,6 +1,8 @@
+import { Trans } from '@lingui/macro'
 import { SwapSkeleton } from 'components/swap/SwapSkeleton'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
-import { ArrowLeft } from 'react-feather'
+import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
+import { ArrowLeft, ChevronRight } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
@@ -8,7 +10,7 @@ import { textFadeIn } from 'theme/styles'
 
 import { LoadingBubble } from '../loading'
 import { AboutContainer, AboutHeader } from './About'
-import { BreadcrumbNavLink } from './BreadcrumbNavLink'
+import { BreadcrumbNav, BreadcrumbNavLink } from './BreadcrumbNavLink'
 import { StatPair, StatsWrapper, StatWrapper } from './StatsSection'
 
 const SWAP_COMPONENT_WIDTH = 360
@@ -41,10 +43,10 @@ export const LeftPanel = styled.div`
   max-width: 780px;
   overflow: hidden;
 `
-export const RightPanel = styled.div`
+export const RightPanel = styled.div<{ isInfoTDPEnabled?: boolean }>`
   display: none;
   flex-direction: column;
-  gap: 20px;
+  gap: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? 40 : 20)}px;
   width: ${SWAP_COMPONENT_WIDTH}px;
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
@@ -91,6 +93,9 @@ const DetailBubble = styled(LoadingBubble)`
 const SquaredBubble = styled(DetailBubble)`
   height: 32px;
   border-radius: 8px;
+`
+const NavBubble = styled(DetailBubble)`
+  width: 169px;
 `
 const TokenLogoBubble = styled(DetailBubble)`
   width: 32px;
@@ -222,13 +227,26 @@ function LoadingStats() {
 export default function TokenDetailsSkeleton() {
   const { chainName } = useParams<{ chainName?: string }>()
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
+  const isInfoTDPEnabled = useInfoTDPEnabled()
+
   return (
     <LeftPanel>
-      <BreadcrumbNavLink
-        to={(isInfoExplorePageEnabled ? '/explore' : '') + (chainName ? `/tokens/${chainName}` : `/tokens`)}
-      >
-        <ArrowLeft size={14} /> Tokens
-      </BreadcrumbNavLink>
+      {isInfoTDPEnabled ? (
+        <BreadcrumbNav isInfoTDPEnabled>
+          <BreadcrumbNavLink to={`${isInfoExplorePageEnabled ? '/explore' : ''}/tokens/${chainName}`}>
+            <Trans>Explore</Trans> <ChevronRight size={14} /> <Trans>Tokens</Trans> <ChevronRight size={14} />
+          </BreadcrumbNavLink>{' '}
+          <NavBubble />
+        </BreadcrumbNav>
+      ) : (
+        <BreadcrumbNav>
+          <BreadcrumbNavLink
+            to={(isInfoExplorePageEnabled ? '/explore' : '') + (chainName ? `/tokens/${chainName}` : `/tokens`)}
+          >
+            <ArrowLeft size={14} /> Tokens
+          </BreadcrumbNavLink>
+        </BreadcrumbNav>
+      )}
       <TokenInfoContainer>
         <TokenNameCell>
           <TokenLogoBubble />

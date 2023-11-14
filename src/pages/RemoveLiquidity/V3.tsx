@@ -12,7 +12,6 @@ import { LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { Break } from 'components/earn/styled'
-import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
 import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AddRemoveTabs } from 'components/NavigationTabs'
@@ -35,6 +34,7 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { WrongChainError } from 'utils/errors'
+import { useFormatter } from 'utils/formatNumbers'
 
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
@@ -74,6 +74,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const theme = useTheme()
   const { account, chainId, provider } = useWeb3React()
   const trace = useTrace()
+  const { formatCurrencyAmount } = useFormatter()
 
   // flag for receiving WETH
   const [receiveWETH, setReceiveWETH] = useState(false)
@@ -223,7 +224,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           </Text>
           <RowFixed>
             <Text fontSize={16} fontWeight={535} marginLeft="6px">
-              {liquidityValue0 && <FormattedCurrencyAmount currencyAmount={liquidityValue0} />}
+              {liquidityValue0 && formatCurrencyAmount({ amount: liquidityValue0 })}
             </Text>
             <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue0?.currency} />
           </RowFixed>
@@ -234,7 +235,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           </Text>
           <RowFixed>
             <Text fontSize={16} fontWeight={535} marginLeft="6px">
-              {liquidityValue1 && <FormattedCurrencyAmount currencyAmount={liquidityValue1} />}
+              {liquidityValue1 && formatCurrencyAmount({ amount: liquidityValue1 })}
             </Text>
             <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue1?.currency} />
           </RowFixed>
@@ -250,7 +251,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               </Text>
               <RowFixed>
                 <Text fontSize={16} fontWeight={535} marginLeft="6px">
-                  {feeValue0 && <FormattedCurrencyAmount currencyAmount={feeValue0} />}
+                  {feeValue0 && formatCurrencyAmount({ amount: feeValue0 })}
                 </Text>
                 <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue0?.currency} />
               </RowFixed>
@@ -261,7 +262,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               </Text>
               <RowFixed>
                 <Text fontSize={16} fontWeight={535} marginLeft="6px">
-                  {feeValue1 && <FormattedCurrencyAmount currencyAmount={feeValue1} />}
+                  {feeValue1 && formatCurrencyAmount({ amount: feeValue1 })}
                 </Text>
                 <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue1?.currency} />
               </RowFixed>
@@ -360,7 +361,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     </Text>
                     <RowFixed>
                       <Text fontSize={16} fontWeight={535} marginLeft="6px">
-                        {liquidityValue0 && <FormattedCurrencyAmount currencyAmount={liquidityValue0} />}
+                        {liquidityValue0 && formatCurrencyAmount({ amount: liquidityValue0 })}
                       </Text>
                       <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue0?.currency} />
                     </RowFixed>
@@ -371,7 +372,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     </Text>
                     <RowFixed>
                       <Text fontSize={16} fontWeight={535} marginLeft="6px">
-                        {liquidityValue1 && <FormattedCurrencyAmount currencyAmount={liquidityValue1} />}
+                        {liquidityValue1 && formatCurrencyAmount({ amount: liquidityValue1 })}
                       </Text>
                       <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue1?.currency} />
                     </RowFixed>
@@ -385,7 +386,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                         </Text>
                         <RowFixed>
                           <Text fontSize={16} fontWeight={535} marginLeft="6px">
-                            {feeValue0 && <FormattedCurrencyAmount currencyAmount={feeValue0} />}
+                            {feeValue0 && formatCurrencyAmount({ amount: feeValue0 })}
                           </Text>
                           <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue0?.currency} />
                         </RowFixed>
@@ -396,7 +397,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                         </Text>
                         <RowFixed>
                           <Text fontSize={16} fontWeight={535} marginLeft="6px">
-                            {feeValue1 && <FormattedCurrencyAmount currencyAmount={feeValue1} />}
+                            {feeValue1 && formatCurrencyAmount({ amount: feeValue1 })}
                           </Text>
                           <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue1?.currency} />
                         </RowFixed>

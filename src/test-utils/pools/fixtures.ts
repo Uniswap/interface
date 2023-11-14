@@ -89,9 +89,11 @@ export const useMultiChainPositionsReturnValue = {
   loading: false,
 }
 
+export const usdcWethPoolAddress = '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640'
+
 export const validPoolDataResponse = {
   data: {
-    id: '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640',
+    id: usdcWethPoolAddress,
     feeTier: 500,
     liquidity: parseFloat('26414803986874770777'),
     sqrtPrice: parseFloat('1977320351696380862605029898750440'),
@@ -108,7 +110,7 @@ export const validPoolDataResponse = {
     totalValueLockedToken1: '130641.89297715763283183',
     totalValueLockedUSD: '399590762.8476702153638342035105795',
     __typename: 'Pool',
-    address: '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640',
+    address: usdcWethPoolAddress,
     volumeUSDChange: -17.753809465717136,
     volumeUSDWeek: 1359911419.265625,
     tvlUSD: 223166198.4690675,

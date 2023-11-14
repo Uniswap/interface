@@ -63,7 +63,7 @@ const AutoBadge = styled(ThemedText.LabelMicro).attrs({ fontWeight: 535 })`
   }
 `
 
-function FOTTooltipContent() {
+export function FOTTooltipContent() {
   return (
     <>
       <Trans>
@@ -80,13 +80,13 @@ function FOTTooltipContent() {
 function SwapFeeTooltipContent({ hasFee }: { hasFee: boolean }) {
   const message = hasFee ? (
     <Trans>
-      Fee is applied on a few token pairs to ensure the best experience with Uniswap. It is paid in the output token and
-      has already been factored into the quote.
+      This fee is applied on select token pairs to ensure the best experience with Uniswap. It is paid in the output
+      token and has already been factored into the quote.
     </Trans>
   ) : (
     <Trans>
-      Fee is applied on a few token pairs to ensure the best experience with Uniswap. There is no fee associated with
-      this swap.
+      This fee is applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated
+      with this swap.
     </Trans>
   )
   return (

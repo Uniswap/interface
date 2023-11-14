@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css'
 
-import { sprinkles, vars } from './sprinkles.css'
+import { sprinkles } from './sprinkles.css'
 
 export const center = sprinkles({
   display: 'flex',
@@ -55,17 +55,6 @@ export const magicalGradientOnHover = style([
       '&:hover::before': {
         opacity: '1',
       },
-    },
-  },
-])
-
-export const lightGrayOverlayOnHover = style([
-  sprinkles({
-    transition: '250',
-  }),
-  {
-    ':hover': {
-      background: vars.color.lightGrayOverlay,
     },
   },
 ])
