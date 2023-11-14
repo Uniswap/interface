@@ -31,8 +31,9 @@ const hasUnfetchedBalancesAtom = atom<boolean>(true)
 export default function PrefetchBalancesWrapper({
   children,
   shouldFetchOnAccountUpdate,
+  shouldFetchOnHover = true,
   className,
-}: PropsWithChildren<{ shouldFetchOnAccountUpdate: boolean; className?: string }>) {
+}: PropsWithChildren<{ shouldFetchOnAccountUpdate: boolean; shouldFetchOnHover?: boolean; className?: string }>) {
   const { account } = useWeb3React()
   const [prefetchPortfolioBalances] = usePortfolioBalancesLazyQuery()
 
@@ -40,8 +41,13 @@ export default function PrefetchBalancesWrapper({
   const [hasUnfetchedBalances, setHasUnfetchedBalances] = useAtom(hasUnfetchedBalancesAtom)
   const fetchBalances = useCallback(() => {
     if (account) {
-      prefetchPortfolioBalances({ variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS } })
-      setHasUnfetchedBalances(false)
+      // Backend takes 0.5-1sec to get the updated portfolio value after a transaction
+      // This timeout is an interim solution while we're working on a websocket that'll ping the client when connected account gets changes
+      // TODO(@zzmp): remove this timeout after websocket is implemented
+      setTimeout(() => {
+        prefetchPortfolioBalances({ variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS } })
+        setHasUnfetchedBalances(false)
+      }, 1500)
     }
   }, [account, prefetchPortfolioBalances, setHasUnfetchedBalances])
 
@@ -73,7 +79,7 @@ export default function PrefetchBalancesWrapper({
   }, [fetchBalances, hasUnfetchedBalances])
 
   return (
-    <div onMouseEnter={onHover} className={className}>
+    <div onMouseEnter={shouldFetchOnHover ? onHover : undefined} className={className}>
       {children}
     </div>
   )

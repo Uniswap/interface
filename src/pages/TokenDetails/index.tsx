@@ -65,7 +65,7 @@ export default function TokenDetailsPage() {
   if (!tokenQuery) return <TokenDetailsPageSkeleton />
 
   return (
-    <StyledPrefetchBalancesWrapper shouldFetchOnAccountUpdate={true}>
+    <StyledPrefetchBalancesWrapper shouldFetchOnAccountUpdate={true} shouldFetchOnHover={false}>
       <TokenDetails
         urlAddress={tokenAddress}
         chain={chain}
