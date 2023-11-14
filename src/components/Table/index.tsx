@@ -1,4 +1,5 @@
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import { ScrollBarStyles } from 'components/Common'
 import { useLayoutEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
@@ -23,8 +24,10 @@ const TableHeadContainer = styled.div`
 `
 const TableBodyContainer = styled.div`
   max-height: 550px;
-  overflow-y: auto; // Enable vertical scroll only on table body
+  ${ScrollBarStyles}
+  overflow: auto;
   overscroll-behavior: none;
+  scrollbar-gutter: stable; // always factor in the width of the scrollbar to avoid layout shifts
 `
 const TableSection = styled.table<{ tableLoaded?: boolean }>`
   border-collapse: collapse;
