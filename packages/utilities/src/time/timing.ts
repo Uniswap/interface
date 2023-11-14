@@ -76,12 +76,14 @@ export function useInterval(
   }, [delay, immediateStart])
 }
 
+type Timeout = ReturnType<typeof setTimeout>
+
 // https://medium.com/javascript-in-plain-english/usetimeout-react-hook-3cc58b94af1f
 export const useTimeout = (
   callback: () => void,
   delay = 0 // in ms (default: immediately put into JS Event Queue)
 ): (() => void) => {
-  const timeoutIdRef = useRef<number>()
+  const timeoutIdRef = useRef<Timeout>()
 
   const cancel = useCallback(() => {
     const timeoutId = timeoutIdRef.current
