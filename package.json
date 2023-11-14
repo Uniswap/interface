@@ -52,6 +52,7 @@
   "packageManager": "yarn@3.2.3",
   "private": true,
   "resolutions": {
+    "@uniswap/v2-sdk": "3.2.3",
     "@apollo/client": "3.7.11",
     "@uniswap/sdk-core": "4.0.7",
     "@react-navigation/routers": "6.1.9",

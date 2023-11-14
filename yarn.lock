@@ -15127,7 +15127,7 @@ __metadata:
     "@uniswap/merkle-distributor": ^1.0.1
     "@uniswap/permit2-sdk": ^1.2.0
     "@uniswap/redux-multicall": ^1.1.8
-    "@uniswap/router-sdk": ^1.6.0
+    "@uniswap/router-sdk": ^1.7.1
     "@uniswap/sdk-core": 4.0.7
     "@uniswap/smart-order-router": ^3.15.0
     "@uniswap/token-lists": ^1.0.0-beta.33
@@ -15135,7 +15135,7 @@ __metadata:
     "@uniswap/universal-router-sdk": ^1.5.8
     "@uniswap/v2-core": ^1.0.1
     "@uniswap/v2-periphery": ^1.1.0-beta.0
-    "@uniswap/v2-sdk": ^3.2.0
+    "@uniswap/v2-sdk": ^3.2.1
     "@uniswap/v3-core": ^1.0.1
     "@uniswap/v3-periphery": ^1.1.1
     "@uniswap/v3-sdk": ^3.10.0
@@ -15518,7 +15518,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/router-sdk@npm:1.7.1, @uniswap/router-sdk@npm:^1.6.0":
+"@uniswap/router-sdk@npm:1.7.1, @uniswap/router-sdk@npm:^1.6.0, @uniswap/router-sdk@npm:^1.7.1":
   version: 1.7.1
   resolution: "@uniswap/router-sdk@npm:1.7.1"
   dependencies:
@@ -15673,20 +15673,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/v2-sdk@npm:3.2.1":
-  version: 3.2.1
-  resolution: "@uniswap/v2-sdk@npm:3.2.1"
-  dependencies:
-    "@ethersproject/address": ^5.0.0
-    "@ethersproject/solidity": ^5.0.0
-    "@uniswap/sdk-core": ^4.0.7
-    tiny-invariant: ^1.1.0
-    tiny-warning: ^1.0.3
-  checksum: 519c01e840878d03b99f0220da3a686afa097287b1c10fc65aaabd0555bab0fbcb013ac6d991453f70161e2e804b0e0797fb853d635acf56eae133671fdcb515
-  languageName: node
-  linkType: hard
-
-"@uniswap/v2-sdk@npm:^3.2.0, @uniswap/v2-sdk@npm:^3.2.3":
+"@uniswap/v2-sdk@npm:3.2.3":
   version: 3.2.3
   resolution: "@uniswap/v2-sdk@npm:3.2.3"
   dependencies:
