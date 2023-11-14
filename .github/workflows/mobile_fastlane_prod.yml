@@ -41,6 +41,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           infura-project-id: ${{ secrets.INFURA_PROJECT_ID }}
           match-password: ${{ secrets.MATCH_PASSWORD }}
+          meld-api-key: ${{ secrets.MELD_API_KEY }}
           moonpay-api-key: ${{ secrets.MOONPAY_API_KEY }}
           moonpay-api-url: ${{ secrets.MOONPAY_API_URL }}
           moonpay-widget-api-url: ${{ secrets.MOONPAY_WIDGET_API_URL }}

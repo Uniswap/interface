@@ -50,6 +50,9 @@ inputs:
   match-password:
     description: 'passed secret value'
     required: true
+  meld-api-key:
+    description: 'passed secret value'
+    required: true
   moonpay-api-key:
     description: 'passed secret value'
     required: true
@@ -197,6 +200,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         INFURA_PROJECT_ID: ${{ inputs.infura-project-id }}
         MATCH_PASSWORD: ${{ inputs.match-password }}
+        MELD_API_KEY: ${{ inputs.meld-api-key }}
         MOONPAY_API_KEY: ${{ inputs.moonpay-api-key }}
         MOONPAY_API_URL: ${{ inputs.moonpay-api-url }}
         MOONPAY_WIDGET_API_URL: ${{ inputs.moonpay-widget-api-url }}
