@@ -1,0 +1,1256 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] = `
+<DocumentFragment>
+  .c3 {
+  color: #7D7D7D;
+}
+
+.c1 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-right: -6px;
+  padding: 0 16px;
+  min-width: -webkit-fit-content;
+  min-width: -moz-fit-content;
+  min-width: fit-content;
+  white-space: nowrap;
+}
+
+.c0 {
+  padding: 0;
+  margin-top: 16px;
+  height: 28px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  background: none;
+  border: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+<button
+    class="c0"
+  >
+    <div
+      class="c1"
+    />
+    <div
+      class="c2"
+    >
+      <div
+        class="c3 css-142zc9n"
+      >
+        Show more
+      </div>
+      <svg>
+        expando-icon-closed.svg
+      </svg>
+    </div>
+    <div
+      class="c1"
+    />
+  </button>
+  .c2 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c10 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c13 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c4 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c11 {
+  color: #7D7D7D;
+}
+
+.c5 {
+  color: #222222;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c7 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c9 {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 0;
+  grid-template-columns: 1fr auto;
+  grid-gap: 0.25rem;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  text-align: left;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+.c8 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c6 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+.c12 {
+  background: #22222212;
+  border-radius: 8px;
+  color: #7D7D7D;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.c12::after {
+  content: 'Auto';
+}
+
+.c1 {
+  padding-bottom: 8px;
+}
+
+<div
+    class="c0 c1"
+  >
+    <div>
+      <div
+        class="c2 c3 c4"
+      >
+        <div
+          class="c5 c6 css-142zc9n"
+          data-testid="swap-li-label"
+        >
+          Rate
+        </div>
+        <div
+          class="c7"
+        >
+          <div>
+            <div
+              class="c5 c8 css-142zc9n"
+            >
+              <button
+                class="c9"
+                title="1 DEF = 1.00 ABC "
+              >
+                <div
+                  class="c5 css-142zc9n"
+                >
+                  1 DEF = 1.00 ABC 
+                </div>
+                 
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="height: 0px; margin-top: -12px; overflow: hidden; width: 100%; min-width: min-content; will-change: height;"
+    >
+      <div>
+        <div
+          class="c0"
+        >
+          <div
+            style="opacity: 0;"
+          >
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c5 c6 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Price impact
+              </div>
+              <div
+                class="c7"
+              >
+                <div>
+                  <div
+                    class="c5 c8 css-142zc9n"
+                  >
+                    <span
+                      class=""
+                    >
+                      ~-105566.373%
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="opacity: 0;"
+          >
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c5 c6 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Max. slippage
+              </div>
+              <div
+                class="c7"
+              >
+                <div>
+                  <div
+                    class="c5 c8 css-142zc9n"
+                  >
+                    <div
+                      class="c2 c10"
+                    >
+                      <div
+                        class="c11 c12 css-1lgneq0"
+                      />
+                       2%
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="opacity: 0;"
+          >
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c5 c6 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Receive at least
+              </div>
+              <div
+                class="c7"
+              >
+                <div>
+                  <div
+                    class="c5 c8 css-142zc9n"
+                  >
+                    0.00000000000000098 DEF
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div
+        class="c2 c3 c4"
+      >
+        <div
+          class="c5 c6 css-142zc9n"
+          data-testid="swap-li-label"
+        >
+          Fee 
+        </div>
+        <div
+          class="c7"
+        >
+          <div>
+            <div
+              class="c5 c8 css-142zc9n"
+            >
+              0 DEF
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div
+        class="c2 c3 c4"
+      >
+        <div
+          class="c5 c6 css-142zc9n"
+          data-testid="swap-li-label"
+        >
+          Network cost
+        </div>
+        <div
+          class="c7"
+        >
+          <div>
+            <div
+              class="c5 c8 css-142zc9n"
+            >
+              <div
+                class="c2 c13"
+              >
+                <svg
+                  aria-labelledby="titleID"
+                  height="16"
+                  width="16"
+                >
+                  <title
+                    id="titleID"
+                  >
+                    Ethereum logo
+                  </title>
+                  <rect
+                    fill="#F9F9F9"
+                    height="16"
+                    rx="4"
+                    width="16"
+                  />
+                  <rect
+                    fill="#6B8AFF33"
+                    height="16"
+                    rx="4"
+                    width="16"
+                  />
+                  <svg
+                    height="16"
+                    width="16"
+                  >
+                    ethereum.svg
+                  </svg>
+                </svg>
+                $1.00
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.c2 > * {
+  margin: !important;
+}
+
+.c7 {
+  color: #F5F6FC;
+}
+
+.c4 {
+  padding: 16px;
+  width: 100%;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c4:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c4 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c4 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c5 {
+  background-color: #FC72FF;
+  font-size: 20px;
+  font-weight: 535;
+  padding: 16px;
+  color: #FFFFFF;
+}
+
+.c5:focus {
+  box-shadow: 0 0 0 1pt #fb58ff;
+  background-color: #fb58ff;
+}
+
+.c5:hover {
+  background-color: #fb58ff;
+}
+
+.c5:active {
+  box-shadow: 0 0 0 1pt #fb3fff;
+  background-color: #fb3fff;
+}
+
+.c5:disabled {
+  background-color: #22222212;
+  color: #7D7D7D;
+  cursor: auto;
+  box-shadow: none;
+  border: 1px solid transparent;
+  outline: none;
+}
+
+.c6 {
+  height: 56px;
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <button
+      class="c3 c4 c5 c6"
+      data-testid="confirm-swap-button"
+      id="confirm-swap-or-send"
+    >
+      <div
+        class="c7 css-1jyz67g"
+      >
+        Confirm swap
+      </div>
+    </button>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 1`] = `
+<DocumentFragment>
+  .c3 {
+  color: #7D7D7D;
+}
+
+.c1 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-right: -6px;
+  padding: 0 16px;
+  min-width: -webkit-fit-content;
+  min-width: -moz-fit-content;
+  min-width: fit-content;
+  white-space: nowrap;
+}
+
+.c0 {
+  padding: 0;
+  margin-top: 16px;
+  height: 28px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  background: none;
+  border: none;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+@media (max-width:960px) {
+
+}
+
+<button
+    class="c0"
+  >
+    <div
+      class="c1"
+    />
+    <div
+      class="c2"
+    >
+      <div
+        class="c3 css-142zc9n"
+      >
+        Show more
+      </div>
+      <svg>
+        expando-icon-closed.svg
+      </svg>
+    </div>
+    <div
+      class="c1"
+    />
+  </button>
+  .c2 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c12 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c4 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c13 {
+  color: #7D7D7D;
+}
+
+.c5 {
+  color: #222222;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c11 {
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
+  background-size: 400%;
+  will-change: background-position;
+  border-radius: 12px;
+  height: 15px;
+  width: 50px;
+}
+
+.c10 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c8 {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 0;
+  grid-template-columns: 1fr auto;
+  grid-gap: 0.25rem;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  text-align: left;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+.c7 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.c6 {
+  cursor: auto;
+  color: #7D7D7D;
+}
+
+.c9 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+.c14 {
+  background: #22222212;
+  border-radius: 8px;
+  color: #7D7D7D;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.c14::after {
+  content: 'Auto';
+}
+
+.c1 {
+  padding-bottom: 8px;
+}
+
+@media (max-width:960px) {
+
+}
+
+<div
+    class="c0 c1"
+  >
+    <div>
+      <div
+        class="c2 c3 c4"
+      >
+        <div
+          class="c5 c6 css-142zc9n"
+          data-testid="swap-li-label"
+        >
+          Rate
+        </div>
+        <div
+          class="c5 c7 css-142zc9n"
+        >
+          <button
+            class="c8"
+            title="1 DEF = 1.00 ABC "
+          >
+            <div
+              class="c5 css-142zc9n"
+            >
+              1 DEF = 1.00 ABC 
+            </div>
+             
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      style="height: 0px; margin-top: -12px; overflow: hidden; width: 100%; min-width: min-content; will-change: height;"
+    >
+      <div>
+        <div
+          class="c0"
+        >
+          <div
+            style="opacity: 0;"
+          >
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c5 c9 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Price impact
+              </div>
+              <div
+                class="c10"
+              >
+                <div>
+                  <div
+                    class="c5 c7 css-142zc9n"
+                  >
+                    <div
+                      class="c11"
+                      data-testid="loading-row"
+                      height="15"
+                      width="50"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="opacity: 0;"
+          >
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c5 c9 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Max. slippage
+              </div>
+              <div
+                class="c10"
+              >
+                <div>
+                  <div
+                    class="c5 c7 css-142zc9n"
+                  >
+                    <div
+                      class="c2 c12"
+                    >
+                      <div
+                        class="c13 c14 css-1lgneq0"
+                      />
+                       2%
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="opacity: 0;"
+          >
+            <div
+              class="c2 c3 c4"
+            >
+              <div
+                class="c5 c9 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Receive at least
+              </div>
+              <div
+                class="c10"
+              >
+                <div>
+                  <div
+                    class="c5 c7 css-142zc9n"
+                  >
+                    0.00000000000000098 DEF
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div
+        class="c2 c3 c4"
+      >
+        <div
+          class="c5 c6 css-142zc9n"
+          data-testid="swap-li-label"
+        >
+          Fee
+        </div>
+        <div
+          class="c5 c7 css-142zc9n"
+        >
+          <div
+            class="c11"
+            data-testid="loading-row"
+            height="15"
+            width="50"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <div
+        class="c2 c3 c4"
+      >
+        <div
+          class="c5 c9 css-142zc9n"
+          data-testid="swap-li-label"
+        >
+          Network cost
+        </div>
+        <div
+          class="c10"
+        >
+          <div>
+            <div
+              class="c5 c7 css-142zc9n"
+            >
+              <div
+                class="c11"
+                data-testid="loading-row"
+                height="15"
+                width="50"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.c2 > * {
+  margin: !important;
+}
+
+.c7 {
+  color: #7D7D7D;
+}
+
+.c9 {
+  width: 8px;
+  height: 8px;
+  min-height: 8px;
+  min-width: 8px;
+  border-radius: 50%;
+  position: relative;
+  background-color: #22222212;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+}
+
+.c8 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  height: 16px;
+  width: 16px;
+  margin-right: 2px;
+  margin-left: 2px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #222222;
+  -webkit-transition: 250ms ease color;
+  transition: 250ms ease color;
+}
+
+.c10 {
+  -webkit-animation: fvtopB 1s cubic-bezier(0.83,0,0.17,1) infinite;
+  animation: fvtopB 1s cubic-bezier(0.83,0,0.17,1) infinite;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  border-top: 1px solid transparent;
+  border-right: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-left: 2px solid #222222;
+  background: transparent;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  position: relative;
+  -webkit-transition: 250ms ease border-color;
+  transition: 250ms ease border-color;
+  left: -3px;
+  top: -3px;
+}
+
+.c4 {
+  padding: 16px;
+  width: 100%;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c4:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c4 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c4 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c5 {
+  background-color: #FC72FF;
+  font-size: 20px;
+  font-weight: 535;
+  padding: 16px;
+  color: #FFFFFF;
+}
+
+.c5:focus {
+  box-shadow: 0 0 0 1pt #fb58ff;
+  background-color: #fb58ff;
+}
+
+.c5:hover {
+  background-color: #fb58ff;
+}
+
+.c5:active {
+  box-shadow: 0 0 0 1pt #fb3fff;
+  background-color: #fb3fff;
+}
+
+.c5:disabled {
+  background-color: #22222212;
+  color: #7D7D7D;
+  cursor: auto;
+  box-shadow: none;
+  border: 1px solid transparent;
+  outline: none;
+}
+
+.c6 {
+  height: 56px;
+}
+
+@media (max-width:960px) {
+  .c8 {
+    display: none;
+  }
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <button
+      class="c3 c4 c5 c6"
+      data-testid="confirm-swap-button"
+      disabled=""
+      id="confirm-swap-or-send"
+    >
+      <div
+        class="c7 css-1jyz67g"
+      >
+        <div
+          class="c0 c1"
+        >
+          <div
+            class="c8"
+          >
+            <div
+              class="c9"
+            >
+              <div
+                class="c10"
+              />
+            </div>
+          </div>
+          Finalizing quote...
+        </div>
+      </div>
+    </button>
+  </div>
+</DocumentFragment>
+`;
