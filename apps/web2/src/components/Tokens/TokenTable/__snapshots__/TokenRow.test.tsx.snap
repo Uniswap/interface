@@ -3,6 +3,14 @@
 exports[`LoadedRow.tsx renders a row 1`] = `
 <DocumentFragment>
   .c7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
   position: relative;
   top: 0;
   left: 0;
@@ -94,7 +102,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 .c6 {
-  gap: 12px;
+  gap: 14px;
   max-width: 100%;
 }
 
