@@ -58,6 +58,7 @@
     "@sideway/formula": "3.0.1",
     "@xmldom/xmldom": "0.7.7",
     "esbuild": "0.19.3",
+    "eslint-plugin-import": "2.27",
     "jpeg-js": "0.4.4",
     "json5": "2.2.2",
     "is-core-module": "2.13.0",

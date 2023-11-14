@@ -9,6 +9,12 @@ rulesDirPlugin.RULES_DIR = 'eslint_rules'
 module.exports = {
   extends: ['@uniswap/eslint-config/react'],
   plugins: ['rulesdir'],
+
+  rules: {
+    'cypress/unsafe-to-chain-command': 'off',
+    'prettier/prettier': 'off',
+  },
+  
   overrides: [
     {
       files: ['**/*'],
