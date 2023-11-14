@@ -63,7 +63,7 @@ function pairKey(token0Address: string, token1Address: string) {
 export const initialState: UserState = {
   selectedWallet,
   userLocale: null,
-  userRouterPreference: RouterPreference.API,
+  userRouterPreference: RouterPreference.X,
   userHideClosedPositions: false,
   userSlippageTolerance: SlippageTolerance.Auto,
   userSlippageToleranceHasBeenMigratedToAuto: true,

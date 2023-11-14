@@ -66,7 +66,7 @@ describe('useUserSlippageTolerance', () => {
 })
 
 describe('useRouterPreference', () => {
-  it('returns `auto` by default', () => {
+  it('returns `x` by default', () => {
     const {
       result: {
         current: [routerPreference],

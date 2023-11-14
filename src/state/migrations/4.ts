@@ -1,27 +1,23 @@
+import { DEFAULT_LOCALE } from 'constants/locales'
 import { PersistState } from 'redux-persist'
-import { RouterPreference } from 'state/routing/types'
 import { UserState } from 'state/user/reducer'
 
 export type PersistAppStateV4 = {
   _persist: PersistState
-} & { user?: UserState & { disabledUniswapX?: boolean } }
+} & { user?: UserState }
 
 /**
- * Migration to migrate users to UniswapX by default.
+ * Migration to set german locale to default locale, after
+ * the german locale was removed from supported locales.
  */
 export const migration4 = (state: PersistAppStateV4 | undefined) => {
-  // Remove a previously-persisted variable
-  if (state?.user && 'disabledUniswapX' in state.user) {
-    delete state.user['disabledUniswapX']
-  }
-  // If the the user has previously disabled UniswapX *during the opt-out rollout period*, we respect that preference.
-  if (state?.user && !state.user?.optedOutOfUniswapX) {
+  if (state?.user) {
+    if (state.user.userLocale === 'de-DE') {
+      state.user.userLocale = DEFAULT_LOCALE
+    }
+
     return {
       ...state,
-      user: {
-        ...state.user,
-        userRouterPreference: RouterPreference.X,
-      },
       _persist: {
         ...state._persist,
         version: 4,
