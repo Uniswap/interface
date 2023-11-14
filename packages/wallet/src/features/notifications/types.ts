@@ -13,6 +13,7 @@ export enum AppNotificationType {
   Copied,
   Success,
   SwapNetwork,
+  ChooseCountry,
   AssetVisibility, // could be token or NFT
 }
 
@@ -143,6 +144,12 @@ export interface SwapNetworkNotification extends AppNotificationBase {
   chainId: ChainId
 }
 
+export interface ChooseCountryNotification extends AppNotificationBase {
+  type: AppNotificationType.ChooseCountry
+  countryName: string
+  countryCode: string
+}
+
 export interface ChangeAssetVisibilityNotification extends AppNotificationBase {
   type: AppNotificationType.AssetVisibility
   visible: boolean
@@ -156,5 +163,6 @@ export type AppNotification =
   | WalletConnectNotification
   | TransactionNotification
   | SwapNetworkNotification
+  | ChooseCountryNotification
   | ChangeAssetVisibilityNotification
   | SuccessNotification

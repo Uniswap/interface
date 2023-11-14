@@ -276,9 +276,16 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const { sync } = useScrollSync(currentTabIndex, scrollPairs, headerConfig)
 
+  const forAggregatorEnabled = useFeatureFlag(FEATURE_FLAGS.ForAggregator)
+
   const onPressBuy = useCallback(
-    () => dispatch(openModal({ name: ModalName.FiatOnRamp })),
-    [dispatch]
+    () =>
+      dispatch(
+        openModal({
+          name: forAggregatorEnabled ? ModalName.FiatOnRampAggregator : ModalName.FiatOnRamp,
+        })
+      ),
+    [dispatch, forAggregatorEnabled]
   )
   const onPressScan = useCallback(() => {
     // in case we received a pending session from a previous scan after closing modal

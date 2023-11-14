@@ -27,3 +27,19 @@ export function differenceWith<T>(
     return !inWithout
   })
 }
+
+export function bubbleToTop<T>(arr: T[], predicate: (element: T) => boolean): T[] {
+  if (!arr.length) return arr
+
+  const result = [...arr]
+
+  const index = result.findIndex(predicate)
+  if (index > 0) {
+    const element = result[index]
+    if (element) {
+      result.splice(index, 1)
+      result.unshift(element)
+    }
+  }
+  return result
+}

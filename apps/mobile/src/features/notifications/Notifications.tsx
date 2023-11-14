@@ -3,6 +3,7 @@
 /* eslint-disable max-lines */
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { SvgUri } from 'react-native-svg'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { store } from 'src/app/store'
@@ -20,7 +21,7 @@ import {
 } from 'src/features/notifications/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useCreateSwapFormState, useCreateWrapFormState } from 'src/features/transactions/hooks'
-import { useSporeColors } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import CheckCircle from 'ui/src/assets/icons/check-circle.svg'
 import EyeOffIcon from 'ui/src/assets/icons/eye-off.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
@@ -35,6 +36,7 @@ import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { useENS } from 'wallet/src/features/ens/useENS'
+import { getCountryFlagSvgUrl } from 'wallet/src/features/fiatOnRamp/meld'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useNFT } from 'wallet/src/features/nfts/hooks'
 import {
@@ -42,6 +44,7 @@ import {
   AppNotificationDefault,
   ApproveTxNotification,
   ChangeAssetVisibilityNotification as ChangeAssetVisibilityNotificationType,
+  ChooseCountryNotification as ChooseCountryNotificationType,
   CopyNotification,
   CopyNotificationType,
   SwapNetworkNotification as SwapNetworkNotificationType,
@@ -524,6 +527,27 @@ export function SwapNetworkNotification({
       hideDelay={hideDelay}
       icon={<NetworkLogo chainId={chainId} size={iconSizes.icon24} />}
       title={t('Swapping on {{ network }}', { network })}
+    />
+  )
+}
+
+export function ChooseCountryNotification({
+  notification: { countryName, countryCode, hideDelay },
+}: {
+  notification: ChooseCountryNotificationType
+}): JSX.Element {
+  const { t } = useTranslation()
+  const countryFlagUrl = getCountryFlagSvgUrl(countryCode)
+  return (
+    <NotificationToast
+      useSmallDisplay
+      hideDelay={hideDelay}
+      icon={
+        <Flex borderRadius="$roundedFull" overflow="hidden">
+          <SvgUri height={iconSizes.icon20} uri={countryFlagUrl} width={iconSizes.icon20} />
+        </Flex>
+      }
+      title={t('Switched to {{name}}', { name: countryName })}
     />
   )
 }

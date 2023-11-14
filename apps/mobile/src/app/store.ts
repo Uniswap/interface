@@ -7,7 +7,7 @@ import createMigrate from 'src/app/createMigrate'
 import { migrations } from 'src/app/migrations'
 import { isNonJestDev } from 'utilities/src/environment'
 import { logger } from 'utilities/src/logger/logger'
-import { fiatOnRampApi } from 'wallet/src/features/fiatOnRamp/api'
+import { fiatOnRampAggregatorApi, fiatOnRampApi } from 'wallet/src/features/fiatOnRamp/api'
 import { importAccountSagaName } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { createStore } from 'wallet/src/state'
 import { RootReducerNames } from 'wallet/src/state/reducer'
@@ -92,7 +92,7 @@ const sentryReduxEnhancer = Sentry.createReduxEnhancer({
   },
 })
 
-const middlewares: Middleware[] = []
+const middlewares: Middleware[] = [fiatOnRampApi.middleware, fiatOnRampAggregatorApi.middleware]
 if (isNonJestDev()) {
   const createDebugger = require('redux-flipper').default
   middlewares.push(createDebugger())
@@ -106,7 +106,7 @@ export const setupStore = (
     reducer: persistedReducer,
     preloadedState,
     additionalSagas: [mobileSaga],
-    middlewareAfter: [fiatOnRampApi.middleware, rtkQueryErrorLogger, ...middlewares],
+    middlewareAfter: [rtkQueryErrorLogger, ...middlewares],
     enhancers: [sentryReduxEnhancer],
   })
 }
