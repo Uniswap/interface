@@ -36,7 +36,9 @@ const DoubleLogoContainer = styled.div`
   }
 `
 
-const StyledLogoParentContainer = styled.div`
+const LogoContainer = styled.div`
+  display: flex;
+  align-items: center;
   position: relative;
   top: 0;
   left: 0;
@@ -57,9 +59,9 @@ const CircleLogoImage = styled.img<{ size: string }>`
 const L2LogoContainer = styled.div`
   border-radius: ${getDefaultBorderRadius(16)}px;
   height: 16px;
-  left: 60%;
+  left: 70%;
   position: absolute;
-  top: 60%;
+  top: 70%;
   outline: 2px solid ${({ theme }) => theme.surface1};
   width: 16px;
   display: flex;
@@ -155,10 +157,10 @@ function SquareL2Logo({ chainId }: { chainId: ChainId }) {
  */
 export function PortfolioLogo(props: PortfolioLogoProps) {
   return (
-    <StyledLogoParentContainer style={props.style}>
+    <LogoContainer style={props.style}>
       {getLogo(props)}
       <SquareL2Logo chainId={props.chainId} />
-    </StyledLogoParentContainer>
+    </LogoContainer>
   )
 }
 
