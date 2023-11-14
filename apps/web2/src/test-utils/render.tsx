@@ -35,7 +35,7 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
              * Web3Provider is mocked through setupTests.ts
              * To test behavior that depends on Web3Provider, use jest.unmock('@web3-react/core')
              */}
-            <MockedProvider>
+            <MockedProvider showWarnings={false}>
               <BlockNumberProvider>
                 <ThemeProvider>{children}</ThemeProvider>
               </BlockNumberProvider>
