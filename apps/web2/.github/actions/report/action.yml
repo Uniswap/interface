@@ -1,5 +1,5 @@
-name: Report
-description: Report test failures via Slack
+name: Report web test failures
+description: Reports web test failures via Slack
 inputs:
   name:
     description: The name of the failing test
