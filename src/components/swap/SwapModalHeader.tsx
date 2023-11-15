@@ -24,7 +24,7 @@ export default function SwapModalHeader({
   allowedSlippage: Percent
 }) {
   const fiatValueInput = useUSDPrice(trade.inputAmount)
-  const fiatValueOutput = useUSDPrice(trade.postTaxOutputAmount)
+  const fiatValueOutput = useUSDPrice(trade.outputAmount)
 
   return (
     <HeaderContainer gap="sm">
@@ -40,7 +40,7 @@ export default function SwapModalHeader({
         <SwapModalHeaderAmount
           field={Field.OUTPUT}
           label={<Trans>You receive</Trans>}
-          amount={trade.postTaxOutputAmount}
+          amount={trade.outputAmount}
           currency={trade.outputAmount.currency}
           usdAmount={fiatValueOutput.data}
           isLoading={isPreviewTrade(trade) && trade.tradeType === TradeType.EXACT_INPUT}

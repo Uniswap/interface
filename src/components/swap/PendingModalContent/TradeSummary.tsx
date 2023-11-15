@@ -6,7 +6,7 @@ import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
 
-export function TradeSummary({ trade }: { trade: Pick<InterfaceTrade, 'inputAmount' | 'postTaxOutputAmount'> }) {
+export function TradeSummary({ trade }: { trade: Pick<InterfaceTrade, 'inputAmount' | 'outputAmount'> }) {
   const theme = useTheme()
   const { formatReviewSwapCurrencyAmount } = useFormatter()
 
@@ -17,9 +17,9 @@ export function TradeSummary({ trade }: { trade: Pick<InterfaceTrade, 'inputAmou
         {formatReviewSwapCurrencyAmount(trade.inputAmount)} {trade.inputAmount.currency.symbol}
       </ThemedText.LabelSmall>
       <ArrowRight color={theme.neutral1} size="12px" />
-      <CurrencyLogo currency={trade.postTaxOutputAmount.currency} size="16px" />
+      <CurrencyLogo currency={trade.outputAmount.currency} size="16px" />
       <ThemedText.LabelSmall color="neutral1">
-        {formatReviewSwapCurrencyAmount(trade.postTaxOutputAmount)} {trade.postTaxOutputAmount.currency.symbol}
+        {formatReviewSwapCurrencyAmount(trade.outputAmount)} {trade.outputAmount.currency.symbol}
       </ThemedText.LabelSmall>
     </Row>
   )
