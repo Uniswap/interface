@@ -1,11 +1,18 @@
 {
   "baseBranch": "origin/main",
   "pipeline": {
+    "prepare": {
+      "dependsOn": [
+      ]
+    },
     "typecheck": {
       "inputs": [
         "{packages,apps,config}/*+(.ts|.tsx)"
       ],
-      "outputs": []
+      "outputs": [],
+      "dependsOn": [
+        "prepare"
+      ]
     },
     "check:circular": {},
     "lint": {
@@ -26,6 +33,7 @@
     },
     "test": {
       "dependsOn": [
+        "prepare",
         "typecheck",
         "lint"
       ]
