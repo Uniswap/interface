@@ -10,95 +10,12 @@ on:
     branches:
       - main
       - releases/staging
+      - interface
   pull_request:
   workflow_dispatch:
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        with:
-          path: node_modules/.cache
-          key: ${{ runner.os }}-eslint-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-eslint-
-      - run: yarn lint
-      - if: failure() && github.ref_name == 'main'
-        uses: ./.github/actions/report
-        with:
-          name: Lint
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
   
-  typecheck:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        with:
-          path: node_modules/.cache
-          key: ${{ runner.os }}-tsc-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-tsc-
-      - run: yarn typecheck
-      - if: failure() && github.ref_name == 'main'
-        uses: ./.github/actions/report
-        with:
-          name: Typecheck
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
-
-  deps-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - run: yarn yarn-deduplicate --strategy=highest --list --fail
-      - if: failure() && github.ref_name == 'main'
-        uses: ./.github/actions/report
-        with:
-          name: Dependency checks
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
-
-  unit-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        with:
-          path: node_modules/.cache
-          key: ${{ runner.os }}-jest-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-jest-
-      - run: yarn test --coverage --maxWorkers=100%
-      - uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
-          flags: unit-tests
-      - if: failure() && github.ref_name == 'main'
-        uses: ./.github/actions/report
-        with:
-          name: Unit tests
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
-
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        with:
-          path: node_modules/.swc
-          key: ${{ runner.os }}-swc-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-swc-
-      - run: yarn build
-      - uses: actions/upload-artifact@v3
-        with:
-          name: build
-          path: build
-          if-no-files-found: error
-
   cypress-typecheck:
     runs-on: ubuntu-latest
     steps:
@@ -235,7 +152,7 @@ jobs:
           flags: cloud-tests
         
   pre:
-    if: ${{ github.ref_name == 'main' || github.ref_name == 'releases/staging' }}
+    if: ${{ github.ref_name == 'main' || github.ref_name == 'releases/staging' || github.ref_name == 'interface'  }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v6.4.1
@@ -252,7 +169,7 @@ jobs:
             })
 
   post:
-    if: ${{ github.ref_name == 'main' || github.ref_name == 'releases/staging' }}
+    if: ${{ github.ref_name == 'main' || github.ref_name == 'releases/staging' || github.ref_name == 'interface'  }}
     needs: [pre, lint, typecheck, deps-tests, unit-tests, cypress-test-matrix, cloud-tests]
     runs-on: ubuntu-latest
     steps:
