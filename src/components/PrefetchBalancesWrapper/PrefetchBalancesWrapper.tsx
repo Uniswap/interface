@@ -41,13 +41,13 @@ export default function PrefetchBalancesWrapper({
   const [hasUnfetchedBalances, setHasUnfetchedBalances] = useAtom(hasUnfetchedBalancesAtom)
   const fetchBalances = useCallback(() => {
     if (account) {
-      // Backend takes 0.5-1sec to get the updated portfolio value after a transaction
+      // Backend takes <2sec to get the updated portfolio value after a transaction
       // This timeout is an interim solution while we're working on a websocket that'll ping the client when connected account gets changes
       // TODO(WEB-3131): remove this timeout after websocket is implemented
       setTimeout(() => {
         prefetchPortfolioBalances({ variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS } })
         setHasUnfetchedBalances(false)
-      }, 1500)
+      }, 3500)
     }
   }, [account, prefetchPortfolioBalances, setHasUnfetchedBalances])
 
