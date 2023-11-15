@@ -1,6 +1,7 @@
 import { ParentSize } from '@visx/responsive'
 import { VolumeChart } from 'components/Charts/VolumeChart'
 import { ChartContainer, LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
+import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TokenPriceQuery } from 'graphql/data/TokenPrice'
 import { isPricePoint, PricePoint } from 'graphql/data/util'
 import { TimePeriod } from 'graphql/data/util'
@@ -56,12 +57,12 @@ function Chart({
   const prices = usePriceHistory(tokenPriceQuery)
   // Initializes time period to global & maintain separate time period for subsequent changes
   const timePeriod = useAtomValue(pageTimePeriodAtom)
-
+  const isInfoTDPEnabled = useInfoTDPEnabled()
   return (
     <ChartContainer data-testid="chart-container">
       <ParentSize>
-        {/* {({ width }) => <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} />} */}
         {({ width }) => <VolumeChart prices={prices} width={width} height={392} timePeriod={timePeriod} />}
+        {/* {({ width }) => <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} />} */}
       </ParentSize>
       <TimePeriodSelector
         currentTimePeriod={timePeriod}

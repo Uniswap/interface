@@ -49,7 +49,7 @@ export function VolumeChart({ width, height, prices, timePeriod }: VolumeChartPr
       width,
       height,
       timeScale: {
-        tickMarkFormatter,
+        tickMarkFormatter, // fixme: really wrong. this uses d3 logic
         borderVisible: false,
         ticksVisible: false,
       },
