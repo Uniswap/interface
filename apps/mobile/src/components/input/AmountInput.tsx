@@ -3,6 +3,7 @@ import { AppState, Keyboard, KeyboardTypeOptions, TextInput as NativeTextInput }
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { useMoonpayFiatCurrencySupportInfo } from 'src/features/fiatOnRamp/hooks'
 import { escapeRegExp } from 'utilities/src/primitives/string'
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 const inputRegex = RegExp('^\\d*(?:\\\\[.])?\\d*$') // match escaped "." characters via in a non-capturing group
@@ -12,77 +13,72 @@ type Props = {
   dimTextColor?: boolean
 } & TextInputProps
 
-const periodRegExp = /\./g
-const commaRegExp = /,/g
-
-export function convertToDotAsDecimalSeparator(input: string): string {
-  // Determine the decimal and thousand separators
-  const commaCount = (input.match(commaRegExp) || []).length
-  const dotCount = (input.match(periodRegExp) || []).length
-
-  let decimalSeparator: string | null = null
-  let thousandSeparator: string | null = null
-
-  if (commaCount === 1 && dotCount === 0) {
-    decimalSeparator = ','
-  } else if (dotCount === 1 && commaCount === 0) {
-    decimalSeparator = '.'
-  } else if (commaCount > 1 && dotCount === 0) {
-    thousandSeparator = ','
-  } else if (dotCount > 1 && commaCount === 0) {
-    thousandSeparator = '.'
-  } else if (dotCount > 0 && commaCount > 0) {
-    // If both commas and dots are present, the one that appears last is the decimal separator
-    decimalSeparator = input.lastIndexOf(',') > input.lastIndexOf('.') ? ',' : '.'
-    thousandSeparator = decimalSeparator === ',' ? '.' : ','
-  }
-
-  const thousandRegExp = thousandSeparator === '.' ? periodRegExp : commaRegExp
-
-  if (decimalSeparator) {
-    const parts = input.split(decimalSeparator)
-    const decimalPart = parts.pop()
-    const thousandsPart = parts.join('')
-
-    // Remove thousands separators
-    const withoutThousandsSeparators = thousandSeparator
-      ? thousandsPart.replace(thousandRegExp, '')
-      : thousandsPart
-
-    // Combine withoutThousandsSeparators and decimalPart with a dot as a separator
-    return `${withoutThousandsSeparators}.${decimalPart}`
-  } else {
-    // Input has only thousands separators
-    const result = input.replace(thousandRegExp, '')
-    return result
-  }
+export function replaceSeparators({
+  value,
+  groupingSeparator,
+  decimalSeparator,
+  groupingOverride,
+  decimalOverride,
+}: {
+  value: string
+  groupingSeparator: string
+  decimalSeparator: string
+  groupingOverride: string
+  decimalOverride: string
+}): string {
+  return (
+    value
+      .split(decimalSeparator)
+      // eslint-disable-next-line security/detect-non-literal-regexp
+      .map((part) => part.replace(new RegExp(groupingSeparator, 'g'), groupingOverride))
+      .join(decimalOverride)
+  )
 }
 
 export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountInput(
-  { onChangeText, value, showCurrencySign, dimTextColor, showSoftInputOnFocus, ...rest },
+  { onChangeText, value, showCurrencySign, dimTextColor, showSoftInputOnFocus, editable, ...rest },
   ref
 ) {
+  const { groupingSeparator, decimalSeparator } = useAppFiatCurrencyInfo()
+
   const handleChange = useCallback(
     (text: string) => {
-      const parsedText = convertToDotAsDecimalSeparator(showCurrencySign ? text.substring(1) : text)
+      const parsedText = replaceSeparators({
+        value: showCurrencySign ? text.substring(1) : text,
+        groupingSeparator,
+        decimalSeparator,
+        groupingOverride: '',
+        decimalOverride: '.',
+      })
 
       if (parsedText === '' || inputRegex.test(escapeRegExp(parsedText))) {
         onChangeText?.(parsedText)
       }
     },
-    [onChangeText, showCurrencySign]
+    [decimalSeparator, groupingSeparator, onChangeText, showCurrencySign]
   )
 
   const { moonpaySupportedFiatCurrency: currency } = useMoonpayFiatCurrencySupportInfo()
   const { addFiatSymbolToNumber } = useLocalizationContext()
 
-  const formattedValue = showCurrencySign
+  let formattedValue = showCurrencySign
     ? addFiatSymbolToNumber({
         value,
         currencyCode: currency.code,
         currencySymbol: currency.symbol,
       })
     : value
+  // TODO gary MOB-2028 replace temporary hack to handle different separators
+  formattedValue =
+    editable ?? true
+      ? replaceSeparators({
+          value: formattedValue ?? '',
+          groupingSeparator: ',',
+          decimalSeparator: '.',
+          groupingOverride: groupingSeparator,
+          decimalOverride: decimalSeparator,
+        })
+      : formattedValue
 
   const textInputProps: TextInputProps = useMemo(
     () => ({

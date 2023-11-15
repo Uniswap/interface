@@ -29,11 +29,12 @@ import { useWalletRestore } from 'src/features/wallet/hooks'
 import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useSwapFormContext } from './contexts/SwapFormContext'
 import { SwapFormHeader } from './SwapFormHeader'
 import { TokenSelector } from './TokenSelector'
+// eslint-disable-next-line no-restricted-imports
+import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 
 const SWAP_DIRECTION_BUTTON_SIZE = iconSizes.icon24
 const SWAP_DIRECTION_BUTTON_INNER_PADDING = spacing.spacing8 + spacing.spacing2
@@ -62,7 +63,6 @@ export function SwapFormScreen({ hideContent }: { hideContent: boolean }): JSX.E
 function SwapFormContent(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const { formatCurrencyAmount } = useLocalizationContext()
 
   const {
     amountUpdatedTimeRef,
@@ -279,8 +279,11 @@ function SwapFormContent(): JSX.Element {
 
   const derivedCurrencyField = exactFieldIsInput ? CurrencyField.OUTPUT : CurrencyField.INPUT
 
+  // TODO gary MOB-2028 replace temporary hack to handle different separators
+  // Replace with localized version of formatter
   const formattedDerivedValue = formatCurrencyAmount({
-    value: currencyAmounts[derivedCurrencyField],
+    amount: currencyAmounts[derivedCurrencyField],
+    locale: 'en-US',
     type: NumberType.SwapTradeAmount,
     placeholder: '',
   })
