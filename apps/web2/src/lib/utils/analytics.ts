@@ -51,7 +51,7 @@ export function formatCommonPropertiesForTrade(
     token_in_symbol: trade.inputAmount.currency.symbol,
     token_out_symbol: trade.outputAmount.currency.symbol,
     token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
-    token_out_amount: formatToDecimal(trade.postTaxOutputAmount, trade.outputAmount.currency.decimals),
+    token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
     price_impact_basis_points: isClassicTrade(trade)
       ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade))
       : undefined,
@@ -64,6 +64,8 @@ export function formatCommonPropertiesForTrade(
     allowed_slippage: formatPercentNumber(allowedSlippage),
     method: getQuoteMethod(trade),
     fee_usd: outputFeeFiatValue,
+    token_out_detected_tax: formatPercentNumber(trade.outputTax),
+    token_in_detected_tax: formatPercentNumber(trade.inputTax),
   }
 }
 
@@ -101,8 +103,6 @@ export const formatSwapQuoteReceivedEventProperties = (
   trade: InterfaceTrade,
   allowedSlippage: Percent,
   swapQuoteLatencyMs: number | undefined,
-  inputTax: Percent,
-  outputTax: Percent,
   outputFeeFiatValue: number | undefined
 ) => {
   return {
@@ -112,7 +112,5 @@ export const formatSwapQuoteReceivedEventProperties = (
     token_in_amount_max: trade.maximumAmountIn(allowedSlippage).toExact(),
     token_out_amount_min: trade.minimumAmountOut(allowedSlippage).toExact(),
     quote_latency_milliseconds: swapQuoteLatencyMs,
-    token_out_detected_tax: formatPercentNumber(outputTax),
-    token_in_detected_tax: formatPercentNumber(inputTax),
   }
 }

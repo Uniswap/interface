@@ -292,9 +292,9 @@ export function Swap({
     parsedAmount,
     currencies,
     inputError: swapInputError,
+    outputFeeFiatValue,
     inputTax,
     outputTax,
-    outputFeeFiatValue,
   } = swapInfo
 
   const [inputTokenHasTax, outputTokenHasTax] = useMemo(
@@ -323,7 +323,7 @@ export function Swap({
           }
         : {
             [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-            [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.postTaxOutputAmount,
+            [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
           },
     [independentField, parsedAmount, showWrap, trade]
   )
@@ -354,7 +354,7 @@ export function Swap({
   )
 
   const fiatValueTradeInput = useUSDPrice(trade?.inputAmount)
-  const fiatValueTradeOutput = useUSDPrice(trade?.postTaxOutputAmount)
+  const fiatValueTradeOutput = useUSDPrice(trade?.outputAmount)
   const preTaxFiatValueTradeOutput = useUSDPrice(trade?.outputAmount)
   const [stablecoinPriceImpact, preTaxStablecoinPriceImpact] = useMemo(
     () =>
@@ -585,17 +585,10 @@ export function Swap({
     if (!trade || prevTrade === trade) return // no new swap quote to log
 
     sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
-      ...formatSwapQuoteReceivedEventProperties(
-        trade,
-        allowedSlippage,
-        swapQuoteLatency,
-        inputTax,
-        outputTax,
-        outputFeeFiatValue
-      ),
+      ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, swapQuoteLatency, outputFeeFiatValue),
       ...trace,
     })
-  }, [prevTrade, trade, trace, allowedSlippage, swapQuoteLatency, inputTax, outputTax, outputFeeFiatValue])
+  }, [prevTrade, trade, trace, allowedSlippage, swapQuoteLatency, outputFeeFiatValue])
 
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)

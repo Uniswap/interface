@@ -6,7 +6,6 @@ import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains
 import { useAndroidGALaunchFlag } from 'featureFlags/flags/androidGALaunch'
 import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
 import { useFallbackProviderEnabledFlag } from 'featureFlags/flags/fallbackProvider'
-import { useFotAdjustmentsFlag } from 'featureFlags/flags/fotAdjustments'
 import { useInfoExploreFlag } from 'featureFlags/flags/infoExplore'
 import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
 import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
@@ -292,12 +291,6 @@ export default function FeatureFlagModal() {
           value={useMultichainUXFlag()}
           featureFlag={FeatureFlag.multichainUX}
           label="Updated Multichain UX"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useFotAdjustmentsFlag()}
-          featureFlag={FeatureFlag.fotAdjustedmentsEnabled}
-          label="Enable fee-on-transfer UI and slippage adjustments"
         />
         <FeatureFlagOption
           variant={BaseVariant}
