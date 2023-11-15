@@ -1,4 +1,5 @@
-import { t } from '@lingui/macro'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -84,7 +85,7 @@ export default function Pools({ account }: { account: string }) {
         />
       ))}
       <ExpandoRow
-        title={t`Closed Positions`}
+        title={msg`Closed Positions`}
         isExpanded={showClosed}
         toggle={toggleShowClosed}
         numItems={closedPositions.length}
@@ -119,6 +120,7 @@ function calculcateLiquidityValue(price0: number | undefined, price1: number | u
 }
 
 function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
+  const { _ } = useLingui()
   const { formatNumber } = useFormatter()
 
   const { chainId, position, pool, details, inRange, closed } = positionInfo
@@ -190,7 +192,7 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
 
             <Row justify="flex-end">
               <ThemedText.BodySmall color="neutral2">
-                {closed ? t`Closed` : inRange ? t`In range` : t`Out of range`}
+                {_(closed ? msg`Closed` : inRange ? msg`In range` : msg`Out of range`)}
               </ThemedText.BodySmall>
               <ActiveDot closed={closed} outOfRange={!inRange} />
             </Row>

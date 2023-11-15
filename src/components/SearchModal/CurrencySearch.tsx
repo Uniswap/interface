@@ -1,5 +1,5 @@
-// eslint-disable-next-line no-restricted-imports
-import { t, Trans } from '@lingui/macro'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -66,6 +66,7 @@ export function CurrencySearch({
 }: CurrencySearchProps) {
   const { chainId, account } = useWeb3React()
   const theme = useTheme()
+  const { _ } = useLingui()
 
   const [tokenLoaderTimerElapsed, setTokenLoaderTimerElapsed] = useState(false)
 
@@ -270,7 +271,7 @@ export function CurrencySearch({
               type="text"
               id="token-search-input"
               data-testid="token-search-input"
-              placeholder={t`Search name or paste address`}
+              placeholder={_(msg`Search name or paste address`)}
               autoComplete="off"
               value={searchQuery}
               ref={inputRef as RefObject<HTMLInputElement>}

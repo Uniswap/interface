@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { useLingui } from '@lingui/react'
 import * as Sentry from '@sentry/react'
 import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
@@ -58,6 +59,7 @@ export function useUniswapXSwapCallback({
 }) {
   const { account, provider, connector } = useWeb3React()
   const analyticsContext = useTrace()
+  const { _ } = useLingui()
 
   const { data } = useCachedPortfolioBalancesQuery({ account })
   const portfolioBalanceUsd = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
@@ -106,9 +108,9 @@ export function useUniswapXSwapCallback({
             }
             if (didUserReject(swapError)) {
               setTraceStatus('cancelled')
-              throw new UserRejectedRequestError(swapErrorToUserReadableMessage(swapError))
+              throw new UserRejectedRequestError(_(swapErrorToUserReadableMessage(swapError)))
             }
-            throw new Error(swapErrorToUserReadableMessage(swapError))
+            throw new Error(_(swapErrorToUserReadableMessage(swapError)))
           }
         }
 
@@ -166,6 +168,6 @@ export function useUniswapXSwapCallback({
           response: { orderHash: body.hash, deadline: updatedOrder.info.deadline },
         }
       }),
-    [account, provider, trade, allowedSlippage, fiatValues, portfolioBalanceUsd, analyticsContext, connector]
+    [account, provider, trade, allowedSlippage, fiatValues, portfolioBalanceUsd, analyticsContext, connector, _]
   )
 }

@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { t } from '@lingui/macro'
+import { i18n } from '@lingui/core'
+import { msg } from '@lingui/macro'
 import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import { nativeOnChain } from 'constants/tokens'
@@ -40,23 +41,23 @@ function buildCurrencyDescriptor(
   currencyB: Currency | undefined,
   amtB: string,
   formatNumber: FormatNumberFunctionType,
-  delimiter = t`for`
+  delimiter = msg`for`
 ) {
   const formattedA = currencyA
     ? formatNumber({
         input: parseFloat(CurrencyAmount.fromRawAmount(currencyA, amtA).toSignificant()),
         type: NumberType.TokenNonTx,
       })
-    : t`Unknown`
+    : i18n._(msg`Unknown`)
   const symbolA = currencyA?.symbol ?? ''
   const formattedB = currencyB
     ? formatNumber({
         input: parseFloat(CurrencyAmount.fromRawAmount(currencyB, amtB).toSignificant()),
         type: NumberType.TokenNonTx,
       })
-    : t`Unknown`
+    : i18n._(msg`Unknown`)
   const symbolB = currencyB?.symbol ?? ''
-  return [formattedA, symbolA, delimiter, formattedB, symbolB].filter(Boolean).join(' ')
+  return [formattedA, symbolA, i18n._(delimiter), formattedB, symbolB].filter(Boolean).join(' ')
 }
 
 function parseSwap(
@@ -109,7 +110,7 @@ function parseApproval(
   status: TransactionStatus
 ): Partial<Activity> {
   const currency = getCurrency(approval.tokenAddress, chainId, tokens)
-  const descriptor = currency?.symbol ?? currency?.name ?? t`Unknown`
+  const descriptor = currency?.symbol ?? currency?.name ?? i18n._(msg`Unknown`)
   return {
     title: getActivityTitle(
       TransactionType.APPROVAL,
@@ -134,7 +135,7 @@ function parseLP(
   const baseCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
   const quoteCurrency = getCurrency(lp.quoteCurrencyId, chainId, tokens)
   const [baseRaw, quoteRaw] = [lp.expectedAmountBaseRaw, lp.expectedAmountQuoteRaw]
-  const descriptor = buildCurrencyDescriptor(baseCurrency, baseRaw, quoteCurrency, quoteRaw, formatNumber, t`and`)
+  const descriptor = buildCurrencyDescriptor(baseCurrency, baseRaw, quoteCurrency, quoteRaw, formatNumber, msg`and`)
 
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }
@@ -166,10 +167,10 @@ function parseMigrateCreateV3(
   tokens: ChainTokenMap
 ): Partial<Activity> {
   const baseCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
-  const baseSymbol = baseCurrency?.symbol ?? t`Unknown`
+  const baseSymbol = baseCurrency?.symbol ?? i18n._(msg`Unknown`)
   const quoteCurrency = getCurrency(lp.quoteCurrencyId, chainId, tokens)
-  const quoteSymbol = quoteCurrency?.symbol ?? t`Unknown`
-  const descriptor = t`${baseSymbol} and ${quoteSymbol}`
+  const quoteSymbol = quoteCurrency?.symbol ?? i18n._(msg`Unknown`)
+  const descriptor = `${baseSymbol} and ${quoteSymbol}`
 
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }

@@ -1,4 +1,5 @@
-import { t, Trans } from '@lingui/macro'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
@@ -139,7 +140,13 @@ function getPendingConfirmationContent({
   ContentArgs,
   'swapConfirmed' | 'swapPending' | 'trade' | 'chainId' | 'swapResult' | 'swapError' | 'onRetryUniswapXSignature'
 >): PendingModalStep {
-  const title = swapPending ? t`Swap submitted` : swapConfirmed ? t`Swap success!` : t`Confirm Swap`
+  const title = swapPending ? (
+    <Trans>Swap submitted</Trans>
+  ) : swapConfirmed ? (
+    <Trans>Swap success!</Trans>
+  ) : (
+    <Trans>Confirm Swap</Trans>
+  )
   const tradeSummary = trade ? <TradeSummary trade={trade} /> : null
   if (swapPending && trade?.fillType === TradeFillType.UniswapX) {
     return {
@@ -165,7 +172,7 @@ function getPendingConfirmationContent({
       return {
         title,
         subtitle: chainId === ChainId.MAINNET ? explorerLink : tradeSummary,
-        bottomLabel: chainId === ChainId.MAINNET ? t`Transaction pending...` : explorerLink,
+        bottomLabel: chainId === ChainId.MAINNET ? <Trans>Transaction pending...</Trans> : explorerLink,
       }
     } else {
       return {
@@ -185,13 +192,13 @@ function getPendingConfirmationContent({
         />
       ),
       subtitle: tradeSummary,
-      bottomLabel: t`Proceed in your wallet`,
+      bottomLabel: <Trans>Proceed in your wallet</Trans>,
     }
   } else {
     return {
       title,
       subtitle: tradeSummary,
-      bottomLabel: t`Proceed in your wallet`,
+      bottomLabel: <Trans>Proceed in your wallet</Trans>,
     }
   }
 }
@@ -210,40 +217,43 @@ function useStepContents(args: ContentArgs): Record<PendingConfirmModalState, Pe
     swapError,
     onRetryUniswapXSignature,
   } = args
+  const { _ } = useLingui()
 
   return useMemo(
     () => ({
       [ConfirmModalState.WRAPPING]: {
-        title: t`Wrap ETH`,
+        title: <Trans>Wrap ETH</Trans>,
         subtitle: (
           <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/16015852009997">
             <Trans>Why is this required?</Trans>
           </ExternalLink>
         ),
-        bottomLabel: wrapPending ? t`Pending...` : t`Proceed in your wallet`,
+        bottomLabel: wrapPending ? <Trans>Pending...</Trans> : <Trans>Proceed in your wallet</Trans>,
       },
       [ConfirmModalState.RESETTING_TOKEN_ALLOWANCE]: {
-        title: t`Reset ${approvalCurrency?.symbol}`,
-        subtitle: t`${approvalCurrency?.symbol} requires resetting approval when spending limits are too low.`,
-        bottomLabel: revocationPending ? t`Pending...` : t`Proceed in your wallet`,
+        title: <Trans>Reset {approvalCurrency?.symbol}</Trans>,
+        subtitle: (
+          <Trans>{approvalCurrency?.symbol} requires resetting approval when spending limits are too low.</Trans>
+        ),
+        bottomLabel: revocationPending ? <Trans>Pending...</Trans> : <Trans>Proceed in your wallet</Trans>,
       },
       [ConfirmModalState.APPROVING_TOKEN]: {
-        title: t`Enable spending ${approvalCurrency?.symbol ?? 'this token'} on Uniswap`,
+        title: <Trans>Enable spending {approvalCurrency?.symbol ?? _(msg`this token`)} on Uniswap</Trans>,
         subtitle: (
           <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8120520483085">
             <Trans>Why is this required?</Trans>
           </ExternalLink>
         ),
-        bottomLabel: tokenApprovalPending ? t`Pending...` : t`Proceed in your wallet`,
+        bottomLabel: tokenApprovalPending ? <Trans>Pending...</Trans> : <Trans>Proceed in your wallet</Trans>,
       },
       [ConfirmModalState.PERMITTING]: {
-        title: t`Allow ${approvalCurrency?.symbol ?? 'this token'} to be used for swapping`,
+        title: <Trans>Allow {approvalCurrency?.symbol ?? _(msg`this token`)} to be used for swapping</Trans>,
         subtitle: (
           <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8120520483085">
             <Trans>Why is this required?</Trans>
           </ExternalLink>
         ),
-        bottomLabel: t`Proceed in your wallet`,
+        bottomLabel: <Trans>Proceed in your wallet</Trans>,
       },
       [ConfirmModalState.PENDING_CONFIRMATION]: getPendingConfirmationContent({
         chainId,
@@ -256,15 +266,16 @@ function useStepContents(args: ContentArgs): Record<PendingConfirmModalState, Pe
       }),
     }),
     [
+      wrapPending,
       approvalCurrency?.symbol,
-      chainId,
       revocationPending,
+      _,
+      tokenApprovalPending,
+      chainId,
       swapConfirmed,
       swapPending,
       swapResult,
-      tokenApprovalPending,
       trade,
-      wrapPending,
       swapError,
       onRetryUniswapXSignature,
     ]

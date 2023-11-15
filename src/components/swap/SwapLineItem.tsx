@@ -1,4 +1,5 @@
-import { t, Trans } from '@lingui/macro'
+import { i18n } from '@lingui/core'
+import { msg, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { LoadingRow } from 'components/Loader/styled'
 import { ChainLogo } from 'components/Logo/ChainLogo'
@@ -59,7 +60,7 @@ const AutoBadge = styled(ThemedText.LabelMicro).attrs({ fontWeight: 535 })`
   padding: 0 6px;
 
   ::after {
-    content: '${t`Auto`}';
+    content: '${i18n._(msg`Auto`)}';
   }
 `
 
@@ -255,7 +256,7 @@ function getFOTLineItem({ type, trade }: SwapLineItemProps): LineItemData | unde
   if (tax.equalTo(0)) return
 
   return {
-    Label: () => <>{t`${currency.symbol ?? currency.name ?? t`Token`} fee`}</>,
+    Label: () => <Trans>{currency.symbol ?? currency.name ?? i18n._(msg`Token`)} fee</Trans>,
     TooltipBody: FOTTooltipContent,
     Value: () => <ColoredPercentRow percent={tax} />,
   }

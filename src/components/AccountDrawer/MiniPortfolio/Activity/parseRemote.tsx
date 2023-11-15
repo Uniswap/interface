@@ -1,4 +1,5 @@
-import { t } from '@lingui/macro'
+import { i18n } from '@lingui/core'
+import { msg } from '@lingui/macro'
 import { ChainId, Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, UNI_ADDRESSES } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
@@ -46,34 +47,34 @@ const ENS_IMG =
 
 const COMMON_CONTRACTS: { [key: string]: Partial<Activity> | undefined } = {
   [UNI_ADDRESSES[ChainId.MAINNET].toLowerCase()]: {
-    title: t`UNI Governance`,
-    descriptor: t`Contract Interaction`,
+    title: i18n._(msg`UNI Governance`),
+    descriptor: i18n._(msg`Contract Interaction`),
     logos: [UNI_IMG],
   },
   // TODO(cartcrom): Add permit2-specific logo
   '0x000000000022d473030f116ddee9f6b43ac78ba3': {
-    title: t`Permit2`,
-    descriptor: t`Uniswap Protocol`,
+    title: i18n._(msg`Permit2`),
+    descriptor: i18n._(msg`Uniswap Protocol`),
     logos: [UNI_IMG],
   },
   '0x4976fb03c32e5b8cfe2b6ccb31c09ba78ebaba41': {
-    title: t`Ethereum Name Service`,
-    descriptor: t`Public Resolver`,
+    title: i18n._(msg`Ethereum Name Service`),
+    descriptor: i18n._(msg`Public Resolver`),
     logos: [ENS_IMG],
   },
   '0x58774bb8acd458a640af0b88238369a167546ef2': {
-    title: t`Ethereum Name Service`,
-    descriptor: t`DNS Registrar`,
+    title: i18n._(msg`Ethereum Name Service`),
+    descriptor: i18n._(msg`DNS Registrar`),
     logos: [ENS_IMG],
   },
   '0x084b1c3c81545d370f3634392de611caabff8148': {
-    title: t`Ethereum Name Service`,
-    descriptor: t`Reverse Registrar`,
+    title: i18n._(msg`Ethereum Name Service`),
+    descriptor: i18n._(msg`Reverse Registrar`),
     logos: [ENS_IMG],
   },
   '0x283af0b28c62c092c9727f1ee09c02ca627eb7f5': {
-    title: t`Ethereum Name Service`,
-    descriptor: t`ETH Registrar Controller`,
+    title: i18n._(msg`Ethereum Name Service`),
+    descriptor: i18n._(msg`ETH Registrar Controller`),
     logos: [ENS_IMG],
   },
 }
@@ -109,14 +110,14 @@ function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferP
     sent.tokenStandard === 'NATIVE' &&
     isSameAddress(nativeOnChain(supportedSentChain).wrapped.address, received.asset.address)
   )
-    return t`Wrapped`
+    return i18n._(msg`Wrapped`)
   else if (
     received.tokenStandard === 'NATIVE' &&
     isSameAddress(nativeOnChain(supportedReceivedChain).wrapped.address, received.asset.address)
   ) {
-    return t`Unwrapped`
+    return i18n._(msg`Unwrapped`)
   } else {
-    return t`Swapped`
+    return i18n._(msg`Swapped`)
   }
 }
 
@@ -149,7 +150,7 @@ function parseSwap(changes: TransactionChanges, formatNumberOrString: FormatNumb
   if (changes.NftTransfer.length > 0 && changes.TokenTransfer.length === 1) {
     const collectionCounts = getCollectionCounts(changes.NftTransfer)
 
-    const title = changes.NftTransfer[0].direction === 'IN' ? t`Bought` : t`Sold`
+    const title = changes.NftTransfer[0].direction === 'IN' ? i18n._(msg`Bought`) : i18n._(msg`Sold`)
     const descriptor = Object.entries(collectionCounts)
       .map(([collectionName, count]) => `${count} ${collectionName}`)
       .join()
@@ -176,7 +177,7 @@ function parseSwap(changes: TransactionChanges, formatNumberOrString: FormatNumb
       }
     }
   }
-  return { title: t`Unknown Swap` }
+  return { title: i18n._(`Unknown Swap`) }
 }
 
 /**
@@ -189,7 +190,7 @@ function parseLend(changes: TransactionChanges, formatNumberOrString: FormatNumb
   if (native && erc20 && gqlToCurrency(native)?.wrapped.address === gqlToCurrency(erc20)?.wrapped.address) {
     return parseSwap(changes, formatNumberOrString)
   }
-  return { title: t`Unknown Lend` }
+  return { title: i18n._(msg`Unknown Lend`) }
 }
 
 function parseSwapOrder(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
@@ -198,12 +199,13 @@ function parseSwapOrder(changes: TransactionChanges, formatNumberOrString: Forma
 
 function parseApprove(changes: TransactionChanges) {
   if (changes.TokenApproval.length === 1) {
-    const title = parseInt(changes.TokenApproval[0].quantity) === 0 ? t`Revoked Approval` : t`Approved`
+    const title =
+      parseInt(changes.TokenApproval[0].quantity) === 0 ? i18n._(msg`Revoked Approval`) : i18n._(msg`Approved`)
     const descriptor = `${changes.TokenApproval[0].asset.symbol}`
     const currencies = [gqlToCurrency(changes.TokenApproval[0].asset)]
     return { title, descriptor, currencies }
   }
-  return { title: t`Unknown Approval` }
+  return { title: i18n._(msg`Unknown Approval`) }
 }
 
 function parseLPTransfers(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
@@ -231,7 +233,7 @@ function parseSendReceive(
   // TODO(cartcrom): remove edge cases after backend implements
   // Edge case: Receiving two token transfers in interaction w/ V3 manager === removing liquidity. These edge cases should potentially be moved to backend
   if (changes.TokenTransfer.length === 2 && callsPositionManagerContract(assetActivity)) {
-    return { title: t`Removed Liquidity`, ...parseLPTransfers(changes, formatNumberOrString) }
+    return { title: i18n._(msg`Removed Liquidity`), ...parseLPTransfers(changes, formatNumberOrString) }
   }
 
   let transfer: NftTransferPartsFragment | TokenTransferPartsFragment | undefined
@@ -256,8 +258,8 @@ function parseSendReceive(
     if (transfer.direction === 'IN') {
       return isMoonpayPurchase && transfer.__typename === 'TokenTransfer'
         ? {
-            title: t`Purchased`,
-            descriptor: `${amount} ${assetName} ${t`for`} ${formatNumberOrString({
+            title: i18n._(msg`Purchased`),
+            descriptor: `${amount} ${assetName} ${i18n._(msg`for`)} ${formatNumberOrString({
               input: getTransactedValue(transfer.transactedValue),
               type: NumberType.FiatTokenPrice,
             })}`,
@@ -265,21 +267,21 @@ function parseSendReceive(
             currencies,
           }
         : {
-            title: t`Received`,
-            descriptor: `${amount} ${assetName} ${t`from`} `,
+            title: i18n._(msg`Received`),
+            descriptor: `${amount} ${assetName} ${i18n._(msg`from`)} `,
             otherAccount: isAddress(transfer.sender) || undefined,
             currencies,
           }
     } else {
       return {
-        title: t`Sent`,
-        descriptor: `${amount} ${assetName} ${t`to`} `,
+        title: i18n._(msg`Sent`),
+        descriptor: `${amount} ${assetName} ${i18n._(msg`to`)} `,
         otherAccount: isAddress(transfer.recipient) || undefined,
         currencies,
       }
     }
   }
-  return { title: t`Unknown Send` }
+  return { title: i18n._(msg`Unknown Send`) }
 }
 
 function parseMint(
@@ -293,11 +295,11 @@ function parseMint(
 
     // Edge case: Minting a v3 positon represents adding liquidity
     if (changes.TokenTransfer.length === 2 && callsPositionManagerContract(assetActivity)) {
-      return { title: t`Added Liquidity`, ...parseLPTransfers(changes, formatNumberOrString) }
+      return { title: i18n._(msg`Added Liquidity`), ...parseLPTransfers(changes, formatNumberOrString) }
     }
-    return { title: t`Minted`, descriptor: `${collectionMap[collectionName]} ${collectionName}` }
+    return { title: i18n._(msg`Minted`), descriptor: `${collectionMap[collectionName]} ${collectionName}` }
   }
-  return { title: t`Unknown Mint` }
+  return { title: i18n._(msg`Unknown Mint`) }
 }
 
 function parseUnknown(
@@ -305,7 +307,7 @@ function parseUnknown(
   _formatNumberOrString: FormatNumberOrStringFunctionType,
   assetActivity: TransactionActivity
 ) {
-  return { title: t`Contract Interaction`, ...COMMON_CONTRACTS[assetActivity.details.to.toLowerCase()] }
+  return { title: i18n._(msg`Contract Interaction`), ...COMMON_CONTRACTS[assetActivity.details.to.toLowerCase()] }
 }
 
 type ActivityTypeParser = (

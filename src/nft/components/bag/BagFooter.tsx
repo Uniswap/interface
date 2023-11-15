@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
-import { t, Trans } from '@lingui/macro'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -226,6 +227,7 @@ const FiatValue = ({
   tradeState: TradeState
   usingPayWithAnyToken: boolean
 }) => {
+  const { _ } = useLingui()
   const { formatNumberOrString } = useFormatter()
 
   if (!usdcValue) {
@@ -240,7 +242,7 @@ const FiatValue = ({
     <PriceImpactContainer>
       {priceImpact && (
         <>
-          <MouseoverTooltip text={t`The estimated difference between the USD values of input and output amounts.`}>
+          <MouseoverTooltip text={_(msg`The estimated difference between the USD values of input and output amounts.`)}>
             <PriceImpactRow>
               <AlertTriangle color={priceImpact.priceImpactSeverity.color} size="16px" />
               <ThemedText.BodySmall style={{ color: priceImpact.priceImpactSeverity.color }} lineHeight="20px">

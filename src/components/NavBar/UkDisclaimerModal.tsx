@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import Modal from 'components/Modal'
@@ -34,6 +35,7 @@ const StyledThemeButton = styled(ThemeButton)`
 `
 
 export function UkDisclaimerModal() {
+  const { _ } = useLingui()
   const isOpen = useModalIsOpen(ApplicationModal.UK_DISCLAIMER)
   const closeModal = useCloseModal()
 
@@ -48,7 +50,7 @@ export function UkDisclaimerModal() {
             <Trans>Disclaimer for UK residents</Trans>
           </ThemedText.HeadlineLarge>
           <ThemedText.BodyPrimary padding="8px 8px 12px" lineHeight="24px">
-            {bannerText}
+            {_(bannerText)}
           </ThemedText.BodyPrimary>
         </Column>
         <ButtonContainer gap="md">

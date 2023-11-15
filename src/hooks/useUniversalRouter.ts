@@ -1,5 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { t } from '@lingui/macro'
+import { i18n } from '@lingui/core'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { FlatFeeOptions, SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
@@ -25,7 +27,7 @@ import { PermitSignature } from './usePermitAllowance'
 /** Thrown when gas estimation fails. This class of error usually requires an emulator to determine the root cause. */
 class GasEstimationError extends Error {
   constructor() {
-    super(t`Your swap is expected to fail.`)
+    super(i18n._(msg`Your swap is expected to fail.`))
   }
 }
 
@@ -36,7 +38,9 @@ class GasEstimationError extends Error {
 class ModifiedSwapError extends Error {
   constructor() {
     super(
-      t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
+      i18n._(
+        msg`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
+      )
     )
   }
 }
@@ -60,6 +64,7 @@ export function useUniversalRouterSwapCallback(
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const { data } = useCachedPortfolioBalancesQuery({ account })
   const portfolioBalanceUsd = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
+  const { _ } = useLingui()
 
   return useCallback(async () => {
     return trace('swap.send', async ({ setTraceData, setTraceStatus, setTraceError }) => {
@@ -153,10 +158,10 @@ export function useUniversalRouterSwapCallback(
         if (didUserReject(swapError)) {
           setTraceStatus('cancelled')
           // This error type allows us to distinguish between user rejections and other errors later too.
-          throw new UserRejectedRequestError(swapErrorToUserReadableMessage(swapError))
+          throw new UserRejectedRequestError(_(swapErrorToUserReadableMessage(swapError)))
         }
 
-        throw new Error(swapErrorToUserReadableMessage(swapError))
+        throw new Error(_(swapErrorToUserReadableMessage(swapError)))
       }
     })
   }, [
@@ -175,5 +180,6 @@ export function useUniversalRouterSwapCallback(
     fiatValues,
     portfolioBalanceUsd,
     connector,
+    _,
   ])
 }

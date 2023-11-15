@@ -1,4 +1,5 @@
-import { Plural, t, Trans } from '@lingui/macro'
+import { msg, Plural, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { ButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
 import { Portal } from 'nft/components/common/Portal'
@@ -83,6 +84,7 @@ export const BelowFloorWarningModal = ({
   startListing: () => void
 }) => {
   const theme = useTheme()
+  const { _ } = useLingui()
   const { formatDelta } = useFormatter()
   const clickContinue = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -105,10 +107,12 @@ export const BelowFloorWarningModal = ({
         <ThemedText.BodyPrimary textAlign="center">
           <Plural
             value={listingsBelowFloor.length !== 1 ? 2 : 1}
-            _1={t`One NFT is listed ${formatDelta(
-              (1 - (listingsBelowFloor[0][1].price ?? 0) / (listingsBelowFloor[0][0].floorPrice ?? 0)) * 100
-            )} `}
-            other={t`${listingsBelowFloor.length} NFTs are listed significantly `}
+            _1={_(
+              msg`One NFT is listed ${formatDelta(
+                (1 - (listingsBelowFloor[0][1].price ?? 0) / (listingsBelowFloor[0][0].floorPrice ?? 0)) * 100
+              )} `
+            )}
+            other={_(msg`${listingsBelowFloor.length} NFTs are listed significantly `)}
           />
           &nbsp;
           <Trans>below the collection’s floor price. Are you sure you want to continue?</Trans>

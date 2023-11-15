@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
-import { t } from '@lingui/macro'
+import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
@@ -50,6 +49,7 @@ export const SearchBar = () => {
   const searchRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const { pathname } = useLocation()
+  const { _ } = useLingui()
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
   const isNavSearchInputVisible = useIsNavSearchInputVisible()
@@ -106,12 +106,11 @@ export const SearchBar = () => {
     ...trace,
   }
 
-  const { i18n } = useLingui() // subscribe to locale changes
   const placeholderText = isMobileOrTablet
-    ? t(i18n)`Search`
+    ? msg`Search`
     : shouldDisableNFTRoutes
-    ? t(i18n)`Search tokens`
-    : t(i18n)`Search tokens and NFT collections`
+    ? msg`Search tokens`
+    : msg`Search tokens and NFT collections`
 
   const handleKeyPress = useCallback(
     (event: any) => {
@@ -188,7 +187,7 @@ export const SearchBar = () => {
             <Box
               as="input"
               data-cy="search-bar-input"
-              placeholder={placeholderText}
+              placeholder={_(placeholderText)}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
                 !isOpen && toggleOpen()
                 setSearchValue(event.target.value)

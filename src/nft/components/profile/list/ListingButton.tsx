@@ -1,4 +1,5 @@
-import { Plural, t, Trans } from '@lingui/macro'
+import { msg, Plural, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { BaseButton } from 'components/Button'
 import { BelowFloorWarningModal } from 'nft/components/profile/list/Modal/BelowFloorWarningModal'
 import { useIsMobile, useSellAsset } from 'nft/hooks'
@@ -40,6 +41,7 @@ export const ListingButton = ({ onClick }: { onClick: () => void }) => {
   )
   const [showWarning, setShowWarning] = useState(false)
   const isMobile = useIsMobile()
+  const { _ } = useLingui()
 
   // Find issues with item listing data
   const [listingsMissingPrice, listingsBelowFloor] = useMemo(() => {
@@ -80,7 +82,7 @@ export const ListingButton = ({ onClick }: { onClick: () => void }) => {
         showResolveIssues={showResolveIssues}
       >
         {showResolveIssues ? (
-          <Plural value={issues !== 1 ? 2 : 1} _1="Resolve issue" other={t`Resolve ${issues} issues`} />
+          <Plural value={issues !== 1 ? 2 : 1} _1="Resolve issue" other={_(msg`Resolve ${issues} issues`)} />
         ) : listingsMissingPrice.length && !isMobile ? (
           <Trans>Set prices to continue</Trans>
         ) : (

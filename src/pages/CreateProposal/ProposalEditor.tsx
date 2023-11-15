@@ -1,5 +1,5 @@
-// eslint-disable-next-line no-restricted-imports
-import { t, Trans } from '@lingui/macro'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { ResizingTextArea, TextInput } from 'components/TextInput'
 import React, { memo } from 'react'
 import { Text } from 'rebass'
@@ -37,6 +37,7 @@ export const ProposalEditor = ({
   onTitleInput: (title: string) => void
   onBodyInput: (body: string) => void
 }) => {
+  const { _ } = useLingui()
   const bodyPlaceholder = `## Summary
 
 Insert your summary here
@@ -56,7 +57,7 @@ Insert your conclusion here
       <ProposalEditorHeader>
         <Trans>Proposal</Trans>
       </ProposalEditorHeader>
-      <ProposalTitle value={title} onUserInput={onTitleInput} placeholder={t`Proposal Title`} fontSize="1.25rem" />
+      <ProposalTitle value={title} onUserInput={onTitleInput} placeholder={_(msg`Proposal Title`)} fontSize="1.25rem" />
       <hr />
       <ResizingTextArea value={body} onUserInput={onBodyInput} placeholder={bodyPlaceholder} fontSize="1rem" />
     </ProposalEditorContainer>

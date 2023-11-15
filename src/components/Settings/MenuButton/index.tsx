@@ -1,4 +1,5 @@
-import { t, Trans } from '@lingui/macro'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { Settings } from 'components/Icons/Settings'
 import Row from 'components/Row'
 import { InterfaceTrade } from 'state/routing/types'
@@ -82,6 +83,8 @@ export default function MenuButton({
   isActive: boolean
   trade?: InterfaceTrade
 }) {
+  const { _ } = useLingui()
+
   return (
     <Button
       disabled={disabled}
@@ -89,7 +92,7 @@ export default function MenuButton({
       isActive={isActive}
       id="open-settings-dialog-button"
       data-testid="open-settings-dialog-button"
-      aria-label={t`Transaction Settings`}
+      aria-label={_(msg`Transaction Settings`)}
     >
       <ButtonContent trade={trade} />
     </Button>

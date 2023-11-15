@@ -1,4 +1,5 @@
-import { t, Trans } from '@lingui/macro'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
@@ -94,6 +95,7 @@ function TransactionSubmittedContent({
   inline?: boolean // not in modal
 }) {
   const theme = useTheme()
+  const { _ } = useLingui()
 
   const { connector } = useWeb3React()
 
@@ -115,7 +117,7 @@ function TransactionSubmittedContent({
       .catch(() => setSuccess(false))
   }, [connector, logoURL, token])
 
-  const explorerText = chainId === ChainId.MAINNET ? t`View on  Etherscan` : t`View on Block Explorer`
+  const explorerText = chainId === ChainId.MAINNET ? msg`View on  Etherscan` : msg`View on Block Explorer`
 
   return (
     <Wrapper>
@@ -154,7 +156,7 @@ function TransactionSubmittedContent({
           </ButtonPrimary>
           {chainId && hash && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <ThemedText.Link color={theme.accent1}>{explorerText}</ThemedText.Link>
+              <ThemedText.Link color={theme.accent1}>{_(explorerText)}</ThemedText.Link>
             </ExternalLink>
           )}
         </ConfirmationModalContentWrapper>

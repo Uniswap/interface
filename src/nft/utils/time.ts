@@ -1,4 +1,5 @@
-import { plural, t } from '@lingui/macro'
+import { i18n } from '@lingui/core'
+import { msg, plural } from '@lingui/macro'
 import ms from 'ms'
 
 import { roundAndPluralize } from './roundAndPluralize'
@@ -74,7 +75,7 @@ export function timeUntil(date: Date, originalDate?: Date): string | undefined {
   if (milliseconds < 0) return undefined
 
   const monthInterval = milliseconds / MONTH
-  if (monthInterval >= 100) return `99+ ${t`months`}`
+  if (monthInterval >= 100) return `99+ ${i18n._(msg`months`)}`
 
   for (const period of timePeriods) {
     const interval = milliseconds / period.milliseconds

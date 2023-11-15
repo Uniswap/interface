@@ -4,8 +4,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
-// eslint-disable-next-line no-restricted-imports
-import { t } from '@lingui/macro'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import GovernorAlphaJSON from '@uniswap/governance/build/GovernorAlpha.json'
 import UniJSON from '@uniswap/governance/build/Uni.json'
 import {
@@ -231,6 +231,7 @@ function countToIndices(count: number | undefined, skip = 0) {
 
 // get data for all past and active proposals
 export function useAllProposalData(): { data: ProposalData[]; loading: boolean } {
+  const { _ } = useLingui()
   const { chainId } = useWeb3React()
   const gov0 = useGovernanceV0Contract()
   const gov1 = useGovernanceV1Contract()
@@ -299,8 +300,8 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
 
         return {
           id: proposal?.result?.id.toString(),
-          title: title ?? t`Untitled`,
-          description: description ?? t`No description.`,
+          title: title ?? _(msg`Untitled`),
+          description: description ?? _(msg`No description.`),
           proposer: proposal?.result?.proposer,
           status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.UNDETERMINED,
           forCount: CurrencyAmount.fromRawAmount(uni, proposal?.result?.forVotes),
@@ -315,6 +316,7 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
       loading: false,
     }
   }, [
+    _,
     formattedLogsV0,
     formattedLogsV1,
     formattedLogsV2,

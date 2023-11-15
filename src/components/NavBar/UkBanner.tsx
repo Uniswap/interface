@@ -1,4 +1,5 @@
-import { t, Trans } from '@lingui/macro'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components'
@@ -58,7 +59,7 @@ const ReadMoreWrapper = styled(ButtonText)`
   }
 `
 
-export const bannerText = t`
+export const bannerText = msg`
   This web application is provided as a tool for users to interact with the Uniswap Protocol on
   their own initiative, with no endorsement or recommendation of cryptocurrency trading activities. In doing so,
   Uniswap is not recommending that users or potential users engage in cryptoasset trading activity, and users or
@@ -67,11 +68,12 @@ export const bannerText = t`
 `
 
 export function UkBanner() {
+  const { _ } = useLingui()
   const openDisclaimer = useOpenModal(ApplicationModal.UK_DISCLAIMER)
 
   return (
     <BannerWrapper>
-      <BannerTextWrapper lineHeight="24px">{t`UK disclaimer:` + ' ' + bannerText}</BannerTextWrapper>
+      <BannerTextWrapper lineHeight="24px">{_(msg`UK disclaimer: `) + _(bannerText)}</BannerTextWrapper>
       <ReadMoreWrapper>
         <ThemedText.BodySecondary lineHeight="24px" color="accent1" onClick={openDisclaimer}>
           <Trans>Read more</Trans>

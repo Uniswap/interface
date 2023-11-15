@@ -1,4 +1,5 @@
-import { t } from '@lingui/macro'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
@@ -64,8 +65,8 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
   const { chainId } = useWeb3React()
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const isMobile = useIsMobile()
-
   const theme = useTheme()
+  const { _ } = useLingui()
 
   const showTestnets = useAtomValue(showTestnetsAtom)
   const walletSupportsChain = useWalletSupportedChains()
@@ -149,7 +150,7 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
 
   return (
     <ChainSelectorWrapper ref={ref}>
-      <MouseoverTooltip text={t`Your wallet's current network is unsupported.`} disabled={isSupported}>
+      <MouseoverTooltip text={_(msg`Your wallet's current network is unsupported.`)} disabled={isSupported}>
         <ChainSelectorButton data-testid="chain-selector" onClick={() => setIsOpen(!isOpen)} isOpen={isOpen}>
           {!isSupported ? (
             <AlertTriangle size={20} color={theme.neutral2} />

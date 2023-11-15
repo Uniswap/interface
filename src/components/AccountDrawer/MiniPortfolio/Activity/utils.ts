@@ -1,4 +1,5 @@
-import { t } from '@lingui/macro'
+import { i18n } from '@lingui/core'
+import { msg } from '@lingui/macro'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 
@@ -53,11 +54,11 @@ export const createGroups = (activities?: Array<Activity>) => {
     .map((year) => ({ title: year, transactions: yearMap[year] }))
 
   const transactionGroups: Array<ActivityGroup> = [
-    { title: t`Pending`, transactions: pending.sort(sortActivities) },
-    { title: t`Today`, transactions: today.sort(sortActivities) },
-    { title: t`This week`, transactions: currentWeek.sort(sortActivities) },
-    { title: t`This month`, transactions: last30Days.sort(sortActivities) },
-    { title: t`This year`, transactions: currentYear.sort(sortActivities) },
+    { title: i18n._(msg`Pending`), transactions: pending.sort(sortActivities) },
+    { title: i18n._(msg`Today`), transactions: today.sort(sortActivities) },
+    { title: i18n._(msg`This week`), transactions: currentWeek.sort(sortActivities) },
+    { title: i18n._(msg`This month`), transactions: last30Days.sort(sortActivities) },
+    { title: i18n._(msg`This year`), transactions: currentYear.sort(sortActivities) },
     ...sortedYears,
   ]
 

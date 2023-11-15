@@ -1,4 +1,5 @@
-import { t } from '@lingui/macro'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -126,6 +127,7 @@ export const MarketplaceRow = ({
   toggleExpandMarketplaceRows,
   rowHovered,
 }: MarketplaceRowProps) => {
+  const { _ } = useLingui()
   const { formatNumberOrString, formatDelta } = useFormatter()
   const setAssetListPrice = useSellAsset((state) => state.setAssetListPrice)
   const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)
@@ -241,7 +243,7 @@ export const MarketplaceRow = ({
         >
           <FeeWrapper>
             <ThemedText.BodyPrimary color="neutral2">
-              {fees > 0 ? `${formatDelta(fees)}${selectedMarkets.length > 1 ? t`max` : ''}` : '--%'}
+              {fees > 0 ? `${formatDelta(fees)}${selectedMarkets.length > 1 ? _(msg`max`) : ''}` : '--%'}
             </ThemedText.BodyPrimary>
           </FeeWrapper>
         </MouseoverTooltip>

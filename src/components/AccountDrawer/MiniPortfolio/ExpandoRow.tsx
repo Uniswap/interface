@@ -1,4 +1,6 @@
-import { t } from '@lingui/macro'
+import { MessageDescriptor } from '@lingui/core'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { PropsWithChildren } from 'react'
@@ -31,18 +33,25 @@ const Wrapper = styled(Column)<{ numItems: number; isExpanded: boolean }>`
 `
 
 // TODO(WEB-1982): Replace this component to use `components/Expand` under the hood
-type ExpandoRowProps = PropsWithChildren<{ title?: string; numItems: number; isExpanded: boolean; toggle: () => void }>
-export function ExpandoRow({ title = t`Hidden`, numItems, isExpanded, toggle, children }: ExpandoRowProps) {
+type ExpandoRowProps = PropsWithChildren<{
+  title?: MessageDescriptor
+  numItems: number
+  isExpanded: boolean
+  toggle: () => void
+}>
+export function ExpandoRow({ title = msg`Hidden`, numItems, isExpanded, toggle, children }: ExpandoRowProps) {
+  const { _ } = useLingui()
+
   if (numItems === 0) return null
   return (
     <>
       <Row align="center" justify="space-between" padding="16px">
         <ThemedText.SubHeader color="neutral2" variant="subheadSmall">
-          {`${title} (${numItems})`}
+          {`${_(title)} (${numItems})`}
         </ThemedText.SubHeader>
         <ToggleButton align="center" onClick={toggle}>
           <ThemedText.LabelSmall color="neutral2" variant="buttonLabelSmall">
-            {isExpanded ? t`Hide` : t`Show`}
+            {_(isExpanded ? msg`Hide` : msg`Show`)}
           </ThemedText.LabelSmall>
           <ExpandIcon $expanded={isExpanded} />
         </ToggleButton>

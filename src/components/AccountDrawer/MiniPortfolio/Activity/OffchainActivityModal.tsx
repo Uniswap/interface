@@ -1,4 +1,5 @@
-import { t, Trans } from '@lingui/macro'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { ReactComponent as ErrorContent } from 'assets/svg/uniswapx_error.svg'
 import Column, { AutoColumn } from 'components/Column'
@@ -120,6 +121,7 @@ function useOrderAmounts(
 }
 
 export function OrderContent({ order }: { order: SelectedOrderInfo }) {
+  const { _ } = useLingui()
   const amounts = useOrderAmounts(order.details)
 
   const explorerLink = order?.details?.txHash
@@ -215,9 +217,13 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
           <ThemedText.SubHeaderLarge>
             <Trans>Insufficient funds for swap</Trans>
           </ThemedText.SubHeaderLarge>
-          <ThemedText.LabelSmall textAlign="center">{t`You didn't have enough ${
-            amounts?.inputAmount.currency.symbol ?? amounts?.inputAmount.currency.name ?? t`of the input token`
-          } to complete this swap.`}</ThemedText.LabelSmall>
+          <ThemedText.LabelSmall textAlign="center">
+            {_(msg`You didn't have enough `) +
+              (amounts?.inputAmount.currency.symbol ??
+                amounts?.inputAmount.currency.name ??
+                _(msg`of the input token`)) +
+              _(msg` to complete this swap.`)}
+          </ThemedText.LabelSmall>
         </ContentContainer>
       )
   }

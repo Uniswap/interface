@@ -1,4 +1,5 @@
-import { t } from '@lingui/macro'
+import { i18n } from '@lingui/core'
+import { msg } from '@lingui/macro'
 import { v4 as uuid } from 'uuid'
 
 // You may throw an instance of this class when the user rejects a request in their wallet.
@@ -20,14 +21,14 @@ export function toReadableError(errorText: string, error: unknown) {
 
 export class WrongChainError extends Error {
   constructor() {
-    super(t`Your wallet is connected to the wrong network.`)
+    super(i18n._(msg`Your wallet is connected to the wrong network.`))
   }
 }
 
 export class SignatureExpiredError extends Error {
   private _id: string
   constructor() {
-    super(t`Your signature has expired.`)
+    super(i18n._(msg`Your signature has expired.`))
     this.name = 'SignatureExpiredError'
     this._id = `SignatureExpiredError-${uuid()}`
   }
