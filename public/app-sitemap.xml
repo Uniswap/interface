@@ -73,12 +73,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://app.uniswap.org/increase</loc>
-    <lastmod>2023-10-11T19:57:27.976Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://app.uniswap.org/migrate/v2</loc>
     <lastmod>2023-10-11T19:57:27.976Z</lastmod>
     <changefreq>weekly</changefreq>

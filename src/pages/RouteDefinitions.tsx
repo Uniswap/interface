@@ -178,19 +178,13 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/add',
-    nestedPaths: [':currencyIdA', ':currencyIdA/:currencyIdB', ':currencyIdA/:currencyIdB/:feeAmount'],
-    getElement: () => <RedirectDuplicateTokenIds />,
-  }),
-
-  createRouteDefinition({
-    path: '/increase',
     nestedPaths: [
       ':currencyIdA',
       ':currencyIdA/:currencyIdB',
       ':currencyIdA/:currencyIdB/:feeAmount',
       ':currencyIdA/:currencyIdB/:feeAmount/:tokenId',
     ],
-    getElement: () => <AddLiquidity />,
+    getElement: () => <RedirectDuplicateTokenIds />,
   }),
   createRouteDefinition({ path: '/remove/v2/:currencyIdA/:currencyIdB', getElement: () => <RemoveLiquidity /> }),
   createRouteDefinition({ path: '/remove/:tokenId', getElement: () => <RemoveLiquidityV3 /> }),

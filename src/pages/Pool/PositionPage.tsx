@@ -706,7 +706,7 @@ function PositionPageContent() {
                     {currency0 && currency1 && feeAmount && tokenId ? (
                       <ButtonGray
                         as={Link}
-                        to={`/increase/${currencyId(currency0)}/${currencyId(currency1)}/${feeAmount}/${tokenId}`}
+                        to={`/add/${currencyId(currency0)}/${currencyId(currency1)}/${feeAmount}/${tokenId}`}
                         padding="6px 8px"
                         width="fit-content"
                         $borderRadius="12px"
