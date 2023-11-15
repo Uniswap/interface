@@ -288,7 +288,7 @@ export default function ConfirmSwapModal({
   fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
   const { chainId } = useWeb3React()
-  const doesTradeDiffer = originalTrade && tradeMeaningfullyDiffers(trade, originalTrade, allowedSlippage)
+  const doesTradeDiffer = originalTrade && tradeMeaningfullyDiffers(originalTrade, trade, allowedSlippage)
   const { startSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps, wrapTxHash } =
     useConfirmModalState({
       trade,
