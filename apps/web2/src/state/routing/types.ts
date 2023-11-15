@@ -43,8 +43,6 @@ export interface GetQuoteArgs {
   tradeType: TradeType
   needsWrapIfUniswapX: boolean
   uniswapXForceSyntheticQuotes: boolean
-  uniswapXEthOutputEnabled: boolean
-  uniswapXExactOutputEnabled: boolean
   // legacy field indicating the user disabled UniswapX during the opt-in period, or dismissed the UniswapX opt-in modal.
   userDisabledUniswapX: boolean
   // temporary field indicating the user disabled UniswapX during the transition to the opt-out model
