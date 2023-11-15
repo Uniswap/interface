@@ -26,7 +26,7 @@ import PriceImpactModal from 'components/swap/PriceImpactModal'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import { ArrowWrapper, PageWrapper, SwapWrapper } from 'components/swap/styled'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
-import SwapHeader from 'components/swap/SwapHeader'
+import SwapHeader, { SwapTab } from 'components/swap/SwapHeader'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { useConnectionReady } from 'connection/eagerlyConnect'
@@ -601,8 +601,10 @@ export function Swap({
   const isDark = useIsDarkMode()
   const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
 
+  const [currentTab, setCurrentTab] = useState<SwapTab>(SwapTab.Swap)
+
   const swapElement = (
-    <SwapWrapper isDark={isDark} className={className} id="swap-page">
+    <>
       <TokenSafetyModal
         isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
         tokenAddress={importTokensNotInDefault[0]?.address}
@@ -611,7 +613,6 @@ export function Swap({
         onCancel={handleDismissTokenWarning}
         showCancel={true}
       />
-      <SwapHeader trade={trade} autoSlippage={autoSlippage} chainId={chainId} />
       {trade && showConfirm && (
         <ConfirmSwapModal
           trade={trade}
@@ -832,13 +833,23 @@ export function Swap({
         </div>
       </AutoColumn>
       {!showOptInSmall && !isUniswapXDefaultEnabled && <UniswapXOptIn isSmall={false} swapInfo={swapInfo} />}
-    </SwapWrapper>
+    </>
   )
 
   return (
-    <>
-      {swapElement}
+    <SwapWrapper isDark={isDark} className={className} id="swap-page">
+      <SwapHeader
+        selectedTab={currentTab}
+        onClickTab={(tab) => {
+          setCurrentTab(tab)
+        }}
+        trade={trade}
+        autoSlippage={autoSlippage}
+        chainId={chainId}
+      />
+      {/* todo: build Limit UI */}
+      {currentTab === SwapTab.Swap ? swapElement : undefined}
       {showOptInSmall && !isUniswapXDefaultEnabled && <UniswapXOptIn isSmall swapInfo={swapInfo} />}
-    </>
+    </SwapWrapper>
   )
 }
