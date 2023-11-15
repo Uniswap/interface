@@ -31,16 +31,13 @@ function NFT({ repeat = 1 }: { repeat?: number }): JSX.Element {
         <NftCardLoader opacity={1} />
       ) : (
         <Flex>
-          {new Array(repeat / 2).fill(null).map((_, i) => {
-            const firstColOpacity = (repeat - ((repeat / 2) * i + 1) + 1) / repeat
-            const secondColOpacity = (repeat - ((repeat / 2) * i + 2) + 1) / repeat
+          {new Array(Math.floor(repeat / 2)).fill(null).map((_, i, { length }) => {
+            const opacity = (length - i) / length
             return (
-              <React.Fragment key={i}>
-                <Flex row>
-                  <NftCardLoader opacity={firstColOpacity} width="50%" />
-                  <NftCardLoader opacity={secondColOpacity} width="50%" />
-                </Flex>
-              </React.Fragment>
+              <Flex key={i} row>
+                <NftCardLoader opacity={opacity} width="50%" />
+                <NftCardLoader opacity={opacity} width="50%" />
+              </Flex>
             )
           })}
         </Flex>

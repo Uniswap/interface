@@ -176,7 +176,7 @@ export const ActivityTab = memo(
           // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
           ListFooterComponent={
             <>
-              {isLoadingInitially && <Loader.Transaction repeat={4} />}
+              {isLoadingInitially && <Loader.Transaction repeat={6} />}
               {isExternalProfile ? null : adaptiveFooter}
             </>
           }

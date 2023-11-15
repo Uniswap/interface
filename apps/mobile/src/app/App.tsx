@@ -10,6 +10,7 @@ import { getUniqueId } from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import RNRestart from 'react-native-restart'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { enableFreeze } from 'react-native-screens'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
 import { useAppSelector } from 'src/app/hooks'
@@ -69,6 +70,9 @@ import { initializeTranslation } from 'wallet/src/i18n/i18n'
 import { SharedProvider } from 'wallet/src/provider'
 import { useAppDispatch } from 'wallet/src/state'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
+
+enableFreeze(true)
+
 if (__DEV__) {
   registerConsoleOverrides()
 }

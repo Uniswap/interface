@@ -135,7 +135,7 @@ export const TokenBalanceList = forwardRef<FlatList<any>, TokenBalanceListProps>
         {!balancesById ? (
           isNonPollingRequestInFlight(networkStatus) ? (
             <Flex px="$spacing24" style={containerProps?.loadingContainerStyle}>
-              <Loader.Token repeat={4} />
+              <Loader.Token repeat={6} />
             </Flex>
           ) : (
             <Flex fill grow justifyContent="center" style={containerProps?.emptyContainerStyle}>
