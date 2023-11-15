@@ -124,8 +124,7 @@
     "upgrade:rnw": "manypkg upgrade react-native-web",
     "upgrade:tamagui": "manypkg upgrade tamagui && manypkg upgrade @tamagui && manypkg upgrade tamagui-loader",
     "web": "yarn workspace @uniswap/web",
-    "web:build": "turbo run --filter=@uniswap/interface build:production",
-    "web:install": "CYPRESS_INSTALL_BINARY=0 yarn workspaces focus @uniswap/interface"
+    "web:build": "turbo run --filter=@uniswap/interface build:production"
   },
   "workspaces": [
     "apps/*",
