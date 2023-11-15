@@ -126,46 +126,50 @@ const StyledLogoParentContainer = styled.div`
   top: 0;
   left: 0;
 `
-function DoubleCurrencyAndChainLogo({
+export function DoubleCurrencyAndChainLogo({
   chainId,
   currencies,
+  size = 32,
 }: {
   chainId: number
   currencies: Array<Currency | undefined>
+  size?: number
 }) {
   return (
     <StyledLogoParentContainer>
-      <DoubleCurrencyLogo chainId={chainId} currencies={currencies} />
-      <SquareL2Logo chainId={chainId} />
+      <DoubleCurrencyLogo chainId={chainId} currencies={currencies} size={size} />
+      <SquareL2Logo chainId={chainId} size={size} />
     </StyledLogoParentContainer>
   )
 }
 
-const L2LogoContainer = styled.div`
+const L2_LOGO_SIZE_FACTOR = 3 / 8
+
+const L2LogoContainer = styled.div<{ size: number }>`
   background-color: ${({ theme }) => theme.surface2};
   border-radius: 2px;
-  height: 12px;
+  width: ${({ size }) => size * L2_LOGO_SIZE_FACTOR}px;
+  height: ${({ size }) => size * L2_LOGO_SIZE_FACTOR}px;
   left: 60%;
   position: absolute;
   top: 60%;
   outline: 2px solid ${({ theme }) => theme.surface1};
-  width: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
 `
 
-function SquareL2Logo({ chainId }: { chainId: ChainId }) {
+function SquareL2Logo({ chainId, size }: { chainId: ChainId; size: number }) {
   if (chainId === ChainId.MAINNET) return null
 
   return (
-    <L2LogoContainer>
-      <ChainLogo chainId={chainId} size={12} />
+    <L2LogoContainer size={size}>
+      <ChainLogo chainId={chainId} size={size * L2_LOGO_SIZE_FACTOR} />
     </L2LogoContainer>
   )
 }
 
-export function DoubleCurrencyLogo({
+function DoubleCurrencyLogo({
   chainId,
   currencies,
   size = 32,

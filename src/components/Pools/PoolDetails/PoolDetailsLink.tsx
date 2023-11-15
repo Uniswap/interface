@@ -18,7 +18,7 @@ import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/c
 import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
-import { DoubleCurrencyLogo } from './PoolDetailsHeader'
+import { DoubleCurrencyAndChainLogo } from './PoolDetailsHeader'
 import { DetailBubble, SmallDetailBubble } from './shared'
 
 const TokenName = styled(ThemedText.BodyPrimary)`
@@ -128,7 +128,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
         onClick={handleTokenTextClick}
       >
         {isPool ? (
-          <DoubleCurrencyLogo chainId={chainId} currencies={currencies} size={20} />
+          <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} size={20} />
         ) : (
           <CurrencyLogo currency={currencies[0]} size="20px" />
         )}

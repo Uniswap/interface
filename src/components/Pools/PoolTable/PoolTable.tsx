@@ -13,7 +13,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { DoubleCurrencyLogo } from '../PoolDetails/PoolDetailsHeader'
+import { DoubleCurrencyAndChainLogo } from '../PoolDetails/PoolDetailsHeader'
 
 const TableWrapper = styled.div`
   max-width: 1200px;
@@ -58,7 +58,7 @@ function PoolDescription({
   const chainName = chainIdToBackendName(chainId).toLowerCase()
   return (
     <PoolDescriptionCell onClick={() => navigate(`/explore/pools/${chainName}/${poolAddress}`)}>
-      <DoubleCurrencyLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} size={28} />
+      <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} size={28} />
       <ThemedText.BodyPrimary>
         {currencies[0]?.symbol}/{currencies[1]?.symbol}
       </ThemedText.BodyPrimary>
