@@ -55,7 +55,8 @@
       "inputs": [
         "yarn.lock",
         "**/package.json",
-        "{packages,apps}/src/**"
+        "{packages,apps}/src/**.ts",
+        "{packages,apps}/src/**.tsx"
       ],
       "outputs": [
         "**/dist/**",
