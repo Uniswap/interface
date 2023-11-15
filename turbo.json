@@ -44,6 +44,12 @@
         "lint"
       ]
     },
+    "build:production": {
+      "dependsOn": [
+        "prepare",
+        "build"
+      ]
+    },
     "build": {
       "inputs": [
         "yarn.lock",

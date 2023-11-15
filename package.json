@@ -34,7 +34,7 @@
     "semantic-release": "^20.1.0",
     "semantic-release-monorepo": "^7.0.5",
     "syncpack": "^8.5.14",
-    "turbo": "latest",
+    "turbo": "1.10.16",
     "typechain": "5.2.0",
     "underscore.string": "3.3.6",
     "undici": "5.19.1"
@@ -123,7 +123,8 @@
     "upgrade:next": "manypkg upgrade next && manypkg upgrade eslint-config-next",
     "upgrade:rnw": "manypkg upgrade react-native-web",
     "upgrade:tamagui": "manypkg upgrade tamagui && manypkg upgrade @tamagui && manypkg upgrade tamagui-loader",
-    "web": "yarn workspace @uniswap/web"
+    "web": "yarn workspace @uniswap/web",
+    "web:build": "turbo run --filter=@uniswap/interface build:production"
   },
   "workspaces": [
     "apps/*",
