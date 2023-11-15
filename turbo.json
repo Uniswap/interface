@@ -7,7 +7,8 @@
     },
     "typecheck": {
       "inputs": [
-        "{packages,apps,config}/*+(.ts|.tsx)"
+        "{packages,apps,config}/src/**.ts",
+        "{packages,apps,config}/src/**.tsx"
       ],
       "outputs": [],
       "dependsOn": [
