@@ -75,7 +75,7 @@
     "xml2js": "0.5.0",
     "yaml": "2.2.2",
     "@shopify/flash-list@1.4.3": "patch:@shopify/flash-list@npm%3A1.4.3#./.yarn/patches/@shopify-flash-list-npm-1.4.3-dc03c28fdd.patch",
-    "react-native@0.71.11": "patch:react-native@npm%3A0.71.11#./.yarn/patches/react-native-npm-0.71.11-c31ec9c2e7.patch",
+    "react-native@0.71.13": "patch:react-native@npm%3A0.71.13#./.yarn/patches/react-native-npm-0.71.13-e260a84bbf.patch",
     "expo-local-authentication@13.0.2": "patch:expo-local-authentication@npm%3A13.0.2#./.yarn/patches/expo-local-authentication-npm-13.0.2-e7639a51e4.patch",
     "@gorhom/bottom-sheet@4.4.7": "patch:@gorhom/bottom-sheet@npm%3A4.4.7#./.yarn/patches/@gorhom-bottom-sheet-npm-4.4.7-1316853536.patch",
     "react-native-context-menu-view@1.6.0": "patch:react-native-context-menu-view@npm%3A1.6.0#./.yarn/patches/react-native-context-menu-view-npm-1.6.0-f5f5410f50.patch",

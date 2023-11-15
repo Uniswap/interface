@@ -1,5 +1,5 @@
 diff --git a/jest/setup.js b/jest/setup.js
-index 3738bd2c61e516fa431f61fda47f2474f72dba42..2f82f7fea1543a3dc73f9ff8c2a760968f02d3bd 100644
+index 3738bd2c61e516fa431f61fda47f2474f72dba42..2b3266007b3c9412d99e7ceee205ee52e3008077 100644
 --- a/jest/setup.js
 +++ b/jest/setup.js
 @@ -17,12 +17,12 @@ jest.requireActual('@react-native/polyfills/error-guard');
