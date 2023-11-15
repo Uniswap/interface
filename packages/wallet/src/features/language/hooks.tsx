@@ -1,8 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { Language, Locale, mapLanguageToLocale } from 'wallet/src/features/language/constants'
+import { selectCurrentLanguage } from 'wallet/src/features/language/slice'
 import { useAppSelector } from 'wallet/src/state'
 
 /**
@@ -10,9 +9,7 @@ import { useAppSelector } from 'wallet/src/state'
  * @returns currently selected language enum
  */
 export function useCurrentLanguage(): Language {
-  const featureEnabled = useFeatureFlag(FEATURE_FLAGS.LanguageSelection)
-  const currentLanguage = useAppSelector((state) => state.languageSettings.currentLanguage)
-  return featureEnabled ? currentLanguage : Language.English
+  return useAppSelector(selectCurrentLanguage)
 }
 
 export type LanguageInfo = {
