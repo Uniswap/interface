@@ -2,6 +2,7 @@ import { notificationAsync } from 'expo-haptics'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
+import { useAppDispatch } from 'src/app/hooks'
 import { Arrow } from 'src/components/icons/Arrow'
 import { BiometricsIcon } from 'src/components/icons/BiometricsIcon'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
@@ -42,6 +43,8 @@ import { TransactionAmountsReview } from 'src/features/transactions/swapRewrite/
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { AnimatedFlex, Button, Flex, Separator, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -50,6 +53,7 @@ import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const dispatch = useAppDispatch()
 
   const account = useActiveAccountWithThrow()
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -72,6 +76,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     exactCurrencyField: ctxExactCurrencyField,
     focusOnCurrencyField,
     isSubmitting,
+    onClose,
     updateSwapForm,
   } = useSwapFormContext()
 
@@ -119,15 +124,23 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     setScreen(SwapScreen.SwapForm)
   }, [ctxExactCurrencyField, focusOnCurrencyField, setScreen, updateSwapForm])
 
-  const onNext = useCallback(() => {
-    setScreen(SwapScreen.SwapPending)
-    updateSwapForm({ isSubmitting: false })
-  }, [setScreen, updateSwapForm])
+  const triggerSwapPendingNotification = useCallback(() => {
+    dispatch(
+      pushNotification({
+        type: AppNotificationType.SwapPending,
+      })
+    )
+  }, [dispatch])
+
+  const navigateToNextScreen = useCallback(() => {
+    onClose()
+    triggerSwapPendingNotification()
+  }, [onClose, triggerSwapPendingNotification])
 
   const { wrapCallback: onWrap } = useWrapCallback(
     currencyAmounts[CurrencyField.INPUT],
     wrapType,
-    onNext,
+    navigateToNextScreen,
     txRequest,
     txId
   )
@@ -140,7 +153,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     currencyAmountsUSDValue[CurrencyField.INPUT],
     currencyAmountsUSDValue[CurrencyField.OUTPUT],
     !customSlippageTolerance,
-    onNext,
+    navigateToNextScreen,
     txId
   )
 

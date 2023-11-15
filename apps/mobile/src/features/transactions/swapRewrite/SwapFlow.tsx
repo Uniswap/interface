@@ -10,7 +10,6 @@ import {
 } from 'src/features/transactions/swapRewrite/SwapBottomSheetModal'
 import { SwapFormButton } from 'src/features/transactions/swapRewrite/SwapFormButton'
 import { SwapFormScreen } from 'src/features/transactions/swapRewrite/SwapFormScreen'
-import { SwapPendingScreen } from 'src/features/transactions/swapRewrite/SwapPendingScreen'
 import { SwapReviewScreen } from 'src/features/transactions/swapRewrite/SwapReviewScreen'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 
@@ -18,7 +17,7 @@ export function SwapFlow(): JSX.Element {
   // We need this additional `screen` state outside of the `SwapScreenContext` because the `SwapScreenContextProvider` needs to be inside the `BottomSheetModal`'s `Container`.
   const [screen, setScreen] = useState<SwapScreen>(SwapScreen.SwapForm)
 
-  const fullscreen = screen === SwapScreen.SwapForm || screen === SwapScreen.SwapPending
+  const fullscreen = screen === SwapScreen.SwapForm
 
   const showStickyReviewButton =
     screen === SwapScreen.SwapForm || screen === SwapScreen.SwapReviewHoldingToSwap
@@ -64,12 +63,6 @@ function CurrentScreen({
       return (
         <Trace logImpression section={SectionName.SwapReview}>
           <SwapReviewScreenDelayedRender />
-        </Trace>
-      )
-    case SwapScreen.SwapPending:
-      return (
-        <Trace logImpression section={SectionName.SwapPending}>
-          <SwapPendingScreen />
         </Trace>
       )
     default:

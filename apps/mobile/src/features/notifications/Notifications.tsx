@@ -7,6 +7,7 @@ import { SvgUri } from 'react-native-svg'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { store } from 'src/app/store'
+import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { closeAllModals, closeModal, openModal } from 'src/features/modals/modalSlice'
 import { NotificationToast } from 'src/features/notifications/NotificationToast'
@@ -26,6 +27,7 @@ import CheckCircle from 'ui/src/assets/icons/check-circle.svg'
 import EyeOffIcon from 'ui/src/assets/icons/eye-off.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { iconSizes } from 'ui/src/theme'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import {
   DappLogoWithTxStatus,
   LogoWithTxStatus,
@@ -584,6 +586,22 @@ export function ChangeAssetVisibilityNotification({
           ? t('{{assetName}} hidden', { assetName })
           : t('{{assetName}} unhidden', { assetName })
       }
+    />
+  )
+}
+
+// We roughly track the L1 block time, accuracy isnt crucial because we have other pending states,
+// and when a txn confirms it ll replace this toast.
+const SWAP_PENDING_NOTIFICATION_DELAY = 10 * ONE_SECOND_MS
+
+export function SwapPendingNotification(): JSX.Element {
+  const { t } = useTranslation()
+  return (
+    <NotificationToast
+      useSmallDisplay
+      hideDelay={SWAP_PENDING_NOTIFICATION_DELAY}
+      icon={<SpinningLoader color="$accent1" />}
+      title={t('Swap pending')}
     />
   )
 }

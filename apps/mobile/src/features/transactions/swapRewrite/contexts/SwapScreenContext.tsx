@@ -4,7 +4,6 @@ export enum SwapScreen {
   SwapForm,
   SwapReview,
   SwapReviewHoldingToSwap,
-  SwapPending,
 }
 
 type SwapScreenContextState = {
