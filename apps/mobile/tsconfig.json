@@ -14,6 +14,7 @@
     }
   ],
   "compilerOptions": {
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "lib": ["ESNext"]
   }
 }
