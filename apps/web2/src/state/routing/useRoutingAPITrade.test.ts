@@ -4,8 +4,6 @@ import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { USDC_MAINNET } from 'constants/tokens'
 import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
-import { useUniswapXEthOutputEnabled } from 'featureFlags/flags/uniswapXEthOutput'
-import { useUniswapXExactOutputEnabled } from 'featureFlags/flags/uniswapXExactOutput'
 import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useFeesEnabled } from 'featureFlags/flags/useFees'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
@@ -31,8 +29,6 @@ jest.mock('./slice', () => {
 })
 jest.mock('state/user/hooks')
 jest.mock('featureFlags/flags/uniswapXUseSyntheticQuote')
-jest.mock('featureFlags/flags/uniswapXEthOutput')
-jest.mock('featureFlags/flags/uniswapXExactOutput')
 jest.mock('featureFlags/flags/uniswapXDefault')
 jest.mock('featureFlags/flags/useFees')
 
@@ -42,8 +38,6 @@ beforeEach(() => {
   mocked(useUniswapXSyntheticQuoteEnabled).mockReturnValue(false)
   mocked(useUserDisabledUniswapX).mockReturnValue(false)
   mocked(useUserOptedOutOfUniswapX).mockReturnValue(false)
-  mocked(useUniswapXEthOutputEnabled).mockReturnValue(false)
-  mocked(useUniswapXExactOutputEnabled).mockReturnValue(false)
   mocked(useUniswapXDefaultEnabled).mockReturnValue(false)
   mocked(useFeesEnabled).mockReturnValue(true)
   // @ts-ignore we dont use the response from this hook in useRoutingAPITrade so fine to mock as undefined
@@ -74,8 +68,6 @@ const MOCK_ARGS: GetQuoteArgs = {
   uniswapXForceSyntheticQuotes: false,
   userDisabledUniswapX: false,
   userOptedOutOfUniswapX: false,
-  uniswapXEthOutputEnabled: false,
-  uniswapXExactOutputEnabled: false,
   isUniswapXDefaultEnabled: false,
   sendPortionEnabled: true,
 }

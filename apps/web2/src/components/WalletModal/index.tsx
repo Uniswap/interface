@@ -6,7 +6,6 @@ import { AutoRow } from 'components/Row'
 import { connections, deprecatedNetworkConnection, networkConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { isSupportedChain } from 'constants/chains'
-import { useAndroidGALaunchFlagEnabled } from 'featureFlags/flags/androidGALaunch'
 import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
 import { useEffect } from 'react'
 import styled from 'styled-components'
@@ -41,7 +40,6 @@ const PrivacyPolicyWrapper = styled.div`
 
 export default function WalletModal({ openSettings }: { openSettings: () => void }) {
   const { connector, chainId } = useWeb3React()
-  const isAndroidGALaunched = useAndroidGALaunchFlagEnabled()
 
   const { activationState } = useActivationState()
   const fallbackProviderEnabled = useFallbackProviderEnabled()
@@ -68,7 +66,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         <AutoColumn gap="16px">
           <OptionGrid data-testid="option-grid">
             {connections
-              .filter((connection) => connection.shouldDisplay(isAndroidGALaunched))
+              .filter((connection) => connection.shouldDisplay())
               .map((connection) => (
                 <Option key={connection.getName()} connection={connection} />
               ))}

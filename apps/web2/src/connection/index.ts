@@ -11,7 +11,7 @@ import COINBASE_ICON from 'assets/wallets/coinbase-icon.svg'
 import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import WALLET_CONNECT_ICON from 'assets/wallets/walletconnect-icon.svg'
 import { useSyncExternalStore } from 'react'
-import { isMobile, isNonIOSPhone, isNonSupportedPhone } from 'utils/userAgent'
+import { isMobile, isNonSupportedPhone } from 'utils/userAgent'
 
 import { RPC_URLS } from '../constants/networks'
 import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from '../constants/providers'
@@ -149,8 +149,7 @@ export const uniwalletWCV2ConnectConnection: Connection = {
   hooks: web3WCV2UniwalletConnectHooks,
   type: ConnectionType.UNISWAP_WALLET_V2,
   getIcon: () => UNIWALLET_ICON,
-  shouldDisplay: (isAndroidGALaunched) =>
-    Boolean(!getIsInjectedMobileBrowser() && (isAndroidGALaunched ? !isNonSupportedPhone : !isNonIOSPhone)),
+  shouldDisplay: () => Boolean(!getIsInjectedMobileBrowser() && !isNonSupportedPhone),
 }
 
 const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(
