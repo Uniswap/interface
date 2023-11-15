@@ -58,7 +58,7 @@ function PoolDescription({
   const chainName = chainIdToBackendName(chainId).toLowerCase()
   return (
     <PoolDescriptionCell onClick={() => navigate(`/explore/pools/${chainName}/${poolAddress}`)}>
-      <DoubleCurrencyLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} small />
+      <DoubleCurrencyLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} size={28} />
       <ThemedText.BodyPrimary>
         {currencies[0]?.symbol}/{currencies[1]?.symbol}
       </ThemedText.BodyPrimary>

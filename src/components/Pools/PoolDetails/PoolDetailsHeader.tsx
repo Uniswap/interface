@@ -168,42 +168,42 @@ function SquareL2Logo({ chainId }: { chainId: ChainId }) {
 export function DoubleCurrencyLogo({
   chainId,
   currencies,
-  small,
+  size = 32,
 }: {
   chainId: number
   currencies: Array<Currency | undefined>
-  small?: boolean
+  size?: number
 }) {
   const [src, nextSrc] = useTokenLogoSource(currencies?.[0]?.wrapped.address, chainId, currencies?.[0]?.isNative)
   const [src2, nextSrc2] = useTokenLogoSource(currencies?.[1]?.wrapped.address, chainId, currencies?.[1]?.isNative)
 
-  return <DoubleLogo logo1={src} onError1={nextSrc} logo2={src2} onError2={nextSrc2} small={small} />
+  return <DoubleLogo logo1={src} onError1={nextSrc} logo2={src2} onError2={nextSrc2} size={size} />
 }
 
-const DoubleLogoContainer = styled.div<{ small?: boolean }>`
+const DoubleLogoContainer = styled.div<{ size: number }>`
   display: flex;
   gap: 2px;
   position: relative;
   top: 0;
   left: 0;
   img {
-    width: ${({ small }) => (small ? '10px' : '16px')};
-    height: ${({ small }) => (small ? '20px' : '32px')};
+    width: ${({ size }) => size / 2}px;
+    height: ${({ size }) => size}px;
     object-fit: cover;
   }
   img:first-child {
-    border-radius: ${({ small }) => (small ? '10px 0 0 10px' : '16px 0 0 16px')};
+    border-radius: ${({ size }) => `${size / 2}px 0 0 ${size / 2}px`};
     object-position: 0 0;
   }
   img:last-child {
-    border-radius: ${({ small }) => (small ? '0 10px 10px 0' : '0 16px 16px 0')};
+    border-radius: ${({ size }) => `0 ${size / 2}px ${size / 2}px 0`};
     object-position: 100% 0;
   }
 `
 
-const CircleLogoImage = styled.img<{ small?: boolean }>`
-  width: ${({ small }) => (small ? '10px' : '16px')};
-  height: ${({ small }) => (small ? '20px' : '32px')};
+const CircleLogoImage = styled.img<{ size: number }>`
+  width: ${({ size }) => size / 2}px;
+  height: ${({ size }) => size}px;
   border-radius: 50%;
 `
 
@@ -212,14 +212,14 @@ interface DoubleLogoProps {
   logo2?: string
   onError1?: () => void
   onError2?: () => void
-  small?: boolean
+  size: number
 }
 
-function DoubleLogo({ logo1, onError1, logo2, onError2, small }: DoubleLogoProps) {
+function DoubleLogo({ logo1, onError1, logo2, onError2, size }: DoubleLogoProps) {
   return (
-    <DoubleLogoContainer small={small}>
-      <CircleLogoImage src={logo1 ?? blankTokenUrl} onError={onError1} small={small} />
-      <CircleLogoImage src={logo2 ?? blankTokenUrl} onError={onError2} small={small} />
+    <DoubleLogoContainer size={size}>
+      <CircleLogoImage src={logo1 ?? blankTokenUrl} onError={onError1} size={size} />
+      <CircleLogoImage src={logo2 ?? blankTokenUrl} onError={onError2} size={size} />
     </DoubleLogoContainer>
   )
 }
