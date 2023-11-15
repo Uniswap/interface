@@ -19,7 +19,7 @@ import {
   URAQuoteResponse,
   URAQuoteType,
 } from './types'
-import { isExactInput, transformRoutesToTrade } from './utils'
+import { isExactInput, transformQuoteToTrade } from './utils'
 
 const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
 if (UNISWAP_API_URL === undefined) {
@@ -69,6 +69,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     ...DEFAULT_QUERY_PARAMS,
     routingType: URAQuoteType.CLASSIC,
     recipient: account,
+    enableFeeOnTransferFeeFetching: true,
   }
 
   const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOutAddress as SwapRouterNativeAssets)
@@ -177,7 +178,7 @@ export const routingApi = createApi({
           }
 
           const uraQuoteResponse = response.data as URAQuoteResponse
-          const tradeResult = await transformRoutesToTrade(args, uraQuoteResponse, QuoteMethod.ROUTING_API)
+          const tradeResult = await transformQuoteToTrade(args, uraQuoteResponse, QuoteMethod.ROUTING_API)
           return { data: { ...tradeResult, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
         } catch (error: any) {
           console.warn(
@@ -192,7 +193,7 @@ export const routingApi = createApi({
           const router = getRouter(args.tokenInChainId)
           const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
           if (quoteResult.state === QuoteState.SUCCESS) {
-            const trade = await transformRoutesToTrade(args, quoteResult.data, QuoteMethod.CLIENT_SIDE_FALLBACK)
+            const trade = await transformQuoteToTrade(args, quoteResult.data, QuoteMethod.CLIENT_SIDE_FALLBACK)
             return {
               data: { ...trade, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
             }

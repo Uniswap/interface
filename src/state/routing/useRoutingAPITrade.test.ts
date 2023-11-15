@@ -2,7 +2,6 @@ import { skipToken } from '@reduxjs/toolkit/query/react'
 import { renderHook } from '@testing-library/react'
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
-import { ZERO_PERCENT } from 'constants/misc'
 import { USDC_MAINNET } from 'constants/tokens'
 import { useUniswapXEthOutputEnabled } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXExactOutputEnabled } from 'featureFlags/flags/uniswapXExactOutput'
@@ -71,8 +70,6 @@ const MOCK_ARGS: GetQuoteArgs = {
   uniswapXEthOutputEnabled: false,
   uniswapXExactOutputEnabled: false,
   sendPortionEnabled: true,
-  inputTax: ZERO_PERCENT,
-  outputTax: ZERO_PERCENT,
 }
 
 describe('#useRoutingAPITrade ExactIn', () => {

@@ -202,7 +202,7 @@
     "@uniswap/merkle-distributor": "^1.0.1",
     "@uniswap/permit2-sdk": "^1.2.0",
     "@uniswap/redux-multicall": "^1.1.8",
-    "@uniswap/router-sdk": "^1.6.0",
+    "@uniswap/router-sdk": "^1.7.1",
     "@uniswap/sdk-core": "4.0.7",
     "@uniswap/smart-order-router": "^3.15.0",
     "@uniswap/token-lists": "^1.0.0-beta.33",

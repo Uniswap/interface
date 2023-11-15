@@ -46,8 +46,6 @@ export interface GetQuoteArgs {
   uniswapXEthOutputEnabled: boolean
   uniswapXExactOutputEnabled: boolean
   sendPortionEnabled: boolean
-  inputTax: Percent
-  outputTax: Percent
 }
 
 export type GetQuickQuoteArgs = {
@@ -64,9 +62,12 @@ export type GetQuickQuoteArgs = {
   inputTax: Percent
   outputTax: Percent
 }
-// from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
 
-type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
+// from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
+export type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'> & {
+  buyFeeBps?: string
+  sellFeeBps?: string
+}
 
 export type V3PoolInRoute = {
   type: 'v3-pool'
@@ -195,8 +196,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   blockNumber: string | null | undefined
   requestId: string | undefined
   quoteMethod: QuoteMethod
-  inputTax: Percent
-  outputTax: Percent
   swapFee: SwapFeeInfo | undefined
 
   constructor({
@@ -205,8 +204,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     requestId,
     quoteMethod,
     approveInfo,
-    inputTax,
-    outputTax,
     swapFee,
     ...routes
   }: {
@@ -216,8 +213,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     requestId?: string
     quoteMethod: QuoteMethod
     approveInfo: ApproveInfo
-    inputTax: Percent
-    outputTax: Percent
     swapFee?: SwapFeeInfo
     v2Routes: {
       routev2: V2Route<Currency, Currency>
@@ -242,8 +237,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     this.requestId = requestId
     this.quoteMethod = quoteMethod
     this.approveInfo = approveInfo
-    this.inputTax = inputTax
-    this.outputTax = outputTax
     this.swapFee = swapFee
   }
 
@@ -254,30 +247,12 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     return new Price({ baseAmount: this.inputAmount, quoteAmount: this.postSwapFeeOutputAmount })
   }
 
-  public get totalTaxRate(): Percent {
-    return this.inputTax.add(this.outputTax)
-  }
-
   public get postSwapFeeOutputAmount(): CurrencyAmount<Currency> {
     // Routing api already applies the swap fee to the output amount for exact-in
     if (this.tradeType === TradeType.EXACT_INPUT) return this.outputAmount
 
     const swapFeeAmount = CurrencyAmount.fromRawAmount(this.outputAmount.currency, this.swapFee?.amount ?? 0)
     return this.outputAmount.subtract(swapFeeAmount)
-  }
-
-  public get postTaxOutputAmount() {
-    // Ideally we should calculate the final output amount by ammending the inputAmount based on the input tax and then applying the output tax,
-    // but this isn't currently possible because V2Trade reconstructs the total inputAmount based on the swap routes
-    // TODO(WEB-2761): Amend V2Trade objects in the v2-sdk to have a separate field for post-input tax routes
-    return this.postSwapFeeOutputAmount.multiply(new Fraction(ONE).subtract(this.totalTaxRate))
-  }
-
-  public minimumAmountOut(slippageTolerance: Percent, amountOut = this.outputAmount): CurrencyAmount<Currency> {
-    // Since universal-router-sdk reconstructs V2Trade objects, overriding this method does not actually change the minimumAmountOut that gets submitted on-chain
-    // Our current workaround is to add tax rate to slippage tolerance before we submit the trade to universal-router-sdk in useUniversalRouter.ts
-    // So the purpose of this override is so the UI displays the same minimum amount out as what is submitted on-chain
-    return super.minimumAmountOut(slippageTolerance.add(this.totalTaxRate), amountOut)
   }
 
   // gas estimate for maybe approve + swap
@@ -361,11 +336,6 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
 
     return 0
   }
-
-  /** For UniswapX, handling token taxes in the output amount is outsourced to quoters */
-  public get postTaxOutputAmount() {
-    return this.outputAmount
-  }
 }
 
 export class PreviewTrade {
@@ -374,38 +344,19 @@ export class PreviewTrade {
   public readonly tradeType: TradeType
   public readonly inputAmount: CurrencyAmount<Currency>
   public readonly outputAmount: CurrencyAmount<Currency>
-  inputTax: Percent
-  outputTax: Percent
 
   constructor({
     inputAmount,
     outputAmount,
     tradeType,
-    inputTax,
-    outputTax,
   }: {
     inputAmount: CurrencyAmount<Currency>
     outputAmount: CurrencyAmount<Currency>
     tradeType: TradeType
-    inputTax: Percent
-    outputTax: Percent
   }) {
     this.inputAmount = inputAmount
     this.outputAmount = outputAmount
     this.tradeType = tradeType
-    this.inputTax = inputTax
-    this.outputTax = outputTax
-  }
-
-  public get totalTaxRate(): Percent {
-    return this.inputTax.add(this.outputTax)
-  }
-
-  public get postTaxOutputAmount() {
-    // Ideally we should calculate the final output amount by ammending the inputAmount based on the input tax and then applying the output tax,
-    // but this isn't currently possible because V2Trade reconstructs the total inputAmount based on the swap routes
-    // TODO(WEB-2761): Amend V2Trade objects in the v2-sdk to have a separate field for post-input tax routes
-    return this.outputAmount.multiply(new Fraction(ONE).subtract(this.totalTaxRate))
   }
 
   // below methods are copied from router-sdk
@@ -429,6 +380,26 @@ export class PreviewTrade {
       const slippageAdjustedAmountIn = new Fraction(ONE).add(slippageTolerance).multiply(amountIn.quotient).quotient
       return CurrencyAmount.fromRawAmount(amountIn.currency, slippageAdjustedAmountIn)
     }
+  }
+
+  /**
+   * Returns the sell tax of the input token
+   */
+  public get inputTax(): Percent {
+    const inputCurrency = this.inputAmount.currency
+    if (inputCurrency.isNative || !inputCurrency.wrapped.sellFeeBps) return ZERO_PERCENT
+
+    return new Percent(inputCurrency.wrapped.sellFeeBps.toNumber(), 10000)
+  }
+
+  /**
+   * Returns the buy tax of the output token
+   */
+  public get outputTax(): Percent {
+    const outputCurrency = this.outputAmount.currency
+    if (outputCurrency.isNative || !outputCurrency.wrapped.buyFeeBps) return ZERO_PERCENT
+
+    return new Percent(outputCurrency.wrapped.buyFeeBps.toNumber(), 10000)
   }
 
   private _executionPrice: Price<Currency, Currency> | undefined
