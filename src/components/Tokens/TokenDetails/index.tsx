@@ -211,15 +211,11 @@ export default function TokenDetails({
   const multiChainBalances = useMemo(() => {
     const tokenBalances = balanceQuery?.portfolios?.[0].tokenBalances
     const bridgeInfo = tokenQuery.token?.project?.tokens
-
-    return tokenBalances?.filter(
-      (tokenBalance) =>
-        tokenBalance.token?.symbol === tokenQuery.token?.symbol &&
-        bridgeInfo?.some((bridgeToken) => bridgeToken.id == tokenBalance.token?.id)
+    return tokenBalances?.filter((tokenBalance) =>
+      bridgeInfo?.some((bridgeToken) => bridgeToken.id == tokenBalance.token?.id)
     ) as TokenBalance[] | undefined
-  }, [balanceQuery?.portfolios, tokenQuery.token?.project?.tokens, tokenQuery.token?.symbol])
+  }, [balanceQuery?.portfolios, tokenQuery.token?.project?.tokens])
 
-  console.log('should even show??', Boolean(detailedToken && tokenQuery))
   // address will never be undefined if token is defined; address is checked here to appease typechecker
   if (detailedToken === undefined || !address) {
     return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!address} />
