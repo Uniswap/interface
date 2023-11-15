@@ -31,7 +31,7 @@ import { ThemedText } from 'theme/components'
 import invariant from 'tiny-invariant'
 import { isL2ChainId } from 'utils/chains'
 import { SignatureExpiredError } from 'utils/errors'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useFormatter } from 'utils/formatNumbers'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
@@ -120,10 +120,7 @@ function useConfirmModalState({
   const { execute: onWrap } = useWrapCallback(
     nativeCurrency,
     trade.inputAmount.currency,
-    formatCurrencyAmount({
-      amount: trade.inputAmount,
-      type: NumberType.SwapTradeAmount,
-    })
+    trade.inputAmount.toExact(),
   )
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
   const prevWrapConfirmed = usePrevious(wrapConfirmed)
