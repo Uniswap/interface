@@ -5,11 +5,11 @@ import { DynamicConfigName } from 'featureFlags/dynamicConfig'
 import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
 import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
 import { useFallbackProviderEnabledFlag } from 'featureFlags/flags/fallbackProvider'
-import { useFotAdjustmentsFlag } from 'featureFlags/flags/fotAdjustments'
 import { useInfoExploreFlag } from 'featureFlags/flags/infoExplore'
 import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
 import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
 import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
+import { useLimitsEnabledFlag } from 'featureFlags/flags/limits'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicatorV2'
 import { useQuickRouteMainnetFlag } from 'featureFlags/flags/quickRouteMainnet'
@@ -274,6 +274,12 @@ export default function FeatureFlagModal() {
         />
         <FeatureFlagOption
           variant={BaseVariant}
+          value={useLimitsEnabledFlag()}
+          featureFlag={FeatureFlag.limitsEnabled}
+          label="Enable Limits"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
           value={useFallbackProviderEnabledFlag()}
           featureFlag={FeatureFlag.fallbackProvider}
           label="Enable fallback provider"
@@ -289,12 +295,6 @@ export default function FeatureFlagModal() {
           value={useMultichainUXFlag()}
           featureFlag={FeatureFlag.multichainUX}
           label="Updated Multichain UX"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useFotAdjustmentsFlag()}
-          featureFlag={FeatureFlag.fotAdjustedmentsEnabled}
-          label="Enable fee-on-transfer UI and slippage adjustments"
         />
         <FeatureFlagOption
           variant={BaseVariant}

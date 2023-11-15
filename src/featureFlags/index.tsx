@@ -12,7 +12,6 @@ export enum FeatureFlag {
   uniswapXSyntheticQuote = 'uniswapx_synthetic_quote',
   multichainUX = 'multichain_ux',
   currencyConversion = 'currency_conversion',
-  fotAdjustedmentsEnabled = 'fot_dynamic_adjustments_enabled',
   infoExplore = 'info_explore',
   infoTDP = 'info_tdp',
   infoPoolPage = 'info_pool_page',
@@ -21,6 +20,7 @@ export enum FeatureFlag {
   quickRouteMainnet = 'enable_quick_route_mainnet',
   progressIndicatorV2 = 'progress_indicator_v2',
   feesEnabled = 'fees_enabled',
+  limitsEnabled = 'limits_enabled',
 }
 
 interface FeatureFlagsContextType {

@@ -17,7 +17,7 @@ import {
   URAQuoteResponse,
   URAQuoteType,
 } from './types'
-import { isExactInput, transformRoutesToTrade } from './utils'
+import { isExactInput, transformQuoteToTrade } from './utils'
 
 const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
 if (UNISWAP_API_URL === undefined) {
@@ -58,10 +58,9 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     ...DEFAULT_QUERY_PARAMS,
     routingType: URAQuoteType.CLASSIC,
     recipient: account,
+    enableFeeOnTransferFeeFetching: true,
   }
 
-  // UniswapX doesn't support native out, exact-out, or non-mainnet trades (yet),
-  // so even if the user has selected UniswapX as their router preference, force them to receive a Classic quote.
   if (
     // If the user has opted out of UniswapX during the opt-out transition period, we should respect that preference and only request classic quotes.
     (args.userOptedOutOfUniswapX && routerPreference !== RouterPreference.X) ||
@@ -164,7 +163,7 @@ export const routingApi = createApi({
           }
 
           const uraQuoteResponse = response.data as URAQuoteResponse
-          const tradeResult = await transformRoutesToTrade(args, uraQuoteResponse, QuoteMethod.ROUTING_API)
+          const tradeResult = await transformQuoteToTrade(args, uraQuoteResponse, QuoteMethod.ROUTING_API)
           return { data: { ...tradeResult, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
         } catch (error: any) {
           console.warn(
@@ -179,7 +178,7 @@ export const routingApi = createApi({
           const router = getRouter(args.tokenInChainId)
           const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
           if (quoteResult.state === QuoteState.SUCCESS) {
-            const trade = await transformRoutesToTrade(args, quoteResult.data, QuoteMethod.CLIENT_SIDE_FALLBACK)
+            const trade = await transformQuoteToTrade(args, quoteResult.data, QuoteMethod.CLIENT_SIDE_FALLBACK)
             return {
               data: { ...trade, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
             }

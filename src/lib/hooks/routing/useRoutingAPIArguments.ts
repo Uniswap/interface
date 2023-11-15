@@ -1,5 +1,5 @@
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
 import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useFeesEnabled } from 'featureFlags/flags/useFees'
@@ -20,8 +20,6 @@ export function useRoutingAPIArguments({
   amount,
   tradeType,
   routerPreference,
-  inputTax,
-  outputTax,
 }: {
   account?: string
   tokenIn?: Currency
@@ -29,8 +27,6 @@ export function useRoutingAPIArguments({
   amount?: CurrencyAmount<Currency>
   tradeType: TradeType
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
-  inputTax: Percent
-  outputTax: Percent
 }): GetQuoteArgs | SkipToken {
   const uniswapXForceSyntheticQuotes = useUniswapXSyntheticQuoteEnabled()
   const userDisabledUniswapX = useUserDisabledUniswapX()
@@ -64,8 +60,6 @@ export function useRoutingAPIArguments({
             userOptedOutOfUniswapX,
             isUniswapXDefaultEnabled,
             sendPortionEnabled,
-            inputTax,
-            outputTax,
           },
     [
       account,
@@ -79,8 +73,6 @@ export function useRoutingAPIArguments({
       userOptedOutOfUniswapX,
       isUniswapXDefaultEnabled,
       sendPortionEnabled,
-      inputTax,
-      outputTax,
     ]
   )
 }
