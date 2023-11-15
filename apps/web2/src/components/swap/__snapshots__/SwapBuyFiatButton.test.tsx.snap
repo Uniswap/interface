@@ -120,6 +120,12 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
   color: #7D7D7D;
   gap: 4px;
   font-weight: 485;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  -webkit-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+  -webkit-transition-property: opacity,color,background-color;
+  transition-property: opacity,color,background-color;
 }
 
 .c4:focus {
@@ -130,6 +136,10 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
 .c4:active {
   -webkit-text-decoration: none;
   text-decoration: none;
+}
+
+.c4:hover {
+  opacity: 0.6;
 }
 
 <div
