@@ -3,11 +3,12 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import { ChartType } from 'components/Charts/utils'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
 import { BreadcrumbNav, BreadcrumbNavLink } from 'components/Tokens/TokenDetails/BreadcrumbNavLink'
-import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
+import ChartSection, { OnChangeChartType } from 'components/Tokens/TokenDetails/ChartSection'
 import MobileBalanceSummaryFooter from 'components/Tokens/TokenDetails/MobileBalanceSummaryFooter'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
 import TokenDetailsSkeleton, {
@@ -29,9 +30,11 @@ import { TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { Chain, TokenQuery, TokenQueryData } from 'graphql/data/Token'
 import { getTokenDetailsURL, gqlToCurrency, InterfaceGqlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
+import { useAtomValue } from 'jotai/utils'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import { Swap } from 'pages/Swap'
-import { useCallback, useMemo, useState, useTransition } from 'react'
+import { pageChartTypeAtom } from 'pages/TokenDetails'
+import { startTransition, useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft, ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Field } from 'state/swap/actions'
@@ -42,6 +45,7 @@ import { isAddress, shortenAddress } from 'utils'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
 import { OnChangeTimePeriod } from './ChartSection'
+import ChartTypeSelector from './ChartTypeSelector'
 import InvalidTokenDetails from './InvalidTokenDetails'
 import { TokenDescription } from './TokenDescription'
 
@@ -103,6 +107,7 @@ type TokenDetailsProps = {
   tokenQuery: TokenQuery
   tokenPriceQuery?: TokenPriceQuery
   onChangeTimePeriod: OnChangeTimePeriod
+  onChangeChartType: OnChangeChartType
 }
 export default function TokenDetails({
   urlAddress,
@@ -111,6 +116,7 @@ export default function TokenDetails({
   tokenQuery,
   tokenPriceQuery,
   onChangeTimePeriod,
+  onChangeChartType,
 }: TokenDetailsProps) {
   if (!urlAddress) {
     throw new Error('Invalid token details route: tokenAddress param is undefined')
@@ -207,6 +213,8 @@ export default function TokenDetails({
     [continueSwap, setContinueSwap]
   )
 
+  const chartType = useAtomValue(pageChartTypeAtom)
+
   // address will never be undefined if token is defined; address is checked here to appease typechecker
   if (detailedToken === undefined || !address) {
     return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!address} />
@@ -254,6 +262,14 @@ export default function TokenDetails({
                   <TokenSymbol>{tokenSymbolName}</TokenSymbol>
                 </TokenTitle>
               </TokenNameCell>
+              {isInfoTDPEnabled && (
+                <ChartTypeSelector
+                  currentChartType={chartType}
+                  onChartTypeChange={(c: ChartType) => {
+                    startTransition(() => onChangeChartType(c))
+                  }}
+                />
+              )}
               <TokenActions>
                 <ShareButton currency={detailedToken} />
               </TokenActions>

@@ -1,4 +1,5 @@
 import { ParentSize } from '@visx/responsive'
+import { ChartType } from 'components/Charts/utils'
 import { ChartContainer, LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
 import { TokenPriceQuery } from 'graphql/data/TokenPrice'
 import { isPricePoint, PricePoint } from 'graphql/data/util'
@@ -46,6 +47,8 @@ export default function ChartSection({
 }
 
 export type OnChangeTimePeriod = (t: TimePeriod) => void
+export type OnChangeChartType = (c: ChartType) => void
+
 function Chart({
   tokenPriceQuery,
   onChangeTimePeriod,
