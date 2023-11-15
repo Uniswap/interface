@@ -68,8 +68,9 @@ export function PoolDetailsHeader({
   loading,
 }: PoolDetailsHeaderProps) {
   const currencies = [useCurrency(token0?.id, chainId) ?? undefined, useCurrency(token1?.id, chainId) ?? undefined]
-  const chainName = chainIdToBackendName(chainId)
-  const origin = `/tokens/${chainName}`
+  const chainName = chainIdToBackendName(chainId).toLowerCase()
+  const exploreHref = `/tokens/${chainName}`
+  const explorePoolsHref = `/explore/pools/${chainName}`
 
   if (loading)
     return (
@@ -87,14 +88,14 @@ export function PoolDetailsHeader({
   return (
     <HeaderColumn>
       <Row>
-        <StyledLink to={origin}>
+        <StyledLink to={exploreHref}>
           <ThemedText.BodySecondary>
             <Trans>Explore</Trans>
           </ThemedText.BodySecondary>
         </StyledLink>
         <ThemedText.BodySecondary>&nbsp;{'>'}&nbsp;</ThemedText.BodySecondary>
         {/* TODO: When Explore Pool table is added, link directly back to it */}
-        <StyledLink to={origin}>
+        <StyledLink to={explorePoolsHref}>
           <ThemedText.BodySecondary>
             <Trans>Pool</Trans>
           </ThemedText.BodySecondary>
