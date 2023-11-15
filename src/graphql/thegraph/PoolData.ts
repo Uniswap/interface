@@ -40,10 +40,10 @@ gql`
       volumeUSD
       volumeToken0
       volumeToken1
-      txCount
       totalValueLockedToken0
       totalValueLockedToken1
       totalValueLockedUSD
+      txCount
     }
     bundles(where: { id: "1" }) {
       ethPriceUSD
@@ -68,6 +68,7 @@ export interface PoolData {
   // volume
   volumeUSD: number
   volumeUSDChange: number
+  volumeUSD24H: number
   volumeUSDWeek: number
 
   // liquidity
@@ -81,6 +82,8 @@ export interface PoolData {
   // token amounts
   tvlToken0: number
   tvlToken1: number
+
+  txCount: string
 }
 
 export function usePoolData(
@@ -168,6 +171,13 @@ export function usePoolData(
         ? parseFloat(current.volumeUSD)
         : 0
 
+    const volumeUSD24H =
+      current && oneDay
+        ? parseFloat(current.volumeUSD) - parseFloat(oneDay.volumeUSD)
+        : current
+        ? parseFloat(current.volumeUSD)
+        : 0
+
     // Hotifx: Subtract fees from TVL to correct data while subgraph is fixed.
     /**
      * Note: see issue desribed here https://github.com/Uniswap/v3-subgraph/issues/74
@@ -207,6 +217,7 @@ export function usePoolData(
             volumeUSD,
             volumeUSDChange,
             volumeUSDWeek,
+            volumeUSD24H,
             tvlUSD,
             tvlUSDChange,
             tvlToken0,

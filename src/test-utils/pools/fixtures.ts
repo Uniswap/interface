@@ -113,6 +113,7 @@ export const validPoolDataResponse = {
     address: usdcWethPoolAddress,
     volumeUSDChange: -17.753809465717136,
     volumeUSDWeek: 1359911419.265625,
+    volumeUSD24H: 1359911419.265625,
     tvlUSD: 223166198.4690675,
     tvlUSDChange: -0.3657085465786977,
     tvlToken0: 90930713.7356909,
