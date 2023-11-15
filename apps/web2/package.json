@@ -27,8 +27,9 @@
     "typecheck": "tsc",
     "typecheck:cloud": "tsc -p functions/tsconfig.json",
     "typecheck:cypress": "tsc -p cypress/tsconfig.json",
-    "test": "craco test",
-    "test:cloud": "yarn jest functions --config=functions/jest.config.json",
+    "test": "yarn test:unit && yarn test:cloud",
+    "test:unit": "craco test",
+    "test:cloud": "yarn start:cloud & sleep 5 && yarn jest functions --config=functions/jest.config.json",
     "cypress:open": "cypress open --browser chrome --e2e",
     "cypress:run": "cypress run --browser chrome --e2e",
     "deduplicate": "yarn-deduplicate --strategy=highest"
