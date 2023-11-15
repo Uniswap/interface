@@ -22,7 +22,7 @@ const assets = [
 test.each(assets)('should inject metadata for valid assets', async (nft) => {
   const url = 'http://127.0.0.1:3000/nfts/asset/' + nft.address + '/' + nft.assetId
   const body = await fetch(new Request(url)).then((res) => res.text())
-  expect(body).toMatchSnapshot()
+  expect(body).toMatchSnapshot(nft.collectionName)
   expect(body).toContain(`<meta property="og:title" content="${nft.collectionName} #${nft.assetId}"/>`)
   expect(body).not.toContain(`<meta property="og:description"`)
   expect(body).toContain(`<meta property="og:image" content="${nft.image}"/>`)

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should inject metadata for valid assets 1`] = `
+exports[`should inject metadata for valid assets: Azuki 1`] = `
 "<!DOCTYPE html>
 <html translate="no">
   <head>
@@ -148,7 +148,7 @@ exports[`should inject metadata for valid assets 1`] = `
 "
 `;
 
-exports[`should inject metadata for valid assets 2`] = `
+exports[`should inject metadata for valid assets: Bored Ape Yacht Club 1`] = `
 "<!DOCTYPE html>
 <html translate="no">
   <head>
@@ -296,7 +296,7 @@ exports[`should inject metadata for valid assets 2`] = `
 "
 `;
 
-exports[`should inject metadata for valid assets 3`] = `
+exports[`should inject metadata for valid assets: CryptoPunk 1`] = `
 "<!DOCTYPE html>
 <html translate="no">
   <head>
