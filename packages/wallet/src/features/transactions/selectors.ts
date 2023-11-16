@@ -29,57 +29,69 @@ export const selectSwapTransactionsCount = createSelector(selectTransactions, (t
   return swapTransactionCount
 })
 
-export const makeSelectAddressTransactions = (
-  address: Address | null
-): Selector<RootState, TransactionDetails[] | undefined> =>
-  createSelector(selectTransactions, (transactions) => {
-    if (!address) return
+export const makeSelectAddressTransactions = (): Selector<
+  RootState,
+  TransactionDetails[] | undefined,
+  [Address | null]
+> =>
+  createSelector(
+    selectTransactions,
+    (_: RootState, address: Address | null) => address,
+    (transactions, address) => {
+      if (!address) return
 
-    const addressTransactions = transactions[address]
-    if (!addressTransactions) return
+      const addressTransactions = transactions[address]
+      if (!addressTransactions) return
 
-    return unique(flattenObjectOfObjects(addressTransactions), (tx, _, self) => {
-      // Remove dummy fiat onramp transactions from TransactionList, notification badge, etc.
-      if (tx.typeInfo.type === TransactionType.FiatPurchase && !tx.typeInfo.syncedWithBackend) {
-        return false
-      }
-      /*
-       * Remove duplicate transactions with the same chain and nonce, keep the one with the higher addedTime,
-       * this represents a txn that is replacing or cancelling the older txn.
-       */
-      const duplicate = self.find(
-        (tx2) =>
-          tx2.id !== tx.id &&
-          tx2.options.request.chainId === tx.options.request.chainId &&
-          tx2.options.request.nonce === tx.options.request.nonce
-      )
-      if (duplicate) {
-        return tx.addedTime > duplicate.addedTime
-      }
-      return true
-    })
-  })
-
-export const makeSelectLocalTxCurrencyIds = (
-  address: Address | null
-): Selector<RootState, Record<string, boolean>> =>
-  createSelector(selectTransactions, (transactions) => {
-    const addressTransactions = address && transactions[address]
-    if (!addressTransactions) return {}
-
-    return flattenObjectOfObjects(addressTransactions).reduce<Record<string, boolean>>(
-      (acc, tx) => {
-        if (tx.typeInfo.type === TransactionType.Send) {
-          acc[buildCurrencyId(tx.chainId, tx.typeInfo.tokenAddress.toLowerCase())] = true
-        } else if (tx.typeInfo.type === TransactionType.Swap) {
-          acc[tx.typeInfo.inputCurrencyId.toLowerCase()] = true
-          acc[tx.typeInfo.outputCurrencyId.toLowerCase()] = true
+      return unique(flattenObjectOfObjects(addressTransactions), (tx, _, self) => {
+        // Remove dummy fiat onramp transactions from TransactionList, notification badge, etc.
+        if (tx.typeInfo.type === TransactionType.FiatPurchase && !tx.typeInfo.syncedWithBackend) {
+          return false
         }
-        return acc
-      },
-      {}
-    )
-  })
+        /*
+         * Remove duplicate transactions with the same chain and nonce, keep the one with the higher addedTime,
+         * this represents a txn that is replacing or cancelling the older txn.
+         */
+        const duplicate = self.find(
+          (tx2) =>
+            tx2.id !== tx.id &&
+            tx2.options.request.chainId === tx.options.request.chainId &&
+            tx2.options.request.nonce === tx.options.request.nonce
+        )
+        if (duplicate) {
+          return tx.addedTime > duplicate.addedTime
+        }
+        return true
+      })
+    }
+  )
+
+export const makeSelectLocalTxCurrencyIds = (): Selector<
+  RootState,
+  Record<string, boolean>,
+  [Address | null]
+> =>
+  createSelector(
+    selectTransactions,
+    (_: RootState, address: Address | null) => address,
+    (transactions, address) => {
+      const addressTransactions = address && transactions[address]
+      if (!addressTransactions) return {}
+
+      return flattenObjectOfObjects(addressTransactions).reduce<Record<string, boolean>>(
+        (acc, tx) => {
+          if (tx.typeInfo.type === TransactionType.Send) {
+            acc[buildCurrencyId(tx.chainId, tx.typeInfo.tokenAddress.toLowerCase())] = true
+          } else if (tx.typeInfo.type === TransactionType.Swap) {
+            acc[tx.typeInfo.inputCurrencyId.toLowerCase()] = true
+            acc[tx.typeInfo.outputCurrencyId.toLowerCase()] = true
+          }
+          return acc
+        },
+        {}
+      )
+    }
+  )
 
 export const makeSelectTransaction = (
   address: Address | undefined,
