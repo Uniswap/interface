@@ -224,7 +224,8 @@ export async function transformRoutesToTrade(
     (routerPreference === RouterPreference.X || (isUniswapXDefaultEnabled && routerPreference === RouterPreference.API))
 
   const [currencyIn, currencyOut] = getTradeCurrencies(args, showUniswapXTrade)
-  const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate, swapFee } = getClassicTradeDetails(
+  // const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate, swapFee } = getClassicTradeDetails(
+  const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate } = getClassicTradeDetails(
     currencyIn,
     currencyOut,
     data
@@ -274,14 +275,14 @@ export async function transformRoutesToTrade(
     quoteMethod,
     inputTax,
     outputTax,
-    swapFee,
+    // swapFee,
   })
 
   // During the opt-in period, only return UniswapX quotes if the user has turned on the setting,
   // even if it is the better quote.
   if (isUniswapXBetter && (routerPreference === RouterPreference.X || isUniswapXDefaultEnabled)) {
     const orderInfo = toDutchOrderInfo(data.quote.orderInfo)
-    const swapFee = getSwapFee(data.quote)
+    // const swapFee = getSwapFee(data.quote)
     const wrapInfo = await getWrapInfo(needsWrapIfUniswapX, account, currencyIn.chainId, amount, usdCostPerGas)
 
     const uniswapXTrade = new DutchOrderTrade({
@@ -298,7 +299,7 @@ export async function transformRoutesToTrade(
       startTimeBufferSecs: data.quote.startTimeBufferSecs,
       deadlineBufferSecs: data.quote.deadlineBufferSecs,
       slippageTolerance: toSlippagePercent(data.quote.slippageTolerance),
-      swapFee,
+      // swapFee,
     })
 
     return {

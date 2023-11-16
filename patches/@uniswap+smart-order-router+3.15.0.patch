@@ -1,0 +1,1306 @@
+diff --git a/node_modules/@uniswap/smart-order-router/CHANGELOG.md b/node_modules/@uniswap/smart-order-router/CHANGELOG.md
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/LICENSE b/node_modules/@uniswap/smart-order-router/LICENSE
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/README.md b/node_modules/@uniswap/smart-order-router/README.md
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/index.d.ts b/node_modules/@uniswap/smart-order-router/build/main/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/index.js b/node_modules/@uniswap/smart-order-router/build/main/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/cache-node.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/cache-node.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/cache-node.js b/node_modules/@uniswap/smart-order-router/build/main/providers/cache-node.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/cache.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/cache.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/cache.js b/node_modules/@uniswap/smart-order-router/build/main/providers/cache.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching-gas-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/caching-gas-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching-gas-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/caching-gas-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching-token-list-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/caching-token-list-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching-token-list-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/caching-token-list-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching-token-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/caching-token-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching-token-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/caching-token-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/index.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/index.js b/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/model/cache-mode.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/model/cache-mode.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/model/cache-mode.js b/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/model/cache-mode.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/model/cached-route.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/model/cached-route.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/model/cached-route.js b/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/model/cached-route.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/model/cached-routes.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/model/cached-routes.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/model/cached-routes.js b/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/model/cached-routes.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/model/index.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/model/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/model/index.js b/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/model/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/route-caching-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/route-caching-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/route-caching-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/caching/route/route-caching-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/eip-1559-gas-price-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/eip-1559-gas-price-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/eip-1559-gas-price-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/eip-1559-gas-price-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/eth-estimate-gas-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/eth-estimate-gas-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/eth-estimate-gas-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/eth-estimate-gas-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/eth-gas-station-info-gas-price-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/eth-gas-station-info-gas-price-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/eth-gas-station-info-gas-price-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/eth-gas-station-info-gas-price-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/gas-price-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/gas-price-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/gas-price-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/gas-price-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/index.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/index.js b/node_modules/@uniswap/smart-order-router/build/main/providers/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/legacy-gas-price-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/legacy-gas-price-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/legacy-gas-price-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/legacy-gas-price-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/multicall-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/multicall-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/multicall-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/multicall-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/multicall-uniswap-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/multicall-uniswap-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/multicall-uniswap-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/multicall-uniswap-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/on-chain-gas-price-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/on-chain-gas-price-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/on-chain-gas-price-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/on-chain-gas-price-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/on-chain-quote-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/on-chain-quote-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/on-chain-quote-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/on-chain-quote-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/simulation-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/simulation-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/simulation-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/simulation-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/static-gas-price-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/static-gas-price-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/static-gas-price-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/static-gas-price-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/swap-router-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/swap-router-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/swap-router-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/swap-router-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/tenderly-simulation-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/tenderly-simulation-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/tenderly-simulation-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/tenderly-simulation-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/token-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/token-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/token-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/token-provider.js
+old mode 100644
+new mode 100755
+index 80da1f0..ad5f481
+--- a/node_modules/@uniswap/smart-order-router/build/main/providers/token-provider.js
++++ b/node_modules/@uniswap/smart-order-router/build/main/providers/token-provider.js
+@@ -12,6 +12,8 @@ const lodash_1 = __importDefault(require("lodash"));
+ const IERC20Metadata__factory_1 = require("../types/v3/factories/IERC20Metadata__factory");
+ const util_1 = require("../util");
+ // Some well known tokens on each chain for seeding cache / testing.
++exports.CCDAO_MAINNET = new sdk_core_1.Token(sdk_core_1.ChainId.MAINNET, '0x1487Bd704Fa05A222B0aDB50dc420f001f003045', 18, 'CCDAO', 'Cross Chain Dao');
++exports.CCDAO_POLYGON = new sdk_core_1.Token(sdk_core_1.ChainId.POLYGON, '0xee546f831533a913848b72f36a9d5e437f63dbb9', 18, 'CCDAO', 'Cross Chain Dao');
+ exports.USDC_MAINNET = new sdk_core_1.Token(sdk_core_1.ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C');
+ exports.USDT_MAINNET = new sdk_core_1.Token(sdk_core_1.ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD');
+ exports.WBTC_MAINNET = new sdk_core_1.Token(sdk_core_1.ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC');
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/token-validator-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/token-validator-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/token-validator-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/token-validator-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/uri-subgraph-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/uri-subgraph-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/uri-subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/uri-subgraph-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/caching-pool-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/caching-pool-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/caching-pool-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/caching-pool-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/caching-subgraph-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/caching-subgraph-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/caching-subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/caching-subgraph-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/pool-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/pool-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/pool-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/pool-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/quote-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/quote-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/quote-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/quote-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/static-subgraph-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/static-subgraph-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/static-subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/static-subgraph-provider.js
+old mode 100644
+new mode 100755
+index b2b52f3..d5f0e17
+--- a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/static-subgraph-provider.js
++++ b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/static-subgraph-provider.js
+@@ -16,7 +16,8 @@ const BASES_TO_CHECK_TRADES_AGAINST = {
+         token_provider_1.DAI_MAINNET,
+         token_provider_1.USDC_MAINNET,
+         token_provider_1.USDT_MAINNET,
+-        token_provider_1.WBTC_MAINNET
++        token_provider_1.WBTC_MAINNET,
++        token_provider_1.CCDAO_MAINNET
+     ],
+     [sdk_core_1.ChainId.GOERLI]: [chains_1.WRAPPED_NATIVE_CURRENCY[sdk_core_1.ChainId.GOERLI]],
+     [sdk_core_1.ChainId.SEPOLIA]: [chains_1.WRAPPED_NATIVE_CURRENCY[sdk_core_1.ChainId.SEPOLIA]],
+@@ -25,7 +26,7 @@ const BASES_TO_CHECK_TRADES_AGAINST = {
+     [sdk_core_1.ChainId.ARBITRUM_ONE]: [],
+     [sdk_core_1.ChainId.ARBITRUM_GOERLI]: [],
+     [sdk_core_1.ChainId.OPTIMISM_GOERLI]: [],
+-    [sdk_core_1.ChainId.POLYGON]: [],
++    [sdk_core_1.ChainId.POLYGON]: [token_provider_1.CCDAO_POLYGON],
+     [sdk_core_1.ChainId.POLYGON_MUMBAI]: [],
+     [sdk_core_1.ChainId.CELO]: [],
+     [sdk_core_1.ChainId.CELO_ALFAJORES]: [],
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/subgraph-provider-with-fallback.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/subgraph-provider-with-fallback.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/subgraph-provider-with-fallback.js b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/subgraph-provider-with-fallback.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/subgraph-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/subgraph-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/subgraph-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/uri-subgraph-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/uri-subgraph-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/uri-subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/uri-subgraph-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/caching-pool-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/caching-pool-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/caching-pool-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/caching-pool-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/caching-subgraph-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/caching-subgraph-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/caching-subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/caching-subgraph-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/gas-data-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/gas-data-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/gas-data-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/gas-data-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/pool-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/pool-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/pool-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/pool-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/static-subgraph-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/static-subgraph-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/static-subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/static-subgraph-provider.js
+old mode 100644
+new mode 100755
+index 4e71f87..8e278ac
+--- a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/static-subgraph-provider.js
++++ b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/static-subgraph-provider.js
+@@ -19,7 +19,8 @@ const BASES_TO_CHECK_TRADES_AGAINST = {
+         token_provider_1.DAI_MAINNET,
+         token_provider_1.USDC_MAINNET,
+         token_provider_1.USDT_MAINNET,
+-        token_provider_1.WBTC_MAINNET
++        token_provider_1.WBTC_MAINNET,
++        token_provider_1.CCDAO_MAINNET
+     ],
+     [sdk_core_1.ChainId.GOERLI]: [
+         chains_1.WRAPPED_NATIVE_CURRENCY[sdk_core_1.ChainId.GOERLI],
+@@ -56,7 +57,7 @@ const BASES_TO_CHECK_TRADES_AGAINST = {
+         token_provider_1.USDT_OPTIMISM_GOERLI,
+         token_provider_1.WBTC_OPTIMISM_GOERLI
+     ],
+-    [sdk_core_1.ChainId.POLYGON]: [token_provider_1.USDC_POLYGON, token_provider_1.WETH_POLYGON, token_provider_1.WMATIC_POLYGON],
++    [sdk_core_1.ChainId.POLYGON]: [token_provider_1.CCDAO_POLYGON, token_provider_1.USDC_POLYGON, token_provider_1.WETH_POLYGON, token_provider_1.WMATIC_POLYGON],
+     [sdk_core_1.ChainId.POLYGON_MUMBAI]: [
+         token_provider_1.DAI_POLYGON_MUMBAI,
+         chains_1.WRAPPED_NATIVE_CURRENCY[sdk_core_1.ChainId.POLYGON_MUMBAI],
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/subgraph-provider-with-fallback.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/subgraph-provider-with-fallback.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/subgraph-provider-with-fallback.js b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/subgraph-provider-with-fallback.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/subgraph-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/subgraph-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/subgraph-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/uri-subgraph-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/uri-subgraph-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/uri-subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/uri-subgraph-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/alpha-router.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/alpha-router.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/alpha-router.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/alpha-router.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/config.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/config.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/config.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/config.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/entities/index.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/entities/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/entities/index.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/entities/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/entities/route-with-valid-quote.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/entities/route-with-valid-quote.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/entities/route-with-valid-quote.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/entities/route-with-valid-quote.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/functions/best-swap-route.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/functions/best-swap-route.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/functions/best-swap-route.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/functions/best-swap-route.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/functions/calculate-ratio-amount-in.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/functions/calculate-ratio-amount-in.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/functions/calculate-ratio-amount-in.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/functions/calculate-ratio-amount-in.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/functions/compute-all-routes.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/functions/compute-all-routes.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/functions/compute-all-routes.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/functions/compute-all-routes.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/functions/get-candidate-pools.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/functions/get-candidate-pools.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/functions/get-candidate-pools.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/functions/get-candidate-pools.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/gas-model.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/gas-model.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/gas-model.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/gas-model.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/index.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/index.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/mixedRoute/mixed-route-heuristic-gas-model.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/mixedRoute/mixed-route-heuristic-gas-model.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/mixedRoute/mixed-route-heuristic-gas-model.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/mixedRoute/mixed-route-heuristic-gas-model.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/v2/v2-heuristic-gas-model.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/v2/v2-heuristic-gas-model.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/v2/v2-heuristic-gas-model.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/v2/v2-heuristic-gas-model.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/v3/gas-costs.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/v3/gas-costs.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/v3/gas-costs.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/v3/gas-costs.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/v3/v3-heuristic-gas-model.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/v3/v3-heuristic-gas-model.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/v3/v3-heuristic-gas-model.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/v3/v3-heuristic-gas-model.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/index.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/index.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/base-quoter.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/base-quoter.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/base-quoter.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/base-quoter.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/index.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/index.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/mixed-quoter.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/mixed-quoter.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/mixed-quoter.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/mixed-quoter.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/model/index.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/model/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/model/index.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/model/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/model/results/get-quotes-result.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/model/results/get-quotes-result.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/model/results/get-quotes-result.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/model/results/get-quotes-result.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/model/results/get-routes-result.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/model/results/get-routes-result.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/model/results/get-routes-result.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/model/results/get-routes-result.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/model/results/index.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/model/results/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/model/results/index.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/model/results/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/v2-quoter.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/v2-quoter.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/v2-quoter.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/v2-quoter.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/v3-quoter.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/v3-quoter.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/v3-quoter.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/quoters/v3-quoter.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/index.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/index.js b/node_modules/@uniswap/smart-order-router/build/main/routers/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/legacy-router/bases.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/legacy-router/bases.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/legacy-router/bases.js b/node_modules/@uniswap/smart-order-router/build/main/routers/legacy-router/bases.js
+old mode 100644
+new mode 100755
+index 94db888..25fece4
+--- a/node_modules/@uniswap/smart-order-router/build/main/routers/legacy-router/bases.js
++++ b/node_modules/@uniswap/smart-order-router/build/main/routers/legacy-router/bases.js
+@@ -13,6 +13,7 @@ const BASES_TO_CHECK_TRADES_AGAINST = (_tokenProvider) => {
+             token_provider_1.USDC_MAINNET,
+             token_provider_1.USDT_MAINNET,
+             token_provider_1.WBTC_MAINNET,
++            token_provider_1.CCDAO_MAINNET
+         ],
+         [sdk_core_1.ChainId.GOERLI]: [chains_1.WRAPPED_NATIVE_CURRENCY[sdk_core_1.ChainId.GOERLI]],
+         [sdk_core_1.ChainId.SEPOLIA]: [chains_1.WRAPPED_NATIVE_CURRENCY[sdk_core_1.ChainId.SEPOLIA]],
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/legacy-router/index.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/legacy-router/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/legacy-router/index.js b/node_modules/@uniswap/smart-order-router/build/main/routers/legacy-router/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/legacy-router/legacy-router.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/legacy-router/legacy-router.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/legacy-router/legacy-router.js b/node_modules/@uniswap/smart-order-router/build/main/routers/legacy-router/legacy-router.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/router.d.ts b/node_modules/@uniswap/smart-order-router/build/main/routers/router.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/router.js b/node_modules/@uniswap/smart-order-router/build/main/routers/router.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/tsconfig.tsbuildinfo b/node_modules/@uniswap/smart-order-router/build/main/tsconfig.tsbuildinfo
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/other/commons.d.ts b/node_modules/@uniswap/smart-order-router/build/main/types/other/commons.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/other/commons.js b/node_modules/@uniswap/smart-order-router/build/main/types/other/commons.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/Erc20__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/Erc20__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/Erc20__factory.js b/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/Erc20__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/GasDataArbitrum__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/GasDataArbitrum__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/GasDataArbitrum__factory.js b/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/GasDataArbitrum__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/GasPriceOracle__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/GasPriceOracle__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/GasPriceOracle__factory.js b/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/GasPriceOracle__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/IMixedRouteQuoterV1__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/IMixedRouteQuoterV1__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/IMixedRouteQuoterV1__factory.js b/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/IMixedRouteQuoterV1__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/ITokenValidator__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/ITokenValidator__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/ITokenValidator__factory.js b/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/ITokenValidator__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/Permit2__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/Permit2__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/Permit2__factory.js b/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/Permit2__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/SwapRouter02__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/SwapRouter02__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/SwapRouter02__factory.js b/node_modules/@uniswap/smart-order-router/build/main/types/other/factories/SwapRouter02__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/v2/commons.d.ts b/node_modules/@uniswap/smart-order-router/build/main/types/v2/commons.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/v2/commons.js b/node_modules/@uniswap/smart-order-router/build/main/types/v2/commons.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/v2/factories/IUniswapV2Pair__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/main/types/v2/factories/IUniswapV2Pair__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/v2/factories/IUniswapV2Pair__factory.js b/node_modules/@uniswap/smart-order-router/build/main/types/v2/factories/IUniswapV2Pair__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/v3/commons.d.ts b/node_modules/@uniswap/smart-order-router/build/main/types/v3/commons.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/v3/commons.js b/node_modules/@uniswap/smart-order-router/build/main/types/v3/commons.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/v3/factories/IERC20Metadata__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/main/types/v3/factories/IERC20Metadata__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/v3/factories/IERC20Metadata__factory.js b/node_modules/@uniswap/smart-order-router/build/main/types/v3/factories/IERC20Metadata__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/v3/factories/IQuoterV2__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/main/types/v3/factories/IQuoterV2__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/v3/factories/IQuoterV2__factory.js b/node_modules/@uniswap/smart-order-router/build/main/types/v3/factories/IQuoterV2__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/v3/factories/IUniswapV3PoolState__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/main/types/v3/factories/IUniswapV3PoolState__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/v3/factories/IUniswapV3PoolState__factory.js b/node_modules/@uniswap/smart-order-router/build/main/types/v3/factories/IUniswapV3PoolState__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/v3/factories/UniswapInterfaceMulticall__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/main/types/v3/factories/UniswapInterfaceMulticall__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/types/v3/factories/UniswapInterfaceMulticall__factory.js b/node_modules/@uniswap/smart-order-router/build/main/types/v3/factories/UniswapInterfaceMulticall__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/addresses.d.ts b/node_modules/@uniswap/smart-order-router/build/main/util/addresses.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/addresses.js b/node_modules/@uniswap/smart-order-router/build/main/util/addresses.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/amounts.d.ts b/node_modules/@uniswap/smart-order-router/build/main/util/amounts.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/amounts.js b/node_modules/@uniswap/smart-order-router/build/main/util/amounts.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/callData.d.ts b/node_modules/@uniswap/smart-order-router/build/main/util/callData.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/callData.js b/node_modules/@uniswap/smart-order-router/build/main/util/callData.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/chains.d.ts b/node_modules/@uniswap/smart-order-router/build/main/util/chains.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/chains.js b/node_modules/@uniswap/smart-order-router/build/main/util/chains.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/gas-factory-helpers.d.ts b/node_modules/@uniswap/smart-order-router/build/main/util/gas-factory-helpers.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/gas-factory-helpers.js b/node_modules/@uniswap/smart-order-router/build/main/util/gas-factory-helpers.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/index.d.ts b/node_modules/@uniswap/smart-order-router/build/main/util/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/index.js b/node_modules/@uniswap/smart-order-router/build/main/util/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/log.d.ts b/node_modules/@uniswap/smart-order-router/build/main/util/log.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/log.js b/node_modules/@uniswap/smart-order-router/build/main/util/log.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/methodParameters.d.ts b/node_modules/@uniswap/smart-order-router/build/main/util/methodParameters.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/methodParameters.js b/node_modules/@uniswap/smart-order-router/build/main/util/methodParameters.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/metric.d.ts b/node_modules/@uniswap/smart-order-router/build/main/util/metric.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/metric.js b/node_modules/@uniswap/smart-order-router/build/main/util/metric.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/protocols.d.ts b/node_modules/@uniswap/smart-order-router/build/main/util/protocols.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/protocols.js b/node_modules/@uniswap/smart-order-router/build/main/util/protocols.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/routes.d.ts b/node_modules/@uniswap/smart-order-router/build/main/util/routes.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/routes.js b/node_modules/@uniswap/smart-order-router/build/main/util/routes.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/unsupported-tokens.d.ts b/node_modules/@uniswap/smart-order-router/build/main/util/unsupported-tokens.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/unsupported-tokens.js b/node_modules/@uniswap/smart-order-router/build/main/util/unsupported-tokens.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/index.d.ts b/node_modules/@uniswap/smart-order-router/build/module/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/index.js b/node_modules/@uniswap/smart-order-router/build/module/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/cache-node.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/cache-node.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/cache-node.js b/node_modules/@uniswap/smart-order-router/build/module/providers/cache-node.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/cache.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/cache.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/cache.js b/node_modules/@uniswap/smart-order-router/build/module/providers/cache.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching-gas-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/caching-gas-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching-gas-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/caching-gas-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching-token-list-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/caching-token-list-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching-token-list-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/caching-token-list-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching-token-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/caching-token-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching-token-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/caching-token-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/index.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/index.js b/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/model/cache-mode.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/model/cache-mode.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/model/cache-mode.js b/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/model/cache-mode.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/model/cached-route.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/model/cached-route.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/model/cached-route.js b/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/model/cached-route.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/model/cached-routes.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/model/cached-routes.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/model/cached-routes.js b/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/model/cached-routes.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/model/index.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/model/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/model/index.js b/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/model/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/route-caching-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/route-caching-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/route-caching-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/caching/route/route-caching-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/eip-1559-gas-price-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/eip-1559-gas-price-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/eip-1559-gas-price-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/eip-1559-gas-price-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/eth-estimate-gas-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/eth-estimate-gas-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/eth-estimate-gas-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/eth-estimate-gas-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/eth-gas-station-info-gas-price-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/eth-gas-station-info-gas-price-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/eth-gas-station-info-gas-price-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/eth-gas-station-info-gas-price-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/gas-price-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/gas-price-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/gas-price-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/gas-price-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/index.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/index.js b/node_modules/@uniswap/smart-order-router/build/module/providers/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/legacy-gas-price-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/legacy-gas-price-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/legacy-gas-price-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/legacy-gas-price-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/multicall-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/multicall-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/multicall-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/multicall-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/multicall-uniswap-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/multicall-uniswap-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/multicall-uniswap-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/multicall-uniswap-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/on-chain-gas-price-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/on-chain-gas-price-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/on-chain-gas-price-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/on-chain-gas-price-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/on-chain-quote-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/on-chain-quote-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/on-chain-quote-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/on-chain-quote-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/simulation-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/simulation-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/simulation-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/simulation-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/static-gas-price-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/static-gas-price-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/static-gas-price-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/static-gas-price-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/swap-router-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/swap-router-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/swap-router-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/swap-router-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/tenderly-simulation-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/tenderly-simulation-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/tenderly-simulation-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/tenderly-simulation-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/token-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/token-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/token-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/token-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/token-validator-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/token-validator-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/token-validator-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/token-validator-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/uri-subgraph-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/uri-subgraph-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/uri-subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/uri-subgraph-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v2/caching-pool-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/v2/caching-pool-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v2/caching-pool-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/v2/caching-pool-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v2/caching-subgraph-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/v2/caching-subgraph-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v2/caching-subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/v2/caching-subgraph-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v2/pool-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/v2/pool-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v2/pool-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/v2/pool-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v2/quote-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/v2/quote-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v2/quote-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/v2/quote-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v2/static-subgraph-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/v2/static-subgraph-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v2/static-subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/v2/static-subgraph-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v2/subgraph-provider-with-fallback.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/v2/subgraph-provider-with-fallback.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v2/subgraph-provider-with-fallback.js b/node_modules/@uniswap/smart-order-router/build/module/providers/v2/subgraph-provider-with-fallback.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v2/subgraph-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/v2/subgraph-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v2/subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/v2/subgraph-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v2/uri-subgraph-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/v2/uri-subgraph-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v2/uri-subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/v2/uri-subgraph-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v3/caching-pool-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/v3/caching-pool-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v3/caching-pool-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/v3/caching-pool-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v3/caching-subgraph-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/v3/caching-subgraph-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v3/caching-subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/v3/caching-subgraph-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v3/gas-data-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/v3/gas-data-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v3/gas-data-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/v3/gas-data-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v3/pool-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/v3/pool-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v3/pool-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/v3/pool-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v3/static-subgraph-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/v3/static-subgraph-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v3/static-subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/v3/static-subgraph-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v3/subgraph-provider-with-fallback.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/v3/subgraph-provider-with-fallback.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v3/subgraph-provider-with-fallback.js b/node_modules/@uniswap/smart-order-router/build/module/providers/v3/subgraph-provider-with-fallback.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v3/subgraph-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/v3/subgraph-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v3/subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/v3/subgraph-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v3/uri-subgraph-provider.d.ts b/node_modules/@uniswap/smart-order-router/build/module/providers/v3/uri-subgraph-provider.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v3/uri-subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/v3/uri-subgraph-provider.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/alpha-router.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/alpha-router.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/alpha-router.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/alpha-router.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/config.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/config.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/config.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/config.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/entities/index.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/entities/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/entities/index.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/entities/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/entities/route-with-valid-quote.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/entities/route-with-valid-quote.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/entities/route-with-valid-quote.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/entities/route-with-valid-quote.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/functions/best-swap-route.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/functions/best-swap-route.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/functions/best-swap-route.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/functions/best-swap-route.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/functions/calculate-ratio-amount-in.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/functions/calculate-ratio-amount-in.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/functions/calculate-ratio-amount-in.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/functions/calculate-ratio-amount-in.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/functions/compute-all-routes.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/functions/compute-all-routes.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/functions/compute-all-routes.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/functions/compute-all-routes.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/functions/get-candidate-pools.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/functions/get-candidate-pools.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/functions/get-candidate-pools.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/functions/get-candidate-pools.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/gas-model.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/gas-model.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/gas-model.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/gas-model.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/index.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/index.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/mixedRoute/mixed-route-heuristic-gas-model.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/mixedRoute/mixed-route-heuristic-gas-model.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/mixedRoute/mixed-route-heuristic-gas-model.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/mixedRoute/mixed-route-heuristic-gas-model.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/v2/v2-heuristic-gas-model.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/v2/v2-heuristic-gas-model.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/v2/v2-heuristic-gas-model.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/v2/v2-heuristic-gas-model.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/v3/gas-costs.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/v3/gas-costs.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/v3/gas-costs.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/v3/gas-costs.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/v3/v3-heuristic-gas-model.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/v3/v3-heuristic-gas-model.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/v3/v3-heuristic-gas-model.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/v3/v3-heuristic-gas-model.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/index.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/index.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/base-quoter.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/base-quoter.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/base-quoter.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/base-quoter.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/index.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/index.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/mixed-quoter.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/mixed-quoter.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/mixed-quoter.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/mixed-quoter.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/model/index.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/model/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/model/index.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/model/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/model/results/get-quotes-result.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/model/results/get-quotes-result.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/model/results/get-quotes-result.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/model/results/get-quotes-result.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/model/results/get-routes-result.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/model/results/get-routes-result.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/model/results/get-routes-result.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/model/results/get-routes-result.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/model/results/index.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/model/results/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/model/results/index.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/model/results/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/v2-quoter.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/v2-quoter.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/v2-quoter.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/v2-quoter.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/v3-quoter.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/v3-quoter.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/v3-quoter.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/quoters/v3-quoter.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/index.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/index.js b/node_modules/@uniswap/smart-order-router/build/module/routers/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/legacy-router/bases.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/legacy-router/bases.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/legacy-router/bases.js b/node_modules/@uniswap/smart-order-router/build/module/routers/legacy-router/bases.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/legacy-router/index.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/legacy-router/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/legacy-router/index.js b/node_modules/@uniswap/smart-order-router/build/module/routers/legacy-router/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/legacy-router/legacy-router.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/legacy-router/legacy-router.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/legacy-router/legacy-router.js b/node_modules/@uniswap/smart-order-router/build/module/routers/legacy-router/legacy-router.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/router.d.ts b/node_modules/@uniswap/smart-order-router/build/module/routers/router.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/router.js b/node_modules/@uniswap/smart-order-router/build/module/routers/router.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/tsconfig.module.tsbuildinfo b/node_modules/@uniswap/smart-order-router/build/module/tsconfig.module.tsbuildinfo
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/other/commons.d.ts b/node_modules/@uniswap/smart-order-router/build/module/types/other/commons.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/other/commons.js b/node_modules/@uniswap/smart-order-router/build/module/types/other/commons.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/Erc20__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/Erc20__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/Erc20__factory.js b/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/Erc20__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/GasDataArbitrum__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/GasDataArbitrum__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/GasDataArbitrum__factory.js b/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/GasDataArbitrum__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/GasPriceOracle__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/GasPriceOracle__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/GasPriceOracle__factory.js b/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/GasPriceOracle__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/IMixedRouteQuoterV1__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/IMixedRouteQuoterV1__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/IMixedRouteQuoterV1__factory.js b/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/IMixedRouteQuoterV1__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/ITokenValidator__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/ITokenValidator__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/ITokenValidator__factory.js b/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/ITokenValidator__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/Permit2__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/Permit2__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/Permit2__factory.js b/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/Permit2__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/SwapRouter02__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/SwapRouter02__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/SwapRouter02__factory.js b/node_modules/@uniswap/smart-order-router/build/module/types/other/factories/SwapRouter02__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/v2/commons.d.ts b/node_modules/@uniswap/smart-order-router/build/module/types/v2/commons.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/v2/commons.js b/node_modules/@uniswap/smart-order-router/build/module/types/v2/commons.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/v2/factories/IUniswapV2Pair__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/module/types/v2/factories/IUniswapV2Pair__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/v2/factories/IUniswapV2Pair__factory.js b/node_modules/@uniswap/smart-order-router/build/module/types/v2/factories/IUniswapV2Pair__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/v3/commons.d.ts b/node_modules/@uniswap/smart-order-router/build/module/types/v3/commons.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/v3/commons.js b/node_modules/@uniswap/smart-order-router/build/module/types/v3/commons.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/v3/factories/IERC20Metadata__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/module/types/v3/factories/IERC20Metadata__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/v3/factories/IERC20Metadata__factory.js b/node_modules/@uniswap/smart-order-router/build/module/types/v3/factories/IERC20Metadata__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/v3/factories/IQuoterV2__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/module/types/v3/factories/IQuoterV2__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/v3/factories/IQuoterV2__factory.js b/node_modules/@uniswap/smart-order-router/build/module/types/v3/factories/IQuoterV2__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/v3/factories/IUniswapV3PoolState__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/module/types/v3/factories/IUniswapV3PoolState__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/v3/factories/IUniswapV3PoolState__factory.js b/node_modules/@uniswap/smart-order-router/build/module/types/v3/factories/IUniswapV3PoolState__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/v3/factories/UniswapInterfaceMulticall__factory.d.ts b/node_modules/@uniswap/smart-order-router/build/module/types/v3/factories/UniswapInterfaceMulticall__factory.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/types/v3/factories/UniswapInterfaceMulticall__factory.js b/node_modules/@uniswap/smart-order-router/build/module/types/v3/factories/UniswapInterfaceMulticall__factory.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/addresses.d.ts b/node_modules/@uniswap/smart-order-router/build/module/util/addresses.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/addresses.js b/node_modules/@uniswap/smart-order-router/build/module/util/addresses.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/amounts.d.ts b/node_modules/@uniswap/smart-order-router/build/module/util/amounts.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/amounts.js b/node_modules/@uniswap/smart-order-router/build/module/util/amounts.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/callData.d.ts b/node_modules/@uniswap/smart-order-router/build/module/util/callData.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/callData.js b/node_modules/@uniswap/smart-order-router/build/module/util/callData.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/chains.d.ts b/node_modules/@uniswap/smart-order-router/build/module/util/chains.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/chains.js b/node_modules/@uniswap/smart-order-router/build/module/util/chains.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/gas-factory-helpers.d.ts b/node_modules/@uniswap/smart-order-router/build/module/util/gas-factory-helpers.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/gas-factory-helpers.js b/node_modules/@uniswap/smart-order-router/build/module/util/gas-factory-helpers.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/index.d.ts b/node_modules/@uniswap/smart-order-router/build/module/util/index.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/index.js b/node_modules/@uniswap/smart-order-router/build/module/util/index.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/log.d.ts b/node_modules/@uniswap/smart-order-router/build/module/util/log.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/log.js b/node_modules/@uniswap/smart-order-router/build/module/util/log.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/methodParameters.d.ts b/node_modules/@uniswap/smart-order-router/build/module/util/methodParameters.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/methodParameters.js b/node_modules/@uniswap/smart-order-router/build/module/util/methodParameters.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/metric.d.ts b/node_modules/@uniswap/smart-order-router/build/module/util/metric.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/metric.js b/node_modules/@uniswap/smart-order-router/build/module/util/metric.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/protocols.d.ts b/node_modules/@uniswap/smart-order-router/build/module/util/protocols.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/protocols.js b/node_modules/@uniswap/smart-order-router/build/module/util/protocols.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/routes.d.ts b/node_modules/@uniswap/smart-order-router/build/module/util/routes.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/routes.js b/node_modules/@uniswap/smart-order-router/build/module/util/routes.js
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/unsupported-tokens.d.ts b/node_modules/@uniswap/smart-order-router/build/module/util/unsupported-tokens.d.ts
+old mode 100644
+new mode 100755
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/unsupported-tokens.js b/node_modules/@uniswap/smart-order-router/build/module/util/unsupported-tokens.js
+old mode 100644
+new mode 100755

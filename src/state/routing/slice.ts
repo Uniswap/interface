@@ -180,7 +180,8 @@ export const routingApi = createApi({
 
           const uraQuoteResponse = response.data as URAQuoteResponse
           const tradeResult = await transformRoutesToTrade(args, uraQuoteResponse, QuoteMethod.ROUTING_API)
-          return { data: { ...tradeResult, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
+          console.log({ data: { ...tradeResult, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } })
+          // return { data: { ...tradeResult, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
         } catch (error: any) {
           console.warn(
             `GetQuote failed on Unified Routing API, falling back to client: ${
