@@ -37,7 +37,7 @@ Object {
   "descriptor": "1 SomeCollectionName from ",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
-  "isSpam": undefined,
+  "isSpam": false,
   "logos": Array [
     "imageUrl",
   ],

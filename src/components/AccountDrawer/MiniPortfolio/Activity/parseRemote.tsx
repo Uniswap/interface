@@ -244,19 +244,15 @@ function parseSendReceive(
   let assetName: string | undefined
   let amount: string | undefined
   let currencies: (Currency | undefined)[] | undefined
-  let isSpam: boolean | undefined
-
   if (changes.NftTransfer.length === 1) {
     transfer = changes.NftTransfer[0]
     assetName = transfer.asset.collection?.name
     amount = '1'
-    isSpam = transfer.asset.isSpam
   } else if (changes.TokenTransfer.length === 1) {
     transfer = changes.TokenTransfer[0]
     assetName = transfer.asset.symbol
     amount = formatNumberOrString({ input: transfer.quantity, type: NumberType.TokenNonTx })
     currencies = [gqlToCurrency(transfer.asset)]
-    isSpam = transfer.asset.project?.isSpam
   }
 
   if (transfer && assetName && amount) {
@@ -278,7 +274,6 @@ function parseSendReceive(
             descriptor: `${amount} ${assetName} ${t`from`} `,
             otherAccount: isAddress(transfer.sender) || undefined,
             currencies,
-            isSpam,
           }
     } else {
       return {
@@ -286,7 +281,6 @@ function parseSendReceive(
         descriptor: `${amount} ${assetName} ${t`to`} `,
         otherAccount: isAddress(transfer.recipient) || undefined,
         currencies,
-        isSpam,
       }
     }
   }
@@ -298,8 +292,6 @@ function parseMint(
   formatNumberOrString: FormatNumberOrStringFunctionType,
   assetActivity: TransactionActivity
 ) {
-  const isSpam = changes.NftTransfer.some((nft) => nft.asset.isSpam)
-
   const collectionMap = getCollectionCounts(changes.NftTransfer)
   if (Object.keys(collectionMap).length === 1) {
     const collectionName = Object.keys(collectionMap)[0]
@@ -308,20 +300,17 @@ function parseMint(
     if (changes.TokenTransfer.length === 2 && callsPositionManagerContract(assetActivity)) {
       return { title: t`Added Liquidity`, ...parseLPTransfers(changes, formatNumberOrString) }
     }
-    return { title: t`Minted`, descriptor: `${collectionMap[collectionName]} ${collectionName}`, isSpam }
+    return { title: t`Minted`, descriptor: `${collectionMap[collectionName]} ${collectionName}` }
   }
-  return { title: t`Unknown Mint`, isSpam }
+  return { title: t`Unknown Mint` }
 }
 
 function parseUnknown(
-  changes: TransactionChanges,
+  _changes: TransactionChanges,
   _formatNumberOrString: FormatNumberOrStringFunctionType,
   assetActivity: TransactionActivity
 ) {
-  const isSpam =
-    changes.NftTransfer.some((transfer) => transfer.asset.isSpam) ||
-    changes.TokenTransfer.some((transfer) => transfer.asset.project?.isSpam)
-  return { title: t`Contract Interaction`, ...COMMON_CONTRACTS[assetActivity.details.to.toLowerCase()], isSpam }
+  return { title: t`Contract Interaction`, ...COMMON_CONTRACTS[assetActivity.details.to.toLowerCase()] }
 }
 
 type TransactionTypeParser = (
@@ -451,7 +440,7 @@ function parseRemoteActivity(
 
 export function parseRemoteActivities(
   formatNumberOrString: FormatNumberOrStringFunctionType,
-  assetActivities: readonly AssetActivityPartsFragment[] | undefined
+  assetActivities?: readonly AssetActivityPartsFragment[]
 ) {
   return assetActivities?.reduce((acc: { [hash: string]: Activity }, assetActivity) => {
     const activity = parseRemoteActivity(assetActivity, formatNumberOrString)
