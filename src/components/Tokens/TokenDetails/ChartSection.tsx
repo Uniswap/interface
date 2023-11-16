@@ -1,7 +1,5 @@
 import { ParentSize } from '@visx/responsive'
-import { ChartType } from 'components/Charts/utils'
 import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
-import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TokenPriceQuery } from 'graphql/data/TokenPrice'
 import { isPricePoint, PricePoint } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
@@ -36,13 +34,7 @@ function usePriceHistory(tokenPriceData: TokenPriceQuery): PricePoint[] | undefi
 
   return priceHistory
 }
-export default function ChartSection({
-  chartType,
-  tokenPriceQuery,
-}: {
-  chartType: ChartType
-  tokenPriceQuery?: TokenPriceQuery
-}) {
+export default function ChartSection({ tokenPriceQuery }: { tokenPriceQuery?: TokenPriceQuery }) {
   if (!tokenPriceQuery) {
     return <LoadingChart />
   }
@@ -50,35 +42,20 @@ export default function ChartSection({
   return (
     <Suspense fallback={<LoadingChart />}>
       <ChartContainer data-testid="chart-container">
-        <Chart chartType={chartType} tokenPriceQuery={tokenPriceQuery} />
+        <Chart tokenPriceQuery={tokenPriceQuery} />
         <TimePeriodSelector />
       </ChartContainer>
     </Suspense>
   )
 }
 
-function Chart({ chartType, tokenPriceQuery }: { chartType: ChartType; tokenPriceQuery: TokenPriceQuery }) {
-  const isInfoTDPEnabled = useInfoTDPEnabled()
+function Chart({ tokenPriceQuery }: { tokenPriceQuery: TokenPriceQuery }) {
   const prices = usePriceHistory(tokenPriceQuery)
   const timePeriod = useAtomValue(pageTimePeriodAtom)
 
   return (
     <ParentSize>
-      {({ width }) => {
-        if (isInfoTDPEnabled) {
-          switch (chartType) {
-            // TODO: Update to correct chart when built
-            case ChartType.VOLUME:
-              return <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} />
-            case ChartType.TVL:
-              return <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} />
-            default:
-              return <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} />
-          }
-        } else {
-          return <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} />
-        }
-      }}
+      {({ width }) => <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} />}
     </ParentSize>
   )
 }

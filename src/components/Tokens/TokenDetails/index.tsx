@@ -3,7 +3,6 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import { ChartType } from 'components/Charts/utils'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
@@ -42,7 +41,6 @@ import { CopyContractAddress } from 'theme/components'
 import { isAddress, shortenAddress } from 'utils'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
-import ChartTypeSelector from './ChartTypeSelector'
 import InvalidTokenDetails from './InvalidTokenDetails'
 import { TokenDescription } from './TokenDescription'
 
@@ -206,8 +204,6 @@ export default function TokenDetails({
     [continueSwap, setContinueSwap]
   )
 
-  const [chartType, setChartType] = useState<ChartType>(ChartType.PRICE)
-
   // address will never be undefined if token is defined; address is checked here to appease typechecker
   if (detailedToken === undefined || !address) {
     return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!address} />
@@ -255,12 +251,11 @@ export default function TokenDetails({
                   <TokenSymbol>{tokenSymbolName}</TokenSymbol>
                 </TokenTitle>
               </TokenNameCell>
-              {isInfoTDPEnabled && <ChartTypeSelector currentChartType={chartType} onChartTypeChange={setChartType} />}
               <TokenActions>
                 <ShareButton currency={detailedToken} />
               </TokenActions>
             </TokenInfoContainer>
-            <ChartSection chartType={chartType} tokenPriceQuery={tokenPriceQuery} />
+            <ChartSection tokenPriceQuery={tokenPriceQuery} />
 
             <StatsSection chainId={pageChainId} address={address} tokenQueryData={tokenQueryData} />
             <Hr />
