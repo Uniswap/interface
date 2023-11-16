@@ -33,7 +33,7 @@ jobs:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
 
       # The source file must exist for the corresponding translation messages to be downloaded.
-      - run: touch src/locales/en-US.po
+      - run: touch apps/web2/src/locales/en-US.po
       - name: Download translations
         uses: crowdin/github-action@3133cc916c35590475cf6705f482fb653d8e36e9
         with:
@@ -41,8 +41,8 @@ jobs:
           download_translations: true
           project_id: 458284
           token: ${{ secrets.CROWDIN_ACCESS_TOKEN }}
-          source: 'src/locales/en-US.po'
-          translation: 'src/locales/%locale%.po'
+          source: 'apps/web2src/locales/en-US.po'
+          translation: 'apps/web2/src/locales/%locale%.po'
           localization_branch_name: main
           create_pull_request: false
           push_translations: false
@@ -56,8 +56,8 @@ jobs:
 
       - name: Add translations
         run: |
-          rm src/locales/en-US.po
-          git add -f src/locales/*.po
+          rm apps/web2/src/locales/en-US.po
+          git add -f apps/web2/src/locales/*.po
           git commit -m 'ci(t9n): download translations from crowdin'
 
       - name: Add CODEOWNERS
