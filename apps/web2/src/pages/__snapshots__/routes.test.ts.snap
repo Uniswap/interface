@@ -143,19 +143,9 @@ Array [
       ":currencyIdA",
       ":currencyIdA/:currencyIdB",
       ":currencyIdA/:currencyIdB/:feeAmount",
-    ],
-    "path": "/add",
-  },
-  Object {
-    "enabled": [Function],
-    "getElement": [Function],
-    "nestedPaths": Array [
-      ":currencyIdA",
-      ":currencyIdA/:currencyIdB",
-      ":currencyIdA/:currencyIdB/:feeAmount",
       ":currencyIdA/:currencyIdB/:feeAmount/:tokenId",
     ],
-    "path": "/increase",
+    "path": "/add",
   },
   Object {
     "enabled": [Function],
