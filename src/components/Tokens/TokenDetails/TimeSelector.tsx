@@ -1,6 +1,5 @@
 import { useAtom } from 'jotai'
 import { pageTimePeriodAtom } from 'pages/TokenDetails'
-import { startTransition } from 'react'
 import styled from 'styled-components'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
@@ -53,13 +52,7 @@ export default function TimePeriodSelector() {
     <TimeOptionsWrapper>
       <TimeOptionsContainer>
         {ORDERED_TIMES.map((time) => (
-          <TimeButton
-            key={DISPLAYS[time]}
-            active={timePeriod === time}
-            onClick={() => {
-              startTransition(() => setTimePeriod(time))
-            }}
-          >
+          <TimeButton key={DISPLAYS[time]} active={timePeriod === time} onClick={() => setTimePeriod(time)}>
             {DISPLAYS[time]}
           </TimeButton>
         ))}

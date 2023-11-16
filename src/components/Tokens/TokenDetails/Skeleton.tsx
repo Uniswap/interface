@@ -54,7 +54,6 @@ export const RightPanel = styled.div<{ isInfoTDPEnabled?: boolean }>`
     display: flex;
   }
 `
-
 const LoadingChartContainer = styled.div`
   display: flex;
   flex-direction: row;
