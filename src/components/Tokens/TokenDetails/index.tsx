@@ -10,7 +10,6 @@ import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
 import { BreadcrumbNav, BreadcrumbNavLink } from 'components/Tokens/TokenDetails/BreadcrumbNavLink'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
 import MobileBalanceSummaryFooter from 'components/Tokens/TokenDetails/MobileBalanceSummaryFooter'
-import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
 import TokenDetailsSkeleton, {
   Hr,
   LeftPanel,
@@ -44,6 +43,7 @@ import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
 import ChartTypeSelector from './ChartTypeSelector'
 import InvalidTokenDetails from './InvalidTokenDetails'
+import ShareButton from './ShareButton'
 import { TokenDescription } from './TokenDescription'
 
 const TokenSymbol = styled.span`
@@ -55,7 +55,6 @@ const ChartActions = styled.div`
   display: flex;
   gap: 8px;
   align-items: center;
-  color: ${({ theme }) => theme.neutral2};
 `
 const TokenTitle = styled.div`
   display: flex;

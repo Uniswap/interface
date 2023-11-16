@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { Share as ShareIcon } from 'components/Icons/Share'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { chainIdToBackendName } from 'graphql/data/util'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -9,7 +10,7 @@ import { useRef } from 'react'
 import { Link, Twitter } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { useTheme } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { colors } from 'theme/colors'
 import { ClickableStyle, CopyHelperRefType } from 'theme/components'
 import { CopyHelper } from 'theme/components'
@@ -19,9 +20,20 @@ import { Z_INDEX } from 'theme/zIndex'
 const TWITTER_WIDTH = 560
 const TWITTER_HEIGHT = 480
 
-const ShareButtonDisplay = styled.div`
+const ShareButtonDisplay = styled.div<{ isInfoTDPEnabled?: boolean }>`
   display: flex;
   position: relative;
+  ${({ isInfoTDPEnabled }) =>
+    isInfoTDPEnabled &&
+    css`
+      color: ${({ theme }) => theme.neutral2};
+      height: 40px;
+      width: 40px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid ${({ theme }) => theme.surface3};
+      border-radius: 20px;
+    `}
 `
 
 const Share = styled(ShareIcon)<{ open: boolean }>`
@@ -74,6 +86,8 @@ export default function ShareButton({ currency }: { currency: Currency }) {
   const address = currency.isNative ? NATIVE_CHAIN_ID : currency.wrapped.address
   useDisableScrolling(open)
 
+  const isInfoTDPEnabled = useInfoTDPEnabled()
+
   const shareTweet = () => {
     toggleShare()
     window.open(
@@ -90,7 +104,7 @@ export default function ShareButton({ currency }: { currency: Currency }) {
   const copyHelperRef = useRef<CopyHelperRefType>(null)
 
   return (
-    <ShareButtonDisplay ref={node}>
+    <ShareButtonDisplay ref={node} isInfoTDPEnabled={isInfoTDPEnabled}>
       <Share onClick={toggleShare} aria-label="ShareOptions" open={open} />
       {open && (
         <ShareActions>
