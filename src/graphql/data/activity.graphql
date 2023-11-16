@@ -1,6 +1,7 @@
 fragment NFTAssetParts on NftAsset {
   id
   name
+  isSpam
   nftContract {
     id
     chain

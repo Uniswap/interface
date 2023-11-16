@@ -6,6 +6,7 @@ Object {
   "descriptor": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
+  "isSpam": false,
   "logos": Array [],
   "nonce": 12345,
   "status": "CONFIRMED",
@@ -20,6 +21,7 @@ Object {
   "descriptor": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
+  "isSpam": false,
   "logos": Array [],
   "nonce": 12345,
   "status": "CONFIRMED",
@@ -35,6 +37,7 @@ Object {
   "descriptor": "1 SomeCollectionName from ",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
+  "isSpam": undefined,
   "logos": Array [
     "imageUrl",
   ],
@@ -52,6 +55,7 @@ Object {
   "descriptor": "1 SomeCollectionName",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
+  "isSpam": false,
   "logos": Array [
     "imageUrl",
   ],
@@ -132,6 +136,7 @@ Object {
   "descriptor": "100 ETH for 100 WETH",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
+  "isSpam": false,
   "logos": Array [
     "https://token-icons.s3.amazonaws.com/eth.png",
     "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
@@ -162,6 +167,7 @@ Object {
   "descriptor": "100 WETH for 100",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
+  "isSpam": false,
   "logos": Array [
     "moonpay.svg",
   ],
@@ -178,6 +184,7 @@ Object {
   "descriptor": "1 SomeCollectionName",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
+  "isSpam": false,
   "logos": Array [
     "imageUrl",
   ],
@@ -207,6 +214,7 @@ Object {
   "descriptor": "100 WETH from ",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
+  "isSpam": false,
   "logos": Array [
     "logoUrl",
   ],
@@ -248,6 +256,7 @@ Object {
   "descriptor": "100 WETH and 100 DAI",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
+  "isSpam": false,
   "logos": Array [
     "logoUrl",
     "logoUrl",
@@ -278,6 +287,7 @@ Object {
   "descriptor": "100 DAI to ",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
+  "isSpam": false,
   "logos": Array [
     "logoUrl",
   ],
@@ -319,6 +329,7 @@ Object {
   "descriptor": "100 DAI for 100 WETH",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
+  "isSpam": false,
   "logos": Array [
     "logoUrl",
   ],
@@ -359,6 +370,7 @@ Object {
   "descriptor": "100 DAI for 100 WETH",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
+  "isSpam": false,
   "logos": Array [
     "logoUrl",
   ],
@@ -389,6 +401,7 @@ Object {
   "descriptor": "DAI",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
+  "isSpam": false,
   "logos": Array [
     "logoUrl",
   ],

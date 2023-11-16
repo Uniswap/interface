@@ -43,8 +43,9 @@ function StatusIndicator({ activity: { status, timestamp } }: { activity: Activi
 }
 
 export function ActivityRow({ activity }: { activity: Activity }) {
-  const { chainId, title, descriptor, logos, otherAccount, currencies, hash, prefixIconSrc, offchainOrderStatus } =
-    activity
+  const { chainId, title, descriptor, logos, otherAccount, currencies, hash, prefixIconSrc } = activity
+  const { offchainOrderStatus, isSpam } = activity
+
   const openOffchainActivityModal = useOpenOffchainActivityModal()
 
   const { ENSName } = useENSName(otherAccount)
@@ -58,6 +59,8 @@ export function ActivityRow({ activity }: { activity: Activity }) {
 
     window.open(getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION), '_blank')
   }, [offchainOrderStatus, chainId, hash, openOffchainActivityModal])
+
+  if (isSpam) return null
 
   return (
     <TraceEvent

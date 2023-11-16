@@ -13,6 +13,7 @@ import ThemeToggle from 'theme/components/ThemeToggle'
 
 import { AnalyticsToggle } from './AnalyticsToggle'
 import { GitVersionRow } from './GitVersionRow'
+import { HideSpamToggle } from './HideSpamToggle'
 import { LanguageMenuItems } from './LanguageMenu'
 import { SlideOutMenu } from './SlideOutMenu'
 import { SmallBalanceToggle } from './SmallBalanceToggle'
@@ -91,6 +92,7 @@ export default function SettingsMenu({
           <ToggleWrapper currencyConversionEnabled={currencyConversionEnabled}>
             <ThemeToggle />
             <SmallBalanceToggle />
+            <HideSpamToggle />
             <AnalyticsToggle />
             <TestnetsToggle />
           </ToggleWrapper>

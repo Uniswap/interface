@@ -2,34 +2,34 @@ import { TokenBalance, TokenStandard } from 'graphql/data/__generated__/types-an
 
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
+interface SplitOptions {
+  hideSmallBalances?: boolean
+  hideSpam?: boolean
+}
+
 export function splitHiddenTokens(
   tokenBalances: TokenBalance[],
-  options: {
-    hideSmallBalances?: boolean
-  } = { hideSmallBalances: true }
+  { hideSmallBalances = true, hideSpam = true }: SplitOptions = {}
 ) {
   const visibleTokens: TokenBalance[] = []
   const hiddenTokens: TokenBalance[] = []
 
   for (const tokenBalance of tokenBalances) {
-    // if undefined we keep visible (see https://linear.app/uniswap/issue/WEB-1940/[mp]-update-how-we-handle-what-goes-in-hidden-token-section-of-mini)
-    const isUndefinedValue = typeof tokenBalance.denominatedValue?.value === 'undefined'
-    const shouldHideSmallBalance =
-      options?.hideSmallBalances &&
-      !meetsThreshold(tokenBalance) && // if below $1
-      tokenBalance.token?.standard !== TokenStandard.Native // do not hide native tokens regardless of small balance
-    const isSpamToken = tokenBalance.tokenProjectMarket?.tokenProject?.isSpam
-    if ((isUndefinedValue || !shouldHideSmallBalance) && !isSpamToken) {
-      visibleTokens.push(tokenBalance)
-    } else {
+    const isSpam = tokenBalance.tokenProjectMarket?.tokenProject?.isSpam
+    if ((hideSpam && isSpam) || (hideSmallBalances && isNegligibleBalance(tokenBalance))) {
       hiddenTokens.push(tokenBalance)
+    } else {
+      visibleTokens.push(tokenBalance)
     }
   }
 
   return { visibleTokens, hiddenTokens }
 }
 
-function meetsThreshold(tokenBalance: TokenBalance) {
-  const value = tokenBalance.denominatedValue?.value ?? 0
-  return value > HIDE_SMALL_USD_BALANCES_THRESHOLD
+function isNegligibleBalance({ denominatedValue, token }: TokenBalance) {
+  return (
+    denominatedValue?.value !== undefined && // if undefined we keep visible (see WEB-1940)
+    token?.standard !== TokenStandard.Native && // always show native token balances
+    denominatedValue?.value < HIDE_SMALL_USD_BALANCES_THRESHOLD // hide balances less than $1
+  )
 }

@@ -4,7 +4,6 @@ import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { nativeOnChain } from 'constants/tokens'
 import {
-  ActivityType,
   AssetActivityPartsFragment,
   Currency as GQLCurrency,
   NftApprovalPartsFragment,
@@ -16,6 +15,7 @@ import {
   TokenAssetPartsFragment,
   TokenTransferPartsFragment,
   TransactionDetailsPartsFragment,
+  TransactionType,
 } from 'graphql/data/__generated__/types-and-hooks'
 import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import ms from 'ms'
@@ -76,6 +76,12 @@ const COMMON_CONTRACTS: { [key: string]: Partial<Activity> | undefined } = {
     descriptor: t`ETH Registrar Controller`,
     logos: [ENS_IMG],
   },
+}
+
+const SPAMMABLE_ACTIVITY_TYPES = [TransactionType.Receive, TransactionType.Mint, TransactionType.Unknown]
+function isSpam({ NftTransfer, TokenTransfer }: TransactionChanges, type: TransactionType): boolean {
+  if (!SPAMMABLE_ACTIVITY_TYPES.includes(type)) return false
+  return NftTransfer.some((nft) => nft.asset.isSpam) || TokenTransfer.some((t) => t.asset.project?.isSpam)
 }
 
 function callsPositionManagerContract(assetActivity: TransactionActivity) {
@@ -238,16 +244,19 @@ function parseSendReceive(
   let assetName: string | undefined
   let amount: string | undefined
   let currencies: (Currency | undefined)[] | undefined
+  let isSpam: boolean | undefined
 
   if (changes.NftTransfer.length === 1) {
     transfer = changes.NftTransfer[0]
     assetName = transfer.asset.collection?.name
     amount = '1'
+    isSpam = transfer.asset.isSpam
   } else if (changes.TokenTransfer.length === 1) {
     transfer = changes.TokenTransfer[0]
     assetName = transfer.asset.symbol
     amount = formatNumberOrString({ input: transfer.quantity, type: NumberType.TokenNonTx })
     currencies = [gqlToCurrency(transfer.asset)]
+    isSpam = transfer.asset.project?.isSpam
   }
 
   if (transfer && assetName && amount) {
@@ -269,6 +278,7 @@ function parseSendReceive(
             descriptor: `${amount} ${assetName} ${t`from`} `,
             otherAccount: isAddress(transfer.sender) || undefined,
             currencies,
+            isSpam,
           }
     } else {
       return {
@@ -276,6 +286,7 @@ function parseSendReceive(
         descriptor: `${amount} ${assetName} ${t`to`} `,
         otherAccount: isAddress(transfer.recipient) || undefined,
         currencies,
+        isSpam,
       }
     }
   }
@@ -287,6 +298,8 @@ function parseMint(
   formatNumberOrString: FormatNumberOrStringFunctionType,
   assetActivity: TransactionActivity
 ) {
+  const isSpam = changes.NftTransfer.some((nft) => nft.asset.isSpam)
+
   const collectionMap = getCollectionCounts(changes.NftTransfer)
   if (Object.keys(collectionMap).length === 1) {
     const collectionName = Object.keys(collectionMap)[0]
@@ -295,33 +308,36 @@ function parseMint(
     if (changes.TokenTransfer.length === 2 && callsPositionManagerContract(assetActivity)) {
       return { title: t`Added Liquidity`, ...parseLPTransfers(changes, formatNumberOrString) }
     }
-    return { title: t`Minted`, descriptor: `${collectionMap[collectionName]} ${collectionName}` }
+    return { title: t`Minted`, descriptor: `${collectionMap[collectionName]} ${collectionName}`, isSpam }
   }
-  return { title: t`Unknown Mint` }
+  return { title: t`Unknown Mint`, isSpam }
 }
 
 function parseUnknown(
-  _changes: TransactionChanges,
+  changes: TransactionChanges,
   _formatNumberOrString: FormatNumberOrStringFunctionType,
   assetActivity: TransactionActivity
 ) {
-  return { title: t`Contract Interaction`, ...COMMON_CONTRACTS[assetActivity.details.to.toLowerCase()] }
+  const isSpam =
+    changes.NftTransfer.some((transfer) => transfer.asset.isSpam) ||
+    changes.TokenTransfer.some((transfer) => transfer.asset.project?.isSpam)
+  return { title: t`Contract Interaction`, ...COMMON_CONTRACTS[assetActivity.details.to.toLowerCase()], isSpam }
 }
 
-type ActivityTypeParser = (
+type TransactionTypeParser = (
   changes: TransactionChanges,
   formatNumberOrString: FormatNumberOrStringFunctionType,
   assetActivity: TransactionActivity
 ) => Partial<Activity>
-const ActivityParserByType: { [key: string]: ActivityTypeParser | undefined } = {
-  [ActivityType.Swap]: parseSwap,
-  [ActivityType.Lend]: parseLend,
-  [ActivityType.SwapOrder]: parseSwapOrder,
-  [ActivityType.Approve]: parseApprove,
-  [ActivityType.Send]: parseSendReceive,
-  [ActivityType.Receive]: parseSendReceive,
-  [ActivityType.Mint]: parseMint,
-  [ActivityType.Unknown]: parseUnknown,
+const ActivityParserByType: { [key: string]: TransactionTypeParser | undefined } = {
+  [TransactionType.Swap]: parseSwap,
+  [TransactionType.Lend]: parseLend,
+  [TransactionType.SwapOrder]: parseSwapOrder,
+  [TransactionType.Approve]: parseApprove,
+  [TransactionType.Send]: parseSendReceive,
+  [TransactionType.Receive]: parseSendReceive,
+  [TransactionType.Mint]: parseMint,
+  [TransactionType.Unknown]: parseUnknown,
 }
 
 function getLogoSrcs(changes: TransactionChanges): Array<string | undefined> {
@@ -398,6 +414,7 @@ function parseRemoteActivity(
       },
       { NftTransfer: [], TokenTransfer: [], TokenApproval: [], NftApproval: [], NftApproveForAll: [] }
     )
+
     const supportedChain = supportedChainIdFromGQLChain(assetActivity.chain)
     if (!supportedChain) {
       logSentryErrorForUnsupportedChain({
@@ -417,6 +434,7 @@ function parseRemoteActivity(
       descriptor: assetActivity.details.to,
       from: assetActivity.details.from,
       nonce: assetActivity.details.nonce,
+      isSpam: isSpam(changes, assetActivity.details.type),
     }
 
     const parsedFields = ActivityParserByType[assetActivity.details.type]?.(
@@ -433,7 +451,7 @@ function parseRemoteActivity(
 
 export function parseRemoteActivities(
   formatNumberOrString: FormatNumberOrStringFunctionType,
-  assetActivities?: readonly AssetActivityPartsFragment[]
+  assetActivities: readonly AssetActivityPartsFragment[] | undefined
 ) {
   return assetActivities?.reduce((acc: { [hash: string]: Activity }, assetActivity) => {
     const activity = parseRemoteActivity(assetActivity, formatNumberOrString)

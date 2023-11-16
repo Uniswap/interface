@@ -19,6 +19,7 @@ export type Activity = {
   nonce?: number | null
   prefixIconSrc?: string
   cancelled?: boolean
+  isSpam?: boolean
 }
 
 export type ActivityMap = { [id: string]: Activity | undefined }

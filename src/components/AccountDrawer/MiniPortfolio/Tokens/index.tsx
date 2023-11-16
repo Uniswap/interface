@@ -1,5 +1,6 @@
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { TraceEvent } from 'analytics'
+import { hideSpamAtom } from 'components/AccountDrawer/HideSpamToggle'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import Row from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
@@ -24,6 +25,7 @@ import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../Portfol
 export default function Tokens({ account }: { account: string }) {
   const toggleWalletDrawer = useToggleAccountDrawer()
   const hideSmallBalances = useAtomValue(hideSmallBalancesAtom)
+  const hideSpam = useAtomValue(hideSpamAtom)
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
   const { data } = useCachedPortfolioBalancesQuery({ account })
@@ -31,8 +33,8 @@ export default function Tokens({ account }: { account: string }) {
   const tokenBalances = data?.portfolios?.[0].tokenBalances as TokenBalance[] | undefined
 
   const { visibleTokens, hiddenTokens } = useMemo(
-    () => splitHiddenTokens(tokenBalances ?? [], { hideSmallBalances }),
-    [hideSmallBalances, tokenBalances]
+    () => splitHiddenTokens(tokenBalances ?? [], { hideSmallBalances, hideSpam }),
+    [hideSmallBalances, tokenBalances, hideSpam]
   )
 
   if (!data) {
