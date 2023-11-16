@@ -105,12 +105,12 @@ export function WCNotification({
   const validChainId = toSupportedChainId(chainId)
   const title = formWCNotificationTitle(notification)
 
-  const useSmallDisplayEvents = [
+  const smallToastEvents = [
     WalletConnectEvent.Connected,
     WalletConnectEvent.Disconnected,
     WalletConnectEvent.NetworkChanged,
   ]
-  const useSmallDisplay = useSmallDisplayEvents.includes(event)
+  const smallToast = smallToastEvents.includes(event)
 
   const icon = (
     <DappLogoWithTxStatus
@@ -118,7 +118,7 @@ export function WCNotification({
       dappImageUrl={imageUrl}
       dappName={dappName}
       event={event}
-      size={useSmallDisplay ? iconSizes.icon24 : NOTIFICATION_ICON_SIZE}
+      size={smallToast ? iconSizes.icon24 : NOTIFICATION_ICON_SIZE}
     />
   )
 
@@ -136,8 +136,8 @@ export function WCNotification({
       address={address}
       hideDelay={hideDelay}
       icon={icon}
+      smallToast={smallToast}
       title={title}
-      useSmallDisplay={useSmallDisplay}
       onPress={onPressNotification}
     />
   )
@@ -477,7 +477,7 @@ export function SuccessNotification({
 
   return (
     <NotificationToast
-      useSmallDisplay
+      smallToast
       hideDelay={hideDelay}
       icon={
         <CheckCircle
@@ -525,7 +525,7 @@ export function SwapNetworkNotification({
 
   return (
     <NotificationToast
-      useSmallDisplay
+      smallToast
       hideDelay={hideDelay}
       icon={<NetworkLogo chainId={chainId} size={iconSizes.icon24} />}
       title={t('Swapping on {{ network }}', { network })}
@@ -542,7 +542,7 @@ export function ChooseCountryNotification({
   const countryFlagUrl = getCountryFlagSvgUrl(countryCode)
   return (
     <NotificationToast
-      useSmallDisplay
+      smallToast
       hideDelay={hideDelay}
       icon={
         <Flex borderRadius="$roundedFull" overflow="hidden">
@@ -564,7 +564,7 @@ export function ChangeAssetVisibilityNotification({
 
   return (
     <NotificationToast
-      useSmallDisplay
+      smallToast
       hideDelay={hideDelay}
       icon={
         visible ? (
@@ -598,7 +598,7 @@ export function SwapPendingNotification(): JSX.Element {
   const { t } = useTranslation()
   return (
     <NotificationToast
-      useSmallDisplay
+      smallToast
       hideDelay={SWAP_PENDING_NOTIFICATION_DELAY}
       icon={<SpinningLoader color="$accent1" />}
       title={t('Swap pending')}
