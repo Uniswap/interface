@@ -1,3 +1,4 @@
+import { ethErrors } from 'eth-rpc-errors'
 import { AnyAction, Dispatch } from 'redux'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import {
@@ -121,7 +122,7 @@ function notOnboardedMessageListener(
   request: BaseDappRequest,
   sender: chrome.runtime.MessageSender
 ): void {
-  sendRejectionToContentScript(request.requestId, sender.tab?.id)
+  sendRejectionToContentScript(ethErrors.provider.unauthorized(), request.requestId, sender.tab?.id)
 }
 
 function initMessageBridge(dispatch: Dispatch<AnyAction>): void {

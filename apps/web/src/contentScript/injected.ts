@@ -1,8 +1,10 @@
+import { ethErrors } from 'eth-rpc-errors'
 import {
   BaseDappRequest,
   BaseDappResponse,
   DappRequestType,
   DappResponseType,
+  ErrorResponse,
 } from 'src/background/features/dappRequests/dappRequestTypes'
 import { isValidMessage } from 'src/background/utils/messageUtils'
 import { BaseExtensionRequest, ExtensionToDappRequestType } from 'src/types/requests'
@@ -18,8 +20,7 @@ addDappToExtensionRoundtripListener()
 addExtensionRequestListener()
 
 /* Functions */
-// New request and response types should be added in types/requests.ts or features/dappRequests/dappRequestTypes.ts
-function dappRequestListener(event: MessageEvent): void {
+async function dappRequestListener(event: MessageEvent): Promise<void> {
   // We only accept valid messages from ourselves
   if (
     event.source !== window ||
@@ -42,9 +43,18 @@ function dappRequestListener(event: MessageEvent): void {
 
   const request = event.data as BaseDappRequest
   logger.info('injected.ts', 'dappRequestListener', 'Payload to send to background is: ', request)
-  chrome.runtime.sendMessage<BaseDappRequest, BaseDappResponse>(request).catch((error) => {
-    logger.error(error, { tags: { file: 'injected.ts', function: 'dappRequestListener' } })
-  })
+
+  try {
+    await chrome.runtime.sendMessage<BaseDappRequest, BaseDappResponse>(request)
+  } catch (error) {
+    const response: ErrorResponse = {
+      type: DappResponseType.ErrorResponse,
+      error: ethErrors.provider.disconnected(),
+      requestId: request.requestId,
+    }
+
+    event.source?.postMessage(response)
+  }
 }
 
 function addDappToExtensionRoundtripListener(): void {

@@ -1,4 +1,6 @@
+import { EthereumRpcError } from 'eth-rpc-errors'
 import { ethers } from 'ethers'
+import { isValidMessage } from 'src/background/utils/messageUtils'
 import { ChainId } from 'wallet/src/constants/chains'
 
 /**
@@ -31,11 +33,20 @@ export enum DappRequestType {
 export enum DappResponseType {
   AccountResponse = 'AccountResponse',
   ChainChangeResponse = 'ChainChangeResponse',
+  ErrorResponse = 'ErrorResponse',
   SignTransactionResponse = 'SignTransactionResponse',
   SendTransactionResponse = 'SendTransactionResponse',
   SignTypedDataResponse = 'SignTypedDataResponse',
   SignMessageResponse = 'SignMessageResponse',
-  TransactionRejected = 'TransactionRejected',
+}
+
+export interface ErrorResponse extends BaseDappResponse {
+  type: DappResponseType.ErrorResponse
+  error: EthereumRpcError<unknown>
+}
+
+export function isErrorResponse(response: unknown): response is ErrorResponse {
+  return isValidMessage<ErrorResponse>([DappResponseType.ErrorResponse], response)
 }
 
 /* Content script request types */
@@ -89,10 +100,6 @@ export interface SignTransactionResponse extends BaseDappResponse {
 export interface SendTransactionResponse extends BaseDappResponse {
   type: DappResponseType.SendTransactionResponse
   transaction?: ethers.providers.TransactionResponse
-}
-
-export interface TransactionRejectedResponse extends BaseDappResponse {
-  type: DappResponseType.TransactionRejected
 }
 
 export interface ChangeChainResponse extends BaseDappResponse {
