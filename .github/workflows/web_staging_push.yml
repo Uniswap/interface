@@ -44,8 +44,9 @@ jobs:
           download_translations: true
           project_id: 458284
           token: ${{ secrets.CROWDIN_WEB_ACCESS_TOKEN }}
-          source: 'apps/web2/src/locales/en-US.po'
-          translation: 'apps/web2/src/locales/%locale%.po'
+          base_path: 'apps/web2'
+          source: 'src/locales/en-US.po'
+          translation: 'src/locales/%locale%.po'
           localization_branch_name: main
           create_pull_request: false
           push_translations: false
