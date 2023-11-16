@@ -1,5 +1,5 @@
 import { ChartType, TDP_CHART_TYPES } from 'components/Charts/utils'
-import { startTransition, useState } from 'react'
+import { startTransition } from 'react'
 import styled from 'styled-components'
 
 const ChartTypeOptionsWrapper = styled.div`
@@ -50,18 +50,14 @@ export default function ChartTypeSelector({
   currentChartType: ChartType
   onChartTypeChange: (c: ChartType) => void
 }) {
-  const [chartType, setChartType] = useState(currentChartType)
   return (
     <ChartTypeOptionsWrapper>
       <ChartTypeOptionsContainer>
         {TDP_CHART_TYPES.map((chart, i) => (
           <ChartTypeButton
             key={i}
-            active={chartType === chart}
-            onClick={() => {
-              startTransition(() => onChartTypeChange(chart))
-              setChartType(chart)
-            }}
+            active={currentChartType === chart}
+            onClick={() => startTransition(() => onChartTypeChange(chart))}
           >
             {chart}
           </ChartTypeButton>
