@@ -22,9 +22,6 @@ const NavLinks = styled(Row)`
   margin: 0;
   border-radius: 20px;
   gap: 1rem;
-  @media (max-width: 480px) {
-    flex-flow: wrap;
-  }
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
     flex-direction: row;
@@ -179,16 +176,6 @@ export default function NavigationLinks() {
             }}
           >
             <Trans>Perpetuals</Trans>
-          </Text>
-        </StyledNavLinkAlt>
-        <StyledNavLinkAlt
-          id={`swap-nav-link`}
-          onClick={() =>
-            window.open('https://app.gamma.xyz/vault/uni/op-mainnet/details/op-krom-3000-narrow', '_blank')
-          }
-        >
-          <Text fontSize={16} fontWeight={400}>
-            <Trans>Liquidity Mining</Trans>
           </Text>
         </StyledNavLinkAlt>
       </NavLinks>
