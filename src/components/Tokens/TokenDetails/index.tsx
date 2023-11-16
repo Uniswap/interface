@@ -121,7 +121,7 @@ export default function TokenDetails({
   const { account, chainId: connectedChainId } = useWeb3React()
   const pageChainId = supportedChainIdFromGQLChain(chain)
   const tokenQueryData = tokenQuery.token
-  const crossChainMap = useMemo(
+  const multiChainMap = useMemo(
     () =>
       tokenQueryData?.project?.tokens.reduce((map, current) => {
         if (current) map[current.chain] = current.address
@@ -143,7 +143,7 @@ export default function TokenDetails({
   const navigateToTokenForChain = useCallback(
     (update: Chain) => {
       if (!address) return
-      const bridgedAddress = crossChainMap[update]
+      const bridgedAddress = multiChainMap[update]
       if (bridgedAddress) {
         startTokenTransition(() =>
           navigate(
@@ -158,7 +158,7 @@ export default function TokenDetails({
         startTokenTransition(() => navigate(getTokenDetailsURL({ address, chain: update, isInfoExplorePageEnabled })))
       }
     },
-    [address, crossChainMap, didFetchFromChain, detailedToken?.isNative, navigate, isInfoExplorePageEnabled]
+    [address, multiChainMap, didFetchFromChain, detailedToken?.isNative, navigate, isInfoExplorePageEnabled]
   )
   useOnGlobalChainSwitch(navigateToTokenForChain)
 
@@ -207,10 +207,10 @@ export default function TokenDetails({
   const { data: balanceQuery } = useCachedPortfolioBalancesQuery({ account })
   const multiChainBalances = useMemo(() => {
     const tokenBalances = balanceQuery?.portfolios?.[0].tokenBalances
-    const bridgeInfo = tokenQuery.token?.project?.tokens
-    return tokenBalances?.filter((tokenBalance) =>
-      bridgeInfo?.some((bridgeToken) => bridgeToken.id == tokenBalance.token?.id)
-    ) as TokenBalance[] | undefined
+    const tokensAcrossChains = tokenQuery.token?.project?.tokens
+    return tokenBalances?.filter((tokenBalance) => tokensAcrossChains?.some((t) => t.id == tokenBalance.token?.id)) as
+      | TokenBalance[]
+      | undefined
   }, [balanceQuery?.portfolios, tokenQuery.token?.project?.tokens])
 
   // address will never be undefined if token is defined; address is checked here to appease typechecker

@@ -3,6 +3,7 @@ import { usePortfolioBalancesLazyQuery, usePortfolioBalancesQuery } from 'graphq
 import { GQL_MAINNET_CHAINS } from 'graphql/data/util'
 import usePrevious from 'hooks/usePrevious'
 import { atom, useAtom } from 'jotai'
+import ms from 'ms'
 import { PropsWithChildren, useCallback, useEffect } from 'react'
 
 import { usePendingActivity } from '../AccountDrawer/MiniPortfolio/Activity/hooks'
@@ -47,7 +48,7 @@ export default function PrefetchBalancesWrapper({
       setTimeout(() => {
         prefetchPortfolioBalances({ variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS } })
         setHasUnfetchedBalances(false)
-      }, 3500)
+      }, ms('3.5s'))
     }
   }, [account, prefetchPortfolioBalances, setHasUnfetchedBalances])
 
