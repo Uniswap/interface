@@ -49,10 +49,10 @@ runs:
         YARN_INSTALL_STATE_PATH: .ci-cache/yarn-state/install-state.gz # Small speedup when lock does not change
         HUSKY: '0' # By default do not run HUSKY install
 
-    - name: 👷 Compile mobile contracts
+    - name: 👷 Prepare
       uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
       with:
         timeout_minutes: 3
         retry_wait_seconds: 20
         max_attempts: 3
-        command: yarn contracts:compile
+        command: yarn prepare
