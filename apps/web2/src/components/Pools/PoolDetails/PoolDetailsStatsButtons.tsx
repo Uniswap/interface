@@ -68,7 +68,7 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
       navigate(
         toSwap
           ? `/swap?inputCurrency=${currencyId(currency0)}&outputCurrency=${currencyId(currency1)}`
-          : `/increase/${currencyId(currency0)}/${currencyId(currency1)}/${feeTier}${tokenId ? `/${tokenId}` : ''}`
+          : `/add/${currencyId(currency0)}/${currencyId(currency1)}/${feeTier}${tokenId ? `/${tokenId}` : ''}`
       )
     }
   }
