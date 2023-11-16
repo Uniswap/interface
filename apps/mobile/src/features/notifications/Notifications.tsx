@@ -2,7 +2,7 @@
 // consider splitting into multiple files
 /* eslint-disable max-lines */
 import React from 'react'
-import { useTranslation } from 'react-i18next'
+import { TFunction, useTranslation } from 'react-i18next'
 import { SvgUri } from 'react-native-svg'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
@@ -50,6 +50,7 @@ import {
   CopyNotification,
   CopyNotificationType,
   SwapNetworkNotification as SwapNetworkNotificationType,
+  SwapPendingNotification as SwapPendingNotificationType,
   SwapTxNotification,
   TransactionNotificationBase,
   TransferCurrencyTxNotification,
@@ -62,7 +63,11 @@ import {
   useNativeCurrencyInfo,
   useWrappedNativeCurrencyInfo,
 } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
+import {
+  TransactionStatus,
+  TransactionType,
+  WrapType,
+} from 'wallet/src/features/transactions/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
@@ -594,14 +599,32 @@ export function ChangeAssetVisibilityNotification({
 // and when a txn confirms it ll replace this toast.
 const SWAP_PENDING_NOTIFICATION_DELAY = 10 * ONE_SECOND_MS
 
-export function SwapPendingNotification(): JSX.Element {
+export function SwapPendingNotification({
+  notification,
+}: {
+  notification: SwapPendingNotificationType
+}): JSX.Element {
   const { t } = useTranslation()
+
+  const notificationText = getNotificationText(notification.wrapType, t)
+
   return (
     <NotificationToast
       smallToast
       hideDelay={SWAP_PENDING_NOTIFICATION_DELAY}
       icon={<SpinningLoader color="$accent1" />}
-      title={t('Swap pending')}
+      title={notificationText}
     />
   )
+}
+
+function getNotificationText(wrapType: WrapType, t: TFunction): string {
+  switch (wrapType) {
+    case WrapType.NotApplicable:
+      return t('Swap pending')
+    case WrapType.Unwrap:
+      return t('Unwrap pending')
+    case WrapType.Wrap:
+      return t('Wrap pending')
+  }
 }

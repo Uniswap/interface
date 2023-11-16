@@ -54,7 +54,7 @@ export function NotificationToastRouter({
     case AppNotificationType.AssetVisibility:
       return <ChangeAssetVisibilityNotification notification={notification} />
     case AppNotificationType.SwapPending:
-      return <SwapPendingNotification />
+      return <SwapPendingNotification notification={notification} />
     case AppNotificationType.Transaction:
       switch (notification.txType) {
         case TransactionType.Approve:

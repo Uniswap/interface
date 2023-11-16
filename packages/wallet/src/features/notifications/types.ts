@@ -1,7 +1,11 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
-import { FinalizedTransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
+import {
+  FinalizedTransactionStatus,
+  TransactionType,
+  WrapType,
+} from 'wallet/src/features/transactions/types'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 
 export enum AppNotificationType {
@@ -159,6 +163,7 @@ export interface ChangeAssetVisibilityNotification extends AppNotificationBase {
 
 export interface SwapPendingNotification extends AppNotificationBase {
   type: AppNotificationType.SwapPending
+  wrapType: WrapType
 }
 
 export type AppNotification =

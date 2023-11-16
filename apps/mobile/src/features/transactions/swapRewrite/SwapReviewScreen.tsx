@@ -24,7 +24,7 @@ import { NetworkFeeInfoModal } from 'src/features/transactions/swap/modals/Netwo
 import { SlippageInfoModal } from 'src/features/transactions/swap/modals/SlippageInfoModal'
 import { SwapFeeInfoModal } from 'src/features/transactions/swap/modals/SwapFeeInfoModal'
 import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
-import { isWrapAction } from 'src/features/transactions/swap/utils'
+import { getActionName, isWrapAction } from 'src/features/transactions/swap/utils'
 import { useSwapBottomSheetModalContext } from 'src/features/transactions/swapRewrite/contexts/SwapBottomSheetModalContext'
 import { useSwapFormContext } from 'src/features/transactions/swapRewrite/contexts/SwapFormContext'
 import {
@@ -128,9 +128,10 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     dispatch(
       pushNotification({
         type: AppNotificationType.SwapPending,
+        wrapType,
       })
     )
-  }, [dispatch])
+  }, [dispatch, wrapType])
 
   const navigateToNextScreen = useCallback(() => {
     onClose()
@@ -329,6 +330,8 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   const submitButtonIcon =
     isBiometricAuthEnabled && requiresBiometrics ? <BiometricsIcon /> : undefined
 
+  const actionText = getActionName(t, wrapType)
+
   const currencyInInfo = currencies[CurrencyField.INPUT]
   const currencyOutInfo = currencies[CurrencyField.OUTPUT]
 
@@ -453,7 +456,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
               size="large"
               testID={ElementName.Swap}
               onPress={onSubmitTransaction}>
-              {t('Swap')}
+              {actionText}
             </Button>
           </Flex>
         </SwapBottomSheetModalFooterContainer>
