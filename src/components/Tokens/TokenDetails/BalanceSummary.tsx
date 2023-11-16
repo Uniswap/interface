@@ -71,13 +71,12 @@ const StyledNetworkLabel = styled.div`
 
 interface BalanceProps {
   currency?: Currency
-  chainId: ChainId
+  chainId?: ChainId
   balance?: CurrencyAmount<Currency> // TODO(WEB-3026): only used for pre-Info-project calculations, should remove after project goes live
   gqlBalance?: TokenBalance
   onClick?: () => void
 }
-const Balance = (props: BalanceProps) => {
-  const { currency, chainId, balance, gqlBalance, onClick } = props
+const Balance = ({ currency, chainId = ChainId.MAINNET, balance, gqlBalance, onClick }: BalanceProps) => {
   const { formatCurrencyAmount, formatNumber } = useFormatter()
   const { label: chainName, color } = getChainInfo(asSupportedChain(chainId) ?? ChainId.MAINNET)
   const currencies = useMemo(() => [currency], [currency])
@@ -150,7 +149,7 @@ const ConnectedChainBalanceSummary = ({
       <ThemedText.SubHeaderSmall color="neutral1">
         <Trans>Your balance on {chainName}</Trans>
       </ThemedText.SubHeaderSmall>
-      <Balance currency={token} chainId={connectedChainId as ChainId} balance={connectedChainBalance} />
+      <Balance currency={token} chainId={connectedChainId} balance={connectedChainBalance} />
     </BalanceSection>
   )
 }
@@ -163,7 +162,7 @@ const PageChainBalanceSummary = ({ pageChainBalance }: { pageChainBalance?: Toke
       <ThemedText.HeadlineSmall color="neutral1">
         <Trans>Your balance</Trans>
       </ThemedText.HeadlineSmall>
-      <Balance currency={currency} chainId={currency?.chainId as ChainId} gqlBalance={pageChainBalance} />
+      <Balance currency={currency} chainId={currency?.chainId} gqlBalance={pageChainBalance} />
     </BalanceSection>
   )
 }
