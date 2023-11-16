@@ -21,7 +21,7 @@ export const onRequest: PagesFunction = async ({ request, next }) => {
   try {
     const content = new HTMLRewriter().on('head', new MetaTagInjector(data, request)).transform(await res).body
     return new Response(content, {
-      status: doesMatchPath(requestURL.pathname) || requestURL.toString().includes('.') ? 200 : 404,
+      status: doesMatchPath(requestURL.pathname) || requestURL.pathname.includes('.') ? 200 : 404,
     })
   } catch (e) {
     return res
