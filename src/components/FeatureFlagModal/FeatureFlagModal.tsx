@@ -3,21 +3,18 @@ import Column from 'components/Column'
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateConfig, useUpdateFlag } from 'featureFlags'
 import { DynamicConfigName } from 'featureFlags/dynamicConfig'
 import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
-import { useAndroidGALaunchFlag } from 'featureFlags/flags/androidGALaunch'
 import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
 import { useFallbackProviderEnabledFlag } from 'featureFlags/flags/fallbackProvider'
-import { useFotAdjustmentsFlag } from 'featureFlags/flags/fotAdjustments'
 import { useInfoExploreFlag } from 'featureFlags/flags/infoExplore'
 import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
 import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
 import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
+import { useLimitsEnabledFlag } from 'featureFlags/flags/limits'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicatorV2'
 import { useQuickRouteMainnetFlag } from 'featureFlags/flags/quickRouteMainnet'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useUniswapXDefaultEnabledFlag } from 'featureFlags/flags/uniswapXDefault'
-import { useUniswapXEthOutputFlag } from 'featureFlags/flags/uniswapXEthOutput'
-import { useUniswapXExactOutputFlag } from 'featureFlags/flags/uniswapXExactOutput'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useFeesEnabledFlag } from 'featureFlags/flags/useFees'
 import { useUpdateAtom } from 'jotai/utils'
@@ -277,6 +274,12 @@ export default function FeatureFlagModal() {
         />
         <FeatureFlagOption
           variant={BaseVariant}
+          value={useLimitsEnabledFlag()}
+          featureFlag={FeatureFlag.limitsEnabled}
+          label="Enable Limits"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
           value={useFallbackProviderEnabledFlag()}
           featureFlag={FeatureFlag.fallbackProvider}
           label="Enable fallback provider"
@@ -295,21 +298,9 @@ export default function FeatureFlagModal() {
         />
         <FeatureFlagOption
           variant={BaseVariant}
-          value={useFotAdjustmentsFlag()}
-          featureFlag={FeatureFlag.fotAdjustedmentsEnabled}
-          label="Enable fee-on-transfer UI and slippage adjustments"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
           value={useProgressIndicatorV2Flag()}
           featureFlag={FeatureFlag.progressIndicatorV2}
           label="Refreshed swap progress indicator"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useAndroidGALaunchFlag()}
-          featureFlag={FeatureFlag.androidGALaunch}
-          label="Android Nov 14th GA launch"
         />
         <FeatureFlagGroup name="Quick routes">
           <FeatureFlagOption
@@ -332,18 +323,6 @@ export default function FeatureFlagModal() {
             value={useUniswapXSyntheticQuoteFlag()}
             featureFlag={FeatureFlag.uniswapXSyntheticQuote}
             label="Force synthetic quotes for UniswapX"
-          />
-          <FeatureFlagOption
-            variant={BaseVariant}
-            value={useUniswapXEthOutputFlag()}
-            featureFlag={FeatureFlag.uniswapXEthOutputEnabled}
-            label="Enable eth output for UniswapX orders"
-          />
-          <FeatureFlagOption
-            variant={BaseVariant}
-            value={useUniswapXExactOutputFlag()}
-            featureFlag={FeatureFlag.uniswapXExactOutputEnabled}
-            label="Enable exact output for UniswapX orders"
           />
           <FeatureFlagOption
             variant={BaseVariant}

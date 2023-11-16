@@ -11,6 +11,7 @@ import { textFadeIn } from 'theme/styles'
 import { LoadingBubble } from '../loading'
 import { AboutContainer, AboutHeader } from './About'
 import { BreadcrumbNav, BreadcrumbNavLink } from './BreadcrumbNavLink'
+import { ChartContainer } from './ChartSection'
 import { StatPair, StatsWrapper, StatWrapper } from './StatsSection'
 
 const SWAP_COMPONENT_WIDTH = 360
@@ -52,14 +53,6 @@ export const RightPanel = styled.div<{ isInfoTDPEnabled?: boolean }>`
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
     display: flex;
   }
-`
-export const ChartContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 436px;
-  margin-bottom: 24px;
-  align-items: flex-start;
-  width: 100%;
 `
 const LoadingChartContainer = styled.div`
   display: flex;

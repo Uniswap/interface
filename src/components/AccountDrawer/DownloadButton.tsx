@@ -1,5 +1,4 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
-import { useAndroidGALaunchFlagEnabled } from 'featureFlags/flags/androidGALaunch'
 import { PropsWithChildren, useCallback } from 'react'
 import styled from 'styled-components'
 import { ClickableStyle } from 'theme/components'
@@ -42,12 +41,11 @@ export function DownloadButton({
   text?: string
   element: InterfaceElementName
 }) {
-  const isAndroidGALaunched = useAndroidGALaunchFlagEnabled()
   const onButtonClick = useCallback(() => {
     // handles any actions required by the parent, i.e. cancelling wallet connection attempt or dismissing an ad
     onClick?.()
-    openDownloadApp({ element, isAndroidGALaunched })
-  }, [element, isAndroidGALaunched, onClick])
+    openDownloadApp({ element })
+  }, [element, onClick])
 
   return (
     <BaseButton branded onClick={onButtonClick}>

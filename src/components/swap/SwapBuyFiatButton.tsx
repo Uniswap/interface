@@ -29,11 +29,17 @@ const StyledTextButton = styled(ButtonText)`
   color: ${({ theme }) => theme.neutral2};
   gap: 4px;
   font-weight: 485;
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
+  transition-timing-function: ease-in-out;
+  transition-property: opacity, color, background-color;
   &:focus {
     text-decoration: none;
   }
   &:active {
     text-decoration: none;
+  }
+  :hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
 `
 
