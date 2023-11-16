@@ -1,10 +1,13 @@
-name: 1 | [web] Push web to staging
+name: 1 | [web] Push staging
 
 # This CI job is responsible for pushing the current contents of a branch to the
 # `web/staging` branch, which will in turn kick off a deploy to the staging environment.
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - 'interface'
 
 # https://stackoverflow.com/questions/57921401/push-to-origin-from-github-action
 jobs:
