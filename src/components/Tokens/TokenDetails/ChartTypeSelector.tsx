@@ -11,8 +11,9 @@ const ChartTypeOptionsContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-top: 4px;
-  gap: 4px;
-  border-radius: 16px;
+  gap: 12px;
+  border: 1px solid ${({ theme }) => theme.surface3};
+  border-radius: 999px;
   height: 40px;
   padding: 4px;
   width: fit-content;
@@ -31,8 +32,8 @@ const ChartTypeButton = styled.button<{ active: boolean }>`
   background-color: ${({ theme, active }) => (active ? theme.surface3 : 'transparent')};
   font-weight: 535;
   font-size: 16px;
-  padding: 6px 12px;
-  border-radius: 12px;
+  padding: 8px 12px;
+  border-radius: 999px;
   line-height: 20px;
   border: none;
   cursor: pointer;

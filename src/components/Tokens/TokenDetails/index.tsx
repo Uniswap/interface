@@ -51,9 +51,10 @@ const TokenSymbol = styled.span`
   color: ${({ theme }) => theme.neutral2};
   margin-left: 8px;
 `
-const TokenActions = styled.div`
+const ChartActions = styled.div`
   display: flex;
-  gap: 16px;
+  gap: 8px;
+  align-items: center;
   color: ${({ theme }) => theme.neutral2};
 `
 const TokenTitle = styled.div`
@@ -255,10 +256,12 @@ export default function TokenDetails({
                   <TokenSymbol>{tokenSymbolName}</TokenSymbol>
                 </TokenTitle>
               </TokenNameCell>
-              {isInfoTDPEnabled && <ChartTypeSelector currentChartType={chartType} onChartTypeChange={setChartType} />}
-              <TokenActions>
+              <ChartActions>
+                {isInfoTDPEnabled && (
+                  <ChartTypeSelector currentChartType={chartType} onChartTypeChange={setChartType} />
+                )}
                 <ShareButton currency={detailedToken} />
-              </TokenActions>
+              </ChartActions>
             </TokenInfoContainer>
             <ChartSection chartType={chartType} tokenPriceQuery={tokenPriceQuery} />
 
