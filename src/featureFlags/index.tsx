@@ -10,8 +10,6 @@ export enum FeatureFlag {
   debounceSwapQuote = 'debounce_swap_quote',
   fallbackProvider = 'fallback_provider',
   uniswapXSyntheticQuote = 'uniswapx_synthetic_quote',
-  uniswapXEthOutputEnabled = 'uniswapx_eth_output_enabled',
-  uniswapXExactOutputEnabled = 'uniswapx_exact_output_enabled',
   multichainUX = 'multichain_ux',
   currencyConversion = 'currency_conversion',
   infoExplore = 'info_explore',
@@ -21,7 +19,6 @@ export enum FeatureFlag {
   quickRouteMainnet = 'enable_quick_route_mainnet',
   progressIndicatorV2 = 'progress_indicator_v2',
   feesEnabled = 'fees_enabled',
-  androidGALaunch = 'android_ga_launch',
   limitsEnabled = 'limits_enabled',
 }
 

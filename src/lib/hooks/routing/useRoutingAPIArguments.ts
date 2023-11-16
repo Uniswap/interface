@@ -1,7 +1,5 @@
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { useUniswapXEthOutputEnabled } from 'featureFlags/flags/uniswapXEthOutput'
-import { useUniswapXExactOutputEnabled } from 'featureFlags/flags/uniswapXExactOutput'
 import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useFeesEnabled } from 'featureFlags/flags/useFees'
 import { useMemo } from 'react'
@@ -29,8 +27,6 @@ export function useRoutingAPIArguments({
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
 }): GetQuoteArgs | SkipToken {
   const uniswapXForceSyntheticQuotes = useUniswapXSyntheticQuoteEnabled()
-  const uniswapXEthOutputEnabled = useUniswapXEthOutputEnabled()
-  const uniswapXExactOutputEnabled = useUniswapXExactOutputEnabled()
 
   const feesEnabled = useFeesEnabled()
   // Don't enable fee logic if this is a quote for pricing
@@ -55,21 +51,8 @@ export function useRoutingAPIArguments({
             tradeType,
             needsWrapIfUniswapX: tokenIn.isNative,
             uniswapXForceSyntheticQuotes,
-            uniswapXEthOutputEnabled,
-            uniswapXExactOutputEnabled,
             sendPortionEnabled,
           },
-    [
-      account,
-      amount,
-      routerPreference,
-      tokenIn,
-      tokenOut,
-      tradeType,
-      uniswapXExactOutputEnabled,
-      uniswapXForceSyntheticQuotes,
-      uniswapXEthOutputEnabled,
-      sendPortionEnabled,
-    ]
+    [account, amount, routerPreference, tokenIn, tokenOut, tradeType, uniswapXForceSyntheticQuotes, sendPortionEnabled]
   )
 }

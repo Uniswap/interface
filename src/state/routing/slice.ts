@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
-import { TradeType } from '@uniswap/sdk-core'
 import { sendAnalyticsEvent } from 'analytics'
 import { isUniswapXSupportedChain } from 'constants/chains'
 import ms from 'ms'
@@ -14,7 +13,6 @@ import {
   QuoteState,
   RouterPreference,
   RoutingConfig,
-  SwapRouterNativeAssets,
   TradeResult,
   URAQuoteResponse,
   URAQuoteType,
@@ -45,16 +43,7 @@ function getQuoteLatencyMeasure(mark: PerformanceMark): PerformanceMeasure {
 }
 
 function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
-  const {
-    account,
-    tradeType,
-    tokenOutAddress,
-    tokenInChainId,
-    uniswapXForceSyntheticQuotes,
-    uniswapXEthOutputEnabled,
-    uniswapXExactOutputEnabled,
-    routerPreference,
-  } = args
+  const { account, tokenInChainId, uniswapXForceSyntheticQuotes, routerPreference } = args
 
   const uniswapx = {
     useSyntheticQuotes: uniswapXForceSyntheticQuotes,
@@ -72,14 +61,10 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     enableFeeOnTransferFeeFetching: true,
   }
 
-  const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOutAddress as SwapRouterNativeAssets)
   if (
+    // If the user has opted out of UniswapX during the opt-out transition period, we should respect that preference and only request classic quotes.
     routerPreference === RouterPreference.API ||
     routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ||
-    // UniswapX doesn't support native out, exact-out, or non-mainnet trades (yet),
-    // so even if the user has selected UniswapX as their router preference, force them to receive a Classic quote.
-    (tokenOutIsNative && !uniswapXEthOutputEnabled) ||
-    (!uniswapXExactOutputEnabled && tradeType === TradeType.EXACT_OUTPUT) ||
     !isUniswapXSupportedChain(tokenInChainId)
   ) {
     return [classic]

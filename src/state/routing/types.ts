@@ -43,8 +43,6 @@ export interface GetQuoteArgs {
   tradeType: TradeType
   needsWrapIfUniswapX: boolean
   uniswapXForceSyntheticQuotes: boolean
-  uniswapXEthOutputEnabled: boolean
-  uniswapXExactOutputEnabled: boolean
   sendPortionEnabled: boolean
 }
 
