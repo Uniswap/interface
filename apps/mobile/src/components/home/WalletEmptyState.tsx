@@ -115,7 +115,7 @@ const ActionCard = ({ title, blurb, onPress, icon, elementName }: ActionCardItem
     <TouchableArea backgroundColor="$surface2" borderRadius="$rounded20" onPress={onPress}>
       <Flex centered row gap="$spacing16" p="$spacing16">
         {icon}
-        <Flex shrink gap="$spacing4">
+        <Flex shrink gap="$spacing4" width="100%">
           <Flex row alignItems="center" gap="$spacing8">
             <Text variant="subheading2">{title}</Text>
           </Flex>
