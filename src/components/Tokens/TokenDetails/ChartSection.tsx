@@ -1,15 +1,25 @@
 import { ParentSize } from '@visx/responsive'
 import { ChartType } from 'components/Charts/utils'
-import { ChartContainer, LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
+import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
+import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TokenPriceQuery } from 'graphql/data/TokenPrice'
 import { isPricePoint, PricePoint } from 'graphql/data/util'
-import { TimePeriod } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { pageTimePeriodAtom } from 'pages/TokenDetails'
-import { startTransition, Suspense, useMemo } from 'react'
+import { Suspense, useMemo } from 'react'
+import styled from 'styled-components'
 
 import { PriceChart } from '../../Charts/PriceChart'
 import TimePeriodSelector from './TimeSelector'
+
+export const ChartContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 436px;
+  margin-bottom: 24px;
+  align-items: flex-start;
+  width: 100%;
+`
 
 function usePriceHistory(tokenPriceData: TokenPriceQuery): PricePoint[] | undefined {
   // Appends the current price to the end of the priceHistory array
@@ -27,11 +37,11 @@ function usePriceHistory(tokenPriceData: TokenPriceQuery): PricePoint[] | undefi
   return priceHistory
 }
 export default function ChartSection({
+  chartType,
   tokenPriceQuery,
-  onChangeTimePeriod,
 }: {
+  chartType: ChartType
   tokenPriceQuery?: TokenPriceQuery
-  onChangeTimePeriod: OnChangeTimePeriod
 }) {
   if (!tokenPriceQuery) {
     return <LoadingChart />
@@ -39,38 +49,36 @@ export default function ChartSection({
 
   return (
     <Suspense fallback={<LoadingChart />}>
-      <ChartContainer>
-        <Chart tokenPriceQuery={tokenPriceQuery} onChangeTimePeriod={onChangeTimePeriod} />
+      <ChartContainer data-testid="chart-container">
+        <Chart chartType={chartType} tokenPriceQuery={tokenPriceQuery} />
+        <TimePeriodSelector />
       </ChartContainer>
     </Suspense>
   )
 }
 
-export type OnChangeTimePeriod = (t: TimePeriod) => void
-export type OnChangeChartType = (c: ChartType) => void
-
-function Chart({
-  tokenPriceQuery,
-  onChangeTimePeriod,
-}: {
-  tokenPriceQuery: TokenPriceQuery
-  onChangeTimePeriod: OnChangeTimePeriod
-}) {
+function Chart({ chartType, tokenPriceQuery }: { chartType: ChartType; tokenPriceQuery: TokenPriceQuery }) {
+  const isInfoTDPEnabled = useInfoTDPEnabled()
   const prices = usePriceHistory(tokenPriceQuery)
-  // Initializes time period to global & maintain separate time period for subsequent changes
   const timePeriod = useAtomValue(pageTimePeriodAtom)
 
   return (
-    <ChartContainer data-testid="chart-container">
-      <ParentSize>
-        {({ width }) => <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} />}
-      </ParentSize>
-      <TimePeriodSelector
-        currentTimePeriod={timePeriod}
-        onTimeChange={(t: TimePeriod) => {
-          startTransition(() => onChangeTimePeriod(t))
-        }}
-      />
-    </ChartContainer>
+    <ParentSize>
+      {({ width }) => {
+        if (isInfoTDPEnabled) {
+          switch (chartType) {
+            // TODO: Update to correct chart when built
+            case ChartType.VOLUME:
+              return <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} />
+            case ChartType.TVL:
+              return <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} />
+            default:
+              return <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} />
+          }
+        } else {
+          return <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} />
+        }
+      }}
+    </ParentSize>
   )
 }
