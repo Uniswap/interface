@@ -14,7 +14,6 @@ import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicatorV2'
 import { useQuickRouteMainnetFlag } from 'featureFlags/flags/quickRouteMainnet'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
-import { useUniswapXDefaultEnabledFlag } from 'featureFlags/flags/uniswapXDefault'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useFeesEnabledFlag } from 'featureFlags/flags/useFees'
 import { useUpdateAtom } from 'jotai/utils'
@@ -323,12 +322,6 @@ export default function FeatureFlagModal() {
             value={useUniswapXSyntheticQuoteFlag()}
             featureFlag={FeatureFlag.uniswapXSyntheticQuote}
             label="Force synthetic quotes for UniswapX"
-          />
-          <FeatureFlagOption
-            variant={BaseVariant}
-            value={useUniswapXDefaultEnabledFlag()}
-            featureFlag={FeatureFlag.uniswapXDefaultEnabled}
-            label="Enable UniswapX by default"
           />
         </FeatureFlagGroup>
         <FeatureFlagGroup name="Info Site Migration">

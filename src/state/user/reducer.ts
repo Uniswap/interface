@@ -48,10 +48,6 @@ export interface UserState {
 
   timestamp: number
   hideAndroidAnnouncementBanner: boolean
-  // legacy field indicating the user disabled UniswapX during the opt-in period, or dismissed the UniswapX opt-in modal.
-  disabledUniswapX?: boolean
-  // temporary field indicating the user disabled UniswapX during the transition to the opt-out model
-  optedOutOfUniswapX?: boolean
   // undefined means has not gone through A/B split yet
   showSurveyPopup?: boolean
 
@@ -111,12 +107,6 @@ const userSlice = createSlice({
     updateHideAndroidAnnouncementBanner(state, action) {
       state.hideAndroidAnnouncementBanner = action.payload.hideAndroidAnnouncementBanner
     },
-    updateDisabledUniswapX(state, action) {
-      state.disabledUniswapX = action.payload.disabledUniswapX
-    },
-    updateOptedOutOfUniswapX(state, action) {
-      state.optedOutOfUniswapX = action.payload.optedOutOfUniswapX
-    },
     addSerializedToken(state, { payload: { serializedToken } }) {
       if (!state.tokens) {
         state.tokens = {}
@@ -153,7 +143,5 @@ export const {
   updateUserLocale,
   updateUserSlippageTolerance,
   updateHideAndroidAnnouncementBanner,
-  updateDisabledUniswapX,
-  updateOptedOutOfUniswapX,
 } = userSlice.actions
 export default userSlice.reducer
