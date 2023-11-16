@@ -1,5 +1,5 @@
-import { TimePeriod } from 'graphql/data/util'
-import { startTransition, useState } from 'react'
+import { useAtom } from 'jotai'
+import { pageTimePeriodAtom } from 'pages/TokenDetails'
 import styled from 'styled-components'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
@@ -46,26 +46,13 @@ const TimeButton = styled.button<{ active: boolean }>`
   }
 `
 
-export default function TimePeriodSelector({
-  currentTimePeriod,
-  onTimeChange,
-}: {
-  currentTimePeriod: TimePeriod
-  onTimeChange: (t: TimePeriod) => void
-}) {
-  const [timePeriod, setTimePeriod] = useState(currentTimePeriod)
+export default function TimePeriodSelector() {
+  const [timePeriod, setTimePeriod] = useAtom(pageTimePeriodAtom)
   return (
     <TimeOptionsWrapper>
       <TimeOptionsContainer>
         {ORDERED_TIMES.map((time) => (
-          <TimeButton
-            key={DISPLAYS[time]}
-            active={timePeriod === time}
-            onClick={() => {
-              startTransition(() => onTimeChange(time))
-              setTimePeriod(time)
-            }}
-          >
+          <TimeButton key={DISPLAYS[time]} active={timePeriod === time} onClick={() => setTimePeriod(time)}>
             {DISPLAYS[time]}
           </TimeButton>
         ))}
