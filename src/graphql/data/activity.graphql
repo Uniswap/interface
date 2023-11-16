@@ -161,10 +161,10 @@ fragment AssetActivityParts on AssetActivity {
 }
 
 # TODO(UniswapX): return to a pagesize of 50 pre-launch
-query Activity($account: String!) {
-  portfolios(ownerAddresses: [$account]) {
+query Activity($account: String!, $chains: [Chain!]!) {
+  portfolios(ownerAddresses: [$account], chains: $chains) {
     id
-    assetActivities(pageSize: 100, page: 1, includeOffChain: true) {
+    assetActivities(pageSize: 100, page: 1, includeOffChain: true, chains: $chains) {
       ...AssetActivityParts
     }
   }

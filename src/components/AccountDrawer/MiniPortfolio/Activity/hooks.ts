@@ -1,4 +1,5 @@
 import { TransactionStatus, useActivityQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { GQL_MAINNET_CHAINS } from 'graphql/data/util'
 import { useEffect, useMemo } from 'react'
 import { usePendingOrders } from 'state/signatures/hooks'
 import { usePendingTransactions, useTransactionCanceller } from 'state/transactions/hooks'
@@ -58,7 +59,7 @@ function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = 
 export function useAllActivities(account: string) {
   const { formatNumberOrString } = useFormatter()
   const { data, loading, refetch } = useActivityQuery({
-    variables: { account },
+    variables: { account, chains: GQL_MAINNET_CHAINS },
     errorPolicy: 'all',
     fetchPolicy: 'cache-first',
   })

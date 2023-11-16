@@ -3,7 +3,7 @@ import { ChainLogo } from 'components/Logo/ChainLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import {
-  BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS,
+  BACKEND_NOT_YET_SUPPORTED_CHAINS,
   BACKEND_SUPPORTED_CHAINS,
   supportedChainIdFromGQLChain,
   validateUrlChainParam,
@@ -199,7 +199,7 @@ export default function NetworkFilter() {
               </InternalLinkMenuItem>
             )
           })}
-          {BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.map((network) => {
+          {BACKEND_NOT_YET_SUPPORTED_CHAINS.map((network) => {
             const chainInfo = getChainInfo(network)
             return (
               <InternalLinkMenuItem
