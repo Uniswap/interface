@@ -197,7 +197,7 @@ describe('UniswapX Eth Input', () => {
     cy.contains('Swapped')
   })
 
-  it('switches swap input to WETH after wrap', () => {
+  it('keeps ETH as the input currency before wrap completes', () => {
     // Setup a swap
     cy.get('#swap-currency-input .token-amount-input').type('1')
     cy.wait('@quote')
@@ -209,6 +209,19 @@ describe('UniswapX Eth Input', () => {
 
     // Close review modal before wrap is confirmed on chain
     cy.get(getTestSelector('confirmation-close-icon')).click()
+    // Confirm ETH is still the input token before wrap succeeds
+    cy.contains('ETH')
+  })
+
+  it('switches swap input to WETH after wrap', () => {
+    // Setup a swap
+    cy.get('#swap-currency-input .token-amount-input').type('1')
+    cy.wait('@quote')
+
+    // Prompt ETH wrap and confirm
+    cy.get('#swap-button').click()
+    cy.contains('Confirm swap').click()
+    cy.wait('@eth_sendRawTransaction')
     cy.hardhat().then((hardhat) => hardhat.mine())
 
     // Confirm wrap is successful and WETH is now input token
