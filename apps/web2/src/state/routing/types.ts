@@ -43,11 +43,6 @@ export interface GetQuoteArgs {
   tradeType: TradeType
   needsWrapIfUniswapX: boolean
   uniswapXForceSyntheticQuotes: boolean
-  // legacy field indicating the user disabled UniswapX during the opt-in period, or dismissed the UniswapX opt-in modal.
-  userDisabledUniswapX: boolean
-  // temporary field indicating the user disabled UniswapX during the transition to the opt-out model
-  userOptedOutOfUniswapX: boolean
-  isUniswapXDefaultEnabled: boolean
   sendPortionEnabled: boolean
 }
 
@@ -197,7 +192,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   approveInfo: ApproveInfo
   gasUseEstimateUSD?: number // gas estimate for swaps
   blockNumber: string | null | undefined
-  isUniswapXBetter: boolean | undefined
   requestId: string | undefined
   quoteMethod: QuoteMethod
   swapFee: SwapFeeInfo | undefined
@@ -205,7 +199,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   constructor({
     gasUseEstimateUSD,
     blockNumber,
-    isUniswapXBetter,
     requestId,
     quoteMethod,
     approveInfo,
@@ -215,7 +208,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     gasUseEstimateUSD?: number
     totalGasUseEstimateUSD?: number
     blockNumber?: string | null
-    isUniswapXBetter?: boolean
     requestId?: string
     quoteMethod: QuoteMethod
     approveInfo: ApproveInfo
@@ -240,7 +232,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     super(routes)
     this.blockNumber = blockNumber
     this.gasUseEstimateUSD = gasUseEstimateUSD
-    this.isUniswapXBetter = isUniswapXBetter
     this.requestId = requestId
     this.quoteMethod = quoteMethod
     this.approveInfo = approveInfo

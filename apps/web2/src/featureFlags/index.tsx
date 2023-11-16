@@ -16,7 +16,6 @@ export enum FeatureFlag {
   infoTDP = 'info_tdp',
   infoPoolPage = 'info_pool_page',
   infoLiveViews = 'info_live_views',
-  uniswapXDefaultEnabled = 'uniswapx_default_enabled',
   quickRouteMainnet = 'enable_quick_route_mainnet',
   progressIndicatorV2 = 'progress_indicator_v2',
   feesEnabled = 'fees_enabled',

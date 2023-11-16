@@ -77,7 +77,7 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
   '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D': true, // v2 router 02
 }
 
-export type SwapInfo = {
+type SwapInfo = {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   inputTax: Percent
