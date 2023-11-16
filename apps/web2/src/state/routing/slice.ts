@@ -63,9 +63,9 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
 
   if (
     // If the user has opted out of UniswapX during the opt-out transition period, we should respect that preference and only request classic quotes.
-    (args.userOptedOutOfUniswapX && routerPreference !== RouterPreference.X) ||
-    !isUniswapXSupportedChain(tokenInChainId) ||
-    routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE
+    routerPreference === RouterPreference.API ||
+    routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ||
+    !isUniswapXSupportedChain(tokenInChainId)
   ) {
     return [classic]
   }
