@@ -99,6 +99,11 @@ export type AssetActivityInput = {
   timestamp: Scalars['Int'];
 };
 
+export enum AssetActivitySwitch {
+  Alternate = 'ALTERNATE',
+  Legacy = 'LEGACY'
+}
+
 export type AssetChange = NftApproval | NftApproveForAll | NftTransfer | TokenApproval | TokenTransfer;
 
 export type AssetChangeInput = {
@@ -784,6 +789,7 @@ export type Portfolio = {
 
 
 export type PortfolioAssetActivitiesArgs = {
+  _fs?: InputMaybe<AssetActivitySwitch>;
   chains?: InputMaybe<Array<Chain>>;
   includeOffChain?: InputMaybe<Scalars['Boolean']>;
   page?: InputMaybe<Scalars['Int']>;
@@ -802,11 +808,11 @@ export enum PriceSource {
 
 export type PushNotification = {
   __typename?: 'PushNotification';
-  contents: Scalars['String'];
+  contents: Scalars['AWSJSON'];
   id: Scalars['ID'];
   notifyAddress: Scalars['String'];
-  signerHeader: Scalars['String'];
-  viewerHeader: Scalars['String'];
+  signerHeader: Scalars['AWSJSON'];
+  viewerHeader: Scalars['AWSJSON'];
 };
 
 export type Query = {
@@ -948,7 +954,7 @@ export type QueryTopTokensArgs = {
 
 export type QueryTransactionNotificationArgs = {
   address: Scalars['String'];
-  oldNotifications?: InputMaybe<Scalars['String']>;
+  chain: Chain;
   transactionHash: Scalars['String'];
 };
 
