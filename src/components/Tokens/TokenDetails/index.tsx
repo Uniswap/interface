@@ -123,7 +123,7 @@ export default function TokenDetails({
   const tokenQueryData = tokenQuery.token
   const { data: balanceQuery } = useCachedPortfolioBalancesQuery({ account })
   const multiChainMap = useMemo(() => {
-    const tokenBalances = balanceQuery?.portfolios?.[0].tokenBalances
+    const tokenBalances = balanceQuery?.portfolios?.[0].tokenBalances as TokenBalance[]
     const tokensAcrossChains = tokenQueryData?.project?.tokens
     if (!tokensAcrossChains) return {}
     return tokensAcrossChains.reduce((map, current) => {
@@ -132,9 +132,7 @@ export default function TokenDetails({
           map[current.chain] = {}
         }
         map[current.chain].address = current.address
-        map[current.chain].balance = tokenBalances?.find((tokenBalance) => tokenBalance.token?.id == current.id) as
-          | TokenBalance
-          | undefined
+        map[current.chain].balance = tokenBalances?.find((tokenBalance) => tokenBalance.token?.id === current.id)
       }
       return map
     }, {} as MultiChainMap)
