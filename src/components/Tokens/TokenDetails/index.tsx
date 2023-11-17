@@ -95,7 +95,7 @@ function useRelevantToken(
     [onChainToken, queryToken]
   )
 }
-
+export type MultiChainMap = { [chain: string]: { address?: string; balance?: TokenBalance } }
 type TokenDetailsProps = {
   urlAddress?: string
   inputTokenAddress?: string
@@ -121,14 +121,25 @@ export default function TokenDetails({
   const { account, chainId: connectedChainId } = useWeb3React()
   const pageChainId = supportedChainIdFromGQLChain(chain)
   const tokenQueryData = tokenQuery.token
-  const multiChainMap = useMemo(
-    () =>
-      tokenQueryData?.project?.tokens.reduce((map, current) => {
-        if (current) map[current.chain] = current.address
-        return map
-      }, {} as { [key: string]: string | undefined }) ?? {},
-    [tokenQueryData]
-  )
+  const { data: balanceQuery } = useCachedPortfolioBalancesQuery({ account })
+  const multiChainMap = useMemo(() => {
+    const tokenBalances = balanceQuery?.portfolios?.[0].tokenBalances
+    const tokensAcrossChains = tokenQueryData?.project?.tokens
+    if (!tokensAcrossChains) return {}
+    return tokensAcrossChains.reduce((map, current) => {
+      if (current) {
+        if (!map[current.chain]) {
+          map[current.chain] = {}
+        }
+        map[current.chain].address = current.address ?? NATIVE_CHAIN_ID
+        map[current.chain].balance = tokenBalances?.find((tokenBalance) => tokenBalance.token?.id == current.id) as
+          | TokenBalance
+          | undefined
+      }
+      return map
+    }, {} as MultiChainMap)
+  }, [balanceQuery?.portfolios, tokenQueryData?.project?.tokens])
+
   const { token: detailedToken, didFetchFromChain } = useRelevantToken(address, pageChainId, tokenQueryData)
 
   const tokenWarning = address ? checkWarning(address) : null
@@ -143,7 +154,7 @@ export default function TokenDetails({
   const navigateToTokenForChain = useCallback(
     (update: Chain) => {
       if (!address) return
-      const bridgedAddress = multiChainMap[update]
+      const bridgedAddress = multiChainMap[update].address
       if (bridgedAddress) {
         startTokenTransition(() =>
           navigate(
@@ -203,15 +214,6 @@ export default function TokenDetails({
     },
     [continueSwap, setContinueSwap]
   )
-
-  const { data: balanceQuery } = useCachedPortfolioBalancesQuery({ account })
-  const multiChainBalances = useMemo(() => {
-    const tokenBalances = balanceQuery?.portfolios?.[0].tokenBalances
-    const tokensAcrossChains = tokenQuery.token?.project?.tokens
-    return tokenBalances?.filter((tokenBalance) => tokensAcrossChains?.some((t) => t.id == tokenBalance.token?.id)) as
-      | TokenBalance[]
-      | undefined
-  }, [balanceQuery?.portfolios, tokenQuery.token?.project?.tokens])
 
   // address will never be undefined if token is defined; address is checked here to appease typechecker
   if (detailedToken === undefined || !address) {
@@ -292,13 +294,7 @@ export default function TokenDetails({
             />
           </div>
           {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
-          {detailedToken && tokenQuery && (
-            <BalanceSummary
-              currency={detailedToken}
-              multiChainBalances={multiChainBalances}
-              tokenQueryId={tokenQuery.token?.id}
-            />
-          )}
+          {detailedToken && <BalanceSummary currency={detailedToken} chain={chain} multiChainMap={multiChainMap} />}
           {isInfoTDPEnabled && (
             <TokenDescription
               tokenAddress={address}
@@ -309,12 +305,7 @@ export default function TokenDetails({
           )}
         </RightPanel>
         {detailedToken && (
-          <MobileBalanceSummaryFooter
-            token={detailedToken}
-            pageChainBalance={multiChainBalances?.find(
-              (tokenBalance) => tokenBalance.token?.id === tokenQuery.token?.id
-            )}
-          />
+          <MobileBalanceSummaryFooter currency={detailedToken} pageChainBalance={multiChainMap[chain].balance} />
         )}
 
         <TokenSafetyModal

@@ -98,16 +98,16 @@ const SwapButton = styled(StyledInternalLink)<{ isInfoTDPEnabled?: boolean }>`
 `
 
 export default function MobileBalanceSummaryFooter({
-  token,
+  currency,
   pageChainBalance,
 }: {
-  token: Currency
+  currency: Currency
   pageChainBalance?: TokenBalance
 }) {
   const isInfoTDPEnabled = useInfoTDPEnabled()
 
   const { account } = useWeb3React()
-  const balance = useCurrencyBalance(account, token)
+  const balance = useCurrencyBalance(account, currency)
   const { formatCurrencyAmount, formatNumber } = useFormatter()
   const formattedBalance = formatCurrencyAmount({
     amount: balance,
@@ -125,16 +125,16 @@ export default function MobileBalanceSummaryFooter({
     input: pageChainBalance?.denominatedValue?.value,
     type: NumberType.PortfolioBalance,
   })
-  const chain = CHAIN_ID_TO_BACKEND_NAME[token.chainId].toLowerCase()
+  const chain = CHAIN_ID_TO_BACKEND_NAME[currency.chainId].toLowerCase()
 
   return (
     <Wrapper isInfoTDPEnabled={isInfoTDPEnabled}>
       {Boolean(account && (isInfoTDPEnabled ? pageChainBalance : balance)) && (
         <BalanceInfo isInfoTDPEnabled={isInfoTDPEnabled}>
-          {isInfoTDPEnabled ? <Trans>Your balance</Trans> : <Trans>Your {token.symbol} balance</Trans>}
+          {isInfoTDPEnabled ? <Trans>Your balance</Trans> : <Trans>Your {currency.symbol} balance</Trans>}
           <Balance isInfoTDPEnabled={isInfoTDPEnabled}>
             <BalanceValue isInfoTDPEnabled={isInfoTDPEnabled}>
-              {isInfoTDPEnabled ? formattedGqlBalance : formattedBalance} {token.symbol}
+              {isInfoTDPEnabled ? formattedGqlBalance : formattedBalance} {currency.symbol}
             </BalanceValue>
             <FiatValue isInfoTDPEnabled={isInfoTDPEnabled}>
               {isInfoTDPEnabled ? `(${formattedUsdGqlValue})` : formattedUsdValue}
@@ -144,7 +144,7 @@ export default function MobileBalanceSummaryFooter({
       )}
       <SwapButton
         isInfoTDPEnabled={isInfoTDPEnabled}
-        to={`/swap?chainName=${chain}&outputCurrency=${token.isNative ? NATIVE_CHAIN_ID : token.address}`}
+        to={`/swap?chainName=${chain}&outputCurrency=${currency.isNative ? NATIVE_CHAIN_ID : currency.address}`}
       >
         <Trans>Swap</Trans>
       </SwapButton>

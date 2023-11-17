@@ -16,6 +16,8 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { MultiChainMap } from '.'
+
 const BalancesCard = styled.div<{ isInfoTDPEnabled?: boolean }>`
   color: ${({ theme }) => theme.neutral1};
   display: flex;
@@ -217,12 +219,12 @@ const OtherChainsBalanceSummary = ({
 
 export default function BalanceSummary({
   currency,
-  multiChainBalances,
-  tokenQueryId,
+  chain,
+  multiChainMap,
 }: {
   currency: Currency
-  multiChainBalances?: TokenBalance[]
-  tokenQueryId?: string
+  chain: Chain
+  multiChainMap: MultiChainMap
 }) {
   const { account } = useWeb3React()
 
@@ -230,8 +232,10 @@ export default function BalanceSummary({
 
   const connectedChainBalance = useCurrencyBalance(account, currency)
 
-  const pageChainBalance = multiChainBalances?.find((tokenBalance) => tokenBalance.token?.id === tokenQueryId)
-  const otherChainBalances = multiChainBalances?.filter((tokenBalance) => tokenBalance.token?.id !== tokenQueryId)
+  const pageChainBalance = multiChainMap[chain].balance
+  const otherChainBalances = Object.entries(multiChainMap)
+    .filter(([key, value]) => key !== chain && value.balance !== undefined)
+    .map(([, value]) => value.balance) as TokenBalance[] | undefined
   const hasBalances = pageChainBalance || Boolean(otherChainBalances?.length)
 
   if (!account || !hasBalances) {
