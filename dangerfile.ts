@@ -55,11 +55,19 @@ async function processAddChanges() {
   })
 
   // Check for non-recommended sentry usage
-  if (changes.some((change) => change.content.includes('logger.error(new Error('))) {
-    warn(`It appears you may be manually logging a Sentry error. Please log the error directly if possible. If you need to use a custom error message, ensure the error object is added to the 'cause' property`)
+  if (changes.some((change) => /logger\.error\(\s*new Error\(/.test(change.content))) {
+    warn(`It appears you may be manually logging a Sentry error. Please log the error directly if possible. If you need to use a custom error message, ensure the error object is added to the 'cause' property.`)
   }
-  if (changes.some((change) => change.content.includes(`logger.error('`))) {
+  if (changes.some((change) => /logger\.error\(\s*['`"]/.test(change.content))) {
     warn(`Please log an error, not a string!`)
+  }
+
+  // Check for incorrect usage of `createSelector`
+  if (changes.some((change) => change.content.includes(`createSelector(`))) {
+    warn("You've added a new call to `createSelector()`. This is Ok, but please make sure you're using it correctly and you're not creating a new selector on every render. See PR #5172 for details.")
+  }
+  if (changes.some((change) => /(useAppSelector|appSelect|select)\(\s*makeSelect/.test(change.content))) {
+    fail(`It appears you may be creating a new selector on every render. See PR #5172 for details on how to fix this.`)
   }
 }
 
