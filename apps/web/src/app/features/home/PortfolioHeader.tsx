@@ -3,7 +3,7 @@ import { SwitchNetworksModal } from 'src/app/features/home/SwitchNetworksModal'
 import { ConnectPopupContent } from 'src/app/features/popups/ConnectPopup'
 import { closePopup, PopupName } from 'src/app/features/popups/slice'
 import { AppRoutes } from 'src/app/navigation/constants'
-import { useDappContext, useIsDappConnected } from 'src/background/features/dapp/hooks'
+import { useDappContext } from 'src/background/features/dapp/DappContext'
 import { selectDappConnectedAddresses } from 'src/background/features/dapp/selectors'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { Flex, Icons, Popover, Text, TouchableArea, Unicon } from 'ui/src'
@@ -26,9 +26,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
     navigate(AppRoutes.AccountSwitcher)
   }
 
-  // Value does not matter, only used as a trigger to re-render the component when the dapp connection status changes
-  const isDappConnected = useIsDappConnected()
-  const { dappUrl } = useDappContext()
+  const { dappUrl, isConnected } = useDappContext()
   const connectedAddresses = useAppSelector(selectDappConnectedAddresses(dappUrl)) || []
 
   const closeConnectPopup = async (): Promise<void> => {
@@ -68,7 +66,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
               pl="$spacing4"
               shadowColor="$neutral3"
               shadowRadius={POPUP_SHADOW_RADIUS}>
-              {isDappConnected ? <SwitchNetworksModal /> : <ConnectPopupContent asPopover />}
+              {isConnected ? <SwitchNetworksModal /> : <ConnectPopupContent asPopover />}
             </Popover.Content>
           </Popover>
         ) : null}

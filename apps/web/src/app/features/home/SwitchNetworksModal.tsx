@@ -1,4 +1,4 @@
-import { useDappContext } from 'src/background/features/dapp/hooks'
+import { useDappContext } from 'src/background/features/dapp/DappContext'
 import { selectDappChainId } from 'src/background/features/dapp/selectors'
 import { removeDappConnection, saveDappChain } from 'src/background/features/dapp/slice'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
