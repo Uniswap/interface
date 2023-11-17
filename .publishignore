@@ -3,6 +3,7 @@
 .vscode
 .yarn
 CODEOWNERS
+.github/CODEOWNERS
 
 /scripts
 /.env*
