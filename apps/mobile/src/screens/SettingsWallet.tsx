@@ -224,7 +224,7 @@ export function SettingsWallet({
                 },
               }
             : { address },
-          text: IS_ANDROID ? t('Google Drive Backup') : t('iCloud backup'),
+          text: IS_ANDROID ? t('Google Drive backup') : t('iCloud backup'),
           icon: <Icons.OSDynamicCloudIcon color="$neutral2" size="$icon.24" />,
           isHidden: readonly || googleDriveDisabled,
         },
