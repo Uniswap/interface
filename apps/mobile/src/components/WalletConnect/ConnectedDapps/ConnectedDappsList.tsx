@@ -14,6 +14,7 @@ import {
   WalletConnectSession,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { AnimatedFlex, Flex, Text, TouchableArea, useDeviceDimensions } from 'ui/src'
+import { Edit as EditIcon, Scan as ScanIcon } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 
 type ConnectedDappsProps = {
@@ -59,19 +60,15 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
                 onPress={(): void => {
                   setIsEditing(!isEditing)
                 }}>
-                <Text
-                  color={isEditing ? '$accent1' : '$neutral2'}
-                  numberOfLines={1}
-                  textAlign="right"
-                  variant="subheading2">
-                  {isEditing ? t('Done') : t('Edit')}
-                </Text>
+                {isEditing ? (
+                  <EditIcon color="$accent1" size="$icon.20" />
+                ) : (
+                  <EditIcon color="$neutral2" size="$icon.20" />
+                )}
               </TouchableArea>
             ) : (
               <TouchableArea onPress={onPressScan}>
-                <Text color="$accent1" numberOfLines={1} textAlign="right" variant="subheading2">
-                  {t('Scan')}
-                </Text>
+                <ScanIcon color="$neutral2" size="$icon.20" />
               </TouchableArea>
             )}
           </Flex>

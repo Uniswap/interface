@@ -35,10 +35,10 @@ import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
 import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import ChartIcon from 'ui/src/assets/icons/chart.svg'
-import EditIcon from 'ui/src/assets/icons/edit.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import KeyIcon from 'ui/src/assets/icons/key.svg'
 import ShieldQuestionIcon from 'ui/src/assets/icons/shield-question.svg'
+import TextEditIcon from 'ui/src/assets/icons/textEdit.svg'
 import { iconSizes } from 'ui/src/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
@@ -164,7 +164,7 @@ export function SettingsWallet({
         {
           screen: Screens.SettingsWalletEdit,
           text: t('Nickname'),
-          icon: <EditIcon fill={colors.neutral2.get()} {...iconProps} />,
+          icon: <TextEditIcon fill={colors.neutral2.get()} {...iconProps} />,
           screenProps: { address },
           isHidden: !!ensName,
         },

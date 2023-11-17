@@ -183,7 +183,6 @@
   "Done": "Done",
   "Due to the amount of {{ currencyOut }} liquidity currently available, the more {{ currencyIn }} you try to swap, the less {{ currencyOut }} you will receive.": "Due to the amount of {{ currencyOut }} liquidity currently available, the more {{ currencyIn }} you try to swap, the less {{ currencyOut }} you will receive.",
   "Dutch": "Dutch",
-  "Edit": "Edit",
   "Edit favorite tokens": "Edit favorite tokens",
   "Edit favorite wallets": "Edit favorite wallets",
   "Edit favorites": "Edit favorites",
