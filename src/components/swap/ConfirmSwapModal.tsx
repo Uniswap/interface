@@ -133,9 +133,6 @@ function useConfirmModalState({
           onWrap?.()
             .then((wrapTxHash) => {
               setWrapTxHash(wrapTxHash)
-              // After the wrap has succeeded, reset the input currency to be WETH
-              // because the trade will be on WETH -> token
-              onCurrencySelection(Field.INPUT, trade.inputAmount.currency)
               sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
                 chain_id: chainId,
                 token_symbol: maximumAmountIn?.currency.symbol,
@@ -183,7 +180,6 @@ function useConfirmModalState({
       onWrap,
       trace,
       trade,
-      onCurrencySelection,
     ]
   )
 
@@ -200,10 +196,20 @@ function useConfirmModalState({
   useEffect(() => {
     // If the wrapping step finished, trigger the next step (allowance or swap).
     if (wrapConfirmed && !prevWrapConfirmed) {
+      // After the wrap has succeeded, reset the input currency to be WETH
+      // because the trade will be on WETH -> token
+      onCurrencySelection(Field.INPUT, trade.inputAmount.currency)
       // moves on to either approve WETH or to swap submission
       performStep(pendingModalSteps[1])
     }
-  }, [pendingModalSteps, performStep, prevWrapConfirmed, wrapConfirmed])
+  }, [
+    pendingModalSteps,
+    performStep,
+    prevWrapConfirmed,
+    wrapConfirmed,
+    onCurrencySelection,
+    trade.inputAmount.currency,
+  ])
 
   useEffect(() => {
     if (
