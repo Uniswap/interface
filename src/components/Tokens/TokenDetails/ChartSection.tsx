@@ -1,4 +1,3 @@
-import { ParentSize } from '@visx/responsive'
 import { ChartContainer, LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
 import { TokenPriceQuery } from 'graphql/data/TokenPrice'
 import { isPricePoint, PricePoint } from 'graphql/data/util'
@@ -59,9 +58,7 @@ function Chart({
 
   return (
     <ChartContainer data-testid="chart-container">
-      <ParentSize>
-        {({ width }) => <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} />}
-      </ParentSize>
+      <PriceChart prices={prices} width={100} height={392} timePeriod={timePeriod} />
       <TimePeriodSelector
         currentTimePeriod={timePeriod}
         onTimeChange={(t: TimePeriod) => {

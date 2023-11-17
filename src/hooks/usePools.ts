@@ -33,6 +33,15 @@ class PoolCache {
     const found = this.addresses.find((address) => address.key === key)
     if (found) return found.address
 
+    console.log(
+      'cart',
+      computePoolAddress({
+        factoryAddress,
+        tokenA,
+        tokenB,
+        fee,
+      }).toLowerCase()
+    )
     const address = {
       key,
       address: computePoolAddress({

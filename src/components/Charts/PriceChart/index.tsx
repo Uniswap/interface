@@ -8,19 +8,23 @@ import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import FadedInLineChart from 'components/Charts/FadeInLineChart'
 import { buildChartModel, ChartErrorType, ChartModel, ErroredChartModel } from 'components/Charts/PriceChart/ChartModel'
 import { getTimestampFormatter, TimestampFormatterType } from 'components/Charts/PriceChart/format'
-import { getNearestPricePoint, getTicks } from 'components/Charts/PriceChart/utils'
+import { getNearestPricePoint, getPriceBounds, getTicks } from 'components/Charts/PriceChart/utils'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { curveCardinal } from 'd3'
 import { PricePoint, TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import { BarPrice, createChart, CrosshairMode, LineStyle, LineType, UTCTimestamp } from 'lightweight-charts'
+import ms from 'ms'
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Info } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
+import { opacify } from 'theme/utils'
 import { useFormatter } from 'utils/formatNumbers'
 
 import { calculateDelta, DeltaArrow } from '../../Tokens/TokenDetails/Delta'
+import { DottedGridPrimitive } from './DottedGrid/dotted-grid'
 
 const CHART_MARGIN = { top: 100, bottom: 48, crosshair: 72 }
 
@@ -288,9 +292,10 @@ interface PriceChartProps {
   height: number
   prices?: PricePoint[]
   timePeriod: TimePeriod
+  color?: string
 }
 
-export function PriceChart({ width, height, prices, timePeriod }: PriceChartProps) {
+function PriceChart2({ width, height, prices, timePeriod }: PriceChartProps) {
   const chart = useMemo(
     () =>
       buildChartModel({
@@ -305,4 +310,203 @@ export function PriceChart({ width, height, prices, timePeriod }: PriceChartProp
   }
 
   return <ChartBody chart={chart} timePeriod={timePeriod} />
+}
+
+export function PriceChart({ width, height, prices, timePeriod, color }: PriceChartProps) {
+  const ref = useRef<HTMLDivElement>(null)
+  // const [chart, setChart] = useState()
+  const { neutral1, neutral2, accent1, surface3, neutral3 } = useTheme()
+  const { formatFiatPrice } = useFormatter()
+  const [crosshairSelectedPrice, setCrosshairSelectedPrice] = useState<PricePoint>()
+
+  const chartModel = useMemo(
+    () =>
+      buildChartModel({
+        dimensions: { width, height, marginBottom: CHART_MARGIN.bottom, marginTop: CHART_MARGIN.top },
+        prices,
+      }),
+    [width, height, prices]
+  )
+
+  useEffect(() => {
+    if (!ref.current || !prices) return
+    const { min, max } = getPriceBounds(prices)
+
+    const data =
+      prices?.map((pricePoint) => {
+        return { value: pricePoint.value, time: pricePoint.timestamp as UTCTimestamp }
+      }) ?? []
+
+    const priceFormat = {
+      type: 'custom' as const,
+      formatter: (price: BarPrice) => {
+        return formatFiatPrice({ price })
+      },
+    }
+
+    const tickMarkFormatter = getTimestampFormatter(timePeriod, 'en', TimestampFormatterType.TICK)
+
+    const chart = createChart(ref.current, {
+      // handleScale: false,
+      // handleScroll: false,
+      localization: {
+        timeFormatter: getTimestampFormatter(timePeriod, 'en', TimestampFormatterType.CROSSHAIR),
+      },
+      timeScale: {
+        tickMarkFormatter,
+        borderVisible: false,
+        ticksVisible: false,
+      },
+      rightPriceScale: {
+        borderVisible: false,
+      },
+      layout: { textColor: neutral2, background: { color: 'transparent' } },
+      grid: {
+        vertLines: {
+          visible: false,
+        },
+        horzLines: {
+          visible: false,
+        },
+      },
+
+      crosshair: {
+        horzLine: {
+          visible: true,
+          style: LineStyle.Solid,
+          width: 1,
+          color: surface3,
+          labelBackgroundColor: surface3,
+        },
+        mode: CrosshairMode.Magnet,
+        vertLine: {
+          visible: true,
+          style: LineStyle.Solid,
+          width: 1,
+          color: surface3,
+          labelBackgroundColor: surface3,
+        },
+      },
+    })
+
+    console.log(
+      'cartcrom',
+      (chart as any)._private__chartWidget._private__model._private__panes[0]._private__timeScale
+        ._private__timeMarksCache
+    ) //._private__model._private__timeScale._private__marks())
+
+    const lineColor = color ?? accent1
+    const areaSeries = chart.addAreaSeries({
+      lineType: LineType.Curved,
+      lineWidth: 2,
+      lineColor,
+      topColor: opacify(12, lineColor),
+      bottomColor: opacify(12, lineColor),
+      priceFormat,
+      crosshairMarkerRadius: 5,
+      crosshairMarkerBorderColor: opacify(30, lineColor),
+      crosshairMarkerBorderWidth: 3,
+      priceLineVisible: false,
+      // priceLineStyle: LineStyle.LargeDashed,
+      // priceLineColor: surface3,
+      // priceLineWidth: 2,
+      lastValueVisible: false,
+      autoscaleInfoProvider: () => ({
+        priceRange: {
+          minValue: min,
+          maxValue: max,
+        },
+        margins: {
+          above: 10,
+          below: 10,
+        },
+      }),
+    })
+    areaSeries.setData(data)
+
+    const dottedGrid = new DottedGridPrimitive({ color: 'red', dotRadius: 2 })
+    areaSeries.attachPrimitive(dottedGrid)
+
+    chart.subscribeCrosshairMove(function (param) {
+      if (
+        ref.current &&
+        (param === undefined ||
+          param.time === undefined ||
+          (param && param.point && param.point.x < 0) ||
+          (param && param.point && param.point.x > ref.current.clientWidth) ||
+          (param && param.point && param.point.y < 0) ||
+          (param && param.point && param.point.y > height))
+      ) {
+        // reset values
+        setCrosshairSelectedPrice(undefined)
+      } else if (param) {
+        // const timestamp = param.time as number
+        const { value, time: timestamp } =
+          (param.seriesData.get(areaSeries) as { value: number; time: number } | undefined) ?? {}
+        if (value && timestamp) setCrosshairSelectedPrice({ value, timestamp })
+      }
+    })
+
+    // areaSeries.createPriceLine({
+    //   price: min,
+    //   color: surface3,
+    //   lineWidth: 2,
+    //   lineStyle: LineStyle.LargeDashed,
+    //   axisLabelTextColor: 'orange',
+    //   axisLabelVisible: false,
+    //   title: 'min',
+    // })
+    // areaSeries.createPriceLine({
+    //   price: max,
+    //   color: surface3,
+    //   lineWidth: 2,
+    //   lineStyle: LineStyle.LargeDashed,
+    //   title: 'max',
+    //   axisLabelVisible: false,
+    // })
+
+    chart
+
+    chart.timeScale().fitContent()
+    chart.timeScale().subscribeVisibleTimeRangeChange((range) => {
+      if (range) {
+        // The range contains from and to properties representing the visible time range
+
+        const rng = ((range.to as number) - (range.from as number)) * 1000
+        // console.log('cartcrom', rng, ms('1d'))
+
+        let timePeriod = TimePeriod.YEAR
+        if (rng < ms('2 months')) {
+          timePeriod = TimePeriod.MONTH
+        }
+        if (rng < ms('9d')) {
+          timePeriod = TimePeriod.WEEK
+        }
+        if (rng < ms('5d')) {
+          timePeriod = TimePeriod.DAY
+        }
+        if (rng < ms('2h')) {
+          timePeriod = TimePeriod.HOUR
+        }
+
+        chart.applyOptions({
+          timeScale: { tickMarkFormatter: getTimestampFormatter(timePeriod, 'en', TimestampFormatterType.TICK) },
+        })
+      }
+    })
+
+    // areaSeries.attachPrimitive(new DeltaTooltipPrimitive({ lineColor: surface3 }))
+
+    return () => {
+      chart.remove()
+      // setChart(undefined)
+    }
+  }, [accent1, color, formatFiatPrice, height, neutral1, neutral2, neutral3, prices, surface3, timePeriod])
+
+  return (
+    <>
+      {chartModel.error === undefined && <ChartHeader chart={chartModel} crosshairPrice={crosshairSelectedPrice} />}
+      <div ref={ref} style={{ height, width: '100%' }}></div>
+    </>
+  )
 }
