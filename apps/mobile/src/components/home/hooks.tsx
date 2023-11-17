@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
 import Animated, { SharedValue, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { TAB_BAR_HEIGHT } from 'src/components/layout/TabHelpers'
@@ -56,9 +56,11 @@ export function useAdaptiveFooter(contentContainerStyle?: StyleProp<ViewStyle>):
     height: footerHeight.value,
   }))
 
+  const adaptiveFooter = useMemo(() => <Animated.View style={footerStyle} />, [footerStyle])
+
   return {
     onContentSizeChange: contentContainerStyle ? onContentSizeChange : undefined,
     footerHeight,
-    adaptiveFooter: <Animated.View style={footerStyle} />,
+    adaptiveFooter,
   }
 }

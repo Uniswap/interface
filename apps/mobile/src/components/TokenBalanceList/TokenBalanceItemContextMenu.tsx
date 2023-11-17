@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useMemo } from 'react'
 import ContextMenu from 'react-native-context-menu-view'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
 import { borderRadii } from 'ui/src/theme'
@@ -22,13 +22,13 @@ export const TokenBalanceItemContextMenu = memo(function _TokenBalanceItem({
     accountHoldsToken: true,
   })
 
+  const style = useMemo(() => ({ borderRadius: borderRadii.rounded16 }), [])
+
   return (
     <ContextMenu
       actions={menuActions}
       disabled={menuActions.length === 0}
-      style={{
-        borderRadius: borderRadii.rounded16,
-      }}
+      style={style}
       onPress={onContextMenuPress}>
       {children}
     </ContextMenu>
