@@ -6,10 +6,20 @@ import { TimePeriod, toHistoryDuration, validateUrlChainParam } from 'graphql/da
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { useEffect, useMemo, useState } from 'react'
+import { Helmet } from 'react-helmet'
 import { useParams } from 'react-router-dom'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 export const pageTimePeriodAtom = atomWithStorage<TimePeriod>('tokenDetailsTimePeriod', TimePeriod.DAY)
+
+const getTitle = (tokenQuery: ReturnType<typeof useTokenQuery>['data']) => {
+  const tokenName = tokenQuery?.token?.name
+  const tokenSymbol = tokenQuery?.token?.symbol
+  if (!tokenName && !tokenSymbol) {
+    return 'Buy & Trade: Live Price & Chart on Uniswap'
+  }
+  return `Buy & Trade ${tokenName ?? ''} ${tokenSymbol ? `(${tokenSymbol})` : ''}: Live Price & Chart on Uniswap`
+}
 
 export default function TokenDetailsPage() {
   const { tokenAddress, chainName } = useParams<{
@@ -58,12 +68,17 @@ export default function TokenDetailsPage() {
   if (!tokenQuery) return <TokenDetailsPageSkeleton />
 
   return (
-    <TokenDetails
-      urlAddress={tokenAddress}
-      chain={chain}
-      tokenQuery={tokenQuery}
-      tokenPriceQuery={currentPriceQuery}
-      inputTokenAddress={parsedInputTokenAddress}
-    />
+    <>
+      <Helmet>
+        <title>{getTitle(tokenQuery)}</title>
+      </Helmet>
+      <TokenDetails
+        urlAddress={tokenAddress}
+        chain={chain}
+        tokenQuery={tokenQuery}
+        tokenPriceQuery={currentPriceQuery}
+        inputTokenAddress={parsedInputTokenAddress}
+      />
+    </>
   )
 }
