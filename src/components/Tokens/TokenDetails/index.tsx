@@ -28,6 +28,7 @@ import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { Chain, TokenQuery, TokenQueryData } from 'graphql/data/Token'
 import { getTokenDetailsURL, gqlToCurrency, InterfaceGqlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { useColor } from 'hooks/useColor'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import { Swap } from 'pages/Swap'
@@ -36,7 +37,7 @@ import { ArrowLeft } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Field } from 'state/swap/actions'
 import { SwapState } from 'state/swap/reducer'
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import { isAddress } from 'utils'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
@@ -133,10 +134,12 @@ export default function TokenDetails({
   const isInfoTDPEnabled = useInfoTDPEnabled()
 
   const { token: detailedToken, didFetchFromChain } = useRelevantToken(address, pageChainId, tokenQueryData)
-
   const tokenWarning = address ? checkWarning(address) : null
   const isBlockedToken = tokenWarning?.canProceed === false
   const navigate = useNavigate()
+
+  const theme = useTheme()
+  const extractedColor = useColor(detailedToken?.wrapped, theme.surface1, theme.darkMode)
 
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
@@ -234,7 +237,11 @@ export default function TokenDetails({
                 <ShareButton currency={detailedToken} />
               </TokenActions>
             </TokenInfoContainer>
-            <ChartSection tokenPriceQuery={tokenPriceQuery} onChangeTimePeriod={onChangeTimePeriod} />
+            <ChartSection
+              tokenPriceQuery={tokenPriceQuery}
+              onChangeTimePeriod={onChangeTimePeriod}
+              extractedColor={extractedColor}
+            />
 
             <StatsSection chainId={pageChainId} address={address} tokenQueryData={tokenQueryData} />
             <Hr />

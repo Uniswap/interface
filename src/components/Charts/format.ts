@@ -39,7 +39,7 @@ const TIME_PERIOD_TO_FORMAT_OPTIONS: Record<TimePeriod, Record<TimestampFormatte
 
 /**
  * Returns a function to format timestamps, specialized by timePeriod and type to display ('tick' or 'crosshair'),
- * localized for the given locale.
+ * localized for the given locale. Returns type NumberValue for D3 library.
  */
 export function getTimestampFormatter(
   timePeriod: TimePeriod,
