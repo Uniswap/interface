@@ -1,0 +1,496 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoadedRow.tsx renders a row 1`] = `
+<DocumentFragment>
+  .c7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c8 {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.c16 {
+  color: #40B66B;
+}
+
+.c17 {
+  color: #40B66B;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c1 {
+  background-color: transparent;
+  display: grid;
+  font-size: 16px;
+  grid-template-columns: 1fr 7fr 4fr 4fr 4fr 4fr 5fr;
+  line-height: 24px;
+  max-width: 1200px;
+  min-width: 390px;
+  height: 72px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 12px;
+  padding-right: 12px;
+  -webkit-transition: background-color 250ms ease;
+  transition: background-color 250ms ease;
+  width: 100%;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c1:hover {
+  background-color: #98A1C014;
+  border-radius: 0px 0px 8px 8px;
+}
+
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #222222;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.c19 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 3px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #222222;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.c6 {
+  gap: 14px;
+  max-width: 100%;
+}
+
+.c3 {
+  color: #7D7D7D;
+  min-width: 32px;
+  font-size: 14px;
+}
+
+.c12 {
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  min-width: 80px;
+  -webkit-user-select: unset;
+  -moz-user-select: unset;
+  -ms-user-select: unset;
+  user-select: unset;
+  -webkit-transition: background-color 250ms ease;
+  transition: background-color 250ms ease;
+}
+
+.c20 {
+  padding-right: 8px;
+}
+
+.c4 {
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 0px 8px;
+  min-width: 240px;
+  gap: 8px;
+}
+
+.c13 {
+  padding-right: 8px;
+}
+
+.c18 {
+  padding-right: 8px;
+}
+
+.c15 {
+  display: none;
+}
+
+.c14 {
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+.c22 {
+  padding: 0px 24px;
+  min-width: 120px;
+}
+
+.c23 {
+  width: 124px;
+  height: 42px;
+}
+
+.c0 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c9 {
+  gap: 8px;
+  line-height: 24px;
+  font-size: 16px;
+  max-width: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.c10 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.c11 {
+  color: #7D7D7D;
+  text-transform: uppercase;
+}
+
+.c21 {
+  padding-right: 8px;
+}
+
+@media only screen and (max-width:1200px) {
+  .c1 {
+    grid-template-columns: 1fr 6.5fr 4.5fr 4.5fr 4.5fr 4.5fr 1.7fr;
+  }
+}
+
+@media only screen and (max-width:840px) {
+  .c1 {
+    grid-template-columns: 1fr 7.5fr 4.5fr 4.5fr 4.5fr 1.7fr;
+  }
+}
+
+@media only screen and (max-width:720px) {
+  .c1 {
+    grid-template-columns: 1fr 10fr 5fr 5fr 1.2fr;
+  }
+}
+
+@media only screen and (max-width:540px) {
+  .c1 {
+    grid-template-columns: 2fr 3fr;
+    min-width: unset;
+    border-bottom: 0.5px solid #F9F9F9;
+  }
+
+  .c1:last-of-type {
+    border-bottom: none;
+  }
+}
+
+@media only screen and (max-width:540px) {
+  .c3 {
+    display: none;
+  }
+}
+
+@media only screen and (max-width:720px) {
+  .c20 {
+    display: none;
+  }
+}
+
+@media only screen and (max-width:396px) {
+  .c4 {
+    min-width: 200px;
+  }
+}
+
+@media only screen and (max-width:540px) {
+  .c18 {
+    display: none;
+  }
+}
+
+@media only screen and (max-width:540px) {
+  .c15 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    gap: 3px;
+    -webkit-box-pack: end;
+    -webkit-justify-content: flex-end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    color: #7D7D7D;
+    font-size: 12px;
+    line-height: 16px;
+  }
+}
+
+@media only screen and (max-width:540px) {
+  .c14 {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-end;
+    -webkit-box-align: flex-end;
+    -ms-flex-align: flex-end;
+    align-items: flex-end;
+  }
+}
+
+@media only screen and (max-width:1200px) {
+  .c22 {
+    display: none;
+  }
+}
+
+@media only screen and (max-width:540px) {
+  .c9 {
+    -webkit-box-pack: start;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: 0px;
+    width: -webkit-max-content;
+    width: -moz-max-content;
+    width: max-content;
+    font-weight: 535;
+  }
+}
+
+@media only screen and (max-width:540px) {
+  .c11 {
+    font-size: 12px;
+    height: 16px;
+    -webkit-box-pack: start;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width:840px) {
+  .c21 {
+    display: none;
+  }
+}
+
+<div
+    data-testid="token-table-row-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+  >
+    <a
+      class="c0"
+      href="/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+    >
+      <div
+        class="c1"
+      >
+        <div
+          class="c2 c3"
+        >
+          2
+        </div>
+        <div
+          class="c2 c4"
+          data-testid="name-cell"
+        >
+          <div
+            class="c5 c6"
+          >
+            <div
+              class="c7"
+            >
+              <img
+                class="c8"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+              />
+            </div>
+            <div
+              class="c2 c9"
+            >
+              <div
+                class="c10"
+                data-cy="token-name"
+              >
+                USD Coin
+              </div>
+              <div
+                class="c2 c11"
+              >
+                USDC
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="c2 c12 c13"
+          data-testid="price-cell"
+        >
+          <div
+            class="c5"
+          >
+            <div
+              class="c2 c14"
+            >
+              $1.00
+              <div
+                class="c2 c15"
+              >
+                <svg
+                  aria-label="up"
+                  class="c16"
+                  fill="none"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+                    fill="currentColor"
+                  />
+                </svg>
+                <span
+                  class="c17"
+                >
+                  0.00%
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="c2 c12 c18"
+          data-testid="percent-change-cell"
+        >
+          <div
+            class="c19"
+          >
+            <svg
+              aria-label="up"
+              class="c16"
+              fill="none"
+              height="16"
+              viewBox="0 0 24 24"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+                fill="currentColor"
+              />
+            </svg>
+            <span
+              class="c17"
+            >
+              0.00%
+            </span>
+          </div>
+        </div>
+        <div
+          class="c2 c12 c20"
+          data-testid="tvl-cell"
+        >
+          <div
+            class="c5"
+          >
+            $674.7M
+          </div>
+        </div>
+        <div
+          class="c2 c12 c21"
+          data-testid="volume-cell"
+        >
+          <div
+            class="c5"
+          >
+            $444.7M
+          </div>
+        </div>
+        <div
+          class="c2 c22"
+        >
+          <div
+            class="c2 c23"
+          >
+            <div
+              style="width: 100%; height: 100%;"
+            >
+              <svg
+                height="0"
+                width="0"
+              >
+                <g
+                  class="visx-group"
+                  transform="translate(0, 5)"
+                >
+                  <path
+                    class="visx-linepath"
+                    d="M0,0C0,0,53.166666666666664,11.310946288825667,55,11.810946288825667C56.833333333333336,12.310946288825667,110,30,110,30"
+                    fill="transparent"
+                    stroke="#40B66B"
+                    stroke-linecap="round"
+                    stroke-width="1.5"
+                  />
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</DocumentFragment>
+`;

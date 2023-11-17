@@ -1,0 +1,344 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`disable nft on searchbar dropdown should not render popular nft collections 1`] = `
+<div>
+  <div
+    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_overflow_hidden_default__rgw6ez8bh SearchBar_searchBarDropdownNft__1fbf9szd SearchBar_baseSearchNftStyle__1fbf9sz2 SearchBar_baseSearchStyle__1fbf9sz1 SearchBar__1fbf9sz0 sprinkles_paddingTop_8_sm__rgw6ez2of sprinkles_paddingBottom_8_sm__rgw6ez27x sprinkles_width_viewWidth_sm__rgw6ez17l sprinkles_borderStyle_solid_default__rgw6ez7zp sprinkles_borderWidth_1px_default__rgw6ez895 sprinkles_borderColor_surface3_default__rgw6ez55f SearchBar__1fbf9szc sprinkles_borderBottomLeftRadius_16_default__rgw6ez85t sprinkles_borderBottomRightRadius_16_default__rgw6ez87d sprinkles_height_viewHeight_sm__rgw6ez1ef sprinkles_height_auto_md__rgw6ez1es sprinkles_backgroundColor_surface1_default__rgw6ez6rr SearchBar__1fbf9sze sprinkles_overflowY_auto_default__rgw6ez8d1"
+  >
+    <div
+      class="reset_base__1klryar0 sprinkles_opacity_1_sm__rgw6ez4b3 sprinkles_transition_125_default__rgw6ez8dx"
+    >
+      <div
+        class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_20_sm__rgw6ez3u3"
+      >
+        <div
+          class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr"
+          data-testid="searchbar-dropdown"
+        >
+          <div
+            class="reset_base__1klryar0 sprinkles_paddingLeft_16_sm__rgw6ez2e3 sprinkles_paddingRight_16_sm__rgw6ez2jl sprinkles_paddingTop_4_sm__rgw6ez2o3 sprinkles_paddingBottom_4_sm__rgw6ez27l sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_gap_8_sm__rgw6ez3t3 sprinkles_color_neutral2_default__rgw6ez4bf common__127l8hd4 sprinkles_fontWeight_book_sm__rgw6ezd3 sprinkles_fontSize_14_sm__rgw6ezb9 sprinkles_lineHeight_14_sm__rgw6ezdr"
+            style="line-height: 20px;"
+          >
+            <svg
+              fill="none"
+              height="20"
+              viewBox="0 0 20 20"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M17.5 5.8335H18.25C18.25 5.41928 17.9142 5.0835 17.5 5.0835V5.8335ZM11.0227 12.4307L10.4876 12.9562C10.6286 13.0998 10.8214 13.1807 11.0227 13.1807C11.224 13.1807 11.4169 13.0998 11.5579 12.9562L11.0227 12.4307ZM7.61364 8.9585L8.14881 8.43305C8.00778 8.28941 7.81493 8.2085 7.61364 8.2085C7.41234 8.2085 7.21949 8.28941 7.07846 8.43305L7.61364 8.9585ZM1.96483 13.6414C1.67463 13.937 1.67899 14.4118 1.97456 14.702C2.27013 14.9922 2.74498 14.9878 3.03517 14.6923L1.96483 13.6414ZM13.4091 5.0835C12.9949 5.0835 12.6591 5.41928 12.6591 5.8335C12.6591 6.24771 12.9949 6.5835 13.4091 6.5835V5.0835ZM16.75 10.0002C16.75 10.4144 17.0858 10.7502 17.5 10.7502C17.9142 10.7502 18.25 10.4144 18.25 10.0002H16.75ZM16.9648 5.30805L10.4876 11.9053L11.5579 12.9562L18.0352 6.35894L16.9648 5.30805ZM11.5579 11.9053L8.14881 8.43305L7.07846 9.48394L10.4876 12.9562L11.5579 11.9053ZM7.07846 8.43305L1.96483 13.6414L3.03517 14.6923L8.14881 9.48394L7.07846 8.43305ZM13.4091 6.5835H17.5V5.0835H13.4091V6.5835ZM16.75 5.8335V10.0002H18.25V5.8335H16.75Z"
+                fill="var(--color-neutral2__rgw6ez1)"
+              />
+            </svg>
+            <div
+              class="reset_base__1klryar0"
+            >
+              Popular tokens
+            </div>
+          </div>
+          <div
+            class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr"
+          >
+            <div
+              class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x SearchBar_suggestionRow__1fbf9szg SearchBar__1fbf9szf sprinkles_paddingLeft_16_sm__rgw6ez2e3 sprinkles_paddingRight_16_sm__rgw6ez2jl sprinkles_paddingTop_8_sm__rgw6ez2of sprinkles_paddingBottom_8_sm__rgw6ez27x sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f sprinkles_cursor_pointer_default__rgw6ez7zd"
+            >
+              <div
+                class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_width_full_sm__rgw6ez16r"
+              >
+                <div
+                  class="reset_base__1klryar0 SearchBar_imageHolder__1fbf9szq SearchBar__1fbf9szh sprinkles_width_36_sm__rgw6ez133 sprinkles_height_36_sm__rgw6ez1a3 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_marginRight_8_sm__rgw6ezqx SearchBar__1fbf9szp sprinkles_background_surface2_default__rgw6ez4ql sprinkles_flexShrink_0_sm__rgw6ez3xr"
+                />
+                <div
+                  class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr sprinkles_width_full_sm__rgw6ez16r"
+                >
+                  <div
+                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                  >
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_background_surface2_default__rgw6ez4ql"
+                      style="width: 180px;"
+                    />
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                    />
+                  </div>
+                  <div
+                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                  >
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_120_sm__rgw6ez15f sprinkles_background_surface2_default__rgw6ez4ql"
+                    />
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x SearchBar_suggestionRow__1fbf9szg SearchBar__1fbf9szf sprinkles_paddingLeft_16_sm__rgw6ez2e3 sprinkles_paddingRight_16_sm__rgw6ez2jl sprinkles_paddingTop_8_sm__rgw6ez2of sprinkles_paddingBottom_8_sm__rgw6ez27x sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f sprinkles_cursor_pointer_default__rgw6ez7zd"
+            >
+              <div
+                class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_width_full_sm__rgw6ez16r"
+              >
+                <div
+                  class="reset_base__1klryar0 SearchBar_imageHolder__1fbf9szq SearchBar__1fbf9szh sprinkles_width_36_sm__rgw6ez133 sprinkles_height_36_sm__rgw6ez1a3 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_marginRight_8_sm__rgw6ezqx SearchBar__1fbf9szp sprinkles_background_surface2_default__rgw6ez4ql sprinkles_flexShrink_0_sm__rgw6ez3xr"
+                />
+                <div
+                  class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr sprinkles_width_full_sm__rgw6ez16r"
+                >
+                  <div
+                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                  >
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_background_surface2_default__rgw6ez4ql"
+                      style="width: 180px;"
+                    />
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                    />
+                  </div>
+                  <div
+                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                  >
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_120_sm__rgw6ez15f sprinkles_background_surface2_default__rgw6ez4ql"
+                    />
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`disable nft on searchbar dropdown should render popular nft collections 1`] = `
+<div>
+  <div
+    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_overflow_hidden_default__rgw6ez8bh SearchBar_searchBarDropdownNft__1fbf9szd SearchBar_baseSearchNftStyle__1fbf9sz2 SearchBar_baseSearchStyle__1fbf9sz1 SearchBar__1fbf9sz0 sprinkles_paddingTop_8_sm__rgw6ez2of sprinkles_paddingBottom_8_sm__rgw6ez27x sprinkles_width_viewWidth_sm__rgw6ez17l sprinkles_borderStyle_solid_default__rgw6ez7zp sprinkles_borderWidth_1px_default__rgw6ez895 sprinkles_borderColor_surface3_default__rgw6ez55f SearchBar__1fbf9szc sprinkles_borderBottomLeftRadius_16_default__rgw6ez85t sprinkles_borderBottomRightRadius_16_default__rgw6ez87d sprinkles_height_viewHeight_sm__rgw6ez1ef sprinkles_height_auto_md__rgw6ez1es sprinkles_backgroundColor_surface1_default__rgw6ez6rr SearchBar__1fbf9sze sprinkles_overflowY_auto_default__rgw6ez8d1"
+  >
+    <div
+      class="reset_base__1klryar0 sprinkles_opacity_1_sm__rgw6ez4b3 sprinkles_transition_125_default__rgw6ez8dx"
+    >
+      <div
+        class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_20_sm__rgw6ez3u3"
+      >
+        <div
+          class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr"
+          data-testid="searchbar-dropdown"
+        >
+          <div
+            class="reset_base__1klryar0 sprinkles_paddingLeft_16_sm__rgw6ez2e3 sprinkles_paddingRight_16_sm__rgw6ez2jl sprinkles_paddingTop_4_sm__rgw6ez2o3 sprinkles_paddingBottom_4_sm__rgw6ez27l sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_gap_8_sm__rgw6ez3t3 sprinkles_color_neutral2_default__rgw6ez4bf common__127l8hd4 sprinkles_fontWeight_book_sm__rgw6ezd3 sprinkles_fontSize_14_sm__rgw6ezb9 sprinkles_lineHeight_14_sm__rgw6ezdr"
+            style="line-height: 20px;"
+          >
+            <svg
+              fill="none"
+              height="20"
+              viewBox="0 0 20 20"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M17.5 5.8335H18.25C18.25 5.41928 17.9142 5.0835 17.5 5.0835V5.8335ZM11.0227 12.4307L10.4876 12.9562C10.6286 13.0998 10.8214 13.1807 11.0227 13.1807C11.224 13.1807 11.4169 13.0998 11.5579 12.9562L11.0227 12.4307ZM7.61364 8.9585L8.14881 8.43305C8.00778 8.28941 7.81493 8.2085 7.61364 8.2085C7.41234 8.2085 7.21949 8.28941 7.07846 8.43305L7.61364 8.9585ZM1.96483 13.6414C1.67463 13.937 1.67899 14.4118 1.97456 14.702C2.27013 14.9922 2.74498 14.9878 3.03517 14.6923L1.96483 13.6414ZM13.4091 5.0835C12.9949 5.0835 12.6591 5.41928 12.6591 5.8335C12.6591 6.24771 12.9949 6.5835 13.4091 6.5835V5.0835ZM16.75 10.0002C16.75 10.4144 17.0858 10.7502 17.5 10.7502C17.9142 10.7502 18.25 10.4144 18.25 10.0002H16.75ZM16.9648 5.30805L10.4876 11.9053L11.5579 12.9562L18.0352 6.35894L16.9648 5.30805ZM11.5579 11.9053L8.14881 8.43305L7.07846 9.48394L10.4876 12.9562L11.5579 11.9053ZM7.07846 8.43305L1.96483 13.6414L3.03517 14.6923L8.14881 9.48394L7.07846 8.43305ZM13.4091 6.5835H17.5V5.0835H13.4091V6.5835ZM16.75 5.8335V10.0002H18.25V5.8335H16.75Z"
+                fill="var(--color-neutral2__rgw6ez1)"
+              />
+            </svg>
+            <div
+              class="reset_base__1klryar0"
+            >
+              Popular tokens
+            </div>
+          </div>
+          <div
+            class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr"
+          >
+            <div
+              class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x SearchBar_suggestionRow__1fbf9szg SearchBar__1fbf9szf sprinkles_paddingLeft_16_sm__rgw6ez2e3 sprinkles_paddingRight_16_sm__rgw6ez2jl sprinkles_paddingTop_8_sm__rgw6ez2of sprinkles_paddingBottom_8_sm__rgw6ez27x sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f sprinkles_cursor_pointer_default__rgw6ez7zd"
+            >
+              <div
+                class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_width_full_sm__rgw6ez16r"
+              >
+                <div
+                  class="reset_base__1klryar0 SearchBar_imageHolder__1fbf9szq SearchBar__1fbf9szh sprinkles_width_36_sm__rgw6ez133 sprinkles_height_36_sm__rgw6ez1a3 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_marginRight_8_sm__rgw6ezqx SearchBar__1fbf9szp sprinkles_background_surface2_default__rgw6ez4ql sprinkles_flexShrink_0_sm__rgw6ez3xr"
+                />
+                <div
+                  class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr sprinkles_width_full_sm__rgw6ez16r"
+                >
+                  <div
+                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                  >
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_background_surface2_default__rgw6ez4ql"
+                      style="width: 180px;"
+                    />
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                    />
+                  </div>
+                  <div
+                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                  >
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_120_sm__rgw6ez15f sprinkles_background_surface2_default__rgw6ez4ql"
+                    />
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x SearchBar_suggestionRow__1fbf9szg SearchBar__1fbf9szf sprinkles_paddingLeft_16_sm__rgw6ez2e3 sprinkles_paddingRight_16_sm__rgw6ez2jl sprinkles_paddingTop_8_sm__rgw6ez2of sprinkles_paddingBottom_8_sm__rgw6ez27x sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f sprinkles_cursor_pointer_default__rgw6ez7zd"
+            >
+              <div
+                class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_width_full_sm__rgw6ez16r"
+              >
+                <div
+                  class="reset_base__1klryar0 SearchBar_imageHolder__1fbf9szq SearchBar__1fbf9szh sprinkles_width_36_sm__rgw6ez133 sprinkles_height_36_sm__rgw6ez1a3 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_marginRight_8_sm__rgw6ezqx SearchBar__1fbf9szp sprinkles_background_surface2_default__rgw6ez4ql sprinkles_flexShrink_0_sm__rgw6ez3xr"
+                />
+                <div
+                  class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr sprinkles_width_full_sm__rgw6ez16r"
+                >
+                  <div
+                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                  >
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_background_surface2_default__rgw6ez4ql"
+                      style="width: 180px;"
+                    />
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                    />
+                  </div>
+                  <div
+                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                  >
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_120_sm__rgw6ez15f sprinkles_background_surface2_default__rgw6ez4ql"
+                    />
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr"
+          data-testid="searchbar-dropdown"
+        >
+          <div
+            class="reset_base__1klryar0 sprinkles_paddingLeft_16_sm__rgw6ez2e3 sprinkles_paddingRight_16_sm__rgw6ez2jl sprinkles_paddingTop_4_sm__rgw6ez2o3 sprinkles_paddingBottom_4_sm__rgw6ez27l sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_gap_8_sm__rgw6ez3t3 sprinkles_color_neutral2_default__rgw6ez4bf common__127l8hd4 sprinkles_fontWeight_book_sm__rgw6ezd3 sprinkles_fontSize_14_sm__rgw6ezb9 sprinkles_lineHeight_14_sm__rgw6ezdr"
+            style="line-height: 20px;"
+          >
+            <svg
+              fill="none"
+              height="20"
+              viewBox="0 0 20 20"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M17.5 5.8335H18.25C18.25 5.41928 17.9142 5.0835 17.5 5.0835V5.8335ZM11.0227 12.4307L10.4876 12.9562C10.6286 13.0998 10.8214 13.1807 11.0227 13.1807C11.224 13.1807 11.4169 13.0998 11.5579 12.9562L11.0227 12.4307ZM7.61364 8.9585L8.14881 8.43305C8.00778 8.28941 7.81493 8.2085 7.61364 8.2085C7.41234 8.2085 7.21949 8.28941 7.07846 8.43305L7.61364 8.9585ZM1.96483 13.6414C1.67463 13.937 1.67899 14.4118 1.97456 14.702C2.27013 14.9922 2.74498 14.9878 3.03517 14.6923L1.96483 13.6414ZM13.4091 5.0835C12.9949 5.0835 12.6591 5.41928 12.6591 5.8335C12.6591 6.24771 12.9949 6.5835 13.4091 6.5835V5.0835ZM16.75 10.0002C16.75 10.4144 17.0858 10.7502 17.5 10.7502C17.9142 10.7502 18.25 10.4144 18.25 10.0002H16.75ZM16.9648 5.30805L10.4876 11.9053L11.5579 12.9562L18.0352 6.35894L16.9648 5.30805ZM11.5579 11.9053L8.14881 8.43305L7.07846 9.48394L10.4876 12.9562L11.5579 11.9053ZM7.07846 8.43305L1.96483 13.6414L3.03517 14.6923L8.14881 9.48394L7.07846 8.43305ZM13.4091 6.5835H17.5V5.0835H13.4091V6.5835ZM16.75 5.8335V10.0002H18.25V5.8335H16.75Z"
+                fill="var(--color-neutral2__rgw6ez1)"
+              />
+            </svg>
+            <div
+              class="reset_base__1klryar0"
+            >
+              Popular NFT collections
+            </div>
+          </div>
+          <div
+            class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr"
+          >
+            <div
+              class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x SearchBar_suggestionRow__1fbf9szg SearchBar__1fbf9szf sprinkles_paddingLeft_16_sm__rgw6ez2e3 sprinkles_paddingRight_16_sm__rgw6ez2jl sprinkles_paddingTop_8_sm__rgw6ez2of sprinkles_paddingBottom_8_sm__rgw6ez27x sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f sprinkles_cursor_pointer_default__rgw6ez7zd"
+            >
+              <div
+                class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_width_full_sm__rgw6ez16r"
+              >
+                <div
+                  class="reset_base__1klryar0 SearchBar_imageHolder__1fbf9szq SearchBar__1fbf9szh sprinkles_width_36_sm__rgw6ez133 sprinkles_height_36_sm__rgw6ez1a3 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_marginRight_8_sm__rgw6ezqx SearchBar__1fbf9szp sprinkles_background_surface2_default__rgw6ez4ql sprinkles_flexShrink_0_sm__rgw6ez3xr"
+                />
+                <div
+                  class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr sprinkles_width_full_sm__rgw6ez16r"
+                >
+                  <div
+                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                  >
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_background_surface2_default__rgw6ez4ql"
+                      style="width: 180px;"
+                    />
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                    />
+                  </div>
+                  <div
+                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                  >
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_120_sm__rgw6ez15f sprinkles_background_surface2_default__rgw6ez4ql"
+                    />
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x SearchBar_suggestionRow__1fbf9szg SearchBar__1fbf9szf sprinkles_paddingLeft_16_sm__rgw6ez2e3 sprinkles_paddingRight_16_sm__rgw6ez2jl sprinkles_paddingTop_8_sm__rgw6ez2of sprinkles_paddingBottom_8_sm__rgw6ez27x sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f sprinkles_cursor_pointer_default__rgw6ez7zd"
+            >
+              <div
+                class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_width_full_sm__rgw6ez16r"
+              >
+                <div
+                  class="reset_base__1klryar0 SearchBar_imageHolder__1fbf9szq SearchBar__1fbf9szh sprinkles_width_36_sm__rgw6ez133 sprinkles_height_36_sm__rgw6ez1a3 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_marginRight_8_sm__rgw6ezqx SearchBar__1fbf9szp sprinkles_background_surface2_default__rgw6ez4ql sprinkles_flexShrink_0_sm__rgw6ez3xr"
+                />
+                <div
+                  class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr sprinkles_width_full_sm__rgw6ez16r"
+                >
+                  <div
+                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                  >
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_background_surface2_default__rgw6ez4ql"
+                      style="width: 180px;"
+                    />
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                    />
+                  </div>
+                  <div
+                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                  >
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_120_sm__rgw6ez15f sprinkles_background_surface2_default__rgw6ez4ql"
+                    />
+                    <div
+                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

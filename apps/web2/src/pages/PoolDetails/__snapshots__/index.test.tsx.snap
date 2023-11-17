@@ -1,0 +1,2312 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PoolDetailsPage pool header is displayed when data is received from thegraph 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c11 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+.c52 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  padding: 4px 0px;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c10 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 18px;
+}
+
+.c12 {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c53 {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 4px 0px;
+}
+
+.c58 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: space-between;
+  -webkit-box-align: space-between;
+  -ms-flex-align: space-between;
+  align-items: space-between;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c73 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c8 {
+  color: #7D7D7D;
+}
+
+.c9 {
+  color: #222222;
+}
+
+.c67 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c67:hover {
+  opacity: 0.6;
+}
+
+.c67:active {
+  opacity: 0.4;
+}
+
+.c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c19 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+  width: 50%;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c33 {
+  height: 16px;
+  width: 80px;
+}
+
+.c36 {
+  height: 20px;
+  width: 20px;
+  border-radius: 100px;
+}
+
+.c6 {
+  gap: 36px;
+}
+
+.c7 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c7:hover {
+  opacity: 0.6;
+}
+
+.c7:active {
+  opacity: 0.4;
+}
+
+.c16 {
+  background: #F9F9F9;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.c17 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c17:hover {
+  opacity: 0.6;
+}
+
+.c17:active {
+  opacity: 0.4;
+}
+
+.c13 {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c14 img {
+  width: 16px;
+  height: 32px;
+  object-fit: cover;
+}
+
+.c14 img:first-child {
+  border-radius: 16px 0 0 16px;
+  object-position: 0 0;
+}
+
+.c14 img:last-child {
+  border-radius: 0 16px 16px 0;
+  object-position: 100% 0;
+}
+
+.c60 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c60 img {
+  width: 10px;
+  height: 20px;
+  object-fit: cover;
+}
+
+.c60 img:first-child {
+  border-radius: 10px 0 0 10px;
+  object-position: 0 0;
+}
+
+.c60 img:last-child {
+  border-radius: 0 10px 10px 0;
+  object-position: 100% 0;
+}
+
+.c15 {
+  width: 16px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.c61 {
+  width: 10px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c72 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c71 {
+  width: 20px;
+  height: 20px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
+}
+
+.c70 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c62 {
+  display: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.c59 {
+  gap: 8px;
+  margin-right: 12px;
+}
+
+.c69 {
+  gap: 8px;
+  margin-right: 12px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c69:hover {
+  opacity: 0.6;
+}
+
+.c69:active {
+  opacity: 0.4;
+}
+
+.c63 {
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.c65 {
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  background-color: #22222212;
+  font-size: 14px;
+  font-weight: 535;
+  line-height: 16px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c65:hover {
+  opacity: 0.6;
+}
+
+.c65:active {
+  opacity: 0.4;
+}
+
+.c66 {
+  width: 16px;
+  height: 16px;
+  color: #7D7D7D;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.c68 {
+  padding: 8px;
+  border-radius: 20px;
+  background-color: #22222212;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c68:hover {
+  opacity: 0.6;
+}
+
+.c68:active {
+  opacity: 0.4;
+}
+
+.c64 {
+  gap: 8px;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+.c54 {
+  color: #FF5F52;
+}
+
+.c44 {
+  font-weight: 485;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+.c43 {
+  gap: 24px;
+  padding: 20px;
+  border-radius: 20px;
+  background: #F9F9F9;
+  width: 100%;
+}
+
+.c45 {
+  gap: 8px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  min-width: 180px;
+}
+
+.c46 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c47 {
+  font-weight: 485;
+  font-size: 18px;
+  line-height: 24px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+.c48 {
+  height: 8px;
+  width: 40.698463777008904%;
+  background: #FC72FF;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-right: 1px solid #F9F9F9;
+}
+
+.c49 {
+  height: 8px;
+  width: 59.3015362229911%;
+  background: #4C82FB;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-left: 1px solid #F9F9F9;
+}
+
+.c50 {
+  gap: 4px;
+  width: 100%;
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+}
+
+.c51 {
+  color: #222222;
+  font-size: 36px;
+  font-weight: 485;
+  line-height: 44px;
+}
+
+.c42 {
+  background-color: transparent;
+  bottom: 0;
+  border-radius: inherit;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  -webkit-transition: 150ms ease background-color;
+  transition: 150ms ease background-color;
+  width: 100%;
+}
+
+.c39 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #FFEFFF;
+  border-radius: 16px;
+  border: 0;
+  color: #FC72FF;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  font-size: 16px;
+  font-weight: 535;
+  gap: 12px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  line-height: 20px;
+  padding: 10px 12px;
+  position: relative;
+  -webkit-transition: 150ms ease opacity;
+  transition: 150ms ease opacity;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c39:active .c41 {
+  background-color: #B8C0DC3d;
+}
+
+.c39:focus .c41 {
+  background-color: #B8C0DC3d;
+}
+
+.c39:hover .c41 {
+  background-color: #98A1C014;
+}
+
+.c39:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.c39:disabled:active .c41,
+.c39:disabled:focus .c41,
+.c39:disabled:hover .c41 {
+  background-color: transparent;
+}
+
+.c38 {
+  gap: 12px;
+}
+
+.c40 {
+  padding: 12px 16px 12px 12px;
+  border-radius: 900px;
+  width: 50%;
+}
+
+.c28 {
+  gap: 24px;
+  border-radius: 20px;
+  border: 1px solid #22222212;
+  padding-bottom: 12px;
+  overflow-y: hidden;
+  -webkit-scrollbar-width: thin;
+  -moz-scrollbar-width: thin;
+  -ms-scrollbar-width: thin;
+  scrollbar-width: thin;
+  -webkit-scrollbar-color: #22222212 transparent;
+  -moz-scrollbar-color: #22222212 transparent;
+  -ms-scrollbar-color: #22222212 transparent;
+  scrollbar-color: #22222212 transparent;
+  height: 100%;
+}
+
+.c28::-webkit-scrollbar {
+  background: transparent;
+  height: 4px;
+  overflow-x: scroll;
+}
+
+.c28::-webkit-scrollbar-thumb {
+  background: #22222212;
+  border-radius: 8px;
+}
+
+.c29 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  border-bottom: 1px solid #22222212;
+  padding: 12px;
+  min-width: -webkit-max-content;
+  min-width: -moz-max-content;
+  min-width: max-content;
+}
+
+.c35 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  border-bottom: none;
+  padding: 12px;
+  min-width: -webkit-max-content;
+  min-width: -moz-max-content;
+  min-width: max-content;
+}
+
+.c30 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px 8px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  width: auto;
+  min-width: 136px !important;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c31 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px 8px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  width: auto;
+  min-width: 121px !important;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c32 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px 8px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  width: auto;
+  min-width: 121px !important;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+}
+
+.c34 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px 8px;
+  -webkit-flex: unset;
+  -ms-flex: unset;
+  flex: unset;
+  width: 44px;
+  min-width: unset !important;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+}
+
+.c18 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  height: 436px;
+  margin-bottom: 24px;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.c24 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+  height: 100%;
+  margin-bottom: 44px;
+  padding-bottom: 66px;
+  overflow: hidden;
+}
+
+.c20 {
+  height: 16px;
+  width: 180px;
+}
+
+.c21 {
+  height: 32px;
+  border-radius: 8px;
+}
+
+.c22 {
+  margin-top: 4px;
+  height: 40px;
+}
+
+.c25 {
+  -webkit-animation: wave 8s cubic-bezier(0.36,0.45,0.63,0.53) infinite;
+  animation: wave 8s cubic-bezier(0.36,0.45,0.63,0.53) infinite;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  overflow: hidden;
+  margin-top: 90px;
+}
+
+.c23 {
+  height: 6px;
+}
+
+.c2 {
+  padding: 48px;
+  width: 100%;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  gap: 60px;
+}
+
+.c4 {
+  gap: 24px;
+  width: 65vw;
+  overflow: hidden;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c26 {
+  border: 0.5px solid #22222212;
+  margin: 16px 0px;
+  width: 100%;
+}
+
+.c27 {
+  width: 180px;
+  height: 32px;
+}
+
+.c37 {
+  gap: 24px;
+  margin: 0 48px 0 auto;
+  width: 22vw;
+  min-width: 360px;
+}
+
+.c55 {
+  gap: 24px;
+  padding: 20px;
+}
+
+.c56 {
+  width: 100%;
+  font-size: 24px;
+  font-weight: 485;
+  line-height: 32px;
+}
+
+.c57 {
+  gap: 16px;
+  width: 100%;
+}
+
+@media (max-width:1023px) and (min-width:395px) {
+  .c62 {
+    display: block;
+  }
+}
+
+@media (max-width:1023px) and (min-width:395px) {
+  .c63 {
+    color: #7D7D7D;
+  }
+}
+
+@media (max-width:1023px) {
+  .c44 {
+    width: 100%;
+  }
+}
+
+@media (max-width:1023px) {
+  .c43 {
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    background: #FFFFFF;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding: 20px 0px;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width:640px) {
+  .c45 {
+    min-width: 150px;
+  }
+}
+
+@media (max-width:1023px) {
+  .c46 {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+}
+
+@media (max-width:1023px) {
+  .c47 {
+    font-size: 20px;
+    line-height: 28px;
+    width: 100%;
+  }
+}
+
+@media (max-width:1023px) {
+  .c50 {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: 0px;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width:1023px) {
+  .c51 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+}
+
+@media (max-width:1023px) {
+  .c38 {
+    display: none;
+  }
+}
+
+@media (max-width:1023px) {
+  .c2 {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: unset;
+  }
+}
+
+@media (max-width:639px) {
+  .c2 {
+    padding: 48px 16px;
+  }
+}
+
+@media (max-width:1023px) {
+  .c4 {
+    width: 100%;
+  }
+}
+
+@media (max-width:1023px) {
+  .c37 {
+    margin: 44px 0px;
+    width: 100%;
+    min-width: unset;
+  }
+}
+
+@media (max-width:1023px) and (min-width:640px) {
+  .c55 {
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding: unset;
+  }
+}
+
+@media (max-width:639px) {
+  .c55 {
+    padding: unset;
+  }
+}
+
+<div
+    class="c0 c1 c2"
+  >
+    <div
+      class="c3 c4"
+    >
+      <div
+        class="c5"
+      >
+        <div
+          class="c3 c6"
+        >
+          <div
+            class="c0 c1"
+          >
+            <a
+              class="c7"
+              href="/tokens/ETHEREUM"
+            >
+              <div
+                class="c8 css-1urox24"
+              >
+                Explore
+              </div>
+            </a>
+            <div
+              class="c8 css-1urox24"
+            >
+               &gt; 
+            </div>
+            <a
+              class="c7"
+              href="/tokens/ETHEREUM"
+            >
+              <div
+                class="c8 css-1urox24"
+              >
+                Pool
+              </div>
+            </a>
+            <div
+              class="c8 css-1urox24"
+            >
+               &gt; 
+            </div>
+            <div
+              class="c9 css-1urox24"
+            >
+              USDC / WETH (0x88e6...5640)
+            </div>
+          </div>
+          <div
+            class="c0 c10"
+          >
+            <div
+              class="c11 c12"
+              width="max-content"
+            >
+              <div
+                class="c13"
+              >
+                <div
+                  class="c14"
+                >
+                  <img
+                    class="c15"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                  />
+                  <img
+                    class="c15"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                  />
+                </div>
+              </div>
+              <div
+                class="c9 css-1jyz67g"
+              >
+                USDC / WETH
+              </div>
+            </div>
+            <div
+              class="c8 c16 css-1m65e73"
+            >
+              0.05%
+            </div>
+            <svg
+              class="c17"
+              data-testid="toggle-tokens-reverse-arrows"
+              fill="none"
+              height="20"
+              viewBox="0 0 20 20"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M18.125 10V12.5C18.125 14.2233 16.7225 15.625 15 15.625H4.0092L5.4425 17.0583C5.68667 17.3025 5.68667 17.6983 5.4425 17.9425C5.32084 18.0642 5.16081 18.1258 5.00081 18.1258C4.84081 18.1258 4.68079 18.065 4.55912 17.9425L2.05912 15.4425C2.00162 15.385 1.9559 15.3159 1.92424 15.2393C1.8609 15.0868 1.8609 14.9143 1.92424 14.7618C1.9559 14.6851 2.00162 14.6158 2.05912 14.5583L4.55912 12.0583C4.80329 11.8141 5.19915 11.8141 5.44332 12.0583C5.68749 12.3025 5.68749 12.6983 5.44332 12.9425L4.01001 14.3758H15C16.0333 14.3758 16.875 13.535 16.875 12.5008V10.0008C16.875 9.65581 17.155 9.37581 17.5 9.37581C17.845 9.37581 18.125 9.655 18.125 10ZM2.5 10.625C2.845 10.625 3.125 10.345 3.125 10V7.5C3.125 6.46583 3.96667 5.625 5 5.625H15.9908L14.5575 7.05831C14.3133 7.30247 14.3133 7.69834 14.5575 7.9425C14.6792 8.06417 14.8392 8.12581 14.9992 8.12581C15.1592 8.12581 15.3192 8.065 15.4409 7.9425L17.9409 5.4425C17.9984 5.385 18.0441 5.31592 18.0758 5.23926C18.1391 5.08676 18.1391 4.91426 18.0758 4.76176C18.0441 4.68509 17.9984 4.61581 17.9409 4.55831L15.4409 2.05831C15.1967 1.81414 14.8008 1.81414 14.5567 2.05831C14.3125 2.30247 14.3125 2.69834 14.5567 2.9425L15.99 4.37581H5C3.2775 4.37581 1.875 5.77748 1.875 7.50081V10.0008C1.875 10.345 2.155 10.625 2.5 10.625Z"
+                fill="#5E5E5E"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="c18"
+        >
+          <div
+            class="c9 css-15popx1"
+          >
+            <div
+              class="c19 c20 c21 c22"
+            />
+          </div>
+          <div
+            class="c23"
+          />
+          <div
+            class="c24"
+          >
+            <div>
+              <div
+                class="c25"
+              >
+                <svg
+                  height="160"
+                  width="416"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M 0 80 Q 104 10, 208 80 T 416 80"
+                    fill="transparent"
+                    stroke="#22222212"
+                    stroke-width="2"
+                  />
+                </svg>
+                <svg
+                  height="160"
+                  width="416"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M 0 80 Q 104 10, 208 80 T 416 80"
+                    fill="transparent"
+                    stroke="#22222212"
+                    stroke-width="2"
+                  />
+                </svg>
+                <svg
+                  height="160"
+                  width="416"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M 0 80 Q 104 10, 208 80 T 416 80"
+                    fill="transparent"
+                    stroke="#22222212"
+                    stroke-width="2"
+                  />
+                </svg>
+                <svg
+                  height="160"
+                  width="416"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M 0 80 Q 104 10, 208 80 T 416 80"
+                    fill="transparent"
+                    stroke="#22222212"
+                    stroke-width="2"
+                  />
+                </svg>
+                <svg
+                  height="160"
+                  width="416"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M 0 80 Q 104 10, 208 80 T 416 80"
+                    fill="transparent"
+                    stroke="#22222212"
+                    stroke-width="2"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr
+        class="c26"
+      />
+      <div
+        class="c19 c27"
+      />
+      <div
+        class="c3 c28"
+      >
+        <div
+          class="c0 c1 c29"
+        >
+          <div
+            class="c8 c30 css-1urox24"
+          >
+            <div
+              class="c0 c1"
+            >
+              <svg
+                fill="none"
+                height="16"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <line
+                  x1="12"
+                  x2="12"
+                  y1="5"
+                  y2="19"
+                />
+                <polyline
+                  points="19 12 12 19 5 12"
+                />
+              </svg>
+              Time
+            </div>
+          </div>
+          <div
+            class="c8 c31 css-1urox24"
+          >
+            Type
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            USD
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            Maker
+          </div>
+          <div
+            class="c8 c34 css-1urox24"
+          >
+            Txn
+          </div>
+        </div>
+        <div
+          class="c0 c1 c35"
+        >
+          <div
+            class="c8 c30 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c31 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c34 css-1urox24"
+          >
+            <div
+              class="c19 c36"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c35"
+        >
+          <div
+            class="c8 c30 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c31 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c34 css-1urox24"
+          >
+            <div
+              class="c19 c36"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c35"
+        >
+          <div
+            class="c8 c30 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c31 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c34 css-1urox24"
+          >
+            <div
+              class="c19 c36"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c35"
+        >
+          <div
+            class="c8 c30 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c31 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c34 css-1urox24"
+          >
+            <div
+              class="c19 c36"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c35"
+        >
+          <div
+            class="c8 c30 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c31 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c34 css-1urox24"
+          >
+            <div
+              class="c19 c36"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c35"
+        >
+          <div
+            class="c8 c30 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c31 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c34 css-1urox24"
+          >
+            <div
+              class="c19 c36"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c35"
+        >
+          <div
+            class="c8 c30 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c31 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c34 css-1urox24"
+          >
+            <div
+              class="c19 c36"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c35"
+        >
+          <div
+            class="c8 c30 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c31 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c34 css-1urox24"
+          >
+            <div
+              class="c19 c36"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c35"
+        >
+          <div
+            class="c8 c30 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c31 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c34 css-1urox24"
+          >
+            <div
+              class="c19 c36"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c35"
+        >
+          <div
+            class="c8 c30 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c31 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c32 css-1urox24"
+          >
+            <div
+              class="c19 c33"
+            />
+          </div>
+          <div
+            class="c8 c34 css-1urox24"
+          >
+            <div
+              class="c19 c36"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c3 c37"
+    >
+      <div
+        class="c0 c1 c38"
+      >
+        <button
+          class="c39 c40"
+          data-testid="pool-details-add-liquidity-button"
+          size="1"
+        >
+          <div
+            class="c41 c42"
+          />
+          Add liquidity
+        </button>
+        <button
+          class="c39 c40"
+          data-testid="pool-details-swap-button"
+          size="1"
+        >
+          <div
+            class="c41 c42"
+          />
+          Swap
+        </button>
+      </div>
+      <div
+        class="c3 c43"
+      >
+        <div
+          class="c44 css-vurnku"
+        >
+          Stats
+        </div>
+        <div
+          class="c3 c45"
+        >
+          <div
+            class="c8 css-1urox24"
+          >
+            Pool balances
+          </div>
+          <div
+            class="c0 c1 c46"
+          >
+            <div
+              class="c0 c1 c47"
+            >
+              90.93M USDC
+            </div>
+            <div
+              class="c0 c1 c47"
+            >
+              82,526.49 WETH
+            </div>
+          </div>
+          <div
+            class="c0 c1"
+            data-testid="pool-balance-chart"
+          >
+            <div
+              class="c48"
+            />
+            <div
+              class="c49"
+            />
+          </div>
+        </div>
+        <div
+          class="c3 c45"
+        >
+          <div
+            class="c8 css-1urox24"
+          >
+            TVL
+          </div>
+          <div
+            class="c0 c1 c50"
+          >
+            <div
+              class="c51 css-vurnku"
+            >
+              $223.2M
+            </div>
+            <div
+              class="c52 c53"
+              width="max-content"
+            >
+              <svg
+                aria-label="down"
+                class="c54"
+                fill="none"
+                height="16"
+                viewBox="0 0 24 24"
+                width="16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <div
+                class="c8 css-1urox24"
+              >
+                0.37%
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="c3 c45"
+        >
+          <div
+            class="c8 css-1urox24"
+          >
+            24H volume
+          </div>
+          <div
+            class="c0 c1 c50"
+          >
+            <div
+              class="c51 css-vurnku"
+            >
+              $233.4M
+            </div>
+            <div
+              class="c52 c53"
+              width="max-content"
+            >
+              <svg
+                aria-label="down"
+                class="c54"
+                fill="none"
+                height="16"
+                viewBox="0 0 24 24"
+                width="16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <div
+                class="c8 css-1urox24"
+              >
+                17.75%
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="c3 c45"
+        >
+          <div
+            class="c8 css-1urox24"
+          >
+            24H fees
+          </div>
+          <div
+            class="c0 c1 c50"
+          >
+            <div
+              class="c51 css-vurnku"
+            >
+              $116.7K
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c3 c55"
+      >
+        <div
+          class="c56 css-vurnku"
+        >
+          Links
+        </div>
+        <div
+          class="c3 c57"
+        >
+          <div
+            class="c0 c58"
+          >
+            <div
+              class="c0 c1 c59"
+              data-testid="pdp-pool-logo-USDC-WETH"
+            >
+              <div
+                class="c60"
+              >
+                <img
+                  class="c61"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                />
+                <img
+                  class="c61"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                />
+              </div>
+              <div
+                class="c9 c62 css-1urox24"
+              >
+                Pool
+              </div>
+              <div
+                class="c9 c63 css-1urox24"
+              >
+                USDC / WETH
+              </div>
+            </div>
+            <div
+              class="c0 c1 c64"
+            >
+              <div
+                class="c0 c1 c65"
+                data-testid="copy-address-0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
+              >
+                0x88e6...5640
+                <svg
+                  class="c66"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    height="13"
+                    rx="2"
+                    ry="2"
+                    width="13"
+                    x="9"
+                    y="9"
+                  />
+                  <path
+                    d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                  />
+                </svg>
+              </div>
+              <a
+                class="c67"
+                data-testid="explorer-url-https://etherscan.io/address/0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
+                href="https://etherscan.io/address/0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <div
+                  class="c68"
+                >
+                  <svg
+                    fill="#7D7D7D"
+                    height="16px"
+                    stroke="transparent"
+                    viewBox="0 0 18 18"
+                    width="16px"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.08042 8.66148C5.08043 8.58693 5.09517 8.51313 5.12378 8.44429C5.1524 8.37546 5.19432 8.31297 5.24716 8.26038C5.30001 8.2078 5.3627 8.16617 5.43167 8.13788C5.50064 8.1096 5.57452 8.09522 5.64907 8.09557L6.59187 8.09865C6.74218 8.09865 6.88635 8.15836 6.99263 8.26465C7.09893 8.37094 7.15865 8.5151 7.15865 8.66543V12.2303C7.26478 12.1988 7.4011 12.1652 7.55026 12.1301C7.65387 12.1058 7.74621 12.0471 7.8123 11.9637C7.87839 11.8803 7.91434 11.777 7.91432 11.6705V7.24848C7.91432 7.09814 7.97403 6.95397 8.08032 6.84766C8.1866 6.74135 8.33077 6.68162 8.4811 6.68158H9.42577C9.57609 6.68162 9.72026 6.74135 9.82655 6.84766C9.93284 6.95397 9.99255 7.09814 9.99255 7.24848V11.3526C9.99255 11.3526 10.2291 11.2569 10.4595 11.1596C10.545 11.1234 10.6181 11.0629 10.6694 10.9854C10.7208 10.908 10.7482 10.8172 10.7483 10.7242V5.83152C10.7483 5.68122 10.808 5.53707 10.9143 5.43078C11.0206 5.32449 11.1647 5.26478 11.315 5.26474H12.2597C12.41 5.26474 12.5542 5.32445 12.6604 5.43075C12.7667 5.53704 12.8265 5.6812 12.8265 5.83152V9.86056C13.6455 9.267 14.4754 8.55315 15.1341 7.69474C15.2297 7.57015 15.2929 7.42383 15.3181 7.26887C15.3434 7.1139 15.3299 6.95509 15.2788 6.8066C14.9739 5.9294 14.4894 5.12551 13.856 4.44636C13.2226 3.76722 12.4544 3.22777 11.6005 2.86256C10.7467 2.49734 9.82602 2.31439 8.89742 2.32542C7.96882 2.33645 7.05275 2.54121 6.20783 2.9266C5.36291 3.31199 4.60774 3.86952 3.99066 4.56352C3.37358 5.25751 2.90817 6.07269 2.62422 6.95689C2.34027 7.84107 2.24403 8.7748 2.34166 9.69832C2.43929 10.6218 2.72863 11.5148 3.19118 12.3201C3.27176 12.459 3.39031 12.572 3.53289 12.6459C3.67548 12.7198 3.83618 12.7514 3.99614 12.7372C4.17482 12.7215 4.3973 12.6992 4.66181 12.6681C4.77695 12.655 4.88326 12.6001 4.96048 12.5137C5.0377 12.4273 5.08043 12.3155 5.08053 12.1996L5.08042 8.66148Z"
+                      fill="#7D7D7D"
+                    />
+                    <path
+                      d="M5.05957 14.3792C6.05531 15.1036 7.23206 15.5384 8.45961 15.6356C9.68716 15.7326 10.9176 15.4883 12.0149 14.9294C13.1122 14.3705 14.0334 13.519 14.6768 12.4691C15.3201 11.4191 15.6605 10.2116 15.6601 8.98024C15.6601 8.82658 15.653 8.67457 15.6428 8.52344C13.2041 12.1605 8.70139 13.8609 5.05978 14.3786"
+                      fill="#7D7D7D"
+                    />
+                  </svg>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div
+            class="c0 c58"
+          >
+            <div
+              class="c0 c1 c69"
+              data-testid="pdp-token-logo-USDC"
+            >
+              <div
+                class="c70"
+                style="height: 20px; width: 20px;"
+              >
+                <div
+                  class="c71"
+                >
+                  <img
+                    alt="USDC logo"
+                    class="c72"
+                    loading="lazy"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                  />
+                </div>
+              </div>
+              <div
+                class="c9 c62 css-1urox24"
+              >
+                USD Coin
+              </div>
+              <div
+                class="c9 c63 css-1urox24"
+              >
+                <div
+                  class="c0 c73"
+                >
+                  USDC 
+                  <svg
+                    fill="none"
+                    height="16"
+                    stroke="#7D7D7D"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polyline
+                      points="9 18 15 12 9 6"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div
+              class="c0 c1 c64"
+            >
+              <div
+                class="c0 c1 c65"
+                data-testid="copy-address-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+              >
+                0xA0b8...eB48
+                <svg
+                  class="c66"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    height="13"
+                    rx="2"
+                    ry="2"
+                    width="13"
+                    x="9"
+                    y="9"
+                  />
+                  <path
+                    d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                  />
+                </svg>
+              </div>
+              <a
+                class="c67"
+                data-testid="explorer-url-https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+                href="https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <div
+                  class="c68"
+                >
+                  <svg
+                    fill="#7D7D7D"
+                    height="16px"
+                    stroke="transparent"
+                    viewBox="0 0 18 18"
+                    width="16px"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.08042 8.66148C5.08043 8.58693 5.09517 8.51313 5.12378 8.44429C5.1524 8.37546 5.19432 8.31297 5.24716 8.26038C5.30001 8.2078 5.3627 8.16617 5.43167 8.13788C5.50064 8.1096 5.57452 8.09522 5.64907 8.09557L6.59187 8.09865C6.74218 8.09865 6.88635 8.15836 6.99263 8.26465C7.09893 8.37094 7.15865 8.5151 7.15865 8.66543V12.2303C7.26478 12.1988 7.4011 12.1652 7.55026 12.1301C7.65387 12.1058 7.74621 12.0471 7.8123 11.9637C7.87839 11.8803 7.91434 11.777 7.91432 11.6705V7.24848C7.91432 7.09814 7.97403 6.95397 8.08032 6.84766C8.1866 6.74135 8.33077 6.68162 8.4811 6.68158H9.42577C9.57609 6.68162 9.72026 6.74135 9.82655 6.84766C9.93284 6.95397 9.99255 7.09814 9.99255 7.24848V11.3526C9.99255 11.3526 10.2291 11.2569 10.4595 11.1596C10.545 11.1234 10.6181 11.0629 10.6694 10.9854C10.7208 10.908 10.7482 10.8172 10.7483 10.7242V5.83152C10.7483 5.68122 10.808 5.53707 10.9143 5.43078C11.0206 5.32449 11.1647 5.26478 11.315 5.26474H12.2597C12.41 5.26474 12.5542 5.32445 12.6604 5.43075C12.7667 5.53704 12.8265 5.6812 12.8265 5.83152V9.86056C13.6455 9.267 14.4754 8.55315 15.1341 7.69474C15.2297 7.57015 15.2929 7.42383 15.3181 7.26887C15.3434 7.1139 15.3299 6.95509 15.2788 6.8066C14.9739 5.9294 14.4894 5.12551 13.856 4.44636C13.2226 3.76722 12.4544 3.22777 11.6005 2.86256C10.7467 2.49734 9.82602 2.31439 8.89742 2.32542C7.96882 2.33645 7.05275 2.54121 6.20783 2.9266C5.36291 3.31199 4.60774 3.86952 3.99066 4.56352C3.37358 5.25751 2.90817 6.07269 2.62422 6.95689C2.34027 7.84107 2.24403 8.7748 2.34166 9.69832C2.43929 10.6218 2.72863 11.5148 3.19118 12.3201C3.27176 12.459 3.39031 12.572 3.53289 12.6459C3.67548 12.7198 3.83618 12.7514 3.99614 12.7372C4.17482 12.7215 4.3973 12.6992 4.66181 12.6681C4.77695 12.655 4.88326 12.6001 4.96048 12.5137C5.0377 12.4273 5.08043 12.3155 5.08053 12.1996L5.08042 8.66148Z"
+                      fill="#7D7D7D"
+                    />
+                    <path
+                      d="M5.05957 14.3792C6.05531 15.1036 7.23206 15.5384 8.45961 15.6356C9.68716 15.7326 10.9176 15.4883 12.0149 14.9294C13.1122 14.3705 14.0334 13.519 14.6768 12.4691C15.3201 11.4191 15.6605 10.2116 15.6601 8.98024C15.6601 8.82658 15.653 8.67457 15.6428 8.52344C13.2041 12.1605 8.70139 13.8609 5.05978 14.3786"
+                      fill="#7D7D7D"
+                    />
+                  </svg>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div
+            class="c0 c58"
+          >
+            <div
+              class="c0 c1 c69"
+              data-testid="pdp-token-logo-WETH"
+            >
+              <div
+                class="c70"
+                style="height: 20px; width: 20px;"
+              >
+                <div
+                  class="c71"
+                >
+                  <img
+                    alt="WETH logo"
+                    class="c72"
+                    loading="lazy"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                  />
+                </div>
+              </div>
+              <div
+                class="c9 c62 css-1urox24"
+              >
+                Wrapped Ether
+              </div>
+              <div
+                class="c9 c63 css-1urox24"
+              >
+                <div
+                  class="c0 c73"
+                >
+                  WETH 
+                  <svg
+                    fill="none"
+                    height="16"
+                    stroke="#7D7D7D"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polyline
+                      points="9 18 15 12 9 6"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div
+              class="c0 c1 c64"
+            >
+              <div
+                class="c0 c1 c65"
+                data-testid="copy-address-0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+              >
+                0xC02a...6Cc2
+                <svg
+                  class="c66"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    height="13"
+                    rx="2"
+                    ry="2"
+                    width="13"
+                    x="9"
+                    y="9"
+                  />
+                  <path
+                    d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                  />
+                </svg>
+              </div>
+              <a
+                class="c67"
+                data-testid="explorer-url-https://etherscan.io/token/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+                href="https://etherscan.io/token/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <div
+                  class="c68"
+                >
+                  <svg
+                    fill="#7D7D7D"
+                    height="16px"
+                    stroke="transparent"
+                    viewBox="0 0 18 18"
+                    width="16px"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.08042 8.66148C5.08043 8.58693 5.09517 8.51313 5.12378 8.44429C5.1524 8.37546 5.19432 8.31297 5.24716 8.26038C5.30001 8.2078 5.3627 8.16617 5.43167 8.13788C5.50064 8.1096 5.57452 8.09522 5.64907 8.09557L6.59187 8.09865C6.74218 8.09865 6.88635 8.15836 6.99263 8.26465C7.09893 8.37094 7.15865 8.5151 7.15865 8.66543V12.2303C7.26478 12.1988 7.4011 12.1652 7.55026 12.1301C7.65387 12.1058 7.74621 12.0471 7.8123 11.9637C7.87839 11.8803 7.91434 11.777 7.91432 11.6705V7.24848C7.91432 7.09814 7.97403 6.95397 8.08032 6.84766C8.1866 6.74135 8.33077 6.68162 8.4811 6.68158H9.42577C9.57609 6.68162 9.72026 6.74135 9.82655 6.84766C9.93284 6.95397 9.99255 7.09814 9.99255 7.24848V11.3526C9.99255 11.3526 10.2291 11.2569 10.4595 11.1596C10.545 11.1234 10.6181 11.0629 10.6694 10.9854C10.7208 10.908 10.7482 10.8172 10.7483 10.7242V5.83152C10.7483 5.68122 10.808 5.53707 10.9143 5.43078C11.0206 5.32449 11.1647 5.26478 11.315 5.26474H12.2597C12.41 5.26474 12.5542 5.32445 12.6604 5.43075C12.7667 5.53704 12.8265 5.6812 12.8265 5.83152V9.86056C13.6455 9.267 14.4754 8.55315 15.1341 7.69474C15.2297 7.57015 15.2929 7.42383 15.3181 7.26887C15.3434 7.1139 15.3299 6.95509 15.2788 6.8066C14.9739 5.9294 14.4894 5.12551 13.856 4.44636C13.2226 3.76722 12.4544 3.22777 11.6005 2.86256C10.7467 2.49734 9.82602 2.31439 8.89742 2.32542C7.96882 2.33645 7.05275 2.54121 6.20783 2.9266C5.36291 3.31199 4.60774 3.86952 3.99066 4.56352C3.37358 5.25751 2.90817 6.07269 2.62422 6.95689C2.34027 7.84107 2.24403 8.7748 2.34166 9.69832C2.43929 10.6218 2.72863 11.5148 3.19118 12.3201C3.27176 12.459 3.39031 12.572 3.53289 12.6459C3.67548 12.7198 3.83618 12.7514 3.99614 12.7372C4.17482 12.7215 4.3973 12.6992 4.66181 12.6681C4.77695 12.655 4.88326 12.6001 4.96048 12.5137C5.0377 12.4273 5.08043 12.3155 5.08053 12.1996L5.08042 8.66148Z"
+                      fill="#7D7D7D"
+                    />
+                    <path
+                      d="M5.05957 14.3792C6.05531 15.1036 7.23206 15.5384 8.45961 15.6356C9.68716 15.7326 10.9176 15.4883 12.0149 14.9294C13.1122 14.3705 14.0334 13.519 14.6768 12.4691C15.3201 11.4191 15.6605 10.2116 15.6601 8.98024C15.6601 8.82658 15.653 8.67457 15.6428 8.52344C13.2041 12.1605 8.70139 13.8609 5.05978 14.3786"
+                      fill="#7D7D7D"
+                    />
+                  </svg>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

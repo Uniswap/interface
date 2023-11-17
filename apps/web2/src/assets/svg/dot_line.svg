@@ -1,0 +1,3 @@
+<svg width="100%" height="35"  viewBox="850 0 300 200" xmlns="http://www.w3.org/2000/svg">
+    <line x1="0" x2="3000" y1="100" y2="100" stroke="currentColor" stroke-width="20" stroke-linecap="round" stroke-dasharray="1, 45"/>
+</svg>

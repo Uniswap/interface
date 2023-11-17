@@ -1,0 +1,43 @@
+ignore:
+  - "**/generated/**/*"
+  - "**/generated/*"
+  - "**/cypress/**/*"
+  - "cypress/**/*"
+  - "**/instrumented/**/*"
+  - "**/styles/**/*"
+  - "styles/**/*"
+  - "**/styled.tsx"
+  - "**/constants/**/*"
+  - "constants/**/*"
+  - "src/dev/*"
+
+coverage:
+  status:
+    project: off
+    patch: off
+
+flag_management:
+  default_rules:
+    statuses:
+      - type: project
+        target: auto
+        threshold: 1%
+        # Adjust the base when removing code to avoid penalizing tech debt payback / dead code removal.
+        removed_code_behavior: adjust_base
+        if_ci_failed: error
+      - type: patch
+        target: 50%
+  individual_flags:
+    - name: unit-tests
+    - name: cloud-tests
+      statuses:
+        - type: project
+          target: 80%
+
+comment:
+  layout: flags
+  hide_comment_details: false
+
+github_checks:
+  # Turn off GitHub Check annotations, as they make it more difficult to review code.
+  annotations: false

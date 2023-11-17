@@ -1,0 +1,278 @@
+name: Test
+
+# Many build steps have their own caches, so each job has its own cache to improve subsequent build times.
+# Build tools are configured to cache to node_modules/.cache, so they are cached independently of node_modules.
+# Caches are saved every run (by keying on github.run_id), and the most recent available cache is loaded.
+# See https://jongleberry.medium.com/speed-up-your-ci-and-dx-with-node-modules-cache-ac8df82b7bb0.
+
+on:
+  push:
+    branches:
+      - main
+      - releases/staging
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: actions/cache@v3
+        with:
+          path: node_modules/.cache
+          key: ${{ runner.os }}-eslint-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-eslint-
+      - run: yarn lint
+      - if: failure() && github.ref_name == 'main'
+        uses: ./.github/actions/report
+        with:
+          name: Lint
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
+  
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: actions/cache@v3
+        with:
+          path: node_modules/.cache
+          key: ${{ runner.os }}-tsc-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-tsc-
+      - run: yarn typecheck
+      - if: failure() && github.ref_name == 'main'
+        uses: ./.github/actions/report
+        with:
+          name: Typecheck
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
+
+  deps-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: yarn yarn-deduplicate --strategy=highest --list --fail
+      - if: failure() && github.ref_name == 'main'
+        uses: ./.github/actions/report
+        with:
+          name: Dependency checks
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: actions/cache@v3
+        with:
+          path: node_modules/.cache
+          key: ${{ runner.os }}-jest-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-jest-
+      - run: yarn test --coverage --maxWorkers=100%
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+          flags: unit-tests
+      - if: failure() && github.ref_name == 'main'
+        uses: ./.github/actions/report
+        with:
+          name: Unit tests
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: actions/cache@v3
+        with:
+          path: node_modules/.swc
+          key: ${{ runner.os }}-swc-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-swc-
+      - run: yarn build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build
+          if-no-files-found: error
+
+  cypress-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: actions/cache@v3
+        with:
+          path: node_modules/.cache
+          key: ${{ runner.os }}-cypress-tsc-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-cypress-tsc-
+      - run: yarn typecheck:cypress
+      - if: failure() && github.ref_name == 'main'
+        uses: ./.github/actions/report
+        with:
+          name: Cypress typecheck
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
+
+  # Allows for parallel re-runs of cypress tests without re-building.
+  cypress-rerun:
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 0
+
+  cypress-test-matrix:
+    needs: [build, cypress-rerun]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: actions/cache@v3
+        with:
+          path: /root/.cache/Cypress
+          key: ${{ runner.os }}-cypress-${{ hashFiles('**/node_modules/cypress/package.json') }}
+      - run: |
+          yarn cypress install
+          yarn cypress info
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: build
+
+      - uses: actions/cache/restore@v3
+        with:
+          path: cache
+          key: ${{ runner.os }}-hardhat-${{ hashFiles('hardhat.config.js') }}-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-hardhat-${{ hashFiles('hardhat.config.js') }}-
+
+      - uses: cypress-io/github-action@v4
+        with:
+          install: false
+          record: true
+          parallel: true
+          start: yarn serve
+          wait-on: 'http://localhost:3000'
+          browser: electron
+          group: e2e
+          spec: ${{ github.ref_name == 'releases/staging' && 'cypress/{e2e,staging}/**/*.test.ts' || 'cypress/e2e/**/*.test.ts' }}
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMIT_INFO_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          COMMIT_INFO_MESSAGE: ${{ github.event.pull_request.title || github.event.head_commit.message }}
+          COMMIT_INFO_AUTHOR: ${{ github.event.sender.login || github.event.head_commit.author.login }}
+          # Cypress requires an email for filtering by author, but GitHub does not expose one.
+          # GitHub's public profile email can be deterministically produced from user id/login.
+          COMMIT_INFO_EMAIL: ${{ github.event.sender.id || github.event.head_commit.author.id }}+${{ github.event.sender.login || github.event.head_commit.author.login }}@users.noreply.github.com
+          COMMIT_INFO_SHA: ${{ github.event.pull_request.head.sha || github.event.head_commit.sha }}
+          COMMIT_INFO_TIMESTAMP: ${{ github.event.pull_request.updated_at || github.event.head_commit.timestamp }}
+          CYPRESS_PULL_REQUEST_ID: ${{ github.event.pull_request.number }}
+          CYPRESS_PULL_REQUEST_URL: ${{ github.event.pull_request.html_url }}
+      - if: failure() && github.ref_name == 'main'
+        uses: ./.github/actions/report
+        with:
+          name: Cypress tests
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: hardhat-cache
+          path: cache
+
+  hardhat-cache:
+    needs: [cypress-test-matrix]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: hardhat-cache
+          path: cache
+      - uses: actions/cache/save@v3
+        with:
+          path: cache
+          key: ${{ runner.os }}-hardhat-${{ hashFiles('hardhat.config.js') }}-${{ github.run_id }}
+
+  cloud-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: actions/cache@v3
+        with:
+          path: node_modules/.cache
+          key: ${{ runner.os }}-cloud-tsc-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-cloud-tsc-
+      - run: yarn typecheck:cloud
+      - if: failure() && github.ref_name == 'main'
+        uses: ./.github/actions/report
+        with:
+          name: Cloud typecheck
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
+
+  cloud-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: actions/cache@v3
+        with:
+          path: node_modules/.cache
+          key: ${{ runner.os }}-cloud-jest-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-cloud-jest-
+      # Ignore start:cloud output so it doesn't flood the test output.
+      # Only use 1 worker for testing, as the other is used to run start:cloud (the proxy server under test).
+      - run: yarn start-server-and-test 'yarn start:cloud >/dev/null' 3000 'yarn test:cloud --coverage --maxWorkers=1'
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+          flags: cloud-tests
+        
+  pre:
+    if: ${{ github.ref_name == 'main' || github.ref_name == 'releases/staging' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6.4.1
+        with:
+          script: |
+            github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: 'pending',
+              context: 'Test / promotion',
+              description: 'Running tests...',
+              target_url: 'https://github.com/Uniswap/interface/actions/runs/' + context.runId
+            })
+
+  post:
+    if: ${{ github.ref_name == 'main' || github.ref_name == 'releases/staging' }}
+    needs: [pre, lint, typecheck, deps-tests, unit-tests, cypress-test-matrix, cloud-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6.4.1
+        with:
+          script: |
+            github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: ${{ env.STATUS }} ? 'success' : 'failure',
+              context: 'Test / promotion',
+              description: ${{ env.STATUS }} ? 'All tests passed' : 'One or more tests failed and are blocking promotion',
+              target_url: 'https://github.com/Uniswap/interface/actions/runs/' + context.runId
+            })
+        env:
+          STATUS: |
+            ${{ needs.lint.result == 'success' }} &&
+            ${{ needs.typecheck.result == 'success' }} &&
+            ${{ needs.deps-tests.result == 'success' }} &&
+            ${{ needs.unit-tests.result == 'success' }} &&
+            ${{ needs.cypress-test-matrix.result == 'success' }} &&
+            ${{ needs.cloud-tests.result == 'success' }}
