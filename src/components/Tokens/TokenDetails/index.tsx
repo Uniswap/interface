@@ -131,7 +131,7 @@ export default function TokenDetails({
         if (!map[current.chain]) {
           map[current.chain] = {}
         }
-        map[current.chain].address = current.address ?? NATIVE_CHAIN_ID
+        map[current.chain].address = current.address
         map[current.chain].balance = tokenBalances?.find((tokenBalance) => tokenBalance.token?.id == current.id) as
           | TokenBalance
           | undefined
