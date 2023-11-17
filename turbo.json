@@ -46,6 +46,14 @@
       ]
     },
     "build:production": {
+      "inputs": [
+        "yarn.lock",
+        "**/package.json",
+        "{packages,apps}/src/**/*"
+      ],
+      "outputs": [
+        "**/build/**"
+      ],
       "dependsOn": [
         "prepare",
         "build"
