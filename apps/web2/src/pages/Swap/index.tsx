@@ -598,6 +598,8 @@ export function Swap({
 
   const [currentTab, setCurrentTab] = useState<SwapTab>(SwapTab.Swap)
 
+  const [currentTab, setCurrentTab] = useState<SwapTab>(SwapTab.Swap)
+
   const swapElement = (
     <>
       <TokenSafetyModal
