@@ -1,6 +1,6 @@
-name: Slack notification on pushes to releases/*
+name: '[web] Slack on pushes to web/*'
 
-# This CI job will push notifications to Slack whenever code is merged into any releases/* branch
+# This CI job will push notifications to Slack whenever code is merged into any web/* branch
 #
 # The steps of the command line kung-fu shown below are as follows:
 # First we take the JSON-formatted Github context
@@ -21,13 +21,11 @@ name: Slack notification on pushes to releases/*
 on:
   push:
     branches:
-      - 'releases/*'
+      - 'web/*'
 
 jobs:
   notify-slack:
     runs-on: ubuntu-latest
-    environment:
-      name: notify/releases
     steps:
       - name: Parse event to slug
         id: parse-slug
@@ -87,5 +85,5 @@ jobs:
               ]
             }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEB_BUILD_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
