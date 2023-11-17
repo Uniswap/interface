@@ -9,7 +9,7 @@ on:
 # https://stackoverflow.com/questions/57921401/push-to-origin-from-github-action
 jobs:
   push-staging:
-    name: 'Push to staging branch'
+    name: 'Push to web/staging'
     runs-on: ubuntu-latest
     steps:
       # TODO(natew): Re-enable the status check conditional once this has been merged.
