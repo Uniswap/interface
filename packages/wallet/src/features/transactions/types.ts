@@ -7,6 +7,12 @@ import { AssetType } from 'wallet/src/entities/assets'
 import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import { DappInfo } from 'wallet/src/features/walletConnect/types'
 
+export enum WrapType {
+  NotApplicable,
+  Wrap,
+  Unwrap,
+}
+
 export type ChainIdToTxIdToDetails = Partial<
   Record<ChainId, { [txId: string]: TransactionDetails }>
 >

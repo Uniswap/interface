@@ -3,20 +3,19 @@ import { TokenLoader } from 'src/components/loading/TokenLoader'
 import { TransactionLoader } from 'src/components/loading/TransactionLoader'
 import { WalletLoader } from 'src/components/loading/WalletLoader'
 import { WaveLoader } from 'src/components/loading/WaveLoader'
-import { Flex, getToken } from 'ui/src'
-import { FlexLoader, FlexLoaderProps, Shimmer } from 'ui/src/loading'
+import { Flex, FlexLoader, FlexLoaderProps, getToken, Skeleton } from 'ui/src'
 
 function Graph(): JSX.Element {
   return (
-    <Shimmer>
+    <Skeleton>
       <WaveLoader />
-    </Shimmer>
+    </Skeleton>
   )
 }
 
 function Wallets({ repeat = 1 }: { repeat?: number }): JSX.Element {
   return (
-    <Shimmer>
+    <Skeleton>
       <Flex gap="$spacing12">
         {new Array(repeat).fill(null).map((_, i, { length }) => (
           <React.Fragment key={i}>
@@ -24,13 +23,13 @@ function Wallets({ repeat = 1 }: { repeat?: number }): JSX.Element {
           </React.Fragment>
         ))}
       </Flex>
-    </Shimmer>
+    </Skeleton>
   )
 }
 
 function Token({ repeat = 1, contrast }: { repeat?: number; contrast?: boolean }): JSX.Element {
   return (
-    <Shimmer contrast={contrast}>
+    <Skeleton contrast={contrast}>
       <Flex grow gap="$spacing4">
         {new Array(repeat).fill(null).map((_, i, { length }) => (
           <React.Fragment key={i}>
@@ -38,7 +37,7 @@ function Token({ repeat = 1, contrast }: { repeat?: number; contrast?: boolean }
           </React.Fragment>
         ))}
       </Flex>
-    </Shimmer>
+    </Skeleton>
   )
 }
 
@@ -48,7 +47,7 @@ export const Transaction = memo(function _Transaction({
   repeat?: number
 }): JSX.Element {
   return (
-    <Shimmer>
+    <Skeleton>
       <Flex>
         {new Array(repeat).fill(null).map((_, i, { length }) => (
           <React.Fragment key={i}>
@@ -56,32 +55,32 @@ export const Transaction = memo(function _Transaction({
           </React.Fragment>
         ))}
       </Flex>
-    </Shimmer>
+    </Skeleton>
   )
 })
 
 function Box(props: FlexLoaderProps): JSX.Element {
   return (
-    <Shimmer>
+    <Skeleton>
       <FlexLoader {...props} />
-    </Shimmer>
+    </Skeleton>
   )
 }
 
 function Image(): JSX.Element {
   return (
-    <Shimmer>
+    <Skeleton>
       <FlexLoader aspectRatio={1} borderRadius={getToken('$none', 'radius')} />
-    </Shimmer>
+    </Skeleton>
   )
 }
 
 function Favorite({ height, contrast }: { height?: number; contrast?: boolean }): JSX.Element {
   return (
-    <Shimmer contrast={contrast}>
+    <Skeleton contrast={contrast}>
       {/* surface3 because these only show up on explore modal which has a blurred bg that makes neutral3 look weird */}
       <FlexLoader backgroundColor="$surface3" borderRadius="$rounded16" height={height ?? 50} />
-    </Shimmer>
+    </Skeleton>
   )
 }
 

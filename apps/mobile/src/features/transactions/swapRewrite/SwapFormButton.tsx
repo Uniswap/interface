@@ -1,5 +1,5 @@
-import React, { ComponentProps, useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
+import React, { useCallback, useMemo } from 'react'
+import { TFunction, useTranslation } from 'react-i18next'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
@@ -15,6 +15,7 @@ import {
 import { useParsedSwapWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { Button, Flex, Icons, Text } from 'ui/src'
+import { WrapType } from 'wallet/src/features/transactions/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
@@ -68,8 +69,10 @@ export function SwapFormButton(): JSX.Element {
     }
   }, [isHoldToSwapPressed, isSubmitting, setScreen])
 
+  const holdButtonText = useMemo(() => getHoldButtonActionText(wrapType, t), [t, wrapType])
+
   return (
-    <Flex alignItems="center" gap="$spacing16" marginHorizontal="$spacing16">
+    <Flex alignItems="center" gap="$spacing16">
       {!isHoldToSwapPressed && <HoldToInstantSwapRow />}
 
       <Trace logPress element={ElementName.SwapReview}>
@@ -94,7 +97,7 @@ export function SwapFormButton(): JSX.Element {
                 pr={PROGRESS_CIRCLE_SIZE}
                 textAlign="center"
                 variant="buttonLabel1">
-                {t('Hold to swap')}
+                {holdButtonText}
               </Text>
             </Flex>
           ) : (
@@ -121,26 +124,16 @@ function HoldToInstantSwapRow(): JSX.Element {
   )
 }
 
-// This component is used to calculate how much space we need to reserve for the absolutely positioned footer in the `SwapForm` screen.
-// This is easier to maintain that just hardcoding the height of the footer, given that it automatically accounts for font size changes.
-export function SwapFormButtonEmptySpace({
-  onLayout,
-}: {
-  onLayout?: ComponentProps<typeof Flex>['onLayout']
-}): JSX.Element {
-  const { screen } = useSwapScreenContext()
-
-  return (
-    <Flex
-      accessibilityElementsHidden
-      alignItems="center"
-      gap="$spacing16"
-      mt="$spacing16"
-      opacity={0}
-      onLayout={onLayout}>
-      {screen !== SwapScreen.SwapReviewHoldingToSwap && <HoldToInstantSwapRow />}
-
-      <Button children="X" disabled size="large" width="100%" />
-    </Flex>
-  )
+function getHoldButtonActionText(
+  wrapType: WrapType,
+  t: TFunction<'translation', undefined>
+): string {
+  switch (wrapType) {
+    case WrapType.Wrap:
+      return t('Hold to wrap')
+    case WrapType.Unwrap:
+      return t('Hold to unwrap')
+    case WrapType.NotApplicable:
+      return t('Hold to swap')
+  }
 }

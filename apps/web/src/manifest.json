@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "UL Wallet Extension",
   "description": "UL Wallet Extension",
-  "version": "0.0.0.3",
+  "version": "0.0.0.14",
   "icons": {
     "16": "assets/icon16.png",
     "32": "assets/icon32.png",

@@ -3,12 +3,14 @@ import { useAppSelector } from 'src/app/hooks'
 import {
   ApproveNotification,
   ChangeAssetVisibilityNotification,
+  ChooseCountryNotification,
   CopiedNotification,
   DefaultNotification,
   ErrorNotification,
   SuccessNotification,
   SwapNetworkNotification,
   SwapNotification,
+  SwapPendingNotification,
   TransferCurrencyNotification,
   TransferNFTNotification,
   UnknownTxNotification,
@@ -47,8 +49,12 @@ export function NotificationToastRouter({
       return <CopiedNotification notification={notification} />
     case AppNotificationType.SwapNetwork:
       return <SwapNetworkNotification notification={notification} />
+    case AppNotificationType.ChooseCountry:
+      return <ChooseCountryNotification notification={notification} />
     case AppNotificationType.AssetVisibility:
       return <ChangeAssetVisibilityNotification notification={notification} />
+    case AppNotificationType.SwapPending:
+      return <SwapPendingNotification notification={notification} />
     case AppNotificationType.Transaction:
       switch (notification.txType) {
         case TransactionType.Approve:

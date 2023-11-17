@@ -10,7 +10,7 @@ import { AssociatedAccountsList } from 'src/components/RemoveWallet/AssociatedAc
 import { RemoveLastMnemonicWalletFooter } from 'src/components/RemoveWallet/RemoveLastMnemonicWalletFooter'
 import { RemoveWalletStep, useModalContent } from 'src/components/RemoveWallet/useModalContent'
 import { navigateToOnboardingImportMethod } from 'src/components/RemoveWallet/utils'
-import { useBiometricPrompt } from 'src/features/biometrics/hooks'
+import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
@@ -97,6 +97,19 @@ export function RemoveWalletModal(): JSX.Element | null {
     }
   )
 
+  const {
+    requiredForAppAccess: biometricAuthRequiredForAppAccess,
+    requiredForTransactions: biometricAuthRequiredForTransactions,
+  } = useBiometricAppSettings()
+
+  const onRemoveWalletPress = async (): Promise<void> => {
+    if (biometricAuthRequiredForAppAccess || biometricAuthRequiredForTransactions) {
+      await trigger()
+    } else {
+      onRemoveWallet()
+    }
+  }
+
   const onPress = async (): Promise<void> => {
     // we want to call onRemoveWallet only once
     if (inProgress) return
@@ -104,7 +117,7 @@ export function RemoveWalletModal(): JSX.Element | null {
       setCurrentStep(RemoveWalletStep.Final)
     } else if (currentStep === RemoveWalletStep.Final) {
       setInProgress(true)
-      await trigger()
+      await onRemoveWalletPress()
     }
   }
 

@@ -1,8 +1,10 @@
+import { useTranslation } from 'react-i18next'
 import { Flex, Text, Unicon } from 'ui/src'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 export function AddressFooter({ account }: { account: Account }): JSX.Element {
+  const { t } = useTranslation()
   return (
     <Flex borderBottomLeftRadius="$rounded16" borderBottomRightRadius="$rounded16" width="100%">
       <Flex
@@ -17,7 +19,7 @@ export function AddressFooter({ account }: { account: Account }): JSX.Element {
         <Flex row alignItems="center" gap="$spacing8" maxWidth="100%">
           <Unicon address={account.address} />
           <Text textOverflow="ellipsis" variant="subheading2">
-            {account.name === undefined ? 'Wallet' : account.name}
+            {account.name === undefined ? t('Wallet') : account.name}
           </Text>
         </Flex>
         <Text

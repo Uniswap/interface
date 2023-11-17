@@ -99,7 +99,7 @@ type QRCodeDisplayProps = {
 
 const _QRCodeDisplay = ({
   address,
-  errorCorrectionLevel = 'M',
+  errorCorrectionLevel = 'Q',
   size,
   backgroundColor = '$surface1',
   containerBackgroundColor,

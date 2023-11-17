@@ -468,7 +468,16 @@ query Token($chain: Chain!, $address: String) {
   }
 }
 
-query TokenDetailsScreen($chain: Chain!, $address: String) {
+query TokenDetailsScreen(
+  $chain: Chain!, 
+  $address: String, 
+  $includeSpanish: Boolean = false, 
+  $includeFrench: Boolean = false, 
+  $includeJapanese: Boolean = false, 
+  $includePortuguese: Boolean = false, 
+  $includeChineseSimplified: Boolean = false,
+  $includeChineseTraditional: Boolean = false,
+) {
   token(chain: $chain, address: $address) {
     address
     chain
@@ -497,6 +506,14 @@ query TokenDetailsScreen($chain: Chain!, $address: String) {
       id
       name
       description
+      descriptionTranslations {
+        descriptionEsEs @include(if: $includeSpanish)
+        descriptionFrFr @include(if: $includeFrench)
+        descriptionJaJp @include(if: $includeJapanese)
+        descriptionPtPt @include(if: $includePortuguese)
+        descriptionZhHans @include(if: $includeChineseSimplified)
+        descriptionZhHant @include(if: $includeChineseTraditional)
+      }
       homepageUrl
       twitterName
       safetyLevel

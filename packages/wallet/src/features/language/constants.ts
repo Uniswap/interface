@@ -51,26 +51,16 @@ export enum Locale {
   VietnameseVietnam = 'vi-VN',
 }
 
-export const ORDERED_LANGUAGES: Language[] = [
+export const SUPPORTED_LANGUAGES: Language[] = [
   Language.English,
   Language.ChineseSimplified,
   Language.ChineseTraditional,
-  Language.Dutch,
   Language.French,
-  Language.Hindi,
-  Language.Indonesian,
   Language.Japanese,
-  Language.Malay,
   Language.Portuguese,
-  Language.Russian,
   Language.SpanishSpain,
   Language.SpanishLatam,
   Language.SpanishUnitedStates,
-  Language.Thai,
-  Language.Turkish,
-  Language.Ukrainian,
-  Language.Urdu,
-  Language.Vietnamese,
 ]
 
 /**

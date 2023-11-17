@@ -25,7 +25,7 @@ export function AnimatedDecimalNumber(props: AnimatedDecimalNumberProps): JSX.El
     separator,
     variant,
     wholePartColor = colors.neutral1.val,
-    decimalPartColor = colors.neutral1.val,
+    decimalPartColor = colors.neutral3.val,
     decimalThreshold = 1,
     testID,
   } = props

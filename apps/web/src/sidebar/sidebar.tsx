@@ -4,6 +4,7 @@
 import React, { lazy } from 'react'
 import { createRoot } from 'react-dom/client'
 import { WebState } from 'src/background/store'
+import { isValidMessage } from 'src/background/utils/messageUtils'
 import { PortName } from 'src/types'
 import { BackgroundToExtensionRequestType } from 'src/types/requests'
 import { logger } from 'utilities/src/logger/logger'
@@ -17,9 +18,17 @@ logger.debug('content_window', 'init', 'initial load')
 
 const App = lazy(() => import('src/app/SidebarApp'))
 
+const extensionId = chrome.runtime.id
 chrome.runtime.connect({ name: PortName.Sidebar })
-chrome.runtime.onMessage.addListener(async (req) => {
-  if (req.type === BackgroundToExtensionRequestType.StoreInitialized) {
+chrome.runtime.onMessage.addListener(async (message, sender) => {
+  if (
+    sender.id === extensionId &&
+    isValidMessage<{ type: BackgroundToExtensionRequestType }>(
+      Object.values(BackgroundToExtensionRequestType),
+      message
+    ) &&
+    message.type === BackgroundToExtensionRequestType.StoreInitialized
+  ) {
     await initContentWindow()
   }
 })

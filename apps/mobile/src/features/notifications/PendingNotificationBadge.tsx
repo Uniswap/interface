@@ -53,13 +53,21 @@ export function PendingNotificationBadge({
 
   /*************** Pending in-app txn  **************/
 
+  const swapPendingNotificationActive =
+    currentNotification?.type === AppNotificationType.SwapPending
   const pendingTransactionCount = (sortedPendingTransactions ?? []).length
   const txPendingLongerThanLimit =
     sortedPendingTransactions?.[0] &&
     Date.now() - sortedPendingTransactions[0].addedTime > PENDING_TX_TIME_LIMIT
 
   // If a transaction has been pending for longer than 5 mins, then don't show the pending icon anymore
-  if (pendingTransactionCount >= 1 && pendingTransactionCount <= 99 && !txPendingLongerThanLimit) {
+  // Dont show the loader if the swap pending toast is on screen
+  if (
+    !swapPendingNotificationActive &&
+    pendingTransactionCount >= 1 &&
+    pendingTransactionCount <= 99 &&
+    !txPendingLongerThanLimit
+  ) {
     return (
       <TouchableArea
         position="relative"

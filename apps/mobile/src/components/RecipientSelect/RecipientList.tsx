@@ -1,6 +1,5 @@
-import { BottomSheetSectionList } from '@gorhom/bottom-sheet'
 import React from 'react'
-import { ListRenderItemInfo, SectionListData } from 'react-native'
+import { ListRenderItemInfo, SectionList, SectionListData } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { AnimatedFlex, Inset, Text, TouchableArea } from 'ui/src'
@@ -21,7 +20,7 @@ export function RecipientList({ onPress, sections }: RecipientListProps): JSX.El
   }
 
   return (
-    <BottomSheetSectionList
+    <SectionList
       ListFooterComponent={<Inset all="$spacing36" />}
       keyExtractor={key}
       keyboardDismissMode="on-drag"
@@ -29,6 +28,7 @@ export function RecipientList({ onPress, sections }: RecipientListProps): JSX.El
       renderItem={renderItem}
       renderSectionHeader={SectionHeader}
       sections={sections}
+      showsVerticalScrollIndicator={false}
     />
   )
 }

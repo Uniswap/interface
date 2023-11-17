@@ -13,7 +13,6 @@ apps/mobile/android/app/google-services.json
 apps/mobile/.storybook
 apps/mobile/codecov.yml
 apps/mobile/scripts
-apps/mobile
 .crowdin.yml
 
 apps/web

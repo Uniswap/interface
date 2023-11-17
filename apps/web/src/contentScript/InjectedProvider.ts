@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ethErrors } from 'eth-rpc-errors'
+import { errorCodes, ethErrors } from 'eth-rpc-errors'
 import { ethers } from 'ethers'
 import EventEmitter from 'eventemitter3'
 import {
@@ -12,7 +12,9 @@ import {
   ChangeChainResponse,
   DappRequestType,
   DappResponseType,
+  ErrorResponse,
   GetAccountRequest,
+  isErrorResponse,
   SendTransactionRequest,
   SendTransactionResponse,
   SignMessageRequest,
@@ -21,8 +23,8 @@ import {
   SignTransactionResponse,
   SignTypedDataRequest,
   SignTypedDataResponse,
-  TransactionRejectedResponse,
 } from 'src/background/features/dappRequests/dappRequestTypes'
+import { isValidMessage } from 'src/background/utils/messageUtils'
 import {
   BaseExtensionRequest,
   ExtensionChainChange,
@@ -35,20 +37,13 @@ import { v4 as uuidv4 } from 'uuid'
 import { ChainId } from 'wallet/src/constants/chains'
 import { chainIdToHexadecimalString, toSupportedChainId } from 'wallet/src/features/chains/utils'
 
-export type EthersSendCallback = (error: unknown, response: unknown) => void
+type EthersSendCallback = (error: unknown, response: unknown) => void
 
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#request
 interface RequestArguments {
   readonly method: string
   readonly params?: readonly unknown[] | object
 }
-
-// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#rpc-errors
-// TODO(EXT-341): add in proper error handling
-// interface ProviderRpcError extends Error {
-//   code: number
-//   data?: unknown
-// }
 
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect-1
 interface ProviderConnectInfo {
@@ -59,14 +54,7 @@ interface SwitchEthereumChainParameter {
   chainId: string
 }
 
-export interface JsonRpcRequest {
-  jsonrpc: string
-  method: string
-  params: any[]
-  id: number
-}
-
-export interface JsonRpcResponse {
+interface JsonRpcResponse {
   jsonrpc: string
   id: number
   result?: any
@@ -114,15 +102,15 @@ export class InjectedProvider extends EventEmitter {
    */
   isMetaMask: boolean
 
+  _isConnected: boolean
+
   constructor() {
     super()
 
+    this._isConnected = true
     this.isMetaMask = true
     this.isUniswapWallet = true
     this.publicKeys = null
-
-    // TODO(EXT-346): pass in an initial state here that's read from local storage so that the dapp doesn't have to wait for a round trip call to initialize
-    // When that is done emit a 'connected' event
 
     this.initExtensionToDappOneWayListener()
   }
@@ -157,13 +145,17 @@ export class InjectedProvider extends EventEmitter {
   // Public methods
   //
 
+  isAuthorized = (): boolean => {
+    return !!this.publicKeys?.length
+  }
+
   /**
    * Returns whether the provider can process RPC requests. (does not imply wallet is connected to dApp)
    * Returns true if the provider is connected to the current chain. If the provider isn't connected,
    * the page must be reloaded to re-establish the connection.
    */
   isConnected = (): boolean => {
-    return !!this.publicKeys
+    return this._isConnected
   }
 
   // Deprecated EIP-1193 method
@@ -204,86 +196,68 @@ export class InjectedProvider extends EventEmitter {
   }
 
   request = async (args: RequestArguments): Promise<JsonRpcResponse> => {
-    if (!args || typeof args !== 'object' || Array.isArray(args)) {
-      throw ethErrors.rpc.invalidRequest({
-        message: messages.errors.invalidRequestArgs(),
-        data: args,
-      })
-    }
-
-    const { method, params } = args
-
-    if (typeof method !== 'string' || method.length === 0) {
-      throw ethErrors.rpc.invalidRequest({
-        message: messages.errors.invalidRequestMethod(),
-        data: args,
-      })
-    }
-
-    if (
-      params !== undefined &&
-      !Array.isArray(params) &&
-      (typeof params !== 'object' || params === null)
-    ) {
-      throw ethErrors.rpc.invalidRequest({
-        message: messages.errors.invalidRequestParams(),
-        data: args,
-      })
-    }
-
-    // type of map with string as key
-    const functionMap: { [key: string]: any } = {
-      eth_accounts: this.handleEthAccounts,
-      eth_requestAccounts: this.handleEthRequestAccounts,
-      eth_chainId: () => this.handleEthChainId(),
-      net_version: () => this.handleEthChainId(),
-      eth_getBalance: (address: string) => this.provider?.getBalance(address),
-      eth_getCode: (address: string) => this.provider?.getCode(address),
-      eth_getStorageAt: (address: string, position: string) =>
-        this.provider?.getStorageAt(address, position),
-      eth_getTransactionCount: (address: string) => this.provider?.getTransactionCount(address),
-      eth_blockNumber: () => this.provider?.getBlockNumber(),
-      eth_getBlockByNumber: (block: number) => this.provider?.getBlock(block),
-      eth_call: (transaction: any) => this.provider?.call(transaction),
-      eth_gasPrice: () => this.provider?.getGasPrice(),
-      eth_estimateGas: (transaction: any) => this.provider?.estimateGas(transaction),
-      eth_getTransactionByHash: (hash: string) => this.provider?.getTransaction(hash),
-      eth_getTransactionReceipt: (hash: string) => this.provider?.getTransactionReceipt(hash),
-      eth_sign: (_address: string, _message: string) => {
-        // Backpack mentioned this is a significant security risk because it can be used to
-        // sign transactions.
-        // TODO maybe enable this with a large warning in the UI?
-        throw new Error('Uniswap Wallet does not support eth_sign due to security concerns')
-      },
-      personal_sign: (messageHex: string, _address: string) =>
-        this.handleEthSignMessage(messageHex),
-      eth_signTransaction: (transaction: any) => this.handleEthSignTransaction(transaction),
-      eth_sendTransaction: (transaction: any) => this.handleEthSendTransaction(transaction),
-      wallet_switchEthereumChain: (switchRequest: SwitchEthereumChainParameter) =>
-        this.handleWalletSwitchEthereumChain(switchRequest),
-      eth_signTypedData_v4: (address: string, typedData: any) =>
-        this.handleEthSignTypedData(address, typedData),
-    }
-
-    const func = functionMap[method]
-    if (func === undefined) {
-      throw ethErrors.rpc.invalidRequest({
-        // TODO(EXT-341): this should reject with 4200
-        message: messages.errors.invalidRequestMethod(),
-        data: args,
-      })
-    }
-
-    // eslint-disable-next-line no-async-promise-executor
-    return new Promise<JsonRpcResponse>(async (resolve, reject) => {
-      let rpcResult
-      try {
-        rpcResult = await func(...(<[]>(params ? params : [])))
-      } catch (error) {
-        logger.error(error, { tags: { file: 'InjectedProvider', function: 'request' } })
-        return reject(error)
+    return new Promise<JsonRpcResponse>((resolve, reject) => {
+      if (!this.isConnected()) {
+        return reject(ethErrors.provider.disconnected())
       }
-      return resolve(rpcResult)
+
+      if (!args || typeof args !== 'object' || Array.isArray(args)) {
+        return reject(
+          ethErrors.rpc.invalidRequest({
+            message: messages.errors.invalidRequestArgs(),
+            data: args,
+          })
+        )
+      }
+
+      const { method, params } = args
+      if (typeof method !== 'string' || method.length === 0) {
+        return reject(
+          ethErrors.rpc.invalidRequest({
+            message: messages.errors.invalidRequestMethod(),
+            data: args,
+          })
+        )
+      }
+
+      if (
+        params !== undefined &&
+        !Array.isArray(params) &&
+        (typeof params !== 'object' || params === null)
+      ) {
+        return reject(
+          ethErrors.rpc.invalidRequest({
+            message: messages.errors.invalidRequestParams(),
+            data: args,
+          })
+        )
+      }
+
+      const func = this.functionMap[method]
+      if (func === undefined) {
+        return reject(
+          ethErrors.provider.unsupportedMethod({
+            message: messages.errors.invalidRequestMethod(),
+            data: args,
+          })
+        )
+      }
+
+      Promise.resolve(func(...(<[]>(params ? params : []))))
+        .then((result) => {
+          if (isErrorResponse(result)) {
+            if (result.error.code === errorCodes.provider.disconnected) {
+              this._isConnected = false
+            }
+
+            reject(result.error)
+          } else {
+            resolve(result)
+          }
+        })
+        .catch((error) => {
+          logger.error(error, { tags: { file: 'InjectedProvider', function: 'request' } })
+        })
     })
   }
 
@@ -295,10 +269,8 @@ export class InjectedProvider extends EventEmitter {
   /**
    * Handle eth_accounts requests. This is called when a dapp first loads.
    * If the user has already connected then this will automatically reconnect them.
-   * TODO(EXT-346): This could be optimized to just read info from this file without
-   * doing a roundtrip to the bg thread.
    */
-  private handleEthAccounts = async (): Promise<string[]> => {
+  private handleEthAccounts = async (): Promise<string[] | ErrorResponse> => {
     // Send request to the RPC API.
     if (this.publicKeys) {
       return this.publicKeys
@@ -315,7 +287,7 @@ export class InjectedProvider extends EventEmitter {
    * Handle eth_requestAccounts requests.
    * The same as handleEthAccounts but it requires user approval for the first connection.
    */
-  private handleEthRequestAccounts = async (): Promise<string[]> => {
+  private handleEthRequestAccounts = async (): Promise<string[] | ErrorResponse> => {
     // Send request to the RPC API.
     if (this.publicKeys?.length) {
       return this.publicKeys
@@ -328,15 +300,17 @@ export class InjectedProvider extends EventEmitter {
     return this._handleEthAccounts(getAccountRequest)
   }
 
-  private _handleEthAccounts = async (request: GetAccountRequest): Promise<string[]> => {
+  private _handleEthAccounts = async (
+    request: GetAccountRequest
+  ): Promise<string[] | ErrorResponse> => {
     // Send request to the RPC API.
-    const response = await sendRequestAsync<AccountResponse | TransactionRejectedResponse>(
+    const response = await sendRequestAsync<AccountResponse>(
       request,
       DappResponseType.AccountResponse
     )
 
-    if (response.type === DappResponseType.TransactionRejected) {
-      throw new Error('Transaction rejected')
+    if (isErrorResponse(response)) {
+      return response
     }
 
     const { connectedAddresses, chainId, providerUrl } = response
@@ -356,9 +330,11 @@ export class InjectedProvider extends EventEmitter {
   /**
    * Handle eth_sign, eth_signTypedData, personal_sign RPC requests.
    */
-  private handleEthSignMessage = async (messageHex: string): Promise<string | undefined> => {
-    if (!this.publicKeys) {
-      throw new Error('Wallet not connected')
+  private handleEthSignMessage = async (
+    messageHex: string
+  ): Promise<string | undefined | ErrorResponse> => {
+    if (!this.isAuthorized()) {
+      return { error: ethErrors.provider.unauthorized() } as ErrorResponse
     }
 
     const request: SignMessageRequest = {
@@ -367,19 +343,22 @@ export class InjectedProvider extends EventEmitter {
       messageHex: ethers.utils.toUtf8String(messageHex),
     }
 
-    const response: SignMessageResponse = await sendRequestAsync(
+    const response = await sendRequestAsync<SignMessageResponse>(
       request,
       DappResponseType.SignMessageResponse
     )
-    return response?.signature
+
+    return isErrorResponse(response) ? response : response?.signature
   }
 
   /**
    * Handle eth_signTransaction RPC requests.
    */
-  private handleEthSignTransaction = async (transaction: unknown): Promise<string | undefined> => {
-    if (!this.publicKeys) {
-      throw new Error('Wallet not connected')
+  private handleEthSignTransaction = async (
+    transaction: unknown
+  ): Promise<string | undefined | ErrorResponse> => {
+    if (!this.isAuthorized()) {
+      return { error: ethErrors.provider.unauthorized() } as ErrorResponse
     }
 
     const request: SignTransactionRequest = {
@@ -387,11 +366,12 @@ export class InjectedProvider extends EventEmitter {
       requestId: uuidv4(),
       transaction: adaptTransactionForEthers(transaction),
     }
-    const response: SignTransactionResponse = await sendRequestAsync(
+    const response = await sendRequestAsync<SignTransactionResponse>(
       request,
       DappResponseType.SignTransactionResponse
     )
-    return response.signedTransactionHash
+
+    return isErrorResponse(response) ? response : response.signedTransactionHash
   }
 
   /**
@@ -400,9 +380,11 @@ export class InjectedProvider extends EventEmitter {
    * // TODO: Unit tests for provider injection methods
    * @returns transaction hash
    */
-  private handleEthSendTransaction = async (transaction: unknown): Promise<string | undefined> => {
-    if (!this.publicKeys) {
-      throw new Error('Wallet not connected')
+  private handleEthSendTransaction = async (
+    transaction: unknown
+  ): Promise<string | undefined | ErrorResponse> => {
+    if (!this.isAuthorized()) {
+      return { error: ethErrors.provider.unauthorized() } as ErrorResponse
     }
 
     const request: SendTransactionRequest = {
@@ -411,29 +393,30 @@ export class InjectedProvider extends EventEmitter {
       transaction: adaptTransactionForEthers(transaction),
     }
 
-    const response = await sendRequestAsync<SendTransactionResponse | TransactionRejectedResponse>(
+    const response = await sendRequestAsync<SendTransactionResponse>(
       request,
       DappResponseType.SendTransactionResponse
     )
 
-    // TODO(EXT-341): make sure error handling is correct and in accordance with EIP-1193
-    if (response.type === DappResponseType.TransactionRejected) {
-      throw new Error('Transaction rejected')
-    }
-    return response?.transaction?.hash
+    return isErrorResponse(response) ? response : response?.transaction?.hash
   }
 
   private handleWalletSwitchEthereumChain = async (
     switchRequest: SwitchEthereumChainParameter
-  ): Promise<null> => {
-    if (!this.publicKeys) {
-      throw new Error('Wallet not connected')
+  ): Promise<null | ErrorResponse> => {
+    if (!this.isAuthorized()) {
+      return { error: ethErrors.provider.unauthorized() } as ErrorResponse
     }
 
     const chainId = toSupportedChainId(parseInt(switchRequest.chainId, 16))
     if (!chainId) {
       // TODO(EXT-330): we should support switching to any chain
-      throw new Error('Unsupported chain')
+      return {
+        error: ethErrors.provider.custom({
+          code: 4902,
+          message: 'Uniswap Wallet does not support switching to this chain.',
+        }),
+      } as ErrorResponse
     }
 
     const changeChainRequest: ChangeChainRequest = {
@@ -442,12 +425,16 @@ export class InjectedProvider extends EventEmitter {
       chainId,
     }
 
-    const { providerUrl } = await sendRequestAsync<ChangeChainResponse>(
+    const response = await sendRequestAsync<ChangeChainResponse>(
       changeChainRequest,
       DappResponseType.ChainChangeResponse
     )
 
-    this.provider = new ethers.providers.JsonRpcProvider(providerUrl)
+    if (isErrorResponse(response)) {
+      return response
+    }
+
+    this.provider = new ethers.providers.JsonRpcProvider(response.providerUrl)
     this.chainId = chainId
     return null
   }
@@ -459,9 +446,12 @@ export class InjectedProvider extends EventEmitter {
    * @param typedData typed data to sign
    * @returns
    */
-  private handleEthSignTypedData = async (_address: any, typedData: any): Promise<string> => {
-    if (!this.publicKeys) {
-      throw new Error('Wallet not connected')
+  private handleEthSignTypedData = async (
+    _address: any,
+    typedData: any
+  ): Promise<string | ErrorResponse> => {
+    if (!this.isAuthorized()) {
+      return { error: ethErrors.provider.unauthorized() } as ErrorResponse
     }
 
     const request: SignTypedDataRequest = {
@@ -475,12 +465,49 @@ export class InjectedProvider extends EventEmitter {
       DappResponseType.SignTypedDataResponse
     )
 
-    return response.signature
+    return isErrorResponse(response) ? response : response.signature
   }
 
   private handleUpdatedConnections = async (addresses: Address[]): Promise<void> => {
     this.publicKeys = addresses
     this.emit('accountsChanged', this.publicKeys)
+  }
+
+  // type of map with string as key
+  private functionMap: { [key: string]: (...params: any[]) => Promise<any> | any } = {
+    eth_accounts: this.handleEthAccounts,
+    eth_requestAccounts: this.handleEthRequestAccounts,
+    eth_chainId: () => this.handleEthChainId(),
+    net_version: () => this.handleEthChainId(),
+    eth_getBalance: (address: string) => this.provider?.getBalance(address),
+    eth_getCode: (address: string) => this.provider?.getCode(address),
+    eth_getStorageAt: (address: string, position: string) =>
+      this.provider?.getStorageAt(address, position),
+    eth_getTransactionCount: (address: string) => this.provider?.getTransactionCount(address),
+    eth_blockNumber: () => this.provider?.getBlockNumber(),
+    eth_getBlockByNumber: (block: number) => this.provider?.getBlock(block),
+    eth_call: (transaction: any) => this.provider?.call(transaction),
+    eth_gasPrice: () => this.provider?.getGasPrice(),
+    eth_estimateGas: (transaction: any) => this.provider?.estimateGas(transaction),
+    eth_getTransactionByHash: (hash: string) => this.provider?.getTransaction(hash),
+    eth_getTransactionReceipt: (hash: string) => this.provider?.getTransactionReceipt(hash),
+    eth_sign: (_address: string, _message: string) => {
+      // Backpack mentioned this is a significant security risk because it can be used to
+      // sign transactions.
+      // TODO maybe enable this with a large warning in the UI?
+      return {
+        error: ethErrors.provider.unsupportedMethod({
+          message: 'Uniswap Wallet does not support eth_sign due to security concerns',
+        }),
+      }
+    },
+    personal_sign: (messageHex: string, _address: string) => this.handleEthSignMessage(messageHex),
+    eth_signTransaction: (transaction: any) => this.handleEthSignTransaction(transaction),
+    eth_sendTransaction: (transaction: any) => this.handleEthSendTransaction(transaction),
+    wallet_switchEthereumChain: (switchRequest: SwitchEthereumChainParameter) =>
+      this.handleWalletSwitchEthereumChain(switchRequest),
+    eth_signTypedData_v4: (address: string, typedData: any) =>
+      this.handleEthSignTypedData(address, typedData),
   }
 }
 
@@ -497,13 +524,13 @@ function adaptTransactionForEthers(transaction: any): any {
  *
  * @param request ContentScriptRequest sent to background service-worker
  * @param responseType type of ContentScriptResponse (can include TransactionRejected)
- * @returns
+ * @returns the specific response type or ErrorResponse if the user rejects the request
  */
 function sendRequestAsync<T extends BaseDappResponse>(
   request: BaseDappRequest,
   responseType: T['type'],
   timeoutMs = ONE_HOUR_MS
-): Promise<T> {
+): Promise<T | ErrorResponse> {
   return new Promise((resolve, reject) => {
     // TOOD(EXT-276): improve transaction timeout logic
     const timeout = setTimeout(() => {
@@ -514,11 +541,14 @@ function sendRequestAsync<T extends BaseDappResponse>(
     const handleDappRequest = (event: MessageEvent<any>): void => {
       const messageData = event.data
       if (
-        (messageData?.type === responseType ||
-          messageData?.type === DappResponseType.TransactionRejected) &&
-        messageData?.requestId === request.requestId
+        messageData?.requestId === request.requestId &&
+        isValidMessage<T | ErrorResponse>(
+          [responseType, DappResponseType.ErrorResponse],
+          messageData
+        )
       ) {
         resolve(messageData)
+
         // need to remove just this specific window listener
         window.removeEventListener('message', handleDappRequest)
         clearTimeout(timeout)

@@ -1,5 +1,6 @@
 import { Provider, TransactionResponse } from '@ethersproject/providers'
 import { createAction } from '@reduxjs/toolkit'
+import { EthereumRpcError, ethErrors } from 'eth-rpc-errors'
 import { ethers, providers } from 'ethers'
 import {
   selectDappChainId,
@@ -32,6 +33,7 @@ import {
   ChangeChainResponse,
   DappRequestType,
   DappResponseType,
+  ErrorResponse,
   SendTransactionRequest,
   SendTransactionResponse,
   SignMessageRequest,
@@ -48,10 +50,10 @@ const FAIL_IMAGE_PATH = 'assets/fail.png'
 const PENDING_IMAGE_PATH = 'assets/pending.png'
 
 export type DappRequestSagaParams = Omit<DappRequestStoreItem, 'account' | 'dappUrl'>
-
+export type DappRequestRejectedParams = DappRequestSagaParams & { error: EthereumRpcError<unknown> }
 export const addRequest = createAction<DappRequestSagaParams>(`dappRequest/handleRequest`)
 export const confirmRequest = createAction<DappRequestStoreItem>(`dappRequest/confirmRequest`)
-export const rejectRequest = createAction<DappRequestStoreItem>(`dappRequest/rejectRequest`)
+export const rejectRequest = createAction<DappRequestRejectedParams>(`dappRequest/rejectRequest`)
 
 export function* dappRequestWatcher() {
   while (true) {
@@ -71,8 +73,8 @@ export function* dappRequestWatcher() {
 export function* handleRequest(requestParams: DappRequestSagaParams) {
   const activeAccount = yield* appSelect(selectActiveAccount)
   if (!activeAccount) {
-    // TODO(EXT-341): reject with error code 4900 (disconnected)
-    throw new Error('No active account')
+    rejectRequest({ ...requestParams, error: ethErrors.provider.unauthorized() })
+    return
   }
 
   const tab = yield* call(chrome.tabs.get, requestParams.senderTabId)
@@ -96,10 +98,9 @@ export function* handleRequest(requestParams: DappRequestSagaParams) {
     !isConnectedToDapp &&
     requestForStore.dappRequest.type !== DappRequestType.GetAccountRequest
   ) {
-    // TODO(EXT-341): reject with error code 4100 (unauthorized)
     // TODO(EXT-359): show a warning when the active account is different.
     // Only reject if there are no wallets connected.
-    yield* put(rejectRequest(requestForStore))
+    yield* put(rejectRequest({ ...requestParams, error: ethErrors.provider.unauthorized() }))
   } else if (
     isConnectedToDapp &&
     (requestForStore.dappRequest.type === DappRequestType.GetAccount ||
@@ -125,7 +126,16 @@ export function* sendTransaction({
   const provider = yield* call(getProvider, chainId)
   const signerManager = yield* call(getSignerManager)
 
-  if (account.type !== AccountType.SignerMnemonic) throw new Error('Account must support signing')
+  if (account.type !== AccountType.SignerMnemonic) {
+    const response: ErrorResponse = {
+      type: DappResponseType.ErrorResponse,
+      error: ethErrors.provider.unauthorized(),
+      requestId,
+    }
+
+    sendMessageToSpecificTab(response, senderTabId)
+    return
+  }
 
   const transactionResponse = yield* call(
     signAndSendTransaction,
@@ -135,7 +145,14 @@ export function* sendTransaction({
     signerManager
   )
 
-  yield* call(handleTransactionResponse, transactionResponse, provider, requestId, senderTabId)
+  yield* call(onTransactionSentToChain, transactionResponse, provider)
+
+  const response: SendTransactionResponse = {
+    type: DappResponseType.SendTransactionResponse,
+    transaction: transactionResponse,
+    requestId,
+  }
+  sendMessageToSpecificTab(response, senderTabId)
 
   return transactionResponse
 }
@@ -153,47 +170,39 @@ export function* getAccount(
   newRequest = false
 ) {
   const activeAccount = yield* appSelect(selectActiveAccount)
+  let response: ErrorResponse | AccountResponse
+
   if (!activeAccount) {
-    throw new Error('No active account')
+    response = {
+      type: DappResponseType.ErrorResponse,
+      error: ethErrors.provider.unauthorized(),
+      requestId,
+    }
+  } else {
+    if (dappUrl && newRequest) {
+      yield* put(
+        saveDappConnection({
+          dappUrl,
+          walletAddress: activeAccount.address,
+        })
+      )
+    }
+
+    const chainId = (dappUrl && (yield* select(selectDappChainId(dappUrl)))) || ChainId.Mainnet
+    const provider = yield* call(getProvider, chainId)
+    const connectedWallets =
+      (dappUrl && (yield* select(selectDappOrderedConnectedAddresses(dappUrl)))) || []
+
+    response = {
+      type: DappResponseType.AccountResponse,
+      requestId,
+      connectedAddresses: connectedWallets,
+      chainId,
+      providerUrl: provider.connection.url,
+    }
   }
 
-  if (dappUrl && newRequest) {
-    yield* put(
-      saveDappConnection({
-        dappUrl,
-        walletAddress: activeAccount.address,
-      })
-    )
-  }
-
-  const chainId = (dappUrl && (yield* select(selectDappChainId(dappUrl)))) || ChainId.Mainnet
-  const provider = yield* call(getProvider, chainId)
-  const connectedWallets =
-    (dappUrl && (yield* select(selectDappOrderedConnectedAddresses(dappUrl)))) || []
-
-  const response: AccountResponse = {
-    type: DappResponseType.AccountResponse,
-    requestId,
-    connectedAddresses: connectedWallets,
-    chainId,
-    providerUrl: provider.connection.url,
-  }
   yield* call(sendMessageToSpecificTab, response, senderTabId)
-}
-
-async function handleTransactionResponse(
-  transactionResponse: ethers.providers.TransactionResponse,
-  provider: Provider,
-  requestId: string,
-  senderTabId: number
-) {
-  const response: SendTransactionResponse = {
-    type: DappResponseType.SendTransactionResponse,
-    transaction: transactionResponse,
-    requestId,
-  }
-  await onTransactionSentToChain(transactionResponse, provider)
-  sendMessageToSpecificTab(response, senderTabId)
 }
 
 export async function signAndSendTransaction(
@@ -297,14 +306,22 @@ export function* handleSignMessage({
   const signerManager = yield* call(getSignerManager)
   const provider = yield* call(getProvider, chainId)
 
-  if (account.type !== AccountType.SignerMnemonic) throw new Error('Account must support signing')
+  let response: SignMessageResponse | ErrorResponse
 
-  const signature = yield* call(signMessage, messageHex, account, signerManager, provider)
+  if (account.type !== AccountType.SignerMnemonic) {
+    response = {
+      type: DappResponseType.ErrorResponse,
+      error: ethErrors.provider.unauthorized(),
+      requestId,
+    }
+  } else {
+    const signature = yield* call(signMessage, messageHex, account, signerManager, provider)
 
-  const response: SignMessageResponse = {
-    type: DappResponseType.SignMessageResponse,
-    requestId,
-    signature,
+    response = {
+      type: DappResponseType.SignMessageResponse,
+      requestId,
+      signature,
+    }
   }
 
   yield* call(sendMessageToSpecificTab, response, senderTabId)
@@ -324,13 +341,21 @@ export function* handleSignTypedData({
   const signerManager = yield* call(getSignerManager)
   const provider = yield* call(getProvider, chainId)
 
-  if (account.type !== AccountType.SignerMnemonic) throw new Error('Account must support signing')
+  let response: SignTypedDataResponse | ErrorResponse
 
-  const signature = yield* call(signTypedDataMessage, typedData, account, signerManager, provider)
-  const response: SignTypedDataResponse = {
-    type: DappResponseType.SignTypedDataResponse,
-    requestId,
-    signature,
+  if (account.type !== AccountType.SignerMnemonic) {
+    response = {
+      type: DappResponseType.ErrorResponse,
+      error: ethErrors.provider.unauthorized(),
+      requestId,
+    }
+  } else {
+    const signature = yield* call(signTypedDataMessage, typedData, account, signerManager, provider)
+    response = {
+      type: DappResponseType.SignTypedDataResponse,
+      requestId,
+      signature,
+    }
   }
 
   yield* call(sendMessageToSpecificTab, response, senderTabId)

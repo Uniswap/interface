@@ -1,31 +1,18 @@
 """This directive allows results to be deferred during execution"""
 directive @defer on FIELD
 
-"""
-Tells the service this field/object has access authorized by an API key.
-"""
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
+"""Tells the service which mutation triggers this subscription."""
+directive @aws_subscribe(
+  """
+  List of mutations which will trigger this subscription when they are called.
+  """
+  mutations: [String]
+) on FIELD_DEFINITION
 
 """
 Tells the service this field/object has access authorized by an OIDC token.
 """
 directive @aws_oidc on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by a Lambda Authorizer.
-"""
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
-
-"""Directs the schema to enforce authorization on a field"""
-directive @aws_auth(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service which subscriptions will be published to when this mutation is
@@ -38,13 +25,15 @@ directive @aws_publish(
   subscriptions: [String]
 ) on FIELD_DEFINITION
 
-"""Tells the service which mutation triggers this subscription."""
-directive @aws_subscribe(
-  """
-  List of mutations which will trigger this subscription when they are called.
-  """
-  mutations: [String]
-) on FIELD_DEFINITION
+"""
+Tells the service this field/object has access authorized by a Lambda Authorizer.
+"""
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service this field/object has access authorized by a Cognito User Pools token.
@@ -53,6 +42,17 @@ directive @aws_cognito_user_pools(
   """List of cognito user pool groups which have access on this field"""
   cognito_groups: [String]
 ) on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by sigv4 signing.
+"""
+directive @aws_iam on OBJECT | FIELD_DEFINITION
+
+"""Directs the schema to enforce authorization on a field"""
+directive @aws_auth(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on FIELD_DEFINITION
 
 union ActivityDetails = TransactionDetails | SwapOrderDetails
 
@@ -118,6 +118,11 @@ input AssetActivityInput {
   timestamp: Int!
   chain: Chain!
   details: ActivityDetailsInput!
+}
+
+enum AssetActivitySwitch {
+  ALTERNATE
+  LEGACY
 }
 
 union AssetChange = TokenTransfer | NftTransfer | TokenApproval | NftApproval | NftApproveForAll
@@ -187,6 +192,29 @@ enum Currency {
   UAH
   USD
   VND
+}
+
+type DescriptionTranslations {
+  id: ID!
+  descriptionZhHans: String
+  descriptionZhHant: String
+  descriptionNlNl: String
+  descriptionEnUs: String
+  descriptionFrFr: String
+  descriptionHiIn: String
+  descriptionIdId: String
+  descriptionJaJp: String
+  descriptionMsMy: String
+  descriptionPtPt: String
+  descriptionRuRu: String
+  descriptionEsEs: String
+  descriptionEs419: String
+  descriptionEsUs: String
+  descriptionThTh: String
+  descriptionTrTr: String
+  descriptionUkUa: String
+  descriptionUrPk: String
+  descriptionViVn: String
 }
 
 type Dimensions {
@@ -698,7 +726,7 @@ type Portfolio {
 
   """  TODO: (michael.zhang) replace with paginated query"""
   nftBalances: [NftBalance]
-  assetActivities(page: Int, pageSize: Int, includeOffChain: Boolean, chains: [Chain!]): [AssetActivity]
+  assetActivities(page: Int, pageSize: Int, includeOffChain: Boolean, chains: [Chain!], _fs: AssetActivitySwitch): [AssetActivity]
 }
 
 enum PriceSource {
@@ -708,10 +736,10 @@ enum PriceSource {
 
 type PushNotification {
   id: ID!
-  contents: String!
+  contents: AWSJSON!
   notifyAddress: String!
-  viewerHeader: String!
-  signerHeader: String!
+  viewerHeader: AWSJSON!
+  signerHeader: AWSJSON!
 }
 
 type Query {
@@ -735,7 +763,7 @@ type Query {
   nftRoute(chain: Chain, senderAddress: String!, nftTrades: [NftTradeInput!]!, tokenTrades: [TokenTradeInput!]): NftRouteResponse
   nftActivity(chain: Chain, filter: NftActivityFilterInput, after: String, first: Int): NftActivityConnection
   nftCollectionBalances(chain: Chain, ownerAddress: String!, after: String, first: Int, before: String, last: Int): NftCollectionBalanceConnection
-  transactionNotification(address: String!, transactionHash: String!, oldNotifications: String): TransactionNotification
+  transactionNotification(chain: Chain!, address: String!, transactionHash: String!): TransactionNotification
 }
 
 enum SafetyLevel {
@@ -861,6 +889,7 @@ type TokenProject {
   name: String
   tokens: [Token!]!
   description: String
+  descriptionTranslations: DescriptionTranslations
   twitterName: String
   homepageUrl: String
   logoUrl: String @deprecated(reason: "use logo")

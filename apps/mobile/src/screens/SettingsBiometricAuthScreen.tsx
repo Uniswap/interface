@@ -79,12 +79,12 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
             [{ text: t('Settings'), onPress: openSettings }, { text: t('Cancel') }]
           )
         : Alert.alert(
-            t('{{capitalizedAuthTypeName}} is not set up', {
+            t('{{capitalizedAuthTypeName}} is not setup', {
               capitalizedAuthTypeName,
               authenticationTypeName,
             }),
             t(
-              '{{capitalizedAuthTypeName}} is not set up on your device. To use {{authenticationTypeName}}, set up it first in settings.',
+              '{{capitalizedAuthTypeName}} is not setup on your device. To use {{authenticationTypeName}}, set it up first in Settings.',
               { capitalizedAuthTypeName, authenticationTypeName }
             ),
             [{ text: t('Set up'), onPress: enroll }, { text: t('Cancel') }]

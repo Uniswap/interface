@@ -1,15 +1,19 @@
 import firebase from '@react-native-firebase/app'
 import firestore from '@react-native-firebase/firestore'
 import { appSelect } from 'src/app/hooks'
+import { initFirebase } from 'src/features/firebase/initFirebaseSaga'
 import {
   getFirebaseUidOrError,
   getFirestoreMetadataRef,
   getFirestoreUidRef,
 } from 'src/features/firebase/utils'
 import { getOneSignalUserIdOrError } from 'src/features/notifications/Onesignal'
-import { call, put, takeEvery } from 'typed-redux-saga'
+import { call, put, select, takeEvery, takeLatest } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
 import { getKeys } from 'utilities/src/primitives/objects'
+import { Language } from 'wallet/src/features/language/constants'
+import { getLocale } from 'wallet/src/features/language/hooks'
+import { selectCurrentLanguage, setCurrentLanguage } from 'wallet/src/features/language/slice'
 import {
   EditAccountAction,
   editAccountActions,
@@ -19,8 +23,9 @@ import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import {
   makeSelectAccountNotificationSetting,
   selectAccounts,
+  selectNonPendingAccounts,
 } from 'wallet/src/features/wallet/selectors'
-import { editAccount } from 'wallet/src/features/wallet/slice'
+import { editAccount, setAccountsNonPending } from 'wallet/src/features/wallet/slice'
 
 interface AccountMetadata {
   name?: string
@@ -33,6 +38,42 @@ interface AccountMetadata {
 // Can't merge with `editAccountSaga` because it can't handle simultaneous actions
 export function* firebaseDataWatcher() {
   yield* takeEvery(editAccountActions.trigger, editAccountDataInFirebase)
+}
+
+export function* firebaseLanguageWatcher() {
+  yield* takeLatest(setCurrentLanguage, syncLanguageWithFirebase)
+}
+
+export function* firebaseAccountWatcher() {
+  yield* takeEvery(setAccountsNonPending, syncAccountWithFirebase)
+}
+
+function* syncLanguageWithFirebase(actionData: ReturnType<typeof setCurrentLanguage>) {
+  yield* call(initFirebase)
+
+  const accounts = yield* select(selectNonPendingAccounts)
+  const addresses = Object.keys(accounts)
+
+  yield* call(updateFirebaseLanguage, addresses, actionData.payload)
+}
+
+function* syncAccountWithFirebase(actionData: ReturnType<typeof setAccountsNonPending>) {
+  const currentLanguage = yield* select(selectCurrentLanguage)
+  yield* call(updateFirebaseLanguage, actionData.payload, currentLanguage)
+}
+
+function* updateFirebaseLanguage(addresses: Address[], language: Language) {
+  const locale = getLocale(language)
+
+  for (const address of addresses) {
+    yield* put(
+      editAccountActions.trigger({
+        type: EditAccountAction.UpdateLanguage,
+        address,
+        locale,
+      })
+    )
+  }
 }
 
 function* editAccountDataInFirebase(actionData: ReturnType<typeof editAccountActions.trigger>) {

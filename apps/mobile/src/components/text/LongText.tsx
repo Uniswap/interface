@@ -2,15 +2,8 @@ import React, { ComponentProps, useCallback, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent, NativeSyntheticEvent, TextLayoutEventData } from 'react-native'
 import Markdown, { MarkdownProps } from 'react-native-markdown-display'
-import {
-  runOnJS,
-  useAnimatedReaction,
-  useAnimatedStyle,
-  useDerivedValue,
-  useSharedValue,
-} from 'react-native-reanimated'
 import { openUri } from 'src/utils/linking'
-import { AnimatedFlex, Flex, SpaceTokens, Text, useSporeColors } from 'ui/src'
+import { Flex, SpaceTokens, Text, useSporeColors } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 
 type LongTextProps = {
@@ -49,40 +42,20 @@ export function LongText(props: LongTextProps): JSX.Element {
     renderAsMarkdown ? true : false
   )
   const [textLengthExceedsLimit, setTextLengthExceedsLimit] = useState(false)
-
-  const initialContentHeight = useSharedValue<number | undefined>(undefined)
-  const textLineHeight = useSharedValue(0)
-  const maxVisibleHeight = useDerivedValue(
-    () => textLineHeight.value * initialDisplayedLines,
-    [initialDisplayedLines]
-  )
-  const animatedStyle = useAnimatedStyle(
-    () => ({
-      height: !textLengthExceedsLimit || expanded ? 'auto' : maxVisibleHeight.value,
-      overflow: 'hidden',
-    }),
-    [expanded, textLengthExceedsLimit]
-  )
-
-  useAnimatedReaction(
-    () => ({
-      initialHeight: initialContentHeight.value,
-      lineHeight: textLineHeight.value,
-    }),
-    ({ initialHeight, lineHeight }) => {
-      if (initialHeight === undefined) return false
-      const numberOfLines = Math.floor(initialHeight / lineHeight)
-      runOnJS(setTextLengthExceedsLimit)(numberOfLines >= initialDisplayedLines)
-    }
-  )
+  const [initialContentHeight, setInitialContentHeight] = useState<number | undefined>(undefined)
+  const [textLineHeight, setTextLineHeight] = useState<number>(fonts[variant].lineHeight)
+  const maxVisibleHeight = textLineHeight * initialDisplayedLines
 
   const onMarkdownLayout = useCallback(
     (event: LayoutChangeEvent) => {
-      if (initialContentHeight.value !== undefined) return
-      initialContentHeight.value = event.nativeEvent.layout.height
+      if (!renderAsMarkdown || initialContentHeight !== undefined) return
+      const textContentHeight = event.nativeEvent.layout.height
+      const currentLines = Math.floor(textContentHeight / textLineHeight)
+      setTextLengthExceedsLimit(currentLines > initialDisplayedLines)
       toggleExpanded()
+      setInitialContentHeight(textContentHeight)
     },
-    [initialContentHeight]
+    [initialContentHeight, initialDisplayedLines, textLineHeight, renderAsMarkdown]
   )
 
   const onTextLayout = useCallback(
@@ -99,6 +72,7 @@ export function LongText(props: LongTextProps): JSX.Element {
       color,
       fontFamily: fonts[variant].family,
       overflow: 'hidden',
+      height: !textLengthExceedsLimit || expanded ? 'auto' : maxVisibleHeight,
     },
     code_inline: codeStyle,
     fence: codeStyle,
@@ -107,15 +81,15 @@ export function LongText(props: LongTextProps): JSX.Element {
     paragraph: {
       marginBottom: 0,
       marginTop: 0,
-      fontSize: fonts[variant].fontSize,
-      lineHeight: fonts[variant].lineHeight,
+      fontSize: fonts.body2.fontSize,
+      lineHeight: textLineHeight,
     },
   }
 
   return (
     <Flex gap={gap}>
       {renderAsMarkdown ? (
-        <AnimatedFlex style={animatedStyle} onLayout={onMarkdownLayout}>
+        <Flex onLayout={onMarkdownLayout}>
           {/* Render fake one-line markdown to properly measure the height of a single text line */}
           <Flex
             opacity={0}
@@ -126,12 +100,12 @@ export function LongText(props: LongTextProps): JSX.Element {
                 layout: { height },
               },
             }): void => {
-              textLineHeight.value = height
+              setTextLineHeight(height)
             }}>
             <Markdown
               style={{
                 ...markdownStyle,
-                body: {},
+                body: { ...markdownStyle.body, height: 'auto' },
                 paragraph: { ...markdownStyle.paragraph, lineHeight: fonts[variant].lineHeight },
               }}
               {...{ children: '.' }}
@@ -147,7 +121,7 @@ export function LongText(props: LongTextProps): JSX.Element {
             // HACK: children prop no in TS definition
             {...{ children: text }}
           />
-        </AnimatedFlex>
+        </Flex>
       ) : (
         <Text
           numberOfLines={expanded ? undefined : initialDisplayedLines}

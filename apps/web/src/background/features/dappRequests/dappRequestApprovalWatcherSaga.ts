@@ -5,13 +5,14 @@ import { ChangeChainRequest, DappRequestType } from './dappRequestTypes'
 import {
   changeChain,
   confirmRequest,
+  DappRequestRejectedParams,
   getAccount,
   handleSignMessage,
   handleSignTypedData,
   rejectRequest,
   sendTransaction,
 } from './saga'
-import { dappRequestActions } from './slice'
+import { dappRequestActions, DappRequestStoreItem } from './slice'
 
 /**
  * Watch for pending requests to be confirmed or rejected and dispatch action
@@ -24,11 +25,12 @@ export function* dappRequestApprovalWatcher() {
 
     try {
       if (type === confirmRequest.type) {
+        const confirmedRequest = request as DappRequestStoreItem
         logger.info('dappRequestApprovalWatcher', 'confirmRequest', JSON.stringify(request))
 
         switch (request.dappRequest.type) {
           case DappRequestType.SendTransaction:
-            yield* call(sendTransaction, request)
+            yield* call(sendTransaction, confirmedRequest)
             break
           case DappRequestType.GetAccount:
           case DappRequestType.GetAccountRequest:
@@ -36,7 +38,7 @@ export function* dappRequestApprovalWatcher() {
               getAccount,
               request.dappRequest.requestId,
               request.senderTabId,
-              request.dappUrl,
+              confirmedRequest.dappUrl,
               request.dappRequest.type === DappRequestType.GetAccountRequest
             )
             break
@@ -46,22 +48,24 @@ export function* dappRequestApprovalWatcher() {
               request.dappRequest.requestId,
               (request.dappRequest as ChangeChainRequest).chainId,
               request.senderTabId,
-              request.dappUrl
+              confirmedRequest.dappUrl
             )
             break
           case DappRequestType.SignMessage:
-            yield* call(handleSignMessage, request)
+            yield* call(handleSignMessage, confirmedRequest)
             break
           case DappRequestType.SignTypedData:
-            yield* call(handleSignTypedData, request)
+            yield* call(handleSignTypedData, confirmedRequest)
             break
           // Add more request types here
         }
       } else if (type === rejectRequest.type) {
-        // TODO(EXT-341): if the user rejects the request the error type should be 4001
         logger.info('dappRequestApprovalWatcher', 'rejectRequest', JSON.stringify(request))
+
+        const rejectedRequest = request as DappRequestRejectedParams
         yield* call(
           sendRejectionToContentScript,
+          rejectedRequest.error,
           request.dappRequest.requestId,
           request.senderTabId
         )

@@ -25,11 +25,7 @@ import {
   requireAcceptNewTrade,
   sumGasFees,
 } from 'src/features/transactions/swap/utils'
-import {
-  getWethContract,
-  tokenWrapActions,
-  WrapType,
-} from 'src/features/transactions/swap/wrapSaga'
+import { getWethContract, tokenWrapActions } from 'src/features/transactions/swap/wrapSaga'
 import {
   updateExactAmountFiat,
   updateExactAmountToken,
@@ -72,7 +68,11 @@ import {
   CurrencyField,
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
-import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
+import {
+  TransactionDetails,
+  TransactionType,
+  WrapType,
+} from 'wallet/src/features/transactions/types'
 import { useContractManager, useProvider } from 'wallet/src/features/wallet/context'
 import {
   useActiveAccount,

@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -153,6 +154,7 @@ private fun SeedPhrasePasteButton(
 ) {
 
   val clipboardManager = LocalClipboardManager.current
+  val isDarkTheme = isSystemInDarkTheme()
 
   Button(
     onClick = {
@@ -165,7 +167,7 @@ private fun SeedPhrasePasteButton(
     },
     colors = ButtonDefaults.buttonColors(
       contentColor = UniswapTheme.colors.neutral2,
-      backgroundColor = UniswapTheme.colors.surface3,
+      backgroundColor = if (isDarkTheme) UniswapTheme.colors.surface3 else UniswapTheme.colors.surface2
     ),
     shape = UniswapTheme.shapes.buttonMedium,
     contentPadding = PaddingValues(

@@ -8,6 +8,8 @@ import { ONBOARDING_LANDING_DARK, ONBOARDING_LANDING_LIGHT } from 'ui/src/assets
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useTimeout } from 'utilities/src/time/timing'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
+import { Language } from 'wallet/src/features/language/constants'
+import { useCurrentLanguage } from 'wallet/src/features/language/hooks'
 
 const stateMachineName = 'State Machine 1'
 
@@ -42,6 +44,7 @@ export const LandingBackground = (): JSX.Element | null => {
   const navigation = useAppStackNavigation()
   const [blurred, setBlurred] = useState(false)
   const [hideAnimation, setHideAnimation] = useState(false)
+  const language = useCurrentLanguage()
 
   useEffect(() => {
     return navigation.addListener('blur', () => {
@@ -78,7 +81,7 @@ export const LandingBackground = (): JSX.Element | null => {
   }
 
   // Android 9 and 10 have issues with Rive, so we fallback on image
-  if (Platform.OS === 'android' && Platform.Version < 30) {
+  if ((Platform.OS === 'android' && Platform.Version < 30) || language !== Language.English) {
     return <OnboardingStaticImage />
   }
 

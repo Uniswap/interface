@@ -9,7 +9,7 @@ import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-n
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
 import { AnimatedFlex, Flex, mediumShadowProps, Text, TouchableArea, useDeviceInsets } from 'ui/src'
-import { spacing } from 'ui/src/theme'
+import { borderRadii, spacing } from 'ui/src/theme'
 import { useTimeout } from 'utilities/src/time/timing'
 import { popNotification } from 'wallet/src/features/notifications/slice'
 
@@ -18,6 +18,10 @@ const NOTIFICATION_HEIGHT = 64
 const DEFAULT_HIDE_DELAY = 5000 // 5 seconds
 const HIDE_OFFSET_Y = -150
 const SPRING_ANIMATION = { damping: 30, stiffness: 150 }
+
+const TOAST_BORDER_WIDTH = spacing.spacing2
+const LARGE_TOAST_RADIUS = borderRadii.rounded24
+const SMALL_TOAST_RADIUS = borderRadii.roundedFull
 
 export interface NotificationContentProps {
   title: string
@@ -33,7 +37,7 @@ export interface NotificationContentProps {
 export interface NotificationToastProps extends NotificationContentProps {
   hideDelay?: number // If omitted, the default delay time is used
   address?: string
-  useSmallDisplay?: boolean // for compressed toasts with only icon and text
+  smallToast?: boolean // for compressed toasts with only icon and text
 }
 
 export function NotificationToast({
@@ -44,7 +48,7 @@ export function NotificationToast({
   hideDelay,
   actionButton,
   address,
-  useSmallDisplay,
+  smallToast,
 }: NotificationToastProps): JSX.Element {
   const dispatch = useAppDispatch()
   const notifications = useAppSelector(selectActiveAccountNotifications)
@@ -109,13 +113,8 @@ export function NotificationToast({
         top={0}
         width="100%"
         zIndex="$modal">
-        <Flex
-          {...mediumShadowProps}
-          borderColor="$surface3"
-          borderRadius="$roundedFull"
-          borderWidth="$spacing2"
-          mx="auto">
-          {useSmallDisplay ? (
+        <Flex {...mediumShadowProps} mx={smallToast ? 'auto' : '$spacing24'}>
+          {smallToast ? (
             <NotificationContentSmall
               icon={icon}
               title={title}
@@ -152,7 +151,9 @@ export function NotificationContent({
     <TouchableArea
       alignItems="center"
       bg="$surface2"
-      borderRadius="$rounded16"
+      borderColor="$surface3"
+      borderRadius={LARGE_TOAST_RADIUS}
+      borderWidth={TOAST_BORDER_WIDTH}
       flex={1}
       flexDirection="row"
       minHeight={NOTIFICATION_HEIGHT}
@@ -166,11 +167,11 @@ export function NotificationContent({
           shrink
           alignItems="center"
           flexBasis={actionButton ? '75%' : '100%'}
-          gap="$spacing8"
+          gap="$spacing12"
           justifyContent="flex-start">
           {icon}
           <Flex row shrink alignItems="center">
-            <Text numberOfLines={2} variant="body2">
+            <Text adjustsFontSizeToFit numberOfLines={2} variant="body2">
               {title}
             </Text>
           </Flex>
@@ -178,7 +179,9 @@ export function NotificationContent({
         {actionButton && (
           <Flex shrink alignItems="flex-end" flexBasis="25%" gap="$spacing4">
             <TouchableArea p="$spacing8" onPress={actionButton.onPress}>
-              <Text color="$accent1">{actionButton.title}</Text>
+              <Text adjustsFontSizeToFit color="$accent1" numberOfLines={1}>
+                {actionButton.title}
+              </Text>
             </TouchableArea>
           </Flex>
         )}
@@ -197,9 +200,9 @@ export function NotificationContentSmall({
     <Flex centered row shrink pointerEvents="box-none">
       <TouchableArea
         bg="$surface2"
-        borderColor="$surface2"
-        borderRadius="$roundedFull"
-        borderWidth={1}
+        borderColor="$surface3"
+        borderRadius={SMALL_TOAST_RADIUS}
+        borderWidth={TOAST_BORDER_WIDTH}
         p="$spacing12"
         onPress={onPress}
         onPressIn={onPressIn}>

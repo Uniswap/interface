@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useBalances } from 'src/features/dataApi/balances'
 import { Screens } from 'src/screens/Screens'
@@ -57,27 +57,39 @@ export function useTokenDetailsNavigation(): {
   const navigation = useAppStackNavigation()
   const [load] = useTokenDetailsScreenLazyQuery()
 
-  const preload = async (currencyId: CurrencyId): Promise<void> => {
-    await load({
-      variables: currencyIdToContractInput(currencyId),
-    })
-  }
+  const preload = useCallback(
+    async (currencyId: CurrencyId): Promise<void> => {
+      await load({
+        variables: currencyIdToContractInput(currencyId),
+      })
+    },
+    [load]
+  )
 
   // the desired behavior is to push the new token details screen onto the stack instead of replacing it
   // however, `push` could create an infinitely deep navigation stack that is hard to get out of
   // for that reason, we first `pop` token details from the stack, and then push it.
   //
   // Use whenever we want to avoid nested token details screens in the nav stack.
-  const navigateWithPop = (currencyId: CurrencyId): void => {
-    if (navigation.canGoBack()) {
-      navigation.pop()
-    }
-    navigation.push(Screens.TokenDetails, { currencyId })
-  }
+  const navigateWithPop = useCallback(
+    (currencyId: CurrencyId): void => {
+      if (navigation.canGoBack()) {
+        navigation.pop()
+      }
+      navigation.push(Screens.TokenDetails, { currencyId })
+    },
+    [navigation]
+  )
 
-  const navigate = (currencyId: CurrencyId): void => {
-    navigation.navigate(Screens.TokenDetails, { currencyId })
-  }
+  const navigate = useCallback(
+    (currencyId: CurrencyId): void => {
+      navigation.navigate(Screens.TokenDetails, { currencyId })
+    },
+    [navigation]
+  )
 
-  return { preload, navigate, navigateWithPop }
+  return useMemo(
+    () => ({ preload, navigate, navigateWithPop }),
+    [navigate, navigateWithPop, preload]
+  )
 }

@@ -1,18 +1,28 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo, useMemo } from 'react'
 import { TextInputProps } from 'react-native'
-import { getNumberFormatSettings } from 'react-native-localize'
 import { AnimatedFlex, Flex, Icons, Text, TouchableArea } from 'ui/src'
-
-// if this setting is changed in phone settings the app would be restarted
-const { decimalSeparator } = getNumberFormatSettings()
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
 enum KeyAction {
   Insert = 'insert',
   Delete = 'delete',
 }
 
-export type KeyLabel = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '.' | '0' | 'backspace'
+export type KeyLabel =
+  | '1'
+  | '2'
+  | '3'
+  | '4'
+  | '5'
+  | '6'
+  | '7'
+  | '8'
+  | '9'
+  | '.'
+  | ','
+  | '0'
+  | 'backspace'
 
 type KeyProps = {
   action: KeyAction
@@ -134,6 +144,8 @@ function KeyButton({
   resetSelection,
   hasCurrencyPrefix,
 }: KeyButtonProps): JSX.Element {
+  const { decimalSeparator } = useAppFiatCurrencyInfo()
+
   const isDisabled = disabled?.(value) ?? false
   // when input is in terms of fiat currency, there is an extra symbol (e.g. "$") in the TextInput value, but not in props.value
   // so account for the extra prefix in `selection`

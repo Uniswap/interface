@@ -3,7 +3,7 @@ import { getToken } from 'tamagui'
 import { Flex } from 'ui/src/components/layout'
 import { FlexLoader } from 'ui/src/loading/FlexLoader'
 import { NftCardLoader } from 'ui/src/loading/NftCardLoader'
-import { Shimmer } from 'ui/src/loading/Shimmer'
+import { Skeleton } from 'ui/src/loading/Skeleton'
 import { TransactionLoader } from './TransactionLoader'
 
 export const Transaction = memo(function _Transaction({
@@ -12,7 +12,7 @@ export const Transaction = memo(function _Transaction({
   repeat?: number
 }): JSX.Element {
   return (
-    <Shimmer>
+    <Skeleton>
       <Flex>
         {new Array(repeat).fill(null).map((_, i, { length }) => (
           <React.Fragment key={i}>
@@ -20,7 +20,7 @@ export const Transaction = memo(function _Transaction({
           </React.Fragment>
         ))}
       </Flex>
-    </Shimmer>
+    </Skeleton>
   )
 })
 
@@ -31,16 +31,13 @@ function NFT({ repeat = 1 }: { repeat?: number }): JSX.Element {
         <NftCardLoader opacity={1} />
       ) : (
         <Flex>
-          {new Array(repeat / 2).fill(null).map((_, i) => {
-            const firstColOpacity = (repeat - ((repeat / 2) * i + 1) + 1) / repeat
-            const secondColOpacity = (repeat - ((repeat / 2) * i + 2) + 1) / repeat
+          {new Array(Math.floor(repeat / 2)).fill(null).map((_, i, { length }) => {
+            const opacity = (length - i) / length
             return (
-              <React.Fragment key={i}>
-                <Flex row>
-                  <NftCardLoader opacity={firstColOpacity} width="50%" />
-                  <NftCardLoader opacity={secondColOpacity} width="50%" />
-                </Flex>
-              </React.Fragment>
+              <Flex key={i} row>
+                <NftCardLoader opacity={opacity} width="50%" />
+                <NftCardLoader opacity={opacity} width="50%" />
+              </Flex>
             )
           })}
         </Flex>
@@ -48,14 +45,14 @@ function NFT({ repeat = 1 }: { repeat?: number }): JSX.Element {
     [repeat]
   )
 
-  return <Shimmer>{loader}</Shimmer>
+  return <Skeleton>{loader}</Skeleton>
 }
 
 function Image(): JSX.Element {
   return (
-    <Shimmer>
+    <Skeleton>
       <FlexLoader aspectRatio={1} borderRadius={getToken('$none', 'radius')} />
-    </Shimmer>
+    </Skeleton>
   )
 }
 

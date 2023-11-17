@@ -9,13 +9,22 @@ import {
 import { BlurView } from 'expo-blur'
 import React, {
   ComponentProps,
+  forwardRef,
   PropsWithChildren,
   useCallback,
   useEffect,
+  useImperativeHandle,
   useRef,
   useState,
 } from 'react'
-import { BackHandler, Keyboard, StyleProp, StyleSheet, ViewStyle } from 'react-native'
+import {
+  BackHandler,
+  Keyboard,
+  LayoutChangeEvent,
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native'
 import Animated, {
   Extrapolate,
   interpolate,
@@ -53,6 +62,7 @@ function useModalBackHandler(modalRef: React.RefObject<BaseModal>, enabled: bool
 }
 
 type Props = PropsWithChildren<{
+  animatedPosition?: Animated.SharedValue<number>
   hideHandlebar?: boolean
   name: ModalName
   onClose?: () => void
@@ -65,6 +75,7 @@ type Props = PropsWithChildren<{
   blurredBackground?: boolean
   dismissOnBackPress?: boolean
   isDismissible?: boolean
+  overrideInnerContainer?: boolean
   renderBehindTopInset?: boolean
   renderBehindBottomInset?: boolean
   hideKeyboardOnDismiss?: boolean
@@ -90,28 +101,37 @@ const Backdrop = (props: BottomSheetBackdropProps): JSX.Element => {
 
 const CONTENT_HEIGHT_SNAP_POINTS = ['CONTENT_HEIGHT']
 
-export function BottomSheetModal({
-  children,
-  name,
-  onClose,
-  snapPoints = CONTENT_HEIGHT_SNAP_POINTS,
-  stackBehavior = 'push',
-  containerComponent,
-  footerComponent,
-  fullScreen,
-  hideHandlebar,
-  backgroundColor,
-  blurredBackground = false,
-  dismissOnBackPress = true,
-  isDismissible = true,
-  renderBehindTopInset = false,
-  renderBehindBottomInset = false,
-  hideKeyboardOnDismiss = false,
-  hideKeyboardOnSwipeDown = false,
-  // keyboardBehavior="extend" does not work and it's hard to figure why,
-  // probably it requires usage of <BottomSheetTextInput>
-  extendOnKeyboardVisible = false,
-}: Props): JSX.Element {
+export type BottomSheetModalRef = {
+  handleContentLayout: (event: LayoutChangeEvent) => void
+}
+
+export const BottomSheetModal = forwardRef<BottomSheetModalRef, Props>(function BottomSheetModal(
+  {
+    children,
+    name,
+    onClose,
+    snapPoints = CONTENT_HEIGHT_SNAP_POINTS,
+    stackBehavior = 'push',
+    animatedPosition: providedAnimatedPosition,
+    containerComponent,
+    footerComponent,
+    fullScreen,
+    hideHandlebar,
+    backgroundColor,
+    blurredBackground = false,
+    dismissOnBackPress = true,
+    isDismissible = true,
+    overrideInnerContainer = false,
+    renderBehindTopInset = false,
+    renderBehindBottomInset = false,
+    hideKeyboardOnDismiss = false,
+    hideKeyboardOnSwipeDown = false,
+    // keyboardBehavior="extend" does not work and it's hard to figure why,
+    // probably it requires usage of <BottomSheetTextInput>
+    extendOnKeyboardVisible = false,
+  },
+  ref
+): JSX.Element {
   const dimensions = useDeviceDimensions()
   const insets = useDeviceInsets()
   const modalRef = useRef<BaseModal>(null)
@@ -135,7 +155,9 @@ export function BottomSheetModal({
     }
   }, [extendOnKeyboardVisible, keyboard.isVisible])
 
-  const animatedPosition = useSharedValue(0)
+  const internalAnimatedPosition = useSharedValue(0)
+  const animatedPosition = providedAnimatedPosition ?? internalAnimatedPosition
+
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
   const media = useMedia()
@@ -268,6 +290,14 @@ export function BottomSheetModal({
     bottomSheetViewStyles.push({ height: fullContentHeight })
   }
 
+  useImperativeHandle(
+    ref,
+    () => ({
+      handleContentLayout,
+    }),
+    [handleContentLayout]
+  )
+
   return (
     <BaseModal
       {...background}
@@ -292,15 +322,19 @@ export function BottomSheetModal({
       onAnimate={onAnimate}
       onDismiss={onClose}>
       <Trace logImpression modal={name}>
-        <BottomSheetView style={bottomSheetViewStyles} onLayout={handleContentLayout}>
-          <BottomSheetContextProvider isSheetReady={isSheetReady}>
-            {children}
-          </BottomSheetContextProvider>
-        </BottomSheetView>
+        {overrideInnerContainer ? (
+          children
+        ) : (
+          <BottomSheetView style={bottomSheetViewStyles} onLayout={handleContentLayout}>
+            <BottomSheetContextProvider isSheetReady={isSheetReady}>
+              {children}
+            </BottomSheetContextProvider>
+          </BottomSheetView>
+        )}
       </Trace>
     </BaseModal>
   )
-}
+})
 
 export function BottomSheetDetachedModal({
   children,

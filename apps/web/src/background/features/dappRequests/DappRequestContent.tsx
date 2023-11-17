@@ -1,4 +1,5 @@
-import { useDappContext } from 'src/background/features/dapp/hooks'
+import { ethErrors } from 'eth-rpc-errors'
+import { useDappContext } from 'src/background/features/dapp/DappContext'
 import { selectDappChainId } from 'src/background/features/dapp/selectors'
 import { AddressFooter } from 'src/background/features/dappRequests/requestContent/AddressFooter'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
@@ -39,7 +40,9 @@ export function DappRequestContent(): JSX.Element {
 
   const onCancel = async (requestToCancel: DappRequestStoreItem): Promise<void> => {
     const shouldCloseWindow = pendingRequests.length <= 1
-    await dispatch(rejectRequest(requestToCancel))
+    await dispatch(
+      rejectRequest({ ...requestToCancel, error: ethErrors.provider.userRejectedRequest() })
+    )
     if (shouldCloseWindow) {
       window.close()
     }

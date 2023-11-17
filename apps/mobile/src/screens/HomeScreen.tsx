@@ -1,8 +1,9 @@
 /* eslint-disable max-lines */
-import { useScrollToTop } from '@react-navigation/native'
+import { useIsFocused, useScrollToTop } from '@react-navigation/native'
 import { FlashList } from '@shopify/flash-list'
 import { impactAsync } from 'expo-haptics'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Freeze } from 'react-freeze'
 import { useTranslation } from 'react-i18next'
 import { FlatList, StyleProp, View, ViewProps, ViewStyle } from 'react-native'
 import { TapGestureHandler, TapGestureHandlerGestureEvent } from 'react-native-gesture-handler'
@@ -19,7 +20,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import { SvgProps } from 'react-native-svg'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
-import { useAppDispatch } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
@@ -40,11 +41,13 @@ import {
   useScrollSync,
 } from 'src/components/layout/TabHelpers'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
+import { TokenBalanceListItem } from 'src/components/TokenBalanceList/TokenBalanceList'
 import Trace from 'src/components/Trace/Trace'
 import TraceTabView from 'src/components/Trace/TraceTabView'
 import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
 import { openModal } from 'src/features/modals/modalSlice'
+import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
 import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
 import {
   ElementName,
@@ -96,6 +99,9 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const insets = useDeviceInsets()
   const dimensions = useDeviceDimensions()
   const dispatch = useAppDispatch()
+  const isFocused = useIsFocused()
+  const isModalOpen = useAppSelector(selectSomeModalOpen)
+  const isHomeScreenBlur = !isFocused || isModalOpen
 
   const showFeedTab = useFeatureFlag(FEATURE_FLAGS.FeedTab)
   // opens the wallet restore modal if recovery phrase is missing after the app is opened
@@ -170,8 +176,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     (event) => (feedTabScrollValue.value = event.contentOffset.y)
   )
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const tokensTabScrollRef = useAnimatedRef<FlatList<any>>()
+  const tokensTabScrollRef = useAnimatedRef<FlatList<TokenBalanceListItem>>()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const nftsTabScrollRef = useAnimatedRef<FlashList<any>>()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -276,9 +281,16 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const { sync } = useScrollSync(currentTabIndex, scrollPairs, headerConfig)
 
+  const forAggregatorEnabled = useFeatureFlag(FEATURE_FLAGS.ForAggregator)
+
   const onPressBuy = useCallback(
-    () => dispatch(openModal({ name: ModalName.FiatOnRamp })),
-    [dispatch]
+    () =>
+      dispatch(
+        openModal({
+          name: forAggregatorEnabled ? ModalName.FiatOnRampAggregator : ModalName.FiatOnRamp,
+        })
+      ),
+    [dispatch, forAggregatorEnabled]
   )
   const onPressScan = useCallback(() => {
     // in case we received a pending session from a previous scan after closing modal
@@ -505,39 +517,45 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       switch (route?.key) {
         case SectionName.HomeTokensTab:
           return (
-            <TokensTab
-              ref={tokensTabScrollRef}
-              containerProps={sharedProps}
-              headerHeight={headerHeight}
-              owner={activeAccount?.address}
-              refreshing={refreshing}
-              scrollHandler={tokensTabScrollHandler}
-              onRefresh={onRefreshHomeData}
-            />
+            <Freeze freeze={tabIndex !== 0 && isHomeScreenBlur}>
+              <TokensTab
+                ref={tokensTabScrollRef}
+                containerProps={sharedProps}
+                headerHeight={headerHeight}
+                owner={activeAccount?.address}
+                refreshing={refreshing}
+                scrollHandler={tokensTabScrollHandler}
+                onRefresh={onRefreshHomeData}
+              />
+            </Freeze>
           )
         case SectionName.HomeNFTsTab:
           return (
-            <NftsTab
-              ref={nftsTabScrollRef}
-              containerProps={sharedProps}
-              headerHeight={headerHeight}
-              owner={activeAccount?.address}
-              refreshing={refreshing}
-              scrollHandler={nftsTabScrollHandler}
-              onRefresh={onRefreshHomeData}
-            />
+            <Freeze freeze={tabIndex !== 1 && isHomeScreenBlur}>
+              <NftsTab
+                ref={nftsTabScrollRef}
+                containerProps={sharedProps}
+                headerHeight={headerHeight}
+                owner={activeAccount?.address}
+                refreshing={refreshing}
+                scrollHandler={nftsTabScrollHandler}
+                onRefresh={onRefreshHomeData}
+              />
+            </Freeze>
           )
         case SectionName.HomeActivityTab:
           return (
-            <ActivityTab
-              ref={activityTabScrollRef}
-              containerProps={sharedProps}
-              headerHeight={headerHeight}
-              owner={activeAccount?.address}
-              refreshing={refreshing}
-              scrollHandler={activityTabScrollHandler}
-              onRefresh={onRefreshHomeData}
-            />
+            <Freeze freeze={tabIndex !== 2 && isHomeScreenBlur}>
+              <ActivityTab
+                ref={activityTabScrollRef}
+                containerProps={sharedProps}
+                headerHeight={headerHeight}
+                owner={activeAccount?.address}
+                refreshing={refreshing}
+                scrollHandler={activityTabScrollHandler}
+                onRefresh={onRefreshHomeData}
+              />
+            </Freeze>
           )
         case SectionName.HomeFeedTab:
           return (
@@ -555,19 +573,21 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       return null
     },
     [
-      activeAccount?.address,
-      activityTabScrollHandler,
-      activityTabScrollRef,
-      feedTabScrollHandler,
-      feedTabScrollRef,
-      nftsTabScrollHandler,
-      nftsTabScrollRef,
-      sharedProps,
-      tokensTabScrollHandler,
+      tabIndex,
+      isHomeScreenBlur,
       tokensTabScrollRef,
-      refreshing,
-      onRefreshHomeData,
+      sharedProps,
       headerHeight,
+      activeAccount?.address,
+      refreshing,
+      tokensTabScrollHandler,
+      onRefreshHomeData,
+      nftsTabScrollRef,
+      nftsTabScrollHandler,
+      activityTabScrollRef,
+      activityTabScrollHandler,
+      feedTabScrollRef,
+      feedTabScrollHandler,
     ]
   )
 

@@ -1,4 +1,4 @@
-import { differenceWith, next } from './array'
+import { bubbleToTop, differenceWith, next } from './array'
 
 it('returns undefined for empty arrays', () => {
   expect(next([], '123')).toBe(undefined)
@@ -28,4 +28,20 @@ it('calculates difference correctly', () => {
   expect(sameResult.length).toEqual(2)
   expect(sameResult[0]).toBe(1)
   expect(sameResult[1]).toBe(2)
+})
+
+describe('bubbleToTop', () => {
+  test('should swap the first element with the one that matches the predicate', () => {
+    const inputArray = [1, 2, 3, 4, 5]
+    const predicate = (element: number): boolean => element === 3
+    const result = bubbleToTop(inputArray, predicate)
+    expect(result).toEqual([3, 1, 2, 4, 5])
+  })
+
+  test('should not swap any elements if the predicate is not met', () => {
+    const inputArray = [1, 2, 3, 4, 5]
+    const predicate = (element: number): boolean => element === 10
+    const result = bubbleToTop(inputArray, predicate)
+    expect(result).toEqual(inputArray) // The array should remain unchanged
+  })
 })

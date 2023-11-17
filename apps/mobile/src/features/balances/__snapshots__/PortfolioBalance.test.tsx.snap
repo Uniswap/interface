@@ -1591,7 +1591,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                 style={
                   [
                     {
-                      "color": "#222222",
+                      "color": "#CECECE",
                     },
                     {
                       "fontFamily": "Basel-Book",
@@ -1645,7 +1645,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1667,7 +1667,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1689,7 +1689,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1711,7 +1711,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1733,7 +1733,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1755,7 +1755,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1777,7 +1777,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1799,7 +1799,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1821,7 +1821,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1843,7 +1843,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1898,7 +1898,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1920,7 +1920,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1942,7 +1942,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1964,7 +1964,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -1986,7 +1986,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -2008,7 +2008,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -2030,7 +2030,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -2052,7 +2052,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -2074,7 +2074,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",
@@ -2096,7 +2096,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#CECECE",
                       },
                       {
                         "fontFamily": "Basel-Book",

@@ -12,6 +12,7 @@
     "@tamagui/theme-base": "1.74.16",
     "ethers": "5.7.2",
     "expo-haptics": "12.0.1",
+    "expo-localization": "14.1.1",
     "react": "18.2.0",
     "react-i18next": "11.18.6",
     "react-native": "0.71.13",

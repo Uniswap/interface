@@ -1,7 +1,6 @@
 import { Platform, StyleSheet } from 'react-native'
 import WebView from 'react-native-webview'
-import { Flex } from 'ui/src'
-import { Loader } from 'ui/src/loading'
+import { Flex, Loader } from 'ui/src'
 import { useSvgData } from 'wallet/src/features/images/hooks'
 import { SvgUriProps } from 'wallet/src/features/images/WebSvgUri'
 
