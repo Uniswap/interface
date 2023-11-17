@@ -76,7 +76,7 @@ export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolea
 
         {gasFeeUSD && (
           <TouchableArea hapticFeedback onPress={(): void => setShowGasInfoModal(true)}>
-            <AnimatedFlex centered row entering={FadeIn} exiting={FadeOut} gap="$spacing4">
+            <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
               <Icons.Gas color={colors.neutral2.val} size="$icon.16" />
               <Text color="$neutral2" variant="body3">
                 {gasFeeFormatted}

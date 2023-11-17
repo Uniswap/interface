@@ -1,7 +1,7 @@
 import React from 'react'
-import { TOKEN_BALANCE_ITEM_HEIGHT } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { TOKEN_BALANCE_ITEM_HEIGHT } from 'wallet/src/features/portfolio/TokenBalanceItem'
 
 interface TokenLoaderProps {
   opacity: number

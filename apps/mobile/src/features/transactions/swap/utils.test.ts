@@ -1,11 +1,11 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Route } from '@uniswap/v3-sdk'
 import { getWrapType, requireAcceptNewTrade } from 'src/features/transactions/swap/utils'
-import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { ChainId } from 'wallet/src/constants/chains'
 import { UNI, WBTC, wrappedNativeCurrency } from 'wallet/src/constants/tokens'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
+import { WrapType } from 'wallet/src/features/transactions/types'
 import { mockPool } from 'wallet/src/test/fixtures'
 
 describe(getWrapType, () => {

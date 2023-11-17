@@ -2,7 +2,11 @@ import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { appRatingWatcherSaga } from 'src/features/appRating/saga'
 import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
 import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLinkSaga'
-import { firebaseDataWatcher } from 'src/features/firebase/firebaseDataSaga'
+import {
+  firebaseAccountWatcher,
+  firebaseDataWatcher,
+  firebaseLanguageWatcher,
+} from 'src/features/firebase/firebaseDataSaga'
 import { initFirebase } from 'src/features/firebase/initFirebaseSaga'
 import { modalWatcher } from 'src/features/modals/saga'
 import { notificationWatcher } from 'src/features/notifications/notificationWatcherSaga'
@@ -23,6 +27,7 @@ import { restoreMnemonicCompleteWatcher } from 'src/features/wallet/saga'
 import { walletConnectSaga } from 'src/features/walletConnect/saga'
 import { signWcRequestSaga } from 'src/features/walletConnect/signWcRequestSaga'
 import { spawn } from 'typed-redux-saga'
+import { appLanguageWatcherSaga } from 'wallet/src/features/language/saga'
 import { transactionWatcher } from 'wallet/src/features/transactions/transactionWatcherSaga'
 import {
   editAccountActions,
@@ -47,10 +52,13 @@ import { getMonitoredSagaReducers, MonitoredSaga } from 'wallet/src/state/saga'
 
 // All regular sagas must be included here
 const sagas = [
+  appLanguageWatcherSaga,
   appRatingWatcherSaga,
   cloudBackupsManagerSaga,
   deepLinkWatcher,
+  firebaseAccountWatcher,
   firebaseDataWatcher,
+  firebaseLanguageWatcher,
   initFirebase,
   modalWatcher,
   notificationWatcher,

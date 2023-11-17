@@ -2,7 +2,6 @@ import { TradeType } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelectTransaction } from 'src/features/transactions/hooks'
-import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { TransactionPending } from 'src/features/transactions/TransactionPending/TransactionPending'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -18,6 +17,7 @@ import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
+  WrapType,
 } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'wallet/src/utils/currency'

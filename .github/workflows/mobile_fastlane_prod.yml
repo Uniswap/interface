@@ -14,14 +14,14 @@ jobs:
     steps:
       - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
         with:
-          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
           ref: ${{ github.ref }}
-          
+          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
+
       - name: 📲 Setup for Fastlane Deploy
         uses: ./.github/actions/mobile_fastlane_deploy/setup
         with:
           branch: ${{ github.ref }}
-            
+
       - name: 📲 Fastlane Deploy iOS Prod 🍎
         uses: ./.github/actions/mobile_fastlane_deploy/ios
         with:
@@ -41,6 +41,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           infura-project-id: ${{ secrets.INFURA_PROJECT_ID }}
           match-password: ${{ secrets.MATCH_PASSWORD }}
+          meld-api-key: ${{ secrets.MELD_API_KEY }}
           moonpay-api-key: ${{ secrets.MOONPAY_API_KEY }}
           moonpay-api-url: ${{ secrets.MOONPAY_API_URL }}
           moonpay-widget-api-url: ${{ secrets.MOONPAY_WIDGET_API_URL }}
@@ -66,7 +67,13 @@ jobs:
     steps:
       - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
         with:
+          fetch-depth: 0
           ref: ${{ github.ref }}
+
+      - name: 📲 Setup for Fastlane Deploy
+        uses: ./.github/actions/mobile_fastlane_deploy/setup
+        with:
+          branch: ${{ github.ref }}
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
 
       - name: 📲 Fastlane Deploy Android Prod 🤖
@@ -76,7 +83,11 @@ jobs:
           android-flavor: prod
           android-json-key-data: ${{ secrets.ANDROID_JSON_KEY_DATA }}
           android-keystore: ${{ secrets.ANDROID_PROD_KEYSTORE }}
+          android-keystore-alias: ${{ secrets.ANDROID_PROD_KEYSTORE_ALIAS }}
+          android-keystore-file: ${{ secrets.ANDROID_PROD_KEYSTORE_FILE }}
+          android-key-password: ${{ secrets.ANDROID_PROD_KEY_PASSWORD }}
           android-package-name: ${{ secrets.ANDROID_PROD_PACKAGE_NAME }}
+          android-store-password: ${{ secrets.ANDROID_PROD_STORE_PASSWORD }}
           appsflyer-api-key: ${{ secrets.APPSFLYER_API_KEY }}
           appsflyer-app-id: ${{ secrets.APPSFLYER_APP_ID }}
           branch: ${{ github.ref }}

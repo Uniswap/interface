@@ -52,6 +52,8 @@ import {
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
+import { Language } from 'wallet/src/features/language/constants'
+import { useCurrentLanguage } from 'wallet/src/features/language/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useExtractedTokenColor } from 'wallet/src/utils/colors'
@@ -105,10 +107,22 @@ export function TokenDetailsScreen({
   const { currencyId: _currencyId } = route.params
   // Potentially delays loading of perf-heavy content to speed up navigation
   const showSkeleton = useSkeletonLoading(navigation)
+  const language = useCurrentLanguage()
 
   // Token details screen query
   const { data, refetch, networkStatus } = useTokenDetailsScreenQuery({
-    variables: currencyIdToContractInput(_currencyId),
+    variables: {
+      ...currencyIdToContractInput(_currencyId),
+      includeSpanish:
+        language === Language.SpanishSpain ||
+        language === Language.SpanishLatam ||
+        language === Language.SpanishUnitedStates,
+      includeFrench: language === Language.French,
+      includeJapanese: language === Language.Japanese,
+      includePortuguese: language === Language.Portuguese,
+      includeChineseSimplified: language === Language.ChineseSimplified,
+      includeChineseTraditional: language === Language.ChineseTraditional,
+    },
     pollInterval: PollingInterval.Normal,
     notifyOnNetworkStatusChange: true,
     returnPartialData: true,

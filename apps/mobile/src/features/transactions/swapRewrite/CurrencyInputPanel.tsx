@@ -212,7 +212,10 @@ export const CurrencyInputPanel = memo(
             row
             alignItems="center"
             gap="$spacing8"
-            justifyContent={!currencyInfo ? 'flex-end' : 'space-between'}>
+            justifyContent={!currencyInfo ? 'flex-end' : 'space-between'}
+            // Extra space in case choose token text overlaps swap arrow
+            pb={!isOutput && !currencyInfo ? '$spacing8' : '$none'}
+            pt={isOutput && !currencyInfo ? '$spacing8' : '$none'}>
             <AnimatedFlex
               fill
               grow

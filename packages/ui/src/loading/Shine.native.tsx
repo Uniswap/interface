@@ -9,19 +9,13 @@ import Reanimated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex } from 'ui/src/components/layout'
+import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { opacify } from 'ui/src/theme'
+import { ShineProps } from './ShineProps'
 const SHIMMER_DURATION = 2000 // 2 seconds
 
-type WarmLoadingShimmerProps = {
-  isWarmLoading?: boolean
-  children: JSX.Element
-}
-
-export function WarmLoadingShimmer({
-  children,
-  isWarmLoading = true,
-}: WarmLoadingShimmerProps): JSX.Element {
+export function Shine({ children, disabled }: ShineProps): JSX.Element {
   const colors = useSporeColors()
 
   const [layout, setLayout] = useState<LayoutRectangle | null>()
@@ -58,7 +52,7 @@ export function WarmLoadingShimmer({
     )
   }
 
-  if (isWarmLoading) {
+  if (!disabled) {
     return (
       <MaskedView maskElement={children} style={{ width: layout.width, height: layout.height }}>
         <Flex grow backgroundColor="$neutral2" height="100%" overflow="hidden" />

@@ -5,12 +5,9 @@ import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import Trace from 'src/components/Trace/Trace'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { openUri } from 'src/utils/linking'
-import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
-import BookIcon from 'ui/src/assets/icons/book.svg'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import PaperStackIcon from 'ui/src/assets/icons/paper-stack.svg'
 import { colors as rawColors, iconSizes } from 'ui/src/theme'
-import { uniswapUrls } from 'wallet/src/constants/urls'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { opacify } from 'wallet/src/utils/colors'
@@ -27,13 +24,11 @@ interface ActionCardItem {
 enum ActionOption {
   Buy = 'Buy',
   Import = 'Import',
-  Learn = 'Learn',
   Receive = 'Receive',
 }
 
 export function WalletEmptyState(): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const dispatch = useAppDispatch()
 
   const activeAccount = useActiveAccount()
@@ -81,26 +76,6 @@ export function WalletEmptyState(): JSX.Element {
             })
           ),
       },
-      [ActionOption.Learn]: {
-        title: t('Get started with Uniswap Wallet'),
-        blurb: isViewOnly
-          ? t('Explore and learn the essentials of what’s possible.')
-          : t('Explore and learn the essentials of your new wallet.'),
-        elementName: ElementName.EmptyStateGetStarted,
-        icon: (
-          <IconContainer
-            backgroundColor={rawColors.blue300}
-            icon={
-              <BookIcon
-                color={colors.DEP_blue300.val}
-                height={iconSizes.icon16}
-                width={iconSizes.icon16}
-              />
-            }
-          />
-        ),
-        onPress: () => openUri(uniswapUrls.helpArticleUrls.walletHelp),
-      },
       [ActionOption.Import]: {
         title: t('Import wallet'),
         blurb: t(`Enter this wallet’s recovery phrase to begin swapping and sending.`),
@@ -117,16 +92,14 @@ export function WalletEmptyState(): JSX.Element {
             }
           />
         ),
-        onPress: () => dispatch(dispatch(openModal({ name: ModalName.AccountSwitcher }))),
+        onPress: () => dispatch(openModal({ name: ModalName.AccountSwitcher })),
       },
     }),
-    [dispatch, isViewOnly, t, colors]
+    [dispatch, t]
   )
 
   // Order options based on view only status
-  const sortedOptions = isViewOnly
-    ? [options.Import, options.Learn, options.Receive]
-    : [...(!isViewOnly ? [options.Buy] : []), options.Receive, options.Learn]
+  const sortedOptions = isViewOnly ? [options.Import] : [options.Buy, options.Receive]
 
   return (
     <Flex gap="$spacing8">
@@ -142,7 +115,7 @@ const ActionCard = ({ title, blurb, onPress, icon, elementName }: ActionCardItem
     <TouchableArea backgroundColor="$surface2" borderRadius="$rounded20" onPress={onPress}>
       <Flex centered row gap="$spacing16" p="$spacing16">
         {icon}
-        <Flex shrink gap="$spacing4">
+        <Flex shrink gap="$spacing4" width="100%">
           <Flex row alignItems="center" gap="$spacing8">
             <Text variant="subheading2">{title}</Text>
           </Flex>

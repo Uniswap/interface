@@ -18,6 +18,13 @@ class SeedPhraseInputView: UIView {
     vc.view.backgroundColor = .clear
     
     self.addSubview(vc.view)
+    
+    NSLayoutConstraint.activate([
+      vc.view.topAnchor.constraint(equalTo: self.topAnchor),
+      vc.view.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+      vc.view.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+      vc.view.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+    ])
   }
   
   required init?(coder aDecoder: NSCoder) {

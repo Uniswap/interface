@@ -177,10 +177,14 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
   }
 }
 
+// eslint-disable-next-line complexity
 export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
   const { coldStart } = action.payload
   try {
     const url = new URL(action.payload.url)
+    const screen = url.searchParams.get('screen')
+    const userAddress = url.searchParams.get('userAddress')
+    const fiatOnRamp = url.searchParams.get('fiatOnRamp') === 'true'
 
     const activeAccount = yield* appSelect(selectActiveAccount)
     if (!activeAccount) {
@@ -251,6 +255,26 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
       return
     }
 
+    if (screen && userAddress) {
+      const validUserAddress = yield* call(parseAndValidateUserAddress, userAddress)
+      yield* put(setAccountAsActive(validUserAddress))
+
+      switch (screen) {
+        case 'transaction':
+          if (fiatOnRamp) {
+            yield* call(handleMoonpayReturnLink)
+          } else {
+            yield* call(handleTransactionLink)
+          }
+          break
+        case 'swap':
+          yield* call(handleSwapLink, url)
+          break
+        default:
+          throw new Error('Invalid or unsupported screen')
+      }
+    }
+
     if (url.hostname === UNISWAP_APP_HOSTNAME) {
       const urlParts = url.href.split(`${UNISWAP_APP_HOSTNAME}/`)
       const urlPath = urlParts.length >= 1 ? (urlParts[1] as string) : ''
@@ -258,31 +282,9 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
       return
     }
 
-    const screen = url.searchParams.get('screen')
-    const userAddress = url.searchParams.get('userAddress')
-    const fiatOnRamp = url.searchParams.get('fiatOnRamp') === 'true'
-
-    const validUserAddress = yield* call(parseAndValidateUserAddress, userAddress)
-    yield* put(setAccountAsActive(validUserAddress))
-
-    switch (screen) {
-      case 'transaction':
-        if (fiatOnRamp) {
-          yield* call(handleMoonpayReturnLink)
-        } else {
-          yield* call(handleTransactionLink)
-        }
-        break
-      case 'swap':
-        yield* call(handleSwapLink, url)
-        break
-      default:
-        throw new Error('Invalid or unsupported screen')
-    }
-
     yield* call(sendMobileAnalyticsEvent, MobileEventName.DeepLinkOpened, {
       url: url.toString(),
-      screen,
+      screen: screen ?? 'other',
       is_cold_start: coldStart,
     })
   } catch (error) {

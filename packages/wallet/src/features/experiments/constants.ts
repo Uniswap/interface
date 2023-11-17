@@ -13,6 +13,7 @@ export enum FEATURE_FLAGS {
   CurrencyConversion = 'currency_conversion',
   LanguageSelection = 'language-selection',
   FeedTab = 'feed-tab',
+  ForAggregator = 'for-aggregator',
 }
 
 /**

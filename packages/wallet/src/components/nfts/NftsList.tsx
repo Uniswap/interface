@@ -8,11 +8,11 @@ import {
   AnimatedBottomSheetFlashList,
   AnimatedFlashList,
   Flex,
+  Loader,
   useDeviceDimensions,
   useSporeColors,
 } from 'ui/src'
 import NoNFTsIcon from 'ui/src/assets/icons/empty-state-picture.svg'
-import { Loader } from 'ui/src/loading'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { HiddenNftsRowLeft, HiddenNftsRowRight } from 'wallet/src/components/nfts/NFTHiddenRow'
 import { GQLQueries } from 'wallet/src/data/queries'
@@ -124,6 +124,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
       }
       switch (item) {
         case LOADING_ITEM:
+          // This case probably never occurs
           return <Loader.NFT />
         case EMPTY_NFT_ITEM:
           return null
@@ -181,7 +182,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
       ListFooterComponent={
         ListFooterComponent ? (
           <>
-            {networkStatus === NetworkStatus.fetchMore && <Loader.NFT repeat={4} />}
+            {networkStatus === NetworkStatus.fetchMore && <Loader.NFT repeat={6} />}
             {ListFooterComponent}
           </>
         ) : undefined

@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Image } from 'react-native'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -16,7 +17,7 @@ interface TokenLogoProps {
   hideNetworkLogo?: boolean
 }
 
-export function TokenLogo({
+export const TokenLogo = memo(function _TokenLogo({
   url,
   symbol,
   chainId,
@@ -100,4 +101,4 @@ export function TokenLogo({
       )}
     </Flex>
   )
-}
+})

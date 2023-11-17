@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { LongText } from 'src/components/text/LongText'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import StatsIcon from 'ui/src/assets/icons/chart-bar.svg'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { Language } from 'wallet/src/features/language/constants'
+import { useCurrentLanguage, useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 function StatsRow({
@@ -88,11 +91,22 @@ export function TokenDetailsStats({
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const currentLanguage = useCurrentLanguage()
+  const currentLanguageInfo = useCurrentLanguageInfo()
+
+  const [showTranslation, setShowTranslation] = useState(false)
 
   const onChainData = data?.token
   const offChainData = data?.token?.project
 
   const description = offChainData?.description
+  const translatedDescription =
+    offChainData?.descriptionTranslations?.descriptionEsEs ||
+    offChainData?.descriptionTranslations?.descriptionFrFr ||
+    offChainData?.descriptionTranslations?.descriptionJaJp ||
+    offChainData?.descriptionTranslations?.descriptionPtPt ||
+    offChainData?.descriptionTranslations?.descriptionZhHans ||
+    offChainData?.descriptionTranslations?.descriptionZhHant
   const name = offChainData?.name ?? onChainData?.name
   const marketCap = offChainData?.markets?.[0]?.marketCap?.value
   const volume = onChainData?.market?.volume?.value
@@ -101,9 +115,12 @@ export function TokenDetailsStats({
   const priceLow52W =
     offChainData?.markets?.[0]?.priceLow52W?.value ?? onChainData?.market?.priceLow52W?.value
 
+  const currentDescription =
+    showTranslation && translatedDescription ? translatedDescription : description
+
   return (
     <Flex gap="$spacing24">
-      {description && (
+      {currentDescription && (
         <Flex gap="$spacing4">
           {name && (
             <Text color="$neutral2" variant="subheading2">
@@ -116,9 +133,39 @@ export function TokenDetailsStats({
               initialDisplayedLines={5}
               linkColor={tokenColor ?? colors.neutral1.get()}
               readMoreOrLessColor={tokenColor ?? colors.neutral2.get()}
-              text={description.trim()}
+              text={currentDescription.trim()}
             />
           </Flex>
+          {currentLanguage !== Language.English && !!translatedDescription && (
+            <TouchableArea
+              hapticFeedback
+              onPress={(): void => setShowTranslation(!showTranslation)}>
+              <Flex alignItems="center" backgroundColor="$surface3" br="$rounded12" p="$spacing12">
+                {showTranslation ? (
+                  <Flex row alignItems="center" gap="$spacing12" width="100%">
+                    <Flex fill row alignItems="center" gap="$spacing12">
+                      <Icons.Language color="$neutral2" size="$icon.20" />
+                      <Text color="$neutral2" variant="body3">
+                        {currentLanguageInfo.name}
+                      </Text>
+                    </Flex>
+                    <Text color="$blue400" variant="buttonLabel4">
+                      {t('Show original')}
+                    </Text>
+                  </Flex>
+                ) : (
+                  <Animated.View entering={FadeIn.duration(100)} exiting={FadeOut.duration(100)}>
+                    <Flex row alignItems="center" gap="$spacing12">
+                      <Icons.Language color="$neutral2" size="$icon.20" />
+                      <Text color="$neutral2" variant="body3">
+                        {t('Translate to {{ language }}', { language: currentLanguageInfo.name })}
+                      </Text>
+                    </Flex>
+                  </Animated.View>
+                )}
+              </Flex>
+            </TouchableArea>
+          )}
         </Flex>
       )}
       <Flex gap="$spacing4">

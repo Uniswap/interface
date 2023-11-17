@@ -1,13 +1,17 @@
+import { ethErrors } from 'eth-rpc-errors'
 import {
   BaseDappRequest,
   BaseDappResponse,
   DappRequestType,
-  Message,
+  DappResponseType,
+  ErrorResponse,
 } from 'src/background/features/dappRequests/dappRequestTypes'
-import { PortName } from 'src/types'
-import { ExtensionToContentScriptRequestType, ExtensionToDappRequestType } from 'src/types/requests'
+import { isValidMessage } from 'src/background/utils/messageUtils'
+import { BaseExtensionRequest, ExtensionToDappRequestType } from 'src/types/requests'
 import { logger } from 'utilities/src/logger/logger'
 import { InjectedAssetsManager } from './InjectedAssetsManager'
+
+const extensionId = chrome.runtime.id
 
 InjectedAssetsManager.init()
 
@@ -15,58 +19,41 @@ InjectedAssetsManager.init()
 addDappToExtensionRoundtripListener()
 addExtensionRequestListener()
 
-chrome.runtime.connect({ name: PortName.ContentScript })
-chrome.runtime.onMessage.addListener((req) => {
-  logger.debug('contentScript', 'listener', `Received ${req.action} from ${req.portName}`)
-
-  // We wait to inject the script until the background is ready to receive messages
-  if (req.action === 'storeReady' && req.portName === 'store') {
-    logger.info('provider.ts', 'main', 'Content script loaded')
-  }
-})
-
 /* Functions */
-
-function dappRequestListener(event: MessageEvent): void {
-  // New request and response types should be added in [types/index.ts]
-
-  // We only accept messages from ourselves
-  if (event.source !== window && !isValidContentScriptRequest(event.data)) {
+async function dappRequestListener(event: MessageEvent): Promise<void> {
+  // We only accept valid messages from ourselves
+  if (
+    event.source !== window ||
+    !isValidMessage<BaseDappRequest>(Object.values(DappRequestType), event.data)
+  ) {
     return
   }
 
+  chrome.runtime.onMessage.addListener((message, sender: chrome.runtime.MessageSender) => {
+    if (
+      sender.id !== extensionId ||
+      !isValidMessage<BaseDappResponse>(Object.values(DappResponseType), message)
+    )
+      return
+
+    logger.info('injected.ts', 'dappRequestListener', 'Response from background is: ', message)
+    // We use event.source here to make sure we send the response back to the original source, but this functions the same as window.postMessage
+    event.source?.postMessage(message)
+  })
+
   const request = event.data as BaseDappRequest
+  logger.info('injected.ts', 'dappRequestListener', 'Payload to send to background is: ', request)
 
-  // Check for a valid request type since any site can post a message to the window
-  if (Object.values(DappRequestType).includes(request.type)) {
-    logger.info(
-      'provider.ts',
-      'contentScriptListener',
-      'Payload to send to background is: ',
-      event.data
-    )
+  try {
+    await chrome.runtime.sendMessage<BaseDappRequest, BaseDappResponse>(request)
+  } catch (error) {
+    const response: ErrorResponse = {
+      type: DappResponseType.ErrorResponse,
+      error: ethErrors.provider.disconnected(),
+      requestId: request.requestId,
+    }
 
-    chrome.runtime.onMessage.addListener(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (message: any, _sender, _sendResponse) => {
-        logger.info(
-          'provider.ts',
-          'contentScriptListener',
-          'Response from background is: ',
-          message
-        )
-        // TODO: Add sender validation
-        if (!isValidContentScriptResponse(message)) return
-
-        // We use event.source here to make sure we send the response back to the original source, but this functions the same as window.postMessage
-        event.source?.postMessage(message)
-      }
-    )
-
-    chrome.runtime.sendMessage<BaseDappRequest, BaseDappResponse>(request).catch((error) => {
-      logger.error(error, { tags: { file: 'injected.ts', function: 'dappRequestListener' } })
-    })
-    logger.info('provider.ts', 'contentScriptListener', 'Message sent to background')
+    event.source?.postMessage(response)
   }
 }
 
@@ -78,58 +65,20 @@ function addDappToExtensionRoundtripListener(): void {
  * Pass on messages from the extension to the page
  */
 function addExtensionRequestListener(): void {
-  chrome.runtime.onMessage.addListener(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (message: any, _sender, _sendResponse) => {
-      logger.info(
-        'provider.ts',
-        'extensionRequestListener',
-        'Message from background is: ',
-        message
-      )
-
-      if (Object.values(ExtensionToDappRequestType).includes(message?.type)) {
-        window.postMessage(message)
-      }
-
-      if (Object.values(ExtensionToContentScriptRequestType).includes(message?.type)) {
-        switch (message.type) {
-          case ExtensionToContentScriptRequestType.InjectAsset:
-            InjectedAssetsManager.injectFrame(message.filename)
-            break
-          case ExtensionToContentScriptRequestType.InjectedAssetRemove:
-            InjectedAssetsManager.removeFrame(message.filename)
-            break
-          default:
-            throw new Error('Unhandled extension request type ' + message.type)
-        }
-      }
+  chrome.runtime.onMessage.addListener((message, sender: chrome.runtime.MessageSender) => {
+    if (
+      sender.id !== extensionId &&
+      isValidMessage<BaseExtensionRequest>(Object.values(ExtensionToDappRequestType), message)
+    ) {
+      return
     }
-  )
-}
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isValidMessage(message: any): message is Message {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return message && typeof message === 'object' && 'type' in message
-}
-
-function isValidContentScriptRequest(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  message: any
-): message is BaseDappRequest {
-  if ((message as BaseDappRequest) !== undefined) {
-    return isValidMessage(message)
-  }
-  return false
-}
-
-function isValidContentScriptResponse(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  message: any
-): message is BaseDappResponse {
-  if ((message as BaseDappResponse) !== undefined) {
-    return isValidMessage(message)
-  }
-  return false
+    logger.info(
+      'injected.ts',
+      'addExtensionRequestListener',
+      'Message from background is: ',
+      message
+    )
+    window.postMessage(message)
+  })
 }

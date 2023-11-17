@@ -1,10 +1,10 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'src/features/dataApi/types'
-import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useTrade } from 'wallet/src/features/transactions/swap/useTrade'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { WrapType } from 'wallet/src/features/transactions/types'
 
 export type DerivedSwapInfo<
   TInput = CurrencyInfo,

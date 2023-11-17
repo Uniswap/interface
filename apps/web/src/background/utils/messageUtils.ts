@@ -1,7 +1,8 @@
+import { EthereumRpcError } from 'eth-rpc-errors'
 import {
   DappResponseType,
+  ErrorResponse,
   Message,
-  TransactionRejectedResponse,
 } from 'src/background/features/dappRequests/dappRequestTypes'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -31,12 +32,24 @@ export function sendMessageToSpecificTab(
 }
 
 export function sendRejectionToContentScript(
+  error: EthereumRpcError<unknown>,
   requestId: string,
   senderTabId: number | undefined
 ): void {
-  const response: TransactionRejectedResponse = {
-    type: DappResponseType.TransactionRejected,
+  const response: ErrorResponse = {
+    type: DappResponseType.ErrorResponse,
+    error,
     requestId,
   }
   sendMessageToSpecificTab(response, senderTabId)
+}
+
+function isMessageWithType(message: unknown): message is Message & { type: string } {
+  return !!message && typeof message === 'object' && 'type' in message
+}
+
+export function isValidMessage<T>(typeValues: string[], message: unknown): message is T {
+  if (!isMessageWithType(message)) return false
+
+  return typeValues.includes(message.type)
 }

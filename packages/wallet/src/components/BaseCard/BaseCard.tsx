@@ -106,7 +106,7 @@ function EmptyState({
       <Flex row gap="$spacing16">
         {buttonLabel && (
           <TouchableArea hapticFeedback onPress={onPress}>
-            <Text color="$accent1" variant="buttonLabel2">
+            <Text color="$accent1" textAlign="center" variant="buttonLabel2">
               {buttonLabel}
             </Text>
           </TouchableArea>

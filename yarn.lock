@@ -17340,7 +17340,7 @@ __metadata:
     expo-linear-gradient: 12.3.0
     expo-linking: 4.0.1
     expo-local-authentication: 13.0.2
-    expo-localization: ~14.1.1
+    expo-localization: 14.1.1
     expo-modules-core: 1.5.8
     expo-screen-capture: 4.2.0
     expo-store-review: ~6.2.1
@@ -17364,6 +17364,7 @@ __metadata:
     react-apollo: 3.1.5
     react-devtools: 4.28.0
     react-dom: 18.2.0
+    react-freeze: 1.0.3
     react-i18next: 11.18.6
     react-native: 0.71.13
     react-native-apollo-devtools-client: 1.0.4
@@ -28913,7 +28914,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-localization@npm:~14.1.1":
+"expo-localization@npm:14.1.1":
   version: 14.1.1
   resolution: "expo-localization@npm:14.1.1"
   dependencies:
@@ -44049,7 +44050,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-freeze@npm:^1.0.0, react-freeze@npm:^1.0.3":
+"react-freeze@npm:1.0.3, react-freeze@npm:^1.0.0, react-freeze@npm:^1.0.3":
   version: 1.0.3
   resolution: "react-freeze@npm:1.0.3"
   peerDependencies:
@@ -44608,6 +44609,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-wagmi-charts@patch:react-native-wagmi-charts@npm%3A2.3.0#./.yarn/patches/react-native-wagmi-charts-npm-2.3.0-8e836a8f3c.patch::locator=universe%40workspace%3A.":
+  version: 2.3.0
+  resolution: "react-native-wagmi-charts@patch:react-native-wagmi-charts@npm%3A2.3.0#./.yarn/patches/react-native-wagmi-charts-npm-2.3.0-8e836a8f3c.patch::version=2.3.0&hash=947134&locator=universe%40workspace%3A."
+  dependencies:
+    d3-interpolate-path: ^2.2.3
+    d3-scale: ^2
+    d3-shape: ^3.0.1
+    react-keyed-flatten-children: ^1.3.0
+    react-native-redash: ^16.1.1
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-gesture-handler: "*"
+    react-native-reanimated: "*"
+    react-native-svg: "*"
+  checksum: 0e3e3ef77c5fcf60c793d69fba50a7a7cbf43170176b995742fd06b200518755c92f23d9c8685c8c4c4c34d018da73b9bc647623fac052a8d52a788cf0123337
+  languageName: node
+  linkType: hard
+
 "react-native-web-internals@npm:1.74.16":
   version: 1.74.16
   resolution: "react-native-web-internals@npm:1.74.16"
@@ -44723,6 +44743,53 @@ __metadata:
   bin:
     react-native: cli.js
   checksum: c895895b88af8a9268ea0d919d41637cabd5450b8397f4e2609095e09925f583471c27b722e78cb583f0e1fdc27f0db09610a95b4bba0bf817081132c695006d
+  languageName: node
+  linkType: hard
+
+"react-native@patch:react-native@npm%3A0.71.13#./.yarn/patches/react-native-npm-0.71.13-e260a84bbf.patch::locator=universe%40workspace%3A.":
+  version: 0.71.13
+  resolution: "react-native@patch:react-native@npm%3A0.71.13#./.yarn/patches/react-native-npm-0.71.13-e260a84bbf.patch::version=0.71.13&hash=d8d3fa&locator=universe%40workspace%3A."
+  dependencies:
+    "@jest/create-cache-key-function": ^29.2.1
+    "@react-native-community/cli": 10.2.4
+    "@react-native-community/cli-platform-android": 10.2.0
+    "@react-native-community/cli-platform-ios": 10.2.4
+    "@react-native/assets": 1.0.0
+    "@react-native/normalize-color": 2.1.0
+    "@react-native/polyfills": 2.0.0
+    abort-controller: ^3.0.0
+    anser: ^1.4.9
+    ansi-regex: ^5.0.0
+    base64-js: ^1.1.2
+    deprecated-react-native-prop-types: ^3.0.1
+    event-target-shim: ^5.0.1
+    invariant: ^2.2.4
+    jest-environment-node: ^29.2.1
+    jsc-android: ^250231.0.0
+    memoize-one: ^5.0.0
+    metro-react-native-babel-transformer: 0.73.10
+    metro-runtime: 0.73.10
+    metro-source-map: 0.73.10
+    mkdirp: ^0.5.1
+    nullthrows: ^1.1.1
+    pretty-format: ^26.5.2
+    promise: ^8.3.0
+    react-devtools-core: ^4.26.1
+    react-native-codegen: ^0.71.5
+    react-native-gradle-plugin: ^0.71.19
+    react-refresh: ^0.4.0
+    react-shallow-renderer: ^16.15.0
+    regenerator-runtime: ^0.13.2
+    scheduler: ^0.23.0
+    stacktrace-parser: ^0.1.3
+    use-sync-external-store: ^1.0.0
+    whatwg-fetch: ^3.0.0
+    ws: ^6.2.2
+  peerDependencies:
+    react: 18.2.0
+  bin:
+    react-native: cli.js
+  checksum: 4f04ff05b4504bbc8dd86055a7efc1628b5b88b669b2c98fdc278e5e67f55c13e8fa250eb8e0a0dbab72130c6d37e24ccaa1b4f7fa72002ea1312fa23c2c5074
   languageName: node
   linkType: hard
 
@@ -50835,6 +50902,7 @@ __metadata:
     eslint: 8.44.0
     ethers: 5.7.2
     expo-haptics: 12.0.1
+    expo-localization: 14.1.1
     fs-extra: ^11.1.1
     react: 18.2.0
     react-i18next: 11.18.6

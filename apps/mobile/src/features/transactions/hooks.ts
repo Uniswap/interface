@@ -75,11 +75,13 @@ export function useSelectTransaction(
 export function useSelectAddressTransactions(
   address: Address | null
 ): TransactionDetails[] | undefined {
-  return useAppSelector(makeSelectAddressTransactions(address))
+  const selectAddressTransactions = useMemo(makeSelectAddressTransactions, [])
+  return useAppSelector((state) => selectAddressTransactions(state, address))
 }
 
 export function useSelectLocalTxCurrencyIds(address: Address | null): Record<string, boolean> {
-  return useAppSelector(makeSelectLocalTxCurrencyIds(address))
+  const selectLocalTxCurrencyIds = useMemo(makeSelectLocalTxCurrencyIds, [])
+  return useAppSelector((state) => selectLocalTxCurrencyIds(state, address))
 }
 
 export function useCreateSwapFormState(

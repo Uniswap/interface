@@ -10,6 +10,7 @@ import { RemoveWalletModal } from 'src/components/RemoveWallet/RemoveWalletModal
 import { RestoreWalletModal } from 'src/components/RestoreWalletModal/RestoreWalletModal'
 import { WalletConnectModals } from 'src/components/WalletConnect/WalletConnectModals'
 import { LockScreenModal } from 'src/features/authentication/LockScreenModal'
+import { FiatOnRampAggregatorModal } from 'src/features/fiatOnRamp/FiatOnRampAggregatorModal'
 import { FiatOnRampModal } from 'src/features/fiatOnRamp/FiatOnRampModal'
 import { ModalName } from 'src/features/telemetry/constants'
 import { SettingsFiatCurrencyModal } from 'src/screens/SettingsFiatCurrencyModal'
@@ -23,6 +24,10 @@ export function AppModals(): JSX.Element {
 
       <LazyModalRenderer name={ModalName.FiatOnRamp}>
         <FiatOnRampModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.FiatOnRampAggregator}>
+        <FiatOnRampAggregatorModal />
       </LazyModalRenderer>
 
       <LazyModalRenderer name={ModalName.Explore}>

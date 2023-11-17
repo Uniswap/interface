@@ -1,5 +1,6 @@
+import { SCREEN_WIDTH } from '@gorhom/bottom-sheet'
 import React, { useEffect, useState } from 'react'
-import { StyleSheet } from 'react-native'
+import { LayoutChangeEvent, StyleSheet } from 'react-native'
 import Animated, {
   FadeIn,
   FadeOut,
@@ -32,19 +33,25 @@ const RollNumber = ({
   index,
   chars,
   commonPrefixLength,
+  shouldFadeDecimals,
 }: {
   chars: string[]
   digit?: string
   nextColor?: string
   index: number
   commonPrefixLength: number
+  shouldFadeDecimals: boolean
 }): JSX.Element => {
   const colors = useSporeColors()
-  const fontColor = useSharedValue(nextColor || colors.neutral1.val)
+  const fontColor = useSharedValue(
+    nextColor ||
+      (shouldFadeDecimals && index > chars.length - 4 ? colors.neutral3.val : colors.neutral1.val)
+  )
   const yOffset = useSharedValue(digit && Number(digit) >= 0 ? DIGIT_HEIGHT * -digit : 0)
 
   useEffect(() => {
-    const finishColor = colors.neutral1.val
+    const finishColor =
+      shouldFadeDecimals && index > chars.length - 4 ? colors.neutral3.val : colors.neutral1.val
     if (nextColor && index > commonPrefixLength - 1) {
       fontColor.value = withSequence(
         withTiming(nextColor, { duration: 250 }),
@@ -62,6 +69,7 @@ const RollNumber = ({
     colors.neutral1,
     commonPrefixLength,
     fontColor,
+    shouldFadeDecimals,
   ])
 
   const animatedFontStyle = useAnimatedStyle(() => {
@@ -121,11 +129,13 @@ const Char = ({
   chars,
   nextColor,
   commonPrefixLength,
+  shouldFadeDecimals,
 }: {
   index: number
   chars: string[]
   nextColor?: string
   commonPrefixLength: number
+  shouldFadeDecimals: boolean
 }): JSX.Element => {
   return (
     <Animated.View
@@ -139,6 +149,7 @@ const Char = ({
         digit={chars[index]}
         index={index}
         nextColor={nextColor}
+        shouldFadeDecimals={shouldFadeDecimals}
       />
     </Animated.View>
   )
@@ -152,23 +163,55 @@ function longestCommonPrefix(a: string, b: string): string {
   return a.substr(0, i)
 }
 
+const SCREEN_WIDTH_BUFFER = 50
+
+// Used for initial layout larger than all screen sizes
+const MAX_DEVICE_WIDTH = 1000
+
 const AnimatedNumber = ({
   value,
   loading = false,
   loadingPlaceholderText,
   colorIndicationDuration,
+  shouldFadeDecimals,
 }: {
   loadingPlaceholderText: string
   loading: boolean | 'no-shimmer'
   value?: string
   colorIndicationDuration: number
+  shouldFadeDecimals: boolean
 }): JSX.Element => {
   const prevValue = usePrevious(value)
   const [chars, setChars] = useState<string[]>()
   const [commonPrefixLength, setCommonPrefixLength] = useState<number>(0)
   const [nextColor, setNextColor] = useState<string>()
+  const scale = useSharedValue(1)
+  const offset = useSharedValue(0)
 
   const colors = useSporeColors()
+
+  const scaleWraper = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateX: -SCREEN_WIDTH / 2 },
+        { scale: scale.value },
+        { translateX: SCREEN_WIDTH / 2 },
+      ],
+    }
+  })
+
+  const fitBalanceOnLayout = (e: LayoutChangeEvent): void => {
+    const newScale = (SCREEN_WIDTH - SCREEN_WIDTH_BUFFER) / e.nativeEvent.layout.width
+
+    if (newScale < 1) {
+      const newOffset = (e.nativeEvent.layout.width - e.nativeEvent.layout.width * newScale) / 2
+      scale.value = withTiming(newScale)
+      offset.value = withTiming(-newOffset)
+    } else if (scale.value < 1) {
+      scale.value = withTiming(1)
+      offset.value = withTiming(0)
+    }
+  }
 
   useEffect(() => {
     if (value && prevValue !== value) {
@@ -205,6 +248,7 @@ const AnimatedNumber = ({
               commonPrefixLength={commonPrefixLength}
               index={index}
               nextColor={nextColor}
+              shouldFadeDecimals={shouldFadeDecimals}
             />
           ))}
         </Flex>
@@ -213,38 +257,58 @@ const AnimatedNumber = ({
   }
 
   return (
-    <Flex row alignItems="flex-start" backgroundColor="$surface1" borderRadius="$rounded4">
-      <Svg height={DIGIT_HEIGHT} style={AnimatedNumberStyles.gradientStyle} width="100%">
-        <Defs>
-          <LinearGradient id="backgroundTop" x1="0%" x2="0%" y1="15%" y2="0%">
-            <Stop offset="0" stopColor={colors.surface1.val} stopOpacity="0" />
-            <Stop offset="1" stopColor={colors.surface1.val} stopOpacity="1" />
-          </LinearGradient>
-          <LinearGradient id="background" x1="0%" x2="0%" y1="85%" y2="100%">
-            <Stop offset="0" stopColor={colors.surface1.val} stopOpacity="0" />
-            <Stop offset="1" stopColor={colors.surface1.val} stopOpacity="1" />
-          </LinearGradient>
-        </Defs>
-        <Rect
-          fill="url(#backgroundTop)"
-          height={DIGIT_HEIGHT}
-          opacity={1}
-          width="100%"
-          x="0"
-          y="0"
-        />
-        <Rect fill="url(#background)" height={DIGIT_HEIGHT} opacity={1} width="100%" x="0" y="0" />
-      </Svg>
-      {chars?.map((_, index) => (
-        <Char
-          key={index === 0 ? `$_sign_${colors.neutral1.val}` : `$_number_${chars.length - index}`}
-          chars={chars}
-          commonPrefixLength={commonPrefixLength}
-          index={index}
-          nextColor={nextColor}
-        />
-      ))}
-    </Flex>
+    <Animated.View style={scaleWraper}>
+      <Flex
+        row
+        alignItems="flex-start"
+        backgroundColor="$surface1"
+        borderRadius="$rounded4"
+        width={MAX_DEVICE_WIDTH}>
+        <Svg height={DIGIT_HEIGHT} style={AnimatedNumberStyles.gradientStyle} width="100%">
+          <Defs>
+            <LinearGradient id="backgroundTop" x1="0%" x2="0%" y1="15%" y2="0%">
+              <Stop offset="0" stopColor={colors.surface1.val} stopOpacity="0" />
+              <Stop offset="1" stopColor={colors.surface1.val} stopOpacity="1" />
+            </LinearGradient>
+            <LinearGradient id="background" x1="0%" x2="0%" y1="85%" y2="100%">
+              <Stop offset="0" stopColor={colors.surface1.val} stopOpacity="0" />
+              <Stop offset="1" stopColor={colors.surface1.val} stopOpacity="1" />
+            </LinearGradient>
+          </Defs>
+          <Rect
+            fill="url(#backgroundTop)"
+            height={DIGIT_HEIGHT}
+            opacity={1}
+            width="100%"
+            x="0"
+            y="0"
+          />
+          <Rect
+            fill="url(#background)"
+            height={DIGIT_HEIGHT}
+            opacity={1}
+            width="100%"
+            x="0"
+            y="0"
+          />
+        </Svg>
+        {chars?.map((_, index) => (
+          <Char
+            key={index === 0 ? `$_sign_${colors.neutral1.val}` : `$_number_${chars.length - index}`}
+            chars={chars}
+            commonPrefixLength={commonPrefixLength}
+            index={index}
+            nextColor={nextColor}
+            shouldFadeDecimals={shouldFadeDecimals}
+          />
+        ))}
+        <Animated.Text
+          style={[AnimatedFontStyles.invisible, AnimatedFontStyles.fontStyle]}
+          onLayout={fitBalanceOnLayout}>
+          {value}
+        </Animated.Text>
+      </Flex>
+    </Animated.View>
   )
 }
 
@@ -270,5 +334,9 @@ const AnimatedFontStyles = StyleSheet.create({
     fontWeight: 500,
     lineHeight: fonts.heading2.lineHeight,
     top: 1,
+  },
+  invisible: {
+    opacity: 0,
+    position: 'absolute',
   },
 })

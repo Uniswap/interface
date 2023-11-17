@@ -1,4 +1,4 @@
-import React, { ComponentProps, ReactNode, useContext, useMemo } from 'react'
+import React, { ComponentProps, ReactNode, useCallback, useContext, useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { runOnJS } from 'react-native-reanimated'
@@ -19,11 +19,12 @@ function Page({
   const { fullWidth } = useDeviceDimensions()
   const { goToPrev, goToNext } = useContext(CarouselContext)
   const navigation = useOnboardingStackNavigation()
-  const onDismiss = (): void => {
-    navigation.navigate(OnboardingScreens.Backup, params)
-  }
 
-  const gesture = useMemo(
+  const onDismiss = useCallback((): void => {
+    navigation.navigate(OnboardingScreens.Backup, params)
+  }, [navigation, params])
+
+  const slideChangeGesture = useMemo(
     () =>
       Gesture.Tap().onEnd(({ absoluteX }) => {
         if (absoluteX < fullWidth * 0.33) {
@@ -35,9 +36,17 @@ function Page({
     [goToPrev, goToNext, fullWidth]
   )
 
+  const dismissGesture = useMemo(
+    () =>
+      Gesture.Tap().onEnd(() => {
+        runOnJS(onDismiss)()
+      }),
+    [onDismiss]
+  )
+
   return (
     <Flex fill>
-      <GestureDetector gesture={gesture}>
+      <GestureDetector gesture={slideChangeGesture}>
         <Flex centered gap="$spacing16">
           <Flex
             row
@@ -48,7 +57,9 @@ function Page({
             <Text color="$neutral2" variant="subheading2">
               <Trans>What’s a recovery phrase?</Trans>
             </Text>
-            <CloseButton color="$neutral2" onPress={onDismiss} />
+            <GestureDetector gesture={dismissGesture}>
+              <CloseButton color="$neutral2" onPress={(): void => undefined} />
+            </GestureDetector>
           </Flex>
           <Flex flex={0.2} />
           <Flex flex={0.8} px="$spacing24">

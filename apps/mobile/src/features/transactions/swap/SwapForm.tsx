@@ -29,6 +29,8 @@ import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors 
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
+// eslint-disable-next-line no-restricted-imports
+import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
@@ -157,8 +159,11 @@ function _SwapForm({
 
   const derivedCurrencyField =
     exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
-  const formattedDerivedValue = formatter.formatCurrencyAmount({
-    value: currencyAmounts[derivedCurrencyField],
+  // TODO gary MOB-2028 replace temporary hack to handle different separators
+  // Replace with localized version of formatter
+  const formattedDerivedValue = formatCurrencyAmount({
+    amount: currencyAmounts[derivedCurrencyField],
+    locale: 'en-US',
     type: NumberType.SwapTradeAmount,
     placeholder: '',
   })

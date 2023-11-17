@@ -2,10 +2,12 @@
 // consider splitting into multiple files
 /* eslint-disable max-lines */
 import React from 'react'
-import { useTranslation } from 'react-i18next'
+import { TFunction, useTranslation } from 'react-i18next'
+import { SvgUri } from 'react-native-svg'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { store } from 'src/app/store'
+import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { closeAllModals, closeModal, openModal } from 'src/features/modals/modalSlice'
 import { NotificationToast } from 'src/features/notifications/NotificationToast'
@@ -20,11 +22,12 @@ import {
 } from 'src/features/notifications/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useCreateSwapFormState, useCreateWrapFormState } from 'src/features/transactions/hooks'
-import { useSporeColors } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import CheckCircle from 'ui/src/assets/icons/check-circle.svg'
 import EyeOffIcon from 'ui/src/assets/icons/eye-off.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { iconSizes } from 'ui/src/theme'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import {
   DappLogoWithTxStatus,
   LogoWithTxStatus,
@@ -35,6 +38,7 @@ import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { useENS } from 'wallet/src/features/ens/useENS'
+import { getCountryFlagSvgUrl } from 'wallet/src/features/fiatOnRamp/meld'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useNFT } from 'wallet/src/features/nfts/hooks'
 import {
@@ -42,9 +46,11 @@ import {
   AppNotificationDefault,
   ApproveTxNotification,
   ChangeAssetVisibilityNotification as ChangeAssetVisibilityNotificationType,
+  ChooseCountryNotification as ChooseCountryNotificationType,
   CopyNotification,
   CopyNotificationType,
   SwapNetworkNotification as SwapNetworkNotificationType,
+  SwapPendingNotification as SwapPendingNotificationType,
   SwapTxNotification,
   TransactionNotificationBase,
   TransferCurrencyTxNotification,
@@ -57,7 +63,11 @@ import {
   useNativeCurrencyInfo,
   useWrappedNativeCurrencyInfo,
 } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
+import {
+  TransactionStatus,
+  TransactionType,
+  WrapType,
+} from 'wallet/src/features/transactions/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
@@ -100,12 +110,12 @@ export function WCNotification({
   const validChainId = toSupportedChainId(chainId)
   const title = formWCNotificationTitle(notification)
 
-  const useSmallDisplayEvents = [
+  const smallToastEvents = [
     WalletConnectEvent.Connected,
     WalletConnectEvent.Disconnected,
     WalletConnectEvent.NetworkChanged,
   ]
-  const useSmallDisplay = useSmallDisplayEvents.includes(event)
+  const smallToast = smallToastEvents.includes(event)
 
   const icon = (
     <DappLogoWithTxStatus
@@ -113,7 +123,7 @@ export function WCNotification({
       dappImageUrl={imageUrl}
       dappName={dappName}
       event={event}
-      size={useSmallDisplay ? iconSizes.icon24 : NOTIFICATION_ICON_SIZE}
+      size={smallToast ? iconSizes.icon24 : NOTIFICATION_ICON_SIZE}
     />
   )
 
@@ -131,8 +141,8 @@ export function WCNotification({
       address={address}
       hideDelay={hideDelay}
       icon={icon}
+      smallToast={smallToast}
       title={title}
-      useSmallDisplay={useSmallDisplay}
       onPress={onPressNotification}
     />
   )
@@ -472,7 +482,7 @@ export function SuccessNotification({
 
   return (
     <NotificationToast
-      useSmallDisplay
+      smallToast
       hideDelay={hideDelay}
       icon={
         <CheckCircle
@@ -520,10 +530,31 @@ export function SwapNetworkNotification({
 
   return (
     <NotificationToast
-      useSmallDisplay
+      smallToast
       hideDelay={hideDelay}
       icon={<NetworkLogo chainId={chainId} size={iconSizes.icon24} />}
       title={t('Swapping on {{ network }}', { network })}
+    />
+  )
+}
+
+export function ChooseCountryNotification({
+  notification: { countryName, countryCode, hideDelay },
+}: {
+  notification: ChooseCountryNotificationType
+}): JSX.Element {
+  const { t } = useTranslation()
+  const countryFlagUrl = getCountryFlagSvgUrl(countryCode)
+  return (
+    <NotificationToast
+      smallToast
+      hideDelay={hideDelay}
+      icon={
+        <Flex borderRadius="$roundedFull" overflow="hidden">
+          <SvgUri height={iconSizes.icon20} uri={countryFlagUrl} width={iconSizes.icon20} />
+        </Flex>
+      }
+      title={t('Switched to {{name}}', { name: countryName })}
     />
   )
 }
@@ -538,7 +569,7 @@ export function ChangeAssetVisibilityNotification({
 
   return (
     <NotificationToast
-      useSmallDisplay
+      smallToast
       hideDelay={hideDelay}
       icon={
         visible ? (
@@ -562,4 +593,38 @@ export function ChangeAssetVisibilityNotification({
       }
     />
   )
+}
+
+// We roughly track the L1 block time, accuracy isnt crucial because we have other pending states,
+// and when a txn confirms it ll replace this toast.
+const SWAP_PENDING_NOTIFICATION_DELAY = 10 * ONE_SECOND_MS
+
+export function SwapPendingNotification({
+  notification,
+}: {
+  notification: SwapPendingNotificationType
+}): JSX.Element {
+  const { t } = useTranslation()
+
+  const notificationText = getNotificationText(notification.wrapType, t)
+
+  return (
+    <NotificationToast
+      smallToast
+      hideDelay={SWAP_PENDING_NOTIFICATION_DELAY}
+      icon={<SpinningLoader color="$accent1" />}
+      title={notificationText}
+    />
+  )
+}
+
+function getNotificationText(wrapType: WrapType, t: TFunction): string {
+  switch (wrapType) {
+    case WrapType.NotApplicable:
+      return t('Swap pending')
+    case WrapType.Unwrap:
+      return t('Unwrap pending')
+    case WrapType.Wrap:
+      return t('Wrap pending')
+  }
 }

@@ -113,8 +113,10 @@ function* shouldSubmitViaPrivateRpc(chainId: number) {
   return Boolean(swapProtectionOn && privateRpcSupportedOnChain && mevBlockerFeatureEnabled)
 }
 
+const selectAddressTransactions = makeSelectAddressTransactions()
+
 function* getPendingPrivateTxCount(address: Address, chainId: number) {
-  const pendingTransactions = yield* select(makeSelectAddressTransactions(address))
+  const pendingTransactions = yield* select(selectAddressTransactions, address)
   if (!pendingTransactions) return 0
 
   return pendingTransactions.filter(

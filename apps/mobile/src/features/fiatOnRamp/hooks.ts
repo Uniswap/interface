@@ -2,9 +2,11 @@ import { useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { Delay } from 'src/components/layout/Delayed'
+import { IS_ANDROID } from 'src/constants/globals'
 import { ColorTokens, useSporeColors } from 'ui/src'
 import { useDebounce } from 'utilities/src/time/timing'
 import { ChainId } from 'wallet/src/constants/chains'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import {
   FiatCurrencyInfo,
@@ -197,6 +199,9 @@ export function useMoonpayFiatOnRamp({
       amount: baseCurrencyAmount,
       currencyCode: quoteCurrencyCode,
       baseCurrencyCode,
+      redirectUrl: `${
+        IS_ANDROID ? uniswapUrls.appUrl : uniswapUrls.appBaseUrl
+      }/?screen=transaction&fiatOnRamp=true&userAddress=${activeAccountAddress}`,
     }
   )
   const {

@@ -2,6 +2,9 @@ import {
   APPSFLYER_API_KEY,
   APPSFLYER_APP_ID,
   INFURA_PROJECT_ID,
+  MELD_API_KEY,
+  MELD_API_URL,
+  MELD_API_VERSION,
   MOONPAY_API_KEY,
   MOONPAY_API_URL,
   MOONPAY_WIDGET_API_URL,
@@ -20,6 +23,9 @@ import {
 export interface Config {
   appsflyerApiKey: string
   appsflyerAppId: string
+  meldApiKey: string
+  meldApiVersion: string
+  meldApiUrl: string
   moonpayApiKey: string
   moonpayApiUrl: string
   moonpayWidgetApiUrl: string
@@ -39,6 +45,9 @@ export interface Config {
 const _config: Config = {
   appsflyerApiKey: process.env.APPSFLYER_API_KEY || APPSFLYER_API_KEY,
   appsflyerAppId: process.env.APPSFLYER_APP_ID || APPSFLYER_APP_ID,
+  meldApiKey: process.env.MELD_API_KEY || MELD_API_KEY,
+  meldApiVersion: process.env.MELD_API_VERSION || MELD_API_VERSION,
+  meldApiUrl: process.env.MELD_API_URL || MELD_API_URL,
   moonpayApiKey: process.env.MOONPAY_API_KEY || MOONPAY_API_KEY,
   moonpayApiUrl: process.env.MOONPAY_API_URL || MOONPAY_API_URL,
   moonpayWidgetApiUrl: process.env.MOONPAY_WIDGET_API_URL || MOONPAY_WIDGET_API_URL,

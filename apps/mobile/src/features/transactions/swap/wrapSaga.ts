@@ -15,12 +15,6 @@ import {
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
-export enum WrapType {
-  NotApplicable,
-  Wrap,
-  Unwrap,
-}
-
 export type Params = {
   txId?: string
   txRequest: providers.TransactionRequest

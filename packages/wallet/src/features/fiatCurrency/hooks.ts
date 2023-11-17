@@ -5,7 +5,7 @@ import { FiatCurrencyComponents, getFiatCurrencyComponents } from 'utilities/src
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
-import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
+import { useCurrentLocale } from 'wallet/src/features/language/hooks'
 import { useAppSelector } from 'wallet/src/state'
 
 export type FiatCurrencyInfo = {
@@ -30,7 +30,7 @@ export function getFiatCurrencyCode(currency: FiatCurrency): string {
  * @returns currency symbol
  */
 export function useFiatCurrencyComponents(currency: FiatCurrency): FiatCurrencyComponents {
-  const locale = useCurrentLanguageInfo().locale
+  const locale = useCurrentLocale()
   const currencyCode = getFiatCurrencyCode(currency)
 
   const components = getFiatCurrencyComponents(locale, currencyCode)

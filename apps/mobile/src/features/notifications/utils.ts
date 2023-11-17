@@ -27,8 +27,8 @@ export const formWCNotificationTitle = (appNotification: WalletConnectNotificati
       {
         const supportedChainId = toSupportedChainId(chainId)
         if (supportedChainId) {
-          return i18n.t('Switched to {{networkName}}', {
-            networkName: CHAIN_INFO[supportedChainId].label,
+          return i18n.t('Switched to {{name}}', {
+            name: CHAIN_INFO[supportedChainId].label,
           })
         }
       }

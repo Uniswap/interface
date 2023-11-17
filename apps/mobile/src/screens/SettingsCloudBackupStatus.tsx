@@ -143,9 +143,15 @@ export function SettingsCloudBackupStatus({
 
       {showBackupDeleteWarning && (
         <WarningModal
-          caption={t(
-            'If you delete your iCloud backup, you’ll only be able to recover your wallet with a manual backup of your recovery phrase. Uniswap Labs can’t recover your assets if you lose your recovery phrase.'
-          )}
+          caption={
+            IS_ANDROID
+              ? t(
+                  'If you delete your Google Drive backup, you’ll only be able to recover your wallet with a manual backup of your recovery phrase. Uniswap Labs can’t recover your assets if you lose your recovery phrase.'
+                )
+              : t(
+                  'If you delete your iCloud backup, you’ll only be able to recover your wallet with a manual backup of your recovery phrase. Uniswap Labs can’t recover your assets if you lose your recovery phrase.'
+                )
+          }
           closeText={t('Close')}
           confirmText={t('Delete')}
           modalName={ModalName.ViewSeedPhraseWarning}

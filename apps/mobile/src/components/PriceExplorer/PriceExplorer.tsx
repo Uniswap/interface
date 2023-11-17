@@ -56,6 +56,11 @@ export function PriceExplorer({
     useTokenPriceHistory(currencyId)
   const { convertFiatAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount().amount
+  const shouldShowAnimatedDot =
+    selectedDuration === HistoryDuration.Day || selectedDuration === HistoryDuration.Hour
+  const additionalPadding = shouldShowAnimatedDot ? 40 : 0
+  const lastPricePoint = data?.priceHistory ? data.priceHistory.length - 1 : 0
+
   const convertedPriceHistory = useMemo(
     (): TLineChartData | undefined =>
       data?.priceHistory?.map((point) => {
@@ -90,8 +95,11 @@ export function PriceExplorer({
   } else if (convertedPriceHistory?.length) {
     content = (
       <PriceExplorerChart
+        additionalPadding={additionalPadding}
+        lastPricePoint={lastPricePoint}
         loading={loading}
         priceHistory={convertedPriceHistory}
+        shouldShowAnimatedDot={shouldShowAnimatedDot}
         spot={convertedSpot}
         tokenColor={tokenColor}
       />
@@ -124,11 +132,17 @@ function PriceExplorerChart({
   spot,
   loading,
   tokenColor,
+  additionalPadding,
+  shouldShowAnimatedDot,
+  lastPricePoint,
 }: {
   priceHistory: TLineChartDataProp
   spot?: TokenSpotData
   loading: boolean
   tokenColor?: string
+  additionalPadding: number
+  shouldShowAnimatedDot: boolean
+  lastPricePoint: number
 }): JSX.Element {
   const { chartHeight, chartWidth } = useChartDimensions()
 
@@ -139,8 +153,21 @@ function PriceExplorerChart({
       <Flex gap="$spacing8">
         <PriceTextSection loading={loading} relativeChange={spot?.relativeChange} />
         <Flex my="$spacing24">
-          <LineChart height={chartHeight} width={chartWidth}>
-            <LineChart.Path color={tokenColor} pathProps={{ isTransitionEnabled: false }} />
+          <LineChart height={chartHeight} width={chartWidth - additionalPadding} yGutter={20}>
+            <LineChart.Path color={tokenColor} pathProps={{ isTransitionEnabled: false }}>
+              {shouldShowAnimatedDot && (
+                <LineChart.Dot
+                  key={lastPricePoint}
+                  hasPulse
+                  at={lastPricePoint}
+                  color={tokenColor}
+                  inactiveColor="transparent"
+                  pulseBehaviour="while-inactive"
+                  pulseDurationMs={2000}
+                  size={5}
+                />
+              )}
+            </LineChart.Path>
             <LineChart.CursorLine color={tokenColor} />
             <LineChart.CursorCrosshair
               color={tokenColor}

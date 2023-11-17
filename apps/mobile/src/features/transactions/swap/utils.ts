@@ -8,7 +8,6 @@ import {
 import { FeeOptions } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
 import { ElementName } from 'src/features/telemetry/constants'
-import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { NumberType } from 'utilities/src/format/types'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -24,6 +23,7 @@ import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionType,
+  WrapType,
 } from 'wallet/src/features/transactions/types'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import {
