@@ -45,7 +45,7 @@ export function FiatOnRampConnectingView({
           </Flex>
         </Flex>
         <Flex centered gap="$spacing8">
-          <Text variant="subheading1">{t('Connecting you to Moonpay')}</Text>
+          <Text variant="subheading1">{t('Connecting you to MoonPay')}</Text>
           {quoteCurrencyCode && (
             <Text color="$neutral2" variant="body2">
               {t('Buying {{amount}} worth of {{quoteCurrencyCode}}', {
