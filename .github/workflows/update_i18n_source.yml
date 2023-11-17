@@ -26,4 +26,17 @@ jobs:
         env:
           CROWDIN_ACCESS_TOKEN: ${{ secrets.CROWDIN_ACCESS_TOKEN }}
 
-    
+      - run: yarn web i18n:extract
+
+      - name: Upload Crowdin sources
+        uses: crowdin/github-action@3133cc916c35590475cf6705f482fb653d8e36e9
+        with:
+          upload_sources: true
+          download_translations: false
+          project_id: 458284
+          token: ${{ secrets.CROWDIN_WEB_ACCESS_TOKEN }}
+          base_path: 'apps/web2'
+          source: 'src/locales/en-US.po'
+          translation: 'src/locales/%locale%.po'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
