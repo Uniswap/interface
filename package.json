@@ -82,9 +82,7 @@
     "react-native-wagmi-charts@2.3.0": "patch:react-native-wagmi-charts@npm%3A2.3.0#./.yarn/patches/react-native-wagmi-charts-npm-2.3.0-8e836a8f3c.patch"
   },
   "scripts": {
-    "contracts:compile": "yarn contracts:compile:abi && yarn contracts:compile:v3",
-    "contracts:compile:abi": "typechain --target ethers-v5 --out-dir packages/wallet/src/abis/types './packages/wallet/src/abis/**/*.json'",
-    "contracts:compile:v3": "typechain --target ethers-v5 --out-dir packages/wallet/src/types/v3 \"./node_modules/@uniswap/**/artifacts/contracts/**/*[!dbg].json\"",
+    "contracts:compile": "typechain --target ethers-v5 --out-dir packages/wallet/src/abis/types './packages/wallet/src/abis/**/*.json'",
     "g:build": "turbo run build --concurrency=100%",
     "g:check:deps": "manypkg check",
     "g:check:circular": "turbo run check:circular --parallel",
@@ -107,6 +105,7 @@
     "i18n:download": "dotenv -e .env.defaults -c -- yarn run i18n:_download",
     "lfg": "yarn && yarn contracts:compile && yarn mobile env:local:download && yarn web env:local:download && yarn g:build && yarn mobile pod && yarn mobile graphql:generate:swift && yarn mobile ios",
     "mobile": "yarn workspace @uniswap/mobile",
+    "postinstall": "husky install",
     "staged:lint:fix": "eslint --fix",
     "ui:build:icons": "yarn workspace ui build:icons",
     "upgrade:next": "manypkg upgrade next && manypkg upgrade eslint-config-next",

@@ -49,15 +49,10 @@ runs:
         YARN_INSTALL_STATE_PATH: .ci-cache/yarn-state/install-state.gz # Small speedup when lock does not change
         HUSKY: '0' # By default do not run HUSKY install
 
-    # Contracts are compiled from source. If source hasn't changed, the contracts do not need to be re-compiled.
     - name: 👷 Compile mobile contracts
-      uses: actions/cache@v3
-      id: contracts-cache
-      path: |
-        packages/wallet/src/abis/types
-        packages/wallet/src/types/v3
-      key: ${{ runner.os }}-contracts-${{ hashFiles('packages/wallet/src/abis/**/*.json', 'node_modules/@uniswap/**/artifacts/contracts/**/*.json') }}
-
-    - if: steps.contracts-cache.outputs.cache-hit != 'true'
-      run: yarn contracts:compile
-      shell: bash
+      uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
+      with:
+        timeout_minutes: 3
+        retry_wait_seconds: 20
+        max_attempts: 3
+        command: yarn contracts:compile
