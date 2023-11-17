@@ -2,34 +2,29 @@ import { Theme, vars } from 'nft/css/sprinkles.css'
 
 export const darkTheme: Theme = {
   colors: {
-    accentFailure: vars.color.red300,
-    accentFailureSoft: 'rgba(253, 118, 107, 0.12)',
-    accentAction: vars.color.blue400,
-    accentActionSoft: 'rgba(76, 130, 251, 0.24)',
-    accentSuccess: vars.color.green200,
+    neutral1: vars.color.neutral1_dark,
+    neutral2: vars.color.neutral2_dark,
+    neutral3: vars.color.neutral3_dark,
+    surface1: vars.color.surface1_dark,
+    surface2: vars.color.surface2_dark,
+    surface3: vars.color.surface3_dark,
+    surface4: vars.color.surface4_dark,
+    surface5: vars.color.surface5_dark,
+    accent1: vars.color.accent1_dark,
+    accent2: vars.color.accent2_dark,
+    scrim: 'rgba(0, 0, 0, 0.60)',
 
-    explicitWhite: '#FFFFFF',
-    green: vars.color.green200,
-    gold: vars.color.gold200,
-    violet: vars.color.violet200,
+    success: vars.color.success,
+    critical: vars.color.critical,
 
-    backgroundFloating: '0000000C',
-    backgroundInteractive: vars.color.gray700,
-    backgroundModule: vars.color.gray800,
-    backgroundOutline: vars.color.backgroundInteractive,
-    backgroundSurface: vars.color.gray900,
-    backgroundBackdrop: vars.color.gray950,
+    white: '#FFFFFF',
 
-    modalBackdrop: 'linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))',
-
-    searchBackground: `rgba(255,255,255,0.07)`,
-    searchOutline: `rgba(255,255,255,0.07)`,
-    stateOverlayHover: `rgba(153,161,189,0.08)`,
-
-    textPrimary: '#FFFFFF',
-    textSecondary: vars.color.gray300,
-    textTertiary: vars.color.gray500,
-
+    //OLD NAMES
+    deprecated_accentFailureSoft: 'rgba(253, 118, 107, 0.12)',
+    deprecated_gold: vars.color.gold200,
+    deprecated_violet: vars.color.violet200,
+    deprecated_modalBackdrop: 'linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))',
+    deprecated_stateOverlayHover: `rgba(153,161,189,0.08)`,
     dropShadow: `0px 4px 16px rgba(76, 130, 251, 0.4)`,
   },
   shadows: {

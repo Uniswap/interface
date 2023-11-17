@@ -4,7 +4,8 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useState } from 'react'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
+import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UniTokenAnimated } from 'theme/components'
 import { shortenAddress } from 'utils'
 
 import Circle from '../../assets/images/blue-loader.svg'
@@ -12,7 +13,6 @@ import tokenLogo from '../../assets/images/token-logo.png'
 import useENS from '../../hooks/useENS'
 import { useClaimCallback, useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { useIsTransactionPending } from '../../state/transactions/hooks'
-import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UniTokenAnimated } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import AddressInputPanel from '../AddressInputPanel'
 import { ButtonPrimary } from '../Button'
@@ -103,19 +103,19 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             <CardNoise />
             <CardSection gap="md">
               <RowBetween>
-                <ThemedText.DeprecatedWhite fontWeight={500}>
-                  <Trans>Claim UNI Token</Trans>
+                <ThemedText.DeprecatedWhite fontWeight={535}>
+                  <Trans>Claim UNI token</Trans>
                 </ThemedText.DeprecatedWhite>
                 <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
               </RowBetween>
-              <ThemedText.DeprecatedWhite fontWeight={700} fontSize={36}>
+              <ThemedText.DeprecatedWhite fontWeight={535} fontSize={36}>
                 <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
               </ThemedText.DeprecatedWhite>
             </CardSection>
             <Break />
           </ModalUpper>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-            <ThemedText.DeprecatedSubHeader fontWeight={500}>
+            <ThemedText.DeprecatedSubHeader fontWeight={535}>
               <Trans>
                 Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on
                 submission.
@@ -157,23 +157,23 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify="center">
             <AutoColumn gap="md" justify="center">
-              <ThemedText.DeprecatedLargeHeader fontWeight={600} color="black">
+              <ThemedText.DeprecatedLargeHeader fontWeight={535} color="black">
                 {claimConfirmed ? <Trans>Claimed</Trans> : <Trans>Claiming</Trans>}
               </ThemedText.DeprecatedLargeHeader>
               {!claimConfirmed && (
-                <Text fontSize={36} color="#ff007a" fontWeight={800}>
+                <Text fontSize={36} color="#ff007a" fontWeight={535}>
                   <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
                 </Text>
               )}
               {parsedAddress && (
-                <ThemedText.DeprecatedLargeHeader fontWeight={600} color="black">
+                <ThemedText.DeprecatedLargeHeader fontWeight={535} color="black">
                   <Trans>for {shortenAddress(parsedAddress)}</Trans>
                 </ThemedText.DeprecatedLargeHeader>
               )}
             </AutoColumn>
             {claimConfirmed && (
               <>
-                <ThemedText.DeprecatedSubHeader fontWeight={500} color="black">
+                <ThemedText.DeprecatedSubHeader fontWeight={535} color="black">
                   <span role="img" aria-label="party-hat">
                     🎉{' '}
                   </span>

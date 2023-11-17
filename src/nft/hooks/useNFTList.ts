@@ -1,6 +1,7 @@
 import { CollectionRow, ListingRow, ListingStatus } from 'nft/types'
-import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
+import { shallow } from 'zustand/shallow'
+import { createWithEqualityFn } from 'zustand/traditional'
 
 interface NFTListState {
   looksRareNonce: number
@@ -18,7 +19,7 @@ interface NFTListState {
   ) => void
 }
 
-export const useNFTList = create<NFTListState>()(
+export const useNFTList = createWithEqualityFn<NFTListState>()(
   devtools((set, get) => ({
     looksRareNonce: 0,
     listings: [],
@@ -136,5 +137,6 @@ export const useNFTList = create<NFTListState>()(
           collectionsRequiringApproval: collectionsCopy,
         }
       }),
-  }))
+  })),
+  shallow
 )

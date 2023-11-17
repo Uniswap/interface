@@ -36,7 +36,7 @@ describe('Token explore', () => {
       .then(function ($elem) {
         cy.wrap($elem.text()).as('yearlyEthVol')
       })
-    expect(cy.get('@dailyEthVol')).to.not.equal(cy.get('@yearlyEthVol'))
+    cy.get('@dailyEthVol').should('not.equal', cy.get('@yearlyEthVol'))
   })
 
   it('should navigate to token detail page when row clicked', () => {
@@ -59,9 +59,7 @@ describe('Token explore', () => {
     // in metamask modal using plain cypress. this is a workaround.
     cy.visit('/tokens/polygon')
     cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Polygon')
-    cy.get(getTestSelector('token-table-row-NATIVE'))
-      .find(getTestSelector('name-cell'))
-      .should('include.text', 'Polygon Matic')
+    cy.get(getTestSelector('token-table-row-NATIVE')).find(getTestSelector('name-cell')).should('include.text', 'Matic')
   })
 
   it('should update when token explore table network changed', () => {
@@ -69,8 +67,6 @@ describe('Token explore', () => {
     cy.get(getTestSelector('tokens-network-filter-selected')).click()
     cy.get(getTestSelector('tokens-network-filter-option-optimism')).click()
     cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Optimism')
-    cy.reload()
-    cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Optimism')
-    cy.get(getTestSelector('chain-selector-logo')).invoke('attr', 'alt').should('eq', 'Ethereum')
+    cy.get(getTestSelector('chain-selector-logo')).find('title').should('include.text', 'Ethereum logo')
   })
 })

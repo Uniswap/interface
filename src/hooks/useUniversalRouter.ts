@@ -1,19 +1,24 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
-import { SwapEventName } from '@uniswap/analytics-events'
+import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
-import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
+import { FlatFeeOptions, SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
+import { sendAnalyticsEvent, useTrace } from 'analytics'
+import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
+import { getConnection } from 'connection'
+import useBlockNumber from 'lib/hooks/useBlockNumber'
+import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { ClassicTrade, TradeFillType } from 'state/routing/types'
+import { useUserSlippageTolerance } from 'state/user/hooks'
 import { trace } from 'tracing/trace'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
-import { UserRejectedRequestError } from 'utils/errors'
+import { UserRejectedRequestError, WrongChainError } from 'utils/errors'
 import isZero from 'utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
+import { getWalletMeta } from 'utils/walletMeta'
 
 import { PermitSignature } from './usePermitAllowance'
 
@@ -41,15 +46,20 @@ interface SwapOptions {
   deadline?: BigNumber
   permit?: PermitSignature
   feeOptions?: FeeOptions
+  flatFeeOptions?: FlatFeeOptions
 }
 
 export function useUniversalRouterSwapCallback(
   trade: ClassicTrade | undefined,
-  fiatValues: { amountIn?: number; amountOut?: number },
+  fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number },
   options: SwapOptions
 ) {
-  const { account, chainId, provider } = useWeb3React()
+  const { account, chainId, provider, connector } = useWeb3React()
   const analyticsContext = useTrace()
+  const blockNumber = useBlockNumber()
+  const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
+  const { data } = useCachedPortfolioBalancesQuery({ account })
+  const portfolioBalanceUsd = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
 
   return useCallback(async () => {
     return trace('swap.send', async ({ setTraceData, setTraceStatus, setTraceError }) => {
@@ -58,14 +68,19 @@ export function useUniversalRouterSwapCallback(
         if (!chainId) throw new Error('missing chainId')
         if (!provider) throw new Error('missing provider')
         if (!trade) throw new Error('missing trade')
+        const connectedChainId = await provider.getSigner().getChainId()
+        if (chainId !== connectedChainId) throw new WrongChainError()
 
         setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
+
         const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
           slippageTolerance: options.slippageTolerance,
           deadlineOrPreviousBlockhash: options.deadline?.toString(),
           inputTokenPermit: options.permit,
           fee: options.feeOptions,
+          flatFee: options.flatFeeOptions,
         })
+
         const tx = {
           from: account,
           to: UNIVERSAL_ROUTER_ADDRESS(chainId),
@@ -80,11 +95,19 @@ export function useUniversalRouterSwapCallback(
         } catch (gasError) {
           setTraceStatus('failed_precondition')
           setTraceError(gasError)
+          sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
+            ...formatCommonPropertiesForTrade(trade, options.slippageTolerance),
+            ...analyticsContext,
+            client_block_number: blockNumber,
+            tx,
+            isAutoSlippage,
+          })
           console.warn(gasError)
           throw new GasEstimationError()
         }
         const gasLimit = calculateGasMargin(gasEstimate)
         setTraceData('gasLimit', gasLimit.toNumber())
+        const beforeSign = Date.now()
         const response = await provider
           .getSigner()
           .sendTransaction({ ...tx, gasLimit })
@@ -92,18 +115,27 @@ export function useUniversalRouterSwapCallback(
             sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
               ...formatSwapSignedAnalyticsEventProperties({
                 trade,
+                timeToSignSinceRequestMs: Date.now() - beforeSign,
                 allowedSlippage: options.slippageTolerance,
                 fiatValues,
                 txHash: response.hash,
+                portfolioBalanceUsd,
               }),
               ...analyticsContext,
+              // TODO (WEB-2993): remove these after debugging missing user properties.
+              [CustomUserProperties.WALLET_ADDRESS]: account,
+              [CustomUserProperties.WALLET_TYPE]: getConnection(connector).getName(),
+              [CustomUserProperties.PEER_WALLET_AGENT]: provider ? getWalletMeta(provider)?.agent : undefined,
             })
             if (tx.data !== response.data) {
               sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, {
                 txHash: response.hash,
                 ...analyticsContext,
               })
-              throw new ModifiedSwapError()
+
+              if (!response.data || response.data.length === 0 || response.data === '0x') {
+                throw new ModifiedSwapError()
+              }
             }
             return response
           })
@@ -129,14 +161,19 @@ export function useUniversalRouterSwapCallback(
     })
   }, [
     account,
-    analyticsContext,
     chainId,
-    fiatValues,
-    options.deadline,
-    options.feeOptions,
-    options.permit,
-    options.slippageTolerance,
     provider,
     trade,
+    options.slippageTolerance,
+    options.deadline,
+    options.permit,
+    options.feeOptions,
+    options.flatFeeOptions,
+    analyticsContext,
+    blockNumber,
+    isAutoSlippage,
+    fiatValues,
+    portfolioBalanceUsd,
+    connector,
   ])
 }

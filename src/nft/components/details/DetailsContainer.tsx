@@ -1,11 +1,11 @@
 import { OpacityHoverState } from 'components/Common'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
-import { putCommas } from 'nft/utils'
 import { useCallback } from 'react'
 import { Copy } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { shortenAddress } from 'utils'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const Details = styled.div`
   display: grid;
@@ -22,13 +22,13 @@ const Details = styled.div`
 `
 
 const Header = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 14px;
   line-height: 20px;
 `
 
 const Body = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   font-size: 14px;
   line-height: 20px;
   margin-top: 8px;
@@ -44,7 +44,7 @@ const Center = styled.span`
 `
 
 const CreatorLink = styled.a`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   text-decoration: none;
 
   ${OpacityHoverState}
@@ -66,6 +66,7 @@ const GridItem = ({ header, body }: { header: string; body: React.ReactNode }) =
 const stringShortener = (text: string) => `${text.substring(0, 4)}...${text.substring(text.length - 4, text.length)}`
 
 const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection: CollectionInfoForAsset }) => {
+  const { formatNumber } = useFormatter()
   const { address, tokenId, tokenType, creator } = asset
   const { totalSupply } = collection
 
@@ -87,7 +88,10 @@ const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection
       <GridItem header="Token ID" body={tokenId.length > 9 ? stringShortener(tokenId) : tokenId} />
       <GridItem header="Token standard" body={tokenType} />
       <GridItem header="Blockchain" body="Ethereum" />
-      <GridItem header="Total supply" body={`${putCommas(totalSupply ?? 0)}`} />
+      <GridItem
+        header="Total supply"
+        body={`${formatNumber({ input: totalSupply ?? 0, type: NumberType.WholeNumber })}`}
+      />
       <GridItem
         header="Creator"
         body={

@@ -1,0 +1,1535 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ChainSelectorRow should match snapshot for chainId 1 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 240px;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+  font-weight: 485;
+}
+
+.c2 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    width: 100%;
+  }
+}
+
+<div>
+  <button
+    class="c0"
+    data-testid="Ethereum-selector"
+  >
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Ethereum logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#6B8AFF33"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        ethereum.svg
+      </svg>
+    </svg>
+    <div
+      class="c1"
+    >
+      Ethereum
+    </div>
+    <div
+      class="c2"
+    >
+      <svg
+        color="#FC72FF"
+        fill="none"
+        height="20"
+        width="20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M16.6693 5.33789L7.5026 14.3175L3.33594 10.2358"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.5"
+        />
+      </svg>
+    </div>
+  </button>
+</div>
+`;
+
+exports[`ChainSelectorRow should match snapshot for chainId 5 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 240px;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+  font-weight: 485;
+}
+
+.c2 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    width: 100%;
+  }
+}
+
+<div>
+  <button
+    class="c0"
+    data-testid="Görli-selector"
+  >
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Görli logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#6B8AFF33"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        ethereum.svg
+      </svg>
+    </svg>
+    <div
+      class="c1"
+    >
+      Görli
+    </div>
+    <div
+      class="c2"
+    />
+  </button>
+</div>
+`;
+
+exports[`ChainSelectorRow should match snapshot for chainId 10 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 240px;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+  font-weight: 485;
+}
+
+.c2 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    width: 100%;
+  }
+}
+
+<div>
+  <button
+    class="c0"
+    data-testid="Optimism-selector"
+  >
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Optimism logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#FF042033"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        optimism.svg
+      </svg>
+    </svg>
+    <div
+      class="c1"
+    >
+      Optimism
+    </div>
+    <div
+      class="c2"
+    />
+  </button>
+</div>
+`;
+
+exports[`ChainSelectorRow should match snapshot for chainId 56 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 240px;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+  font-weight: 485;
+}
+
+.c2 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    width: 100%;
+  }
+}
+
+<div>
+  <button
+    class="c0"
+    data-testid="BNB Chain-selector"
+  >
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        BNB Chain logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#EAB20033"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        bnb.svg
+      </svg>
+    </svg>
+    <div
+      class="c1"
+    >
+      BNB Chain
+    </div>
+    <div
+      class="c2"
+    />
+  </button>
+</div>
+`;
+
+exports[`ChainSelectorRow should match snapshot for chainId 137 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 240px;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+  font-weight: 485;
+}
+
+.c2 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    width: 100%;
+  }
+}
+
+<div>
+  <button
+    class="c0"
+    data-testid="Polygon-selector"
+  >
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Polygon logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#9558FF33"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        polygon.svg
+      </svg>
+    </svg>
+    <div
+      class="c1"
+    >
+      Polygon
+    </div>
+    <div
+      class="c2"
+    />
+  </button>
+</div>
+`;
+
+exports[`ChainSelectorRow should match snapshot for chainId 420 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 240px;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+  font-weight: 485;
+}
+
+.c2 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    width: 100%;
+  }
+}
+
+<div>
+  <button
+    class="c0"
+    data-testid="Optimism Görli-selector"
+  >
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Optimism Görli logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#FF042033"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        optimism.svg
+      </svg>
+    </svg>
+    <div
+      class="c1"
+    >
+      Optimism Görli
+    </div>
+    <div
+      class="c2"
+    />
+  </button>
+</div>
+`;
+
+exports[`ChainSelectorRow should match snapshot for chainId 8453 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 240px;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+  font-weight: 485;
+}
+
+.c2 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    width: 100%;
+  }
+}
+
+<div>
+  <button
+    class="c0"
+    data-testid="Base-selector"
+  >
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Base logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#0052FF33"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        base.svg
+      </svg>
+    </svg>
+    <div
+      class="c1"
+    >
+      Base
+    </div>
+    <div
+      class="c2"
+    />
+  </button>
+</div>
+`;
+
+exports[`ChainSelectorRow should match snapshot for chainId 42161 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 240px;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+  font-weight: 485;
+}
+
+.c2 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    width: 100%;
+  }
+}
+
+<div>
+  <button
+    class="c0"
+    data-testid="Arbitrum-selector"
+  >
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Arbitrum logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#00A3FF33"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        arbitrum.svg
+      </svg>
+    </svg>
+    <div
+      class="c1"
+    >
+      Arbitrum
+    </div>
+    <div
+      class="c2"
+    />
+  </button>
+</div>
+`;
+
+exports[`ChainSelectorRow should match snapshot for chainId 42220 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 240px;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+  font-weight: 485;
+}
+
+.c2 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    width: 100%;
+  }
+}
+
+<div>
+  <button
+    class="c0"
+    data-testid="Celo-selector"
+  >
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Celo logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#FCFF5299"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        celo_light.svg
+      </svg>
+    </svg>
+    <div
+      class="c1"
+    >
+      Celo
+    </div>
+    <div
+      class="c2"
+    />
+  </button>
+</div>
+`;
+
+exports[`ChainSelectorRow should match snapshot for chainId 43114 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 240px;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+  font-weight: 485;
+}
+
+.c2 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    width: 100%;
+  }
+}
+
+<div>
+  <button
+    class="c0"
+    data-testid="Avalanche-selector"
+  >
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Avalanche logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#E8414233"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        avax.svg
+      </svg>
+    </svg>
+    <div
+      class="c1"
+    >
+      Avalanche
+    </div>
+    <div
+      class="c2"
+    />
+  </button>
+</div>
+`;
+
+exports[`ChainSelectorRow should match snapshot for chainId 44787 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 240px;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+  font-weight: 485;
+}
+
+.c2 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    width: 100%;
+  }
+}
+
+<div>
+  <button
+    class="c0"
+    data-testid="Celo Alfajores-selector"
+  >
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Celo Alfajores logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#FCFF5299"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        celo_light.svg
+      </svg>
+    </svg>
+    <div
+      class="c1"
+    >
+      Celo Alfajores
+    </div>
+    <div
+      class="c2"
+    />
+  </button>
+</div>
+`;
+
+exports[`ChainSelectorRow should match snapshot for chainId 80001 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 240px;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+  font-weight: 485;
+}
+
+.c2 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    width: 100%;
+  }
+}
+
+<div>
+  <button
+    class="c0"
+    data-testid="Polygon Mumbai-selector"
+  >
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Polygon Mumbai logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#9558FF33"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        polygon.svg
+      </svg>
+    </svg>
+    <div
+      class="c1"
+    >
+      Polygon Mumbai
+    </div>
+    <div
+      class="c2"
+    />
+  </button>
+</div>
+`;
+
+exports[`ChainSelectorRow should match snapshot for chainId 84531 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 240px;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    width: 100%;
+  }
+}
+
+<div>
+  <button
+    class="c0"
+    data-testid="undefined-selector"
+  >
+    <div
+      class="c1"
+    />
+  </button>
+</div>
+`;
+
+exports[`ChainSelectorRow should match snapshot for chainId 421613 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 240px;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+  font-weight: 485;
+}
+
+.c2 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    width: 100%;
+  }
+}
+
+<div>
+  <button
+    class="c0"
+    data-testid="Arbitrum Goerli-selector"
+  >
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Arbitrum Goerli logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#00A3FF33"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        arbitrum.svg
+      </svg>
+    </svg>
+    <div
+      class="c1"
+    >
+      Arbitrum Goerli
+    </div>
+    <div
+      class="c2"
+    />
+  </button>
+</div>
+`;
+
+exports[`ChainSelectorRow should match snapshot for chainId 11155111 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 240px;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+  font-weight: 485;
+}
+
+.c2 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    width: 100%;
+  }
+}
+
+<div>
+  <button
+    class="c0"
+    data-testid="Sepolia-selector"
+  >
+    <svg
+      aria-labelledby="titleID"
+      height="20"
+      style="margin-right: 12px;"
+      width="20"
+    >
+      <title
+        id="titleID"
+      >
+        Sepolia logo
+      </title>
+      <rect
+        fill="#F9F9F9"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <rect
+        fill="#6B8AFF33"
+        height="20"
+        rx="6"
+        width="20"
+      />
+      <svg
+        height="20"
+        width="20"
+      >
+        ethereum.svg
+      </svg>
+    </svg>
+    <div
+      class="c1"
+    >
+      Sepolia
+    </div>
+    <div
+      class="c2"
+    />
+  </button>
+</div>
+`;

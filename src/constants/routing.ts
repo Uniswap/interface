@@ -2,14 +2,11 @@
 import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 
 import {
-  AMPL,
   ARB,
   BTC_BSC,
   BUSD_BSC,
-  CAKE_BSC,
   CEUR_CELO,
   CEUR_CELO_ALFAJORES,
-  CMC02_CELO,
   CUSD_CELO,
   CUSD_CELO_ALFAJORES,
   DAI,
@@ -19,28 +16,20 @@ import {
   DAI_OPTIMISM,
   DAI_POLYGON,
   ETH_BSC,
-  ETH2X_FLI,
-  FEI,
-  FRAX,
-  FRAX_BSC,
-  FXS,
-  MATIC_BSC,
   nativeOnChain,
   OP,
   PORTAL_ETH_CELO,
   PORTAL_USDC_CELO,
-  renBTC,
-  rETH2,
-  sETH2,
-  SWISE,
-  TRIBE,
   USDC_ARBITRUM,
   USDC_ARBITRUM_GOERLI,
   USDC_AVALANCHE,
+  USDC_BASE,
   USDC_BSC,
   USDC_MAINNET,
   USDC_OPTIMISM,
+  USDC_OPTIMISM_GOERLI,
   USDC_POLYGON,
+  USDC_POLYGON_MUMBAI,
   USDT,
   USDT_ARBITRUM_ONE,
   USDT_AVALANCHE,
@@ -49,6 +38,7 @@ import {
   USDT_POLYGON,
   WBTC,
   WBTC_ARBITRUM_ONE,
+  WBTC_CELO,
   WBTC_OPTIMISM,
   WBTC_POLYGON,
   WETH_AVALANCHE,
@@ -71,66 +61,6 @@ const WRAPPED_NATIVE_CURRENCIES_ONLY: ChainTokenList = Object.fromEntries(
     .filter(Boolean)
 )
 
-// used to construct intermediary pairs for trading
-export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-  ...WRAPPED_NATIVE_CURRENCIES_ONLY,
-  [ChainId.MAINNET]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.MAINNET], DAI, USDC_MAINNET, USDT, WBTC],
-  [ChainId.OPTIMISM]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.OPTIMISM], DAI_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM],
-  [ChainId.ARBITRUM_ONE]: [
-    ...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.ARBITRUM_ONE],
-    DAI_ARBITRUM_ONE,
-    USDT_ARBITRUM_ONE,
-    WBTC_ARBITRUM_ONE,
-  ],
-  [ChainId.POLYGON]: [
-    ...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.POLYGON],
-    DAI_POLYGON,
-    USDC_POLYGON,
-    USDT_POLYGON,
-    WETH_POLYGON,
-  ],
-  [ChainId.BNB]: [
-    ...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.BNB],
-    DAI_BSC,
-    USDC_BSC,
-    USDT_BSC,
-    BUSD_BSC,
-    FRAX_BSC,
-    MATIC_BSC,
-    CAKE_BSC,
-  ],
-  [ChainId.AVALANCHE]: [
-    ...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.AVALANCHE],
-    DAI_AVALANCHE,
-    USDC_AVALANCHE,
-    USDT_AVALANCHE,
-    WETH_AVALANCHE,
-  ],
-  [ChainId.CELO]: [CUSD_CELO, CEUR_CELO, CMC02_CELO, PORTAL_USDC_CELO, PORTAL_ETH_CELO],
-}
-export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
-  [ChainId.MAINNET]: {
-    '0xF16E4d813f4DcfDe4c5b44f305c908742De84eF0': [ETH2X_FLI],
-    [rETH2.address]: [sETH2],
-    [SWISE.address]: [sETH2],
-    [FEI.address]: [TRIBE],
-    [TRIBE.address]: [FEI],
-    [FRAX.address]: [FXS],
-    [FXS.address]: [FRAX],
-    [WBTC.address]: [renBTC],
-    [renBTC.address]: [WBTC],
-  },
-}
-/**
- * Some tokens can only be swapped via certain pairs, so we override the list of bases that are considered for these
- * tokens.
- */
-export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
-  [ChainId.MAINNET]: {
-    [AMPL.address]: [DAI, WRAPPED_NATIVE_CURRENCY[ChainId.MAINNET] as Token],
-  },
-}
-
 /**
  * Shows up in the currency select for swap and add liquidity
  */
@@ -145,6 +75,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   ],
   [ChainId.GOERLI]: [nativeOnChain(ChainId.GOERLI), WRAPPED_NATIVE_CURRENCY[ChainId.GOERLI] as Token],
   [ChainId.SEPOLIA]: [nativeOnChain(ChainId.SEPOLIA), WRAPPED_NATIVE_CURRENCY[ChainId.SEPOLIA] as Token],
+
   [ChainId.ARBITRUM_ONE]: [
     nativeOnChain(ChainId.ARBITRUM_ONE),
     ARB,
@@ -159,8 +90,12 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_NATIVE_CURRENCY[ChainId.ARBITRUM_GOERLI] as Token,
     USDC_ARBITRUM_GOERLI,
   ],
+
   [ChainId.OPTIMISM]: [nativeOnChain(ChainId.OPTIMISM), OP, DAI_OPTIMISM, USDC_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM],
-  [ChainId.OPTIMISM_GOERLI]: [nativeOnChain(ChainId.OPTIMISM_GOERLI)],
+  [ChainId.OPTIMISM_GOERLI]: [nativeOnChain(ChainId.OPTIMISM_GOERLI), USDC_OPTIMISM_GOERLI],
+
+  [ChainId.BASE]: [nativeOnChain(ChainId.BASE), WRAPPED_NATIVE_CURRENCY[ChainId.BASE] as Token, USDC_BASE],
+
   [ChainId.POLYGON]: [
     nativeOnChain(ChainId.POLYGON),
     WETH_POLYGON,
@@ -172,13 +107,15 @@ export const COMMON_BASES: ChainCurrencyList = {
   [ChainId.POLYGON_MUMBAI]: [
     nativeOnChain(ChainId.POLYGON_MUMBAI),
     WRAPPED_NATIVE_CURRENCY[ChainId.POLYGON_MUMBAI] as Token,
+    USDC_POLYGON_MUMBAI,
     WETH_POLYGON_MUMBAI,
   ],
 
-  [ChainId.CELO]: [nativeOnChain(ChainId.CELO), CEUR_CELO, CUSD_CELO, PORTAL_ETH_CELO, PORTAL_USDC_CELO, CMC02_CELO],
+  [ChainId.CELO]: [nativeOnChain(ChainId.CELO), CEUR_CELO, CUSD_CELO, PORTAL_ETH_CELO, PORTAL_USDC_CELO, WBTC_CELO],
   [ChainId.CELO_ALFAJORES]: [nativeOnChain(ChainId.CELO_ALFAJORES), CUSD_CELO_ALFAJORES, CEUR_CELO_ALFAJORES],
 
   [ChainId.BNB]: [nativeOnChain(ChainId.BNB), DAI_BSC, USDC_BSC, USDT_BSC, ETH_BSC, BTC_BSC, BUSD_BSC],
+
   [ChainId.AVALANCHE]: [
     nativeOnChain(ChainId.AVALANCHE),
     DAI_AVALANCHE,

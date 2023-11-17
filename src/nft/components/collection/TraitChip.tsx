@@ -1,19 +1,19 @@
 import { CrossIcon } from 'nft/components/icons'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const TraitChipWrap = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 6px 6px 6px 12px;
-  font-weight: 600;
+  font-weight: 535;
   border-radius: 8px;
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  background-color: ${({ theme }) => theme.surface3};
   font-size: 14px;
 `
 
 const CrossIconWrap = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   height: 28px;
   width: 28px;
   border: none;

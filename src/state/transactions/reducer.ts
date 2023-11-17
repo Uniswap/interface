@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { ChainId } from '@uniswap/sdk-core'
 
-import { updateVersion } from '../global/actions'
 import { SerializableTransactionReceipt, TransactionDetails, TransactionInfo } from './types'
 
 // TODO(WEB-2053): update this to be a map of account -> chainId -> txHash -> TransactionDetails
@@ -67,23 +66,27 @@ const transactionSlice = createSlice({
       tx.receipt = receipt
       tx.confirmedTime = Date.now()
     },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(updateVersion, (transactions) => {
-      // in case there are any transactions in the store with the old format, remove them
-      Object.keys(transactions).forEach((chainId) => {
-        const chainTransactions = transactions[chainId as unknown as number]
-        Object.keys(chainTransactions).forEach((hash) => {
-          if (!('info' in chainTransactions[hash])) {
-            // clear old transactions that don't have the right format
-            delete chainTransactions[hash]
-          }
-        })
-      })
-    })
+    cancelTransaction(transactions, { payload: { hash, chainId, cancelHash } }) {
+      const tx = transactions[chainId]?.[hash]
+
+      if (tx) {
+        delete transactions[chainId]?.[hash]
+        transactions[chainId][cancelHash] = {
+          ...tx,
+          hash: cancelHash,
+          cancelled: true,
+        }
+      }
+    },
   },
 })
 
-export const { addTransaction, clearAllTransactions, checkedTransaction, finalizeTransaction, removeTransaction } =
-  transactionSlice.actions
+export const {
+  addTransaction,
+  clearAllTransactions,
+  checkedTransaction,
+  finalizeTransaction,
+  removeTransaction,
+  cancelTransaction,
+} = transactionSlice.actions
 export default transactionSlice.reducer

@@ -23,7 +23,7 @@ import { getTickToPrice } from 'utils/getTickToPrice'
 import { BIG_INT_ZERO } from '../../../constants/misc'
 import { PoolState } from '../../../hooks/usePools'
 import { useCurrencyBalances } from '../../connection/hooks'
-import { AppState } from '../../types'
+import { AppState } from '../../reducer'
 import {
   Bound,
   Field,
@@ -444,7 +444,7 @@ export function useV3DerivedMintInfo(
 
   let errorMessage: ReactNode | undefined
   if (!account) {
-    errorMessage = <Trans>Connect Wallet</Trans>
+    errorMessage = <Trans>Connect wallet</Trans>
   }
 
   if (poolState === PoolState.INVALID) {

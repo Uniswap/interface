@@ -1,9 +1,11 @@
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
-import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
+import { useLingui } from '@lingui/react'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from 'analytics'
 import clsx from 'clsx'
+import { Search } from 'components/Icons/Search'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
 import useDebounce from 'hooks/useDebounce'
@@ -16,24 +18,24 @@ import { Column, Row } from 'nft/components/Flex'
 import { magicalGradientOnHover } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
-import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { ChangeEvent, useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
-import { ChevronLeftIcon, MagnifyingGlassIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
+import { ChevronLeftIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
 import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
 import { SearchBarDropdown } from './SearchBarDropdown'
 
 const KeyShortCut = styled.div`
-  background-color: ${({ theme }) => theme.hoverState};
-  color: ${({ theme }) => theme.textSecondary};
+  background-color: ${({ theme }) => theme.surface3};
+  color: ${({ theme }) => theme.neutral2};
   padding: 0px 8px;
   width: 20px;
   height: 20px;
   border-radius: 4px;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 535;
   line-height: 16px;
   display: flex;
   align-items: center;
@@ -103,17 +105,13 @@ export const SearchBar = () => {
     hasInput: debouncedSearchValue && debouncedSearchValue.length > 0,
     ...trace,
   }
-  const placeholderText = useMemo(() => {
-    if (isMobileOrTablet) {
-      return t`Search`
-    } else {
-      if (shouldDisableNFTRoutes) {
-        return t`Search tokens`
-      } else {
-        return t`Search tokens and NFT collections`
-      }
-    }
-  }, [isMobileOrTablet, shouldDisableNFTRoutes])
+
+  const { i18n } = useLingui() // subscribe to locale changes
+  const placeholderText = isMobileOrTablet
+    ? t(i18n)`Search`
+    : shouldDisableNFTRoutes
+    ? t(i18n)`Search tokens`
+    : t(i18n)`Search tokens and NFT collections`
 
   const handleKeyPress = useCallback(
     (event: any) => {
@@ -155,6 +153,9 @@ export const SearchBar = () => {
           position: 'relative',
           display: 'flex',
         })}
+        {...(isOpen && {
+          boxShadow: 'deep',
+        })}
       >
         <Row
           className={clsx(
@@ -162,19 +163,19 @@ export const SearchBar = () => {
             !isOpen && !isMobile && magicalGradientOnHover,
             isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)
           )}
-          borderRadius={isOpen || isMobileOrTablet ? undefined : '12'}
-          borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
-          borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
+          borderRadius={isOpen || isMobileOrTablet ? undefined : '16'}
+          borderTopRightRadius={isOpen && !isMobile ? '16' : undefined}
+          borderTopLeftRadius={isOpen && !isMobile ? '16' : undefined}
           borderBottomWidth={isOpen || isMobileOrTablet ? '0px' : '1px'}
-          backgroundColor={isOpen ? 'backgroundSurface' : 'searchBackground'}
+          backgroundColor={isOpen ? 'surface1' : 'surface1'}
           onClick={() => !isOpen && toggleOpen()}
           gap="12"
         >
           <Box className={styles.searchContentLeftAlign}>
             <Box display={{ sm: 'none', md: 'flex' }}>
-              <MagnifyingGlassIcon />
+              <Search width="20px" height="20px" />
             </Box>
-            <Box display={{ sm: 'flex', md: 'none' }} color="textTertiary" onClick={toggleOpen}>
+            <Box display={{ sm: 'flex', md: 'none' }} color="neutral3" onClick={toggleOpen}>
               <ChevronLeftIcon />
             </Box>
           </Box>

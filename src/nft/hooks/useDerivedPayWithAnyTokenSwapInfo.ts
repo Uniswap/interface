@@ -1,9 +1,8 @@
 import { Currency, CurrencyAmount, NativeCurrency, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
-import { useBestTrade } from 'hooks/useBestTrade'
+import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
 import { useMemo } from 'react'
-import { RouterPreference } from 'state/routing/slice'
-import { ClassicTrade, TradeState } from 'state/routing/types'
+import { ClassicTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
 
 export default function useDerivedPayWithAnyTokenSwapInfo(
@@ -15,7 +14,7 @@ export default function useDerivedPayWithAnyTokenSwapInfo(
   maximumAmountIn?: CurrencyAmount<Token>
   allowedSlippage: Percent
 } {
-  const { state, trade } = useBestTrade(
+  const { state, trade } = useDebouncedTrade(
     TradeType.EXACT_OUTPUT,
     parsedOutputAmount,
     inputCurrency ?? undefined,

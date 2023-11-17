@@ -1,15 +1,28 @@
-import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
-import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
-import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
+import { ChainId } from '@uniswap/sdk-core'
+import Column from 'components/Column'
+import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateConfig, useUpdateFlag } from 'featureFlags'
+import { DynamicConfigName } from 'featureFlags/dynamicConfig'
+import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
+import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
+import { useFallbackProviderEnabledFlag } from 'featureFlags/flags/fallbackProvider'
+import { useInfoExploreFlag } from 'featureFlags/flags/infoExplore'
+import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
+import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
+import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
+import { useLimitsEnabledFlag } from 'featureFlags/flags/limits'
+import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
+import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicatorV2'
+import { useQuickRouteMainnetFlag } from 'featureFlags/flags/quickRouteMainnet'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
-import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/uniswapx'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
+import { useFeesEnabledFlag } from 'featureFlags/flags/useFees'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
+import { BREAKPOINTS } from 'theme'
 
 const StyledModal = styled.div`
   position: fixed;
@@ -19,21 +32,35 @@ const StyledModal = styled.div`
   transform: translate(-50%, -50%);
   width: 400px;
   height: fit-content;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   font-size: 18px;
-  padding: 20px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  padding: 20px 0px;
+  background-color: ${({ theme }) => theme.surface2};
   border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
   z-index: 100;
   flex-direction: column;
   gap: 8px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    max-height: 100vh;
+  }
 `
 
 function Modal({ open, children }: { open: boolean; children: ReactNode }) {
   return open ? <StyledModal>{children}</StyledModal> : null
 }
+
+const FlagsColumn = styled(Column)`
+  max-height: 600px;
+  overflow-y: auto;
+  padding: 0px 20px;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    max-height: unset;
+  }
+`
 
 const Row = styled.div`
   display: flex;
@@ -46,52 +73,52 @@ const CloseButton = styled.button`
   cursor: pointer;
   background: transparent;
   border: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 
 const ToggleButton = styled.button`
   cursor: pointer;
   background: transparent;
   border: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 
 const Header = styled(Row)`
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-bottom: 1px solid ${({ theme }) => theme.surface3};
   margin-bottom: 8px;
 `
 const FlagName = styled.span`
   font-size: 16px;
   line-height: 20px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 const FlagGroupName = styled.span`
   font-size: 20px;
   line-height: 24px;
-  color: ${({ theme }) => theme.textPrimary};
-  font-weight: 600;
+  color: ${({ theme }) => theme.neutral1};
+  font-weight: 535;
 `
 const FlagDescription = styled.span`
   font-size: 12px;
   line-height: 16px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   display: flex;
   align-items: center;
 `
 const FlagVariantSelection = styled.select`
   border-radius: 12px;
   padding: 8px;
-  background: ${({ theme }) => theme.backgroundInteractive};
-  font-weight: 600;
+  background: ${({ theme }) => theme.surface3};
+  font-weight: 535;
   font-size: 16px;
   border: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   cursor: pointer;
 
   :hover {
-    background: ${({ theme }) => theme.backgroundOutline};
+    background: ${({ theme }) => theme.surface3};
   }
 `
 
@@ -104,15 +131,16 @@ const FlagInfo = styled.div`
 const SaveButton = styled.button`
   border-radius: 12px;
   padding: 8px;
-  background: ${({ theme }) => theme.backgroundInteractive};
-  font-weight: 600;
+  margin: 0px 20px;
+  background: ${({ theme }) => theme.surface3};
+  font-weight: 535;
   font-size: 16px;
   border: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   cursor: pointer;
 
   :hover {
-    background: ${({ theme }) => theme.backgroundOutline};
+    background: ${({ theme }) => theme.surface3};
   }
 `
 
@@ -192,50 +220,145 @@ function FeatureFlagOption({ value, variant, featureFlag, label }: FeatureFlagPr
   )
 }
 
+interface DynamicConfigDropdownProps {
+  configName: DynamicConfigName
+  label: string
+  options: any[]
+  selected: any[]
+  parser: (opt: string) => any
+}
+
+function DynamicConfigDropdown({ configName, label, options, selected, parser }: DynamicConfigDropdownProps) {
+  const updateConfig = useUpdateConfig()
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValues = Array.from(e.target.selectedOptions, (opt) => parser(opt.value))
+    // Saved to atom as { [configName]: { [configName]: values } } to match Statsig return format
+    updateConfig(configName, { [configName]: selectedValues })
+  }
+  return (
+    <Row key={configName}>
+      <FlagInfo>
+        <FlagName>{configName}</FlagName>
+        <FlagDescription>{label}</FlagDescription>
+      </FlagInfo>
+      <select multiple onChange={handleSelectChange}>
+        {options.map((opt) => (
+          <option key={opt} value={opt} selected={selected.includes(opt)}>
+            {opt}
+          </option>
+        ))}
+      </select>
+    </Row>
+  )
+}
+
 export default function FeatureFlagModal() {
   const open = useModalIsOpen(ApplicationModal.FEATURE_FLAGS)
-  const toggle = useToggleFeatureFlags()
+  const toggleModal = useToggleFeatureFlags()
 
   return (
     <Modal open={open}>
-      <Header>
-        Feature Flag Settings
-        <CloseButton onClick={toggle}>
-          <X size={24} />
-        </CloseButton>
-      </Header>
-      <FeatureFlagOption
-        variant={DetailsV2Variant}
-        value={useDetailsV2Flag()}
-        featureFlag={FeatureFlag.detailsV2}
-        label="Use the new details page for nfts"
-      />
-      <FeatureFlagOption
-        variant={UniswapXVariant}
-        value={useUniswapXFlag()}
-        featureFlag={FeatureFlag.uniswapXEnabled}
-        label="Enable UniswapX"
-      />
-      <FeatureFlagOption
-        variant={BaseVariant}
-        value={useUniswapXSyntheticQuoteFlag()}
-        featureFlag={FeatureFlag.uniswapXSyntheticQuote}
-        label="Force synthetic quotes for UniswapX"
-      />
-      <FeatureFlagOption
-        variant={BaseVariant}
-        value={useRoutingAPIForPriceFlag()}
-        featureFlag={FeatureFlag.routingAPIPrice}
-        label="Use the routing-api v2 for price fetches"
-      />
-      <FeatureFlagGroup name="Debug">
+      <FlagsColumn>
+        <Header>
+          Feature Flag Settings
+          <CloseButton onClick={toggleModal}>
+            <X size={24} />
+          </CloseButton>
+        </Header>
         <FeatureFlagOption
-          variant={TraceJsonRpcVariant}
-          value={useTraceJsonRpcFlag()}
-          featureFlag={FeatureFlag.traceJsonRpc}
-          label="Enables JSON-RPC tracing"
+          variant={BaseVariant}
+          value={useFeesEnabledFlag()}
+          featureFlag={FeatureFlag.feesEnabled}
+          label="Enable Swap Fees"
         />
-      </FeatureFlagGroup>
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useLimitsEnabledFlag()}
+          featureFlag={FeatureFlag.limitsEnabled}
+          label="Enable Limits"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useFallbackProviderEnabledFlag()}
+          featureFlag={FeatureFlag.fallbackProvider}
+          label="Enable fallback provider"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useCurrencyConversionFlag()}
+          featureFlag={FeatureFlag.currencyConversion}
+          label="Enable currency conversion"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useMultichainUXFlag()}
+          featureFlag={FeatureFlag.multichainUX}
+          label="Updated Multichain UX"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useProgressIndicatorV2Flag()}
+          featureFlag={FeatureFlag.progressIndicatorV2}
+          label="Refreshed swap progress indicator"
+        />
+        <FeatureFlagGroup name="Quick routes">
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useQuickRouteMainnetFlag()}
+            featureFlag={FeatureFlag.quickRouteMainnet}
+            label="Enable quick routes for Mainnet"
+          />
+          <DynamicConfigDropdown
+            selected={useQuickRouteChains()}
+            options={Object.values(ChainId).filter((v) => !isNaN(Number(v))) as ChainId[]}
+            parser={Number.parseInt}
+            configName={DynamicConfigName.quickRouteChains}
+            label="Enable quick routes for these chains"
+          />
+        </FeatureFlagGroup>
+        <FeatureFlagGroup name="UniswapX Flags">
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useUniswapXSyntheticQuoteFlag()}
+            featureFlag={FeatureFlag.uniswapXSyntheticQuote}
+            label="Force synthetic quotes for UniswapX"
+          />
+        </FeatureFlagGroup>
+        <FeatureFlagGroup name="Info Site Migration">
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useInfoExploreFlag()}
+            featureFlag={FeatureFlag.infoExplore}
+            label="Info site migration - Updating Token Explore Page"
+          />
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useInfoTDPFlag()}
+            featureFlag={FeatureFlag.infoTDP}
+            label="Info site migration - Updating Token Details Page"
+          />
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useInfoPoolPageFlag()}
+            featureFlag={FeatureFlag.infoPoolPage}
+            label="Info site migration - Adding Pool Details Page"
+          />
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useInfoLiveViewsFlag()}
+            featureFlag={FeatureFlag.infoLiveViews}
+            label="Info site migration - Support live view graphs"
+          />
+        </FeatureFlagGroup>
+        <FeatureFlagGroup name="Debug">
+          <FeatureFlagOption
+            variant={TraceJsonRpcVariant}
+            value={useTraceJsonRpcFlag()}
+            featureFlag={FeatureFlag.traceJsonRpc}
+            label="Enables JSON-RPC tracing"
+          />
+        </FeatureFlagGroup>
+      </FlagsColumn>
       <SaveButton onClick={() => window.location.reload()}>Reload</SaveButton>
     </Modal>
   )

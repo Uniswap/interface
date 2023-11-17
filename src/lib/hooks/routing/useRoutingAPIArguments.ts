@@ -1,9 +1,9 @@
+import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { useRoutingAPIForPrice } from 'featureFlags/flags/priceRoutingApi'
-import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
 import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
+import { useFeesEnabled } from 'featureFlags/flags/useFees'
 import { useMemo } from 'react'
-import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/slice'
+import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
 
 /**
@@ -25,15 +25,17 @@ export function useRoutingAPIArguments({
   amount?: CurrencyAmount<Currency>
   tradeType: TradeType
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
-}): GetQuoteArgs | undefined {
-  const uniswapXEnabled = useUniswapXEnabled()
+}): GetQuoteArgs | SkipToken {
   const uniswapXForceSyntheticQuotes = useUniswapXSyntheticQuoteEnabled()
-  const isRoutingAPIPrice = useRoutingAPIForPrice()
+
+  const feesEnabled = useFeesEnabled()
+  // Don't enable fee logic if this is a quote for pricing
+  const sendPortionEnabled = routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? false : feesEnabled
 
   return useMemo(
     () =>
       !tokenIn || !tokenOut || !amount || tokenIn.equals(tokenOut) || tokenIn.wrapped.equals(tokenOut.wrapped)
-        ? undefined
+        ? skipToken
         : {
             account,
             amount: amount.quotient.toString(),
@@ -47,21 +49,10 @@ export function useRoutingAPIArguments({
             tokenOutSymbol: tokenOut.wrapped.symbol,
             routerPreference,
             tradeType,
-            isRoutingAPIPrice,
             needsWrapIfUniswapX: tokenIn.isNative,
-            uniswapXEnabled,
             uniswapXForceSyntheticQuotes,
+            sendPortionEnabled,
           },
-    [
-      account,
-      amount,
-      routerPreference,
-      tokenIn,
-      tokenOut,
-      tradeType,
-      uniswapXEnabled,
-      isRoutingAPIPrice,
-      uniswapXForceSyntheticQuotes,
-    ]
+    [account, amount, routerPreference, tokenIn, tokenOut, tradeType, uniswapXForceSyntheticQuotes, sendPortionEnabled]
   )
 }

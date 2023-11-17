@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { sendEvent } from 'components/analytics'
 import { useCallback, useEffect } from 'react'
 import { Heart, X } from 'react-feather'
-import styled, { keyframes } from 'styled-components/macro'
+import styled, { keyframes } from 'styled-components'
+import { ThemedText } from 'theme/components'
 
 import tokenLogo from '../../assets/images/token-logo.png'
 import {
@@ -15,7 +15,6 @@ import {
 } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
-import { ThemedText } from '../../theme'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn } from '../Column'
 import { CardBGImage, CardNoise } from '../earn/styled'
@@ -65,10 +64,6 @@ export default function ClaimPopup() {
   const showClaimModal = useModalIsOpen(ApplicationModal.SELF_CLAIM)
   const toggleSelfClaimModal = useToggleSelfClaimModal()
   const handleToggleSelfClaimModal = useCallback(() => {
-    sendEvent({
-      category: 'MerkleDrop',
-      action: 'Toggle self claim modal',
-    })
     toggleSelfClaimModal()
   }, [toggleSelfClaimModal])
 
@@ -79,10 +74,6 @@ export default function ClaimPopup() {
   // listen for available claim and show popup if needed
   useEffect(() => {
     if (userHasAvailableclaim) {
-      sendEvent({
-        category: 'MerkleDrop',
-        action: 'Show claim popup',
-      })
       toggleShowClaimPopup()
     }
     // the toggleShowClaimPopup function changes every time the popup changes, so this will cause an infinite loop.
@@ -98,12 +89,12 @@ export default function ClaimPopup() {
           <StyledClose stroke="white" onClick={toggleShowClaimPopup} />
           <AutoColumn style={{ padding: '2rem 0', zIndex: 10 }} justify="center">
             <UniToken width="48px" src={tokenLogo} />{' '}
-            <ThemedText.DeprecatedWhite style={{ marginTop: '1rem' }} fontSize={36} fontWeight={600}>
+            <ThemedText.DeprecatedWhite style={{ marginTop: '1rem' }} fontSize={36} fontWeight={535}>
               {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
             </ThemedText.DeprecatedWhite>
             <ThemedText.DeprecatedWhite
               style={{ paddingTop: '1.25rem', textAlign: 'center' }}
-              fontWeight={600}
+              fontWeight={535}
               color="white"
             >
               <span role="img" aria-label="party">

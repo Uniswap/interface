@@ -1,31 +1,32 @@
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent } from 'analytics'
+import { Gas } from 'components/Icons/Gas'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { UniswapXRouterIcon } from 'components/RouterLabel/UniswapXRouterLabel'
 import Row, { RowFixed } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
-import { InterfaceTrade } from 'state/routing/types'
+import { SubmittableTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
-import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import styled from 'styled-components'
+import { ThemedText } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { ReactComponent as GasIcon } from '../../assets/images/gas-icon.svg'
 import { GasBreakdownTooltip } from './GasBreakdownTooltip'
 
-const StyledGasIcon = styled(GasIcon)`
-  height: 18px;
-
+const StyledGasIcon = styled(Gas)`
+  height: 16px;
+  width: 16px;
   // We apply the following to all children of the SVG in order to override the default color
   & > * {
-    stroke: ${({ theme }) => theme.textTertiary};
+    fill: ${({ theme }) => theme.neutral2};
   }
 `
 
-export default function GasEstimateTooltip({ trade, loading }: { trade?: InterfaceTrade; loading: boolean }) {
+export default function GasEstimateTooltip({ trade, loading }: { trade?: SubmittableTrade; loading: boolean }) {
   const { chainId } = useWeb3React()
+  const { formatNumber } = useFormatter()
 
   if (!trade || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) {
     return null
@@ -44,13 +45,23 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Interfa
     >
       <LoadingOpacityContainer $loading={loading}>
         <RowFixed gap="xs">
-          {isUniswapXTrade(trade) ? <UniswapXRouterIcon /> : <StyledGasIcon />}
-          <ThemedText.BodySmall color="textSecondary">
+          {isUniswapXTrade(trade) ? <UniswapXRouterIcon testId="gas-estimate-uniswapx-icon" /> : <StyledGasIcon />}
+          <ThemedText.BodySmall color="neutral2">
             <Row gap="xs">
-              <div>{formatNumber(trade.totalGasUseEstimateUSD, NumberType.FiatGasPrice)}</div>
+              <div>
+                {formatNumber({
+                  input: trade.totalGasUseEstimateUSD,
+                  type: NumberType.FiatGasPrice,
+                })}
+              </div>
               {isUniswapXTrade(trade) && (
                 <div>
-                  <s>{formatNumber(trade.classicGasUseEstimateUSD, NumberType.FiatGasPrice)}</s>
+                  <s>
+                    {formatNumber({
+                      input: trade.classicGasUseEstimateUSD,
+                      type: NumberType.FiatGasPrice,
+                    })}
+                  </s>
                 </div>
               )}
             </Row>

@@ -1,13 +1,14 @@
 import { Trans } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonText } from 'components/Button'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useCallback, useEffect, useState } from 'react'
-import styled from 'styled-components/macro'
-import { ExternalLink } from 'theme'
+import styled from 'styled-components'
+import { ExternalLink } from 'theme/components'
+import { isPathBlocked } from 'utils/blockedPaths'
 
 import { useFiatOnrampAvailability, useOpenModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -25,19 +26,27 @@ enum BuyFiatFlowState {
 }
 
 const StyledTextButton = styled(ButtonText)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   gap: 4px;
+  font-weight: 485;
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
+  transition-timing-function: ease-in-out;
+  transition-property: opacity, color, background-color;
   &:focus {
     text-decoration: none;
   }
   &:active {
     text-decoration: none;
   }
+  :hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
 `
 
 export default function SwapBuyFiatButton() {
   const { account } = useWeb3React()
   const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
+  const shouldShowBuyFiatButton = !isPathBlocked('/buy')
   const [checkFiatRegionAvailability, setCheckFiatRegionAvailability] = useState(false)
   const {
     available: fiatOnrampAvailable,
@@ -95,6 +104,10 @@ export default function SwapBuyFiatButton() {
 
   const fiatOnRampsUnavailableTooltipDisabled =
     !fiatOnrampAvailabilityChecked || (fiatOnrampAvailabilityChecked && fiatOnrampAvailable)
+
+  if (!shouldShowBuyFiatButton) {
+    return null
+  }
 
   return (
     <MouseoverTooltip

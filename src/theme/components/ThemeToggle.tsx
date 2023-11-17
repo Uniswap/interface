@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import Row from 'components/Row'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Moon, Sun } from 'react-feather'
 import { addMediaQueryListener, removeMediaQueryListener } from 'utils/matchMedia'
@@ -10,7 +10,7 @@ import { addMediaQueryListener, removeMediaQueryListener } from 'utils/matchMedi
 import { Segment, SegmentedControl } from './SegmentedControl'
 import { ThemedText } from './text'
 
-const THEME_UPDATE_DELAY = ms`0.1s`
+const THEME_UPDATE_DELAY = ms(`0.1s`)
 const DARKMODE_MEDIA_QUERY = window.matchMedia('(prefers-color-scheme: dark)')
 
 export enum ThemeMode {
@@ -41,6 +41,24 @@ export function SystemThemeUpdater() {
     addMediaQueryListener(DARKMODE_MEDIA_QUERY, listener)
     return () => removeMediaQueryListener(DARKMODE_MEDIA_QUERY, listener)
   }, [setSystemTheme, listener])
+
+  return null
+}
+
+export function ThemeColorMetaUpdater() {
+  const isDark = useIsDarkMode()
+
+  useEffect(() => {
+    const meta = document.querySelector('meta[name=theme-color]')
+    if (!meta) return
+
+    if (isDark) {
+      // this color comes from #background-radial-gradient
+      meta.setAttribute('content', 'rgb(19, 19, 19)')
+    } else {
+      meta.setAttribute('content', '#fff')
+    }
+  }, [isDark])
 
   return null
 }

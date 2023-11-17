@@ -43,11 +43,11 @@ export enum ApplicationModal {
   TAX_SERVICE,
   TIME_SELECTOR,
   VOTE,
-  WALLET,
+  UK_DISCLAIMER,
   UNISWAP_NFT_AIRDROP_CLAIM,
 }
 
-type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
+export type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
 
 export interface ApplicationState {
   readonly chainId: number | null

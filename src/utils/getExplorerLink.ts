@@ -4,6 +4,8 @@ const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
   [ChainId.MAINNET]: 'https://etherscan.io',
   [ChainId.GOERLI]: 'https://goerli.etherscan.io',
   [ChainId.SEPOLIA]: 'https://sepolia.etherscan.io',
+  [ChainId.ARBITRUM_ONE]: 'https://arbiscan.io',
+  [ChainId.ARBITRUM_GOERLI]: 'https://goerli.arbiscan.io',
   [ChainId.OPTIMISM]: 'https://optimistic.etherscan.io',
   [ChainId.OPTIMISM_GOERLI]: 'https://goerli-optimism.etherscan.io',
   [ChainId.POLYGON]: 'https://polygonscan.com',
@@ -12,6 +14,7 @@ const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
   [ChainId.CELO_ALFAJORES]: 'https://alfajores-blockscout.celo-testnet.org',
   [ChainId.BNB]: 'https://bscscan.com',
   [ChainId.AVALANCHE]: 'https://snowtrace.io',
+  [ChainId.BASE]: 'https://basescan.org',
 }
 
 export enum ExplorerDataType {
@@ -19,6 +22,7 @@ export enum ExplorerDataType {
   TOKEN = 'token',
   ADDRESS = 'address',
   BLOCK = 'block',
+  NATIVE = 'native',
 }
 
 /**
@@ -28,34 +32,6 @@ export enum ExplorerDataType {
  * @param type the type of the data
  */
 export function getExplorerLink(chainId: number, data: string, type: ExplorerDataType): string {
-  if (chainId === ChainId.ARBITRUM_ONE) {
-    switch (type) {
-      case ExplorerDataType.TRANSACTION:
-        return `https://arbiscan.io/tx/${data}`
-      case ExplorerDataType.ADDRESS:
-      case ExplorerDataType.TOKEN:
-        return `https://arbiscan.io/address/${data}`
-      case ExplorerDataType.BLOCK:
-        return `https://arbiscan.io/block/${data}`
-      default:
-        return `https://arbiscan.io/`
-    }
-  }
-
-  if (chainId === ChainId.ARBITRUM_GOERLI) {
-    switch (type) {
-      case ExplorerDataType.TRANSACTION:
-        return `https://goerli.arbiscan.io/tx/${data}`
-      case ExplorerDataType.ADDRESS:
-      case ExplorerDataType.TOKEN:
-        return `https://goerli.arbiscan.io/address/${data}`
-      case ExplorerDataType.BLOCK:
-        return `https://goerli.arbiscan.io/block/${data}`
-      default:
-        return `https://goerli.arbiscan.io/`
-    }
-  }
-
   const prefix = BLOCK_EXPLORER_PREFIXES[chainId] ?? 'https://etherscan.io'
 
   switch (type) {
@@ -66,9 +42,6 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
       return `${prefix}/token/${data}`
 
     case ExplorerDataType.BLOCK:
-      if (chainId === ChainId.OPTIMISM || chainId === ChainId.OPTIMISM_GOERLI) {
-        return `${prefix}/tx/${data}`
-      }
       return `${prefix}/block/${data}`
 
     case ExplorerDataType.ADDRESS:

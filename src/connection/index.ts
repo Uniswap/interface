@@ -10,10 +10,11 @@ import UNISWAP_LOGO from 'assets/svg/logo.svg'
 import COINBASE_ICON from 'assets/wallets/coinbase-icon.svg'
 import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import WALLET_CONNECT_ICON from 'assets/wallets/walletconnect-icon.svg'
-import { isMobile, isNonIOSPhone } from 'utils/userAgent'
+import { useSyncExternalStore } from 'react'
+import { isMobile, isNonSupportedPhone } from 'utils/userAgent'
 
 import { RPC_URLS } from '../constants/networks'
-import { RPC_PROVIDERS } from '../constants/providers'
+import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from '../constants/providers'
 import { Connection, ConnectionType } from './types'
 import { getInjection, getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
 import { UniwalletConnect as UniwalletWCV2Connect, WalletConnectV2 } from './WalletConnectV2'
@@ -33,6 +34,17 @@ export const networkConnection: Connection = {
   shouldDisplay: () => false,
 }
 
+const [deprecatedWeb3Network, deprecatedWeb3NetworkHooks] = initializeConnector<Network>(
+  (actions) => new Network({ actions, urlMap: DEPRECATED_RPC_PROVIDERS, defaultChainId: 1 })
+)
+export const deprecatedNetworkConnection: Connection = {
+  getName: () => 'Network',
+  connector: deprecatedWeb3Network,
+  hooks: deprecatedWeb3NetworkHooks,
+  type: ConnectionType.NETWORK,
+  shouldDisplay: () => false,
+}
+
 const getIsCoinbaseWalletBrowser = () => isMobile && getIsCoinbaseWallet()
 const getIsMetaMaskBrowser = () => isMobile && getIsMetaMaskWallet()
 const getIsInjectedMobileBrowser = () => getIsCoinbaseWalletBrowser() || getIsMetaMaskBrowser()
@@ -43,7 +55,7 @@ const getIsGenericInjector = () => getIsInjected() && !getIsMetaMaskWallet() && 
 
 const [web3Injected, web3InjectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
 
-const injectedConnection: Connection = {
+export const injectedConnection: Connection = {
   getName: () => getInjection().name,
   connector: web3Injected,
   hooks: web3InjectedHooks,
@@ -78,17 +90,53 @@ export const walletConnectV2Connection: Connection = new (class implements Conne
   getIcon = () => WALLET_CONNECT_ICON
   shouldDisplay = () => !getIsInjectedMobileBrowser()
 
-  private _connector = initializeConnector<WalletConnectV2>(this.initializer)
+  private activeConnector = initializeConnector<WalletConnectV2>(this.initializer)
+  // The web3-react Provider requires referentially stable connectors, so we use proxies to allow lazy connections
+  // whilst maintaining referential equality.
+  private proxyConnector = new Proxy(
+    {},
+    {
+      get: (target, p, receiver) => Reflect.get(this.activeConnector[0], p, receiver),
+      getOwnPropertyDescriptor: (target, p) => Reflect.getOwnPropertyDescriptor(this.activeConnector[0], p),
+      getPrototypeOf: () => WalletConnectV2.prototype,
+      set: (target, p, receiver) => Reflect.set(this.activeConnector[0], p, receiver),
+    }
+  ) as (typeof this.activeConnector)[0]
+  private proxyHooks = new Proxy(
+    {},
+    {
+      get: (target, p, receiver) => {
+        return () => {
+          // Because our connectors are referentially stable (through proxying), we need a way to trigger React renders
+          // from outside of the React lifecycle when our connector is re-initialized. This is done via 'change' events
+          // with `useSyncExternalStore`:
+          const hooks = useSyncExternalStore(
+            (onChange) => {
+              this.onActivate = onChange
+              return () => (this.onActivate = undefined)
+            },
+            () => this.activeConnector[1]
+          )
+          return Reflect.get(hooks, p, receiver)()
+        }
+      },
+    }
+  ) as (typeof this.activeConnector)[1]
+
+  private onActivate?: () => void
+
   overrideActivate = (chainId?: ChainId) => {
     // Always re-create the connector, so that the chainId is updated.
-    this._connector = initializeConnector((actions) => this.initializer(actions, chainId))
+    this.activeConnector = initializeConnector((actions) => this.initializer(actions, chainId))
+    this.onActivate?.()
     return false
   }
+
   get connector() {
-    return this._connector[0]
+    return this.proxyConnector
   }
   get hooks() {
-    return this._connector[1]
+    return this.proxyHooks
   }
 })()
 
@@ -101,7 +149,7 @@ export const uniwalletWCV2ConnectConnection: Connection = {
   hooks: web3WCV2UniwalletConnectHooks,
   type: ConnectionType.UNISWAP_WALLET_V2,
   getIcon: () => UNIWALLET_ICON,
-  shouldDisplay: () => Boolean(!getIsInjectedMobileBrowser() && !isNonIOSPhone),
+  shouldDisplay: () => Boolean(!getIsInjectedMobileBrowser() && !isNonSupportedPhone),
 }
 
 const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(
@@ -135,20 +183,19 @@ const coinbaseWalletConnection: Connection = {
   },
 }
 
-export function getConnections() {
-  return [
-    uniwalletWCV2ConnectConnection,
-    injectedConnection,
-    walletConnectV2Connection,
-    coinbaseWalletConnection,
-    gnosisSafeConnection,
-    networkConnection,
-  ]
-}
+export const connections = [
+  gnosisSafeConnection,
+  uniwalletWCV2ConnectConnection,
+  injectedConnection,
+  walletConnectV2Connection,
+  coinbaseWalletConnection,
+  networkConnection,
+  deprecatedNetworkConnection,
+]
 
 export function getConnection(c: Connector | ConnectionType) {
   if (c instanceof Connector) {
-    const connection = getConnections().find((connection) => connection.connector === c)
+    const connection = connections.find((connection) => connection.connector === c)
     if (!connection) {
       throw Error('unsupported connector')
     }
@@ -165,6 +212,8 @@ export function getConnection(c: Connector | ConnectionType) {
         return uniwalletWCV2ConnectConnection
       case ConnectionType.NETWORK:
         return networkConnection
+      case ConnectionType.DEPRECATED_NETWORK:
+        return deprecatedNetworkConnection
       case ConnectionType.GNOSIS_SAFE:
         return gnosisSafeConnection
     }

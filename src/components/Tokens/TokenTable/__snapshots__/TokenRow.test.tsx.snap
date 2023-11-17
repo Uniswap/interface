@@ -2,49 +2,32 @@
 
 exports[`LoadedRow.tsx renders a row 1`] = `
 <DocumentFragment>
-  .c18 {
-  color: #40B66B;
+  .c7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
 }
 
-.c19 {
+.c8 {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.c16 {
   color: #40B66B;
 }
 
 .c17 {
-  padding-right: 3px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.c8 {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: radial-gradient(white 60%,#ffffff00 calc(70% + 1px));
-  box-shadow: 0 0 1px white;
-}
-
-.c7 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.c9 {
-  --size: calc(24px / 2);
-  width: var(--size);
-  height: var(--size);
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  background: url();
-  background-repeat: no-repeat;
-  background-size: calc(24px / 2) calc(24px / 2);
-  display: none;
+  color: #40B66B;
 }
 
 .c2 {
@@ -94,7 +77,23 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   display: flex;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: #0D111C;
+  color: #222222;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.c19 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 3px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #222222;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -103,17 +102,17 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 .c6 {
-  gap: 8px;
+  gap: 14px;
   max-width: 100%;
 }
 
 .c3 {
-  color: #7780A0;
+  color: #7D7D7D;
   min-width: 32px;
   font-size: 14px;
 }
 
-.c13 {
+.c12 {
   -webkit-box-pack: end;
   -webkit-justify-content: flex-end;
   -ms-flex-pack: end;
@@ -127,7 +126,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   transition: background-color 250ms ease;
 }
 
-.c21 {
+.c20 {
   padding-right: 8px;
 }
 
@@ -141,19 +140,19 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   gap: 8px;
 }
 
-.c14 {
+.c13 {
   padding-right: 8px;
 }
 
-.c20 {
+.c18 {
   padding-right: 8px;
-}
-
-.c16 {
-  display: none;
 }
 
 .c15 {
+  display: none;
+}
+
+.c14 {
   -webkit-box-pack: end;
   -webkit-justify-content: flex-end;
   -ms-flex-pack: end;
@@ -163,12 +162,12 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   flex: 1;
 }
 
-.c23 {
+.c22 {
   padding: 0px 24px;
   min-width: 120px;
 }
 
-.c24 {
+.c23 {
   width: 124px;
   height: 42px;
 }
@@ -178,7 +177,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   text-decoration: none;
 }
 
-.c10 {
+.c9 {
   gap: 8px;
   line-height: 24px;
   font-size: 16px;
@@ -188,19 +187,19 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   white-space: nowrap;
 }
 
-.c11 {
+.c10 {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 100%;
 }
 
-.c12 {
-  color: #98A1C0;
+.c11 {
+  color: #7D7D7D;
   text-transform: uppercase;
 }
 
-.c22 {
+.c21 {
   padding-right: 8px;
 }
 
@@ -226,7 +225,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   .c1 {
     grid-template-columns: 2fr 3fr;
     min-width: unset;
-    border-bottom: 0.5px solid #F5F6FC;
+    border-bottom: 0.5px solid #F9F9F9;
   }
 
   .c1:last-of-type {
@@ -241,35 +240,42 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 @media only screen and (max-width:720px) {
-  .c21 {
-    display: none;
-  }
-}
-
-@media only screen and (max-width:540px) {
   .c20 {
     display: none;
   }
 }
 
+@media only screen and (max-width:396px) {
+  .c4 {
+    min-width: 200px;
+  }
+}
+
 @media only screen and (max-width:540px) {
-  .c16 {
+  .c18 {
+    display: none;
+  }
+}
+
+@media only screen and (max-width:540px) {
+  .c15 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
+    gap: 3px;
     -webkit-box-pack: end;
     -webkit-justify-content: flex-end;
     -ms-flex-pack: end;
     justify-content: flex-end;
-    color: #7780A0;
+    color: #7D7D7D;
     font-size: 12px;
     line-height: 16px;
   }
 }
 
 @media only screen and (max-width:540px) {
-  .c15 {
+  .c14 {
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
@@ -281,13 +287,13 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 @media only screen and (max-width:1200px) {
-  .c23 {
+  .c22 {
     display: none;
   }
 }
 
 @media only screen and (max-width:540px) {
-  .c10 {
+  .c9 {
     -webkit-box-pack: start;
     -webkit-justify-content: flex-start;
     -ms-flex-pack: start;
@@ -299,12 +305,12 @@ exports[`LoadedRow.tsx renders a row 1`] = `
     width: -webkit-max-content;
     width: -moz-max-content;
     width: max-content;
-    font-weight: 500;
+    font-weight: 535;
   }
 }
 
 @media only screen and (max-width:540px) {
-  .c12 {
+  .c11 {
     font-size: 12px;
     height: 16px;
     -webkit-box-pack: start;
@@ -316,7 +322,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 @media only screen and (max-width:840px) {
-  .c22 {
+  .c21 {
     display: none;
   }
 }
@@ -326,7 +332,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   >
     <a
       class="c0"
-      href="#/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+      href="/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
     >
       <div
         class="c1"
@@ -347,25 +353,21 @@ exports[`LoadedRow.tsx renders a row 1`] = `
               class="c7"
             >
               <img
-                alt="USDC logo"
                 class="c8"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
               />
-              <div
-                class="c9"
-              />
             </div>
             <div
-              class="7 c2 c10"
+              class="c2 c9"
             >
               <div
-                class="8 c11"
+                class="c10"
                 data-cy="token-name"
               >
                 USD Coin
               </div>
               <div
-                class="9 c2 c12"
+                class="c2 c11"
               >
                 USDC
               </div>
@@ -373,48 +375,35 @@ exports[`LoadedRow.tsx renders a row 1`] = `
           </div>
         </div>
         <div
-          class="c2 c13 c14"
+          class="c2 c12 c13"
           data-testid="price-cell"
         >
           <div
             class="c5"
           >
             <div
-              class="2 c2 c15"
+              class="c2 c14"
             >
               $1.00
               <div
-                class="1 c2 c16"
+                class="c2 c15"
               >
-                <div
-                  class="c17"
+                <svg
+                  aria-label="up"
+                  class="c16"
+                  fill="none"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <svg
-                    aria-label="up"
-                    class="c18"
-                    fill="none"
-                    height="14"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="14"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <line
-                      x1="7"
-                      x2="17"
-                      y1="17"
-                      y2="7"
-                    />
-                    <polyline
-                      points="7 7 17 7 17 17"
-                    />
-                  </svg>
-                </div>
+                  <path
+                    d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+                    fill="currentColor"
+                  />
+                </svg>
                 <span
-                  class="c19"
+                  class="c17"
                 >
                   0.00%
                 </span>
@@ -423,48 +412,35 @@ exports[`LoadedRow.tsx renders a row 1`] = `
           </div>
         </div>
         <div
-          class="0 c2 c13 c20"
+          class="c2 c12 c18"
           data-testid="percent-change-cell"
         >
           <div
-            class="c5"
+            class="c19"
           >
-            <div
-              class="c17"
+            <svg
+              aria-label="up"
+              class="c16"
+              fill="none"
+              height="16"
+              viewBox="0 0 24 24"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                aria-label="up"
-                class="c18"
-                fill="none"
-                height="20"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                width="20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <line
-                  x1="7"
-                  x2="17"
-                  y1="17"
-                  y2="7"
-                />
-                <polyline
-                  points="7 7 17 7 17 17"
-                />
-              </svg>
-            </div>
+              <path
+                d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+                fill="currentColor"
+              />
+            </svg>
             <span
-              class="c19"
+              class="c17"
             >
               0.00%
             </span>
           </div>
         </div>
         <div
-          class="c2 c13 c21"
+          class="c2 c12 c20"
           data-testid="tvl-cell"
         >
           <div
@@ -474,7 +450,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
           </div>
         </div>
         <div
-          class="0 c2 c13 c22"
+          class="c2 c12 c21"
           data-testid="volume-cell"
         >
           <div
@@ -484,10 +460,10 @@ exports[`LoadedRow.tsx renders a row 1`] = `
           </div>
         </div>
         <div
-          class="4 c2 c23"
+          class="c2 c22"
         >
           <div
-            class="5 c2 c24"
+            class="c2 c23"
           >
             <div
               style="width: 100%; height: 100%;"

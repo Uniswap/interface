@@ -1,10 +1,10 @@
 {
-  "globalSetup": "<rootDir>/global-setup.ts",
-  "globalTeardown": "<rootDir>/global-teardown.ts",
+  "setupFilesAfterEnv": ["<rootDir>/setupAfterEnv.ts"],
   "preset": "ts-jest",
   "transform": {
     "'^.+\\.(ts|tsx)?$'": "ts-jest",
     "^.+\\.(js|jsx)$": "babel-jest"
   },
-  "testTimeout": 50000
+  "testTimeout": 360000,
+  "cacheDirectory": "../node_modules/.cache/cloud-jest"
 }

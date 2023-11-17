@@ -1,7 +1,15 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { parsedQueryString } from 'hooks/useParsedQueryString'
 
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import {
+  Field,
+  forceExactInput,
+  replaceSwapState,
+  selectCurrency,
+  setRecipient,
+  switchCurrencies,
+  typeInput,
+} from './actions'
 import { queryParametersToSwapState } from './hooks'
 
 export interface SwapState {
@@ -55,12 +63,29 @@ export default createReducer<SwapState>(initialState, (builder) =>
         }
       }
     })
-    .addCase(switchCurrencies, (state) => {
+    .addCase(switchCurrencies, (state, { payload: { newOutputHasTax, previouslyEstimatedOutput } }) => {
+      if (newOutputHasTax && state.independentField === Field.INPUT) {
+        // To prevent swaps with FOT tokens as exact-outputs, we leave it as an exact-in swap and use the previously estimated output amount as the new exact-in amount.
+        return {
+          ...state,
+          [Field.INPUT]: { currencyId: state[Field.OUTPUT].currencyId },
+          [Field.OUTPUT]: { currencyId: state[Field.INPUT].currencyId },
+          typedValue: previouslyEstimatedOutput,
+        }
+      }
+
       return {
         ...state,
         independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
         [Field.INPUT]: { currencyId: state[Field.OUTPUT].currencyId },
         [Field.OUTPUT]: { currencyId: state[Field.INPUT].currencyId },
+      }
+    })
+    .addCase(forceExactInput, (state) => {
+      return {
+        ...state,
+        independentField: Field.INPUT,
+        typedValue: '',
       }
     })
     .addCase(typeInput, (state, { payload: { field, typedValue } }) => {

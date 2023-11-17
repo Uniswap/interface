@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
@@ -9,11 +8,13 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { getTotalEthValue } from 'nft/components/profile/list/utils'
 import { useSellAsset } from 'nft/hooks'
-import { formatEth, generateTweetForList, pluralize } from 'nft/utils'
+import { generateTweetForList, pluralize } from 'nft/utils'
 import { useMemo } from 'react'
 import { Twitter, X } from 'react-feather'
-import styled, { css, useTheme } from 'styled-components/macro'
-import { BREAKPOINTS, ThemedText } from 'theme'
+import styled, { css, useTheme } from 'styled-components'
+import { BREAKPOINTS } from 'theme'
+import { ThemedText } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { TitleRow } from '../shared'
 
@@ -40,7 +41,7 @@ const buttonStyle = css`
   cursor: pointer;
   padding: 12px 0px;
   text-align: center;
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
   line-height: 20px;
   border-radius: 12px;
@@ -57,14 +58,14 @@ const buttonStyle = css`
 `
 
 const ReturnButton = styled.button`
-  background-color: ${({ theme }) => theme.backgroundInteractive};
-  color: ${({ theme }) => theme.textPrimary};
+  background-color: ${({ theme }) => theme.surface3};
+  color: ${({ theme }) => theme.neutral1};
   ${buttonStyle}
 `
 
 const TweetButton = styled.a`
-  background-color: ${({ theme }) => theme.accentAction};
-  color: ${({ theme }) => theme.accentTextLightPrimary};
+  background-color: ${({ theme }) => theme.accent1};
+  color: ${({ theme }) => theme.deprecated_accentTextLightPrimary};
   text-decoration: none;
   ${buttonStyle}
 `
@@ -76,9 +77,11 @@ const TweetRow = styled(Row)`
 
 export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) => {
   const theme = useTheme()
+  const { formatNumberOrString } = useFormatter()
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
+  const { formatCurrencyAmount } = useFormatter()
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
@@ -107,10 +110,15 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
           <Trans>Proceeds if sold</Trans>
         </ThemedText.SubHeader>
         <ProceedsColumn>
-          <ThemedText.SubHeader>{formatEth(totalEthListingValue)} ETH</ThemedText.SubHeader>
+          <ThemedText.SubHeader>
+            {formatNumberOrString({ input: totalEthListingValue, type: NumberType.NFTToken })} ETH
+          </ThemedText.SubHeader>
           {usdcValue && (
-            <ThemedText.BodySmall lineHeight="20px" color="textSecondary">
-              {formatCurrencyAmount(usdcValue, NumberType.FiatTokenPrice)}
+            <ThemedText.BodySmall lineHeight="20px" color="neutral2">
+              {formatCurrencyAmount({
+                amount: usdcValue,
+                type: NumberType.FiatTokenPrice,
+              })}
             </ThemedText.BodySmall>
           )}
         </ProceedsColumn>
@@ -121,7 +129,12 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
         </ReturnButton>
         <TweetButton href={generateTweetForList(sellAssets)} target="_blank" rel="noreferrer">
           <TweetRow>
-            <Twitter height={20} width={20} color={theme.accentTextLightPrimary} fill={theme.accentTextLightPrimary} />
+            <Twitter
+              height={20}
+              width={20}
+              color={theme.deprecated_accentTextLightPrimary}
+              fill={theme.deprecated_accentTextLightPrimary}
+            />
             <Trans>Share on Twitter</Trans>
           </TweetRow>
         </TweetButton>

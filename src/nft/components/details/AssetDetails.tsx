@@ -10,16 +10,14 @@ import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { Center } from 'nft/components/Flex'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { ActivityEventType, CollectionInfoForAsset, GenieAsset } from 'nft/types'
-import { formatEth } from 'nft/utils/currency'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
-import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Link as RouterLink } from 'react-router-dom'
-import styled from 'styled-components/macro'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import styled from 'styled-components'
 import { shortenAddress } from 'utils/addresses'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import AssetActivity, { LoadingAssetActivity } from './AssetActivity'
 import * as styles from './AssetDetails.css'
@@ -49,7 +47,7 @@ const Column = styled.div`
 
 const AddressTextLink = styled.a`
   display: inline-block;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   text-decoration: none;
   max-width: 100%;
   word-wrap: break-word;
@@ -70,7 +68,7 @@ const DescriptionText = styled.div`
 
 const RarityWrap = styled.span`
   display: flex;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   padding: 2px 4px;
   border-radius: 4px;
   align-items: center;
@@ -82,14 +80,14 @@ const EmptyActivitiesContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   font-size: 28px;
   line-height: 36px;
   padding: 56px 0px;
 `
 
 const Link = styled(RouterLink)`
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accent1};
   text-decoration: none;
   font-size: 14px;
   line-height: 16px;
@@ -112,8 +110,8 @@ const ActivitySelectContainer = styled.div`
 
 const ContentNotAvailable = styled.div`
   display: flex;
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  color: ${({ theme }) => theme.textSecondary};
+  background-color: ${({ theme }) => theme.surface1};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 14px;
   line-height: 20px;
   align-items: center;
@@ -127,9 +125,10 @@ const FilterBox = styled.div<{ backgroundColor: string }>`
   box-sizing: border-box;
   background-color: ${({ backgroundColor }) => backgroundColor};
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 535;
   line-height: 14px;
-  color: ${({ theme }) => theme.textPrimary};
+  border: 1px solid ${({ theme }) => theme.surface3};
+  color: ${({ theme }) => theme.neutral1};
   padding: 8px 16px;
   border-radius: 12px;
   cursor: pointer;
@@ -243,6 +242,7 @@ interface AssetDetailsProps {
 }
 
 export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
+  const { formatNumberOrString } = useFormatter()
   const [dominantColor] = useState<[number, number, number]>([0, 0, 0])
 
   const { rarityProvider } = useMemo(
@@ -281,19 +281,18 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   )
 
   const weiPrice = gqlPriceData?.[0]?.price
-  const formattedPrice = weiPrice ? formatEth(parseFloat(weiPrice)) : undefined
+  const formattedPrice = weiPrice
+    ? formatNumberOrString({ input: parseFloat(weiPrice), type: NumberType.NFTToken })
+    : undefined
 
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
   const Filter = useCallback(
     function ActivityFilter({ eventType }: { eventType: ActivityEventType }) {
       const isActive = activeFilters[eventType]
-      const isDarkMode = useIsDarkMode()
 
       return (
         <FilterBox
-          backgroundColor={
-            isActive ? (isDarkMode ? vars.color.gray500 : vars.color.gray200) : themeVars.colors.backgroundInteractive
-          }
+          backgroundColor={isActive ? vars.color.surface1 : themeVars.colors.surface3}
           onClick={() => filtersDispatch({ eventType })}
         >
           {eventType === ActivityEventType.CancelListing
@@ -362,7 +361,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                 }
                 placement="top"
               >
-                <RarityWrap>Rarity: {putCommas(rarity.score)}</RarityWrap>
+                <RarityWrap>
+                  Rarity: {formatNumberOrString({ input: rarity.score, type: NumberType.WholeNumber })}
+                </RarityWrap>
               </MouseoverTooltip>
             ) : null
           }

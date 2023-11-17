@@ -9,13 +9,9 @@ beforeEach(() => {
     req.headers['origin'] = 'https://app.uniswap.org'
   })
 
-  // Infura uses a test endpoint, which allow-lists http://localhost:3000 instead.
-  cy.intercept(/infura.io/, (req) => {
-    req.headers['referer'] = 'http://localhost:3000'
-    req.headers['origin'] = 'http://localhost:3000'
-    req.alias = req.body.method
-    req.continue()
-  })
+  // Network RPCs are disabled for cypress tests - calls should be routed through the connected wallet instead.
+  cy.intercept(/infura.io/, { statusCode: 404 })
+  cy.intercept(/quiknode.pro/, { statusCode: 404 })
 
   // Log requests to hardhat.
   cy.intercept(/:8545/, logJsonRpc)
@@ -24,15 +20,22 @@ beforeEach(() => {
   cy.intercept('https://api.uniswap.org/v1/amplitude-proxy', (req) => {
     const requestBody = JSON.stringify(req.body)
     const byteSize = new Blob([requestBody]).size
+    req.alias = 'amplitude'
     req.reply(
       JSON.stringify({
         code: 200,
         server_upload_time: Date.now(),
         payload_size_bytes: byteSize,
         events_ingested: req.body.events.length,
-      })
+      }),
+      {
+        'origin-country': 'US',
+      }
     )
   }).intercept('https://*.sentry.io', { statusCode: 200 })
+
+  // Mock statsig to allow us to mock flags.
+  cy.intercept(/statsig/, { statusCode: 409 })
 
   // Mock our own token list responses to avoid the latency of IPFS.
   cy.intercept('https://gateway.ipfs.io/ipns/tokens.uniswap.org', TokenListJSON)
@@ -49,7 +52,7 @@ function logJsonRpc(req: CyHttpMessages.IncomingHttpRequest) {
   const log = Cypress.log({
     autoEnd: false,
     name: req.body.method,
-    message: req.body.params?.map((param: unknown) =>
+    message: req.body.params?.map((param: any) =>
       typeof param === 'object' ? '{...}' : param?.toString().substring(0, 10)
     ),
   })

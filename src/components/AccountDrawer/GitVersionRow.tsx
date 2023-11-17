@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import Tooltip from 'components/Tooltip'
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import styled from 'styled-components'
+import { ThemedText } from 'theme/components'
 
 const Container = styled.div`
   width: 100%;
@@ -18,7 +18,7 @@ export function GitVersionRow() {
       }}
     >
       <Tooltip text="Copied" show={isCopied}>
-        <ThemedText.BodySmall color="textTertiary">
+        <ThemedText.BodySmall color="neutral3">
           <Trans>Version: </Trans>
           {' ' + process.env.REACT_APP_GIT_COMMIT_HASH.substring(0, 6)}
         </ThemedText.BodySmall>

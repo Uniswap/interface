@@ -1,7 +1,7 @@
 import 'rc-slider/assets/index.css'
 
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
+import { sendAnalyticsEvent } from 'analytics'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
@@ -13,8 +13,8 @@ import { scrollToTop } from 'nft/utils/scrollToTop'
 import { default as Slider } from 'rc-slider'
 import { FocusEventHandler, FormEvent, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components/macro'
-import { darkTheme } from 'theme/colors'
+import styled, { useTheme } from 'styled-components'
+import { darkDeprecatedTheme } from 'theme/deprecatedColors'
 
 import * as styles from './PriceRange.css'
 import { TraitsHeader } from './TraitsHeader'
@@ -140,7 +140,7 @@ export const PriceRange = () => {
 
   return (
     <TraitsHeader title="Price range" index={TraitPosition.PRICE_RANGE_INDEX}>
-      <Row marginTop="12" color="textPrimary" justifyContent="space-between">
+      <Row marginTop="12" color="neutral1" justifyContent="space-between">
         <Row position="relative">
           <NumericInput
             style={{
@@ -181,7 +181,7 @@ export const PriceRange = () => {
           trackStyle={{
             top: '3px',
             height: '8px',
-            background: `${theme.accentAction}`,
+            background: `${theme.accent1}`,
           }}
           handleStyle={{
             top: '3px',
@@ -191,12 +191,12 @@ export const PriceRange = () => {
             backgroundColor: `white`,
             borderRadius: '4px',
             border: 'none',
-            boxShadow: darkTheme.shallowShadow.slice(0, -1),
+            boxShadow: darkDeprecatedTheme.deprecated_shallowShadow.slice(0, -1),
           }}
           railStyle={{
             top: '3px',
             height: '8px',
-            backgroundColor: `${theme.accentActionSoft}`,
+            backgroundColor: `${theme.accent2}`,
           }}
           onChange={handleSliderLogic}
         />

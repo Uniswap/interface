@@ -4,7 +4,8 @@ import * as styles from 'nft/components/collection/FilterButton.css'
 import { FilterIcon } from 'nft/components/icons'
 import { buttonTextMedium } from 'nft/css/common.css'
 import { breakpoints } from 'nft/css/sprinkles.css'
-import { pluralize, putCommas } from 'nft/utils'
+import { pluralize } from 'nft/utils'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export const FilterButton = ({
   onClick,
@@ -17,6 +18,7 @@ export const FilterButton = ({
   onClick: () => void
   collectionCount?: number
 }) => {
+  const { formatNumberOrString } = useFormatter()
   const hideResultsCount = window.innerWidth >= breakpoints.sm && window.innerWidth < breakpoints.md
 
   return (
@@ -33,7 +35,6 @@ export const FilterButton = ({
       width={isMobile ? '44' : 'auto'}
       height="44"
       whiteSpace="nowrap"
-      color="white"
       data-testid="nft-filter"
     >
       <FilterIcon />
@@ -42,7 +43,10 @@ export const FilterButton = ({
           {' '}
           {!collectionCount || hideResultsCount
             ? 'Filter'
-            : `Filter • ${putCommas(collectionCount)} result${pluralize(collectionCount)}`}
+            : `Filter • ${formatNumberOrString({
+                input: collectionCount,
+                type: NumberType.WholeNumber,
+              })} result${pluralize(collectionCount)}`}
         </Box>
       ) : null}
     </Box>

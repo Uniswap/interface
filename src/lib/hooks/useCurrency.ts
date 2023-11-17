@@ -1,12 +1,14 @@
 import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
+import { InterfaceEventName } from '@uniswap/analytics-events'
 import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent } from 'analytics'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import { DEFAULT_ERC20_DECIMALS } from '../../constants/tokens'
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
@@ -66,9 +68,12 @@ export function useTokenFromActiveNetwork(tokenAddress: string | undefined): Tok
     // If the token is on another chain, we cannot fetch it on-chain, and it is invalid.
     if (typeof tokenAddress !== 'string' || !isSupportedChain(chainId) || !formattedAddress) return undefined
     if (isLoading || !chainId) return null
+    if (!decimals?.result?.[0] && parsedSymbol === UNKNOWN_TOKEN_SYMBOL && parsedName === UNKNOWN_TOKEN_NAME) {
+      return undefined
+    }
 
     return new Token(chainId, formattedAddress, parsedDecimals, parsedSymbol, parsedName)
-  }, [chainId, tokenAddress, formattedAddress, isLoading, parsedDecimals, parsedSymbol, parsedName])
+  }, [tokenAddress, chainId, formattedAddress, isLoading, decimals?.result, parsedDecimals, parsedSymbol, parsedName])
 }
 
 type TokenMap = { [address: string]: Token }
@@ -78,10 +83,25 @@ type TokenMap = { [address: string]: Token }
  * Returns null if token is loading or null was passed.
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
-export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string | null): Token | null | undefined {
+export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string | null): Token | undefined {
   const address = isAddress(tokenAddress)
   const token: Token | undefined = address ? tokens[address] : undefined
   const tokenFromNetwork = useTokenFromActiveNetwork(token ? undefined : address ? address : undefined)
+
+  useEffect(() => {
+    if (tokenFromNetwork) {
+      sendAnalyticsEvent(InterfaceEventName.WALLET_PROVIDER_USED, {
+        source: 'useTokenFromActiveNetwork',
+        token: {
+          name: tokenFromNetwork?.name,
+          symbol: tokenFromNetwork?.symbol,
+          address: tokenFromNetwork?.address,
+          isNative: tokenFromNetwork?.isNative,
+          chainId: tokenFromNetwork?.chainId,
+        },
+      })
+    }
+  }, [tokenFromNetwork])
 
   return tokenFromNetwork ?? token
 }
@@ -95,7 +115,7 @@ export function useCurrencyFromMap(
   tokens: TokenMap,
   chainId: ChainId | undefined,
   currencyId?: string | null
-): Currency | null | undefined {
+): Currency | undefined {
   const nativeCurrency = useNativeCurrency(chainId)
   const isNative = Boolean(nativeCurrency && currencyId?.toUpperCase() === 'ETH')
   const shorthandMatchAddress = useMemo(() => {
@@ -105,7 +125,7 @@ export function useCurrencyFromMap(
 
   const token = useTokenFromMapOrNetwork(tokens, isNative ? undefined : shorthandMatchAddress ?? currencyId)
 
-  if (currencyId === null || currencyId === undefined || !isSupportedChain(chainId)) return null
+  if (currencyId === null || currencyId === undefined || !isSupportedChain(chainId)) return
 
   // this case so we use our builtin wrapped token instead of wrapped tokens on token lists
   const wrappedNative = nativeCurrency?.wrapped

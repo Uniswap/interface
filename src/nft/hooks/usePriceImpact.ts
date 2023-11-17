@@ -1,7 +1,7 @@
-import { Percent } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { ClassicTrade } from 'state/routing/types'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
+import { useFormatter } from 'utils/formatNumbers'
 import { computeRealizedPriceImpact, getPriceImpactWarning } from 'utils/prices'
 
 export interface PriceImpact {
@@ -16,15 +16,16 @@ interface PriceImpactSeverity {
 
 export function usePriceImpact(trade?: ClassicTrade): PriceImpact | undefined {
   const theme = useTheme()
+  const { formatPercent } = useFormatter()
 
   return useMemo(() => {
     const marketPriceImpact = trade ? computeRealizedPriceImpact(trade) : undefined
     const priceImpactWarning = marketPriceImpact ? getPriceImpactWarning(marketPriceImpact) : undefined
     const warningColor =
       priceImpactWarning === 'error'
-        ? theme.accentCritical
+        ? theme.critical
         : priceImpactWarning === 'warning'
-        ? theme.accentWarning
+        ? theme.deprecated_accentWarning
         : undefined
 
     return marketPriceImpact && priceImpactWarning && warningColor
@@ -33,18 +34,8 @@ export function usePriceImpact(trade?: ClassicTrade): PriceImpact | undefined {
             type: priceImpactWarning,
             color: warningColor,
           },
-          displayPercentage: () => toHumanReadablePercent(marketPriceImpact),
+          displayPercentage: () => formatPercent(marketPriceImpact),
         }
       : undefined
-  }, [theme.accentCritical, theme.accentWarning, trade])
-}
-
-function toHumanReadablePercent(priceImpact: Percent): string {
-  const sign = priceImpact.lessThan(0) ? '+' : ''
-  const exactFloat = (Number(priceImpact.numerator) / Number(priceImpact.denominator)) * 100
-  if (exactFloat < 0.005) {
-    return '0.00%'
-  }
-  const number = parseFloat(priceImpact.multiply(-1)?.toFixed(2))
-  return `${sign}${number}%`
+  }, [formatPercent, theme.critical, theme.deprecated_accentWarning, trade])
 }

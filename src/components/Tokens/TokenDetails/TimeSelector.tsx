@@ -1,6 +1,6 @@
-import { TimePeriod } from 'graphql/data/util'
-import { startTransition, useState } from 'react'
-import styled from 'styled-components/macro'
+import { useAtom } from 'jotai'
+import { pageTimePeriodAtom } from 'pages/TokenDetails'
+import styled from 'styled-components'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
@@ -31,41 +31,28 @@ const TimeButton = styled.button<{ active: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${({ theme, active }) => (active ? theme.backgroundInteractive : 'transparent')};
-  font-weight: 600;
+  background-color: ${({ theme, active }) => (active ? theme.surface3 : 'transparent')};
+  font-weight: 535;
   font-size: 16px;
   padding: 6px 12px;
   border-radius: 12px;
   line-height: 20px;
   border: none;
   cursor: pointer;
-  color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
+  color: ${({ theme, active }) => (active ? theme.neutral1 : theme.neutral2)};
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
   :hover {
     ${({ active, theme }) => !active && `opacity: ${theme.opacity.hover};`}
   }
 `
 
-export default function TimePeriodSelector({
-  currentTimePeriod,
-  onTimeChange,
-}: {
-  currentTimePeriod: TimePeriod
-  onTimeChange: (t: TimePeriod) => void
-}) {
-  const [timePeriod, setTimePeriod] = useState(currentTimePeriod)
+export default function TimePeriodSelector() {
+  const [timePeriod, setTimePeriod] = useAtom(pageTimePeriodAtom)
   return (
     <TimeOptionsWrapper>
       <TimeOptionsContainer>
         {ORDERED_TIMES.map((time) => (
-          <TimeButton
-            key={DISPLAYS[time]}
-            active={timePeriod === time}
-            onClick={() => {
-              startTransition(() => onTimeChange(time))
-              setTimePeriod(time)
-            }}
-          >
+          <TimeButton key={DISPLAYS[time]} active={timePeriod === time} onClick={() => setTimePeriod(time)}>
             {DISPLAYS[time]}
           </TimeButton>
         ))}

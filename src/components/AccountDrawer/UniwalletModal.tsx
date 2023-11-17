@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { InterfaceElementName } from '@uniswap/analytics-events'
+import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { WalletConnect as WalletConnectv2 } from '@web3-react/walletconnect-v2'
+import { sendAnalyticsEvent } from 'analytics'
 import Column, { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
@@ -11,8 +11,9 @@ import { ConnectionType } from 'connection/types'
 import { UniwalletConnect as UniwalletConnectV2 } from 'connection/WalletConnectV2'
 import { QRCodeSVG } from 'qrcode.react'
 import { useEffect, useState } from 'react'
-import styled, { useTheme } from 'styled-components/macro'
-import { CloseIcon, ThemedText } from 'theme'
+import styled, { useTheme } from 'styled-components'
+import { CloseIcon, ThemedText } from 'theme/components'
+import { isAndroid, isIOS } from 'utils/userAgent'
 
 import uniPng from '../../assets/images/uniwallet_modal_icon.png'
 import { DownloadButton } from './DownloadButton'
@@ -33,7 +34,7 @@ const QRCodeWrapper = styled(RowBetween)`
   padding: 10px;
 `
 const Divider = styled.div`
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-bottom: 1px solid ${({ theme }) => theme.surface3};
   width: 100%;
 `
 
@@ -41,8 +42,10 @@ export default function UniwalletModal() {
   const { activationState, cancelActivation } = useActivationState()
   const [uri, setUri] = useState<string>()
 
-  // Displays the modal if a Uniswap Wallet Connection is pending & qrcode URI is available
+  // Displays the modal if not on iOS/Android, a Uniswap Wallet Connection is pending, & qrcode URI is available
+  const onLaunchedMobilePlatform = isIOS || isAndroid
   const open =
+    !onLaunchedMobilePlatform &&
     activationState.status === ActivationStatus.PENDING &&
     activationState.connection.type === ConnectionType.UNISWAP_WALLET_V2 &&
     !!uri
@@ -55,7 +58,7 @@ export default function UniwalletModal() {
   }, [])
 
   useEffect(() => {
-    if (open) sendAnalyticsEvent('Uniswap wallet modal opened')
+    if (open) sendAnalyticsEvent(InterfaceEventName.UNIWALLET_CONNECT_MODAL_OPENED)
   }, [open])
 
   const theme = useTheme()
@@ -75,7 +78,7 @@ export default function UniwalletModal() {
               width="100%"
               height="100%"
               level="M"
-              fgColor={theme.darkMode ? theme.backgroundSurface : theme.black}
+              fgColor={theme.darkMode ? theme.surface1 : theme.black}
               imageSettings={{
                 src: uniPng,
                 height: 33,
@@ -103,14 +106,12 @@ function InfoSection() {
   return (
     <InfoSectionWrapper>
       <AutoColumn gap="4px">
-        <ThemedText.SubHeaderSmall color="textPrimary">
-          <Trans>Don&apos;t have Uniswap Wallet?</Trans>
+        <ThemedText.SubHeaderSmall color="neutral1">
+          <Trans>Don&apos;t have a Uniswap wallet?</Trans>
         </ThemedText.SubHeaderSmall>
-        <ThemedText.Caption color="textSecondary">
-          <Trans>
-            Download in the App Store to safely store your tokens and NFTs, swap tokens, and connect to crypto apps.
-          </Trans>
-        </ThemedText.Caption>
+        <ThemedText.BodySmall color="neutral2">
+          <Trans>Safely store and swap tokens with the Uniswap app. Available on iOS and Android.</Trans>
+        </ThemedText.BodySmall>
       </AutoColumn>
       <Column>
         <DownloadButton element={InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON} />

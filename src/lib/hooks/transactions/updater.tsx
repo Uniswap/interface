@@ -3,7 +3,7 @@ import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { useCallback, useEffect } from 'react'
 import { useTransactionRemover } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/types'
@@ -21,7 +21,7 @@ export function shouldCheck(lastBlockNumber: number, tx: Transaction): boolean {
   if (!tx.lastCheckedBlockNumber) return true
   const blocksSinceCheck = lastBlockNumber - tx.lastCheckedBlockNumber
   if (blocksSinceCheck < 1) return false
-  const minutesPending = (new Date().getTime() - tx.addedTime) / ms`1m`
+  const minutesPending = (new Date().getTime() - tx.addedTime) / ms(`1m`)
   if (minutesPending > 60) {
     // every 10 blocks if pending longer than an hour
     return blocksSinceCheck > 9
@@ -39,6 +39,7 @@ const RETRY_OPTIONS_BY_CHAIN_ID: { [chainId: number]: RetryOptions } = {
   [ChainId.ARBITRUM_GOERLI]: { n: 10, minWait: 250, maxWait: 1000 },
   [ChainId.OPTIMISM]: { n: 10, minWait: 250, maxWait: 1000 },
   [ChainId.OPTIMISM_GOERLI]: { n: 10, minWait: 250, maxWait: 1000 },
+  [ChainId.BASE]: { n: 10, minWait: 250, maxWait: 1000 },
 }
 const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 1, minWait: 0, maxWait: 0 }
 
@@ -72,7 +73,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
                   if (blockTimestamp && tx.deadline < blockTimestamp.toNumber()) {
                     removeTransaction(hash)
                   }
-                } else if (tx.addedTime + ms`6h` < Date.now()) {
+                } else if (tx.addedTime + ms(`6h`) < Date.now()) {
                   removeTransaction(hash)
                 }
               }

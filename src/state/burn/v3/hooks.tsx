@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { PositionDetails } from 'types/position'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
-import { AppState } from '../../types'
+import { AppState } from '../../reducer'
 import { selectPercent } from './actions'
 
 export function useBurnV3State(): AppState['burnV3'] {
@@ -76,7 +76,7 @@ export function useDerivedV3BurnInfo(
 
   let error: ReactNode | undefined
   if (!account) {
-    error = <Trans>Connect Wallet</Trans>
+    error = <Trans>Connect wallet</Trans>
   }
   if (percent === 0) {
     error = error ?? <Trans>Enter a percent</Trans>

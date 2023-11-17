@@ -4,7 +4,7 @@ import { sprinkles, themeVars } from 'nft/css/sprinkles.css'
 
 export const bagRow = style([
   sprinkles({
-    color: 'textPrimary',
+    color: 'neutral1',
     paddingX: '12',
     paddingY: '8',
     gap: '12',
@@ -16,7 +16,7 @@ export const bagRow = style([
     marginLeft: '-4px',
     marginRight: '-4px',
     ':hover': {
-      background: themeVars.colors.stateOverlayHover,
+      background: themeVars.colors.deprecated_stateOverlayHover,
     },
   },
 ])
@@ -24,27 +24,27 @@ export const bagRow = style([
 export const unavailableAssetsContainer = sprinkles({
   background: 'none',
   gap: '12',
-  color: 'textPrimary',
+  color: 'neutral1',
   paddingY: '16',
   marginX: '8',
   borderStyle: 'solid',
   borderWidth: '1px',
   borderColor: 'transparent',
-  borderTopColor: 'backgroundOutline',
-  borderBottomColor: 'backgroundOutline',
+  borderTopColor: 'surface3',
+  borderBottomColor: 'surface3',
   height: 'full',
 })
 
 export const priceChangeColumn = sprinkles({
   background: 'none',
   gap: '8',
-  color: 'textPrimary',
+  color: 'neutral1',
   paddingY: '16',
   marginX: '8',
   borderStyle: 'solid',
   borderWidth: '1px',
   borderColor: 'transparent',
-  borderBottomColor: 'backgroundOutline',
+  borderBottomColor: 'surface3',
   height: 'full',
   cursor: 'pointer',
 })
@@ -52,7 +52,7 @@ export const priceChangeColumn = sprinkles({
 export const priceChangeRow = style([
   bodySmall,
   sprinkles({
-    color: 'gold',
+    color: 'deprecated_gold',
     gap: '4',
   }),
 ])
@@ -72,7 +72,7 @@ export const bagRowPrice = style([
   sprinkles({
     gap: '4',
     fontSize: '16',
-    fontWeight: 'semibold',
+    fontWeight: 'medium',
     flexShrink: '0',
   }),
   {
@@ -99,7 +99,7 @@ export const collectionName = style([
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    color: 'textSecondary',
+    color: 'neutral2',
   }),
 ])
 

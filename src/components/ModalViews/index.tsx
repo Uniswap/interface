@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { ArrowUpCircle } from 'react-feather'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
+import { CloseIcon, CustomLightSpinner, ThemedText } from 'theme/components'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import { CloseIcon, CustomLightSpinner, ThemedText } from '../../theme'
 import { ExternalLink } from '../../theme/components'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { AutoColumn, ColumnCenter } from '../Column'
@@ -50,7 +50,7 @@ export function SubmittedView({ children, onDismiss, hash }: { children: any; on
         <CloseIcon onClick={onDismiss} />
       </RowBetween>
       <ConfirmedIcon>
-        <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.accentAction} />
+        <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.accent1} />
       </ConfirmedIcon>
       <AutoColumn gap="100px" justify="center">
         {children}

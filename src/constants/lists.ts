@@ -1,6 +1,6 @@
-export const UNI_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
-export const UNI_EXTENDED_LIST = 'https://gateway.ipfs.io/ipns/extendedtokens.uniswap.org'
-const UNI_UNSUPPORTED_LIST = 'https://gateway.ipfs.io/ipns/unsupportedtokens.uniswap.org'
+export const UNI_LIST = 'https://cloudflare-ipfs.com/ipns/tokens.uniswap.org'
+export const UNI_EXTENDED_LIST = 'https://cloudflare-ipfs.com/ipns/extendedtokens.uniswap.org'
+const UNI_UNSUPPORTED_LIST = 'https://cloudflare-ipfs.com/ipns/unsupportedtokens.uniswap.org'
 const AAVE_LIST = 'tokenlist.aave.eth'
 const BA_LIST = 'https://raw.githubusercontent.com/The-Blockchain-Association/sec-notice-list/master/ba-sec-list.json'
 // TODO(WEB-2282): Re-enable CMC list once we have a better solution for handling large lists.
@@ -24,6 +24,8 @@ export const CELO_LIST = 'https://celo-org.github.io/celo-token-list/celo.tokenl
 export const PLASMA_BNB_LIST = 'https://raw.githubusercontent.com/plasmadlt/plasma-finance-token-list/master/bnb.json'
 export const AVALANCHE_LIST =
   'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/token_list.json'
+export const BASE_LIST =
+  'https://raw.githubusercontent.com/ethereum-optimism/ethereum-optimism.github.io/master/optimism.tokenlist.json'
 
 export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST, UNI_UNSUPPORTED_LIST]
 
@@ -50,6 +52,7 @@ export const DEFAULT_INACTIVE_LIST_URLS: string[] = [
   CELO_LIST,
   PLASMA_BNB_LIST,
   AVALANCHE_LIST,
+  BASE_LIST,
   ...UNSUPPORTED_LIST_URLS,
 ]
 

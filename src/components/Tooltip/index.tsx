@@ -1,6 +1,6 @@
 import { transparentize } from 'polished'
 import { PropsWithChildren, ReactNode, useEffect, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import noop from 'utils/noop'
 
 import Popover, { PopoverProps } from '../Popover'
@@ -29,15 +29,15 @@ const TooltipContainer = styled.div<{ size: TooltipSize }>`
   padding: ${({ size }) => getPaddingForSize(size)};
   pointer-events: auto;
 
-  color: ${({ theme }) => theme.textPrimary};
-  font-weight: 400;
+  color: ${({ theme }) => theme.neutral1};
+  font-weight: 485;
   font-size: 12px;
   line-height: 16px;
   word-break: break-word;
 
-  background: ${({ theme }) => theme.backgroundSurface};
+  background: ${({ theme }) => theme.surface1};
   border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.backgroundInteractive};
+  border: 1px solid ${({ theme }) => theme.surface3};
   box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.9, theme.shadow1)};
 `
 
@@ -77,9 +77,11 @@ type MouseoverTooltipProps = Omit<PopoverProps, 'content' | 'show'> &
     timeout?: number
     placement?: PopoverProps['placement']
     onOpen?: () => void
+    forceShow?: boolean
   }>
 
-export function MouseoverTooltip({ text, disabled, children, onOpen, timeout, ...rest }: MouseoverTooltipProps) {
+export function MouseoverTooltip(props: MouseoverTooltipProps) {
+  const { text, disabled, children, onOpen, forceShow, timeout, ...rest } = props
   const [show, setShow] = useState(false)
   const open = () => {
     setShow(true)
@@ -101,7 +103,14 @@ export function MouseoverTooltip({ text, disabled, children, onOpen, timeout, ..
   }, [timeout, show])
 
   return (
-    <Tooltip {...rest} open={open} close={close} disabled={disabled} show={show} text={disabled ? null : text}>
+    <Tooltip
+      {...rest}
+      open={open}
+      close={close}
+      disabled={disabled}
+      show={forceShow || show}
+      text={disabled ? null : text}
+    >
       <div onMouseEnter={disabled ? noop : open} onMouseLeave={disabled || timeout ? noop : close}>
         {children}
       </div>

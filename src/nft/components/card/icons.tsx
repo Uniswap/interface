@@ -5,10 +5,10 @@ import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { getMarketplaceIcon } from 'nft/components/card/utils'
 import { CollectionSelectedAssetIcon } from 'nft/components/icons'
 import { Markets } from 'nft/types'
-import { putCommas } from 'nft/utils'
 import { AlertTriangle, Check, Tag } from 'react-feather'
-import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import styled from 'styled-components'
+import { ThemedText } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const StyledMarketplaceContainer = styled.div<{ isText?: boolean }>`
   position: absolute;
@@ -19,7 +19,7 @@ const StyledMarketplaceContainer = styled.div<{ isText?: boolean }>`
   width: ${({ isText }) => (isText ? 'auto' : '32px')};
   padding: ${({ isText }) => (isText ? '0px 8px' : '0px')};
   background: rgba(93, 103, 133, 0.24);
-  color: ${({ theme }) => theme.accentTextLightPrimary};
+  color: ${({ theme }) => theme.deprecated_accentTextLightPrimary};
   justify-content: center;
   align-items: center;
   border-radius: 32px;
@@ -28,9 +28,9 @@ const StyledMarketplaceContainer = styled.div<{ isText?: boolean }>`
 
 const ListPriceRowContainer = styled(Row)`
   gap: 6px;
-  color: ${({ theme }) => theme.accentTextLightPrimary};
+  color: ${({ theme }) => theme.deprecated_accentTextLightPrimary};
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 535;
   line-height: 16px;
   text-shadow: 1px 1px 3px rgba(51, 53, 72, 0.54);
 `
@@ -85,7 +85,7 @@ export const MarketplaceContainer = ({
 const SuspiciousIcon = styled(AlertTriangle)`
   width: 16px;
   height: 16px;
-  color: ${({ theme }) => theme.accentFailure};
+  color: ${({ theme }) => theme.critical};
 `
 
 interface RankingProps {
@@ -101,19 +101,21 @@ const RarityText = styled(ThemedText.BodySmall)`
   display: flex;
 `
 
-const RarityInfo = styled(ThemedText.Caption)`
+const RarityInfo = styled(ThemedText.BodySmall)`
   flex-shrink: 0;
-  color: ${({ theme }) => theme.textSecondary};
-  background: ${({ theme }) => theme.backgroundInteractive};
+  color: ${({ theme }) => theme.neutral2};
+  background: ${({ theme }) => theme.surface3};
   padding: 4px 6px;
   border-radius: 4px;
-  font-weight: 700 !important;
+  font-weight: 535 !important;
   line-height: 12px;
   text-align: right;
   cursor: pointer;
 `
 
 export const Ranking = ({ provider }: RankingProps) => {
+  const { formatNumber } = useFormatter()
+
   if (!provider.rank) {
     return null
   }
@@ -131,7 +133,7 @@ export const Ranking = ({ provider }: RankingProps) => {
         }
         placement="top"
       >
-        # {putCommas(provider.rank)}
+        # {formatNumber({ input: provider.rank, type: NumberType.WholeNumber })}
       </MouseoverTooltip>
     </RarityInfo>
   )

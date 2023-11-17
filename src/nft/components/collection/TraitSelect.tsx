@@ -1,5 +1,5 @@
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
+import { sendAnalyticsEvent } from 'analytics'
 import useDebounce from 'hooks/useDebounce'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -72,7 +72,7 @@ const TraitItem = ({
       maxWidth="full"
       overflowX="hidden"
       overflowY="hidden"
-      fontWeight="normal"
+      fontWeight="book"
       className={`${subheadSmall} ${styles.subRowHover}`}
       justifyContent="space-between"
       cursor="pointer"
@@ -104,7 +104,7 @@ const TraitItem = ({
           : trait.trait_value}
       </Box>
       <Checkbox checked={isCheckboxSelected} hovered={hovered} onChange={handleCheckbox}>
-        <Box as="span" color="textTertiary" minWidth="8" paddingTop="2" paddingRight="12" position="relative">
+        <Box as="span" color="neutral2" minWidth="8" paddingTop="2" paddingRight="12" position="relative">
           {!showFullTraitName && trait.trait_count}
         </Box>
       </Checkbox>

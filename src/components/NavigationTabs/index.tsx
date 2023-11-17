@@ -1,19 +1,19 @@
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import SettingsTab from 'components/Settings'
 import { ReactNode } from 'react'
 import { ArrowLeft } from 'react-feather'
-import { Link as HistoryLink, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Box } from 'rebass'
 import { useAppDispatch } from 'state/hooks'
 import { resetMintState } from 'state/mint/actions'
 import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
-import styled, { useTheme } from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import styled, { useTheme } from 'styled-components'
+import { ThemedText } from 'theme/components'
 import { flexRowNoWrap } from 'theme/styles'
 
-import Row, { RowBetween } from '../Row'
-import SettingsTab from '../Settings'
+import { RowBetween } from '../Row'
 
 const Tabs = styled.div`
   ${flexRowNoWrap};
@@ -22,8 +22,10 @@ const Tabs = styled.div`
   justify-content: space-evenly;
 `
 
-const StyledHistoryLink = styled(HistoryLink)<{ flex?: string }>`
+const StyledLink = styled(Link)<{ flex?: string }>`
   flex: ${({ flex }) => flex ?? 'none'};
+  display: flex;
+  align-items: center;
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     flex: none;
@@ -31,29 +33,35 @@ const StyledHistoryLink = styled(HistoryLink)<{ flex?: string }>`
   `};
 `
 
-const ActiveText = styled.div`
-  font-weight: 500;
-  font-size: 20px;
+const FindPoolTabsText = styled(ThemedText.SubHeaderLarge)`
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 `
 
 const StyledArrowLeft = styled(ArrowLeft)`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 
 export function FindPoolTabs({ origin }: { origin: string }) {
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem', position: 'relative' }}>
-        <HistoryLink to={origin}>
+        <Link to={origin}>
           <StyledArrowLeft />
-        </HistoryLink>
-        <ActiveText style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
-          <Trans>Import V2 Pool</Trans>
-        </ActiveText>
+        </Link>
+        <FindPoolTabsText>
+          <Trans>Import V2 pool</Trans>
+        </FindPoolTabsText>
       </RowBetween>
     </Tabs>
   )
 }
+
+const AddRemoveTitleText = styled(ThemedText.SubHeaderLarge)`
+  flex: 1;
+  margin: auto;
+`
 
 export function AddRemoveTabs({
   adding,
@@ -82,8 +90,8 @@ export function AddRemoveTabs({
 
   return (
     <Tabs>
-      <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
-        <StyledHistoryLink
+      <RowBetween style={{ padding: '1rem 1rem 0 1rem' }} align="center">
+        <StyledLink
           to={poolLink}
           onClick={() => {
             if (adding) {
@@ -94,37 +102,20 @@ export function AddRemoveTabs({
           }}
           flex={children ? '1' : undefined}
         >
-          <StyledArrowLeft stroke={theme.textSecondary} />
-        </StyledHistoryLink>
-        <ThemedText.DeprecatedMediumHeader
-          fontWeight={500}
-          fontSize={20}
-          style={{ flex: '1', margin: 'auto', textAlign: children ? 'start' : 'center' }}
-        >
+          <StyledArrowLeft stroke={theme.neutral2} />
+        </StyledLink>
+        <AddRemoveTitleText textAlign={children ? 'start' : 'center'}>
           {creating ? (
             <Trans>Create a pair</Trans>
           ) : adding ? (
-            <Trans>Add Liquidity</Trans>
+            <Trans>Add liquidity</Trans>
           ) : (
-            <Trans>Remove Liquidity</Trans>
+            <Trans>Remove liquidity</Trans>
           )}
-        </ThemedText.DeprecatedMediumHeader>
-        <Box style={{ marginRight: '.5rem' }}>{children}</Box>
-        <SettingsTab autoSlippage={autoSlippage} chainId={chainId} />
+        </AddRemoveTitleText>
+        {children && <Box style={{ marginRight: '.5rem' }}>{children}</Box>}
+        <SettingsTab autoSlippage={autoSlippage} chainId={chainId} hideRoutingSettings />
       </RowBetween>
-    </Tabs>
-  )
-}
-
-export function CreateProposalTabs() {
-  return (
-    <Tabs>
-      <Row style={{ padding: '1rem 1rem 0 1rem' }}>
-        <HistoryLink to="/vote">
-          <StyledArrowLeft />
-        </HistoryLink>
-        <ActiveText style={{ marginLeft: 'auto', marginRight: 'auto' }}>Create Proposal</ActiveText>
-      </Row>
     </Tabs>
   )
 }

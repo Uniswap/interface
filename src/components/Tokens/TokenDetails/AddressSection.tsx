@@ -1,11 +1,12 @@
 import { Trans } from '@lingui/macro'
-import styled from 'styled-components/macro'
-import { CopyContractAddress, ThemedText } from 'theme'
+import styled from 'styled-components'
+import { CopyContractAddress, ThemedText } from 'theme/components'
+import { shortenAddress } from 'utils/addresses'
 
 const ContractAddressSection = styled.div`
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 0.9em;
   gap: 4px;
   padding: 4px 0px;
@@ -13,7 +14,7 @@ const ContractAddressSection = styled.div`
 
 const ContractAddress = styled.button`
   display: flex;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   gap: 10px;
   align-items: center;
   background: transparent;
@@ -29,7 +30,7 @@ export default function AddressSection({ address }: { address: string }) {
         <Trans>Contract address</Trans>
       </ThemedText.SubHeaderSmall>
       <ContractAddress>
-        <CopyContractAddress address={address} />
+        <CopyContractAddress address={address} truncatedAddress={shortenAddress(address, 2, 3)} />
       </ContractAddress>
     </ContractAddressSection>
   )

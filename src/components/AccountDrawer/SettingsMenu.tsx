@@ -1,78 +1,127 @@
 import { Trans } from '@lingui/macro'
-import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
+import Column from 'components/Column'
+import Row from 'components/Row'
+import { LOCALE_LABEL } from 'constants/locales'
+import { useCurrencyConversionFlagEnabled } from 'featureFlags/flags/currencyConversion'
+import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
-import { Check } from 'react-feather'
-import { Link } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components/macro'
-import { ClickableStyle, ThemedText } from 'theme'
+import { ReactNode } from 'react'
+import { ChevronRight } from 'react-feather'
+import styled from 'styled-components'
+import { ClickableStyle, ThemedText } from 'theme/components'
 import ThemeToggle from 'theme/components/ThemeToggle'
 
+import { AnalyticsToggle } from './AnalyticsToggle'
 import { GitVersionRow } from './GitVersionRow'
+import { LanguageMenuItems } from './LanguageMenu'
 import { SlideOutMenu } from './SlideOutMenu'
 import { SmallBalanceToggle } from './SmallBalanceToggle'
 import { TestnetsToggle } from './TestnetsToggle'
 
-const InternalLinkMenuItem = styled(Link)`
-  ${ClickableStyle}
-  flex: 1;
-  color: ${({ theme }) => theme.textTertiary};
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 12px 0;
+const Container = styled(Column)`
+  height: 100%;
   justify-content: space-between;
-  text-decoration: none;
-  color: ${({ theme }) => theme.textPrimary};
 `
 
-function LanguageMenuItem({ locale, isActive }: { locale: SupportedLocale; isActive: boolean }) {
-  const { to, onClick } = useLocationLinkProps(locale)
-  const theme = useTheme()
-
-  if (!to) return null
-
-  return (
-    <InternalLinkMenuItem onClick={onClick} to={to}>
-      <ThemedText.BodySmall data-testid="wallet-language-item">{LOCALE_LABEL[locale]}</ThemedText.BodySmall>
-      {isActive && <Check color={theme.accentActive} opacity={1} size={20} />}
-    </InternalLinkMenuItem>
-  )
-}
-
 const SectionTitle = styled(ThemedText.SubHeader)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   padding-bottom: 24px;
 `
 
-const ToggleWrapper = styled.div`
+const ToggleWrapper = styled.div<{ currencyConversionEnabled?: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-bottom: 24px;
+  margin-bottom: ${({ currencyConversionEnabled }) => (currencyConversionEnabled ? '10px' : '24px')};
 `
 
-export default function SettingsMenu({ onClose }: { onClose: () => void }) {
+const SettingsButtonWrapper = styled(Row)`
+  ${ClickableStyle}
+  padding: 16px 0px;
+`
+
+const StyledChevron = styled(ChevronRight)`
+  color: ${({ theme }) => theme.neutral2};
+`
+
+const LanguageLabel = styled(Row)`
+  white-space: nowrap;
+`
+
+const SettingsButton = ({
+  title,
+  currentState,
+  onClick,
+  testId,
+}: {
+  title: ReactNode
+  currentState: ReactNode
+  onClick: () => void
+  testId?: string
+}) => (
+  <SettingsButtonWrapper data-testid={testId} align="center" justify="space-between" onClick={onClick}>
+    <ThemedText.SubHeaderSmall color="textPrimary">{title}</ThemedText.SubHeaderSmall>
+    <LanguageLabel gap="xs" align="center" width="min-content">
+      <ThemedText.LabelSmall color="textPrimary">{currentState}</ThemedText.LabelSmall>
+      <StyledChevron size={20} />
+    </LanguageLabel>
+  </SettingsButtonWrapper>
+)
+
+export default function SettingsMenu({
+  onClose,
+  openLanguageSettings,
+  openLocalCurrencySettings,
+}: {
+  onClose: () => void
+  openLanguageSettings: () => void
+  openLocalCurrencySettings: () => void
+}) {
+  const currencyConversionEnabled = useCurrencyConversionFlagEnabled()
   const activeLocale = useActiveLocale()
+  const activeLocalCurrency = useActiveLocalCurrency()
 
   return (
     <SlideOutMenu title={<Trans>Settings</Trans>} onClose={onClose}>
-      <SectionTitle>
-        <Trans>Preferences</Trans>
-      </SectionTitle>
-      <ToggleWrapper>
-        <ThemeToggle />
-        <SmallBalanceToggle />
-        <TestnetsToggle />
-      </ToggleWrapper>
+      <Container>
+        <div>
+          <SectionTitle data-testid="wallet-header">
+            <Trans>Preferences</Trans>
+          </SectionTitle>
+          <ToggleWrapper currencyConversionEnabled={currencyConversionEnabled}>
+            <ThemeToggle />
+            <SmallBalanceToggle />
+            <AnalyticsToggle />
+            <TestnetsToggle />
+          </ToggleWrapper>
+          {!currencyConversionEnabled && (
+            <>
+              <SectionTitle data-testid="wallet-header">
+                <Trans>Language</Trans>
+              </SectionTitle>
+              <LanguageMenuItems />
+            </>
+          )}
 
-      <SectionTitle data-testid="wallet-header">
-        <Trans>Language</Trans>
-      </SectionTitle>
-      {SUPPORTED_LOCALES.map((locale) => (
-        <LanguageMenuItem locale={locale} isActive={activeLocale === locale} key={locale} />
-      ))}
-      <GitVersionRow />
+          {currencyConversionEnabled && (
+            <Column>
+              <SettingsButton
+                title={<Trans>Language</Trans>}
+                currentState={LOCALE_LABEL[activeLocale]}
+                onClick={openLanguageSettings}
+                testId="language-settings-button"
+              />
+              <SettingsButton
+                title={<Trans>Currency</Trans>}
+                currentState={activeLocalCurrency}
+                onClick={openLocalCurrencySettings}
+                testId="local-currency-settings-button"
+              />
+            </Column>
+          )}
+        </div>
+        <GitVersionRow />
+      </Container>
     </SlideOutMenu>
   )
 }

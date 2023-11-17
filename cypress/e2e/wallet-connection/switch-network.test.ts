@@ -2,7 +2,7 @@ import { createDeferredPromise } from '../../../src/test-utils/promise'
 import { getTestSelector } from '../../utils'
 
 function waitsForActiveChain(chain: string) {
-  cy.get(getTestSelector('chain-selector-logo')).invoke('attr', 'alt').should('eq', chain)
+  cy.get(getTestSelector('chain-selector-logo')).find('title').should('include.text', `${chain} logo`)
 }
 
 function switchChain(chain: string) {
@@ -12,7 +12,7 @@ function switchChain(chain: string) {
 
 describe('network switching', () => {
   beforeEach(() => {
-    cy.visit('/swap', { ethereum: 'hardhat' })
+    cy.visit('/swap')
     cy.get(getTestSelector('web3-status-connected'))
   })
 
@@ -111,6 +111,7 @@ describe('network switching', () => {
     cy.wait('@wallet_switchEthereumChain')
     waitsForActiveChain('Polygon')
     cy.get(getTestSelector('web3-status-connected'))
+    cy.url().should('contain', 'chain=polygon')
 
     // Verify that the input/output fields were reset
     cy.get('#swap-currency-input .token-amount-input').should('have.value', '')
@@ -122,9 +123,22 @@ describe('network switching', () => {
 
 describe('network switching from URL param', () => {
   it('should switch network from URL param', () => {
-    cy.visit('/swap?chain=polygon', { ethereum: 'hardhat' })
+    cy.visit('/swap?chain=polygon')
     cy.get(getTestSelector('web3-status-connected'))
     cy.wait('@wallet_switchEthereumChain')
     waitsForActiveChain('Polygon')
+  })
+
+  it('should be able to switch network after loading from URL param', () => {
+    cy.visit('/swap?chain=polygon')
+    cy.get(getTestSelector('web3-status-connected'))
+    cy.wait('@wallet_switchEthereumChain')
+    waitsForActiveChain('Polygon')
+
+    // switching to another chain clears query param
+    switchChain('Ethereum')
+    cy.wait('@wallet_switchEthereumChain')
+    waitsForActiveChain('Ethereum')
+    cy.url().should('not.contain', 'chain=polygon')
   })
 })

@@ -2,19 +2,20 @@ import { t, Trans } from '@lingui/macro'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedL2ChainId } from 'constants/chains'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
+import { ExternalLink, ThemedText } from 'theme/components'
+import { CloseIcon, CustomLightSpinner } from 'theme/components'
 import { isL2ChainId } from 'utils/chains'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import { ExternalLink, ThemedText } from '../../theme'
-import { CloseIcon, CustomLightSpinner } from '../../theme'
 import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import { ButtonLight, ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
@@ -23,9 +24,9 @@ import Row, { RowBetween, RowFixed } from '../Row'
 import AnimatedConfirmation from './AnimatedConfirmation'
 
 const Wrapper = styled.div`
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
   border-radius: 20px;
-  outline: 1px solid ${({ theme }) => theme.backgroundOutline};
+  outline: 1px solid ${({ theme }) => theme.surface3};
   width: 100%;
   padding: 16px;
 `
@@ -37,12 +38,6 @@ const BottomSection = styled(AutoColumn)`
 
 const ConfirmedIcon = styled(ColumnCenter)<{ inline?: boolean }>`
   padding: ${({ inline }) => (inline ? '20px 0' : '32px 0;')};
-`
-
-const StyledLogo = styled.img`
-  height: 16px;
-  width: 16px;
-  margin-left: 6px;
 `
 
 const ConfirmationModalContentWrapper = styled(AutoColumn)`
@@ -71,13 +66,13 @@ function ConfirmationPendingContent({
           <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
         </ConfirmedIcon>
         <AutoColumn gap="md" justify="center">
-          <ThemedText.SubHeaderLarge color="textPrimary" textAlign="center">
+          <ThemedText.SubHeaderLarge color="neutral1" textAlign="center">
             <Trans>Waiting for confirmation</Trans>
           </ThemedText.SubHeaderLarge>
-          <ThemedText.SubHeader color="textPrimary" textAlign="center">
+          <ThemedText.SubHeader color="neutral1" textAlign="center">
             {pendingText}
           </ThemedText.SubHeader>
-          <ThemedText.SubHeaderSmall color="textSecondary" textAlign="center" marginBottom="12px">
+          <ThemedText.SubHeaderSmall color="neutral2" textAlign="center" marginBottom="12px">
             <Trans>Confirm this transaction in your wallet</Trans>
           </ThemedText.SubHeaderSmall>
         </AutoColumn>
@@ -132,7 +127,7 @@ function TransactionSubmittedContent({
           </RowBetween>
         )}
         <ConfirmedIcon inline={inline}>
-          <ArrowUpCircle strokeWidth={1} size={inline ? '40px' : '75px'} color={theme.accentActive} />
+          <ArrowUpCircle strokeWidth={1} size={inline ? '40px' : '75px'} color={theme.accent1} />
         </ConfirmedIcon>
         <ConfirmationModalContentWrapper gap="md" justify="center">
           <ThemedText.MediumHeader textAlign="center">
@@ -147,19 +142,19 @@ function TransactionSubmittedContent({
               ) : (
                 <RowFixed>
                   <Trans>Added {currencyToAdd.symbol} </Trans>
-                  <CheckCircle size="16px" stroke={theme.accentSuccess} style={{ marginLeft: '6px' }} />
+                  <CheckCircle size="16px" stroke={theme.success} style={{ marginLeft: '6px' }} />
                 </RowFixed>
               )}
             </ButtonLight>
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }} data-testid="dismiss-tx-confirmation">
-            <ThemedText.HeadlineSmall color={theme.accentTextLightPrimary}>
+            <ThemedText.HeadlineSmall color={theme.deprecated_accentTextLightPrimary}>
               {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
             </ThemedText.HeadlineSmall>
           </ButtonPrimary>
           {chainId && hash && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <ThemedText.Link color={theme.accentAction}>{explorerText}</ThemedText.Link>
+              <ThemedText.Link color={theme.accent1}>{explorerText}</ThemedText.Link>
             </ExternalLink>
           )}
         </ConfirmationModalContentWrapper>
@@ -193,10 +188,14 @@ export function ConfirmationModalContent({
         </Row>
         {topContent()}
       </AutoColumn>
-      {bottomContent && <BottomSection gap="12px">{bottomContent()}</BottomSection>}
+      {bottomContent && <BottomSection gap="16px">{bottomContent()}</BottomSection>}
     </Wrapper>
   )
 }
+
+const StyledL2Badge = styled(Badge)`
+  padding: 6px 8px;
+`
 
 function L2Content({
   onDismiss,
@@ -230,22 +229,22 @@ function L2Content({
       <AutoColumn>
         {!inline && (
           <RowBetween mb="16px">
-            <Badge>
-              <RowFixed>
-                <StyledLogo src={info.logoUrl} style={{ margin: '0 8px 0 0' }} />
-                {info.label}
+            <StyledL2Badge>
+              <RowFixed gap="sm">
+                <ChainLogo chainId={chainId} />
+                <ThemedText.SubHeaderSmall>{info.label}</ThemedText.SubHeaderSmall>
               </RowFixed>
-            </Badge>
+            </StyledL2Badge>
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
         )}
         <ConfirmedIcon inline={inline}>
           {confirmed ? (
             transactionSuccess ? (
-              // <CheckCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.accentSuccess} />
+              // <CheckCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.success} />
               <AnimatedConfirmation />
             ) : (
-              <AlertCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.accentFailure} />
+              <AlertCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.critical} />
             )
           ) : (
             <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
@@ -256,7 +255,7 @@ function L2Content({
             {!hash ? (
               <Trans>Confirm transaction in wallet</Trans>
             ) : !confirmed ? (
-              <Trans>Transaction Submitted</Trans>
+              <Trans>Transaction submitted</Trans>
             ) : transactionSuccess ? (
               <Trans>Success</Trans>
             ) : (
@@ -268,20 +267,20 @@ function L2Content({
           </ThemedText.BodySecondary>
           {chainId && hash ? (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <ThemedText.SubHeaderSmall color={theme.accentAction}>
+              <ThemedText.SubHeaderSmall color={theme.accent1}>
                 <Trans>View on Explorer</Trans>
               </ThemedText.SubHeaderSmall>
             </ExternalLink>
           ) : (
             <div style={{ height: '17px' }} />
           )}
-          <ThemedText.SubHeaderSmall color={theme.textTertiary} marginTop="20px">
+          <ThemedText.SubHeaderSmall color={theme.neutral3} marginTop="20px">
             {!secondsToConfirm ? (
               <div style={{ height: '24px' }} />
             ) : (
               <div>
                 <Trans>Transaction completed in </Trans>
-                <span style={{ fontWeight: 500, marginLeft: '4px', color: theme.textPrimary }}>
+                <span style={{ fontWeight: 535, marginLeft: '4px', color: theme.neutral1 }}>
                   {secondsToConfirm} seconds 🎉
                 </span>
               </div>

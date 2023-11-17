@@ -1,13 +1,12 @@
 import { t } from '@lingui/macro'
-import { formatFiatPrice, formatNumberOrString, NumberType } from '@uniswap/conedison/format'
-import { ChainId, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, UNI_ADDRESSES } from '@uniswap/sdk-core'
+import { ChainId, Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, UNI_ADDRESSES } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { nativeOnChain } from 'constants/tokens'
 import {
   ActivityType,
   AssetActivityPartsFragment,
-  Currency,
+  Currency as GQLCurrency,
   NftApprovalPartsFragment,
   NftApproveForAllPartsFragment,
   NftTransferPartsFragment,
@@ -18,10 +17,12 @@ import {
   TokenTransferPartsFragment,
   TransactionDetailsPartsFragment,
 } from 'graphql/data/__generated__/types-and-hooks'
-import { logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
-import ms from 'ms.macro'
+import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
+import { isSameAddress } from 'utils/addresses'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { MOONPAY_SENDER_ADDRESSES, OrderStatusTable, OrderTextTable } from '../constants'
 import { Activity } from './types'
@@ -33,6 +34,8 @@ type TransactionChanges = {
   NftApproval: NftApprovalPartsFragment[]
   NftApproveForAll: NftApproveForAllPartsFragment[]
 }
+
+type FormatNumberOrStringFunctionType = ReturnType<typeof useFormatter>['formatNumberOrString']
 
 // TODO: Move common contract metadata to a backend service
 const UNI_IMG =
@@ -73,10 +76,6 @@ const COMMON_CONTRACTS: { [key: string]: Partial<Activity> | undefined } = {
     descriptor: t`ETH Registrar Controller`,
     logos: [ENS_IMG],
   },
-}
-
-function isSameAddress(a?: string, b?: string) {
-  return a === b || a?.toLowerCase() === b?.toLowerCase() // Lazy-lowercases the addresses
 }
 
 function callsPositionManagerContract(assetActivity: TransactionActivity) {
@@ -140,13 +139,13 @@ function getSwapDescriptor({
  * @param transactedValue Transacted value amount from TokenTransfer API response
  * @returns parsed & formatted USD value as a string if currency is of type USD
  */
-function formatTransactedValue(transactedValue: TokenTransferPartsFragment['transactedValue']): string {
-  if (!transactedValue) return '-'
-  const price = transactedValue?.currency === Currency.Usd ? transactedValue.value ?? undefined : undefined
-  return formatFiatPrice(price)
+function getTransactedValue(transactedValue: TokenTransferPartsFragment['transactedValue']): number | undefined {
+  if (!transactedValue) return undefined
+  const price = transactedValue?.currency === GQLCurrency.Usd ? transactedValue.value ?? undefined : undefined
+  return price
 }
 
-function parseSwap(changes: TransactionChanges) {
+function parseSwap(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
   if (changes.NftTransfer.length > 0 && changes.TokenTransfer.length === 1) {
     const collectionCounts = getCollectionCounts(changes.NftTransfer)
 
@@ -156,60 +155,89 @@ function parseSwap(changes: TransactionChanges) {
       .join()
 
     return { title, descriptor }
-  } else if (changes.TokenTransfer.length === 2) {
-    const sent = changes.TokenTransfer.find((t) => t?.__typename === 'TokenTransfer' && t.direction === 'OUT')
-    const received = changes.TokenTransfer.find((t) => t?.__typename === 'TokenTransfer' && t.direction === 'IN')
+  }
+  // Some swaps may have more than 2 transfers, e.g. swaps with fees on tranfer
+  if (changes.TokenTransfer.length >= 2) {
+    const sent = changes.TokenTransfer.find((t) => t.direction === 'OUT')
+    // Any leftover native token is refunded on exact_out swaps where the input token is native
+    const refund = changes.TokenTransfer.find(
+      (t) => t.direction === 'IN' && t.asset.id === sent?.asset.id && t.asset.standard === 'NATIVE'
+    )
+    const received = changes.TokenTransfer.find((t) => t.direction === 'IN' && t !== refund)
+
     if (sent && received) {
-      const inputAmount = formatNumberOrString(sent.quantity, NumberType.TokenNonTx)
-      const outputAmount = formatNumberOrString(received.quantity, NumberType.TokenNonTx)
+      const adjustedInput = parseFloat(sent.quantity) - parseFloat(refund?.quantity ?? '0')
+      const inputAmount = formatNumberOrString({ input: adjustedInput, type: NumberType.TokenNonTx })
+      const outputAmount = formatNumberOrString({ input: received.quantity, type: NumberType.TokenNonTx })
       return {
         title: getSwapTitle(sent, received),
         descriptor: getSwapDescriptor({ tokenIn: sent.asset, inputAmount, tokenOut: received.asset, outputAmount }),
+        currencies: [gqlToCurrency(sent.asset), gqlToCurrency(received.asset)],
       }
     }
   }
   return { title: t`Unknown Swap` }
 }
 
-function parseSwapOrder(changes: TransactionChanges) {
-  return { ...parseSwap(changes), prefixIconSrc: UniswapXBolt }
+/**
+ * Wrap/unwrap transactions are labelled as lend transactions on the backend.
+ * This function parses the transaction changes to determine if the transaction is a wrap/unwrap transaction.
+ */
+function parseLend(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
+  const native = changes.TokenTransfer.find((t) => t.tokenStandard === 'NATIVE')?.asset
+  const erc20 = changes.TokenTransfer.find((t) => t.tokenStandard === 'ERC20')?.asset
+  if (native && erc20 && gqlToCurrency(native)?.wrapped.address === gqlToCurrency(erc20)?.wrapped.address) {
+    return parseSwap(changes, formatNumberOrString)
+  }
+  return { title: t`Unknown Lend` }
+}
+
+function parseSwapOrder(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
+  return { ...parseSwap(changes, formatNumberOrString), prefixIconSrc: UniswapXBolt }
 }
 
 function parseApprove(changes: TransactionChanges) {
   if (changes.TokenApproval.length === 1) {
     const title = parseInt(changes.TokenApproval[0].quantity) === 0 ? t`Revoked Approval` : t`Approved`
     const descriptor = `${changes.TokenApproval[0].asset.symbol}`
-    return { title, descriptor }
+    const currencies = [gqlToCurrency(changes.TokenApproval[0].asset)]
+    return { title, descriptor, currencies }
   }
   return { title: t`Unknown Approval` }
 }
 
-function parseLPTransfers(changes: TransactionChanges) {
+function parseLPTransfers(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
   const poolTokenA = changes.TokenTransfer[0]
   const poolTokenB = changes.TokenTransfer[1]
 
-  const tokenAQuanitity = formatNumberOrString(poolTokenA.quantity, NumberType.TokenNonTx)
-  const tokenBQuantity = formatNumberOrString(poolTokenB.quantity, NumberType.TokenNonTx)
+  const tokenAQuanitity = formatNumberOrString({ input: poolTokenA.quantity, type: NumberType.TokenNonTx })
+  const tokenBQuantity = formatNumberOrString({ input: poolTokenB.quantity, type: NumberType.TokenNonTx })
 
   return {
     descriptor: `${tokenAQuanitity} ${poolTokenA.asset.symbol} and ${tokenBQuantity} ${poolTokenB.asset.symbol}`,
     logos: [poolTokenA.asset.project?.logo?.url, poolTokenB.asset.project?.logo?.url],
+    currencies: [gqlToCurrency(poolTokenA.asset), gqlToCurrency(poolTokenB.asset)],
   }
 }
 
 type TransactionActivity = AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment }
 type OrderActivity = AssetActivityPartsFragment & { details: SwapOrderDetailsPartsFragment }
 
-function parseSendReceive(changes: TransactionChanges, assetActivity: TransactionActivity) {
+function parseSendReceive(
+  changes: TransactionChanges,
+  formatNumberOrString: FormatNumberOrStringFunctionType,
+  assetActivity: TransactionActivity
+) {
   // TODO(cartcrom): remove edge cases after backend implements
   // Edge case: Receiving two token transfers in interaction w/ V3 manager === removing liquidity. These edge cases should potentially be moved to backend
   if (changes.TokenTransfer.length === 2 && callsPositionManagerContract(assetActivity)) {
-    return { title: t`Removed Liquidity`, ...parseLPTransfers(changes) }
+    return { title: t`Removed Liquidity`, ...parseLPTransfers(changes, formatNumberOrString) }
   }
 
   let transfer: NftTransferPartsFragment | TokenTransferPartsFragment | undefined
   let assetName: string | undefined
   let amount: string | undefined
+  let currencies: (Currency | undefined)[] | undefined
 
   if (changes.NftTransfer.length === 1) {
     transfer = changes.NftTransfer[0]
@@ -218,7 +246,8 @@ function parseSendReceive(changes: TransactionChanges, assetActivity: Transactio
   } else if (changes.TokenTransfer.length === 1) {
     transfer = changes.TokenTransfer[0]
     assetName = transfer.asset.symbol
-    amount = formatNumberOrString(transfer.quantity, NumberType.TokenNonTx)
+    amount = formatNumberOrString({ input: transfer.quantity, type: NumberType.TokenNonTx })
+    currencies = [gqlToCurrency(transfer.asset)]
   }
 
   if (transfer && assetName && amount) {
@@ -228,46 +257,65 @@ function parseSendReceive(changes: TransactionChanges, assetActivity: Transactio
       return isMoonpayPurchase && transfer.__typename === 'TokenTransfer'
         ? {
             title: t`Purchased`,
-            descriptor: `${amount} ${assetName} ${t`for`} ${formatTransactedValue(transfer.transactedValue)}`,
+            descriptor: `${amount} ${assetName} ${t`for`} ${formatNumberOrString({
+              input: getTransactedValue(transfer.transactedValue),
+              type: NumberType.FiatTokenPrice,
+            })}`,
             logos: [moonpayLogoSrc],
+            currencies,
           }
         : {
             title: t`Received`,
             descriptor: `${amount} ${assetName} ${t`from`} `,
             otherAccount: isAddress(transfer.sender) || undefined,
+            currencies,
           }
     } else {
       return {
         title: t`Sent`,
         descriptor: `${amount} ${assetName} ${t`to`} `,
         otherAccount: isAddress(transfer.recipient) || undefined,
+        currencies,
       }
     }
   }
   return { title: t`Unknown Send` }
 }
 
-function parseMint(changes: TransactionChanges, assetActivity: TransactionActivity) {
+function parseMint(
+  changes: TransactionChanges,
+  formatNumberOrString: FormatNumberOrStringFunctionType,
+  assetActivity: TransactionActivity
+) {
   const collectionMap = getCollectionCounts(changes.NftTransfer)
   if (Object.keys(collectionMap).length === 1) {
     const collectionName = Object.keys(collectionMap)[0]
 
     // Edge case: Minting a v3 positon represents adding liquidity
     if (changes.TokenTransfer.length === 2 && callsPositionManagerContract(assetActivity)) {
-      return { title: t`Added Liquidity`, ...parseLPTransfers(changes) }
+      return { title: t`Added Liquidity`, ...parseLPTransfers(changes, formatNumberOrString) }
     }
     return { title: t`Minted`, descriptor: `${collectionMap[collectionName]} ${collectionName}` }
   }
   return { title: t`Unknown Mint` }
 }
 
-function parseUnknown(_changes: TransactionChanges, assetActivity: TransactionActivity) {
+function parseUnknown(
+  _changes: TransactionChanges,
+  _formatNumberOrString: FormatNumberOrStringFunctionType,
+  assetActivity: TransactionActivity
+) {
   return { title: t`Contract Interaction`, ...COMMON_CONTRACTS[assetActivity.details.to.toLowerCase()] }
 }
 
-type ActivityTypeParser = (changes: TransactionChanges, assetActivity: TransactionActivity) => Partial<Activity>
+type ActivityTypeParser = (
+  changes: TransactionChanges,
+  formatNumberOrString: FormatNumberOrStringFunctionType,
+  assetActivity: TransactionActivity
+) => Partial<Activity>
 const ActivityParserByType: { [key: string]: ActivityTypeParser | undefined } = {
   [ActivityType.Swap]: parseSwap,
+  [ActivityType.Lend]: parseLend,
   [ActivityType.SwapOrder]: parseSwapOrder,
   [ActivityType.Approve]: parseApprove,
   [ActivityType.Send]: parseSendReceive,
@@ -276,7 +324,7 @@ const ActivityParserByType: { [key: string]: ActivityTypeParser | undefined } = 
   [ActivityType.Unknown]: parseUnknown,
 }
 
-function getLogoSrcs(changes: TransactionChanges): string[] {
+function getLogoSrcs(changes: TransactionChanges): Array<string | undefined> {
   // Uses set to avoid duplicate logos (e.g. nft's w/ same image url)
   const logoSet = new Set<string | undefined>()
   // Uses only NFT logos if they are present (will not combine nft image w/ token image)
@@ -286,7 +334,7 @@ function getLogoSrcs(changes: TransactionChanges): string[] {
     changes.TokenTransfer.forEach((tokenChange) => logoSet.add(tokenChange.asset.project?.logo?.url))
     changes.TokenApproval.forEach((tokenChange) => logoSet.add(tokenChange.asset.project?.logo?.url))
   }
-  return Array.from(logoSet).filter(Boolean) as string[]
+  return Array.from(logoSet)
 }
 
 function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activity | undefined {
@@ -321,6 +369,7 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
     offchainOrderStatus: uniswapXOrderStatus,
     timestamp,
     logos: [inputToken.project?.logo?.url, outputToken.project?.logo?.url],
+    currencies: [gqlToCurrency(inputToken), gqlToCurrency(outputToken)],
     title,
     descriptor,
     from: details.offerer,
@@ -328,13 +377,16 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
   }
 }
 
-function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activity | undefined {
+function parseRemoteActivity(
+  assetActivity: AssetActivityPartsFragment,
+  formatNumberOrString: FormatNumberOrStringFunctionType
+): Activity | undefined {
   try {
     if (assetActivity.details.__typename === 'SwapOrderDetails') {
       return parseUniswapXOrder(assetActivity as OrderActivity)
     }
 
-    const changes = assetActivity.assetChanges.reduce(
+    const changes = assetActivity.details.assetChanges.reduce(
       (acc: TransactionChanges, assetChange) => {
         if (assetChange.__typename === 'NftApproval') acc.NftApproval.push(assetChange)
         else if (assetChange.__typename === 'NftApproveForAll') acc.NftApproveForAll.push(assetChange)
@@ -354,19 +406,24 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
       })
       return undefined
     }
+
     const defaultFields = {
       hash: assetActivity.details.hash,
       chainId: supportedChain,
       status: assetActivity.details.status,
       timestamp: assetActivity.timestamp,
       logos: getLogoSrcs(changes),
-      title: assetActivity.type,
+      title: assetActivity.details.type,
       descriptor: assetActivity.details.to,
       from: assetActivity.details.from,
       nonce: assetActivity.details.nonce,
     }
 
-    const parsedFields = ActivityParserByType[assetActivity.type]?.(changes, assetActivity as TransactionActivity)
+    const parsedFields = ActivityParserByType[assetActivity.details.type]?.(
+      changes,
+      formatNumberOrString,
+      assetActivity as TransactionActivity
+    )
     return { ...defaultFields, ...parsedFields }
   } catch (e) {
     console.error('Failed to parse activity', e, assetActivity)
@@ -374,9 +431,12 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
   }
 }
 
-export function parseRemoteActivities(assetActivities?: readonly AssetActivityPartsFragment[]) {
+export function parseRemoteActivities(
+  formatNumberOrString: FormatNumberOrStringFunctionType,
+  assetActivities?: readonly AssetActivityPartsFragment[]
+) {
   return assetActivities?.reduce((acc: { [hash: string]: Activity }, assetActivity) => {
-    const activity = parseRemoteActivity(assetActivity)
+    const activity = parseRemoteActivity(assetActivity, formatNumberOrString)
     if (activity) acc[activity.hash] = activity
     return acc
   }, {})
@@ -387,12 +447,12 @@ const getTimeSince = (timestamp: number) => {
 
   let interval
   // TODO(cartcrom): use locale to determine date shorthands to use for non-english
-  if ((interval = seconds / ms`1y`) > 1) return Math.floor(interval) + 'y'
-  if ((interval = seconds / ms`30d`) > 1) return Math.floor(interval) + 'mo'
-  if ((interval = seconds / ms`1d`) > 1) return Math.floor(interval) + 'd'
-  if ((interval = seconds / ms`1h`) > 1) return Math.floor(interval) + 'h'
-  if ((interval = seconds / ms`1m`) > 1) return Math.floor(interval) + 'm'
-  else return Math.floor(seconds / ms`1s`) + 's'
+  if ((interval = seconds / ms(`1y`)) > 1) return Math.floor(interval) + 'y'
+  if ((interval = seconds / ms(`30d`)) > 1) return Math.floor(interval) + 'mo'
+  if ((interval = seconds / ms(`1d`)) > 1) return Math.floor(interval) + 'd'
+  if ((interval = seconds / ms(`1h`)) > 1) return Math.floor(interval) + 'h'
+  if ((interval = seconds / ms(`1m`)) > 1) return Math.floor(interval) + 'm'
+  else return Math.floor(seconds / ms(`1s`)) + 's'
 }
 
 /**
@@ -404,15 +464,19 @@ export function useTimeSince(timestamp: number) {
   const [timeSince, setTimeSince] = useState<string>(getTimeSince(timestamp))
 
   useEffect(() => {
-    const refreshTime = () => {
-      if (Math.floor(Date.now() - timestamp * 1000) / ms`61s` <= 1) {
-        setTimeSince(getTimeSince(timestamp))
-        setTimeout(() => {
-          refreshTime()
-        }, ms`1s`)
-      }
+    const refreshTime = () =>
+      setTimeout(() => {
+        if (Math.floor(Date.now() - timestamp * 1000) / ms(`61s`) <= 1) {
+          setTimeSince(getTimeSince(timestamp))
+          timeout = refreshTime()
+        }
+      }, ms(`1s`))
+
+    let timeout = refreshTime()
+
+    return () => {
+      timeout && clearTimeout(timeout)
     }
-    refreshTime()
   }, [timestamp])
 
   return timeSince

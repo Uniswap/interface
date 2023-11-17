@@ -5,11 +5,13 @@ const { execSync } = require('child_process')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
-const { DefinePlugin, IgnorePlugin, ProvidePlugin } = require('webpack')
+const { IgnorePlugin, ProvidePlugin } = require('webpack')
 const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
 
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
 const isProduction = process.env.NODE_ENV === 'production'
+
+process.env.REACT_APP_GIT_COMMIT_HASH = commitHash
 
 // Linting and type checking are only necessary as part of development and testing.
 // Omit them from production builds, as they slow down the feedback loop.
@@ -21,32 +23,6 @@ function getCacheDirectory(cacheName) {
 }
 
 module.exports = {
-  babel: {
-    plugins: [
-      '@vanilla-extract/babel-plugin',
-      ...(process.env.REACT_APP_ADD_COVERAGE_INSTRUMENTATION
-        ? [
-            [
-              'istanbul',
-              {
-                all: true,
-                include: ['src/**/*.tsx', 'src/**/*.ts'],
-                exclude: [
-                  'src/**/*.css',
-                  'src/**/*.css.ts',
-                  'src/**/*.test.ts',
-                  'src/**/*.test.tsx',
-                  'src/**/*.spec.ts',
-                  'src/**/*.spec.tsx',
-                  'src/**/graphql/**/*',
-                  'src/**/*.d.ts',
-                ],
-              },
-            ],
-          ]
-        : []),
-    ],
-  },
   eslint: {
     enable: shouldLintOrTypeCheck,
     pluginOptions(eslintConfig) {
@@ -69,16 +45,20 @@ module.exports = {
     configure(jestConfig) {
       return Object.assign(jestConfig, {
         cacheDirectory: getCacheDirectory('jest'),
-        transform: Object.assign(jestConfig.transform, {
+        transform: {
+          ...Object.entries(jestConfig.transform).reduce((transform, [key, value]) => {
+            if (value.match(/babel/)) return transform
+            return { ...transform, [key]: value }
+          }, {}),
           // Transform vanilla-extract using its own transformer.
           // See https://sandroroth.com/blog/vanilla-extract-cra#jest-transform.
           '\\.css\\.ts$': '@vanilla-extract/jest-transform',
-        }),
-        // Use @uniswap/conedison's build directly, as jest does not support its exports.
-        transformIgnorePatterns: ['@uniswap/conedison/format', '@uniswap/conedison/provider'],
+          '\\.(t|j)sx?$': '@swc/jest',
+        },
+        // Use d3-arrays's build directly, as jest does not support its exports.
+        transformIgnorePatterns: ['d3-array'],
         moduleNameMapper: {
-          '@uniswap/conedison/format': '@uniswap/conedison/dist/format',
-          '@uniswap/conedison/provider': '@uniswap/conedison/dist/provider',
+          'd3-array': 'd3-array/dist/d3-array.min.js',
         },
       })
     },
@@ -88,12 +68,9 @@ module.exports = {
       // Webpack 5 does not polyfill node globals, so we do so for those necessary:
       new ProvidePlugin({
         // - react-markdown requires process.cwd
-        process: 'process/browser',
+        process: 'process/browser.js',
       }),
-      // vanilla-extract has poor performance on M1 machines with 'debug' identifiers, so we use 'short' instead.
-      // See https://vanilla-extract.style/documentation/integrations/webpack/#identifiers for docs.
-      // See https://github.com/vanilla-extract-css/vanilla-extract/issues/771#issuecomment-1249524366.
-      new VanillaExtractPlugin({ identifiers: 'short' }),
+      new VanillaExtractPlugin(),
       new RetryChunkLoadPlugin({
         cacheBust: `function() {
           return 'cache-bust=' + Date.now();
@@ -109,14 +86,6 @@ module.exports = {
       // Configure webpack plugins:
       webpackConfig.plugins = webpackConfig.plugins
         .map((plugin) => {
-          // Extend process.env with dynamic values (eg commit hash).
-          // This will make dynamic values available to JavaScript only, not to interpolated HTML (ie index.html).
-          if (plugin instanceof DefinePlugin) {
-            Object.assign(plugin.definitions['process.env'], {
-              REACT_APP_GIT_COMMIT_HASH: JSON.stringify(commitHash),
-            })
-          }
-
           // CSS ordering is mitigated through scoping / naming conventions, so we can ignore order warnings.
           // See https://webpack.js.org/plugins/mini-css-extract-plugin/#remove-order-warnings.
           if (plugin instanceof MiniCssExtractPlugin) {
@@ -161,17 +130,30 @@ module.exports = {
         },
       })
 
+      // Retain source maps for node_modules packages:
+      webpackConfig.module.rules[0] = {
+        ...webpackConfig.module.rules[0],
+        exclude: /node_modules/,
+      }
+
       // Configure webpack transpilation (create-react-app specifies transpilation rules in a oneOf):
       webpackConfig.module.rules[1].oneOf = webpackConfig.module.rules[1].oneOf.map((rule) => {
-        // The fallback rule (eg for dependencies).
-        if (rule.loader && rule.loader.match(/babel-loader/) && !rule.include) {
-          // Allow not-fully-specified modules so that legacy packages are still able to build.
-          rule.resolve = { fullySpecified: false }
-
-          // The class properties transform is required for @uniswap/analytics to build.
-          rule.options.plugins.push('@babel/plugin-proposal-class-properties')
+        if (rule.loader && rule.loader.match(/babel-loader/)) {
+          rule.loader = 'swc-loader'
+          delete rule.options
         }
         return rule
+      })
+
+      // Run terser compression on node_modules before tree-shaking, so that tree-shaking is more effective.
+      // This works by eliminating dead code, so that webpack can identify unused imports and tree-shake them;
+      // it is only necessary for node_modules - it is done through linting for our own source code -
+      // see https://medium.com/engineering-housing/dead-code-elimination-and-tree-shaking-at-housing-part-1-307a94b30f23#7e03:
+      webpackConfig.module.rules.push({
+        enforce: 'post',
+        test: /node_modules.*\.(js)$/,
+        loader: path.join(__dirname, 'scripts/terser-loader.js'),
+        options: { compress: true, mangle: false },
       })
 
       // Configure webpack optimization:
@@ -192,16 +174,8 @@ module.exports = {
           : {}
       )
 
-      // Configure webpack caching:
-      webpackConfig.cache = Object.assign(webpackConfig.cache, {
-        cacheDirectory: getCacheDirectory('webpack'),
-      })
-
-      // Ignore failed source mappings to avoid spamming the console.
-      // Source mappings for a package will fail if the package does not provide them, but the build will still succeed,
-      // so it is unnecessary (and bothersome) to log it. This should be turned off when debugging missing sourcemaps.
-      // See https://webpack.js.org/loaders/source-map-loader#ignoring-warnings.
-      webpackConfig.ignoreWarnings = [/Failed to parse source map/]
+      // Configure webpack resolution. webpackConfig.cache is unused with swc-loader, but the resolver can still cache:
+      webpackConfig.resolve = Object.assign(webpackConfig.resolve, { unsafeCache: true })
 
       return webpackConfig
     },

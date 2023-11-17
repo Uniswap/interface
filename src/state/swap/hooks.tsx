@@ -1,15 +1,18 @@
 import { Trans } from '@lingui/macro'
 import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { useConnectionReady } from 'connection/eagerlyConnect'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
-import { useBestTrade } from 'hooks/useBestTrade'
+import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
+import { useSwapTaxes } from 'hooks/useSwapTaxes'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
-import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
+import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
@@ -23,7 +26,7 @@ import { SwapState } from './reducer'
 
 export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
   onCurrencySelection: (field: Field, currency: Currency) => void
-  onSwitchTokens: () => void
+  onSwitchTokens: (newOutputHasTax: boolean, previouslyEstimatedOutput: string) => void
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
 } {
@@ -39,9 +42,12 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
     [dispatch]
   )
 
-  const onSwitchTokens = useCallback(() => {
-    dispatch(switchCurrencies())
-  }, [dispatch])
+  const onSwitchTokens = useCallback(
+    (newOutputHasTax: boolean, previouslyEstimatedOutput: string) => {
+      dispatch(switchCurrencies({ newOutputHasTax, previouslyEstimatedOutput }))
+    },
+    [dispatch]
+  )
 
   const onUserInput = useCallback(
     (field: Field, typedValue: string) => {
@@ -71,9 +77,12 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
   '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D': true, // v2 router 02
 }
 
-export type SwapInfo = {
-  currencies: { [field in Field]?: Currency | null }
+type SwapInfo = {
+  currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
+  inputTax: Percent
+  outputTax: Percent
+  outputFeeFiatValue?: number
   parsedAmount?: CurrencyAmount<Currency>
   inputError?: ReactNode
   trade: {
@@ -81,6 +90,7 @@ export type SwapInfo = {
     state: TradeState
     uniswapXGasUseEstimateUSD?: number
     error?: any
+    swapQuoteLatency?: number
   }
   allowedSlippage: Percent
   autoSlippage: Percent
@@ -100,8 +110,14 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
 
   const inputCurrency = useCurrency(inputCurrencyId, chainId)
   const outputCurrency = useCurrency(outputCurrencyId, chainId)
+
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
+
+  const { inputTax, outputTax } = useSwapTaxes(
+    inputCurrency?.isToken ? inputCurrency.address : undefined,
+    outputCurrency?.isToken ? outputCurrency.address : undefined
+  )
 
   const relevantTokenBalances = useCurrencyBalances(
     account ?? undefined,
@@ -114,12 +130,19 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
     [inputCurrency, isExactIn, outputCurrency, typedValue]
   )
 
-  const trade = useBestTrade(
+  const trade = useDebouncedTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     parsedAmount,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined,
     undefined,
     account
+  )
+
+  const { data: outputFeeFiatValue } = useUSDPrice(
+    isSubmittableTrade(trade.trade) && trade.trade.swapFee
+      ? CurrencyAmount.fromRawAmount(trade.trade.outputAmount.currency, trade.trade.swapFee.amount)
+      : undefined,
+    trade.trade?.outputAmount.currency
   )
 
   const currencyBalances = useMemo(
@@ -130,7 +153,7 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
     [relevantTokenBalances]
   )
 
-  const currencies: { [field in Field]?: Currency | null } = useMemo(
+  const currencies: { [field in Field]?: Currency } = useMemo(
     () => ({
       [Field.INPUT]: inputCurrency,
       [Field.OUTPUT]: outputCurrency,
@@ -151,11 +174,12 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
   // slippage amount used to submit the trade
   const allowedSlippage = uniswapXAutoSlippage ?? classicAllowedSlippage
 
+  const connectionReady = useConnectionReady()
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
 
     if (!account) {
-      inputError = <Trans>Connect Wallet</Trans>
+      inputError = connectionReady ? <Trans>Connect wallet</Trans> : <Trans>Connecting wallet...</Trans>
     }
 
     if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
@@ -183,7 +207,7 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
     }
 
     return inputError
-  }, [account, currencies, parsedAmount, to, currencyBalances, trade.trade, allowedSlippage])
+  }, [account, currencies, parsedAmount, to, currencyBalances, trade?.trade, allowedSlippage, connectionReady])
 
   return useMemo(
     () => ({
@@ -194,8 +218,22 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
       trade,
       autoSlippage,
       allowedSlippage,
+      outputFeeFiatValue,
+      inputTax,
+      outputTax,
     }),
-    [allowedSlippage, autoSlippage, currencies, currencyBalances, inputError, parsedAmount, trade]
+    [
+      allowedSlippage,
+      autoSlippage,
+      currencies,
+      currencyBalances,
+      inputError,
+      outputFeeFiatValue,
+      parsedAmount,
+      trade,
+      inputTax,
+      outputTax,
+    ]
   )
 }
 

@@ -1,8 +1,9 @@
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
+import { TraceEvent } from 'analytics'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
-import styled from 'styled-components/macro'
-import { BREAKPOINTS, ExternalLink, StyledRouterLink } from 'theme'
+import styled from 'styled-components'
+import { BREAKPOINTS } from 'theme'
+import { ExternalLink, StyledRouterLink } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import { DiscordIcon, GithubIcon, TwitterIcon } from './Icons'
@@ -88,26 +89,26 @@ const LinkGroup = styled.div`
 const LinkGroupTitle = styled.span`
   font-size: 16px;
   line-height: 20px;
-  font-weight: 700;
+  font-weight: 535;
 `
 
 const ExternalTextLink = styled(ExternalLink)`
   font-size: 16px;
   line-height: 20px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
 `
 
 const TextLink = styled(StyledRouterLink)`
   font-size: 16px;
   line-height: 20px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
 `
 
 const Copyright = styled.span`
   font-size: 16px;
   line-height: 20px;
   margin: 1rem 0 0 0;
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.neutral3};
 `
 
 const LogoSectionContent = () => {

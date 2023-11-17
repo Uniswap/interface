@@ -1,33 +1,39 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { getChainInfo } from 'constants/chainInfo'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
-import React from 'react'
-import styled, { css } from 'styled-components/macro'
+import React, { useState } from 'react'
+import styled from 'styled-components'
 
 export const MissingImageLogo = styled.div<{ size?: string }>`
   --size: ${({ size }) => size};
   border-radius: 100px;
-  color: ${({ theme }) => theme.textPrimary};
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  color: ${({ theme }) => theme.neutral1};
+  background-color: ${({ theme }) => theme.surface3};
   font-size: calc(var(--size) / 3);
-  font-weight: 500;
+  font-weight: 535;
   height: ${({ size }) => size ?? '24px'};
   line-height: ${({ size }) => size ?? '24px'};
   text-align: center;
   width: ${({ size }) => size ?? '24px'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
-export const LogoImage = styled.img<{ size: string; useBG?: boolean }>`
+const LogoImage = styled.img<{ size: string; imgLoaded?: boolean }>`
+  opacity: ${({ imgLoaded }) => (imgLoaded ? 1 : 0)};
+  transition: opacity ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.in}`};
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   border-radius: 50%;
+`
 
-  ${({ useBG }) =>
-    useBG &&
-    css`
-      background: radial-gradient(white 60%, #ffffff00 calc(70% + 1px));
-      box-shadow: 0 0 1px white;
-    `}
+const LogoImageWrapper = styled.div<{ size: string; imgLoaded?: boolean }>`
+  width: ${({ size }) => size};
+  height: ${({ size }) => size};
+  background: ${({ theme, imgLoaded }) => (imgLoaded ? 'none' : theme.surface3)};
+  transition: background-color ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.in}`};
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
 `
 
 export type AssetLogoBaseProps = {
@@ -35,26 +41,12 @@ export type AssetLogoBaseProps = {
   backupImg?: string | null
   size?: string
   style?: React.CSSProperties
-  hideL2Icon?: boolean
 }
 type AssetLogoProps = AssetLogoBaseProps & { isNative?: boolean; address?: string | null; chainId?: number }
 
 const LogoContainer = styled.div`
   position: relative;
   display: flex;
-`
-
-const L2NetworkLogo = styled.div<{ networkUrl?: string; parentSize: string }>`
-  --size: ${({ parentSize }) => `calc(${parentSize} / 2)`};
-  width: var(--size);
-  height: var(--size);
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  background: url(${({ networkUrl }) => networkUrl});
-  background-repeat: no-repeat;
-  background-size: ${({ parentSize }) => `calc(${parentSize} / 2) calc(${parentSize} / 2)`};
-  display: ${({ networkUrl }) => !networkUrl && 'none'};
 `
 
 /**
@@ -68,27 +60,34 @@ export default function AssetLogo({
   backupImg,
   size = '24px',
   style,
-  hideL2Icon = false,
 }: AssetLogoProps) {
-  const imageProps = {
-    alt: `${symbol ?? 'token'} logo`,
-    size,
-  }
-
   const [src, nextSrc] = useTokenLogoSource(address, chainId, isNative, backupImg)
-  const L2Icon = getChainInfo(chainId)?.circleLogoUrl
+  const [imgLoaded, setImgLoaded] = useState(() => {
+    const img = document.createElement('img')
+    img.src = src ?? ''
+    return src ? img.complete : false
+  })
 
   return (
-    <LogoContainer style={style}>
+    <LogoContainer style={{ height: size, width: size, ...style }}>
       {src ? (
-        <LogoImage {...imageProps} src={src} onError={nextSrc} useBG={true} />
+        <LogoImageWrapper size={size} imgLoaded={imgLoaded}>
+          <LogoImage
+            src={src}
+            alt={`${symbol ?? 'token'} logo`}
+            size={size}
+            onLoad={() => void setImgLoaded(true)}
+            onError={nextSrc}
+            imgLoaded={imgLoaded}
+            loading="lazy"
+          />
+        </LogoImageWrapper>
       ) : (
         <MissingImageLogo size={size}>
           {/* use only first 3 characters of Symbol for design reasons */}
           {symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
         </MissingImageLogo>
       )}
-      {!hideL2Icon && <L2NetworkLogo networkUrl={L2Icon} parentSize={size} />}
     </LogoContainer>
   )
 }

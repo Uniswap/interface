@@ -30,9 +30,5 @@
     "types": ["jest"],
     "useUnknownInCatchVariables": false
   },
-  "exclude": ["node_modules"],
   "include": ["src/**/*", "src/**/*.json"],
-  "watchOptions": {
-    "excludeDirectories": ["node_modules"]
-  }
 }

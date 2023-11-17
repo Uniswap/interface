@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css'
 import { MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT, XLARGE_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { buttonTextMedium } from 'nft/css/common.css'
 import { loadingBlock } from 'nft/css/loading.css'
-import { css } from 'styled-components/macro'
+import { css } from 'styled-components'
 
 import { sprinkles } from '../../css/sprinkles.css'
 
@@ -22,7 +22,7 @@ export const baseActivitySwitcherToggle = style([
 export const activitySwitcherToggle = style([
   baseActivitySwitcherToggle,
   sprinkles({
-    color: 'textSecondary',
+    color: 'neutral2',
   }),
 ])
 

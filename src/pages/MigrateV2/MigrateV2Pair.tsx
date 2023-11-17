@@ -1,10 +1,11 @@
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 import { CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { sendEvent } from 'components/analytics'
+import { sendAnalyticsEvent, useTrace } from 'analytics'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { ButtonConfirmed } from 'components/Button'
 import { BlueCard, DarkGrayCard, LightCard, YellowCard } from 'components/Card'
@@ -13,9 +14,11 @@ import FeeSelector from 'components/FeeSelector'
 import RangeSelector from 'components/RangeSelector'
 import RateToggle from 'components/RateToggle'
 import SettingsTab from 'components/Settings'
-import { Dots } from 'components/swap/styleds'
+import { Dots } from 'components/swap/styled'
+import { V2Unsupported } from 'components/V2Unsupported'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
+import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { PoolState, usePool } from 'hooks/usePools'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
@@ -30,7 +33,7 @@ import { Bound, resetMintState } from 'state/mint/v3/actions'
 import { useRangeHopCallbacks, useV3DerivedMintInfo, useV3MintActionHandlers } from 'state/mint/v3/hooks'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
@@ -45,7 +48,7 @@ import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useTokenBalance } from '../../state/connection/hooks'
 import { TransactionType } from '../../state/transactions/types'
-import { BackArrowLink, ExternalLink, ThemedText } from '../../theme'
+import { BackArrowLink, ExternalLink, ThemedText } from '../../theme/components'
 import { isAddress } from '../../utils'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
@@ -79,23 +82,23 @@ function LiquidityInfo({
       <RowBetween>
         <RowFixed>
           <CurrencyLogo size="20px" style={{ marginRight: '8px' }} currency={currency0} />
-          <Text fontSize={16} fontWeight={500}>
+          <Text fontSize={16} fontWeight={535}>
             {currency0.symbol}
           </Text>
         </RowFixed>
-        <Text fontSize={16} fontWeight={500}>
+        <Text fontSize={16} fontWeight={535}>
           <FormattedCurrencyAmount currencyAmount={token0Amount} />
         </Text>
       </RowBetween>
       <RowBetween>
         <RowFixed>
           <CurrencyLogo size="20px" style={{ marginRight: '8px' }} currency={currency1} />
-          <Text fontSize={16} fontWeight={500}>
+          <Text fontSize={16} fontWeight={535}>
             {currency1.symbol}
           </Text>
         </RowFixed>
 
-        <Text fontSize={16} fontWeight={500}>
+        <Text fontSize={16} fontWeight={535}>
           <FormattedCurrencyAmount currencyAmount={token1Amount} />
         </Text>
       </RowBetween>
@@ -126,6 +129,7 @@ function V2PairMigration({
   const { chainId, account } = useWeb3React()
   const theme = useTheme()
   const v2FactoryAddress = chainId ? V2_FACTORY_ADDRESSES[chainId] : undefined
+  const trace = useTrace()
 
   const pairFactory = useSingleCallResult(pair, 'factory')
   const isNotUniswap = pairFactory.result?.[0] && pairFactory.result[0] !== v2FactoryAddress
@@ -262,6 +266,8 @@ function V2PairMigration({
   const addTransaction = useTransactionAdder()
   const isMigrationPending = useIsTransactionPending(pendingMigrationHash ?? undefined)
 
+  const networkSupportsV2 = useNetworkSupportsV2()
+
   const migrate = useCallback(() => {
     if (
       !migrator ||
@@ -272,7 +278,8 @@ function V2PairMigration({
       typeof tickUpper !== 'number' ||
       !v3Amount0Min ||
       !v3Amount1Min ||
-      !chainId
+      !chainId ||
+      !networkSupportsV2
     )
       return
 
@@ -335,10 +342,10 @@ function V2PairMigration({
         return migrator
           .multicall(data, { gasLimit: calculateGasMargin(gasEstimate) })
           .then((response: TransactionResponse) => {
-            sendEvent({
-              category: 'Migrate',
-              action: `${isNotUniswap ? 'SushiSwap' : 'V2'}->V3`,
+            sendAnalyticsEvent(LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED, {
+              action: `${isNotUniswap ? LiquiditySource.SUSHISWAP : LiquiditySource.V2}->${LiquiditySource.V3}`,
               label: `${currency0.symbol}/${currency1.symbol}`,
+              ...trace,
             })
 
             addTransaction(response, {
@@ -354,34 +361,38 @@ function V2PairMigration({
         setConfirmingMigration(false)
       })
   }, [
-    chainId,
-    isNotUniswap,
     migrator,
-    noLiquidity,
-    blockTimestamp,
-    token0,
-    token1,
-    feeAmount,
-    pairBalance,
-    tickLower,
-    tickUpper,
-    sqrtPrice,
-    v3Amount0Min,
-    v3Amount1Min,
     account,
     deadline,
+    blockTimestamp,
+    tickLower,
+    tickUpper,
+    v3Amount0Min,
+    v3Amount1Min,
+    chainId,
+    networkSupportsV2,
     signatureData,
-    addTransaction,
-    pair,
+    noLiquidity,
+    pair.address,
+    pairBalance.quotient,
+    token0.address,
+    token1.address,
+    feeAmount,
+    sqrtPrice,
+    isNotUniswap,
     currency0,
     currency1,
+    trace,
+    addTransaction,
   ])
 
   const isSuccessfullyMigrated = !!pendingMigrationHash && JSBI.equal(pairBalance.quotient, ZERO)
 
+  if (!networkSupportsV2) return <V2Unsupported />
+
   return (
     <AutoColumn gap="20px">
-      <ThemedText.DeprecatedBody my={9} style={{ fontWeight: 400 }}>
+      <ThemedText.DeprecatedBody my={9} style={{ fontWeight: 485 }}>
         <Trans>
           This tool will safely migrate your {isNotUniswap ? 'SushiSwap' : 'V2'} liquidity to V3. The process is
           completely trustless thanks to the{' '}
@@ -389,7 +400,7 @@ function V2PairMigration({
         {chainId && migrator && (
           <ExternalLink href={getExplorerLink(chainId, migrator.address, ExplorerDataType.ADDRESS)}>
             <ThemedText.DeprecatedBlue display="inline">
-              <Trans>Uniswap migration contract↗</Trans>
+              <Trans>Uniswap migration contract</Trans> ↗
             </ThemedText.DeprecatedBlue>
           </ExternalLink>
         )}
@@ -434,10 +445,10 @@ function V2PairMigration({
           <FeeSelector feeAmount={feeAmount} handleFeePoolSelect={setFeeAmount} />
           {noLiquidity && (
             <BlueCard style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <AlertCircle color={theme.textPrimary} style={{ marginBottom: '12px', opacity: 0.8 }} />
+              <AlertCircle color={theme.neutral1} style={{ marginBottom: '12px', opacity: 0.8 }} />
               <ThemedText.DeprecatedBody
                 fontSize={14}
-                style={{ marginBottom: 8, fontWeight: 500, opacity: 0.8 }}
+                style={{ marginBottom: 8, fontWeight: 535, opacity: 0.8 }}
                 textAlign="center"
               >
                 <Trans>
@@ -447,7 +458,7 @@ function V2PairMigration({
               </ThemedText.DeprecatedBody>
 
               <ThemedText.DeprecatedBody
-                fontWeight={500}
+                fontWeight={535}
                 textAlign="center"
                 fontSize={14}
                 style={{ marginTop: '8px', opacity: 0.8 }}
@@ -458,7 +469,7 @@ function V2PairMigration({
               {v2SpotPrice && (
                 <AutoColumn gap="sm" style={{ marginTop: '12px' }}>
                   <RowBetween>
-                    <ThemedText.DeprecatedBody fontWeight={500} fontSize={14}>
+                    <ThemedText.DeprecatedBody fontWeight={535} fontSize={14}>
                       <Trans>
                         {isNotUniswap ? 'SushiSwap' : 'V2'} {invertPrice ? currency1.symbol : currency0.symbol} Price:
                       </Trans>{' '}
@@ -501,14 +512,14 @@ function V2PairMigration({
 
                 <RowBetween>
                   <ThemedText.DeprecatedBody fontSize={14} color="inherit">
-                    <Trans>Price Difference:</Trans>
+                    <Trans>Price difference:</Trans>
                   </ThemedText.DeprecatedBody>
                   <ThemedText.DeprecatedBlack fontSize={14} color="inherit">
                     <Trans>{priceDifferenceFraction?.toSignificant(4)}%</Trans>
                   </ThemedText.DeprecatedBlack>
                 </RowBetween>
               </AutoColumn>
-              <ThemedText.DeprecatedBody fontSize={14} style={{ marginTop: 8, fontWeight: 400 }}>
+              <ThemedText.DeprecatedBody fontSize={14} style={{ marginTop: 8, fontWeight: 485 }}>
                 <Trans>
                   You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <br />
                   If the price seems incorrect, you can either make a swap to move the price or wait for someone else to
@@ -531,7 +542,7 @@ function V2PairMigration({
 
           <RowBetween>
             <ThemedText.DeprecatedLabel>
-              <Trans>Set Price Range</Trans>
+              <Trans>Set price range</Trans>
             </ThemedText.DeprecatedLabel>
             <RateToggle
               currencyA={invertPrice ? currency1 : currency0}
@@ -726,9 +737,9 @@ export default function MigrateV2Pair() {
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrowLink to="/migrate/v2" />
           <ThemedText.DeprecatedMediumHeader>
-            <Trans>Migrate V2 Liquidity</Trans>
+            <Trans>Migrate V2 liquidity</Trans>
           </ThemedText.DeprecatedMediumHeader>
-          <SettingsTab autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} chainId={chainId} />
+          <SettingsTab autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} chainId={chainId} hideRoutingSettings />
         </AutoRow>
 
         {!account ? (

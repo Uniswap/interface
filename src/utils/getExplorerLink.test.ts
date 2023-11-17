@@ -35,4 +35,7 @@ describe('#getExplorerLink', () => {
       'https://snowtrace.io/address/abc'
     )
   })
+  it('base', () => {
+    expect(getExplorerLink(ChainId.BASE, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://basescan.org/address/abc')
+  })
 })

@@ -103,7 +103,7 @@ describe('trace', () => {
       const errorEvent: ErrorEvent = {
         type: undefined,
         request: {
-          url: 'https://app.uniswap.org/#/pools',
+          url: 'https://app.uniswap.org/pools',
         },
       }
       const eventHint: EventHint = {}
@@ -114,7 +114,7 @@ describe('trace', () => {
       const errorEvent: ErrorEvent = {
         type: undefined,
         request: {
-          url: 'https://app.uniswap.org/#',
+          url: 'https://app.uniswap.org/',
         },
       }
       const eventHint: EventHint = {}

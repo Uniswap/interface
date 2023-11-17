@@ -1,5 +1,6 @@
 /* eslint-env node */
 
+const { node: restrictedImports } = require('@uniswap/eslint-config/restrictedImports')
 require('@uniswap/eslint-config/load')
 
 const rulesDirPlugin = require('eslint-plugin-rulesdir')
@@ -27,6 +28,20 @@ module.exports = {
     {
       files: ['**/*.ts', '**/*.tsx'],
       rules: {
+        '@typescript-eslint/no-restricted-imports': [
+          'error',
+          {
+            ...restrictedImports,
+            paths: [
+              ...restrictedImports.paths,
+              {
+                name: '@uniswap/smart-order-router',
+                message: 'Only import types, unless you are in the client-side SOR, to preserve lazy-loading.',
+                allowTypeImports: true,
+              },
+            ],
+          },
+        ],
         'import/no-restricted-paths': [
           'error',
           {
@@ -51,6 +66,30 @@ module.exports = {
                 name: 'zustand',
                 importNames: ['default'],
                 message: 'Default import from zustand is deprecated. Import `{ create }` instead.',
+              },
+            ],
+          },
+        ],
+        'no-restricted-syntax': [
+          'error',
+          {
+            selector: ':matches(ExportAllDeclaration)',
+            message: 'Barrel exports bloat the bundle size by preventing tree-shaking.',
+          },
+        ],
+      },
+    },
+    {
+      files: ['**/*.ts', '**/*.tsx'],
+      excludedFiles: ['src/analytics/*'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: [
+              {
+                name: '@uniswap/analytics',
+                message: `Do not import from '@uniswap/analytics' directly. Use 'analytics' instead.`,
               },
             ],
           },

@@ -2,7 +2,7 @@ import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from 'compone
 import { BrushBehavior, brushX, D3BrushEvent, ScaleLinear, select } from 'd3'
 import usePrevious from 'hooks/usePrevious'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const Handle = styled.path<{ color: string }>`
   cursor: ew-resize;
@@ -28,13 +28,13 @@ const LabelGroup = styled.g<{ visible: boolean }>`
 `
 
 const TooltipBackground = styled.rect`
-  fill: ${({ theme }) => theme.backgroundInteractive};
+  fill: ${({ theme }) => theme.surface3};
 `
 
 const Tooltip = styled.text`
   text-anchor: middle;
   font-size: 13px;
-  fill: ${({ theme }) => theme.textPrimary};
+  fill: ${({ theme }) => theme.neutral1};
 `
 
 // flips the handles draggers when close to the container edges

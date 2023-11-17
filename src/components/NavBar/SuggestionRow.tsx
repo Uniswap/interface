@@ -1,10 +1,10 @@
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName } from '@uniswap/analytics-events'
-import { formatUSDPrice } from '@uniswap/conedison/format'
+import { sendAnalyticsEvent } from 'analytics'
 import clsx from 'clsx'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkSearchTokenWarning } from 'constants/tokenSafety'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { Chain, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
@@ -13,25 +13,21 @@ import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { vars } from 'nft/css/sprinkles.css'
 import { GenieCollection } from 'nft/types'
-import { ethNumberStandardFormatter } from 'nft/utils/currency'
-import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import styled from 'styled-components'
+import { ThemedText } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { DeltaText, getDeltaArrow } from '../Tokens/TokenDetails/PriceChart'
+import { DeltaArrow, DeltaText } from '../Tokens/TokenDetails/Delta'
 import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 
 const PriceChangeContainer = styled.div`
   display: flex;
   align-items: center;
-`
-
-const ArrowCell = styled.span`
-  padding-top: 5px;
-  padding-right: 3px;
+  padding-top: 4px;
+  gap: 2px;
 `
 
 interface CollectionRowProps {
@@ -51,6 +47,8 @@ export const CollectionRow = ({
   index,
   eventProperties,
 }: CollectionRowProps) => {
+  const { formatNumberOrString } = useFormatter()
+
   const [brokenImage, setBrokenImage] = useState(false)
   const [loaded, setLoaded] = useState(false)
 
@@ -104,13 +102,17 @@ export const CollectionRow = ({
             <Box className={styles.primaryText}>{collection.name}</Box>
             {collection.isVerified && <VerifiedIcon className={styles.suggestionIcon} />}
           </Row>
-          <Box className={styles.secondaryText}>{putCommas(collection?.stats?.total_supply ?? 0)} items</Box>
+          <Box className={styles.secondaryText}>
+            {formatNumberOrString({ input: collection?.stats?.total_supply, type: NumberType.WholeNumber })} items
+          </Box>
         </Column>
       </Row>
       {collection.stats?.floor_price ? (
         <Column className={styles.suggestionSecondaryContainer}>
           <Row gap="4">
-            <Box className={styles.primaryText}>{ethNumberStandardFormatter(collection.stats?.floor_price)} ETH</Box>
+            <Box className={styles.primaryText}>
+              {formatNumberOrString({ input: collection.stats?.floor_price, type: NumberType.NFTToken })} ETH
+            </Box>
           </Row>
           <Box className={styles.secondaryText}>Floor</Box>
         </Column>
@@ -131,6 +133,7 @@ interface TokenRowProps {
 export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
   const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
   const navigate = useNavigate()
+  const { formatFiatPrice, formatDelta } = useFormatter()
 
   const handleClick = useCallback(() => {
     const address = !token.address && token.standard === TokenStandard.Native ? 'NATIVE' : token.address
@@ -140,7 +143,9 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
 
-  const tokenDetailsPath = getTokenDetailsURL(token)
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
+
+  const tokenDetailsPath = getTokenDetailsURL({ ...token, isInfoExplorePageEnabled })
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -156,11 +161,9 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     }
   }, [toggleOpen, isHovered, token, navigate, handleClick, tokenDetailsPath])
 
-  const arrow = getDeltaArrow(token.market?.pricePercentChange?.value, 18)
-
   return (
     <Link
-      data-cy={`searchbar-token-row-${token.symbol}`}
+      data-testid={`searchbar-token-row-${token.chain}-${token.address ?? 'NATIVE'}`}
       to={tokenDetailsPath}
       onClick={handleClick}
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}
@@ -174,7 +177,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
           symbol={token.symbol}
           size="36px"
           backupImg={token.project?.logoUrl}
-          style={{ paddingRight: '8px' }}
+          style={{ marginRight: '8px' }}
         />
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
@@ -189,13 +192,13 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
         {!!token.market?.price?.value && (
           <>
             <Row gap="4">
-              <Box className={styles.primaryText}>{formatUSDPrice(token.market.price.value)}</Box>
+              <Box className={styles.primaryText}>{formatFiatPrice({ price: token.market.price.value })}</Box>
             </Row>
             <PriceChangeContainer>
-              <ArrowCell>{arrow}</ArrowCell>
+              <DeltaArrow delta={token.market?.pricePercentChange?.value} />
               <ThemedText.BodySmall>
                 <DeltaText delta={token.market?.pricePercentChange?.value}>
-                  {Math.abs(token.market?.pricePercentChange?.value ?? 0).toFixed(2)}%
+                  {formatDelta(Math.abs(token.market?.pricePercentChange?.value ?? 0))}
                 </DeltaText>
               </ThemedText.BodySmall>
             </PriceChangeContainer>
@@ -213,13 +216,13 @@ export const SkeletonRow = () => {
         <Box className={styles.imageHolder} />
         <Column gap="4" width="full">
           <Row justifyContent="space-between">
-            <Box borderRadius="round" height="20" background="backgroundModule" style={{ width: '180px' }} />
-            <Box borderRadius="round" height="20" width="48" background="backgroundModule" />
+            <Box borderRadius="round" height="20" background="surface2" style={{ width: '180px' }} />
+            <Box borderRadius="round" height="20" width="48" background="surface2" />
           </Row>
 
           <Row justifyContent="space-between">
-            <Box borderRadius="round" height="16" width="120" background="backgroundModule" />
-            <Box borderRadius="round" height="16" width="48" background="backgroundModule" />
+            <Box borderRadius="round" height="16" width="120" background="surface2" />
+            <Box borderRadius="round" height="16" width="48" background="surface2" />
           </Row>
         </Column>
       </Row>

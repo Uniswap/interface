@@ -12,17 +12,9 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import {
-  AlertTriangle,
-  ArrowLeft,
-  CheckCircle,
-  Copy,
-  ExternalLink as ExternalLinkIconFeather,
-  Icon,
-  X,
-} from 'react-feather'
+import { AlertTriangle, ArrowLeft, CheckCircle, Copy, Icon, X } from 'react-feather'
 import { Link } from 'react-router-dom'
-import styled, { css, keyframes } from 'styled-components/macro'
+import styled, { css, keyframes } from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
 import { ReactComponent as TooltipTriangle } from '../../assets/svg/tooltip_triangle.svg'
@@ -30,23 +22,11 @@ import { anonymizeLink } from '../../utils/anonymizeLink'
 
 // TODO: Break this file into a components folder
 
-export const CloseIcon = styled(X)<{ onClick: () => void }>`
-  color: ${({ theme }) => theme.textPrimary};
-  cursor: pointer;
-`
+export { ThemedText } from './text'
 
-// for wrapper react feather icons
-export const IconWrapper = styled.div<{ stroke?: string; size?: string; marginRight?: string; marginLeft?: string }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: ${({ size }) => size ?? '20px'};
-  height: ${({ size }) => size ?? '20px'};
-  margin-right: ${({ marginRight }) => marginRight ?? 0};
-  margin-left: ${({ marginLeft }) => marginLeft ?? 0};
-  & > * {
-    stroke: ${({ theme, stroke }) => stroke ?? theme.accentActive};
-  }
+export const CloseIcon = styled(X)<{ onClick: () => void }>`
+  color: ${({ theme }) => theme.neutral1};
+  cursor: pointer;
 `
 
 // A button that triggers some onClick result, but looks like a link.
@@ -56,7 +36,7 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
   background: none;
 
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
-  color: ${({ theme, disabled }) => (disabled ? theme.textSecondary : theme.accentAction)};
+  color: ${({ theme, disabled }) => (disabled ? theme.neutral2 : theme.accent1)};
   font-weight: 500;
 
   :hover {
@@ -113,9 +93,9 @@ export const ClickableStyle = css`
   }
 `
 
-export const LinkStyle = css`
-  color: ${({ theme }) => theme.accentAction};
-  stroke: ${({ theme }) => theme.accentAction};
+const LinkStyle = css`
+  color: ${({ theme }) => theme.accent1};
+  stroke: ${({ theme }) => theme.accent1};
   font-weight: 500;
 `
 
@@ -125,29 +105,17 @@ export const StyledInternalLink = styled(Link)`
   ${LinkStyle}
 `
 
-const LinkIconWrapper = styled.a`
-  align-items: center;
-  justify-content: center;
-  display: flex;
-`
-
 const IconStyle = css`
   height: 16px;
   width: 18px;
   margin-left: 10px;
 `
 
-const LinkIcon = styled(ExternalLinkIconFeather)`
-  ${IconStyle}
-  ${ClickableStyle}
-  ${LinkStyle}
-`
-
 const CopyIcon = styled(Copy)`
   ${IconStyle}
   ${ClickableStyle}
   ${LinkStyle}
-  stroke: ${({ theme }) => theme.accentAction};
+  stroke: ${({ theme }) => theme.accent1};
 `
 
 const rotateImg = keyframes`
@@ -173,15 +141,11 @@ function handleClickExternalLink(event: React.MouseEvent<HTMLAnchorElement>) {
 
   // don't prevent default, don't redirect if it's a new tab
   if (target === '_blank' || event.ctrlKey || event.metaKey) {
-    outboundLink({ label: anonymizedHref }, () => {
-      console.debug('Fired outbound link event', anonymizedHref)
-    })
+    outboundLink({ label: anonymizedHref })
   } else {
     event.preventDefault()
     // send a ReactGA event and then trigger a location change
-    outboundLink({ label: anonymizedHref }, () => {
-      window.location.href = anonymizedHref
-    })
+    outboundLink({ label: anonymizedHref })
   }
 }
 
@@ -205,19 +169,6 @@ export function ExternalLink({
   ...rest
 }: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & { href: string }) {
   return <StyledLink target={target} rel={rel} href={href} onClick={handleClickExternalLink} {...rest} />
-}
-
-export function ExternalLinkIcon({
-  target = '_blank',
-  href,
-  rel = 'noopener noreferrer',
-  ...rest
-}: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & { href: string }) {
-  return (
-    <LinkIconWrapper target={target} rel={rel} href={href} onClick={handleClickExternalLink} {...rest}>
-      <LinkIcon />
-    </LinkIconWrapper>
-  )
 }
 
 const TOOLTIP_WIDTH = 60
@@ -292,13 +243,14 @@ export function CopyLinkIcon({ toCopy }: { toCopy: string }) {
   )
 }
 
-const FullAddress = styled.span`
+const FullAddress = styled.span<{ showTruncated?: boolean }>`
+  ${({ showTruncated }) => showTruncated && 'display: none;'}
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: none;
   }
 `
-const TruncatedAddress = styled.span`
-  display: none;
+const TruncatedAddress = styled.span<{ showTruncated?: boolean }>`
+  display: ${({ showTruncated }) => (showTruncated ? 'flex' : 'none')};
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: flex;
   }
@@ -322,7 +274,15 @@ const CopyContractAddressWrapper = styled.div`
   display: flex;
 `
 
-export function CopyContractAddress({ address }: { address: string }) {
+export function CopyContractAddress({
+  address,
+  showTruncatedOnly,
+  truncatedAddress,
+}: {
+  address: string
+  showTruncatedOnly?: boolean
+  truncatedAddress?: string
+}) {
   const [isCopied, setCopied] = useCopyClipboard()
   const [tooltipX, setTooltipX] = useState<number | undefined>()
   const copy = useCallback(
@@ -333,12 +293,11 @@ export function CopyContractAddress({ address }: { address: string }) {
     [address, setCopied]
   )
 
-  const truncated = `${address.slice(0, 4)}...${address.slice(-3)}`
   return (
     <CopyContractAddressWrapper onClick={copy}>
       <CopyAddressRow isClicked={isCopied}>
-        <FullAddress>{address}</FullAddress>
-        <TruncatedAddress>{truncated}</TruncatedAddress>
+        <FullAddress showTruncated={showTruncatedOnly}>{address}</FullAddress>
+        <TruncatedAddress showTruncated={showTruncatedOnly}>{truncatedAddress}</TruncatedAddress>
         <Copy size={14} />
       </CopyAddressRow>
       {isCopied && <Tooltip isCopyContractTooltip tooltipX={tooltipX} />}
@@ -362,7 +321,7 @@ const CopyHelperText = styled.div<{ fontSize?: number; offset: number }>`
 `
 
 const StyledCheckCircle = styled(CheckCircle)`
-  color: ${({ theme }) => theme.accentSuccess};
+  color: ${({ theme }) => theme.success};
   stroke-width: 1.5px;
 `
 
@@ -468,7 +427,7 @@ export const SpinnerSVG = styled.svg`
 `
 
 const BackArrowIcon = styled(ArrowLeft)`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 
 export function BackArrowLink({ to }: { to: string }) {
@@ -513,16 +472,11 @@ export const MediumOnly = styled.span`
 export const Separator = styled.div`
   width: 100%;
   height: 1px;
-  background-color: ${({ theme }) => theme.backgroundOutline};
-`
-
-export const GlowEffect = styled.div`
-  border-radius: 32px;
-  box-shadow: ${({ theme }) => theme.networkDefaultShadow};
+  background-color: ${({ theme }) => theme.surface3};
 `
 
 export const CautionTriangle = styled(AlertTriangle)`
-  color: ${({ theme }) => theme.accentWarning};
+  color: ${({ theme }) => theme.deprecated_accentWarning};
 `
 
 export const Divider = styled.div`
@@ -530,5 +484,5 @@ export const Divider = styled.div`
   height: 1px;
   border-width: 0;
   margin: 0;
-  background-color: ${({ theme }) => theme.backgroundOutline};
+  background-color: ${({ theme }) => theme.surface3};
 `

@@ -1,6 +1,6 @@
 import { Plural } from '@lingui/macro'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { Column, Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
 import { body, caption } from 'nft/css/common.css'
@@ -8,7 +8,7 @@ import { useSellAsset } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
 import { Dropdown } from './Dropdown'
@@ -24,22 +24,22 @@ const InputWrapper = styled(Row)<{ isInvalid: boolean }>`
   position: relative;
   height: 44px;
   border-radius: 8px;
-  border-color: ${({ isInvalid, theme }) => (isInvalid ? theme.accentCritical : theme.backgroundOutline)};
+  border-color: ${({ isInvalid, theme }) => (isInvalid ? theme.critical : theme.surface3)};
   width: 160px;
   justify-content: space-between;
 `
 
 const DropdownPrompt = styled(Row)`
   gap: 4px;
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  background-color: ${({ theme }) => theme.surface3};
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 535;
   font-size: 14px;
   line-height: 16px;
   border-radius: 8px;
   padding: 6px 4px 6px 8px;
   white-space: nowrap;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 
   &:hover {
     opacity: ${({ theme }) => theme.opacity.hover};
@@ -49,7 +49,7 @@ const DropdownPrompt = styled(Row)`
 const DropdownChevron = styled(ChevronDown)<{ isOpen: boolean }>`
   height: 20px;
   width: 20px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   transform: ${({ isOpen }) => isOpen && 'rotate(180deg)'};
   transition: ${({
     theme: {
@@ -66,7 +66,7 @@ const DropdownContainer = styled.div`
 `
 
 const ErrorMessage = styled(Row)`
-  color: ${({ theme }) => theme.accentCritical};
+  color: ${({ theme }) => theme.critical};
   gap: 4px;
   position: absolute;
   top: 44px;
@@ -75,7 +75,7 @@ const ErrorMessage = styled(Row)`
 
 const WarningIcon = styled(AlertTriangle)`
   width: 16px;
-  color: ${({ theme }) => theme.accentCritical};
+  color: ${({ theme }) => theme.critical};
 `
 
 enum Duration {
@@ -163,8 +163,8 @@ export const SetDurationModal = () => {
   useEffect(() => {
     const expiration = convertDurationToExpiration(parseFloat(amount), duration)
 
-    if (expiration * 1000 - Date.now() < ms`60 seconds` || isNaN(expiration)) setErrorState(ErrorState.empty)
-    else if (expiration * 1000 - Date.now() > ms`180 days`) setErrorState(ErrorState.overMax)
+    if (expiration * 1000 - Date.now() < ms(`60s`) || isNaN(expiration)) setErrorState(ErrorState.empty)
+    else if (expiration * 1000 - Date.now() > ms(`180d`)) setErrorState(ErrorState.overMax)
     else setErrorState(ErrorState.valid)
     setGlobalExpiration(expiration)
   }, [amount, duration, setGlobalExpiration])
@@ -178,7 +178,7 @@ export const SetDurationModal = () => {
           pattern="[0-9]"
           borderStyle="none"
           className={body}
-          color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
+          color={{ placeholder: 'neutral2', default: 'neutral1' }}
           value={amount}
           width="40"
           marginRight="4"
@@ -218,5 +218,5 @@ const convertDurationToExpiration = (amount: number, duration: Duration) => {
         return 24 * 30
     }
   }
-  return Math.round((Date.now() + ms`1 hour` * durationFactor() * amount) / 1000)
+  return Math.round((Date.now() + ms(`1h`) * durationFactor() * amount) / 1000)
 }

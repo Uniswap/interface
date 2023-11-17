@@ -18,7 +18,7 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  margin-right: 8px;
+  margin-right: 4px;
 }
 
 .c0 > img,
@@ -112,9 +112,9 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
     class="c1"
   >
     <img
-      alt="WalletConnect icon"
+      alt="Install MetaMask icon"
       class="c2"
-      src="walletconnect-icon.svg"
+      src="metamask-icon.svg"
     />
   </div>
   <div
@@ -146,7 +146,7 @@ exports[`StatusIcon with no account renders children in correct order 1`] = `
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  margin-right: 8px;
+  margin-right: 4px;
 }
 
 .c0 > img,
@@ -240,9 +240,9 @@ exports[`StatusIcon with no account renders children in correct order 1`] = `
     class="c1"
   >
     <img
-      alt="WalletConnect icon"
+      alt="Install MetaMask icon"
       class="c2"
-      src="walletconnect-icon.svg"
+      src="metamask-icon.svg"
     />
   </div>
   <div

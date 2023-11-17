@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
+import { Trace } from 'analytics'
 import { SmallButtonPrimary } from 'components/Button'
 import { useIsMobile } from 'nft/hooks'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import styled from 'styled-components'
+import { ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import darkImage from '../../assets/images/404-page-dark.png'
@@ -51,7 +51,7 @@ export default function NotFound() {
         <Header>
           <Container>
             <Title>404</Title>
-            <Paragraph color="textSecondary">
+            <Paragraph color="neutral2">
               <Trans>Page not found!</Trans>
             </Paragraph>
           </Container>

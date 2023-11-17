@@ -1,14 +1,19 @@
-import { ChainId, SupportedChainsType } from '@uniswap/sdk-core'
+import { ChainId } from '@uniswap/sdk-core'
 import { Connector } from '@web3-react/types'
-import { networkConnection, uniwalletWCV2ConnectConnection, walletConnectV2Connection } from 'connection'
+import {
+  deprecatedNetworkConnection,
+  networkConnection,
+  uniwalletWCV2ConnectConnection,
+  walletConnectV2Connection,
+} from 'connection'
 import { getChainInfo } from 'constants/chainInfo'
-import { isSupportedChain } from 'constants/chains'
+import { isSupportedChain, SupportedInterfaceChain } from 'constants/chains'
 import { FALLBACK_URLS, RPC_URLS } from 'constants/networks'
 import { useCallback } from 'react'
 import { useAppDispatch } from 'state/hooks'
 import { endSwitchingChain, startSwitchingChain } from 'state/wallets/reducer'
 
-function getRpcUrl(chainId: SupportedChainsType): string {
+function getRpcUrl(chainId: SupportedInterfaceChain): string {
   switch (chainId) {
     case ChainId.MAINNET:
     case ChainId.GOERLI:
@@ -37,6 +42,7 @@ export function useSwitchChain() {
               walletConnectV2Connection.connector,
               uniwalletWCV2ConnectConnection.connector,
               networkConnection.connector,
+              deprecatedNetworkConnection.connector,
             ].includes(connector)
           ) {
             await connector.activate(chainId)

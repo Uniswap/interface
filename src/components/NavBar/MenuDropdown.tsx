@@ -1,6 +1,5 @@
 import { t, Trans } from '@lingui/macro'
 import { InterfaceElementName } from '@uniswap/analytics-events'
-import { openDownloadApp } from 'components/AccountDrawer/DownloadButton'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -20,10 +19,12 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { ReactNode, useReducer, useRef } from 'react'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import { useToggleModal } from 'state/application/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
+import { ThemedText } from 'theme/components'
 import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
+import { openDownloadApp } from 'utils/openDownloadApp'
 
-import { ReactComponent as AppleLogo } from '../../assets/svg/apple_logo.svg'
+import { ReactComponent as UniswapAppLogo } from '../../assets/svg/uniswap_app_logo.svg'
 import { ApplicationModal } from '../../state/application/reducer'
 import * as styles from './MenuDropdown.css'
 import { NavDropdown } from './NavDropdown'
@@ -108,7 +109,7 @@ const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
         rel={href ? 'noopener noreferrer' : undefined}
         display="flex"
         flexDirection="column"
-        color="textPrimary"
+        color="neutral1"
         background="none"
         border="none"
         justifyContent="center"
@@ -138,31 +139,21 @@ export const MenuDropdown = () => {
 
         {isOpen && (
           <NavDropdown top={{ sm: 'unset', lg: '56' }} bottom={{ sm: '50', lg: 'unset' }} right="0">
-            <Column gap="16">
+            <Column gap="8">
               <Column paddingX="8" gap="4">
                 <Box display={{ sm: 'none', lg: 'flex', xxl: 'none' }}>
                   <PrimaryMenuRow to="/pool" close={toggleOpen}>
                     <Icon>
-                      <PoolIcon width={24} height={24} fill={theme.textPrimary} />
+                      <PoolIcon width={24} height={24} fill={theme.neutral1} />
                     </Icon>
                     <PrimaryMenuRow.Text>
                       <Trans>Pool</Trans>
                     </PrimaryMenuRow.Text>
                   </PrimaryMenuRow>
                 </Box>
-                <Box onClick={() => openDownloadApp(InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON)}>
-                  <PrimaryMenuRow close={toggleOpen}>
-                    <Icon>
-                      <AppleLogo width="24px" height="24px" fill={theme.textPrimary} />
-                    </Icon>
-                    <PrimaryMenuRow.Text>
-                      <Trans>Download Uniswap Wallet</Trans>
-                    </PrimaryMenuRow.Text>
-                  </PrimaryMenuRow>
-                </Box>
                 <PrimaryMenuRow to="/vote" close={toggleOpen}>
                   <Icon>
-                    <GovernanceIcon width={24} height={24} color={theme.textPrimary} />
+                    <GovernanceIcon width={24} height={24} color={theme.neutral1} />
                   </Icon>
                   <PrimaryMenuRow.Text>
                     <Trans>Vote in governance</Trans>
@@ -170,12 +161,35 @@ export const MenuDropdown = () => {
                 </PrimaryMenuRow>
                 <PrimaryMenuRow href="https://info.uniswap.org/#/">
                   <Icon>
-                    <BarChartIcon width={24} height={24} color={theme.textPrimary} />
+                    <BarChartIcon width={24} height={24} color={theme.neutral1} />
                   </Icon>
                   <PrimaryMenuRow.Text>
                     <Trans>View more analytics</Trans>
                   </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
+                <Box
+                  onClick={() =>
+                    openDownloadApp({
+                      element: InterfaceElementName.UNISWAP_WALLET_NAVBAR_MENU_DOWNLOAD_BUTTON,
+                    })
+                  }
+                >
+                  <PrimaryMenuRow close={toggleOpen}>
+                    <>
+                      <Icon>
+                        <UniswapAppLogo width="24px" height="24px" />
+                      </Icon>
+                      <div>
+                        <ThemedText.BodyPrimary>
+                          <Trans>Download Uniswap</Trans>
+                        </ThemedText.BodyPrimary>
+                        <ThemedText.LabelSmall>
+                          <Trans>Available on iOS and Android</Trans>
+                        </ThemedText.LabelSmall>
+                      </div>
+                    </>
+                  </PrimaryMenuRow>
+                </Box>
               </Column>
               <Separator />
               <Box
@@ -203,35 +217,25 @@ export const MenuDropdown = () => {
                   <Trans>Legal & Privacy</Trans> ↗
                 </SecondaryLinkedText>
                 {(isDevelopmentEnv() || isStagingEnv()) && (
-                  <SecondaryLinkedText onClick={openFeatureFlagsModal}>
+                  <SecondaryLinkedText
+                    onClick={() => {
+                      toggleOpen()
+                      openFeatureFlagsModal()
+                    }}
+                  >
                     <Trans>Feature Flags</Trans>
                   </SecondaryLinkedText>
                 )}
               </Box>
               <IconRow>
                 <Icon href="https://discord.com/invite/FCfyBSbCU5">
-                  <DiscordIconMenu
-                    className={styles.hover}
-                    width={24}
-                    height={24}
-                    color={themeVars.colors.textSecondary}
-                  />
+                  <DiscordIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.neutral2} />
                 </Icon>
                 <Icon href="https://twitter.com/Uniswap">
-                  <TwitterIconMenu
-                    className={styles.hover}
-                    width={24}
-                    height={24}
-                    color={themeVars.colors.textSecondary}
-                  />
+                  <TwitterIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.neutral2} />
                 </Icon>
                 <Icon href="https://github.com/Uniswap">
-                  <GithubIconMenu
-                    className={styles.hover}
-                    width={24}
-                    height={24}
-                    color={themeVars.colors.textSecondary}
-                  />
+                  <GithubIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.neutral2} />
                 </Icon>
               </IconRow>
             </Column>

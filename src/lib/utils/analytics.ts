@@ -1,17 +1,12 @@
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { InterfaceTrade, QuoteMethod } from 'state/routing/types'
-import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
+import { InterfaceTrade, QuoteMethod, SubmittableTrade } from 'state/routing/types'
+import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
 export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEpoch?: number): number | undefined => {
   if (!futureTimestampInSecondsSinceEpoch) return undefined
   return futureTimestampInSecondsSinceEpoch - new Date().getTime() / 1000
-}
-
-export const getDurationFromDateMilliseconds = (start?: Date): number | undefined => {
-  if (!start) return undefined
-  return new Date().getTime() - start.getTime()
 }
 
 export const formatToDecimal = (
@@ -34,12 +29,23 @@ export const getPriceUpdateBasisPoints = (
   return formatPercentInBasisPointsNumber(changePercentage)
 }
 
-export function formatCommonPropertiesForTrade(trade: InterfaceTrade, allowedSlippage: Percent) {
+function getEstimatedNetworkFee(trade: InterfaceTrade) {
+  if (isClassicTrade(trade)) return trade.gasUseEstimateUSD
+  if (isUniswapXTrade(trade)) return trade.classicGasUseEstimateUSD
+  return undefined
+}
+
+export function formatCommonPropertiesForTrade(
+  trade: InterfaceTrade,
+  allowedSlippage: Percent,
+  outputFeeFiatValue?: number
+) {
   return {
     routing: trade.fillType,
     type: trade.tradeType,
     ura_quote_id: isUniswapXTrade(trade) ? trade.quoteId : undefined,
-    ura_request_id: trade.requestId,
+    ura_request_id: isSubmittableTrade(trade) ? trade.requestId : undefined,
+    ura_quote_block_number: isClassicTrade(trade) ? trade.blockNumber : undefined,
     token_in_address: getTokenAddress(trade.inputAmount.currency),
     token_out_address: getTokenAddress(trade.outputAmount.currency),
     token_in_symbol: trade.inputAmount.currency.symbol,
@@ -53,10 +59,13 @@ export function formatCommonPropertiesForTrade(trade: InterfaceTrade, allowedSli
       trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
         ? trade.inputAmount.currency.chainId
         : undefined,
-    estimated_network_fee_usd: isClassicTrade(trade) ? trade.gasUseEstimateUSD : trade.classicGasUseEstimateUSD,
+    estimated_network_fee_usd: getEstimatedNetworkFee(trade),
     minimum_output_after_slippage: trade.minimumAmountOut(allowedSlippage).toSignificant(6),
     allowed_slippage: formatPercentNumber(allowedSlippage),
     method: getQuoteMethod(trade),
+    fee_usd: outputFeeFiatValue,
+    token_out_detected_tax: formatPercentNumber(trade.outputTax),
+    token_in_detected_tax: formatPercentNumber(trade.inputTax),
   }
 }
 
@@ -65,16 +74,23 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   allowedSlippage,
   fiatValues,
   txHash,
+  timeToSignSinceRequestMs,
+  portfolioBalanceUsd,
 }: {
-  trade: InterfaceTrade
+  trade: SubmittableTrade
   allowedSlippage: Percent
-  fiatValues: { amountIn?: number; amountOut?: number }
+  fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }
   txHash?: string
+  timeToSignSinceRequestMs?: number
+  portfolioBalanceUsd?: number
 }) => ({
+  total_balances_usd: portfolioBalanceUsd,
   transaction_hash: txHash,
   token_in_amount_usd: fiatValues.amountIn,
   token_out_amount_usd: fiatValues.amountOut,
-  ...formatCommonPropertiesForTrade(trade, allowedSlippage),
+  // measures the amount of time the user took to sign the permit message or swap tx in their wallet
+  time_to_sign_since_request_ms: timeToSignSinceRequestMs,
+  ...formatCommonPropertiesForTrade(trade, allowedSlippage, fiatValues.feeUsd),
 })
 
 function getQuoteMethod(trade: InterfaceTrade) {
@@ -86,14 +102,15 @@ function getQuoteMethod(trade: InterfaceTrade) {
 export const formatSwapQuoteReceivedEventProperties = (
   trade: InterfaceTrade,
   allowedSlippage: Percent,
-  swapQuoteReceivedDate: Date
+  swapQuoteLatencyMs: number | undefined,
+  outputFeeFiatValue: number | undefined
 ) => {
   return {
-    ...formatCommonPropertiesForTrade(trade, allowedSlippage),
+    ...formatCommonPropertiesForTrade(trade, allowedSlippage, outputFeeFiatValue),
     swap_quote_block_number: isClassicTrade(trade) ? trade.blockNumber : undefined,
-    swap_quote_received_timestamp: swapQuoteReceivedDate.getTime(),
     allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
     token_in_amount_max: trade.maximumAmountIn(allowedSlippage).toExact(),
     token_out_amount_min: trade.minimumAmountOut(allowedSlippage).toExact(),
+    quote_latency_milliseconds: swapQuoteLatencyMs,
   }
 }

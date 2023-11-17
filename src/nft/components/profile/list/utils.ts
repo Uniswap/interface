@@ -1,20 +1,18 @@
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { addressesByNetwork, SupportedChainId } from '@looksrare/sdk'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { SetPriceMethod, WarningType } from 'nft/components/profile/list/shared'
 import { useNFTList, useSellAsset } from 'nft/hooks'
 import {
   LOOKSRARE_MARKETPLACE_CONTRACT_721,
   LOOKSRARE_MARKETPLACE_CONTRACT_1155,
-  X2Y2_TRANSFER_CONTRACT_721,
-  X2Y2_TRANSFER_CONTRACT_1155,
-} from 'nft/queries'
-import { OPENSEA_CROSS_CHAIN_CONDUIT } from 'nft/queries/openSea'
+} from 'nft/queries/looksRare/constants'
+import { OPENSEA_CROSS_CHAIN_CONDUIT } from 'nft/queries/openSea/constants'
+import { X2Y2_TRANSFER_CONTRACT_721, X2Y2_TRANSFER_CONTRACT_1155 } from 'nft/queries/x2y2'
 import { CollectionRow, Listing, ListingMarket, ListingRow, ListingStatus, WalletAsset } from 'nft/types'
 import { approveCollection, LOOKS_RARE_CREATOR_BASIS_POINTS, signListing } from 'nft/utils/listNfts'
 import { Dispatch, useEffect } from 'react'
-import { shallow } from 'zustand/shallow'
 
 export async function approveCollectionRow(
   collectionRow: CollectionRow,
@@ -134,8 +132,7 @@ export function useSubscribeListingState() {
     ({ setListings, setCollectionsRequiringApproval }) => ({
       setListings,
       setCollectionsRequiringApproval,
-    }),
-    shallow
+    })
   )
   useEffect(() => {
     const [newCollectionsToApprove, newListings] = getListings(sellAssets)
@@ -233,11 +230,11 @@ export const findListingIssues = (sellAssets: WalletAsset[]) => {
   const missingExpiration = sellAssets.some((asset) => {
     return (
       asset.expirationTime != null &&
-      (isNaN(asset.expirationTime) || asset.expirationTime * 1000 - Date.now() < ms`60 seconds`)
+      (isNaN(asset.expirationTime) || asset.expirationTime * 1000 - Date.now() < ms(`60s`))
     )
   })
   const overMaxExpiration = sellAssets.some((asset) => {
-    return asset.expirationTime != null && asset.expirationTime * 1000 - Date.now() > ms`180 days`
+    return asset.expirationTime != null && asset.expirationTime * 1000 - Date.now() > ms(`180d`)
   })
 
   const listingsMissingPrice: [WalletAsset, Listing][] = []

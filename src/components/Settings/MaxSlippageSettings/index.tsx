@@ -6,8 +6,9 @@ import Row, { RowBetween } from 'components/Row'
 import React, { useState } from 'react'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
-import styled from 'styled-components/macro'
-import { CautionTriangle, ThemedText } from 'theme'
+import styled from 'styled-components'
+import { CautionTriangle, ThemedText } from 'theme/components'
+import { useFormatter } from 'utils/formatNumbers'
 
 import { Input, InputContainer } from '../Input'
 
@@ -22,14 +23,14 @@ const Option = styled(Row)<{ isActive: boolean }>`
   text-align: center;
   gap: 4px;
   border-radius: 12px;
-  background: ${({ isActive, theme }) => (isActive ? theme.backgroundInteractive : 'transparent')};
+  background: ${({ isActive, theme }) => (isActive ? theme.surface3 : 'transparent')};
   pointer-events: ${({ isActive }) => isActive && 'none'};
 `
 
 const Switch = styled(Row)`
   width: auto;
   padding: 4px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
   border-radius: 16px;
 `
 
@@ -37,15 +38,23 @@ const NUMBER_WITH_MAX_TWO_DECIMAL_PLACES = /^(?:\d*\.\d{0,2}|\d+)$/
 const MINIMUM_RECOMMENDED_SLIPPAGE = new Percent(5, 10_000)
 const MAXIMUM_RECOMMENDED_SLIPPAGE = new Percent(1, 100)
 
+function useFormatPercentInput() {
+  const { formatPercent } = useFormatter()
+
+  return (slippage: Percent) => formatPercent(slippage).slice(0, -1) // remove % sign
+}
+
 export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Percent }) {
   const [userSlippageTolerance, setUserSlippageTolerance] = useUserSlippageTolerance()
+  const { formatPercent } = useFormatter()
+  const formatPercentInput = useFormatPercentInput()
 
   // In order to trigger `custom` mode, we need to set `userSlippageTolerance` to a value that is not `auto`.
   // To do so, we use `autoSlippage` value. However, since users are likely to change that value,
   // we render it as a placeholder instead of a value.
   const defaultSlippageInputValue =
     userSlippageTolerance !== SlippageTolerance.Auto && !userSlippageTolerance.equalTo(autoSlippage)
-      ? userSlippageTolerance.toFixed(2)
+      ? formatPercentInput(userSlippageTolerance)
       : ''
 
   // If user has previously entered a custom slippage, we want to show that value in the input field
@@ -101,7 +110,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
       header={
         <Row width="auto">
           <ThemedText.BodySecondary>
-            <Trans>Max slippage</Trans>
+            <Trans>Max. slippage</Trans>
           </ThemedText.BodySecondary>
           <QuestionHelper
             text={
@@ -115,7 +124,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
           {userSlippageTolerance === SlippageTolerance.Auto ? (
             <Trans>Auto</Trans>
           ) : (
-            `${userSlippageTolerance.toFixed(2)}%`
+            formatPercent(userSlippageTolerance)
           )}
         </ThemedText.BodyPrimary>
       }
@@ -149,7 +158,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
         <InputContainer gap="md" error={!!slippageError}>
           <Input
             data-testid="slippage-input"
-            placeholder={autoSlippage.toFixed(2)}
+            placeholder={formatPercentInput(autoSlippage)}
             value={slippageInput}
             onChange={(e) => parseSlippageInput(e.target.value)}
             onBlur={() => {
@@ -164,15 +173,15 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
       {tooLow || tooHigh ? (
         <RowBetween gap="md">
           <CautionTriangle />
-          <ThemedText.Caption color="accentWarning">
+          <ThemedText.BodySmall color="deprecated_accentWarning">
             {tooLow ? (
               <Trans>
-                Slippage below {MINIMUM_RECOMMENDED_SLIPPAGE.toFixed(2)}% may result in a failed transaction
+                Slippage below {formatPercent(MINIMUM_RECOMMENDED_SLIPPAGE)} may result in a failed transaction
               </Trans>
             ) : (
               <Trans>Your transaction may be frontrun and result in an unfavorable trade.</Trans>
             )}
-          </ThemedText.Caption>
+          </ThemedText.BodySmall>
         </RowBetween>
       ) : null}
     </Expand>

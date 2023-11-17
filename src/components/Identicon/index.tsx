@@ -1,13 +1,13 @@
 import jazzicon from '@metamask/jazzicon'
 import useENSAvatar from 'hooks/useENSAvatar'
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const StyledIdenticon = styled.div<{ iconSize: number }>`
   height: ${({ iconSize }) => `${iconSize}px`};
   width: ${({ iconSize }) => `${iconSize}px`};
   border-radius: 50%;
-  background-color: ${({ theme }) => theme.deprecated_bg4};
+  background-color: ${({ theme }) => theme.surface3};
   font-size: initial;
 `
 

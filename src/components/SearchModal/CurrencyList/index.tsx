@@ -1,38 +1,32 @@
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
+import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
-import { Check } from 'react-feather'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
+import { ThemedText } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { useIsUserAddedToken } from '../../../hooks/Tokens'
-import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
-import { ThemedText } from '../../../theme'
+import { TokenFromList } from '../../../state/lists/tokenFromList'
 import Column, { AutoColumn } from '../../Column'
 import CurrencyLogo from '../../Logo/CurrencyLogo'
 import Row, { RowFixed } from '../../Row'
 import { MouseoverTooltip } from '../../Tooltip'
-import { LoadingRows, MenuItem } from '../styleds'
+import { LoadingRows, MenuItem } from '../styled'
 import { scrollbarStyle } from './index.css'
 
 function currencyKey(currency: Currency): string {
   return currency.isToken ? currency.address : 'ETHER'
 }
-
-const CheckIcon = styled(Check)`
-  height: 20px;
-  width: 20px;
-  margin-left: 4px;
-  color: ${({ theme }) => theme.accentAction};
-`
 
 const StyledBalanceText = styled(Text)`
   white-space: nowrap;
@@ -42,15 +36,14 @@ const StyledBalanceText = styled(Text)`
 `
 
 const CurrencyName = styled(Text)`
-  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `
 
 const Tag = styled.div`
-  background-color: ${({ theme }) => theme.deprecated_bg3};
-  color: ${({ theme }) => theme.textSecondary};
+  background-color: ${({ theme }) => theme.surface2};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 14px;
   border-radius: 4px;
   padding: 0.25rem 0.3rem 0.25rem 0.3rem;
@@ -66,12 +59,17 @@ const WarningContainer = styled.div`
   margin-left: 0.3em;
 `
 
-const ListWrapper = styled.div`
-  padding-right: 0.25rem;
-`
-
 function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
-  return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
+  const { formatNumberOrString } = useFormatter()
+
+  return (
+    <StyledBalanceText title={balance.toExact()}>
+      {formatNumberOrString({
+        input: balance.toExact(),
+        type: NumberType.TokenNonTx,
+      })}
+    </StyledBalanceText>
+  )
 }
 
 const TagContainer = styled.div`
@@ -80,7 +78,7 @@ const TagContainer = styled.div`
 `
 
 function TokenTags({ currency }: { currency: Currency }) {
-  if (!(currency instanceof WrappedTokenInfo)) {
+  if (!(currency instanceof TokenFromList)) {
     return null
   }
 
@@ -133,13 +131,15 @@ export function CurrencyRow({
   const warning = currency.isNative ? null : checkWarning(currency.address)
   const isBlockedToken = !!warning && !warning.canProceed
   const blockedTokenOpacity = '0.6'
+  const { data } = useCachedPortfolioBalancesQuery({ account })
+  const portfolioBalanceUsd = data?.portfolios?.[0].tokensTotalDenominatedValue?.value
 
   // only show add or remove buttons if not on selected list
   return (
     <TraceEvent
       events={[BrowserEvent.onClick, BrowserEvent.onKeyPress]}
       name={InterfaceEventName.TOKEN_SELECTED}
-      properties={{ is_imported_by_user: customAdded, ...eventProperties }}
+      properties={{ is_imported_by_user: customAdded, ...eventProperties, total_balances_usd: portfolioBalanceUsd }}
       element={InterfaceElementName.TOKEN_SELECTOR_ROW}
     >
       <MenuItem
@@ -166,26 +166,17 @@ export function CurrencyRow({
               <TokenSafetyIcon warning={warning} />
             </WarningContainer>
           </Row>
-          <ThemedText.DeprecatedDarkGray ml="0px" fontSize="12px" fontWeight={300}>
-            {currency.symbol}
-          </ThemedText.DeprecatedDarkGray>
+          <ThemedText.LabelMicro ml="0px">{currency.symbol}</ThemedText.LabelMicro>
         </AutoColumn>
         <Column>
           <RowFixed style={{ justifySelf: 'flex-end' }}>
             <TokenTags currency={currency} />
           </RowFixed>
         </Column>
-        {showCurrencyAmount ? (
+        {showCurrencyAmount && (
           <RowFixed style={{ justifySelf: 'flex-end' }}>
             {account ? balance ? <Balance balance={balance} /> : <Loader /> : null}
-            {isSelected && <CheckIcon />}
           </RowFixed>
-        ) : (
-          isSelected && (
-            <RowFixed style={{ justifySelf: 'flex-end' }}>
-              <CheckIcon />
-            </RowFixed>
-          )
         )}
       </MenuItem>
     </TraceEvent>
@@ -241,7 +232,7 @@ export default function CurrencyList({
 }: {
   height: number
   currencies: Currency[]
-  otherListTokens?: WrappedTokenInfo[]
+  otherListTokens?: TokenFromList[]
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency, hasWarning?: boolean) => void
   otherCurrency?: Currency | null
@@ -314,7 +305,7 @@ export default function CurrencyList({
   }, [])
 
   return (
-    <ListWrapper data-testid="currency-list-wrapper">
+    <div data-testid="currency-list-wrapper">
       {isLoading ? (
         <FixedSizeList
           className={scrollbarStyle}
@@ -341,6 +332,6 @@ export default function CurrencyList({
           {Row}
         </FixedSizeList>
       )}
-    </ListWrapper>
+    </div>
   )
 }

@@ -1,27 +1,18 @@
 /* eslint-disable import/no-unused-modules */
-import { MetaTagInjector } from '../components/metaTagInjector'
+import { getMetadataRequest } from '../utils/getRequest'
 import getToken from '../utils/getToken'
 
-const convertTokenAddress = (tokenAddress: string) => {
-  return tokenAddress && tokenAddress === 'NATIVE' ? '0x0000000000000000000000000000000000000000' : tokenAddress
-}
-
 export const onRequest: PagesFunction = async ({ params, request, next }) => {
-  const { index } = params
-  const networkName = index[0]?.toString().toUpperCase()
-  const tokenAddress = convertTokenAddress(index[1]?.toString())
-  if (!tokenAddress) {
-    return next()
-  }
-  const tokenPromise = getToken(networkName, tokenAddress, request.url)
-  const resPromise = next()
+  const res = next()
   try {
-    const [data, res] = await Promise.all([tokenPromise, resPromise])
-    if (!data) {
-      return resPromise
+    const { index } = params
+    const networkName = index[0]?.toString()
+    const tokenAddress = index[1]?.toString()
+    if (!tokenAddress) {
+      return res
     }
-    return new HTMLRewriter().on('head', new MetaTagInjector(data)).transform(res)
+    return getMetadataRequest(res, request, () => getToken(networkName, tokenAddress, request.url))
   } catch (e) {
-    return resPromise
+    return res
   }
 }

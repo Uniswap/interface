@@ -16,8 +16,8 @@ import { X } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import { useOrder } from 'state/signatures/hooks'
 import { UniswapXOrderDetails } from 'state/signatures/types'
-import styled from 'styled-components/macro'
-import { ExternalLink, ThemedText } from 'theme'
+import styled from 'styled-components'
+import { ExternalLink, ThemedText } from 'theme/components'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 type SelectedOrderInfo = {
@@ -50,7 +50,7 @@ const StyledXButton = styled(X)`
   cursor: pointer;
   justify-self: flex-end;
 
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   ${OpacityHoverState};
 `
 
@@ -77,11 +77,12 @@ function Loader() {
 }
 
 const Success = styled(AnimatedEntranceConfirmationIcon)`
+  position: relative;
   margin-bottom: 10px;
 `
 
 const LearnMoreLink = styled(ExternalLink)`
-  font-weight: 600;
+  font-weight: 535;
 `
 const DescriptionText = styled(ThemedText.LabelMicro)`
   text-align: center;
@@ -135,11 +136,11 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
           </ThemedText.SubHeaderLarge>
           <Column>
             {amounts && <TradeSummary trade={amounts} />}
-            <ThemedText.Caption paddingTop="48px" textAlign="center">
+            <ThemedText.BodySmall paddingTop="48px" textAlign="center">
               <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
                 <Trans>Learn more about swapping with UniswapX</Trans>
               </ExternalLink>
-            </ThemedText.Caption>
+            </ThemedText.BodySmall>
           </Column>
         </ContentContainer>
       )
@@ -153,13 +154,13 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
           </ThemedText.SubHeaderLarge>
           <Column>
             {amounts && <TradeSummary trade={amounts} />}
-            <ThemedText.Caption paddingTop="48px" textAlign="center">
+            <ThemedText.BodySmall paddingTop="48px" textAlign="center">
               {explorerLink && (
                 <ExternalLink href={explorerLink}>
                   <Trans>View on Explorer</Trans>
                 </ExternalLink>
               )}
-            </ThemedText.Caption>
+            </ThemedText.BodySmall>
           </Column>
         </ContentContainer>
       )
@@ -248,7 +249,7 @@ export function OffchainActivityModal() {
 
   return (
     <Modal isOpen={!!syncedSelectedOrder?.modalOpen} onDismiss={reset}>
-      <Wrapper>
+      <Wrapper data-testid="offchain-activity-modal">
         <StyledXButton onClick={reset} />
         {syncedSelectedOrder && <OrderContent order={syncedSelectedOrder} />}
       </Wrapper>

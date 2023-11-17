@@ -1,19 +1,13 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "esModuleInterop": true,
+    "baseUrl": "functions",
+    "composite": false,
     "incremental": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "noEmit": true,
-    "strict": true,
-    "target": "ES6",
-    "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/functions", // avoid clobbering the build tsbuildinfo
-    "types": ["jest", "node"],
+    "isolatedModules": false,
     "jsx": "react",
-    "moduleResolution": "NodeNext",
+    "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/functions", // avoid clobbering the build tsbuildinfo
+    "types": ["jest", "node", "@cloudflare/workers-types"],
   },
-  "exclude": ["node_modules"],
-  "include": ["**/*.ts"],
-  "watchOptions": {
-    "excludeDirectories": ["node_modules"]
-  }
+  "include": ["**/*.ts", ".ts", "**/*.tsx"],
 }

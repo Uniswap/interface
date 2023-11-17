@@ -6,15 +6,16 @@ import Badge from 'components/Badge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row, { AutoRow } from 'components/Row'
+import { BIPS_BASE } from 'constants/misc'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Box } from 'rebass'
-import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import styled from 'styled-components'
+import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { RoutingDiagramEntry } from 'utils/getRoutingDiagramEntries'
 
 import { ReactComponent as DotLine } from '../../assets/svg/dot_line.svg'
-import { MouseoverTooltip } from '../Tooltip'
+import { MouseoverTooltip, TooltipSize } from '../Tooltip'
 
 const Wrapper = styled(Box)`
   align-items: center;
@@ -50,26 +51,25 @@ const DottedLine = styled.div`
 
 const DotColor = styled(DotLine)`
   path {
-    stroke: ${({ theme }) => theme.deprecated_bg4};
+    stroke: ${({ theme }) => theme.surface3};
   }
 `
 
 const OpaqueBadge = styled(Badge)`
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  background-color: ${({ theme }) => theme.surface2};
   border-radius: 8px;
   display: grid;
-  font-size: 12px;
   grid-gap: 4px;
   grid-auto-flow: column;
   justify-content: start;
-  padding: 4px 6px 4px 4px;
+  padding: 4px 6px;
   z-index: ${Z_INDEX.sticky};
 `
 
 const ProtocolBadge = styled(Badge)`
-  background-color: ${({ theme }) => theme.deprecated_bg3};
+  background-color: ${({ theme }) => theme.surface2};
   border-radius: 4px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 10px;
   padding: 2px 4px;
   z-index: ${Z_INDEX.sticky + 1};
@@ -79,7 +79,7 @@ const MixedProtocolBadge = styled(ProtocolBadge)`
   width: 60px;
 `
 
-const BadgeText = styled(ThemedText.DeprecatedSmall)`
+const BadgeText = styled(ThemedText.LabelMicro)`
   word-break: normal;
 `
 
@@ -117,16 +117,14 @@ function Route({ entry: { percent, path, protocol } }: { entry: RoutingDiagramEn
       <OpaqueBadge>
         {protocol === Protocol.MIXED ? (
           <MixedProtocolBadge>
-            <BadgeText fontSize={12}>V3 + V2</BadgeText>
+            <BadgeText>V3 + V2</BadgeText>
           </MixedProtocolBadge>
         ) : (
           <ProtocolBadge>
-            <BadgeText fontSize={12}>{protocol.toUpperCase()}</BadgeText>
+            <BadgeText color="neutral1">{protocol.toUpperCase()}</BadgeText>
           </ProtocolBadge>
         )}
-        <BadgeText fontSize={14} style={{ minWidth: 'auto' }}>
-          {percent.toSignificant(2)}%
-        </BadgeText>
+        <BadgeText style={{ minWidth: 'auto' }}>{percent.toSignificant(2)}%</BadgeText>
       </OpaqueBadge>
       <AutoRow gap="1px" width="100%" style={{ justifyContent: 'space-evenly', zIndex: 2 }}>
         {path.map(([currency0, currency1, feeAmount], index) => (
@@ -145,12 +143,13 @@ function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; curren
   return (
     <MouseoverTooltip
       text={<Trans>{tokenInfo0?.symbol + '/' + tokenInfo1?.symbol + ' ' + feeAmount / 10000}% pool</Trans>}
+      size={TooltipSize.ExtraSmall}
     >
       <PoolBadge>
         <Box margin="0 4px 0 12px">
           <DoubleCurrencyLogo currency0={tokenInfo1} currency1={tokenInfo0} size={20} />
         </Box>
-        <ThemedText.DeprecatedSmall fontSize={14}>{feeAmount / 10000}%</ThemedText.DeprecatedSmall>
+        <BadgeText>{feeAmount / BIPS_BASE}%</BadgeText>
       </PoolBadge>
     </MouseoverTooltip>
   )

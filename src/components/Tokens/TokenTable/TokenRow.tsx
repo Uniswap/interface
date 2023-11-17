@@ -1,20 +1,24 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName } from '@uniswap/analytics-events'
-import { formatNumber, formatUSDPrice, NumberType } from '@uniswap/conedison/format'
 import { ParentSize } from '@visx/responsive'
+import { sendAnalyticsEvent } from 'analytics'
 import SparklineChart from 'components/Charts/SparklineChart'
+import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
+import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
+import { Info } from 'components/Icons/Info'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { getTokenDetailsURL, supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
-import { ArrowDown, ArrowUp, Info } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
-import styled, { css, useTheme } from 'styled-components/macro'
-import { ClickableStyle } from 'theme'
+import styled, { css, useTheme } from 'styled-components'
+import { BREAKPOINTS } from 'theme'
+import { ClickableStyle } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -31,7 +35,7 @@ import {
   TokenSortMethod,
   useSetSortMethod,
 } from '../state'
-import { ArrowCell, DeltaText, formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
+import { DeltaArrow, DeltaText } from '../TokenDetails/Delta'
 
 const Cell = styled.div`
   display: flex;
@@ -69,7 +73,7 @@ const StyledTokenRow = styled.div<{
     ${({ $loading, theme }) =>
       !$loading &&
       css`
-        background-color: ${theme.hoverDefault};
+        background-color: ${theme.deprecated_hoverDefault};
       `}
     ${({ last }) =>
       last &&
@@ -93,7 +97,7 @@ const StyledTokenRow = styled.div<{
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     grid-template-columns: 2fr 3fr;
     min-width: unset;
-    border-bottom: 0.5px solid ${({ theme }) => theme.backgroundModule};
+    border-bottom: 0.5px solid ${({ theme }) => theme.surface2};
 
     :last-of-type {
       border-bottom: none;
@@ -101,22 +105,23 @@ const StyledTokenRow = styled.div<{
   }
 `
 
-const ClickableContent = styled.div`
+const ClickableContent = styled.div<{ gap?: number }>`
   display: flex;
+  ${({ gap }) => gap && `gap: ${gap}px`};
   text-decoration: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   align-items: center;
   cursor: pointer;
 `
 const ClickableName = styled(ClickableContent)`
-  gap: 8px;
+  gap: 14px;
   max-width: 100%;
 `
 const StyledHeaderRow = styled(StyledTokenRow)`
   border-bottom: 1px solid;
-  border-color: ${({ theme }) => theme.backgroundOutline};
+  border-color: ${({ theme }) => theme.surface3};
   border-radius: 8px 8px 0px 0px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 14px;
   height: 48px;
   line-height: 16px;
@@ -134,7 +139,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
 `
 
 const ListNumberCell = styled(Cell)<{ header: boolean }>`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   min-width: 32px;
   font-size: 14px;
 
@@ -163,6 +168,10 @@ const NameCell = styled(Cell)`
   padding: 0px 8px;
   min-width: 240px;
   gap: 8px;
+
+  @media only screen and (max-width: ${BREAKPOINTS.xs}px) {
+    min-width: 200px;
+  }
 `
 const PriceCell = styled(DataCell)`
   padding-right: 8px;
@@ -178,8 +187,9 @@ const PercentChangeInfoCell = styled(Cell)`
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: flex;
+    gap: 3px;
     justify-content: flex-end;
-    color: ${({ theme }) => theme.textSecondary};
+    color: ${({ theme }) => theme.neutral2};
     font-size: 12px;
     line-height: 16px;
   }
@@ -235,7 +245,7 @@ const TokenInfoCell = styled(Cell)`
     flex-direction: column;
     gap: 0px;
     width: max-content;
-    font-weight: 500;
+    font-weight: 535;
   }
 `
 const TokenName = styled.div`
@@ -245,7 +255,7 @@ const TokenName = styled.div`
   max-width: 100%;
 `
 const TokenSymbol = styled(Cell)`
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.neutral2};
   text-transform: uppercase;
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -279,6 +289,7 @@ export const SparkLineLoadingBubble = styled(LongLoadingBubble)`
 `
 
 const InfoIconContainer = styled.div`
+  width: 16px;
   margin-left: 2px;
   display: flex;
   align-items: center;
@@ -291,6 +302,12 @@ export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined>
   [TokenSortMethod.TOTAL_VALUE_LOCKED]: (
     <Trans>
       Total value locked (TVL) is the aggregate amount of the asset available across all Uniswap v3 liquidity pools.
+    </Trans>
+  ),
+  [TokenSortMethod.FULLY_DILUTED_VALUATION]: (
+    <Trans>
+      Fully diluted valuation (FDV) is the market capitalization of an asset if maximum token supply were in
+      circulation.
     </Trans>
   ),
   [TokenSortMethod.VOLUME]: (
@@ -316,9 +333,9 @@ function HeaderCell({
       {sortMethod === category && (
         <>
           {sortAscending ? (
-            <ArrowUp size={20} strokeWidth={1.8} color={theme.accentActive} />
+            <ArrowChangeUp width={16} height={16} color={theme.neutral2} />
           ) : (
-            <ArrowDown size={20} strokeWidth={1.8} color={theme.accentActive} />
+            <ArrowChangeDown width={16} height={16} color={theme.neutral2} />
           )}
         </>
       )}
@@ -326,7 +343,7 @@ function HeaderCell({
       {description && (
         <MouseoverTooltip text={description} placement="right">
           <InfoIconContainer>
-            <Info size={14} />
+            <Info width="16px" height="16px" />
           </InfoIconContainer>
         </MouseoverTooltip>
       )}
@@ -431,6 +448,8 @@ interface LoadedRowProps {
 
 /* Loaded State: row component with token information */
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
+  const { formatFiatPrice, formatNumber, formatDelta } = useFormatter()
+
   const { tokenListIndex, tokenListLength, token, sortRank } = props
   const filterString = useAtomValue(filterStringAtom)
 
@@ -438,8 +457,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const chainId = supportedChainIdFromGQLChain(filterNetwork)
   const timePeriod = useAtomValue(filterTimeAtom)
   const delta = token.market?.pricePercentChange?.value
-  const arrow = getDeltaArrow(delta)
-  const smallArrow = getDeltaArrow(delta, 14)
   const formattedDelta = formatDelta(delta)
 
   const exploreTokenSelectedEventProperties = {
@@ -454,13 +471,15 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   }
 
   // A simple 0 price indicates the price is not currently available from the api
-  const price = token.market?.price?.value === 0 ? '-' : formatUSDPrice(token.market?.price?.value)
+  const price = token.market?.price?.value === 0 ? '-' : formatFiatPrice({ price: token.market?.price?.value })
+
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <div ref={ref} data-testid={`token-table-row-${token.address}`}>
       <StyledLink
-        to={getTokenDetailsURL(token)}
+        to={getTokenDetailsURL({ ...token, isInfoExplorePageEnabled })}
         onClick={() =>
           sendAnalyticsEvent(InterfaceEventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)
         }
@@ -470,7 +489,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           listNumber={sortRank}
           tokenInfo={
             <ClickableName>
-              <QueryTokenLogo token={token} />
+              <QueryTokenLogo token={token} size="32px" />
               <TokenInfoCell>
                 <TokenName data-cy="token-name">{token.name}</TokenName>
                 <TokenSymbol>{token.symbol}</TokenSymbol>
@@ -482,25 +501,33 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <PriceInfoCell>
                 {price}
                 <PercentChangeInfoCell>
-                  <ArrowCell>{smallArrow}</ArrowCell>
+                  <DeltaArrow delta={delta} size={14} />
                   <DeltaText delta={delta}>{formattedDelta}</DeltaText>
                 </PercentChangeInfoCell>
               </PriceInfoCell>
             </ClickableContent>
           }
           percentChange={
-            <ClickableContent>
-              <ArrowCell>{arrow}</ArrowCell>
+            <ClickableContent gap={3}>
+              <DeltaArrow delta={delta} />
               <DeltaText delta={delta}>{formattedDelta}</DeltaText>
             </ClickableContent>
           }
           tvl={
             <ClickableContent>
-              {formatNumber(token.market?.totalValueLocked?.value, NumberType.FiatTokenStats)}
+              {formatNumber({
+                input: token.market?.totalValueLocked?.value,
+                type: NumberType.FiatTokenStats,
+              })}
             </ClickableContent>
           }
           volume={
-            <ClickableContent>{formatNumber(token.market?.volume?.value, NumberType.FiatTokenStats)}</ClickableContent>
+            <ClickableContent>
+              {formatNumber({
+                input: token.market?.volume?.value,
+                type: NumberType.FiatTokenStats,
+              })}
+            </ClickableContent>
           }
           sparkLine={
             <SparkLine>

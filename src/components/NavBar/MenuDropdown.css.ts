@@ -17,7 +17,7 @@ export const hover = style([
 export const MenuRow = style([
   hover,
   sprinkles({
-    color: 'textPrimary',
+    color: 'neutral1',
     paddingY: '8',
     paddingX: '8',
     width: 'full',
@@ -26,6 +26,7 @@ export const MenuRow = style([
   {
     lineHeight: '24px',
     textDecoration: 'none',
+    alignItems: 'flex-start',
   },
 ])
 
@@ -40,7 +41,7 @@ export const SecondaryText = style([
   sprinkles({
     paddingY: '8',
     paddingX: '8',
-    color: 'textSecondary',
+    color: 'neutral2',
     width: 'full',
   }),
   {
@@ -55,7 +56,7 @@ export const Separator = style([
   }),
   {
     borderTop: 'solid',
-    borderColor: themeVars.colors.backgroundOutline,
+    borderColor: themeVars.colors.surface3,
     borderWidth: '1px',
   },
 ])
