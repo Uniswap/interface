@@ -13,7 +13,7 @@ export function DirectToDefi() {
     threshold: 0,
   })
   return (
-    <Box direction="column" align="center" padding="0 24px">
+    <SectionLayout>
       <SectionCol direction="column" gap="48px" maxWidth="1328px">
         <H2>Go direct to DeFi</H2>
         <Box direction="column" gap="24px">
@@ -27,9 +27,22 @@ export function DirectToDefi() {
           </RowToCol>
         </Box>
       </SectionCol>
-    </Box>
+    </SectionLayout>
   )
 }
+
+const SectionLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 24px;
+  @media (max-width: 768px) {
+    padding: 0 64px;
+  }
+  @media (max-width: 468px) {
+    padding: 0 24px;
+  }
+`
 
 const RowToCol = styled(Box)`
   height: auto;

@@ -30,10 +30,10 @@ export default function ValuePropCard(props: ValuePropCardProps & BoxProps) {
       minHeight={minHeight}
       {...props}
     >
-      <Box direction="column" padding="32px" gap="24px">
+      <Inner>
         {props.button}
         <Title color={textColor}>{props.titleText}</Title>
-      </Box>
+      </Inner>
       {props.children}
     </Container>
   )
@@ -52,6 +52,24 @@ const Container = motion(styled(Box)<ValuePropCardProps & BoxProps>`
     min-height: ${(props) => props.minHeight || '240px'};
 `)
 
+const Inner = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  gap: 24px;
+  padding: 32px;
+  @media (max-width: 1024px) {
+    gap: 16px;
+    padding: 24px;
+  }
+  @media (max-width: 768px) {
+    gap: 16px;
+    padding: 24px;
+  }
+`
+
 const Title = styled.div`
   color: ${(props) => props.color};
   font-feature-settings: 'ss07' on;
@@ -61,6 +79,10 @@ const Title = styled.div`
   font-weight: 500;
   line-height: 44px; /* 122.222% */
   white-space: pre-line;
+  @media (max-width: 1024px) {
+    font-size: 28px;
+    line-height: 32px;
+  }
   @media (max-width: 768px) {
     font-size: 24px;
     line-height: 32px;

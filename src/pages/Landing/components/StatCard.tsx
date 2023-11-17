@@ -1,8 +1,6 @@
 import { motion } from 'framer-motion'
 import styled from 'styled-components'
 
-import { H3 } from './Generics'
-
 type StatCardProps = {
   title: string
   value: string
@@ -44,9 +42,7 @@ function StringInterpolationWithMotion({ prefix, suffix, value, delay, inView })
     <Mask
       initial="initial"
       animate={inView ? 'animate' : 'initial'}
-      // whileInView="animate"
       transition={{ staggerChildren: 0.025, delayChildren: delay }}
-      // viewport={{ once: true }}
     >
       {chars.map((char: string, index: number) => {
         // select charset based on char
@@ -61,8 +57,8 @@ function StringInterpolationWithMotion({ prefix, suffix, value, delay, inView })
         return <NumberSprite char={char} key={index} charset={charset} />
       })}
 
-      <TopGradient />
-      <BottomGradient />
+      {/* <TopGradient />
+      <BottomGradient /> */}
     </Mask>
   )
 }
@@ -136,19 +132,18 @@ const BottomGradient = styled.div`
   background: linear-gradient(0deg, ${({ theme }) => theme.surface2} 20%, rgba(0, 0, 0, 0) 100%);
 `
 
-const Mask = motion(styled.span`
+const Mask = motion(styled.div`
   position: relative;
-  padding-top: 28px;
-  padding-bottom: 28px;
   display: flex;
-  height: 116px;
-  max-height: 180px;
+  flex: 0;
+  min-height: 52px;
   width: 100%;
   overflow: hidden;
+  @media (max-width: 1024px) {
+    min-height: 40px;
+  }
   @media (max-width: 768px) {
-    padding-top: 16px;
-    padding-bottom: 16px;
-    height: 92px;
+    min-height: 32px;
   }
 `)
 
@@ -159,9 +154,14 @@ const Char = motion(styled.div`
   font-style: normal;
   font-weight: 500;
   color: ${({ theme }) => theme.neutral1};
-  line-height: 32px; /* 115.385% */
+  line-height: 52px;
+  @media (max-width: 1024px) {
+    font-size: 40px;
+    line-height: 40px;
+  }
   @media (max-width: 768px) {
-    font-size: 24px;
+    font-size: 32px;
+    line-height: 32px;
   }
 `)
 
@@ -170,19 +170,20 @@ const Container = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  position: relative;
   border-radius: 20px;
-  padding-left: 32px;
-  padding-right: 32px;
-  padding-top: 28px;
-  padding-bottom: 0;
+
   width: 100%;
   height: 100%;
+
+  padding: 32px;
+
   background-color: ${({ theme }) => theme.surface2};
   overflow: hidden;
+
+  @media (max-width: 1024px) {
+    padding: 24px;
+  }
   @media (max-width: 768px) {
-    padding: 16px;
-    padding-bottom: 0px;
   }
 `
 
@@ -193,10 +194,21 @@ const SpriteContainer = motion(styled.div`
   color: ${({ theme }) => theme.neutral2};
 `)
 
-const Title = styled(H3)`
+const Title = styled.h3`
+  padding: 0;
+  margin: 0;
+  font-family: Basel;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 32px; /* 133.333% */
   color: ${({ theme }) => theme.neutral2};
+  @media (max-width: 1024px) {
+    font-size: 20px;
+    line-height: 26px;
+  }
   @media (max-width: 768px) {
-    font-size: 16px;
-    line-height: 24px;
+    font-size: 20px;
+    line-height: 20px;
   }
 `

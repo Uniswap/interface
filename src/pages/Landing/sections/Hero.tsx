@@ -81,6 +81,7 @@ const LandingSwapContainer = styled(Box)`
   width: 464px;
   padding: 0px 16px;
   @media (max-width: 768px) {
+    max-width: 464px;
     width: 100%;
   }
 `

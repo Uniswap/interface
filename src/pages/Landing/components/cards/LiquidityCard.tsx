@@ -1,6 +1,7 @@
+import Rive, { Alignment, Fit, Layout } from '@rive-app/react-canvas'
 import styled from 'styled-components'
 
-import { CodeBrackets } from '../Icons'
+import { Bars } from '../Icons'
 import { PillButton } from './PillButton'
 import ValuePropCard from './ValuePropCard'
 
@@ -20,12 +21,23 @@ export function LiquidityCard(props: LiquidityCardProps) {
       isDarkMode={props.isDarkMode}
       textColor={primary}
       backgroundColor={{ dark: 'rgba(164, 87, 255, 0.15)', light: 'rgba(164, 87, 255, 0.15)' }}
-      button={<PillButton color={primary} label="Liquidity" icon={<CodeBrackets size="24px" fill={primary} />} />}
+      button={<PillButton color={primary} label="Liquidity" icon={<Bars size="24px" fill={primary} />} />}
       titleText="Provide liquidity to pools on the Uniswap protocol and earn fees on swaps."
       paddingRight="15%"
     >
       <Contents>
-        <Svg />
+        <Rive
+          style={{ width: '500px', height: '100%' }}
+          src="/rive/landingPageAnimations.riv"
+          artboard="LP"
+          animations="HoverAnimation"
+          layout={
+            new Layout({
+              fit: Fit.Contain,
+              alignment: Alignment.CenterRight,
+            })
+          }
+        />
       </Contents>
     </ValuePropCard>
   )

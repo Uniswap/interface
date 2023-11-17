@@ -25,7 +25,7 @@ export const H2 = styled.h2`
   font-style: normal;
   font-weight: 500;
   line-height: 60px; /* 115.385% */
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     font-size: 36px;
   }
 `
