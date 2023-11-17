@@ -18,7 +18,13 @@ const getTitle = (tokenQuery: ReturnType<typeof useTokenQuery>['data']) => {
   if (!tokenName && !tokenSymbol) {
     return 'Buy & Trade: Live Price & Chart on Uniswap'
   }
-  return `Buy & Trade ${tokenName ?? ''} ${tokenSymbol ? `(${tokenSymbol})` : ''}: Live Price & Chart on Uniswap`
+  if (!tokenName && tokenSymbol) {
+    return `Buy & Trade ${tokenSymbol}: Live Price & Chart on Uniswap`
+  }
+  if (tokenName && !tokenSymbol) {
+    return `Buy & Trade ${tokenName}: Live Price & Chart on Uniswap`
+  }
+  return `Buy & Trade ${tokenName} (${tokenSymbol}) : Live Price & Chart on Uniswap`
 }
 
 export default function TokenDetailsPage() {
