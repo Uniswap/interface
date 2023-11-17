@@ -18,6 +18,7 @@ import { sendExtensionAnalyticsEvent } from 'src/app/features/telemetry'
 import { ExtensionEventName } from 'src/app/features/telemetry/constants'
 import { TransferFlowScreen } from 'src/app/features/transfer/TransferFlowScreen'
 import { AppRoutes, SettingsRoutes, SettingsWalletRoutes } from 'src/app/navigation/constants'
+import { DappContextProvider } from 'src/background/features/dapp/DappContext'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 import { uniswapUrls } from 'wallet/src/constants/urls'
@@ -90,11 +91,13 @@ function App({ store }: { store: Store }): JSX.Element {
         <GraphqlProvider>
           <LocalizationContextProvider>
             <TraceUserProperties />
-            <ToastProvider>
-              <RouterProvider router={router} />
-              <ToastViewport bottom={0} flexDirection="column" left={0} name="popup" right={0} />
-              <BottomToast />
-            </ToastProvider>
+            <DappContextProvider>
+              <ToastProvider>
+                <RouterProvider router={router} />
+                <ToastViewport bottom={0} flexDirection="column" left={0} name="popup" right={0} />
+                <BottomToast />
+              </ToastProvider>
+            </DappContextProvider>
           </LocalizationContextProvider>
         </GraphqlProvider>
       </SharedProvider>

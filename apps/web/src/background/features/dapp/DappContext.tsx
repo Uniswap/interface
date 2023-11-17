@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import { selectDappConnectedAddresses } from 'src/background/features/dapp/selectors'
 import { extractBaseUrl } from 'src/background/features/dappRequests/utils'
 import { useAppSelector } from 'src/background/store'
@@ -6,30 +6,24 @@ import { isValidMessage } from 'src/background/utils/messageUtils'
 import { BackgroundToExtensionRequestType } from 'src/types/requests'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
-type DappContext = {
+type DappContextState = {
   dappUrl: string
   dappName: string
   dappIconUrl?: string
+  isConnected: boolean
 }
 
-/** Hook to indicate whether the current dapp is connected to the active address. */
-export function useIsDappConnected(): boolean {
-  const { dappUrl } = useDappContext()
-  const activeAddress = useActiveAccountAddress()
+const DappContext = createContext<DappContextState | undefined>(undefined)
 
-  const connectedAddresses = useAppSelector(selectDappConnectedAddresses(dappUrl)) || []
-
-  return !!activeAddress && connectedAddresses.includes(activeAddress)
-}
-
-/**
- * Hook used to get the dApp context. It updates whenever the current tab changes
- * TODO(EXT-358): turn this into a react context so there is just one instance of the message handler
- **/
-export function useDappContext(): DappContext {
+export function DappContextProvider({ children }: { children: ReactNode }): JSX.Element {
   const [dappUrl, setDappUrl] = useState('')
   const [dappName, setDappName] = useState('')
   const [dappIconUrl, setDappIconUrl] = useState<string | undefined>(undefined)
+
+  const activeAddress = useActiveAccountAddress()
+  const connectedAddresses = useAppSelector(selectDappConnectedAddresses(dappUrl)) || []
+
+  const isConnected = !!activeAddress && connectedAddresses.includes(activeAddress)
 
   useEffect(() => {
     const updateDappInfo = (): void => {
@@ -64,5 +58,17 @@ export function useDappContext(): DappContext {
     return () => chrome.runtime.onMessage.removeListener(tabChangedHandler)
   }, [setDappIconUrl, setDappUrl, setDappName])
 
-  return { dappUrl, dappName, dappIconUrl }
+  const value = { dappUrl, dappName, dappIconUrl, isConnected }
+
+  return <DappContext.Provider value={value}>{children}</DappContext.Provider>
+}
+
+export function useDappContext(): DappContextState {
+  const context = useContext(DappContext)
+
+  if (context === undefined) {
+    throw new Error('useDappContext must be used within a DappContextProvider')
+  }
+
+  return context
 }

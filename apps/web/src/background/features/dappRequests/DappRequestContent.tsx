@@ -1,5 +1,5 @@
 import { ethErrors } from 'eth-rpc-errors'
-import { useDappContext } from 'src/background/features/dapp/hooks'
+import { useDappContext } from 'src/background/features/dapp/DappContext'
 import { selectDappChainId } from 'src/background/features/dapp/selectors'
 import { AddressFooter } from 'src/background/features/dappRequests/requestContent/AddressFooter'
 import { useAppDispatch, useAppSelector } from 'src/background/store'

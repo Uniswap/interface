@@ -1,4 +1,4 @@
-import { useDappContext } from 'src/background/features/dapp/hooks'
+import { useDappContext } from 'src/background/features/dapp/DappContext'
 import { saveDappConnection } from 'src/background/features/dapp/slice'
 import { Anchor, Button, Flex, FlexProps, Icons, Popover, Text, TouchableArea } from 'ui/src'
 import { fonts } from 'ui/src/theme'
