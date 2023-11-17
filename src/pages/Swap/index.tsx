@@ -355,13 +355,13 @@ export function Swap({
   const preTaxFiatValueTradeOutput = useUSDPrice(trade?.outputAmount)
   const [stablecoinPriceImpact, preTaxStablecoinPriceImpact] = useMemo(
     () =>
-      routeIsSyncing || !isClassicTrade(trade)
+      routeIsSyncing || !isClassicTrade(trade) || showWrap
         ? [undefined, undefined]
         : [
             computeFiatValuePriceImpact(fiatValueTradeInput.data, fiatValueTradeOutput.data),
             computeFiatValuePriceImpact(fiatValueTradeInput.data, preTaxFiatValueTradeOutput.data),
           ],
-    [fiatValueTradeInput, fiatValueTradeOutput, preTaxFiatValueTradeOutput, routeIsSyncing, trade]
+    [fiatValueTradeInput, fiatValueTradeOutput, preTaxFiatValueTradeOutput, routeIsSyncing, trade, showWrap]
   )
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers(dispatch)
