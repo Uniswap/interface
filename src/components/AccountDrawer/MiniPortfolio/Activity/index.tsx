@@ -1,8 +1,10 @@
 import { useAccountDrawer } from 'components/AccountDrawer'
+import { hideSpamAtom } from 'components/AccountDrawer/SpamToggle'
 import Column from 'components/Column'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { PollingInterval } from 'graphql/data/util'
 import { atom, useAtom } from 'jotai'
+import { useAtomValue } from 'jotai/utils'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
@@ -23,6 +25,7 @@ const lastFetchedAtom = atom<number | undefined>(0)
 export function ActivityTab({ account }: { account: string }) {
   const [drawerOpen, toggleWalletDrawer] = useAccountDrawer()
   const [lastFetched, setLastFetched] = useAtom(lastFetchedAtom)
+  const hideSpam = useAtomValue(hideSpamAtom)
 
   const { activities, loading, refetch } = useAllActivities(account)
 
@@ -58,7 +61,7 @@ export function ActivityTab({ account }: { account: string }) {
             </ThemedText.SubHeader>
             <Column data-testid="activity-content">
               {activityGroup.transactions.map(
-                (activity) => !activity.isSpam && <ActivityRow key={activity.hash} activity={activity} />
+                (activity) => !(hideSpam && activity.isSpam) && <ActivityRow key={activity.hash} activity={activity} />
               )}
             </Column>
           </ActivityGroupWrapper>

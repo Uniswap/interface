@@ -1,6 +1,6 @@
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { TraceEvent } from 'analytics'
-import { hideSpamAtom } from 'components/AccountDrawer/HideSpamToggle'
+import { hideSpamAtom } from 'components/AccountDrawer/SpamToggle'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import Row from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'

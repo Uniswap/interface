@@ -6,7 +6,7 @@ import { SettingsToggle } from './SettingsToggle'
 
 export const hideSpamAtom = atomWithStorage<boolean>('hideSmallBalances', true)
 
-export function HideSpamToggle() {
+export function SpamToggle() {
   const [hideSpam, updateHideSpam] = useAtom(hideSpamAtom)
 
   return (
