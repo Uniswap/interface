@@ -1,5 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`parseRemote parseRemoteActivities should parse NFT Mint 1`] = `
+Object {
+  "chainId": 1,
+  "descriptor": "1 SomeCollectionName",
+  "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
+  "hash": "someHash",
+  "isSpam": false,
+  "logos": Array [
+    "imageUrl",
+  ],
+  "nonce": 12345,
+  "status": "CONFIRMED",
+  "timestamp": 10000,
+  "title": "Minted",
+}
+`;
+
 exports[`parseRemote parseRemoteActivities should parse NFT approval 1`] = `
 Object {
   "chainId": 1,
@@ -46,23 +63,6 @@ Object {
   "status": "CONFIRMED",
   "timestamp": 10000,
   "title": "Received",
-}
-`;
-
-exports[`parseRemote parseRemoteActivities should parse NFT transfer 1`] = `
-Object {
-  "chainId": 1,
-  "descriptor": "1 SomeCollectionName",
-  "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
-  "hash": "someHash",
-  "isSpam": false,
-  "logos": Array [
-    "imageUrl",
-  ],
-  "nonce": 12345,
-  "status": "CONFIRMED",
-  "timestamp": 10000,
-  "title": "Minted",
 }
 `;
 

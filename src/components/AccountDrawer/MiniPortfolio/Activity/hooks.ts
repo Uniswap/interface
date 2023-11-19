@@ -65,8 +65,8 @@ export function useAllActivities(account: string) {
 
   const localMap = useLocalActivities(account)
   const remoteMap = useMemo(
-    () => parseRemoteActivities(formatNumberOrString, data?.portfolios?.[0].assetActivities),
-    [data?.portfolios, formatNumberOrString]
+    () => parseRemoteActivities(data?.portfolios?.[0].assetActivities, account, formatNumberOrString),
+    [account, data?.portfolios, formatNumberOrString]
   )
   const updateCancelledTx = useTransactionCanceller()
 

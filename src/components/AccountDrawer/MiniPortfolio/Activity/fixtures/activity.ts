@@ -4,9 +4,14 @@ import {
   AssetActivityPartsFragment,
   Chain,
   Currency,
+  NftApprovalPartsFragment,
+  NftApproveForAllPartsFragment,
   NftStandard,
+  NftTransferPartsFragment,
   SwapOrderStatus,
+  TokenApprovalPartsFragment,
   TokenStandard,
+  TokenTransferPartsFragment,
   TransactionDirection,
   TransactionStatus,
   TransactionType,
@@ -16,7 +21,7 @@ import { MOONPAY_SENDER_ADDRESSES } from '../../constants'
 
 const MockOrderTimestamp = 10000
 const MockRecipientAddress = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
-const MockSenderAddress = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
+export const MockSenderAddress = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
 
 const mockAssetActivityPartsFragment = {
   __typename: 'AssetActivity',
@@ -96,7 +101,7 @@ const mockSwapOrderDetailsPartsFragment = {
   },
 }
 
-const mockNftApprovalPartsFragment = {
+const mockNftApprovalPartsFragment: NftApprovalPartsFragment = {
   __typename: 'NftApproval',
   id: 'approvalId',
   nftStandard: NftStandard.Erc721, // Replace with actual enum value
@@ -125,7 +130,7 @@ const mockNftApprovalPartsFragment = {
   },
 }
 
-const mockNftApproveForAllPartsFragment = {
+const mockNftApproveForAllPartsFragment: NftApproveForAllPartsFragment = {
   __typename: 'NftApproveForAll',
   id: 'approveForAllId',
   nftStandard: NftStandard.Erc721, // Replace with actual enum value
@@ -155,7 +160,7 @@ const mockNftApproveForAllPartsFragment = {
   },
 }
 
-const mockNftTransferPartsFragment = {
+const mockNftTransferPartsFragment: NftTransferPartsFragment = {
   __typename: 'NftTransfer',
   id: 'transferId',
   nftStandard: NftStandard.Erc721,
@@ -186,7 +191,15 @@ const mockNftTransferPartsFragment = {
   },
 }
 
-const mockTokenTransferOutPartsFragment = {
+const mockSpamNftTransferPartsFragment: NftTransferPartsFragment = {
+  ...mockNftTransferPartsFragment,
+  asset: {
+    ...mockNftTransferPartsFragment.asset,
+    isSpam: true,
+  },
+}
+
+const mockTokenTransferOutPartsFragment: TokenTransferPartsFragment = {
   __typename: 'TokenTransfer',
   id: 'tokenTransferId',
   tokenStandard: TokenStandard.Erc20,
@@ -222,7 +235,7 @@ const mockTokenTransferOutPartsFragment = {
   },
 }
 
-const mockNativeTokenTransferOutPartsFragment = {
+const mockNativeTokenTransferOutPartsFragment: TokenTransferPartsFragment = {
   __typename: 'TokenTransfer',
   id: 'tokenTransferId',
   asset: {
@@ -230,10 +243,10 @@ const mockNativeTokenTransferOutPartsFragment = {
     id: 'ETH',
     name: 'Ether',
     symbol: 'ETH',
-    address: null,
+    address: undefined,
     decimals: 18,
-    chain: 'ETHEREUM',
-    standard: null,
+    chain: Chain.Ethereum,
+    standard: TokenStandard.Native,
     project: {
       __typename: 'TokenProject',
       id: 'Ethereum',
@@ -245,20 +258,20 @@ const mockNativeTokenTransferOutPartsFragment = {
       },
     },
   },
-  tokenStandard: 'NATIVE',
+  tokenStandard: TokenStandard.Native,
   quantity: '0.25',
   sender: MockSenderAddress,
   recipient: MockRecipientAddress,
-  direction: 'OUT',
+  direction: TransactionDirection.Out,
   transactedValue: {
     __typename: 'Amount',
     id: 'ETH_amount',
-    currency: 'USD',
+    currency: Currency.Usd,
     value: 399.0225,
   },
 }
 
-const mockWrappedEthTransferInPartsFragment = {
+const mockWrappedEthTransferInPartsFragment: TokenTransferPartsFragment = {
   __typename: 'TokenTransfer',
   id: 'tokenTransferId',
   asset: {
@@ -268,8 +281,8 @@ const mockWrappedEthTransferInPartsFragment = {
     symbol: 'WETH',
     address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
     decimals: 18,
-    chain: 'ETHEREUM',
-    standard: 'ERC20',
+    chain: Chain.Ethereum,
+    standard: TokenStandard.Erc20,
     project: {
       __typename: 'TokenProject',
       id: 'weth_project_id',
@@ -281,20 +294,20 @@ const mockWrappedEthTransferInPartsFragment = {
       },
     },
   },
-  tokenStandard: 'ERC20',
+  tokenStandard: TokenStandard.Erc20,
   quantity: '0.25',
   sender: MockSenderAddress,
   recipient: MockRecipientAddress,
-  direction: 'IN',
+  direction: TransactionDirection.In,
   transactedValue: {
     __typename: 'Amount',
     id: 'mockWethAmountId',
-    currency: 'USD',
+    currency: Currency.Usd,
     value: 399.1334007875,
   },
 }
 
-const mockTokenTransferInPartsFragment = {
+const mockTokenTransferInPartsFragment: TokenTransferPartsFragment = {
   __typename: 'TokenTransfer',
   id: 'tokenTransferId',
   tokenStandard: TokenStandard.Erc20,
@@ -330,7 +343,19 @@ const mockTokenTransferInPartsFragment = {
   },
 }
 
-const mockTokenApprovalPartsFragment = {
+const mockSpamTokenTransferInPartsFragment: TokenTransferPartsFragment = {
+  ...mockTokenTransferInPartsFragment,
+  asset: {
+    ...mockTokenTransferInPartsFragment.asset,
+    project: {
+      ...mockTokenTransferInPartsFragment.asset.project,
+      id: WETH9[1].address,
+      isSpam: true,
+    },
+  },
+}
+
+const mockTokenApprovalPartsFragment: TokenApprovalPartsFragment = {
   __typename: 'TokenApproval',
   id: 'tokenApprovalId',
   tokenStandard: TokenStandard.Erc20,
@@ -399,7 +424,7 @@ export const MockNFTApprovalForAll = {
   },
 } as AssetActivityPartsFragment
 
-export const MockNFTTransfer = {
+export const MockMint = {
   ...mockAssetActivityPartsFragment,
   details: {
     ...commonTransactionDetailsFields,
@@ -408,12 +433,28 @@ export const MockNFTTransfer = {
   },
 } as AssetActivityPartsFragment
 
-export const MockTokenTransfer = {
+export const MockSpamMint = {
+  ...MockMint,
+  details: {
+    ...MockMint.details,
+    assetChanges: [mockSpamNftTransferPartsFragment],
+  },
+} as AssetActivityPartsFragment
+
+export const MockSwap = {
   ...mockAssetActivityPartsFragment,
   details: {
     ...commonTransactionDetailsFields,
     type: TransactionType.Swap,
     assetChanges: [mockTokenTransferOutPartsFragment, mockTokenTransferInPartsFragment],
+  },
+} as AssetActivityPartsFragment
+
+export const MockSpamSwap = {
+  ...MockSwap,
+  details: {
+    ...MockSwap.details,
+    assetChanges: [mockTokenTransferOutPartsFragment, mockSpamTokenTransferInPartsFragment],
   },
 } as AssetActivityPartsFragment
 

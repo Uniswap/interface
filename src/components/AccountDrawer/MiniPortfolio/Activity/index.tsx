@@ -57,9 +57,9 @@ export function ActivityTab({ account }: { account: string }) {
               {activityGroup.title}
             </ThemedText.SubHeader>
             <Column data-testid="activity-content">
-              {activityGroup.transactions.map((activity) => (
-                <ActivityRow key={activity.hash} activity={activity} />
-              ))}
+              {activityGroup.transactions.map(
+                (activity) => !activity.isSpam && <ActivityRow key={activity.hash} activity={activity} />
+              )}
             </Column>
           </ActivityGroupWrapper>
         ))}

@@ -1,6 +1,7 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
 import Toggle from 'components/Toggle'
+import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 
@@ -10,7 +11,7 @@ const StyledColumn = styled(Column)`
 `
 
 interface SettingsToggleProps {
-  title: string
+  title: ReactNode
   description?: string
   dataid?: string
   isActive: boolean

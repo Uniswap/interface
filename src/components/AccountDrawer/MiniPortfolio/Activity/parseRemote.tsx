@@ -79,8 +79,12 @@ const COMMON_CONTRACTS: { [key: string]: Partial<Activity> | undefined } = {
 }
 
 const SPAMMABLE_ACTIVITY_TYPES = [TransactionType.Receive, TransactionType.Mint, TransactionType.Unknown]
-function isSpam({ NftTransfer, TokenTransfer }: TransactionChanges, type: TransactionType): boolean {
-  if (!SPAMMABLE_ACTIVITY_TYPES.includes(type)) return false
+function isSpam(
+  { NftTransfer, TokenTransfer }: TransactionChanges,
+  details: TransactionDetailsPartsFragment,
+  account: string
+): boolean {
+  if (!SPAMMABLE_ACTIVITY_TYPES.includes(details.type) || details.from === account) return false
   return NftTransfer.some((nft) => nft.asset.isSpam) || TokenTransfer.some((t) => t.asset.project?.isSpam)
 }
 
@@ -384,6 +388,7 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
 
 function parseRemoteActivity(
   assetActivity: AssetActivityPartsFragment,
+  account: string,
   formatNumberOrString: FormatNumberOrStringFunctionType
 ): Activity | undefined {
   try {
@@ -423,7 +428,7 @@ function parseRemoteActivity(
       descriptor: assetActivity.details.to,
       from: assetActivity.details.from,
       nonce: assetActivity.details.nonce,
-      isSpam: isSpam(changes, assetActivity.details.type),
+      isSpam: isSpam(changes, assetActivity.details, account),
     }
 
     const parsedFields = ActivityParserByType[assetActivity.details.type]?.(
@@ -439,11 +444,12 @@ function parseRemoteActivity(
 }
 
 export function parseRemoteActivities(
-  formatNumberOrString: FormatNumberOrStringFunctionType,
-  assetActivities?: readonly AssetActivityPartsFragment[]
+  assetActivities: readonly AssetActivityPartsFragment[] | undefined,
+  account: string,
+  formatNumberOrString: FormatNumberOrStringFunctionType
 ) {
   return assetActivities?.reduce((acc: { [hash: string]: Activity }, assetActivity) => {
-    const activity = parseRemoteActivity(assetActivity, formatNumberOrString)
+    const activity = parseRemoteActivity(assetActivity, account, formatNumberOrString)
     if (activity) acc[activity.hash] = activity
     return acc
   }, {})

@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 
@@ -11,7 +11,7 @@ export function HideSpamToggle() {
 
   return (
     <SettingsToggle
-      title={t`Hide unknown tokens & NFTs`}
+      title={<Trans>Hide unknown tokens & NFTs</Trans>}
       isActive={hideSpam}
       toggle={() => void updateHideSpam((value) => !value)}
     />
