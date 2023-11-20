@@ -235,7 +235,7 @@
     "ajv-formats": "^2.1.1",
     "array.prototype.flat": "^1.2.4",
     "array.prototype.flatmap": "^1.2.4",
-    "cids": "^1.1.9",
+    "cids": "1.1.6",
     "clsx": "^1.1.1",
     "copy-to-clipboard": "^3.2.0",
     "d3": "^7.6.1",

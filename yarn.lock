@@ -14777,7 +14777,7 @@ __metadata:
     babel-jest: 29.6.1
     browser-cache-mock: ^0.1.7
     buffer: ^6.0.3
-    cids: ^1.1.9
+    cids: 1.1.6
     clsx: ^1.1.1
     concurrently: ^8.0.1
     copy-to-clipboard: ^3.2.0
@@ -20057,15 +20057,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cids@npm:^1.1.9":
-  version: 1.1.9
-  resolution: "cids@npm:1.1.9"
+"cids@npm:1.1.6":
+  version: 1.1.6
+  resolution: "cids@npm:1.1.6"
   dependencies:
     multibase: ^4.0.1
     multicodec: ^3.0.1
     multihashes: ^4.0.1
-    uint8arrays: ^3.0.0
-  checksum: 58ad9411b51c4f2d1568a3542578cf8c05028631ef8d9b0aa46db4ebbc812c4d7159216b310e333a81ff9f1b8e44c1c8ff3debdc0a8e9d83421af7f776677e41
+    uint8arrays: ^2.1.3
+  checksum: 1a11f0fa32c6a56ad0405edd87d797008a8bee1b1c0292ced4d20e2528b7f56bc4050336bf306b27c1cbe9a1baa860ddd104aee2702c0c2f60e0f27ca4cc0fc5
   languageName: node
   linkType: hard
 
@@ -35513,13 +35513,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"multicodec@npm:^3.0.1, multicodec@npm:^3.2.1":
-  version: 3.2.1
-  resolution: "multicodec@npm:3.2.1"
+"multicodec@npm:3.0.1":
+  version: 3.0.1
+  resolution: "multicodec@npm:3.0.1"
   dependencies:
-    uint8arrays: ^3.0.0
-    varint: ^6.0.0
-  checksum: 9b6d209c85e12ea3f66cad25671dd92b6be2eff1455669fbbd3c01a26e649c79f94b29f8228c0f9e4fdecb4137b6b6f0f4b0721fd2cb79ec74b1049c29101092
+    uint8arrays: ^2.1.3
+    varint: ^5.0.2
+  checksum: d65963d4065e829db3a6d1823fb4729c4c8881368e61fa0bca3b9722947c7162f2fef565e7e17b0e0b855df907dd88cc50a88fe36c44f00777b6da94af66bc62
   languageName: node
   linkType: hard
 
@@ -46529,6 +46529,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"uint8arrays@npm:^2.1.3":
+  version: 2.1.10
+  resolution: "uint8arrays@npm:2.1.10"
+  dependencies:
+    multiformats: ^9.4.2
+  checksum: 63ceb5fecc09de69641531c847e0b435d15a73587e40d4db23ed9b8a1ebbe839ae39fe81a15ea6079cdf642fcf2583983f9a5d32726edc4bc5e87634f34e3bd5
+  languageName: node
+  linkType: hard
+
 "uint8arrays@npm:^3.0.0, uint8arrays@npm:^3.1.0":
   version: 3.1.1
   resolution: "uint8arrays@npm:3.1.1"
@@ -47519,13 +47528,6 @@ __metadata:
   version: 5.0.2
   resolution: "varint@npm:5.0.2"
   checksum: e1a66bf9a6cea96d1f13259170d4d41b845833acf3a9df990ea1e760d279bd70d5b1f4c002a50197efd2168a2fd43eb0b808444600fd4d23651e8d42fe90eb05
-  languageName: node
-  linkType: hard
-
-"varint@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "varint@npm:6.0.0"
-  checksum: 7684113c9d497c01e40396e50169c502eb2176203219b96e1c5ac965a3e15b4892bd22b7e48d87148e10fffe638130516b6dbeedd0efde2b2d0395aa1772eea7
   languageName: node
   linkType: hard
 
