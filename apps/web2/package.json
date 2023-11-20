@@ -243,7 +243,7 @@
     "ext-name": "^5.0.0",
     "focus-visible": "^5.2.0",
     "get-graphql-schema": "^2.1.2",
-    "graphql": "^16.6.0",
+    "graphql": "16.6.0",
     "graphql-request": "^3.4.0",
     "immer": "^9.0.6",
     "inter-ui": "^3.13.1",
