@@ -315,6 +315,7 @@ export function CurrencySearch({
         ) : searchCurrencies?.length > 0 || filteredInactiveTokens?.length > 0 || isLoading ? (
           <div style={{ flex: '1' }}>
             <AutoSizer disableWidth>
+              {/* @ts-ignore TODO-MIGRATION complaining on any type */}
               {({ height }) => (
                 <CurrencyList
                   height={height}
