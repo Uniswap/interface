@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { SwapTab } from 'components/swap/constants'
 import { useConnectionReady } from 'connection/eagerlyConnect'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
@@ -77,7 +78,7 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
   '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D': true, // v2 router 02
 }
 
-type SwapInfo = {
+export type SwapInfo = {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   inputTax: Percent
@@ -293,6 +294,7 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
     typedValue,
     independentField,
     recipient,
+    currentTab: SwapTab.Swap,
   }
 }
 
@@ -318,6 +320,7 @@ export function useDefaultsFromURLSearch(): SwapState {
         inputCurrencyId,
         outputCurrencyId,
         recipient: parsedSwapState.recipient,
+        currentTab: SwapTab.Swap,
       })
     )
   }, [dispatch, chainId, parsedSwapState])

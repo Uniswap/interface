@@ -1,3 +1,4 @@
+import { SwapTab } from 'components/swap/constants'
 import { createStore, Store } from 'redux'
 
 import { Field, selectCurrency } from './actions'
@@ -13,6 +14,7 @@ describe('swap reducer', () => {
       typedValue: '',
       independentField: Field.INPUT,
       recipient: null,
+      currentTab: SwapTab.Swap,
     })
   })
 
@@ -31,6 +33,7 @@ describe('swap reducer', () => {
         typedValue: '',
         independentField: Field.INPUT,
         recipient: null,
+        currentTab: SwapTab.Swap,
       })
     })
   })

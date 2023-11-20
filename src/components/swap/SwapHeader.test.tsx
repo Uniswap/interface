@@ -1,19 +1,41 @@
-import { TEST_ALLOWED_SLIPPAGE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
+import { ChainId } from '@uniswap/sdk-core'
+import { Field } from 'state/swap/actions'
+import { initialDerivedSwapInfo, SwapContext } from 'state/swap/SwapContext'
 import { render, screen } from 'test-utils/render'
 
-import SwapHeader, { SwapTab } from './SwapHeader'
+import { SwapTab } from './constants'
+import SwapHeader from './SwapHeader'
 
 jest.mock('../../featureFlags/flags/limits', () => ({ useLimitsEnabled: () => true }))
 
 describe('SwapHeader.tsx', () => {
   it('matches base snapshot', () => {
     const { asFragment } = render(
-      <SwapHeader
-        trade={TEST_TRADE_EXACT_INPUT}
-        selectedTab={SwapTab.Swap}
-        autoSlippage={TEST_ALLOWED_SLIPPAGE}
-        onClickTab={jest.fn()}
-      />
+      <SwapContext.Provider
+        value={{
+          state: {
+            independentField: Field.INPUT,
+            typedValue: '',
+            recipient: '',
+            [Field.INPUT]: {},
+            [Field.OUTPUT]: {},
+            currentTab: SwapTab.Swap,
+          },
+          prefilledState: {
+            INPUT: {
+              currencyId: undefined,
+            },
+            OUTPUT: {
+              currencyId: undefined,
+            },
+          },
+          chainId: ChainId.MAINNET,
+          derivedSwapInfo: initialDerivedSwapInfo,
+          dispatch: jest.fn(),
+        }}
+      >
+        <SwapHeader />
+      </SwapContext.Provider>
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText('Swap')).toBeInTheDocument()
@@ -24,14 +46,33 @@ describe('SwapHeader.tsx', () => {
   it('calls callback for switching tabs', () => {
     const onClickTab = jest.fn()
     render(
-      <SwapHeader
-        trade={TEST_TRADE_EXACT_INPUT}
-        selectedTab={SwapTab.Swap}
-        autoSlippage={TEST_ALLOWED_SLIPPAGE}
-        onClickTab={onClickTab}
-      />
+      <SwapContext.Provider
+        value={{
+          state: {
+            independentField: Field.INPUT,
+            typedValue: '',
+            recipient: '',
+            [Field.INPUT]: {},
+            [Field.OUTPUT]: {},
+            currentTab: SwapTab.Swap,
+          },
+          prefilledState: {
+            INPUT: {
+              currencyId: undefined,
+            },
+            OUTPUT: {
+              currencyId: undefined,
+            },
+          },
+          chainId: ChainId.MAINNET,
+          derivedSwapInfo: initialDerivedSwapInfo,
+          dispatch: onClickTab,
+        }}
+      >
+        <SwapHeader />
+      </SwapContext.Provider>
     )
     screen.getByText('Limit').click()
-    expect(onClickTab).toHaveBeenCalledWith(SwapTab.Limit)
+    expect(onClickTab).toHaveBeenCalledWith({ payload: { tab: 'limit' }, type: 'swap/setCurrentTab' })
   })
 })

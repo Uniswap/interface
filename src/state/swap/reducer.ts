@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
+import { SwapTab } from 'components/swap/constants'
 import { parsedQueryString } from 'hooks/useParsedQueryString'
 
 import {
@@ -6,6 +7,7 @@ import {
   forceExactInput,
   replaceSwapState,
   selectCurrency,
+  setCurrentTab,
   setRecipient,
   switchCurrencies,
   typeInput,
@@ -23,6 +25,7 @@ export interface SwapState {
   }
   // the typed recipient address or ENS name, or null if swap should go to sender
   readonly recipient: string | null
+  readonly currentTab: SwapTab
 }
 
 export const initialState: SwapState = queryParametersToSwapState(parsedQueryString())
@@ -31,7 +34,7 @@ export default createReducer<SwapState>(initialState, (builder) =>
   builder
     .addCase(
       replaceSwapState,
-      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId } }) => {
+      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId, currentTab } }) => {
         return {
           [Field.INPUT]: {
             currencyId: inputCurrencyId ?? null,
@@ -42,6 +45,7 @@ export default createReducer<SwapState>(initialState, (builder) =>
           independentField: field,
           typedValue,
           recipient,
+          currentTab,
         }
       }
     )
@@ -96,6 +100,15 @@ export default createReducer<SwapState>(initialState, (builder) =>
       }
     })
     .addCase(setRecipient, (state, { payload: { recipient } }) => {
-      state.recipient = recipient
+      return {
+        ...state,
+        recipient,
+      }
+    })
+    .addCase(setCurrentTab, (state, { payload: { tab } }) => {
+      return {
+        ...state,
+        currentTab: tab,
+      }
     })
 )

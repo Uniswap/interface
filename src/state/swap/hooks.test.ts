@@ -1,3 +1,4 @@
+import { SwapTab } from 'components/swap/constants'
 import { parse } from 'qs'
 import { TEST_RECIPIENT_ADDRESS } from 'test-utils/constants'
 
@@ -20,6 +21,7 @@ describe('hooks', () => {
         typedValue: '20.5',
         independentField: Field.OUTPUT,
         recipient: null,
+        currentTab: SwapTab.Swap,
       })
     })
 
@@ -32,6 +34,7 @@ describe('hooks', () => {
         typedValue: '',
         independentField: Field.INPUT,
         recipient: null,
+        currentTab: SwapTab.Swap,
       })
     })
 
@@ -46,6 +49,7 @@ describe('hooks', () => {
         typedValue: '20.5',
         independentField: Field.INPUT,
         recipient: null,
+        currentTab: SwapTab.Swap,
       })
     })
 
@@ -60,6 +64,7 @@ describe('hooks', () => {
         typedValue: '20.5',
         independentField: Field.INPUT,
         recipient: null,
+        currentTab: SwapTab.Swap,
       })
     })
 
@@ -77,6 +82,7 @@ describe('hooks', () => {
         typedValue: '20.5',
         independentField: Field.INPUT,
         recipient: TEST_RECIPIENT_ADDRESS,
+        currentTab: SwapTab.Swap,
       })
     })
     test('accepts any recipient', () => {
@@ -93,6 +99,7 @@ describe('hooks', () => {
         typedValue: '20.5',
         independentField: Field.INPUT,
         recipient: 'bob.argent.xyz',
+        currentTab: SwapTab.Swap,
       })
     })
   })

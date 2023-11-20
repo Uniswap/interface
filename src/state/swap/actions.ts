@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
+import { SwapTab } from 'components/swap/constants'
 
 export enum Field {
   INPUT = 'INPUT',
@@ -17,5 +18,7 @@ export const replaceSwapState = createAction<{
   inputCurrencyId?: string
   outputCurrencyId?: string
   recipient: string | null
+  currentTab: SwapTab
 }>('swap/replaceSwapState')
 export const setRecipient = createAction<{ recipient: string | null }>('swap/setRecipient')
+export const setCurrentTab = createAction<{ tab: SwapTab }>('swap/setCurrentTab')
