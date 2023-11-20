@@ -7,7 +7,7 @@ const mockStore = async ({ data }: { data: Record<string, string> }): Promise<vo
   await chrome.storage.local.set(data)
 }
 
-const PASSWORD_KEY = '.password.'
+const PASSWORD_KEY = 'com.uniswap.web.password'
 
 describe(WebKeyring, () => {
   beforeEach(async () => {

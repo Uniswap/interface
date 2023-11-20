@@ -8,7 +8,9 @@ import { isValidMessage } from 'src/background/utils/messageUtils'
 import { PortName } from 'src/types'
 import { BackgroundToExtensionRequestType } from 'src/types/requests'
 import { logger } from 'utilities/src/logger/logger'
+import { lockWallet } from 'wallet/src/features/wallet/slice'
 import { initializeTranslation } from 'wallet/src/i18n/i18n'
+import { passwordKey, PersistedStorage } from 'wallet/src/utils/persistedStorage'
 import { Store } from 'webext-redux'
 ;(globalThis as any).regeneratorRuntime = undefined // eslint-disable-line @typescript-eslint/no-explicit-any
 // The globalThis.regeneratorRuntime = undefined addresses a potentially unsafe-eval problem
@@ -43,6 +45,13 @@ async function initContentWindow(): Promise<void> {
   })
 
   await store.ready()
+  const sessionStorage = new PersistedStorage('session')
+  const sessionPassword = await sessionStorage.getItem(passwordKey)
+  if (!sessionPassword) {
+    // if the session was closed the password would be cleared from session storage but the lock action
+    // would not be dispatched. This ensures the store and the session storage are in sync.
+    store.dispatch(lockWallet())
+  }
 
   initializeTranslation()
 
