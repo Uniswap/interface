@@ -115,7 +115,7 @@
     "i18n:download": "dotenv -e .env.defaults -c -- yarn run i18n:_download",
     "lfg": "yarn && yarn contracts:compile && yarn mobile env:local:download && yarn web env:local:download && yarn g:build && yarn mobile pod && yarn mobile graphql:generate:swift && yarn mobile ios",
     "mobile": "yarn workspace @uniswap/mobile",
-    "postinstall": "husky install && yarn patch-package",
+    "postinstall": "husky install && yarn patch-package && yarn prepare",
     "staged:lint:fix": "eslint --fix",
     "ui:build:icons": "yarn workspace ui build:icons",
     "upgrade:next": "manypkg upgrade next && manypkg upgrade eslint-config-next",
