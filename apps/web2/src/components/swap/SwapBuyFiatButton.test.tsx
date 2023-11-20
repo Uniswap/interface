@@ -82,7 +82,11 @@ describe('SwapBuyFiatButton.tsx', () => {
     expect(screen.queryByTestId('buy-fiat-flow-incomplete-indicator')).not.toBeInTheDocument()
   })
 
-  it.skip('fiat on ramps unavailable in region', async () => {
+  it('fiat on ramps unavailable in region', async () => {
+    // we get flushSync errors only from Popper used in here, for now disabling this as an error
+    jest.spyOn(console, 'error').mockImplementation((...args) => {
+      process.stdout.write(`${args.join(' ')}`)
+    })
     mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsUnavailable)
     mockuseAccountDrawer.mockImplementation(() => [false, toggleWalletDrawer])
     render(<SwapBuyFiatButton />)
