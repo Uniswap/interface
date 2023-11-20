@@ -48,7 +48,12 @@ export default function AndroidAnnouncementBanner() {
           <ThemedText.LabelMicro>
             <Trans>Available now - download from the Google Play Store today</Trans>
           </ThemedText.LabelMicro>
-          <DownloadButton onClick={onClick}>
+          <DownloadButton
+            onClick={(e) => {
+              e.stopPropagation()
+              onClick()
+            }}
+          >
             <Trans>Download now</Trans>
           </DownloadButton>
         </TextContainer>
