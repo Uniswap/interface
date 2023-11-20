@@ -90,7 +90,7 @@ function AssociatedAccountRow({
       <Flex shrink>
         <AddressDisplay hideAddressInSubtitle address={address} size={24} variant="subheading2" />
       </Flex>
-      <Text color="$neutral2" flexGrow={1} loading={loading} numberOfLines={1} variant="body3">
+      <Text color="$neutral2" loading={loading} numberOfLines={1} variant="body3">
         {balanceFormatted}
       </Text>
     </Flex>

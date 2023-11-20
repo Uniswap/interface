@@ -1,5 +1,8 @@
 type AreaName = keyof Pick<typeof chrome.storage, 'sync' | 'local' | 'managed' | 'session'>
 
+export const prefix = 'com.uniswap.web'
+export const passwordKey = `${prefix}.password`
+
 /**
  * Chrome storage wrapper
  * @implements {redux-persist#Storage}

@@ -7,10 +7,8 @@ import { WalletEmptyState } from 'src/components/home/WalletEmptyState'
 import { NoTokens } from 'src/components/icons/NoTokens'
 import { TabContentProps, TabProps } from 'src/components/layout/TabHelpers'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import {
-  TokenBalanceList,
-  TokenBalanceListItem,
-} from 'src/components/TokenBalanceList/TokenBalanceList'
+import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
+import { TokenBalanceListRow } from 'src/components/TokenBalanceList/TokenBalanceListContext'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -25,7 +23,7 @@ export const TOKENS_TAB_DATA_DEPENDENCIES = [GQLQueries.PortfolioBalances]
 // ignore ref type
 
 export const TokensTab = memo(
-  forwardRef<FlatList<TokenBalanceListItem>, TabProps & { isExternalProfile?: boolean }>(
+  forwardRef<FlatList<TokenBalanceListRow>, TabProps & { isExternalProfile?: boolean }>(
     function _TokensTab(
       {
         owner,

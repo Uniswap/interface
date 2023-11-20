@@ -94,8 +94,7 @@ fun SeedPhraseInput(viewModel: SeedPhraseInputViewModel, onHelpTextPress: () -> 
         color = UniswapTheme.colors.neutral1
       ),
       keyboardOptions = KeyboardOptions(
-        keyboardType = KeyboardType.Text,
-        autoCorrect = false,
+        keyboardType = KeyboardType.Password,
         capitalization = KeyboardCapitalization.None
       )
     ) { innerTextField ->

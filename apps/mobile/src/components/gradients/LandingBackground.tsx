@@ -24,12 +24,13 @@ const OnboardingAnimation = (): JSX.Element => {
   const isDarkMode = useIsDarkMode()
   const animationRef = useRef<RiveRef>(null)
   const media = useMedia()
-  const fitValue = media.short ? Fit.FitWidth : Fit.FitHeight
+  const fitValue = media.short ? Fit.Cover : Fit.FitHeight
+  const alignmentValue = media.short ? Alignment.BottomCenter : Alignment.Center
 
   return (
     <Rive
       ref={animationRef}
-      alignment={Alignment.TopCenter}
+      alignment={alignmentValue}
       animationName="Intro"
       artboardName="Unified"
       fit={fitValue}

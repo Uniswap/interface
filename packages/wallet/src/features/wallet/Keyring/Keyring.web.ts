@@ -1,16 +1,14 @@
 import { Signature, Wallet } from 'ethers'
 import { defaultPath, joinSignature, SigningKey } from 'ethers/lib/utils'
 import { logger } from 'utilities/src/logger/logger'
-import { PersistedStorage } from 'wallet/src/utils/persistedStorage'
+import { passwordKey, PersistedStorage, prefix } from 'wallet/src/utils/persistedStorage'
 import { decrypt, encrypt } from './crypto'
 import { IKeyring } from './Keyring'
 
-const prefix = 'com.uniswap.web'
 const mnemonicPrefix = '.mnemonic.'
 const privateKeyPrefix = '.privateKey.'
 const entireMnemonicPrefix = prefix + mnemonicPrefix
 const entirePrivateKeyPrefix = prefix + privateKeyPrefix
-const passwordKey = '.password.'
 
 enum ErrorType {
   StoreMnemonicError = 'storeMnemonicError',

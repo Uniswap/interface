@@ -56,6 +56,7 @@ import { Icons, useDeviceInsets, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
+import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 
 const OnboardingStack = createStackNavigator<OnboardingStackParamList>()
@@ -114,7 +115,10 @@ function SettingsStackGroup(): JSX.Element {
 
 export function WrappedHomeScreen(props: AppStackScreenProp<Screens.Home>): JSX.Element {
   useBiometricCheck()
-  return <HomeScreen {...props} />
+  const activeAccount = useActiveAccountWithThrow()
+  // Adding `key` forces a full re-render and re-mount when switching accounts
+  // to avoid issues with wrong cached data being shown in some memoized components that are already mounted.
+  return <HomeScreen key={activeAccount.address} {...props} />
 }
 
 export function ExploreStackNavigator(): JSX.Element {
