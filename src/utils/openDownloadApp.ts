@@ -59,5 +59,7 @@ const openDownloadStore = (options: AnalyticsLinkOptions) => {
     element: options.element,
     appPlatform: options?.appPlatform,
   })
-  window.open(APP_DOWNLOAD_LINKS[options.element], /* target = */ options.linkTarget)
+  // window.open(APP_DOWNLOAD_LINKS[options.element], /* target = */ options.linkTarget)
+  window.open(APP_DOWNLOAD_LINKS[options.element])
+
 }
