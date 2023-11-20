@@ -3,4 +3,4 @@ apps/mobile/**/* @uniswap/wallet
 apps/web/**/* @uniswap/extension
 packages/wallet/**/* @uniswap/wallet @uniswap/extension
 packages/utilities/**/* @uniswap/wallet @uniswap/extension
-packages/ui/**/* @natew @adjkant @danielcolinjames
+packages/ui/**/* @uniswap/eng-ui
