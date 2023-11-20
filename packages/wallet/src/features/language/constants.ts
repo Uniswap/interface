@@ -114,3 +114,32 @@ export const mapLocaleToLanguage: Record<Locale, Language> = {
   [Locale.UrduPakistan]: Language.Urdu,
   [Locale.VietnameseVietnam]: Language.Vietnamese,
 }
+
+/**
+ * External mapping to be used with system locale strings trying to resolve to specific language
+ * Included different Spanish variations availabled on Android/iOS as of 11/17/23
+ */
+export const mapDeviceLanguageToLanguage: Record<string, Language> = {
+  'es-AR': Language.SpanishLatam,
+  'es-BO': Language.SpanishLatam,
+  'es-BZ': Language.SpanishLatam,
+  'es-BR': Language.SpanishLatam,
+  'es-CL': Language.SpanishLatam,
+  'es-CO': Language.SpanishLatam,
+  'es-CR': Language.SpanishLatam,
+  'es-CU': Language.SpanishLatam,
+  'es-DO': Language.SpanishLatam,
+  'es-EC': Language.SpanishLatam,
+  'es-SV': Language.SpanishLatam,
+  'es-GT': Language.SpanishLatam,
+  'es-GQ': Language.SpanishLatam, // Equatorial Guinea is an African country but format is closer to LATAM
+  'es-HN': Language.SpanishLatam,
+  'es-MX': Language.SpanishLatam,
+  'es-NI': Language.SpanishLatam,
+  'es-PA': Language.SpanishLatam,
+  'es-PY': Language.SpanishLatam,
+  'es-PE': Language.SpanishLatam,
+  'es-PR': Language.SpanishUnitedStates,
+  'es-UY': Language.SpanishLatam,
+  'es-VE': Language.SpanishLatam,
+}

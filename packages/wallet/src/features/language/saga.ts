@@ -8,6 +8,7 @@ import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import {
   Language,
   Locale,
+  mapDeviceLanguageToLanguage,
   mapLocaleToLanguage,
   SUPPORTED_LANGUAGES,
 } from 'wallet/src/features/language/constants'
@@ -58,7 +59,7 @@ function getDeviceLanguage(): Language {
     const normalizedLanguageTag = locale.languageTag.split('-').slice(0, 2).join('-') as Locale
     const mappedLanguageFromTag = Object.values(Locale).includes(normalizedLanguageTag)
       ? mapLocaleToLanguage[normalizedLanguageTag]
-      : undefined
+      : mapDeviceLanguageToLanguage[normalizedLanguageTag]
     const mappedLanguageFromCode = locale.languageCode as Maybe<Language>
     // Prefer languageTag as it's more specific, falls back to languageCode
     const mappedLanguage = mappedLanguageFromTag || mappedLanguageFromCode
