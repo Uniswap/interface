@@ -1,8 +1,8 @@
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
-import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
+import { FadeIn, FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import { useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
@@ -51,6 +51,7 @@ import {
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { Language } from 'wallet/src/features/language/constants'
 import { useCurrentLanguage } from 'wallet/src/features/language/hooks'
@@ -259,20 +260,10 @@ function TokenDetails({
 
   const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen
 
-  const { menuActions, onContextMenuPress } = useTokenContextMenu({
-    currencyId: _currencyId,
-    isSpam: currentChainBalance?.currencyInfo.isSpam,
-    isNative: currentChainBalance?.currencyInfo.currency.isNative,
-    balanceUSD: currentChainBalance?.balanceUSD,
-    tokenSymbolForNotification: data?.token?.symbol,
-  })
-
   const isDarkMode = useIsDarkMode()
-  // shall be the same color as heart icon in not favorited state next to it
-  const ellipsisColor = isDarkMode ? colors.neutral2.get() : colors.neutral2.get()
   const loadingColor = isDarkMode ? colors.neutral3.get() : colors.surface3.get()
 
-  const ellipsisMenuVisible = menuActions.length > 0
+  const [ellipsisMenuVisible, setEllipsisMenuVisible] = useState<boolean>(false)
 
   return (
     <Trace screen={Screens.TokenDetails}>
@@ -280,25 +271,14 @@ function TokenDetails({
         centerElement={<HeaderTitleElement data={data} ellipsisMenuVisible={ellipsisMenuVisible} />}
         renderedInModal={inModal}
         rightElement={
-          <Flex row alignItems="center" gap="$spacing16">
-            {ellipsisMenuVisible && (
-              <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
-                <TouchableArea
-                  hapticFeedback
-                  hitSlop={{ right: 5, left: 20, top: 20, bottom: 20 }}
-                  style={{ padding: spacing.spacing8, marginRight: -spacing.spacing8 }}
-                  onLongPress={disableOnPress}
-                  onPress={disableOnPress}>
-                  <EllipsisIcon
-                    color={ellipsisColor}
-                    height={iconSizes.icon16}
-                    width={iconSizes.icon16}
-                  />
-                </TouchableArea>
-              </ContextMenu>
-            )}
-            <TokenDetailsFavoriteButton currencyId={_currencyId} />
-          </Flex>
+          showSkeleton ? undefined : (
+            <HeaderRightElement
+              currencyId={_currencyId}
+              currentChainBalance={currentChainBalance}
+              data={data}
+              setEllipsisMenuVisible={setEllipsisMenuVisible}
+            />
+          )
         }
         showHandleBar={inModal}>
         <Flex gap="$spacing16" pb="$spacing16">
@@ -385,5 +365,59 @@ function TokenDetailsTextPlaceholders(): JSX.Element {
         </Flex>
       </Flex>
     </>
+  )
+}
+
+function HeaderRightElement({
+  currencyId,
+  currentChainBalance,
+  data,
+  setEllipsisMenuVisible,
+}: {
+  currencyId: string
+  currentChainBalance: PortfolioBalance | null
+  data?: TokenDetailsScreenQuery
+  setEllipsisMenuVisible: (visible: boolean) => void
+}): JSX.Element {
+  const colors = useSporeColors()
+  const isDarkMode = useIsDarkMode()
+
+  const { menuActions, onContextMenuPress } = useTokenContextMenu({
+    currencyId,
+    isSpam: currentChainBalance?.currencyInfo.isSpam,
+    isNative: currentChainBalance?.currencyInfo.currency.isNative,
+    balanceUSD: currentChainBalance?.balanceUSD,
+    tokenSymbolForNotification: data?.token?.symbol,
+  })
+
+  // Should be the same color as heart icon in not favorited state next to it
+  const ellipsisColor = isDarkMode ? colors.neutral2.get() : colors.neutral2.get()
+
+  const ellipsisMenuVisible = menuActions.length > 0
+
+  useEffect(() => {
+    setEllipsisMenuVisible(ellipsisMenuVisible)
+  }, [ellipsisMenuVisible, setEllipsisMenuVisible])
+
+  return (
+    <AnimatedFlex row alignItems="center" entering={FadeIn} gap="$spacing16">
+      {ellipsisMenuVisible && (
+        <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
+          <TouchableArea
+            hapticFeedback
+            hitSlop={{ right: 5, left: 20, top: 20, bottom: 20 }}
+            style={{ padding: spacing.spacing8, marginRight: -spacing.spacing8 }}
+            onLongPress={disableOnPress}
+            onPress={disableOnPress}>
+            <EllipsisIcon
+              color={ellipsisColor}
+              height={iconSizes.icon16}
+              width={iconSizes.icon16}
+            />
+          </TouchableArea>
+        </ContextMenu>
+      )}
+      <TokenDetailsFavoriteButton currencyId={currencyId} />
+    </AnimatedFlex>
   )
 }

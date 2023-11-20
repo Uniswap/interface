@@ -41,7 +41,7 @@ import {
   useScrollSync,
 } from 'src/components/layout/TabHelpers'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import { TokenBalanceListItem } from 'src/components/TokenBalanceList/TokenBalanceList'
+import { TokenBalanceListRow } from 'src/components/TokenBalanceList/TokenBalanceListContext'
 import Trace from 'src/components/Trace/Trace'
 import TraceTabView from 'src/components/Trace/TraceTabView'
 import { apolloClient } from 'src/data/usePersistedApolloClient'
@@ -176,7 +176,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     (event) => (feedTabScrollValue.value = event.contentOffset.y)
   )
 
-  const tokensTabScrollRef = useAnimatedRef<FlatList<TokenBalanceListItem>>()
+  const tokensTabScrollRef = useAnimatedRef<FlatList<TokenBalanceListRow>>()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const nftsTabScrollRef = useAnimatedRef<FlashList<any>>()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
