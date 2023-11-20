@@ -26,7 +26,8 @@ jobs:
         env:
           CROWDIN_ACCESS_TOKEN: ${{ secrets.CROWDIN_ACCESS_TOKEN }}
 
-      - run: yarn web i18n:extract
+      - name: Extract i18n
+        run: yarn web i18n:extract
 
       - name: Upload Crowdin sources
         uses: crowdin/github-action@3133cc916c35590475cf6705f482fb653d8e36e9
