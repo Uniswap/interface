@@ -65,7 +65,7 @@ export function NFTCollectionHeader({
 
   return (
     <>
-      <Flex gap="$spacing12" mb="$spacing16" pb="$spacing4">
+      <Flex mb="$spacing16" pb="$spacing4">
         {/* Banner image*/}
         {loading || !!bannerImageUrl ? (
           <ImageUri
@@ -90,8 +90,8 @@ export function NFTCollectionHeader({
           row
           alignItems="center"
           justifyContent="space-between"
-          mx="$spacing24"
-          pt="$spacing48">
+          mt={deviceTopPadding + spacing.spacing12}
+          mx="$spacing24">
           <Flex backgroundColor="$scrim" borderRadius="$roundedFull" p="$spacing4">
             <BackButton color="$sporeWhite" mr="$spacing1" size={iconSizes.icon24} />
           </Flex>
@@ -137,12 +137,8 @@ export function NFTCollectionHeader({
           pt="$spacing12"
           px="$spacing24"
           style={{ marginTop: PROFILE_IMAGE_WRAPPER_SIZE }}>
-          <Flex row alignItems="center" gap="$spacing8">
-            <Text
-              loading={loading}
-              loadingPlaceholderText="Collection Name"
-              mt="$spacing16"
-              variant="subheading1">
+          <Flex row ai="center" gap="$spacing8" mt="$spacing16">
+            <Text loading={loading} loadingPlaceholderText="Collection Name" variant="subheading1">
               {data?.name ?? '-'}
             </Text>
             {data?.isVerified ? (
