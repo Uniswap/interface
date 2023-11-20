@@ -1,23 +1,23 @@
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const { ProgressPlugin, ProvidePlugin, DefinePlugin } = require('webpack')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const path = require('path')
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
-const fs = require('fs')
-const DotenvPlugin = require('dotenv-webpack')
-const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const { ProgressPlugin, ProvidePlugin, DefinePlugin } = require("webpack");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const path = require("path");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const fs = require("fs");
+const DotenvPlugin = require("dotenv-webpack");
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 
-const NODE_ENV = process.env.NODE_ENV || 'development'
+const NODE_ENV = process.env.NODE_ENV || "development";
 
 // if not set tamagui wont add nice data-at, data-in etc debug attributes
-process.env.NODE_ENV = NODE_ENV
+process.env.NODE_ENV = NODE_ENV;
 
 const EXTENSION_NAME =
-  NODE_ENV === 'development' ? '(DEV) Uniswap Wallet' : 'Uniswap Wallet'
+  NODE_ENV === "development" ? "(DEV) Uniswap Wallet" : "Uniswap Wallet";
 
-const isDevelopment = NODE_ENV === 'development'
-const appDirectory = path.resolve(__dirname)
+const isDevelopment = NODE_ENV === "development";
+const appDirectory = path.resolve(__dirname);
 
 // This is needed for webpack to compile JavaScript.
 // Many OSS React Native packages are not compiled to ES5 before being
@@ -30,35 +30,36 @@ const babelLoaderConfiguration = {
   include: [
     // path.resolve(appDirectory, "index.web.js"),
     // path.resolve(appDirectory, "src"),
-    path.resolve(appDirectory, 'node_modules/react-native-uncompiled'),
+    path.resolve(appDirectory, "node_modules/react-native-uncompiled"),
   ],
   use: {
-    loader: 'babel-loader',
+    loader: "babel-loader",
     options: {
       cacheDirectory: true,
       // The 'metro-react-native-babel-preset' preset is recommended to match React Native's packager
-      presets: ['module:metro-react-native-babel-preset'],
+      presets: ["module:metro-react-native-babel-preset"],
       // Re-write paths to import only the modules needed by the app
-      plugins: ['react-native-web'],
+      plugins: ["react-native-web"],
     },
   },
-}
+};
 
 const swcLoaderConfiguration = {
-  test: ['.jsx', '.js', '.tsx', '.ts'].map((ext) => new RegExp(`${ext}$`)),
+  test: [".jsx", ".js", ".tsx", ".ts"].map((ext) => new RegExp(`${ext}$`)),
   exclude: /node_modules/,
   use: {
-    loader: 'swc-loader',
+    loader: "swc-loader",
     options: {
       // parseMap: true, // required when using with babel-loader
       env: {
-        targets: require('./package.json').browserslist,
+        targets: require("./package.json").browserslist,
       },
       sourceMap: isDevelopment,
       jsc: {
-        target: 'es2022',
+        // swc says this can't be used with env!
+        // target: 'es2022',
         parser: {
-          syntax: 'typescript',
+          syntax: "typescript",
           tsx: true,
           dynamicImport: true,
         },
@@ -71,20 +72,20 @@ const swcLoaderConfiguration = {
       },
     },
   },
-}
+};
 
 const fileExtensions = [
-  'eot',
-  'gif',
-  'jpeg',
-  'jpg',
-  'otf',
-  'png',
-  'ttf',
-  'woff',
-  'woff2',
-  'mp4',
-]
+  "eot",
+  "gif",
+  "jpeg",
+  "jpg",
+  "otf",
+  "png",
+  "ttf",
+  "woff",
+  "woff2",
+  "mp4",
+];
 
 const {
   dir,
@@ -92,23 +93,23 @@ const {
   ...extras
 } = isDevelopment
   ? {
-      dir: 'dev',
+      dir: "dev",
       devServer: {
         // watchFiles: ['src/**/*', 'webpack.config.js'],
-        host: '127.0.0.1',
+        host: "127.0.0.1",
         port: 9997,
-        server: fs.existsSync('localhost.pem')
+        server: fs.existsSync("localhost.pem")
           ? {
-              type: 'https',
+              type: "https",
               options: {
-                key: 'localhost-key.pem',
-                cert: 'localhost.pem',
+                key: "localhost-key.pem",
+                cert: "localhost.pem",
               },
             }
           : {},
         compress: false,
         static: {
-          directory: path.join(__dirname, '../dev'),
+          directory: path.join(__dirname, "../dev"),
         },
         client: {
           // logging: "info",
@@ -116,50 +117,48 @@ const {
           reconnect: false,
           overlay: {
             errors: true,
-            warnings: false,  
+            warnings: false,
             // disable resize observer error
             // NOTE: ideally would use the function format (error) => boolean
             //       however, I was not able to get past CSP with that solution
-            runtimeErrors: false 
+            runtimeErrors: false,
           },
         },
         devMiddleware: {
           writeToDisk: true,
         },
       },
-      devtool: 'cheap-module-source-map',
-      plugins: [
-        new ReactRefreshWebpackPlugin(),
-      ],
+      devtool: "cheap-module-source-map",
+      plugins: [new ReactRefreshWebpackPlugin()],
     }
   : {
-      dir: 'build',
+      dir: "build",
       plugins: [],
-    }
+    };
 
 const options = {
   mode: NODE_ENV,
   entry: {
-    background: './src/background/index.ts',
-    onboarding: './src/onboarding/onboarding.tsx',
-    sidebar: './src/sidebar/sidebar.tsx',
-    injected: './src/contentScript/injected.ts',
-    ethereum: './src/contentScript/ethereum.js',
+    background: "./src/background/index.ts",
+    onboarding: "./src/onboarding/onboarding.tsx",
+    sidebar: "./src/sidebar/sidebar.tsx",
+    injected: "./src/contentScript/injected.ts",
+    ethereum: "./src/contentScript/ethereum.js",
   },
   output: {
-    filename: '[name].js',
-    chunkFilename: '[name].js',
+    filename: "[name].js",
+    chunkFilename: "[name].js",
     path: path.resolve(__dirname, dir),
     clean: true,
-    publicPath: '',
+    publicPath: "",
   },
   // https://webpack.js.org/configuration/other-options/#level
-  infrastructureLogging: { level: 'warn' },
+  infrastructureLogging: { level: "warn" },
   module: {
     rules: [
       {
         test: /\.(woff|woff2)$/,
-        use: { loader: 'file-loader' }
+        use: { loader: "file-loader" },
       },
       {
         test: /\.m?js$/,
@@ -171,79 +170,79 @@ const options = {
         test: /\.css$/,
         use: [
           {
-            loader: 'style-loader',
+            loader: "style-loader",
           },
           {
-            loader: 'css-loader',
+            loader: "css-loader",
           },
         ],
       },
       {
-        type: 'javascript/auto',
+        type: "javascript/auto",
         test: /\.json$/,
-        use: ['file-loader'],
+        use: ["file-loader"],
         include: /tokenlist/,
       },
       // Used for creating SVG React components (similar to react=native-svg-transformer on mobile)
       {
         test: /\.svg$/,
-        use: ['@svgr/webpack'],
+        use: ["@svgr/webpack"],
       },
       {
-        test: new RegExp('.(' + fileExtensions.join('|') + ')$'),
-        type: 'asset/resource',
+        test: new RegExp(".(" + fileExtensions.join("|") + ")$"),
+        type: "asset/resource",
       },
       babelLoaderConfiguration,
       swcLoaderConfiguration,
       {
         test: /.tsx$/,
-        exclude: file => {
-          if (file.includes('node_modules')) {
-            return true
+        exclude: (file) => {
+          if (file.includes("node_modules")) {
+            return true;
           }
-          return false
+          return false;
         },
         use: [
           // idk why but handing the source off to swc it gets confused about jsx, but esbuild doesnt
           {
-            loader: 'esbuild-loader',
+            loader: "esbuild-loader",
             options: {
-              target: 'es2020',
-              loader: 'tsx',
+              target: "es2020",
+              loader: "tsx",
               minify: false,
             },
           },
           {
-            loader: 'tamagui-loader',
+            loader: "tamagui-loader",
             options: {
-              config: '../../packages/ui/src/tamagui.config.ts',
-              components: ['tamagui', 'ui'],
+              config: "../../packages/ui/src/tamagui.config.ts",
+              components: ["tamagui", "ui"],
               // add files here that should be parsed by the compiler from within any of the apps/*
               // for example if you have constants.ts then constants.js goes here and it will eval them
               // at build time and if it can flatten views even if they use imports from that file
-              importsWhitelist: ['constants.js'],
-              disableExtraction: NODE_ENV === 'development',
+              importsWhitelist: ["constants.js"],
+              disableExtraction: NODE_ENV === "development",
               // disable: true,
-            }
-          }
-        ]
-      }
+            },
+          },
+        ],
+      },
     ],
   },
   resolve: {
     alias: {
-      'react-native$': 'react-native-web',
-      'react-native-vector-icons$': 'react-native-vector-icons/dist',
-      'src': path.resolve(__dirname, 'src') // absolute imports in apps/web
+      "react-native$": "react-native-web",
+      "react-native-vector-icons$": "react-native-vector-icons/dist",
+      src: path.resolve(__dirname, "src"), // absolute imports in apps/web
     },
     // Add support for web-based extensions so we can share code between mobile/extension
     extensions: [
-      '.web.js',
-      '.web.jsx',
-      '.web.ts',
-      '.web.tsx',
+      ".web.js",
+      ".web.jsx",
+      ".web.ts",
+      ".web.tsx",
       ...fileExtensions.map((e) => `.${e}`),
-      ...['.js', '.jsx', '.ts', '.tsx', '.css'],
+      ...[".js", ".jsx", ".ts", ".tsx", ".css"],
     ],
     fallback: {
       fs: false,
@@ -251,14 +250,14 @@ const options = {
   },
   plugins: [
     new DotenvPlugin({
-      path: '../../.env',
+      path: "../../.env",
       defaults: true,
     }),
     new DefinePlugin({
-      '__DEV__': NODE_ENV === 'development' ? 'true' : 'false',
-      'process.env.IS_STATIC': '""',
-      'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
-      'process.env.DEBUG': JSON.stringify(process.env.DEBUG || '0'),
+      __DEV__: NODE_ENV === "development" ? "true" : "false",
+      "process.env.IS_STATIC": '""',
+      "process.env.NODE_ENV": JSON.stringify(NODE_ENV),
+      "process.env.DEBUG": JSON.stringify(process.env.DEBUG || "0"),
     }),
     new CleanWebpackPlugin(),
     new NodePolyfillPlugin(), // necessary to compile with reactnative-dotenv
@@ -266,14 +265,14 @@ const options = {
     new MiniCssExtractPlugin(),
     new ProgressPlugin(),
     new ProvidePlugin({
-      process: 'process/browser',
-      React: 'react',
-      Buffer: ['buffer', 'Buffer'],
+      process: "process/browser",
+      React: "react",
+      Buffer: ["buffer", "Buffer"],
     }),
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: 'src/manifest.json',
+          from: "src/manifest.json",
           force: true,
           transform(content, path) {
             return Buffer.from(
@@ -287,28 +286,28 @@ const options = {
                 null,
                 2
               )
-            )
+            );
           },
         },
         {
-          from: 'src/assets/fonts/*.{woff,woff2,ttf}',
-          to: 'assets/fonts/[name][ext]',
+          from: "src/assets/fonts/*.{woff,woff2,ttf}",
+          to: "assets/fonts/[name][ext]",
           force: true,
         },
         {
-          from: 'src/assets/*.{html,png,svg}',
-          to: 'assets/[name][ext]',
+          from: "src/assets/*.{html,png,svg}",
+          to: "assets/[name][ext]",
           force: true,
         },
         {
-          from: 'src/*.{html,png,svg}',
-          to: '[name][ext]',
+          from: "src/*.{html,png,svg}",
+          to: "[name][ext]",
           force: true,
         },
       ],
     }),
   ],
   ...extras,
-}
+};
 
-module.exports = options
+module.exports = options;
