@@ -62,6 +62,7 @@
     "esbuild": "0.19.3",
     "eslint-plugin-import": "2.27",
     "multicodec": "3.0.1",
+    "multihashes": "4.0.2",
     "@ethersproject/hash": "5.7.0",
     "jpeg-js": "0.4.4",
     "json5": "2.2.2",

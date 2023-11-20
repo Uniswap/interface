@@ -35537,14 +35537,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"multihashes@npm:^4.0.1, multihashes@npm:^4.0.3":
-  version: 4.0.3
-  resolution: "multihashes@npm:4.0.3"
+"multihashes@npm:4.0.2":
+  version: 4.0.2
+  resolution: "multihashes@npm:4.0.2"
   dependencies:
     multibase: ^4.0.1
-    uint8arrays: ^3.0.0
+    uint8arrays: ^2.1.3
     varint: ^5.0.2
-  checksum: 57c978aa53f7144f8a146a486aa6aea96a73f21058f48ab80a8c5542854197aa63d33aae42b005bed1bbba9f70958b60f3287d90f1a47cf13e8ea7d75d6b8e34
+  checksum: 506fcbc3e59638e3509900beb34f490bfb5bf19bcce338f55e7c908d93d5358a6a0876a3275f8d07d9e5a7a5368e1d598a0d5359fa3d6003116977b4e1e306f8
   languageName: node
   linkType: hard
 

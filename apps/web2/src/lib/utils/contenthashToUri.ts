@@ -24,13 +24,6 @@ export default function contenthashToUri(contenthash: string): string {
   switch (codec) {
     case 'ipfs-ns': {
       const unprefixedData = rmPrefix(data)
-
-      try {
-        new CID(unprefixedData)
-      } catch(err) {
-        console.log('ERRRRRRRR', err)
-      }
-      
       const cid = new CID(unprefixedData)
       return `ipfs://${toB58String(cid.multihash)}`
     }
