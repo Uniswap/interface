@@ -41,7 +41,6 @@ import { CopyContractAddress } from 'theme/components'
 import { isAddress, shortenAddress } from 'utils'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
-import { OnChangeTimePeriod } from './ChartSection'
 import InvalidTokenDetails from './InvalidTokenDetails'
 import { TokenDescription } from './TokenDescription'
 
@@ -102,7 +101,6 @@ type TokenDetailsProps = {
   chain: InterfaceGqlChain
   tokenQuery: TokenQuery
   tokenPriceQuery?: TokenPriceQuery
-  onChangeTimePeriod: OnChangeTimePeriod
 }
 export default function TokenDetails({
   urlAddress,
@@ -110,7 +108,6 @@ export default function TokenDetails({
   chain,
   tokenQuery,
   tokenPriceQuery,
-  onChangeTimePeriod,
 }: TokenDetailsProps) {
   if (!urlAddress) {
     throw new Error('Invalid token details route: tokenAddress param is undefined')
@@ -258,7 +255,7 @@ export default function TokenDetails({
                 <ShareButton currency={detailedToken} />
               </TokenActions>
             </TokenInfoContainer>
-            <ChartSection tokenPriceQuery={tokenPriceQuery} onChangeTimePeriod={onChangeTimePeriod} />
+            <ChartSection tokenPriceQuery={tokenPriceQuery} />
 
             <StatsSection chainId={pageChainId} address={address} tokenQueryData={tokenQueryData} />
             <Hr />

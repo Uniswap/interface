@@ -1,6 +1,5 @@
 import { ChainId, CurrencyAmount } from '@uniswap/sdk-core'
 import { CyHttpMessages } from 'cypress/types/net-stubbing'
-import { FeatureFlag } from 'featureFlags'
 
 import { DAI, nativeOnChain, USDC_MAINNET } from '../../../src/constants/tokens'
 import { getTestSelector } from '../../utils'
@@ -45,9 +44,7 @@ function stubSwapTxReceipt() {
 describe('UniswapX Toggle', () => {
   beforeEach(() => {
     stubNonPriceQuoteWith(QuoteWhereUniswapXIsBetter)
-    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
-      featureFlags: [{ name: FeatureFlag.uniswapXDefaultEnabled, value: true }],
-    })
+    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
   })
 
   it('displays uniswapx ui when setting is on', () => {
@@ -69,9 +66,7 @@ describe('UniswapX Orders', () => {
     stubSwapTxReceipt()
 
     cy.hardhat().then((hardhat) => hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 3e8)))
-    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
-      featureFlags: [{ name: FeatureFlag.uniswapXDefaultEnabled, value: true }],
-    })
+    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
   })
 
   it('can swap exact-in trades using uniswapX', () => {
@@ -159,9 +154,7 @@ describe('UniswapX Eth Input', () => {
 
     stubSwapTxReceipt()
 
-    cy.visit(`/swap/?inputCurrency=ETH&outputCurrency=${DAI.address}`, {
-      featureFlags: [{ name: FeatureFlag.uniswapXDefaultEnabled, value: true }],
-    })
+    cy.visit(`/swap/?inputCurrency=ETH&outputCurrency=${DAI.address}`)
   })
 
   it('can swap using uniswapX with ETH as input', () => {
@@ -197,7 +190,7 @@ describe('UniswapX Eth Input', () => {
     cy.contains('Swapped')
   })
 
-  it('switches swap input to WETH after wrap', () => {
+  it('keeps ETH as the input currency before wrap completes', () => {
     // Setup a swap
     cy.get('#swap-currency-input .token-amount-input').type('1')
     cy.wait('@quote')
@@ -209,15 +202,24 @@ describe('UniswapX Eth Input', () => {
 
     // Close review modal before wrap is confirmed on chain
     cy.get(getTestSelector('confirmation-close-icon')).click()
+    // Confirm ETH is still the input token before wrap succeeds
+    cy.contains('ETH')
+  })
+
+  it('switches swap input to WETH after wrap', () => {
+    // Setup a swap
+    cy.get('#swap-currency-input .token-amount-input').type('1')
+    cy.wait('@quote')
+
+    // Prompt ETH wrap and confirm
+    cy.get('#swap-button').click()
+    cy.contains('Confirm swap').click()
+    cy.wait('@eth_sendRawTransaction')
     cy.hardhat().then((hardhat) => hardhat.mine())
 
     // Confirm wrap is successful and WETH is now input token
     cy.contains('Wrapped')
     cy.contains('WETH')
-
-    // Reopen review modal and continue swap
-    cy.get('#swap-button').click()
-    cy.contains('Confirm swap').click()
 
     // Approve WETH spend
     cy.wait('@eth_sendRawTransaction')
@@ -233,6 +235,11 @@ describe('UniswapX Eth Input', () => {
 
     // Verify swap success
     cy.contains('Swapped')
+
+    // Close modal
+    cy.get(getTestSelector('confirmation-close-icon')).click()
+    // The input currency should now be WETH
+    cy.contains('WETH')
   })
 })
 
@@ -247,9 +254,7 @@ describe('UniswapX activity history', () => {
     cy.hardhat().then(async (hardhat) => {
       await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 3e8))
     })
-    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
-      featureFlags: [{ name: FeatureFlag.uniswapXDefaultEnabled, value: true }],
-    })
+    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
   })
 
   it('can view UniswapX order status progress in activity', () => {

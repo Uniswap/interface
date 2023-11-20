@@ -120,10 +120,7 @@ describe('Swap with fees', () => {
   describe('UniswapX swaps', () => {
     it('displays UniswapX fee in UI', () => {
       cy.visit('/swap', {
-        featureFlags: [
-          { name: FeatureFlag.feesEnabled, value: true },
-          { name: FeatureFlag.uniswapXDefaultEnabled, value: true },
-        ],
+        featureFlags: [{ name: FeatureFlag.feesEnabled, value: true }],
       })
 
       // Intercept the trade quote

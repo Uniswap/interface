@@ -31,7 +31,6 @@ import { ThemedText } from 'theme/components'
 import invariant from 'tiny-invariant'
 import { isL2ChainId } from 'utils/chains'
 import { SignatureExpiredError } from 'utils/errors'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
@@ -82,7 +81,6 @@ function useConfirmModalState({
   const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.REVIEWING)
   const [approvalError, setApprovalError] = useState<PendingModalError>()
   const [pendingModalSteps, setPendingModalSteps] = useState<PendingConfirmModalState[]>([])
-  const { formatCurrencyAmount } = useFormatter()
 
   // This is a function instead of a memoized value because we do _not_ want it to update as the allowance changes.
   // For example, if the user needs to complete 3 steps initially, we should always show 3 step indicators
@@ -117,14 +115,7 @@ function useConfirmModalState({
   const nativeCurrency = useNativeCurrency(chainId)
 
   const [wrapTxHash, setWrapTxHash] = useState<string>()
-  const { execute: onWrap } = useWrapCallback(
-    nativeCurrency,
-    trade.inputAmount.currency,
-    formatCurrencyAmount({
-      amount: trade.inputAmount,
-      type: NumberType.SwapTradeAmount,
-    })
-  )
+  const { execute: onWrap } = useWrapCallback(nativeCurrency, trade.inputAmount.currency, trade.inputAmount.toExact())
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
   const prevWrapConfirmed = usePrevious(wrapConfirmed)
   const catchUserReject = async (e: any, errorType: PendingModalError) => {
@@ -142,9 +133,6 @@ function useConfirmModalState({
           onWrap?.()
             .then((wrapTxHash) => {
               setWrapTxHash(wrapTxHash)
-              // After the wrap has succeeded, reset the input currency to be WETH
-              // because the trade will be on WETH -> token
-              onCurrencySelection(Field.INPUT, trade.inputAmount.currency)
               sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
                 chain_id: chainId,
                 token_symbol: maximumAmountIn?.currency.symbol,
@@ -192,7 +180,6 @@ function useConfirmModalState({
       onWrap,
       trace,
       trade,
-      onCurrencySelection,
     ]
   )
 
@@ -209,10 +196,20 @@ function useConfirmModalState({
   useEffect(() => {
     // If the wrapping step finished, trigger the next step (allowance or swap).
     if (wrapConfirmed && !prevWrapConfirmed) {
+      // After the wrap has succeeded, reset the input currency to be WETH
+      // because the trade will be on WETH -> token
+      onCurrencySelection(Field.INPUT, trade.inputAmount.currency)
       // moves on to either approve WETH or to swap submission
       performStep(pendingModalSteps[1])
     }
-  }, [pendingModalSteps, performStep, prevWrapConfirmed, wrapConfirmed])
+  }, [
+    pendingModalSteps,
+    performStep,
+    prevWrapConfirmed,
+    wrapConfirmed,
+    onCurrencySelection,
+    trade.inputAmount.currency,
+  ])
 
   useEffect(() => {
     if (
