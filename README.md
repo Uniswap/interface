@@ -1,8 +1,6 @@
 # Uniswap Labs Interface
 
-Welcome! This repo is a [monorepo](https://monorepo.tools) that contains both the web and mobile code. We have two sections below for familiarizing yourself with each.
-
-Uniswap is an open source protocol for decentralized exchange of Ethereum tokens.
+Uniswap is an open source protocol for decentralized exchange of Ethereum tokens. This repo is a monorepo that contains both the web and mobile code.
 
 - Website: [uniswap.org](https://uniswap.org/)
 - Interface: [app.uniswap.org](https://app.uniswap.org)
@@ -15,10 +13,6 @@ Uniswap is an open source protocol for decentralized exchange of Ethereum tokens
   - [V1](https://hackmd.io/C-DvwDSfSxuh-Gd4WKE_ig)
   - [V2](https://uniswap.org/whitepaper.pdf)
   - [V3](https://uniswap.org/whitepaper-v3.pdf)
-
----
-
-# Web
 
 [![codecov](https://codecov.io/gh/Uniswap/interface/branch/main/graph/badge.svg?token=YVT2Y86O82)](https://codecov.io/gh/Uniswap/interface)
 
@@ -87,6 +81,7 @@ linked from the [v1.0.0 release](https://github.com/Uniswap/uniswap-interface/re
 
 ---
 
+
 # Mobile (Wallet)
 
 This repository contains code for the Uniswap Wallet and is in transition to a monorepo to share code across platforms!
@@ -139,6 +134,8 @@ Shared infrastructure packages and configurations.
 Store all product related shared packages code here. Packages should be broken down by specific product. For non-product specific code, split into separate yet widely scoped packages rather than small packages.
 
 ---
+
+# Notes on the monorepo
 
 ## Using `packages/ui`
 
