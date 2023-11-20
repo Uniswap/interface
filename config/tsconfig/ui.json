@@ -10,6 +10,5 @@
     "noEmit": false,
     "target": "es2019",
     "types": ["node"],
-    "lib": ["es2021", "dom", "esnext"]
   }
 }
