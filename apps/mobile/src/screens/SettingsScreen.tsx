@@ -178,12 +178,12 @@ export function SettingsScreen(): JSX.Element {
         ],
       },
       {
-        subTitle: t('Developer settings'),
+        subTitle: 'Developer settings',
         isHidden: !__DEV__,
         data: [
           {
             screen: Screens.Dev,
-            text: t('Dev options'),
+            text: 'Dev options',
             icon: <UniswapIcon {...svgProps} />,
           },
           { component: <OnboardingRow iconProps={svgProps} /> },
@@ -260,7 +260,7 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
             <UniswapIcon {...iconProps} />
           </Flex>
           <Text ml="$spacing12" variant="body1">
-            {t('Onboarding')}
+            Onboarding
           </Text>
         </Flex>
         <Icons.RotatableChevron
@@ -396,7 +396,7 @@ function FooterSettings(): JSX.Element {
         onLongPress={(): void => {
           setShowSignature(true)
         }}>
-        {`Version ${getFullAppVersion()}`}
+        {t('Version {{appVersion}}', { appVersion: getFullAppVersion() })}
       </Text>
     </Flex>
   )
