@@ -120,8 +120,8 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
   const currency0 = useCurrency(poolData?.token0?.id, chainId) ?? undefined
   const currency1 = useCurrency(poolData?.token1?.id, chainId) ?? undefined
 
-  const color0 = useColor(currency0?.wrapped, theme.surface2, theme.darkMode)
-  let color1 = useColor(currency1?.wrapped, theme.surface2, theme.darkMode)
+  const color0 = useColor(currency0, theme.surface2, theme.darkMode)
+  let color1 = useColor(currency1, theme.surface2, theme.darkMode)
   if (color0 === color1 && color0 === theme.accent1) {
     color1 = colors.blue400
   }

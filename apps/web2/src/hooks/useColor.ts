@@ -1,4 +1,4 @@
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { DEFAULT_COLOR } from 'constants/tokenColors'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import { darken, lighten, rgb } from 'polished'
@@ -29,13 +29,13 @@ function URIForEthToken(address: string) {
 /**
  * Retrieves the average color from a token's symbol using various sources.
  *
- * @param {Token} token - The token for which to fetch the color.
+ * @param {Currency} token - The token for which to fetch the color.
  * @param {string} primarySrc - Primary source URL for color retrieval (optional).
  *
  * @returns {Promise< | null>} A promise that resolves to a color string or null if color cannot be determined.
  */
-async function getColorFromToken(token: Token, primarySrc?: string): Promise<string | null> {
-  const wrappedToken = token as TokenFromList
+async function getColorFromToken(token: Currency, primarySrc?: string): Promise<string | null> {
+  const wrappedToken = token.wrapped as TokenFromList
   let color: string | null = null
 
   try {
@@ -65,10 +65,10 @@ function convertColorArrayToString([red, green, blue]: number[]): string {
   return rgb({ red, green, blue })
 }
 
-export function useColor(token?: Token, backgroundColor?: string, makeLighter?: boolean) {
+export function useColor(token?: Currency, backgroundColor?: string, makeLighter?: boolean) {
   const theme = useTheme()
   const [color, setColor] = useState(theme.accent1)
-  const [src] = useTokenLogoSource(token?.address, token?.chainId, token?.isNative)
+  const [src] = useTokenLogoSource(token?.wrapped.address, token?.chainId, token?.isNative)
 
   useEffect(() => {
     let stale = false
