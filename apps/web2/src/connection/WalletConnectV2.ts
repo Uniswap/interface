@@ -47,7 +47,6 @@ export class WalletConnectV2 extends WalletConnect {
           termsOfServiceUrl: undefined,
           themeMode: darkmode ? 'dark' : 'light',
           themeVariables: {
-            // @ts-expect-error "Object literal may only specify known properties"
             '--wcm-font-family': '"Inter custom", sans-serif',
             '--wcm-z-index': Z_INDEX.modal.toString(),
           },

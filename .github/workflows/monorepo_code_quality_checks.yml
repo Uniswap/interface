@@ -3,10 +3,6 @@ name: '[monorepo] Code Quality Checks'
 on:
   workflow_call:
 
-  push:
-    branches:
-      - interface
-
   pull_request:
     types:
       - opened
