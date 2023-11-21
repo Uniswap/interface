@@ -2,8 +2,7 @@
   "baseBranch": "origin/main",
   "pipeline": {
     "prepare": {
-      "dependsOn": [
-      ]
+      "dependsOn": []
     },
     "typecheck": {
       "inputs": [
