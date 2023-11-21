@@ -1,19 +1,36 @@
 import React, { useState } from 'react'
-import { BottomSheetDetachedModal } from 'src/components/modals/BottomSheetModal'
+import { useTranslation } from 'react-i18next'
+import { ColorValue } from 'react-native'
+import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { ModalName } from 'src/features/telemetry/constants'
-import { Text, TouchableArea, TouchableAreaProps, useSporeColors } from 'ui/src'
+import { TouchableArea, TouchableAreaProps, useSporeColors } from 'ui/src'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 
 const DEFAULT_ICON_SIZE = 20
 
 type InfoButtonProps = {
-  content: string
+  modalText: string
+  modalTitle: string
+  modalIcon?: JSX.Element
+  modalContent?: JSX.Element
+  backgroundIconColor?: ColorValue
   size?: number
+  closeText?: string
 } & TouchableAreaProps
 
-export function TooltipInfoButton({ size, content, ...rest }: InfoButtonProps): JSX.Element {
+export function TooltipInfoButton({
+  size,
+  backgroundIconColor,
+  closeText,
+  modalText,
+  modalTitle,
+  modalIcon,
+  modalContent,
+  ...rest
+}: InfoButtonProps): JSX.Element {
   const colors = useSporeColors()
   const [showModal, setShowModal] = useState(false)
+  const { t } = useTranslation()
   return (
     <>
       <TouchableArea onPress={(): void => setShowModal(true)} {...rest}>
@@ -24,14 +41,16 @@ export function TooltipInfoButton({ size, content, ...rest }: InfoButtonProps): 
         />
       </TouchableArea>
       {showModal && (
-        <BottomSheetDetachedModal
-          backgroundColor={colors.surface2.get()}
-          name={ModalName.TooltipContent}
+        <WarningModal
+          backgroundIconColor={backgroundIconColor}
+          caption={modalText}
+          closeText={closeText ?? t('Close')}
+          icon={modalIcon}
+          modalName={ModalName.TooltipContent}
+          title={modalTitle}
           onClose={(): void => setShowModal(false)}>
-          <Text p="$spacing16" variant="body1">
-            {content}
-          </Text>
-        </BottomSheetDetachedModal>
+          {modalContent ?? null}
+        </WarningModal>
       )}
     </>
   )

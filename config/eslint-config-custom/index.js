@@ -293,7 +293,15 @@ module.exports = {
               'blockchain',
               'validators',
               'Naira',
-              'Hryvnia'
+              'Hryvnia',
+              'customizable',
+              'subdomains',
+              'unitag',
+              'defi',
+              'versa',
+              'Unicon',
+              'yourname',
+              'yourusername',
             ],
           },
 

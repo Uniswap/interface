@@ -40,6 +40,8 @@ type SwapModalParams = { name: ModalName.Swap; initialState?: TransactionState }
 
 type SendModalParams = { name: ModalName.Send; initialState?: TransactionState }
 
+type UnitagsIntroParams = { name: ModalName.UnitagsIntro; initialState?: undefined }
+
 export type OpenModalParams =
   | AccountSwitcherModalParams
   | ExperimentsModalParams
@@ -52,6 +54,8 @@ export type OpenModalParams =
   | SwapModalParams
   | WalletConnectModalParams
   | RestoreWalletModalParams
+  | UnitagsIntroParams
+
 export type CloseModalParams = { name: keyof ModalsState }
 
 export const initialModalState: ModalsState = {
@@ -96,6 +100,10 @@ export const initialModalState: ModalsState = {
     initialState: undefined,
   },
   [ModalName.FiatCurrencySelector]: {
+    isOpen: false,
+    initialState: undefined,
+  },
+  [ModalName.UnitagsIntro]: {
     isOpen: false,
     initialState: undefined,
   },

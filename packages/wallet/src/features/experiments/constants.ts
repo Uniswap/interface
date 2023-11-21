@@ -14,6 +14,7 @@ export enum FEATURE_FLAGS {
   LanguageSelection = 'language-selection',
   FeedTab = 'feed-tab',
   ForAggregator = 'for-aggregator',
+  Unitags = 'unitags',
 }
 
 /**

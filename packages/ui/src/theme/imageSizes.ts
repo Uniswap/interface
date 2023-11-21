@@ -7,4 +7,5 @@ export const imageSizes = {
   image36: 36,
   image40: 40,
   image48: 48,
+  image100: 100,
 }

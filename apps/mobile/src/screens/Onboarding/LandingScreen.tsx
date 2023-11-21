@@ -3,6 +3,7 @@ import { selectionAsync } from 'expo-haptics'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { LandingBackground } from 'src/components/gradients/LandingBackground'
 import { Screen } from 'src/components/layout/Screen'
@@ -10,7 +11,7 @@ import Trace from 'src/components/Trace/Trace'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { OnboardingScreens } from 'src/screens/Screens'
+import { OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import { isDevBuild } from 'src/utils/version'
@@ -18,6 +19,8 @@ import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { useTimeout } from 'utilities/src/time/timing'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
 import {
   PendingAccountActions,
@@ -30,14 +33,26 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
+  // TODO (MOB-1314): request /claim/eligibility/ from unitags backend
+  const canClaimUnitag = true && unitagsFeatureFlagEnabled
 
   const onPressCreateWallet = (): void => {
     dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
     dispatch(createAccountActions.trigger())
-    navigation.navigate(OnboardingScreens.EditName, {
-      importType: ImportType.CreateNew,
-      entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
-    })
+    if (canClaimUnitag) {
+      navigate(Screens.UnitagStack, {
+        screen: UnitagScreens.ClaimUnitag,
+        params: {
+          entryPoint: OnboardingScreens.Landing,
+        },
+      })
+    } else {
+      navigation.navigate(OnboardingScreens.EditName, {
+        importType: ImportType.CreateNew,
+        entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
+      })
+    }
   }
 
   const onPressImportWallet = (): void => {

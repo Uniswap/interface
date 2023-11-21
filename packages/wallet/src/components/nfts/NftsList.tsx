@@ -165,7 +165,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
           // empty view
           <Flex centered grow style={emptyStateStyle}>
             <BaseCard.EmptyState
-              buttonLabel={isExternalProfile ? undefined : t('Receive NFTs')}
+              buttonLabel={isExternalProfile || !onPressEmptyState ? undefined : t('Receive NFTs')}
               description={
                 isExternalProfile
                   ? t('When this wallet buys or receives NFTs, they’ll appear here.')

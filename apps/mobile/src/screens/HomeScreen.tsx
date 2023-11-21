@@ -44,6 +44,7 @@ import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { TokenBalanceListRow } from 'src/components/TokenBalanceList/TokenBalanceListContext'
 import Trace from 'src/components/Trace/Trace'
 import TraceTabView from 'src/components/Trace/TraceTabView'
+import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
 import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -70,8 +71,8 @@ import {
   useMedia,
   useSporeColors,
 } from 'ui/src'
-import ReceiveIcon from 'ui/src/assets/icons/arrow-down-circle-filled.svg'
 import BuyIcon from 'ui/src/assets/icons/buy.svg'
+import ReceiveIcon from 'ui/src/assets/icons/receive.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-home.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -362,6 +363,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     ]
   )
 
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
   const viewOnlyLabel = t('This is a view-only wallet')
   const contentHeader = useMemo(() => {
     return (
@@ -379,9 +381,10 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
             </Text>
           </Flex>
         )}
+        {unitagsFeatureFlagEnabled && <UnitagBanner />}
       </Flex>
     )
-  }, [activeAccount.address, isSignerAccount, viewOnlyLabel, actions])
+  }, [activeAccount.address, isSignerAccount, viewOnlyLabel, actions, unitagsFeatureFlagEnabled])
 
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({

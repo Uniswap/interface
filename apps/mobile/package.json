@@ -136,6 +136,7 @@
     "react-native-gesture-handler": "2.9.0",
     "react-native-get-random-values": "1.8.0",
     "react-native-image-colors": "1.5.2",
+    "react-native-image-picker": "7.0.1",
     "react-native-localize": "^2.2.6",
     "react-native-markdown-display": "7.0.0-alpha.2",
     "react-native-mmkv": "2.10.1",
