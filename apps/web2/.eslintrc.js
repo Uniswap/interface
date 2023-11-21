@@ -11,10 +11,10 @@ module.exports = {
   plugins: ['rulesdir'],
 
   rules: {
+    // TODO: had to add this rule to avoid errors on monorepo migration that didnt happen in interface
     'cypress/unsafe-to-chain-command': 'off',
-    'prettier/prettier': 'off',
   },
-  
+
   overrides: [
     {
       files: ['**/*'],
