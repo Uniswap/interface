@@ -1,4 +1,4 @@
-name: 2 | [web] Push production
+name: 2 | [web] Push staging -> production
 
 # This CI job is responsible for pushing the content of web/staging to web/production.
 # It must be approved by web-reviewers, as enforced by environment protection rules.
