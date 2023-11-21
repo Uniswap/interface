@@ -13,7 +13,7 @@ yarn install
 ## Running the web app locally
 
 ```
-yarn web start
+yarn web2 start
 ```
 
 The interface should automatically open. If it does not, navigate to [http://localhost:3000].
@@ -21,13 +21,13 @@ The interface should automatically open. If it does not, navigate to [http://loc
 ## Creating a production build
 
 ```
-yarn web:build
+yarn web2:build
 ```
 
 To serve the production build:
 
 ```
-yarn web serve
+yarn web2 serve
 ```
 
 Then, navigate to [http://localhost:3000] to see it.
@@ -35,13 +35,13 @@ Then, navigate to [http://localhost:3000] to see it.
 ## Running unit tests
 
 ```
-yarn web test
+yarn web2 test
 ```
 
 By default, this runs only unit tests that have been affected since the last commit. To run _all_ unit tests:
 
 ```
-yarn web test --watchAll
+yarn web2 test --watchAll
 ```
 
 ## Running integration tests (cypress)
@@ -49,19 +49,19 @@ yarn web test --watchAll
 Integration tests require a server to be running. In order to see your changes quickly, run `start` in its own tab/window:
 
 ```
-yarn web start
+yarn web2 start
 ```
 
 Integration tests are run using `cypress`. When developing locally, use `cypress:open` for an interactive UI, and to inspect the rendered page:
 
 ```
-yarn web cypress:open
+yarn web2 cypress:open
 ```
 
 To run _all_ cypress integration tests _from the command line_:
 
 ```
-yarn web cypress:run
+yarn web2 cypress:run
 ```
 
 ## Adding a new dependency

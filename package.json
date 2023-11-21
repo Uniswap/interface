@@ -124,7 +124,7 @@
     "upgrade:rnw": "manypkg upgrade react-native-web",
     "upgrade:tamagui": "manypkg upgrade tamagui && manypkg upgrade @tamagui && manypkg upgrade tamagui-loader",
     "web": "yarn workspace @uniswap/web",
-    "web:build": "turbo run --filter=@uniswap/interface build:production",
+    "web2:build": "turbo run --filter=@uniswap/interface build:production",
     "prepare": "turbo prepare && yarn contracts:compile"
   },
   "workspaces": [
