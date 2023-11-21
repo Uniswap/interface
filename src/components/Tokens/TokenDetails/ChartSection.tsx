@@ -1,4 +1,5 @@
 import { ParentSize } from '@visx/responsive'
+import { PriceChart } from 'components/Charts/PriceChart'
 import { VolumeChart } from 'components/Charts/VolumeChart/index'
 import { ChartContainer, LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
@@ -69,16 +70,19 @@ function Chart({
   return (
     <ChartContainer data-testid="chart-container">
       <ParentSize>
-        {({ width }) => (
-          <VolumeChart
-            prices={prices}
-            width={width}
-            height={392}
-            timePeriod={timePeriod}
-            extractedColor={extractedColor}
-          />
-        )}
-        {/* {({ width }) => <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} />} */}
+        {({ width }) => {
+          return isInfoTDPEnabled ? (
+            <VolumeChart
+              prices={prices}
+              width={width}
+              height={392}
+              timePeriod={timePeriod}
+              extractedColor={extractedColor}
+            />
+          ) : (
+            <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} />
+          )
+        }}
       </ParentSize>
       <TimePeriodSelector
         currentTimePeriod={timePeriod}

@@ -138,7 +138,7 @@ export default function TokenDetails({
   const navigate = useNavigate()
 
   const theme = useTheme()
-  const extractedColor = useColor(detailedToken?.wrapped, theme.surface1, theme.darkMode)
+  const extractedColor = useColor(detailedToken?.wrapped, theme.surface2, theme.darkMode)
 
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 

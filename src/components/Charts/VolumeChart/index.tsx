@@ -15,7 +15,6 @@ const Tooltip = styled.div`
   padding: 8px;
   gap: 4px;
   text-align: left;
-  z-index: 1000;
   pointer-events: none;
 `
 
@@ -33,12 +32,10 @@ function formatTickMarks(time: UTCTimestamp, tickMarkType: TickMarkType, locale:
     case TickMarkType.Month:
       return date.toLocaleString(locale, { month: 'short', year: 'numeric' })
     case TickMarkType.DayOfMonth:
-      return null
-    case TickMarkType.Time:
-      // Insert code for Time case
+      return date.toLocaleString(locale, { month: 'short', day: 'numeric' })
+    case TickMarkType.Time: // why doesn't lightweight-charts switch to the correct TickMarkType on zoomin?
       return date.toLocaleString(locale, { hour: 'numeric', minute: 'numeric' })
     case TickMarkType.TimeWithSeconds:
-      // Insert code for TimeWithSeconds case
       return date.toLocaleString(locale, { hour: 'numeric', minute: 'numeric', second: '2-digit' })
     default:
       return null

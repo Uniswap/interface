@@ -176,7 +176,7 @@ export class CrosshairHighlightPrimitive implements ISeriesPrimitive<Time> {
     const ts = chart.timeScale()
     const visibleLogicalRange = ts.getVisibleLogicalRange()
     if (!visibleLogicalRange) return 6
-    return ts.width() / (visibleLogicalRange.to - visibleLogicalRange.from)
+    return ts.width() / (visibleLogicalRange.to + 1 - visibleLogicalRange.from)
   }
 
   private _onMouseMove(param: MouseEventParams) {
