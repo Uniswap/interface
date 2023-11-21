@@ -8,7 +8,7 @@ import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-naviga
 import { EducationContentType } from 'src/components/education'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
-import { OnboardingScreens, Screens } from 'src/screens/Screens'
+import { OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 
 type NFTItemScreenParams = {
@@ -85,6 +85,22 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.WatchWallet]: OnboardingStackBaseParams
 }
 
+export type UnitagStackParamList = {
+  [UnitagScreens.ClaimUnitag]: { entryPoint: OnboardingScreens.Landing | Screens.Home }
+  [UnitagScreens.ChooseProfilePicture]: {
+    entryPoint: OnboardingScreens.Landing | Screens.Home
+    unitag: string
+  }
+  [UnitagScreens.UnitagConfirmation]: {
+    unitag: string
+    address: Address
+    profilePictureUri?: string
+  }
+  [UnitagScreens.EditProfile]: {
+    address: Address
+  }
+}
+
 export type AppStackParamList = {
   [Screens.Education]: {
     type: EducationContentType
@@ -92,6 +108,7 @@ export type AppStackParamList = {
   [Screens.Home]?: { tab?: HomeScreenTabIndex }
   [Screens.OnboardingStack]: NavigatorScreenParams<OnboardingStackParamList>
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
+  [Screens.UnitagStack]: NavigatorScreenParams<UnitagStackParamList>
   [Screens.TokenDetails]: {
     currencyId: string
   }
@@ -128,10 +145,14 @@ export type OnboardingStackNavigationProp = CompositeNavigationProp<
   AppStackNavigationProp
 >
 
+export type UnitagStackScreenProp<Screen extends keyof UnitagStackParamList> =
+  NativeStackScreenProps<UnitagStackParamList, Screen>
+
 export type RootParamList = AppStackParamList &
   ExploreStackParamList &
   OnboardingStackParamList &
-  SettingsStackParamList
+  SettingsStackParamList &
+  UnitagStackParamList
 
 export const useAppStackNavigation = (): AppStackNavigationProp =>
   useNavigation<AppStackNavigationProp>()

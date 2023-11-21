@@ -7,10 +7,11 @@ import {
 } from 'react-native'
 import { TextInput } from 'src/components/input/TextInput'
 import { IS_ANDROID } from 'src/constants/globals'
-import { Flex, useSporeColors } from 'ui/src'
+import { ColorTokens, Flex, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 
 interface Props {
+  alwaysShowInputSuffix?: boolean
   autoCorrect: boolean
   blurOnSubmit: boolean
   inputAlignment: 'center' | 'flex-start'
@@ -18,6 +19,8 @@ interface Props {
   inputFontSize: number
   inputMaxFontSizeMultiplier: number
   inputSuffix?: string
+  inputSuffixColor?: ColorTokens
+  multiline?: boolean
   textAlign?: 'left' | 'right' | 'center'
   textInputRef: React.RefObject<NativeTextInput>
   layout?: LayoutRectangle | null
@@ -39,12 +42,15 @@ export default function InputWithSuffix(props: Props): JSX.Element {
 }
 
 function Inputs({
+  alwaysShowInputSuffix = false,
   value,
   layout,
   inputSuffix,
+  inputSuffixColor,
   inputAlignment,
   inputFontSize,
   inputMaxFontSizeMultiplier,
+  multiline = true,
   textAlign,
   textInputRef,
   layerType,
@@ -55,11 +61,11 @@ function Inputs({
 
   const handleContentSizeChange = useCallback(
     (e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {
-      if (textInputRef.current) {
+      if (multiline && textInputRef.current) {
         setIsMultiline(Math.floor(e.nativeEvent.contentSize.height / inputFontSize) > 1)
       }
     },
-    [textInputRef, inputFontSize]
+    [textInputRef, inputFontSize, multiline]
   )
 
   const isInputEmpty = !value?.length
@@ -89,7 +95,7 @@ function Inputs({
           justifyContent="flex-start"
           lineHeight={inputFontSize}
           maxFontSizeMultiplier={inputMaxFontSizeMultiplier}
-          multiline={true}
+          multiline={multiline}
           px="$none"
           py="$none"
           scrollEnabled={false}
@@ -109,7 +115,7 @@ function Inputs({
           justifyContent="center"
           lineHeight={inputFontSize}
           maxFontSizeMultiplier={inputMaxFontSizeMultiplier}
-          multiline={true}
+          multiline={multiline}
           px="$none"
           py="$none"
           returnKeyType="done"
@@ -126,16 +132,16 @@ function Inputs({
             : { ...inputProps, ref: textInputRef, autoFocus: true })}
         />
       )}
-      {inputSuffix && value && !value.includes(inputSuffix) ? (
+      {inputSuffix && (alwaysShowInputSuffix || (value && !value.includes(inputSuffix))) ? (
         <TextInput
           backgroundColor="$transparent"
-          color="$neutral2"
+          color={inputSuffixColor ?? '$neutral2'}
           editable={false}
           fontSize={inputFontSize}
           justifyContent="center"
           lineHeight={inputFontSize}
           maxFontSizeMultiplier={inputMaxFontSizeMultiplier}
-          multiline={true}
+          multiline={multiline}
           px="$none"
           py="$none"
           scrollEnabled={false}

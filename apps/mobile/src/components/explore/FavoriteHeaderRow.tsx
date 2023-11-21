@@ -1,8 +1,7 @@
 import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import TripleDots from 'ui/src/assets/icons/triple-dots.svg'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
 export function FavoriteHeaderRow({
@@ -17,7 +16,6 @@ export function FavoriteHeaderRow({
   onPress: () => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   return (
     <Flex
       row
@@ -31,12 +29,11 @@ export function FavoriteHeaderRow({
       </Text>
       {!isEditing ? (
         <TouchableArea hapticFeedback hitSlop={16} testID={ElementName.Edit} onPress={onPress}>
-          <TripleDots
-            color={colors.neutral2.get()}
-            height={iconSizes.icon20}
+          <Icons.TripleDots
+            color="$neutral2"
+            size={iconSizes.icon20}
             strokeLinecap="round"
-            strokeWidth="1"
-            width={iconSizes.icon20}
+            strokeWidth={1}
           />
         </TouchableArea>
       ) : (

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { SvgProps } from 'react-native-svg'
 import { useAppDispatch } from 'src/app/hooks'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import {
   OnboardingStackNavigationProp,
   SettingsStackNavigationProp,
@@ -31,7 +32,7 @@ import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
-import { OnboardingScreens, Screens } from 'src/screens/Screens'
+import { OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
 import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
 import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import ChartIcon from 'ui/src/assets/icons/chart.svg'
@@ -84,6 +85,7 @@ export function SettingsWallet({
   const [notificationSwitchEnabled, setNotificationSwitchEnabled] = useState<boolean>(
     notificationsEnabledOnFirebase
   )
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
 
   useEffect(() => {
     // If the user deletes the account while on this screen, go back
@@ -157,17 +159,19 @@ export function SettingsWallet({
     width: iconSizes.icon24,
   }
 
+  const editNicknameSectionOption: SettingsSectionItem = {
+    screen: Screens.SettingsWalletEdit,
+    text: t('Nickname'),
+    icon: <TextEditIcon fill={colors.neutral2.get()} {...iconProps} />,
+    screenProps: { address },
+    isHidden: !!ensName,
+  }
+
   const sections: SettingsSection[] = [
     {
       subTitle: t('Wallet preferences'),
       data: [
-        {
-          screen: Screens.SettingsWalletEdit,
-          text: t('Nickname'),
-          icon: <TextEditIcon fill={colors.neutral2.get()} {...iconProps} />,
-          screenProps: { address },
-          isHidden: !!ensName,
-        },
+        ...(unitagsFeatureFlagEnabled ? [] : [editNicknameSectionOption]),
         {
           action: (
             <Switch
@@ -270,6 +274,9 @@ export function SettingsWallet({
         <Flex fill>
           <SectionList
             ItemSeparatorComponent={renderItemSeparator}
+            ListHeaderComponent={
+              unitagsFeatureFlagEnabled ? <AddressDisplayHeader address={address} /> : undefined
+            }
             keyExtractor={(_item, index): string => 'wallet_settings' + index}
             renderItem={renderItem}
             renderSectionFooter={(): JSX.Element => <Flex pt="$spacing24" />}
@@ -294,3 +301,49 @@ export function SettingsWallet({
 }
 
 const renderItemSeparator = (): JSX.Element => <Flex pt="$spacing8" />
+
+function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
+  const { t } = useTranslation()
+  const ensName = useENS(ChainId.Mainnet, address)?.name
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
+  // TODO (MOB-2122): GET /address from unitags backend to check for unitag
+  const hasUnitag = false && unitagsFeatureFlagEnabled
+
+  const onPressEditProfile = (): void => {
+    if (hasUnitag) {
+      navigate(Screens.UnitagStack, {
+        screen: UnitagScreens.EditProfile,
+        params: {
+          address,
+        },
+      })
+    } else {
+      navigate(Screens.SettingsWalletEdit, {
+        address,
+      })
+    }
+  }
+
+  return (
+    <Flex gap="$spacing12" justifyContent="flex-start" pb="$spacing16">
+      <Flex shrink>
+        <AddressDisplay
+          address={address}
+          captionVariant="subheading2"
+          size={iconSizes.icon40}
+          variant="body1"
+        />
+      </Flex>
+      {(!ensName || hasUnitag) && (
+        <Button
+          color="$neutral1"
+          fontSize="$small"
+          size="medium"
+          theme="tertiary"
+          onPress={onPressEditProfile}>
+          {hasUnitag ? t('Edit profile') : t('Edit label')}
+        </Button>
+      )}
+    </Flex>
+  )
+}

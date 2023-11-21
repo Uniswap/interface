@@ -9,10 +9,15 @@ import {
   ExploreStackParamList,
   OnboardingStackParamList,
   SettingsStackParamList,
+  UnitagStackParamList,
 } from 'src/app/navigation/types'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
+import { ChooseProfilePictureScreen } from 'src/features/unitags/ChooseProfilePictureScreen'
+import { ClaimUnitagScreen } from 'src/features/unitags/ClaimUnitagScreen'
+import { EditProfileScreen } from 'src/features/unitags/EditProfileScreen'
+import { UnitagConfirmationScreen } from 'src/features/unitags/UnitagConfirmationScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
@@ -38,7 +43,7 @@ import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { QRAnimationScreen } from 'src/screens/Onboarding/QRAnimationScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
-import { OnboardingScreens, Screens } from 'src/screens/Screens'
+import { OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
 import { SettingsAppearanceScreen } from 'src/screens/SettingsAppearanceScreen'
 import { SettingsBiometricAuthScreen } from 'src/screens/SettingsBiometricAuthScreen'
 import { SettingsCloudBackupPasswordConfirmScreen } from 'src/screens/SettingsCloudBackupPasswordConfirmScreen'
@@ -63,6 +68,7 @@ const OnboardingStack = createStackNavigator<OnboardingStackParamList>()
 const AppStack = createNativeStackNavigator<AppStackParamList>()
 const ExploreStack = createNativeStackNavigator<ExploreStackParamList>()
 const SettingsStack = createNativeStackNavigator<SettingsStackParamList>()
+const UnitagStack = createNativeStackNavigator<UnitagStackParamList>()
 
 function SettingsStackGroup(): JSX.Element {
   return (
@@ -196,7 +202,7 @@ export function OnboardingStackNavigator(): JSX.Element {
         <OnboardingStack.Screen
           component={LandingScreen}
           name={OnboardingScreens.Landing}
-          options={{ headerShown: false }}
+          options={navOptions.noHeader}
         />
         <OnboardingStack.Screen component={EditNameScreen} name={OnboardingScreens.EditName} />
         <OnboardingStack.Screen component={BackupScreen} name={OnboardingScreens.Backup} />
@@ -268,13 +274,37 @@ export function OnboardingStackNavigator(): JSX.Element {
   )
 }
 
+export function UnitagStackNavigator(): JSX.Element {
+  return (
+    <UnitagStack.Navigator>
+      <UnitagStack.Group
+        screenOptions={{
+          ...navOptions.noHeader,
+          fullScreenGestureEnabled: true,
+          animation: 'slide_from_right',
+        }}>
+        <UnitagStack.Screen component={ClaimUnitagScreen} name={UnitagScreens.ClaimUnitag} />
+        <UnitagStack.Screen
+          component={ChooseProfilePictureScreen}
+          name={UnitagScreens.ChooseProfilePicture}
+        />
+        <UnitagStack.Screen
+          component={UnitagConfirmationScreen}
+          name={UnitagScreens.UnitagConfirmation}
+        />
+        <UnitagStack.Screen component={EditProfileScreen} name={UnitagScreens.EditProfile} />
+      </UnitagStack.Group>
+    </UnitagStack.Navigator>
+  )
+}
+
 export function AppStackNavigator(): JSX.Element {
   const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
 
   return (
     <AppStack.Navigator
       screenOptions={{
-        headerShown: false,
+        ...navOptions.noHeader,
         fullScreenGestureEnabled: true,
         gestureEnabled: true,
         animation: 'slide_from_right',
@@ -289,6 +319,7 @@ export function AppStackNavigator(): JSX.Element {
             : OnboardingEntryPoint.FreshInstallOrReplace.valueOf()
         }
       />
+      <AppStack.Screen component={UnitagStackNavigator} name={Screens.UnitagStack} />
       <AppStack.Screen component={ExternalProfileScreen} name={Screens.ExternalProfile} />
       <AppStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
       <AppStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />

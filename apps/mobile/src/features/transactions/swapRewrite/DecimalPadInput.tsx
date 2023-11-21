@@ -14,7 +14,6 @@ type DisableKeyCondition = (value: string) => boolean
 
 type DecimalPadInputProps = {
   disabled?: boolean
-  hasCurrencyPrefix?: boolean
   hideDecimal?: boolean
   onReady: () => void
   resetSelection: (start: number, end?: number) => void
@@ -30,19 +29,9 @@ export type DecimalPadInputRef = {
 
 export const DecimalPadInput = memo(
   forwardRef<DecimalPadInputRef, DecimalPadInputProps>(function DecimalPadInput(
-    {
-      disabled,
-      hasCurrencyPrefix,
-      hideDecimal,
-      onReady,
-      resetSelection,
-      selectionRef,
-      setValue,
-      valueRef,
-    },
+    { disabled, hideDecimal, onReady, resetSelection, selectionRef, setValue, valueRef },
     ref
   ): JSX.Element {
-    const prefixLength = hasCurrencyPrefix ? 1 : 0
     const [disabledKeys, setDisabledKeys] = useState<Partial<Record<KeyLabel, boolean>>>({})
     const [maxHeight, setMaxHeight] = useState<number | null>(null)
 
@@ -62,26 +51,19 @@ export const DecimalPadInput = memo(
 
     const getCurrentSelection = useCallback(() => {
       const selection = selectionRef?.current
-      const start =
-        selection && selection.start > 0 && hasCurrencyPrefix
-          ? selection.start - 1
-          : selection?.start
-      const end = selection?.end && hasCurrencyPrefix ? selection.end - 1 : selection?.end
-      return { start, end }
-    }, [hasCurrencyPrefix, selectionRef])
+      return { start: selection?.start, end: selection?.end }
+    }, [selectionRef])
 
     const disableKeysConditions = useMemo<Partial<Record<KeyLabel, DisableKeyCondition>>>(
       () => ({
         '.': (v) => v.includes('.'),
         backspace: (v): boolean => {
           const { start, end } = getCurrentSelection()
-          const cursorAtStart = hasCurrencyPrefix
-            ? start === 1 && end === 1
-            : start === 0 && end === 0
+          const cursorAtStart = start === 0 && end === 0
           return cursorAtStart || v.length === 0
         },
       }),
-      [hasCurrencyPrefix, getCurrentSelection]
+      [getCurrentSelection]
     )
 
     const updateDisabledKeys = useCallback(
@@ -123,11 +105,11 @@ export const DecimalPadInput = memo(
           // has no text selection, cursor is at the end of the text input
           updateValue(valueRef.current + label)
         } else {
-          resetSelection(start + 1 + prefixLength, start + 1 + prefixLength)
+          resetSelection(start + 1, start + 1)
           updateValue(valueRef.current.slice(0, start) + label + valueRef.current.slice(end))
         }
       },
-      [updateValue, resetSelection, valueRef, getCurrentSelection, prefixLength]
+      [updateValue, resetSelection, valueRef, getCurrentSelection]
     )
 
     const handleDelete = useCallback((): void => {
@@ -137,15 +119,15 @@ export const DecimalPadInput = memo(
         // has no text selection, cursor is at the end of the text input
         updateValue(valueRef.current.slice(0, -1))
       } else if (start < end) {
-        resetSelection(start + prefixLength, start + prefixLength)
+        resetSelection(start, start)
         // has text part selected
         updateValue(valueRef.current.slice(0, start) + valueRef.current.slice(end))
       } else if (start > 0) {
-        resetSelection(start - 1 + prefixLength, start - 1 + prefixLength)
+        resetSelection(start - 1, start - 1)
         // part of the text is not selected, but cursor moved
         updateValue(valueRef.current.slice(0, start - 1) + valueRef.current.slice(start))
       }
-    }, [updateValue, resetSelection, valueRef, getCurrentSelection, prefixLength])
+    }, [updateValue, resetSelection, valueRef, getCurrentSelection])
 
     const onPress = useCallback(
       (label: KeyLabel, action: KeyAction) => {

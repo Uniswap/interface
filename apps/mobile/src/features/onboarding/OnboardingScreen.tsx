@@ -2,7 +2,7 @@ import { useHeaderHeight } from '@react-navigation/elements'
 import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { Screen } from 'src/components/layout/Screen'
+import { Screen, SHORT_SCREEN_HEADER_HEIGHT_RATIO } from 'src/components/layout/Screen'
 import { IS_IOS } from 'src/constants/globals'
 import { AnimatedFlex, Flex, SpaceTokens, Text, useDeviceInsets, useMedia } from 'ui/src'
 import { fonts } from 'ui/src/theme'
@@ -29,7 +29,10 @@ export function OnboardingScreen({
   const gapSize = media.short ? '$none' : '$spacing16'
 
   return (
-    <Screen $short={{ pt: headerHeight * 0.88 }} edges={['right', 'left']} pt={headerHeight}>
+    <Screen
+      $short={{ pt: headerHeight * SHORT_SCREEN_HEADER_HEIGHT_RATIO }}
+      edges={['right', 'left']}
+      pt={headerHeight}>
       <KeyboardAvoidingView
         behavior={IS_IOS ? 'padding' : undefined}
         enabled={keyboardAvoidingViewEnabled}

@@ -85,7 +85,9 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) Wallet needs access to your Camera to scan QR codes</string>
-	<key>NSFaceIDUsageDescription</key>
+	<key>NSPhotoLibraryUsageDescription</key>
+  <string>$(PRODUCT_NAME) Wallet needs access to your Camera Roll to choose an avatar for your username</string>
+  <key>NSFaceIDUsageDescription</key>
 	<string>Enabling Face ID helps $(PRODUCT_NAME) Wallet keep your assets secure.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) Wallet does not require access to your location.</string>

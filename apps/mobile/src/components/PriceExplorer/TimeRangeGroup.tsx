@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import {
   interpolateColor,
@@ -6,7 +6,7 @@ import {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import { BUTTON_PADDING, TIME_RANGES } from 'src/components/PriceExplorer/constants'
+import { TIME_RANGES } from 'src/components/PriceExplorer/constants'
 import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
 import Trace from 'src/components/Trace/Trace'
 import { AnimatedFlex, AnimatedText, Flex, TouchableArea, useSporeColors } from 'ui/src'
@@ -52,13 +52,18 @@ export function TimeRangeGroup({
   const transition = useSharedValue(1)
   const previousIndex = useSharedValue(1)
   const currentIndex = useSharedValue(1)
+  const [adjustedLabelWidth, setAdjustedLabelWidth] = useState(labelWidth)
 
   // animates slider (time range label background) on press
   const sliderStyle = useAnimatedStyle(
     () => ({
-      transform: [{ translateX: buttonWidth * currentIndex.value + BUTTON_PADDING }],
+      transform: [
+        {
+          translateX: buttonWidth * currentIndex.value + (buttonWidth - adjustedLabelWidth) / 2,
+        },
+      ],
     }),
-    [buttonWidth]
+    [adjustedLabelWidth]
   )
 
   return (
@@ -68,7 +73,7 @@ export function TimeRangeGroup({
           bg="$surface3"
           borderRadius="$rounded20"
           style={[StyleSheet.absoluteFillObject, sliderStyle]}
-          width={labelWidth}
+          width={adjustedLabelWidth}
         />
       </View>
       {TIME_RANGES.map(([duration, label, element], index) => {
@@ -85,12 +90,26 @@ export function TimeRangeGroup({
                 currentIndex.value = index
                 transition.value = 1
               }}>
-              <TimeRangeLabel
-                index={index}
-                label={label}
-                selectedIndex={currentIndex}
-                transition={transition}
-              />
+              <Flex
+                alignSelf="center"
+                minWidth={adjustedLabelWidth}
+                px="$spacing8"
+                onLayout={({
+                  nativeEvent: {
+                    layout: { width },
+                  },
+                }): void => {
+                  if (width > adjustedLabelWidth) {
+                    setAdjustedLabelWidth(width)
+                  }
+                }}>
+                <TimeRangeLabel
+                  index={index}
+                  label={label}
+                  selectedIndex={currentIndex}
+                  transition={transition}
+                />
+              </Flex>
             </TouchableArea>
           </Trace>
         )

@@ -2,6 +2,9 @@ import React, { useMemo } from 'react'
 import { NativeSafeAreaViewProps } from 'react-native-safe-area-context'
 import { Flex, FlexProps, useDeviceInsets } from 'ui/src'
 
+// Used to determine amount of top padding for short screens
+export const SHORT_SCREEN_HEADER_HEIGHT_RATIO = 0.88
+
 type ScreenProps = FlexProps &
   // The SafeAreaView from react-native-safe-area-context also supports a `mode` prop which
   //  lets you choose if `edges` are added as margin or padding, but we don’t use that so

@@ -6,7 +6,7 @@ import { useAsyncData } from 'utilities/src/react/hooks'
 
 type Props = {
   backgroundColor?: string
-  borderRadius: number
+  borderRadius?: number
   imageHttpUrl: string | undefined
   height: number
   width: number

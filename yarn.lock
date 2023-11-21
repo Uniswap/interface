@@ -15058,7 +15058,8 @@ __metadata:
     react-native-gesture-handler: 2.9.0
     react-native-get-random-values: 1.8.0
     react-native-image-colors: 1.5.2
-    react-native-localize: 2.2.6
+    react-native-image-picker: 7.0.1
+    react-native-localize: ^2.2.6
     react-native-markdown-display: 7.0.0-alpha.2
     react-native-mmkv: 2.10.1
     react-native-mmkv-flipper-plugin: 1.0.0
@@ -40300,7 +40301,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-localize@npm:2.2.6":
+"react-native-image-picker@npm:7.0.1":
+  version: 7.0.1
+  resolution: "react-native-image-picker@npm:7.0.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 1af72d42a82bc7ade4906210496bc0f86218595098b20f003488793c733f387115d58e0a44c22c4bbcc4cc8eb354ef18c306f5b64e4def2d67b2ddabd6d8cb46
+  languageName: node
+  linkType: hard
+
+"react-native-localize@npm:^2.2.6":
   version: 2.2.6
   resolution: "react-native-localize@npm:2.2.6"
   peerDependencies:

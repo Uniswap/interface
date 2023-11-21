@@ -1146,6 +1146,8 @@ PODS:
     - React-Core
   - react-native-get-random-values (1.8.0):
     - React-Core
+  - react-native-image-picker (7.0.1):
+    - React-Core
   - react-native-mmkv (2.10.1):
     - MMKV (>= 1.2.13)
     - React-Core
@@ -1409,6 +1411,7 @@ DEPENDENCIES:
   - react-native-context-menu-view (from `../../../node_modules/react-native-context-menu-view`)
   - react-native-flipper-performance-plugin (from `../../../node_modules/react-native-flipper-performance-plugin`)
   - react-native-get-random-values (from `../../../node_modules/react-native-get-random-values`)
+  - react-native-image-picker (from `../../../node_modules/react-native-image-picker`)
   - react-native-mmkv (from `../../../node_modules/react-native-mmkv`)
   - "react-native-netinfo (from `../../../node_modules/@react-native-community/netinfo`)"
   - react-native-onesignal (from `../../../node_modules/react-native-onesignal`)
@@ -1585,6 +1588,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native-flipper-performance-plugin"
   react-native-get-random-values:
     :path: "../../../node_modules/react-native-get-random-values"
+  react-native-image-picker:
+    :path: "../../../node_modules/react-native-image-picker"
   react-native-mmkv:
     :path: "../../../node_modules/react-native-mmkv"
   react-native-netinfo:
@@ -1746,6 +1751,7 @@ SPEC CHECKSUMS:
   react-native-context-menu-view: d3b3e77985d5b05674a70f8e7eafe404dfa5bbcc
   react-native-flipper-performance-plugin: 2b873b68da3e368afeaf29c9c7a8c2b0ff908c4f
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
+  react-native-image-picker: 1569cfade34b3a011191ce262423e6ce2f8db5a1
   react-native-mmkv: dea675cf9697ad35940f1687e98e133e1358ef9f
   react-native-netinfo: 129bd99f607a2dc5bb096168f3e5c150fd1f1c95
   react-native-onesignal: 7bd44dbd031d8d57110c0203836ffc37ddead526

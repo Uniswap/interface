@@ -6,6 +6,7 @@ export enum Screens {
   NFTItem = 'NFTItem',
   NFTCollection = 'NFTCollection',
   OnboardingStack = 'OnboardingStack',
+  UnitagStack = 'UnitagStack',
   Settings = 'Settings',
   SettingsCloudBackupPasswordCreate = 'SettingsCloudBackupPasswordCreate',
   SettingsCloudBackupPasswordConfirm = 'SettingsCloudBackupPasswordConfirm',
@@ -47,4 +48,11 @@ export enum OnboardingScreens {
   WatchWallet = 'WatchWallet',
 }
 
-export type AppScreen = Screens | OnboardingScreens
+export enum UnitagScreens {
+  ClaimUnitag = 'ClaimUnitag',
+  ChooseProfilePicture = 'ChooseProfilePicture',
+  UnitagConfirmation = 'UnitagConfirmation',
+  EditProfile = 'EditProfile',
+}
+
+export type AppScreen = Screens | OnboardingScreens | UnitagScreens
