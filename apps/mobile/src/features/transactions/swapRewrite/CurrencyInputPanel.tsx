@@ -19,7 +19,7 @@ import { useDynamicFontSizing } from 'src/app/hooks'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
 import { MaxAmountButton } from 'src/features/transactions/swapRewrite/MaxAmountButton'
-import { AnimatedFlex, Flex, FlexProps, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, FlexProps, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { fonts, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { useForwardRef, usePrevious } from 'utilities/src/react/hooks'
@@ -200,6 +200,8 @@ export const CurrencyInputPanel = memo(
     const { animatedContainerStyle, animatedAmountInputStyle, animatedInfoRowStyle } =
       useAnimatedContainerStyles(isLoading, focus)
 
+    const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
+
     return (
       <TouchableArea hapticFeedback onPress={currencyInfo ? onPressIn : onShowTokenSelector}>
         <AnimatedFlex
@@ -225,6 +227,17 @@ export const CurrencyInputPanel = memo(
               overflow="hidden"
               style={animatedAmountInputStyle}
               onLayout={onLayout}>
+              {isFiatMode && (
+                <Text
+                  allowFontScaling
+                  color={inputColor}
+                  style={{
+                    fontSize: isCollapsed ? MIN_INPUT_FONT_SIZE : fontSize,
+                  }}
+                  variant="heading2">
+                  {fiatCurrencySymbol}
+                </Text>
+              )}
               {currencyInfo ? (
                 <AmountInput
                   ref={inputRef}
@@ -248,7 +261,8 @@ export const CurrencyInputPanel = memo(
                   px="$none"
                   py="$none"
                   returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
-                  showCurrencySign={isFiatMode}
+                  // Inline for better interaction with custom selection refs
+                  showCurrencySign={false}
                   showSoftInputOnFocus={showSoftInputOnFocus}
                   testID={isOutput ? 'amount-input-out' : 'amount-input-in'}
                   value={isLoading ? loadingTextValue : value}
@@ -286,10 +300,13 @@ export const CurrencyInputPanel = memo(
               width="100%">
               {/* TODO: enable this when fiat mode is ready to be integrated */}
               <TouchableArea disabled={true} onPress={onToggleIsFiatMode}>
-                <Flex shrink>
+                <Flex centered row shrink gap="$spacing4">
                   <Text color="$neutral2" numberOfLines={1} variant="body3">
                     {inputPanelFormattedValue}
                   </Text>
+                  {inputPanelFormattedValue && (
+                    <Icons.ArrowUpDown color="$neutral3" size="$icon.12" />
+                  )}
                 </Flex>
               </TouchableArea>
               <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">
