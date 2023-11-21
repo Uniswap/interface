@@ -125,6 +125,7 @@
     "upgrade:tamagui": "manypkg upgrade tamagui && manypkg upgrade @tamagui && manypkg upgrade tamagui-loader",
     "web": "yarn workspace @uniswap/web",
     "web2": "yarn workspace @uniswap/interface",
+    "web2:start": "cd apps/web2 && yarn start",
     "web2:build": "turbo run --filter=@uniswap/interface build:production",
     "prepare": "turbo prepare && yarn contracts:compile"
   },

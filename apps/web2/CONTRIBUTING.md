@@ -13,7 +13,7 @@ yarn install
 ## Running the web app locally
 
 ```
-yarn web2 start
+yarn web2:start
 ```
 
 The interface should automatically open. If it does not, navigate to [http://localhost:3000].
