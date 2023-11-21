@@ -246,6 +246,7 @@
     "d3": "^7.6.1",
     "ethers": "^5.7.2",
     "ext-name": "^5.0.0",
+    "fancy-canvas": "^2.1.0",
     "focus-visible": "^5.2.0",
     "get-graphql-schema": "^2.1.2",
     "graphql": "^16.5.0",

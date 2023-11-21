@@ -1,5 +1,5 @@
 import { ParentSize } from '@visx/responsive'
-import { VolumeChart } from 'components/Charts/VolumeChart'
+import { VolumeChart } from 'components/Charts/VolumeChart/index'
 import { ChartContainer, LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TokenPriceQuery } from 'graphql/data/TokenPrice'

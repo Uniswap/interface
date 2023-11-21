@@ -1,18 +1,12 @@
 import { PricePoint, TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import {
-  createChart,
-  CrosshairMode,
-  HistogramData,
-  LineStyle,
-  TickMarkType,
-  Time,
-  UTCTimestamp,
-} from 'lightweight-charts'
+import { createChart, HistogramData, TickMarkType, Time, UTCTimestamp } from 'lightweight-charts'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+
+import { CrosshairHighlightPrimitive } from './CrosshairHighlightPrimitive'
 
 const Tooltip = styled.div`
   display: flex;
@@ -21,19 +15,6 @@ const Tooltip = styled.div`
   padding: 8px;
   gap: 4px;
   text-align: left;
-  z-index: 1000;
-  pointer-events: none;
-`
-// width: ${toolTipWidth}px;
-// height: ${height};
-const CrosshairLine = styled.div<{ height: number }>`
-  background-color: ${({ theme }) => theme.surface3};
-  height: ${({ height }) => height}px;
-  position: absolute;
-  display: none;
-
-  // top: 0px;
-  // box-sizing: border-box;
   z-index: 1000;
   pointer-events: none;
 `
@@ -63,12 +44,7 @@ function formatTickMarks(time: UTCTimestamp, tickMarkType: TickMarkType, locale:
       return null
   }
 }
-type CrosshairLineStyle = {
-  display: string
-  left: string
-  height?: string
-  width: string
-}
+
 interface VolumeChartProps {
   width: number
   height: number
@@ -81,12 +57,6 @@ export function VolumeChart({ width, height, prices, timePeriod, extractedColor 
   const chartRef = useRef<HTMLDivElement>(null)
   const [tooltipPrice, setTooltipPrice] = useState<string>('')
   const [toolTipDate, setTooltipDate] = useState<string>('')
-  const [crosshairLineStyle, setCrosshairLineStyle] = useState<CrosshairLineStyle>({
-    display: 'none',
-    left: '0px',
-    height: `${height}px`,
-    width: '0px',
-  })
 
   const { formatFiatPrice } = useFormatter()
   const locale = useActiveLocale()
@@ -130,13 +100,6 @@ export function VolumeChart({ width, height, prices, timePeriod, extractedColor 
         },
       },
       crosshair: {
-        mode: CrosshairMode.Normal,
-        vertLine: {
-          width: 4,
-          color: surface3,
-          style: LineStyle.Solid,
-          labelVisible: false,
-        },
         horzLine: {
           visible: false,
           labelVisible: false,
@@ -159,8 +122,12 @@ export function VolumeChart({ width, height, prices, timePeriod, extractedColor 
         bottom: 0,
       },
     })
-    volumeSeries.setData(data) // can update realtime using volumeSeries.update({ time, value: 25 });
+    volumeSeries.setData(data)
     chart.timeScale().fitContent()
+
+    /* Add crosshair highlight bar */
+    const crosshair = new CrosshairHighlightPrimitive({ color: surface3 })
+    volumeSeries.attachPrimitive(crosshair)
 
     /* Create tooltip */
     const tooltipTimeFormatOptions: Intl.DateTimeFormatOptions = {
@@ -198,37 +165,6 @@ export function VolumeChart({ width, height, prices, timePeriod, extractedColor 
         const formattedDate = new Date((p.time as UTCTimestamp) * 1000).toLocaleString(locale, tooltipTimeFormatOptions)
         setTooltipDate(formattedDate)
       }
-      const crosshairWidth = chart.timeScale().width() / prices.length
-      // let left: number = p.point.x // relative to timeScale
-      // const timeScaleWidth = chart.timeScale().width()
-      // const priceScaleWidth = chart.priceScale('left').width()
-      // const halfTooltipWidth = crosshairWidth / 2
-      // left += priceScaleWidth - halfTooltipWidth
-      // left = Math.min(left, priceScaleWidth + timeScaleWidth - crosshairWidth)
-      // left = Math.max(left, priceScaleWidth)
-
-      const logical = p.logical
-      if (!logical || !chart) {
-        setCrosshairLineStyle({
-          display: 'none',
-          left: `0px`,
-          width: '0px',
-        })
-        // setData({
-        //   x: 0,
-        //   visible: false,
-        //   color: currentColor(),
-        //   barSpacing: _barSpacing(),
-        // })
-        return
-      }
-      const coordinate = chart.timeScale().logicalToCoordinate(logical)
-
-      setCrosshairLineStyle({
-        display: 'block',
-        left: `${coordinate}px`,
-        width: `${crosshairWidth}px`,
-      })
     })
 
     return () => {
@@ -238,7 +174,6 @@ export function VolumeChart({ width, height, prices, timePeriod, extractedColor 
 
   return (
     <div ref={chartRef}>
-      <CrosshairLine style={crosshairLineStyle} height={height} />
       <Tooltip>
         <ThemedText.HeadlineLarge>{tooltipPrice}</ThemedText.HeadlineLarge>
         <ThemedText.Caption color="neutral2">{toolTipDate}</ThemedText.Caption>

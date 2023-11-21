@@ -95,7 +95,6 @@ function useRelevantToken(
     [onChainToken, queryToken]
   )
 }
-
 type TokenDetailsProps = {
   urlAddress?: string
   inputTokenAddress?: string
