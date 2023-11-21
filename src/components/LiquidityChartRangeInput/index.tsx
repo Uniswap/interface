@@ -90,8 +90,8 @@ export default function LiquidityChartRangeInput({
 }) {
   const theme = useTheme()
 
-  const tokenAColor = useColor(currencyA?.wrapped)
-  const tokenBColor = useColor(currencyB?.wrapped)
+  const tokenAColor = useColor(currencyA)
+  const tokenBColor = useColor(currencyB)
 
   const isSorted = currencyA && currencyB && currencyA?.wrapped.sortsBefore(currencyB?.wrapped)
 

@@ -1,4 +1,4 @@
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { DEFAULT_COLOR } from 'constants/tokenColors'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import { darken, lighten, rgb } from 'polished'
@@ -29,13 +29,13 @@ function URIForEthToken(address: string) {
 /**
  * Retrieves the average color from a token's symbol using various sources.
  *
- * @param {Token} token - The token for which to fetch the color.
+ * @param {Currency} currency - The currency for which to fetch the color.
  * @param {string} primarySrc - Primary source URL for color retrieval (optional).
  *
  * @returns {Promise< | null>} A promise that resolves to a color string or null if color cannot be determined.
  */
-async function getColorFromToken(token: Token, primarySrc?: string): Promise<string | null> {
-  const wrappedToken = token as TokenFromList
+async function getColorFromToken(currency: Currency, primarySrc?: string): Promise<string | null> {
+  const wrappedToken = currency.wrapped as TokenFromList
   let color: string | null = null
 
   try {
@@ -49,14 +49,14 @@ async function getColorFromToken(token: Token, primarySrc?: string): Promise<str
       color = colorArray === DEFAULT_COLOR ? null : convertColorArrayToString(colorArray)
     }
 
-    if (!color && token.chainId === ChainId.MAINNET) {
+    if (!color && currency.chainId === ChainId.MAINNET) {
       const colorArray = await getColor(URIForEthToken(wrappedToken.address))
       color = colorArray === DEFAULT_COLOR ? null : convertColorArrayToString(colorArray)
     }
 
     return color
   } catch (error) {
-    console.warn(`Unable to load logoURI (${token.symbol}): ${primarySrc}, ${wrappedToken.logoURI}`)
+    console.warn(`Unable to load logoURI (${currency.symbol}): ${primarySrc}, ${wrappedToken.logoURI}`)
     return null
   }
 }
@@ -65,16 +65,16 @@ function convertColorArrayToString([red, green, blue]: number[]): string {
   return rgb({ red, green, blue })
 }
 
-export function useColor(token?: Token, backgroundColor?: string, makeLighter?: boolean) {
+export function useColor(currency?: Currency, backgroundColor?: string, makeLighter?: boolean) {
   const theme = useTheme()
   const [color, setColor] = useState(theme.accent1)
-  const [src] = useTokenLogoSource(token?.address, token?.chainId, token?.isNative)
+  const [src] = useTokenLogoSource(currency?.wrapped.address, currency?.chainId, currency?.isNative)
 
   useEffect(() => {
     let stale = false
 
-    if (token) {
-      getColorFromToken(token, src).then((tokenColor) => {
+    if (currency) {
+      getColorFromToken(currency, src).then((tokenColor) => {
         if (!stale && tokenColor !== null) {
           if (backgroundColor) {
             let increment = 0.1
@@ -92,7 +92,7 @@ export function useColor(token?: Token, backgroundColor?: string, makeLighter?: 
       stale = true
       setColor(theme.accent1)
     }
-  }, [backgroundColor, makeLighter, src, theme.accent1, token])
+  }, [backgroundColor, makeLighter, src, theme.accent1, currency])
 
   return color
 }
