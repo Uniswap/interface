@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { InterfaceSectionName } from '@uniswap/analytics-events'
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { FeatureFlag } from 'featureFlags'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../../src/constants/misc'
 import { DAI, USDC_MAINNET } from '../../../src/constants/tokens'
@@ -65,9 +64,7 @@ describe('Swap errors', () => {
   })
 
   it('slippage failure', () => {
-    cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
-      featureFlags: [{ name: FeatureFlag.uniswapXDefaultEnabled, value: false }],
-    })
+    cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
     cy.hardhat({ automine: false }).then(async (hardhat) => {
       await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 500e6))
       await hardhat.mine()
