@@ -9,7 +9,7 @@ This repository contains code for the Uniswap Wallet and is in transition to a m
 First, read and follow the instructions of the individual apps in this repository to install prerequisites to run these apps.
 
 - [Mobile](apps/mobile/README.md)
-- [Web](apps/web/README.md)
+- [Interface](apps/web2/README.md)
 
 ### Quickstart
 
