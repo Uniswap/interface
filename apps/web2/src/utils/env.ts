@@ -7,7 +7,7 @@ export function isTestEnv(): boolean {
 }
 
 export function isStagingEnv(): boolean {
-  // This is set in vercel builds and deploys from releases/staging.
+  // This is set in vercel builds and deploys from web/staging.
   return Boolean(process.env.REACT_APP_STAGING)
 }
 

@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - main
-      - interface
 
 jobs:
   monorepo-integrity:

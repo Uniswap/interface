@@ -55,7 +55,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Code merged to <https://github.com/Uniswap/interface/tree/${{ github.ref }}|${{ github.ref_name }}> branch:*\n"
+                    "text": "*Code merged to <https://github.com/Uniswap/wallet-internal/tree/${{ github.ref }}|${{ github.ref_name }}> branch:*\n"
                   }
                 },
                 {

@@ -9,8 +9,7 @@ on:
   push:
     branches:
       - main
-      - releases/staging
-      - interface
+      - web/staging
   pull_request:
   workflow_dispatch:
 
@@ -77,7 +76,7 @@ jobs:
           wait-on: 'http://localhost:3000'
           browser: electron
           group: e2e
-          spec: ${{ github.ref_name == 'releases/staging' && 'cypress/{e2e,staging}/**/*.test.ts' || 'cypress/e2e/**/*.test.ts' }}
+          spec: ${{ github.ref_name == 'web/staging' && 'cypress/{e2e,staging}/**/*.test.ts' || 'cypress/e2e/**/*.test.ts' }}
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -152,7 +151,7 @@ jobs:
           flags: cloud-tests
         
   pre:
-    if: ${{ github.ref_name == 'main' || github.ref_name == 'releases/staging' }}
+    if: ${{ github.ref_name == 'main' || github.ref_name == 'web/staging' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v6.4.1
@@ -165,11 +164,11 @@ jobs:
               state: 'pending',
               context: 'Test / promotion',
               description: 'Running tests...',
-              target_url: 'https://github.com/Uniswap/interface/actions/runs/' + context.runId
+              target_url: 'https://github.com/Uniswap/wallet-internal/actions/runs/' + context.runId
             })
 
   post:
-    if: ${{ github.ref_name == 'main' || github.ref_name == 'releases/staging' }}
+    if: ${{ github.ref_name == 'main' || github.ref_name == 'web/staging' }}
     needs: [pre, lint, typecheck, deps-tests, unit-tests, cypress-test-matrix, cloud-tests]
     runs-on: ubuntu-latest
     steps:
@@ -183,7 +182,7 @@ jobs:
               state: ${{ env.STATUS }} ? 'success' : 'failure',
               context: 'Test / promotion',
               description: ${{ env.STATUS }} ? 'All tests passed' : 'One or more tests failed and are blocking promotion',
-              target_url: 'https://github.com/Uniswap/interface/actions/runs/' + context.runId
+              target_url: 'https://github.com/Uniswap/wallet-internal/actions/runs/' + context.runId
             })
         env:
           STATUS: |

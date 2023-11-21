@@ -29,7 +29,7 @@ jobs:
       - name: Extract i18n for web
         run: yarn web i18n:extract
 
-      - name: Upload Crowdin sources
+      - name: Upload Crowdin sources for web
         uses: crowdin/github-action@3133cc916c35590475cf6705f482fb653d8e36e9
         with:
           upload_sources: true
