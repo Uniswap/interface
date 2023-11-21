@@ -4,9 +4,8 @@ import { PoolDetailsHeader } from 'components/Pools/PoolDetails/PoolDetailsHeade
 import { PoolDetailsLink } from 'components/Pools/PoolDetails/PoolDetailsLink'
 import { PoolDetailsStats } from 'components/Pools/PoolDetails/PoolDetailsStats'
 import { PoolDetailsStatsButtons } from 'components/Pools/PoolDetails/PoolDetailsStatsButtons'
-import { PoolDetailsTableSkeleton } from 'components/Pools/PoolDetails/PoolDetailsTableSkeleton'
+import { PoolDetailsTable } from 'components/Pools/PoolDetails/PoolDetailsTable'
 import Row from 'components/Row'
-import { LoadingBubble } from 'components/Tokens/loading'
 import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
 import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { usePoolData } from 'graphql/thegraph/PoolData'
@@ -49,11 +48,6 @@ const HR = styled.hr`
   border: 0.5px solid ${({ theme }) => theme.surface3};
   margin: 16px 0px;
   width: 100%;
-`
-
-const ChartHeaderBubble = styled(LoadingBubble)`
-  width: 180px;
-  height: 32px;
 `
 
 const RightColumn = styled(Column)`
@@ -127,8 +121,7 @@ export default function PoolDetailsPage() {
           <LoadingChart />
         </Column>
         <HR />
-        <ChartHeaderBubble />
-        <PoolDetailsTableSkeleton />
+        <PoolDetailsTable loading={loading} />
       </LeftColumn>
       <RightColumn>
         <PoolDetailsStatsButtons

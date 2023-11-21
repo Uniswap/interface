@@ -2,11 +2,17 @@ import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { ArrowDown } from 'react-feather'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 
 import { DetailBubble, SmallDetailBubble } from './shared'
+
+const ChartHeaderBubble = styled(LoadingBubble)`
+  width: 180px;
+  height: 32px;
+`
 
 const Table = styled(Column)`
   gap: 24px;
@@ -41,40 +47,21 @@ const TableElement = styled(ThemedText.BodySecondary)<{
 }
 export function PoolDetailsTableSkeleton() {
   return (
-    <Table $isHorizontalScroll>
-      <TableRow $borderBottom>
-        <TableElement large>
-          <Row>
-            <ArrowDown size={16} />
-            <Trans>Time</Trans>
-          </Row>
-        </TableElement>
-        <TableElement>
-          <Trans>Type</Trans>
-        </TableElement>
-        <TableElement alignRight>
-          <Trans>USD</Trans>
-        </TableElement>
-        <TableElement alignRight>
-          <DetailBubble />
-        </TableElement>
-        <TableElement alignRight>
-          <DetailBubble />
-        </TableElement>
-        <TableElement alignRight>
-          <Trans>Maker</Trans>
-        </TableElement>
-        <TableElement alignRight small>
-          <Trans>Txn</Trans>
-        </TableElement>
-      </TableRow>
-      {Array.from({ length: 10 }).map((_, i) => (
-        <TableRow key={`loading-table-row-${i}`}>
+    <Column gap="lg">
+      <ChartHeaderBubble />
+      <Table $isHorizontalScroll>
+        <TableRow $borderBottom>
           <TableElement large>
-            <DetailBubble />
+            <Row>
+              <ArrowDown size={16} />
+              <Trans>Time</Trans>
+            </Row>
           </TableElement>
           <TableElement>
-            <DetailBubble />
+            <Trans>Type</Trans>
+          </TableElement>
+          <TableElement alignRight>
+            <Trans>USD</Trans>
           </TableElement>
           <TableElement alignRight>
             <DetailBubble />
@@ -83,16 +70,38 @@ export function PoolDetailsTableSkeleton() {
             <DetailBubble />
           </TableElement>
           <TableElement alignRight>
-            <DetailBubble />
-          </TableElement>
-          <TableElement alignRight>
-            <DetailBubble />
+            <Trans>Maker</Trans>
           </TableElement>
           <TableElement alignRight small>
-            <SmallDetailBubble />
+            <Trans>Txn</Trans>
           </TableElement>
         </TableRow>
-      ))}
-    </Table>
+        {Array.from({ length: 10 }).map((_, i) => (
+          <TableRow key={`loading-table-row-${i}`}>
+            <TableElement large>
+              <DetailBubble />
+            </TableElement>
+            <TableElement>
+              <DetailBubble />
+            </TableElement>
+            <TableElement alignRight>
+              <DetailBubble />
+            </TableElement>
+            <TableElement alignRight>
+              <DetailBubble />
+            </TableElement>
+            <TableElement alignRight>
+              <DetailBubble />
+            </TableElement>
+            <TableElement alignRight>
+              <DetailBubble />
+            </TableElement>
+            <TableElement alignRight small>
+              <SmallDetailBubble />
+            </TableElement>
+          </TableRow>
+        ))}
+      </Table>
+    </Column>
   )
 }
