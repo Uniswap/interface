@@ -1,6 +1,27 @@
 import gql from 'graphql-tag'
 
+import { TokenBalance } from './__generated__/types-and-hooks'
+
 gql`
+  fragment PortfolioTokenBalanceParts on TokenBalance {
+    id
+    quantity
+    denominatedValue {
+      id
+      currency
+      value
+    }
+    token {
+      id
+      chain
+      address
+      name
+      symbol
+      standard
+      decimals
+    }
+  }
+
   query PortfolioBalances($ownerAddress: String!, $chains: [Chain!]!) {
     portfolios(ownerAddresses: [$ownerAddress], chains: $chains) {
       id
@@ -19,13 +40,7 @@ gql`
         }
       }
       tokenBalances {
-        id
-        quantity
-        denominatedValue {
-          id
-          currency
-          value
-        }
+        ...PortfolioTokenBalanceParts
         tokenProjectMarket {
           id
           pricePercentChange(duration: DAY) {
@@ -38,16 +53,9 @@ gql`
             isSpam
           }
         }
-        token {
-          id
-          chain
-          address
-          name
-          symbol
-          standard
-          decimals
-        }
       }
     }
   }
 `
+
+export type PortfolioToken = NonNullable<TokenBalance['token']>

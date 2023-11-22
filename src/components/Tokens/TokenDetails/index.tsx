@@ -24,7 +24,12 @@ import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
-import { Chain, TokenBalance, TokenPriceQuery, TokenQuery } from 'graphql/data/__generated__/types-and-hooks'
+import {
+  Chain,
+  PortfolioTokenBalancePartsFragment,
+  TokenPriceQuery,
+  TokenQuery,
+} from 'graphql/data/__generated__/types-and-hooks'
 import { TokenQueryData } from 'graphql/data/Token'
 import { getTokenDetailsURL, gqlToCurrency, InterfaceGqlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
@@ -95,7 +100,7 @@ function useRelevantToken(
     [onChainToken, queryToken]
   )
 }
-export type MultiChainMap = { [chain: string]: { address?: string; balance?: TokenBalance } }
+export type MultiChainMap = { [chain: string]: { address?: string; balance?: PortfolioTokenBalancePartsFragment } }
 type TokenDetailsProps = {
   urlAddress?: string
   inputTokenAddress?: string
@@ -123,7 +128,7 @@ export default function TokenDetails({
   const tokenQueryData = tokenQuery.token
   const { data: balanceQuery } = useCachedPortfolioBalancesQuery({ account })
   const multiChainMap = useMemo(() => {
-    const tokenBalances = balanceQuery?.portfolios?.[0].tokenBalances as TokenBalance[]
+    const tokenBalances = balanceQuery?.portfolios?.[0].tokenBalances as PortfolioTokenBalancePartsFragment[]
     const tokensAcrossChains = tokenQueryData?.project?.tokens
     if (!tokensAcrossChains) return {}
     return tokensAcrossChains.reduce((map, current) => {

@@ -6,7 +6,7 @@ import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain } from 'constants/chains'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
-import { Chain, TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
+import { Chain, PortfolioTokenBalancePartsFragment } from 'graphql/data/__generated__/types-and-hooks'
 import { getTokenDetailsURL, gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
@@ -75,7 +75,7 @@ interface BalanceProps {
   currency?: Currency
   chainId?: ChainId
   balance?: CurrencyAmount<Currency> // TODO(WEB-3026): only used for pre-Info-project calculations, should remove after project goes live
-  gqlBalance?: TokenBalance
+  gqlBalance?: PortfolioTokenBalancePartsFragment
   onClick?: () => void
 }
 const Balance = ({ currency, chainId = ChainId.MAINNET, balance, gqlBalance, onClick }: BalanceProps) => {
@@ -156,7 +156,7 @@ const ConnectedChainBalanceSummary = ({
   )
 }
 
-const PageChainBalanceSummary = ({ pageChainBalance }: { pageChainBalance?: TokenBalance }) => {
+const PageChainBalanceSummary = ({ pageChainBalance }: { pageChainBalance?: PortfolioTokenBalancePartsFragment }) => {
   if (!pageChainBalance || !pageChainBalance.token) return null
   const currency = gqlToCurrency(pageChainBalance.token)
   return (
@@ -173,7 +173,7 @@ const OtherChainsBalanceSummary = ({
   otherChainBalances,
   hasPageChainBalance,
 }: {
-  otherChainBalances?: TokenBalance[]
+  otherChainBalances?: PortfolioTokenBalancePartsFragment[]
   hasPageChainBalance: boolean
 }) => {
   const navigate = useNavigate()
@@ -235,7 +235,7 @@ export default function BalanceSummary({
   const pageChainBalance = multiChainMap[chain].balance
   const otherChainBalances = Object.entries(multiChainMap)
     .filter(([key, value]) => key !== chain && value.balance !== undefined)
-    .map(([, value]) => value.balance) as TokenBalance[] | undefined
+    .map(([, value]) => value.balance) as PortfolioTokenBalancePartsFragment[] | undefined
   const hasBalances = pageChainBalance || Boolean(otherChainBalances?.length)
 
   if (!account || !hasBalances) {

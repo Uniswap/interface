@@ -4,7 +4,8 @@ import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrap
 import Row from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
-import { TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
+import { PortfolioTokenBalancePartsFragment } from 'graphql/data/__generated__/types-and-hooks'
+import { PortfolioToken } from 'graphql/data/portfolios'
 import { getTokenDetailsURL, gqlToCurrency, logSentryErrorForUnsupportedChain } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
@@ -28,7 +29,7 @@ export default function Tokens({ account }: { account: string }) {
 
   const { data } = useCachedPortfolioBalancesQuery({ account })
 
-  const tokenBalances = data?.portfolios?.[0].tokenBalances as TokenBalance[] | undefined
+  const tokenBalances = data?.portfolios?.[0].tokenBalances as PortfolioTokenBalancePartsFragment[] | undefined
 
   const { visibleTokens, hiddenTokens } = useMemo(
     () => splitHiddenTokens(tokenBalances ?? [], { hideSmallBalances }),
@@ -69,9 +70,12 @@ const TokenNameText = styled(ThemedText.SubHeader)`
   ${EllipsisStyle}
 `
 
-type PortfolioToken = NonNullable<TokenBalance['token']>
-
-function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: TokenBalance & { token: PortfolioToken }) {
+function TokenRow({
+  token,
+  quantity,
+  denominatedValue,
+  tokenProjectMarket,
+}: PortfolioTokenBalancePartsFragment & { token: PortfolioToken }) {
   const { formatDelta } = useFormatter()
   const percentChange = tokenProjectMarket?.pricePercentChange?.value ?? 0
 

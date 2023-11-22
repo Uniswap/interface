@@ -1,15 +1,15 @@
-import { TokenBalance, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
+import { PortfolioTokenBalancePartsFragment, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
 export function splitHiddenTokens(
-  tokenBalances: TokenBalance[],
+  tokenBalances: PortfolioTokenBalancePartsFragment[],
   options: {
     hideSmallBalances?: boolean
   } = { hideSmallBalances: true }
 ) {
-  const visibleTokens: TokenBalance[] = []
-  const hiddenTokens: TokenBalance[] = []
+  const visibleTokens: PortfolioTokenBalancePartsFragment[] = []
+  const hiddenTokens: PortfolioTokenBalancePartsFragment[] = []
 
   for (const tokenBalance of tokenBalances) {
     // if undefined we keep visible (see https://linear.app/uniswap/issue/WEB-1940/[mp]-update-how-we-handle-what-goes-in-hidden-token-section-of-mini)
@@ -29,7 +29,7 @@ export function splitHiddenTokens(
   return { visibleTokens, hiddenTokens }
 }
 
-function meetsThreshold(tokenBalance: TokenBalance) {
+function meetsThreshold(tokenBalance: PortfolioTokenBalancePartsFragment) {
   const value = tokenBalance.denominatedValue?.value ?? 0
   return value > HIDE_SMALL_USD_BALANCES_THRESHOLD
 }
