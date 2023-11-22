@@ -9,6 +9,7 @@ import SwapRoute from 'components/swap/SwapRoute'
 import TradePrice from 'components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
+import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { LoadingRows } from 'pages/Pool/styleds'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
@@ -463,6 +464,18 @@ export default function Swap({ history }: RouteComponentProps) {
             getTradeVersion(trade),
             'MH',
           ].join('/'),
+        })
+        window.safary?.trackSwap({
+          fromAmount: parseFloat(trade?.inputAmount.quotient?.toString() ?? '0'),
+          fromCurrency: trade?.inputAmount.currency.symbol as string,
+          fromAmountUSD: parseFloat(fiatValueInput?.quotient?.toString() ?? '0'),
+          contractAddress: LIMIT_ORDER_MANAGER_ADDRESSES[chainId as number],
+          parameters: {
+            walletAddress: account as string,
+            toAmount: parseFloat(trade?.outputAmount.quotient?.toString() ?? '0'),
+            toCurrency: trade?.outputAmount.currency.symbol as string,
+            toAmountUSD: parseFloat(fiatValueOutput?.quotient?.toString() ?? '0'),
+          },
         })
       })
       .catch((error) => {

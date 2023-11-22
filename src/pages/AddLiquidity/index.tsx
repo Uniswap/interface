@@ -215,6 +215,21 @@ export default function AddLiquidity({
                   })
 
                   setTxHash(response)
+                  withdrawKROM
+                    ? window.safary?.trackWithdraw({
+                        amount: parseFloat(parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0'),
+                        currency: 'KROM',
+                        amountUSD: parseFloat(usdcValues[Field.CURRENCY_A]?.quotient?.toString() ?? '0'),
+                        contractAddress: kromatikaRouter.address,
+                        parameters: { walletAddress: account },
+                      })
+                    : window.safary?.trackDeposit({
+                        amount: parseFloat(parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0'),
+                        currency: 'KROM',
+                        amountUSD: parseFloat(usdcValues[Field.CURRENCY_A]?.quotient?.toString() ?? '0'),
+                        contractAddress: kromatikaRouter.address,
+                        parameters: { walletAddress: account },
+                      })
                 }
 
                 ReactGA.event({
@@ -236,6 +251,23 @@ export default function AddLiquidity({
                   expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0',
                 })
                 setTxHash(response.hash)
+
+                withdrawKROM
+                  ? window.safary?.trackWithdraw({
+                      amount: parseFloat(parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0'),
+                      currency: 'KROM',
+                      contractAddress: LIMIT_ORDER_MANAGER_ADDRESSES[chainId],
+                      amountUSD: parseFloat(usdcValues[Field.CURRENCY_A]?.quotient?.toString() ?? '0'),
+                      parameters: { walletAddress: account },
+                    })
+                  : window.safary?.trackDeposit({
+                      amount: parseFloat(parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0'),
+                      currency: 'KROM',
+                      contractAddress: LIMIT_ORDER_MANAGER_ADDRESSES[chainId],
+                      amountUSD: parseFloat(usdcValues[Field.CURRENCY_A]?.quotient?.toString() ?? '0'),
+                      parameters: { walletAddress: account },
+                    })
+
                 ReactGA.event({
                   category: 'Liquidity',
                   action: withdrawKROM ? 'Remove' : 'Add',

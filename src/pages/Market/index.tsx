@@ -11,6 +11,7 @@ import SwapRoute from 'components/swap/SwapRoute'
 import TradePrice from 'components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
+import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
 import { CHAIN_NATIVE_TOKEN_SYMBOL, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useMarketCallback } from 'hooks/useMarketCallback'
@@ -436,7 +437,6 @@ export default function Market({ history }: RouteComponentProps) {
       }
     } else {
       await approveCallback()
-
       ReactGA.event({
         category: 'Swap',
         action: 'Approve',
@@ -512,6 +512,19 @@ export default function Market({ history }: RouteComponentProps) {
             getTradeVersion(trade),
             'MH',
           ].join('/'),
+        })
+
+        window.safary?.trackSwap({
+          fromAmount: parseFloat(trade?.inputAmount.quotient?.toString() ?? '0'),
+          fromCurrency: trade?.inputAmount.currency.symbol as string,
+          fromAmountUSD: parseFloat(fiatValueInput?.quotient?.toString() ?? '0'),
+          contractAddress: LIMIT_ORDER_MANAGER_ADDRESSES[chainId as number],
+          parameters: {
+            walletAddress: account as string,
+            toAmount: parseFloat(trade?.outputAmount.quotient?.toString() ?? '0'),
+            toCurrency: trade?.outputAmount.currency.symbol as string,
+            toAmountUSD: parseFloat(fiatValueOutput?.quotient?.toString() ?? '0'),
+          },
         })
       })
       .catch((error) => {
