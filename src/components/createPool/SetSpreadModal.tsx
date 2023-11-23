@@ -94,8 +94,7 @@ export default function SetSpreadModal({ isOpen, currentSpread, onDismiss, title
               <ThemedText.DeprecatedMediumHeader fontWeight={500}>{title}</ThemedText.DeprecatedMediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
-            <NameInputPanel value={typed} onChange={onUserInput} label="Pool Spread" placeholder="max 10%" />
-            {/* TODO: disables if same as current */}
+            <NameInputPanel value={typed} onChange={onUserInput} label="Pool Spread (%)" placeholder="max 10%" />
             <ButtonError
               disabled={
                 typed === '' ||
