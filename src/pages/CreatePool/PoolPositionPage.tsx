@@ -384,12 +384,15 @@ export function PoolPositionPage() {
                 title={<Trans>Set Spread</Trans>}
               />
             )}
-            <SetValueModal
-              isOpen={showSetValueModal}
-              onDismiss={() => setShowSetValueModal(false)}
-              poolInfo={poolInfo}
-              title={<Trans>Set Value</Trans>}
-            />
+            {baseTokenSymbol && (
+              <SetValueModal
+                isOpen={showSetValueModal}
+                onDismiss={() => setShowSetValueModal(false)}
+                poolInfo={poolInfo}
+                baseTokenSymbol={baseTokenSymbol}
+                title={<Trans>Set Value</Trans>}
+              />
+            )}
             <DelegateModal
               isOpen={showStakeModal}
               poolInfo={poolInfo}

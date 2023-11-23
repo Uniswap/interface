@@ -31,10 +31,11 @@ interface SetValueModalProps {
   isOpen: boolean
   onDismiss: () => void
   poolInfo: PoolInfo
+  baseTokenSymbol: string
   title: ReactNode
 }
 
-export default function SetValueModal({ isOpen, onDismiss, poolInfo, title }: SetValueModalProps) {
+export default function SetValueModal({ isOpen, onDismiss, poolInfo, baseTokenSymbol, title }: SetValueModalProps) {
   const { account, chainId } = useWeb3React()
 
   // state for create input
@@ -117,7 +118,7 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, title }: Se
             <NameInputPanel
               value={typed}
               onChange={onUserInput}
-              label={`Unitary Value (${poolInfo.userPoolBalance?.currency.symbol})`}
+              label={`Unitary Value (${baseTokenSymbol})`}
               placeholder="New Value"
             />
             {/* TODO: display return error from hook */}
