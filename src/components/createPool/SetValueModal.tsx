@@ -75,11 +75,11 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, title }: Se
   )
   const isTooSmall: boolean = JSBI.lessThanOrEqual(
     JSBI.BigInt(parsedValue),
-    JSBI.divide(poolInfo.poolPriceAmount.quotient, JSBI.BigInt(5))
+    JSBI.divide(poolInfo.poolPriceAmount?.quotient ?? JSBI.BigInt(0), JSBI.BigInt(5))
   )
   const isTooBig: boolean = JSBI.greaterThanOrEqual(
     JSBI.BigInt(parsedValue),
-    JSBI.multiply(poolInfo.poolPriceAmount.quotient, JSBI.BigInt(5))
+    JSBI.multiply(poolInfo.poolPriceAmount?.quotient ?? JSBI.BigInt(0), JSBI.BigInt(5))
   )
 
   async function onSetValue() {
@@ -117,12 +117,12 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, title }: Se
             <NameInputPanel
               value={typed}
               onChange={onUserInput}
-              label={`Unitary Value (${poolInfo.userPoolBalance.currency.symbol})`}
+              label={`Unitary Value (${poolInfo.userPoolBalance?.currency.symbol})`}
               placeholder="New Value"
             />
             {/* TODO: display return error from hook */}
             <ButtonError
-              disabled={typed === '' || typed.length > 10 || isSameAsCurrent || isTooSmall || isTooBig}
+              disabled={typed === '' || typed?.length > 10 || isSameAsCurrent || isTooSmall || isTooBig}
               error={isSameAsCurrent || (typed && isTooSmall) || isTooBig}
               onClick={onSetValue}
             >

@@ -103,11 +103,17 @@ export default function SetSpreadModal({ isOpen, currentSpread, onDismiss, title
                 JSBI.lessThan(JSBI.BigInt(parsedSpread), JSBI.BigInt(1)) ||
                 JSBI.greaterThan(JSBI.BigInt(parsedSpread), JSBI.BigInt(1000))
               }
-              error={isSameAsCurrent}
+              error={isSameAsCurrent || JSBI.greaterThan(JSBI.BigInt(parsedSpread), JSBI.BigInt(1000))}
               onClick={onSetSpread}
             >
               <ThemedText.DeprecatedMediumHeader color="white">
-                {isSameAsCurrent ? <Trans>Same as current</Trans> : <Trans>Update Spread</Trans>}
+                {isSameAsCurrent ? (
+                  <Trans>Same as current</Trans>
+                ) : JSBI.greaterThan(JSBI.BigInt(parsedSpread), JSBI.BigInt(1000)) ? (
+                  <Trans>max spread 10%</Trans>
+                ) : (
+                  <Trans>Update Spread</Trans>
+                )}
               </ThemedText.DeprecatedMediumHeader>
             </ButtonError>
           </AutoColumn>

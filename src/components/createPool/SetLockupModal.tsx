@@ -118,7 +118,7 @@ export default function SetLockupModal({ isOpen, currentLockup, onDismiss, title
                 {isSameAsCurrent ? (
                   <Trans>Same as current</Trans>
                 ) : isLockupTooBig ? (
-                  <Trans>30 days max lockup</Trans>
+                  <Trans>max lockup 30 days</Trans>
                 ) : (
                   <Trans>Set Lockup</Trans>
                 )}
