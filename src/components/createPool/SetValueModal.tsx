@@ -9,8 +9,7 @@ import styled from 'styled-components'
 import { PoolInfo } from '../../state/buy/hooks'
 import { useSetValueCallback } from '../../state/pool/hooks'
 import { ThemedText } from '../../theme'
-import { ButtonPrimary } from '../Button'
-//import { ButtonError } from '../Button'
+import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
 import { LoadingView, SubmittedView } from '../ModalViews'
@@ -70,6 +69,10 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, title }: Se
     console.debug(`Failed to parse input amount: "${typed}"`, error)
   }
   //const parsedValue = typed
+  const isSameAsCurrent: boolean = JSBI.equal(
+    JSBI.BigInt(parsedValue),
+    poolInfo.poolPriceAmount?.quotient ?? JSBI.BigInt(0)
+  )
 
   async function onSetValue() {
     setAttempting(true)
@@ -104,11 +107,11 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, title }: Se
               <Trans>Pool base token balance must be at least 3% of new pool value.</Trans>
             </ThemedText.DeprecatedBody>
             <NameInputPanel value={typed} onChange={onUserInput} label="Unitary Value" placeholder="New Value" />
-            {/* TODO: disables if same as current */}
-            <ButtonPrimary
+            <ButtonError
               disabled={
                 typed === '' ||
                 typed.length > 10 ||
+                isSameAsCurrent ||
                 JSBI.lessThanOrEqual(
                   JSBI.BigInt(parsedValue),
                   JSBI.divide(poolInfo.poolPriceAmount.quotient, JSBI.BigInt(5))
@@ -118,12 +121,13 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, title }: Se
                   JSBI.multiply(poolInfo.poolPriceAmount.quotient, JSBI.BigInt(5))
                 )
               }
+              error={isSameAsCurrent}
               onClick={onSetValue}
             >
               <ThemedText.DeprecatedMediumHeader color="white">
-                <Trans>Update Value</Trans>
+                {isSameAsCurrent ? <Trans>Same as current</Trans> : <Trans>Update Value</Trans>}
               </ThemedText.DeprecatedMediumHeader>
-            </ButtonPrimary>
+            </ButtonError>
           </AutoColumn>
         </ContentWrapper>
       )}
