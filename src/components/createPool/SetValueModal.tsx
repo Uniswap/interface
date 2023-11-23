@@ -124,7 +124,7 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, baseTokenSy
             {/* TODO: display return error from hook */}
             <ButtonError
               disabled={typed === '' || typed?.length > 10 || isSameAsCurrent || isTooSmall || isTooBig}
-              error={isSameAsCurrent || (typed && isTooSmall) || isTooBig}
+              error={isSameAsCurrent || (typed && Number(parsedValue) !== 0 && isTooSmall) || isTooBig}
               onClick={onSetValue}
             >
               <ThemedText.DeprecatedMediumHeader color="white">
