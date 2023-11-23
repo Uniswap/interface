@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
@@ -19,6 +20,7 @@ export const ProposalSubmissionModal = ({
   onDismiss: () => void
 }) => {
   const theme = useTheme()
+  const { chainId } = useWeb3React()
 
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
@@ -36,8 +38,8 @@ export const ProposalSubmissionModal = ({
             <Text fontWeight={500} fontSize={20} textAlign="center">
               <Trans>Proposal Submitted</Trans>
             </Text>
-            {hash && (
-              <ExternalLink href={getExplorerLink(1, hash, ExplorerDataType.TRANSACTION)}>
+            {hash && chainId && (
+              <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
                 <Text fontWeight={500} fontSize={14} color={theme.accentAction}>
                   <Trans>View on Etherscan</Trans>
                 </Text>
