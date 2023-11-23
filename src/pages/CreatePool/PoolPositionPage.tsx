@@ -376,11 +376,14 @@ export function PoolPositionPage() {
               onDismiss={() => setShowSetLockupModal(false)}
               title={<Trans>Set Lockup</Trans>}
             />
-            <SetSpreadModal
-              isOpen={showSetSpreadModal}
-              onDismiss={() => setShowSetSpreadModal(false)}
-              title={<Trans>Set Spread</Trans>}
-            />
+            {spread && (
+              <SetSpreadModal
+                isOpen={showSetSpreadModal}
+                currentSpread={spread}
+                onDismiss={() => setShowSetSpreadModal(false)}
+                title={<Trans>Set Spread</Trans>}
+              />
+            )}
             <SetValueModal
               isOpen={showSetValueModal}
               onDismiss={() => setShowSetValueModal(false)}
