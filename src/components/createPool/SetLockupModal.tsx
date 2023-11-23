@@ -89,6 +89,7 @@ export default function SetLockupModal({ isOpen, currentLockup, onDismiss, title
   }
 
   const isSameAsCurrent: boolean = (parsedLockup !== '0' ? parsedLockup : '2').toString() === currentLockup
+  const isLockupTooBig: boolean = JSBI.greaterThan(JSBI.BigInt(parsedLockup), JSBI.BigInt(2592000))
 
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
@@ -109,16 +110,18 @@ export default function SetLockupModal({ isOpen, currentLockup, onDismiss, title
               placeholder="max 30 days"
             />
             <ButtonError
-              disabled={
-                parsedLockup === '' ||
-                isSameAsCurrent ||
-                JSBI.greaterThan(JSBI.BigInt(parsedLockup), JSBI.BigInt(2592000))
-              }
-              error={isSameAsCurrent}
+              disabled={parsedLockup === '' || isSameAsCurrent || isLockupTooBig}
+              error={isSameAsCurrent || isLockupTooBig}
               onClick={onSetLockup}
             >
               <ThemedText.DeprecatedMediumHeader color="white">
-                {isSameAsCurrent ? <Trans>Same as current</Trans> : <Trans>Set Lockup</Trans>}
+                {isSameAsCurrent ? (
+                  <Trans>Same as current</Trans>
+                ) : isLockupTooBig ? (
+                  <Trans>30 days max lockup</Trans>
+                ) : (
+                  <Trans>Set Lockup</Trans>
+                )}
               </ThemedText.DeprecatedMediumHeader>
             </ButtonError>
           </AutoColumn>
