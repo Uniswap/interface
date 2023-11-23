@@ -9,8 +9,7 @@ import styled from 'styled-components'
 import { PoolInfo } from '../../state/buy/hooks'
 import { useSetValueCallback } from '../../state/pool/hooks'
 import { ThemedText } from '../../theme'
-import { ButtonPrimary } from '../Button'
-//import { ButtonError } from '../Button'
+import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
 import { LoadingView, SubmittedView } from '../ModalViews'
@@ -32,10 +31,11 @@ interface SetValueModalProps {
   isOpen: boolean
   onDismiss: () => void
   poolInfo: PoolInfo
+  baseTokenSymbol: string
   title: ReactNode
 }
 
-export default function SetValueModal({ isOpen, onDismiss, poolInfo, title }: SetValueModalProps) {
+export default function SetValueModal({ isOpen, onDismiss, poolInfo, baseTokenSymbol, title }: SetValueModalProps) {
   const { account, chainId } = useWeb3React()
 
   // state for create input
@@ -70,6 +70,18 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, title }: Se
     console.debug(`Failed to parse input amount: "${typed}"`, error)
   }
   //const parsedValue = typed
+  const isSameAsCurrent: boolean = JSBI.equal(
+    JSBI.BigInt(parsedValue),
+    poolInfo.poolPriceAmount?.quotient ?? JSBI.BigInt(0)
+  )
+  const isTooSmall: boolean = JSBI.lessThanOrEqual(
+    JSBI.BigInt(parsedValue),
+    JSBI.divide(poolInfo.poolPriceAmount?.quotient ?? JSBI.BigInt(0), JSBI.BigInt(5))
+  )
+  const isTooBig: boolean = JSBI.greaterThanOrEqual(
+    JSBI.BigInt(parsedValue),
+    JSBI.multiply(poolInfo.poolPriceAmount?.quotient ?? JSBI.BigInt(0), JSBI.BigInt(5))
+  )
 
   async function onSetValue() {
     setAttempting(true)
@@ -103,27 +115,30 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, title }: Se
             <ThemedText.DeprecatedBody>
               <Trans>Pool base token balance must be at least 3% of new pool value.</Trans>
             </ThemedText.DeprecatedBody>
-            <NameInputPanel value={typed} onChange={onUserInput} label="Unitary Value" placeholder="New Value" />
-            {/* TODO: disables if same as current */}
-            <ButtonPrimary
-              disabled={
-                typed === '' ||
-                typed.length > 10 ||
-                JSBI.lessThanOrEqual(
-                  JSBI.BigInt(parsedValue),
-                  JSBI.divide(poolInfo.poolPriceAmount.quotient, JSBI.BigInt(5))
-                ) ||
-                JSBI.greaterThanOrEqual(
-                  JSBI.BigInt(parsedValue),
-                  JSBI.multiply(poolInfo.poolPriceAmount.quotient, JSBI.BigInt(5))
-                )
-              }
+            <NameInputPanel
+              value={typed}
+              onChange={onUserInput}
+              label={`Unitary Value (${baseTokenSymbol})`}
+              placeholder="New Value"
+            />
+            {/* TODO: display return error from hook */}
+            <ButtonError
+              disabled={typed === '' || typed?.length > 10 || isSameAsCurrent || isTooSmall || isTooBig}
+              error={isSameAsCurrent || (typed && Number(parsedValue) !== 0 && isTooSmall) || isTooBig}
               onClick={onSetValue}
             >
               <ThemedText.DeprecatedMediumHeader color="white">
-                <Trans>Update Value</Trans>
+                {isSameAsCurrent ? (
+                  <Trans>Same as current</Trans>
+                ) : typed && isTooSmall ? (
+                  <Trans>less than 20% of current</Trans>
+                ) : isTooBig ? (
+                  <Trans>more than 5x current</Trans>
+                ) : (
+                  <Trans>Update Value</Trans>
+                )}
               </ThemedText.DeprecatedMediumHeader>
-            </ButtonPrimary>
+            </ButtonError>
           </AutoColumn>
         </ContentWrapper>
       )}

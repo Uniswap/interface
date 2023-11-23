@@ -8,8 +8,7 @@ import styled from 'styled-components'
 
 import { useSetSpreadCallback } from '../../state/pool/hooks'
 import { ThemedText } from '../../theme'
-import { ButtonPrimary } from '../Button'
-//import { ButtonError } from '../Button'
+import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
 import { LoadingView, SubmittedView } from '../ModalViews'
@@ -29,11 +28,12 @@ const StyledClosed = styled(X)`
 
 interface SetSpreadModalProps {
   isOpen: boolean
+  currentSpread: number
   onDismiss: () => void
   title: ReactNode
 }
 
-export default function SetSpreadModal({ isOpen, onDismiss, title }: SetSpreadModalProps) {
+export default function SetSpreadModal({ isOpen, currentSpread, onDismiss, title }: SetSpreadModalProps) {
   const { account, chainId } = useWeb3React()
 
   // state for create input
@@ -53,6 +53,7 @@ export default function SetSpreadModal({ isOpen, onDismiss, title }: SetSpreadMo
   } catch (error) {
     console.debug(`Failed to parse spread: "${typed}"`, error)
   }
+  const isSameAsCurrent: boolean = currentSpread === Number(parsedSpread)
 
   const setSpreadCallback = useSetSpreadCallback()
 
@@ -93,20 +94,28 @@ export default function SetSpreadModal({ isOpen, onDismiss, title }: SetSpreadMo
               <ThemedText.DeprecatedMediumHeader fontWeight={500}>{title}</ThemedText.DeprecatedMediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
-            <NameInputPanel value={typed} onChange={onUserInput} label="Pool Spread" placeholder="max 10%" />
-            <ButtonPrimary
+            <NameInputPanel value={typed} onChange={onUserInput} label="Pool Spread (%)" placeholder="max 10%" />
+            <ButtonError
               disabled={
                 typed === '' ||
                 typed.length > 4 ||
+                isSameAsCurrent ||
                 JSBI.lessThan(JSBI.BigInt(parsedSpread), JSBI.BigInt(1)) ||
                 JSBI.greaterThan(JSBI.BigInt(parsedSpread), JSBI.BigInt(1000))
               }
+              error={isSameAsCurrent || JSBI.greaterThan(JSBI.BigInt(parsedSpread), JSBI.BigInt(1000))}
               onClick={onSetSpread}
             >
               <ThemedText.DeprecatedMediumHeader color="white">
-                <Trans>Update Spread</Trans>
+                {isSameAsCurrent ? (
+                  <Trans>Same as current</Trans>
+                ) : JSBI.greaterThan(JSBI.BigInt(parsedSpread), JSBI.BigInt(1000)) ? (
+                  <Trans>max spread 10%</Trans>
+                ) : (
+                  <Trans>Update Spread</Trans>
+                )}
               </ThemedText.DeprecatedMediumHeader>
-            </ButtonPrimary>
+            </ButtonError>
           </AutoColumn>
         </ContentWrapper>
       )}

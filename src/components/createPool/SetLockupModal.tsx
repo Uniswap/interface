@@ -8,8 +8,7 @@ import styled from 'styled-components'
 
 import { useSetLockupCallback } from '../../state/pool/hooks'
 import { ThemedText } from '../../theme'
-import { ButtonPrimary } from '../Button'
-//import { ButtonError } from '../Button'
+import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
 import { LoadingView, SubmittedView } from '../ModalViews'
@@ -89,6 +88,9 @@ export default function SetLockupModal({ isOpen, currentLockup, onDismiss, title
     }
   }
 
+  const isSameAsCurrent: boolean = (parsedLockup !== '0' ? parsedLockup : '2').toString() === currentLockup
+  const isLockupTooBig: boolean = JSBI.greaterThan(JSBI.BigInt(parsedLockup), JSBI.BigInt(2592000))
+
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
       {!attempting && !hash && (
@@ -107,18 +109,21 @@ export default function SetLockupModal({ isOpen, currentLockup, onDismiss, title
               label="Lockup (days)"
               placeholder="max 30 days"
             />
-            <ButtonPrimary
-              disabled={
-                parsedLockup === '' ||
-                (parsedLockup !== '0' ? parsedLockup : '2').toString() === currentLockup ||
-                JSBI.greaterThan(JSBI.BigInt(parsedLockup), JSBI.BigInt(2592000))
-              }
+            <ButtonError
+              disabled={parsedLockup === '' || isSameAsCurrent || isLockupTooBig}
+              error={isSameAsCurrent || isLockupTooBig}
               onClick={onSetLockup}
             >
               <ThemedText.DeprecatedMediumHeader color="white">
-                <Trans>Set Lockup</Trans>
+                {isSameAsCurrent ? (
+                  <Trans>Same as current</Trans>
+                ) : isLockupTooBig ? (
+                  <Trans>max lockup 30 days</Trans>
+                ) : (
+                  <Trans>Set Lockup</Trans>
+                )}
               </ThemedText.DeprecatedMediumHeader>
-            </ButtonPrimary>
+            </ButtonError>
           </AutoColumn>
         </ContentWrapper>
       )}
