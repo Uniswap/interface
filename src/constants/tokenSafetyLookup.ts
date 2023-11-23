@@ -44,7 +44,7 @@ class TokenSafetyLookupTable {
     })
 
     // Initialize blocked tokens from all urls included
-    UNSUPPORTED_LIST_URLS.map((url) => lists.byUrl[url].current?.tokens)
+    UNSUPPORTED_LIST_URLS.map((url) => lists.byUrl[url]?.current?.tokens)
       .filter((x): x is TokenInfo[] => !!x)
       .flat(1)
       .forEach((token) => {
