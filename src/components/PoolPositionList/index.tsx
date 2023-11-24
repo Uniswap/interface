@@ -63,7 +63,7 @@ type PoolPositionListProps = React.PropsWithChildren<{
 export default function PoolPositionList({ positions, filterByOperator }: PoolPositionListProps) {
   const { account, chainId } = useWeb3React()
   // TODO: we should merge this part with same part in swap page and move to a custom hook
-  const poolAddresses = positions.map((p) => p.pool)
+  const poolAddresses: string[] = useMemo(() => positions.map((p) => p.pool), [positions])
   const PoolInterface = new Interface(POOL_EXTENDED_ABI)
 
   // notice: if RPC endpoint is not available the following calls will result in empty poolsWithStats. However,
@@ -81,12 +81,12 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
   const poolsWithStats = useMemo(() => {
     return results
       ?.map((result, i) => {
-        const { result: pool, loading } = result
+        const { result: pool /*, loading*/ } = result
         //if (!chainId || loading || !pool || !pool?.[0]) return
         //if (!chainId || loading) return
-        const { decimals, owner } = pool?.[0]
+        //const { decimals, owner } = pool?.[0]
         const shouldDisplay = filterByOperator
-          ? Boolean(account && (owner === account || Number(userBalances?.[i]?.result) > 0))
+          ? Boolean(account && (pool?.[0]?.owner === account || Number(userBalances?.[i]?.result) > 0))
           : true
         return {
           ...result,
@@ -96,12 +96,12 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           poolDelegatedStake: positions?.[i]?.poolDelegatedStake,
           userHasStake: positions?.[i]?.userHasStake ?? false,
           address: poolAddresses[i],
-          decimals: decimals ?? 18,
+          decimals: pool?.[0]?.decimals ?? 18,
           symbol: positions?.[i]?.symbol,
           name: positions?.[i]?.name,
           chainId: chainId ?? 1,
           shouldDisplay,
-          userIsOwner: account ? owner === account : false,
+          userIsOwner: account ? pool?.[0]?.owner === account : false,
           userBalance: userBalances?.[i]?.result,
         }
       })
