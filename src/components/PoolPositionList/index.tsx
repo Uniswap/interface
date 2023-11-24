@@ -79,15 +79,15 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
   //  in 1) swap and 2) each pool url, we could also store poolId at that point
   const poolsWithStats = useMemo(() => {
     return results
-      .map((result, i) => {
+      ?.map((result, i) => {
         const { result: pool, loading } = result
         //if (!chainId || loading || !pool || !pool?.[0]) return
         if (!chainId || loading) return
         const { name, symbol, decimals, owner } = pool?.[0]
         if (!name || !symbol || !decimals) return
-        //const shouldDisplay = filterByOperator
-        //  ? Boolean(owner === account || Number(userBalances[i]?.result) > 0)
-        //  : true
+        const shouldDisplay = filterByOperator
+          ? Boolean(owner === account || Number(userBalances?.[i]?.result) > 0)
+          : true
         return {
           ...result,
           apr: positions?.[i]?.apr,
@@ -100,13 +100,14 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           symbol,
           name,
           chainId: chainId ?? 1,
-          shouldDisplay: true,
+          shouldDisplay,
           userIsOwner: account ? owner === account : false,
-          userBalance: account ? userBalances[i].result : undefined,
+          userBalance: userBalances?.[i]?.result,
         }
       })
       .filter((p) => p && p.shouldDisplay)
-  }, [account, chainId, /*filterByOperator,*/ poolAddresses, positions, results, userBalances])
+  }, [account, chainId, filterByOperator, poolAddresses, positions, results, userBalances])
+  console.log(poolsWithStats)
 
   return (
     <>
