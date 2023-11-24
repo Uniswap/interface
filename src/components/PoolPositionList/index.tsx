@@ -75,13 +75,13 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
     useMemo(() => [account], [account])
   )
   const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'getPool')
+  console.log(positions)
   // TODO: if we initiate this in state, we can later query from state instead of making rpc call
   //  in 1) swap and 2) each pool url, we could also store poolId at that point
   const poolsWithStats = useMemo(() => {
     return results
       ?.map((result, i) => {
         const { result: pool, loading } = result
-        console.log(pool)
         //if (!chainId || loading || !pool || !pool?.[0]) return
         if (!chainId || loading) return
         const { name, symbol, decimals, owner } = pool?.[0]
