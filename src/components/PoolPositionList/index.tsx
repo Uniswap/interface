@@ -111,7 +111,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
       <DesktopHeader>
         <div>
           {filterByOperator ? <Trans>Your pools</Trans> : <Trans>Loaded pools</Trans>}
-          {positions && ' (' + poolsWithStats.length + ')'}
+          {positions && ' (' + results.length + ')'}
         </div>
         {!filterByOperator && (
           <RowFixed gap="32px">
