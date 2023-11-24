@@ -63,7 +63,7 @@ type PoolPositionListProps = React.PropsWithChildren<{
 export default function PoolPositionList({ positions, filterByOperator }: PoolPositionListProps) {
   const { account, chainId } = useWeb3React()
   // TODO: we should merge this part with same part in swap page and move to a custom hook
-  const poolAddresses = positions.map((p) => p.pool)
+  const poolAddresses: string[] = useMemo(() => positions.map((p) => p.pool), [positions])
   const PoolInterface = new Interface(POOL_EXTENDED_ABI)
 
   // notice: if RPC endpoint is not available the following calls will result in empty poolsWithStats. However,
@@ -74,17 +74,21 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
     'balanceOf',
     useMemo(() => [account], [account])
   )
+  // notice: this call will not return pools if account is not connected and the endpoint is not responsive, which
+  //   is fine as we don't want to display empty pools when endpoint is not responsive.
   const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'getPool')
   // TODO: if we initiate this in state, we can later query from state instead of making rpc call
   //  in 1) swap and 2) each pool url, we could also store poolId at that point
   const poolsWithStats = useMemo(() => {
     return results
-      .map((result, i) => {
-        const { result: pools, loading } = result
-        if (!chainId || loading || !pools || !pools?.[0]) return
-        const { name, symbol, decimals, owner } = pools?.[0]
+      ?.map((result, i) => {
+        const { result: pool, loading } = result
+        // if pool is not correctly returned by endpoint it means endpoint is down, and we don't want to display pools
+        if (!chainId || loading || !pool) return
+        const { decimals, owner } = pool[0]
+        if (!decimals || !owner) return
         const shouldDisplay = filterByOperator
-          ? Boolean(owner === account || Number(userBalances[i]?.result) > 0)
+          ? Boolean(owner === account || Number(userBalances?.[i]?.result) > 0)
           : true
         return {
           ...result,
@@ -95,12 +99,12 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           userHasStake: positions?.[i]?.userHasStake ?? false,
           address: poolAddresses[i],
           decimals,
-          symbol,
-          name,
-          chainId: chainId ?? 1,
+          symbol: positions?.[i]?.symbol,
+          name: positions?.[i]?.name,
+          chainId,
           shouldDisplay,
           userIsOwner: account ? owner === account : false,
-          userBalance: account ? userBalances[i].result : undefined,
+          userBalance: userBalances?.[i]?.result,
         }
       })
       .filter((p) => p && p.shouldDisplay)
