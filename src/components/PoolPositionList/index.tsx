@@ -85,9 +85,9 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
         if (!chainId || loading) return
         const { name, symbol, decimals, owner } = pool?.[0]
         if (!name || !symbol || !decimals) return
-        const shouldDisplay = filterByOperator
-          ? Boolean(owner === account || Number(userBalances[i]?.result) > 0)
-          : true
+        //const shouldDisplay = filterByOperator
+        //  ? Boolean(owner === account || Number(userBalances[i]?.result) > 0)
+        //  : true
         return {
           ...result,
           apr: positions?.[i]?.apr,
@@ -100,13 +100,13 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           symbol,
           name,
           chainId: chainId ?? 1,
-          shouldDisplay,
+          shouldDisplay: true,
           userIsOwner: account ? owner === account : false,
           userBalance: account ? userBalances[i].result : undefined,
         }
       })
       .filter((p) => p && p.shouldDisplay)
-  }, [account, chainId, filterByOperator, poolAddresses, positions, results, userBalances])
+  }, [account, chainId, /*filterByOperator,*/ poolAddresses, positions, results, userBalances])
 
   return (
     <>
