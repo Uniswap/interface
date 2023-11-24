@@ -74,19 +74,21 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
     'balanceOf',
     useMemo(() => [account], [account])
   )
+  // notice: this call will not return pools if account is not connected and the endpoint is not responsive, which
+  //   is fine as we don't want to display empty pools when endpoint is not responsive.
   const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'getPool')
-  console.log(results)
   // TODO: if we initiate this in state, we can later query from state instead of making rpc call
   //  in 1) swap and 2) each pool url, we could also store poolId at that point
   const poolsWithStats = useMemo(() => {
     return results
       ?.map((result, i) => {
-        const { result: pool /*, loading*/ } = result
-        //if (!chainId || loading || !pool || !pool?.[0]) return
-        //if (!chainId || loading) return
-        //const { decimals, owner } = pool?.[0]
+        const { result: pool, loading } = result
+        // if pool is not correctly returned by endpoint it means endpoint is down, and we don't want to display pools
+        if (!chainId || loading || !pool) return
+        const { decimals, owner } = pool[0]
+        if (!decimals || !owner) return
         const shouldDisplay = filterByOperator
-          ? Boolean(account && (pool?.[0]?.owner === account || Number(userBalances?.[i]?.result) > 0))
+          ? Boolean(owner === account || Number(userBalances?.[i]?.result) > 0)
           : true
         return {
           ...result,
@@ -96,18 +98,17 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           poolDelegatedStake: positions?.[i]?.poolDelegatedStake,
           userHasStake: positions?.[i]?.userHasStake ?? false,
           address: poolAddresses[i],
-          decimals: pool?.[0]?.decimals ?? 18,
+          decimals,
           symbol: positions?.[i]?.symbol,
           name: positions?.[i]?.name,
-          chainId: chainId ?? 1,
+          chainId,
           shouldDisplay,
-          userIsOwner: account ? pool?.[0]?.owner === account : false,
+          userIsOwner: account ? owner === account : false,
           userBalance: userBalances?.[i]?.result,
         }
       })
       .filter((p) => p && p.shouldDisplay)
   }, [account, chainId, filterByOperator, poolAddresses, positions, results, userBalances])
-  console.log(poolsWithStats, 'pools with stats')
 
   return (
     <>
