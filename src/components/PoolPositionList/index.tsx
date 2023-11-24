@@ -83,7 +83,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
       ?.map((result, i) => {
         const { result: pool, loading } = result
         //if (!chainId || loading || !pool || !pool?.[0]) return
-        if (!chainId || loading) return
+        //if (!chainId || loading) return
         const { decimals, owner } = pool?.[0]
         const shouldDisplay = filterByOperator
           ? Boolean(account && (owner === account || Number(userBalances?.[i]?.result) > 0))
@@ -107,6 +107,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
       })
       .filter((p) => p && p.shouldDisplay)
   }, [account, chainId, filterByOperator, poolAddresses, positions, results, userBalances])
+  console.log(poolsWithStats, 'pools with stats')
 
   return (
     <>
