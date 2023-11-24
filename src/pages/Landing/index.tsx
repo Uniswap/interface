@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
 import { Trace, TraceEvent } from 'analytics'
 import { ReactComponent as UniswapAppLogo } from 'assets/svg/uniswap_app_logo.svg'
 import { AboutFooter } from 'components/About/AboutFooter'
@@ -14,7 +15,6 @@ import { parse } from 'qs'
 import { useEffect, useMemo, useRef } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
-import { useAppSelector } from 'state/hooks'
 import styled, { css } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -312,7 +312,7 @@ const Link = styled(NativeLink)`
 export default function Landing() {
   const isDarkMode = useIsDarkMode()
   const cardsRef = useRef<HTMLDivElement>(null)
-  const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
+  const { account } = useWeb3React()
 
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
   const cards = useMemo(
@@ -333,7 +333,7 @@ export default function Landing() {
   const location = useLocation()
   const queryParams = parse(location.search, { ignoreQueryPrefix: true })
 
-  if (selectedWallet && !queryParams.intro) {
+  if (account && !queryParams.intro) {
     return <Navigate to={{ ...location, pathname: '/swap' }} replace />
   }
 

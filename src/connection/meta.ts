@@ -1,37 +1,22 @@
-import { ConnectionType, toConnectionType } from './types'
-
-export interface ConnectionMeta {
-  type: ConnectionType
-  address?: string
-  ENSName?: string
-}
+import { ConnectionType, RecentConnectionMeta } from './types'
 
 export const connectionMetaKey = 'connection_meta'
 
-export function getPersistedConnectionMeta(): ConnectionMeta | undefined {
+export function getPersistedConnectionMeta(): RecentConnectionMeta | undefined {
+  const value = localStorage.getItem(connectionMetaKey)
+  if (!value) return
+
   try {
-    const value = localStorage.getItem(connectionMetaKey)
-    if (value) {
-      const raw = JSON.parse(value) as ConnectionMeta
-      const connectionType = toConnectionType(raw.type)
-      if (connectionType) {
-        return {
-          type: connectionType,
-          address: raw.address,
-          ENSName: raw.ENSName,
-        }
-      }
-    }
+    const parsedMeta = JSON.parse(value) as RecentConnectionMeta
+    if (ConnectionType[parsedMeta.type]) return parsedMeta
   } catch (e) {
     console.warn(e)
   }
   return
 }
 
-export function setPersistedConnectionMeta(meta: ConnectionMeta) {
-  localStorage.setItem(connectionMetaKey, JSON.stringify(meta))
-}
+export function setPersistedConnectionMeta(meta: RecentConnectionMeta | undefined) {
+  if (!meta) return localStorage.removeItem(connectionMetaKey)
 
-export function deletePersistedConnectionMeta() {
-  localStorage.removeItem(connectionMetaKey)
+  localStorage.setItem(connectionMetaKey, JSON.stringify(meta))
 }

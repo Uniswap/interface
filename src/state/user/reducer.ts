@@ -1,17 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { deletePersistedConnectionMeta, getPersistedConnectionMeta } from 'connection/meta'
+import { getPersistedConnectionMeta, setPersistedConnectionMeta } from 'connection/meta'
+import { ConnectionType, RecentConnectionMeta } from 'connection/types'
 
-import { ConnectionType } from '../../connection/types'
 import { SupportedLocale } from '../../constants/locales'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { RouterPreference } from '../../state/routing/types'
 import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 
-const selectedWallet = getPersistedConnectionMeta()?.type
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
   selectedWallet?: ConnectionType
+  recentConnectionMeta?: RecentConnectionMeta
 
   // the timestamp of the last updateVersion action
   lastUpdateVersionTimestamp?: number
@@ -59,7 +59,7 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  selectedWallet,
+  recentConnectionMeta: getPersistedConnectionMeta(),
   userLocale: null,
   userRouterPreference: RouterPreference.X,
   userHideClosedPositions: false,
@@ -78,11 +78,20 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    updateSelectedWallet(state, { payload: { wallet } }) {
-      if (!wallet) {
-        deletePersistedConnectionMeta()
-      }
-      state.selectedWallet = wallet
+    updateRecentConnectionMeta(state, { payload: meta }: { payload: RecentConnectionMeta }) {
+      setPersistedConnectionMeta(meta)
+      state.recentConnectionMeta = meta
+    },
+    setRecentConnectionDisconnected(state) {
+      if (!state.recentConnectionMeta) return
+
+      const disconnectedMeta = { ...state.recentConnectionMeta, disconnected: true }
+      setPersistedConnectionMeta(disconnectedMeta)
+      state.recentConnectionMeta = disconnectedMeta
+    },
+    clearRecentConnectionMeta(state) {
+      setPersistedConnectionMeta(undefined)
+      state.recentConnectionMeta = undefined
     },
     updateUserLocale(state, action) {
       if (action.payload.userLocale !== state.userLocale) {
@@ -133,10 +142,12 @@ const userSlice = createSlice({
 })
 
 export const {
+  updateRecentConnectionMeta,
+  setRecentConnectionDisconnected,
+  clearRecentConnectionMeta,
   addSerializedPair,
   addSerializedToken,
   setOriginCountry,
-  updateSelectedWallet,
   updateHideClosedPositions,
   updateUserRouterPreference,
   updateUserDeadline,

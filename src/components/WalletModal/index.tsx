@@ -7,7 +7,8 @@ import { connections, deprecatedNetworkConnection, networkConnection } from 'con
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { isSupportedChain } from 'constants/chains'
 import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
+import { useAppSelector } from 'state/hooks'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
@@ -54,6 +55,22 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
     }
   }, [chainId, connector, fallbackProviderEnabled])
 
+  const { type: recentConnectionType } = useAppSelector((state) => state.user.recentConnectionMeta) ?? {}
+  const orderedConnectionList = useMemo(
+    () =>
+      connections.reduce<JSX.Element[]>((acc, connection) => {
+        if (connection.shouldDisplay()) {
+          if (connection.type === recentConnectionType) {
+            acc.unshift(<Option key={connection.getName()} connection={connection} isRecent />)
+          } else {
+            acc.push(<Option key={connection.getName()} connection={connection} />)
+          }
+        }
+        return acc
+      }, []),
+    [recentConnectionType]
+  )
+
   return (
     <Wrapper data-testid="wallet-modal">
       <AutoRow justify="space-between" width="100%" marginBottom="16px">
@@ -64,13 +81,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         <ConnectionErrorView />
       ) : (
         <AutoColumn gap="16px">
-          <OptionGrid data-testid="option-grid">
-            {connections
-              .filter((connection) => connection.shouldDisplay())
-              .map((connection) => (
-                <Option key={connection.getName()} connection={connection} />
-              ))}
-          </OptionGrid>
+          <OptionGrid data-testid="option-grid">{orderedConnectionList}</OptionGrid>
           <PrivacyPolicyWrapper>
             <PrivacyPolicyNotice />
           </PrivacyPolicyWrapper>

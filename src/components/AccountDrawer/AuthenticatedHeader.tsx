@@ -21,7 +21,7 @@ import { useCallback, useState } from 'react'
 import { CreditCard, Info } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
-import { updateSelectedWallet } from 'state/user/reducer'
+import { setRecentConnectionDisconnected } from 'state/user/reducer'
 import styled from 'styled-components'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils'
@@ -171,11 +171,9 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const openNftModal = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const disconnect = useCallback(() => {
-    if (connector && connector.deactivate) {
-      connector.deactivate()
-    }
+    connector.deactivate?.()
     connector.resetState()
-    dispatch(updateSelectedWallet({ wallet: undefined }))
+    dispatch(setRecentConnectionDisconnected())
   }, [connector, dispatch])
 
   const toggleWalletDrawer = useToggleAccountDrawer()

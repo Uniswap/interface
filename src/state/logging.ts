@@ -26,6 +26,7 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
    */
   stateTransformer: (state: AppState): DeepPartial<AppState> => {
     const { application, user, transactions } = state
+
     return {
       application: {
         fiatOnramp: application.fiatOnramp,
@@ -34,7 +35,7 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
         popupList: application.popupList,
       },
       user: {
-        selectedWallet: user.selectedWallet,
+        recentConnectionMeta: user.recentConnectionMeta,
         lastUpdateVersionTimestamp: user.lastUpdateVersionTimestamp,
         userLocale: user.userLocale,
         userRouterPreference: user.userRouterPreference,

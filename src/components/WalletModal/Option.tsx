@@ -1,11 +1,14 @@
+import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
+import Badge, { BadgeVariant } from 'components/Badge'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { Connection } from 'connection/types'
 import styled from 'styled-components'
+import { ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 
@@ -77,8 +80,9 @@ const Wrapper = styled.div<{ disabled: boolean }>`
 
 interface OptionProps {
   connection: Connection
+  isRecent?: boolean
 }
-export default function Option({ connection }: OptionProps) {
+export default function Option({ connection, isRecent }: OptionProps) {
   const { activationState, tryActivation } = useActivationState()
   const toggleAccountDrawer = useToggleAccountDrawer()
   const { chainId } = useWeb3React()
@@ -87,6 +91,8 @@ export default function Option({ connection }: OptionProps) {
   const isSomeOptionPending = activationState.status === ActivationStatus.PENDING
   const isCurrentOptionPending = isSomeOptionPending && activationState.connection.type === connection.type
   const isDarkMode = useIsDarkMode()
+
+  const rightSideDetail = isCurrentOptionPending ? <Loader /> : isRecent ? <RecentBadge /> : null
 
   return (
     <Wrapper disabled={isSomeOptionPending}>
@@ -108,9 +114,21 @@ export default function Option({ connection }: OptionProps) {
             </IconWrapper>
             <HeaderText>{connection.getName()}</HeaderText>
           </OptionCardLeft>
-          {isCurrentOptionPending && <Loader />}
+          {rightSideDetail}
         </OptionCardClickable>
       </TraceEvent>
     </Wrapper>
   )
 }
+
+const StyledBadge = styled(Badge)`
+  border-radius: 4px;
+  padding: 1px 4px;
+`
+const RecentBadge = () => (
+  <StyledBadge variant={BadgeVariant.SOFT}>
+    <ThemedText.LabelMicro color="accent1">
+      <Trans>Recent</Trans>
+    </ThemedText.LabelMicro>
+  </StyledBadge>
+)

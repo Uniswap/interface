@@ -70,13 +70,6 @@ function legacyTransactionMigrations(state: any): TransactionState {
 function legacyUserMigrations(state: any): UserState {
   // Make a copy of the object so we can mutate it.
   const result = JSON.parse(JSON.stringify(state))
-  // If `selectedWallet` is a WalletConnect v1 wallet, reset to default.
-  if (result.selectedWallet) {
-    const selectedWallet = result.selectedWallet as string
-    if (selectedWallet === 'UNIWALLET' || selectedWallet === 'UNISWAP_WALLET' || selectedWallet === 'WALLET_CONNECT') {
-      delete result.selectedWallet
-    }
-  }
 
   // If `userSlippageTolerance` is not present or its value is invalid, reset to default
   if (

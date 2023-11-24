@@ -9,7 +9,7 @@ import { IconWrapper } from 'components/Identicon/StatusIcon'
 import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { getConnection } from 'connection'
 import { useConnectionReady } from 'connection/eagerlyConnect'
-import { ConnectionMeta, getPersistedConnectionMeta, setPersistedConnectionMeta } from 'connection/meta'
+import { getPersistedConnectionMeta } from 'connection/meta'
 import useENSName from 'hooks/useENSName'
 import useLast from 'hooks/useLast'
 import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
@@ -17,7 +17,8 @@ import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { darken } from 'polished'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useAppSelector } from 'state/hooks'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { updateRecentConnectionMeta } from 'state/user/reducer'
 import styled from 'styled-components'
 import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
@@ -143,6 +144,7 @@ function Web3StatusInner() {
   const { account, connector } = useMemo(() => (activeWeb3.account ? activeWeb3 : lastWeb3), [activeWeb3, lastWeb3])
   const { ENSName, loading: ENSLoading } = useENSName(account)
   const connection = getConnection(connector)
+  const dispatch = useAppDispatch()
 
   const [, toggleAccountDrawer] = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {
@@ -173,14 +175,9 @@ function Web3StatusInner() {
   // Persist the connection if it changes, so it can be used to initialize the next session's connection.
   useEffect(() => {
     if (account || ENSName) {
-      const meta: ConnectionMeta = {
-        type: connection.type,
-        address: account,
-        ENSName: ENSName ?? undefined,
-      }
-      setPersistedConnectionMeta(meta)
+      dispatch(updateRecentConnectionMeta({ type: connection.type, address: account, ENSName: ENSName ?? undefined }))
     }
-  }, [ENSName, account, connection.type])
+  }, [ENSName, account, connection.type, dispatch])
 
   if (!isConnectionInitialized) {
     return (

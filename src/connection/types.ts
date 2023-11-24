@@ -12,14 +12,6 @@ export enum ConnectionType {
   DEPRECATED_NETWORK = 'DEPRECATED_NETWORK',
 }
 
-export function toConnectionType(value = ''): ConnectionType | undefined {
-  if (Object.keys(ConnectionType).includes(value)) {
-    return value as ConnectionType
-  } else {
-    return undefined
-  }
-}
-
 export interface Connection {
   getName(): string
   connector: Connector
@@ -28,4 +20,11 @@ export interface Connection {
   getIcon?(isDarkMode: boolean): string
   shouldDisplay(): boolean
   overrideActivate?: (chainId?: ChainId) => boolean
+}
+
+export interface RecentConnectionMeta {
+  type: ConnectionType
+  address?: string
+  ENSName?: string
+  disconnected?: boolean
 }

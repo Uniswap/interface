@@ -1,6 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
-import { ConnectionType } from 'connection/types'
+import { ConnectionType, RecentConnectionMeta } from 'connection/types'
 import { SupportedLocale } from 'constants/locales'
 import multicall from 'lib/state/multicall'
 import { CombinedState } from 'redux'
@@ -69,6 +69,7 @@ assert<Equals<AppState, ExpectedAppState>>()
 
 interface ExpectedUserState {
   selectedWallet?: ConnectionType
+  recentConnectionMeta?: RecentConnectionMeta
   lastUpdateVersionTimestamp?: number
   userLocale: SupportedLocale | null
   userRouterPreference: RouterPreference

@@ -7,7 +7,6 @@ import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
-import { updateSelectedWallet } from 'state/user/reducer'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 
 import { didUserReject } from './utils'
@@ -41,11 +40,9 @@ function useTryActivation() {
         setActivationState({ status: ActivationStatus.PENDING, connection })
 
         console.debug(`Connection activating: ${connection.getName()}`)
-        dispatch(updateSelectedWallet({ wallet: undefined }))
         await connection.connector.activate()
 
         console.debug(`Connection activated: ${connection.getName()}`)
-        dispatch(updateSelectedWallet({ wallet: connection.type }))
 
         // Clears pending connection state
         setActivationState(IDLE_ACTIVATION_STATE)
@@ -72,7 +69,7 @@ function useTryActivation() {
         setActivationState({ status: ActivationStatus.ERROR, connection, error })
       }
     },
-    [currentPage, dispatch, setActivationState]
+    [currentPage, setActivationState]
   )
 }
 

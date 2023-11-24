@@ -1,13 +1,17 @@
+import { getPersistedConnectionMeta } from 'connection/meta'
+import { ConnectionType } from 'connection/types'
 import { createStore, Store } from 'redux'
 import { RouterPreference } from 'state/routing/types'
 
 import reducer, {
   addSerializedPair,
   addSerializedToken,
+  clearRecentConnectionMeta,
   initialState,
+  setRecentConnectionDisconnected,
   updateHideAndroidAnnouncementBanner,
   updateHideClosedPositions,
-  updateSelectedWallet,
+  updateRecentConnectionMeta,
   updateUserDeadline,
   updateUserLocale,
   updateUserRouterPreference,
@@ -35,10 +39,29 @@ describe('swap reducer', () => {
     store = createStore(reducer, initialState)
   })
 
-  describe('updateSelectedWallet', () => {
-    it('updates the selected wallet', () => {
-      store.dispatch(updateSelectedWallet({ wallet: 'metamask' }))
-      expect(store.getState().selectedWallet).toEqual('metamask')
+  describe('updateRecentConnectionMeta', () => {
+    it('updates the recentConnectionMeta wallet', () => {
+      store.dispatch(updateRecentConnectionMeta({ type: ConnectionType.INJECTED }))
+      expect(store.getState().recentConnectionMeta).toEqual({ type: ConnectionType.INJECTED })
+      expect(getPersistedConnectionMeta()).toEqual({ type: ConnectionType.INJECTED })
+    })
+  })
+
+  describe('disconnectRecentConnectionMeta', () => {
+    it('sets the recentConnectionMeta as disconnected', () => {
+      store.dispatch(updateRecentConnectionMeta({ type: ConnectionType.INJECTED }))
+      store.dispatch(setRecentConnectionDisconnected())
+      expect(store.getState().recentConnectionMeta).toEqual({ type: ConnectionType.INJECTED, disconnected: true })
+      expect(getPersistedConnectionMeta()).toEqual({ type: ConnectionType.INJECTED, disconnected: true })
+    })
+  })
+
+  describe('clearRecentConnectionMeta', () => {
+    it('clears the recentConnectionMeta from state', () => {
+      store.dispatch(updateRecentConnectionMeta({ type: ConnectionType.INJECTED }))
+      store.dispatch(clearRecentConnectionMeta())
+      expect(store.getState().recentConnectionMeta).toEqual(undefined)
+      expect(getPersistedConnectionMeta()).toEqual(undefined)
     })
   })
 
