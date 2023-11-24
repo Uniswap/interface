@@ -130,7 +130,7 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, baseTokenSy
               <ThemedText.DeprecatedMediumHeader color="white">
                 {isSameAsCurrent ? (
                   <Trans>Same as current</Trans>
-                ) : typed && isTooSmall ? (
+                ) : typed && Number(parsedValue) !== 0 && isTooSmall ? (
                   <Trans>less than 20% of current</Trans>
                 ) : isTooBig ? (
                   <Trans>more than 5x current</Trans>
