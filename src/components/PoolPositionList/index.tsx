@@ -82,7 +82,6 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
       .map((result, i) => {
         const { result: pool, loading } = result
         //if (!chainId || loading || !pools || !pool?.[0]) return
-        if (!pool?.[0]) return
         const { name, symbol, decimals, owner } = pool?.[0]
         const shouldDisplay = filterByOperator
           ? Boolean(owner === account || Number(userBalances[i]?.result) > 0)
@@ -95,9 +94,9 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           poolDelegatedStake: positions?.[i]?.poolDelegatedStake,
           userHasStake: positions?.[i]?.userHasStake ?? false,
           address: poolAddresses[i],
-          decimals,
-          symbol,
-          name,
+          decimals: decimals ?? 18,
+          symbol: symbol ?? '',
+          name: name ?? '',
           chainId: chainId ?? 1,
           shouldDisplay,
           userIsOwner: account ? owner === account : false,
