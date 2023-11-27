@@ -232,7 +232,7 @@ export default function BalanceSummary({
   const connectedChainBalance = useCurrencyBalance(account, currency)
 
   const pageChainBalance = multiChainMap[chain].balance
-  const otherChainBalances = []
+  const otherChainBalances: PortfolioTokenBalancePartsFragment[] = []
   for (const [key, value] of Object.entries(multiChainMap)) {
     if (key !== chain && value.balance !== undefined) {
       otherChainBalances.push(value.balance)
