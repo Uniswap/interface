@@ -3,7 +3,7 @@ import { PortfolioTokenBalancePartsFragment, TokenStandard } from 'graphql/data/
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
 export function splitHiddenTokens(
-  tokenBalances: PortfolioTokenBalancePartsFragment[],
+  tokenBalances: readonly PortfolioTokenBalancePartsFragment[],
   options: {
     hideSmallBalances?: boolean
   } = { hideSmallBalances: true }

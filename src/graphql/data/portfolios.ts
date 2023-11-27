@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 
-import { TokenBalance } from './__generated__/types-and-hooks'
+import { PortfolioTokenBalancePartsFragment } from './__generated__/types-and-hooks'
 
 gql`
   fragment PortfolioTokenBalanceParts on TokenBalance {
@@ -19,6 +19,18 @@ gql`
       symbol
       standard
       decimals
+    }
+    tokenProjectMarket {
+      id
+      pricePercentChange(duration: DAY) {
+        id
+        value
+      }
+      tokenProject {
+        id
+        logoUrl
+        isSpam
+      }
     }
   }
 
@@ -41,21 +53,9 @@ gql`
       }
       tokenBalances {
         ...PortfolioTokenBalanceParts
-        tokenProjectMarket {
-          id
-          pricePercentChange(duration: DAY) {
-            id
-            value
-          }
-          tokenProject {
-            id
-            logoUrl
-            isSpam
-          }
-        }
       }
     }
   }
 `
 
-export type PortfolioToken = NonNullable<TokenBalance['token']>
+export type PortfolioToken = NonNullable<PortfolioTokenBalancePartsFragment['token']>

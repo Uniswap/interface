@@ -173,14 +173,13 @@ const OtherChainsBalanceSummary = ({
   otherChainBalances,
   hasPageChainBalance,
 }: {
-  otherChainBalances?: PortfolioTokenBalancePartsFragment[]
+  otherChainBalances: readonly PortfolioTokenBalancePartsFragment[]
   hasPageChainBalance: boolean
 }) => {
   const navigate = useNavigate()
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
-  const hasOtherChainBalances = otherChainBalances && Boolean(otherChainBalances.length)
-  if (!hasOtherChainBalances) return null
+  if (!otherChainBalances.length) return null
   return (
     <BalanceSection>
       {hasPageChainBalance ? (
@@ -192,7 +191,7 @@ const OtherChainsBalanceSummary = ({
           <Trans>Balance on other networks</Trans>
         </ThemedText.HeadlineSmall>
       )}
-      {otherChainBalances?.map((balance) => {
+      {otherChainBalances.map((balance) => {
         const currency = balance.token && gqlToCurrency(balance.token)
         const chainId = (balance.token && supportedChainIdFromGQLChain(balance.token.chain)) ?? ChainId.MAINNET
         return (
@@ -233,10 +232,13 @@ export default function BalanceSummary({
   const connectedChainBalance = useCurrencyBalance(account, currency)
 
   const pageChainBalance = multiChainMap[chain].balance
-  const otherChainBalances = Object.entries(multiChainMap)
-    .filter(([key, value]) => key !== chain && value.balance !== undefined)
-    .map(([, value]) => value.balance) as PortfolioTokenBalancePartsFragment[] | undefined
-  const hasBalances = pageChainBalance || Boolean(otherChainBalances?.length)
+  const otherChainBalances = []
+  for (const [key, value] of Object.entries(multiChainMap)) {
+    if (key !== chain && value.balance !== undefined) {
+      otherChainBalances.push(value.balance)
+    }
+  }
+  const hasBalances = pageChainBalance || Boolean(otherChainBalances.length)
 
   if (!account || !hasBalances) {
     return null

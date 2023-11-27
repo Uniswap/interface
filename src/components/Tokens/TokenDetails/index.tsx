@@ -128,7 +128,7 @@ export default function TokenDetails({
   const tokenQueryData = tokenQuery.token
   const { data: balanceQuery } = useCachedPortfolioBalancesQuery({ account })
   const multiChainMap = useMemo(() => {
-    const tokenBalances = balanceQuery?.portfolios?.[0].tokenBalances as PortfolioTokenBalancePartsFragment[]
+    const tokenBalances = balanceQuery?.portfolios?.[0].tokenBalances
     const tokensAcrossChains = tokenQueryData?.project?.tokens
     if (!tokensAcrossChains) return {}
     return tokensAcrossChains.reduce((map, current) => {
