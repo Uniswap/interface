@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import clsx, { ClassValue } from 'clsx'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { UniIcon } from 'components/Logo/UniIcon'
 import Web3Status from 'components/Web3Status'
@@ -34,16 +35,17 @@ const Nav = styled.nav`
 interface MenuItemProps {
   href: string
   id?: NavLinkProps['id']
+  className?: ClassValue
   isActive?: boolean
   children: ReactNode
   dataTestId?: string
 }
 
-const MenuItem = ({ href, dataTestId, id, isActive, children }: MenuItemProps) => {
+const MenuItem = ({ href, dataTestId, id, className, isActive, children }: MenuItemProps) => {
   return (
     <NavLink
       to={href}
-      className={isActive ? styles.activeMenuItem : styles.menuItem}
+      className={clsx(isActive ? styles.activeMenuItem : styles.menuItem, className)}
       id={id}
       style={{ textDecoration: 'none' }}
       data-testid={dataTestId}
@@ -83,11 +85,9 @@ export const PageTabs = () => {
           <Trans>NFTs</Trans>
         </MenuItem>
       )}
-      <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }} width="full">
-        <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
-          <Trans>Pools</Trans>
-        </MenuItem>
-      </Box>
+      <MenuItem href="/pools" className={styles.pools} dataTestId="pool-nav-link" isActive={isPoolActive}>
+        <Trans>Pools</Trans>
+      </MenuItem>
       <Box marginY="4">
         <MenuDropdown />
       </Box>
