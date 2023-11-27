@@ -110,7 +110,7 @@ const ActiveDot = styled.span<{ closed: boolean; outOfRange: boolean }>`
   margin-top: 1px;
 `
 
-function calculcateLiquidityValue(price0: number | undefined, price1: number | undefined, position: Position) {
+function calculateLiquidityValue(price0: number | undefined, price1: number | undefined, position: Position) {
   if (!price0 || !price1) return undefined
 
   const value0 = parseFloat(position.amount0.toExact()) * price0
@@ -124,7 +124,7 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
   const { chainId, position, pool, details, inRange, closed } = positionInfo
 
   const { priceA, priceB, fees: feeValue } = useFeeValues(positionInfo)
-  const liquidityValue = calculcateLiquidityValue(priceA, priceB, position)
+  const liquidityValue = calculateLiquidityValue(priceA, priceB, position)
 
   const navigate = useNavigate()
   const toggleWalletDrawer = useToggleAccountDrawer()

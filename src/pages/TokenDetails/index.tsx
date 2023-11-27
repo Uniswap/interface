@@ -1,3 +1,4 @@
+import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import TokenDetails from 'components/Tokens/TokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
@@ -7,9 +8,14 @@ import useParsedQueryString from 'hooks/useParsedQueryString'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import styled from 'styled-components'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 export const pageTimePeriodAtom = atomWithStorage<TimePeriod>('tokenDetailsTimePeriod', TimePeriod.DAY)
+
+const StyledPrefetchBalancesWrapper = styled(PrefetchBalancesWrapper)`
+  display: contents;
+`
 
 export default function TokenDetailsPage() {
   const { tokenAddress, chainName } = useParams<{
@@ -58,12 +64,14 @@ export default function TokenDetailsPage() {
   if (!tokenQuery) return <TokenDetailsPageSkeleton />
 
   return (
-    <TokenDetails
-      urlAddress={tokenAddress}
-      chain={chain}
-      tokenQuery={tokenQuery}
-      tokenPriceQuery={currentPriceQuery}
-      inputTokenAddress={parsedInputTokenAddress}
-    />
+    <StyledPrefetchBalancesWrapper shouldFetchOnAccountUpdate={true} shouldFetchOnHover={false}>
+      <TokenDetails
+        urlAddress={tokenAddress}
+        chain={chain}
+        tokenQuery={tokenQuery}
+        tokenPriceQuery={currentPriceQuery}
+        inputTokenAddress={parsedInputTokenAddress}
+      />
+    </StyledPrefetchBalancesWrapper>
   )
 }

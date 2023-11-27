@@ -3,12 +3,11 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
-import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
 import { BreadcrumbNav, BreadcrumbNavLink } from 'components/Tokens/TokenDetails/BreadcrumbNavLink'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
-import MobileBalanceSummaryFooter from 'components/Tokens/TokenDetails/MobileBalanceSummaryFooter'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
 import TokenDetailsSkeleton, {
   Hr,
@@ -25,8 +24,13 @@ import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
-import { TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { Chain, TokenQuery, TokenQueryData } from 'graphql/data/Token'
+import {
+  Chain,
+  PortfolioTokenBalancePartsFragment,
+  TokenPriceQuery,
+  TokenQuery,
+} from 'graphql/data/__generated__/types-and-hooks'
+import { TokenQueryData } from 'graphql/data/Token'
 import { getTokenDetailsURL, gqlToCurrency, InterfaceGqlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
@@ -41,7 +45,9 @@ import { CopyContractAddress } from 'theme/components'
 import { isAddress, shortenAddress } from 'utils'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
+import BalanceSummary from './BalanceSummary'
 import InvalidTokenDetails from './InvalidTokenDetails'
+import MobileBalanceSummaryFooter from './MobileBalanceSummaryFooter'
 import { TokenDescription } from './TokenDescription'
 
 const TokenSymbol = styled.span`
@@ -94,7 +100,7 @@ function useRelevantToken(
     [onChainToken, queryToken]
   )
 }
-
+export type MultiChainMap = { [chain: string]: { address?: string; balance?: PortfolioTokenBalancePartsFragment } }
 type TokenDetailsProps = {
   urlAddress?: string
   inputTokenAddress?: string
@@ -117,17 +123,25 @@ export default function TokenDetails({
     [urlAddress]
   )
 
-  const { chainId: connectedChainId } = useWeb3React()
+  const { account, chainId: connectedChainId } = useWeb3React()
   const pageChainId = supportedChainIdFromGQLChain(chain)
   const tokenQueryData = tokenQuery.token
-  const crossChainMap = useMemo(
-    () =>
-      tokenQueryData?.project?.tokens.reduce((map, current) => {
-        if (current) map[current.chain] = current.address
-        return map
-      }, {} as { [key: string]: string | undefined }) ?? {},
-    [tokenQueryData]
-  )
+  const { data: balanceQuery } = useCachedPortfolioBalancesQuery({ account })
+  const multiChainMap = useMemo(() => {
+    const tokenBalances = balanceQuery?.portfolios?.[0].tokenBalances
+    const tokensAcrossChains = tokenQueryData?.project?.tokens
+    if (!tokensAcrossChains) return {}
+    return tokensAcrossChains.reduce((map, current) => {
+      if (current) {
+        if (!map[current.chain]) {
+          map[current.chain] = {}
+        }
+        map[current.chain].address = current.address
+        map[current.chain].balance = tokenBalances?.find((tokenBalance) => tokenBalance.token?.id === current.id)
+      }
+      return map
+    }, {} as MultiChainMap)
+  }, [balanceQuery?.portfolios, tokenQueryData?.project?.tokens])
 
   const { token: detailedToken, didFetchFromChain } = useRelevantToken(address, pageChainId, tokenQueryData)
 
@@ -143,7 +157,7 @@ export default function TokenDetails({
   const navigateToTokenForChain = useCallback(
     (update: Chain) => {
       if (!address) return
-      const bridgedAddress = crossChainMap[update]
+      const bridgedAddress = multiChainMap[update].address
       if (bridgedAddress) {
         startTokenTransition(() =>
           navigate(
@@ -158,7 +172,7 @@ export default function TokenDetails({
         startTokenTransition(() => navigate(getTokenDetailsURL({ address, chain: update, isInfoExplorePageEnabled })))
       }
     },
-    [address, crossChainMap, didFetchFromChain, detailedToken?.isNative, navigate, isInfoExplorePageEnabled]
+    [address, multiChainMap, didFetchFromChain, detailedToken?.isNative, navigate, isInfoExplorePageEnabled]
   )
   useOnGlobalChainSwitch(navigateToTokenForChain)
 
@@ -283,7 +297,7 @@ export default function TokenDetails({
             />
           </div>
           {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
-          {!isInfoTDPEnabled && detailedToken && <BalanceSummary token={detailedToken} />}
+          {detailedToken && <BalanceSummary currency={detailedToken} chain={chain} multiChainMap={multiChainMap} />}
           {isInfoTDPEnabled && (
             <TokenDescription
               tokenAddress={address}
@@ -293,7 +307,9 @@ export default function TokenDetails({
             />
           )}
         </RightPanel>
-        {!isInfoTDPEnabled && detailedToken && <MobileBalanceSummaryFooter token={detailedToken} />}
+        {detailedToken && (
+          <MobileBalanceSummaryFooter currency={detailedToken} pageChainBalance={multiChainMap[chain].balance} />
+        )}
 
         <TokenSafetyModal
           isOpen={openTokenSafetyModal || !!continueSwap}

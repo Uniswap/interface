@@ -108,6 +108,10 @@ export function useTokenBalance(account?: string, token?: Token): CurrencyAmount
   return tokenBalances[token.address]
 }
 
+/**
+ * Returns balances for tokens on currently-connected chainId via RPC.
+ * See useCachedPortfolioBalancesQuery for multichain portfolio balances via GQL.
+ */
 export function useCurrencyBalances(
   account?: string,
   currencies?: (Currency | undefined)[]

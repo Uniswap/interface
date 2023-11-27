@@ -49,6 +49,22 @@ export const apolloClient = new ApolloClient({
           },
         },
       },
+      TokenProject: {
+        fields: {
+          tokens: {
+            // cache data may be lost when replacing the tokens array
+            merge(existing, incoming) {
+              if (!existing) {
+                return incoming
+              } else if (Array.isArray(existing)) {
+                return [...existing, ...incoming]
+              } else {
+                return [existing, ...incoming]
+              }
+            },
+          },
+        },
+      },
     },
   }),
   defaultOptions: {

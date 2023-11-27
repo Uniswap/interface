@@ -3,6 +3,7 @@ import { usePortfolioBalancesLazyQuery, usePortfolioBalancesQuery } from 'graphq
 import { GQL_MAINNET_CHAINS } from 'graphql/data/util'
 import usePrevious from 'hooks/usePrevious'
 import { atom, useAtom } from 'jotai'
+import ms from 'ms'
 import { PropsWithChildren, useCallback, useEffect } from 'react'
 
 import { usePendingActivity } from '../AccountDrawer/MiniPortfolio/Activity/hooks'
@@ -31,8 +32,9 @@ const hasUnfetchedBalancesAtom = atom<boolean>(true)
 export default function PrefetchBalancesWrapper({
   children,
   shouldFetchOnAccountUpdate,
+  shouldFetchOnHover = true,
   className,
-}: PropsWithChildren<{ shouldFetchOnAccountUpdate: boolean; className?: string }>) {
+}: PropsWithChildren<{ shouldFetchOnAccountUpdate: boolean; shouldFetchOnHover?: boolean; className?: string }>) {
   const { account } = useWeb3React()
   const [prefetchPortfolioBalances] = usePortfolioBalancesLazyQuery()
 
@@ -40,8 +42,13 @@ export default function PrefetchBalancesWrapper({
   const [hasUnfetchedBalances, setHasUnfetchedBalances] = useAtom(hasUnfetchedBalancesAtom)
   const fetchBalances = useCallback(() => {
     if (account) {
-      prefetchPortfolioBalances({ variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS } })
-      setHasUnfetchedBalances(false)
+      // Backend takes <2sec to get the updated portfolio value after a transaction
+      // This timeout is an interim solution while we're working on a websocket that'll ping the client when connected account gets changes
+      // TODO(WEB-3131): remove this timeout after websocket is implemented
+      setTimeout(() => {
+        prefetchPortfolioBalances({ variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS } })
+        setHasUnfetchedBalances(false)
+      }, ms('3.5s'))
     }
   }, [account, prefetchPortfolioBalances, setHasUnfetchedBalances])
 
@@ -62,12 +69,18 @@ export default function PrefetchBalancesWrapper({
     }
   }, [account, prevAccount, shouldFetchOnAccountUpdate, fetchBalances, hasUpdatedTx, setHasUnfetchedBalances])
 
+  // Temporary workaround to fix balances on TDP - this fetches balances if shouldFetchOnAccountUpdate becomes true while hasUnfetchedBalances is true
+  // TODO(WEB-3071) remove this logic once balance provider refactor is done
+  useEffect(() => {
+    if (hasUnfetchedBalances && shouldFetchOnAccountUpdate) fetchBalances()
+  }, [fetchBalances, hasUnfetchedBalances, shouldFetchOnAccountUpdate])
+
   const onHover = useCallback(() => {
     if (hasUnfetchedBalances) fetchBalances()
   }, [fetchBalances, hasUnfetchedBalances])
 
   return (
-    <div onMouseEnter={onHover} className={className}>
+    <div onMouseEnter={shouldFetchOnHover ? onHover : undefined} className={className}>
       {children}
     </div>
   )

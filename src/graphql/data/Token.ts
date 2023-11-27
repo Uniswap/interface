@@ -97,7 +97,4 @@ gql`
     }
   }
 `
-
-export type { Chain, TokenQuery } from './__generated__/types-and-hooks'
-
 export type TokenQueryData = TokenQuery['token']

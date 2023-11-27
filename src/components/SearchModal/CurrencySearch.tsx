@@ -5,7 +5,6 @@ import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
-import { TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -101,7 +100,7 @@ export function CurrencySearch({
   }, [chainId, data?.portfolios])
 
   const sortedTokens: Token[] = useMemo(() => {
-    const portfolioTokenBalances = data?.portfolios?.[0].tokenBalances as TokenBalance[] | undefined
+    const portfolioTokenBalances = data?.portfolios?.[0].tokenBalances
     const portfolioTokens = splitHiddenTokens(portfolioTokenBalances ?? [])
       .visibleTokens.map((tokenBalance) => {
         if (!tokenBalance?.token?.chain || !tokenBalance.token?.address || !tokenBalance.token?.decimals) {
