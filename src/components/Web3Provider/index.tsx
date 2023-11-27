@@ -57,7 +57,7 @@ function Updater() {
       sendAnalyticsEvent(InterfaceEventName.CHAIN_CHANGED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: account,
-        wallet_type: getConnection(connector).getName(),
+        wallet_type: getConnection(connector).getProviderInfo().name,
         chain_id: chainId,
         previousConnectedChainId,
         page: currentPage,
@@ -70,7 +70,7 @@ function Updater() {
   const [connectedWallets, addConnectedWallet] = useConnectedWallets()
   useEffect(() => {
     if (account && account !== previousAccount) {
-      const walletType = getConnection(connector).getName()
+      const walletType = getConnection(connector).getProviderInfo().name
       const peerWalletAgent = provider ? getWalletMeta(provider)?.agent : undefined
       const isReconnect = connectedWallets.some(
         (wallet) => wallet.account === account && wallet.walletType === walletType

@@ -1,11 +1,15 @@
+import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
+import METAMASK_ICON from 'assets/wallets/metamask-icon.svg'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Loader from 'components/Icons/LoadingSpinner'
+import { injectedConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { Connection } from 'connection/types'
 import styled from 'styled-components'
+import { ButtonText, ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 
@@ -75,6 +79,16 @@ const Wrapper = styled.div<{ disabled: boolean }>`
   }
 `
 
+const ICON_OVERRIDE_MAP: { [rdns in string]?: string } = {
+  'io.metamask': METAMASK_ICON, // MetaMask's provided icon has no padding
+}
+
+/** Returns a different icon than the input if we want to override the one provided by a wallet */
+function getOverrideIcon(icon: string | undefined, rdns?: string) {
+  if (!rdns) return icon
+  return ICON_OVERRIDE_MAP[rdns] ?? icon
+}
+
 interface OptionProps {
   connection: Connection
 }
@@ -82,35 +96,51 @@ export default function Option({ connection }: OptionProps) {
   const { activationState, tryActivation } = useActivationState()
   const toggleAccountDrawer = useToggleAccountDrawer()
   const { chainId } = useWeb3React()
-  const activate = () => tryActivation(connection, toggleAccountDrawer, chainId)
+
+  const isDarkMode = useIsDarkMode()
+  const { name, icon, rdns } = connection.getProviderInfo(isDarkMode)
+  const displayIcon = getOverrideIcon(icon, rdns)
 
   const isSomeOptionPending = activationState.status === ActivationStatus.PENDING
-  const isCurrentOptionPending = isSomeOptionPending && activationState.connection.type === connection.type
-  const isDarkMode = useIsDarkMode()
+  const isCurrentOptionPending = isSomeOptionPending && activationState.connection === connection
 
   return (
     <Wrapper disabled={isSomeOptionPending}>
       <TraceEvent
         events={[BrowserEvent.onClick]}
         name={InterfaceEventName.WALLET_SELECTED}
-        properties={{ wallet_type: connection.getName() }}
+        properties={{ wallet_type: name }}
         element={InterfaceElementName.WALLET_TYPE_OPTION}
       >
         <OptionCardClickable
           disabled={isSomeOptionPending}
-          onClick={activate}
+          onClick={() => tryActivation(connection, toggleAccountDrawer, chainId)}
           selected={isCurrentOptionPending}
           data-testid={`wallet-option-${connection.type}`}
         >
           <OptionCardLeft>
             <IconWrapper>
-              <img src={connection.getIcon?.(isDarkMode)} alt={connection.getName()} />
+              <img src={displayIcon} alt={name} />
             </IconWrapper>
-            <HeaderText>{connection.getName()}</HeaderText>
+            <HeaderText>{name}</HeaderText>
           </OptionCardLeft>
           {isCurrentOptionPending && <Loader />}
         </OptionCardClickable>
       </TraceEvent>
     </Wrapper>
+  )
+}
+
+export function DeprecatedInjectorMessage() {
+  const { tryActivation } = useActivationState()
+  const toggleAccountDrawer = useToggleAccountDrawer()
+  const { chainId } = useWeb3React()
+
+  return (
+    <ButtonText onClick={() => tryActivation(injectedConnection, toggleAccountDrawer, chainId)}>
+      <ThemedText.BodySmall color="neutral2">
+        <Trans>Don&apos;t see your wallet?</Trans>
+      </ThemedText.BodySmall>
+    </ButtonText>
   )
 }

@@ -4,6 +4,7 @@ export interface ConnectionMeta {
   type: ConnectionType
   address?: string
   ENSName?: string
+  latestEip6963rdns?: string
 }
 
 export const connectionMetaKey = 'connection_meta'
@@ -34,4 +35,19 @@ export function setPersistedConnectionMeta(meta: ConnectionMeta) {
 
 export function deletePersistedConnectionMeta() {
   localStorage.removeItem(connectionMetaKey)
+}
+
+const recentlyUsedInjectorKey = 'recently_used_injector'
+export function getRecentlyUsedInjector(): string | null {
+  try {
+    const value = localStorage.getItem(recentlyUsedInjectorKey)
+    return value ?? null
+  } catch (e) {
+    console.warn(e)
+  }
+  return null
+}
+
+export function setRecentlyUsedInjector(rdns?: string) {
+  if (rdns) localStorage.setItem(recentlyUsedInjectorKey, rdns)
 }

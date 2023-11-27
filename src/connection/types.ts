@@ -10,6 +10,7 @@ export enum ConnectionType {
   NETWORK = 'NETWORK',
   GNOSIS_SAFE = 'GNOSIS_SAFE',
   DEPRECATED_NETWORK = 'DEPRECATED_NETWORK',
+  EIP_6963_INJECTED = 'EIP_6963_INJECTED',
 }
 
 export function toConnectionType(value = ''): ConnectionType | undefined {
@@ -20,12 +21,18 @@ export function toConnectionType(value = ''): ConnectionType | undefined {
   }
 }
 
+export interface ProviderInfo {
+  name: string
+  icon?: string
+  rdns?: string
+}
+
 export interface Connection {
-  getName(): string
+  /** Optionally include isDarkMode when displaying icons that should change with current theme */
+  getProviderInfo(isDarkMode?: boolean): ProviderInfo
   connector: Connector
   hooks: Web3ReactHooks
   type: ConnectionType
-  getIcon?(isDarkMode: boolean): string
-  shouldDisplay(): boolean
+  shouldDisplay(eip6963Enabled: boolean): boolean
   overrideActivate?: (chainId?: ChainId) => boolean
 }

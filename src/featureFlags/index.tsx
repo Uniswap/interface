@@ -23,6 +23,7 @@ export enum FeatureFlag {
   quickRouteMainnet = 'enable_quick_route_mainnet',
   progressIndicatorV2 = 'progress_indicator_v2',
   feesEnabled = 'fees_enabled',
+  eip6963Enabled = 'eip6963_enabled',
 }
 
 interface FeatureFlagsContextType {

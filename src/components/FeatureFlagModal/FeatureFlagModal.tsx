@@ -4,6 +4,7 @@ import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateConfig, useUpda
 import { DynamicConfigName } from 'featureFlags/dynamicConfig'
 import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
 import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
+import { useEip6963EnabledFlag } from 'featureFlags/flags/eip6963'
 import { useFallbackProviderEnabledFlag } from 'featureFlags/flags/fallbackProvider'
 import { useFotAdjustmentsFlag } from 'featureFlags/flags/fotAdjustments'
 import { useInfoExploreFlag } from 'featureFlags/flags/infoExplore'
@@ -268,6 +269,12 @@ export default function FeatureFlagModal() {
             <X size={24} />
           </CloseButton>
         </Header>
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useEip6963EnabledFlag()}
+          featureFlag={FeatureFlag.eip6963Enabled}
+          label="Enable eip6969 Multiple Injected Wallet Detection"
+        />
         <FeatureFlagOption
           variant={BaseVariant}
           value={useFeesEnabledFlag()}
