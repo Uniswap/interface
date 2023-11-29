@@ -23,7 +23,7 @@ import { CloseIcon, ThemedText } from 'theme/components'
 import { UserAddedToken } from 'types/tokens'
 import { splitHiddenTokens } from 'utils/splitHiddenTokens'
 
-import { useDefaultActiveTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
+import { useDefaultActiveTokens, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
 import { isAddress } from '../../utils'
 import Column from '../Column'
 import Row, { RowBetween } from '../Row'
@@ -76,7 +76,6 @@ export function CurrencySearch({
   const debouncedQuery = useDebounce(searchQuery, 200)
   const isAddressSearch = isAddress(debouncedQuery)
   const searchToken = useToken(debouncedQuery)
-  const searchTokenIsAdded = useIsUserAddedToken(searchToken)
 
   const defaultTokens = useDefaultActiveTokens(chainId)
 
@@ -289,7 +288,7 @@ export function CurrencySearch({
           )}
         </PaddedColumn>
         <Separator />
-        {searchToken && !searchTokenIsAdded ? (
+        {searchToken ? (
           <Column style={{ padding: '20px 0', height: '100%' }}>
             <CurrencyRow
               currency={searchToken}
