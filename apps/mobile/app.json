@@ -1,0 +1,15 @@
+{
+  "name": "Uniswap",
+  "displayName": "Uniswap",
+  "appStoreUrl": "https://apps.apple.com/app/apple-store/id6443944476",
+  "plugins": [
+    "expo-localization"
+  ],
+  "expo": {
+    "ios": {
+      "infoPlist": {
+        "CFBundleAllowMixedLocalizations": true
+      }
+    }
+  }
+}

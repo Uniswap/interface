@@ -1,0 +1,208 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders wallet loader 1`] = `
+<View
+  sentry-label="WalletLoader"
+  style={
+    {
+      "alignItems": "center",
+      "borderBottomColor": "#CECECE",
+      "borderBottomLeftRadius": 20,
+      "borderBottomRightRadius": 20,
+      "borderBottomWidth": 1,
+      "borderLeftColor": "#CECECE",
+      "borderLeftWidth": 1,
+      "borderRightColor": "#CECECE",
+      "borderRightWidth": 1,
+      "borderStyle": "solid",
+      "borderTopColor": "#CECECE",
+      "borderTopLeftRadius": 20,
+      "borderTopRightRadius": 20,
+      "borderTopWidth": 1,
+      "flexDirection": "row",
+      "justifyContent": "flex-start",
+      "opacity": 1,
+      "overflow": "hidden",
+      "paddingBottom": 16,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 16,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "gap": 12,
+        "height": 36,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "stretch",
+          "backgroundColor": "#CECECE",
+          "borderBottomLeftRadius": 999999,
+          "borderBottomRightRadius": 999999,
+          "borderTopLeftRadius": 999999,
+          "borderTopRightRadius": 999999,
+          "flexDirection": "column",
+          "height": 32,
+          "width": 32,
+        }
+      }
+    />
+    <View
+      style={
+        {
+          "alignItems": "flex-start",
+          "flexDirection": "column",
+          "width": "100%",
+        }
+      }
+    >
+      <View
+        onLayout={[Function]}
+        style={
+          {
+            "alignItems": "stretch",
+            "flexDirection": "column",
+            "opacity": 0,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "position": "relative",
+              }
+            }
+          >
+            <View
+              accessibilityElementsHidden={true}
+              importantForAccessibility="no-hide-descendants"
+            >
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
+                style={
+                  {
+                    "color": "transparent",
+                    "fontFamily": "Basel-Book",
+                    "fontSize": 19,
+                    "lineHeight": 24,
+                    "opacity": 0,
+                  }
+                }
+                suppressHighlighting={true}
+              >
+                Wallet Nickname
+              </Text>
+            </View>
+            <View
+              style={
+                {
+                  "alignItems": "stretch",
+                  "backgroundColor": "#F9F9F9",
+                  "borderBottomLeftRadius": 4,
+                  "borderBottomRightRadius": 4,
+                  "borderTopLeftRadius": 4,
+                  "borderTopRightRadius": 4,
+                  "bottom": "5%",
+                  "flexDirection": "column",
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": "5%",
+                }
+              }
+            />
+          </View>
+        </View>
+      </View>
+      <View
+        onLayout={[Function]}
+        style={
+          {
+            "alignItems": "stretch",
+            "flexDirection": "column",
+            "opacity": 0,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "position": "relative",
+              }
+            }
+          >
+            <View
+              accessibilityElementsHidden={true}
+              importantForAccessibility="no-hide-descendants"
+            >
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
+                style={
+                  {
+                    "color": "transparent",
+                    "fontFamily": "Basel-Book",
+                    "fontSize": 17,
+                    "lineHeight": 24,
+                    "opacity": 0,
+                  }
+                }
+                suppressHighlighting={true}
+              >
+                0xaaaa...aaaa
+              </Text>
+            </View>
+            <View
+              style={
+                {
+                  "alignItems": "stretch",
+                  "backgroundColor": "#F9F9F9",
+                  "borderBottomLeftRadius": 4,
+                  "borderBottomRightRadius": 4,
+                  "borderTopLeftRadius": 4,
+                  "borderTopRightRadius": 4,
+                  "bottom": "5%",
+                  "flexDirection": "column",
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": "5%",
+                }
+              }
+            />
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;

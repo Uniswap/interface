@@ -1,0 +1,27 @@
+{
+  "extensions": {
+    "recommendations": [
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode"
+    ]
+  },
+  "settings": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "eslint.alwaysShowStatus": true,
+    "eslint.workingDirectories": [
+      "./apps/mobile",
+      "./apps/stretch",
+      "./apps/web",
+      "./config/eslint-config-custom",
+      "./config/jest-presets",
+      "./config/tsconfig",
+      "./packages/wallet",
+      "./packages/ui",
+      "./packages/utilities"
+    ]
+  }
+}

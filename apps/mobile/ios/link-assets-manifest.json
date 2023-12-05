@@ -1,0 +1,17 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/Basel-Book.ttf",
+      "sha1": "7ff6b3f7e5c2857ca3b39fad3ba09c35bb75e302"
+    },
+    {
+      "path": "src/assets/fonts/Basel-Medium.ttf",
+      "sha1": "182bf31d0794296a034a2d13b50fffd804709aaa"
+    },
+    {
+      "path": "src/assets/fonts/InputMono-Regular.ttf",
+      "sha1": "c27a811b8a8e05a578f67f71bb89ecb03dca5905"
+    }
+  ]
+}

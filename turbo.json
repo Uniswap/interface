@@ -1,0 +1,98 @@
+{
+  "baseBranch": "origin/main",
+  "pipeline": {
+    "prepare": {
+      "inputs": [
+        "package.json"
+      ],
+      "outputs": [
+        "src/**/__generated__/**",
+        "src/types/v3/**",
+        "src/locales/**",
+        "src/abis/types/**",
+        "src/constants/tokenLists/**"
+      ],
+      "dependsOn": []
+    },
+    "typecheck": {
+      "inputs": [
+        "src/**.ts",
+        "src/**.tsx"
+      ],
+      "outputs": [],
+      "dependsOn": [
+        "prepare"
+      ]
+    },
+    "check:circular": {},
+    "lint": {
+      "dependsOn": [
+        "typecheck"
+      ]
+    },
+    "lint:fix": {
+      "dependsOn": [
+        "typecheck"
+      ]
+    },
+    "//#staged:lint:fix": {
+      "outputs": []
+    },
+    "//#staged:format": {
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": [
+        "prepare",
+        "typecheck",
+        "lint"
+      ]
+    },
+    "snapshots": {
+      "dependsOn": [
+        "typecheck",
+        "lint"
+      ]
+    },
+    "build:production": {
+      "inputs": [
+        "yarn.lock",
+        "**/package.json",
+        "{packages,apps}/src/**/*"
+      ],
+      "outputs": [
+        "**/build/**"
+      ],
+      "dependsOn": [
+        "prepare",
+        "build"
+      ]
+    },
+    "build": {
+      "inputs": [
+        "yarn.lock",
+        "**/package.json",
+        "{packages,apps}/src/**.ts",
+        "{packages,apps}/src/**.tsx"
+      ],
+      "outputs": [
+        "**/dist/**",
+        "./apps/next/.next/**"
+      ],
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "storybook#build": {
+      "dependsOn": [
+        "ui#build"
+      ],
+      "inputs": [
+        "packages/ui/**"
+      ],
+      "outputs": [
+        "apps/storybook/dist/**"
+      ]
+    }
+  }
+}

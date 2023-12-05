@@ -1,0 +1,43 @@
+IPFS hash of the deployment:
+- CIDv0: `Qmbx2qmXcLfaqtEm71XnBrTZRJSepmMiCYqQa833MUehQR`
+- CIDv1: `bafybeigkhbeiart6cgq77am7th53hpxehbvlevnzxuqn3z7qvk2nagv2my`
+
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
+
+IPFS gateways:
+- https://bafybeigkhbeiart6cgq77am7th53hpxehbvlevnzxuqn3z7qvk2nagv2my.ipfs.dweb.link/
+- https://bafybeigkhbeiart6cgq77am7th53hpxehbvlevnzxuqn3z7qvk2nagv2my.ipfs.cf-ipfs.com/
+- [ipfs://Qmbx2qmXcLfaqtEm71XnBrTZRJSepmMiCYqQa833MUehQR/](ipfs://Qmbx2qmXcLfaqtEm71XnBrTZRJSepmMiCYqQa833MUehQR/)
+
+## 5.1.0 (2023-12-05)
+
+
+### Features
+
+* **web:** [info] add TDP chart toggle controls (#5223) c9ffc36
+* **web:** add H1 to token detail page (#5272) b75724c
+* **web:** page titles for all pages (#5327) b45bcab
+* **web:** refresh swap flow (#5315) 83f70d4
+* **web:** use Context for swap state (#5266) 37a649e
+
+
+### Bug Fixes
+
+* **web:** network downtime warning is not positioned correctly (#5281) 8b3ebb3
+* **web:** page titles not updating properly (#5346) 6a29762
+* **web:** put tdp text content in p tags (#5308) e5ca253
+* **web:** remove trailing slash from canonicals (#5305) 00844b1
+* **web:** tab title bug (#5258) e4b92be
+* **web:** use nondenominational festive uni logo (#5361) 6f47a78
+
+
+### Tests
+
+* **web:** add tests for token page title (#5307) 714c0fa
+
+

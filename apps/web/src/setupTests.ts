@@ -1,0 +1,152 @@
+import '@testing-library/jest-dom' // jest custom assertions
+import '@vanilla-extract/css/disableRuntimeStyles' // https://vanilla-extract.style/documentation/test-environments/#disabling-runtime-styles
+import 'polyfills'
+import 'jest-styled-components' // adds style diffs to snapshot tests
+import 'polyfills'
+
+import type { createPopper } from '@popperjs/core'
+import { useWeb3React } from '@web3-react/core'
+import failOnConsole from 'jest-fail-on-console'
+import { disableNetConnect, restore as restoreNetConnect } from 'nock'
+import { Readable } from 'stream'
+import { toBeVisible } from 'test-utils/matchers'
+import { mocked } from 'test-utils/mocked'
+import { TextDecoder, TextEncoder } from 'util'
+
+window.open = jest.fn()
+window.getComputedStyle = jest.fn()
+
+if (typeof globalThis.TextEncoder === 'undefined') {
+  globalThis.ReadableStream = Readable as unknown as typeof globalThis.ReadableStream
+  globalThis.TextEncoder = TextEncoder
+  globalThis.TextDecoder = TextDecoder as typeof globalThis.TextDecoder
+}
+
+// Sets origin to the production origin, because some tests depend on this.
+// This prevents each test file from needing to set this manually.
+globalThis.origin = 'https://app.uniswap.org'
+
+globalThis.matchMedia =
+  globalThis.matchMedia ||
+  (() => {
+    return {
+      matches: false,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    }
+  })
+
+jest.mock('@popperjs/core', () => {
+  const core = jest.requireActual('@popperjs/core')
+  return {
+    ...core,
+    createPopper: (...args: Parameters<typeof createPopper>) => {
+      const [referenceElement, popperElement, options = {}] = args
+
+      // Prevent popper from making state updates asynchronously.
+      // This is necessary to avoid warnings during tests, as popper will asynchronously update state outside of test setup.
+      options?.modifiers?.push({
+        name: 'synchronousUpdate',
+        enabled: true,
+        phase: 'beforeMain',
+        effect: (state) => {
+          state.instance.update = () => {
+            state.instance.forceUpdate()
+            return Promise.resolve(state.instance.state)
+          }
+        },
+      })
+
+      return core.createPopper(referenceElement, popperElement, options)
+    },
+  }
+})
+
+jest.mock('@web3-react/core', () => {
+  const web3React = jest.requireActual('@web3-react/core')
+  const { Empty } = jest.requireActual('@web3-react/empty')
+  return {
+    ...web3React,
+    initializeConnector: () =>
+      web3React.initializeConnector(
+        (actions: Parameters<typeof web3React.initializeConnector>[0]) => new Empty(actions)
+      ),
+    useWeb3React: jest.fn(),
+  }
+})
+
+jest.mock('connection/eagerlyConnect', () => {
+  return {
+    useConnectionReady: () => true,
+  }
+})
+
+jest.mock('state/routing/slice', () => {
+  const routingSlice = jest.requireActual('state/routing/slice')
+  return {
+    ...routingSlice,
+    // Prevents unit tests from logging errors from failed getQuote queries
+    useGetQuoteQuery: () => ({
+      isError: false,
+      data: undefined,
+      error: undefined,
+      currentData: undefined,
+    }),
+  }
+})
+
+jest.mock('state/routing/quickRouteSlice', () => {
+  const quickRouteSlice = jest.requireActual('state/routing/quickRouteSlice')
+  return {
+    ...quickRouteSlice,
+    // Prevents unit tests from logging errors from failed getQuote queries
+    useGetQuickRouteQuery: () => ({
+      isError: false,
+      data: undefined,
+      error: undefined,
+      currentData: undefined,
+    }),
+  }
+})
+
+// Mocks are configured to reset between tests (by CRA), so they must be set in a beforeEach.
+beforeEach(() => {
+  // Mock window.getComputedStyle, because it is otherwise too computationally expensive to unit test.
+  // Not mocking this results in multi-second tests when using popper.js.
+  mocked(window.getComputedStyle).mockImplementation(() => new CSSStyleDeclaration())
+
+  // Mock useWeb3React to return a chainId of 1 by default.
+  mocked(useWeb3React).mockReturnValue({ chainId: 1 } as ReturnType<typeof useWeb3React>)
+
+  // Disable network connections by default.
+  disableNetConnect()
+})
+
+afterEach(() => {
+  // Without this, nock causes a memory leak and the tests will fail on CI.
+  // https://github.com/nock/nock/issues/1817
+  restoreNetConnect()
+})
+
+/**
+ * Fail tests if anything is logged to the console. This keeps the console clean and ensures test output stays readable.
+ * If something should log to the console, it should be stubbed and asserted:
+ * @example
+ * beforeEach(() => jest.spyOn(console, 'error').mockReturnsValue())
+ * it('should log an error', () => {
+ *   example()
+ *   expect(console.error).toHaveBeenCalledWith(expect.any(Error))
+ * })
+ */
+failOnConsole({
+  shouldFailOnAssert: true,
+  shouldFailOnDebug: true,
+  shouldFailOnError: true,
+  shouldFailOnInfo: true,
+  shouldFailOnLog: true,
+  shouldFailOnWarn: true,
+})
+
+expect.extend({
+  toBeVisible,
+})

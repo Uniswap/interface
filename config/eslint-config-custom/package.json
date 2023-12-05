@@ -1,0 +1,22 @@
+{
+  "name": "eslint-config-custom",
+  "version": "0.0.0",
+  "dependencies": {
+    "@jambit/eslint-plugin-typed-redux-saga": "0.4.0",
+    "@react-native-community/eslint-config": "3.0.3",
+    "eslint": "8.44.0",
+    "eslint-config-next": "^13.1.3",
+    "eslint-config-prettier": "8.7.0",
+    "eslint-config-turbo": "latest",
+    "eslint-plugin-no-unsanitized": "4.0.1",
+    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-security": "1.5.0",
+    "eslint-plugin-spellcheck": "0.0.20",
+    "eslint-plugin-storybook": "^0.6.10",
+    "prettier": "^2.8.8",
+    "typescript": "4.9.4"
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "private": true
+}

@@ -1,0 +1,6 @@
+export const HIDDEN_NFTS_ROW_LEFT_ITEM = 'HIDDEN_NFTS_ROW_LEFT_ITEM'
+export const HIDDEN_NFTS_ROW_RIGHT_ITEM = 'HIDDEN_NFTS_ROW_RIGHT_ITEM'
+export const EMPTY_NFT_ITEM = 'EMPTY_NFT_ITEM'
+
+export const MAX_NFT_IMAGE_SIZE = 375
+export const ESTIMATED_NFT_LIST_ITEM_SIZE = 251 // heuristic provided by FlashList

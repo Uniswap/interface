@@ -1,6 +1,0 @@
-# *
-User-agent: *
-Disallow:
-
-# Sitemaps
-Sitemap: https://app.uniswap.org/sitemap.xml
