@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a DecimalNumber 1`] = `
+<Text
+  allowFontScaling={true}
+  maxFontSizeMultiplier={1.4}
+  style={
+    {
+      "color": "#222222",
+      "fontFamily": "Basel-Book",
+      "fontSize": 19,
+      "lineHeight": 24,
+    }
+  }
+  suppressHighlighting={true}
+>
+  14,123
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#CECECE",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    .
+    78
+  </Text>
+</Text>
+`;
+
+exports[`renders a DecimalNumber without a comma separator 1`] = `
+<Text
+  allowFontScaling={true}
+  maxFontSizeMultiplier={1.4}
+  style={
+    {
+      "color": "#222222",
+      "fontFamily": "Basel-Book",
+      "fontSize": 19,
+      "lineHeight": 24,
+    }
+  }
+  suppressHighlighting={true}
+>
+  14
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#CECECE",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    ,
+    23
+  </Text>
+</Text>
+`;
+
+exports[`renders a DecimalNumber without a decimal part 1`] = `
+<Text
+  allowFontScaling={true}
+  maxFontSizeMultiplier={1.4}
+  style={
+    {
+      "color": "#222222",
+      "fontFamily": "Basel-Book",
+      "fontSize": 19,
+      "lineHeight": 24,
+    }
+  }
+  suppressHighlighting={true}
+>
+  14,123
+</Text>
+`;

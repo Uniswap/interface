@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Expo",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "alwaysStrict": true,
+    "composite": false,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "jsx": "react-native",
+    "module": "CommonJS",
+    "noErrorTruncation": true,
+    "noImplicitAny": true,
+    "resolveJsonModule": true,
+    "target": "esnext",
+    "types": [
+      "react-native",
+      "jest"
+    ],
+    "paths": {
+      "wallet/*": [
+        "../../packages/wallet/*"
+      ],
+      "ui/*": [
+        "../../packages/ui/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "babel.config.js",
+    "metro.config.js",
+    "jest.config.js"
+  ]
+}

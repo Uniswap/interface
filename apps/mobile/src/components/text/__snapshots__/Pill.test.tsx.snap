@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a Pill with border 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "borderBottomColor": "#40B66B",
+      "borderBottomLeftRadius": 999999,
+      "borderBottomRightRadius": 999999,
+      "borderBottomWidth": 1,
+      "borderLeftColor": "#40B66B",
+      "borderLeftWidth": 1,
+      "borderRightColor": "#40B66B",
+      "borderRightWidth": 1,
+      "borderStyle": "solid",
+      "borderTopColor": "#40B66B",
+      "borderTopLeftRadius": 999999,
+      "borderTopRightRadius": 999999,
+      "borderTopWidth": 1,
+      "flexDirection": "row",
+      "gap": 8,
+      "justifyContent": "center",
+      "paddingBottom": 8,
+      "paddingLeft": 4,
+      "paddingRight": 4,
+      "paddingTop": 8,
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#222222",
+        "fontFamily": "Basel-Book",
+        "fontSize": 17,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    Icon
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": undefined,
+        "fontFamily": "Basel-Book",
+        "fontSize": 17,
+        "lineHeight": 24,
+        "paddingTop": 1,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    My Second Pill Label
+  </Text>
+</View>
+`;
+
+exports[`renders a Pill without image 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#F9F9F9",
+      "borderBottomColor": "transparent",
+      "borderBottomLeftRadius": 999999,
+      "borderBottomRightRadius": 999999,
+      "borderBottomWidth": 1,
+      "borderLeftColor": "transparent",
+      "borderLeftWidth": 1,
+      "borderRightColor": "transparent",
+      "borderRightWidth": 1,
+      "borderStyle": "solid",
+      "borderTopColor": "transparent",
+      "borderTopLeftRadius": 999999,
+      "borderTopRightRadius": 999999,
+      "borderTopWidth": 1,
+      "flexDirection": "row",
+      "gap": 8,
+      "justifyContent": "center",
+      "paddingBottom": 8,
+      "paddingLeft": 4,
+      "paddingRight": 4,
+      "paddingTop": 8,
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#000",
+        "fontFamily": "Basel-Book",
+        "fontSize": 17,
+        "lineHeight": 24,
+        "paddingTop": 1,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    My Pill Label
+  </Text>
+</View>
+`;

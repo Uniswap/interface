@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+  <!--We only need this list because we have the Spanish languages using the same translation file.-->
+  <!--Otherwise, can use automatic detection with `generateLocaleConfig = true`-->
+  <locale android:name="en"/>
+  <locale android:name="zh-Hans"/>
+  <locale android:name="zh-Hant"/>
+  <locale android:name="fr"/>
+  <locale android:name="ja"/>
+  <locale android:name="pt"/>
+  <locale android:name="es-ES"/>
+  <locale android:name="es-US"/>
+  <locale android:name="es-419"/>
+</locale-config>

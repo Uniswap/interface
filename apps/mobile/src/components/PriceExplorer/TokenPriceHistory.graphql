@@ -1,0 +1,42 @@
+query TokenPriceHistory(
+  $contract: ContractInput!
+  $duration: HistoryDuration = DAY
+) {
+  tokenProjects(contracts: [$contract]) {
+    id
+    name
+    markets(currencies: [USD]) {
+      id
+      price {
+        value
+      }
+      pricePercentChange24h {
+        value
+      }
+      priceHistory(duration: $duration) {
+        timestamp
+        value
+      }
+    }
+    tokens {
+      id
+      chain
+      address
+      symbol
+      decimals
+      market(currency: USD) {
+        id
+        price {
+          value
+        }
+        pricePercentChange24h: pricePercentChange(duration: DAY) {
+          value
+        }
+        priceHistory(duration: $duration) {
+          timestamp
+          value
+        }
+      }
+    }
+  }
+}

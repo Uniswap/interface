@@ -1,0 +1,19 @@
+diff --git a/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java b/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java
+index 4b5b90b7b478668fdff3fd12d5e028d423ada057..af30dc6f700b3b3cfde5c149bf1f865786df3e27 100644
+--- a/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java
++++ b/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java
+@@ -67,6 +67,14 @@ public class ContextMenuView extends ReactViewGroup implements PopupMenu.OnMenuI
+                     contextMenu.show();
+                 }
+             }
++            
++            @Override
++            public boolean onDoubleTap(MotionEvent e) {
++              if (dropdownMenuMode) {
++                contextMenu.show();
++              }
++              return super.onSingleTapConfirmed(e);
++            }
+         });
+     }
+ 

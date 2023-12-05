@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/swcrc",
+  "jsc": {
+    "target": "es2020",
+    "keepClassNames": true,
+    "experimental": {
+      "plugins": [
+        [
+          "@lingui/swc-plugin",
+          {}
+        ],
+        [
+          "@swc/plugin-styled-components",
+          {
+            "displayName": true
+          }
+        ]
+      ]
+    },
+    "parser": {
+      "syntax": "typescript",
+      "tsx": true
+    },
+    "transform": {
+      "react": {
+        "runtime": "automatic"
+      }
+    }
+  }
+}

@@ -1,0 +1,251 @@
+import com.android.build.OutputFile
+
+plugins {
+  id 'com.android.application'
+  id 'com.facebook.react'
+  id 'com.google.gms.google-services'
+  id 'maven-publish'
+  id 'kotlin-android'
+}
+
+def nodeModulesPath = "../../../../node_modules"
+def rnRoot = "../.."
+
+
+def keystorePropertiesFile = rootProject.file("keystore.properties");
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+  keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+react {
+    root = file("$rnRoot/")
+    reactNativeDir = file("$nodeModulesPath/react-native")
+    codegenDir = file("$nodeModulesPath/react-native-codegen")
+    cliFile = file("$nodeModulesPath/react-native/cli.js")
+    debuggableVariants = ["devDebug", "betaDebug", "prodDebug"]
+    hermesCommand = "../../node_modules/react-native/sdks/hermesc/%OS-BIN%/hermesc" // This is relative to the project root.
+}
+/**
+ * Set this to true to create four separate APKs instead of one,
+ * one for each native architecture. This is useful if you don't
+ * use App Bundles (https://developer.android.com/guide/app-bundle/)
+ * and want to have separate APKs to upload to the Play Store.
+ */
+def enableSeparateBuildPerCPUArchitecture = false
+
+/**
+ * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
+ */
+def enableProguardInReleaseBuilds = false
+
+/**
+ * The preferred build flavor of JavaScriptCore (JSC)
+ *
+ * For example, to use the international variant, you can use:
+ * `def jscFlavor = 'org.webkit:android-jsc-intl:+'`
+ *
+ * The international variant includes ICU i18n library and necessary data
+ * allowing to use e.g. `Date.toLocaleString` and `String.localeCompare` that
+ * give correct results when using with locales other than en-US. Note that
+ * this variant is about 6MiB larger per architecture than default.
+ */
+def jscFlavor = 'org.webkit:android-jsc-intl:+'
+
+/**
+ * Private function to get the list of Native Architectures you want to build.
+ * This reads the value from reactNativeArchitectures in your gradle.properties
+ * file and works together with the --active-arch-only flag of react-native run-android.
+ */
+def reactNativeArchitectures() {
+  def value = project.getProperties().get("reactNativeArchitectures")
+  return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
+}
+
+boolean isCI = System.getenv('CI') != null
+boolean sentryPropertiesAvailable = System.getenv('SENTRY_AUTH_TOKEN') != null && System.getenv('SENTRY_PROJECT') != null && System.getenv('SENTRY_ORG') != null
+
+if (isCI && sentryPropertiesAvailable) {
+  project.ext.sentryCli = [
+    logLevel: "info",
+  ]
+
+  apply from: "../../../../node_modules/@sentry/react-native/sentry.gradle"
+  apply plugin: "io.sentry.android.gradle"
+
+  sentry {
+    uploadNativeSymbols = true
+    includeNativeSources = true
+
+    autoInstallation {
+      enabled = false
+    }
+  }
+}
+
+android {
+    ndkVersion rootProject.ext.ndkVersion
+
+    namespace "com.uniswap"
+    defaultConfig {
+        applicationId "com.uniswap.mobile"
+        compileSdk rootProject.ext.compileSdkVersion
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+    }
+    splits {
+        abi {
+            reset()
+            enable enableSeparateBuildPerCPUArchitecture
+            universalApk false  // If true, also generate a universal APK
+            include (*reactNativeArchitectures())
+        }
+    }
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+        release {
+            storeFile file(System.getenv("ANDROID_KEYSTORE_FILE") ?: 'keystore.jks')
+            storePassword System.getenv("ANDROID_STORE_PASSWORD") ?: keystoreProperties.getProperty("STORE_PASSWORD")
+            keyAlias System.getenv("ANDROID_KEYSTORE_ALIAS") ?: keystoreProperties.getProperty("KEYSTORE_ALIAS")
+            keyPassword System.getenv("ANDROID_KEY_PASSWORD") ?: keystoreProperties.getProperty("KEY_PASSWORD")
+        }
+    }
+
+    flavorDimensions += "variant"
+
+    productFlavors {
+      dev {
+        isDefault(true)
+        applicationIdSuffix ".dev"
+        versionName "1.17"
+        dimension "variant"
+      }
+      beta {
+        applicationIdSuffix ".beta"
+        versionName "1.17.1"
+        dimension "variant"
+      }
+      prod {
+        dimension "variant"
+        versionName "1.17.1"
+      }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled enableProguardInReleaseBuilds
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+
+    // applicationVariants are e.g. debug, release
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            // For each separate APK per architecture, set a unique version code as described here:
+            // https://developer.android.com/studio/build/configure-apk-splits.html
+            // Example: versionCode 1 will generate 1001 for armeabi-v7a, 1002 for x86, etc.
+            def versionCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4]
+            def abi = output.getFilter(OutputFile.ABI)
+            if (abi != null) {  // null for the universal-debug, universal-release variants
+                output.versionCodeOverride =
+                        defaultConfig.versionCode * 1000 + versionCodes.get(abi)
+            }
+
+        }
+    }
+
+    packagingOptions {
+      resources.excludes.add("META-INF/*")
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+         kotlinCompilerExtensionVersion = "1.4.6"
+    }
+
+    sourceSets {
+        main {
+          jniLibs {
+            srcDir '../../../../node_modules/@uniswap/ethers-rs-mobile/android/jniLibs'
+          }
+        }
+    }
+}
+
+dependencies {
+    // The version of react-native is set by the React Native Gradle Plugin
+    implementation "com.facebook.react:react-android"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+
+    // Used to deal with Flipper/OkHttp issues with DevSupportManager
+    implementation "androidx.multidex:multidex:$multidexVersion"
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerialization"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
+
+    implementation 'com.google.android.play:integrity:1.2.0'
+
+    // Guava
+    implementation "com.google.guava:guava:24.1-jre"
+    // Guava fix
+    implementation "com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava"
+
+    //TODO: Revisit dependencies during security audit
+    //Drive
+    implementation('com.google.api-client:google-api-client-android:2.1.0') {
+      exclude group: 'org.apache.httpcomponents'
+      exclude module: 'guava-jdk5'
+    }
+    implementation('com.google.apis:google-api-services-drive:v3-rev20221023-2.0.0') {
+      exclude group: 'org.apache.httpcomponents'
+      exclude module: 'guava-jdk5'
+    }
+    implementation 'com.google.android.gms:play-services-auth:20.4.0'
+
+    implementation 'com.google.api-client:google-api-client-jackson2:1.31.1'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.11.0'
+
+    implementation "androidx.compose.foundation:foundation:$compose"
+    implementation "androidx.compose.material:material:$compose"
+    implementation "androidx.compose.ui:ui:$compose"
+
+    implementation "androidx.security:security-crypto:1.0.0"
+    implementation 'com.lambdapioneer.argon2kt:argon2kt:1.3.0'
+
+    implementation "com.google.accompanist:accompanist-flowlayout:$flowlayout"
+
+    implementation project(':@sentry_react-native')
+    // Used for device-reported performance class.
+    implementation("androidx.core:core-performance:$corePerf")
+    implementation("androidx.core:core-performance-play-services:$corePerf")
+
+    debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
+      exclude group:'com.facebook.fbjni'
+    }
+    debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
+        exclude group:'com.squareup.okhttp3', module:'okhttp'
+    }
+    debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}")
+
+    if (hermesEnabled.toBoolean()) {
+        implementation("com.facebook.react:hermes-android")
+    } else {
+        implementation jscFlavor
+    }
+}
+
+apply from: file("${nodeModulesPath}/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

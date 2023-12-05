@@ -1,0 +1,49 @@
+{
+  "testRunner": "jest",
+  "runnerConfig": "e2e/config.json",
+  "skipLegacyWorkersInjection": true,
+  "apps": {
+    "ios.debug": {
+      "type": "ios.app",
+      "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/Uniswap.app",
+      "build": "RN_SRC_EXT=e2e.js,e2e.ts xcodebuild -workspace ios/Uniswap.xcworkspace -scheme Uniswap -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build -UseModernBuildSystem=YES -arch x86_64"
+    },
+    "ios.release": {
+      "type": "ios.app",
+      "binaryPath": "ios/build/Build/Products/Release-iphonesimulator/Uniswap.app",
+      "build": "RN_SRC_EXT=e2e.js,e2e.ts xcodebuild -workspace ios/Uniswap.xcworkspace -scheme Uniswap -configuration Release -sdk iphonesimulator -derivedDataPath ios/build -UseModernBuildSystem=YES -arch x86_64"
+    },
+    "android": {
+      "type": "android.apk",
+      "binaryPath": "SPECIFY_PATH_TO_YOUR_APP_BINARY"
+    }
+  },
+  "devices": {
+    "simulator": {
+      "type": "ios.simulator",
+      "device": {
+        "type": "iPhone 12 Pro Max"
+      }
+    },
+    "emulator": {
+      "type": "android.emulator",
+      "device": {
+        "avdName": "Pixel_3a_API_30_x86"
+      }
+    }
+  },
+  "configurations": {
+    "ios.sim.debug": {
+      "device": "simulator",
+      "app": "ios.debug"
+    },
+    "ios.sim.release": {
+      "device": "simulator",
+      "app": "ios.release"
+    },
+    "android": {
+      "device": "emulator",
+      "app": "android"
+    }
+  }
+}

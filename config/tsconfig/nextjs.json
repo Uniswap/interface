@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "NextJS",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "paths": {
+      "react-native": [
+        "react-native-web"
+      ],
+      "wallet/*": [
+        "../../packages/wallet/*"
+      ],
+      "ui/*": [
+        "../../packages/ui/*"
+      ]
+    },
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve"
+  }
+}

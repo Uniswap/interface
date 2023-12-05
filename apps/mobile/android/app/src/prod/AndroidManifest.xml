@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools">
+
+  <application
+    android:usesCleartextTraffic="true"
+    tools:ignore="GoogleAppIndexingWarning"
+    tools:targetApi="28">
+    <activity
+      android:name=".MainActivity"
+      android:exported="true">
+      <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data android:scheme="https" />
+        <data android:host="uniswap.org" />
+        <data android:host="app.uniswap.org" />
+        <data android:host="uniswap.com" />
+        <data android:host="app.uniswap.com" />
+      </intent-filter>
+    </activity>
+
+  </application>
+</manifest>

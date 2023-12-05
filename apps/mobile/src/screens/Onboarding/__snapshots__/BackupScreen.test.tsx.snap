@@ -1,0 +1,1157 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BackupScreen renders backup options when none are completed 1`] = `
+<View
+  sentry-label="Screen"
+  style={
+    {
+      "alignItems": "stretch",
+      "backgroundColor": "#FFFFFF",
+      "flex": 1,
+      "flexDirection": "column",
+      "paddingLeft": undefined,
+      "paddingRight": undefined,
+      "paddingTop": 200,
+    }
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        [
+          {
+            "flex": 1,
+            "justifyContent": "flex-end",
+          },
+          {
+            "marginBottom": undefined,
+          },
+        ],
+        {
+          "paddingBottom": 0,
+        },
+      ]
+    }
+  >
+    <View
+      entering={BaseAnimationMock {}}
+      exiting={BaseAnimationMock {}}
+      style={
+        {
+          "alignItems": "stretch",
+          "flexDirection": "column",
+          "flexGrow": 1,
+          "gap": 16,
+          "paddingBottom": 16,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+            "gap": 12,
+            "justifyContent": "center",
+            "marginBottom": 12,
+            "marginLeft": 12,
+            "marginRight": 12,
+            "marginTop": 12,
+          }
+        }
+      >
+        <Text
+          allowFontScaling={false}
+          maxFontSizeMultiplier={1.2}
+          style={
+            {
+              "color": "#222222",
+              "fontFamily": "Basel-Book",
+              "fontSize": 25,
+              "lineHeight": 32,
+              "paddingTop": 0,
+              "textAlign": "center",
+            }
+          }
+          suppressHighlighting={true}
+        >
+          Choose a backup for your wallet
+        </Text>
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.4}
+          style={
+            {
+              "color": "#7D7D7D",
+              "fontFamily": "Basel-Book",
+              "fontSize": 17,
+              "lineHeight": 24,
+              "textAlign": "center",
+            }
+          }
+          suppressHighlighting={true}
+        >
+          Backups let you restore your wallet if you delete the app or lose your device
+        </Text>
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "stretch",
+            "flex": 1,
+            "flexDirection": "column",
+            "flexGrow": 1,
+            "justifyContent": "space-between",
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "stretch",
+              "flexDirection": "column",
+              "flexGrow": 1,
+              "justifyContent": "space-between",
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "stretch",
+                "flexDirection": "column",
+                "gap": 12,
+              }
+            }
+          >
+            <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={
+                {
+                  "bottom": 5,
+                  "left": 5,
+                  "right": 5,
+                  "top": 5,
+                }
+              }
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "backgroundColor": "#F9F9F9",
+                  "borderBottomColor": "#2222220D",
+                  "borderBottomLeftRadius": 20,
+                  "borderBottomRightRadius": 20,
+                  "borderLeftColor": "#2222220D",
+                  "borderRightColor": "#2222220D",
+                  "borderStyle": "solid",
+                  "borderTopColor": "#2222220D",
+                  "borderTopLeftRadius": 20,
+                  "borderTopRightRadius": 20,
+                  "borderWidth": 1,
+                  "opacity": 1,
+                  "paddingBottom": 16,
+                  "paddingLeft": 16,
+                  "paddingRight": 16,
+                  "paddingTop": 16,
+                }
+              }
+              testID="add-cloud-backup"
+            >
+              <View
+                style={
+                  {
+                    "alignContent": "center",
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "gap": 16,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "backgroundColor": "#FC72FF1f",
+                      "borderBottomLeftRadius": 999999,
+                      "borderBottomRightRadius": 999999,
+                      "borderTopLeftRadius": 999999,
+                      "borderTopRightRadius": 999999,
+                      "flexDirection": "column",
+                      "height": 36,
+                      "justifyContent": "center",
+                      "paddingBottom": 16,
+                      "paddingLeft": 16,
+                      "paddingRight": 16,
+                      "paddingTop": 16,
+                      "width": 36,
+                    }
+                  }
+                >
+                  <RNSVGSvgView
+                    align="xMidYMid"
+                    bbHeight="16"
+                    bbWidth="16"
+                    fill="none"
+                    focusable={false}
+                    meetOrSlice={0}
+                    minX={0}
+                    minY={0}
+                    strokeWidth={8}
+                    style={
+                      [
+                        {
+                          "backgroundColor": "transparent",
+                          "borderWidth": 0,
+                        },
+                        {
+                          "color": "#FC72FF",
+                          "height": 16,
+                          "width": 16,
+                        },
+                        {
+                          "flex": 0,
+                          "height": 16,
+                          "width": 16,
+                        },
+                      ]
+                    }
+                    tintColor="#FC72FF"
+                    vbHeight={24}
+                    vbWidth={24}
+                  >
+                    <RNSVGGroup
+                      fill={null}
+                      propList={
+                        [
+                          "fill",
+                          "strokeWidth",
+                        ]
+                      }
+                      strokeWidth="8"
+                    >
+                      <RNSVGPath
+                        d="M15.03 9.09003C15.35 9.03003 15.67 9 16 9C18.76 9 21 11.24 21 14C21 16.76 18.76 19 16 19H9.5C5.91 19 3 16.09 3 12.5C3 8.91 5.91 6 9.5 6C11.146 6 12.648 6.61297 13.792 7.62097C14.274 8.04597 14.692 8.54103 15.03 9.09003Z"
+                        fill={
+                          {
+                            "type": 2,
+                          }
+                        }
+                        propList={
+                          [
+                            "fill",
+                          ]
+                        }
+                      />
+                    </RNSVGGroup>
+                  </RNSVGSvgView>
+                </View>
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "gap": 4,
+                      "paddingRight": 60,
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "alignItems": "flex-start",
+                        "flex": 1,
+                        "flexDirection": "column",
+                        "gap": 4,
+                        "justifyContent": "space-around",
+                      }
+                    }
+                  >
+                    <View
+                      style={
+                        {
+                          "alignItems": "stretch",
+                          "flexDirection": "row",
+                          "gap": 8,
+                        }
+                      }
+                    >
+                      <Text
+                        allowFontScaling={false}
+                        maxFontSizeMultiplier={1.4}
+                        style={
+                          {
+                            "color": "#222222",
+                            "fontFamily": "Basel-Book",
+                            "fontSize": 19,
+                            "lineHeight": 24,
+                          }
+                        }
+                        suppressHighlighting={true}
+                      >
+                        iCloud backup
+                      </Text>
+                    </View>
+                    <Text
+                      allowFontScaling={false}
+                      maxFontSizeMultiplier={1.4}
+                      style={
+                        {
+                          "color": "#7D7D7D",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 17,
+                          "lineHeight": 24,
+                        }
+                      }
+                      suppressHighlighting={true}
+                    >
+                      Encrypt your recovery phrase with a secure password
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={
+                {
+                  "bottom": 5,
+                  "left": 5,
+                  "right": 5,
+                  "top": 5,
+                }
+              }
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "backgroundColor": "#F9F9F9",
+                  "borderBottomColor": "#2222220D",
+                  "borderBottomLeftRadius": 20,
+                  "borderBottomRightRadius": 20,
+                  "borderLeftColor": "#2222220D",
+                  "borderRightColor": "#2222220D",
+                  "borderStyle": "solid",
+                  "borderTopColor": "#2222220D",
+                  "borderTopLeftRadius": 20,
+                  "borderTopRightRadius": 20,
+                  "borderWidth": 1,
+                  "opacity": 1,
+                  "paddingBottom": 16,
+                  "paddingLeft": 16,
+                  "paddingRight": 16,
+                  "paddingTop": 16,
+                }
+              }
+              testID="add-manual-backup"
+            >
+              <View
+                style={
+                  {
+                    "alignContent": "center",
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "gap": 16,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "backgroundColor": "#FC72FF1f",
+                      "borderBottomLeftRadius": 999999,
+                      "borderBottomRightRadius": 999999,
+                      "borderTopLeftRadius": 999999,
+                      "borderTopRightRadius": 999999,
+                      "flexDirection": "column",
+                      "height": 36,
+                      "justifyContent": "center",
+                      "paddingBottom": 16,
+                      "paddingLeft": 16,
+                      "paddingRight": 16,
+                      "paddingTop": 16,
+                      "width": 36,
+                    }
+                  }
+                >
+                  <svg
+                    color="#FC72FF"
+                    data-file-name="SvgPaperStack"
+                    height={16}
+                  />
+                </View>
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "gap": 4,
+                      "paddingRight": 60,
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "alignItems": "flex-start",
+                        "flex": 1,
+                        "flexDirection": "column",
+                        "gap": 4,
+                        "justifyContent": "space-around",
+                      }
+                    }
+                  >
+                    <View
+                      style={
+                        {
+                          "alignItems": "stretch",
+                          "flexDirection": "row",
+                          "gap": 8,
+                        }
+                      }
+                    >
+                      <Text
+                        allowFontScaling={false}
+                        maxFontSizeMultiplier={1.4}
+                        style={
+                          {
+                            "color": "#222222",
+                            "fontFamily": "Basel-Book",
+                            "fontSize": 19,
+                            "lineHeight": 24,
+                          }
+                        }
+                        suppressHighlighting={true}
+                      >
+                        Manual backup
+                      </Text>
+                    </View>
+                    <Text
+                      allowFontScaling={false}
+                      maxFontSizeMultiplier={1.4}
+                      style={
+                        {
+                          "color": "#7D7D7D",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 17,
+                          "lineHeight": 24,
+                        }
+                      }
+                      suppressHighlighting={true}
+                    >
+                      Save your recovery phrase in a safe location
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View
+            style={
+              {
+                "alignItems": "stretch",
+                "flexDirection": "column",
+                "gap": 12,
+                "justifyContent": "flex-end",
+              }
+            }
+          >
+            <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={
+                {
+                  "bottom": 5,
+                  "left": 5,
+                  "right": 5,
+                  "top": 5,
+                }
+              }
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignSelf": "center",
+                  "opacity": 1,
+                  "paddingBottom": 8,
+                  "paddingTop": 8,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.2}
+                style={
+                  {
+                    "color": "#7D7D7D",
+                    "fontFamily": "Basel-Medium",
+                    "fontSize": 17,
+                    "fontWeight": "500",
+                    "lineHeight": 24,
+                  }
+                }
+                suppressHighlighting={true}
+              >
+                Learn more
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`BackupScreen renders backup options when some are completed 1`] = `
+<View
+  sentry-label="Screen"
+  style={
+    {
+      "alignItems": "stretch",
+      "backgroundColor": "#FFFFFF",
+      "flex": 1,
+      "flexDirection": "column",
+      "paddingLeft": undefined,
+      "paddingRight": undefined,
+      "paddingTop": 200,
+    }
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        [
+          {
+            "flex": 1,
+            "justifyContent": "flex-end",
+          },
+          {
+            "marginBottom": undefined,
+          },
+        ],
+        {
+          "paddingBottom": 0,
+        },
+      ]
+    }
+  >
+    <View
+      entering={BaseAnimationMock {}}
+      exiting={BaseAnimationMock {}}
+      style={
+        {
+          "alignItems": "stretch",
+          "flexDirection": "column",
+          "flexGrow": 1,
+          "gap": 16,
+          "paddingBottom": 16,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+            "gap": 12,
+            "justifyContent": "center",
+            "marginBottom": 12,
+            "marginLeft": 12,
+            "marginRight": 12,
+            "marginTop": 12,
+          }
+        }
+      >
+        <Text
+          allowFontScaling={false}
+          maxFontSizeMultiplier={1.2}
+          style={
+            {
+              "color": "#222222",
+              "fontFamily": "Basel-Book",
+              "fontSize": 25,
+              "lineHeight": 32,
+              "paddingTop": 0,
+              "textAlign": "center",
+            }
+          }
+          suppressHighlighting={true}
+        >
+          Choose a backup for your wallet
+        </Text>
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.4}
+          style={
+            {
+              "color": "#7D7D7D",
+              "fontFamily": "Basel-Book",
+              "fontSize": 17,
+              "lineHeight": 24,
+              "textAlign": "center",
+            }
+          }
+          suppressHighlighting={true}
+        >
+          Backups let you restore your wallet if you delete the app or lose your device
+        </Text>
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "stretch",
+            "flex": 1,
+            "flexDirection": "column",
+            "flexGrow": 1,
+            "justifyContent": "space-between",
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "stretch",
+              "flexDirection": "column",
+              "flexGrow": 1,
+              "justifyContent": "space-between",
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "stretch",
+                "flexDirection": "column",
+                "gap": 12,
+              }
+            }
+          >
+            <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": true,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={
+                {
+                  "bottom": 5,
+                  "left": 5,
+                  "right": 5,
+                  "top": 5,
+                }
+              }
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "backgroundColor": "#F9F9F9",
+                  "borderBottomColor": "#2222220D",
+                  "borderBottomLeftRadius": 20,
+                  "borderBottomRightRadius": 20,
+                  "borderLeftColor": "#2222220D",
+                  "borderRightColor": "#2222220D",
+                  "borderStyle": "solid",
+                  "borderTopColor": "#2222220D",
+                  "borderTopLeftRadius": 20,
+                  "borderTopRightRadius": 20,
+                  "borderWidth": 1,
+                  "opacity": 0.5,
+                  "paddingBottom": 16,
+                  "paddingLeft": 16,
+                  "paddingRight": 16,
+                  "paddingTop": 16,
+                }
+              }
+              testID="add-cloud-backup"
+            >
+              <View
+                style={
+                  {
+                    "alignContent": "center",
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "gap": 16,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "backgroundColor": "#FC72FF1f",
+                      "borderBottomLeftRadius": 999999,
+                      "borderBottomRightRadius": 999999,
+                      "borderTopLeftRadius": 999999,
+                      "borderTopRightRadius": 999999,
+                      "flexDirection": "column",
+                      "height": 36,
+                      "justifyContent": "center",
+                      "paddingBottom": 16,
+                      "paddingLeft": 16,
+                      "paddingRight": 16,
+                      "paddingTop": 16,
+                      "width": 36,
+                    }
+                  }
+                >
+                  <RNSVGSvgView
+                    align="xMidYMid"
+                    bbHeight="16"
+                    bbWidth="16"
+                    fill="none"
+                    focusable={false}
+                    meetOrSlice={0}
+                    minX={0}
+                    minY={0}
+                    strokeWidth={8}
+                    style={
+                      [
+                        {
+                          "backgroundColor": "transparent",
+                          "borderWidth": 0,
+                        },
+                        {
+                          "color": "#FC72FF",
+                          "height": 16,
+                          "width": 16,
+                        },
+                        {
+                          "flex": 0,
+                          "height": 16,
+                          "width": 16,
+                        },
+                      ]
+                    }
+                    tintColor="#FC72FF"
+                    vbHeight={24}
+                    vbWidth={24}
+                  >
+                    <RNSVGGroup
+                      fill={null}
+                      propList={
+                        [
+                          "fill",
+                          "strokeWidth",
+                        ]
+                      }
+                      strokeWidth="8"
+                    >
+                      <RNSVGPath
+                        d="M15.03 9.09003C15.35 9.03003 15.67 9 16 9C18.76 9 21 11.24 21 14C21 16.76 18.76 19 16 19H9.5C5.91 19 3 16.09 3 12.5C3 8.91 5.91 6 9.5 6C11.146 6 12.648 6.61297 13.792 7.62097C14.274 8.04597 14.692 8.54103 15.03 9.09003Z"
+                        fill={
+                          {
+                            "type": 2,
+                          }
+                        }
+                        propList={
+                          [
+                            "fill",
+                          ]
+                        }
+                      />
+                    </RNSVGGroup>
+                  </RNSVGSvgView>
+                </View>
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "gap": 4,
+                      "paddingRight": 60,
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "alignItems": "flex-start",
+                        "flex": 1,
+                        "flexDirection": "column",
+                        "gap": 4,
+                        "justifyContent": "space-around",
+                      }
+                    }
+                  >
+                    <View
+                      style={
+                        {
+                          "alignItems": "stretch",
+                          "flexDirection": "row",
+                          "gap": 8,
+                        }
+                      }
+                    >
+                      <Text
+                        allowFontScaling={false}
+                        maxFontSizeMultiplier={1.4}
+                        style={
+                          {
+                            "color": "#222222",
+                            "fontFamily": "Basel-Book",
+                            "fontSize": 19,
+                            "lineHeight": 24,
+                          }
+                        }
+                        suppressHighlighting={true}
+                      >
+                        iCloud backup
+                      </Text>
+                    </View>
+                    <Text
+                      allowFontScaling={false}
+                      maxFontSizeMultiplier={1.4}
+                      style={
+                        {
+                          "color": "#7D7D7D",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 17,
+                          "lineHeight": 24,
+                        }
+                      }
+                      suppressHighlighting={true}
+                    >
+                      Encrypt your recovery phrase with a secure password
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={
+                {
+                  "bottom": 5,
+                  "left": 5,
+                  "right": 5,
+                  "top": 5,
+                }
+              }
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "backgroundColor": "#F9F9F9",
+                  "borderBottomColor": "#2222220D",
+                  "borderBottomLeftRadius": 20,
+                  "borderBottomRightRadius": 20,
+                  "borderLeftColor": "#2222220D",
+                  "borderRightColor": "#2222220D",
+                  "borderStyle": "solid",
+                  "borderTopColor": "#2222220D",
+                  "borderTopLeftRadius": 20,
+                  "borderTopRightRadius": 20,
+                  "borderWidth": 1,
+                  "opacity": 1,
+                  "paddingBottom": 16,
+                  "paddingLeft": 16,
+                  "paddingRight": 16,
+                  "paddingTop": 16,
+                }
+              }
+              testID="add-manual-backup"
+            >
+              <View
+                style={
+                  {
+                    "alignContent": "center",
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "gap": 16,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "backgroundColor": "#FC72FF1f",
+                      "borderBottomLeftRadius": 999999,
+                      "borderBottomRightRadius": 999999,
+                      "borderTopLeftRadius": 999999,
+                      "borderTopRightRadius": 999999,
+                      "flexDirection": "column",
+                      "height": 36,
+                      "justifyContent": "center",
+                      "paddingBottom": 16,
+                      "paddingLeft": 16,
+                      "paddingRight": 16,
+                      "paddingTop": 16,
+                      "width": 36,
+                    }
+                  }
+                >
+                  <svg
+                    color="#FC72FF"
+                    data-file-name="SvgPaperStack"
+                    height={16}
+                  />
+                </View>
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "gap": 4,
+                      "paddingRight": 60,
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "alignItems": "flex-start",
+                        "flex": 1,
+                        "flexDirection": "column",
+                        "gap": 4,
+                        "justifyContent": "space-around",
+                      }
+                    }
+                  >
+                    <View
+                      style={
+                        {
+                          "alignItems": "stretch",
+                          "flexDirection": "row",
+                          "gap": 8,
+                        }
+                      }
+                    >
+                      <Text
+                        allowFontScaling={false}
+                        maxFontSizeMultiplier={1.4}
+                        style={
+                          {
+                            "color": "#222222",
+                            "fontFamily": "Basel-Book",
+                            "fontSize": 19,
+                            "lineHeight": 24,
+                          }
+                        }
+                        suppressHighlighting={true}
+                      >
+                        Manual backup
+                      </Text>
+                    </View>
+                    <Text
+                      allowFontScaling={false}
+                      maxFontSizeMultiplier={1.4}
+                      style={
+                        {
+                          "color": "#7D7D7D",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 17,
+                          "lineHeight": 24,
+                        }
+                      }
+                      suppressHighlighting={true}
+                    >
+                      Save your recovery phrase in a safe location
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View
+            style={
+              {
+                "alignItems": "stretch",
+                "flexDirection": "column",
+                "gap": 12,
+                "justifyContent": "flex-end",
+              }
+            }
+          >
+            <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={
+                {
+                  "bottom": 5,
+                  "left": 5,
+                  "right": 5,
+                  "top": 5,
+                }
+              }
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignSelf": "center",
+                  "opacity": 1,
+                  "paddingBottom": 8,
+                  "paddingTop": 8,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.2}
+                style={
+                  {
+                    "color": "#7D7D7D",
+                    "fontFamily": "Basel-Medium",
+                    "fontSize": 17,
+                    "fontWeight": "500",
+                    "lineHeight": 24,
+                  }
+                }
+                suppressHighlighting={true}
+              >
+                Learn more
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;

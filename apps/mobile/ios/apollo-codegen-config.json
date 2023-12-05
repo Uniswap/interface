@@ -1,0 +1,34 @@
+{
+  "schemaNamespace" : "MobileSchema",
+  "options" : {
+    "cocoapodsCompatibleImportStatements" : true
+  },
+  "input" : {
+    "operationSearchPaths" : [
+      "../../../apps/mobile/src/components/PriceExplorer/TokenPriceHistory.graphql",
+      "../../../apps/mobile/src/components/explore/search/SearchPopularTokens.graphql",
+      "../../../packages/wallet/src/data/queries.graphql"
+    ],
+    "schemaSearchPaths" : [
+      "../../../packages/wallet/src/data/__generated__/schema.graphql"
+    ]
+  },
+  "output" : {
+    "testMocks" : {
+      "none" : {
+      }
+    },
+    "schemaTypes" : {
+      "path" : "./WidgetsCore/MobileSchema",
+      "moduleType" : {
+        "embeddedInTarget" : {
+          "name" : "WidgetsCore"
+        }
+      }
+    },
+    "operations" : {
+      "inSchemaModule" : {
+      }
+    }
+  }
+}

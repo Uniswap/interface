@@ -1,0 +1,1828 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ActivityTab renders without error 1`] = `
+<View
+  style={
+    {
+      "alignItems": "stretch",
+      "flexDirection": "column",
+      "flexGrow": 1,
+      "paddingLeft": 24,
+      "paddingRight": 24,
+    }
+  }
+>
+  <RCTScrollView
+    CellRendererComponent={[Function]}
+    ListEmptyComponent={null}
+    ListFooterComponent={
+      <React.Fragment>
+        <View
+          style={
+            {
+              "height": NaN,
+            }
+          }
+        />
+      </React.Fragment>
+    }
+    data={
+      [
+        {
+          "id": 1,
+          "itemType": "LOADING",
+        },
+        {
+          "id": 2,
+          "itemType": "LOADING",
+        },
+        {
+          "id": 3,
+          "itemType": "LOADING",
+        },
+        {
+          "id": 4,
+          "itemType": "LOADING",
+        },
+      ]
+    }
+    estimatedItemSize={92}
+    getItem={[Function]}
+    getItemCount={[Function]}
+    initialNumToRender={20}
+    keyExtractor={[Function]}
+    maxToRenderPerBatch={20}
+    onContentSizeChange={[Function]}
+    onLayout={[Function]}
+    onMomentumScrollBegin={[Function]}
+    onMomentumScrollEnd={[Function]}
+    onScroll={[Function]}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    refreshControl={
+      <RefreshControlMock
+        progressViewOffset={NaN}
+        refreshing={false}
+        tintColor="#CECECE"
+      />
+    }
+    removeClippedSubviews={false}
+    renderItem={[Function]}
+    scrollEventThrottle={50}
+    showsVerticalScrollIndicator={false}
+    stickyHeaderIndices={[]}
+    updateCellsBatchingPeriod={10}
+    viewabilityConfigCallbackPairs={[]}
+  >
+    <RCTRefreshControl />
+    <View>
+      <View
+        onLayout={[Function]}
+      >
+        <View
+          onLayout={[Function]}
+          style={
+            {
+              "alignItems": "stretch",
+              "flexDirection": "column",
+              "opacity": 0,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "stretch",
+                "flexDirection": "column",
+              }
+            }
+          >
+            <View
+              sentry-label="TransactionLoader"
+              style={
+                {
+                  "alignItems": "stretch",
+                  "flexDirection": "column",
+                  "opacity": 1,
+                  "overflow": "hidden",
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "alignItems": "flex-start",
+                    "flexDirection": "row",
+                    "flexGrow": 1,
+                    "gap": 16,
+                    "justifyContent": "space-between",
+                    "paddingBottom": 12,
+                    "paddingTop": 12,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "flexShrink": 1,
+                      "gap": 12,
+                      "height": "100%",
+                      "justifyContent": "flex-start",
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "alignItems": "center",
+                        "backgroundColor": "#CECECE",
+                        "borderBottomLeftRadius": 999999,
+                        "borderBottomRightRadius": 999999,
+                        "borderTopLeftRadius": 999999,
+                        "borderTopRightRadius": 999999,
+                        "flexDirection": "column",
+                        "height": 40,
+                        "justifyContent": "center",
+                        "width": 40,
+                      }
+                    }
+                  />
+                  <View
+                    style={
+                      {
+                        "alignItems": "stretch",
+                        "flexDirection": "column",
+                        "flexShrink": 1,
+                      }
+                    }
+                  >
+                    <View
+                      style={
+                        {
+                          "alignItems": "center",
+                          "flexDirection": "row",
+                          "gap": 4,
+                        }
+                      }
+                    >
+                      <View
+                        style={
+                          {
+                            "alignItems": "center",
+                            "flexDirection": "row",
+                          }
+                        }
+                      >
+                        <View
+                          style={
+                            {
+                              "alignItems": "center",
+                              "flexDirection": "row",
+                              "position": "relative",
+                            }
+                          }
+                        >
+                          <View
+                            accessibilityElementsHidden={true}
+                            importantForAccessibility="no-hide-descendants"
+                          >
+                            <Text
+                              allowFontScaling={true}
+                              maxFontSizeMultiplier={1.4}
+                              numberOfLines={1}
+                              style={
+                                {
+                                  "color": "transparent",
+                                  "fontFamily": "Basel-Book",
+                                  "fontSize": 19,
+                                  "lineHeight": 24,
+                                  "opacity": 0,
+                                }
+                              }
+                              suppressHighlighting={true}
+                            >
+                              Contract Interaction
+                            </Text>
+                          </View>
+                          <View
+                            style={
+                              {
+                                "alignItems": "stretch",
+                                "backgroundColor": "#F9F9F9",
+                                "borderBottomLeftRadius": 4,
+                                "borderBottomRightRadius": 4,
+                                "borderTopLeftRadius": 4,
+                                "borderTopRightRadius": 4,
+                                "bottom": "5%",
+                                "flexDirection": "column",
+                                "left": 0,
+                                "position": "absolute",
+                                "right": 0,
+                                "top": "5%",
+                              }
+                            }
+                          />
+                        </View>
+                      </View>
+                    </View>
+                    <View
+                      style={
+                        {
+                          "alignItems": "center",
+                          "flexDirection": "row",
+                        }
+                      }
+                    >
+                      <View
+                        style={
+                          {
+                            "alignItems": "center",
+                            "flexDirection": "row",
+                            "position": "relative",
+                          }
+                        }
+                      >
+                        <View
+                          accessibilityElementsHidden={true}
+                          importantForAccessibility="no-hide-descendants"
+                        >
+                          <Text
+                            allowFontScaling={true}
+                            maxFontSizeMultiplier={1.4}
+                            numberOfLines={1}
+                            style={
+                              {
+                                "color": "transparent",
+                                "fontFamily": "Basel-Book",
+                                "fontSize": 17,
+                                "lineHeight": 24,
+                                "opacity": 0,
+                              }
+                            }
+                            suppressHighlighting={true}
+                          >
+                            Caption Text
+                          </Text>
+                        </View>
+                        <View
+                          style={
+                            {
+                              "alignItems": "stretch",
+                              "backgroundColor": "#F9F9F9",
+                              "borderBottomLeftRadius": 4,
+                              "borderBottomRightRadius": 4,
+                              "borderTopLeftRadius": 4,
+                              "borderTopRightRadius": 4,
+                              "bottom": "5%",
+                              "flexDirection": "column",
+                              "left": 0,
+                              "position": "absolute",
+                              "right": 0,
+                              "top": "5%",
+                            }
+                          }
+                        />
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
+        onLayout={[Function]}
+      >
+        <View
+          onLayout={[Function]}
+          style={
+            {
+              "alignItems": "stretch",
+              "flexDirection": "column",
+              "opacity": 0,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "stretch",
+                "flexDirection": "column",
+              }
+            }
+          >
+            <View
+              sentry-label="TransactionLoader"
+              style={
+                {
+                  "alignItems": "stretch",
+                  "flexDirection": "column",
+                  "opacity": 1,
+                  "overflow": "hidden",
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "alignItems": "flex-start",
+                    "flexDirection": "row",
+                    "flexGrow": 1,
+                    "gap": 16,
+                    "justifyContent": "space-between",
+                    "paddingBottom": 12,
+                    "paddingTop": 12,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "flexShrink": 1,
+                      "gap": 12,
+                      "height": "100%",
+                      "justifyContent": "flex-start",
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "alignItems": "center",
+                        "backgroundColor": "#CECECE",
+                        "borderBottomLeftRadius": 999999,
+                        "borderBottomRightRadius": 999999,
+                        "borderTopLeftRadius": 999999,
+                        "borderTopRightRadius": 999999,
+                        "flexDirection": "column",
+                        "height": 40,
+                        "justifyContent": "center",
+                        "width": 40,
+                      }
+                    }
+                  />
+                  <View
+                    style={
+                      {
+                        "alignItems": "stretch",
+                        "flexDirection": "column",
+                        "flexShrink": 1,
+                      }
+                    }
+                  >
+                    <View
+                      style={
+                        {
+                          "alignItems": "center",
+                          "flexDirection": "row",
+                          "gap": 4,
+                        }
+                      }
+                    >
+                      <View
+                        style={
+                          {
+                            "alignItems": "center",
+                            "flexDirection": "row",
+                          }
+                        }
+                      >
+                        <View
+                          style={
+                            {
+                              "alignItems": "center",
+                              "flexDirection": "row",
+                              "position": "relative",
+                            }
+                          }
+                        >
+                          <View
+                            accessibilityElementsHidden={true}
+                            importantForAccessibility="no-hide-descendants"
+                          >
+                            <Text
+                              allowFontScaling={true}
+                              maxFontSizeMultiplier={1.4}
+                              numberOfLines={1}
+                              style={
+                                {
+                                  "color": "transparent",
+                                  "fontFamily": "Basel-Book",
+                                  "fontSize": 19,
+                                  "lineHeight": 24,
+                                  "opacity": 0,
+                                }
+                              }
+                              suppressHighlighting={true}
+                            >
+                              Contract Interaction
+                            </Text>
+                          </View>
+                          <View
+                            style={
+                              {
+                                "alignItems": "stretch",
+                                "backgroundColor": "#F9F9F9",
+                                "borderBottomLeftRadius": 4,
+                                "borderBottomRightRadius": 4,
+                                "borderTopLeftRadius": 4,
+                                "borderTopRightRadius": 4,
+                                "bottom": "5%",
+                                "flexDirection": "column",
+                                "left": 0,
+                                "position": "absolute",
+                                "right": 0,
+                                "top": "5%",
+                              }
+                            }
+                          />
+                        </View>
+                      </View>
+                    </View>
+                    <View
+                      style={
+                        {
+                          "alignItems": "center",
+                          "flexDirection": "row",
+                        }
+                      }
+                    >
+                      <View
+                        style={
+                          {
+                            "alignItems": "center",
+                            "flexDirection": "row",
+                            "position": "relative",
+                          }
+                        }
+                      >
+                        <View
+                          accessibilityElementsHidden={true}
+                          importantForAccessibility="no-hide-descendants"
+                        >
+                          <Text
+                            allowFontScaling={true}
+                            maxFontSizeMultiplier={1.4}
+                            numberOfLines={1}
+                            style={
+                              {
+                                "color": "transparent",
+                                "fontFamily": "Basel-Book",
+                                "fontSize": 17,
+                                "lineHeight": 24,
+                                "opacity": 0,
+                              }
+                            }
+                            suppressHighlighting={true}
+                          >
+                            Caption Text
+                          </Text>
+                        </View>
+                        <View
+                          style={
+                            {
+                              "alignItems": "stretch",
+                              "backgroundColor": "#F9F9F9",
+                              "borderBottomLeftRadius": 4,
+                              "borderBottomRightRadius": 4,
+                              "borderTopLeftRadius": 4,
+                              "borderTopRightRadius": 4,
+                              "bottom": "5%",
+                              "flexDirection": "column",
+                              "left": 0,
+                              "position": "absolute",
+                              "right": 0,
+                              "top": "5%",
+                            }
+                          }
+                        />
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
+        onLayout={[Function]}
+      >
+        <View
+          onLayout={[Function]}
+          style={
+            {
+              "alignItems": "stretch",
+              "flexDirection": "column",
+              "opacity": 0,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "stretch",
+                "flexDirection": "column",
+              }
+            }
+          >
+            <View
+              sentry-label="TransactionLoader"
+              style={
+                {
+                  "alignItems": "stretch",
+                  "flexDirection": "column",
+                  "opacity": 1,
+                  "overflow": "hidden",
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "alignItems": "flex-start",
+                    "flexDirection": "row",
+                    "flexGrow": 1,
+                    "gap": 16,
+                    "justifyContent": "space-between",
+                    "paddingBottom": 12,
+                    "paddingTop": 12,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "flexShrink": 1,
+                      "gap": 12,
+                      "height": "100%",
+                      "justifyContent": "flex-start",
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "alignItems": "center",
+                        "backgroundColor": "#CECECE",
+                        "borderBottomLeftRadius": 999999,
+                        "borderBottomRightRadius": 999999,
+                        "borderTopLeftRadius": 999999,
+                        "borderTopRightRadius": 999999,
+                        "flexDirection": "column",
+                        "height": 40,
+                        "justifyContent": "center",
+                        "width": 40,
+                      }
+                    }
+                  />
+                  <View
+                    style={
+                      {
+                        "alignItems": "stretch",
+                        "flexDirection": "column",
+                        "flexShrink": 1,
+                      }
+                    }
+                  >
+                    <View
+                      style={
+                        {
+                          "alignItems": "center",
+                          "flexDirection": "row",
+                          "gap": 4,
+                        }
+                      }
+                    >
+                      <View
+                        style={
+                          {
+                            "alignItems": "center",
+                            "flexDirection": "row",
+                          }
+                        }
+                      >
+                        <View
+                          style={
+                            {
+                              "alignItems": "center",
+                              "flexDirection": "row",
+                              "position": "relative",
+                            }
+                          }
+                        >
+                          <View
+                            accessibilityElementsHidden={true}
+                            importantForAccessibility="no-hide-descendants"
+                          >
+                            <Text
+                              allowFontScaling={true}
+                              maxFontSizeMultiplier={1.4}
+                              numberOfLines={1}
+                              style={
+                                {
+                                  "color": "transparent",
+                                  "fontFamily": "Basel-Book",
+                                  "fontSize": 19,
+                                  "lineHeight": 24,
+                                  "opacity": 0,
+                                }
+                              }
+                              suppressHighlighting={true}
+                            >
+                              Contract Interaction
+                            </Text>
+                          </View>
+                          <View
+                            style={
+                              {
+                                "alignItems": "stretch",
+                                "backgroundColor": "#F9F9F9",
+                                "borderBottomLeftRadius": 4,
+                                "borderBottomRightRadius": 4,
+                                "borderTopLeftRadius": 4,
+                                "borderTopRightRadius": 4,
+                                "bottom": "5%",
+                                "flexDirection": "column",
+                                "left": 0,
+                                "position": "absolute",
+                                "right": 0,
+                                "top": "5%",
+                              }
+                            }
+                          />
+                        </View>
+                      </View>
+                    </View>
+                    <View
+                      style={
+                        {
+                          "alignItems": "center",
+                          "flexDirection": "row",
+                        }
+                      }
+                    >
+                      <View
+                        style={
+                          {
+                            "alignItems": "center",
+                            "flexDirection": "row",
+                            "position": "relative",
+                          }
+                        }
+                      >
+                        <View
+                          accessibilityElementsHidden={true}
+                          importantForAccessibility="no-hide-descendants"
+                        >
+                          <Text
+                            allowFontScaling={true}
+                            maxFontSizeMultiplier={1.4}
+                            numberOfLines={1}
+                            style={
+                              {
+                                "color": "transparent",
+                                "fontFamily": "Basel-Book",
+                                "fontSize": 17,
+                                "lineHeight": 24,
+                                "opacity": 0,
+                              }
+                            }
+                            suppressHighlighting={true}
+                          >
+                            Caption Text
+                          </Text>
+                        </View>
+                        <View
+                          style={
+                            {
+                              "alignItems": "stretch",
+                              "backgroundColor": "#F9F9F9",
+                              "borderBottomLeftRadius": 4,
+                              "borderBottomRightRadius": 4,
+                              "borderTopLeftRadius": 4,
+                              "borderTopRightRadius": 4,
+                              "bottom": "5%",
+                              "flexDirection": "column",
+                              "left": 0,
+                              "position": "absolute",
+                              "right": 0,
+                              "top": "5%",
+                            }
+                          }
+                        />
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
+        onLayout={[Function]}
+      >
+        <View
+          onLayout={[Function]}
+          style={
+            {
+              "alignItems": "stretch",
+              "flexDirection": "column",
+              "opacity": 0,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "stretch",
+                "flexDirection": "column",
+              }
+            }
+          >
+            <View
+              sentry-label="TransactionLoader"
+              style={
+                {
+                  "alignItems": "stretch",
+                  "flexDirection": "column",
+                  "opacity": 1,
+                  "overflow": "hidden",
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "alignItems": "flex-start",
+                    "flexDirection": "row",
+                    "flexGrow": 1,
+                    "gap": 16,
+                    "justifyContent": "space-between",
+                    "paddingBottom": 12,
+                    "paddingTop": 12,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "flexShrink": 1,
+                      "gap": 12,
+                      "height": "100%",
+                      "justifyContent": "flex-start",
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "alignItems": "center",
+                        "backgroundColor": "#CECECE",
+                        "borderBottomLeftRadius": 999999,
+                        "borderBottomRightRadius": 999999,
+                        "borderTopLeftRadius": 999999,
+                        "borderTopRightRadius": 999999,
+                        "flexDirection": "column",
+                        "height": 40,
+                        "justifyContent": "center",
+                        "width": 40,
+                      }
+                    }
+                  />
+                  <View
+                    style={
+                      {
+                        "alignItems": "stretch",
+                        "flexDirection": "column",
+                        "flexShrink": 1,
+                      }
+                    }
+                  >
+                    <View
+                      style={
+                        {
+                          "alignItems": "center",
+                          "flexDirection": "row",
+                          "gap": 4,
+                        }
+                      }
+                    >
+                      <View
+                        style={
+                          {
+                            "alignItems": "center",
+                            "flexDirection": "row",
+                          }
+                        }
+                      >
+                        <View
+                          style={
+                            {
+                              "alignItems": "center",
+                              "flexDirection": "row",
+                              "position": "relative",
+                            }
+                          }
+                        >
+                          <View
+                            accessibilityElementsHidden={true}
+                            importantForAccessibility="no-hide-descendants"
+                          >
+                            <Text
+                              allowFontScaling={true}
+                              maxFontSizeMultiplier={1.4}
+                              numberOfLines={1}
+                              style={
+                                {
+                                  "color": "transparent",
+                                  "fontFamily": "Basel-Book",
+                                  "fontSize": 19,
+                                  "lineHeight": 24,
+                                  "opacity": 0,
+                                }
+                              }
+                              suppressHighlighting={true}
+                            >
+                              Contract Interaction
+                            </Text>
+                          </View>
+                          <View
+                            style={
+                              {
+                                "alignItems": "stretch",
+                                "backgroundColor": "#F9F9F9",
+                                "borderBottomLeftRadius": 4,
+                                "borderBottomRightRadius": 4,
+                                "borderTopLeftRadius": 4,
+                                "borderTopRightRadius": 4,
+                                "bottom": "5%",
+                                "flexDirection": "column",
+                                "left": 0,
+                                "position": "absolute",
+                                "right": 0,
+                                "top": "5%",
+                              }
+                            }
+                          />
+                        </View>
+                      </View>
+                    </View>
+                    <View
+                      style={
+                        {
+                          "alignItems": "center",
+                          "flexDirection": "row",
+                        }
+                      }
+                    >
+                      <View
+                        style={
+                          {
+                            "alignItems": "center",
+                            "flexDirection": "row",
+                            "position": "relative",
+                          }
+                        }
+                      >
+                        <View
+                          accessibilityElementsHidden={true}
+                          importantForAccessibility="no-hide-descendants"
+                        >
+                          <Text
+                            allowFontScaling={true}
+                            maxFontSizeMultiplier={1.4}
+                            numberOfLines={1}
+                            style={
+                              {
+                                "color": "transparent",
+                                "fontFamily": "Basel-Book",
+                                "fontSize": 17,
+                                "lineHeight": 24,
+                                "opacity": 0,
+                              }
+                            }
+                            suppressHighlighting={true}
+                          >
+                            Caption Text
+                          </Text>
+                        </View>
+                        <View
+                          style={
+                            {
+                              "alignItems": "stretch",
+                              "backgroundColor": "#F9F9F9",
+                              "borderBottomLeftRadius": 4,
+                              "borderBottomRightRadius": 4,
+                              "borderTopLeftRadius": 4,
+                              "borderTopRightRadius": 4,
+                              "bottom": "5%",
+                              "flexDirection": "column",
+                              "left": 0,
+                              "position": "absolute",
+                              "right": 0,
+                              "top": "5%",
+                            }
+                          }
+                        />
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
+        onLayout={[Function]}
+      >
+        <View
+          style={
+            {
+              "height": NaN,
+            }
+          }
+        />
+      </View>
+    </View>
+  </RCTScrollView>
+</View>
+`;
+
+exports[`ActivityTab renders without error 2`] = `
+<View
+  style={
+    {
+      "alignItems": "stretch",
+      "flexDirection": "column",
+      "flexGrow": 1,
+      "paddingLeft": 24,
+      "paddingRight": 24,
+    }
+  }
+>
+  <RCTScrollView
+    CellRendererComponent={[Function]}
+    ListEmptyComponent={
+      <Memo
+        grow={true}
+      >
+        <EmptyState
+          buttonLabel="Receive tokens or NFTs"
+          description="When you approve, trade, or transfer tokens or NFTs, your transactions will appear here."
+          icon={<Memo(_NoTransactions) />}
+          onPress={[Function]}
+          title="No activity yet"
+        />
+      </Memo>
+    }
+    ListFooterComponent={
+      <React.Fragment>
+        <View
+          style={
+            {
+              "height": NaN,
+            }
+          }
+        />
+      </React.Fragment>
+    }
+    data={
+      [
+        {
+          "itemType": "HEADER",
+          "title": "February 1990",
+        },
+        {
+          "addedTime": 634722508000,
+          "chainId": 1,
+          "from": "0x82D56A352367453f74FC0dC7B071b311da373Fa6",
+          "hash": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
+          "id": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
+          "options": {
+            "request": {},
+          },
+          "status": "confirmed",
+          "typeInfo": {
+            "approvalAmount": "1",
+            "spender": "0x55f4B664C68F398f9e81EFf63ef4444A1A184F98",
+            "tokenAddress": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+            "type": "approve",
+          },
+        },
+        {
+          "addedTime": 634722508000,
+          "chainId": 1,
+          "from": "0x82D56A352367453f74FC0dC7B071b311da373Fa6",
+          "hash": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
+          "id": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
+          "options": {
+            "request": {},
+          },
+          "status": "confirmed",
+          "typeInfo": {
+            "approvalAmount": "1",
+            "spender": "0x55f4B664C68F398f9e81EFf63ef4444A1A184F98",
+            "tokenAddress": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+            "type": "approve",
+          },
+        },
+      ]
+    }
+    estimatedItemSize={92}
+    getItem={[Function]}
+    getItemCount={[Function]}
+    initialNumToRender={20}
+    keyExtractor={[Function]}
+    maxToRenderPerBatch={20}
+    onContentSizeChange={[Function]}
+    onLayout={[Function]}
+    onMomentumScrollBegin={[Function]}
+    onMomentumScrollEnd={[Function]}
+    onScroll={[Function]}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    refreshControl={
+      <RefreshControlMock
+        progressViewOffset={NaN}
+        refreshing={false}
+        tintColor="#CECECE"
+      />
+    }
+    removeClippedSubviews={false}
+    renderItem={[Function]}
+    scrollEventThrottle={50}
+    showsVerticalScrollIndicator={false}
+    stickyHeaderIndices={[]}
+    updateCellsBatchingPeriod={10}
+    viewabilityConfigCallbackPairs={[]}
+  >
+    <RCTRefreshControl />
+    <View>
+      <View
+        onLayout={[Function]}
+      >
+        <View
+          style={
+            {
+              "alignItems": "stretch",
+              "flexDirection": "column",
+              "paddingBottom": 12,
+            }
+          }
+        >
+          <Text
+            allowFontScaling={true}
+            maxFontSizeMultiplier={1.4}
+            style={
+              {
+                "color": "#7D7D7D",
+                "fontFamily": "Basel-Book",
+                "fontSize": 17,
+                "lineHeight": 24,
+              }
+            }
+            suppressHighlighting={true}
+          >
+            February 1990
+          </Text>
+        </View>
+      </View>
+      <View
+        onLayout={[Function]}
+      >
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          hitSlop={
+            {
+              "bottom": 5,
+              "left": 5,
+              "right": 5,
+              "top": 5,
+            }
+          }
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "marginBottom": 24,
+              "opacity": 1,
+              "overflow": "hidden",
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "stretch",
+                "backgroundColor": "#FFFFFF",
+                "flexDirection": "row",
+                "flexGrow": 1,
+                "gap": 12,
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "column",
+                  "justifyContent": "center",
+                  "width": 40,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "column",
+                    "height": 40,
+                    "justifyContent": "center",
+                    "width": 40,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "column",
+                      "height": 40,
+                      "justifyContent": "center",
+                      "width": 40,
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "alignItems": "center",
+                        "backgroundColor": "#2222220D",
+                        "borderBottomLeftRadius": 999999,
+                        "borderBottomRightRadius": 999999,
+                        "borderTopLeftRadius": 999999,
+                        "borderTopRightRadius": 999999,
+                        "flexDirection": "column",
+                        "height": 40,
+                        "justifyContent": "center",
+                        "paddingLeft": 8,
+                        "paddingRight": 8,
+                        "width": 40,
+                      }
+                    }
+                  >
+                    <Text
+                      adjustsFontSizeToFit={true}
+                      allowFontScaling={true}
+                      maxFontSizeMultiplier={1.4}
+                      minimumFontScale={0.5}
+                      numberOfLines={1}
+                      style={
+                        {
+                          "color": "#222222",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 17,
+                          "lineHeight": 20,
+                          "textAlign": "center",
+                        }
+                      }
+                      suppressHighlighting={true}
+                    >
+                      DAI
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={
+                    {
+                      "alignItems": "stretch",
+                      "bottom": -4,
+                      "flexDirection": "column",
+                      "position": "absolute",
+                      "right": -4,
+                    }
+                  }
+                >
+                  <RNSVGSvgView
+                    align="xMidYMid"
+                    bbHeight="20"
+                    bbWidth="20"
+                    fill="#40B66B"
+                    focusable={false}
+                    meetOrSlice={0}
+                    minX={0}
+                    minY={0}
+                    strokeWidth={8}
+                    style={
+                      [
+                        {
+                          "backgroundColor": "transparent",
+                          "borderWidth": 0,
+                        },
+                        {
+                          "color": "#F9F9F9",
+                          "height": 20,
+                          "width": 20,
+                        },
+                        {
+                          "flex": 0,
+                          "height": 20,
+                          "width": 20,
+                        },
+                      ]
+                    }
+                    tintColor="#F9F9F9"
+                    vbHeight={16}
+                    vbWidth={16}
+                  >
+                    <RNSVGGroup
+                      fill={
+                        {
+                          "payload": 4282431083,
+                          "type": 0,
+                        }
+                      }
+                      propList={
+                        [
+                          "fill",
+                          "strokeWidth",
+                        ]
+                      }
+                      strokeWidth="8"
+                    >
+                      <RNSVGPath
+                        d="M7.99968 14.6668C11.6816 14.6668 14.6663 11.6821 14.6663 8.00016C14.6663 4.31826 11.6816 1.3335 7.99968 1.3335C4.31778 1.3335 1.33301 4.31826 1.33301 8.00016C1.33301 11.6821 4.31778 14.6668 7.99968 14.6668Z"
+                        fill={
+                          {
+                            "payload": 4278190080,
+                            "type": 0,
+                          }
+                        }
+                        propList={
+                          [
+                            "stroke",
+                            "strokeWidth",
+                            "strokeLinecap",
+                            "strokeLinejoin",
+                          ]
+                        }
+                        stroke={
+                          {
+                            "type": 2,
+                          }
+                        }
+                        strokeLinecap={1}
+                        strokeLinejoin={1}
+                        strokeWidth="1.5"
+                      />
+                      <RNSVGPath
+                        d="M10.6666 6.66667L6.99998 10L5.33331 8.48485"
+                        fill={
+                          {
+                            "payload": 4278190080,
+                            "type": 0,
+                          }
+                        }
+                        propList={
+                          [
+                            "stroke",
+                            "strokeWidth",
+                            "strokeLinecap",
+                            "strokeLinejoin",
+                          ]
+                        }
+                        stroke={
+                          {
+                            "type": 2,
+                          }
+                        }
+                        strokeLinecap={1}
+                        strokeLinejoin={1}
+                        strokeWidth="2"
+                      />
+                    </RNSVGGroup>
+                  </RNSVGSvgView>
+                </View>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "alignItems": "stretch",
+                  "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "alignItems": "stretch",
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "flexGrow": 1,
+                      "gap": 4,
+                      "justifyContent": "space-between",
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "alignItems": "center",
+                        "flexDirection": "row",
+                        "gap": 4,
+                      }
+                    }
+                  >
+                    <Text
+                      allowFontScaling={true}
+                      maxFontSizeMultiplier={1.4}
+                      numberOfLines={1}
+                      style={
+                        {
+                          "color": "#7D7D7D",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 17,
+                          "lineHeight": 24,
+                        }
+                      }
+                      suppressHighlighting={true}
+                    >
+                      Approved
+                    </Text>
+                  </View>
+                  <Text
+                    allowFontScaling={true}
+                    maxFontSizeMultiplier={1.4}
+                    style={
+                      {
+                        "color": "#CECECE",
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 15,
+                        "lineHeight": 16,
+                      }
+                    }
+                    suppressHighlighting={true}
+                  >
+                    Feb 11
+                  </Text>
+                </View>
+                <View
+                  style={
+                    {
+                      "alignItems": "stretch",
+                      "flexDirection": "row",
+                      "flexGrow": 1,
+                      "gap": 16,
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "alignItems": "stretch",
+                        "flexDirection": "column",
+                        "flexGrow": 1,
+                        "flexShrink": 1,
+                      }
+                    }
+                  >
+                    <Text
+                      allowFontScaling={true}
+                      maxFontSizeMultiplier={1.4}
+                      style={
+                        {
+                          "color": "#222222",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 17,
+                          "lineHeight": 24,
+                        }
+                      }
+                      suppressHighlighting={true}
+                    >
+                      1.00 DAI
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
+        onLayout={[Function]}
+      >
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          hitSlop={
+            {
+              "bottom": 5,
+              "left": 5,
+              "right": 5,
+              "top": 5,
+            }
+          }
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "marginBottom": 24,
+              "opacity": 1,
+              "overflow": "hidden",
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "stretch",
+                "backgroundColor": "#FFFFFF",
+                "flexDirection": "row",
+                "flexGrow": 1,
+                "gap": 12,
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "column",
+                  "justifyContent": "center",
+                  "width": 40,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "column",
+                    "height": 40,
+                    "justifyContent": "center",
+                    "width": 40,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "column",
+                      "height": 40,
+                      "justifyContent": "center",
+                      "width": 40,
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "alignItems": "center",
+                        "backgroundColor": "#2222220D",
+                        "borderBottomLeftRadius": 999999,
+                        "borderBottomRightRadius": 999999,
+                        "borderTopLeftRadius": 999999,
+                        "borderTopRightRadius": 999999,
+                        "flexDirection": "column",
+                        "height": 40,
+                        "justifyContent": "center",
+                        "paddingLeft": 8,
+                        "paddingRight": 8,
+                        "width": 40,
+                      }
+                    }
+                  >
+                    <Text
+                      adjustsFontSizeToFit={true}
+                      allowFontScaling={true}
+                      maxFontSizeMultiplier={1.4}
+                      minimumFontScale={0.5}
+                      numberOfLines={1}
+                      style={
+                        {
+                          "color": "#222222",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 17,
+                          "lineHeight": 20,
+                          "textAlign": "center",
+                        }
+                      }
+                      suppressHighlighting={true}
+                    >
+                      DAI
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={
+                    {
+                      "alignItems": "stretch",
+                      "bottom": -4,
+                      "flexDirection": "column",
+                      "position": "absolute",
+                      "right": -4,
+                    }
+                  }
+                >
+                  <RNSVGSvgView
+                    align="xMidYMid"
+                    bbHeight="20"
+                    bbWidth="20"
+                    fill="#40B66B"
+                    focusable={false}
+                    meetOrSlice={0}
+                    minX={0}
+                    minY={0}
+                    strokeWidth={8}
+                    style={
+                      [
+                        {
+                          "backgroundColor": "transparent",
+                          "borderWidth": 0,
+                        },
+                        {
+                          "color": "#F9F9F9",
+                          "height": 20,
+                          "width": 20,
+                        },
+                        {
+                          "flex": 0,
+                          "height": 20,
+                          "width": 20,
+                        },
+                      ]
+                    }
+                    tintColor="#F9F9F9"
+                    vbHeight={16}
+                    vbWidth={16}
+                  >
+                    <RNSVGGroup
+                      fill={
+                        {
+                          "payload": 4282431083,
+                          "type": 0,
+                        }
+                      }
+                      propList={
+                        [
+                          "fill",
+                          "strokeWidth",
+                        ]
+                      }
+                      strokeWidth="8"
+                    >
+                      <RNSVGPath
+                        d="M7.99968 14.6668C11.6816 14.6668 14.6663 11.6821 14.6663 8.00016C14.6663 4.31826 11.6816 1.3335 7.99968 1.3335C4.31778 1.3335 1.33301 4.31826 1.33301 8.00016C1.33301 11.6821 4.31778 14.6668 7.99968 14.6668Z"
+                        fill={
+                          {
+                            "payload": 4278190080,
+                            "type": 0,
+                          }
+                        }
+                        propList={
+                          [
+                            "stroke",
+                            "strokeWidth",
+                            "strokeLinecap",
+                            "strokeLinejoin",
+                          ]
+                        }
+                        stroke={
+                          {
+                            "type": 2,
+                          }
+                        }
+                        strokeLinecap={1}
+                        strokeLinejoin={1}
+                        strokeWidth="1.5"
+                      />
+                      <RNSVGPath
+                        d="M10.6666 6.66667L6.99998 10L5.33331 8.48485"
+                        fill={
+                          {
+                            "payload": 4278190080,
+                            "type": 0,
+                          }
+                        }
+                        propList={
+                          [
+                            "stroke",
+                            "strokeWidth",
+                            "strokeLinecap",
+                            "strokeLinejoin",
+                          ]
+                        }
+                        stroke={
+                          {
+                            "type": 2,
+                          }
+                        }
+                        strokeLinecap={1}
+                        strokeLinejoin={1}
+                        strokeWidth="2"
+                      />
+                    </RNSVGGroup>
+                  </RNSVGSvgView>
+                </View>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "alignItems": "stretch",
+                  "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "alignItems": "stretch",
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "flexGrow": 1,
+                      "gap": 4,
+                      "justifyContent": "space-between",
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "alignItems": "center",
+                        "flexDirection": "row",
+                        "gap": 4,
+                      }
+                    }
+                  >
+                    <Text
+                      allowFontScaling={true}
+                      maxFontSizeMultiplier={1.4}
+                      numberOfLines={1}
+                      style={
+                        {
+                          "color": "#7D7D7D",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 17,
+                          "lineHeight": 24,
+                        }
+                      }
+                      suppressHighlighting={true}
+                    >
+                      Approved
+                    </Text>
+                  </View>
+                  <Text
+                    allowFontScaling={true}
+                    maxFontSizeMultiplier={1.4}
+                    style={
+                      {
+                        "color": "#CECECE",
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 15,
+                        "lineHeight": 16,
+                      }
+                    }
+                    suppressHighlighting={true}
+                  >
+                    Feb 11
+                  </Text>
+                </View>
+                <View
+                  style={
+                    {
+                      "alignItems": "stretch",
+                      "flexDirection": "row",
+                      "flexGrow": 1,
+                      "gap": 16,
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "alignItems": "stretch",
+                        "flexDirection": "column",
+                        "flexGrow": 1,
+                        "flexShrink": 1,
+                      }
+                    }
+                  >
+                    <Text
+                      allowFontScaling={true}
+                      maxFontSizeMultiplier={1.4}
+                      style={
+                        {
+                          "color": "#222222",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 17,
+                          "lineHeight": 24,
+                        }
+                      }
+                      suppressHighlighting={true}
+                    >
+                      1.00 DAI
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
+        onLayout={[Function]}
+      >
+        <View
+          style={
+            {
+              "height": NaN,
+            }
+          }
+        />
+      </View>
+    </View>
+  </RCTScrollView>
+</View>
+`;

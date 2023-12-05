@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "APP",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "isolatedModules": false,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "noEmit": false,
+    "jsx": "react-jsx",
+    "target": "es2019",
+    "lib": ["es2021", "dom", "esnext"]
+  }
+}
