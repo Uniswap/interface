@@ -198,7 +198,7 @@ export default function TokenDetails({
   const navigateToTokenForChain = useCallback(
     (update: Chain) => {
       if (!address) return
-      const bridgedAddress = multiChainMap[update].address
+      const bridgedAddress = multiChainMap[update]?.address
       if (bridgedAddress) {
         startTokenTransition(() =>
           navigate(
