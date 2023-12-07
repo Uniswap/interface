@@ -16,7 +16,6 @@ import {
 } from 'nft/components/profile/list/utils'
 import { useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from 'nft/pages/profile/shared'
-import { looksRareNonceFetcher } from 'nft/queries/looksRare'
 import { ProfilePageStateType } from 'nft/types'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { useEffect, useMemo, useReducer, useState } from 'react'
@@ -195,11 +194,10 @@ export const ListPage = () => {
       issues,
     })
   )
-  const { listings, collectionsRequiringApproval, setLooksRareNonce, setCollectionStatusAndCallback } = useNFTList(
-    ({ listings, collectionsRequiringApproval, setLooksRareNonce, setCollectionStatusAndCallback }) => ({
+  const { listings, collectionsRequiringApproval, setCollectionStatusAndCallback } = useNFTList(
+    ({ listings, collectionsRequiringApproval, setCollectionStatusAndCallback }) => ({
       listings,
       collectionsRequiringApproval,
-      setLooksRareNonce,
       setCollectionStatusAndCallback,
     })
   )
@@ -235,9 +233,6 @@ export const ListPage = () => {
   const startListingFlow = async () => {
     if (!signer) return
     sendAnalyticsEvent(NFTEventName.NFT_SELL_START_LISTING, { ...startListingEventProperties })
-    const signerAddress = await signer.getAddress()
-    const nonce = await looksRareNonceFetcher(signerAddress)
-    setLooksRareNonce(nonce ?? 0)
 
     // for all unique collection, marketplace combos -> approve collections
     for (const collectionRow of collectionsRequiringApproval) {
