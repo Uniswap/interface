@@ -14,6 +14,37 @@ interface Window {
     autoRefreshOnNetworkChange?: boolean
   }
   web3?: Record<string, unknown>
+  safary?: {
+    track: (args: {
+      eventType: string
+      eventName: string
+      parameters?: { [key: string]: string | number | boolean }
+    }) => void
+    trackSwap: (args: {
+      eventName?: string
+      fromAmount: number
+      fromCurrency: string
+      fromAmountUSD?: number
+      contractAddress: string
+      parameters?: { [key: string]: string | number | boolean }
+    }) => void
+    trackDeposit: (args: {
+      eventName?: string
+      amount: number
+      currency: string
+      amountUSD?: number
+      contractAddress: string
+      parameters?: Record<string, unknown>
+    }) => void
+    trackWithdraw: (args: {
+      eventName?: string
+      amount: number
+      currency: string
+      amountUSD?: number
+      contractAddress: string
+      parameters?: Record<string, unknown>
+    }) => void
+  }
 }
 
 declare module 'content-hash' {

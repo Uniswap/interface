@@ -6,6 +6,7 @@ import { LoadingOpacityContainer } from 'components/Loader/styled'
 import TradePrice from 'components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, X } from 'react-feather'
@@ -355,6 +356,18 @@ const LimitOrderModal = () => {
             getTradeVersion(trade),
             'MH',
           ].join('/'),
+        })
+        window.safary?.track({
+          eventType: 'FELO',
+          eventName: 'Create FELO',
+          parameters: {
+            walletAddress: account as string,
+            inputCurrency: trade?.inputAmount?.currency?.symbol as string,
+            inputAmount: parseFloat(trade?.inputAmount?.quotient?.toString() ?? '0'),
+            toAmount: parseFloat(trade?.outputAmount.quotient?.toString() ?? '0'),
+            toCurrency: trade?.outputAmount.currency.symbol as string,
+            toAmountUSD: parseFloat(fiatValueOutput?.quotient?.toString() ?? '0'),
+          },
         })
       })
       .catch((error) => {

@@ -22,6 +22,7 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 import Slider from '../../components/Slider'
 import { Dots } from '../../components/swap/styleds'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
+import { LIMIT_ORDER_MANAGER_ADDRESSES } from '../../constants/addresses'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
@@ -29,6 +30,7 @@ import { usePairContract, useV2RouterContract } from '../../hooks/useContract'
 import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
+import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/burn/actions'
@@ -98,6 +100,10 @@ export default function RemoveLiquidity({
   const pairContract: Contract | null = usePairContract(pair?.liquidityToken?.address)
 
   const router = useV2RouterContract()
+
+  const usdcValues = {
+    [Field.CURRENCY_A]: useUSDCValue(parsedAmounts[Field.CURRENCY_A]),
+  }
 
   // allowance handling
   const { gatherPermitSignature, signatureData } = useV2LiquidityTokenPermit(
@@ -276,11 +282,17 @@ export default function RemoveLiquidity({
           })
 
           setTxHash(response.hash)
-
           ReactGA.event({
             category: 'Liquidity',
             action: 'Remove',
             label: [currencyA.symbol, currencyB.symbol].join('/'),
+          })
+          window.safary?.trackWithdraw({
+            amount: parseFloat(parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0'),
+            currency: 'KROM',
+            amountUSD: parseFloat(usdcValues[Field.CURRENCY_A]?.quotient?.toString() ?? '0'),
+            contractAddress: LIMIT_ORDER_MANAGER_ADDRESSES[chainId],
+            parameters: { walletAddress: account },
           })
         })
         .catch((error: Error) => {
