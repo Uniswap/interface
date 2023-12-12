@@ -24,6 +24,7 @@ import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { Field } from 'state/swap/actions'
+import { useIsWhitelistedToken } from 'state/swap/hooks'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
@@ -71,6 +72,7 @@ function useConfirmModalState({
   allowedSlippage,
   onSwap,
   allowance,
+  selectedPool,
   doesTradeDiffer,
   onCurrencySelection,
 }: {
@@ -78,12 +80,29 @@ function useConfirmModalState({
   allowedSlippage: Percent
   onSwap: () => void
   allowance?: Allowance
+  selectedPool?: Currency | null
   doesTradeDiffer: boolean
   onCurrencySelection: (field: Field, currency: Currency) => void
 }) {
   const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.REVIEWING)
   const [approvalError, setApprovalError] = useState<PendingModalError>()
+  const [tokenError, setTokenError] = useState<PendingModalError>()
   const [pendingModalSteps, setPendingModalSteps] = useState<PendingConfirmModalState[]>([])
+
+  const isWhitelistedToken: boolean | undefined = useIsWhitelistedToken(
+    selectedPool?.isToken ? selectedPool?.address : undefined,
+    trade.outputAmount.currency
+  )
+
+  useEffect(() => {
+    // we do not want to display token error until the whitelist check returns a boolean
+    if (isWhitelistedToken === undefined) return
+    if (!isWhitelistedToken) {
+      setTokenError(PendingModalError.TOKEN_WHITELIST_ERROR)
+    } else {
+      setTokenError(undefined)
+    }
+  }, [isWhitelistedToken, setTokenError])
 
   // This is a function instead of a memoized value because we do _not_ want it to update as the allowance changes.
   // For example, if the user needs to complete 3 steps initially, we should always show 3 step indicators
@@ -252,7 +271,7 @@ function useConfirmModalState({
     setApprovalError(undefined)
   }
 
-  return { startSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps, wrapTxHash }
+  return { startSwapFlow, onCancel, confirmModalState, approvalError, tokenError, pendingModalSteps, wrapTxHash }
 }
 
 export default function ConfirmSwapModal({
@@ -262,6 +281,7 @@ export default function ConfirmSwapModal({
   onAcceptChanges,
   allowedSlippage,
   allowance,
+  selectedPool,
   onConfirm,
   onDismiss,
   onCurrencySelection,
@@ -276,6 +296,7 @@ export default function ConfirmSwapModal({
   swapResult?: SwapResult
   allowedSlippage: Percent
   allowance?: Allowance
+  selectedPool?: Currency | null
   onAcceptChanges: () => void
   onConfirm: () => void
   swapError?: Error
@@ -286,34 +307,29 @@ export default function ConfirmSwapModal({
 }) {
   const { chainId } = useWeb3React()
   const doesTradeDiffer = originalTrade && tradeMeaningfullyDiffers(trade, originalTrade, allowedSlippage)
-  const { startSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps, wrapTxHash } =
+  const { startSwapFlow, onCancel, confirmModalState, approvalError, tokenError, pendingModalSteps, wrapTxHash } =
     useConfirmModalState({
       trade,
       allowedSlippage,
       onSwap: onConfirm,
       onCurrencySelection,
       allowance,
+      selectedPool,
       doesTradeDiffer: Boolean(doesTradeDiffer),
     })
 
   const swapStatus = useSwapTransactionStatus(swapResult)
-  const [whitelistedTokenError, setWhitelistedTokenError] = useState<PendingModalError>()
 
   // Swap was reverted onchain.
   const swapReverted = swapStatus === TransactionStatus.Failed
   // Swap failed locally and was not broadcast to the blockchain.
   const localSwapFailure = Boolean(swapError) && !didUserReject(swapError)
   const swapFailed = localSwapFailure || swapReverted
+
   useEffect(() => {
     // Reset the modal state if the user rejected the swap.
     if (swapError && !swapFailed) {
       onCancel()
-    }
-    let errorMessage: any = swapError?.toString()
-    errorMessage = errorMessage?.substr(0, 'Error: The token you are trying to buy is not whitelisted'.length)
-    if (errorMessage === 'Error: The token you are trying to buy is not whitelisted') {
-      console.log(errorMessage, 'tre')
-      setWhitelistedTokenError(errorMessage)
     }
   }, [onCancel, swapError, swapFailed])
 
@@ -342,9 +358,8 @@ export default function ConfirmSwapModal({
     setTimeout(() => {
       // Reset local state after the modal dismiss animation finishes, to avoid UI flicker as it dismisses
       onCancel()
-      setWhitelistedTokenError(undefined)
     }, MODAL_TRANSITION_DURATION)
-  }, [onCancel, onDismiss, priceUpdate, setWhitelistedTokenError, showAcceptChanges, trade])
+  }, [onCancel, onDismiss, priceUpdate, showAcceptChanges, trade])
 
   const modalHeader = useCallback(() => {
     if (confirmModalState !== ConfirmModalState.REVIEWING && !showAcceptChanges) {
@@ -417,13 +432,9 @@ export default function ConfirmSwapModal({
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <Modal isOpen $scrollOverlay onDismiss={onModalDismiss} maxHeight={90}>
-        {approvalError || swapFailed ? (
+        {approvalError || swapFailed || tokenError ? (
           <ErrorModalContent
-            errorType={
-              approvalError ?? whitelistedTokenError
-                ? PendingModalError.TOKEN_WHITELIST_ERROR
-                : PendingModalError.CONFIRMATION_ERROR
-            }
+            errorType={approvalError ?? tokenError ?? PendingModalError.CONFIRMATION_ERROR}
             onRetry={startSwapFlow}
           />
         ) : (

@@ -3,12 +3,14 @@ import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/
 import { useWeb3React } from '@web3-react/core'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
+import { useSingleCallResult } from 'lib/hooks/multicall'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
 import { useActiveSmartPool } from 'state/application/hooks'
 import { useAppDispatch } from 'state/hooks'
+import { usePoolExtendedContract } from 'state/pool/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
@@ -288,4 +290,14 @@ export function useDefaultsFromURLSearch(): SwapState {
   }, [dispatch, chainId, parsedSwapState])
 
   return parsedSwapState
+}
+
+export function useIsWhitelistedToken(poolAddress?: string, token?: Currency): boolean | undefined {
+  const contract = usePoolExtendedContract(poolAddress)
+
+  const isWhitelistedToken: boolean | undefined = useSingleCallResult(contract, 'isWhitelistedToken', [
+    token?.isToken ? token.address : undefined,
+  ])?.result?.[0]
+
+  return useMemo(() => (token?.isToken ? isWhitelistedToken : true), [token, isWhitelistedToken])
 }

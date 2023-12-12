@@ -706,6 +706,7 @@ export function Swap({
           originalTrade={tradeToConfirm}
           onAcceptChanges={handleAcceptChanges}
           onCurrencySelection={onCurrencySelection}
+          selectedPool={smartPool}
           swapResult={swapResult}
           allowedSlippage={allowedSlippage}
           onConfirm={handleSwap}
