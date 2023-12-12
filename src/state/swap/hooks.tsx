@@ -299,8 +299,5 @@ export function useIsWhitelistedToken(poolAddress?: string, token?: Currency): b
     token?.isToken ? token.address : undefined,
   ])?.result?.[0]
 
-  return useMemo(
-    () => (token?.isToken ? isWhitelistedToken : Boolean(poolAddress && token?.isNative) ?? false),
-    [poolAddress, token, isWhitelistedToken]
-  )
+  return useMemo(() => (token?.isToken ? isWhitelistedToken : true), [token, isWhitelistedToken])
 }

@@ -72,6 +72,7 @@ function useConfirmModalState({
   allowedSlippage,
   onSwap,
   allowance,
+  selectedPool,
   doesTradeDiffer,
   onCurrencySelection,
 }: {
@@ -79,12 +80,29 @@ function useConfirmModalState({
   allowedSlippage: Percent
   onSwap: () => void
   allowance?: Allowance
+  selectedPool?: Currency | null
   doesTradeDiffer: boolean
   onCurrencySelection: (field: Field, currency: Currency) => void
 }) {
   const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.REVIEWING)
   const [approvalError, setApprovalError] = useState<PendingModalError>()
+  const [tokenError, setTokenError] = useState<PendingModalError>()
   const [pendingModalSteps, setPendingModalSteps] = useState<PendingConfirmModalState[]>([])
+
+  const isWhitelistedToken: boolean | undefined = useIsWhitelistedToken(
+    selectedPool?.isToken ? selectedPool?.address : undefined,
+    trade.outputAmount.currency
+  )
+
+  useEffect(() => {
+    // we do not want to display token error until the whitelist check returns a boolean
+    if (isWhitelistedToken === undefined) return
+    if (!isWhitelistedToken) {
+      setTokenError(PendingModalError.TOKEN_WHITELIST_ERROR)
+    } else {
+      setTokenError(undefined)
+    }
+  }, [isWhitelistedToken, setTokenError])
 
   // This is a function instead of a memoized value because we do _not_ want it to update as the allowance changes.
   // For example, if the user needs to complete 3 steps initially, we should always show 3 step indicators
@@ -253,7 +271,7 @@ function useConfirmModalState({
     setApprovalError(undefined)
   }
 
-  return { startSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps, wrapTxHash }
+  return { startSwapFlow, onCancel, confirmModalState, approvalError, tokenError, pendingModalSteps, wrapTxHash }
 }
 
 export default function ConfirmSwapModal({
@@ -289,49 +307,31 @@ export default function ConfirmSwapModal({
 }) {
   const { chainId } = useWeb3React()
   const doesTradeDiffer = originalTrade && tradeMeaningfullyDiffers(trade, originalTrade, allowedSlippage)
-  const { startSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps, wrapTxHash } =
+  const { startSwapFlow, onCancel, confirmModalState, approvalError, tokenError, pendingModalSteps, wrapTxHash } =
     useConfirmModalState({
       trade,
       allowedSlippage,
       onSwap: onConfirm,
       onCurrencySelection,
       allowance,
+      selectedPool,
       doesTradeDiffer: Boolean(doesTradeDiffer),
     })
 
   const swapStatus = useSwapTransactionStatus(swapResult)
-  const [whitelistedTokenError, setWhitelistedTokenError] = useState<PendingModalError>()
 
   // Swap was reverted onchain.
   const swapReverted = swapStatus === TransactionStatus.Failed
   // Swap failed locally and was not broadcast to the blockchain.
   const localSwapFailure = Boolean(swapError) && !didUserReject(swapError)
   const swapFailed = localSwapFailure || swapReverted
-  const isWhitelistedTokenFromWhitelist: boolean | undefined = useIsWhitelistedToken(
-    selectedPool?.isToken ? selectedPool?.address : undefined,
-    trade.outputAmount.currency
-  )
 
   useEffect(() => {
     // Reset the modal state if the user rejected the swap.
     if (swapError && !swapFailed) {
       onCancel()
     }
-
-    // state is reset at every input change, no need to reset to default
-    if (!whitelistedTokenError) {
-      if (!isWhitelistedTokenFromWhitelist) {
-        setWhitelistedTokenError(PendingModalError.TOKEN_WHITELIST_ERROR)
-      }
-    }
-  }, [
-    onCancel,
-    isWhitelistedTokenFromWhitelist,
-    setWhitelistedTokenError,
-    swapError,
-    swapFailed,
-    whitelistedTokenError,
-  ])
+  }, [onCancel, swapError, swapFailed])
 
   const showAcceptChanges = Boolean(
     trade && doesTradeDiffer && confirmModalState !== ConfirmModalState.PENDING_CONFIRMATION
@@ -432,9 +432,9 @@ export default function ConfirmSwapModal({
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <Modal isOpen $scrollOverlay onDismiss={onModalDismiss} maxHeight={90}>
-        {approvalError || swapFailed || whitelistedTokenError ? (
+        {approvalError || swapFailed || tokenError ? (
           <ErrorModalContent
-            errorType={approvalError ?? whitelistedTokenError ?? PendingModalError.CONFIRMATION_ERROR}
+            errorType={approvalError ?? tokenError ?? PendingModalError.CONFIRMATION_ERROR}
             onRetry={startSwapFlow}
           />
         ) : (
