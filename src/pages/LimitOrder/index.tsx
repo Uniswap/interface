@@ -628,8 +628,8 @@ const LimitOrderModal = () => {
                 </TYPE.main>
               </GreyCard>
             ) : showApproveFlow ? (
-              <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
-                <AutoColumn style={{ width: '100%' }} gap="md">
+              <AutoRow style={{ display: 'flex', width: '100%', textAlign: 'center', justifyContent: 'center' }}>
+                <AutoColumn style={{ width: '100%', textAlign: 'center', justifyContent: 'center' }} gap="md">
                   <ButtonConfirmed
                     onClick={handleApprove}
                     disabled={
@@ -644,7 +644,15 @@ const LimitOrderModal = () => {
                     }
                   >
                     <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                      <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
+                      <span
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          textAlign: 'center',
+                          whiteSpace: 'break-spaces',
+                        }}
+                      >
                         <CurrencyLogo
                           currency={currencies[Field.INPUT]}
                           size={'20px'}
