@@ -162,7 +162,7 @@ export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: s
 
   if (!activity) return null
 
-  const onClick = () => openOffchainActivityModal({ orderHash, status: order.status })
+  const onClick = () => openOffchainActivityModal(order)
 
   return <ActivityPopupContent activity={activity} onClose={onClose} onClick={onClick} />
 }

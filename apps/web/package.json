@@ -31,7 +31,8 @@
     "test:cloud": "yarn jest functions --config=functions/jest.config.json",
     "cypress:open": "cypress open --browser chrome --e2e",
     "cypress:run": "cypress run --browser chrome --e2e",
-    "deduplicate": "yarn-deduplicate --strategy=highest"
+    "deduplicate": "yarn-deduplicate --strategy=highest",
+    "web:ignore-build": "exit 1"
   },
   "husky": {
     "hooks": {
@@ -100,7 +101,7 @@
     "@types/lingui__react": "2.8.3",
     "@types/ms": "0.7.31",
     "@types/multicodec": "1.0.0",
-    "@types/node": "13.13.5",
+    "@types/node": "18.16.0",
     "@types/qs": "6.9.2",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",

@@ -9,8 +9,11 @@ import {
   getOnChainBalancesFetch,
   STUB_ONCHAIN_BALANCES_ENDPOINT,
 } from 'wallet/src/features/portfolio/api'
+import { isAndroid, isIOS } from 'wallet/src/utils/platform'
 
 const REST_API_URL = uniswapUrls.apiBaseUrl
+
+const requestSource = isIOS ? 'uniswap-ios' : isAndroid ? 'uniswap-android' : 'uniswap-web'
 
 // mapping from endpoint to custom fetcher, when needed
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -40,6 +43,7 @@ export const getRestLink = (): ApolloLink => {
     headers: {
       'Content-Type': 'application/json',
       'X-API-KEY': config.uniswapApiKey,
+      'x-request-source': requestSource,
       Origin: config.uniswapAppUrl,
     },
   })
@@ -56,6 +60,7 @@ export const getCustomGraphqlHttpLink = (endpoint: CustomEndpoint): ApolloLink =
     headers: {
       'Content-Type': 'application/json',
       'X-API-KEY': endpoint.key,
+      'x-request-source': requestSource,
       // TODO: [MOB-3883] remove once API gateway supports mobile origin URL
       Origin: uniswapUrls.apiBaseUrl,
     },
@@ -67,6 +72,7 @@ export const getGraphqlHttpLink = (): ApolloLink =>
     headers: {
       'Content-Type': 'application/json',
       'X-API-KEY': config.uniswapApiKey,
+      'x-request-source': requestSource,
       // TODO: [MOB-3883] remove once API gateway supports mobile origin URL
       Origin: uniswapUrls.apiBaseUrl,
     },

@@ -30,6 +30,7 @@ export const uniswapUrls = {
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
   appUrl: `https://${UNISWAP_APP_HOSTNAME}`,
   interfaceUrl: `https://${UNISWAP_APP_HOSTNAME}/#/swap`,
+  unitagsApiUrl: getUnitagsApiUrl(),
 }
 
 function getUniswapApiBaseUrl(): string {
@@ -58,4 +59,8 @@ function getUniswapAmplitudeProxyUrl(): string {
 
 function getUniswapStatsigProxyUrl(): string {
   return `${config.uniswapApiBaseUrl}/v1/statsig-proxy`
+}
+
+function getUnitagsApiUrl(): string {
+  return config.unitagsApiUrl
 }

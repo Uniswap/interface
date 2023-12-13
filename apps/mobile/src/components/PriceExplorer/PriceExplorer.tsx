@@ -1,5 +1,5 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
-import React, { useMemo } from 'react'
+import React, { memo, useMemo } from 'react'
 import { I18nManager } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
 import {
@@ -15,7 +15,8 @@ import { DatetimeText, PriceText, RelativeChangeText } from 'src/components/Pric
 import { TimeRangeGroup } from 'src/components/PriceExplorer/TimeRangeGroup'
 import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
 import { invokeImpact } from 'src/utils/haptic'
-import { Flex } from 'ui/src'
+import { Flex, useDeviceDimensions } from 'ui/src'
+import { spacing } from 'ui/src/theme'
 import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
@@ -27,9 +28,15 @@ type PriceTextProps = {
 }
 
 function PriceTextSection({ loading, relativeChange }: PriceTextProps): JSX.Element {
+  const { fullWidth } = useDeviceDimensions()
+  const mx = spacing.spacing12
+
   return (
-    <Flex mx="$spacing12">
-      <PriceText loading={loading} />
+    <Flex mx={mx}>
+      {/* Specify maxWidth to allow text scalling. onLayout was sometimes called after more
+      than 5 seconds which is not acceptable so we have to provide the approximate width
+      of the PriceText component explicitly. */}
+      <PriceText loading={loading} maxWidth={fullWidth - 2 * mx} />
       <Flex row gap="$spacing4">
         <RelativeChangeText loading={loading} spotRelativeChange={relativeChange} />
         <DatetimeText loading={loading} />
@@ -42,7 +49,7 @@ export type LineChartPriceAndDateTimeTextProps = {
   currencyId: CurrencyId
 }
 
-export function PriceExplorer({
+export const PriceExplorer = memo(function PriceExplorer({
   currencyId,
   tokenColor,
   forcePlaceholder,
@@ -115,7 +122,7 @@ export function PriceExplorer({
       <TimeRangeGroup setDuration={setDuration} />
     </Flex>
   )
-}
+})
 
 function PriceExplorerPlaceholder({ loading }: { loading: boolean }): JSX.Element {
   return (

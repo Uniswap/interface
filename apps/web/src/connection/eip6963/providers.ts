@@ -5,11 +5,12 @@ import { applyOverrideIcon, isCoinbaseProviderDetail, isEIP6963ProviderDetail } 
 
 // TODO(WEB-3241) - Once Mutable<T> utility type is consolidated, use it here
 type MutableInjectedProviderMap = Map<string, EIP6963ProviderDetail>
-export type InjectedProviderMap = ReadonlyMap<string, EIP6963ProviderDetail>
+type InjectedProviderMap = ReadonlyMap<string, EIP6963ProviderDetail>
 
 class EIP6963ProviderManager {
   public listeners = new Set<() => void>()
   private _map: MutableInjectedProviderMap = new Map()
+  private _list: EIP6963ProviderDetail[] = []
 
   constructor() {
     window.addEventListener(EIP6963Event.ANNOUNCE_PROVIDER, this.onAnnounceProvider.bind(this) as EventListener)
@@ -35,11 +36,16 @@ class EIP6963ProviderManager {
     }
 
     this._map.set(detail.info.rdns, detail)
+    this._list = [...this._list, detail] // re-create array to trigger re-render from useInjectedProviderDetails
     this.listeners.forEach((listener) => listener())
   }
 
   public get map(): InjectedProviderMap {
     return this._map
+  }
+
+  public get list(): readonly EIP6963ProviderDetail[] {
+    return this._list
   }
 }
 
@@ -50,11 +56,11 @@ function subscribeToProviderMap(listener: () => void): () => void {
   return () => EIP6963_PROVIDER_MANAGER.listeners.delete(listener)
 }
 
-function getProviderMapSnapshot(): InjectedProviderMap {
-  return EIP6963_PROVIDER_MANAGER.map
+function getProviderMapSnapshot(): readonly EIP6963ProviderDetail[] {
+  return EIP6963_PROVIDER_MANAGER.list
 }
 
 /** Returns an up-to-date map of announced eip6963 providers */
-export function useInjectedProviderDetails(): InjectedProviderMap {
+export function useInjectedProviderDetails(): readonly EIP6963ProviderDetail[] {
   return useSyncExternalStore(subscribeToProviderMap, getProviderMapSnapshot)
 }

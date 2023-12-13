@@ -16,7 +16,7 @@ import {
   PendingAccountActions,
   pendingAccountActions,
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
-import { shortenAddress } from 'wallet/src/utils/addresses'
+import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 import { isAndroid } from 'wallet/src/utils/platform'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackup>
@@ -24,6 +24,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 export function RestoreCloudBackupScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+  // const backups = useMockCloudBackups(4) // returns 4 mock backups with random mnemonicIds and createdAt dates
   const backups = useCloudBackups()
   const sortedBackups = backups.slice().sort((a, b) => b.createdAt - a.createdAt)
 
@@ -50,7 +51,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
       title={t('Select backup to restore')}>
       <ScrollView>
         <Flex gap="$spacing8">
-          {sortedBackups.map((backup, index) => {
+          {sortedBackups.map((backup) => {
             const { mnemonicId, createdAt } = backup
             return (
               <TouchableArea
@@ -65,25 +66,15 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                   <Flex centered row gap="$spacing12">
                     <Unicon address={mnemonicId} size={32} />
                     <Flex>
-                      <Text numberOfLines={1} variant="subheading2">
-                        {t('Backup {{backupIndex}}', { backupIndex: sortedBackups.length - index })}
+                      <Text adjustsFontSizeToFit variant="subheading1">
+                        {sanitizeAddressText(shortenAddress(mnemonicId))}
                       </Text>
-                      <Text color="$neutral2" variant="buttonLabel4">
-                        {shortenAddress(mnemonicId)}
-                      </Text>
-                    </Flex>
-                  </Flex>
-                  <Flex row gap="$spacing12">
-                    <Flex alignItems="flex-end" gap="$spacing4">
-                      <Text color="$neutral2" variant="buttonLabel4">
-                        {t('Backed up on:')}
-                      </Text>
-                      <Text variant="buttonLabel4">
+                      <Text adjustsFontSizeToFit color="$neutral2" variant="buttonLabel4">
                         {dayjs.unix(createdAt).format('MMM D, YYYY, h:mma')}
                       </Text>
                     </Flex>
-                    <Icons.RotatableChevron color="$neutral1" direction="end" />
                   </Flex>
+                  <Icons.RotatableChevron color="$neutral2" direction="end" />
                 </Flex>
               </TouchableArea>
             )

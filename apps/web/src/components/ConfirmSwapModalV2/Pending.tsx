@@ -114,11 +114,7 @@ export default function Pending({
     uniswapXOrder.status !== UniswapXOrderStatus.OPEN &&
     uniswapXOrder.status !== UniswapXOrderStatus.FILLED
   ) {
-    return (
-      <OrderContent
-        order={{ status: uniswapXOrder.status, orderHash: uniswapXOrder.orderHash, details: uniswapXOrder }}
-      />
-    )
+    return <OrderContent order={uniswapXOrder} />
   }
 
   return (

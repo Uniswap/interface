@@ -174,9 +174,14 @@ exports[`PriceText renders without error 1`] = `
           "fontSize": 53,
           "lineHeight": 60,
         },
-        {
-          "color": "#222222",
-        },
+        [
+          {
+            "color": "#222222",
+          },
+          {
+            "fontSize": 106,
+          },
+        ],
       ]
     }
     testID="wholePart"
@@ -202,9 +207,14 @@ exports[`PriceText renders without error 1`] = `
           "fontSize": 53,
           "lineHeight": 60,
         },
-        {
-          "color": "#CECECE",
-        },
+        [
+          {
+            "color": "#CECECE",
+          },
+          {
+            "fontSize": 106,
+          },
+        ],
       ]
     }
     testID="decimalPart"
@@ -243,9 +253,14 @@ exports[`PriceText renders without error less than a dollar 1`] = `
           "fontSize": 53,
           "lineHeight": 60,
         },
-        {
-          "color": "#222222",
-        },
+        [
+          {
+            "color": "#222222",
+          },
+          {
+            "fontSize": 106,
+          },
+        ],
       ]
     }
     testID="wholePart"
@@ -271,9 +286,14 @@ exports[`PriceText renders without error less than a dollar 1`] = `
           "fontSize": 53,
           "lineHeight": 60,
         },
-        {
-          "color": "#222222",
-        },
+        [
+          {
+            "color": "#222222",
+          },
+          {
+            "fontSize": 106,
+          },
+        ],
       ]
     }
     testID="decimalPart"

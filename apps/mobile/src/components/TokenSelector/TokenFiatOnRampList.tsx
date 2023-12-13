@@ -3,70 +3,21 @@ import React, { memo, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { Loader } from 'src/components/loading'
-import { useAllCommonBaseCurrencies } from 'src/components/TokenSelector/hooks'
 import { TokenOptionItem } from 'src/components/TokenSelector/TokenOptionItem'
-import { useFiatOnRampSupportedTokens } from 'src/features/fiatOnRamp/hooks'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { Flex, Icons, Inset, Text, TouchableArea } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { ChainId } from 'wallet/src/constants/chains'
-import { fromMoonpayNetwork } from 'wallet/src/features/chains/utils'
-import { CurrencyInfo, GqlResult } from 'wallet/src/features/dataApi/types'
-import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 interface Props {
   onSelectCurrency: (currency: FiatOnRampCurrency) => void
   onBack: () => void
-}
-
-const findTokenOptionForMoonpayCurrency = (
-  commonBaseCurrencies: CurrencyInfo[] | undefined,
-  moonpayCurrency: MoonpayCurrency
-): Maybe<CurrencyInfo> => {
-  return (commonBaseCurrencies || []).find((item) => {
-    const [code, network] = moonpayCurrency.code.split('_') ?? [undefined, undefined]
-    const chainId = fromMoonpayNetwork(network)
-    return (
-      item &&
-      code &&
-      code === item.currency.symbol?.toLowerCase() &&
-      chainId === item.currency.chainId
-    )
-  })
-}
-
-function useFiatOnRampTokenList(
-  supportedTokens: MoonpayCurrency[] | undefined
-): GqlResult<FiatOnRampCurrency[]> {
-  const {
-    data: commonBaseCurrencies,
-    error: commonBaseCurrenciesError,
-    loading: commonBaseCurrenciesLoading,
-    refetch: refetchCommonBaseCurrencies,
-  } = useAllCommonBaseCurrencies()
-
-  const data = useMemo(
-    () =>
-      (supportedTokens || [])
-        .map((moonpayCurrency) => ({
-          currencyInfo: findTokenOptionForMoonpayCurrency(commonBaseCurrencies, moonpayCurrency),
-          moonpayCurrency,
-        }))
-        .filter((item) => !!item.currencyInfo),
-    [commonBaseCurrencies, supportedTokens]
-  )
-
-  return useMemo(
-    () => ({
-      data,
-      loading: commonBaseCurrenciesLoading,
-      error: commonBaseCurrenciesError,
-      refetch: refetchCommonBaseCurrencies,
-    }),
-    [commonBaseCurrenciesError, commonBaseCurrenciesLoading, data, refetchCommonBaseCurrencies]
-  )
+  onRetry: () => void
+  error: boolean
+  loading: boolean
+  list: FiatOnRampCurrency[] | undefined
 }
 
 function TokenOptionItemWrapper({
@@ -100,19 +51,17 @@ function TokenOptionItemWrapper({
   )
 }
 
-function _TokenFiatOnRampList({ onSelectCurrency, onBack }: Props): JSX.Element {
+function _TokenFiatOnRampList({
+  onSelectCurrency,
+  onBack,
+  error,
+  onRetry,
+  list,
+  loading,
+}: Props): JSX.Element {
   const { t } = useTranslation()
 
   const flatListRef = useRef(null)
-
-  const {
-    data: supportedTokens,
-    isLoading: supportedTokensLoading,
-    isError: supportedTokensQueryError,
-    refetch: supportedTokensQueryRefetch,
-  } = useFiatOnRampSupportedTokens()
-
-  const { data, loading, error, refetch } = useFiatOnRampTokenList(supportedTokens)
 
   const renderItem = useCallback(
     ({ item: currency }: ListRenderItemInfo<FiatOnRampCurrency>) => {
@@ -121,7 +70,7 @@ function _TokenFiatOnRampList({ onSelectCurrency, onBack }: Props): JSX.Element 
     [onSelectCurrency]
   )
 
-  if (supportedTokensQueryError || error) {
+  if (error) {
     return (
       <>
         <Header onBack={onBack} />
@@ -129,21 +78,14 @@ function _TokenFiatOnRampList({ onSelectCurrency, onBack }: Props): JSX.Element 
           <BaseCard.ErrorState
             retryButtonLabel="Retry"
             title={t('Couldn’t load tokens to buy')}
-            onRetry={(): void => {
-              if (supportedTokensQueryError) {
-                supportedTokensQueryRefetch?.()
-              }
-              if (error) {
-                refetch?.()
-              }
-            }}
+            onRetry={onRetry}
           />
         </Flex>
       </>
     )
   }
 
-  if (supportedTokensLoading || loading) {
+  if (loading) {
     return (
       <Flex>
         <Header onBack={onBack} />
@@ -159,7 +101,7 @@ function _TokenFiatOnRampList({ onSelectCurrency, onBack }: Props): JSX.Element 
         ref={flatListRef}
         ListEmptyComponent={<Flex />}
         ListFooterComponent={<Inset all="$spacing36" />}
-        data={data}
+        data={list}
         keyExtractor={key}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="always"

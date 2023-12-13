@@ -20,8 +20,9 @@ import {
 import { isExactInput, transformQuoteToTrade } from './utils'
 
 const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
-if (UNISWAP_API_URL === undefined) {
-  throw new Error(`UNISWAP_API_URL must be a defined environment variable`)
+const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
+if (UNISWAP_API_URL === undefined || UNISWAP_GATEWAY_DNS_URL === undefined) {
+  throw new Error(`UNISWAP_API_URL and UNISWAP_GATEWAY_DNS_URL must be defined environment variables`)
 }
 
 const CLIENT_PARAMS = {
@@ -75,9 +76,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
 
 export const routingApi = createApi({
   reducerPath: 'routingApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: UNISWAP_API_URL,
-  }),
+  baseQuery: fetchBaseQuery(),
   endpoints: (build) => ({
     getQuote: build.query<TradeResult, GetQuoteArgs>({
       async onQueryStarted(args: GetQuoteArgs, { queryFulfilled }) {
@@ -119,6 +118,7 @@ export const routingApi = createApi({
             amount,
             tradeType,
             sendPortionEnabled,
+            gatewayDNSUpdateEnabled,
           } = args
 
           const requestBody = {
@@ -133,10 +133,14 @@ export const routingApi = createApi({
             configs: getRoutingAPIConfig(args),
           }
 
+          const baseURL = gatewayDNSUpdateEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
           const response = await fetch({
             method: 'POST',
-            url: '/quote',
+            url: `${baseURL}/quote`,
             body: JSON.stringify(requestBody),
+            headers: {
+              'x-request-source': 'uniswap-web',
+            },
           })
 
           if (response.error) {

@@ -15,8 +15,8 @@ describe('hooks', () => {
           )
         )
       ).toEqual({
-        [Field.OUTPUT]: { currencyId: '0x6B175474E89094C44Da98b954EedeAC495271d0F' },
-        [Field.INPUT]: { currencyId: 'ETH' },
+        outputCurrencyId: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+        inputCurrencyId: 'ETH',
         typedValue: '20.5',
         independentField: Field.OUTPUT,
         recipient: null,
@@ -27,8 +27,8 @@ describe('hooks', () => {
       expect(
         queryParametersToSwapState(parse('?outputCurrency=invalid', { parseArrays: false, ignoreQueryPrefix: true }))
       ).toEqual({
-        [Field.INPUT]: { currencyId: 'ETH' },
-        [Field.OUTPUT]: { currencyId: null },
+        inputCurrencyId: 'ETH',
+        outputCurrencyId: null,
         typedValue: '',
         independentField: Field.INPUT,
         recipient: null,
@@ -41,8 +41,8 @@ describe('hooks', () => {
           parse('?outputCurrency=eth&exactAmount=20.5', { parseArrays: false, ignoreQueryPrefix: true })
         )
       ).toEqual({
-        [Field.OUTPUT]: { currencyId: 'ETH' },
-        [Field.INPUT]: { currencyId: null },
+        outputCurrencyId: 'ETH',
+        inputCurrencyId: null,
         typedValue: '20.5',
         independentField: Field.INPUT,
         recipient: null,
@@ -55,8 +55,8 @@ describe('hooks', () => {
           parse('?outputCurrency=eth&exactAmount=20.5&recipient=abc', { parseArrays: false, ignoreQueryPrefix: true })
         )
       ).toEqual({
-        [Field.OUTPUT]: { currencyId: 'ETH' },
-        [Field.INPUT]: { currencyId: null },
+        outputCurrencyId: 'ETH',
+        inputCurrencyId: null,
         typedValue: '20.5',
         independentField: Field.INPUT,
         recipient: null,
@@ -72,8 +72,8 @@ describe('hooks', () => {
           })
         )
       ).toEqual({
-        [Field.OUTPUT]: { currencyId: 'ETH' },
-        [Field.INPUT]: { currencyId: null },
+        outputCurrencyId: 'ETH',
+        inputCurrencyId: null,
         typedValue: '20.5',
         independentField: Field.INPUT,
         recipient: TEST_RECIPIENT_ADDRESS,
@@ -88,8 +88,8 @@ describe('hooks', () => {
           })
         )
       ).toEqual({
-        [Field.OUTPUT]: { currencyId: 'ETH' },
-        [Field.INPUT]: { currencyId: null },
+        outputCurrencyId: 'ETH',
+        inputCurrencyId: null,
         typedValue: '20.5',
         independentField: Field.INPUT,
         recipient: 'bob.argent.xyz',

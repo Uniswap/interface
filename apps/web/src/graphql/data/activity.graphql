@@ -136,6 +136,7 @@ fragment SwapOrderDetailsParts on SwapOrderDetails {
   offerer
   hash
   orderStatus: status
+  expiry
   inputToken {
     ...TokenAssetParts
   }

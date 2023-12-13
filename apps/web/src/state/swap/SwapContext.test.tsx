@@ -44,22 +44,14 @@ describe('Swap Context', () => {
         },
       },
       prefilledState: {
-        INPUT: {
-          currencyId: undefined,
-        },
-        OUTPUT: {
-          currencyId: undefined,
-        },
+        inputCurrencyId: undefined,
+        outputCurrencyId: undefined,
       },
       setCurrentTab: expect.any(Function),
       setSwapState: expect.any(Function),
       swapState: {
-        INPUT: {
-          currencyId: undefined,
-        },
-        OUTPUT: {
-          currencyId: undefined,
-        },
+        inputCurrencyId: undefined,
+        outputCurrencyId: undefined,
         independentField: 'INPUT',
         recipient: null,
         typedValue: '',

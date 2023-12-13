@@ -13,6 +13,7 @@ import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
+import { useAccountListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
@@ -24,24 +25,39 @@ type AccountCardItemProps = {
 } & PortfolioValueProps
 
 type PortfolioValueProps = {
+  address: Address
   isPortfolioValueLoading: boolean
   portfolioValue: number | undefined
 }
 
 function PortfolioValue({
+  address,
   isPortfolioValueLoading,
-  portfolioValue,
+  portfolioValue: providedPortfolioValue,
 }: PortfolioValueProps): JSX.Element {
-  const isLoading = isPortfolioValueLoading && portfolioValue === undefined
+  const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
+  // When we add a new wallet, we'll make a new network request to fetch all accounts as a single request.
+  // Since we're adding a new wallet address to the `ownerAddresses` array, this will be a brand new query, which won't be cached.
+  // To avoid all wallets showing a "loading" state, we read directly from cache while we wait for the other query to complete.
+
+  const { data } = useAccountListQuery({
+    fetchPolicy: 'cache-first',
+    variables: { addresses: address },
+  })
+
+  const cachedPortfolioValue = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
+
+  const portfolioValue = providedPortfolioValue ?? cachedPortfolioValue
+
+  const isLoading = isPortfolioValueLoading && portfolioValue === undefined
+
   return (
-    <Text
-      color="$neutral2"
-      loading={isLoading}
-      loadingPlaceholderText="0000.00"
-      variant="subheading2">
-      {convertFiatAmountFormatted(portfolioValue, NumberType.PortfolioBalance)}
+    <Text color="$neutral2" loading={isLoading} variant="subheading2">
+      {portfolioValue
+        ? convertFiatAmountFormatted(portfolioValue, NumberType.PortfolioBalance)
+        : t('N/A')}
     </Text>
   )
 }
@@ -126,6 +142,7 @@ export function AccountCardItem({
             />
           </Flex>
           <PortfolioValue
+            address={address}
             isPortfolioValueLoading={isPortfolioValueLoading}
             portfolioValue={portfolioValue}
           />

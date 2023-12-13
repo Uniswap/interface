@@ -31,21 +31,22 @@ export function useSwapActionHandlers(): {
   const onCurrencySelection = useCallback(
     (field: Field, currency: Currency) => {
       const currencyId = currency.isToken ? currency.address : currency.isNative ? 'ETH' : ''
-      const otherField = field === Field.INPUT ? Field.OUTPUT : Field.INPUT
+      const [currentCurrencyKey, otherCurrencyKey]: (keyof SwapState)[] =
+        field === Field.INPUT ? ['inputCurrencyId', 'outputCurrencyId'] : ['outputCurrencyId', 'inputCurrencyId']
       setSwapState((state) => {
-        if (currencyId === state[otherField].currencyId) {
+        if (currencyId === state[otherCurrencyKey]) {
           // the case where we have to swap the order
           return {
             ...state,
             independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-            [field]: { currencyId },
-            [otherField]: { currencyId: state[field].currencyId },
+            [currentCurrencyKey]: currencyId,
+            [otherCurrencyKey]: state[currentCurrencyKey],
           }
         } else {
           // the normal case
           return {
             ...state,
-            [field]: { currencyId },
+            [currentCurrencyKey]: currencyId,
           }
         }
       })
@@ -60,8 +61,8 @@ export function useSwapActionHandlers(): {
           // To prevent swaps with FOT tokens as exact-outputs, we leave it as an exact-in swap and use the previously estimated output amount as the new exact-in amount.
           return {
             ...state,
-            [Field.INPUT]: { currencyId: state[Field.OUTPUT].currencyId },
-            [Field.OUTPUT]: { currencyId: state[Field.INPUT].currencyId },
+            inputCurrencyId: state.outputCurrencyId,
+            outputCurrencyId: state.inputCurrencyId,
             typedValue: previouslyEstimatedOutput,
           }
         }
@@ -69,8 +70,8 @@ export function useSwapActionHandlers(): {
         return {
           ...state,
           independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-          [Field.INPUT]: { currencyId: state[Field.OUTPUT].currencyId },
-          [Field.OUTPUT]: { currencyId: state[Field.INPUT].currencyId },
+          inputCurrencyId: state.outputCurrencyId,
+          outputCurrencyId: state.inputCurrencyId,
         }
       })
     },
@@ -134,13 +135,7 @@ export type SwapInfo = {
 export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefined): SwapInfo {
   const { account } = useWeb3React()
 
-  const {
-    independentField,
-    typedValue,
-    [Field.INPUT]: { currencyId: inputCurrencyId },
-    [Field.OUTPUT]: { currencyId: outputCurrencyId },
-    recipient,
-  } = state
+  const { independentField, typedValue, inputCurrencyId, outputCurrencyId, recipient } = state
 
   const inputCurrency = useCurrency(inputCurrencyId, chainId)
   const outputCurrency = useCurrency(outputCurrencyId, chainId)
@@ -318,12 +313,8 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
   const recipient = validatedRecipient(parsedQs.recipient)
 
   return {
-    [Field.INPUT]: {
-      currencyId: inputCurrency === '' ? null : inputCurrency ?? null,
-    },
-    [Field.OUTPUT]: {
-      currencyId: outputCurrency === '' ? null : outputCurrency ?? null,
-    },
+    inputCurrencyId: inputCurrency === '' ? null : inputCurrency ?? null,
+    outputCurrencyId: outputCurrency === '' ? null : outputCurrency ?? null,
     typedValue,
     independentField,
     recipient,

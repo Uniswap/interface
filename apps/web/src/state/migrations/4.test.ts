@@ -19,7 +19,7 @@ const previousState: PersistAppStateV4 = {
     tokens: {},
     pairs: {},
     timestamp: Date.now(),
-    hideAndroidAnnouncementBanner: false,
+    hideAppPromoBanner: false,
   },
   _persist: {
     version: 3,

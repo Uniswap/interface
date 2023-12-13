@@ -48,6 +48,7 @@ export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> 
     }
 
     const newClient = new ApolloClient({
+      assumeImmutableResults: true,
       link: from([
         getErrorLink(),
         // requires typing outside of wallet package

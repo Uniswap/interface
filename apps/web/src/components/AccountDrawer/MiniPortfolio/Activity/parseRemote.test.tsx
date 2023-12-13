@@ -19,9 +19,25 @@ import {
   MockTokenApproval,
   MockTokenReceive,
   MockTokenSend,
+  mockTokenTransferInPartsFragment,
+  mockTokenTransferOutPartsFragment,
+  mockTransactionDetailsPartsFragment,
   MockWrap,
 } from './fixtures/activity'
-import { parseRemoteActivities, useTimeSince } from './parseRemote'
+import {
+  offchainOrderDetailsFromGraphQLTransactionActivity,
+  parseRemoteActivities,
+  parseSwapAmounts,
+  useTimeSince,
+} from './parseRemote'
+
+const swapOrderTokenChanges = {
+  TokenTransfer: [mockTokenTransferOutPartsFragment, mockTokenTransferInPartsFragment],
+  NftTransfer: [],
+  TokenApproval: [],
+  NftApproval: [],
+  NftApproveForAll: [],
+}
 
 describe('parseRemote', () => {
   beforeEach(() => {
@@ -139,6 +155,70 @@ describe('parseRemote', () => {
 
       // maxes out at 1m
       expect(result.current).toBe('1m')
+    })
+  })
+
+  describe('parseSwapAmounts', () => {
+    it('should correctly parse amounts when both sent and received tokens are present', () => {
+      const result = parseSwapAmounts(swapOrderTokenChanges, jest.fn().mockReturnValue('100'))
+      expect(result).toEqual({
+        inputCurrencyId: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+        inputAmount: '100',
+        outputCurrencyId: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+        outputAmount: '100',
+        sent: mockTokenTransferOutPartsFragment,
+        received: mockTokenTransferInPartsFragment,
+      })
+    })
+
+    it('should return undefined when sent token is missing', () => {
+      const result = parseSwapAmounts(
+        {
+          ...swapOrderTokenChanges,
+          TokenTransfer: [mockTokenTransferOutPartsFragment],
+        },
+        jest.fn().mockReturnValue('100')
+      )
+      expect(result).toEqual(undefined)
+    })
+  })
+
+  describe('offchainOrderDetailsFromGraphQLTransactionActivity', () => {
+    it('should return undefined when the activity is not a swap order', () => {
+      const result = offchainOrderDetailsFromGraphQLTransactionActivity(
+        { ...MockSwapOrder, details: { ...mockTransactionDetailsPartsFragment, __typename: 'TransactionDetails' } },
+        {
+          ...swapOrderTokenChanges,
+          TokenTransfer: [],
+        }, // no token changes
+        jest.fn().mockReturnValue('100')
+      )
+      expect(result).toEqual(undefined)
+    })
+
+    it('should return the OffchainOrderDetails', () => {
+      const result = offchainOrderDetailsFromGraphQLTransactionActivity(
+        { ...MockSwapOrder, details: { ...mockTransactionDetailsPartsFragment, __typename: 'TransactionDetails' } },
+        swapOrderTokenChanges,
+        jest.fn().mockReturnValue('100')
+      )
+      expect(result).toEqual({
+        chainId: 1,
+        status: 'filled',
+        swapInfo: {
+          expectedOutputCurrencyAmountRaw: '100',
+          inputCurrencyAmountRaw: '100',
+          inputCurrencyId: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+          isUniswapXOrder: true,
+          minimumOutputCurrencyAmountRaw: '100',
+          outputCurrencyId: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+          settledOutputCurrencyAmountRaw: '100',
+          tradeType: 0,
+          type: 1,
+        },
+        txHash: '0xHashValue',
+        type: 'signUniswapXOrder',
+      })
     })
   })
 })

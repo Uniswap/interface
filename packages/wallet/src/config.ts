@@ -17,6 +17,7 @@ import {
   UNISWAP_API_BASE_URL,
   UNISWAP_API_KEY,
   UNISWAP_APP_URL,
+  UNITAGS_API_URL,
   WALLETCONNECT_PROJECT_ID,
 } from 'react-native-dotenv'
 
@@ -40,6 +41,7 @@ export interface Config {
   statSigProxyUrl: string
   walletConnectProjectId: string
   quicknodeBnbRpcUrl: string
+  unitagsApiUrl: string
 }
 
 const _config: Config = {
@@ -62,6 +64,7 @@ const _config: Config = {
   statSigProxyUrl: process.env.STATSIG_PROXY_URL || STATSIG_PROXY_URL,
   walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID || WALLETCONNECT_PROJECT_ID,
   quicknodeBnbRpcUrl: process.env.QUICKNODE_BNB_RPC_URL || QUICKNODE_BNB_RPC_URL,
+  unitagsApiUrl: process.env.UNITAGS_API_URL || UNITAGS_API_URL,
 }
 
 export const config = Object.freeze(_config)

@@ -25,16 +25,12 @@ function Wrapper(props: PropsWithChildren<WrapperProps>) {
           independentField: Field.INPUT,
           typedValue: '',
           recipient: '',
-          [Field.INPUT]: {},
-          [Field.OUTPUT]: {},
+          inputCurrencyId: undefined,
+          outputCurrencyId: undefined,
         },
         prefilledState: {
-          INPUT: {
-            currencyId: undefined,
-          },
-          OUTPUT: {
-            currencyId: undefined,
-          },
+          inputCurrencyId: undefined,
+          outputCurrencyId: undefined,
         },
       }}
     >

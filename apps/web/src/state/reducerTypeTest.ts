@@ -87,7 +87,7 @@ interface ExpectedUserState {
     }
   }
   timestamp: number
-  hideAndroidAnnouncementBanner: boolean
+  hideAppPromoBanner: boolean
   showSurveyPopup?: boolean
   originCountry?: string
 }

@@ -68,7 +68,7 @@ import { OutputTaxTooltipBody } from './TaxTooltipBody'
 
 interface SwapFormProps {
   disableTokenInputs?: boolean
-  onCurrencyChange?: (selected: Pick<SwapState, Field.INPUT | Field.OUTPUT>) => void
+  onCurrencyChange?: (selected: Pick<SwapState, 'inputCurrencyId' | 'outputCurrencyId'>) => void
 }
 
 export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapFormProps) {
@@ -84,8 +84,8 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   const prefilledCurrencies = useMemo(() => {
     return queryParametersToSwapState(parsedQs)
   }, [parsedQs])
-  const prefilledInputCurrency = useCurrency(prefilledCurrencies?.[Field.INPUT]?.currencyId, chainId)
-  const prefilledOutputCurrency = useCurrency(prefilledCurrencies?.[Field.OUTPUT]?.currencyId, chainId)
+  const prefilledInputCurrency = useCurrency(prefilledCurrencies?.inputCurrencyId, chainId)
+  const prefilledOutputCurrency = useCurrency(prefilledCurrencies?.outputCurrencyId, chainId)
 
   const [loadedInputCurrency, setLoadedInputCurrency] = useState(prefilledInputCurrency)
   const [loadedOutputCurrency, setLoadedOutputCurrency] = useState(prefilledOutputCurrency)
@@ -266,22 +266,16 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     const combinedInitialState = { ...initialSwapState, ...prefilledState }
     const chainChanged = previousConnectedChainId && previousConnectedChainId !== connectedChainId
     const prefilledInputChanged =
-      previousPrefilledState &&
-      previousPrefilledState?.[Field.INPUT]?.currencyId !== prefilledState?.[Field.INPUT]?.currencyId
+      previousPrefilledState && previousPrefilledState?.inputCurrencyId !== prefilledState?.inputCurrencyId
     const prefilledOutputChanged =
-      previousPrefilledState &&
-      previousPrefilledState?.[Field.OUTPUT]?.currencyId !== prefilledState?.[Field.OUTPUT]?.currencyId
+      previousPrefilledState && previousPrefilledState?.outputCurrencyId !== prefilledState?.outputCurrencyId
     if (chainChanged || prefilledInputChanged || prefilledOutputChanged) {
       setSwapState({
         ...initialSwapState,
         ...prefilledState,
         independentField: combinedInitialState.independentField ?? Field.INPUT,
-        [Field.INPUT]: {
-          currencyId: combinedInitialState.INPUT.currencyId ?? undefined,
-        },
-        [Field.OUTPUT]: {
-          currencyId: combinedInitialState.OUTPUT.currencyId ?? undefined,
-        },
+        inputCurrencyId: combinedInitialState.inputCurrencyId ?? undefined,
+        outputCurrencyId: combinedInitialState.outputCurrencyId ?? undefined,
       })
       // reset local state
       setSwapFormState({
@@ -434,10 +428,8 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     (inputCurrency: Currency) => {
       onCurrencySelection(Field.INPUT, inputCurrency)
       onCurrencyChange?.({
-        [Field.INPUT]: {
-          currencyId: getSwapCurrencyId(inputCurrency),
-        },
-        [Field.OUTPUT]: swapState[Field.OUTPUT],
+        inputCurrencyId: getSwapCurrencyId(inputCurrency),
+        outputCurrencyId: swapState.outputCurrencyId,
       })
       maybeLogFirstSwapAction(trace)
     },
@@ -454,10 +446,8 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     (outputCurrency: Currency) => {
       onCurrencySelection(Field.OUTPUT, outputCurrency)
       onCurrencyChange?.({
-        [Field.INPUT]: swapState[Field.INPUT],
-        [Field.OUTPUT]: {
-          currencyId: getSwapCurrencyId(outputCurrency),
-        },
+        inputCurrencyId: swapState.inputCurrencyId,
+        outputCurrencyId: getSwapCurrencyId(outputCurrency),
       })
       maybeLogFirstSwapAction(trace)
     },

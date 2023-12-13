@@ -9,7 +9,7 @@ import reducer, {
   clearRecentConnectionMeta,
   initialState,
   setRecentConnectionDisconnected,
-  updateHideAndroidAnnouncementBanner,
+  updateHideAppPromoBanner,
   updateHideClosedPositions,
   updateRecentConnectionMeta,
   updateUserDeadline,
@@ -100,10 +100,10 @@ describe('swap reducer', () => {
     })
   })
 
-  describe('updateHideAndroidAnnouncementBanner', () => {
-    it('updates the updateHideAndroidAnnouncementBanner', () => {
-      store.dispatch(updateHideAndroidAnnouncementBanner({ hideAndroidAnnouncementBanner: true }))
-      expect(store.getState().hideAndroidAnnouncementBanner).toEqual(true)
+  describe('updateHideAppPromoBanner', () => {
+    it('updates the updateHideAppPromoBanner', () => {
+      store.dispatch(updateHideAppPromoBanner({ hideAppPromoBanner: true }))
+      expect(store.getState().hideAppPromoBanner).toEqual(true)
     })
   })
 

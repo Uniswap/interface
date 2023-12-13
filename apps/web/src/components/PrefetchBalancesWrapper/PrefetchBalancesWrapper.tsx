@@ -40,17 +40,23 @@ export default function PrefetchBalancesWrapper({
 
   // Use an atom to track unfetched state to avoid duplicating fetches if this component appears multiple times on the page.
   const [hasUnfetchedBalances, setHasUnfetchedBalances] = useAtom(hasUnfetchedBalancesAtom)
-  const fetchBalances = useCallback(() => {
-    if (account) {
-      // Backend takes <2sec to get the updated portfolio value after a transaction
-      // This timeout is an interim solution while we're working on a websocket that'll ping the client when connected account gets changes
-      // TODO(WEB-3131): remove this timeout after websocket is implemented
-      setTimeout(() => {
-        prefetchPortfolioBalances({ variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS } })
-        setHasUnfetchedBalances(false)
-      }, ms('3.5s'))
-    }
-  }, [account, prefetchPortfolioBalances, setHasUnfetchedBalances])
+  const fetchBalances = useCallback(
+    (withDelay: boolean) => {
+      if (account) {
+        // Backend takes <2sec to get the updated portfolio value after a transaction
+        // This timeout is an interim solution while we're working on a websocket that'll ping the client when connected account gets changes
+        // TODO(WEB-3131): remove this timeout after websocket is implemented
+        setTimeout(
+          () => {
+            prefetchPortfolioBalances({ variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS } })
+            setHasUnfetchedBalances(false)
+          },
+          withDelay ? ms('3.5s') : 0
+        )
+      }
+    },
+    [account, prefetchPortfolioBalances, setHasUnfetchedBalances]
+  )
 
   const prevAccount = usePrevious(account)
 
@@ -62,7 +68,7 @@ export default function PrefetchBalancesWrapper({
       // The parent configures whether these conditions should trigger an immediate fetch,
       // if not, we set a flag to fetch on next hover.
       if (shouldFetchOnAccountUpdate) {
-        fetchBalances()
+        fetchBalances(true)
       } else {
         setHasUnfetchedBalances(true)
       }
@@ -72,11 +78,11 @@ export default function PrefetchBalancesWrapper({
   // Temporary workaround to fix balances on TDP - this fetches balances if shouldFetchOnAccountUpdate becomes true while hasUnfetchedBalances is true
   // TODO(WEB-3071) remove this logic once balance provider refactor is done
   useEffect(() => {
-    if (hasUnfetchedBalances && shouldFetchOnAccountUpdate) fetchBalances()
+    if (hasUnfetchedBalances && shouldFetchOnAccountUpdate) fetchBalances(true)
   }, [fetchBalances, hasUnfetchedBalances, shouldFetchOnAccountUpdate])
 
   const onHover = useCallback(() => {
-    if (hasUnfetchedBalances) fetchBalances()
+    if (hasUnfetchedBalances) fetchBalances(false)
   }, [fetchBalances, hasUnfetchedBalances])
 
   return (

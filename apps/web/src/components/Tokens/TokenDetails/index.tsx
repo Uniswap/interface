@@ -5,10 +5,8 @@ import { Trace } from 'analytics'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
-import { Field } from 'components/swap/constants'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
-import { BreadcrumbNav, BreadcrumbNavLink } from 'components/Tokens/TokenDetails/BreadcrumbNavLink'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
 import TokenDetailsSkeleton, {
@@ -48,11 +46,12 @@ import { ArrowLeft, ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { SwapState } from 'state/swap/SwapContext'
 import styled, { css } from 'styled-components'
-import { CopyContractAddress, EllipsisStyle } from 'theme/components'
-import { isAddress, shortenAddress } from 'utils'
+import { EllipsisStyle } from 'theme/components'
+import { isAddress } from 'utils'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
 import BalanceSummary from './BalanceSummary'
+import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentBreadcrumb } from './BreadcrumbNav'
 import { AdvancedPriceChartToggle } from './ChartTypeSelectors/AdvancedPriceChartToggle'
 import ChartTypeSelector from './ChartTypeSelectors/ChartTypeSelector'
 import InvalidTokenDetails from './InvalidTokenDetails'
@@ -95,13 +94,6 @@ const TokenTitle = styled.div<{ isInfoTDPEnabled?: boolean }>`
 const TokenName = styled.span`
   ${EllipsisStyle}
   min-width: 40px;
-`
-// This must be an h1 to match the SEO title, and must be the first heading tag in code.
-const PageTitleText = styled.h1`
-  font-weight: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  color: inherit;
 `
 
 function useOnChainToken(address: string | undefined, skip: boolean) {
@@ -218,15 +210,15 @@ export default function TokenDetails({
   useOnGlobalChainSwitch(navigateToTokenForChain)
 
   const handleCurrencyChange = useCallback(
-    (tokens: Pick<SwapState, Field.INPUT | Field.OUTPUT>) => {
+    (tokens: Pick<SwapState, 'inputCurrencyId' | 'outputCurrencyId'>) => {
       if (
-        addressesAreEquivalent(tokens[Field.INPUT]?.currencyId, address) ||
-        addressesAreEquivalent(tokens[Field.OUTPUT]?.currencyId, address)
+        addressesAreEquivalent(tokens.inputCurrencyId, address) ||
+        addressesAreEquivalent(tokens.outputCurrencyId, address)
       ) {
         return
       }
 
-      const newDefaultTokenID = tokens[Field.OUTPUT]?.currencyId ?? tokens[Field.INPUT]?.currencyId
+      const newDefaultTokenID = tokens.outputCurrencyId ?? tokens.inputCurrencyId
       startTokenTransition(() =>
         navigate(
           getTokenDetailsURL({
@@ -236,9 +228,7 @@ export default function TokenDetails({
             inputAddress:
               // If only one token was selected before we navigate, then it was the default token and it's being replaced.
               // On the new page, the *new* default token becomes the output, and we don't have another option to set as the input token.
-              tokens[Field.INPUT] && tokens[Field.INPUT]?.currencyId !== newDefaultTokenID
-                ? tokens[Field.INPUT]?.currencyId
-                : null,
+              tokens.inputCurrencyId !== newDefaultTokenID ? tokens.inputCurrencyId : null,
             isInfoExplorePageEnabled,
           })
         )
@@ -277,29 +267,18 @@ export default function TokenDetails({
         {detailedToken && !isPending ? (
           <LeftPanel>
             {isInfoTDPEnabled ? (
-              <BreadcrumbNav isInfoTDPEnabled>
-                <BreadcrumbNavLink to={`${isInfoExplorePageEnabled ? '/explore' : ''}/tokens/${chain.toLowerCase()}`}>
+              <BreadcrumbNavContainer aria-label="breadcrumb-nav">
+                <BreadcrumbNavLink to={`/explore/tokens/${chain.toLowerCase()}`}>
                   <Trans>Explore</Trans> <ChevronRight size={14} /> <Trans>Tokens</Trans> <ChevronRight size={14} />
                 </BreadcrumbNavLink>{' '}
-                <PageTitleText>{tokenSymbolName}</PageTitleText>{' '}
-                {!detailedToken.isNative && (
-                  <>
-                    (
-                    <CopyContractAddress
-                      address={address}
-                      showTruncatedOnly
-                      truncatedAddress={shortenAddress(address)}
-                    />
-                    )
-                  </>
-                )}
-              </BreadcrumbNav>
+                <CurrentBreadcrumb address={address} currency={detailedToken} />
+              </BreadcrumbNavContainer>
             ) : (
-              <BreadcrumbNav>
+              <BreadcrumbNavContainer aria-label="breadcrumb-nav">
                 <BreadcrumbNavLink to={`${isInfoExplorePageEnabled ? '/explore' : ''}/tokens/${chain.toLowerCase()}`}>
                   <ArrowLeft data-testid="token-details-return-button" size={14} /> Tokens
                 </BreadcrumbNavLink>
-              </BreadcrumbNav>
+              </BreadcrumbNavContainer>
             )}
             <TokenInfoContainer isInfoTDPEnabled={isInfoTDPEnabled} data-testid="token-info-container">
               <TokenNameCell isInfoTDPEnabled={isInfoTDPEnabled}>

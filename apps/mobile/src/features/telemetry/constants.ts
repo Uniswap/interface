@@ -174,6 +174,7 @@ export const enum ElementName {
   EtherscanView = 'etherscan-view',
   Favorite = 'favorite',
   FiatOnRampTokenSelector = 'fiat-on-ramp-token-selector',
+  FiatOnRampAggregatorTokenSelector = 'fiat-on-ramp-aggregator-token-selector',
   FiatOnRampWidgetButton = 'fiat-on-ramp-widget-button',
   FiatOnRampCountryPicker = 'fiat-on-ramp-country-picker',
   GetHelp = 'get-help',

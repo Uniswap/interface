@@ -10,7 +10,13 @@ import { isAndroid } from 'wallet/src/utils/platform'
 import { AnimatedDecimalNumber } from './AnimatedDecimalNumber'
 import { useLineChartPrice, useLineChartRelativeChange } from './usePrice'
 
-export function PriceText({ loading }: { loading: boolean }): JSX.Element {
+export function PriceText({
+  loading,
+  maxWidth,
+}: {
+  loading: boolean
+  maxWidth?: number
+}): JSX.Element {
   const price = useLineChartPrice()
   const colors = useSporeColors()
   const currency = useAppFiatCurrency()
@@ -28,6 +34,7 @@ export function PriceText({ loading }: { loading: boolean }): JSX.Element {
   return (
     <AnimatedDecimalNumber
       decimalPartColor={shouldFadePortfolioDecimals ? colors.neutral3.val : colors.neutral1.val}
+      maxWidth={maxWidth}
       number={price}
       separator={decimalSeparator}
       testID="price-text"

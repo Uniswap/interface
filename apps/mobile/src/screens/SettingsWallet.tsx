@@ -44,6 +44,7 @@ import { useENS } from 'wallet/src/features/ens/useENS'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
+import { useUnitag } from 'wallet/src/features/unitags/hooks'
 import {
   EditAccountAction,
   editAccountActions,
@@ -304,9 +305,7 @@ const renderItemSeparator = (): JSX.Element => <Flex pt="$spacing8" />
 function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()
   const ensName = useENS(ChainId.Mainnet, address)?.name
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
-  // TODO (MOB-2122): GET /address from unitags backend to check for unitag
-  const hasUnitag = false && unitagsFeatureFlagEnabled
+  const hasUnitag = !!useUnitag(address)
 
   const onPressEditProfile = (): void => {
     if (hasUnitag) {

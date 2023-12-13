@@ -6,10 +6,9 @@ import LEDGER_ICON from 'assets/wallets/ledger-icon.svg'
 import METAMASK_ICON from 'assets/wallets/metamask-icon.svg'
 import RABBY_ICON from 'assets/wallets/rabby-icon.svg'
 import TRUST_WALLET_ICON from 'assets/wallets/trustwallet-icon.svg'
+import { EIP6963ProviderDetail } from 'connection/eip6963/types'
 import { Connection, ConnectionType, ProviderInfo } from 'connection/types'
 import { getInjectedMeta } from 'utils/walletMeta'
-
-import { InjectedProviderMap } from './eip6963/providers'
 
 export const getIsInjected = () => Boolean(window.ethereum)
 
@@ -23,12 +22,12 @@ const InjectedWalletTable: { [key in InjectedWalletKey]?: ProviderInfo } = {
 }
 
 /** Returns boolean representing whether the app should still use the deprecated window.ethereum provider, based on eip6963 providers present */
-export function shouldUseDeprecatedInjector(providerMap: InjectedProviderMap): boolean {
+export function shouldUseDeprecatedInjector(providerDetails: readonly EIP6963ProviderDetail[]): boolean {
   if (!window.ethereum) return false
 
   const { name: deprecatedInjectionName } = getInjectedMeta(window.ethereum)
 
-  for (const injector of providerMap.values()) {
+  for (const injector of providerDetails) {
     // Compares window.ethereum flags (isMetaMask) to corresponding flags on eip6963 providers
     if (getInjectedMeta(injector.provider as ExternalProvider).name === deprecatedInjectionName) {
       return false

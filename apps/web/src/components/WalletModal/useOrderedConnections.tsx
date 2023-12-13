@@ -9,20 +9,19 @@ import { useAppSelector } from 'state/hooks'
 import Option from './Option'
 
 function useEIP6963Connections() {
-  const injectedDetailsMap = useInjectedProviderDetails()
+  const eip6963Injectors = useInjectedProviderDetails()
   const eip6963Enabled = useEip6963Enabled()
 
   return useMemo(() => {
     if (!eip6963Enabled) return { eip6963Connections: [], showDeprecatedMessage: false }
 
-    const eip6963Injectors = Array.from(injectedDetailsMap.values())
     const eip6963Connections = eip6963Injectors.flatMap((injector) => eip6963Connection.wrap(injector.info) ?? [])
 
     // Displays ui to activate window.ethereum for edge-case where we detect window.ethereum !== one of the eip6963 providers
-    const showDeprecatedMessage = eip6963Connections.length > 0 && shouldUseDeprecatedInjector(injectedDetailsMap)
+    const showDeprecatedMessage = eip6963Connections.length > 0 && shouldUseDeprecatedInjector(eip6963Injectors)
 
     return { eip6963Connections, showDeprecatedMessage }
-  }, [injectedDetailsMap, eip6963Enabled])
+  }, [eip6963Injectors, eip6963Enabled])
 }
 
 function mergeConnections(connections: Connection[], eip6963Connections: Connection[]) {

@@ -44,6 +44,7 @@ export interface GetQuoteArgs {
   needsWrapIfUniswapX: boolean
   uniswapXForceSyntheticQuotes: boolean
   sendPortionEnabled: boolean
+  gatewayDNSUpdateEnabled: boolean
 }
 
 export type GetQuickQuoteArgs = {

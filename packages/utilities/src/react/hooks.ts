@@ -15,8 +15,6 @@ export function usePrevious<T>(value: T): T | undefined {
   return ref.current
 }
 
-// adapted from https://usehooks.com/useAsync/ but simplified
-// above link contains example on how to add delayed execution if ever needed
 export function useAsyncData<T>(
   asyncCallback: () => Promise<T> | undefined,
   onCancel?: () => void
@@ -25,65 +23,55 @@ export function useAsyncData<T>(
   data: T | undefined
 } {
   const [state, setState] = useState<{
-    data: {
-      res: T | undefined
-      input: () => Promise<T> | undefined
-    }
+    data: T | undefined
     isLoading: boolean
   }>({
-    data: {
-      res: undefined,
-      input: asyncCallback,
-    },
+    data: undefined,
     isLoading: true,
   })
-
-  const isMountedRef = useRef(true)
-
-  useEffect(() => {
-    return () => {
-      isMountedRef.current = false
-    }
-  }, [])
+  const onCancelRef = useRef(onCancel)
+  const lastCompletedAsyncCallbackRef = useRef(asyncCallback)
 
   useEffect(() => {
-    if (!state.isLoading) {
-      setState((currentState) => ({ ...currentState, isLoading: true }))
-    }
-
-    let isCancelled = false
+    let isPending = false
 
     async function runCallback(): Promise<void> {
-      const res = await asyncCallback()
-      // Prevent setting state if the component has unmounted (prevents memory leaks)
-      if (!isMountedRef.current) return
-      // Prevent setting state if the request was cancelled
-      if (isCancelled) return
-      setState({
-        isLoading: false,
-        data: {
-          res,
-          input: asyncCallback,
-        },
-      })
+      isPending = true
+      const data = await asyncCallback()
+      if (isPending) {
+        setState((prevState) => ({ ...prevState, data, isLoading: false }))
+      }
     }
 
-    runCallback().catch(() => undefined)
+    runCallback()
+      .catch(() => {
+        if (isPending) {
+          setState((prevState) => ({ ...prevState, isLoading: false }))
+        }
+      })
+      .finally(() => {
+        isPending = false
+        lastCompletedAsyncCallbackRef.current = asyncCallback
+      })
+
+    const handleCancel = onCancelRef.current
 
     return () => {
-      isCancelled = true
-      onCancel?.()
+      if (!isPending) return
+      isPending = false
+      if (handleCancel) {
+        handleCancel()
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asyncCallback])
 
   return useMemo(() => {
-    if (asyncCallback !== state.data.input) return { isLoading: true, data: undefined }
-
-    return { isLoading: state.isLoading, data: state.data.res }
-  }, [asyncCallback, state.isLoading, state.data])
+    if (asyncCallback !== lastCompletedAsyncCallbackRef.current) {
+      return { isLoading: true, data: undefined }
+    }
+    return state
+  }, [asyncCallback, state])
 }
-
 // modified from https://usehooks.com/useMemoCompare/
 export function useMemoCompare<T>(next: () => T, compare: (a: T | undefined, b: T) => boolean): T {
   // Ref for storing previous value
@@ -98,11 +86,9 @@ export function useMemoCompare<T>(next: () => T, compare: (a: T | undefined, b: 
   // If not equal update previousRef to next value.
   // We only update if not equal so that this hook continues to return
   // the same old value if compare keeps returning true.
-  useEffect(() => {
-    if (!isEqual) {
-      previousRef.current = nextValue
-    }
-  })
+  if (!isEqual || !previous) {
+    previousRef.current = nextValue
+  }
 
   // Finally, if equal then return the previous value if it's set
   return isEqual && previous ? previous : nextValue

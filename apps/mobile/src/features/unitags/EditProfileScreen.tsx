@@ -14,15 +14,14 @@ import { Button, Flex, Icons, Text, useDeviceInsets } from 'ui/src'
 import { iconSizes, imageSizes } from 'ui/src/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
+import { useUnitag } from 'wallet/src/features/unitags/hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
 export function EditProfileScreen({
   route,
 }: UnitagStackScreenProp<UnitagScreens.EditProfile>): JSX.Element {
-  // TODO (MOB-1314): add backend call to get unitag from address
-  const unitag = 'placeholder'
-
   const { address } = route.params
+  const unitag = useUnitag(address)
   const { name: ensName } = useENS(ChainId.Mainnet, address)
   const navigation = useNavigation()
   const insets = useDeviceInsets()

@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { SharedValue, useDerivedValue } from 'react-native-reanimated'
 import {
   useLineChart,
@@ -44,10 +45,14 @@ export function useLineChartPrice(): ValueAndFormatted {
       currencyInfo.symbol
     )
   })
-  return {
-    value: price,
-    formatted: priceFormatted,
-  }
+
+  return useMemo(
+    () => ({
+      value: price,
+      formatted: priceFormatted,
+    }),
+    [price, priceFormatted]
+  )
 }
 
 /**

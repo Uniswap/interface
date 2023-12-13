@@ -10,7 +10,7 @@ import { textFadeIn } from 'theme/styles'
 
 import { LoadingBubble } from '../loading'
 import { AboutContainer, AboutHeader } from './About'
-import { BreadcrumbNav, BreadcrumbNavLink } from './BreadcrumbNavLink'
+import { BreadcrumbNavContainer, BreadcrumbNavLink } from './BreadcrumbNav'
 import { ChartContainer } from './ChartSection'
 import { StatPair, StatsWrapper, StatWrapper } from './StatsSection'
 
@@ -236,20 +236,20 @@ export default function TokenDetailsSkeleton() {
   return (
     <LeftPanel>
       {isInfoTDPEnabled ? (
-        <BreadcrumbNav isInfoTDPEnabled>
+        <BreadcrumbNavContainer isInfoTDPEnabled>
           <BreadcrumbNavLink to={`${isInfoExplorePageEnabled ? '/explore' : ''}/tokens/${chainName}`}>
             <Trans>Explore</Trans> <ChevronRight size={14} /> <Trans>Tokens</Trans> <ChevronRight size={14} />
           </BreadcrumbNavLink>{' '}
           <NavBubble />
-        </BreadcrumbNav>
+        </BreadcrumbNavContainer>
       ) : (
-        <BreadcrumbNav>
+        <BreadcrumbNavContainer>
           <BreadcrumbNavLink
             to={(isInfoExplorePageEnabled ? '/explore' : '') + (chainName ? `/tokens/${chainName}` : `/tokens`)}
           >
             <ArrowLeft size={14} /> Tokens
           </BreadcrumbNavLink>
-        </BreadcrumbNav>
+        </BreadcrumbNavContainer>
       )}
       <TokenInfoContainer>
         <TokenNameCell>

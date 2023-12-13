@@ -89,6 +89,12 @@
   <string>$(PRODUCT_NAME) Wallet needs access to your Camera Roll to choose an avatar for your username</string>
   <key>NSFaceIDUsageDescription</key>
 	<string>Enabling Face ID helps $(PRODUCT_NAME) Wallet keep your assets secure.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>$(PRODUCT_NAME) Wallet does not require access to your location.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>$(PRODUCT_NAME) Wallet does not require access to your location.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>$(PRODUCT_NAME) Wallet does not require access to the microphone.</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
 		<key>iCloud.Uniswap</key>

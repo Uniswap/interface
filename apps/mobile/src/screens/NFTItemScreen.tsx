@@ -297,6 +297,7 @@ function NFTItemScreenContents({
                 <Flex gap="$spacing12" px="$spacing24">
                   {listingPrice?.value ? (
                     <AssetMetadata
+                      color={accentTextColor}
                       title={t('Current price')}
                       valueComponent={
                         <PriceAmount
@@ -310,6 +311,7 @@ function NFTItemScreenContents({
                   ) : null}
                   {lastSaleData?.price?.value ? (
                     <AssetMetadata
+                      color={accentTextColor}
                       title={t('Last sale price')}
                       valueComponent={
                         <PriceAmount
@@ -324,6 +326,7 @@ function NFTItemScreenContents({
 
                   {owner && (
                     <AssetMetadata
+                      color={accentTextColor}
                       title={t('Owned by')}
                       valueComponent={
                         <TouchableArea
@@ -365,14 +368,17 @@ function NFTItemScreenContents({
 function AssetMetadata({
   title,
   valueComponent,
+  color,
 }: {
   title: string
   valueComponent: JSX.Element
+  color: string
 }): JSX.Element {
+  const colors = useSporeColors()
   return (
     <Flex row alignItems="center" justifyContent="space-between" pl="$spacing2">
       <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" maxWidth="40%">
-        <Text color="$neutral2" variant="body2">
+        <Text style={{ color: color ?? colors.neutral2.get() }} variant="body2">
           {title}
         </Text>
       </Flex>

@@ -20,6 +20,8 @@ afterEach(() => {
 
   // @ts-ignore
   EIP6963_PROVIDER_MANAGER._map.clear() // reset the map after each test
+  // @ts-ignore
+  EIP6963_PROVIDER_MANAGER._list.length = 0 // reset the list after each test
 })
 
 function announceProvider(rdns: string, provider: MockEIP1193Provider) {

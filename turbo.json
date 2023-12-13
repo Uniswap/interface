@@ -1,6 +1,9 @@
 {
   "baseBranch": "origin/main",
   "pipeline": {
+    "web:ignore-build": {
+      "comment": "this is used by vercel to cancel builds if not web"
+    },
     "prepare": {
       "inputs": [
         "package.json"

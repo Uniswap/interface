@@ -1,6 +1,36 @@
 """This directive allows results to be deferred during execution"""
 directive @defer on FIELD
 
+"""
+Tells the service this field/object has access authorized by a Cognito User Pools token.
+"""
+directive @aws_cognito_user_pools(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service which subscriptions will be published to when this mutation is
+called. This directive is deprecated use @aws_susbscribe directive instead.
+"""
+directive @aws_publish(
+  """
+  List of subscriptions which will be published to when this mutation is called.
+  """
+  subscriptions: [String]
+) on FIELD_DEFINITION
+
+"""Directs the schema to enforce authorization on a field"""
+directive @aws_auth(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Lambda Authorizer.
+"""
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
+
 """Tells the service which mutation triggers this subscription."""
 directive @aws_subscribe(
   """
@@ -15,44 +45,14 @@ Tells the service this field/object has access authorized by an OIDC token.
 directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
 """
-Tells the service which subscriptions will be published to when this mutation is
-called. This directive is deprecated use @aws_susbscribe directive instead.
+Tells the service this field/object has access authorized by sigv4 signing.
 """
-directive @aws_publish(
-  """
-  List of subscriptions which will be published to when this mutation is called.
-  """
-  subscriptions: [String]
-) on FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by a Lambda Authorizer.
-"""
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
+directive @aws_iam on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service this field/object has access authorized by an API key.
 """
 directive @aws_api_key on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by a Cognito User Pools token.
-"""
-directive @aws_cognito_user_pools(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""Directs the schema to enforce authorization on a field"""
-directive @aws_auth(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on FIELD_DEFINITION
 
 union ActivityDetails = TransactionDetails | SwapOrderDetails
 
@@ -729,9 +729,24 @@ type Portfolio {
   assetActivities(page: Int, pageSize: Int, includeOffChain: Boolean, chains: [Chain!], _fs: AssetActivitySwitch): [AssetActivity]
 }
 
+"""  Specify how the portfolio value should be calculated for each `ownerAddress`.
+"""
+input PortfolioValueModifier {
+  ownerAddress: String!
+  tokenIncludeOverrides: [ContractInput!]
+  tokenExcludeOverrides: [ContractInput!]
+  includeSmallBalances: Boolean
+  includeSpamTokens: Boolean
+}
+
 enum PriceSource {
   SUBGRAPH_V2
   SUBGRAPH_V3
+}
+
+enum ProtocolVersion {
+  V2
+  V3
 }
 
 type PushNotification {
@@ -743,6 +758,8 @@ type PushNotification {
 }
 
 type Query {
+  """  returns top pools by total value locked"""
+  topV3Pools(chain: Chain!, first: Int!, tvlCursor: Float): [V3Pool!]
   convert(fromAmount: AmountInput!, toCurrency: Currency!): Amount
   tokens(contracts: [ContractInput!]!): [Token]
 
@@ -754,7 +771,7 @@ type Query {
   token(chain: Chain!, address: String): Token
   tokenProjects(contracts: [ContractInput!]!): [TokenProject]
   searchTokens(searchQuery: String!, chains: [Chain!]): [Token]
-  portfolios(ownerAddresses: [String!]!, chains: [Chain!], lookupTokens: [ContractInput!]): [Portfolio]
+  portfolios(ownerAddresses: [String!]!, chains: [Chain!], lookupTokens: [ContractInput!], valueModifiers: [PortfolioValueModifier!]): [Portfolio]
   topTokens(chain: Chain, page: Int, pageSize: Int, orderBy: TokenSortableField): [Token]
   topCollections(chains: [Chain!], orderBy: CollectionSortableField, duration: HistoryDuration, after: String, first: Int, cursor: String, limit: Int): NftCollectionConnection
   nftAssets(chain: Chain, address: String!, orderBy: NftAssetSortableField, asc: Boolean, filter: NftAssetsFilterInput, after: String, first: Int, before: String, last: Int): NftAssetConnection
@@ -794,6 +811,7 @@ type SwapOrderDetails {
   inputTokenQuantity: String!
   outputToken: Token!
   outputTokenQuantity: String!
+  expiry: Int!
 }
 
 enum SwapOrderStatus {
@@ -863,6 +881,7 @@ type TokenBalance {
   ownerAddress: String!
   token: Token
   tokenProjectMarket: TokenProjectMarket
+  isHidden: Boolean
 }
 
 input TokenInput {
@@ -878,6 +897,7 @@ type TokenMarket {
   price: Amount
   priceSource: PriceSource!
   totalValueLocked: Amount
+  fullyDilutedValuation: Amount
   volume(duration: HistoryDuration!): Amount
   pricePercentChange(duration: HistoryDuration!): Amount
   priceHistory(duration: HistoryDuration!): [TimestampedAmount]
@@ -1046,5 +1066,21 @@ enum TransactionType {
   UNKNOWN
   UNSTAKE
   WITHDRAW
+}
+
+type V3Pool {
+  id: ID!
+  protocolVersion: ProtocolVersion!
+  chain: Chain!
+  address: String!
+  createdAtTimestamp: Int
+  totalLiquidity: Amount
+  feeTier: Float
+  token0: Token
+  token0Supply: Float
+  token1: Token
+  token1Supply: Float
+  txCount: Int
+  cumulativeVolume(duration: HistoryDuration): Amount
 }
 

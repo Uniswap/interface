@@ -13478,17 +13478,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:13.13.5":
-  version: 13.13.5
-  resolution: "@types/node@npm:13.13.5"
-  checksum: 874bb45920a33d18619c19687425628ae536a28d3342c781f5c84e0ac41f3f6cbb5afda1b2d366e232a7862cbf44ba559c1775fc9db875388148d7f893f64ad0
-  languageName: node
-  linkType: hard
-
 "@types/node@npm:16.9.1":
   version: 16.9.1
   resolution: "@types/node@npm:16.9.1"
   checksum: 41afcf183a22d59323a0199dd7e0f46591247f45fc08a4434edb26d56dc279ae4fdb80f37989ddd7a0f45e3857c4933e6e82057ede09c5a829f77e373e680375
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:18.16.0":
+  version: 18.16.0
+  resolution: "@types/node@npm:18.16.0"
+  checksum: 63e0042136663b9e85ce503a4c65406cc6621fdba63ea66c74b4b1364a9aa9bdb57cadcb76696abab177f38a819b0fa6ace9e7f1647dcb990aedb1b4bd01012f
   languageName: node
   linkType: hard
 
@@ -14515,7 +14515,7 @@ __metadata:
     "@types/lingui__react": 2.8.3
     "@types/ms": 0.7.31
     "@types/multicodec": 1.0.0
-    "@types/node": 13.13.5
+    "@types/node": 18.16.0
     "@types/qs": 6.9.2
     "@types/react": ^18.0.15
     "@types/react-dom": ^18.0.6
@@ -14819,7 +14819,7 @@ __metadata:
     ethers: 5.7.2
     expo: 48.0.19
     expo-av: 13.4.1
-    expo-barcode-scanner: 12.3.2
+    expo-barcode-scanner: 12.7.0
     expo-blur: 12.2.2
     expo-clipboard: 4.1.2
     expo-haptics: 12.0.1
@@ -20623,7 +20623,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"confusing-browser-globals@npm:^1.0.11":
+"confusing-browser-globals@npm:1.0.11, confusing-browser-globals@npm:^1.0.11":
   version: 1.0.11
   resolution: "confusing-browser-globals@npm:1.0.11"
   checksum: 3afc635abd37e566477f610e7978b15753f0e84025c25d49236f1f14d480117185516bdd40d2a2167e6bed8048641a9854964b9c067e3dcdfa6b5d0ad3c3a5ef
@@ -25394,14 +25394,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-barcode-scanner@npm:12.3.2":
-  version: 12.3.2
-  resolution: "expo-barcode-scanner@npm:12.3.2"
+"expo-barcode-scanner@npm:12.7.0":
+  version: 12.7.0
+  resolution: "expo-barcode-scanner@npm:12.7.0"
   dependencies:
-    expo-image-loader: ~4.1.0
+    expo-image-loader: ~4.4.0
   peerDependencies:
     expo: "*"
-  checksum: b07831a8b7205c838be54268ac927ca4ce431065f55f551d37e9957e3b2bae0c6b208fee278d846a9f06d9cd9e71d54f3821818c80327fa8387a7b56ee1291af
+  checksum: 7672d68761eeb401188da5c5c85242f93940aa26acd2f989fb7af1a82e91264449c872376fdbe0acae07fbe8adb8dc712576c02ad166f36320664f0b605c86ed
   languageName: node
   linkType: hard
 
@@ -25489,12 +25489,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-image-loader@npm:~4.1.0":
-  version: 4.1.1
-  resolution: "expo-image-loader@npm:4.1.1"
+"expo-image-loader@npm:~4.4.0":
+  version: 4.4.0
+  resolution: "expo-image-loader@npm:4.4.0"
   peerDependencies:
     expo: "*"
-  checksum: 6ea7d49148d9126a79f00b1e9a2e648884d208daf8ac54c663eb941a7524d229aa907d6d45704598168c7d1efcb891bdc0bd91f077a53d3a270b18c269d43d99
+  checksum: e872e45a807cd867c5a8e8fc5665de33de5d467ea533222037b09b70268d0166012769bfcd340ab8922dbf826a3e4f0498ff73973ad62f21134764b4bc8b1f5a
   languageName: node
   linkType: hard
 
@@ -46668,6 +46668,7 @@ __metadata:
     "@types/react": ^18.0.15
     "@typescript-eslint/eslint-plugin": 5.59.2
     concurrently: ^8.0.1
+    confusing-browser-globals: 1.0.11
     danger: 11.2.6
     dotenv-cli: ^7.0.0
     eslint: 8.44.0

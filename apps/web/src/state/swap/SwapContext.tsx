@@ -9,12 +9,8 @@ import { queryParametersToSwapState, SwapInfo, useDerivedSwapInfo } from './hook
 export interface SwapState {
   readonly independentField: Field
   readonly typedValue: string
-  readonly [Field.INPUT]: {
-    readonly currencyId?: string | null
-  }
-  readonly [Field.OUTPUT]: {
-    readonly currencyId?: string | null
-  }
+  inputCurrencyId?: string | null
+  outputCurrencyId?: string | null
   // the typed recipient address or ENS name, or null if swap should go to sender
   readonly recipient: string | null
 }
@@ -24,12 +20,8 @@ export const initialSwapState: SwapState = queryParametersToSwapState(parsedQuer
 type SwapContextType = {
   swapState: SwapState
   prefilledState: {
-    INPUT: {
-      currencyId?: string | null
-    }
-    OUTPUT: {
-      currencyId?: string | null
-    }
+    inputCurrencyId?: string | null
+    outputCurrencyId?: string | null
   }
   derivedSwapInfo: SwapInfo
   setSwapState: Dispatch<SetStateAction<SwapState>>
@@ -55,12 +47,8 @@ export const EMPTY_DERIVED_SWAP_INFO: SwapInfo = Object.freeze({
 export const SwapContext = createContext<SwapContextType>({
   swapState: initialSwapState,
   prefilledState: {
-    INPUT: {
-      currencyId: undefined,
-    },
-    OUTPUT: {
-      currencyId: undefined,
-    },
+    inputCurrencyId: undefined,
+    outputCurrencyId: undefined,
   },
   chainId: ChainId.MAINNET,
   derivedSwapInfo: EMPTY_DERIVED_SWAP_INFO,
@@ -88,8 +76,8 @@ export function SwapContextProvider({
 
   const prefilledState = useMemo(
     () => ({
-      [Field.INPUT]: { currencyId: initialInputCurrencyId },
-      [Field.OUTPUT]: { currencyId: initialOutputCurrencyId },
+      inputCurrencyId: initialInputCurrencyId,
+      outputCurrencyId: initialOutputCurrencyId,
     }),
     [initialInputCurrencyId, initialOutputCurrencyId]
   )

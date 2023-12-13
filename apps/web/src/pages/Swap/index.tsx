@@ -3,7 +3,7 @@ import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
-import { Field, SwapTab } from 'components/swap/constants'
+import { SwapTab } from 'components/swap/constants'
 import { PageWrapper, SwapWrapper } from 'components/swap/styled'
 import SwapHeader from 'components/swap/SwapHeader'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
@@ -50,8 +50,8 @@ export default function SwapPage({ className }: { className?: string }) {
           className={className}
           chainId={supportedChainId ?? ChainId.MAINNET}
           disableTokenInputs={supportedChainId === undefined}
-          initialInputCurrencyId={parsedSwapState?.[Field.INPUT]?.currencyId}
-          initialOutputCurrencyId={parsedSwapState?.[Field.OUTPUT]?.currencyId}
+          initialInputCurrencyId={parsedSwapState?.inputCurrencyId}
+          initialOutputCurrencyId={parsedSwapState?.outputCurrencyId}
         />
         <NetworkAlert />
       </PageWrapper>
@@ -77,7 +77,7 @@ export function Swap({
 }: {
   className?: string
   chainId?: ChainId
-  onCurrencyChange?: (selected: Pick<SwapState, Field.INPUT | Field.OUTPUT>) => void
+  onCurrencyChange?: (selected: Pick<SwapState, 'inputCurrencyId' | 'outputCurrencyId'>) => void
   disableTokenInputs?: boolean
   initialInputCurrencyId?: string | null
   initialOutputCurrencyId?: string | null

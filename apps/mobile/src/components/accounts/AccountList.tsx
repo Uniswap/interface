@@ -97,15 +97,18 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
 
   const hasViewOnlyAccounts = viewOnlyAccounts.length > 0
 
-  const renderAccountCardItem = (item: AccountWithPortfolioValue): JSX.Element => (
-    <AccountCardItem
-      key={item.account.address}
-      address={item.account.address}
-      isPortfolioValueLoading={item.isPortfolioValueLoading}
-      isViewOnly={item.account.type === AccountType.Readonly}
-      portfolioValue={item.portfolioValue}
-      onPress={onPress}
-    />
+  const renderAccountCardItem = useCallback(
+    (item: AccountWithPortfolioValue): JSX.Element => (
+      <AccountCardItem
+        key={item.account.address}
+        address={item.account.address}
+        isPortfolioValueLoading={item.isPortfolioValueLoading}
+        isViewOnly={item.account.type === AccountType.Readonly}
+        portfolioValue={item.portfolioValue}
+        onPress={onPress}
+      />
+    ),
+    [onPress]
   )
 
   return (
