@@ -1,5 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
@@ -8,15 +8,22 @@ import { PageWrapper, SwapWrapper } from 'components/swap/styled'
 import SwapHeader from 'components/swap/SwapHeader'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { asSupportedChain } from 'constants/chains'
+import { useCurrency } from 'hooks/Tokens'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { ReactNode, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { isPreviewTrade } from 'state/routing/utils'
-import { queryParametersToSwapState } from 'state/swap/hooks'
-import { SwapContext, SwapContextProvider, SwapState } from 'state/swap/SwapContext'
+import { queryParametersToCurrencyState } from 'state/swap/hooks'
+import {
+  CurrencyState,
+  SwapAndLimitContext,
+  SwapAndLimitContextProvider,
+  SwapContextProvider,
+} from 'state/swap/SwapContext'
 
 import { useIsDarkMode } from '../../theme/components/ThemeToggle'
+import { LimitForm } from './Limit/LimitForm'
 import { SwapForm } from './SwapForm'
 
 export function getIsReviewableQuote(
@@ -32,26 +39,29 @@ export function getIsReviewableQuote(
 }
 
 export default function SwapPage({ className }: { className?: string }) {
-  const { chainId: connectedChainId } = useWeb3React()
-
   const location = useLocation()
 
+  const { chainId: connectedChainId } = useWeb3React()
   const supportedChainId = asSupportedChain(connectedChainId)
-  const parsedQs = useParsedQueryString()
+  const chainId = supportedChainId || ChainId.MAINNET
 
-  const parsedSwapState = useMemo(() => {
-    return queryParametersToSwapState(parsedQs)
+  const parsedQs = useParsedQueryString()
+  const parsedCurrencyState = useMemo(() => {
+    return queryParametersToCurrencyState(parsedQs)
   }, [parsedQs])
+
+  const initialInputCurrency = useCurrency(parsedCurrencyState.inputCurrencyId, chainId)
+  const initialOutputCurrency = useCurrency(parsedCurrencyState.outputCurrencyId, chainId)
 
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <PageWrapper>
         <Swap
           className={className}
-          chainId={supportedChainId ?? ChainId.MAINNET}
+          chainId={chainId}
           disableTokenInputs={supportedChainId === undefined}
-          initialInputCurrencyId={parsedSwapState?.inputCurrencyId}
-          initialOutputCurrencyId={parsedSwapState?.outputCurrencyId}
+          initialInputCurrency={initialInputCurrency}
+          initialOutputCurrency={initialOutputCurrency}
         />
         <NetworkAlert />
       </PageWrapper>
@@ -69,38 +79,41 @@ export default function SwapPage({ className }: { className?: string }) {
  */
 export function Swap({
   className,
-  initialInputCurrencyId,
-  initialOutputCurrencyId,
+  initialInputCurrency,
+  initialOutputCurrency,
   chainId,
   onCurrencyChange,
   disableTokenInputs = false,
 }: {
   className?: string
   chainId?: ChainId
-  onCurrencyChange?: (selected: Pick<SwapState, 'inputCurrencyId' | 'outputCurrencyId'>) => void
+  onCurrencyChange?: (selected: CurrencyState) => void
   disableTokenInputs?: boolean
-  initialInputCurrencyId?: string | null
-  initialOutputCurrencyId?: string | null
+  initialInputCurrency?: Currency
+  initialOutputCurrency?: Currency
 }) {
   const isDark = useIsDarkMode()
 
   return (
-    <SwapContextProvider
+    <SwapAndLimitContextProvider
       chainId={chainId}
-      initialInputCurrencyId={initialInputCurrencyId}
-      initialOutputCurrencyId={initialOutputCurrencyId}
+      initialInputCurrency={initialInputCurrency}
+      initialOutputCurrency={initialOutputCurrency}
     >
-      <SwapContext.Consumer>
+      {/* TODO: Move SwapContextProvider inside Swap tab ONLY after SwapHeader removes references to trade / autoSlippage */}
+      <SwapAndLimitContext.Consumer>
         {({ currentTab }) => (
-          <SwapWrapper isDark={isDark} className={className} id="swap-page">
-            <SwapHeader />
-            {/* todo: build Limit UI */}
-            {currentTab === SwapTab.Swap ? (
-              <SwapForm onCurrencyChange={onCurrencyChange} disableTokenInputs={disableTokenInputs} />
-            ) : undefined}
-          </SwapWrapper>
+          <SwapContextProvider>
+            <SwapWrapper isDark={isDark} className={className} id="swap-page">
+              <SwapHeader />
+              {currentTab === SwapTab.Swap && (
+                <SwapForm onCurrencyChange={onCurrencyChange} disableTokenInputs={disableTokenInputs} />
+              )}
+              {currentTab === SwapTab.Limit && <LimitForm />}
+            </SwapWrapper>
+          </SwapContextProvider>
         )}
-      </SwapContext.Consumer>
-    </SwapContextProvider>
+      </SwapAndLimitContext.Consumer>
+    </SwapAndLimitContextProvider>
   )
 }

@@ -14,12 +14,13 @@ import { UNSUPPORTED_METADATA_CHAINS } from '../constants'
 import { TokenSortMethod } from '../state'
 import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow'
 
-export const StatWrapper = styled.div`
+export const StatWrapper = styled.div<{ isInfoTDPEnabled?: boolean }>`
   color: ${({ theme }) => theme.neutral2};
   font-size: 14px;
   min-width: 121px;
   flex: 1;
-  padding: 24px 0px;
+  padding-top: 24px;
+  padding-bottom: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '0px' : '24px')};
 
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
     min-width: 168px;
@@ -66,9 +67,10 @@ function Stat({
   description?: ReactNode
 }) {
   const { formatNumber } = useFormatter()
+  const isInfoTDPEnabled = useInfoTDPEnabled()
 
   return (
-    <StatWrapper data-cy={`${dataCy}`}>
+    <StatWrapper data-cy={`${dataCy}`} isInfoTDPEnabled={isInfoTDPEnabled}>
       <MouseoverTooltip text={description}>{title}</MouseoverTooltip>
       <StatPrice>
         {formatNumber({

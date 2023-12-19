@@ -717,4 +717,15 @@ export const migrations = {
 
     return newState
   },
+
+  55: function addBehaviorHistory(state: any) {
+    const newState = { ...state }
+
+    newState.behaviorHistory = {
+      hasViewedReviewScreen: false,
+      hasSubmittedHoldToSwap: false,
+    }
+
+    return newState
+  },
 }

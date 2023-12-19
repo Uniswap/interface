@@ -1,8 +1,8 @@
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { useActivePopups } from 'state/application/hooks'
 import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
-import { useAccountDrawer } from '../AccountDrawer'
 import { AutoColumn } from '../Column'
 import ClaimPopup from './ClaimPopup'
 import PopupItem from './PopupItem'

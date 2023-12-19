@@ -16,6 +16,7 @@ import { useOrder } from 'state/signatures/hooks'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled, { css } from 'styled-components'
 import { ExternalLink } from 'theme/components'
+import { AnimationType } from 'theme/components/FadePresence'
 import { ThemedText } from 'theme/components/text'
 import { getExplorerLink } from 'utils/getExplorerLink'
 import { ExplorerDataType } from 'utils/getExplorerLink'
@@ -24,7 +25,6 @@ import { slideInAnimation, slideOutAnimation } from '../swap/PendingModalContent
 import {
   AnimatedEntranceConfirmationIcon,
   AnimatedEntranceSubmittedIcon,
-  AnimationType,
   LoadingIndicatorOverlay,
   LogoContainer,
 } from '../swap/PendingModalContent/Logos'

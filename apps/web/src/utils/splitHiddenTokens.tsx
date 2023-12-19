@@ -2,7 +2,7 @@ import { PortfolioTokenBalancePartsFragment, TokenStandard } from 'graphql/data/
 
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
-interface SplitOptions {
+export interface SplitOptions {
   hideSmallBalances?: boolean
   hideSpam?: boolean
 }

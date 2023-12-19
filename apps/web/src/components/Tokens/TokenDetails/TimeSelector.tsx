@@ -1,8 +1,12 @@
 import { TimePeriod } from 'graphql/data/util'
+import { atom } from 'jotai'
+import { useAtomValue } from 'jotai/utils'
 import styled from 'styled-components'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
+
+export const refitChartContentAtom = atom<(() => void) | undefined>(undefined)
 
 const TimeOptionsWrapper = styled.div`
   display: flex;
@@ -52,11 +56,23 @@ export default function TimePeriodSelector({
   timePeriod: TimePeriod
   onChangeTimePeriod: (t: TimePeriod) => void
 }) {
+  const refitChartContent = useAtomValue(refitChartContentAtom)
+
   return (
     <TimeOptionsWrapper>
       <TimeOptionsContainer>
         {ORDERED_TIMES.map((time) => (
-          <TimeButton key={DISPLAYS[time]} active={timePeriod === time} onClick={() => onChangeTimePeriod(time)}>
+          <TimeButton
+            key={DISPLAYS[time]}
+            active={timePeriod === time}
+            onClick={() => {
+              if (timePeriod === time) {
+                refitChartContent?.()
+              } else {
+                onChangeTimePeriod(time)
+              }
+            }}
+          >
             {DISPLAYS[time]}
           </TimeButton>
         ))}

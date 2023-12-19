@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
+import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
@@ -10,7 +11,6 @@ import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
 import TokenDetailsSkeleton, {
-  Hr,
   LeftPanel,
   RightPanel,
   TokenDetailsLayout,
@@ -38,24 +38,28 @@ import {
   supportedChainIdFromGQLChain,
   TimePeriod,
 } from 'graphql/data/util'
+import { useCurrency } from 'hooks/Tokens'
+import { useColor } from 'hooks/useColor'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import { Swap } from 'pages/Swap'
 import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft, ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import { SwapState } from 'state/swap/SwapContext'
-import styled, { css } from 'styled-components'
+import { CurrencyState } from 'state/swap/SwapContext'
+import styled, { css, useTheme } from 'styled-components'
 import { EllipsisStyle } from 'theme/components'
 import { isAddress } from 'utils'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
+import { ActivitySection } from './ActivitySection'
 import BalanceSummary from './BalanceSummary'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentBreadcrumb } from './BreadcrumbNav'
 import { AdvancedPriceChartToggle } from './ChartTypeSelectors/AdvancedPriceChartToggle'
 import ChartTypeSelector from './ChartTypeSelectors/ChartTypeSelector'
 import InvalidTokenDetails from './InvalidTokenDetails'
 import MobileBalanceSummaryFooter from './MobileBalanceSummaryFooter'
+import { Hr } from './shared'
 import { TokenDescription } from './TokenDescription'
 
 const TokenSymbol = styled.span<{ isInfoTDPEnabled?: boolean }>`
@@ -95,6 +99,13 @@ const TokenName = styled.span`
   ${EllipsisStyle}
   min-width: 40px;
 `
+const DividerLine = styled(Hr)`
+  margin-top: 40px;
+  margin-bottom: 40px;
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    display: none;
+  }
+`
 
 function useOnChainToken(address: string | undefined, skip: boolean) {
   const token = useTokenFromActiveNetwork(skip || !address ? undefined : address)
@@ -129,6 +140,16 @@ function useRelevantToken(
     [onChainToken, queryToken]
   )
 }
+
+function getCurrencyURLAddress(currency?: Currency): string {
+  if (!currency) return ''
+
+  if (currency.isToken) {
+    return currency.address
+  }
+  return NATIVE_CHAIN_ID
+}
+
 export type MultiChainMap = { [chain: string]: { address?: string; balance?: PortfolioTokenBalancePartsFragment } }
 type TokenDetailsProps = {
   urlAddress?: string
@@ -158,6 +179,9 @@ export default function TokenDetails({
 
   const { account, chainId: connectedChainId } = useWeb3React()
   const pageChainId = supportedChainIdFromGQLChain(chain)
+  const inputCurrency = useCurrency(inputTokenAddress, pageChainId)
+  const outputCurrency = useCurrency(address === NATIVE_CHAIN_ID ? 'ETH' : address, pageChainId)
+
   const tokenQueryData = tokenQuery.token
   const { data: balanceQuery } = useCachedPortfolioBalancesQuery({ account })
   const multiChainMap = useMemo(() => {
@@ -181,6 +205,9 @@ export default function TokenDetails({
   const tokenWarning = address ? checkWarning(address) : null
   const isBlockedToken = tokenWarning?.canProceed === false
   const navigate = useNavigate()
+
+  const theme = useTheme()
+  const extractedColor = useColor(detailedToken ?? undefined, theme.surface2, theme.darkMode)
 
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
   const isInfoTDPEnabled = useInfoTDPEnabled()
@@ -210,25 +237,29 @@ export default function TokenDetails({
   useOnGlobalChainSwitch(navigateToTokenForChain)
 
   const handleCurrencyChange = useCallback(
-    (tokens: Pick<SwapState, 'inputCurrencyId' | 'outputCurrencyId'>) => {
+    (tokens: CurrencyState) => {
+      const inputCurrencyURLAddress = getCurrencyURLAddress(tokens.inputCurrency)
+      const outputCurrencyURLAddress = getCurrencyURLAddress(tokens.outputCurrency)
       if (
-        addressesAreEquivalent(tokens.inputCurrencyId, address) ||
-        addressesAreEquivalent(tokens.outputCurrencyId, address)
+        addressesAreEquivalent(inputCurrencyURLAddress, address) ||
+        addressesAreEquivalent(outputCurrencyURLAddress, address)
       ) {
         return
       }
 
-      const newDefaultTokenID = tokens.outputCurrencyId ?? tokens.inputCurrencyId
+      const newDefaultToken = tokens.outputCurrency ?? tokens.inputCurrency
+      if (!newDefaultToken) return
+
       startTokenTransition(() =>
         navigate(
           getTokenDetailsURL({
             // The function falls back to "NATIVE" if the address is null
-            address: newDefaultTokenID === 'ETH' ? null : newDefaultTokenID,
+            address: newDefaultToken.isNative ? null : newDefaultToken.address,
             chain,
             inputAddress:
               // If only one token was selected before we navigate, then it was the default token and it's being replaced.
               // On the new page, the *new* default token becomes the output, and we don't have another option to set as the input token.
-              tokens.inputCurrencyId !== newDefaultTokenID ? tokens.inputCurrencyId : null,
+              tokens.inputCurrency && tokens.inputCurrency !== newDefaultToken ? inputCurrencyURLAddress : null,
             isInfoExplorePageEnabled,
           })
         )
@@ -323,18 +354,29 @@ export default function TokenDetails({
               timePeriod={timePeriod}
               onChangeTimePeriod={onChangeTimePeriod}
               tokenPriceQuery={tokenPriceQuery}
+              extractedColor={extractedColor}
             />
 
             <StatsSection chainId={pageChainId} address={address} tokenQueryData={tokenQueryData} />
-            <Hr />
-            <AboutSection
-              address={address}
-              chainId={pageChainId}
-              description={tokenQueryData?.project?.description}
-              homepageUrl={tokenQueryData?.project?.homepageUrl}
-              twitterName={tokenQueryData?.project?.twitterName}
-            />
-            {!detailedToken.isNative && <AddressSection address={address} />}
+            {!isInfoTDPEnabled && (
+              <>
+                <Hr />
+                <AboutSection
+                  address={address}
+                  chainId={pageChainId}
+                  description={tokenQueryData?.project?.description}
+                  homepageUrl={tokenQueryData?.project?.homepageUrl}
+                  twitterName={tokenQueryData?.project?.twitterName}
+                />
+                {!detailedToken.isNative && <AddressSection address={address} />}
+              </>
+            )}
+            {isInfoTDPEnabled && (
+              <>
+                <DividerLine />
+                <ActivitySection chainId={pageChainId} referenceToken={detailedToken.wrapped} />
+              </>
+            )}
           </LeftPanel>
         ) : (
           <TokenDetailsSkeleton />
@@ -344,8 +386,8 @@ export default function TokenDetails({
           <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
             <Swap
               chainId={pageChainId}
-              initialInputCurrencyId={inputTokenAddress}
-              initialOutputCurrencyId={address === NATIVE_CHAIN_ID ? 'ETH' : address}
+              initialInputCurrency={inputCurrency}
+              initialOutputCurrency={outputCurrency}
               onCurrencyChange={handleCurrencyChange}
               disableTokenInputs={pageChainId !== connectedChainId}
             />

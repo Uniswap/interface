@@ -179,8 +179,8 @@ function AppOuter(): JSX.Element | null {
     <ApolloProvider client={client}>
       <PersistGate loading={null} persistor={persistor}>
         <ErrorBoundary>
-          <GestureHandlerRootView style={flexStyles.fill}>
-            <LocalizationContextProvider>
+          <LocalizationContextProvider>
+            <GestureHandlerRootView style={flexStyles.fill}>
               <WalletContextProvider>
                 <BiometricContextProvider>
                   <LockScreenContextProvider>
@@ -202,8 +202,8 @@ function AppOuter(): JSX.Element | null {
                   </LockScreenContextProvider>
                 </BiometricContextProvider>
               </WalletContextProvider>
-            </LocalizationContextProvider>
-          </GestureHandlerRootView>
+            </GestureHandlerRootView>
+          </LocalizationContextProvider>
         </ErrorBoundary>
       </PersistGate>
     </ApolloProvider>

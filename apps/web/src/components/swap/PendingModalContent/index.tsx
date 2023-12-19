@@ -16,6 +16,7 @@ import { UniswapXOrderDetails } from 'state/signatures/types'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled, { css } from 'styled-components'
 import { ExternalLink } from 'theme/components'
+import { AnimationType } from 'theme/components/FadePresence'
 import { ThemedText } from 'theme/components/text'
 import { SignatureExpiredError } from 'utils/errors'
 import { getExplorerLink } from 'utils/getExplorerLink'
@@ -26,7 +27,6 @@ import { slideInAnimation, slideOutAnimation } from './animations'
 import {
   AnimatedEntranceConfirmationIcon,
   AnimatedEntranceSubmittedIcon,
-  AnimationType,
   CurrencyLoader,
   LoadingIndicatorOverlay,
   LogoContainer,

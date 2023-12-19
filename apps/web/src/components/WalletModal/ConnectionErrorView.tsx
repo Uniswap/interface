@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { useCloseAccountDrawer } from 'components/AccountDrawer'
+import { useCloseAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { AlertTriangle } from 'react-feather'

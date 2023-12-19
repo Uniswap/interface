@@ -1,6 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { PropsWithChildren } from 'react'
-import { EMPTY_DERIVED_SWAP_INFO, SwapContext } from 'state/swap/SwapContext'
+import { Dispatch, PropsWithChildren, SetStateAction } from 'react'
+import { CurrencyState, EMPTY_DERIVED_SWAP_INFO, SwapAndLimitContext, SwapContext } from 'state/swap/SwapContext'
 import { render, screen } from 'test-utils/render'
 
 import { Field, SwapTab } from './constants'
@@ -9,33 +9,39 @@ import SwapHeader from './SwapHeader'
 jest.mock('../../featureFlags/flags/limits', () => ({ useLimitsEnabled: () => true }))
 
 interface WrapperProps {
-  setCurrentTab?: (tab: SwapTab) => void
+  setCurrentTab?: Dispatch<SetStateAction<SwapTab>>
+  setCurrencyState?: Dispatch<SetStateAction<CurrencyState>>
 }
 
 function Wrapper(props: PropsWithChildren<WrapperProps>) {
   return (
-    <SwapContext.Provider
+    <SwapAndLimitContext.Provider
       value={{
+        currencyState: { inputCurrency: undefined, outputCurrency: undefined },
+        setCurrencyState: props.setCurrencyState ?? jest.fn(),
+        prefilledState: {
+          inputCurrency: undefined,
+          outputCurrency: undefined,
+        },
+        chainId: ChainId.MAINNET,
         currentTab: SwapTab.Swap,
         setCurrentTab: props.setCurrentTab ?? jest.fn(),
-        chainId: ChainId.MAINNET,
-        derivedSwapInfo: EMPTY_DERIVED_SWAP_INFO,
-        setSwapState: jest.fn(),
-        swapState: {
-          independentField: Field.INPUT,
-          typedValue: '',
-          recipient: '',
-          inputCurrencyId: undefined,
-          outputCurrencyId: undefined,
-        },
-        prefilledState: {
-          inputCurrencyId: undefined,
-          outputCurrencyId: undefined,
-        },
       }}
     >
-      {props.children}
-    </SwapContext.Provider>
+      <SwapContext.Provider
+        value={{
+          derivedSwapInfo: EMPTY_DERIVED_SWAP_INFO,
+          setSwapState: jest.fn(),
+          swapState: {
+            independentField: Field.INPUT,
+            typedValue: '',
+            recipient: '',
+          },
+        }}
+      >
+        {props.children}
+      </SwapContext.Provider>
+    </SwapAndLimitContext.Provider>
   )
 }
 

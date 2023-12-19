@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useLimitsEnabled } from 'featureFlags/flags/limits'
-import { useSwapContext } from 'state/swap/SwapContext'
+import { useSwapAndLimitContext, useSwapContext } from 'state/swap/SwapContext'
 import styled from 'styled-components'
 import { ButtonText } from 'theme/components'
 
@@ -33,8 +33,11 @@ const StyledTextButton = styled(ButtonText)<{ $isActive: boolean }>`
 
 export default function SwapHeader() {
   const limitsEnabled = useLimitsEnabled()
-  const { chainId, derivedSwapInfo, currentTab, setCurrentTab } = useSwapContext()
-  const { trade, autoSlippage } = derivedSwapInfo
+  const { chainId, currentTab, setCurrentTab } = useSwapAndLimitContext()
+  const {
+    derivedSwapInfo: { trade, autoSlippage },
+  } = useSwapContext()
+
   return (
     <StyledSwapHeader>
       <HeaderButtonContainer>

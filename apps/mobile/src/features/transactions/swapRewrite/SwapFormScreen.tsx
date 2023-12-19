@@ -327,8 +327,7 @@ function SwapFormContent(): JSX.Element {
     })
   }, [exactFieldIsInput, input, output, updateSwapForm])
 
-  // TODO gary MOB-2028 replace temporary hack to handle different separators
-  // Replace with localized version of formatter
+  // Swap input requires numeric values, not localized ones
   const formattedDerivedValue = formatCurrencyAmount({
     amount: currencyAmounts[derivedCurrencyField],
     locale: 'en-US',

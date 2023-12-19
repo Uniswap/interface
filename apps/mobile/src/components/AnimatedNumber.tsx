@@ -17,10 +17,10 @@ import { TextLoaderWrapper } from 'ui/src/components/text/Text'
 import { fonts } from 'ui/src/theme'
 import { usePrevious } from 'utilities/src/react/hooks'
 
-const NUMBER_ARRAY = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-const NUMBER_WIDTH_ARRAY = [29, 20, 29, 29, 29, 29, 29, 29, 29, 29] // width of digits in a font
-const DIGIT_HEIGHT = 44
-const ADDITIONAL_WIDTH_FOR_ANIMATIONS = 10
+export const NUMBER_ARRAY = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+export const NUMBER_WIDTH_ARRAY = [29, 20, 29, 29, 29, 29, 29, 29, 29, 29] // width of digits in a font
+export const DIGIT_HEIGHT = 44
+export const ADDITIONAL_WIDTH_FOR_ANIMATIONS = 8
 
 // TODO: remove need to manually define width of each character
 const NUMBER_WIDTH_ARRAY_SCALED = NUMBER_WIDTH_ARRAY.map(
@@ -171,6 +171,27 @@ function longestCommonPrefix(a: string, b: string): string {
   return a.substr(0, i)
 }
 
+export const TopAndBottomGradient = (): JSX.Element => {
+  const colors = useSporeColors()
+
+  return (
+    <Svg height={DIGIT_HEIGHT} style={AnimatedNumberStyles.gradientStyle} width="100%">
+      <Defs>
+        <LinearGradient id="backgroundTop" x1="0%" x2="0%" y1="15%" y2="0%">
+          <Stop offset="0" stopColor={colors.surface1.val} stopOpacity="0" />
+          <Stop offset="1" stopColor={colors.surface1.val} stopOpacity="1" />
+        </LinearGradient>
+        <LinearGradient id="background" x1="0%" x2="0%" y1="85%" y2="100%">
+          <Stop offset="0" stopColor={colors.surface1.val} stopOpacity="0" />
+          <Stop offset="1" stopColor={colors.surface1.val} stopOpacity="1" />
+        </LinearGradient>
+      </Defs>
+      <Rect fill="url(#backgroundTop)" height={DIGIT_HEIGHT} opacity={1} width="100%" x="0" y="0" />
+      <Rect fill="url(#background)" height={DIGIT_HEIGHT} opacity={1} width="100%" x="0" y="0" />
+    </Svg>
+  )
+}
+
 const SCREEN_WIDTH_BUFFER = 50
 
 // Used for initial layout larger than all screen sizes
@@ -274,34 +295,7 @@ const AnimatedNumber = ({
         backgroundColor="$surface1"
         borderRadius="$rounded4"
         width={MAX_DEVICE_WIDTH}>
-        <Svg height={DIGIT_HEIGHT} style={AnimatedNumberStyles.gradientStyle} width="100%">
-          <Defs>
-            <LinearGradient id="backgroundTop" x1="0%" x2="0%" y1="15%" y2="0%">
-              <Stop offset="0" stopColor={colors.surface1.val} stopOpacity="0" />
-              <Stop offset="1" stopColor={colors.surface1.val} stopOpacity="1" />
-            </LinearGradient>
-            <LinearGradient id="background" x1="0%" x2="0%" y1="85%" y2="100%">
-              <Stop offset="0" stopColor={colors.surface1.val} stopOpacity="0" />
-              <Stop offset="1" stopColor={colors.surface1.val} stopOpacity="1" />
-            </LinearGradient>
-          </Defs>
-          <Rect
-            fill="url(#backgroundTop)"
-            height={DIGIT_HEIGHT}
-            opacity={1}
-            width="100%"
-            x="0"
-            y="0"
-          />
-          <Rect
-            fill="url(#background)"
-            height={DIGIT_HEIGHT}
-            opacity={1}
-            width="100%"
-            x="0"
-            y="0"
-          />
-        </Svg>
+        <TopAndBottomGradient />
         <Shine disabled={!warmLoading}>
           <AnimatedFlex row entering={FadeIn} width={MAX_DEVICE_WIDTH}>
             {chars?.map((_, index) => (
@@ -331,24 +325,24 @@ const AnimatedNumber = ({
 
 export default AnimatedNumber
 
-const AnimatedNumberStyles = StyleSheet.create({
+export const AnimatedNumberStyles = StyleSheet.create({
   gradientStyle: {
     position: 'absolute',
     zIndex: 100,
   },
 })
 
-const AnimatedCharStyles = StyleSheet.create({
+export const AnimatedCharStyles = StyleSheet.create({
   wrapperStyle: {
     overflow: 'hidden',
   },
 })
 
-const AnimatedFontStyles = StyleSheet.create({
+export const AnimatedFontStyles = StyleSheet.create({
   fontStyle: {
     fontFamily: fonts.heading2.family,
     fontSize: fonts.heading2.fontSize,
-    fontWeight: 500,
+    fontWeight: '500',
     lineHeight: fonts.heading2.lineHeight,
     top: 1,
   },

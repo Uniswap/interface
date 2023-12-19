@@ -1,8 +1,10 @@
+import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import IconButton from 'components/AccountDrawer/IconButton'
-import { AutoColumn } from 'components/Column'
+import { useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import Column from 'components/Column'
 import { Settings } from 'components/Icons/Settings'
-import { AutoRow } from 'components/Row'
+import Row, { AutoRow } from 'components/Row'
 import { deprecatedNetworkConnection, networkConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { isSupportedChain } from 'constants/chains'
@@ -27,6 +29,7 @@ const Wrapper = styled.div`
 
 const OptionGrid = styled.div`
   display: grid;
+  flex: 1;
   grid-gap: 2px;
   border-radius: 12px;
   overflow: hidden;
@@ -39,8 +42,14 @@ const TextSectionWrapper = styled.div`
   padding: 0 4px;
 `
 
+const Line = styled.hr`
+  width: 100%;
+  border-color: ${({ theme }) => theme.surface3};
+`
+
 export default function WalletModal({ openSettings }: { openSettings: () => void }) {
   const { connector, chainId } = useWeb3React()
+  const showMoonpayText = useShowMoonpayText()
 
   const { activationState } = useActivationState()
   const fallbackProviderEnabled = useFallbackProviderEnabled()
@@ -66,13 +75,31 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
       {activationState.status === ActivationStatus.ERROR ? (
         <ConnectionErrorView />
       ) : (
-        <AutoColumn gap="16px">
-          <OptionGrid data-testid="option-grid">{orderedConnections}</OptionGrid>
-          <TextSectionWrapper>{showDeprecatedMessage && <DeprecatedInjectorMessage />}</TextSectionWrapper>
-          <TextSectionWrapper>
-            <PrivacyPolicyNotice />
-          </TextSectionWrapper>
-        </AutoColumn>
+        <Column gap="md" flex="1">
+          <Row flex="1" align="flex-start">
+            <OptionGrid data-testid="option-grid">{orderedConnections}</OptionGrid>
+          </Row>
+          {showDeprecatedMessage && (
+            <TextSectionWrapper>
+              <DeprecatedInjectorMessage />
+            </TextSectionWrapper>
+          )}
+          <Column gap="md">
+            <TextSectionWrapper>
+              <PrivacyPolicyNotice />
+            </TextSectionWrapper>
+            {showMoonpayText && (
+              <>
+                <Line />
+                <TextSectionWrapper>
+                  <ThemedText.Caption color="neutral3">
+                    <Trans>Fiat onramp powered by MoonPay USA LLC</Trans>
+                  </ThemedText.Caption>
+                </TextSectionWrapper>
+              </>
+            )}
+          </Column>
+        </Column>
       )}
     </Wrapper>
   )

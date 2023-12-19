@@ -12,8 +12,7 @@ import {
 import { DerivedSwapInfo } from 'src/features/transactions/swap/types'
 import { formatPriceImpact } from 'utilities/src/format/formatPriceImpact'
 import { useMemoCompare } from 'utilities/src/react/hooks'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
+import { useSwapRewriteEnabled } from 'wallet/src/features/experiments/hooks'
 import {
   API_RATE_LIMIT_ERROR,
   NO_QUOTE_DATA,
@@ -143,7 +142,7 @@ export function useSwapWarnings(t: TFunction, derivedSwapInfo: DerivedSwapInfo):
   // See for more here: https://github.com/react-native-netinfo/react-native-netinfo/pull/444
   const offline = isOffline(networkStatus)
 
-  const isSwapRewriteFeatureEnabled = useFeatureFlag(FEATURE_FLAGS.SwapRewrite)
+  const isSwapRewriteFeatureEnabled = useSwapRewriteEnabled()
 
   return useMemoCompare(
     () => getSwapWarnings(t, derivedSwapInfo, offline, isSwapRewriteFeatureEnabled),

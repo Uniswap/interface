@@ -41,6 +41,16 @@ export type UnitagClaimEligibilityParams = {
   deviceId: string
 }
 
+export type UnitagUpdateMetadataRequestBody = {
+  address: Address
+  metadata: ProfileMetadata
+}
+
+export type UnitagUpdateMetadataResponse = {
+  success: boolean
+  metadata?: ProfileMetadata
+}
+
 // Copied enum from unitags backend code -- needs to be up-to-date
 export enum UnitagErrorCodes {
   UnitagNotAvailable = 'unitags-1',

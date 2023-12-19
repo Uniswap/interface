@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
 import Row from 'components/Row'
-import { FadePresence } from 'components/swap/PendingModalContent/Logos'
 import { X } from 'react-feather'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
+import { FadePresence } from 'theme/components/FadePresence'
 
 import GetHelpButton from '../Button/GetHelp'
 

@@ -305,7 +305,7 @@ const renderItemSeparator = (): JSX.Element => <Flex pt="$spacing8" />
 function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()
   const ensName = useENS(ChainId.Mainnet, address)?.name
-  const hasUnitag = !!useUnitag(address)
+  const hasUnitag = !!useUnitag(address)?.username
 
   const onPressEditProfile = (): void => {
     if (hasUnitag) {

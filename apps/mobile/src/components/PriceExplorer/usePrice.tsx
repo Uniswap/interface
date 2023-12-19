@@ -1,5 +1,10 @@
 import { useMemo } from 'react'
-import { SharedValue, useDerivedValue } from 'react-native-reanimated'
+import {
+  SharedValue,
+  useAnimatedReaction,
+  useDerivedValue,
+  useSharedValue,
+} from 'react-native-reanimated'
 import {
   useLineChart,
   useLineChartPrice as useRNWagmiChartLineChartPrice,
@@ -8,9 +13,10 @@ import { numberToLocaleStringWorklet, numberToPercentWorklet } from 'src/utils/r
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useCurrentLocale } from 'wallet/src/features/language/hooks'
 
-export type ValueAndFormatted<U = number, V = string> = {
+export type ValueAndFormatted<U = number, V = string, B = boolean> = {
   value: Readonly<SharedValue<U>>
   formatted: Readonly<SharedValue<V>>
+  shouldAnimate: Readonly<SharedValue<B>>
 }
 
 /**
@@ -23,6 +29,18 @@ export function useLineChartPrice(): ValueAndFormatted {
     precision: 18,
   })
   const { data } = useLineChart()
+  const shouldAnimate = useSharedValue(true)
+
+  useAnimatedReaction(
+    () => {
+      return activeCursorPrice.value
+    },
+    (currentValue, previousValue) => {
+      if (previousValue && currentValue && shouldAnimate.value) {
+        shouldAnimate.value = false
+      }
+    }
+  )
   const currencyInfo = useAppFiatCurrencyInfo()
   const locale = useCurrentLocale()
 
@@ -32,6 +50,7 @@ export function useLineChartPrice(): ValueAndFormatted {
       return Number(activeCursorPrice.value)
     }
 
+    shouldAnimate.value = true
     return data[data.length - 1]?.value ?? 0
   })
   const priceFormatted = useDerivedValue(() => {
@@ -50,8 +69,9 @@ export function useLineChartPrice(): ValueAndFormatted {
     () => ({
       value: price,
       formatted: priceFormatted,
+      shouldAnimate,
     }),
-    [price, priceFormatted]
+    [price, priceFormatted, shouldAnimate]
   )
 }
 
@@ -65,6 +85,7 @@ export function useLineChartRelativeChange({
   spotRelativeChange?: SharedValue<number>
 }): ValueAndFormatted {
   const { currentIndex, data, isActive } = useLineChart()
+  const shouldAnimate = useSharedValue(false)
 
   const relativeChange = useDerivedValue(() => {
     if (!isActive.value && Boolean(spotRelativeChange)) {
@@ -98,5 +119,5 @@ export function useLineChartRelativeChange({
     return numberToPercentWorklet(relativeChange.value, { precision: 2, absolute: true })
   })
 
-  return { value: relativeChange, formatted: relativeChangeFormattted }
+  return { value: relativeChange, formatted: relativeChangeFormattted, shouldAnimate }
 }

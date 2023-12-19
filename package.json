@@ -6,6 +6,7 @@
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
     "@crowdin/cli": "3.14.0",
+    "@ethersproject/keccak256": "5.7.0",
     "@graphql-codegen/cli": "^3.3.1",
     "@graphql-codegen/client-preset": "^3.0.1",
     "@graphql-codegen/typescript": "^3.0.4",

@@ -271,7 +271,14 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
   const portfolioBalance = balancesById?.[item]
 
   if (!portfolioBalance) {
-    throw new Error(`portfolioBalance not found in balancesById for currencyId "${item}"`)
+    // This can happen when the view is out of focus and the user sells/sends 100% of a token's balance.
+    // In that case, the token is removed from the `balancesById` object, but the FlatList is still using the cached array of IDs until the view comes back into focus.
+    // As soon as the view comes back into focus, the FlatList will re-render with the latest data, so users won't really see this Skeleton for more than a few milliseconds when this happens.
+    return (
+      <Flex height={ESTIMATED_TOKEN_ITEM_HEIGHT} px="$spacing24">
+        <Loader.Token />
+      </Flex>
+    )
   }
 
   return (

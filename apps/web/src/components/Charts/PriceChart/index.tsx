@@ -7,7 +7,6 @@ import { Line } from '@visx/shape'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import FadedInLineChart from 'components/Charts/FadeInLineChart'
 import { buildChartModel, ChartErrorType, ChartModel, ErroredChartModel } from 'components/Charts/PriceChart/ChartModel'
-import { getTimestampFormatter, TimestampFormatterType } from 'components/Charts/PriceChart/format'
 import { getNearestPricePoint, getTicks } from 'components/Charts/PriceChart/utils'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { curveCardinal } from 'd3'
@@ -21,6 +20,7 @@ import { textFadeIn } from 'theme/styles'
 import { useFormatter } from 'utils/formatNumbers'
 
 import { calculateDelta, DeltaArrow } from '../../Tokens/TokenDetails/Delta'
+import { getTimestampFormatter, TimestampFormatterType } from './format'
 
 const CHART_MARGIN = { top: 100, bottom: 48, crosshair: 72 }
 

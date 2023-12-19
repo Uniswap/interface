@@ -3,13 +3,13 @@ import { ComponentProps, default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
+import { useAccountList } from 'src/components/accounts/hooks'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { opacify, spacing } from 'ui/src/theme'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import { useAccountListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 
 // Most screens can fit more but this is set conservatively
@@ -50,10 +50,10 @@ const SignerHeader = (): JSX.Element => {
 
 export function AccountList({ accounts, onPress, isVisible }: AccountListProps): JSX.Element {
   const colors = useSporeColors()
-  const addresses = accounts.map((a) => a.address)
+  const addresses = useMemo(() => accounts.map((a) => a.address), [accounts])
 
-  const { data, networkStatus, refetch, startPolling, stopPolling } = useAccountListQuery({
-    variables: { addresses },
+  const { data, networkStatus, refetch, startPolling, stopPolling } = useAccountList({
+    addresses,
     notifyOnNetworkStatusChange: true,
   })
 

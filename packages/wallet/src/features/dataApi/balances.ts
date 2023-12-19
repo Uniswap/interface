@@ -1,23 +1,95 @@
-import { NetworkStatus, WatchQueryFetchPolicy } from '@apollo/client'
+import { NetworkStatus, useApolloClient, WatchQueryFetchPolicy } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { usePortfolioBalancesQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import {
+  ContractInput,
+  IAmount,
+  Portfolio,
+  PortfolioBalanceDocument,
+  PortfolioValueModifier,
+  usePortfolioBalancesQuery,
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { CurrencyInfo, GqlResult, PortfolioBalance } from 'wallet/src/features/dataApi/types'
-import { buildCurrency, usePersistedError } from 'wallet/src/features/dataApi/utils'
-import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'wallet/src/features/wallet/slice'
+import {
+  buildCurrency,
+  currencyIdToContractInput,
+  usePersistedError,
+} from 'wallet/src/features/dataApi/utils'
+import { useAccountToTokenVisibility } from 'wallet/src/features/transactions/selectors'
+import { selectAccounts } from 'wallet/src/features/wallet/selectors'
+import { useAppSelector } from 'wallet/src/state'
 import { CurrencyId, currencyId } from 'wallet/src/utils/currencyId'
 
 type SortedPortfolioBalances = {
   balances: PortfolioBalance[]
-  smallBalances: PortfolioBalance[]
-  spamBalances: PortfolioBalance[]
+  hiddenBalances: PortfolioBalance[]
+}
+
+export type PortfolioTotalValue = {
+  balanceUSD: number | undefined
+  percentChange: number | undefined
+  absoluteChangeUSD: number | undefined
+}
+
+export type PortfolioCacheUpdater = (hidden: boolean, portfolioBalance?: PortfolioBalance) => void
+
+export function usePortfolioValueModifiers(
+  address?: Address | Address[]
+): PortfolioValueModifier[] | undefined {
+  // Memoize array creation if passed a string to avoid recomputing at every render
+  const addressArray = useMemo(
+    () => (!address ? [] : Array.isArray(address) ? address : [address]),
+    [address]
+  )
+  const accounts = useAppSelector(selectAccounts)
+  const accountToTokensVisibility = useAccountToTokenVisibility(addressArray)
+
+  const modifiers = useMemo<PortfolioValueModifier[]>(() => {
+    return addressArray.map((addr) => {
+      const tokenOverrides = accountToTokensVisibility[addr] || {}
+
+      interface TokenOverrides {
+        tokenIncludeOverrides: ContractInput[]
+        tokenExcludeOverrides: ContractInput[]
+      }
+
+      const { tokenIncludeOverrides, tokenExcludeOverrides } = Object.entries(
+        tokenOverrides
+      ).reduce(
+        (acc: TokenOverrides, [key, tokenVisibility]) => {
+          const contractInput = currencyIdToContractInput(key)
+          if (tokenVisibility.isVisible) {
+            acc.tokenIncludeOverrides.push(contractInput)
+          } else {
+            acc.tokenExcludeOverrides.push(contractInput)
+          }
+          return acc
+        },
+        {
+          tokenIncludeOverrides: [],
+          tokenExcludeOverrides: [],
+        }
+      )
+
+      return {
+        ownerAddress: addr,
+        tokenIncludeOverrides,
+        tokenExcludeOverrides,
+        includeSmallBalances: accounts[addr]?.showSmallBalances ?? false,
+        includeSpamTokens: accounts[addr]?.showSpamTokens ?? false,
+      }
+    })
+  }, [accountToTokensVisibility, accounts, addressArray])
+
+  return modifiers.length > 0 ? modifiers : undefined
 }
 
 /**
  * Returns all balances indexed by checksummed currencyId for a given address
  * @param address
- * @param shouldPoll whether query should poll
+ * @param pollInterval optional `PollingInterval` representing polling frequency.
+ *  If undefined, will query once and not poll.
  * NOTE:
  *  on TokenDetails, useBalances relies rely on usePortfolioBalances but don't need
  *  polling versions of it. Including polling was causing multiple polling intervals
@@ -25,22 +97,22 @@ type SortedPortfolioBalances = {
  *  Same with on Token Selector's TokenSearchResultList, since the home screen
  *  has a usePortfolioBalances polling hook, we don't need to duplicate the
  *  polling interval when token selector is open
- * @param hideSmallBalances
- * @param hideSpamTokens
  * @param onCompleted
+ * @param fetchPolicy
  * @returns
  */
 export function usePortfolioBalances({
   address,
-  shouldPoll,
+  pollInterval,
   onCompleted,
   fetchPolicy,
 }: {
   address?: Address
-  shouldPoll?: boolean
+  pollInterval?: PollingInterval
   onCompleted?: () => void
   fetchPolicy?: WatchQueryFetchPolicy
 }): GqlResult<Record<CurrencyId, PortfolioBalance>> & { networkStatus: NetworkStatus } {
+  const valueModifiers = usePortfolioValueModifiers(address)
   const {
     data: balancesData,
     loading,
@@ -51,8 +123,8 @@ export function usePortfolioBalances({
     fetchPolicy,
     notifyOnNetworkStatusChange: true,
     onCompleted,
-    pollInterval: shouldPoll ? PollingInterval.KindaFast : undefined,
-    variables: address ? { ownerAddress: address } : undefined,
+    pollInterval,
+    variables: address ? { ownerAddress: address, valueModifiers } : undefined,
     skip: !address,
   })
 
@@ -64,7 +136,15 @@ export function usePortfolioBalances({
 
     const byId: Record<CurrencyId, PortfolioBalance> = {}
     balancesForAddress.forEach((balance) => {
-      const { denominatedValue, token, tokenProjectMarket, quantity } = balance || {}
+      const {
+        __typename: tokenBalanceType,
+        id: tokenBalanceId,
+        denominatedValue,
+        token,
+        tokenProjectMarket,
+        quantity,
+        isHidden,
+      } = balance || {}
       const { address: tokenAddress, chain, decimals, symbol, project } = token || {}
       const { name, logoUrl, isSpam, safetyLevel } = project || {}
       const chainId = fromGraphQLChain(chain)
@@ -93,10 +173,12 @@ export function usePortfolioBalances({
       }
 
       const portfolioBalance: PortfolioBalance = {
+        cacheId: `${tokenBalanceType}:${tokenBalanceId}`,
         quantity,
         balanceUSD: denominatedValue?.value,
         currencyInfo,
         relativeChange24: tokenProjectMarket?.relativeChange24?.value,
+        isHidden,
       }
 
       byId[id] = portfolioBalance
@@ -105,7 +187,64 @@ export function usePortfolioBalances({
     return byId
   }, [balancesForAddress])
 
-  const retry = useCallback(() => refetch({ ownerAddress: address }), [address, refetch])
+  const retry = useCallback(
+    () => refetch({ ownerAddress: address, valueModifiers }),
+    [address, valueModifiers, refetch]
+  )
+
+  return {
+    data: formattedData,
+    loading,
+    networkStatus,
+    refetch: retry,
+    error: persistedError,
+  }
+}
+
+export function usePortfolioTotalValue({
+  address,
+  pollInterval,
+  onCompleted,
+  fetchPolicy,
+}: {
+  address?: Address
+  pollInterval?: PollingInterval
+  onCompleted?: () => void
+  fetchPolicy?: WatchQueryFetchPolicy
+}): GqlResult<PortfolioTotalValue> & { networkStatus: NetworkStatus } {
+  const valueModifiers = usePortfolioValueModifiers(address)
+  const {
+    data: balancesData,
+    loading,
+    networkStatus,
+    refetch,
+    error,
+  } = usePortfolioBalancesQuery({
+    fetchPolicy,
+    notifyOnNetworkStatusChange: true,
+    onCompleted,
+    pollInterval,
+    variables: address ? { ownerAddress: address, valueModifiers } : undefined,
+    skip: !address,
+  })
+
+  const persistedError = usePersistedError(loading, error)
+  const portfolioForAddress = balancesData?.portfolios?.[0]
+
+  const formattedData = useMemo(() => {
+    if (!portfolioForAddress) return
+
+    return {
+      balanceUSD: portfolioForAddress?.tokensTotalDenominatedValue?.value,
+      percentChange: portfolioForAddress?.tokensTotalDenominatedValueChange?.percentage?.value,
+      absoluteChangeUSD: portfolioForAddress?.tokensTotalDenominatedValueChange?.absolute?.value,
+    }
+  }, [portfolioForAddress])
+
+  const retry = useCallback(
+    () => refetch({ ownerAddress: address, valueModifiers }),
+    [address, valueModifiers, refetch]
+  )
 
   return {
     data: formattedData,
@@ -124,28 +263,74 @@ export function usePortfolioBalances({
  *
  */
 export function useHighestBalanceNativeCurrencyId(address: Address): CurrencyId | undefined {
-  const { data } = useSortedPortfolioBalances(address, /*shouldPoll=*/ false)
+  const { data } = useSortedPortfolioBalances({ address })
   return data?.balances.find((balance) => balance.currencyInfo.currency.isNative)?.currencyInfo
     .currencyId
 }
 
 /**
+ * Custom hook to group Token Balances fetched from API to shown and hidden.
+ *
+ * @param balancesById - An object where keys are token ids and values are the corresponding balances. May be undefined.
+ *
+ * @returns {object} An object containing two fields:
+ *  - `shownTokens`: shown tokens.
+ *  - `hiddenTokens`: hidden tokens.
+ *
+ * @example
+ * const { shownTokens, hiddenTokens } = useTokenBalancesGroupedByVisibility({ balancesById });
+ */
+export function useTokenBalancesGroupedByVisibility({
+  balancesById,
+}: {
+  balancesById?: Record<string, PortfolioBalance>
+}): {
+  shownTokens: PortfolioBalance[] | undefined
+  hiddenTokens: PortfolioBalance[] | undefined
+} {
+  return useMemo(() => {
+    if (!balancesById) return { shownTokens: undefined, hiddenTokens: undefined }
+
+    const { shown, hidden } = Object.values(balancesById).reduce<{
+      shown: PortfolioBalance[]
+      hidden: PortfolioBalance[]
+    }>(
+      (acc, balance) => {
+        if (balance.isHidden) {
+          acc.hidden.push(balance)
+        } else {
+          acc.shown.push(balance)
+        }
+        return acc
+      },
+      { shown: [], hidden: [] }
+    )
+    return {
+      shownTokens: shown.length ? shown : undefined,
+      hiddenTokens: hidden.length ? hidden : undefined,
+    }
+  }, [balancesById])
+}
+
+/**
  * Returns portfolio balances for a given address sorted by USD value.
- * Can optionally split out small balances and spam balances into separate arrays.
  *
  * @param address to get portfolio balances for
- * @param hideSmallBalances whether to return small balances in separate array
- * @param hideSpamTokens whether to return spam token balances in separate array
- * @returns SortedPortfolioBalances object with `balances`, `smallBalances`, `spamBalances`
- *
+ * @param pollInterval optional polling interval for auto refresh.
+ *    If undefined, query will run only once.
+ * @param onCompleted callback
+ * @returns SortedPortfolioBalances object with `balances` and `hiddenBalances`
  */
-export function useSortedPortfolioBalances(
-  address: Address,
-  shouldPoll: boolean,
-  hideSmallBalances?: boolean,
-  hideSpamTokens?: boolean,
+export function useSortedPortfolioBalances({
+  address,
+  pollInterval,
+  onCompleted,
+}: {
+  address: Address
+  pollInterval?: PollingInterval
+  valueModifiers?: PortfolioValueModifier[]
   onCompleted?: () => void
-): GqlResult<SortedPortfolioBalances> & { networkStatus: NetworkStatus } {
+}): GqlResult<SortedPortfolioBalances> & { networkStatus: NetworkStatus } {
   // Fetch all balances including small balances and spam tokens because we want to return those in separate arrays
   const {
     data: balancesById,
@@ -154,44 +339,22 @@ export function useSortedPortfolioBalances(
     refetch,
   } = usePortfolioBalances({
     address,
-    shouldPoll,
+    pollInterval,
     onCompleted,
     fetchPolicy: 'cache-and-network',
   })
 
-  const formattedData = useMemo(() => {
-    if (!balancesById) return
+  const { shownTokens, hiddenTokens } = useTokenBalancesGroupedByVisibility({ balancesById })
 
-    const { balances, smallBalances, spamBalances } = Object.values(
-      balancesById
-    ).reduce<SortedPortfolioBalances>(
-      (acc, balance) => {
-        // Prioritize isSpam over small balance
-        if (hideSpamTokens && balance.currencyInfo.isSpam) {
-          acc.spamBalances.push(balance)
-        } else if (
-          // Small balances includes tokens that don't have a balanceUSD value but should exclude native currencies
-          hideSmallBalances &&
-          !balance.currencyInfo.currency.isNative &&
-          (!balance.balanceUSD || balance.balanceUSD < HIDE_SMALL_USD_BALANCES_THRESHOLD)
-        ) {
-          acc.smallBalances.push(balance)
-        } else {
-          acc.balances.push(balance)
-        }
-        return acc
-      },
-      { balances: [], smallBalances: [], spamBalances: [] }
-    )
-
-    return {
-      balances: sortPortfolioBalances(balances),
-      smallBalances: sortPortfolioBalances(smallBalances),
-      spamBalances: sortPortfolioBalances(spamBalances),
-    }
-  }, [balancesById, hideSmallBalances, hideSpamTokens])
-
-  return { data: formattedData, loading, networkStatus, refetch }
+  return {
+    data: {
+      balances: sortPortfolioBalances(shownTokens || []),
+      hiddenBalances: sortPortfolioBalances(hiddenTokens || []),
+    },
+    loading,
+    networkStatus,
+    refetch,
+  }
 }
 
 /**
@@ -214,4 +377,61 @@ export function sortPortfolioBalances(balances: PortfolioBalance[]): PortfolioBa
       return a.currencyInfo.currency.name?.localeCompare(b.currencyInfo.currency.name)
     }),
   ]
+}
+
+/**
+ * Creates a function to update the Apollo cache when a token is shown or hidden.
+ * We manually modify the cache to avoid having to wait for the server's response,
+ * so that the change is immediately reflected in the UI.
+ *
+ * @param address active wallet address
+ * @returns a `PortfolioCacheUpdater` function that will update the Apollo cache
+ */
+export function usePortfolioCacheUpdater(address: string): PortfolioCacheUpdater {
+  const apolloClient = useApolloClient()
+
+  const updater = useCallback(
+    (hidden: boolean, portfolioBalance?: PortfolioBalance) => {
+      if (!portfolioBalance) {
+        return
+      }
+
+      const cachedPortfolio = apolloClient.readQuery<{ portfolios: Portfolio[] }>({
+        query: PortfolioBalanceDocument,
+        variables: {
+          owner: address,
+        },
+      })?.portfolios[0]
+
+      if (!cachedPortfolio) {
+        return
+      }
+
+      apolloClient.cache.modify({
+        id: portfolioBalance.cacheId,
+        fields: {
+          isHidden() {
+            return hidden
+          },
+        },
+      })
+
+      apolloClient.cache.modify({
+        id: apolloClient.cache.identify(cachedPortfolio),
+        fields: {
+          tokensTotalDenominatedValue(amount: IAmount) {
+            const newValue = portfolioBalance.balanceUSD
+              ? hidden
+                ? amount.value - portfolioBalance.balanceUSD
+                : amount.value + portfolioBalance.balanceUSD
+              : amount.value
+            return { ...amount, value: newValue }
+          },
+        },
+      })
+    },
+    [apolloClient, address]
+  )
+
+  return updater
 }

@@ -27,9 +27,10 @@ export function PriceText({
     (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) &&
     symbolAtFront
 
-  if (loading) {
-    return <AnimatedText loading loadingPlaceholderText="$10,000" variant="heading1" />
-  }
+  // TODO(MOB-2308): re-enable this when we have a better solution for handling the loading state
+  // if (loading) {
+  //   return <AnimatedText loading loadingPlaceholderText="$10,000" variant="heading1" />
+  // }
 
   return (
     <AnimatedDecimalNumber

@@ -64,7 +64,11 @@ export function dismissInAppBrowser(): void {
   WebBrowser.dismissBrowser()
 }
 
-export async function openTransactionLink(hash: string, chainId: ChainId): Promise<void> {
+export async function openTransactionLink(
+  hash: string | undefined,
+  chainId: ChainId
+): Promise<void> {
+  if (!hash) return
   const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
   return openUri(explorerUrl)
 }

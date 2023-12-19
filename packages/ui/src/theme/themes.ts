@@ -173,8 +173,9 @@ const dark_secondary_Button: BaseTheme = {
 const light_tertiary_Button: BaseTheme = {
   ...light,
   background: colorsLight.surface3,
-  backgroundHover: colorsLight.none,
-  backgroundPress: colorsLight.none,
+  // TODO(MOB-2206): make hover and press colors different from each other and more consistent with other buttons
+  backgroundHover: colorsLight.surface2,
+  backgroundPress: colorsLight.surface2,
   borderColor: colorsLight.none,
   color: colorsLight.neutral1,
 }
@@ -183,8 +184,9 @@ const light_tertiary_Button: BaseTheme = {
 const dark_tertiary_Button: BaseTheme = {
   ...dark,
   background: colorsDark.surface3,
-  backgroundHover: colorsDark.none,
-  backgroundPress: colorsDark.none,
+  // TODO(MOB-2206): make hover and press colors different from each other and more consistent with other buttons
+  backgroundHover: colorsDark.surface2,
+  backgroundPress: colorsDark.surface2,
   borderColor: colorsDark.none,
   color: colorsDark.neutral1,
 }

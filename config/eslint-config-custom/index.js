@@ -142,7 +142,22 @@ module.exports = {
             name: 'react-native-safe-area-context',
             importNames: ["useSafeAreaInsets"],
             message: "Use our internal `useDeviceInsets` hook instead.",
-          }
+          },
+          {
+            name: 'wallet/src/data/__generated__/types-and-hooks',
+            importNames: ["usePortfolioBalancesQuery"],
+            message: "Use `usePortfolioBalances` instead.",
+          },
+          {
+            name: 'wallet/src/data/__generated__/types-and-hooks',
+            importNames: ["useAccountListQuery"],
+            message: "Use `useAccountList` instead.",
+          },
+          {
+            name: 'wallet/src/features/dataApi/balances',
+            importNames: ["usePortfolioValueModifiers"],
+            message: "Use the wrapper hooks `usePortfolioTotalValue`, `useAccountList` or `usePortfolioBalances` instead of `usePortfolioValueModifiers` directly.",
+          },
         ],
       },
     ],

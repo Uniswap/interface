@@ -12,15 +12,11 @@ import { LoadingBubble } from '../loading'
 import { AboutContainer, AboutHeader } from './About'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from './BreadcrumbNav'
 import { ChartContainer } from './ChartSection'
+import { Hr } from './shared'
 import { StatPair, StatsWrapper, StatWrapper } from './StatsSection'
 
 const SWAP_COMPONENT_WIDTH = 360
 
-export const Hr = styled.hr`
-  background-color: ${({ theme }) => theme.surface3};
-  border: none;
-  height: 0.5px;
-`
 export const TokenDetailsLayout = styled.div`
   display: flex;
   padding: 0 16px 52px;
@@ -66,7 +62,7 @@ export const TokenInfoContainer = styled.div<{ isInfoTDPEnabled?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? 'flex-start' : 'center')};
-  margin-bottom: 4px;
+  margin-bottom: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '12' : '4')}px;
   gap: 20px;
   ${textFadeIn};
   animation-duration: ${({ theme }) => theme.transition.duration.medium};

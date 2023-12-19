@@ -2,6 +2,12 @@
 // Do not add any imports to this file.
 // The array is kept up to date via the tests in src/pages/paths.test.ts
 
+import { t } from '@lingui/macro'
+import { getValidUrlChainName } from 'graphql/data/util'
+import { capitalize } from 'tsafe/capitalize'
+
+import { ExploreTab } from './Explore'
+
 export const paths = [
   '/',
   '/explore',
@@ -36,3 +42,20 @@ export const paths = [
   '/nfts/collection/:contractAddress',
   '/nfts/collection/:contractAddress/activity',
 ]
+
+export const getExploreTitle = (path?: string) => {
+  const parts = path?.split('/').filter((part) => part !== '')
+  const tabsToFind: string[] = [ExploreTab.Pools, ExploreTab.Tokens, ExploreTab.Transactions]
+  const tab = parts?.find((part) => tabsToFind.includes(part)) ?? ExploreTab.Tokens
+
+  const network = parts?.find((part) => getValidUrlChainName(part)) ?? 'ethereum'
+
+  return t`Explore Top ${capitalize(tab)} on ${capitalize(network)} on Uniswap`
+}
+
+export const getDefaultTokensTitle = (path?: string) => {
+  const parts = path?.split('/').filter((part) => part !== '')
+  const network = parts?.find((part) => getValidUrlChainName(part)) ?? 'ethereum'
+
+  return t`Explore Top Tokens on ${capitalize(network)} on Uniswap`
+}

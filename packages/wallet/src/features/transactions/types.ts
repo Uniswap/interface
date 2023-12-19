@@ -40,7 +40,7 @@ export interface TransactionDetails extends TransactionId {
   addedTime: number
   // Note: hash is mandatory for now but may be made optional if
   // we start tracking txs before they're actually sent
-  hash: string
+  hash?: string
 
   // Info for submitting the tx
   options: TransactionOptions
@@ -75,6 +75,7 @@ export type FinalizedTransactionStatus =
 
 export interface FinalizedTransactionDetails extends TransactionDetails {
   status: FinalizedTransactionStatus
+  hash: string
 }
 
 export interface TransactionOptions {

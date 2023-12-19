@@ -12,14 +12,12 @@ import {
   createWrapFormFromTxDetails,
 } from 'src/features/transactions/swap/createSwapFormFromTxDetails'
 import { transactionStateActions } from 'src/features/transactions/transactionState/transactionState'
-import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import {
-  makeSelectAddressTransactions,
-  makeSelectLocalTxCurrencyIds,
   makeSelectTransaction,
+  useSelectAddressTransactions,
 } from 'wallet/src/features/transactions/selectors'
 import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
 import {
@@ -71,18 +69,6 @@ export function useSelectTransaction(
 ): TransactionDetails | undefined {
   const selectTransaction = useMemo(makeSelectTransaction, [])
   return useAppSelector((state) => selectTransaction(state, { address, chainId, txId }))
-}
-
-export function useSelectAddressTransactions(
-  address: Address | null
-): TransactionDetails[] | undefined {
-  const selectAddressTransactions = useMemo(makeSelectAddressTransactions, [])
-  return useAppSelector((state) => selectAddressTransactions(state, address))
-}
-
-export function useSelectLocalTxCurrencyIds(address: Address | null): Record<string, boolean> {
-  const selectLocalTxCurrencyIds = useMemo(makeSelectLocalTxCurrencyIds, [])
-  return useAppSelector((state) => selectLocalTxCurrencyIds(state, address))
 }
 
 export function useCreateSwapFormState(
@@ -273,7 +259,7 @@ export function useTokenFormActionHandlers(dispatch: React.Dispatch<AnyAction>):
  * Merge local and remote transactions. If duplicated hash found use data from local store.
  */
 export function useMergeLocalAndRemoteTransactions(
-  address: string,
+  address: Address,
   remoteTransactions: TransactionDetails[] | undefined
 ): TransactionDetails[] | undefined {
   const dispatch = useAppDispatch()
@@ -285,6 +271,7 @@ export function useMergeLocalAndRemoteTransactions(
     if (!localTransactions?.length) return remoteTransactions
 
     const txHashes = new Set<string>()
+    const fiatOnRampTxs: TransactionDetails[] = []
 
     const remoteTxMap: Map<string, TransactionDetails> = new Map()
     remoteTransactions.forEach((tx) => {
@@ -293,10 +280,7 @@ export function useMergeLocalAndRemoteTransactions(
         remoteTxMap.set(txHash, tx)
         txHashes.add(txHash)
       } else {
-        logger.error(new Error('Remote transaction is missing hash '), {
-          tags: { file: 'transactions/hooks', function: 'useMergeLocalAndRemoteTransactions' },
-          extra: { tx },
-        })
+        fiatOnRampTxs.push(tx)
       }
     })
 
@@ -307,15 +291,11 @@ export function useMergeLocalAndRemoteTransactions(
         localTxMap.set(txHash, tx)
         txHashes.add(txHash)
       } else {
-        // TODO(MOB-1737): Figure out why transactions are missing a hash and fix root issue
-        logger.error(new Error('Local transaction is missing hash '), {
-          tags: { file: 'transactions/hooks', function: 'useMergeLocalAndRemoteTransactions' },
-          extra: { tx },
-        })
+        fiatOnRampTxs.push(tx)
       }
     })
 
-    const deDupedTxs: TransactionDetails[] = []
+    const deDupedTxs: TransactionDetails[] = [...fiatOnRampTxs]
 
     for (const txHash of [...txHashes]) {
       const remoteTx = remoteTxMap.get(txHash)
@@ -407,7 +387,7 @@ export function useLowestPendingNonce(): BigNumberish | undefined {
  */
 export function useAllTransactionsBetweenAddresses(
   sender: Address,
-  recipient: string | undefined | null
+  recipient: Maybe<Address>
 ): TransactionDetails[] | undefined {
   const txnsToSearch = useSelectAddressTransactions(sender)
   return useMemo(() => {

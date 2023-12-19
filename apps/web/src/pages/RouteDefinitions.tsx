@@ -10,6 +10,7 @@ import { isBrowserRouterEnabled } from 'utils/env'
 
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from './Landing'
+import { getDefaultTokensTitle, getExploreTitle } from './paths'
 import Swap from './Swap'
 
 const NftExplore = lazy(() => import('nft/pages/explore'))
@@ -79,7 +80,7 @@ export function useRouterConfig(): RouterConfig {
 export interface RouteDefinition {
   path: string
   nestedPaths: string[]
-  staticTitle: string
+  getTitle: (path?: string) => string
   enabled: (args: RouterConfig) => boolean
   getElement: (args: RouterConfig) => ReactNode
 }
@@ -88,7 +89,7 @@ export interface RouteDefinition {
 function createRouteDefinition(route: Partial<RouteDefinition>): RouteDefinition {
   return {
     getElement: () => null,
-    staticTitle: 'Uniswap Interface',
+    getTitle: () => 'Uniswap Interface',
     enabled: () => true,
     path: '/',
     nestedPaths: [],
@@ -100,55 +101,55 @@ function createRouteDefinition(route: Partial<RouteDefinition>): RouteDefinition
 export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/',
-    staticTitle: t`Trade crypto and NFTs on Uniswap`,
+    getTitle: () => t`Uniswap | Trade crypto & NFTs safely on the top DeFi exchange`,
     getElement: (args) => {
       return args.browserRouterEnabled && args.hash ? <Navigate to={args.hash.replace('#', '')} replace /> : <Landing />
     },
   }),
   createRouteDefinition({
     path: '/explore',
-    staticTitle: t`Explore Tokens on Uniswap`,
+    getTitle: getExploreTitle,
     nestedPaths: [':tab', ':chainName'],
     getElement: () => <RedirectExplore />,
     enabled: (args) => Boolean(args.infoExplorePageEnabled),
   }),
   createRouteDefinition({
     path: '/explore',
-    staticTitle: t`Explore Tokens on Uniswap`,
+    getTitle: getExploreTitle,
     nestedPaths: [':tab/:chainName'],
     getElement: () => <Explore />,
     enabled: (args) => Boolean(args.infoExplorePageEnabled),
   }),
   createRouteDefinition({
     path: '/explore/tokens/:chainName/:tokenAddress',
-    staticTitle: t`Buy & Sell on Uniswap`,
+    getTitle: () => t`Buy & Sell on Uniswap`,
     getElement: () => <TokenDetails />,
     enabled: (args) => Boolean(args.infoExplorePageEnabled),
   }),
   createRouteDefinition({
     path: '/tokens',
-    staticTitle: t`Explore Tokens on Uniswap`,
+    getTitle: getDefaultTokensTitle,
     getElement: (args) => {
       return args.infoExplorePageEnabled ? <Navigate to="/explore/tokens" replace /> : <Explore />
     },
   }),
   createRouteDefinition({
     path: '/tokens/:chainName',
-    staticTitle: t`Explore Tokens on Uniswap`,
+    getTitle: getDefaultTokensTitle,
     getElement: (args) => {
       return args.infoExplorePageEnabled ? <RedirectExplore /> : <Explore />
     },
   }),
   createRouteDefinition({
     path: '/tokens/:chainName/:tokenAddress',
-    staticTitle: t`Explore Tokens on Uniswap`,
+    getTitle: getDefaultTokensTitle,
     getElement: (args) => {
       return args.infoExplorePageEnabled ? <RedirectExplore /> : <TokenDetails />
     },
   }),
   createRouteDefinition({
     path: '/explore/pools/:chainName/:poolAddress',
-    staticTitle: t`Explore Pools on Uniswap`,
+    getTitle: () => t`Explore Pools on Uniswap`,
     getElement: () => (
       <Suspense fallback={null}>
         <PoolDetails />
@@ -158,7 +159,7 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/vote/*',
-    staticTitle: t`Vote on Uniswap`,
+    getTitle: () => t`Vote on Governance Proposals on Uniswap`,
     getElement: () => (
       <Suspense fallback={<LazyLoadSpinner />}>
         <Vote />
@@ -167,7 +168,7 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/create-proposal',
-    staticTitle: t`Uniswap Governance Proposals`,
+    getTitle: () => t`Create a new Governance Proposal on Uniswap`,
     getElement: () => <Navigate to="/vote/create-proposal" replace />,
   }),
   createRouteDefinition({
@@ -177,37 +178,49 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/swap',
     getElement: () => <Swap />,
-    staticTitle: t`Trade crypto and NFTs on Uniswap`,
+    getTitle: () => t`Buy, Sell & Trade Ethereum and Other Top Tokens on Uniswap`,
   }),
   createRouteDefinition({
     path: '/pool/v2/find',
     getElement: () => <PoolFinder />,
-    staticTitle: t`Explore Pools on Uniswap`,
+    getTitle: () => t`Explore Top Liquidity Pools (v2) on Uniswap`,
   }),
-  createRouteDefinition({ path: '/pool/v2', getElement: () => <PoolV2 />, staticTitle: t`Explore Pools on Uniswap` }),
+  createRouteDefinition({
+    path: '/pool/v2',
+    getElement: () => <PoolV2 />,
+    getTitle: () => t`Provide Liquidity to Pools (v2) on Uniswap`,
+  }),
   createRouteDefinition({ path: '/pool', getElement: () => <Pool /> }),
   createRouteDefinition({
     path: '/pool/:tokenId',
     getElement: () => <PositionPage />,
-    staticTitle: t`Manage Positions on Uniswap`,
+    getTitle: () => t`Manage Pool Liquidity on Uniswap`,
   }),
   createRouteDefinition({
     path: '/pools/v2/find',
     getElement: () => <PoolFinder />,
-    staticTitle: t`Explore Pools on Uniswap`,
+    getTitle: () => t`Explore Top Liquidity Pools (v2) on Uniswap`,
   }),
-  createRouteDefinition({ path: '/pools/v2', getElement: () => <PoolV2 />, staticTitle: t`Explore Pools on Uniswap` }),
-  createRouteDefinition({ path: '/pools', getElement: () => <Pool />, staticTitle: t`Explore Pools on Uniswap` }),
+  createRouteDefinition({
+    path: '/pools/v2',
+    getElement: () => <PoolV2 />,
+    getTitle: () => t`Manage & Provide v2 Pool Liquidity on Uniswap`,
+  }),
+  createRouteDefinition({
+    path: '/pools',
+    getElement: () => <Pool />,
+    getTitle: () => t`Manage & Provide Pool Liquidity on Uniswap`,
+  }),
   createRouteDefinition({
     path: '/pools/:tokenId',
     getElement: () => <PositionPage />,
-    staticTitle: t`Explore Pools on Uniswap`,
+    getTitle: () => t`Manage Pool Liquidity on Uniswap`,
   }),
   createRouteDefinition({
     path: '/add/v2',
     nestedPaths: [':currencyIdA', ':currencyIdA/:currencyIdB'],
     getElement: () => <AddLiquidityV2WithTokenRedirects />,
-    staticTitle: t`Add Liquidity on Uniswap`,
+    getTitle: () => t`Provide Liquidity to Pools (v2) on Uniswap`,
   }),
   createRouteDefinition({
     path: '/add',
@@ -218,27 +231,27 @@ export const routes: RouteDefinition[] = [
       ':currencyIdA/:currencyIdB/:feeAmount/:tokenId',
     ],
     getElement: () => <AddLiquidityWithTokenRedirects />,
-    staticTitle: t`Add Liquidity on Uniswap`,
+    getTitle: () => t`Provide Liquidity to Pools on Uniswap`,
   }),
   createRouteDefinition({
     path: '/remove/v2/:currencyIdA/:currencyIdB',
     getElement: () => <RemoveLiquidity />,
-    staticTitle: t`Manage Liquidity on Uniswap`,
+    getTitle: () => t`Manage v2 Pool Liquidity on Uniswap`,
   }),
   createRouteDefinition({
     path: '/remove/:tokenId',
     getElement: () => <RemoveLiquidityV3 />,
-    staticTitle: t`Manage Liquidity on Uniswap`,
+    getTitle: () => t`Manage Pool Liquidity on Uniswap`,
   }),
   createRouteDefinition({
     path: '/migrate/v2',
     getElement: () => <MigrateV2 />,
-    staticTitle: t`Manage Liquidity on Uniswap`,
+    getTitle: () => t`Migrate v2 Pool Liquidity to Uniswap v3`,
   }),
   createRouteDefinition({
     path: '/migrate/v2/:address',
     getElement: () => <MigrateV2Pair />,
-    staticTitle: t`Manage Liquidity on Uniswap`,
+    getTitle: () => t`Migrate v2 Pool Liquidity to Uniswap v3`,
   }),
   createRouteDefinition({
     path: '/nfts',
@@ -248,7 +261,7 @@ export const routes: RouteDefinition[] = [
       </Suspense>
     ),
     enabled: (args) => !args.shouldDisableNFTRoutes,
-    staticTitle: t`Explore NFTs on Uniswap`,
+    getTitle: () => t`Trade NFTs Across OpenSea & Other Top Marketplaces on Uniswap`,
   }),
   createRouteDefinition({
     path: '/nfts/asset/:contractAddress/:tokenId',
@@ -258,7 +271,7 @@ export const routes: RouteDefinition[] = [
       </Suspense>
     ),
     enabled: (args) => !args.shouldDisableNFTRoutes,
-    staticTitle: t`Explore NFTs on Uniswap`,
+    getTitle: () => t`Explore NFTs on Uniswap`,
   }),
   createRouteDefinition({
     path: '/nfts/profile',
@@ -268,7 +281,7 @@ export const routes: RouteDefinition[] = [
       </Suspense>
     ),
     enabled: (args) => !args.shouldDisableNFTRoutes,
-    staticTitle: t`Explore NFTs on Uniswap`,
+    getTitle: () => t`Explore NFTs on Uniswap`,
   }),
   createRouteDefinition({
     path: '/nfts/collection/:contractAddress',
@@ -278,7 +291,7 @@ export const routes: RouteDefinition[] = [
       </Suspense>
     ),
     enabled: (args) => !args.shouldDisableNFTRoutes,
-    staticTitle: t`Explore NFTs on Uniswap`,
+    getTitle: () => t`Explore NFTs on Uniswap`,
   }),
   createRouteDefinition({
     path: '/nfts/collection/:contractAddress/activity',
@@ -288,7 +301,7 @@ export const routes: RouteDefinition[] = [
       </Suspense>
     ),
     enabled: (args) => !args.shouldDisableNFTRoutes,
-    staticTitle: t`Explore NFTs on Uniswap`,
+    getTitle: () => t`Explore NFTs on Uniswap`,
   }),
   createRouteDefinition({ path: '*', getElement: () => <Navigate to="/not-found" replace /> }),
   createRouteDefinition({ path: '/not-found', getElement: () => <NotFound /> }),
@@ -299,6 +312,13 @@ export const findRouteByPath = (pathname: string) => {
     const match = matchPath(route.path, pathname)
     if (match) {
       return route
+    }
+    const subPaths = route.nestedPaths.map((nestedPath) => `${route.path}/${nestedPath}`)
+    for (const subPath of subPaths) {
+      const match = matchPath(subPath, pathname)
+      if (match) {
+        return route
+      }
     }
   }
   return undefined

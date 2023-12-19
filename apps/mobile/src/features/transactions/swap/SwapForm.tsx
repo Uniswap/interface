@@ -159,8 +159,7 @@ function _SwapForm({
 
   const derivedCurrencyField =
     exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
-  // TODO gary MOB-2028 replace temporary hack to handle different separators
-  // Replace with localized version of formatter
+  // Swap input requires numeric values, not localized ones
   const formattedDerivedValue = formatCurrencyAmount({
     amount: currencyAmounts[derivedCurrencyField],
     locale: 'en-US',

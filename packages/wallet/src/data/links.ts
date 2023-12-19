@@ -21,9 +21,10 @@ const ENDPOINT_TO_FETCHER: Record<string, (body: any) => Promise<Response>> = {
   [REST_API_URL + STUB_ONCHAIN_BALANCES_ENDPOINT]: getOnChainBalancesFetch,
   [REST_API_URL + STUB_ONCHAIN_ENS_ENDPOINT]: getOnChainEnsFetch,
 }
+
 // Handles fetching data from REST APIs
 // Responses will be stored in graphql cache
-export const getRestLink = (): ApolloLink => {
+export const getRestLink = (restUri?: string): ApolloLink => {
   // On-chain balances are fetched with ethers.provider
   // When we detect a request to the balances endpoint, we provide a custom fetcher.
   const customFetch: RestLink.CustomFetch = (uri, options) => {
@@ -39,7 +40,7 @@ export const getRestLink = (): ApolloLink => {
 
   return new RestLink({
     customFetch,
-    uri: REST_API_URL,
+    uri: restUri ?? REST_API_URL,
     headers: {
       'Content-Type': 'application/json',
       'X-API-KEY': config.uniswapApiKey,

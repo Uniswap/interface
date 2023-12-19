@@ -1,5 +1,5 @@
 import { ThunkDispatch } from '@reduxjs/toolkit'
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch } from 'src/app/store'
@@ -70,27 +70,24 @@ export function useDynamicFontSizing(
   onSetFontSize: (amount: string) => void
 } {
   const [fontSize, setFontSize] = useState(maxFontSize)
-  const [textInputElementWidth, setTextInputElementWidth] = useState<number>(0)
+  const textInputElementWidthRef = useRef(0)
 
-  const onLayout = useCallback(
-    (event: LayoutChangeEvent) => {
-      if (textInputElementWidth) return
+  const onLayout = useCallback((event: LayoutChangeEvent) => {
+    if (textInputElementWidthRef.current) return
 
-      const width = event.nativeEvent.layout.width
-      setTextInputElementWidth(width)
-    },
-    [setTextInputElementWidth, textInputElementWidth]
-  )
+    const width = event.nativeEvent.layout.width
+    textInputElementWidthRef.current = width
+  }, [])
 
   const onSetFontSize = useCallback(
     (amount: string) => {
       const stringWidth = getStringWidth(amount, maxCharWidthAtMaxFontSize, fontSize, maxFontSize)
-      const scaledSize = fontSize * (textInputElementWidth / stringWidth)
+      const scaledSize = fontSize * (textInputElementWidthRef.current / stringWidth)
       const scaledSizeWithMin = Math.max(scaledSize, minFontSize)
       const newFontSize = Math.round(Math.min(maxFontSize, scaledSizeWithMin))
       setFontSize(newFontSize)
     },
-    [fontSize, maxFontSize, minFontSize, maxCharWidthAtMaxFontSize, textInputElementWidth]
+    [fontSize, maxFontSize, minFontSize, maxCharWidthAtMaxFontSize]
   )
 
   return { onLayout, fontSize, onSetFontSize }

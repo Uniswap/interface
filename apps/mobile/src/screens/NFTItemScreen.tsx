@@ -136,13 +136,31 @@ function NFTItemScreenContents({
 
   const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen
 
-  const traceProperties = useMemo(
-    () =>
-      asset?.collection?.name
-        ? { owner, address, tokenId, collectionName: asset?.collection?.name }
-        : undefined,
-    [address, asset?.collection?.name, owner, tokenId]
-  )
+  const traceProperties: Record<string, Maybe<string | boolean>> = useMemo(() => {
+    const baseProps = {
+      owner,
+      address,
+      tokenId,
+    }
+
+    if (asset?.collection?.name) {
+      return {
+        ...baseProps,
+        collectionName: asset?.collection?.name,
+        isMissingData: false,
+      }
+    }
+
+    if (fallbackData) {
+      return {
+        ...baseProps,
+        collectionName: fallbackData.collectionName,
+        isMissingData: true,
+      }
+    }
+
+    return { ...baseProps, isMissingData: true }
+  }, [address, asset?.collection?.name, fallbackData, owner, tokenId])
 
   const { colorLight, colorDark } = useNearestThemeColorFromImageUri(imageUrl)
   // check if colorLight passes contrast against card bg color, if not use fallback

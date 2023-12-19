@@ -8,7 +8,6 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { buildReceiveNotification } from 'src/features/notifications/buildReceiveNotification'
 import { selectLastTxNotificationUpdate } from 'src/features/notifications/selectors'
-import { useSelectAddressTransactions } from 'src/features/transactions/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { GQLQueries } from 'wallet/src/data/queries'
@@ -24,6 +23,7 @@ import {
   setNotificationStatus,
 } from 'wallet/src/features/notifications/slice'
 import { parseDataResponseToTransactionDetails } from 'wallet/src/features/transactions/history/utils'
+import { useSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import {
   useAccounts,

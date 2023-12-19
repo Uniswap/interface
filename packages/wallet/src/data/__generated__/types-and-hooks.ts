@@ -972,6 +972,7 @@ export type QueryTopTokensArgs = {
 export type QueryTopV3PoolsArgs = {
   chain: Chain;
   first: Scalars['Int'];
+  tokenFilter?: InputMaybe<Scalars['String']>;
   tvlCursor?: InputMaybe<Scalars['Float']>;
 };
 
@@ -1002,7 +1003,6 @@ export type Subscription = {
 
 export type SubscriptionOnAssetActivityArgs = {
   addresses: Array<Scalars['String']>;
-  chain: Chain;
   subscriptionId: Scalars['ID'];
 };
 

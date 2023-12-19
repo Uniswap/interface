@@ -9,6 +9,8 @@ import {
   UnitagClaimEligibilityResponse,
   UnitagClaimResponse,
   UnitagClaimUsernameRequestBody,
+  UnitagUpdateMetadataRequestBody,
+  UnitagUpdateMetadataResponse,
   UnitagUsernameResponse,
 } from 'wallet/src/features/unitags/types'
 
@@ -85,6 +87,20 @@ export function useClaimUnitagMutation(): ReturnType<
     ['success', 'errorCode'], // return all fields
     {},
     'POST',
+    apolloClient
+  )
+}
+
+export function useUnitagUpdateMetadataMutation(
+  unitag: string
+): ReturnType<
+  typeof useRestMutation<UnitagUpdateMetadataResponse, UnitagUpdateMetadataRequestBody>
+> {
+  return useRestMutation<UnitagUpdateMetadataResponse, UnitagUpdateMetadataRequestBody>(
+    `/username/${unitag}/metadata`,
+    ['success', 'metadata'], // return all fields
+    {},
+    'PUT',
     apolloClient
   )
 }

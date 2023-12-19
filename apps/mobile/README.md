@@ -85,6 +85,9 @@ Set this as your default version:
 Install cocoapods:
 `gem install cocoapods -v 1.13.0`
 
+If you hit ruby errors around `ActiveSupport.deprecator`, downgrade your `activesupport` package by running:
+`gem uninstall activesupport && gem install activesupport -v 7.0.8`
+
 ### Add Xcode Command Line Tools
 
 Open Xcode and go to:

@@ -39,3 +39,26 @@ declare module '*.mov' {
   const src: string
   export default src
 }
+
+declare module 'react-scroll-sync' {
+  export interface ScrollSyncProps {
+    children?: React.ReactNode
+    onSync?(el: Element): void
+    proportional?: boolean
+    vertical?: boolean
+    horizontal?: boolean
+    enabled?: boolean
+  }
+
+  export interface ScrollSyncPaneProps {
+    attachTo?: HTMLElement
+    children?: React.ReactNode
+    group?: string | string[]
+    enabled?: boolean
+    // https://github.com/okonet/react-scroll-sync/issues/79
+    innerRef?: React.Ref<HTMLElement>
+  }
+
+  export const ScrollSync: React.FC<ScrollSyncProps>
+  export const ScrollSyncPane: React.FC<ScrollSyncPaneProps>
+}

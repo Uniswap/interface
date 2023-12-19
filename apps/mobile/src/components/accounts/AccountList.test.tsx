@@ -20,6 +20,15 @@ const mock: MockedResponse<AccountListQuery> = {
     query: AccountListDocument,
     variables: {
       addresses: [account.address],
+      valueModifiers: [
+        {
+          ownerAddress: account.address,
+          tokenIncludeOverrides: [],
+          tokenExcludeOverrides: [],
+          includeSmallBalances: false,
+          includeSpamTokens: false,
+        },
+      ],
     },
   },
   result: {

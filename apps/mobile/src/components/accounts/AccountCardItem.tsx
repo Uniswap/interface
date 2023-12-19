@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
+import { useAccountList } from 'src/components/accounts/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -13,7 +14,6 @@ import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
-import { useAccountListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
@@ -42,9 +42,9 @@ function PortfolioValue({
   // Since we're adding a new wallet address to the `ownerAddresses` array, this will be a brand new query, which won't be cached.
   // To avoid all wallets showing a "loading" state, we read directly from cache while we wait for the other query to complete.
 
-  const { data } = useAccountListQuery({
+  const { data } = useAccountList({
     fetchPolicy: 'cache-first',
-    variables: { addresses: address },
+    addresses: address,
   })
 
   const cachedPortfolioValue = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value

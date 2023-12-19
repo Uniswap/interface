@@ -1,36 +1,76 @@
-import { ChainId, Percent } from '@uniswap/sdk-core'
+import { ChainId, Currency, Percent } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { Field, SwapTab } from 'components/swap/constants'
 import { parsedQueryString } from 'hooks/useParsedQueryString'
-import { createContext, Dispatch, SetStateAction, useContext, useMemo, useState } from 'react'
+import usePrevious from 'hooks/usePrevious'
+import {
+  createContext,
+  Dispatch,
+  PropsWithChildren,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { TradeState } from 'state/routing/types'
 
 import { queryParametersToSwapState, SwapInfo, useDerivedSwapInfo } from './hooks'
 
+export interface SerializedCurrencyState {
+  inputCurrencyId?: string | null
+  outputCurrencyId?: string | null
+}
+
+// shared state between Swap and Limit
+export interface CurrencyState {
+  inputCurrency?: Currency
+  outputCurrency?: Currency
+}
+
 export interface SwapState {
   readonly independentField: Field
   readonly typedValue: string
-  inputCurrencyId?: string | null
-  outputCurrencyId?: string | null
   // the typed recipient address or ENS name, or null if swap should go to sender
   readonly recipient: string | null
 }
 
-export const initialSwapState: SwapState = queryParametersToSwapState(parsedQueryString())
+const initialSwapState: SwapState = queryParametersToSwapState(parsedQueryString())
 
-type SwapContextType = {
-  swapState: SwapState
+type SwapAndLimitContextType = {
+  currencyState: CurrencyState
   prefilledState: {
-    inputCurrencyId?: string | null
-    outputCurrencyId?: string | null
+    inputCurrency?: Currency
+    outputCurrency?: Currency
   }
-  derivedSwapInfo: SwapInfo
-  setSwapState: Dispatch<SetStateAction<SwapState>>
+  setCurrencyState: Dispatch<SetStateAction<CurrencyState>>
   currentTab: SwapTab
-  setCurrentTab: (tab: SwapTab) => void
+  setCurrentTab: Dispatch<SetStateAction<SwapTab>>
   // The chainId of the page/context - can be different from the connected Chain ID if the
   // page is displaying content for a different chain
   chainId?: ChainId
 }
+
+type SwapContextType = {
+  swapState: SwapState
+  derivedSwapInfo: SwapInfo
+  setSwapState: Dispatch<SetStateAction<SwapState>>
+}
+
+export const SwapAndLimitContext = createContext<SwapAndLimitContextType>({
+  currencyState: {
+    inputCurrency: undefined,
+    outputCurrency: undefined,
+  },
+  setCurrencyState: () => undefined,
+  prefilledState: {
+    inputCurrency: undefined,
+    outputCurrency: undefined,
+  },
+  chainId: ChainId.MAINNET,
+  currentTab: SwapTab.Swap,
+  setCurrentTab: () => undefined,
+})
 
 export const EMPTY_DERIVED_SWAP_INFO: SwapInfo = Object.freeze({
   currencies: {},
@@ -46,50 +86,75 @@ export const EMPTY_DERIVED_SWAP_INFO: SwapInfo = Object.freeze({
 
 export const SwapContext = createContext<SwapContextType>({
   swapState: initialSwapState,
-  prefilledState: {
-    inputCurrencyId: undefined,
-    outputCurrencyId: undefined,
-  },
-  chainId: ChainId.MAINNET,
   derivedSwapInfo: EMPTY_DERIVED_SWAP_INFO,
   setSwapState: () => undefined,
-  currentTab: SwapTab.Swap,
-  setCurrentTab: () => undefined,
 })
 
 export function useSwapContext() {
   return useContext(SwapContext)
 }
 
-export function SwapContextProvider({
+export function useSwapAndLimitContext() {
+  return useContext(SwapAndLimitContext)
+}
+
+export function SwapAndLimitContextProvider({
   children,
   chainId,
-  initialInputCurrencyId,
-  initialOutputCurrencyId,
-}: {
-  children: React.ReactNode
+  initialInputCurrency,
+  initialOutputCurrency,
+}: PropsWithChildren<{
   chainId?: ChainId
-  initialInputCurrencyId?: string | null
-  initialOutputCurrencyId?: string | null
-}) {
+  initialInputCurrency?: Currency
+  initialOutputCurrency?: Currency
+}>) {
+  const { chainId: connectedChainId } = useWeb3React()
   const [currentTab, setCurrentTab] = useState<SwapTab>(SwapTab.Swap)
+  const [currencyState, setCurrencyState] = useState<CurrencyState>({
+    inputCurrency: initialInputCurrency,
+    outputCurrency: initialOutputCurrency,
+  })
 
   const prefilledState = useMemo(
     () => ({
-      inputCurrencyId: initialInputCurrencyId,
-      outputCurrencyId: initialOutputCurrencyId,
+      inputCurrency: initialInputCurrency,
+      outputCurrency: initialOutputCurrency,
     }),
-    [initialInputCurrencyId, initialOutputCurrencyId]
+    [initialInputCurrency, initialOutputCurrency]
   )
 
-  const [swapState, setSwapState] = useState<SwapState>({ ...initialSwapState, ...prefilledState })
-  const derivedSwapInfo = useDerivedSwapInfo(swapState, chainId)
+  const previousConnectedChainId = usePrevious(connectedChainId)
+  const previousPrefilledState = usePrevious(prefilledState)
+
+  useEffect(() => {
+    const combinedCurrencyState = { ...currencyState, ...prefilledState }
+    const chainChanged = previousConnectedChainId && previousConnectedChainId !== connectedChainId
+    const prefilledInputChanged =
+      previousPrefilledState?.inputCurrency &&
+      !prefilledState.inputCurrency?.equals(previousPrefilledState.inputCurrency)
+    const prefilledOutputChanged =
+      previousPrefilledState?.outputCurrency &&
+      !prefilledState?.outputCurrency?.equals(previousPrefilledState.outputCurrency)
+
+    if (chainChanged || prefilledInputChanged || prefilledOutputChanged) {
+      setCurrencyState({
+        inputCurrency: combinedCurrencyState.inputCurrency ?? undefined,
+        outputCurrency: combinedCurrencyState.outputCurrency ?? undefined,
+      })
+    }
+  }, [connectedChainId, currencyState, prefilledState, previousConnectedChainId, previousPrefilledState])
 
   return (
-    <SwapContext.Provider
-      value={{ swapState, setSwapState, derivedSwapInfo, chainId, prefilledState, currentTab, setCurrentTab }}
+    <SwapAndLimitContext.Provider
+      value={{ currencyState, setCurrencyState, currentTab, setCurrentTab, prefilledState, chainId }}
     >
       {children}
-    </SwapContext.Provider>
+    </SwapAndLimitContext.Provider>
   )
+}
+
+export function SwapContextProvider({ children }: { children: React.ReactNode }) {
+  const [swapState, setSwapState] = useState<SwapState>({ ...initialSwapState })
+  const derivedSwapInfo = useDerivedSwapInfo(swapState)
+  return <SwapContext.Provider value={{ swapState, setSwapState, derivedSwapInfo }}>{children}</SwapContext.Provider>
 }

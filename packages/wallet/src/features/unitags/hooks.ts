@@ -11,6 +11,7 @@ import {
   useUnitagClaimEligibilityQuery,
   useUnitagQuery,
 } from 'wallet/src/features/unitags/api'
+import { UnitagAddressResponse } from 'wallet/src/features/unitags/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
@@ -40,10 +41,10 @@ export const useCanAddressClaimUnitag = (address?: Address): boolean => {
   return !loading && !!data?.canClaim
 }
 
-export const useUnitag = (address?: Address): string | undefined => {
+export const useUnitag = (address?: Address): UnitagAddressResponse | undefined => {
   const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
   const { data } = useUnitagByAddressQuery(unitagsFeatureFlagEnabled ? address : undefined)
-  return data?.username
+  return data
 }
 
 // Helper function to enforce unitag length and alphanumeric characters

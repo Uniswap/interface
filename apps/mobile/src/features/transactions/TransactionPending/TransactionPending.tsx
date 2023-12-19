@@ -33,7 +33,7 @@ export function TransactionPending({
 
   const onPressViewTransaction = async (): Promise<void> => {
     if (transaction) {
-      await openTransactionLink(transaction.hash, transaction.chainId)
+      await openTransactionLink(transaction?.hash, transaction.chainId)
     }
   }
 

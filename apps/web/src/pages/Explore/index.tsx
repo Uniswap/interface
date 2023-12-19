@@ -18,6 +18,7 @@ import styled, { css } from 'styled-components'
 import { ThemedText } from 'theme/components'
 
 import { useExploreParams } from './redirects'
+import RecentTransactions from './tables/RecentTransactions'
 
 const ExploreContainer = styled.div`
   width: 100%;
@@ -140,7 +141,7 @@ const Pages: Array<Page> = [
   {
     title: <Trans>Transactions</Trans>,
     key: ExploreTab.Transactions,
-    component: TokenTable,
+    component: RecentTransactions,
     loggingElementName: InterfaceElementName.EXPLORE_TRANSACTIONS_TAB,
   },
 ]

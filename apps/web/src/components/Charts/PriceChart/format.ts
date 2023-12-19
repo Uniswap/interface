@@ -41,6 +41,7 @@ const TIME_PERIOD_TO_FORMAT_OPTIONS: Record<TimePeriod, Record<TimestampFormatte
  * Returns a function to format timestamps, specialized by timePeriod and type to display ('tick' or 'crosshair'),
  * localized for the given locale.
  */
+// TODO(WEB-2986): remove d3-specific util once PriceChart is moved to lightweight-charts
 export function getTimestampFormatter(
   timePeriod: TimePeriod,
   locale: string,

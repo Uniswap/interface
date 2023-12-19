@@ -1,6 +1,5 @@
 import { InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
-import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { Box } from 'nft/components/Box'
@@ -12,6 +11,8 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+
+import { useToggleAccountDrawer } from '../hooks'
 
 const FloorPrice = styled(Row)`
   opacity: 0;

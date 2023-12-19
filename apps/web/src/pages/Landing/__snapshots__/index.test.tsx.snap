@@ -744,46 +744,6 @@ exports[`disable nft on landing page does not render nft information and card 1`
   grid-row-gap: 4px;
 }
 
-.c41 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c15 {
-  display: inline-block;
-  height: inherit;
-}
-
-.c36 {
-  opacity: 0;
-  -webkit-transition: opacity 250ms ease-in;
-  transition: opacity 250ms ease-in;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-}
-
-.c35 {
-  width: 24px;
-  height: 24px;
-  background: #22222212;
-  -webkit-transition: background-color 250ms ease-in;
-  transition: background-color 250ms ease-in;
-  box-shadow: 0 0 1px white;
-  border-radius: 50%;
-}
-
-.c34 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
 .c3 {
   padding: 68px 8px 0px;
   max-width: 480px;
@@ -902,6 +862,46 @@ exports[`disable nft on landing page does not render nft information and card 1`
   justify-content: center;
   width: 100%;
   height: 100%;
+}
+
+.c41 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c15 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c36 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.c35 {
+  width: 24px;
+  height: 24px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
+}
+
+.c34 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .c23 {
@@ -3388,46 +3388,6 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   grid-row-gap: 4px;
 }
 
-.c41 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c15 {
-  display: inline-block;
-  height: inherit;
-}
-
-.c36 {
-  opacity: 0;
-  -webkit-transition: opacity 250ms ease-in;
-  transition: opacity 250ms ease-in;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-}
-
-.c35 {
-  width: 24px;
-  height: 24px;
-  background: #22222212;
-  -webkit-transition: background-color 250ms ease-in;
-  transition: background-color 250ms ease-in;
-  box-shadow: 0 0 1px white;
-  border-radius: 50%;
-}
-
-.c34 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
 .c3 {
   padding: 68px 8px 0px;
   max-width: 480px;
@@ -3546,6 +3506,46 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   justify-content: center;
   width: 100%;
   height: 100%;
+}
+
+.c41 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c15 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c36 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.c35 {
+  width: 24px;
+  height: 24px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
+}
+
+.c34 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .c23 {

@@ -3,11 +3,13 @@ import { Gap } from 'theme'
 
 export const Column = styled.div<{
   gap?: Gap
+  flex?: string
 }>`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   gap: ${({ gap, theme }) => gap && theme.grids[gap]};
+  ${({ flex }) => flex && `flex: ${flex};`}
 `
 export const ColumnCenter = styled(Column)`
   width: 100%;

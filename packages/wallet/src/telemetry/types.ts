@@ -50,6 +50,10 @@ export type WalletEventProperties = {
     success: boolean
     networkError: boolean
   } & TraceProps
+  [WalletEventName.NFTsLoaded]: {
+    shown: number
+    hidden: number
+  }
   [WalletEventName.PortfolioBalanceFreshnessLag]: {
     freshnessLag: number
     updatedCurrencies: string[]

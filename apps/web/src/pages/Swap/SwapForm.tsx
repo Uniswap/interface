@@ -11,7 +11,7 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from 'analytics'
-import { useToggleAccountDrawer } from 'components/AccountDrawer'
+import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import AddressInputPanel from 'components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { GrayCard } from 'components/Card'
@@ -30,7 +30,7 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { useConnectionReady } from 'connection/eagerlyConnect'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
-import { getSwapCurrencyId, TOKEN_SHORTHANDS } from 'constants/tokens'
+import { TOKEN_SHORTHANDS } from 'constants/tokens'
 import { useNewSwapFlow } from 'featureFlags/flags/progressIndicatorV2'
 import { useCurrency, useDefaultActiveTokens } from 'hooks/Tokens'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
@@ -51,8 +51,8 @@ import { Text } from 'rebass'
 import { useAppSelector } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
-import { queryParametersToSwapState, useSwapActionHandlers } from 'state/swap/hooks'
-import { initialSwapState, SwapState, useSwapContext } from 'state/swap/SwapContext'
+import { queryParametersToCurrencyState, useSwapActionHandlers } from 'state/swap/hooks'
+import { CurrencyState, useSwapAndLimitContext, useSwapContext } from 'state/swap/SwapContext'
 import { useTheme } from 'styled-components'
 import { LinkStyledButton, ThemedText } from 'theme/components'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
@@ -68,7 +68,7 @@ import { OutputTaxTooltipBody } from './TaxTooltipBody'
 
 interface SwapFormProps {
   disableTokenInputs?: boolean
-  onCurrencyChange?: (selected: Pick<SwapState, 'inputCurrencyId' | 'outputCurrencyId'>) => void
+  onCurrencyChange?: (selected: CurrencyState) => void
 }
 
 export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapFormProps) {
@@ -76,13 +76,14 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   const { account, chainId: connectedChainId, connector } = useWeb3React()
   const trace = useTrace()
 
-  const { swapState, setSwapState, derivedSwapInfo, chainId, prefilledState } = useSwapContext()
+  const { chainId, prefilledState, currencyState } = useSwapAndLimitContext()
+  const { swapState, setSwapState, derivedSwapInfo } = useSwapContext()
   const { typedValue, recipient, independentField } = swapState
 
   // token warning stuff
   const parsedQs = useParsedQueryString()
   const prefilledCurrencies = useMemo(() => {
-    return queryParametersToSwapState(parsedQs)
+    return queryParametersToCurrencyState(parsedQs)
   }, [parsedQs])
   const prefilledInputCurrency = useCurrency(prefilledCurrencies?.inputCurrencyId, chainId)
   const prefilledOutputCurrency = useCurrency(prefilledCurrencies?.outputCurrencyId, chainId)
@@ -263,20 +264,15 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   const previousConnectedChainId = usePrevious(connectedChainId)
   const previousPrefilledState = usePrevious(prefilledState)
   useEffect(() => {
-    const combinedInitialState = { ...initialSwapState, ...prefilledState }
     const chainChanged = previousConnectedChainId && previousConnectedChainId !== connectedChainId
     const prefilledInputChanged =
-      previousPrefilledState && previousPrefilledState?.inputCurrencyId !== prefilledState?.inputCurrencyId
+      previousPrefilledState?.inputCurrency &&
+      !prefilledState.inputCurrency?.equals(previousPrefilledState.inputCurrency)
     const prefilledOutputChanged =
-      previousPrefilledState && previousPrefilledState?.outputCurrencyId !== prefilledState?.outputCurrencyId
+      previousPrefilledState?.outputCurrency &&
+      !prefilledState?.outputCurrency?.equals(previousPrefilledState.outputCurrency)
+
     if (chainChanged || prefilledInputChanged || prefilledOutputChanged) {
-      setSwapState({
-        ...initialSwapState,
-        ...prefilledState,
-        independentField: combinedInitialState.independentField ?? Field.INPUT,
-        inputCurrencyId: combinedInitialState.inputCurrencyId ?? undefined,
-        outputCurrencyId: combinedInitialState.outputCurrencyId ?? undefined,
-      })
       // reset local state
       setSwapFormState({
         tradeToConfirm: undefined,
@@ -428,12 +424,12 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     (inputCurrency: Currency) => {
       onCurrencySelection(Field.INPUT, inputCurrency)
       onCurrencyChange?.({
-        inputCurrencyId: getSwapCurrencyId(inputCurrency),
-        outputCurrencyId: swapState.outputCurrencyId,
+        inputCurrency,
+        outputCurrency: currencyState.outputCurrency,
       })
       maybeLogFirstSwapAction(trace)
     },
-    [onCurrencyChange, onCurrencySelection, swapState, trace]
+    [onCurrencyChange, onCurrencySelection, currencyState, trace]
   )
   const inputCurrencyNumericalInputRef = useRef<HTMLInputElement>(null)
 
@@ -446,12 +442,12 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     (outputCurrency: Currency) => {
       onCurrencySelection(Field.OUTPUT, outputCurrency)
       onCurrencyChange?.({
-        inputCurrencyId: swapState.inputCurrencyId,
-        outputCurrencyId: getSwapCurrencyId(outputCurrency),
+        inputCurrency: currencyState.inputCurrency,
+        outputCurrency,
       })
       maybeLogFirstSwapAction(trace)
     },
-    [onCurrencyChange, onCurrencySelection, swapState, trace]
+    [onCurrencyChange, onCurrencySelection, currencyState, trace]
   )
 
   const showPriceImpactWarning = isClassicTrade(trade) && largerPriceImpact && priceImpactSeverity > 3
