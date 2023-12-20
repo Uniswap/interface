@@ -1,7 +1,7 @@
 import React from 'react'
 import { Switch as BaseSwitch, SwitchProps, ViewProps } from 'react-native'
+import { IS_ANDROID } from 'src/constants/globals'
 import { Flex, useSporeColors } from 'ui/src'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 // TODO(MOB-1518) change to tamagui ui/src Switch
 
@@ -16,7 +16,7 @@ type Props = {
 export function Switch({ value, onValueChange, disabled, ...rest }: Props): JSX.Element {
   const colors = useSporeColors()
 
-  const falseThumbColor = isAndroid ? colors.neutral3.val : colors.surface1.val
+  const falseThumbColor = IS_ANDROID ? colors.neutral3.val : colors.surface1.val
   const trackColor = colors.accentSoft.val
 
   return (

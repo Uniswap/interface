@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
-import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -36,7 +35,7 @@ export const exampleSwapSuccess = {
 }
 
 // easiest to use inside NotificationToastWrapper before any returns
-export const useMockNotification = (ms?: number): void => {
+export const useFakeNotification = (ms?: number): void => {
   const [sent, setSent] = useState(false)
   const dispatch = useAppDispatch()
   const activeAddress = useActiveAccountAddressWithThrow()
@@ -57,31 +56,4 @@ export const useMockNotification = (ms?: number): void => {
       setSent(true)
     }
   }, [activeAddress, dispatch, ms, sent])
-}
-
-const generateRandomId = (): string => {
-  let randomId = '0x'
-  for (let i = 0; i < 40; i++) {
-    randomId += Math.floor(Math.random() * 16).toString(16)
-  }
-  return randomId
-}
-
-const generateRandomDate = (): number => {
-  const start = new Date(2023, 4, 12)
-  const end = new Date()
-  return Math.floor(
-    new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())).getTime() / 1000
-  )
-}
-
-export const useMockCloudBackups = (numberOfBackups?: number): CloudStorageMnemonicBackup[] => {
-  const number = numberOfBackups ?? 1
-
-  const mockBackups = Array.from({ length: number }, () => ({
-    mnemonicId: generateRandomId(),
-    createdAt: generateRandomDate(),
-  }))
-
-  return mockBackups
 }

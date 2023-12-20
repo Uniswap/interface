@@ -16,7 +16,6 @@ import { UniswapXOrderDetails } from 'state/signatures/types'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled, { css } from 'styled-components'
 import { ExternalLink } from 'theme/components'
-import { AnimationType } from 'theme/components/FadePresence'
 import { ThemedText } from 'theme/components/text'
 import { SignatureExpiredError } from 'utils/errors'
 import { getExplorerLink } from 'utils/getExplorerLink'
@@ -27,6 +26,7 @@ import { slideInAnimation, slideOutAnimation } from './animations'
 import {
   AnimatedEntranceConfirmationIcon,
   AnimatedEntranceSubmittedIcon,
+  AnimationType,
   CurrencyLoader,
   LoadingIndicatorOverlay,
   LogoContainer,
@@ -317,7 +317,7 @@ export function PendingModalContent({
 
   // Return finalized-order-specifc content if available
   if (order && order.status !== UniswapXOrderStatus.OPEN) {
-    return <OrderContent order={order} />
+    return <OrderContent order={{ status: order.status, orderHash: order.orderHash, details: order }} />
   }
 
   // On mainnet, we show a different icon when the transaction is submitted but pending confirmation.

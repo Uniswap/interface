@@ -1,11 +1,13 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
-import { useAccountList } from 'src/components/accounts/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Flex, Text, useDeviceDimensions } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
-import { AccountListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import {
+  AccountListQuery,
+  useAccountListQuery,
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
@@ -15,9 +17,10 @@ type Portfolio = NonNullable<NonNullable<NonNullable<AccountListQuery['portfolio
 
 function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Element {
   const { fullHeight } = useDeviceDimensions()
-  const addresses = useMemo(() => accounts.map((account) => account.address), [accounts])
-  const { data, loading } = useAccountList({
-    addresses,
+  const { data, loading } = useAccountListQuery({
+    variables: {
+      addresses: accounts.map((account) => account.address),
+    },
     notifyOnNetworkStatusChange: true,
   })
 

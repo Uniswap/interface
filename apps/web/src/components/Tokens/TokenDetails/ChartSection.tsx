@@ -1,17 +1,14 @@
 import { ParentSize } from '@visx/responsive'
-import { ChartType, PriceChartType } from 'components/Charts/utils'
-import { VolumeChart } from 'components/Charts/VolumeChart'
 import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
-import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TokenPriceQuery } from 'graphql/data/TokenPrice'
-import { isPricePoint, PricePoint, TimePeriod } from 'graphql/data/util'
+import { isPricePoint, PricePoint } from 'graphql/data/util'
+import { useAtomValue } from 'jotai/utils'
+import { pageTimePeriodAtom } from 'pages/TokenDetails'
 import { Suspense, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { PriceChart } from '../../Charts/PriceChart'
 import TimePeriodSelector from './TimeSelector'
-
-const TDP_CHART_HEIGHT_PX = 392
 
 export const ChartContainer = styled.div`
   display: flex;
@@ -37,21 +34,7 @@ function usePriceHistory(tokenPriceData: TokenPriceQuery): PricePoint[] | undefi
 
   return priceHistory
 }
-export default function ChartSection({
-  chartType,
-  priceChartType,
-  timePeriod,
-  onChangeTimePeriod,
-  tokenPriceQuery,
-  extractedColor,
-}: {
-  chartType: ChartType
-  priceChartType?: PriceChartType
-  timePeriod: TimePeriod
-  onChangeTimePeriod: (t: TimePeriod) => void
-  tokenPriceQuery?: TokenPriceQuery
-  extractedColor: string
-}) {
+export default function ChartSection({ tokenPriceQuery }: { tokenPriceQuery?: TokenPriceQuery }) {
   if (!tokenPriceQuery) {
     return <LoadingChart />
   }
@@ -59,67 +42,20 @@ export default function ChartSection({
   return (
     <Suspense fallback={<LoadingChart />}>
       <ChartContainer data-testid="chart-container">
-        <Chart
-          chartType={chartType}
-          priceChartType={priceChartType}
-          timePeriod={timePeriod}
-          tokenPriceQuery={tokenPriceQuery}
-          extractedColor={extractedColor}
-        />
-        <TimePeriodSelector timePeriod={timePeriod} onChangeTimePeriod={onChangeTimePeriod} />
+        <Chart tokenPriceQuery={tokenPriceQuery} />
+        <TimePeriodSelector />
       </ChartContainer>
     </Suspense>
   )
 }
 
-function Chart({
-  chartType,
-  priceChartType,
-  timePeriod,
-  tokenPriceQuery,
-  extractedColor,
-}: {
-  chartType: ChartType
-  priceChartType?: PriceChartType
-  timePeriod: TimePeriod
-  tokenPriceQuery: TokenPriceQuery
-  extractedColor: string
-}) {
+function Chart({ tokenPriceQuery }: { tokenPriceQuery: TokenPriceQuery }) {
   const prices = usePriceHistory(tokenPriceQuery)
+  const timePeriod = useAtomValue(pageTimePeriodAtom)
 
-  const isInfoTDPEnabled = useInfoTDPEnabled()
-  if (!isInfoTDPEnabled) {
-    return (
-      <ParentSize>
-        {({ width }) => (
-          <PriceChart prices={prices} width={width} height={TDP_CHART_HEIGHT_PX} timePeriod={timePeriod} />
-        )}
-      </ParentSize>
-    )
-  }
-
-  switch (chartType) {
-    case ChartType.PRICE:
-      if (priceChartType === PriceChartType.CANDLESTICK) {
-        return null
-      }
-      return (
-        <ParentSize>
-          {({ width }) => (
-            <PriceChart prices={prices} width={width} height={TDP_CHART_HEIGHT_PX} timePeriod={timePeriod} />
-          )}
-        </ParentSize>
-      )
-    case ChartType.VOLUME:
-      return (
-        <VolumeChart
-          volumes={prices}
-          timePeriod={timePeriod}
-          height={TDP_CHART_HEIGHT_PX}
-          extractedColor={extractedColor}
-        />
-      )
-    default:
-      return null
-  }
+  return (
+    <ParentSize>
+      {({ width }) => <PriceChart prices={prices} width={width} height={392} timePeriod={timePeriod} />}
+    </ParentSize>
+  )
 }

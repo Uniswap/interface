@@ -1,5 +1,6 @@
 import * as StoreReview from 'expo-store-review'
 import { Alert } from 'react-native'
+import { IS_ANDROID } from 'src/constants/globals'
 import { APP_FEEDBACK_LINK } from 'src/constants/urls'
 import { hasConsecutiveRecentSwapsSelector } from 'src/features/appRating/selectors'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
@@ -13,7 +14,6 @@ import { TransactionStatus, TransactionType } from 'wallet/src/features/transact
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { setAppRating } from 'wallet/src/features/wallet/slice'
 import { appSelect } from 'wallet/src/state'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 // at most once per reminder period (120 days)
 const MIN_PROMPT_REMINDER_MS = 120 * ONE_DAY_MS
@@ -27,7 +27,7 @@ export function* appRatingWatcherSaga() {
     // count successful swaps
 
     // TODO(MOB-1814): Remove once Android goes live
-    if (isAndroid) return
+    if (IS_ANDROID) return
 
     if (
       action.payload.typeInfo.type === TransactionType.Swap &&

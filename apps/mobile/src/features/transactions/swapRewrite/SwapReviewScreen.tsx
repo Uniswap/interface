@@ -2,14 +2,12 @@ import { notificationAsync } from 'expo-haptics'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { Arrow } from 'src/components/icons/Arrow'
 import { BiometricsIcon } from 'src/components/icons/BiometricsIcon'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { OnShowSwapFeeInfo } from 'src/components/SwapFee/SwapFee'
-import { selectHasViewedReviewScreen } from 'src/features/behaviorHistory/selectors'
-import { setHasViewedReviewScreen } from 'src/features/behaviorHistory/slice'
 import {
   useBiometricAppSettings,
   useBiometricPrompt,
@@ -80,7 +78,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     isSubmitting,
     onClose,
     updateSwapForm,
-    isFiatMode,
   } = useSwapFormContext()
 
   const {
@@ -159,8 +156,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     !customSlippageTolerance,
     navigateToNextScreen,
     txId,
-    screen === SwapScreen.SwapReviewHoldingToSwap,
-    isFiatMode
+    screen === SwapScreen.SwapReviewHoldingToSwap
   )
 
   const submitTransaction = useCallback(() => {
@@ -319,12 +315,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   const onCloseSwapFeeInfo = useCallback(() => {
     setShowSwapFeeInfoModal(false)
   }, [])
-
-  // Flag review screen user behavior, used to show hold to swap tip
-  const hasViewedReviewScreen = useAppSelector(selectHasViewedReviewScreen)
-  useEffect(() => {
-    if (!hasViewedReviewScreen) dispatch(setHasViewedReviewScreen(true))
-  }, [dispatch, hasViewedReviewScreen])
 
   if (hideContent || !acceptedDerivedSwapInfo || (!isWrap && (!acceptedTrade || !trade))) {
     // We forcefully hide the content via `hideContent` to allow the bottom sheet to animate faster while still allowing all API requests to trigger ASAP.

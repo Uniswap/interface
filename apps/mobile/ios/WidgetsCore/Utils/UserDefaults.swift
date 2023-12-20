@@ -34,17 +34,6 @@ public struct WidgetDataAccounts: Decodable {
   public var accounts: [Account]
 }
 
-public struct WidgetDataI18n: Decodable {
-  
-  public init() {
-    self.locale = "en"
-    self.currency = WidgetConstants.currencyUsd
-  }
-  
-  public var locale: String
-  public var currency: String
-}
-
 public struct Account: Decodable {
   public var address: String
   public var name: String?
@@ -91,14 +80,14 @@ public enum Change: String, Codable {
   case removed = "removed"
 }
 
+
 public struct UniswapUserDefaults {
   private static var buildString = getBuildVariantString(bundleId: Bundle.main.bundleIdentifier!)
   
-  static let keyEvents = buildString + ".widgets.configuration.events"
-  static let keyCache = buildString + ".widgets.configuration.cache"
-  static let keyFavorites = buildString + ".widgets.favorites"
-  static let keyAccounts = buildString + ".widgets.accounts"
-  static let keyI18n = buildString + ".widgets.i18n"
+  static let eventsKey = buildString + ".widgets.configuration.events"
+  static let cacheKey = buildString + ".widgets.configuration.cache"
+  static let favoritesKey = buildString + ".widgets.favorites"
+  static let accountsKey = buildString + ".widgets.accounts"
   
   static let userDefaults = UserDefaults.init(suiteName: APP_GROUP)
   
@@ -115,7 +104,7 @@ public struct UniswapUserDefaults {
   }
   
   public static func readAccounts() -> WidgetDataAccounts {
-    let data = readData(key: keyAccounts)
+    let data = readData(key: accountsKey)
     guard let data = data else {
       return WidgetDataAccounts([])
     }
@@ -128,7 +117,7 @@ public struct UniswapUserDefaults {
   }
   
   public static func readFavorites() -> WidgetDataFavorites {
-    let data = readData(key: keyFavorites)
+    let data = readData(key: favoritesKey)
     guard let data = data else {
       return WidgetDataFavorites([])
     }
@@ -140,20 +129,8 @@ public struct UniswapUserDefaults {
     return parsedData
   }
   
-  public static func readI18n() -> WidgetDataI18n {
-    let data = readData(key: keyI18n)
-    guard let data = data else {
-      return WidgetDataI18n()
-    }
-    let decoder = JSONDecoder()
-    guard let parsedData = try? decoder.decode(WidgetDataI18n.self, from: data) else {
-      return WidgetDataI18n()
-    }
-    return parsedData
-  }
-  
   public static func readConfiguration() -> WidgetDataConfiguration {
-    let data = readData(key: keyCache)
+    let data = readData(key: cacheKey)
     guard let data = data else {
       return WidgetDataConfiguration([])
     }
@@ -170,12 +147,12 @@ public struct UniswapUserDefaults {
       let encoder = JSONEncoder()
       let JSONdata = try! encoder.encode(data)
       let json = String(data: JSONdata, encoding: String.Encoding.utf8)
-      userDefaults!.set(json, forKey: keyCache)
+      userDefaults!.set(json, forKey: cacheKey)
     }
   }
   
   public static func readEventChanges() -> WidgetEvents {
-    let data = readData(key: keyEvents)
+    let data = readData(key: eventsKey)
     guard let data = data else {
       return WidgetEvents(events: [])
     }
@@ -192,7 +169,7 @@ public struct UniswapUserDefaults {
       let encoder = JSONEncoder()
       let JSONdata = try! encoder.encode(data)
       let json = String(data: JSONdata, encoding: String.Encoding.utf8)
-      userDefaults!.set(json, forKey: keyEvents)
+      userDefaults!.set(json, forKey: eventsKey)
     }
   }
 }

@@ -6,8 +6,8 @@ import {
   LocalAuthenticationResult,
 } from 'expo-local-authentication'
 import { NativeModulesProxy } from 'expo-modules-core'
+import { Platform } from 'react-native'
 import { logger } from 'utilities/src/logger/logger'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 const ELA = NativeModulesProxy.ExpoLocalAuthentication
 
@@ -33,8 +33,8 @@ export async function enroll(): Promise<void> {
 
 const DEFAULT_AUTHENTICATE_OPTIONS = {
   promptMessage: 'Please authenticate',
-  // Temporary disabled due to the android AppState foreground -> background triggers of biometrics popup with pin fallback
-  disableDeviceFallback: isAndroid ? true : false,
+  // Temporary disabled due to the android AppState forground -> background triggers of biometrics popup with pin fallback
+  disableDeviceFallback: Platform.OS === 'android' ? true : false,
   cancelLabel: 'Cancel',
 }
 

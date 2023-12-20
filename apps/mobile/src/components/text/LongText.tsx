@@ -60,7 +60,7 @@ export function LongText(props: LongTextProps): JSX.Element {
 
   const onTextLayout = useCallback(
     (e: NativeSyntheticEvent<TextLayoutEventData>) => {
-      setTextLengthExceedsLimit(e.nativeEvent.lines.length > initialDisplayedLines)
+      setTextLengthExceedsLimit(e.nativeEvent.lines.length >= initialDisplayedLines)
     },
     [initialDisplayedLines]
   )

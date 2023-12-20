@@ -26,7 +26,7 @@ jest.mock('connection', () => {
   const mockConnection: Connection = {
     connector,
     hooks,
-    getProviderInfo: () => ({ name: 'test' }),
+    getName: () => 'test',
     type: 'INJECTED' as ConnectionType,
     shouldDisplay: () => false,
   }

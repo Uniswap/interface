@@ -27,8 +27,6 @@ import {
 import { useGroupNftsByVisibility } from 'wallet/src/features/nfts/hooks'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { formatNftItems, getNFTAssetKey } from 'wallet/src/features/nfts/utils'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { WalletEventName } from 'wallet/src/telemetry/constants'
 
 export const NFTS_TAB_DATA_DEPENDENCIES = [GQLQueries.NftsTab]
 
@@ -104,11 +102,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     })
   }, [data?.nftBalances?.pageInfo?.endCursor, data?.nftBalances?.pageInfo?.hasNextPage, fetchMore])
 
-  const { nfts, numHidden, numShown } = useGroupNftsByVisibility(
-    nftDataItems,
-    hiddenNftsExpanded,
-    owner
-  )
+  const { nfts, numHidden } = useGroupNftsByVisibility(nftDataItems, hiddenNftsExpanded, owner)
 
   const onHiddenRowPressed = useCallback((): void => {
     if (hiddenNftsExpanded && footerHeight) {
@@ -116,13 +110,6 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     }
     setHiddenNftsExpanded(!hiddenNftsExpanded)
   }, [hiddenNftsExpanded, footerHeight, fullHeight])
-
-  useEffect(() => {
-    sendWalletAnalyticsEvent(WalletEventName.NFTsLoaded, {
-      shown: numShown,
-      hidden: numHidden,
-    })
-  }, [numHidden, numShown])
 
   useEffect(() => {
     if (numHidden === 0 && hiddenNftsExpanded) {

@@ -9,6 +9,7 @@ export function useBalances(currencies: CurrencyId[] | undefined): PortfolioBala
   const address = useActiveAccountAddressWithThrow()
   const { data: balances } = usePortfolioBalances({
     address,
+    shouldPoll: false,
     fetchPolicy: 'cache-and-network',
   })
 

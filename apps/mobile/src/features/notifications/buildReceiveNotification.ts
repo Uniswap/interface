@@ -25,7 +25,7 @@ export function buildReceiveNotification(
   const { typeInfo, status, chainId, hash, id } = transactionDetails
 
   // Only build notification object on successful receive transactions.
-  if (status !== TransactionStatus.Success || typeInfo.type !== TransactionType.Receive || !hash) {
+  if (status !== TransactionStatus.Success || typeInfo.type !== TransactionType.Receive) {
     return undefined
   }
 

@@ -398,14 +398,6 @@ export const v54Schema = {
   },
 }
 
-export const v55Schema = {
-  ...v54Schema,
-  behaviorHistory: {
-    hasViewedReviewScreen: false,
-    hasSubmittedHoldToSwap: false,
-  },
-}
-
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
 export const getSchema = (): typeof v54Schema => v54Schema

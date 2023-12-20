@@ -22,8 +22,7 @@ export const LoadingBubble = styled.div<{
   background: linear-gradient(
     to left,
     ${({ theme }) => theme.surface3} 25%,
-    // Default color values prevent undefined argument error
-    ${({ theme }) => lighten(0.075, theme.surface3 ?? '#FFFFFF12')} 50%,
+    ${({ theme }) => lighten(0.075, theme.surface3)} 50%,
     ${({ theme }) => theme.surface3} 75%
   );
   will-change: background-position;

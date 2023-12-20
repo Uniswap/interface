@@ -1,18 +1,17 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import Column, { AutoColumn } from 'components/Column'
-import { useNewSwapFlow } from 'featureFlags/flags/progressIndicatorV2'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { InterfaceTrade } from 'state/routing/types'
 import { isPreviewTrade } from 'state/routing/utils'
+import { Field } from 'state/swap/actions'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 
-import { Field } from './constants'
 import { SwapModalHeaderAmount } from './SwapModalHeaderAmount'
 
-const HeaderContainer = styled(AutoColumn)<{ isNewSwapFlowEnabled?: boolean }>`
-  margin-top: ${({ isNewSwapFlowEnabled }) => (isNewSwapFlowEnabled ? '0px' : '16px')};
+const HeaderContainer = styled(AutoColumn)`
+  margin-top: 16px;
 `
 
 export default function SwapModalHeader({
@@ -26,10 +25,9 @@ export default function SwapModalHeader({
 }) {
   const fiatValueInput = useUSDPrice(trade.inputAmount)
   const fiatValueOutput = useUSDPrice(trade.outputAmount)
-  const isNewSwapFlowEnabled = useNewSwapFlow()
 
   return (
-    <HeaderContainer gap="sm" isNewSwapFlowEnabled={isNewSwapFlowEnabled}>
+    <HeaderContainer gap="sm">
       <Column gap="lg">
         <SwapModalHeaderAmount
           field={Field.INPUT}

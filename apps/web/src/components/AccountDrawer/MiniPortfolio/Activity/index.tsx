@@ -1,3 +1,4 @@
+import { useAccountDrawer } from 'components/AccountDrawer'
 import { hideSpamAtom } from 'components/AccountDrawer/SpamToggle'
 import Column from 'components/Column'
 import { LoadingBubble } from 'components/Tokens/loading'
@@ -9,7 +10,6 @@ import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 
-import { useAccountDrawer } from '../hooks'
 import { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
 import { ActivityRow } from './ActivityRow'
 import { useAllActivities } from './hooks'

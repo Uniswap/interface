@@ -1,12 +1,9 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
-import { useMemo } from 'react'
 import { unique } from 'utilities/src/primitives/array'
 import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
 import { ChainId } from 'wallet/src/constants/chains'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { uniqueAddressesOnly } from 'wallet/src/features/address/utils'
-import { selectTokensVisibility } from 'wallet/src/features/favorites/selectors'
-import { AccountToTokenVisibility, TokenVisibility } from 'wallet/src/features/favorites/slice'
 import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
 import {
   SendTokenTransactionInfo,
@@ -14,7 +11,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { RootState, useAppSelector } from 'wallet/src/state'
+import { RootState } from 'wallet/src/state'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export const selectTransactions = (state: RootState): TransactionStateMap => state.transactions
@@ -69,58 +66,30 @@ export const makeSelectAddressTransactions = (): Selector<
     }
   )
 
-export function useSelectAddressTransactions(
-  address: Address | null
-): TransactionDetails[] | undefined {
-  const selectAddressTransactions = useMemo(makeSelectAddressTransactions, [])
-  return useAppSelector((state) => selectAddressTransactions(state, address))
-}
-
-export function useAccountToTokenVisibility(addresses: Address[]): AccountToTokenVisibility {
-  const accountToTokenVisibilityFromUserSettings = useAppSelector(selectTokensVisibility)
-  const selectLocalTxCurrencyIds: (
-    state: RootState,
-    addresses: Address[]
-  ) => AccountToTokenVisibility = useMemo(makeSelectTokenVisibilityFromLocalTxs, [])
-  const accountToTokenVisibilityFromLocalTxs = useAppSelector((state) =>
-    selectLocalTxCurrencyIds(state, addresses)
-  )
-  return {
-    ...accountToTokenVisibilityFromLocalTxs,
-    // User settings has higher priority and overrides items from local txs
-    ...accountToTokenVisibilityFromUserSettings,
-  }
-}
-
-export const makeSelectTokenVisibilityFromLocalTxs = (): Selector<
+export const makeSelectLocalTxCurrencyIds = (): Selector<
   RootState,
-  AccountToTokenVisibility,
-  [Address[]]
+  Record<string, boolean>,
+  [Address | null]
 > =>
   createSelector(
     selectTransactions,
-    (_: RootState, addresses: Address[]) => addresses,
-    (transactions, addresses) => {
-      return addresses.reduce<AccountToTokenVisibility>((addressAcc, address) => {
-        const addressTransactions = address && transactions[address]
-        if (!addressTransactions) return addressAcc
+    (_: RootState, address: Address | null) => address,
+    (transactions, address) => {
+      const addressTransactions = address && transactions[address]
+      if (!addressTransactions) return {}
 
-        addressAcc[address] = flattenObjectOfObjects(addressTransactions).reduce<
-          Record<string, TokenVisibility>
-        >((txAcc, tx) => {
+      return flattenObjectOfObjects(addressTransactions).reduce<Record<string, boolean>>(
+        (acc, tx) => {
           if (tx.typeInfo.type === TransactionType.Send) {
-            txAcc[buildCurrencyId(tx.chainId, tx.typeInfo.tokenAddress.toLowerCase())] = {
-              isVisible: true,
-            }
+            acc[buildCurrencyId(tx.chainId, tx.typeInfo.tokenAddress.toLowerCase())] = true
           } else if (tx.typeInfo.type === TransactionType.Swap) {
-            txAcc[tx.typeInfo.inputCurrencyId.toLowerCase()] = { isVisible: true }
-            txAcc[tx.typeInfo.outputCurrencyId.toLowerCase()] = { isVisible: true }
+            acc[tx.typeInfo.inputCurrencyId.toLowerCase()] = true
+            acc[tx.typeInfo.outputCurrencyId.toLowerCase()] = true
           }
-          return txAcc
-        }, {})
-
-        return addressAcc
-      }, {})
+          return acc
+        },
+        {}
+      )
     }
   )
 

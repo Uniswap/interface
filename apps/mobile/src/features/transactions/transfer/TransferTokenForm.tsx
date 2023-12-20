@@ -33,12 +33,12 @@ import {
   AnimatedFlex,
   Button,
   Flex,
-  Icons,
   Text,
   TouchableArea,
   useDeviceDimensions,
   useSporeColors,
 } from 'ui/src'
+import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { usePrevious } from 'utilities/src/react/hooks'
@@ -209,7 +209,7 @@ export function TransferTokenForm({
   const TRANSFER_DIRECTION_BUTTON_SIZE = iconSizes.icon20
   const TRANSFER_DIRECTION_BUTTON_INNER_PADDING = spacing.spacing12
   const TRANSFER_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
-  const SendWarningIcon = transferWarning?.icon ?? Icons.AlertCircle
+  const SendWarningIcon = transferWarning?.icon ?? AlertTriangleIcon
 
   return (
     <>
@@ -356,7 +356,7 @@ export function TransferTokenForm({
                     strokeWidth={1.5}
                     width={iconSizes.icon16}
                   />
-                  <Text adjustsFontSizeToFit color={transferWarningColor.text} variant="body3">
+                  <Text color={transferWarningColor.text} variant="subheading2">
                     {transferWarning.title}
                   </Text>
                 </Flex>

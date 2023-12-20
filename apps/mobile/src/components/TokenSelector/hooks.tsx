@@ -3,6 +3,7 @@ import { useAppSelector } from 'src/app/hooks'
 import { filter } from 'src/components/TokenSelector/filter'
 import { TokenOption, TokenSelectorFlow } from 'src/components/TokenSelector/types'
 import { createEmptyBalanceOption } from 'src/components/TokenSelector/utils'
+import { useTokenBalancesGroupedByVisibility } from 'src/features/balances/hooks'
 import { useTokenProjects } from 'src/features/dataApi/tokenProjects'
 import { usePopularTokens } from 'src/features/dataApi/topTokens'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
@@ -10,11 +11,7 @@ import { MobileEventName } from 'src/features/telemetry/constants'
 import { BRIDGED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, USDC, USDT, WBTC } from 'wallet/src/constants/tokens'
-import {
-  sortPortfolioBalances,
-  usePortfolioBalances,
-  useTokenBalancesGroupedByVisibility,
-} from 'wallet/src/features/dataApi/balances'
+import { sortPortfolioBalances, usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
 import { CurrencyInfo, GqlResult, PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
@@ -176,6 +173,7 @@ export function usePortfolioBalancesForAddressById(
     loading,
   } = usePortfolioBalances({
     address,
+    shouldPoll: false, // Home tab's TokenBalanceList will poll portfolio balances for activeAccount
     fetchPolicy: 'cache-first', // we want to avoid re-renders when token selector is opening
   })
 

@@ -4,10 +4,10 @@ import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, ScrollView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Screen } from 'src/components/layout/Screen'
+import { IS_IOS } from 'src/constants/globals'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
 import { AnimatedFlex, Flex, flexStyles, SpaceTokens, Text, useMedia, useSporeColors } from 'ui/src'
 import { opacify, spacing } from 'ui/src/theme'
-import { isIOS } from 'wallet/src/utils/platform'
 
 type OnboardingScreenProps = {
   subtitle?: string
@@ -70,7 +70,7 @@ export function SafeKeyboardOnboardingScreen({
   return (
     <Screen edges={['right', 'left', 'bottom']}>
       <KeyboardAvoidingView
-        behavior={isIOS ? 'padding' : undefined}
+        behavior={IS_IOS ? 'padding' : undefined}
         contentContainerStyle={containerStyle}
         style={styles.base}>
         <ScrollView

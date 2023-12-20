@@ -12312,25 +12312,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-table@npm:8.10.7":
-  version: 8.10.7
-  resolution: "@tanstack/react-table@npm:8.10.7"
-  dependencies:
-    "@tanstack/table-core": 8.10.7
-  peerDependencies:
-    react: ">=16"
-    react-dom: ">=16"
-  checksum: f8f19ae3ad8531e0f3cb838b61213d9acd0b64b27d1a8a05a699e6ed50e25c9d3c9478ae3f6d20883288f601eec06e8264fac9503b36122471c2f8778782e1e2
-  languageName: node
-  linkType: hard
-
-"@tanstack/table-core@npm:8.10.7":
-  version: 8.10.7
-  resolution: "@tanstack/table-core@npm:8.10.7"
-  checksum: 2a364917e7ab051ef3f33d6f18e5e1ddb75cfed4b5ee0e2b9c74a8cb72d3b86cdd4ffbab67565c68b4333f761b6fde9a7215196387a9a3b3d5811119d8859bad
-  languageName: node
-  linkType: hard
-
 "@testing-library/dom@npm:^7.11.0":
   version: 7.31.2
   resolution: "@testing-library/dom@npm:7.31.2"
@@ -13497,17 +13478,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:13.13.5":
+  version: 13.13.5
+  resolution: "@types/node@npm:13.13.5"
+  checksum: 874bb45920a33d18619c19687425628ae536a28d3342c781f5c84e0ac41f3f6cbb5afda1b2d366e232a7862cbf44ba559c1775fc9db875388148d7f893f64ad0
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:16.9.1":
   version: 16.9.1
   resolution: "@types/node@npm:16.9.1"
   checksum: 41afcf183a22d59323a0199dd7e0f46591247f45fc08a4434edb26d56dc279ae4fdb80f37989ddd7a0f45e3857c4933e6e82057ede09c5a829f77e373e680375
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:18.16.0":
-  version: 18.16.0
-  resolution: "@types/node@npm:18.16.0"
-  checksum: 63e0042136663b9e85ce503a4c65406cc6621fdba63ea66c74b4b1364a9aa9bdb57cadcb76696abab177f38a819b0fa6ace9e7f1647dcb990aedb1b4bd01012f
   languageName: node
   linkType: hard
 
@@ -13672,15 +13653,6 @@ __metadata:
     hoist-non-react-statics: ^3.3.0
     redux: ^4.0.0
   checksum: df86069aae0b2dd79752a45265b36ad5583f4c87a05731607192a4df6dd4e1ed151e458957cced31df37cbb60c58c41211f7186a783305a8af62d8cd69ae6789
-  languageName: node
-  linkType: hard
-
-"@types/react-scroll-sync@npm:0.8.7":
-  version: 0.8.7
-  resolution: "@types/react-scroll-sync@npm:0.8.7"
-  dependencies:
-    "@types/react": "*"
-  checksum: e147ff4588d3b97c17ba5b3f683ea0baf7514189a9ad6e2ef24eb2f92b7af18017698099c993b704c74683aaac1fa711e17ba2088a4435181132b02b74812e85
   languageName: node
   linkType: hard
 
@@ -14530,7 +14502,6 @@ __metadata:
     "@swc/core": 1.3.72
     "@swc/jest": 0.2.29
     "@swc/plugin-styled-components": 1.5.97
-    "@tanstack/react-table": 8.10.7
     "@testing-library/jest-dom": 5.17.0
     "@testing-library/react": 13.4.0
     "@testing-library/user-event": 14.5.1
@@ -14544,13 +14515,12 @@ __metadata:
     "@types/lingui__react": 2.8.3
     "@types/ms": 0.7.31
     "@types/multicodec": 1.0.0
-    "@types/node": 18.16.0
+    "@types/node": 13.13.5
     "@types/qs": 6.9.2
     "@types/react": ^18.0.15
     "@types/react-dom": ^18.0.6
     "@types/react-helmet": 6.1.7
     "@types/react-redux": 7.1.30
-    "@types/react-scroll-sync": 0.8.7
     "@types/react-table": 7.7.12
     "@types/react-virtualized-auto-sizer": 1.0.0
     "@types/react-window": 1.8.2
@@ -14628,7 +14598,6 @@ __metadata:
     eslint-plugin-rulesdir: 0.2.2
     ethers: 5.7.2
     ext-name: 5.0.0
-    fancy-canvas: 2.1.0
     focus-visible: 5.2.0
     get-graphql-schema: ^2.1.2
     graphql: 16.6.0
@@ -14645,7 +14614,6 @@ __metadata:
     jotai: 1.3.7
     jpeg-js: 0.4.4
     jsbi: 3.2.5
-    lightweight-charts: 4.1.1
     lint-staged: ^14.0.0
     localforage: 1.10.0
     make-plural: 7.0.0
@@ -14680,7 +14648,6 @@ __metadata:
     react-redux: 8.0.5
     react-router-dom: 6.10.0
     react-scripts: 5.0.1
-    react-scroll-sync: 0.11.2
     react-spring: 9.7.3
     react-table: 7.8.0
     react-use-gesture: 6.0.14
@@ -14852,7 +14819,7 @@ __metadata:
     ethers: 5.7.2
     expo: 48.0.19
     expo-av: 13.4.1
-    expo-barcode-scanner: 12.7.0
+    expo-barcode-scanner: 12.3.2
     expo-blur: 12.2.2
     expo-clipboard: 4.1.2
     expo-haptics: 12.0.1
@@ -20656,7 +20623,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"confusing-browser-globals@npm:1.0.11, confusing-browser-globals@npm:^1.0.11":
+"confusing-browser-globals@npm:^1.0.11":
   version: 1.0.11
   resolution: "confusing-browser-globals@npm:1.0.11"
   checksum: 3afc635abd37e566477f610e7978b15753f0e84025c25d49236f1f14d480117185516bdd40d2a2167e6bed8048641a9854964b9c067e3dcdfa6b5d0ad3c3a5ef
@@ -25427,14 +25394,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-barcode-scanner@npm:12.7.0":
-  version: 12.7.0
-  resolution: "expo-barcode-scanner@npm:12.7.0"
+"expo-barcode-scanner@npm:12.3.2":
+  version: 12.3.2
+  resolution: "expo-barcode-scanner@npm:12.3.2"
   dependencies:
-    expo-image-loader: ~4.4.0
+    expo-image-loader: ~4.1.0
   peerDependencies:
     expo: "*"
-  checksum: 7672d68761eeb401188da5c5c85242f93940aa26acd2f989fb7af1a82e91264449c872376fdbe0acae07fbe8adb8dc712576c02ad166f36320664f0b605c86ed
+  checksum: b07831a8b7205c838be54268ac927ca4ce431065f55f551d37e9957e3b2bae0c6b208fee278d846a9f06d9cd9e71d54f3821818c80327fa8387a7b56ee1291af
   languageName: node
   linkType: hard
 
@@ -25522,12 +25489,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-image-loader@npm:~4.4.0":
-  version: 4.4.0
-  resolution: "expo-image-loader@npm:4.4.0"
+"expo-image-loader@npm:~4.1.0":
+  version: 4.1.1
+  resolution: "expo-image-loader@npm:4.1.1"
   peerDependencies:
     expo: "*"
-  checksum: e872e45a807cd867c5a8e8fc5665de33de5d467ea533222037b09b70268d0166012769bfcd340ab8922dbf826a3e4f0498ff73973ad62f21134764b4bc8b1f5a
+  checksum: 6ea7d49148d9126a79f00b1e9a2e648884d208daf8ac54c663eb941a7524d229aa907d6d45704598168c7d1efcb891bdc0bd91f077a53d3a270b18c269d43d99
   languageName: node
   linkType: hard
 
@@ -25865,13 +25832,6 @@ __metadata:
   version: 0.1.8
   resolution: "eyes@npm:0.1.8"
   checksum: c31703a92bf36ba75ee8d379ee7985c24ee6149f3a6175f44cec7a05b178c38bce9836d3ca48c9acb0329a960ac2c4b2ead4e60cdd4fe6e8c92cad7cd6913687
-  languageName: node
-  linkType: hard
-
-"fancy-canvas@npm:2.1.0":
-  version: 2.1.0
-  resolution: "fancy-canvas@npm:2.1.0"
-  checksum: 2463ca8a9254fb4cc69bbe33a2996b2a0ba8f725721d51464d9e87b4f3c3e8759e2289b0d592f56265501d5cff0b363bb7c72bb9c38212c19114dbd006ec8959
   languageName: node
   linkType: hard
 
@@ -32516,15 +32476,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lightweight-charts@npm:4.1.1":
-  version: 4.1.1
-  resolution: "lightweight-charts@npm:4.1.1"
-  dependencies:
-    fancy-canvas: 2.1.0
-  checksum: c90ee2370b82758ae402a855f8729b8ca19a268e923ecd7e0faa04490b91ac0a0de26a76c42fc47aad2adf24627b5766a4e56b1ecdff0d7d03a768c4edc8c3e9
-  languageName: node
-  linkType: hard
-
 "lilconfig@npm:2.1.0, lilconfig@npm:^2.0.3, lilconfig@npm:^2.0.5, lilconfig@npm:^2.0.6, lilconfig@npm:^2.1.0":
   version: 2.1.0
   resolution: "lilconfig@npm:2.1.0"
@@ -39030,7 +38981,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:*, prop-types@npm:15.8.1, prop-types@npm:^15.5.10, prop-types@npm:^15.5.7, prop-types@npm:^15.6.0, prop-types@npm:^15.6.1, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:*, prop-types@npm:15.8.1, prop-types@npm:^15.5.10, prop-types@npm:^15.6.0, prop-types@npm:^15.6.1, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -39952,11 +39903,11 @@ __metadata:
 
 "react-native-context-menu-view@patch:react-native-context-menu-view@npm%3A1.6.0#./.yarn/patches/react-native-context-menu-view-npm-1.6.0-f5f5410f50.patch::locator=universe%40workspace%3A.":
   version: 1.6.0
-  resolution: "react-native-context-menu-view@patch:react-native-context-menu-view@npm%3A1.6.0#./.yarn/patches/react-native-context-menu-view-npm-1.6.0-f5f5410f50.patch::version=1.6.0&hash=ddea74&locator=universe%40workspace%3A."
+  resolution: "react-native-context-menu-view@patch:react-native-context-menu-view@npm%3A1.6.0#./.yarn/patches/react-native-context-menu-view-npm-1.6.0-f5f5410f50.patch::version=1.6.0&hash=3e2cbb&locator=universe%40workspace%3A."
   peerDependencies:
     react: ^16.8.1 || ^17.0.0
     react-native: ">=0.60.0-rc.0 <1.0.x"
-  checksum: bdfa08d69722b78d270112f78bdd356764508d7d14f8f1608f8793c22fc6b665a6d6aac1b404d5bee8e988116df1cd97709b7fe941e755818c0d35ac1ce524f5
+  checksum: 2813e5dc43cf5f0bd3245014e10876afe51f1d6cd4b3e21334d85dca30e17b8a6361069e9a618a95474d14d03e13d5bd9e3a9dcaf7a5a22e8e4dc9daff6baf02
   languageName: node
   linkType: hard
 
@@ -40725,18 +40676,6 @@ __metadata:
   bin:
     react-scripts: bin/react-scripts.js
   checksum: 92afa2f245c7092ccc97d5609dc7a2130616262e34da7f15072d9442e2d2e1d4909a91022abd1faac1336eb17c5525a10d9bd43e1ae374c7ec941ca20addca68
-  languageName: node
-  linkType: hard
-
-"react-scroll-sync@npm:0.11.2":
-  version: 0.11.2
-  resolution: "react-scroll-sync@npm:0.11.2"
-  dependencies:
-    prop-types: ^15.5.7
-  peerDependencies:
-    react: 16.x || 17.x || 18.x
-    react-dom: 16.x || 17.x || 18.x
-  checksum: 42220e7606c3f28a58ce579313044d5dc2c370c2db25737432e74065805ff50baf7f94136597ae7b1c192657c13ee16d6a9274316ab9481ba05595cefd7a2f07
   languageName: node
   linkType: hard
 
@@ -46718,7 +46657,6 @@ __metadata:
     "@commitlint/cli": ^17.4.2
     "@commitlint/config-conventional": ^17.4.2
     "@crowdin/cli": 3.14.0
-    "@ethersproject/keccak256": 5.7.0
     "@graphql-codegen/cli": ^3.3.1
     "@graphql-codegen/client-preset": ^3.0.1
     "@graphql-codegen/typescript": ^3.0.4
@@ -46730,7 +46668,6 @@ __metadata:
     "@types/react": ^18.0.15
     "@typescript-eslint/eslint-plugin": 5.59.2
     concurrently: ^8.0.1
-    confusing-browser-globals: 1.0.11
     danger: 11.2.6
     dotenv-cli: ^7.0.0
     eslint: 8.44.0

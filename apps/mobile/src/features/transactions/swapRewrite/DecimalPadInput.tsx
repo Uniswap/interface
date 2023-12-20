@@ -16,8 +16,8 @@ type DecimalPadInputProps = {
   disabled?: boolean
   hideDecimal?: boolean
   onReady: () => void
-  resetSelection: (args: { start: number; end?: number }) => void
-  selectionRef: React.MutableRefObject<TextInputProps['selection']>
+  resetSelection: (start: number, end?: number) => void
+  selectionRef?: React.MutableRefObject<TextInputProps['selection']>
   setValue: (newValue: string) => void
   valueRef: React.MutableRefObject<string>
 }
@@ -101,11 +101,11 @@ export const DecimalPadInput = memo(
       (label: KeyLabel): void => {
         const { start, end } = getCurrentSelection()
         if (start === undefined || end === undefined) {
-          resetSelection({ start: valueRef.current.length + 1, end: valueRef.current.length + 1 })
+          resetSelection(valueRef.current.length + 1, valueRef.current.length + 1)
           // has no text selection, cursor is at the end of the text input
           updateValue(valueRef.current + label)
         } else {
-          resetSelection({ start: start + 1, end: start + 1 })
+          resetSelection(start + 1, start + 1)
           updateValue(valueRef.current.slice(0, start) + label + valueRef.current.slice(end))
         }
       },
@@ -115,15 +115,15 @@ export const DecimalPadInput = memo(
     const handleDelete = useCallback((): void => {
       const { start, end } = getCurrentSelection()
       if (start === undefined || end === undefined) {
-        resetSelection({ start: valueRef.current.length - 1, end: valueRef.current.length - 1 })
+        resetSelection(valueRef.current.length - 1, valueRef.current.length - 1)
         // has no text selection, cursor is at the end of the text input
         updateValue(valueRef.current.slice(0, -1))
       } else if (start < end) {
-        resetSelection({ start, end: start })
+        resetSelection(start, start)
         // has text part selected
         updateValue(valueRef.current.slice(0, start) + valueRef.current.slice(end))
       } else if (start > 0) {
-        resetSelection({ start: start - 1, end: start - 1 })
+        resetSelection(start - 1, start - 1)
         // part of the text is not selected, but cursor moved
         updateValue(valueRef.current.slice(0, start - 1) + valueRef.current.slice(start))
       }
@@ -144,7 +144,7 @@ export const DecimalPadInput = memo(
     const onLongPress = useCallback(
       (_: KeyLabel, action: KeyAction) => {
         if (disabled || action !== KeyAction.Delete) return
-        resetSelection({ start: 0, end: 0 })
+        resetSelection(0, 0)
         updateValue('')
       },
       [disabled, updateValue, resetSelection]

@@ -134,7 +134,7 @@ function TransactionSummaryLayout({
           <Flex grow shrink>
             <Flex grow>
               <Flex grow row alignItems="center" gap="$spacing4" justifyContent="space-between">
-                <Flex row shrink alignItems="center" gap="$spacing4">
+                <Flex row alignItems="center" gap="$spacing4">
                   {walletDisplayName?.name ? (
                     <Text color="$accent1" numberOfLines={1} variant="body1">
                       {walletDisplayName.name}

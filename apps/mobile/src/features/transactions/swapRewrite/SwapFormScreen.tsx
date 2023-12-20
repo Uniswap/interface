@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent, StyleSheet, TextInput, TextInputProps } from 'react-native'
@@ -101,13 +100,11 @@ function SwapFormContent(): JSX.Element {
     openWalletRestoreModal()
   }
 
+  const focusFieldIsInput = focusOnCurrencyField === CurrencyField.INPUT
+  const focusFieldIsOutput = focusOnCurrencyField === CurrencyField.OUTPUT
+
   const exactFieldIsInput = exactCurrencyField === CurrencyField.INPUT
   const exactFieldIsOutput = exactCurrencyField === CurrencyField.OUTPUT
-  const derivedCurrencyField = exactFieldIsInput ? CurrencyField.OUTPUT : CurrencyField.INPUT
-
-  // We want the `DecimalPad` to always control one of the 2 inputs even when no input is focused,
-  // which can happen after the user hits `Max`.
-  const decimalPadControlledField = focusOnCurrencyField ?? exactCurrencyField
 
   // Quote is being fetched for first time
   const isSwapDataLoading = !isWrapAction(wrapType) && trade.loading
@@ -128,77 +125,35 @@ function SwapFormContent(): JSX.Element {
   )
 
   const resetSelection = useCallback(
-    ({
-      start,
-      end,
-      currencyField,
-    }: {
-      start: number
-      end?: number
-      currencyField?: CurrencyField
-    }) => {
+    (start: number, end?: number) => {
       // Update refs first to have the latest selection state available in the DecimalPadInput
-      // component and properly update disabled keys of the decimal pad.
-      // We reset the native selection on the next tick because we need to wait for the native input to be updated.
+      // component and property update disabled keys of the decimal pad.
+      if (focusFieldIsInput) {
+        inputSelectionRef.current = { start, end }
+      } else if (focusFieldIsOutput) {
+        outputSelectionRef.current = { start, end }
+      } else return
+      // We reset the selection on the next tick because we need to wait for the native input to be updated.
       // This is needed because of the combination of state (delayed update) + ref (instant update) to improve performance.
-
-      const _currencyField = currencyField ?? decimalPadControlledField
-      const selectionRef =
-        _currencyField === CurrencyField.INPUT ? inputSelectionRef : outputSelectionRef
-      const inputFieldRef = _currencyField === CurrencyField.INPUT ? inputRef : outputRef
-
-      selectionRef.current = { start, end }
-
       setTimeout(() => {
-        inputFieldRef.current?.setNativeProps?.({ selection: { start, end } })
+        inputRef.current?.setNativeProps?.({ selection: { start, end } })
       }, 0)
     },
-    [decimalPadControlledField]
-  )
-
-  const moveCursorToEnd = useCallback(
-    (args?: { overrideIsFiatMode?: boolean }) => {
-      const _isFiatMode = args?.overrideIsFiatMode ?? isFiatMode
-
-      const amountRef =
-        decimalPadControlledField === derivedCurrencyField
-          ? formattedDerivedValueRef
-          : _isFiatMode
-          ? exactAmountFiatRef
-          : exactAmountTokenRef
-
-      if (_isFiatMode) {
-        resetSelection({
-          start: amountRef.current.length,
-          end: amountRef.current.length,
-        })
-      } else {
-        resetSelection({
-          start: amountRef.current.length,
-          end: amountRef.current.length,
-        })
-      }
-    },
-    [
-      decimalPadControlledField,
-      derivedCurrencyField,
-      exactAmountFiatRef,
-      exactAmountTokenRef,
-      isFiatMode,
-      resetSelection,
-    ]
+    [focusFieldIsInput, focusFieldIsOutput]
   )
 
   const decimalPadSetValue = useCallback(
     (value: string): void => {
+      if (!focusOnCurrencyField) {
+        return
+      }
       updateSwapForm({
         exactAmountFiat: isFiatMode ? value : undefined,
         exactAmountToken: !isFiatMode ? value : undefined,
-        exactCurrencyField: decimalPadControlledField,
-        focusOnCurrencyField: decimalPadControlledField,
+        exactCurrencyField: focusOnCurrencyField,
       })
     },
-    [decimalPadControlledField, isFiatMode, updateSwapForm]
+    [focusOnCurrencyField, isFiatMode, updateSwapForm]
   )
 
   const [decimalPadReady, setDecimalPadReady] = useState(true)
@@ -230,7 +185,6 @@ function SwapFormContent(): JSX.Element {
     },
     [amountUpdatedTimeRef]
   )
-
   const onOutputSelectionChange = useCallback(
     (start: number, end: number) => {
       if (Date.now() - amountUpdatedTimeRef.current < ON_SELECTION_CHANGE_WAIT_TIME_MS) {
@@ -293,29 +247,25 @@ function SwapFormContent(): JSX.Element {
         exactAmountFiat: undefined,
         exactAmountToken: amount,
         exactCurrencyField: CurrencyField.INPUT,
-        focusOnCurrencyField: undefined,
+        focusOnCurrencyField: CurrencyField.INPUT,
       })
-
-      // We want this update to happen on the next tick, after the input value is updated.
-      setTimeout(() => {
-        moveCursorToEnd()
-        decimalPadRef.current?.updateDisabledKeys()
-      }, 0)
+      resetSelection(0, 0)
     },
-    [moveCursorToEnd, updateSwapForm]
+    [resetSelection, updateSwapForm]
   )
 
   // Reset selection based the new input value (token, or fiat), and toggle fiat mode
   const onToggleIsFiatMode = useCallback(() => {
-    const newIsFiatMode = !isFiatMode
-
     updateSwapForm({
-      isFiatMode: newIsFiatMode,
+      isFiatMode: !isFiatMode,
     })
-
-    // We want this update to happen on the next tick, after the input value is updated.
-    setTimeout(() => moveCursorToEnd({ overrideIsFiatMode: newIsFiatMode }), 0)
-  }, [isFiatMode, moveCursorToEnd, updateSwapForm])
+    // Need to do the opposite of previous mode, as we're selecting the new value after mode update
+    if (!isFiatMode) {
+      resetSelection(exactAmountFiatRef.current.length, exactAmountFiatRef.current.length)
+    } else {
+      resetSelection(exactAmountTokenRef.current.length, exactAmountTokenRef.current.length)
+    }
+  }, [exactAmountFiatRef, exactAmountTokenRef, isFiatMode, resetSelection, updateSwapForm])
 
   const onSwitchCurrencies = useCallback(() => {
     const newExactCurrencyField = exactFieldIsInput ? CurrencyField.OUTPUT : CurrencyField.INPUT
@@ -327,7 +277,10 @@ function SwapFormContent(): JSX.Element {
     })
   }, [exactFieldIsInput, input, output, updateSwapForm])
 
-  // Swap input requires numeric values, not localized ones
+  const derivedCurrencyField = exactFieldIsInput ? CurrencyField.OUTPUT : CurrencyField.INPUT
+
+  // TODO gary MOB-2028 replace temporary hack to handle different separators
+  // Replace with localized version of formatter
   const formattedDerivedValue = formatCurrencyAmount({
     amount: currencyAmounts[derivedCurrencyField],
     locale: 'en-US',
@@ -335,39 +288,25 @@ function SwapFormContent(): JSX.Element {
     placeholder: '',
   })
 
+  // TODO - improve this to update ref when calculating the derived state
+  // instead of assigning ref based on the derived state
   const formattedDerivedValueRef = useRef(formattedDerivedValue)
-  formattedDerivedValueRef.current = formattedDerivedValue
-
   useEffect(() => {
-    if (decimalPadControlledField === exactCurrencyField) {
-      return
-    }
-
-    // When the `formattedDerivedValue` changes while the field that is not set as the `exactCurrencyField` is focused, we want to reset the cursor selection to the end of the input.
-    // This to prevent an issue that happens with the cursor selection getting out of sync when a user changes focus from one input to another while a quote request in in flight.
-    moveCursorToEnd()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    formattedDerivedValueRef.current = formattedDerivedValue
   }, [formattedDerivedValue])
 
   const exactValue = isFiatMode ? exactAmountFiat : exactAmountToken
   const exactValueRef = isFiatMode ? exactAmountFiatRef : exactAmountTokenRef
 
-  const decimalPadValueRef =
-    decimalPadControlledField === exactCurrencyField ? exactValueRef : formattedDerivedValueRef
-
   // Animated background color on input panels based on focus
-  const inputColorTransitionProgress = useDerivedValue(() => {
-    return withTiming(focusOnCurrencyField === CurrencyField.INPUT ? 0 : 1, { duration: 250 })
-  }, [focusOnCurrencyField])
-
-  const outputColorTransitionProgress = useDerivedValue(() => {
-    return withTiming(focusOnCurrencyField === CurrencyField.OUTPUT ? 0 : 1, { duration: 250 })
-  }, [focusOnCurrencyField])
+  const colorTransitionProgress = useDerivedValue(() => {
+    return withTiming(focusFieldIsInput ? 0 : 1, { duration: 250 })
+  }, [focusFieldIsInput])
 
   const inputBackgroundStyle = useAnimatedStyle(() => {
     return {
       backgroundColor: interpolateColor(
-        inputColorTransitionProgress.value,
+        colorTransitionProgress.value,
         [0, 1],
         [colors.surface1.val, colors.surface2.val]
       ),
@@ -377,9 +316,9 @@ function SwapFormContent(): JSX.Element {
   const outputBackgroundStyle = useAnimatedStyle(() => {
     return {
       backgroundColor: interpolateColor(
-        outputColorTransitionProgress.value,
+        colorTransitionProgress.value,
         [0, 1],
-        [colors.surface1.val, colors.surface2.val]
+        [colors.surface2.val, colors.surface1.val]
       ),
     }
   })
@@ -398,10 +337,9 @@ function SwapFormContent(): JSX.Element {
               ref={inputRef}
               currencyAmount={currencyAmounts[CurrencyField.INPUT]}
               currencyBalance={currencyBalances[CurrencyField.INPUT]}
-              currencyField={CurrencyField.INPUT}
               currencyInfo={currencies[CurrencyField.INPUT]}
-              focus={focusOnCurrencyField === CurrencyField.INPUT}
-              isCollapsed={decimalPadControlledField !== CurrencyField.INPUT}
+              focus={focusFieldIsInput}
+              isCollapsed={focusOnCurrencyField ? !focusFieldIsInput : !exactFieldIsInput}
               isFiatMode={isFiatMode && exactFieldIsInput}
               isLoading={!exactFieldIsInput && isSwapDataLoading}
               resetSelection={resetSelection}
@@ -431,12 +369,12 @@ function SwapFormContent(): JSX.Element {
             style={outputBackgroundStyle}>
             <CurrencyInputPanel
               ref={outputRef}
+              isOutput
               currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
               currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
-              currencyField={CurrencyField.OUTPUT}
               currencyInfo={currencies[CurrencyField.OUTPUT]}
-              focus={focusOnCurrencyField === CurrencyField.OUTPUT}
-              isCollapsed={decimalPadControlledField !== CurrencyField.OUTPUT}
+              focus={focusFieldIsOutput}
+              isCollapsed={focusOnCurrencyField ? !focusFieldIsOutput : !exactFieldIsOutput}
               isFiatMode={isFiatMode && exactFieldIsOutput}
               isLoading={!exactFieldIsOutput && isSwapDataLoading}
               resetSelection={resetSelection}
@@ -498,14 +436,20 @@ function SwapFormContent(): JSX.Element {
         right={0}
         style={decimalPadAndButtonAnimatedStyle}>
         <Flex grow justifyContent="flex-end">
-          <DecimalPadInput
-            ref={decimalPadRef}
-            resetSelection={resetSelection}
-            selectionRef={selection[decimalPadControlledField]}
-            setValue={decimalPadSetValue}
-            valueRef={decimalPadValueRef}
-            onReady={onDecimalPadReady}
-          />
+          {focusOnCurrencyField && (
+            <DecimalPadInput
+              ref={decimalPadRef}
+              resetSelection={resetSelection}
+              selectionRef={focusOnCurrencyField ? selection[focusOnCurrencyField] : undefined}
+              setValue={decimalPadSetValue}
+              valueRef={
+                focusOnCurrencyField === exactCurrencyField
+                  ? exactValueRef
+                  : formattedDerivedValueRef
+              }
+              onReady={onDecimalPadReady}
+            />
+          )}
         </Flex>
       </AnimatedFlex>
     </Flex>

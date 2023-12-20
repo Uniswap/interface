@@ -14,6 +14,7 @@ import {
 } from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
 import { pulseAnimation } from 'src/components/buttons/utils'
+import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -35,7 +36,6 @@ import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { useHighestBalanceNativeCurrencyId } from 'wallet/src/features/dataApi/balances'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { opacify } from 'wallet/src/utils/colors'
-import { isAndroid, isIOS } from 'wallet/src/utils/platform'
 
 export const NAV_BAR_HEIGHT_XS = 52
 export const NAV_BAR_HEIGHT_SM = 72
@@ -86,7 +86,7 @@ export function NavBar(): JSX.Element {
           alignItems="center"
           gap="$spacing12"
           justifyContent="space-between"
-          mb={isAndroid ? '$spacing8' : '$none'}
+          mb={IS_ANDROID ? '$spacing8' : '$none'}
           mx="$spacing24"
           pointerEvents="auto">
           <ExploreTabBarButton />
@@ -212,7 +212,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
     },
   })
 
-  const contentProps: FlexProps = isIOS
+  const contentProps: FlexProps = IS_IOS
     ? {
         bg: '$surface2',
         opacity: isDarkMode ? 0.6 : 0.8,
@@ -233,7 +233,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
       onPress={onPress}>
       <TapGestureHandler onGestureEvent={onGestureEvent}>
         <AnimatedFlex borderRadius="$roundedFull" overflow="hidden" style={animatedStyle}>
-          <BlurView intensity={isIOS ? 100 : 0}>
+          <BlurView intensity={IS_IOS ? 100 : 0}>
             <Flex
               {...contentProps}
               fill

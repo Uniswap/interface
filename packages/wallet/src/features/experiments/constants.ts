@@ -3,15 +3,16 @@
  * These should match the Gate Key on Statsig
  */
 export enum FEATURE_FLAGS {
-  CloudflareGateway = 'cloudflare-gateway',
+  ExampleFlag = 'example-flag', // FEATURE_FLAGS enum cannot be empty for string typings to work
+  RestoreWallet = 'restore-wallet',
+  MevBlocker = 'mev-blocker',
+  SwapRewrite = 'swap-rewrite',
+  SeedPhraseRefactorNative = 'refactor-seed-phrase-native',
+  PortionFields = 'portion-fields',
   CurrencyConversion = 'currency_conversion',
+  LanguageSelection = 'language-selection',
   FeedTab = 'feed-tab',
   ForAggregator = 'for-aggregator',
-  LanguageSelection = 'language-selection',
-  MevBlocker = 'mev-blocker',
-  PortionFields = 'portion-fields',
-  RestoreWallet = 'restore-wallet',
-  SeedPhraseRefactorNative = 'refactor-seed-phrase-native',
   Unitags = 'unitags',
 }
 
@@ -22,7 +23,6 @@ export enum FEATURE_FLAGS {
 export enum EXPERIMENT_NAMES {
   OnboardingNewCreateImportFlow = 'onboarding-ab-1',
   SkeletonLoading = 'skeleton_loading_1',
-  SwapRewriteVariants = 'swap_rewrite_variants',
 }
 
 /**

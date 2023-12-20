@@ -14,7 +14,8 @@ import { TransactionDetails } from 'src/features/transactions/TransactionDetails
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
 import { NumberType } from 'utilities/src/format/types'
-import { useSwapRewriteEnabled } from 'wallet/src/features/experiments/hooks'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
@@ -81,7 +82,7 @@ export function SwapDetails({
   const formatter = useLocalizationContext()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
-  const shouldShowSwapRewrite = useSwapRewriteEnabled()
+  const shouldShowSwapRewrite = useFeatureFlag(FEATURE_FLAGS.SwapRewrite)
 
   const trade = derivedSwapInfo.trade.trade
   const acceptedTrade = acceptedDerivedSwapInfo.trade.trade
@@ -240,7 +241,7 @@ function AcceptNewQuoteRow({
   const { t } = useTranslation()
   const { formatCurrencyAmount } = useLocalizationContext()
 
-  const shouldShowSwapRewrite = useSwapRewriteEnabled()
+  const shouldShowSwapRewrite = useFeatureFlag(FEATURE_FLAGS.SwapRewrite)
 
   const derivedCurrencyField =
     derivedSwapInfo.exactCurrencyField === CurrencyField.INPUT

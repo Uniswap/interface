@@ -1,7 +1,7 @@
+import { IS_ANDROID } from 'src/constants/globals'
 import { getOneSignalPushToken } from 'src/features/notifications/Onesignal'
 import { logger } from 'utilities/src/logger/logger'
 import { config } from 'wallet/src/config'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 const WC_HOSTED_PUSH_SERVER_URL = `https://echo.walletconnect.com/${config.walletConnectProjectId}`
 
@@ -27,7 +27,7 @@ export async function registerWCClientForPushNotifications(clientId: string): Pr
 
     // WC requests we use the `fcm` push server for Android and the `apns` server for prod iOS
     // and `apns-sandbox` for dev iOS
-    const pushServer = isAndroid ? 'fcm' : __DEV__ ? 'apns-sandbox' : 'apns'
+    const pushServer = IS_ANDROID ? 'fcm' : __DEV__ ? 'apns-sandbox' : 'apns'
     const request = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

@@ -8,7 +8,6 @@ import { migration3 } from './migrations/3'
 import { migration4 } from './migrations/4'
 import { migration5 } from './migrations/5'
 import { migration6 } from './migrations/6'
-import { migration7 } from './migrations/7'
 import { legacyLocalStorageMigration } from './migrations/legacy'
 
 /**
@@ -28,7 +27,6 @@ export const migrations: MigrationManifest = {
   4: migration4,
   5: migration5,
   6: migration6,
-  7: migration7,
 }
 
 // We use a custom migration function for the initial state, because redux-persist

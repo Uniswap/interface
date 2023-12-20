@@ -23,7 +23,10 @@ const NetworkLabel = styled.div`
   gap: 8px;
   align-items: center;
 `
-
+const CheckContainer = styled.div`
+  display: flex;
+  flex-direction: flex-end;
+`
 const Tag = styled(Badge)`
   background-color: ${({ theme }) => theme.surface2};
   color: ${({ theme }) => theme.neutral2};
@@ -90,7 +93,11 @@ export default function NetworkFilter() {
                 <NetworkLabel>
                   <ChainLogo chainId={chainId} size={20} /> {chainInfo.label}
                 </NetworkLabel>
-                {network === currentChainName && <Check size={16} color={theme.accent1} />}
+                {network === currentChainName && (
+                  <CheckContainer>
+                    <Check size={16} color={theme.accent1} />
+                  </CheckContainer>
+                )}
               </InternalMenuItem>
             )
           })}

@@ -801,23 +801,9 @@ export type PortfolioTokensTotalDenominatedValueChangeArgs = {
   duration?: InputMaybe<HistoryDuration>;
 };
 
-/**   Specify how the portfolio value should be calculated for each `ownerAddress`. */
-export type PortfolioValueModifier = {
-  includeSmallBalances?: InputMaybe<Scalars['Boolean']>;
-  includeSpamTokens?: InputMaybe<Scalars['Boolean']>;
-  ownerAddress: Scalars['String'];
-  tokenExcludeOverrides?: InputMaybe<Array<ContractInput>>;
-  tokenIncludeOverrides?: InputMaybe<Array<ContractInput>>;
-};
-
 export enum PriceSource {
   SubgraphV2 = 'SUBGRAPH_V2',
   SubgraphV3 = 'SUBGRAPH_V3'
-}
-
-export enum ProtocolVersion {
-  V2 = 'V2',
-  V3 = 'V3'
 }
 
 export type PushNotification = {
@@ -850,8 +836,6 @@ export type Query = {
   tokens?: Maybe<Array<Maybe<Token>>>;
   topCollections?: Maybe<NftCollectionConnection>;
   topTokens?: Maybe<Array<Maybe<Token>>>;
-  /**   returns top pools by total value locked */
-  topV3Pools?: Maybe<Array<V3Pool>>;
   transactionNotification?: Maybe<TransactionNotification>;
 };
 
@@ -924,7 +908,6 @@ export type QueryPortfoliosArgs = {
   chains?: InputMaybe<Array<Chain>>;
   lookupTokens?: InputMaybe<Array<ContractInput>>;
   ownerAddresses: Array<Scalars['String']>;
-  valueModifiers?: InputMaybe<Array<PortfolioValueModifier>>;
 };
 
 
@@ -969,14 +952,6 @@ export type QueryTopTokensArgs = {
 };
 
 
-export type QueryTopV3PoolsArgs = {
-  chain: Chain;
-  first: Scalars['Int'];
-  tokenFilter?: InputMaybe<Scalars['String']>;
-  tvlCursor?: InputMaybe<Scalars['Float']>;
-};
-
-
 export type QueryTransactionNotificationArgs = {
   address: Scalars['String'];
   chain: Chain;
@@ -1003,6 +978,7 @@ export type Subscription = {
 
 export type SubscriptionOnAssetActivityArgs = {
   addresses: Array<Scalars['String']>;
+  chain: Chain;
   subscriptionId: Scalars['ID'];
 };
 
@@ -1012,7 +988,6 @@ export enum SubscriptionType {
 
 export type SwapOrderDetails = {
   __typename?: 'SwapOrderDetails';
-  expiry: Scalars['Int'];
   hash: Scalars['String'];
   id: Scalars['ID'];
   inputToken: Token;
@@ -1095,7 +1070,6 @@ export type TokenBalance = {
   blockTimestamp?: Maybe<Scalars['Int']>;
   denominatedValue?: Maybe<Amount>;
   id: Scalars['ID'];
-  isHidden?: Maybe<Scalars['Boolean']>;
   ownerAddress: Scalars['String'];
   quantity?: Maybe<Scalars['Float']>;
   token?: Maybe<Token>;
@@ -1111,7 +1085,6 @@ export type TokenInput = {
 
 export type TokenMarket = {
   __typename?: 'TokenMarket';
-  fullyDilutedValuation?: Maybe<Amount>;
   id: Scalars['ID'];
   price?: Maybe<Amount>;
   priceHighLow?: Maybe<Amount>;
@@ -1337,28 +1310,6 @@ export enum TransactionType {
   Withdraw = 'WITHDRAW'
 }
 
-export type V3Pool = {
-  __typename?: 'V3Pool';
-  address: Scalars['String'];
-  chain: Chain;
-  createdAtTimestamp?: Maybe<Scalars['Int']>;
-  cumulativeVolume?: Maybe<Amount>;
-  feeTier?: Maybe<Scalars['Float']>;
-  id: Scalars['ID'];
-  protocolVersion: ProtocolVersion;
-  token0?: Maybe<Token>;
-  token0Supply?: Maybe<Scalars['Float']>;
-  token1?: Maybe<Token>;
-  token1Supply?: Maybe<Scalars['Float']>;
-  totalLiquidity?: Maybe<Amount>;
-  txCount?: Maybe<Scalars['Int']>;
-};
-
-
-export type V3PoolCumulativeVolumeArgs = {
-  duration?: InputMaybe<HistoryDuration>;
-};
-
 export type TokenPriceHistoryQueryVariables = Exact<{
   contract: ContractInput;
   duration?: InputMaybe<HistoryDuration>;
@@ -1369,7 +1320,6 @@ export type TokenPriceHistoryQuery = { __typename?: 'Query', tokenProjects?: Arr
 
 export type AccountListQueryVariables = Exact<{
   addresses: Array<Scalars['String']> | Scalars['String'];
-  valueModifiers?: InputMaybe<Array<PortfolioValueModifier> | PortfolioValueModifier>;
 }>;
 
 
@@ -1422,19 +1372,17 @@ export type NftsTabQuery = { __typename?: 'Query', nftBalances?: { __typename?: 
 
 export type PortfolioBalancesQueryVariables = Exact<{
   ownerAddress: Scalars['String'];
-  valueModifiers?: InputMaybe<Array<PortfolioValueModifier> | PortfolioValueModifier>;
 }>;
 
 
-export type PortfolioBalancesQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, tokensTotalDenominatedValue?: { __typename?: 'Amount', value: number } | null, tokensTotalDenominatedValueChange?: { __typename?: 'AmountChange', absolute?: { __typename?: 'Amount', value: number } | null, percentage?: { __typename?: 'Amount', value: number } | null } | null, tokenBalances?: Array<{ __typename?: 'TokenBalance', id: string, quantity?: number | null, isHidden?: boolean | null, denominatedValue?: { __typename?: 'Amount', currency?: Currency | null, value: number } | null, token?: { __typename?: 'Token', chain: Chain, address?: string | null, symbol?: string | null, decimals?: number | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null, isSpam?: boolean | null } | null } | null, tokenProjectMarket?: { __typename?: 'TokenProjectMarket', relativeChange24?: { __typename?: 'Amount', value: number } | null } | null } | null> | null } | null> | null };
+export type PortfolioBalancesQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, tokensTotalDenominatedValue?: { __typename?: 'Amount', value: number } | null, tokensTotalDenominatedValueChange?: { __typename?: 'AmountChange', absolute?: { __typename?: 'Amount', value: number } | null, percentage?: { __typename?: 'Amount', value: number } | null } | null, tokenBalances?: Array<{ __typename?: 'TokenBalance', id: string, quantity?: number | null, denominatedValue?: { __typename?: 'Amount', currency?: Currency | null, value: number } | null, token?: { __typename?: 'Token', chain: Chain, address?: string | null, symbol?: string | null, decimals?: number | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null, isSpam?: boolean | null } | null } | null, tokenProjectMarket?: { __typename?: 'TokenProjectMarket', relativeChange24?: { __typename?: 'Amount', value: number } | null } | null } | null> | null } | null> | null };
 
 export type MultiplePortfolioBalancesQueryVariables = Exact<{
   ownerAddresses: Array<Scalars['String']> | Scalars['String'];
-  valueModifiers?: InputMaybe<Array<PortfolioValueModifier> | PortfolioValueModifier>;
 }>;
 
 
-export type MultiplePortfolioBalancesQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, tokensTotalDenominatedValue?: { __typename?: 'Amount', value: number } | null, tokensTotalDenominatedValueChange?: { __typename?: 'AmountChange', absolute?: { __typename?: 'Amount', value: number } | null, percentage?: { __typename?: 'Amount', value: number } | null } | null, tokenBalances?: Array<{ __typename?: 'TokenBalance', id: string, quantity?: number | null, isHidden?: boolean | null, denominatedValue?: { __typename?: 'Amount', currency?: Currency | null, value: number } | null, token?: { __typename?: 'Token', chain: Chain, address?: string | null, symbol?: string | null, decimals?: number | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null, isSpam?: boolean | null } | null } | null, tokenProjectMarket?: { __typename?: 'TokenProjectMarket', relativeChange24?: { __typename?: 'Amount', value: number } | null } | null } | null> | null } | null> | null };
+export type MultiplePortfolioBalancesQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, tokensTotalDenominatedValue?: { __typename?: 'Amount', value: number } | null, tokensTotalDenominatedValueChange?: { __typename?: 'AmountChange', absolute?: { __typename?: 'Amount', value: number } | null, percentage?: { __typename?: 'Amount', value: number } | null } | null, tokenBalances?: Array<{ __typename?: 'TokenBalance', id: string, quantity?: number | null, denominatedValue?: { __typename?: 'Amount', currency?: Currency | null, value: number } | null, token?: { __typename?: 'Token', chain: Chain, address?: string | null, symbol?: string | null, decimals?: number | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null, isSpam?: boolean | null } | null } | null, tokenProjectMarket?: { __typename?: 'TokenProjectMarket', relativeChange24?: { __typename?: 'Amount', value: number } | null } | null } | null> | null } | null> | null };
 
 export type SelectWalletScreenQueryVariables = Exact<{
   ownerAddresses: Array<Scalars['String']> | Scalars['String'];
@@ -1553,7 +1501,6 @@ export type ConvertQuery = { __typename?: 'Query', convert?: { __typename?: 'Amo
 
 export type PortfolioBalanceQueryVariables = Exact<{
   owner: Scalars['String'];
-  valueModifiers?: InputMaybe<Array<PortfolioValueModifier> | PortfolioValueModifier>;
 }>;
 
 
@@ -1670,11 +1617,10 @@ export type TokenPriceHistoryQueryHookResult = ReturnType<typeof useTokenPriceHi
 export type TokenPriceHistoryLazyQueryHookResult = ReturnType<typeof useTokenPriceHistoryLazyQuery>;
 export type TokenPriceHistoryQueryResult = Apollo.QueryResult<TokenPriceHistoryQuery, TokenPriceHistoryQueryVariables>;
 export const AccountListDocument = gql`
-    query AccountList($addresses: [String!]!, $valueModifiers: [PortfolioValueModifier!]) {
+    query AccountList($addresses: [String!]!) {
   portfolios(
     ownerAddresses: $addresses
     chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
-    valueModifiers: $valueModifiers
   ) {
     id
     ownerAddress
@@ -1698,7 +1644,6 @@ export const AccountListDocument = gql`
  * const { data, loading, error } = useAccountListQuery({
  *   variables: {
  *      addresses: // value for 'addresses'
- *      valueModifiers: // value for 'valueModifiers'
  *   },
  * });
  */
@@ -2228,11 +2173,10 @@ export type NftsTabQueryHookResult = ReturnType<typeof useNftsTabQuery>;
 export type NftsTabLazyQueryHookResult = ReturnType<typeof useNftsTabLazyQuery>;
 export type NftsTabQueryResult = Apollo.QueryResult<NftsTabQuery, NftsTabQueryVariables>;
 export const PortfolioBalancesDocument = gql`
-    query PortfolioBalances($ownerAddress: String!, $valueModifiers: [PortfolioValueModifier!]) {
+    query PortfolioBalances($ownerAddress: String!) {
   portfolios(
     ownerAddresses: [$ownerAddress]
     chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
-    valueModifiers: $valueModifiers
   ) {
     id
     tokensTotalDenominatedValue {
@@ -2249,7 +2193,6 @@ export const PortfolioBalancesDocument = gql`
     tokenBalances {
       id
       quantity
-      isHidden
       denominatedValue {
         currency
         value
@@ -2290,7 +2233,6 @@ export const PortfolioBalancesDocument = gql`
  * const { data, loading, error } = usePortfolioBalancesQuery({
  *   variables: {
  *      ownerAddress: // value for 'ownerAddress'
- *      valueModifiers: // value for 'valueModifiers'
  *   },
  * });
  */
@@ -2306,11 +2248,10 @@ export type PortfolioBalancesQueryHookResult = ReturnType<typeof usePortfolioBal
 export type PortfolioBalancesLazyQueryHookResult = ReturnType<typeof usePortfolioBalancesLazyQuery>;
 export type PortfolioBalancesQueryResult = Apollo.QueryResult<PortfolioBalancesQuery, PortfolioBalancesQueryVariables>;
 export const MultiplePortfolioBalancesDocument = gql`
-    query MultiplePortfolioBalances($ownerAddresses: [String!]!, $valueModifiers: [PortfolioValueModifier!]) {
+    query MultiplePortfolioBalances($ownerAddresses: [String!]!) {
   portfolios(
     ownerAddresses: $ownerAddresses
     chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
-    valueModifiers: $valueModifiers
   ) {
     id
     tokensTotalDenominatedValue {
@@ -2327,7 +2268,6 @@ export const MultiplePortfolioBalancesDocument = gql`
     tokenBalances {
       id
       quantity
-      isHidden
       denominatedValue {
         currency
         value
@@ -2368,7 +2308,6 @@ export const MultiplePortfolioBalancesDocument = gql`
  * const { data, loading, error } = useMultiplePortfolioBalancesQuery({
  *   variables: {
  *      ownerAddresses: // value for 'ownerAddresses'
- *      valueModifiers: // value for 'valueModifiers'
  *   },
  * });
  */
@@ -3240,11 +3179,10 @@ export type ConvertQueryHookResult = ReturnType<typeof useConvertQuery>;
 export type ConvertLazyQueryHookResult = ReturnType<typeof useConvertLazyQuery>;
 export type ConvertQueryResult = Apollo.QueryResult<ConvertQuery, ConvertQueryVariables>;
 export const PortfolioBalanceDocument = gql`
-    query PortfolioBalance($owner: String!, $valueModifiers: [PortfolioValueModifier!]) {
+    query PortfolioBalance($owner: String!) {
   portfolios(
     ownerAddresses: [$owner]
     chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
-    valueModifiers: $valueModifiers
   ) {
     id
     tokensTotalDenominatedValue {
@@ -3275,7 +3213,6 @@ export const PortfolioBalanceDocument = gql`
  * const { data, loading, error } = usePortfolioBalanceQuery({
  *   variables: {
  *      owner: // value for 'owner'
- *      valueModifiers: // value for 'valueModifiers'
  *   },
  * });
  */

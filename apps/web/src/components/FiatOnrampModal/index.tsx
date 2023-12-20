@@ -57,16 +57,6 @@ const StyledSpinner = styled(CustomLightSpinner)`
   top: 0;
 `
 
-const MoonpayTextWrapper = styled.div`
-  position: absolute;
-  bottom: 20px;
-  margin: auto;
-  left: 0;
-  right: 0;
-  width: 100%;
-  text-align: center;
-`
-
 export default function FiatOnrampModal() {
   const { account } = useWeb3React()
   const theme = useTheme()
@@ -128,37 +118,30 @@ export default function FiatOnrampModal() {
   }, [fetchSignedIframeUrl])
 
   return (
-    <>
-      <Modal isOpen={fiatOnrampModalOpen} onDismiss={() => closeModal()} height={80 /* vh */}>
-        <Wrapper data-testid="fiat-onramp-modal" isDarkMode={isDarkMode}>
-          {error ? (
-            <>
-              <ThemedText.MediumHeader>
-                <Trans>MoonPay fiat on-ramp iframe</Trans>
-              </ThemedText.MediumHeader>
-              <ErrorText>
-                <Trans>Something went wrong!</Trans>
-                <br />
-                {error}
-              </ErrorText>
-            </>
-          ) : loading ? (
-            <StyledSpinner src={Circle} alt="loading spinner" size="90px" />
-          ) : (
-            <StyledIframe
-              src={signedIframeUrl ?? ''}
-              frameBorder="0"
-              title="fiat-onramp-iframe"
-              isDarkMode={isDarkMode}
-            />
-          )}
-        </Wrapper>
-        <MoonpayTextWrapper>
-          <ThemedText.BodySmall color="neutral3">
-            <Trans>Powered by MoonPay USA LLC</Trans>
-          </ThemedText.BodySmall>
-        </MoonpayTextWrapper>
-      </Modal>
-    </>
+    <Modal isOpen={fiatOnrampModalOpen} onDismiss={() => closeModal()} height={80 /* vh */}>
+      <Wrapper data-testid="fiat-onramp-modal" isDarkMode={isDarkMode}>
+        {error ? (
+          <>
+            <ThemedText.MediumHeader>
+              <Trans>MoonPay fiat on-ramp iframe</Trans>
+            </ThemedText.MediumHeader>
+            <ErrorText>
+              <Trans>Something went wrong!</Trans>
+              <br />
+              {error}
+            </ErrorText>
+          </>
+        ) : loading ? (
+          <StyledSpinner src={Circle} alt="loading spinner" size="90px" />
+        ) : (
+          <StyledIframe
+            src={signedIframeUrl ?? ''}
+            frameBorder="0"
+            title="fiat-onramp-iframe"
+            isDarkMode={isDarkMode}
+          />
+        )}
+      </Wrapper>
+    </Modal>
   )
 }

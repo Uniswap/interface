@@ -2,9 +2,8 @@ import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, TraceEvent } from 'analytics'
-import PortfolioDrawer from 'components/AccountDrawer'
+import PortfolioDrawer, { useAccountDrawer } from 'components/AccountDrawer'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Loader, { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
@@ -176,12 +175,9 @@ function Web3StatusInner() {
   // Persist the connection if it changes, so it can be used to initialize the next session's connection.
   useEffect(() => {
     if (account || ENSName) {
-      const { rdns } = connection.getProviderInfo()
-      dispatch(
-        updateRecentConnectionMeta({ type: connection.type, address: account, ENSName: ENSName ?? undefined, rdns })
-      )
+      dispatch(updateRecentConnectionMeta({ type: connection.type, address: account, ENSName: ENSName ?? undefined }))
     }
-  }, [ENSName, account, connection, dispatch])
+  }, [ENSName, account, connection.type, dispatch])
 
   if (!isConnectionInitialized) {
     return (

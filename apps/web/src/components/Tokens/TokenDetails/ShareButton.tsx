@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { Share as ShareIcon } from 'components/Icons/Share'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { chainIdToBackendName } from 'graphql/data/util'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -10,7 +9,7 @@ import { useRef } from 'react'
 import { Link, Twitter } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { css, useTheme } from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import { colors } from 'theme/colors'
 import { ClickableStyle, CopyHelperRefType } from 'theme/components'
 import { CopyHelper } from 'theme/components'
@@ -25,27 +24,19 @@ const ShareButtonDisplay = styled.div`
   position: relative;
 `
 
-const Share = styled(ShareIcon)<{ open: boolean; $isInfoTDPEnabled?: boolean }>`
-  ${({ $isInfoTDPEnabled }) =>
-    $isInfoTDPEnabled
-      ? css`
-          height: 16px;
-          width: 16px;
-        `
-      : css`
-          height: 24px;
-          width: 24px;
-        `}
+const Share = styled(ShareIcon)<{ open: boolean }>`
+  height: 24px;
+  width: 24px;
   ${ClickableStyle}
   ${({ open, theme }) => open && `opacity: ${theme.opacity.click} !important`};
 `
 
-const ShareActions = styled.div<{ isInfoTDPEnabled?: boolean }>`
+const ShareActions = styled.div`
   position: absolute;
   z-index: ${Z_INDEX.dropdown};
   width: 240px;
   top: 36px;
-  ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? 'left' : 'right')}: 0px;
+  right: 0px;
   justify-content: center;
   display: flex;
   flex-direction: column;
@@ -83,14 +74,12 @@ export default function ShareButton({ currency }: { currency: Currency }) {
   const address = currency.isNative ? NATIVE_CHAIN_ID : currency.wrapped.address
   useDisableScrolling(open)
 
-  const isInfoTDPEnabled = useInfoTDPEnabled()
-
   const shareTweet = () => {
     toggleShare()
     window.open(
       `https://twitter.com/intent/tweet?text=Check%20out%20${currency.name}%20(${
         currency.symbol
-      })%20https://app.uniswap.org/${isInfoTDPEnabled ? 'explore/' : ''}tokens/${chainIdToBackendName(
+      })%20https://app.uniswap.org/%23/tokens/${chainIdToBackendName(
         currency.chainId
       ).toLowerCase()}/${address}%20via%20@uniswap`,
       'newwindow',
@@ -102,9 +91,9 @@ export default function ShareButton({ currency }: { currency: Currency }) {
 
   return (
     <ShareButtonDisplay ref={node}>
-      <Share onClick={toggleShare} aria-label="ShareOptions" open={open} $isInfoTDPEnabled={isInfoTDPEnabled} />
+      <Share onClick={toggleShare} aria-label="ShareOptions" open={open} />
       {open && (
-        <ShareActions isInfoTDPEnabled={isInfoTDPEnabled}>
+        <ShareActions>
           <ShareAction onClick={() => copyHelperRef.current?.forceCopy()}>
             <CopyHelper
               InitialIcon={Link}

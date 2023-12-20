@@ -10,7 +10,6 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/splashscreen_icon</item>
         <item name="android:navigationBarColor">@color/background_material_light</item>
-        <item name="android:editTextBackground">@android:color/transparent</item>
     </style>
 
 </resources>

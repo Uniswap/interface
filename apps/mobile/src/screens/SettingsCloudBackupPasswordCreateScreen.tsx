@@ -6,11 +6,11 @@ import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
+import { IS_ANDROID } from 'src/constants/globals'
 import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 type Props = NativeStackScreenProps<
   SettingsStackParamList,
@@ -46,10 +46,10 @@ export function SettingsCloudBackupPasswordCreateScreen({
       <ScrollView bounces={false} keyboardShouldPersistTaps="handled">
         <Flex alignItems="center" justifyContent="space-between" mb="$spacing24" mx="$spacing12">
           <Text variant="heading3">
-            {isAndroid ? t('Back up to Google Drive') : t('Back up to iCloud')}
+            {IS_ANDROID ? t('Back up to Google Drive') : t('Back up to iCloud')}
           </Text>
           <Text color="$neutral2" textAlign="center" variant="body2">
-            {isAndroid
+            {IS_ANDROID
               ? t(
                   'Setting a password will encrypt your recovery phrase backup, adding an extra level of protection if your Google Drive account is ever compromised.'
                 )
@@ -69,12 +69,12 @@ export function SettingsCloudBackupPasswordCreateScreen({
                   <Icons.OSDynamicCloudIcon color="$accent1" size="$icon.24" />
                 </Flex>
                 <Text textAlign="center" variant="subheading1">
-                  {isAndroid
+                  {IS_ANDROID
                     ? t('Back up recovery phrase to Google Drive?')
                     : t('Back up recovery phrase to iCloud?')}
                 </Text>
                 <Text color="$neutral2" textAlign="center" variant="body2">
-                  {isAndroid
+                  {IS_ANDROID
                     ? t(
                         'You haven’t backed up your recovery phrase to Google Drive yet. By doing so, you can recover your wallet just by being logged into Google Drive on any device.'
                       )

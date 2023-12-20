@@ -64,23 +64,25 @@ export function SeedPhraseDisplay({
 
   return (
     <>
-      <Flex grow mt="$spacing16">
-        {showSeedPhrase ? (
+      {showSeedPhrase ? (
+        <Flex grow mt="$spacing16">
           <Flex grow pt="$spacing16" px="$spacing16">
             <MnemonicDisplay mnemonicId={mnemonicId} />
           </Flex>
-        ) : (
-          <HiddenMnemonicWordView />
-        )}
-      </Flex>
-      <Flex borderTopColor="$surface3" borderTopWidth={1} pt="$spacing12" px="$spacing16">
-        <Button
-          testID={ElementName.Next}
-          theme="secondary"
-          onPress={(): void => setShowSeedPhrase(!showSeedPhrase)}>
-          {showSeedPhrase ? t('Hide recovery phrase') : t('Show recovery phrase')}
-        </Button>
-      </Flex>
+          <Flex borderTopColor="$surface3" borderTopWidth={1} pt="$spacing12" px="$spacing16">
+            <Button
+              testID={ElementName.Next}
+              theme="secondary"
+              onPress={(): void => {
+                setShowSeedPhrase(false)
+              }}>
+              {t('Hide recovery phrase')}
+            </Button>
+          </Flex>
+        </Flex>
+      ) : (
+        <HiddenMnemonicWordView />
+      )}
 
       {showSeedPhraseViewWarningModal && (
         <WarningModal

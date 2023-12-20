@@ -1,44 +1,35 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
-import { memo, useEffect, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { I18nManager } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
-import { LineChart, LineChartProvider, TLineChartDataProp } from 'react-native-wagmi-charts'
+import {
+  LineChart,
+  LineChartProvider,
+  TLineChartData,
+  TLineChartDataProp,
+} from 'react-native-wagmi-charts'
 import { Loader } from 'src/components/loading'
 import { CURSOR_INNER_SIZE, CURSOR_SIZE } from 'src/components/PriceExplorer/constants'
-import PriceExplorerAnimatedNumber from 'src/components/PriceExplorer/PriceExplorerAnimatedNumber'
 import { PriceExplorerError } from 'src/components/PriceExplorer/PriceExplorerError'
-import { DatetimeText, RelativeChangeText } from 'src/components/PriceExplorer/Text'
+import { DatetimeText, PriceText, RelativeChangeText } from 'src/components/PriceExplorer/Text'
 import { TimeRangeGroup } from 'src/components/PriceExplorer/TimeRangeGroup'
 import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
-import { useLineChartPrice } from 'src/components/PriceExplorer/usePrice'
 import { invokeImpact } from 'src/utils/haptic'
 import { Flex } from 'ui/src'
-import { spacing } from 'ui/src/theme'
 import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
-import { PriceNumberOfDigits, TokenSpotData, useTokenPriceHistory } from './usePriceHistory'
+import { TokenSpotData, useTokenPriceHistory } from './usePriceHistory'
 
 type PriceTextProps = {
   loading: boolean
   relativeChange?: SharedValue<number>
-  numberOfDigits: PriceNumberOfDigits
 }
 
-function PriceTextSection({
-  loading,
-  relativeChange,
-  numberOfDigits,
-}: PriceTextProps): JSX.Element {
-  const price = useLineChartPrice()
-  const mx = spacing.spacing12
-
+function PriceTextSection({ loading, relativeChange }: PriceTextProps): JSX.Element {
   return (
-    <Flex mx={mx}>
-      {/* Specify maxWidth to allow text scalling. onLayout was sometimes called after more
-      than 5 seconds which is not acceptable so we have to provide the approximate width
-      of the PriceText component explicitly. */}
-      <PriceExplorerAnimatedNumber numberOfDigits={numberOfDigits} price={price} />
+    <Flex mx="$spacing12">
+      <PriceText loading={loading} />
       <Flex row gap="$spacing4">
         <RelativeChangeText loading={loading} spotRelativeChange={relativeChange} />
         <DatetimeText loading={loading} />
@@ -51,7 +42,7 @@ export type LineChartPriceAndDateTimeTextProps = {
   currencyId: CurrencyId
 }
 
-export const PriceExplorer = memo(function PriceExplorer({
+export function PriceExplorer({
   currencyId,
   tokenColor,
   forcePlaceholder,
@@ -62,36 +53,22 @@ export const PriceExplorer = memo(function PriceExplorer({
   forcePlaceholder?: boolean
   onRetry: () => void
 }): JSX.Element {
-  const [fetchComplete, setFetchComplete] = useState(false)
-  const onFetchComplete = (): void => {
-    setFetchComplete(true)
-  }
-
-  const { data, loading, error, refetch, setDuration, selectedDuration, numberOfDigits } =
-    useTokenPriceHistory(currencyId, onFetchComplete)
-
-  useEffect(() => {
-    if (loading && fetchComplete) {
-      setFetchComplete(false)
-    }
-  }, [loading, fetchComplete])
-
+  const { data, loading, error, refetch, setDuration, selectedDuration } =
+    useTokenPriceHistory(currencyId)
   const { convertFiatAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount().amount
   const shouldShowAnimatedDot =
     selectedDuration === HistoryDuration.Day || selectedDuration === HistoryDuration.Hour
   const additionalPadding = shouldShowAnimatedDot ? 40 : 0
+  const lastPricePoint = data?.priceHistory ? data.priceHistory.length - 1 : 0
 
-  const { lastPricePoint, convertedPriceHistory } = useMemo(() => {
-    const priceHistory = data?.priceHistory?.map((point) => {
-      return { ...point, value: point.value * conversionRate }
-    })
-
-    const lastPoint = priceHistory ? priceHistory.length - 1 : 0
-
-    return { lastPricePoint: lastPoint, convertedPriceHistory: priceHistory }
-  }, [data, conversionRate])
-
+  const convertedPriceHistory = useMemo(
+    (): TLineChartData | undefined =>
+      data?.priceHistory?.map((point) => {
+        return { ...point, value: point.value * conversionRate }
+      }),
+    [data, conversionRate]
+  )
   const convertedSpot = useMemo((): TokenSpotData | undefined => {
     return (
       data?.spot && {
@@ -115,26 +92,21 @@ export const PriceExplorer = memo(function PriceExplorer({
 
   let content: JSX.Element | null
   if (forcePlaceholder) {
-    content = (
-      <PriceExplorerPlaceholder loading={forcePlaceholder} numberOfDigits={numberOfDigits} />
-    )
+    content = <PriceExplorerPlaceholder loading={forcePlaceholder} />
   } else if (convertedPriceHistory?.length) {
     content = (
-      <Flex opacity={fetchComplete ? 1 : 0.35}>
-        <PriceExplorerChart
-          additionalPadding={additionalPadding}
-          lastPricePoint={lastPricePoint}
-          loading={loading}
-          numberOfDigits={numberOfDigits}
-          priceHistory={convertedPriceHistory}
-          shouldShowAnimatedDot={shouldShowAnimatedDot}
-          spot={convertedSpot}
-          tokenColor={tokenColor}
-        />
-      </Flex>
+      <PriceExplorerChart
+        additionalPadding={additionalPadding}
+        lastPricePoint={lastPricePoint}
+        loading={loading}
+        priceHistory={convertedPriceHistory}
+        shouldShowAnimatedDot={shouldShowAnimatedDot}
+        spot={convertedSpot}
+        tokenColor={tokenColor}
+      />
     )
   } else {
-    content = <PriceExplorerPlaceholder loading={loading} numberOfDigits={numberOfDigits} />
+    content = <PriceExplorerPlaceholder loading={loading} />
   }
 
   return (
@@ -143,18 +115,12 @@ export const PriceExplorer = memo(function PriceExplorer({
       <TimeRangeGroup setDuration={setDuration} />
     </Flex>
   )
-})
+}
 
-function PriceExplorerPlaceholder({
-  loading,
-  numberOfDigits,
-}: {
-  loading: boolean
-  numberOfDigits: PriceNumberOfDigits
-}): JSX.Element {
+function PriceExplorerPlaceholder({ loading }: { loading: boolean }): JSX.Element {
   return (
     <Flex gap="$spacing8">
-      <PriceTextSection loading={loading} numberOfDigits={numberOfDigits} />
+      <PriceTextSection loading={loading} />
       <Flex my="$spacing24">
         <Loader.Graph />
       </Flex>
@@ -170,7 +136,6 @@ function PriceExplorerChart({
   additionalPadding,
   shouldShowAnimatedDot,
   lastPricePoint,
-  numberOfDigits,
 }: {
   priceHistory: TLineChartDataProp
   spot?: TokenSpotData
@@ -179,7 +144,6 @@ function PriceExplorerChart({
   additionalPadding: number
   shouldShowAnimatedDot: boolean
   lastPricePoint: number
-  numberOfDigits: PriceNumberOfDigits
 }): JSX.Element {
   const { chartHeight, chartWidth } = useChartDimensions()
   const isRTL = I18nManager.isRTL
@@ -189,11 +153,7 @@ function PriceExplorerChart({
       data={priceHistory}
       onCurrentIndexChange={invokeImpact[ImpactFeedbackStyle.Light]}>
       <Flex gap="$spacing8">
-        <PriceTextSection
-          loading={loading}
-          numberOfDigits={numberOfDigits}
-          relativeChange={spot?.relativeChange}
-        />
+        <PriceTextSection loading={loading} relativeChange={spot?.relativeChange} />
         {/* TODO(MOB-2166): remove forced LTR direction + scaleX horizontal flip technique once react-native-wagmi-charts fixes this: https://github.com/coinjar/react-native-wagmi-charts/issues/136 */}
         <Flex direction="ltr" my="$spacing24" style={{ transform: [{ scaleX: isRTL ? -1 : 1 }] }}>
           <LineChart height={chartHeight} width={chartWidth - additionalPadding} yGutter={20}>
@@ -202,10 +162,7 @@ function PriceExplorerChart({
                 <LineChart.Dot
                   key={lastPricePoint}
                   hasPulse
-                  // Sometimes, the pulse dot doesn't appear on the end of
-                  // the chart’s path, but on top of the container instead.
-                  // A little shift backwards seems to solve this problem.
-                  at={lastPricePoint - 0.1}
+                  at={lastPricePoint}
                   color={tokenColor}
                   inactiveColor="transparent"
                   pulseBehaviour="while-inactive"
@@ -214,10 +171,9 @@ function PriceExplorerChart({
                 />
               )}
             </LineChart.Path>
-            <LineChart.CursorLine color={tokenColor} minDurationMs={150} />
+            <LineChart.CursorLine color={tokenColor} />
             <LineChart.CursorCrosshair
               color={tokenColor}
-              minDurationMs={150}
               outerSize={CURSOR_SIZE}
               size={CURSOR_INNER_SIZE}
               onActivated={invokeImpact[ImpactFeedbackStyle.Light]}

@@ -48,13 +48,8 @@ describe('signature reducer', () => {
         },
       })
 
-      // Adding a signature w/ same id should be a no-op
-      store.dispatch(addSignature(signature))
-      expect(store.getState()).toStrictEqual({
-        [account]: {
-          [signature.id]: signature,
-        },
-      })
+      // Adding a signature w/ same id should throw
+      expect(() => store.dispatch(addSignature(signature))).toThrow()
     })
   })
 

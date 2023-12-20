@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { WalletSelectorModal } from 'src/components/unitags/WalletSelectorModal'
 import InputWithSuffix from 'src/features/import/InputWithSuffix'
 import { UNITAG_SUFFIX } from 'src/features/unitags/constants'
@@ -32,7 +31,6 @@ type UnitagInputProps = {
   onSubmit?: () => void
   inputSuffix?: string
   liveCheck?: boolean
-  loading?: boolean
   showUnitagLogo: boolean
   onBlur?: () => void
   onFocus?: () => void
@@ -47,7 +45,6 @@ export function UnitagInput({
   onSubmit,
   onChange,
   liveCheck,
-  loading,
   placeholderLabel,
   showUnitagLogo,
   errorMessage,
@@ -132,16 +129,7 @@ export function UnitagInput({
                 onFocus={handleFocus}
                 onSubmitEditing={handleSubmit}
               />
-              {loading && (
-                <AnimatedFlex centered entering={FadeIn} exiting={FadeOut}>
-                  <SpinningLoader size={iconSizes.icon24} />
-                </AnimatedFlex>
-              )}
-              {showUnitagLogo && (
-                <AnimatedFlex centered entering={FadeIn} exiting={FadeOut}>
-                  <Unitag height={iconSizes.icon24} width={iconSizes.icon24} />
-                </AnimatedFlex>
-              )}
+              {showUnitagLogo && <Unitag height={iconSizes.icon24} width={iconSizes.icon24} />}
             </Flex>
             {!value && (
               <AnimatedFlex

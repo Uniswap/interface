@@ -12,6 +12,7 @@ import {
 import { BackButton } from 'src/components/buttons/BackButton'
 import { EducationContentType } from 'src/components/education'
 import Trace from 'src/components/Trace/Trace'
+import { IS_ANDROID } from 'src/constants/globals'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
@@ -25,7 +26,6 @@ import { useAsyncData } from 'utilities/src/react/hooks'
 import { ImportType } from 'wallet/src/features/onboarding/types'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 type Props = CompositeScreenProps<
   StackScreenProps<OnboardingStackParamList, OnboardingScreens.Backup>,
@@ -81,8 +81,8 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   const onPressCloudBackup = (): void => {
     if (!cloudStorageAvailable) {
       Alert.alert(
-        isAndroid ? t('Google Drive not available') : t('iCloud Drive not available'),
-        isAndroid
+        IS_ANDROID ? t('Google Drive not available') : t('iCloud Drive not available'),
+        IS_ANDROID
           ? t(
               'Please verify that you are logged in to a Google account with Google Drive enabled on this device and try again.'
             )
@@ -130,7 +130,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
       disabled={hasCloudBackup}
       elementName={ElementName.AddCloudBackup}
       icon={<Icons.OSDynamicCloudIcon color="$accent1" size="$icon.16" />}
-      title={isAndroid ? t('Google Drive backup') : t('iCloud backup')}
+      title={IS_ANDROID ? t('Google Drive backup') : t('iCloud backup')}
       onPress={onPressCloudBackup}
     />
   )

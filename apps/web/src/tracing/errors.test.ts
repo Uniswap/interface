@@ -187,17 +187,4 @@ describe('beforeSend', () => {
       expect(beforeSend(ERROR, { originalException })).toBeNull()
     })
   })
-
-  describe('ProviderRpcErrors', () => {
-    it('augments the event with an exception from the ProviderRpcError', () => {
-      const exception = { mechanism: { handled: false, synthetic: true } }
-      const event = { exception: { values: [exception] } } as ErrorEvent
-      const originalException = { code: -32603, message: 'Internal JSON-RPC error', data: '[Object]' }
-      beforeSend(event, { originalException })
-      expect(event.exception?.values).toEqual([
-        exception,
-        { type: 'ProviderRpcError', value: `${originalException.code}: ${originalException.message}` },
-      ])
-    })
-  })
 })

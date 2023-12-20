@@ -13,15 +13,6 @@ const mock: MockedResponse<PortfolioBalancesQuery> = {
     query: PortfolioBalancesDocument,
     variables: {
       ownerAddress: Portfolios[0].ownerAddress,
-      valueModifiers: [
-        {
-          ownerAddress: Portfolios[0].ownerAddress,
-          tokenIncludeOverrides: undefined,
-          tokenExcludeOverrides: undefined,
-          includeSmallBalances: false,
-          includeSpamTokens: false,
-        },
-      ],
     },
   },
   result: {

@@ -51,8 +51,3 @@ public struct PriceHistory {
   public let timestamp: Int
   public let price: Double
 }
-
-public struct CurrencyConversionResponse {
-  public let conversionRate: Double
-  public let currency: String
-}

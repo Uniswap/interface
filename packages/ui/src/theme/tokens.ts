@@ -84,7 +84,8 @@ export const validColor = (value: string | undefined | null): ColorTokens => {
         if (!(valueWithout$Prefix in color) && !(valueWithout$Prefix in themes.light)) {
           throw new Error(`Invalid color token: ${value}`)
         }
-      } else if (
+      }
+      if (
         value[0] !== '#' &&
         !value.startsWith('rgb(') &&
         !value.startsWith('rgba(') &&

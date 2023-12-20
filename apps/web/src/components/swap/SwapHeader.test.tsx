@@ -1,56 +1,19 @@
-import { ChainId } from '@uniswap/sdk-core'
-import { Dispatch, PropsWithChildren, SetStateAction } from 'react'
-import { CurrencyState, EMPTY_DERIVED_SWAP_INFO, SwapAndLimitContext, SwapContext } from 'state/swap/SwapContext'
+import { TEST_ALLOWED_SLIPPAGE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { render, screen } from 'test-utils/render'
 
-import { Field, SwapTab } from './constants'
-import SwapHeader from './SwapHeader'
+import SwapHeader, { SwapTab } from './SwapHeader'
 
 jest.mock('../../featureFlags/flags/limits', () => ({ useLimitsEnabled: () => true }))
-
-interface WrapperProps {
-  setCurrentTab?: Dispatch<SetStateAction<SwapTab>>
-  setCurrencyState?: Dispatch<SetStateAction<CurrencyState>>
-}
-
-function Wrapper(props: PropsWithChildren<WrapperProps>) {
-  return (
-    <SwapAndLimitContext.Provider
-      value={{
-        currencyState: { inputCurrency: undefined, outputCurrency: undefined },
-        setCurrencyState: props.setCurrencyState ?? jest.fn(),
-        prefilledState: {
-          inputCurrency: undefined,
-          outputCurrency: undefined,
-        },
-        chainId: ChainId.MAINNET,
-        currentTab: SwapTab.Swap,
-        setCurrentTab: props.setCurrentTab ?? jest.fn(),
-      }}
-    >
-      <SwapContext.Provider
-        value={{
-          derivedSwapInfo: EMPTY_DERIVED_SWAP_INFO,
-          setSwapState: jest.fn(),
-          swapState: {
-            independentField: Field.INPUT,
-            typedValue: '',
-            recipient: '',
-          },
-        }}
-      >
-        {props.children}
-      </SwapContext.Provider>
-    </SwapAndLimitContext.Provider>
-  )
-}
 
 describe('SwapHeader.tsx', () => {
   it('matches base snapshot', () => {
     const { asFragment } = render(
-      <Wrapper>
-        <SwapHeader />
-      </Wrapper>
+      <SwapHeader
+        trade={TEST_TRADE_EXACT_INPUT}
+        selectedTab={SwapTab.Swap}
+        autoSlippage={TEST_ALLOWED_SLIPPAGE}
+        onClickTab={jest.fn()}
+      />
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText('Swap')).toBeInTheDocument()
@@ -61,9 +24,12 @@ describe('SwapHeader.tsx', () => {
   it('calls callback for switching tabs', () => {
     const onClickTab = jest.fn()
     render(
-      <Wrapper setCurrentTab={onClickTab}>
-        <SwapHeader />
-      </Wrapper>
+      <SwapHeader
+        trade={TEST_TRADE_EXACT_INPUT}
+        selectedTab={SwapTab.Swap}
+        autoSlippage={TEST_ALLOWED_SLIPPAGE}
+        onClickTab={onClickTab}
+      />
     )
     screen.getByText('Limit').click()
     expect(onClickTab).toHaveBeenCalledWith(SwapTab.Limit)

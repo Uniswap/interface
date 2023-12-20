@@ -1,6 +1,6 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 
-import { getCanonicalUrl, getCurrentPageFromLocation } from './urlRoutes'
+import { getCurrentPageFromLocation } from './urlRoutes'
 
 describe('getCurrentPageFromLocation', () => {
   it('should return SWAP_PAGE when location pathname starts with "/swap"', () => {
@@ -49,17 +49,5 @@ describe('getCurrentPageFromLocation', () => {
   it('should return undefined for unknown location pathnames', () => {
     const result = getCurrentPageFromLocation('/unknown')
     expect(result).toBeUndefined()
-  })
-})
-
-describe('getCanonicalUrl', () => {
-  it('should return the base URL as is', () => {
-    const result = getCanonicalUrl('/swap/123')
-    expect(result).toBe('http://localhost/swap/123')
-  })
-
-  it('should return the base URL without trailing slash', () => {
-    const result = getCanonicalUrl('/swap/123/')
-    expect(result).toBe('http://localhost/swap/123')
   })
 })

@@ -15,12 +15,12 @@ import { DecimalPad } from 'src/components/input/DecimalPad'
 import { TextInputProps } from 'src/components/input/TextInput'
 import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
+import { FiatOnRampTokenSelector } from 'src/components/TokenSelector/FiatOnRampTokenSelector'
 import { FiatOnRampAmountSection } from 'src/features/fiatOnRamp/FiatOnRampAmountSection'
 import {
   FiatOnRampConnectingView,
   SERVICE_PROVIDER_ICON_SIZE,
 } from 'src/features/fiatOnRamp/FiatOnRampConnecting'
-import { FiatOnRampTokenSelector } from 'src/features/fiatOnRamp/FiatOnRampTokenSelector'
 import {
   useMoonpayFiatCurrencySupportInfo,
   useMoonpayFiatOnRamp,
@@ -97,6 +97,15 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
 
   const [currency, setCurrency] = useState<FiatOnRampCurrency>({
     currencyInfo: ethCurrencyInfo,
+    moonpayCurrency: {
+      code: 'eth',
+      type: 'crypto',
+      id: '',
+      supportsLiveMode: true,
+      supportsTestMode: true,
+      isSupportedInUS: true,
+      notAllowedUSStates: [],
+    },
   })
 
   const { appFiatCurrencySupportedInMoonpay, moonpaySupportedFiatCurrency } =
@@ -131,7 +140,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
     errorColor,
   } = useMoonpayFiatOnRamp({
     baseCurrencyAmount: value,
-    quoteCurrencyCode: currency.currencyInfo?.currency.symbol,
+    quoteCurrencyCode: currency.moonpayCurrency.code,
   })
 
   useTimeout(

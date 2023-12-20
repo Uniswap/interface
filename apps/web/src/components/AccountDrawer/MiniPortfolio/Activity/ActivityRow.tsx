@@ -43,7 +43,7 @@ function StatusIndicator({ activity: { status, timestamp } }: { activity: Activi
 }
 
 export function ActivityRow({ activity }: { activity: Activity }) {
-  const { chainId, title, descriptor, logos, otherAccount, currencies, hash, prefixIconSrc, offchainOrderDetails } =
+  const { chainId, title, descriptor, logos, otherAccount, currencies, hash, prefixIconSrc, offchainOrderStatus } =
     activity
 
   const openOffchainActivityModal = useOpenOffchainActivityModal()
@@ -52,13 +52,13 @@ export function ActivityRow({ activity }: { activity: Activity }) {
   const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
 
   const onClick = useCallback(() => {
-    if (offchainOrderDetails) {
-      openOffchainActivityModal(offchainOrderDetails)
+    if (offchainOrderStatus) {
+      openOffchainActivityModal({ orderHash: hash, status: offchainOrderStatus })
       return
     }
 
     window.open(getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION), '_blank')
-  }, [chainId, hash, offchainOrderDetails, openOffchainActivityModal])
+  }, [offchainOrderStatus, chainId, hash, openOffchainActivityModal])
 
   return (
     <TraceEvent

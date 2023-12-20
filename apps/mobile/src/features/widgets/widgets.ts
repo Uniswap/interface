@@ -1,5 +1,6 @@
 import { NativeModules } from 'react-native'
 import { getItem, reloadAllTimelines, setItem } from 'react-native-widgetkit'
+import { IS_ANDROID } from 'src/constants/globals'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { getBuildVariant } from 'src/utils/version'
@@ -7,14 +8,12 @@ import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 const APP_GROUP = 'group.com.uniswap.widgets'
-const KEY_WIDGET_EVENTS = getBuildVariant() + '.widgets.configuration.events'
-const KEY_WIDGET_CACHE = getBuildVariant() + '.widgets.configuration.cache'
-const KEY_WIDGETS_FAVORITE = getBuildVariant() + '.widgets.favorites'
-const KEY_WIDGETS_ACCOUNTS = getBuildVariant() + '.widgets.accounts'
-const KEY_WIDGETS_I18N = getBuildVariant() + '.widgets.i18n'
+const WIDGET_EVENTS_KEY = getBuildVariant() + '.widgets.configuration.events'
+const WIDGET_CACHE_KEY = getBuildVariant() + '.widgets.configuration.cache'
+const FAVORITE_WIDGETS_KEY = getBuildVariant() + '.widgets.favorites'
+const ACCOUNTS_WIDGETS_KEY = getBuildVariant() + '.widgets.accounts'
 
 const { RNWidgets } = NativeModules
 
@@ -41,11 +40,6 @@ export type WidgetConfiguration = {
   family: string
 }
 
-export type WidgetI18nSettings = {
-  locale: string
-  currency: string
-}
-
 export const setUserDefaults = async (data: object, key: string): Promise<void> => {
   const dataJSON = JSON.stringify(data)
   await setItem(key, dataJSON, APP_GROUP)
@@ -61,7 +55,7 @@ export const setFavoritesUserDefaults = (currencyIds: CurrencyId[]): void => {
   const data = {
     favorites,
   }
-  setUserDefaults(data, KEY_WIDGETS_FAVORITE).catch(() => undefined)
+  setUserDefaults(data, FAVORITE_WIDGETS_KEY).catch(() => undefined)
 }
 
 export const setAccountAddressesUserDefaults = (accounts: Account[]): void => {
@@ -76,11 +70,7 @@ export const setAccountAddressesUserDefaults = (accounts: Account[]): void => {
   const data = {
     accounts: userDefaultAccounts,
   }
-  setUserDefaults(data, KEY_WIDGETS_ACCOUNTS).catch(() => undefined)
-}
-
-export const setI18NUserDefaults = (i18nSettings: WidgetI18nSettings): void => {
-  setUserDefaults(i18nSettings, KEY_WIDGETS_I18N).catch(() => undefined)
+  setUserDefaults(data, ACCOUNTS_WIDGETS_KEY).catch(() => undefined)
 }
 
 // handles edge case where there is a widget left in the cache,
@@ -89,7 +79,7 @@ export const setI18NUserDefaults = (i18nSettings: WidgetI18nSettings): void => {
 async function handleLastRemovalEvents(): Promise<void> {
   const areWidgetsInstalled = await hasWidgetsInstalled()
   if (!areWidgetsInstalled) {
-    const widgetCacheJSONString = await getItem(KEY_WIDGET_CACHE, APP_GROUP)
+    const widgetCacheJSONString = await getItem(WIDGET_CACHE_KEY, APP_GROUP)
     if (!widgetCacheJSONString) {
       return
     }
@@ -101,14 +91,14 @@ async function handleLastRemovalEvents(): Promise<void> {
         change: 'removed',
       })
     })
-    await setUserDefaults({ configuration: [] }, KEY_WIDGET_CACHE)
+    await setUserDefaults({ configuration: [] }, WIDGET_CACHE_KEY)
   }
 }
 
 export async function processWidgetEvents(): Promise<void> {
   reloadAllTimelines()
   await handleLastRemovalEvents()
-  const widgetEventsJSONString = await getItem(KEY_WIDGET_EVENTS, APP_GROUP)
+  const widgetEventsJSONString = await getItem(WIDGET_EVENTS_KEY, APP_GROUP)
 
   if (!widgetEventsJSONString) {
     return
@@ -120,12 +110,12 @@ export async function processWidgetEvents(): Promise<void> {
 
   if (widgetEvents.events.length > 0) {
     analytics.flushEvents()
-    await setUserDefaults({ events: [] }, KEY_WIDGET_EVENTS)
+    await setUserDefaults({ events: [] }, WIDGET_EVENTS_KEY)
   }
 }
 
 async function hasWidgetsInstalled(): Promise<boolean> {
-  if (isAndroid) return false
+  if (IS_ANDROID) return false
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return await RNWidgets.hasWidgetsInstalled()
 }

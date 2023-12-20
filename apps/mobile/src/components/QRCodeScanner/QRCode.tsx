@@ -3,9 +3,9 @@ import { ImageSourcePropType, StyleSheet } from 'react-native'
 import QRCode from 'src/components/QRCodeScanner/custom-qr-code-generator'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { useUniconColors } from 'src/components/unicons/utils'
+import { IS_ANDROID } from 'src/constants/globals'
 import { ColorTokens, Flex, useSporeColors } from 'ui/src'
 import { borderRadii, opacify } from 'ui/src/theme'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 type AddressQRCodeProps = {
   address: Address
@@ -65,7 +65,7 @@ export const AddressQRCode = ({
         enableLinearGradient: true,
         linearGradient: [gradientData.gradientStart, gradientData.gradientEnd],
         color: gradientData.gradientStart,
-        gradientDirection: ['0%', '0%', isAndroid ? '150%' : '100%', '0%'],
+        gradientDirection: ['0%', '0%', IS_ANDROID ? '150%' : '100%', '0%'],
       }
     }
     return gradientPropsObject

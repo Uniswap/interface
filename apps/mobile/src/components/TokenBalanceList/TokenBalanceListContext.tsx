@@ -1,4 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
 import { isEqual } from 'lodash'
 import {
   createContext,
@@ -10,22 +9,18 @@ import {
   useRef,
   useState,
 } from 'react'
-import { PollingInterval } from 'wallet/src/constants/misc'
+import { useTokenBalancesGroupedByVisibility } from 'src/features/balances/hooks'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
-import {
-  usePortfolioBalances,
-  useTokenBalancesGroupedByVisibility,
-} from 'wallet/src/features/dataApi/balances'
-import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
+import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
 
 type CurrencyId = string
 export const HIDDEN_TOKEN_BALANCES_ROW = 'HIDDEN_TOKEN_BALANCES_ROW' as const
 export type TokenBalanceListRow = CurrencyId | typeof HIDDEN_TOKEN_BALANCES_ROW
 
 type TokenBalanceListContextState = {
-  balancesById: Record<string, PortfolioBalance> | undefined
-  networkStatus: NetworkStatus
-  refetch: (() => void) | undefined
+  balancesById: ReturnType<typeof usePortfolioBalances>['data']
+  networkStatus: ReturnType<typeof usePortfolioBalances>['networkStatus']
+  refetch: ReturnType<typeof usePortfolioBalances>['refetch']
   hiddenTokensCount: number
   hiddenTokensExpanded: boolean
   isWarmLoading: boolean
@@ -54,7 +49,7 @@ export function TokenBalanceListContextProvider({
     refetch,
   } = usePortfolioBalances({
     address: owner,
-    pollInterval: PollingInterval.KindaFast,
+    shouldPoll: true,
     fetchPolicy: 'cache-and-network',
   })
 

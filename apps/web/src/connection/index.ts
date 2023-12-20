@@ -1,4 +1,3 @@
-import { t } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { CoinbaseWallet } from '@web3-react/coinbase-wallet'
 import { initializeConnector } from '@web3-react/core'
@@ -12,57 +11,23 @@ import COINBASE_ICON from 'assets/wallets/coinbase-icon.svg'
 import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import WALLET_CONNECT_ICON from 'assets/wallets/walletconnect-icon.svg'
 import { useSyncExternalStore } from 'react'
-import { isMobile, isNonSupportedDevice } from 'wallet/src/utils/platform'
+import { isMobile, isNonSupportedPhone } from 'utils/userAgent'
 
 import { RPC_URLS } from '../constants/networks'
 import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from '../constants/providers'
-import { EIP6963 } from './eip6963'
-import { Connection, ConnectionType, ProviderInfo } from './types'
-import { getDeprecatedInjection, getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
+import { Connection, ConnectionType } from './types'
+import { getInjection, getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
 import { UniwalletConnect as UniwalletWCV2Connect, WalletConnectV2 } from './WalletConnectV2'
 
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)
 }
 
-type InjectedConnection = Connection & {
-  /** Returns a copy of the connection with metadata & activation for a specific extension/provider */
-  wrap: (providerInfo: ProviderInfo) => Connection | undefined
-  /** Sets which extension/provider the connector should activate */
-  selectRdns(rdns: string): void
-}
-
-const [eip6963, eip6963hooks] = initializeConnector<EIP6963>((actions) => new EIP6963({ actions, onError }))
-// Since eip6963 wallet are `announced` dynamically after compile-time, but web3provider required connectors to be statically defined,
-// we define a static eip6963Connection object that provides access to all eip6963 wallets. The `wrap` function is used to obtain a copy
-// of the connection with metadata & activation for a specific extension/provider.
-export const eip6963Connection: InjectedConnection = {
-  getProviderInfo: () => eip6963.provider.currentProviderDetail?.info ?? { name: t`Browser Wallet` },
-  selectRdns: (rdns: string) => eip6963.selectProvider(rdns),
-  connector: eip6963,
-  hooks: eip6963hooks,
-  type: ConnectionType.EIP_6963_INJECTED,
-  shouldDisplay: () => false, // Since we display each individual eip6963 wallet, we shouldn't display this generic parent connection
-  wrap(providerInfo: ProviderInfo) {
-    const { rdns } = providerInfo
-    if (!rdns) return undefined
-    return {
-      ...this,
-      getProviderInfo: () => providerInfo,
-      overrideActivate() {
-        eip6963.selectProvider(rdns) // Select the specific eip6963 provider before activating
-        return false
-      },
-      shouldDisplay: () => true, // Individual eip6963 wallets should always be displayed
-    }
-  },
-}
-
 const [web3Network, web3NetworkHooks] = initializeConnector<Network>(
   (actions) => new Network({ actions, urlMap: RPC_PROVIDERS, defaultChainId: 1 })
 )
 export const networkConnection: Connection = {
-  getProviderInfo: () => ({ name: 'Network' }),
+  getName: () => 'Network',
   connector: web3Network,
   hooks: web3NetworkHooks,
   type: ConnectionType.NETWORK,
@@ -70,15 +35,10 @@ export const networkConnection: Connection = {
 }
 
 const [deprecatedWeb3Network, deprecatedWeb3NetworkHooks] = initializeConnector<Network>(
-  (actions) =>
-    new Network({
-      actions,
-      urlMap: DEPRECATED_RPC_PROVIDERS,
-      defaultChainId: 1,
-    })
+  (actions) => new Network({ actions, urlMap: DEPRECATED_RPC_PROVIDERS, defaultChainId: 1 })
 )
 export const deprecatedNetworkConnection: Connection = {
-  getProviderInfo: () => ({ name: 'Network' }),
+  getName: () => 'Network',
   connector: deprecatedWeb3Network,
   hooks: deprecatedWeb3NetworkHooks,
   type: ConnectionType.NETWORK,
@@ -95,11 +55,12 @@ const getIsGenericInjector = () => getIsInjected() && !getIsMetaMaskWallet() && 
 
 const [web3Injected, web3InjectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
 
-export const deprecatedInjectedConnection: Connection = {
-  getProviderInfo: (isDarkMode: boolean) => getDeprecatedInjection(isDarkMode) ?? { name: t`Browser Wallet` },
+export const injectedConnection: Connection = {
+  getName: () => getInjection().name,
   connector: web3Injected,
   hooks: web3InjectedHooks,
   type: ConnectionType.INJECTED,
+  getIcon: (isDarkMode: boolean) => getInjection(isDarkMode).icon,
   shouldDisplay: () => getIsMetaMaskWallet() || getShouldAdvertiseMetaMask() || getIsGenericInjector(),
   // If on non-injected, non-mobile browser, prompt user to install Metamask
   overrideActivate: () => {
@@ -112,10 +73,11 @@ export const deprecatedInjectedConnection: Connection = {
 }
 const [web3GnosisSafe, web3GnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe({ actions }))
 export const gnosisSafeConnection: Connection = {
-  getProviderInfo: () => ({ name: 'Gnosis Safe', icon: GNOSIS_ICON }),
+  getName: () => 'Gnosis Safe',
   connector: web3GnosisSafe,
   hooks: web3GnosisSafeHooks,
   type: ConnectionType.GNOSIS_SAFE,
+  getIcon: () => GNOSIS_ICON,
   shouldDisplay: () => false,
 }
 
@@ -126,10 +88,6 @@ export const walletConnectV2Connection: Connection = new (class implements Conne
   type = ConnectionType.WALLET_CONNECT_V2
   getName = () => 'WalletConnect'
   getIcon = () => WALLET_CONNECT_ICON
-  getProviderInfo = () => ({
-    name: 'WalletConnect',
-    icon: WALLET_CONNECT_ICON,
-  })
   shouldDisplay = () => !getIsInjectedMobileBrowser()
 
   private activeConnector = initializeConnector<WalletConnectV2>(this.initializer)
@@ -186,11 +144,12 @@ const [web3WCV2UniwalletConnect, web3WCV2UniwalletConnectHooks] = initializeConn
   (actions) => new UniwalletWCV2Connect({ actions, onError })
 )
 export const uniwalletWCV2ConnectConnection: Connection = {
-  getProviderInfo: () => ({ name: 'Uniswap Wallet', icon: UNIWALLET_ICON }),
+  getName: () => 'Uniswap Wallet',
   connector: web3WCV2UniwalletConnect,
   hooks: web3WCV2UniwalletConnectHooks,
   type: ConnectionType.UNISWAP_WALLET_V2,
-  shouldDisplay: () => Boolean(!getIsInjectedMobileBrowser() && !isNonSupportedDevice),
+  getIcon: () => UNIWALLET_ICON,
+  shouldDisplay: () => Boolean(!getIsInjectedMobileBrowser() && !isNonSupportedPhone),
 }
 
 const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(
@@ -207,10 +166,11 @@ const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<Coinba
     })
 )
 const coinbaseWalletConnection: Connection = {
-  getProviderInfo: () => ({ name: 'Coinbase Wallet', icon: COINBASE_ICON }),
+  getName: () => 'Coinbase Wallet',
   connector: web3CoinbaseWallet,
   hooks: web3CoinbaseWalletHooks,
   type: ConnectionType.COINBASE_WALLET,
+  getIcon: () => COINBASE_ICON,
   shouldDisplay: () =>
     Boolean((isMobile && !getIsInjectedMobileBrowser()) || !isMobile || getIsCoinbaseWalletBrowser()),
   // If on a mobile browser that isn't the coinbase wallet browser, deeplink to the coinbase wallet app
@@ -226,11 +186,9 @@ const coinbaseWalletConnection: Connection = {
 export const connections = [
   gnosisSafeConnection,
   uniwalletWCV2ConnectConnection,
-  deprecatedInjectedConnection,
+  injectedConnection,
   walletConnectV2Connection,
   coinbaseWalletConnection,
-  eip6963Connection,
-  // network connector should be last in the list, as it should be the fallback if no other connector is active
   networkConnection,
   deprecatedNetworkConnection,
 ]
@@ -245,7 +203,7 @@ export function getConnection(c: Connector | ConnectionType) {
   } else {
     switch (c) {
       case ConnectionType.INJECTED:
-        return deprecatedInjectedConnection
+        return injectedConnection
       case ConnectionType.COINBASE_WALLET:
         return coinbaseWalletConnection
       case ConnectionType.WALLET_CONNECT_V2:
@@ -258,8 +216,6 @@ export function getConnection(c: Connector | ConnectionType) {
         return deprecatedNetworkConnection
       case ConnectionType.GNOSIS_SAFE:
         return gnosisSafeConnection
-      case ConnectionType.EIP_6963_INJECTED:
-        return eip6963Connection
     }
   }
 }

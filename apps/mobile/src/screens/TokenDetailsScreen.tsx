@@ -384,8 +384,10 @@ function HeaderRightElement({
 
   const { menuActions, onContextMenuPress } = useTokenContextMenu({
     currencyId,
+    isSpam: currentChainBalance?.currencyInfo.isSpam,
+    isNative: currentChainBalance?.currencyInfo.currency.isNative,
+    balanceUSD: currentChainBalance?.balanceUSD,
     tokenSymbolForNotification: data?.token?.symbol,
-    portfolioBalance: currentChainBalance,
   })
 
   // Should be the same color as heart icon in not favorited state next to it

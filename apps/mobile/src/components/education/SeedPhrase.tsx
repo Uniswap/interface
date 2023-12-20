@@ -5,9 +5,9 @@ import { runOnJS } from 'react-native-reanimated'
 import { OnboardingStackBaseParams, useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { CloseButton } from 'src/components/buttons/CloseButton'
 import { CarouselContext } from 'src/components/carousel/Carousel'
+import { IS_ANDROID } from 'src/constants/globals'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { Flex, Text, useDeviceDimensions } from 'ui/src'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 function Page({
   text,
@@ -113,7 +113,7 @@ export const SeedPhraseEducationContent = (params: OnboardingStackBaseParams): J
     params={params}
     text={
       <CustomHeadingText>
-        {isAndroid ? (
+        {IS_ANDROID ? (
           <Trans>
             Instead of memorizing your recovery phrase, you can{' '}
             <CustomHeadingText color="$accent1">back it up to Google Drive</CustomHeadingText> and

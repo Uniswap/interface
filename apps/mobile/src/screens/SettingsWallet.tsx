@@ -21,6 +21,7 @@ import {
   SettingsSectionItem,
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
+import { IS_ANDROID } from 'src/constants/globals'
 import { openModal } from 'src/features/modals/modalSlice'
 import {
   NotificationPermission,
@@ -44,7 +45,6 @@ import { useENS } from 'wallet/src/features/ens/useENS'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
-import { useUnitag } from 'wallet/src/features/unitags/hooks'
 import {
   EditAccountAction,
   editAccountActions,
@@ -56,7 +56,6 @@ import {
   useSelectAccountHideSpamTokens,
   useSelectAccountNotificationSetting,
 } from 'wallet/src/features/wallet/hooks'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWallet>
 
@@ -228,7 +227,7 @@ export function SettingsWallet({
                 },
               }
             : { address },
-          text: isAndroid ? t('Google Drive backup') : t('iCloud backup'),
+          text: IS_ANDROID ? t('Google Drive backup') : t('iCloud backup'),
           icon: <Icons.OSDynamicCloudIcon color="$neutral2" size="$icon.24" />,
           isHidden: readonly,
         },
@@ -305,7 +304,9 @@ const renderItemSeparator = (): JSX.Element => <Flex pt="$spacing8" />
 function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()
   const ensName = useENS(ChainId.Mainnet, address)?.name
-  const hasUnitag = !!useUnitag(address)?.username
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
+  // TODO (MOB-2122): GET /address from unitags backend to check for unitag
+  const hasUnitag = false && unitagsFeatureFlagEnabled
 
   const onPressEditProfile = (): void => {
     if (hasUnitag) {

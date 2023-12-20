@@ -3,10 +3,10 @@ import React from 'react'
 import { KeyboardAvoidingView, StyleSheet } from 'react-native'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
 import { Screen, SHORT_SCREEN_HEADER_HEIGHT_RATIO } from 'src/components/layout/Screen'
+import { IS_IOS } from 'src/constants/globals'
 import { ChooseUnitag } from 'src/features/unitags/ChooseUnitag'
 import { UnitagScreens } from 'src/screens/Screens'
 import { useDeviceInsets } from 'ui/src'
-import { isIOS } from 'wallet/src/utils/platform'
 
 export function ClaimUnitagScreen({
   route,
@@ -22,7 +22,7 @@ export function ClaimUnitagScreen({
       pt={headerHeight}>
       <KeyboardAvoidingView
         enabled
-        behavior={isIOS ? 'padding' : undefined}
+        behavior={IS_IOS ? 'padding' : undefined}
         style={[styles.base, { marginTop: insets.top, marginBottom: insets.bottom }]}>
         <ChooseUnitag entryPoint={entryPoint} />
       </KeyboardAvoidingView>

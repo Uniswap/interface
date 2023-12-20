@@ -8,6 +8,7 @@ import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { Loader } from 'src/components/loading'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { useBottomSheetFocusHook } from 'src/components/modals/hooks'
+import { IS_IOS } from 'src/constants/globals'
 import { ModalName } from 'src/features/telemetry/constants'
 import {
   AnimatedFlex,
@@ -27,7 +28,6 @@ import {
   getCountryFlagSvgUrl,
   MeldCountryPaymentMethodsResponse,
 } from 'wallet/src/features/fiatOnRamp/meld'
-import { isIOS } from 'wallet/src/utils/platform'
 
 const ICON_SIZE = 32 // design prefers a custom value here
 
@@ -98,7 +98,7 @@ function CountrySelectorContent({
   )
 
   return (
-    <Flex grow gap="$spacing16" pb={isIOS ? '$spacing16' : '$none'} px="$spacing16">
+    <Flex grow gap="$spacing16" pb={IS_IOS ? '$spacing16' : '$none'} px="$spacing16">
       <Text color="$neutral1" mt="$spacing2" textAlign="center" variant="subheading1">
         {t('Select your region')}
       </Text>

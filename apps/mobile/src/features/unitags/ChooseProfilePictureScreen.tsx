@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { getUniqueId } from 'react-native-device-info'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
@@ -11,10 +10,7 @@ import { OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
 import { Button, Flex, Icons, Text, useDeviceInsets } from 'ui/src'
 import Unitag from 'ui/src/assets/icons/unitag.svg'
 import { fonts, iconSizes, imageSizes } from 'ui/src/theme'
-import { useAsyncData } from 'utilities/src/react/hooks'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
-import { useClaimUnitagMutation } from 'wallet/src/features/unitags/api'
-import { parseUnitagErrorCode } from 'wallet/src/features/unitags/utils'
 import { useActiveAccountAddress, usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 
 export function ChooseProfilePictureScreen({
@@ -29,17 +25,6 @@ export function ChooseProfilePictureScreen({
   const { t } = useTranslation()
   const [imageUri, setImageUri] = useState<string>()
   const [showModal, setShowModal] = useState(false)
-  const [claimError, setClaimError] = useState<string>()
-  const [
-    claimUnitag,
-    {
-      called: claimRequestMade,
-      loading: claimResponseLoading,
-      data: claimResponse,
-      reset: resetClaimResponse,
-    },
-  ] = useClaimUnitagMutation()
-  const { data: deviceId } = useAsyncData(getUniqueId)
 
   const openModal = (): void => {
     setShowModal(true)
@@ -49,30 +34,7 @@ export function ChooseProfilePictureScreen({
     setShowModal(false)
   }
 
-  const onPressFinish = async (): Promise<void> => {
-    if (!deviceId) {
-      return // Should never hit this condition. Button is disabled if deviceId is undefined
-    }
-
-    // throw error if unitagAddress is falsey
-    if (!unitagAddress) {
-      throw new Error('unitagAddress should never be null when claiming a unitag')
-    }
-
-    await claimUnitag({
-      address: unitagAddress,
-      username: unitag,
-      deviceId,
-      metadata: {
-        avatar: imageUri ?? '', // TODO (MOB-2271): upload profile pic image to backend
-        description: '',
-        url: '',
-        twitter: '',
-      },
-    })
-  }
-
-  const onClaimSuccess = useCallback((): void => {
+  const onPressFinish = (): void => {
     if (entryPoint === Screens.Home) {
       if (!activeAddress) {
         throw new Error('activeAddress should never be null when Unitag entryPoint is Home Screen')
@@ -95,30 +57,7 @@ export function ChooseProfilePictureScreen({
         },
       })
     }
-  }, [activeAddress, entryPoint, imageUri, unitag])
-
-  useEffect(() => {
-    if (claimRequestMade && !claimResponseLoading && !!claimResponse) {
-      // We POSTed to claim and got a response
-      if (claimResponse.success) {
-        onClaimSuccess()
-        return
-      }
-      if (claimResponse.errorCode) {
-        setClaimError(parseUnitagErrorCode(t, unitag, claimResponse.errorCode))
-      }
-      // Reset everything so called=false, claimResponse=undefined
-      resetClaimResponse()
-    }
-  }, [
-    claimResponseLoading,
-    claimResponse,
-    onClaimSuccess,
-    unitag,
-    claimRequestMade,
-    resetClaimResponse,
-    t,
-  ])
+  }
 
   return (
     <Screen edges={['right', 'left']}>
@@ -156,17 +95,8 @@ export function ChooseProfilePictureScreen({
                 <Unitag height={iconSizes.icon24} width={iconSizes.icon24} />
               </Flex>
             </Flex>
-            {!!claimError && (
-              <Text color="$statusCritical" variant="body2">
-                {claimError}
-              </Text>
-            )}
           </Flex>
-          <Button
-            disabled={!deviceId || !!claimError}
-            size="medium"
-            theme="primary"
-            onPress={onPressFinish}>
+          <Button size="medium" theme="primary" onPress={onPressFinish}>
             {entryPoint === Screens.Home ? t('Finish') : t('Create wallet')}
           </Button>
         </Flex>

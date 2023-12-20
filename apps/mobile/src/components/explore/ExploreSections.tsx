@@ -1,16 +1,14 @@
 import { NetworkStatus } from '@apollo/client'
-import React, { useCallback, useMemo, useRef } from 'react'
+import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ListRenderItem, ListRenderItemInfo, StyleSheet, View } from 'react-native'
-import { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
+import { ListRenderItem, ListRenderItemInfo } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
 import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
 import { SortButton } from 'src/components/explore/SortButton'
 import { TokenItem, TokenItemData } from 'src/components/explore/TokenItem'
-import { AnimatedBottomSheetFlatList } from 'src/components/layout/AnimatedFlatList'
 import { Loader } from 'src/components/loading'
-import { AutoScrollProps } from 'src/components/sortableGrid'
 import {
   getClientTokensOrderByCompareFn,
   getTokenMetadataDisplayType,
@@ -38,15 +36,12 @@ import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 type ExploreSectionsProps = {
-  listRef: React.MutableRefObject<null>
+  listRef?: React.MutableRefObject<null>
 }
 
 export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element {
   const { t } = useTranslation()
   const insets = useDeviceInsets()
-  const scrollY = useSharedValue(0)
-  const headerRef = useRef<View>(null)
-  const visibleListHeight = useSharedValue(0)
 
   // Top tokens sorting
   const orderBy = useAppSelector(selectTokensOrderBy)
@@ -125,10 +120,6 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
     await refetch()
   }, [refetch])
 
-  const scrollHandler = useAnimatedScrollHandler((e) => {
-    scrollY.value = e.contentOffset.y
-  })
-
   // Use showLoading for showing full screen loading state
   // Used in each section to ensure loading state layout matches loaded state
   const showLoading = (!hasAllData && isLoading) || (!!error && isLoading)
@@ -146,60 +137,39 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
   }
 
   return (
-    // Pass onLayout callback to the list wrapper component as it returned
-    // incorrect values when it was passed to the list itself
-    <Flex
-      fill
-      onLayout={({
-        nativeEvent: {
-          layout: { height },
-        },
-      }): void => {
-        visibleListHeight.value = height
-      }}>
-      <AnimatedBottomSheetFlatList
-        ref={listRef}
-        ListEmptyComponent={
-          <Flex mx="$spacing24" my="$spacing12">
-            <Loader.Token repeat={5} />
+    <BottomSheetFlatList
+      ref={listRef}
+      ListEmptyComponent={
+        <Flex mx="$spacing24" my="$spacing12">
+          <Loader.Token repeat={5} />
+        </Flex>
+      }
+      ListHeaderComponent={
+        <>
+          <FavoritesSection showLoading={showLoading} />
+          <Flex
+            row
+            alignItems="center"
+            justifyContent="space-between"
+            mb="$spacing8"
+            ml="$spacing16"
+            mr="$spacing12"
+            mt="$spacing16"
+            pl="$spacing4">
+            <Text color="$neutral2" variant="subheading2">
+              {t('Top tokens')}
+            </Text>
+            <SortButton orderBy={orderBy} />
           </Flex>
-        }
-        ListHeaderComponent={
-          <Flex ref={headerRef}>
-            <FavoritesSection
-              containerRef={headerRef}
-              scrollY={scrollY}
-              scrollableRef={listRef}
-              showLoading={showLoading}
-              visibleHeight={visibleListHeight}
-            />
-            <Flex
-              row
-              alignItems="center"
-              justifyContent="space-between"
-              mb="$spacing8"
-              ml="$spacing16"
-              mr="$spacing12"
-              mt="$spacing16"
-              pl="$spacing4">
-              <Text color="$neutral2" variant="subheading2">
-                {t('Top tokens')}
-              </Text>
-              <SortButton orderBy={orderBy} />
-            </Flex>
-          </Flex>
-        }
-        ListHeaderComponentStyle={styles.foreground}
-        contentContainerStyle={{ paddingBottom: insets.bottom }}
-        data={showLoading ? undefined : topTokenItems}
-        keyExtractor={tokenKey}
-        renderItem={renderItem}
-        scrollEventThrottle={16}
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        onScroll={scrollHandler}
-      />
-    </Flex>
+        </>
+      }
+      contentContainerStyle={{ paddingBottom: insets.bottom }}
+      data={showLoading ? undefined : topTokenItems}
+      keyExtractor={tokenKey}
+      renderItem={renderItem}
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
+    />
   )
 }
 
@@ -234,32 +204,16 @@ function gqlTokenToTokenItemData(
   } as TokenItemData
 }
 
-type FavoritesSectionProps = AutoScrollProps & {
-  showLoading: boolean
-}
-
-function FavoritesSection(props: FavoritesSectionProps): JSX.Element | null {
+function FavoritesSection({ showLoading }: { showLoading: boolean }): JSX.Element | null {
   const hasFavoritedTokens = useAppSelector(selectHasFavoriteTokens)
   const hasFavoritedWallets = useAppSelector(selectHasWatchedWallets)
 
   if (!hasFavoritedTokens && !hasFavoritedWallets) return null
 
   return (
-    <Flex
-      bg="$transparent"
-      gap="$spacing12"
-      pb="$spacing12"
-      pt="$spacing8"
-      px="$spacing12"
-      zIndex={1}>
-      {hasFavoritedTokens && <FavoriteTokensGrid {...props} />}
-      {hasFavoritedWallets && <FavoriteWalletsGrid showLoading={props.showLoading} />}
+    <Flex bg="$transparent" gap="$spacing12" pb="$spacing12" pt="$spacing8" px="$spacing12">
+      {hasFavoritedTokens && <FavoriteTokensGrid showLoading={showLoading} />}
+      {hasFavoritedWallets && <FavoriteWalletsGrid showLoading={showLoading} />}
     </Flex>
   )
 }
-
-const styles = StyleSheet.create({
-  foreground: {
-    zIndex: 1,
-  },
-})

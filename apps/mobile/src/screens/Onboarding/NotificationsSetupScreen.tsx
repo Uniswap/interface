@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
 import Trace from 'src/components/Trace/Trace'
+import { IS_IOS } from 'src/constants/globals'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
@@ -25,7 +26,6 @@ import {
 import { useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 import i18n from 'wallet/src/i18n/i18n'
-import { isIOS } from 'wallet/src/utils/platform'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Notifications>
 
@@ -124,7 +124,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
     <OnboardingScreen
       subtitle={t('Get notified when your transfers, swaps, and approvals complete.')}
       title={t('Turn on push notifications')}>
-      <Flex centered shrink py={isIOS ? '$spacing60' : '$spacing16'}>
+      <Flex centered shrink py={IS_IOS ? '$spacing60' : '$spacing16'}>
         <NotificationsBackgroundImage />
       </Flex>
       <Flex gap="$spacing24">

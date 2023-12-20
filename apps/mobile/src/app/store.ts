@@ -55,7 +55,6 @@ const rtkQueryErrorLogger: Middleware = () => (next) => (action: PayloadAction<u
 
 const whitelist: Array<ReducerNames | RootReducerNames> = [
   'appearanceSettings',
-  'behaviorHistory',
   'biometricSettings',
   'favorites',
   'notifications',
@@ -75,7 +74,7 @@ export const persistConfig = {
   key: 'root',
   storage: reduxStorage,
   whitelist,
-  version: 55,
+  version: 54,
   migrate: createMigrate(migrations),
 }
 

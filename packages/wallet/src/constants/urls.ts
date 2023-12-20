@@ -1,5 +1,4 @@
 import { config } from 'wallet/src/config'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 export const UNISWAP_APP_HOSTNAME = 'app.uniswap.org'
 
@@ -20,7 +19,6 @@ export const uniswapUrls = {
     walletHelp: `${helpUrl}/hc/en-us/categories/11301970439565-Uniswap-Wallet`,
   },
   apiBaseUrl: getUniswapApiBaseUrl(),
-  apiBaseUrlCloudflare: getCloudflareApiBaseUrl(),
   appBaseUrl: 'https://uniswap.org/app',
   gasServicePath: getUniswapGasServicePath(),
   routingApiUrl: getUniswapRoutingApiUrl(),
@@ -32,11 +30,6 @@ export const uniswapUrls = {
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
   appUrl: `https://${UNISWAP_APP_HOSTNAME}`,
   interfaceUrl: `https://${UNISWAP_APP_HOSTNAME}/#/swap`,
-  unitagsApiUrl: getUnitagsApiUrl(),
-}
-
-function getCloudflareApiBaseUrl(): string {
-  return `https://${isAndroid ? 'android' : 'ios'}.wallet.gateway.uniswap.org`
 }
 
 function getUniswapApiBaseUrl(): string {
@@ -65,8 +58,4 @@ function getUniswapAmplitudeProxyUrl(): string {
 
 function getUniswapStatsigProxyUrl(): string {
   return `${config.uniswapApiBaseUrl}/v1/statsig-proxy`
-}
-
-function getUnitagsApiUrl(): string {
-  return config.unitagsApiUrl
 }

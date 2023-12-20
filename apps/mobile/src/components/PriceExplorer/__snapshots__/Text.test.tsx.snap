@@ -33,47 +33,115 @@ exports[`DatetimeText renders without error 1`] = `
 
 exports[`PriceText renders loading state 1`] = `
 <View
+  onLayout={[Function]}
   style={
     {
       "alignItems": "stretch",
-      "flexDirection": "row",
+      "flexDirection": "column",
+      "opacity": 0,
     }
   }
-  testID="price-text"
 >
-  <TextInput
-    allowFontScaling={true}
-    animatedProps={
+  <View
+    style={
       {
-        "text": "-",
+        "alignItems": "center",
+        "flexDirection": "row",
       }
     }
-    editable={false}
-    maxFontSizeMultiplier={1.2}
-    style={
-      [
+  >
+    <View
+      style={
         {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel-Book",
-          "fontSize": 53,
-          "lineHeight": 60,
-        },
-        [
+          "alignItems": "center",
+          "flexDirection": "row",
+          "position": "relative",
+        }
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+      >
+        <View
+          style={
+            {
+              "alignItems": "stretch",
+              "flexDirection": "row",
+            }
+          }
+        >
+          <TextInput
+            allowFontScaling={true}
+            editable={false}
+            maxFontSizeMultiplier={1.2}
+            style={
+              [
+                [
+                  {
+                    "padding": 0,
+                  },
+                  {
+                    "fontFamily": "Basel-Book",
+                    "fontSize": 53,
+                    "lineHeight": 60,
+                  },
+                  undefined,
+                ],
+                {
+                  "marginHorizontal": 0,
+                  "opacity": 0,
+                  "paddingHorizontal": 0,
+                  "width": 0,
+                },
+              ]
+            }
+            underlineColorAndroid="transparent"
+          />
+          <Text
+            style={
+              [
+                [
+                  {
+                    "padding": 0,
+                  },
+                  {
+                    "fontFamily": "Basel-Book",
+                    "fontSize": 53,
+                    "lineHeight": 60,
+                  },
+                  undefined,
+                ],
+                {
+                  "opacity": 0,
+                },
+              ]
+            }
+          >
+            $10,000
+          </Text>
+        </View>
+      </View>
+      <View
+        style={
           {
-            "color": "#222222",
-          },
-          {
-            "fontSize": 106,
-          },
-        ],
-      ]
-    }
-    testID="wholePart"
-    underlineColorAndroid="transparent"
-    value="-"
-  />
+            "alignItems": "stretch",
+            "backgroundColor": "#F9F9F9",
+            "borderBottomLeftRadius": 4,
+            "borderBottomRightRadius": 4,
+            "borderTopLeftRadius": 4,
+            "borderTopRightRadius": 4,
+            "bottom": "5%",
+            "flexDirection": "column",
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": "5%",
+          }
+        }
+      />
+    </View>
+  </View>
 </View>
 `;
 
@@ -106,14 +174,9 @@ exports[`PriceText renders without error 1`] = `
           "fontSize": 53,
           "lineHeight": 60,
         },
-        [
-          {
-            "color": "#222222",
-          },
-          {
-            "fontSize": 106,
-          },
-        ],
+        {
+          "color": "#222222",
+        },
       ]
     }
     testID="wholePart"
@@ -139,14 +202,9 @@ exports[`PriceText renders without error 1`] = `
           "fontSize": 53,
           "lineHeight": 60,
         },
-        [
-          {
-            "color": "#CECECE",
-          },
-          {
-            "fontSize": 106,
-          },
-        ],
+        {
+          "color": "#CECECE",
+        },
       ]
     }
     testID="decimalPart"
@@ -185,14 +243,9 @@ exports[`PriceText renders without error less than a dollar 1`] = `
           "fontSize": 53,
           "lineHeight": 60,
         },
-        [
-          {
-            "color": "#222222",
-          },
-          {
-            "fontSize": 106,
-          },
-        ],
+        {
+          "color": "#222222",
+        },
       ]
     }
     testID="wholePart"
@@ -218,14 +271,9 @@ exports[`PriceText renders without error less than a dollar 1`] = `
           "fontSize": 53,
           "lineHeight": 60,
         },
-        [
-          {
-            "color": "#222222",
-          },
-          {
-            "fontSize": 106,
-          },
-        ],
+        {
+          "color": "#222222",
+        },
       ]
     }
     testID="decimalPart"

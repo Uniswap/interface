@@ -1,11 +1,9 @@
-import { useWeb3React } from '@web3-react/core'
 import { Unicon } from 'components/Unicon'
-import { Connection } from 'connection/types'
+import { Connection, ConnectionType } from 'connection/types'
 import useENSAvatar from 'hooks/useENSAvatar'
 import styled from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap } from 'theme/styles'
-import { getWalletMeta } from 'utils/walletMeta'
 
 import sockImg from '../../assets/svg/socks.svg'
 import { useHasSocks } from '../../hooks/useSocksBalance'
@@ -61,16 +59,9 @@ const Socks = () => {
 
 const MiniWalletIcon = ({ connection, side }: { connection: Connection; side: 'left' | 'right' }) => {
   const isDarkMode = useIsDarkMode()
-  const { provider } = useWeb3React()
-
-  const providerInfo = connection.getProviderInfo(isDarkMode)
-
-  // Uses icon from wallet meta when available, otherwise uses icon from connection
-  const icon = (provider && getWalletMeta(provider)?.icons?.[0]) ?? providerInfo.icon
-
   return (
     <MiniIconContainer side={side}>
-      <MiniImg src={icon} alt={`${providerInfo.name} icon`} />
+      <MiniImg src={connection.getIcon?.(isDarkMode)} alt={`${connection.getName()} icon`} />
     </MiniIconContainer>
   )
 }
@@ -78,11 +69,13 @@ const MiniWalletIcon = ({ connection, side }: { connection: Connection; side: 'l
 const MainWalletIcon = ({ account, connection, size }: { account: string; connection: Connection; size: number }) => {
   const { avatar } = useENSAvatar(account ?? undefined)
 
-  if (!account) return null
-
-  const hasIdenticon = avatar || connection.getProviderInfo().name === 'MetaMask'
-
-  return hasIdenticon ? <Identicon account={account} size={size} /> : <Unicon address={account} size={size} />
+  if (!account) {
+    return null
+  } else if (avatar || (connection.type === ConnectionType.INJECTED && connection.getName() === 'MetaMask')) {
+    return <Identicon account={account} size={size} />
+  } else {
+    return <Unicon address={account} size={size} />
+  }
 }
 
 export default function StatusIcon({

@@ -35,7 +35,7 @@ module.exports = {
   },
   modulePathIgnorePatterns: ['<rootDir>/node_modules'],
   testPathIgnorePatterns: ['<rootDir>/node_modules'],
-  testMatch: ['<rootDir>/**/*.(spec|test).[jt]s?(x)'],
+  testMatch: ['<rootDir>/**/?(*.)+(spec|test).[jt]s?(x)'],
   setupFilesAfterEnv: ['<rootDir>/../../config/jest-presets/jest/setup.js'],
   // consider enabling for speed
   // changedSince: 'master',

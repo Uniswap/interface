@@ -236,7 +236,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
     },
     [activeAddress, dispatch, onClose, pendingSession, didOpenFromDeepLink]
   )
-  const dappName = pendingSession.dapp.name || pendingSession.dapp.url || ''
+  const dappName = pendingSession.dapp.name || pendingSession.dapp.url
 
   return (
     <BottomSheetModal name={ModalName.WCPendingConnection} onClose={onClose}>

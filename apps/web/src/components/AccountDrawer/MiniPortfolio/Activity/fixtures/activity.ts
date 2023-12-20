@@ -12,7 +12,6 @@ import {
   TokenApprovalPartsFragment,
   TokenStandard,
   TokenTransferPartsFragment,
-  TransactionDetailsPartsFragment,
   TransactionDirection,
   TransactionStatus,
   TransactionType,
@@ -23,18 +22,6 @@ import { MOONPAY_SENDER_ADDRESSES } from '../../constants'
 const MockOrderTimestamp = 10000
 const MockRecipientAddress = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
 export const MockSenderAddress = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
-
-export const mockTransactionDetailsPartsFragment: TransactionDetailsPartsFragment = {
-  __typename: 'TransactionDetails',
-  id: 'tx123',
-  type: TransactionType.Swap,
-  from: '0xSenderAddress',
-  to: '0xRecipientAddress',
-  hash: '0xHashValue',
-  nonce: 123,
-  status: TransactionStatus.Confirmed,
-  assetChanges: [],
-}
 
 const mockAssetActivityPartsFragment = {
   __typename: 'AssetActivity',
@@ -212,7 +199,7 @@ const mockSpamNftTransferPartsFragment: NftTransferPartsFragment = {
   },
 }
 
-export const mockTokenTransferOutPartsFragment: TokenTransferPartsFragment = {
+const mockTokenTransferOutPartsFragment: TokenTransferPartsFragment = {
   __typename: 'TokenTransfer',
   id: 'tokenTransferId',
   tokenStandard: TokenStandard.Erc20,
@@ -320,7 +307,7 @@ const mockWrappedEthTransferInPartsFragment: TokenTransferPartsFragment = {
   },
 }
 
-export const mockTokenTransferInPartsFragment: TokenTransferPartsFragment = {
+const mockTokenTransferInPartsFragment: TokenTransferPartsFragment = {
   __typename: 'TokenTransfer',
   id: 'tokenTransferId',
   tokenStandard: TokenStandard.Erc20,

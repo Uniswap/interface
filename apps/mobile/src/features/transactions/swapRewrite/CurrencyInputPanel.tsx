@@ -33,11 +33,11 @@ type CurrentInputPanelProps = {
   autoFocus?: boolean
   currencyAmount: Maybe<CurrencyAmount<Currency>>
   currencyBalance: Maybe<CurrencyAmount<Currency>>
-  currencyField: CurrencyField
   currencyInfo: Maybe<CurrencyInfo>
   isLoading?: boolean
   isCollapsed: boolean
   focus?: boolean
+  isOutput?: boolean
   isFiatMode?: boolean
   onPressIn?: () => void
   onSelectionChange?: (start: number, end: number) => void
@@ -50,7 +50,7 @@ type CurrentInputPanelProps = {
   showSoftInputOnFocus?: boolean
   usdValue: Maybe<CurrencyAmount<Currency>>
   value?: string
-  resetSelection: (args: { start: number; end?: number; currencyField?: CurrencyField }) => void
+  resetSelection: (start: number, end: number) => void
 } & FlexProps
 
 const MAX_INPUT_FONT_SIZE = 42
@@ -68,11 +68,11 @@ export const CurrencyInputPanel = memo(
       autoFocus,
       currencyAmount,
       currencyBalance,
-      currencyField,
       currencyInfo,
       isLoading,
       isCollapsed,
       focus,
+      isOutput = false,
       isFiatMode = false,
       onPressIn,
       onSelectionChange: selectionChange,
@@ -98,8 +98,6 @@ export const CurrencyInputPanel = memo(
 
     useForwardRef(forwardedRef, inputRef)
 
-    const isOutput = currencyField === CurrencyField.OUTPUT
-
     const showInsufficientBalanceWarning =
       !isOutput && !!currencyBalance && !!currencyAmount && currencyBalance.lessThan(currencyAmount)
 
@@ -118,22 +116,11 @@ export const CurrencyInputPanel = memo(
     useEffect(() => {
       if (focus && !isTextInputRefActuallyFocused) {
         inputRef.current?.focus()
-        resetSelection({
-          start: value?.length ?? 0,
-          end: value?.length ?? 0,
-          currencyField,
-        })
+        resetSelection(value?.length ?? 0, value?.length ?? 0)
       } else if (!focus && isTextInputRefActuallyFocused) {
         inputRef.current?.blur()
       }
-    }, [
-      currencyField,
-      focus,
-      inputRef,
-      isTextInputRefActuallyFocused,
-      resetSelection,
-      value?.length,
-    ])
+    }, [focus, inputRef, isTextInputRefActuallyFocused, resetSelection, value?.length])
 
     const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(
       MAX_CHAR_PIXEL_WIDTH,
@@ -211,7 +198,7 @@ export const CurrencyInputPanel = memo(
     const loadingTextValue = previousValue && previousValue !== '' ? previousValue : '0'
 
     const { animatedContainerStyle, animatedAmountInputStyle, animatedInfoRowStyle } =
-      useAnimatedContainerStyles(isLoading, isCollapsed)
+      useAnimatedContainerStyles(isLoading, focus)
 
     const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
 
@@ -336,7 +323,10 @@ export const CurrencyInputPanel = memo(
                     </Text>
                   )}
                   {showMaxButton && onSetMax && (
-                    <MaxAmountButton currencyField={currencyField} onSetMax={onSetMax} />
+                    <MaxAmountButton
+                      currencyField={isOutput ? CurrencyField.OUTPUT : CurrencyField.INPUT}
+                      onSetMax={onSetMax}
+                    />
                   )}
                 </Flex>
               </>
@@ -350,7 +340,7 @@ export const CurrencyInputPanel = memo(
 
 function useAnimatedContainerStyles(
   isLoading: boolean | undefined,
-  isCollapsed: boolean | undefined
+  focus: boolean | undefined
 ): {
   animatedContainerStyle: {
     paddingTop: number
@@ -365,14 +355,14 @@ function useAnimatedContainerStyles(
 } {
   const animatedContainerStyle = useAnimatedStyle(() => {
     return {
-      paddingTop: withTiming(isCollapsed ? spacing.spacing16 : spacing.spacing24, {
+      paddingTop: withTiming(focus ? spacing.spacing24 : spacing.spacing16, {
         duration: 300,
       }),
-      paddingBottom: withTiming(isCollapsed ? spacing.spacing16 : spacing.spacing48, {
+      paddingBottom: withTiming(focus ? spacing.spacing48 : spacing.spacing16, {
         duration: 300,
       }),
     }
-  }, [isCollapsed])
+  }, [focus])
 
   const loadingFlexProgress = useSharedValue(1)
   loadingFlexProgress.value = withRepeat(
@@ -392,11 +382,11 @@ function useAnimatedContainerStyles(
 
   const animatedInfoRowStyle = useAnimatedStyle(() => {
     return {
-      bottom: withTiming(isCollapsed ? -spacing.spacing24 : spacing.spacing16, {
+      bottom: withTiming(focus ? spacing.spacing16 : -spacing.spacing24, {
         duration: 300,
       }),
     }
-  }, [isCollapsed])
+  }, [focus])
 
   return {
     animatedContainerStyle,

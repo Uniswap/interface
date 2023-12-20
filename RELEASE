@@ -1,40 +1,5 @@
-IPFS hash of the deployment:
-- CIDv0: `QmYMiHUXKwbifsieRsk6jexS5sS321rZtsoEtu5s266ewa`
-- CIDv1: `bafybeieu3j7cdq5nz4r6z7qnoxcyqq7bk4wjiyxmelpzprkvoaedcb4uze`
+Here again with a new (sparse) update to our app! Check out what is new below:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
-
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
-
-IPFS gateways:
-- https://bafybeieu3j7cdq5nz4r6z7qnoxcyqq7bk4wjiyxmelpzprkvoaedcb4uze.ipfs.dweb.link/
-- https://bafybeieu3j7cdq5nz4r6z7qnoxcyqq7bk4wjiyxmelpzprkvoaedcb4uze.ipfs.cf-ipfs.com/
-- [ipfs://QmYMiHUXKwbifsieRsk6jexS5sS321rZtsoEtu5s266ewa/](ipfs://QmYMiHUXKwbifsieRsk6jexS5sS321rZtsoEtu5s266ewa/)
-
-## 5.3.0 (2023-12-19)
-
-
-### Features
-
-* **web:** [info] add volume charts (#5235) 80c3996
-* **web:** [info] hide About and Address section with flag on (#5464) 61d0397
-* **web:** add info tables (#5274) adf64bd
-* **web:** Add moonpay text to account drawer and moonpay modal (#5478) 0a09ce3
-* **web:** updated page titles (#5390) 4b39985
-* **web:** use cumulative value for unhovered bar chart header (#5432) 304c761
-
-
-### Bug Fixes
-
-* **web:** center confirmation modal icons (#5492) fe3688a
-* **web:** disambiguate 3P ProviderRpcErrors (#5481) ca912dd
-* **web:** fix fadepresence typecheck (#5466) 9d39fa6
-* **web:** fix vercel ignore to actually ignore if no web changes (#5420) 45e0ee2
-* **web:** fixes and improvements to token sorting / filtering (#5388) 8f740ce
-* **web:** optional address for multichainmap  (#5393) 6eb015f
-* **web:** show default list tokens when searched (#5494) (#5498) d28e298
-
-
+- Bug fixes
+- Performance improvements on home and swap
+- Improvements in language support

@@ -10,6 +10,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
 import { Loader } from 'src/components/loading'
 import Trace from 'src/components/Trace/Trace'
+import { IS_IOS } from 'src/constants/globals'
 import { ListPriceBadge } from 'src/features/nfts/collection/ListPriceCard'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
 import {
@@ -37,7 +38,6 @@ import {
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
-import { isIOS } from 'wallet/src/utils/platform'
 
 const PREFETCH_ITEMS_THRESHOLD = 0.5
 const ASSET_FETCH_PAGE_SIZE = 30
@@ -152,7 +152,7 @@ export function NFTCollectionScreen({
       marginRight: middle ? spacing.spacing8 : last ? spacing.spacing16 : 0,
       marginBottom: spacing.spacing8,
     }
-    const priceColor = isIOS ? '$sporeWhite' : '$neutral1'
+    const priceColor = IS_IOS ? '$sporeWhite' : '$neutral1'
 
     return (
       <Flex

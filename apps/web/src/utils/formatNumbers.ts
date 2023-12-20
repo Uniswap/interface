@@ -267,31 +267,6 @@ const fiatTokenDetailsFormatter: FormatterRule[] = [
   { upperBound: Infinity, formatterOptions: SHORTHAND_CURRENCY_TWO_DECIMALS },
 ]
 
-const fiatTokenChartScaleFormatter: FormatterRule[] = [
-  {
-    upperBound: 0.001,
-    hardCodedInput: { input: 0.001, prefix: '<' },
-    formatterOptions: ONE_SIG_FIG_CURRENCY,
-  },
-  { upperBound: 1, formatterOptions: TWO_DECIMALS_CURRENCY },
-  { upperBound: 1000, formatterOptions: ONE_SIG_FIG_CURRENCY },
-  { upperBound: Infinity, formatterOptions: SHORTHAND_CURRENCY_ONE_DECIMAL },
-]
-
-const fiatTokenStatChartHeaderFormatter: FormatterRule[] = [
-  // if token stat value is 0, we probably don't have the data for it, so show '-' as a placeholder
-  { exact: 0, hardCodedInput: { hardcodedOutput: '-' }, formatterOptions: ONE_SIG_FIG_CURRENCY },
-  {
-    upperBound: 0.00000001,
-    hardCodedInput: { input: 0.00000001, prefix: '<' },
-    formatterOptions: ONE_SIG_FIG_CURRENCY,
-  },
-  { upperBound: 0.1, formatterOptions: THREE_SIG_FIGS_CURRENCY },
-  { upperBound: 1.05, formatterOptions: THREE_DECIMALS_CURRENCY },
-  { upperBound: 1e6, formatterOptions: TWO_DECIMALS_CURRENCY },
-  { upperBound: Infinity, formatterOptions: SHORTHAND_CURRENCY_TWO_DECIMALS },
-]
-
 const fiatTokenPricesFormatter: FormatterRule[] = [
   { exact: 0, formatterOptions: TWO_DECIMALS_CURRENCY },
   {
@@ -417,12 +392,6 @@ export enum NumberType {
   // fiat prices in any component that belongs in the Token Details flow (except for token stats)
   FiatTokenDetails = 'fiat-token-details',
 
-  // fiat values for market cap, TVL, volume, etc in any chart header
-  FiatTokenStatChartHeader = 'fiat-token-stat-chart-header',
-
-  // fiat prices in any token chart price scale
-  FiatTokenChartPriceScale = 'fiat-token-chart-price-scale',
-
   // fiat prices everywhere except Token Details flow
   FiatTokenPrice = 'fiat-token-price',
 
@@ -466,8 +435,6 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.SwapDetailsAmount]: swapDetailsAmountFormatter,
   [NumberType.FiatTokenQuantity]: fiatTokenQuantityFormatter,
   [NumberType.FiatTokenDetails]: fiatTokenDetailsFormatter,
-  [NumberType.FiatTokenStatChartHeader]: fiatTokenStatChartHeaderFormatter,
-  [NumberType.FiatTokenChartPriceScale]: fiatTokenChartScaleFormatter,
   [NumberType.FiatTokenPrice]: fiatTokenPricesFormatter,
   [NumberType.FiatTokenStats]: fiatTokenStatsFormatter,
   [NumberType.FiatGasPrice]: fiatGasPriceFormatter,

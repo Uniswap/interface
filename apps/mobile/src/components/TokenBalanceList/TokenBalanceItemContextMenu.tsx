@@ -11,9 +11,15 @@ export const TokenBalanceItemContextMenu = memo(function _TokenBalanceItem({
   portfolioBalance: PortfolioBalance
   children: React.ReactNode
 }) {
+  const { currencyInfo, balanceUSD } = portfolioBalance
+  const { currency, currencyId, isSpam } = currencyInfo
+
   const { menuActions, onContextMenuPress } = useTokenContextMenu({
-    currencyId: portfolioBalance.currencyInfo.currencyId,
-    portfolioBalance,
+    currencyId,
+    isSpam,
+    balanceUSD,
+    isNative: currency.isNative,
+    accountHoldsToken: true,
   })
 
   const style = useMemo(() => ({ borderRadius: borderRadii.rounded16 }), [])

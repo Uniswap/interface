@@ -1,20 +1,28 @@
-import { NotImplementedError } from 'utilities/src/errors'
+import appsFlyer from 'react-native-appsflyer'
+import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { WalletAppsFlyerEventProperties, WalletEventProperties } from 'wallet/src/telemetry/types'
 
 export function sendWalletAnalyticsEvent<EventName extends keyof WalletEventProperties>(
-  ..._args: undefined extends WalletEventProperties[EventName]
+  ...args: undefined extends WalletEventProperties[EventName]
     ? [EventName] | [EventName, WalletEventProperties[EventName]]
     : [EventName, WalletEventProperties[EventName]]
 ): void {
-  throw new NotImplementedError('sendWalletAnalyticsEvent')
+  const [eventName, eventProperties] = args
+  // note: can remove the as unknown case once there are events in ExtensionEventProperties
+  analytics.sendEvent(eventName, eventProperties as unknown as Record<string, unknown>)
 }
 
 export async function sendWalletAppsFlyerEvent<
   EventName extends keyof WalletAppsFlyerEventProperties
 >(
-  ..._args: undefined extends WalletAppsFlyerEventProperties[EventName]
+  ...args: undefined extends WalletAppsFlyerEventProperties[EventName]
     ? [EventName] | [EventName, WalletAppsFlyerEventProperties[EventName]]
     : [EventName, WalletAppsFlyerEventProperties[EventName]]
 ): Promise<void> {
-  throw new NotImplementedError('sendWalletAppsFlyerEvent')
+  const [eventName, eventProperties] = args
+  if (__DEV__) {
+    console.debug('sendWalletAppsFlyerEvent', eventName, eventProperties)
+  } else {
+    await appsFlyer.logEvent(eventName, eventProperties ?? {})
+  }
 }

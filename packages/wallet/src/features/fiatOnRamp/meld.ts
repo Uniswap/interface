@@ -114,27 +114,6 @@ export type MeldSupportedToken = {
 
 export type MeldSupportedTokensResponse = MeldSupportedToken[]
 
-export interface MeldApiError {
-  data: {
-    code: string
-    message: string
-    requestId?: string
-    timestamp?: string
-  }
-}
-
 export function getCountryFlagSvgUrl(countryCode: string): string {
   return `https://images-country.meld.io/${countryCode}/flag.svg`
-}
-
-export function isMeldApiError(error: unknown): error is MeldApiError {
-  return (
-    typeof error === 'object' &&
-    error != null &&
-    'data' in error &&
-    typeof error.data === 'object' &&
-    error.data != null &&
-    'code' in error.data &&
-    'message' in error.data
-  )
 }

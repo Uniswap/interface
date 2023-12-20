@@ -4,14 +4,15 @@ import { connections, getConnection } from 'connection'
 
 import { ConnectionType } from './types'
 
-const UserAgentMock = jest.requireMock('wallet/src/utils/platform')
-jest.mock('wallet/src/utils/platform', () => ({
+const UserAgentMock = jest.requireMock('utils/userAgent')
+jest.mock('utils/userAgent', () => ({
   isMobile: false,
 }))
 
 describe('connection utility/metadata tests', () => {
   beforeEach(() => {
     globalThis.window.ethereum = undefined
+    globalThis.window.phantom = undefined
   })
 
   const createWalletEnvironment = (ethereum: Window['window']['ethereum'], isMobile = false) => {
@@ -27,11 +28,15 @@ describe('connection utility/metadata tests', () => {
     return { displayed, injected, coinbase, uniswap, walletconnect }
   }
 
+  const createPhantomEnviroment = () => {
+    globalThis.window.phantom = { ethereum: { isPhantom: true } }
+  }
+
   it('Non-injected Desktop', async () => {
     const { displayed, injected } = createWalletEnvironment(undefined)
 
     expect(displayed.includes(injected)).toBe(true)
-    expect(injected.getProviderInfo().name).toBe('Install MetaMask')
+    expect(injected.getName()).toBe('Install MetaMask')
     expect(injected.overrideActivate?.()).toBeTruthy()
 
     expect(displayed.length).toEqual(4)
@@ -41,7 +46,7 @@ describe('connection utility/metadata tests', () => {
     const { displayed, injected } = createWalletEnvironment({ isMetaMask: true })
 
     expect(displayed.includes(injected)).toBe(true)
-    expect(injected.getProviderInfo().name).toBe('MetaMask')
+    expect(injected.getName()).toBe('MetaMask')
     expect(injected.overrideActivate?.()).toBeFalsy()
 
     expect(displayed.length).toEqual(4)
@@ -52,7 +57,7 @@ describe('connection utility/metadata tests', () => {
 
     expect(displayed.includes(coinbase)).toBe(true)
     expect(displayed.includes(injected)).toBe(true)
-    expect(injected.getProviderInfo().name).toBe('Install MetaMask')
+    expect(injected.getName()).toBe('Install MetaMask')
     expect(injected.overrideActivate?.()).toBeTruthy()
 
     expect(displayed.length).toEqual(4)
@@ -63,7 +68,7 @@ describe('connection utility/metadata tests', () => {
 
     expect(displayed.includes(coinbase)).toBe(true)
     expect(displayed.includes(injected)).toBe(true)
-    expect(injected.getProviderInfo().name).toBe('MetaMask')
+    expect(injected.getName()).toBe('MetaMask')
     expect(injected.overrideActivate?.()).toBeFalsy()
 
     expect(displayed.length).toEqual(4)
@@ -73,7 +78,7 @@ describe('connection utility/metadata tests', () => {
     const { displayed, injected } = createWalletEnvironment({ isTrust: true })
 
     expect(displayed.includes(injected)).toBe(true)
-    expect(injected.getProviderInfo().name).toBe('Trust Wallet')
+    expect(injected.getName()).toBe('Trust Wallet')
     expect(injected.overrideActivate?.()).toBeFalsy()
 
     expect(displayed.length).toEqual(4)
@@ -83,7 +88,7 @@ describe('connection utility/metadata tests', () => {
     const { displayed, injected } = createWalletEnvironment({ isRabby: true, isMetaMask: true }) // Rabby sets isMetaMask to true
 
     expect(displayed.includes(injected)).toBe(true)
-    expect(injected.getProviderInfo().name).toBe('Rabby')
+    expect(injected.getName()).toBe('Rabby')
     expect(injected.overrideActivate?.()).toBeFalsy()
 
     expect(displayed.length).toEqual(4)
@@ -93,7 +98,7 @@ describe('connection utility/metadata tests', () => {
     const { displayed, injected } = createWalletEnvironment({ isLedgerConnect: true })
 
     expect(displayed.includes(injected)).toBe(true)
-    expect(injected.getProviderInfo().name).toBe('Ledger')
+    expect(injected.getName()).toBe('Ledger')
     expect(injected.overrideActivate?.()).toBeFalsy()
 
     expect(displayed.length).toEqual(4)
@@ -103,7 +108,18 @@ describe('connection utility/metadata tests', () => {
     const { displayed, injected } = createWalletEnvironment({ isBraveWallet: true })
 
     expect(displayed.includes(injected)).toBe(true)
-    expect(injected.getProviderInfo().name).toBe('Brave')
+    expect(injected.getName()).toBe('Brave')
+    expect(injected.overrideActivate?.()).toBeFalsy()
+
+    expect(displayed.length).toEqual(4)
+  })
+
+  it('Phantom Wallet Injected Desktop displays as MetaMask', async () => {
+    createPhantomEnviroment()
+    const { displayed, injected } = createWalletEnvironment({ isMetaMask: true }) // Phantom sets isMetaMask to true
+
+    expect(displayed.includes(injected)).toBe(true)
+    expect(injected.getName()).toBe('MetaMask')
     expect(injected.overrideActivate?.()).toBeFalsy()
 
     expect(displayed.length).toEqual(4)
@@ -114,7 +130,7 @@ describe('connection utility/metadata tests', () => {
     const { displayed, injected } = createWalletEnvironment(UNKNOWN_MM_INJECTOR)
 
     expect(displayed.includes(injected)).toBe(true)
-    expect(injected.getProviderInfo().name).toBe('MetaMask')
+    expect(injected.getName()).toBe('MetaMask')
     expect(injected.overrideActivate?.()).toBeFalsy()
 
     expect(displayed.length).toEqual(4)
@@ -125,11 +141,11 @@ describe('connection utility/metadata tests', () => {
     const { displayed, injected } = createWalletEnvironment(UNKNOWN_INJECTOR, true)
 
     expect(displayed.includes(injected)).toBe(true)
-    expect(injected.getProviderInfo().name).toBe('Browser Wallet')
+    expect(injected.getName()).toBe('Browser Wallet')
     expect(injected.overrideActivate?.()).toBeFalsy()
 
-    expect(injected.getProviderInfo(/* isDarkMode= */ false).icon).toBe(INJECTED_LIGHT_ICON)
-    expect(injected.getProviderInfo(/* isDarkMode= */ true).icon).toBe(INJECTED_DARK_ICON)
+    expect(injected.getIcon?.(/* isDarkMode= */ false)).toBe(INJECTED_LIGHT_ICON)
+    expect(injected.getIcon?.(/* isDarkMode= */ true)).toBe(INJECTED_DARK_ICON)
 
     // Ensures we provide multiple connection options if in an unknown injected browser
     expect(displayed.length).toEqual(4)
@@ -138,12 +154,12 @@ describe('connection utility/metadata tests', () => {
   it('Generic Wallet Browser with delayed injection', async () => {
     const { injected } = createWalletEnvironment(undefined)
 
-    expect(injected.getProviderInfo().name).toBe('Install MetaMask')
+    expect(injected.getName()).toBe('Install MetaMask')
     expect(injected.overrideActivate?.()).toBeTruthy()
 
     createWalletEnvironment(UNKNOWN_INJECTOR)
 
-    expect(injected.getProviderInfo().name).toBe('Browser Wallet')
+    expect(injected.getName()).toBe('Browser Wallet')
     expect(injected.overrideActivate?.()).toBeFalsy()
   })
 
@@ -151,7 +167,7 @@ describe('connection utility/metadata tests', () => {
     const { displayed, injected } = createWalletEnvironment({ isMetaMask: true }, true)
 
     expect(displayed.includes(injected)).toBe(true)
-    expect(injected.getProviderInfo().name).toBe('MetaMask')
+    expect(injected.getName()).toBe('MetaMask')
     expect(injected.overrideActivate?.()).toBeFalsy()
     expect(displayed.length).toEqual(1)
   })

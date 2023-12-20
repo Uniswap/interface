@@ -1,4 +1,3 @@
-import { maxBy } from 'lodash'
 import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
 import { SharedValue } from 'react-native-reanimated'
 import { TLineChartData } from 'react-native-wagmi-charts'
@@ -17,17 +16,11 @@ export type TokenSpotData = {
   relativeChange: SharedValue<number>
 }
 
-export type PriceNumberOfDigits = {
-  left: number
-  right: number
-}
-
 /**
  * @returns Token price history for requested duration
  */
 export function useTokenPriceHistory(
   currencyId: string,
-  onCompleted?: () => void,
   initialDuration: HistoryDuration = HistoryDuration.Day
 ): Omit<
   GqlResult<{
@@ -39,7 +32,6 @@ export function useTokenPriceHistory(
   setDuration: Dispatch<SetStateAction<HistoryDuration>>
   selectedDuration: HistoryDuration
   error: boolean
-  numberOfDigits: PriceNumberOfDigits
 } {
   const [duration, setDuration] = useState(initialDuration)
 
@@ -54,9 +46,7 @@ export function useTokenPriceHistory(
     },
     notifyOnNetworkStatusChange: true,
     pollInterval: PollingInterval.Normal,
-    onCompleted,
-    // TODO(MOB-2308): maybe update to network-only once we have a better loading state
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
   })
 
   const offChainData = priceData?.tokenProjects?.[0]?.markets?.[0]
@@ -83,24 +73,13 @@ export function useTokenPriceHistory(
       ?.filter((x): x is TimestampedAmount => Boolean(x))
       .map((x) => ({ timestamp: x.timestamp * 1000, value: x.value }))
 
+    // adds the current price to the chart given we show spot price/24h change
+    if (formatted && spot?.value) {
+      formatted?.push({ timestamp: Date.now(), value: spot.value.value })
+    }
+
     return formatted
-  }, [priceHistory])
-
-  const numberOfDigits = useMemo(() => {
-    const max = maxBy(priceHistory, 'value')
-
-    if (max) {
-      return {
-        left: String(max.value).split('.')[0]?.length || 10,
-        right: Number(String(max.value).split('.')[0]) > 0 ? 2 : 10,
-      }
-    }
-
-    return {
-      left: 0,
-      right: 0,
-    }
-  }, [priceHistory])
+  }, [priceHistory, spot?.value])
 
   const retry = useCallback(async () => {
     await refetch({ contract: currencyIdToContractInput(currencyId) })
@@ -117,18 +96,7 @@ export function useTokenPriceHistory(
       refetch: retry,
       setDuration,
       selectedDuration: duration,
-      numberOfDigits,
-      onCompleted,
     }),
-    [
-      duration,
-      formattedPriceHistory,
-      networkStatus,
-      priceData,
-      retry,
-      spot,
-      onCompleted,
-      numberOfDigits,
-    ]
+    [duration, formattedPriceHistory, networkStatus, priceData, retry, spot]
   )
 }

@@ -114,6 +114,7 @@ export function TokenDetailsStats({
     offChainData?.markets?.[0]?.priceHigh52W?.value ?? onChainData?.market?.priceHigh52W?.value
   const priceLow52W =
     offChainData?.markets?.[0]?.priceLow52W?.value ?? onChainData?.market?.priceLow52W?.value
+
   const currentDescription =
     showTranslation && translatedDescription ? translatedDescription : description
 

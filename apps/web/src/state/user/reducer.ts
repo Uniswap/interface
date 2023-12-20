@@ -46,7 +46,7 @@ export interface UserState {
   }
 
   timestamp: number
-  hideAppPromoBanner: boolean
+  hideAndroidAnnouncementBanner: boolean
   // undefined means has not gone through A/B split yet
   showSurveyPopup?: boolean
 
@@ -68,7 +68,7 @@ export const initialState: UserState = {
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
-  hideAppPromoBanner: false,
+  hideAndroidAnnouncementBanner: false,
   showSurveyPopup: undefined,
   originCountry: undefined,
 }
@@ -112,8 +112,8 @@ const userSlice = createSlice({
     updateHideClosedPositions(state, action) {
       state.userHideClosedPositions = action.payload.userHideClosedPositions
     },
-    updateHideAppPromoBanner(state, action) {
-      state.hideAppPromoBanner = action.payload.hideAppPromoBanner
+    updateHideAndroidAnnouncementBanner(state, action) {
+      state.hideAndroidAnnouncementBanner = action.payload.hideAndroidAnnouncementBanner
     },
     addSerializedToken(state, { payload: { serializedToken } }) {
       if (!state.tokens) {
@@ -152,6 +152,6 @@ export const {
   updateUserDeadline,
   updateUserLocale,
   updateUserSlippageTolerance,
-  updateHideAppPromoBanner,
+  updateHideAndroidAnnouncementBanner,
 } = userSlice.actions
 export default userSlice.reducer

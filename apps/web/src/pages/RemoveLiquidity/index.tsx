@@ -6,7 +6,7 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventN
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, TraceEvent, useTrace } from 'analytics'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { isSupportedChain } from 'constants/chains'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'

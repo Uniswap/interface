@@ -17,7 +17,6 @@ import { Provider } from 'react-redux'
 import { BrowserRouter, HashRouter, useLocation } from 'react-router-dom'
 import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/ThemeToggle'
 import { isBrowserRouterEnabled } from 'utils/env'
-import { getCanonicalUrl } from 'utils/urlRoutes'
 
 import Web3Provider from './components/Web3Provider'
 import { LanguageProvider } from './i18n'
@@ -38,11 +37,11 @@ if (window.ethereum) {
 
 function Updaters() {
   const location = useLocation()
-
+  const baseUrl = `${window.location.origin}${location.pathname}`
   return (
     <>
       <Helmet>
-        <link rel="canonical" href={getCanonicalUrl(location.pathname)} />
+        <link rel="canonical" href={baseUrl} />
       </Helmet>
       <RadialGradientByChainUpdater />
       <ListsUpdater />

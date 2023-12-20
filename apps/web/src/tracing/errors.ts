@@ -1,5 +1,4 @@
 import { ClientOptions, ErrorEvent, EventHint } from '@sentry/types'
-import { ProviderRpcError } from '@web3-react/types'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 // `responseStatus` is only currently supported on certain browsers.
@@ -19,25 +18,12 @@ export const beforeSend: Required<ClientOptions>['beforeSend'] = (event: ErrorEv
     return null
   }
 
-  const exception = event.exception?.values?.[0]
-  if (exception?.mechanism && exception.mechanism.synthetic && !exception.mechanism.handled) {
-    // ProviderRpcErrors occur frequently through 3P providers, so it's good to disambiguate them.
-    // This allows us to see which errors are actually frequent, vs which ones are extension-specific.
-    if (isProviderRpcError(hint.originalException)) {
-      event.exception?.values?.push({
-        type: 'ProviderRpcError',
-        value: `${hint.originalException.code}: ${hint.originalException.message}`,
-      })
-    }
-  }
-
   updateRequestUrl(event)
 
   return event
 }
 
 type ErrorLike = Partial<Error> & Required<Pick<Error, 'message'>>
-
 function isErrorLike(error: unknown): error is ErrorLike {
   return error instanceof Object && 'message' in error && typeof (error as Partial<ErrorLike>)?.message === 'string'
 }
@@ -119,14 +105,4 @@ function shouldRejectError(error: EventHint['originalException']) {
   }
 
   return false
-}
-
-function isProviderRpcError(error: unknown): error is ProviderRpcError {
-  return (
-    error instanceof Object &&
-    'code' in error &&
-    typeof (error as Partial<ProviderRpcError>)?.code === 'number' &&
-    'message' in error &&
-    typeof (error as Partial<ProviderRpcError>)?.message === 'string'
-  )
 }

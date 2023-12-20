@@ -48,12 +48,6 @@ export function setupCache(): InMemoryCache {
               })
             },
           },
-
-          // Ignore `valueModifiers` when caching `portfolios`.
-          // IMPORTANT: This assumes that `valueModifiers` are always the same when querying `portfolios` across the entire app.
-          portfolios: {
-            keyArgs: ['chains', 'ownerAddresses'],
-          },
         },
       },
       Token: {

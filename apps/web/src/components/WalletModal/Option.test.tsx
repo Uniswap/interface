@@ -1,6 +1,6 @@
 import { Connector } from '@web3-react/types'
 import UNIWALLET_ICON from 'assets/images/uniwallet.png'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { Connection, ConnectionType } from 'connection/types'
 import { mocked } from 'test-utils/mocked'
 import { createDeferredPromise } from 'test-utils/promise'
@@ -9,7 +9,7 @@ import { act, render } from 'test-utils/render'
 import Option from './Option'
 
 const mockToggleDrawer = jest.fn()
-jest.mock('components/AccountDrawer/MiniPortfolio/hooks')
+jest.mock('components/AccountDrawer')
 
 beforeEach(() => {
   jest.spyOn(console, 'debug').mockReturnValue()
@@ -17,20 +17,22 @@ beforeEach(() => {
 })
 
 const mockConnection1: Connection = {
-  getProviderInfo: () => ({ name: 'Mock Connection 1', icon: UNIWALLET_ICON }),
+  getName: () => 'Mock Connection 1',
   connector: {
     activate: jest.fn(),
     deactivate: jest.fn(),
   } as unknown as Connector,
+  getIcon: () => UNIWALLET_ICON,
   type: ConnectionType.UNISWAP_WALLET_V2,
 } as unknown as Connection
 
 const mockConnection2: Connection = {
-  getProviderInfo: () => ({ name: 'Mock Connection 2', icon: UNIWALLET_ICON }),
+  getName: () => 'Mock Connection 2',
   connector: {
     activate: jest.fn(),
     deactivate: jest.fn(),
   } as unknown as Connector,
+  getIcon: () => UNIWALLET_ICON,
   type: ConnectionType.INJECTED,
 } as unknown as Connection
 

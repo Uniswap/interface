@@ -1,8 +1,8 @@
 import React from 'react'
 import { ColorValue, FlexStyle } from 'react-native'
+import { IS_ANDROID } from 'src/constants/globals'
 import { Flex, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 const HANDLEBAR_HEIGHT = spacing.spacing4
 const HANDLEBAR_WIDTH = spacing.spacing36
@@ -21,7 +21,7 @@ export const HandleBar = ({
   const bg = hidden ? 'transparent' : backgroundColor ?? colors.surface1.get()
 
   return (
-    <Flex mt={isAndroid ? '$spacing4' : '$none'}>
+    <Flex mt={IS_ANDROID ? '$spacing4' : '$none'}>
       <Flex
         alignItems="center"
         borderTopLeftRadius="$rounded24"

@@ -53,7 +53,6 @@ import {
   v51Schema,
   v52Schema,
   v53Schema,
-  v54Schema,
   v5Schema,
   v6Schema,
   v7Schema,
@@ -62,7 +61,6 @@ import {
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import { initialBehaviorHistoryState } from 'src/features/behaviorHistory/slice'
 import { initialBiometricsSettingsState } from 'src/features/biometrics/slice'
 import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
 import { initialPasswordLockoutState } from 'src/features/CloudBackup/passwordLockoutSlice'
@@ -154,7 +152,6 @@ describe('Redux state migrations', () => {
       modals: initialModalState,
       notifications: initialNotificationsState,
       passwordLockout: initialPasswordLockoutState,
-      behaviorHistory: initialBehaviorHistoryState,
       providers: { isInitialized: false },
       saga: {},
       searchHistory: initialSearchHistoryState,
@@ -1242,12 +1239,5 @@ describe('Redux state migrations', () => {
     const v54 = migrations[54](v53Stub)
 
     expect(v54.telemetry.walletIsFunded).toBe(false)
-  })
-
-  it('migrates from v54 to 55', () => {
-    const v54Stub = { ...v54Schema }
-    const v55 = migrations[55](v54Stub)
-
-    expect(v55.behaviorHistory.hasViewedReviewScreen).toBe(false)
   })
 })

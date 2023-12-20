@@ -6,7 +6,7 @@ import multicall from 'lib/state/multicall'
 import { CombinedState } from 'redux'
 import { assert, Equals } from 'tsafe'
 
-import { ApplicationModal, ApplicationState, PopupList, PopupType } from './application/reducer'
+import { ApplicationModal, ApplicationState, PopupList } from './application/reducer'
 import { Field as BurnField } from './burn/actions'
 import { BurnState } from './burn/reducer'
 import { BurnV3State } from './burn/v3/reducer'
@@ -87,7 +87,7 @@ interface ExpectedUserState {
     }
   }
   timestamp: number
-  hideAppPromoBanner: boolean
+  hideAndroidAnnouncementBanner: boolean
   showSurveyPopup?: boolean
   originCountry?: string
 }
@@ -121,7 +121,6 @@ interface ExpectedApplicationState {
   readonly fiatOnramp: { available: boolean; availabilityChecked: boolean }
   readonly openModal: ApplicationModal | null
   readonly popupList: PopupList
-  readonly suppressedPopups: PopupType[]
 }
 
 assert<Equals<ApplicationState, ExpectedApplicationState>>()

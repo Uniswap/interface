@@ -1,23 +1,21 @@
-import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import IconButton from 'components/AccountDrawer/IconButton'
-import { useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import Column from 'components/Column'
+import { AutoColumn } from 'components/Column'
 import { Settings } from 'components/Icons/Settings'
-import Row, { AutoRow } from 'components/Row'
-import { deprecatedNetworkConnection, networkConnection } from 'connection'
+import { AutoRow } from 'components/Row'
+import { connections, deprecatedNetworkConnection, networkConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { isSupportedChain } from 'constants/chains'
 import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
+import { useAppSelector } from 'state/hooks'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
 
 import ConnectionErrorView from './ConnectionErrorView'
-import { DeprecatedInjectorMessage } from './Option'
+import Option from './Option'
 import PrivacyPolicyNotice from './PrivacyPolicyNotice'
-import { useOrderedConnections } from './useOrderedConnections'
 
 const Wrapper = styled.div`
   ${flexColumnNoWrap};
@@ -29,7 +27,6 @@ const Wrapper = styled.div`
 
 const OptionGrid = styled.div`
   display: grid;
-  flex: 1;
   grid-gap: 2px;
   border-radius: 12px;
   overflow: hidden;
@@ -38,18 +35,12 @@ const OptionGrid = styled.div`
   `};
 `
 
-const TextSectionWrapper = styled.div`
+const PrivacyPolicyWrapper = styled.div`
   padding: 0 4px;
-`
-
-const Line = styled.hr`
-  width: 100%;
-  border-color: ${({ theme }) => theme.surface3};
 `
 
 export default function WalletModal({ openSettings }: { openSettings: () => void }) {
   const { connector, chainId } = useWeb3React()
-  const showMoonpayText = useShowMoonpayText()
 
   const { activationState } = useActivationState()
   const fallbackProviderEnabled = useFallbackProviderEnabled()
@@ -64,7 +55,22 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
     }
   }, [chainId, connector, fallbackProviderEnabled])
 
-  const { orderedConnections, showDeprecatedMessage } = useOrderedConnections()
+  const { type: recentConnectionType } = useAppSelector((state) => state.user.recentConnectionMeta) ?? {}
+
+  const orderedConnectionList = useMemo(() => {
+    const list: JSX.Element[] = []
+
+    for (const connection of connections) {
+      if (!connection.shouldDisplay()) continue
+
+      const isRecent = connection.type === recentConnectionType
+      const option = <Option key={connection.getName()} connection={connection} isRecent={isRecent} />
+      // Place recent connection at top of list
+      isRecent ? list.unshift(option) : list.push(option)
+    }
+
+    return list
+  }, [recentConnectionType])
 
   return (
     <Wrapper data-testid="wallet-modal">
@@ -75,31 +81,12 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
       {activationState.status === ActivationStatus.ERROR ? (
         <ConnectionErrorView />
       ) : (
-        <Column gap="md" flex="1">
-          <Row flex="1" align="flex-start">
-            <OptionGrid data-testid="option-grid">{orderedConnections}</OptionGrid>
-          </Row>
-          {showDeprecatedMessage && (
-            <TextSectionWrapper>
-              <DeprecatedInjectorMessage />
-            </TextSectionWrapper>
-          )}
-          <Column gap="md">
-            <TextSectionWrapper>
-              <PrivacyPolicyNotice />
-            </TextSectionWrapper>
-            {showMoonpayText && (
-              <>
-                <Line />
-                <TextSectionWrapper>
-                  <ThemedText.Caption color="neutral3">
-                    <Trans>Fiat onramp powered by MoonPay USA LLC</Trans>
-                  </ThemedText.Caption>
-                </TextSectionWrapper>
-              </>
-            )}
-          </Column>
-        </Column>
+        <AutoColumn gap="16px">
+          <OptionGrid data-testid="option-grid">{orderedConnectionList}</OptionGrid>
+          <PrivacyPolicyWrapper>
+            <PrivacyPolicyNotice />
+          </PrivacyPolicyWrapper>
+        </AutoColumn>
       )}
     </Wrapper>
   )

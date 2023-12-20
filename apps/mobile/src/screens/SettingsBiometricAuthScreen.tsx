@@ -7,6 +7,7 @@ import { Switch } from 'src/components/buttons/Switch'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
+import { IS_IOS } from 'src/constants/globals'
 import { enroll } from 'src/features/biometrics'
 import {
   checkOsBiometricAuthEnabled,
@@ -22,7 +23,6 @@ import {
 } from 'src/features/biometrics/slice'
 import { openSettings } from 'src/utils/linking'
 import { Flex, Text, TouchableArea } from 'ui/src'
-import { isIOS } from 'wallet/src/utils/platform'
 
 interface BiometricAuthSetting {
   onValueChange: (newValue: boolean) => void
@@ -69,7 +69,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
 
   const options: BiometricAuthSetting[] = useMemo((): BiometricAuthSetting[] => {
     const handleFaceIdTurnedOff = (): void => {
-      isIOS
+      IS_IOS
         ? Alert.alert(
             t('{{capitalizedAuthTypeName}} is turned off', { capitalizedAuthTypeName }),
             t(

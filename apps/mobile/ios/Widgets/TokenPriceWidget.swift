@@ -26,31 +26,9 @@ let placeholderPriceHistory = [
   PriceHistory(timestamp: 1689794997, price: 2167),
   PriceHistory(timestamp: 1689795264, price: 2165)
 ]
-let previewEntry = TokenPriceEntry(
-  date: Date(),
-  configuration: TokenPriceConfigurationIntent(), 
-  currency: WidgetConstants.currencyUsd,
-  spotPrice: 2165,
-  pricePercentChange: -9.87,
-  symbol: "ETH",
-  logo: UIImage(url: URL(string: "https://token-icons.s3.amazonaws.com/eth.png")),
-  backgroundColor: ColorExtraction.extractImageColorWithSpecialCase(
-    imageURL: "https://token-icons.s3.amazonaws.com/eth.png"
-  ),
-  tokenPriceHistory: TokenPriceHistoryResponse(priceHistory: placeholderPriceHistory)
-)
+let previewEntry = TokenPriceEntry(date: Date(), configuration: TokenPriceConfigurationIntent(), spotPrice: 2165, pricePercentChange: -9.87, symbol: "ETH", logo: UIImage(url: URL(string: "https://token-icons.s3.amazonaws.com/eth.png")), backgroundColor:  ColorExtraction.extractImageColorWithSpecialCase(imageURL: "https://token-icons.s3.amazonaws.com/eth.png"), tokenPriceHistory: TokenPriceHistoryResponse(priceHistory: placeholderPriceHistory))
 
-let placeholderEntry = TokenPriceEntry(
-  date: previewEntry.date,
-  configuration: previewEntry.configuration,
-  currency: previewEntry.currency,
-  spotPrice: previewEntry.spotPrice,
-  pricePercentChange: previewEntry.pricePercentChange,
-  symbol: previewEntry.symbol,
-  logo: nil,
-  backgroundColor: nil,
-  tokenPriceHistory: previewEntry.tokenPriceHistory
-)
+let placeholderEntry = TokenPriceEntry(date: previewEntry.date, configuration: previewEntry.configuration, spotPrice: previewEntry.spotPrice, pricePercentChange: previewEntry.pricePercentChange, symbol: previewEntry.symbol, logo: nil, backgroundColor: nil,  tokenPriceHistory: previewEntry.tokenPriceHistory)
 
 let refreshMinutes = 5
 let displayName = "Token Prices"
@@ -61,16 +39,10 @@ struct Provider: IntentTimelineProvider {
   
   func getEntry(configuration: TokenPriceConfigurationIntent, context: Context, isSnapshot: Bool) async throws -> TokenPriceEntry {
     let entryDate = Date()
-    async let tokenPriceRequest = isSnapshot ?
-      await DataQueries.fetchTokenPriceData(chain: WidgetConstants.ethereumChain, address: nil) :
-      await DataQueries.fetchTokenPriceData(chain: configuration.selectedToken?.chain ?? "", address: configuration.selectedToken?.address)
-    async let conversionRequest = await DataQueries.fetchCurrencyConversion(
-      toCurrency: UniswapUserDefaults.readI18n().currency)
-    
-    let (tokenPriceResponse, conversionResponse) = try await (tokenPriceRequest, conversionRequest)
-    
-    let spotPrice = tokenPriceResponse.spotPrice != nil ?
-      tokenPriceResponse.spotPrice! * conversionResponse.conversionRate : nil
+    let tokenPriceResponse = isSnapshot ?
+    try await DataQueries.fetchTokenPriceData(chain: WidgetConstants.ethereumChain, address: nil) :
+    try await DataQueries.fetchTokenPriceData(chain: configuration.selectedToken?.chain ?? "", address: configuration.selectedToken?.address)
+    let spotPrice = tokenPriceResponse.spotPrice
     let pricePercentChange = tokenPriceResponse.pricePercentChange
     let symbol = tokenPriceResponse.symbol
     let logo = UIImage(url: URL(string: tokenPriceResponse.logoUrl ?? ""))
@@ -90,17 +62,7 @@ struct Provider: IntentTimelineProvider {
         address: configuration.selectedToken?.address)
     }
     
-    return TokenPriceEntry(
-      date: entryDate,
-      configuration: configuration,
-      currency: conversionResponse.currency,
-      spotPrice: spotPrice,
-      pricePercentChange: pricePercentChange,
-      symbol: symbol,
-      logo: logo,
-      backgroundColor: backgroundColor,
-      tokenPriceHistory: tokenPriceHistory
-    )
+    return TokenPriceEntry(date: entryDate, configuration: configuration, spotPrice: spotPrice, pricePercentChange: pricePercentChange, symbol: symbol, logo: logo, backgroundColor: backgroundColor, tokenPriceHistory: tokenPriceHistory)
   }
   
   func placeholder(in context: Context) -> TokenPriceEntry {
@@ -128,7 +90,6 @@ struct Provider: IntentTimelineProvider {
 struct TokenPriceEntry: TimelineEntry {
   let date: Date
   let configuration: TokenPriceConfigurationIntent
-  let currency: String
   let spotPrice: Double?
   let pricePercentChange: Double?
   let symbol: String
@@ -169,14 +130,7 @@ struct TokenPriceWidgetEntryView: View {
   func priceSection(isPlaceholder: Bool) -> some View {
     return VStack(alignment: .leading, spacing: 0) {
       if (!isPlaceholder && entry.spotPrice != nil && entry.pricePercentChange != nil) {
-        let i18nSettings = UniswapUserDefaults.readI18n()
-        Text(
-          NumberFormatter.fiatTokenDetailsFormatter(
-            price: entry.spotPrice,
-            locale: Locale(identifier: i18nSettings.locale),
-            currencyCode: entry.currency
-          )
-        )
+        Text(NumberFormatter.fiatTokenDetailsFormatter(price: entry.spotPrice))
           .withHeading1Style()
           .frame(minHeight: 28)
           .minimumScaleFactor(0.3)

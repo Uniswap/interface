@@ -24,12 +24,6 @@ type FiatOnRampAggregatorModalParams = {
   name: ModalName.FiatOnRampAggregator
   initialState?: undefined
 }
-
-type LanguageSelectorModalParams = {
-  name: ModalName.LanguageSelector
-  initialState?: undefined
-}
-
 type RemoveWalletModalParams = {
   name: ModalName.RemoveWallet
   initialState?: RemoveWalletModalState
@@ -55,7 +49,6 @@ export type OpenModalParams =
   | FiatCurrencySelectorParams
   | FiatOnRampModalParams
   | FiatOnRampAggregatorModalParams
-  | LanguageSelectorModalParams
   | RemoveWalletModalParams
   | SendModalParams
   | SwapModalParams
@@ -103,10 +96,6 @@ export const initialModalState: ModalsState = {
     initialState: undefined,
   },
   [ModalName.RestoreWallet]: {
-    isOpen: false,
-    initialState: undefined,
-  },
-  [ModalName.LanguageSelector]: {
     isOpen: false,
     initialState: undefined,
   },

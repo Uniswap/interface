@@ -5,8 +5,8 @@ import { useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import styled from 'styled-components'
 
+import { useAccountDrawer } from '../..'
 import { DEFAULT_NFT_QUERY_AMOUNT } from '../constants'
-import { useAccountDrawer } from '../hooks'
 import { NFT } from './NFTItem'
 
 export default function NFTs({ account }: { account: string }) {

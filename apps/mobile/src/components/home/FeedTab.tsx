@@ -9,6 +9,7 @@ import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import { TabProps, TAB_BAR_HEIGHT } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
+import { IS_ANDROID } from 'src/constants/globals'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
@@ -23,7 +24,6 @@ import {
   useActiveAccountWithThrow,
   useSelectAccountHideSpamTokens,
 } from 'wallet/src/features/wallet/hooks'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 export const FEED_TAB_DATA_DEPENDENCIES = [GQLQueries.FeedTransactionList]
 
@@ -107,7 +107,7 @@ export const FeedTab = memo(
       return (
         <RefreshControl
           progressViewOffset={
-            insets.top + (isAndroid && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
+            insets.top + (IS_ANDROID && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
           }
           refreshing={refreshing ?? false}
           tintColor={colors.neutral3.get()}

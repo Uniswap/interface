@@ -2,7 +2,6 @@
 import { useMemo } from 'react'
 import { ScrollView } from 'tamagui'
 import { Flex, Text } from 'ui/src'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import { useSortedPortfolioBalances } from 'wallet/src/features/dataApi/balances'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { TokenBalanceItem } from './TokenBalanceItem'
@@ -12,26 +11,29 @@ type TokenBalanceListProps = {
 }
 
 export function TokenBalanceList({ owner }: TokenBalanceListProps): JSX.Element {
-  const { data, loading } = useSortedPortfolioBalances({
-    address: owner,
-    pollInterval: PollingInterval.KindaFast,
-  })
+  const { data, loading } = useSortedPortfolioBalances(
+    owner,
+    /*shouldPoll=*/ true,
+    /* hideSmallBalances=*/ false,
+    /* hideSpamTokens=*/ true
+    // onCompleted
+  )
 
   const listItems = useMemo((): PortfolioBalance[] | undefined => {
     if (!data) return
 
-    const { balances, hiddenBalances } = data
+    const { balances, smallBalances, spamBalances } = data
 
     // No balances
-    if (!balances.length && !hiddenBalances.length) return
+    if (!balances.length && !smallBalances.length && !spamBalances.length) return
 
     // No hidden tokens
-    if (balances.length > 0 && hiddenBalances.length === 0) {
+    if (balances.length > 0 && smallBalances.length === 0 && spamBalances.length === 0) {
       return balances
     }
 
     // Show all tokens including hidden
-    return [...balances, ...hiddenBalances]
+    return [...balances, ...smallBalances, ...spamBalances]
   }, [data])
 
   if (!data && loading) {

@@ -10,7 +10,6 @@ import { TapGestureHandler, TapGestureHandlerGestureEvent } from 'react-native-g
 import Animated, {
   cancelAnimation,
   FadeIn,
-  FadeOut,
   interpolateColor,
   runOnJS,
   useAnimatedGestureHandler,
@@ -83,7 +82,6 @@ import { useInterval, useTimeout } from 'utilities/src/time/timing'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
-import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { HomeScreenTabIndex } from './HomeScreenTabIndex'
@@ -368,7 +366,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     ]
   )
 
-  const hasClaimEligibility = useCanActiveAddressClaimUnitag()
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
   const viewOnlyLabel = t('This is a view-only wallet')
   const contentHeader = useMemo(() => {
     return (
@@ -386,14 +384,10 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
             </Text>
           </Flex>
         )}
-        {hasClaimEligibility && (
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
-            <UnitagBanner />
-          </AnimatedFlex>
-        )}
+        {unitagsFeatureFlagEnabled && <UnitagBanner />}
       </Flex>
     )
-  }, [activeAccount.address, isSignerAccount, viewOnlyLabel, actions, hasClaimEligibility])
+  }, [activeAccount.address, isSignerAccount, viewOnlyLabel, actions, unitagsFeatureFlagEnabled])
 
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({

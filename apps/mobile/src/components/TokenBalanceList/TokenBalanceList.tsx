@@ -21,6 +21,7 @@ import {
   TokenBalanceListRow,
   useTokenBalanceListContext,
 } from 'src/components/TokenBalanceList/TokenBalanceListContext'
+import { IS_ANDROID } from 'src/constants/globals'
 import { Screens } from 'src/screens/Screens'
 import { AnimatedFlex, Flex, useDeviceDimensions, useDeviceInsets, useSporeColors } from 'ui/src'
 import { zIndices } from 'ui/src/theme'
@@ -28,7 +29,6 @@ import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { TokenBalanceItem } from 'wallet/src/features/portfolio/TokenBalanceItem'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 type TokenBalanceListProps = TabProps & {
   empty?: JSX.Element | null
@@ -127,7 +127,7 @@ export const TokenBalanceListInner = forwardRef<
     return (
       <RefreshControl
         progressViewOffset={
-          insets.top + (isAndroid && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
+          insets.top + (IS_ANDROID && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
         }
         refreshing={refreshing ?? false}
         tintColor={colors.neutral3.get()}

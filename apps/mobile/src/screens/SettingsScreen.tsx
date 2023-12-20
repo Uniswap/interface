@@ -51,7 +51,6 @@ import { useCurrentAppearanceSetting, useIsDarkMode } from 'wallet/src/features/
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 import { AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { resetWallet, setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
@@ -72,7 +71,6 @@ export function SettingsScreen(): JSX.Element {
   const authenticationTypeName = useBiometricName(isTouchIdSupported, true)
   const currentAppearanceSetting = useCurrentAppearanceSetting()
   const currentFiatCurrencyInfo = useAppFiatCurrencyInfo()
-  const { originName: currentLanguage } = useCurrentLanguageInfo()
 
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
     const svgProps: SvgProps = {
@@ -95,20 +93,6 @@ export function SettingsScreen(): JSX.Element {
       {
         subTitle: t('App settings'),
         data: [
-          ...(deviceSupportsBiometrics
-            ? [
-                {
-                  screen: Screens.SettingsBiometricAuth as Screens.SettingsBiometricAuth,
-                  isHidden: !isTouchIdSupported && !isFaceIdSupported,
-                  text: authenticationTypeName,
-                  icon: isTouchIdSupported ? (
-                    <FingerprintIcon {...svgProps} />
-                  ) : (
-                    <FaceIdIcon {...svgProps} />
-                  ),
-                },
-              ]
-            : []),
           {
             screen: Screens.SettingsAppearance,
             text: t('Appearance'),
@@ -130,12 +114,20 @@ export function SettingsScreen(): JSX.Element {
                 },
               ] as SettingsSectionItem[])
             : []),
-          {
-            modal: ModalName.LanguageSelector,
-            text: t('Language'),
-            currentSetting: currentLanguage,
-            icon: <Icons.Language {...iconProps} />,
-          },
+          ...(deviceSupportsBiometrics
+            ? [
+                {
+                  screen: Screens.SettingsBiometricAuth as Screens.SettingsBiometricAuth,
+                  isHidden: !isTouchIdSupported && !isFaceIdSupported,
+                  text: authenticationTypeName,
+                  icon: isTouchIdSupported ? (
+                    <FingerprintIcon {...svgProps} />
+                  ) : (
+                    <FaceIdIcon {...svgProps} />
+                  ),
+                },
+              ]
+            : []),
           // @TODO: [MOB-250] add back testnet toggle once we support testnets
         ],
       },
@@ -202,13 +194,12 @@ export function SettingsScreen(): JSX.Element {
     colors.neutral2,
     t,
     currentAppearanceSetting,
-    currentLanguage,
-    currencyConversionEnabled,
-    currentFiatCurrencyInfo.code,
     deviceSupportsBiometrics,
     isTouchIdSupported,
     isFaceIdSupported,
     authenticationTypeName,
+    currentFiatCurrencyInfo,
+    currencyConversionEnabled,
   ])
 
   const renderItem = ({

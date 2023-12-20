@@ -2,21 +2,15 @@ import React from 'react'
 import { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { useLineChartDatetime } from 'react-native-wagmi-charts'
 import { AnimatedText } from 'src/components/text/AnimatedText'
+import { IS_ANDROID } from 'src/constants/globals'
 import { Flex, Icons, useSporeColors } from 'ui/src'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useCurrentLocale } from 'wallet/src/features/language/hooks'
-import { isAndroid } from 'wallet/src/utils/platform'
 import { AnimatedDecimalNumber } from './AnimatedDecimalNumber'
 import { useLineChartPrice, useLineChartRelativeChange } from './usePrice'
 
-export function PriceText({
-  loading,
-  maxWidth,
-}: {
-  loading: boolean
-  maxWidth?: number
-}): JSX.Element {
+export function PriceText({ loading }: { loading: boolean }): JSX.Element {
   const price = useLineChartPrice()
   const colors = useSporeColors()
   const currency = useAppFiatCurrency()
@@ -27,15 +21,13 @@ export function PriceText({
     (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) &&
     symbolAtFront
 
-  // TODO(MOB-2308): re-enable this when we have a better solution for handling the loading state
-  // if (loading) {
-  //   return <AnimatedText loading loadingPlaceholderText="$10,000" variant="heading1" />
-  // }
+  if (loading) {
+    return <AnimatedText loading loadingPlaceholderText="$10,000" variant="heading1" />
+  }
 
   return (
     <AnimatedDecimalNumber
       decimalPartColor={shouldFadePortfolioDecimals ? colors.neutral3.val : colors.neutral1.val}
-      maxWidth={maxWidth}
       number={price}
       separator={decimalSeparator}
       testID="price-text"
@@ -65,7 +57,7 @@ export function RelativeChangeText({
 
   if (loading) {
     return (
-      <Flex mt={isAndroid ? '$none' : '$spacing2'}>
+      <Flex mt={IS_ANDROID ? '$none' : '$spacing2'}>
         <AnimatedText loading loadingPlaceholderText="00.00%" variant="body1" />
       </Flex>
     )
@@ -74,9 +66,9 @@ export function RelativeChangeText({
   return (
     <Flex
       row
-      alignItems={isAndroid ? 'center' : 'flex-end'}
+      alignItems={IS_ANDROID ? 'center' : 'flex-end'}
       gap="$spacing2"
-      mt={isAndroid ? '$none' : '$spacing2'}>
+      mt={IS_ANDROID ? '$none' : '$spacing2'}>
       <Icons.AnimatedCaretChange
         size="$icon.16"
         strokeWidth={2}

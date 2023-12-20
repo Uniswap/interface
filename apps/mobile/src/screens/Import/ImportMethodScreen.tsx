@@ -5,6 +5,7 @@ import { Alert } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import Trace from 'src/components/Trace/Trace'
+import { IS_ANDROID } from 'src/constants/globals'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
@@ -21,7 +22,6 @@ import {
   PendingAccountActions,
   pendingAccountActions,
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 interface ImportMethodOption {
   title: (t: AppTFunction) => string
@@ -44,7 +44,7 @@ const options: ImportMethodOption[] = [
   {
     title: (t: AppTFunction) => t('Restore a wallet'),
     blurb: (t: AppTFunction) =>
-      isAndroid
+      IS_ANDROID
         ? t(`Add wallets you’ve backed up to your Google Drive account`)
         : t(`Add wallets you’ve backed up to your iCloud account`),
     icon: <Icons.OSDynamicCloudIcon color="$accent1" size="$icon.24" />,
@@ -69,8 +69,8 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
 
     if (!cloudStorageAvailable) {
       Alert.alert(
-        isAndroid ? t('Google Drive not available') : t('iCloud Drive not available'),
-        isAndroid
+        IS_ANDROID ? t('Google Drive not available') : t('iCloud Drive not available'),
+        IS_ANDROID
           ? t(
               'Please verify that you are logged in to a Google account with Google Drive enabled on this device and try again.'
             )

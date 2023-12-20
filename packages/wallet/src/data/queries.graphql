@@ -295,14 +295,10 @@ query NftsTab(
   }
 }
 
-query PortfolioBalances(
-  $ownerAddress: String!
-  $valueModifiers: [PortfolioValueModifier!]
-) {
+query PortfolioBalances($ownerAddress: String!) {
   portfolios(
     ownerAddresses: [$ownerAddress]
     chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
-    valueModifiers: $valueModifiers
   ) {
     id
     # Total portfolio balance for header
@@ -322,7 +318,6 @@ query PortfolioBalances(
     tokenBalances {
       id
       quantity
-      isHidden
       denominatedValue {
         currency
         value
@@ -349,14 +344,10 @@ query PortfolioBalances(
   }
 }
 
-query MultiplePortfolioBalances(
-  $ownerAddresses: [String!]!
-  $valueModifiers: [PortfolioValueModifier!]
-) {
+query MultiplePortfolioBalances($ownerAddresses: [String!]!) {
   portfolios(
     ownerAddresses: $ownerAddresses
     chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
-    valueModifiers: $valueModifiers
   ) {
     id
 
@@ -377,7 +368,6 @@ query MultiplePortfolioBalances(
     tokenBalances {
       id
       quantity
-      isHidden
       denominatedValue {
         currency
         value

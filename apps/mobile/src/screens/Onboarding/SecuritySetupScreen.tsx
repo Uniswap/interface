@@ -7,6 +7,7 @@ import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
 import Trace from 'src/components/Trace/Trace'
+import { IS_IOS } from 'src/constants/globals'
 import {
   BiometricAuthenticationStatus,
   enroll,
@@ -31,7 +32,6 @@ import { borderRadii, imageSizes } from 'ui/src/theme'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { ImportType } from 'wallet/src/features/onboarding/types'
 import { opacify } from 'wallet/src/utils/colors'
-import { isAndroid, isIOS } from 'wallet/src/utils/platform'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Security>
 
@@ -62,8 +62,8 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
 
   const onPressEnableSecurity = useCallback(async () => {
     const authStatus = await tryLocalAuthenticate({
-      // Temporary disabled due to the android AppState foreground -> background triggers of biometrics popup with pin fallback
-      disableDeviceFallback: isAndroid ? true : false,
+      // Temporary disabled due to the android AppState forground -> background triggers of biometrics popup with pin fallback
+      disableDeviceFallback: Platform.OS === 'android' ? true : false,
       cancelLabel: 'Cancel',
     })
 
@@ -74,7 +74,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
       authStatus === BiometricAuthenticationStatus.Unsupported ||
       authStatus === BiometricAuthenticationStatus.MissingEnrollment
     ) {
-      isIOS
+      IS_IOS
         ? Alert.alert(
             t('{{authTypeCapitalized}} is disabled', { authTypeCapitalized }),
             t('To use {{authenticationTypeName}}, allow access in system settings', {
@@ -133,7 +133,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
             }}
             top={0}>
             <BlurView
-              intensity={isDarkMode ? (isIOS ? 20 : 80) : 40}
+              intensity={isDarkMode ? (IS_IOS ? 20 : 80) : 40}
               style={styles.blurView}
               tint="dark"
             />

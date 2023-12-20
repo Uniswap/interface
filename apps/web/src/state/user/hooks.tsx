@@ -15,7 +15,7 @@ import { useDefaultActiveTokens } from '../../hooks/Tokens'
 import {
   addSerializedPair,
   addSerializedToken,
-  updateHideAppPromoBanner,
+  updateHideAndroidAnnouncementBanner,
   updateHideClosedPositions,
   updateUserDeadline,
   updateUserLocale,
@@ -206,15 +206,15 @@ export function usePairAdder(): (pair: Pair) => void {
   )
 }
 
-export function useHideAppPromoBanner(): [boolean, () => void] {
+export function useHideAndroidAnnouncementBanner(): [boolean, () => void] {
   const dispatch = useAppDispatch()
-  const hideAppPromoBanner = useAppSelector((state) => state.user.hideAppPromoBanner)
+  const hideAndroidAnnouncementBanner = useAppSelector((state) => state.user.hideAndroidAnnouncementBanner)
 
-  const toggleHideAppPromoBanner = useCallback(() => {
-    dispatch(updateHideAppPromoBanner({ hideAppPromoBanner: true }))
+  const toggleHideAndroidAnnouncementBanner = useCallback(() => {
+    dispatch(updateHideAndroidAnnouncementBanner({ hideAndroidAnnouncementBanner: true }))
   }, [dispatch])
 
-  return [hideAppPromoBanner, toggleHideAppPromoBanner]
+  return [hideAndroidAnnouncementBanner, toggleHideAndroidAnnouncementBanner]
 }
 
 /**

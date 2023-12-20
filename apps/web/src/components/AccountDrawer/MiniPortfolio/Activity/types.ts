@@ -1,18 +1,13 @@
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
-import { UniswapXOrderDetails } from 'state/signatures/types'
-
-/**
- * TODO: refactor parsing / Activity so that all Activity Types can have a detail sheet.
- */
-
-export type OffchainOrderDetails = Pick<UniswapXOrderDetails, 'txHash' | 'chainId' | 'type' | 'status' | 'swapInfo'>
+import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 
 export type Activity = {
   hash: string
   chainId: ChainId
   status: TransactionStatus
-  offchainOrderDetails?: OffchainOrderDetails
+  // TODO (UniswapX): decouple Activity from UniswapXOrderStatus once we can link UniswapXScan instead of needing data for modal
+  offchainOrderStatus?: UniswapXOrderStatus
   statusMessage?: string
   timestamp: number
   title: string

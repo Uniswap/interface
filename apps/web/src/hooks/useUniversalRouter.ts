@@ -124,7 +124,7 @@ export function useUniversalRouterSwapCallback(
               ...analyticsContext,
               // TODO (WEB-2993): remove these after debugging missing user properties.
               [CustomUserProperties.WALLET_ADDRESS]: account,
-              [CustomUserProperties.WALLET_TYPE]: getConnection(connector).getProviderInfo().name,
+              [CustomUserProperties.WALLET_TYPE]: getConnection(connector).getName(),
               [CustomUserProperties.PEER_WALLET_AGENT]: provider ? getWalletMeta(provider)?.agent : undefined,
             })
             if (tx.data !== response.data) {

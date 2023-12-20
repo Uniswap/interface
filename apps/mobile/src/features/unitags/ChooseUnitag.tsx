@@ -13,7 +13,6 @@ import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
 import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
-import { useUnitagError } from 'wallet/src/features/unitags/hooks'
 import { useActiveAccountAddress, usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
@@ -34,9 +33,6 @@ export function ChooseUnitag({
   const unitagAddress = activeAddress || pendingAccountAddress
   const [unitag, setUnitag] = useState<string | undefined>(undefined)
   const [showLiveCheck, setShowLiveCheck] = useState(false)
-  const { unitagError, loading } = useUnitagError(unitagAddress, unitag)
-  const isUnitagValid = !unitagError && !loading && !!unitag
-  const showValidUnitagLogo = isUnitagValid && showLiveCheck
 
   const onChange = (text: string | undefined): void => {
     if (unitag !== text?.trim()) {
@@ -120,12 +116,11 @@ export function ChooseUnitag({
       <Flex fill justifyContent="space-between">
         <UnitagInput
           activeAddress={entryPoint === Screens.Home ? activeAddress : null}
-          errorMessage={unitagError}
-          inputSuffix={!showValidUnitagLogo ? UNITAG_SUFFIX : undefined}
+          errorMessage={undefined} // TODO (MOB-2105): GET /username/ from unitags backend and surface any errors
+          inputSuffix={true ? UNITAG_SUFFIX : undefined} // TODO (MOB-2105)
           liveCheck={showLiveCheck}
-          loading={!!unitag && (loading || !showLiveCheck)}
           placeholderLabel="yourname"
-          showUnitagLogo={showValidUnitagLogo} // TODO (MOB-2125): add Unitag logo animation when continue button is pressed
+          showUnitagLogo={false} // TODO (MOB-2125): add Unitag logo animation when continue button is pressed
           value={unitag}
           onChange={onChange}
           onSubmit={onSubmit}
@@ -136,11 +131,7 @@ export function ChooseUnitag({
               {t('Maybe later')}
             </Button>
           )}
-          <Button
-            disabled={!showValidUnitagLogo}
-            size="medium"
-            theme="primary"
-            onPress={onPressContinue}>
+          <Button size="medium" theme="primary" onPress={onPressContinue}>
             {t('Continue')}
           </Button>
         </Flex>

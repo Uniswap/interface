@@ -6,9 +6,9 @@ import {
   TextInputContentSizeChangeEventData,
 } from 'react-native'
 import { TextInput } from 'src/components/input/TextInput'
+import { IS_ANDROID } from 'src/constants/globals'
 import { ColorTokens, Flex, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 interface Props {
   alwaysShowInputSuffix?: boolean
@@ -31,7 +31,7 @@ interface Props {
 }
 
 export default function InputWithSuffix(props: Props): JSX.Element {
-  return isAndroid ? (
+  return IS_ANDROID ? (
     <Flex width="100%">
       <Inputs {...props} layerType="foreground" />
       <Inputs {...props} layerType="background" />

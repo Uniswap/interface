@@ -210,6 +210,7 @@ export const fiatOnRampAggregatorApi = createApi({
       return headers
     },
   }),
+
   endpoints: (builder) => ({
     fiatOnRampAggregatorCountryList: builder.query<MeldCountryPaymentMethodsResponse, void>({
       query: () =>
@@ -235,7 +236,7 @@ export const fiatOnRampAggregatorApi = createApi({
       }),
       transformResponse: (response: MeldCryptoQuoteResponse): Maybe<MeldQuote[]> =>
         response?.quotes,
-      keepUnusedDataFor: 0,
+      transformErrorResponse: (baseQueryReturnValue) => baseQueryReturnValue?.data,
     }),
     fiatOnRampAggregatorServiceProviders: builder.query<MeldServiceProvidersResponse, void>({
       query: () => '/service-providers/details?statuses=LIVE%2CRECENTLY_ADDED',
@@ -250,7 +251,7 @@ export const fiatOnRampAggregatorApi = createApi({
         // get all crypto currencies from all service providers that support the given fiat currency in the given country
         Object.values(
           response.reduce((acc: Record<string, MeldCryptoCurrency>, serviceProvider) => {
-            if (!serviceProvider.crypto?.onRamp) return acc
+            if (serviceProvider.crypto?.onRamp) return acc
             const { countries, cryptoCurrencies } = serviceProvider.crypto.onRamp
             if (countries.find((c) => c.countryCode === countryCode)) {
               cryptoCurrencies.forEach((cryptoCurrency) => {

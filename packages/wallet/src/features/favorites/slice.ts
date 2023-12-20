@@ -81,12 +81,6 @@ export const slice = createSlice({
 
       state.tokens = newTokens
     },
-    setFavoriteTokens: (
-      state,
-      { payload: { currencyIds } }: PayloadAction<{ currencyIds: string[] }>
-    ) => {
-      state.tokens = currencyIds
-    },
     addWatchedAddress: (state, { payload: { address } }: PayloadAction<{ address: Address }>) => {
       if (!state.watchedAddresses.includes(address)) {
         state.watchedAddresses.push(address)
@@ -181,7 +175,6 @@ export const slice = createSlice({
 export const {
   addFavoriteToken,
   removeFavoriteToken,
-  setFavoriteTokens,
   addWatchedAddress,
   removeWatchedAddress,
   toggleNftVisibility,

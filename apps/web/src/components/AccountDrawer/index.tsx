@@ -4,23 +4,43 @@ import { ScrollBarStyles } from 'components/Common'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import usePrevious from 'hooks/usePrevious'
 import { useWindowSize } from 'hooks/useWindowSize'
-import { useEffect, useRef, useState } from 'react'
+import { atom } from 'jotai'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronsRight } from 'react-feather'
 import { useGesture } from 'react-use-gesture'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { isMobile } from 'wallet/src/utils/platform'
+import { isMobile } from 'utils/userAgent'
 
 import DefaultMenu from './DefaultMenu'
-import { useAccountDrawer } from './MiniPortfolio/hooks'
 
 const DRAWER_WIDTH_XL = '390px'
 const DRAWER_WIDTH = '320px'
 const DRAWER_MARGIN = '8px'
 const DRAWER_OFFSET = '10px'
 const DRAWER_TOP_MARGIN_MOBILE_WEB = '72px'
+
+const accountDrawerOpenAtom = atom(false)
+
+export function useToggleAccountDrawer() {
+  const updateAccountDrawerOpen = useUpdateAtom(accountDrawerOpenAtom)
+  return useCallback(() => {
+    updateAccountDrawerOpen((open) => !open)
+  }, [updateAccountDrawerOpen])
+}
+
+export function useCloseAccountDrawer() {
+  const updateAccountDrawerOpen = useUpdateAtom(accountDrawerOpenAtom)
+  return useCallback(() => updateAccountDrawerOpen(false), [updateAccountDrawerOpen])
+}
+
+export function useAccountDrawer(): [boolean, () => void] {
+  const accountDrawerOpen = useAtomValue(accountDrawerOpenAtom)
+  return [accountDrawerOpen, useToggleAccountDrawer()]
+}
 
 const ScrimBackground = styled.div<{ $open: boolean }>`
   z-index: ${Z_INDEX.modalBackdrop};
@@ -100,7 +120,6 @@ const AccountDrawerWrapper = styled.div<{ open: boolean }>`
     position: absolute;
     margin-right: 0;
     top: ${({ open }) => (open ? `calc(-1 * (100% - ${DRAWER_TOP_MARGIN_MOBILE_WEB}))` : 0)};
-    height: calc(100% - ${DRAWER_TOP_MARGIN_MOBILE_WEB});
 
     width: 100%;
     border-bottom-right-radius: 0px;

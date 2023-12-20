@@ -7,6 +7,7 @@ import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { TabProps, TAB_BAR_HEIGHT } from 'src/components/layout/TabHelpers'
 import { NftView } from 'src/components/NFT/NftView'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
+import { IS_ANDROID } from 'src/constants/globals'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
@@ -15,7 +16,6 @@ import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
 import { NftsList } from 'wallet/src/components/nfts/NftsList'
 import { GQLQueries } from 'wallet/src/data/queries'
 import { NFTItem } from 'wallet/src/features/nfts/types'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 export const NFTS_TAB_DATA_DEPENDENCIES = [GQLQueries.NftsTab]
 
@@ -71,7 +71,7 @@ export const NftsTab = memo(
       return (
         <RefreshControl
           progressViewOffset={
-            insets.top + (isAndroid && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
+            insets.top + (IS_ANDROID && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
           }
           refreshing={refreshing ?? false}
           tintColor={colors.neutral3.get()}

@@ -18,8 +18,9 @@ import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { useTimeout } from 'utilities/src/time/timing'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
-import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
 import {
   PendingAccountActions,
@@ -32,7 +33,9 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
-  const canClaimUnitag = useCanAddressClaimUnitag()
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
+  // TODO (MOB-1314): request /claim/eligibility/ from unitags backend
+  const canClaimUnitag = true && unitagsFeatureFlagEnabled
 
   const onPressCreateWallet = (): void => {
     dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))

@@ -1,16 +1,17 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
+import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
+import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useToggle from 'hooks/useToggle'
-import { useTokenBalances } from 'hooks/useTokenBalances'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
-import { getSortedPortfolioTokens, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
+import { TokenBalances, tokenComparator, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ChangeEvent, KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -19,6 +20,7 @@ import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
 import { UserAddedToken } from 'types/tokens'
+import { splitHiddenTokens } from 'utils/splitHiddenTokens'
 
 import { useDefaultActiveTokens, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
 import { isAddress } from '../../utils'
@@ -61,7 +63,7 @@ export function CurrencySearch({
   isOpen,
   onlyShowCurrenciesWithBalance,
 }: CurrencySearchProps) {
-  const { chainId } = useWeb3React()
+  const { chainId, account } = useWeb3React()
   const theme = useTheme()
 
   const [tokenLoaderTimerElapsed, setTokenLoaderTimerElapsed] = useState(false)
@@ -76,44 +78,83 @@ export function CurrencySearch({
 
   const defaultTokens = useDefaultActiveTokens(chainId)
 
-  const { balanceMap, balanceList, loading: balancesAreLoading } = useTokenBalances()
+  const { data, loading: balancesAreLoading } = useCachedPortfolioBalancesQuery({ account })
+  const balances: TokenBalances = useMemo(() => {
+    return (
+      data?.portfolios?.[0].tokenBalances?.reduce((balanceMap, tokenBalance) => {
+        if (
+          tokenBalance.token?.chain &&
+          supportedChainIdFromGQLChain(tokenBalance.token?.chain) === chainId &&
+          tokenBalance.token?.address !== undefined &&
+          tokenBalance.denominatedValue?.value !== undefined
+        ) {
+          const address = tokenBalance.token?.standard === 'ERC20' ? tokenBalance.token?.address?.toLowerCase() : 'ETH'
+          const usdValue = tokenBalance.denominatedValue?.value
+          const balance = tokenBalance.quantity
+          balanceMap[address] = { usdValue, balance: balance ?? 0 }
+        }
+        return balanceMap
+      }, {} as TokenBalances) ?? {}
+    )
+  }, [chainId, data?.portfolios])
 
   const sortedTokens: Token[] = useMemo(() => {
+    const portfolioTokenBalances = data?.portfolios?.[0].tokenBalances
+    const portfolioTokens = splitHiddenTokens(portfolioTokenBalances ?? [])
+      .visibleTokens.map((tokenBalance) => {
+        if (!tokenBalance?.token?.chain || !tokenBalance.token?.address || !tokenBalance.token?.decimals) {
+          return undefined
+        }
+
+        const tokenChainId = supportedChainIdFromGQLChain(tokenBalance.token?.chain) ?? ChainId.MAINNET
+        if (tokenChainId !== chainId) {
+          return undefined
+        }
+
+        const portfolioToken = new Token(
+          tokenChainId,
+          tokenBalance.token?.address,
+          tokenBalance.token?.decimals,
+          tokenBalance.token?.symbol,
+          tokenBalance.token?.name
+        )
+
+        return portfolioToken
+      })
+      .filter((token) => !!token) as Token[]
+
+    const filteredTokens = Object.values(defaultTokens)
+      .filter(getTokenFilter(debouncedQuery))
+      // Filter out tokens with balances so they aren't duplicated when we merge below.
+      .filter((token) => !(token.address?.toLowerCase() in balances))
+    const mergedTokens = [...(portfolioTokens ?? []), ...filteredTokens]
+
     if (balancesAreLoading) {
-      return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
+      return mergedTokens
     }
 
-    const filteredListTokens = Object.values(defaultTokens)
-      // Filter out tokens with balances so they aren't duplicated when we merge below.
-      .filter((token) => !(token.address?.toLowerCase() in balanceMap))
+    return mergedTokens
+      .filter((token) => {
+        if (onlyShowCurrenciesWithBalance) {
+          return balances[token.address?.toLowerCase()]?.usdValue > 0
+        }
 
-    const portfolioTokens = getSortedPortfolioTokens(balanceList ?? [], balanceMap, chainId, {
-      hideSmallBalances: false,
-      hideSpam: true,
-    })
-    const mergedTokens = [...(portfolioTokens ?? []), ...filteredListTokens].filter(getTokenFilter(debouncedQuery))
-
-    return mergedTokens.filter((token) => {
-      if (token.isNative && disableNonToken) {
-        return false
-      }
-
-      // If there is no query, filter out unselected user-added tokens with no balance.
-      if (!debouncedQuery && token instanceof UserAddedToken) {
-        if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
-        return balanceMap[token.address.toLowerCase()]?.usdValue > 0
-      }
-
-      return true
-    })
+        // If there is no query, filter out unselected user-added tokens with no balance.
+        if (!debouncedQuery && token instanceof UserAddedToken) {
+          if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
+          return balances[token.address.toLowerCase()]?.usdValue > 0
+        }
+        return true
+      })
+      .sort(tokenComparator.bind(null, balances))
   }, [
-    balanceList,
+    data,
     defaultTokens,
     debouncedQuery,
     balancesAreLoading,
-    balanceMap,
+    balances,
     chainId,
-    disableNonToken,
+    onlyShowCurrenciesWithBalance,
     selectedCurrency,
     otherSelectedCurrency,
   ])
@@ -123,6 +164,29 @@ export function CurrencySearch({
   const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
 
   const native = useNativeCurrency(chainId)
+  const wrapped = native.wrapped
+
+  const searchCurrencies: Currency[] = useMemo(() => {
+    const s = debouncedQuery.toLowerCase().trim()
+
+    const tokens = filteredSortedTokens.filter((t) => !(t.equals(wrapped) || (disableNonToken && t.isNative)))
+    const shouldShowWrapped =
+      !onlyShowCurrenciesWithBalance || (!balancesAreLoading && balances[wrapped.address]?.usdValue > 0)
+    const natives = (
+      disableNonToken || native.equals(wrapped) ? [wrapped] : shouldShowWrapped ? [native, wrapped] : [native]
+    ).filter((n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1)
+
+    return [...natives, ...tokens]
+  }, [
+    debouncedQuery,
+    filteredSortedTokens,
+    onlyShowCurrenciesWithBalance,
+    balancesAreLoading,
+    balances,
+    wrapped,
+    disableNonToken,
+    native,
+  ])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {
@@ -152,17 +216,17 @@ export function CurrencySearch({
         const s = debouncedQuery.toLowerCase().trim()
         if (s === native?.symbol?.toLowerCase()) {
           handleCurrencySelect(native)
-        } else if (filteredSortedTokens.length > 0) {
+        } else if (searchCurrencies.length > 0) {
           if (
-            filteredSortedTokens[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
-            filteredSortedTokens.length === 1
+            searchCurrencies[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
+            searchCurrencies.length === 1
           ) {
-            handleCurrencySelect(filteredSortedTokens[0])
+            handleCurrencySelect(searchCurrencies[0])
           }
         }
       }
     },
-    [debouncedQuery, native, filteredSortedTokens, handleCurrencySelect]
+    [debouncedQuery, native, searchCurrencies, handleCurrencySelect]
   )
 
   // menu ui
@@ -240,19 +304,19 @@ export function CurrencySearch({
               )}
               balance={
                 tryParseCurrencyAmount(
-                  String(balanceMap[searchToken.isNative ? 'ETH' : searchToken.address?.toLowerCase()]?.balance ?? 0),
+                  String(balances[searchToken.isNative ? 'ETH' : searchToken.address?.toLowerCase()]?.balance ?? 0),
                   searchToken
                 ) ?? CurrencyAmount.fromRawAmount(searchToken, 0)
               }
             />
           </Column>
-        ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 || isLoading ? (
+        ) : searchCurrencies?.length > 0 || filteredInactiveTokens?.length > 0 || isLoading ? (
           <div style={{ flex: '1' }}>
             <AutoSizer disableWidth>
               {({ height }: { height: number }) => (
                 <CurrencyList
                   height={height}
-                  currencies={filteredSortedTokens}
+                  currencies={searchCurrencies}
                   otherListTokens={filteredInactiveTokens}
                   onCurrencySelect={handleCurrencySelect}
                   otherCurrency={otherSelectedCurrency}
@@ -262,7 +326,7 @@ export function CurrencySearch({
                   isLoading={isLoading}
                   searchQuery={searchQuery}
                   isAddressSearch={isAddressSearch}
-                  balances={balanceMap}
+                  balances={balances}
                 />
               )}
             </AutoSizer>

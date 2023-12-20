@@ -6,12 +6,11 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { PropsWithChildren, ReactNode } from 'react'
 import { TextProps } from 'rebass'
+import { Field } from 'state/swap/actions'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { Field } from './constants'
 
 const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
   cursor: ${({ cursor }) => cursor};
@@ -69,12 +68,14 @@ export function SwapModalHeaderAmount({
           <ResponsiveHeadline data-testid={`${field}-amount`} color={isLoading ? 'neutral2' : undefined}>
             {formatReviewSwapCurrencyAmount(amount)} {currency?.symbol}
           </ResponsiveHeadline>
-          <ThemedText.BodySmall color="neutral2">
-            {formatNumber({
-              input: usdAmount,
-              type: NumberType.FiatTokenQuantity,
-            })}
-          </ThemedText.BodySmall>
+          {usdAmount && (
+            <ThemedText.BodySmall color="neutral2">
+              {formatNumber({
+                input: usdAmount,
+                type: NumberType.FiatTokenQuantity,
+              })}
+            </ThemedText.BodySmall>
+          )}
         </Column>
       </Column>
       <CurrencyLogo currency={currency} size="36px" />

@@ -1,11 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import { TFunction, useTranslation } from 'react-i18next'
-import { useAppSelector as useMobileAppSelector } from 'src/app/hooks'
 import Trace from 'src/components/Trace/Trace'
-import {
-  selectHasSubmittedHoldToSwap,
-  selectHasViewedReviewScreen,
-} from 'src/features/behaviorHistory/selectors'
 import { ElementName } from 'src/features/telemetry/constants'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
 import { useSwapFormContext } from 'src/features/transactions/swapRewrite/contexts/SwapFormContext'
@@ -23,14 +18,11 @@ import { Button, Flex, Icons, Text } from 'ui/src'
 import { WrapType } from 'wallet/src/features/transactions/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export const HOLD_TO_SWAP_TIMEOUT = 3000
 
 export function SwapFormButton(): JSX.Element {
   const { t } = useTranslation()
-  const activeAccount = useActiveAccountWithThrow()
 
   const { screen, setScreen } = useSwapScreenContext()
   const { derivedSwapInfo, isSubmitting, updateSwapForm } = useSwapFormContext()
@@ -55,15 +47,6 @@ export function SwapFormButton(): JSX.Element {
 
   const isHoldToSwapPressed = screen === SwapScreen.SwapReviewHoldingToSwap || isSubmitting
 
-  const hasViewedReviewScreen = useMobileAppSelector(selectHasViewedReviewScreen)
-  const hasSubmittedHoldToSwap = useMobileAppSelector(selectHasSubmittedHoldToSwap)
-  const showHoldToSwapTip =
-    hasViewedReviewScreen && !hasSubmittedHoldToSwap && activeAccount.type !== AccountType.Readonly
-
-  // Force users to view regular review screen before enabling hold to swap
-  // Disable for view only because onSwap action will fail
-  const enableHoldToSwap = hasViewedReviewScreen && activeAccount.type !== AccountType.Readonly
-
   const onReview = useCallback(
     (nextScreen: SwapScreen) => {
       updateSwapForm({ txId: createTransactionId() })
@@ -77,10 +60,8 @@ export function SwapFormButton(): JSX.Element {
   }, [onReview])
 
   const onLongPressHoldToSwap = useCallback(() => {
-    if (enableHoldToSwap) {
-      onReview(SwapScreen.SwapReviewHoldingToSwap)
-    }
-  }, [enableHoldToSwap, onReview])
+    onReview(SwapScreen.SwapReviewHoldingToSwap)
+  }, [onReview])
 
   const onReleaseHoldToSwap = useCallback(() => {
     if (isHoldToSwapPressed && !isSubmitting) {
@@ -92,7 +73,7 @@ export function SwapFormButton(): JSX.Element {
 
   return (
     <Flex alignItems="center" gap="$spacing16">
-      {!isHoldToSwapPressed && showHoldToSwapTip && <HoldToInstantSwapRow />}
+      {!isHoldToSwapPressed && <HoldToInstantSwapRow />}
 
       <Trace logPress element={ElementName.SwapReview}>
         <Button
@@ -135,9 +116,9 @@ function HoldToInstantSwapRow(): JSX.Element {
 
   return (
     <Flex centered row gap="$spacing4">
-      <Icons.GraduationCap color="$neutral3" size="$icon.16" />
+      <Icons.Lightning color="$neutral3" size="$icon.12" />
       <Text color="$neutral3" variant="body3">
-        {t('Tip: Hold to instant swap')}
+        {t('Hold to instant swap')}
       </Text>
     </Flex>
   )

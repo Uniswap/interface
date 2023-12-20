@@ -2,9 +2,9 @@ import { Trans } from '@lingui/macro'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { AnimationType } from 'theme/components/FadePresence'
 
 import { slideInAnimation, slideOutAnimation } from './animations'
+import { AnimationType } from './Logos'
 
 interface TransitionTextProps {
   initialText: ReactNode

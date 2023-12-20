@@ -14,6 +14,7 @@ const TokenDescriptionContainer = styled.div`
   text-overflow: ellipsis;
   max-width: 100%;
   max-height: fit-content;
+  padding-top: 16px;
   line-height: 24px;
   white-space: pre-wrap;
 `
@@ -60,7 +61,7 @@ export function AboutSection({ address, chainId, description, homepageUrl, twitt
             <Trans>No token information available</Trans>
           </NoInfoAvailable>
         )}
-        <p>{tokenDescription}</p>
+        {tokenDescription}
         {shouldTruncate && (
           <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(!isDescriptionTruncated)}>
             {isDescriptionTruncated ? <Trans>Show more</Trans> : <Trans>Hide</Trans>}

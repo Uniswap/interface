@@ -5,11 +5,11 @@ import {
   supportedAuthenticationTypesAsync,
 } from 'expo-local-authentication'
 import { useAppSelector } from 'src/app/hooks'
+import { IS_ANDROID } from 'src/constants/globals'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { BiometricSettingsState } from 'src/features/biometrics/slice'
 import { useAsyncData } from 'utilities/src/react/hooks'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 /**
  * Hook shortcut to use the biometric prompt.
@@ -97,7 +97,7 @@ export function useBiometricAppSettings(): BiometricSettingsState {
 }
 
 export function useBiometricName(isTouchIdSupported: boolean, shouldCapitalize?: boolean): string {
-  if (isAndroid) {
+  if (IS_ANDROID) {
     return shouldCapitalize ? 'Biometrics' : 'biometrics'
   }
 

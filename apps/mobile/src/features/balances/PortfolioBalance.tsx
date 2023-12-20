@@ -5,7 +5,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
-import { usePortfolioTotalValue } from 'wallet/src/features/dataApi/balances'
+import { usePortfolioBalancesQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
@@ -15,11 +15,12 @@ interface PortfolioBalanceProps {
 }
 
 export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element {
-  const { data, loading, networkStatus } = usePortfolioTotalValue({
-    address: owner,
+  const { data, loading, networkStatus } = usePortfolioBalancesQuery({
+    variables: { ownerAddress: owner },
     // TransactionHistoryUpdater will refetch this query on new transaction.
     // No need to be super aggressive with polling here.
     pollInterval: PollingInterval.Normal,
+    notifyOnNetworkStatusChange: true,
   })
   const currency = useAppFiatCurrency()
   const currencyComponents = useAppFiatCurrencyInfo()
@@ -28,10 +29,14 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
   const isLoading = loading && !data
   const isWarmLoading = !!data && isWarmLoadingStatus(networkStatus)
 
-  const { percentChange, absoluteChangeUSD, balanceUSD } = data || {}
+  const portfolioBalance = data?.portfolios?.[0]
+  const portfolioChange = portfolioBalance?.tokensTotalDenominatedValueChange
 
-  const totalBalance = convertFiatAmountFormatted(balanceUSD, NumberType.PortfolioBalance)
-  const { amount: absoluteChange } = convertFiatAmount(absoluteChangeUSD)
+  const totalBalance = convertFiatAmountFormatted(
+    portfolioBalance?.tokensTotalDenominatedValue?.value,
+    NumberType.PortfolioBalance
+  )
+  const { amount: absoluteChange } = convertFiatAmount(portfolioChange?.absolute?.value)
   // TODO gary re-enabling this for USD/Euros only, replace with more scalable approach
   const shouldFadePortfolioDecimals =
     (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) &&
@@ -52,7 +57,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
         <RelativeChange
           absoluteChange={absoluteChange}
           arrowSize="$icon.16"
-          change={percentChange}
+          change={portfolioChange?.percentage?.value}
           loading={isLoading}
           negativeChangeColor={isWarmLoading ? '$neutral2' : '$statusCritical'}
           positiveChangeColor={isWarmLoading ? '$neutral2' : '$statusSuccess'}

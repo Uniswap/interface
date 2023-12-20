@@ -55,7 +55,7 @@ function getWalletConnectMeta(provider: WalletConnectProvider): WalletMeta {
   }
 }
 
-export function getInjectedMeta(provider: ExternalProvider & Record<string, unknown>): WalletMeta {
+function getInjectedMeta(provider: ExternalProvider & Record<string, unknown>): WalletMeta {
   const properties = Object.getOwnPropertyNames(provider)
   const names =
     properties

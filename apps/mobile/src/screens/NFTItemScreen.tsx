@@ -13,6 +13,7 @@ import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollSc
 import { Loader } from 'src/components/loading'
 import { LongText } from 'src/components/text/LongText'
 import Trace from 'src/components/Trace/Trace'
+import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
 import { useNFTMenu } from 'src/features/nfts/hooks'
@@ -45,14 +46,13 @@ import {
   passesContrast,
   useNearestThemeColorFromImageUri,
 } from 'wallet/src/utils/colors'
-import { isAndroid, isIOS } from 'wallet/src/utils/platform'
 
 const MAX_NFT_IMAGE_HEIGHT = 375
 
 type NFTItemScreenProps = AppStackScreenProp<Screens.NFTItem>
 
 export function NFTItemScreen(props: NFTItemScreenProps): JSX.Element {
-  return isAndroid ? (
+  return IS_ANDROID ? (
     // display screen with theme dependent colors on Android
     <NFTItemScreenContents {...props} />
   ) : (
@@ -136,31 +136,13 @@ function NFTItemScreenContents({
 
   const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen
 
-  const traceProperties: Record<string, Maybe<string | boolean>> = useMemo(() => {
-    const baseProps = {
-      owner,
-      address,
-      tokenId,
-    }
-
-    if (asset?.collection?.name) {
-      return {
-        ...baseProps,
-        collectionName: asset?.collection?.name,
-        isMissingData: false,
-      }
-    }
-
-    if (fallbackData) {
-      return {
-        ...baseProps,
-        collectionName: fallbackData.collectionName,
-        isMissingData: true,
-      }
-    }
-
-    return { ...baseProps, isMissingData: true }
-  }, [address, asset?.collection?.name, fallbackData, owner, tokenId])
+  const traceProperties = useMemo(
+    () =>
+      asset?.collection?.name
+        ? { owner, address, tokenId, collectionName: asset?.collection?.name }
+        : undefined,
+    [address, asset?.collection?.name, owner, tokenId]
+  )
 
   const { colorLight, colorDark } = useNearestThemeColorFromImageUri(imageUrl)
   // check if colorLight passes contrast against card bg color, if not use fallback
@@ -192,7 +174,7 @@ function NFTItemScreenContents({
 
   return (
     <>
-      {isIOS ? (
+      {IS_IOS ? (
         <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
       ) : null}
       <Trace
@@ -202,7 +184,7 @@ function NFTItemScreenContents({
         screen={Screens.NFTItem}>
         <ExploreModalAwareView>
           <>
-            {isIOS ? (
+            {IS_IOS ? (
               <BlurredImageBackground
                 backgroundColor={colorDark ?? colorsDark.surface2}
                 imageUri={imageUrl}
@@ -315,7 +297,6 @@ function NFTItemScreenContents({
                 <Flex gap="$spacing12" px="$spacing24">
                   {listingPrice?.value ? (
                     <AssetMetadata
-                      color={accentTextColor}
                       title={t('Current price')}
                       valueComponent={
                         <PriceAmount
@@ -329,7 +310,6 @@ function NFTItemScreenContents({
                   ) : null}
                   {lastSaleData?.price?.value ? (
                     <AssetMetadata
-                      color={accentTextColor}
                       title={t('Last sale price')}
                       valueComponent={
                         <PriceAmount
@@ -344,7 +324,6 @@ function NFTItemScreenContents({
 
                   {owner && (
                     <AssetMetadata
-                      color={accentTextColor}
                       title={t('Owned by')}
                       valueComponent={
                         <TouchableArea
@@ -386,17 +365,14 @@ function NFTItemScreenContents({
 function AssetMetadata({
   title,
   valueComponent,
-  color,
 }: {
   title: string
   valueComponent: JSX.Element
-  color: string
 }): JSX.Element {
-  const colors = useSporeColors()
   return (
     <Flex row alignItems="center" justifyContent="space-between" pl="$spacing2">
       <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" maxWidth="40%">
-        <Text style={{ color: color ?? colors.neutral2.get() }} variant="body2">
+        <Text color="$neutral2" variant="body2">
           {title}
         </Text>
       </Flex>

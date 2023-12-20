@@ -6,6 +6,7 @@ import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { TextInput } from 'src/components/input/TextInput'
 import Trace from 'src/components/Trace/Trace'
+import { IS_ANDROID } from 'src/constants/globals'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
@@ -25,7 +26,6 @@ import {
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.EditName>
 
@@ -143,7 +143,7 @@ function CustomizationSection({
             maxLength={NICKNAME_MAX_LENGTH}
             placeholder={t('Nickname')}
             placeholderTextColor="$neutral3"
-            style={isAndroid ? styles.noHorizontalPadding : {}}
+            style={IS_ANDROID ? styles.noHorizontalPadding : {}}
             testID="customize/name"
             textAlign="center"
             value={accountName}

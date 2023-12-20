@@ -198,11 +198,11 @@ exports[`TokenDescription no description or social buttons shown when not availa
     <div
       class="c2 c9 css-1urox24"
     >
-      <p
+      <span
         class="c10"
       >
         No token information available
-      </p>
+      </span>
     </div>
   </div>
 </DocumentFragment>
@@ -471,18 +471,18 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
     <div
       class="c2 c9 css-1urox24"
     >
-      <p
+      <span
         class="c10"
         data-testid="token-description-full"
       >
         USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value between people, businesses and financial institutions just like email between mail services and texts between SMS providers. We believe by removing artificial economic borders, we can create a more inclusive global economy.
-      </p>
-      <p
+      </span>
+      <span
         class="c11"
         data-testid="token-description-truncated"
       >
         USDC is a fully collateralized US dollar stablecoin. USDC is the bridge...
-      </p>
+      </span>
       <div
         class="c12"
         data-testid="token-description-show-more-button"
@@ -757,18 +757,18 @@ exports[`TokenDescription truncates description and shows more 1`] = `
     <div
       class="c2 c9 css-1urox24"
     >
-      <p
+      <span
         class="c10"
         data-testid="token-description-full"
       >
         USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value between people, businesses and financial institutions just like email between mail services and texts between SMS providers. We believe by removing artificial economic borders, we can create a more inclusive global economy.
-      </p>
-      <p
+      </span>
+      <span
         class="c11"
         data-testid="token-description-truncated"
       >
         USDC is a fully collateralized US dollar stablecoin. USDC is the bridge...
-      </p>
+      </span>
       <div
         class="c12"
         data-testid="token-description-show-more-button"

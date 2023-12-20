@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
-import { useAccountDrawer, useSetShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonText } from 'components/Button'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useCallback, useEffect, useState } from 'react'
@@ -55,7 +55,6 @@ export default function SwapBuyFiatButton() {
   } = useFiatOnrampAvailability(checkFiatRegionAvailability)
   const [buyFiatFlowState, setBuyFiatFlowState] = useState(BuyFiatFlowState.INACTIVE)
   const [walletDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
-  const setShowMoonpayTextInDrawer = useSetShowMoonpayText()
 
   // Depending on the current state of the buy fiat flow the user is in (buyFiatFlowState),
   // the desired behavior of clicking the 'Buy' button is different.
@@ -70,7 +69,6 @@ export default function SwapBuyFiatButton() {
       setCheckFiatRegionAvailability(true)
       setBuyFiatFlowState(BuyFiatFlowState.ACTIVE_CHECKING_REGION)
     } else if (fiatOnrampAvailable && !account && !walletDrawerOpen) {
-      setShowMoonpayTextInDrawer(true)
       toggleWalletDrawer()
       setBuyFiatFlowState(BuyFiatFlowState.ACTIVE_NEEDS_ACCOUNT)
     } else if (fiatOnrampAvailable && account) {
@@ -86,7 +84,6 @@ export default function SwapBuyFiatButton() {
     walletDrawerOpen,
     toggleWalletDrawer,
     openFiatOnRampModal,
-    setShowMoonpayTextInDrawer,
   ])
 
   // Continue buy fiat flow automatically when requisite state changes have occured.

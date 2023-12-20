@@ -25,6 +25,5 @@ module.exports = {
     UNISWAP_API_BASE_URL: 'https://api.uniswap.org',
     UNISWAP_APP_URL: 'https://app.uniswap.org',
     WALLETCONNECT_PROJECT_ID: 123,
-    UNITAGS_API_URL: 'https://api.uniswap.org/unitags',
   },
 };
