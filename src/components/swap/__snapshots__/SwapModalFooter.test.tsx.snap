@@ -552,7 +552,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
 }
 
 .c5 {
-  background-color: #FC72FF;
+  background-color: #69C9FF;
   font-size: 20px;
   font-weight: 535;
   padding: 16px;
@@ -1181,7 +1181,7 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
 }
 
 .c5 {
-  background-color: #FC72FF;
+  background-color: #69C9FF;
   font-size: 20px;
   font-weight: 535;
   padding: 16px;

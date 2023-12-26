@@ -46,7 +46,7 @@ exports[`EmptyWalletContent.tsx matches base snapshot 1`] = `
 }
 
 .c5 {
-  background-color: #FC72FF;
+  background-color: #69C9FF;
   padding: 10px 24px;
   color: #FFFFFF;
   width: -webkit-min-content;
