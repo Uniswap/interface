@@ -272,7 +272,11 @@ export function useSetLockupCallback(): (lockup: string | undefined) => undefine
       if (!provider || !chainId || !account) return undefined
       if (!poolContract) throw new Error('No Pool Contract!')
       return poolContract.estimateGas.changeMinPeriod(lockup, {}).then((estimatedGasLimit) => {
-        return poolContract.changeMinPeriod(lockup, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+        return poolContract
+          .changeMinPeriod(lockup, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .then((response: TransactionResponse) => {
+            return response.hash
+          })
       })
     },
     [account, chainId, provider, poolContract]
@@ -289,7 +293,11 @@ export function useSetSpreadCallback(): (spread: string | undefined) => undefine
       if (!provider || !chainId || !account) return undefined
       if (!poolContract) throw new Error('No Pool Contract!')
       return poolContract.estimateGas.changeSpread(spread, {}).then((estimatedGasLimit) => {
-        return poolContract.changeSpread(spread, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+        return poolContract
+          .changeSpread(spread, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .then((response: TransactionResponse) => {
+            return response.hash
+          })
       })
     },
     [account, chainId, provider, poolContract]
@@ -306,7 +314,11 @@ export function useSetValueCallback(): (value: string | undefined) => undefined 
       if (!provider || !chainId || !account) return undefined
       if (!poolContract) throw new Error('No Pool Contract!')
       return poolContract.estimateGas.setUnitaryValue(value, {}).then((estimatedGasLimit) => {
-        return poolContract.setUnitaryValue(value, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+        return poolContract
+          .setUnitaryValue(value, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .then((response: TransactionResponse) => {
+            return response.hash
+          })
       })
     },
     [account, chainId, provider, poolContract]
