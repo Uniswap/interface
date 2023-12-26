@@ -88,7 +88,7 @@ export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismi
     if (!unstakeCallback || !freeStakeBalance || !parsedAmount || !currencyValue.isToken) return
 
     // try delegation and store hash
-    const hash = await unstakeCallback(parsedAmount)?.catch((error) => {
+    const hash = await unstakeCallback(parsedAmount, isPool)?.catch((error) => {
       setAttempting(false)
       console.log(error)
     })

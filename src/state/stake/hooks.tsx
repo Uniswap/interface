@@ -251,7 +251,16 @@ export function useFreeStakeBalance(isDelegateFreeStake?: boolean): CurrencyAmou
     StakeStatus.UNDELEGATED,
   ])?.result?.[0]
 
-  return freeStake && grg ? CurrencyAmount.fromRawAmount(grg, freeStake.currentEpochBalance) : undefined
+  // when all stake has been delegated, the current epoch stake is positive but withdrawing it will revert
+  //  unless deactivated first. We use the lower of the current and next epoch undelegated stake.
+  return freeStake && grg
+    ? CurrencyAmount.fromRawAmount(
+        grg,
+        Number(freeStake.currentEpochBalance) > Number(freeStake.nextEpochBalance)
+          ? freeStake.nextEpochBalance
+          : freeStake.currentEpochBalance
+      )
+    : undefined
 }
 
 interface UnclaimedRewardsData {
@@ -345,17 +354,25 @@ export function useUnstakeCallback(): (amount: CurrencyAmount<Token>, isPool?: b
       if (isPool && !poolContract) throw new Error('No Pool Contract!')
       if (!isPool) {
         return stakingContract.estimateGas.unstake(amount.quotient.toString(), {}).then((estimatedGasLimit) => {
-          return stakingContract.unstake(amount.quotient.toString(), {
-            value: null,
-            gasLimit: calculateGasMargin(estimatedGasLimit),
-          })
+          return stakingContract
+            .unstake(amount.quotient.toString(), {
+              value: null,
+              gasLimit: calculateGasMargin(estimatedGasLimit),
+            })
+            .then((response: TransactionResponse) => {
+              return response.hash
+            })
         })
       } else {
         return poolContract?.estimateGas.unstake(amount.quotient.toString(), {}).then((estimatedGasLimit) => {
-          return poolContract?.unstake(amount.quotient.toString(), {
-            value: null,
-            gasLimit: calculateGasMargin(estimatedGasLimit),
-          })
+          return poolContract
+            ?.unstake(amount.quotient.toString(), {
+              value: null,
+              gasLimit: calculateGasMargin(estimatedGasLimit),
+            })
+            .then((response: TransactionResponse) => {
+              return response.hash
+            })
         })
       }
     },
@@ -369,7 +386,9 @@ export function useHarvestCallback(): (poolIds: string[], isPool?: boolean) => u
   const stakingProxy = useStakingProxyContract()
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
   const poolContract = usePoolExtendedContract(poolAddressFromUrl ?? undefined)
-  // TODO: encode transaction and batch execute for user
+
+  // state for pending and submitted txn views
+  const addTransaction = useTransactionAdder()
 
   return useCallback(
     (poolIds: string[], isPool?: boolean) => {
@@ -388,21 +407,37 @@ export function useHarvestCallback(): (poolIds: string[], isPool?: boolean) => u
       }
       if (!isPool) {
         return stakingProxy.estimateGas.batchExecute(harvestCalls, {}).then((estimatedGasLimit) => {
-          return stakingProxy.batchExecute(harvestCalls, {
-            value: null,
-            gasLimit: calculateGasMargin(estimatedGasLimit),
-          })
+          return stakingProxy
+            .batchExecute(harvestCalls, {
+              value: null,
+              gasLimit: calculateGasMargin(estimatedGasLimit),
+            })
+            .then((response: TransactionResponse) => {
+              addTransaction(response, {
+                type: TransactionType.CLAIM,
+                recipient: account,
+              })
+              return response.hash
+            })
         })
       } else {
         return poolContract?.estimateGas.withdrawDelegatorRewards({}).then((estimatedGasLimit) => {
-          return poolContract?.withdrawDelegatorRewards({
-            value: null,
-            gasLimit: calculateGasMargin(estimatedGasLimit),
-          })
+          return poolContract
+            ?.withdrawDelegatorRewards({
+              value: null,
+              gasLimit: calculateGasMargin(estimatedGasLimit),
+            })
+            .then((response: TransactionResponse) => {
+              addTransaction(response, {
+                type: TransactionType.CLAIM,
+                recipient: poolContract.address,
+              })
+              return response.hash
+            })
         })
       }
     },
-    [account, chainId, provider, poolContract, stakingContract, stakingProxy]
+    [account, chainId, provider, poolContract, stakingContract, stakingProxy, addTransaction]
   )
 }
 
