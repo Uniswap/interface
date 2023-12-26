@@ -148,21 +148,23 @@ const CloseIcon = styled(ChevronsRight).attrs({ size: 24 })`
 `
 
 const CloseDrawer = styled.div`
-  ${ClickableStyle}
-  cursor: pointer;
   height: 100%;
   // When the drawer is not hovered, the icon should be 18px from the edge of the sidebar.
   padding: 24px calc(18px + ${DRAWER_OFFSET}) 24px 14px;
   border-radius: 20px 0 0 20px;
   transition: ${({ theme }) =>
-    `${theme.transition.duration.medium} ${theme.transition.timing.ease} background-color, ${theme.transition.duration.medium} ${theme.transition.timing.ease} margin`};
-  &:hover {
+    `${theme.transition.duration.medium} ${theme.transition.timing.ease} background-color, ${theme.transition.duration.medium} ${theme.transition.timing.ease} transform`};
+`
+
+const CloseDrawerWrapper = styled.div`
+  ${ClickableStyle}
+  cursor: pointer;
+  height: 100%;
+  z-index: -1;
+  &:hover ${CloseDrawer} {
     z-index: -1;
-    margin: 0 -8px 0 0;
+    transform: translateX(8px);
     background-color: ${({ theme }) => theme.deprecated_stateOverlayHover};
-  }
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    display: none;
   }
 `
 
@@ -248,9 +250,11 @@ function AccountDrawer() {
           name={InterfaceEventName.MINI_PORTFOLIO_TOGGLED}
           properties={{ type: 'close' }}
         >
-          <CloseDrawer onClick={toggleWalletDrawer} data-testid="close-account-drawer">
-            <CloseIcon />
-          </CloseDrawer>
+          <CloseDrawerWrapper onClick={toggleWalletDrawer} data-testid="close-account-drawer">
+            <CloseDrawer>
+              <CloseIcon />
+            </CloseDrawer>
+          </CloseDrawerWrapper>
         </TraceEvent>
       )}
       <Scrim onClick={toggleWalletDrawer} $open={walletDrawerOpen} />
