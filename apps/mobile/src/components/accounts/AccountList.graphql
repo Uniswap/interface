@@ -1,9 +1,0 @@
-query AccountList($addresses: [String!]!) {
-  portfolios(ownerAddresses: $addresses, chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]) {
-    id
-    ownerAddress
-    tokensTotalDenominatedValue {
-      value
-    }
-  }
-}

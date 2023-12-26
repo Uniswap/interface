@@ -1,1 +1,0 @@
-export const NUMBER_OF_WALLETS_TO_IMPORT = 10

@@ -1,0 +1,49 @@
+name: Setup
+description: checkout repo, setup node, and install node_modules
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        registry-url: https://registry.npmjs.org
+        # cache is intentionally omitted, as it is faster with yarn v1 to cache node_modules.
+
+    - uses: actions/cache@v3
+      id: install-cache
+      with:
+        # node_modules/.cache is intentionally omitted, as this is used for build tool caches.
+        path: |
+          node_modules
+          !node_modules/.cache
+        key: ${{ runner.os }}-install-${{ hashFiles('yarn.lock') }}
+    - if: steps.install-cache.outputs.cache-hit != 'true'
+      run: yarn install --frozen-lockfile --ignore-scripts
+      shell: bash
+    
+    # Run patch-package to apply patches to dependencies.
+    - run: yarn patch-package
+      shell: bash
+
+    # Contracts are compiled from source. If source hasn't changed, the contracts do not need to be re-compiled.
+    - uses: actions/cache@v3
+      id: contracts-cache
+      with:
+        path: |
+          src/abis/types
+          src/types/v3
+        key: ${{ runner.os }}-contracts-${{ hashFiles('src/abis/**/*.json', 'node_modules/@uniswap/**/artifacts/contracts/**/*.json') }}
+    - if: steps.contracts-cache.outputs.cache-hit != 'true'
+      run: yarn contracts
+      shell: bash
+
+    # These operations cannot be cached, so they are run concurrently
+    # - ajv: Validators compile quickly, so caching can be omitted.
+    # - graphql: GraphQL is generated from schema and client-side graphql queries. The schema is always fetched and
+    #   changes to client-side queries are hard to detect, so it is always re-generated.
+    # - i18n: Messages are extracted from source and compiled. No caching extractor is available (out-of-the-box).
+    - run: yarn concurrently --max-processes=100% npm:ajv npm:graphql npm:i18n
+      shell: bash

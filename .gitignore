@@ -1,48 +1,57 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+
+# generated contract types
+/src/types/v3
+/src/abis/types
+/src/locales/**/*.js
+/src/locales/**/*.po
+
+# generated files
+/src/**/__generated__
+
+# schema
+schema.graphql
 
 # dependencies
-node_modules
-.pnp
-.pnp.js
+/node_modules
 
 # testing
-coverage
+/coverage
+/cache
+/functions/coverage
+/.swc
 
-# next.js
-.next/
-out/
-build
+# builds
+/build
+/dts
 
 # misc
 .DS_Store
-*.pem
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# debug
+instrumented
+.nyc_output
+.nyc_output/**/*
+
+/.netlify
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
 
-# local env files
-.env
-.env.defaults.local
-
-# turbo
-.turbo
-
-# .yarn files
-.yarn/cache
-.yarn/versions
-.yarn/install-state.gz
-
-dist/out-tsc/*
-
-# Locale backup files
-packages/wallet/src/i18n/locales/*_old.json
-
-# ci
-.ci-cache/
-
-
-# JetBrains
+notes.txt
 .idea/
+
+package-lock.json
+
+cypress/downloads
+cypress/videos
+cypress/screenshots
+
+.vercel
+
+.wrangler
