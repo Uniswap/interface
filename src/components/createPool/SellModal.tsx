@@ -59,7 +59,8 @@ export default function SellModal({ isOpen, onDismiss, poolInfo, userBaseTokenBa
   const { parsedAmount, error } = useDerivedPoolInfo(
     typedValue,
     poolInfo?.userPoolBalance?.currency,
-    poolInfo?.userPoolBalance
+    poolInfo?.userPoolBalance,
+    poolInfo?.activation
   )
 
   const poolContract = usePoolExtendedContract(poolInfo?.pool?.address)
@@ -130,7 +131,7 @@ export default function SellModal({ isOpen, onDismiss, poolInfo, userBaseTokenBa
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
-          {/* TODO: check handling of user with null base token balance */}
+          {/* userBaseTokenBalance exists with null base token balance */}
           {userBaseTokenBalance && poolInfo && (
             <>
               <RowBetween>

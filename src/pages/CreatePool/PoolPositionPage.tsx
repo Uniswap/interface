@@ -31,7 +31,7 @@ import { /*BIG_INT_ZERO,*/ ZERO_ADDRESS } from 'constants/misc'
 import { nativeOnChain } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import { useSmartPoolFromAddress, useUserPoolBalance } from 'hooks/useSmartPools'
+import { UserAccount, useSmartPoolFromAddress, useUserPoolBalance } from 'hooks/useSmartPools'
 // TODO: this import is from node modules
 import JSBI from 'jsbi'
 //import { PoolState, usePool } from 'hooks/usePools'
@@ -263,7 +263,7 @@ export function PoolPositionPage() {
   //  id is stored in registry so we could save rpc call by using storing in state?
   const poolStorage = useSmartPoolFromAddress(poolAddressFromUrl ?? undefined)
   // TODO: user account also stores activation
-  const userAccount = useUserPoolBalance(poolAddressFromUrl, account)
+  const userAccount: UserAccount | undefined = useUserPoolBalance(poolAddressFromUrl, account)
 
   const { name, symbol, decimals, owner, baseToken } = poolStorage?.poolInitParams || {}
   const { minPeriod, spread, transactionFee } = poolStorage?.poolVariables || {}
@@ -301,6 +301,7 @@ export function PoolPositionPage() {
     recipient: account,
     owner,
     userPoolBalance,
+    activation: Number(userAccount?.activation),
     poolPriceAmount: poolPrice,
     spread,
     poolStake: Number(poolStakeFromUrl),
