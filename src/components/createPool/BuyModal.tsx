@@ -149,7 +149,6 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
-          {/* TODO: check handling of user with null base token balance */}
           {userBaseTokenBalance && poolInfo && (
             <>
               <RowBetween>
