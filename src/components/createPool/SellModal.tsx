@@ -55,7 +55,6 @@ export default function SellModal({ isOpen, onDismiss, poolInfo, userBaseTokenBa
     onDismiss()
   }, [onDismiss])
 
-  // TODO: check if needed to send also currency as input to hook
   const { parsedAmount, error } = useDerivedPoolInfo(
     typedValue,
     poolInfo?.userPoolBalance?.currency,
@@ -103,14 +102,18 @@ export default function SellModal({ isOpen, onDismiss, poolInfo, userBaseTokenBa
         return poolContract['burn(uint256,uint256)'](...args, {
           value: null,
           gasLimit: calculateGasMargin(estimatedGasLimit),
-        }).then((response: TransactionResponse) => {
-          addTransaction(response, {
-            type: TransactionType.SELL,
-          })
-          setAttempting(false)
-          setHash(response.hash)
-          return response.hash
         })
+          .then((response: TransactionResponse) => {
+            addTransaction(response, {
+              type: TransactionType.SELL,
+            })
+            setAttempting(false)
+            setHash(response.hash)
+            return response.hash
+          })
+          .catch(() => {
+            setAttempting(false)
+          })
       })
     }
   }
@@ -131,7 +134,6 @@ export default function SellModal({ isOpen, onDismiss, poolInfo, userBaseTokenBa
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
-          {/* userBaseTokenBalance exists with null base token balance */}
           {userBaseTokenBalance && poolInfo && (
             <>
               <RowBetween>

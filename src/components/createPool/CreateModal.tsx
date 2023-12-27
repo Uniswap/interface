@@ -158,7 +158,7 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
     // if callback not returned properly ignore
     if (!account || !chainId || !createCallback) return
 
-    // try delegation and store hash
+    // try deploy pool and store hash
     const hash = await createCallback(typedName, typedSymbol, currencyValue)?.catch((error) => {
       setAttempting(false)
       console.log(error)
