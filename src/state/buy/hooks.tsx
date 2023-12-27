@@ -56,7 +56,7 @@ export function useDerivedPoolInfo(
   if (activation) {
     error =
       error ?? Number(currentTimestamp) < activation ? (
-        <Trans>Unlock in {((activation - Number(currentTimestamp)) / 86400).toFixed(2)} days</Trans>
+        <Trans>Unlock in {((activation - Number(currentTimestamp)) / 86400).toFixed(1)} days</Trans>
       ) : undefined
   }
 
