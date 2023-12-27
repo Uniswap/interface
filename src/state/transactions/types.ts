@@ -45,6 +45,9 @@ export enum TransactionType {
   DEPLOY,
   CANCEL,
   SELL,
+  SET_SPREAD,
+  SET_LOCKUP,
+  SET_VALUE,
 }
 
 interface BaseTransactionInfo {
@@ -189,6 +192,18 @@ export interface SellSmartPoolTransactionInfo {
   type: TransactionType.SELL
 }
 
+export interface SetSmartPoolSpreadTransactionInfo {
+  type: TransactionType.SET_SPREAD
+}
+
+export interface SetSmartPoolLockupPoolTransactionInfo {
+  type: TransactionType.SET_LOCKUP
+}
+
+export interface SetSmartPoolValuePoolTransactionInfo {
+  type: TransactionType.SET_VALUE
+}
+
 export type TransactionInfo =
   | ApproveTransactionInfo
   | ExactOutputSwapTransactionInfo
@@ -210,6 +225,9 @@ export type TransactionInfo =
   | SubmitProposalTransactionInfo
   | BuySmartPoolTransactionInfo
   | SellSmartPoolTransactionInfo
+  | SetSmartPoolSpreadTransactionInfo
+  | SetSmartPoolLockupPoolTransactionInfo
+  | SetSmartPoolValuePoolTransactionInfo
 
 export interface TransactionDetails {
   hash: string

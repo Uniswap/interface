@@ -347,6 +347,9 @@ export function useUnstakeCallback(): (amount: CurrencyAmount<Token>, isPool?: b
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
   const poolContract = usePoolExtendedContract(poolAddressFromUrl ?? undefined)
 
+  // state for pending and submitted txn views
+  const addTransaction = useTransactionAdder()
+
   return useCallback(
     (amount: CurrencyAmount<Token>, isPool?: boolean) => {
       if (!provider || !chainId || !account) return undefined
@@ -360,6 +363,10 @@ export function useUnstakeCallback(): (amount: CurrencyAmount<Token>, isPool?: b
               gasLimit: calculateGasMargin(estimatedGasLimit),
             })
             .then((response: TransactionResponse) => {
+              addTransaction(response, {
+                type: TransactionType.CLAIM,
+                recipient: account,
+              })
               return response.hash
             })
         })
@@ -371,12 +378,16 @@ export function useUnstakeCallback(): (amount: CurrencyAmount<Token>, isPool?: b
               gasLimit: calculateGasMargin(estimatedGasLimit),
             })
             .then((response: TransactionResponse) => {
+              addTransaction(response, {
+                type: TransactionType.CLAIM,
+                recipient: poolContract.address,
+              })
               return response.hash
             })
         })
       }
     },
-    [account, chainId, provider, poolContract, stakingContract]
+    [account, chainId, provider, poolContract, stakingContract, addTransaction]
   )
 }
 

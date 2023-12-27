@@ -319,6 +319,18 @@ function SellSmartPoolSummary() {
   return <Trans>Sell smart pool</Trans>
 }
 
+function SetSmartPoolSpreadSummary() {
+  return <Trans>Set smart pool</Trans>
+}
+
+function SetSmartPoolLockupSummary() {
+  return <Trans>Set smart pool lockup</Trans>
+}
+
+function SetSmartPoolValueSummary() {
+  return <Trans>Set smart pool value</Trans>
+}
+
 export function TransactionSummary({ info }: { info: TransactionInfo }) {
   switch (info.type) {
     case TransactionType.ADD_LIQUIDITY_V3_POOL:
@@ -377,5 +389,14 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.SELL:
       return <SellSmartPoolSummary />
+
+    case TransactionType.SET_SPREAD:
+      return <SetSmartPoolSpreadSummary />
+
+    case TransactionType.SET_LOCKUP:
+      return <SetSmartPoolLockupSummary />
+
+    case TransactionType.SET_VALUE:
+      return <SetSmartPoolValueSummary />
   }
 }
