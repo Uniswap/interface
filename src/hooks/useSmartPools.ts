@@ -31,7 +31,7 @@ interface PoolDetails {
   poolTokensInfo: PoolTokensInfo
 }
 
-interface UserAccount {
+export interface UserAccount {
   userBalance: BigNumber
   activation: BigNumber
 }
