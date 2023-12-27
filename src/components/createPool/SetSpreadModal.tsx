@@ -7,6 +7,7 @@ import { X } from 'react-feather'
 import styled from 'styled-components'
 
 import { useSetSpreadCallback } from '../../state/pool/hooks'
+import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
 import { ThemedText } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
@@ -60,6 +61,10 @@ export default function SetSpreadModal({ isOpen, currentSpread, onDismiss, title
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
+
+  const transaction = useTransaction(hash)
+  const confirmed = useIsTransactionConfirmed(hash)
+  const transactionSuccess = transaction?.receipt?.status === 1
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {
@@ -131,9 +136,29 @@ export default function SetSpreadModal({ isOpen, currentSpread, onDismiss, title
       {hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify="center">
-            <ThemedText.DeprecatedLargeHeader>
-              <Trans>Transaction Submitted</Trans>
-            </ThemedText.DeprecatedLargeHeader>
+            {!confirmed ? (
+              <>
+                <ThemedText.DeprecatedLargeHeader>
+                  <Trans>Transaction Submitted</Trans>
+                </ThemedText.DeprecatedLargeHeader>
+                <ThemedText.DeprecatedBody fontSize={20}>
+                  <Trans>Setting spread to {Number(parsedSpread) / 100}%</Trans>
+                </ThemedText.DeprecatedBody>
+              </>
+            ) : transactionSuccess ? (
+              <>
+                <ThemedText.DeprecatedLargeHeader>
+                  <Trans>Transaction Success</Trans>
+                </ThemedText.DeprecatedLargeHeader>
+                <ThemedText.DeprecatedBody fontSize={20}>
+                  <Trans>Spread set to {Number(parsedSpread) / 100}%</Trans>
+                </ThemedText.DeprecatedBody>
+              </>
+            ) : (
+              <ThemedText.DeprecatedLargeHeader>
+                <Trans>Transaction Failed</Trans>
+              </ThemedText.DeprecatedLargeHeader>
+            )}
           </AutoColumn>
         </SubmittedView>
       )}

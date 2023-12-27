@@ -264,6 +264,8 @@ export function useRegisteredPools(): PoolRegisteredLog[] | undefined {
 
 export function useSetLockupCallback(): (lockup: string | undefined) => undefined | Promise<string> {
   const { account, chainId, provider } = useWeb3React()
+  const addTransaction = useTransactionAdder()
+
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
   const poolContract = usePoolExtendedContract(poolAddressFromUrl ?? undefined)
 
@@ -275,16 +277,21 @@ export function useSetLockupCallback(): (lockup: string | undefined) => undefine
         return poolContract
           .changeMinPeriod(lockup, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
           .then((response: TransactionResponse) => {
+            addTransaction(response, {
+              type: TransactionType.SET_LOCKUP,
+            })
             return response.hash
           })
       })
     },
-    [account, chainId, provider, poolContract]
+    [account, chainId, provider, poolContract, addTransaction]
   )
 }
 
 export function useSetSpreadCallback(): (spread: string | undefined) => undefined | Promise<string> {
   const { account, chainId, provider } = useWeb3React()
+  const addTransaction = useTransactionAdder()
+
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
   const poolContract = usePoolExtendedContract(poolAddressFromUrl ?? undefined)
 
@@ -296,16 +303,21 @@ export function useSetSpreadCallback(): (spread: string | undefined) => undefine
         return poolContract
           .changeSpread(spread, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
           .then((response: TransactionResponse) => {
+            addTransaction(response, {
+              type: TransactionType.SET_SPREAD,
+            })
             return response.hash
           })
       })
     },
-    [account, chainId, provider, poolContract]
+    [account, chainId, provider, poolContract, addTransaction]
   )
 }
 
 export function useSetValueCallback(): (value: string | undefined) => undefined | Promise<string> {
   const { account, chainId, provider } = useWeb3React()
+  const addTransaction = useTransactionAdder()
+
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
   const poolContract = usePoolExtendedContract(poolAddressFromUrl ?? undefined)
 
@@ -317,11 +329,14 @@ export function useSetValueCallback(): (value: string | undefined) => undefined 
         return poolContract
           .setUnitaryValue(value, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
           .then((response: TransactionResponse) => {
+            addTransaction(response, {
+              type: TransactionType.SET_VALUE,
+            })
             return response.hash
           })
       })
     },
-    [account, chainId, provider, poolContract]
+    [account, chainId, provider, poolContract, addTransaction]
   )
 }
 

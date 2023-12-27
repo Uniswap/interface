@@ -9,6 +9,7 @@ import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { GRG } from '../../constants/tokens'
 import { useHarvestCallback } from '../../state/stake/hooks'
+import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
 import { ThemedText } from '../../theme'
 import { ButtonPrimary } from '../Button'
 import { LightCard } from '../Card'
@@ -53,6 +54,10 @@ export default function HarvestYieldModal({
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
+
+  const transaction = useTransaction(hash)
+  const confirmed = useIsTransactionConfirmed(hash)
+  const transactionSuccess = transaction?.receipt?.status === 1
 
   const [farmAmount, setFarmAmount] = useState<CurrencyAmount<Token>>()
 
@@ -123,27 +128,32 @@ export default function HarvestYieldModal({
           </AutoColumn>
         </LoadingView>
       )}
-      {hash && Boolean(Number(yieldAmount?.quotient.toString()) > 0) && (
+      {hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify="center">
-            <ThemedText.DeprecatedLargeHeader>
-              <Trans>Transaction Submitted</Trans>
-            </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>
-              {formatCurrencyAmount(farmAmount, 4)} GRG
-            </ThemedText.DeprecatedMain>
-          </AutoColumn>
-        </SubmittedView>
-      )}
-      {hash && Boolean(Number(yieldAmount?.quotient.toString()) === 0) && (
-        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
-          <AutoColumn gap="12px" justify="center">
-            <ThemedText.DeprecatedLargeHeader>
-              <Trans>Transaction Confirmed</Trans>
-            </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>
-              Received {formatCurrencyAmount(farmAmount, 4)} GRG
-            </ThemedText.DeprecatedMain>
+            {!confirmed ? (
+              <>
+                <ThemedText.DeprecatedLargeHeader>
+                  <Trans>Transaction Submitted</Trans>
+                </ThemedText.DeprecatedLargeHeader>
+                <ThemedText.DeprecatedMain fontSize={36}>
+                  Claiming {formatCurrencyAmount(farmAmount, 4)} GRG
+                </ThemedText.DeprecatedMain>
+              </>
+            ) : transactionSuccess ? (
+              <>
+                <ThemedText.DeprecatedLargeHeader>
+                  <Trans>Transaction Success</Trans>
+                </ThemedText.DeprecatedLargeHeader>
+                <ThemedText.DeprecatedMain fontSize={36}>
+                  Claimed {formatCurrencyAmount(farmAmount, 4)} GRG
+                </ThemedText.DeprecatedMain>
+              </>
+            ) : (
+              <ThemedText.DeprecatedLargeHeader>
+                <Trans>Transaction Failed</Trans>
+              </ThemedText.DeprecatedLargeHeader>
+            )}
           </AutoColumn>
         </SubmittedView>
       )}

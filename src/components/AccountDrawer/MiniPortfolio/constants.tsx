@@ -142,6 +142,21 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
     [TransactionStatus.Confirmed]: t`Sold`,
     [TransactionStatus.Failed]: t`Sell failed`,
   },
+  [TransactionType.SET_SPREAD]: {
+    [TransactionStatus.Pending]: t`Setting spread`,
+    [TransactionStatus.Confirmed]: t`Spread set`,
+    [TransactionStatus.Failed]: t`Set spread failed`,
+  },
+  [TransactionType.SET_LOCKUP]: {
+    [TransactionStatus.Pending]: t`Setting lockup`,
+    [TransactionStatus.Confirmed]: t`Lockup set`,
+    [TransactionStatus.Failed]: t`Set lockup failed`,
+  },
+  [TransactionType.SET_VALUE]: {
+    [TransactionStatus.Pending]: t`Setting value`,
+    [TransactionStatus.Confirmed]: t`Value set`,
+    [TransactionStatus.Failed]: t`Set value failed`,
+  },
 }
 
 export const CancelledTransactionTitleTable: { [key in TransactionType]: string } = {
@@ -172,6 +187,9 @@ export const CancelledTransactionTitleTable: { [key in TransactionType]: string 
   [TransactionType.MIGRATE_LIQUIDITY_V3]: t`Migrate liquidity cancelled`,
   [TransactionType.SUBMIT_PROPOSAL]: t`Submit proposal cancelled`,
   [TransactionType.SELL]: t`Sell cancelled`,
+  [TransactionType.SET_SPREAD]: t`Set spread cancelled`,
+  [TransactionType.SET_LOCKUP]: t`Set lockup cancelled`,
+  [TransactionType.SET_VALUE]: t`Set value cancelled`,
 }
 
 const AlternateTransactionTitleTable: { [key in TransactionType]?: { [state in TransactionStatus]: string } } = {
