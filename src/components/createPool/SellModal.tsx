@@ -103,14 +103,18 @@ export default function SellModal({ isOpen, onDismiss, poolInfo, userBaseTokenBa
         return poolContract['burn(uint256,uint256)'](...args, {
           value: null,
           gasLimit: calculateGasMargin(estimatedGasLimit),
-        }).then((response: TransactionResponse) => {
-          addTransaction(response, {
-            type: TransactionType.SELL,
-          })
-          setAttempting(false)
-          setHash(response.hash)
-          return response.hash
         })
+          .then((response: TransactionResponse) => {
+            addTransaction(response, {
+              type: TransactionType.SELL,
+            })
+            setAttempting(false)
+            setHash(response.hash)
+            return response.hash
+          })
+          .catch(() => {
+            setAttempting(false)
+          })
       })
     }
   }
