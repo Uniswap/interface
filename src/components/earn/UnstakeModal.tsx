@@ -13,6 +13,7 @@ import { ResponsiveHeaderText, SmallMaxButton } from '../../pages/RemoveLiquidit
 // TODO: check if should write into state stake hooks
 import { useBurnV3ActionHandlers, useBurnV3State } from '../../state/burn/v3/hooks'
 import { useUnstakeCallback } from '../../state/stake/hooks'
+import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
 import { ThemedText } from '../../theme'
 import { /*ButtonConfirmed,*/ ButtonPrimary } from '../Button'
 //import { ButtonError } from '../Button'
@@ -68,6 +69,10 @@ export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismi
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
   const [stakeAmount, setStakeAmount] = useState<CurrencyAmount<Token>>()
+
+  const transaction = useTransaction(hash)
+  const confirmed = useIsTransactionConfirmed(hash)
+  const transactionSuccess = transaction?.receipt?.status === 1
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {
@@ -160,10 +165,29 @@ export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismi
       {hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify="center">
-            <ThemedText.DeprecatedLargeHeader>
-              <Trans>Transaction Submitted</Trans>
-            </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(stakeAmount, 4)}</ThemedText.DeprecatedMain>
+            {!confirmed ? (
+              <>
+                <ThemedText.DeprecatedLargeHeader>
+                  <Trans>Transaction Submitted</Trans>
+                </ThemedText.DeprecatedLargeHeader>
+                <ThemedText.DeprecatedMain fontSize={36}>
+                  Unstaking {formatCurrencyAmount(stakeAmount, 4)} GRG
+                </ThemedText.DeprecatedMain>
+              </>
+            ) : transactionSuccess ? (
+              <>
+                <ThemedText.DeprecatedLargeHeader>
+                  <Trans>Transaction Success</Trans>
+                </ThemedText.DeprecatedLargeHeader>
+                <ThemedText.DeprecatedMain fontSize={36}>
+                  Unstaked {formatCurrencyAmount(stakeAmount, 4)} GRG
+                </ThemedText.DeprecatedMain>
+              </>
+            ) : (
+              <ThemedText.DeprecatedLargeHeader>
+                <Trans>Transaction Failed</Trans>
+              </ThemedText.DeprecatedLargeHeader>
+            )}
           </AutoColumn>
         </SubmittedView>
       )}
