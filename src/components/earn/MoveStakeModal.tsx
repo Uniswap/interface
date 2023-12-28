@@ -26,6 +26,7 @@ import {
   useStakeBalance,
 } from '../../state/governance/hooks'
 import { useFreeStakeBalance } from '../../state/stake/hooks'
+import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
 import { ThemedText } from '../../theme'
 import AddressInputPanel from '../AddressInputPanel'
 import { /*ButtonConfirmed,*/ ButtonPrimary } from '../Button'
@@ -126,6 +127,10 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
   const [stakeAmount, setStakeAmount] = useState<CurrencyAmount<Currency>>()
+
+  const transaction = useTransaction(hash)
+  const confirmed = useIsTransactionConfirmed(hash)
+  const transactionSuccess = transaction?.receipt?.status === 1
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {
@@ -263,30 +268,33 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
           </AutoColumn>
         </LoadingView>
       )}
-      {Boolean(hash && stakeAmount?.quotient.toString() === parsedAmount?.quotient.toString()) && (
-        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
-          <AutoColumn gap="12px" justify="center">
+      <SubmittedView onDismiss={wrappedOnDismiss} hash={hash} transactionSuccess={transactionSuccess}>
+        <AutoColumn gap="12px" justify="center">
+          {!confirmed ? (
+            <>
+              <ThemedText.DeprecatedLargeHeader>
+                <Trans>Transaction Submitted</Trans>
+              </ThemedText.DeprecatedLargeHeader>
+              <ThemedText.DeprecatedMain fontSize={36}>
+                Moving {formatCurrencyAmount(stakeAmount, 4)} GRG
+              </ThemedText.DeprecatedMain>
+            </>
+          ) : transactionSuccess ? (
+            <>
+              <ThemedText.DeprecatedLargeHeader>
+                <Trans>Transaction Success</Trans>
+              </ThemedText.DeprecatedLargeHeader>
+              <ThemedText.DeprecatedMain fontSize={36}>
+                Moved {formatCurrencyAmount(stakeAmount, 4)} GRG
+              </ThemedText.DeprecatedMain>
+            </>
+          ) : (
             <ThemedText.DeprecatedLargeHeader>
-              <Trans>Transaction Submitted</Trans>
+              <Trans>Transaction Failed</Trans>
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>
-              {formatCurrencyAmount(stakeAmount, 4)} GRG
-            </ThemedText.DeprecatedMain>
-          </AutoColumn>
-        </SubmittedView>
-      )}
-      {Boolean(hash && stakeAmount?.quotient.toString() !== parsedAmount?.quotient.toString()) && (
-        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
-          <AutoColumn gap="12px" justify="center">
-            <ThemedText.DeprecatedLargeHeader>
-              <Trans>Transaction Confirmed</Trans>
-            </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>
-              Moved {formatCurrencyAmount(stakeAmount, 4)} GRG
-            </ThemedText.DeprecatedMain>
-          </AutoColumn>
-        </SubmittedView>
-      )}
+          )}
+        </AutoColumn>
+      </SubmittedView>
     </Modal>
   )
 }
