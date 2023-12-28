@@ -142,7 +142,7 @@ export default function SetLockupModal({ isOpen, currentLockup, onDismiss, title
         </LoadingView>
       )}
       {hash && (
-        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
+        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash} transactionSuccess={transactionSuccess}>
           <AutoColumn gap="12px" justify="center">
             {!confirmed ? (
               <>

@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { ArrowUpCircle } from 'react-feather'
+import { ArrowUpCircle, CheckCircle } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 
 import Circle from '../../assets/images/blue-loader.svg'
@@ -39,7 +39,17 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
   )
 }
 
-export function SubmittedView({ children, onDismiss, hash }: { children: any; onDismiss: () => void; hash?: string }) {
+export function SubmittedView({
+  children,
+  onDismiss,
+  transactionSuccess,
+  hash,
+}: {
+  children: any
+  onDismiss: () => void
+  transactionSuccess: boolean
+  hash?: string
+}) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
 
@@ -50,7 +60,11 @@ export function SubmittedView({ children, onDismiss, hash }: { children: any; on
         <CloseIcon onClick={onDismiss} />
       </RowBetween>
       <ConfirmedIcon>
-        <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.accentAction} />
+        {!transactionSuccess ? (
+          <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.accentAction} />
+        ) : (
+          <CheckCircle strokeWidth={0.5} size={90} color={theme.accentSuccess} />
+        )}
       </ConfirmedIcon>
       <AutoColumn gap="100px" justify="center">
         {children}

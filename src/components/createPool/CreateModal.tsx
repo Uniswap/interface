@@ -256,7 +256,7 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
         </LoadingView>
       )}
       {hash && (
-        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
+        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash} transactionSuccess={transactionSuccess}>
           <AutoColumn gap="12px" justify="center">
             {!confirmed ? (
               <ThemedText.DeprecatedLargeHeader>
