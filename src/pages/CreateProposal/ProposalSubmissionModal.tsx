@@ -6,6 +6,7 @@ import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
+import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -22,6 +23,10 @@ export const ProposalSubmissionModal = ({
   const theme = useTheme()
   const { chainId } = useWeb3React()
 
+  const transaction = useTransaction(hash)
+  const confirmed = useIsTransactionConfirmed(hash)
+  const transactionSuccess = transaction?.receipt?.status === 1
+
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
       {!hash ? (
@@ -33,11 +38,25 @@ export const ProposalSubmissionModal = ({
           </AutoColumn>
         </LoadingView>
       ) : (
-        <SubmittedView onDismiss={onDismiss} hash={hash}>
+        <SubmittedView onDismiss={onDismiss} hash={hash} transactionSuccess={transactionSuccess}>
           <AutoColumn gap="md" justify="center">
-            <Text fontWeight={500} fontSize={20} textAlign="center">
-              <Trans>Proposal Submitted</Trans>
-            </Text>
+            {!confirmed ? (
+              <>
+                <Text fontWeight={500} fontSize={20} textAlign="center">
+                  <Trans>Proposal Submitted</Trans>
+                </Text>
+              </>
+            ) : transactionSuccess ? (
+              <>
+                <Text fontWeight={500} fontSize={20} textAlign="center">
+                  <Trans>Transaction Success</Trans>
+                </Text>
+              </>
+            ) : (
+              <Text fontWeight={500} fontSize={20} textAlign="center">
+                <Trans>Transaction Failed</Trans>
+              </Text>
+            )}
             {hash && chainId && (
               <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
                 <Text fontWeight={500} fontSize={14} color={theme.accentAction}>
