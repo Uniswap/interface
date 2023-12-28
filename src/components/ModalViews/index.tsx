@@ -4,6 +4,7 @@ import { ArrowUpCircle } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 
 import Circle from '../../assets/images/blue-loader.svg'
+import { AnimatedEntranceConfirmationIcon } from '../../components/swap/PendingModalContent/Logos'
 import { CloseIcon, CustomLightSpinner, ThemedText } from '../../theme'
 import { ExternalLink } from '../../theme/components'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -39,7 +40,17 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
   )
 }
 
-export function SubmittedView({ children, onDismiss, hash }: { children: any; onDismiss: () => void; hash?: string }) {
+export function SubmittedView({
+  children,
+  onDismiss,
+  hash,
+  transactionSuccess,
+}: {
+  children: any
+  onDismiss: () => void
+  hash?: string
+  transactionSuccess?: boolean
+}) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
 
@@ -49,9 +60,15 @@ export function SubmittedView({ children, onDismiss, hash }: { children: any; on
         <div />
         <CloseIcon onClick={onDismiss} />
       </RowBetween>
-      <ConfirmedIcon>
-        <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.accentAction} />
-      </ConfirmedIcon>
+      <>
+        {!transactionSuccess ? (
+          <ConfirmedIcon>
+            <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.accentAction} />
+          </ConfirmedIcon>
+        ) : (
+          <AnimatedEntranceConfirmationIcon />
+        )}
+      </>
       <AutoColumn gap="100px" justify="center">
         {children}
         {chainId && hash && (
