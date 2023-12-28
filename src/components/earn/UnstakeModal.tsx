@@ -163,7 +163,7 @@ export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismi
         </LoadingView>
       )}
       {hash && (
-        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
+        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash} transactionSuccess={transactionSuccess}>
           <AutoColumn gap="12px" justify="center">
             {!confirmed ? (
               <>
