@@ -42,13 +42,13 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
 export function SubmittedView({
   children,
   onDismiss,
-  hash,
   transactionSuccess,
+  hash,
 }: {
   children: any
   onDismiss: () => void
+  transactionSuccess: boolean
   hash?: string
-  transactionSuccess?: boolean
 }) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
