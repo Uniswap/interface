@@ -158,7 +158,9 @@ export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismi
             <ThemedText.DeprecatedLargeHeader>
               <Trans>Withdrawing Stake</Trans>
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(parsedAmount, 4)}</ThemedText.DeprecatedMain>
+            <ThemedText.DeprecatedMain fontSize={36}>
+              {formatCurrencyAmount(parsedAmount, 4)} GRG
+            </ThemedText.DeprecatedMain>
           </AutoColumn>
         </LoadingView>
       )}

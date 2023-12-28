@@ -268,33 +268,35 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
           </AutoColumn>
         </LoadingView>
       )}
-      <SubmittedView onDismiss={wrappedOnDismiss} hash={hash} transactionSuccess={transactionSuccess}>
-        <AutoColumn gap="12px" justify="center">
-          {!confirmed ? (
-            <>
+      {hash && (
+        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash} transactionSuccess={transactionSuccess}>
+          <AutoColumn gap="12px" justify="center">
+            {!confirmed ? (
+              <>
+                <ThemedText.DeprecatedLargeHeader>
+                  <Trans>Transaction Submitted</Trans>
+                </ThemedText.DeprecatedLargeHeader>
+                <ThemedText.DeprecatedMain fontSize={36}>
+                  Moving {formatCurrencyAmount(stakeAmount, 4)} GRG
+                </ThemedText.DeprecatedMain>
+              </>
+            ) : transactionSuccess ? (
+              <>
+                <ThemedText.DeprecatedLargeHeader>
+                  <Trans>Transaction Success</Trans>
+                </ThemedText.DeprecatedLargeHeader>
+                <ThemedText.DeprecatedMain fontSize={36}>
+                  Moved {formatCurrencyAmount(stakeAmount, 4)} GRG
+                </ThemedText.DeprecatedMain>
+              </>
+            ) : (
               <ThemedText.DeprecatedLargeHeader>
-                <Trans>Transaction Submitted</Trans>
+                <Trans>Transaction Failed</Trans>
               </ThemedText.DeprecatedLargeHeader>
-              <ThemedText.DeprecatedMain fontSize={36}>
-                Moving {formatCurrencyAmount(stakeAmount, 4)} GRG
-              </ThemedText.DeprecatedMain>
-            </>
-          ) : transactionSuccess ? (
-            <>
-              <ThemedText.DeprecatedLargeHeader>
-                <Trans>Transaction Success</Trans>
-              </ThemedText.DeprecatedLargeHeader>
-              <ThemedText.DeprecatedMain fontSize={36}>
-                Moved {formatCurrencyAmount(stakeAmount, 4)} GRG
-              </ThemedText.DeprecatedMain>
-            </>
-          ) : (
-            <ThemedText.DeprecatedLargeHeader>
-              <Trans>Transaction Failed</Trans>
-            </ThemedText.DeprecatedLargeHeader>
-          )}
-        </AutoColumn>
-      </SubmittedView>
+            )}
+          </AutoColumn>
+        </SubmittedView>
+      )}
     </Modal>
   )
 }
