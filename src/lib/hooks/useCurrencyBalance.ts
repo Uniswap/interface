@@ -8,7 +8,7 @@ import { useMultipleContractSingleData, useSingleContractMultipleData } from 'li
 import { useMemo } from 'react'
 
 import { nativeOnChain } from '../../constants/tokens'
-import { useInterfaceMulticall } from '../../hooks/useContract'
+import { useInterfaceMulticall, useTokenContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
 
 /**
@@ -48,6 +48,59 @@ export function useNativeCurrencyBalances(uncheckedAddresses?: (string | undefin
 
 const ERC20Interface = new Interface(ERC20ABI) as Erc20Interface
 const tokenBalancesGasRequirement = { gasRequired: 185_000 }
+
+/**
+ * Returns a currency address to its eventually consistent currency balances for multiple account.
+ */
+export function useCurrencyBalancesMultipleAccounts(
+  uncheckedAddresses?: (string | undefined)[],
+  currency?: Currency | undefined
+): {
+  [address: string]: CurrencyAmount<Currency> | undefined
+} {
+  const { chainId } = useWeb3React()
+  const multicallContract = useInterfaceMulticall()
+
+  // TODO: no need to sort here, we already know the order defined in type
+  const validAddressInputs: [string][] = useMemo(
+    () =>
+      uncheckedAddresses
+        ? uncheckedAddresses
+            .map(isAddress)
+            .filter((a): a is string => a !== false)
+            //.sort()
+            .map((addr) => [addr])
+        : [],
+    [uncheckedAddresses]
+  )
+
+  const validatedToken: Token | undefined = useMemo(
+    () => (!currency?.isNative && isAddress(currency?.address) && currency?.chainId === chainId ? currency : undefined),
+    [chainId, currency]
+  )
+
+  const tokenContract = useTokenContract(validatedToken?.address, false)
+  //const isNativeCurrency: boolean = useMemo(() => currency?.isNative ?? false, [currency])
+  const balances = useSingleContractMultipleData(
+    tokenContract ?? multicallContract,
+    tokenContract ? 'balanceOf' : 'getEthBalance',
+    validAddressInputs
+  )
+
+  return useMemo(
+    () =>
+      validAddressInputs.reduce<{ [address: string]: CurrencyAmount<Currency> }>((memo, [address], i) => {
+        const value = balances?.[i]?.result?.[0]
+        if (value && chainId)
+          memo[address] = CurrencyAmount.fromRawAmount(
+            validatedToken ?? nativeOnChain(chainId),
+            JSBI.BigInt(value.toString())
+          )
+        return memo
+      }, {}),
+    [validAddressInputs, chainId, balances, validatedToken]
+  )
+}
 
 /**
  * Returns a map of token addresses to their eventually consistent token balances for a single account.
