@@ -44,7 +44,7 @@ import { Link, useParams } from 'react-router-dom'
 //import { Bound } from 'state/mint/v3/actions'
 import { PoolInfo } from 'state/buy/hooks'
 //import { useTokenBalance } from 'state/connection/hooks'
-import { /*useCurrencyBalance,*/ useCurrencyBalancesMultipleAccounts } from 'state/connection/hooks'
+import { useCurrencyBalancesMultipleAccounts } from 'state/connection/hooks'
 import { usePoolIdByAddress } from 'state/governance/hooks'
 import { useFreeStakeBalance, useUnclaimedRewards } from 'state/stake/hooks'
 //import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -309,7 +309,6 @@ export function PoolPositionPage() {
     poolOwnStake: Number(poolOwnStakeFromUrl),
     irr: Number(irrFromUrl),
   } as PoolInfo
-  //const userBaseTokenBalance = useCurrencyBalance(account ?? undefined, base ?? undefined)
   const baseTokenBalances = useCurrencyBalancesMultipleAccounts(
     [account ?? undefined, poolAddressFromUrl ?? undefined],
     base ?? undefined
