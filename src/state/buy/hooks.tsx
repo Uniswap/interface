@@ -29,8 +29,8 @@ export interface PoolInfo {
 // based on typed value
 export function useDerivedPoolInfo(
   typedValue: string,
-  baseToken: Currency | undefined,
-  userBaseTokenBalance: CurrencyAmount<Currency> | undefined,
+  token: Currency | undefined,
+  tokenBalance: CurrencyAmount<Currency> | undefined,
   activation?: number
 ): {
   parsedAmount?: CurrencyAmount<Currency>
@@ -39,12 +39,13 @@ export function useDerivedPoolInfo(
   const { account } = useWeb3React()
   const currentTimestamp = useCurrentBlockTimestamp()
 
-  const parsedInput: CurrencyAmount<Currency> | undefined = tryParseCurrencyAmount(typedValue, baseToken)
+  const parsedAmount: CurrencyAmount<Currency> | undefined = tryParseCurrencyAmount(typedValue, token)
 
-  const parsedAmount =
-    parsedInput && userBaseTokenBalance && JSBI.lessThanOrEqual(parsedInput.quotient, userBaseTokenBalance.quotient)
-      ? parsedInput
-      : undefined
+  // when a value is not typed, we do not return an error
+  const userHasEnough: boolean = JSBI.lessThanOrEqual(
+    parsedAmount?.quotient ?? JSBI.BigInt(0),
+    tokenBalance?.quotient ?? JSBI.BigInt(0)
+  )
 
   let error: ReactNode | undefined
   if (!account) {
@@ -52,6 +53,13 @@ export function useDerivedPoolInfo(
   }
   if (!parsedAmount) {
     error = error ?? <Trans>Enter an amount</Trans>
+  }
+  if (!userHasEnough) {
+    if (activation) {
+      error = error ?? <Trans>Cannot sell more than owned</Trans>
+    } else {
+      error = error ?? <Trans>Amount error</Trans>
+    }
   }
   if (activation && activation > Number(currentTimestamp)) {
     error = error ?? <Trans>Unlock in {((activation - Number(currentTimestamp)) / 86400).toFixed(1)} days</Trans>

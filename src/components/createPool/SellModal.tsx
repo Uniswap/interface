@@ -100,10 +100,15 @@ export default function SellModal({
   }, [parsedAmount, poolInfo])
 
   // TODO: when expected amount is 0 or null should return true
-  const poolHoldsEnough: boolean = JSBI.greaterThanOrEqual(
-    poolBaseTokenBalance?.quotient ?? JSBI.BigInt(0),
-    expectedBaseTokens?.quotient ?? JSBI.BigInt(0)
-  )
+  // it is possible that user is requesting more that its balance
+  const poolHoldsEnough: boolean = useMemo(() => {
+    if (!poolBaseTokenBalance || !expectedBaseTokens || !parsedAmount || !poolInfo) return true
+    //if (JSBI.equal(expectedBaseTokens.quotient, JSBI.BigInt(0))) return true
+    // if a user is requesting more than it holds, the expected base token amount will always be 0
+    if (JSBI.greaterThanOrEqual(parsedAmount.quotient, poolInfo?.userPoolBalance.quotient)) return false
+    return JSBI.greaterThanOrEqual(poolBaseTokenBalance.quotient, expectedBaseTokens.quotient)
+  }, [poolBaseTokenBalance, expectedBaseTokens, parsedAmount, poolInfo])
+  //console.log(poolHoldsEnough)
 
   async function onSell() {
     setAttempting(true)
@@ -142,6 +147,7 @@ export default function SellModal({
   const handleMax = useCallback(() => {
     maxAmountInput && onUserInput(maxAmountInput.toExact())
   }, [maxAmountInput, onUserInput])
+  console.log(error)
 
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
@@ -177,11 +183,12 @@ export default function SellModal({
               error={(!!error || !poolHoldsEnough) && !!parsedAmount}
               onClick={onSell}
             >
-              {error ?? !poolHoldsEnough ? (
-                <Trans>Pool does not hold enough {poolInfo?.poolPriceAmount?.currency.symbol}</Trans>
-              ) : (
-                <Trans>Sell</Trans>
-              )}
+              {error ??
+                (!poolHoldsEnough ? (
+                  <Trans>Pool does not hold enough {userBaseTokenBalance?.currency?.symbol}</Trans>
+                ) : (
+                  <Trans>Sell</Trans>
+                ))}
             </ButtonError>
           </RowBetween>
           {/* TODO: check these circles */}
