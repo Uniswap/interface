@@ -61,14 +61,13 @@ export function useCurrencyBalancesMultipleAccounts(
   const { chainId } = useWeb3React()
   const multicallContract = useInterfaceMulticall()
 
-  // TODO: no need to sort here, we already know the order defined in type
   const validAddressInputs: [string][] = useMemo(
     () =>
       uncheckedAddresses
         ? uncheckedAddresses
             .map(isAddress)
             .filter((a): a is string => a !== false)
-            //.sort()
+            .sort()
             .map((addr) => [addr])
         : [],
     [uncheckedAddresses]
@@ -86,6 +85,7 @@ export function useCurrencyBalancesMultipleAccounts(
     validAddressInputs
   )
 
+  // if a type is returned instead of a mapping, must assert no sort() op is performed.
   return useMemo(
     () =>
       validAddressInputs.reduce<{ [address: string]: CurrencyAmount<Currency> }>((memo, [address], i) => {
