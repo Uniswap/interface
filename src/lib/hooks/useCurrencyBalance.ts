@@ -80,7 +80,6 @@ export function useCurrencyBalancesMultipleAccounts(
   )
 
   const tokenContract = useTokenContract(validatedToken?.address, false)
-  //const isNativeCurrency: boolean = useMemo(() => currency?.isNative ?? false, [currency])
   const balances = useSingleContractMultipleData(
     tokenContract ?? multicallContract,
     tokenContract ? 'balanceOf' : 'getEthBalance',
