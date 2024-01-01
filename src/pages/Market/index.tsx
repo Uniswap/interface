@@ -1,4 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
+import 'react-toastify/dist/ReactToastify.css'
+
+// eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
@@ -10,6 +13,8 @@ import { AutoRouterLogo } from 'components/swap/RouterLabel'
 import SwapRoute from 'components/swap/SwapRoute'
 import TradePrice from 'components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import { setToast } from 'components/Toast'
+import ToastContainer from 'components/Toast'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
@@ -26,6 +31,7 @@ import { SwapTransaction, V3TradeState } from 'state/validator/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { shortenAddress } from 'utils'
 
+import CliqueLogo from '../../assets/images/Clique.png'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import CandleSticks from '../../components/CandleSticks'
@@ -639,6 +645,14 @@ export default function Market({ history }: RouteComponentProps) {
     setFeeImpactAccepted(!feeImpactAccepted)
   }
 
+  setToast({
+    title: '$CLIQUE: WAR OF DEX',
+    description: `Stand a chance to win 25000 OP when you swap \r\nor provide liquidity on Optimism network.`,
+    ctaText: 'More Info',
+    ctaUrl: 'https://twitter.com/KromatikaFi/status/1740035551036891541',
+    toastId: 'warofdex',
+    imageUrl: CliqueLogo,
+  })
   if (expertMode) {
     return (
       <>
@@ -1090,6 +1104,8 @@ export default function Market({ history }: RouteComponentProps) {
                 </Wrapper>
               </AppBody>
               <SwitchLocaleLink />
+              <ToastContainer />
+
               {!swapIsUnsupported ? null : (
                 <UnsupportedCurrencyFooter
                   show={swapIsUnsupported}
@@ -1612,6 +1628,8 @@ export default function Market({ history }: RouteComponentProps) {
         </AppBody>
       </StyledSwap>
       <SwitchLocaleLink />
+      <ToastContainer />
+
       {!swapIsUnsupported ? null : (
         <UnsupportedCurrencyFooter
           show={swapIsUnsupported}
