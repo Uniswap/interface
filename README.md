@@ -33,7 +33,7 @@ Products include:
   - Place a Limit order, get your limit order filled and earn 1%-9% extra in LP rewards
 - Regular and Gasless Swaps
   - Aggregates from multiple aggregators
-  - Gasless Swaps enables you to trade that coin without having to pay for the gas in eth but from the coin.
+  - Essentially it means you won’t need a native chain token to pay for gas fees when swap token A for token B - for example on L1 you won’t need ETH anymore. Instead your swap fees will be paid in the output-token from your swap.
 - Perpetual Trading
   - on ETH L1, Arbitrum and BNB
   - V1: Orderbook perps with over 72 pairs

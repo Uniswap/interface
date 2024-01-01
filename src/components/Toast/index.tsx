@@ -1,6 +1,7 @@
 // import { Trans } from '@lingui/macro'
 import { useState } from 'react'
 import { toast, ToastContainer as ToastContainerBase } from 'react-toastify'
+import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 
 import { isMobile } from '../../utils/userAgent'
@@ -26,14 +27,24 @@ export const setToast = (props: ToastInterface) => {
       }}
     >
       <div className="" style={{ marginBottom: '10px', marginTop: '-5px' }}>
-        <span style={{ fontWeight: 'bold', color: 'white', textAlign: 'center', fontSize: '1.3vw' }}>
+        <Text
+          onClick={() => window.open(props.ctaUrl, '_blank')}
+          fontWeight={800}
+          fontSize={17}
+          style={{ whiteSpace: 'pre', color: 'white' }}
+        >
           {props.title}
-        </span>
+        </Text>
       </div>
       <div>
-        <span style={{ whiteSpace: 'pre', color: 'white', textAlign: 'center', fontSize: '0.9vw' }}>
+        <Text
+          onClick={() => window.open(props.ctaUrl, '_blank')}
+          fontWeight={300}
+          fontSize={13}
+          style={{ whiteSpace: 'pre', color: 'white' }}
+        >
           {props.description}
-        </span>
+        </Text>
       </div>
       <div style={{ marginTop: '20px', display: 'flex', width: '100%' }}>
         <div
@@ -45,12 +56,14 @@ export const setToast = (props: ToastInterface) => {
             verticalAlign: 'middle',
           }}
         >
-          <span
-            style={{ color: '#475dc0', textAlign: 'center', fontSize: '1vw', fontWeight: 'bold' }}
+          <Text
             onClick={() => window.open(props.ctaUrl, '_blank')}
+            fontWeight={400}
+            fontSize={15}
+            style={{ color: '#475dc0' }}
           >
             {props.ctaText}
-          </span>
+          </Text>
         </div>
         <div
           style={{
