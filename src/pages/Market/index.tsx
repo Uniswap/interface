@@ -31,7 +31,6 @@ import { SwapTransaction, V3TradeState } from 'state/validator/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { shortenAddress } from 'utils'
 
-import CliqueLogo from '../../assets/images/Clique.png'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import CandleSticks from '../../components/CandleSticks'
@@ -644,15 +643,6 @@ export default function Market({ history }: RouteComponentProps) {
   const toggleFeeImpactAccepted = () => {
     setFeeImpactAccepted(!feeImpactAccepted)
   }
-
-  setToast({
-    title: '$CLIQUE: WAR OF DEX',
-    description: `Stand a chance to win 25000 OP when you swap \r\nor provide liquidity on Optimism network.`,
-    ctaText: 'More Info',
-    ctaUrl: 'https://twitter.com/KromatikaFi/status/1740035551036891541',
-    toastId: 'warofdex',
-    imageUrl: CliqueLogo,
-  })
   if (expertMode) {
     return (
       <>
@@ -1104,7 +1094,6 @@ export default function Market({ history }: RouteComponentProps) {
                 </Wrapper>
               </AppBody>
               <SwitchLocaleLink />
-              <ToastContainer />
 
               {!swapIsUnsupported ? null : (
                 <UnsupportedCurrencyFooter
@@ -1628,7 +1617,6 @@ export default function Market({ history }: RouteComponentProps) {
         </AppBody>
       </StyledSwap>
       <SwitchLocaleLink />
-      <ToastContainer />
 
       {!swapIsUnsupported ? null : (
         <UnsupportedCurrencyFooter
