@@ -86,14 +86,6 @@ export default function App() {
     toastId: 'warofdex',
     imageUrl: CliqueLogo,
   })
-  setToast({
-    title: '$CLIQUE: WAR OF DEX',
-    description: `Stand a chance to win 25000 OP when you swap \r\nor provide liquidity on Optimism network.`,
-    ctaText: 'More Info',
-    ctaUrl: 'https://x.com/KromatikaFi/status/1740035551036891541',
-    toastId: 'warojfdex',
-    imageUrl: CliqueLogo,
-  })
 
   return (
     <ErrorBoundary>

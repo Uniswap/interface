@@ -80,7 +80,8 @@ export const setToast = (props: ToastInterface) => {
       </div>
     </div>,
     {
-      toastId: 'warofdex', // Prevent duplicate toasts // Closes windows on click
+      position: isMobile ? 'top-center' : 'bottom-right',
+      toastId: props.toastId, // Prevent duplicate toasts // Closes windows on click
       autoClose: false, // Prevents toast from auto closing
     }
   )
@@ -95,9 +96,10 @@ const StyledToastContainer = styled(ToastContainerBase).attrs({
     padding: '20px',
     width: '400px',
     height: '160px',
-    position: 'absolute',
-    bottom: 0,
-    right: '0px',
+    marginBottom: '20px',
+    // position: 'absolute',
+    // right: '0px',
+    // bottom: 0,
   },
 })``
 
@@ -109,10 +111,23 @@ const CloseButton = ({ closeToast }: any) => (
 
 export default function ToastContainer() {
   const [closed, setClosed] = useState(false)
+  const ResponsiveToastContainerStyle = isMobile
+    ? {
+        zIndex: 999,
+        width: '100vw',
+      }
+    : {
+        zIndex: 999,
+        width: '400px',
+      }
   return (
     <>
       {!closed && (
-        <StyledToastContainer style={{ zIndex: 999 }} onClick={() => setClosed(true)} closeButton={CloseButton} />
+        <StyledToastContainer
+          style={ResponsiveToastContainerStyle}
+          onClick={() => setClosed(true)}
+          closeButton={CloseButton}
+        />
       )}
     </>
   )
