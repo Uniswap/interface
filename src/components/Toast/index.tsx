@@ -95,7 +95,7 @@ const CloseButton = ({ closeToast }: any) => (
 )
 
 export default function ToastContainer() {
-  const [closed, setClosed] = useState(false)
+  // const [closed, setClosed] = useState(false)
   const ResponsiveToastContainerStyle = isMobile
     ? {
         zIndex: 999,
@@ -107,13 +107,11 @@ export default function ToastContainer() {
       }
   return (
     <>
-      {!closed && (
-        <StyledToastContainer
-          style={ResponsiveToastContainerStyle}
-          onClick={() => setClosed(true)}
-          closeButton={CloseButton}
-        />
-      )}
+      <StyledToastContainer
+        style={ResponsiveToastContainerStyle}
+        // onClick={() => setClosed(true)}
+        closeButton={CloseButton}
+      />
     </>
   )
 }
