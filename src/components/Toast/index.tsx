@@ -27,22 +27,12 @@ export const setToast = (props: ToastInterface) => {
       }}
     >
       <div className="" style={{ marginBottom: '10px', marginTop: '-5px' }}>
-        <Text
-          onClick={() => window.open(props.ctaUrl, '_blank')}
-          fontWeight={800}
-          fontSize={17}
-          style={{ whiteSpace: 'pre', color: 'white' }}
-        >
+        <Text fontWeight={800} fontSize={17} style={{ whiteSpace: 'pre', color: 'white' }}>
           {props.title}
         </Text>
       </div>
       <div>
-        <Text
-          onClick={() => window.open(props.ctaUrl, '_blank')}
-          fontWeight={300}
-          fontSize={13}
-          style={{ whiteSpace: 'pre', color: 'white' }}
-        >
+        <Text fontWeight={300} fontSize={13} style={{ whiteSpace: 'pre', color: 'white' }}>
           {props.description}
         </Text>
       </div>
@@ -56,12 +46,7 @@ export const setToast = (props: ToastInterface) => {
             verticalAlign: 'middle',
           }}
         >
-          <Text
-            onClick={() => window.open(props.ctaUrl, '_blank')}
-            fontWeight={400}
-            fontSize={15}
-            style={{ color: '#475dc0' }}
-          >
+          <Text fontWeight={400} fontSize={15} style={{ color: '#475dc0' }}>
             {props.ctaText}
           </Text>
         </div>
