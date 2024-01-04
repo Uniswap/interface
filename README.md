@@ -16,7 +16,7 @@ Kromatika is developped by the Kromatika DAO, a community-driven DAO that aims t
 
 Find more information about Kromatika DAO and Kromatika on our socials.
 
-- Twitter: [@KromatikaFi](https://twitter.com/KromatikaFi)
+- Twitter: [@KromatikaFi](https://x.com/KromatikaFi)
 - Discord: [Kromatika.Finance](https://discord.gg/5fWzdmkz9S)
 - Telegram Discussion: [Kromatika.Finance Official](https://t.me/kromatika_finance)
 - Telegram Announcements: [KromatikaNews](https://t.me/KromatikaNews)

@@ -27,22 +27,12 @@ export const setToast = (props: ToastInterface) => {
       }}
     >
       <div className="" style={{ marginBottom: '10px', marginTop: '-5px' }}>
-        <Text
-          onClick={() => window.open(props.ctaUrl, '_blank')}
-          fontWeight={800}
-          fontSize={17}
-          style={{ whiteSpace: 'pre', color: 'white' }}
-        >
+        <Text fontWeight={800} fontSize={17} style={{ whiteSpace: 'pre', color: 'white' }}>
           {props.title}
         </Text>
       </div>
       <div>
-        <Text
-          onClick={() => window.open(props.ctaUrl, '_blank')}
-          fontWeight={300}
-          fontSize={13}
-          style={{ whiteSpace: 'pre', color: 'white' }}
-        >
+        <Text fontWeight={300} fontSize={13} style={{ whiteSpace: 'pre', color: 'white' }}>
           {props.description}
         </Text>
       </div>
@@ -56,12 +46,7 @@ export const setToast = (props: ToastInterface) => {
             verticalAlign: 'middle',
           }}
         >
-          <Text
-            onClick={() => window.open(props.ctaUrl, '_blank')}
-            fontWeight={400}
-            fontSize={15}
-            style={{ color: '#475dc0' }}
-          >
+          <Text fontWeight={400} fontSize={15} style={{ color: '#475dc0' }}>
             {props.ctaText}
           </Text>
         </div>
@@ -80,7 +65,8 @@ export const setToast = (props: ToastInterface) => {
       </div>
     </div>,
     {
-      toastId: 'warofdex', // Prevent duplicate toasts // Closes windows on click
+      position: isMobile ? 'top-center' : 'bottom-right',
+      toastId: props.toastId, // Prevent duplicate toasts // Closes windows on click
       autoClose: false, // Prevents toast from auto closing
     }
   )
@@ -95,9 +81,10 @@ const StyledToastContainer = styled(ToastContainerBase).attrs({
     padding: '20px',
     width: '400px',
     height: '160px',
-    position: 'absolute',
-    bottom: 0,
-    right: '0px',
+    marginBottom: '20px',
+    // position: 'absolute',
+    // right: '0px',
+    // bottom: 0,
   },
 })``
 
@@ -108,12 +95,23 @@ const CloseButton = ({ closeToast }: any) => (
 )
 
 export default function ToastContainer() {
-  const [closed, setClosed] = useState(false)
+  // const [closed, setClosed] = useState(false)
+  const ResponsiveToastContainerStyle = isMobile
+    ? {
+        zIndex: 999,
+        width: '100vw',
+      }
+    : {
+        zIndex: 999,
+        width: '400px',
+      }
   return (
     <>
-      {!closed && (
-        <StyledToastContainer style={{ zIndex: 999 }} onClick={() => setClosed(true)} closeButton={CloseButton} />
-      )}
+      <StyledToastContainer
+        style={ResponsiveToastContainerStyle}
+        // onClick={() => setClosed(true)}
+        closeButton={CloseButton}
+      />
     </>
   )
 }
