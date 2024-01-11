@@ -111,9 +111,9 @@ export default function App() {
                 path="/balance/:action/:currencyIdA?/:currencyIdB?/:feeAmount?"
                 component={RedirectDuplicateTokenIds}
               />
-              <Route exact strict path="/limitorder" component={LimitOrder} />
+              <Route exact path="/limitorder" component={LimitOrder} />
               <Route exact strict path="/limitorder/:tokenId" component={PositionPage} />
-              <Route exact strict path="/swap" component={Market} />
+              <Route exact path="/swap" component={Market} />
               {showFallbackRoute && <Route component={RedirectPathToLimitOrderOnly} />}
             </BodyWrapper>
           </AppWrapper>
