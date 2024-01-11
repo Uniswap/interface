@@ -3,8 +3,8 @@ import { AppStackScreenProp } from 'src/app/navigation/types'
 import { Carousel } from 'src/components/carousel/Carousel'
 import { educationContent } from 'src/components/education'
 import { Screen } from 'src/components/layout/Screen'
-import { IS_IOS } from 'src/constants/globals'
 import { Screens } from 'src/screens/Screens'
+import { isIOS } from 'wallet/src/utils/platform'
 
 export function EducationScreen({
   route: {
@@ -21,7 +21,7 @@ export function EducationScreen({
   )
 
   return (
-    <Screen edges={IS_IOS ? [] : ['top']} mt={IS_IOS ? '$spacing24' : '$spacing8'}>
+    <Screen edges={isIOS ? [] : ['top']} mt={isIOS ? '$spacing24' : '$spacing8'}>
       <Carousel slides={content} />
     </Screen>
   )

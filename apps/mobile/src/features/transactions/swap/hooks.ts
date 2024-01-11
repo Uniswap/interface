@@ -10,6 +10,7 @@ import { providers } from 'ethers'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { setHasSubmittedHoldToSwap } from 'src/features/behaviorHistory/slice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { selectSwapStartTimestamp } from 'src/features/telemetry/timing/selectors'
 import { updateSwapStartTimestamp } from 'src/features/telemetry/timing/slice'
@@ -732,7 +733,8 @@ export function useSwapCallback(
   isAutoSlippage: boolean,
   onSubmit: () => void,
   txId?: string,
-  isHoldToSwap?: boolean
+  isHoldToSwap?: boolean,
+  isFiatInputMode?: boolean
 ): () => void {
   const appDispatch = useAppDispatch()
   const account = useActiveAccount()
@@ -784,10 +786,16 @@ export function useSwapCallback(
           ? Date.now() - swapStartTimestamp
           : undefined,
         is_hold_to_swap: isHoldToSwap,
+        is_fiat_input_mode: isFiatInputMode,
       })
 
       // Reset swap start timestamp now that the swap has been submitted
       appDispatch(updateSwapStartTimestamp({ timestamp: undefined }))
+
+      // Mark hold to swap persisted user behavior
+      if (isHoldToSwap) {
+        appDispatch(setHasSubmittedHoldToSwap(true))
+      }
     }
   }, [
     account,
@@ -804,6 +812,7 @@ export function useSwapCallback(
     isAutoSlippage,
     swapStartTimestamp,
     isHoldToSwap,
+    isFiatInputMode,
   ])
 }
 

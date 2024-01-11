@@ -1376,6 +1376,7 @@ exports[`ActivityTab renders without error 2`] = `
                       {
                         "alignItems": "center",
                         "flexDirection": "row",
+                        "flexShrink": 1,
                         "gap": 4,
                       }
                     }
@@ -1732,6 +1733,7 @@ exports[`ActivityTab renders without error 2`] = `
                       {
                         "alignItems": "center",
                         "flexDirection": "row",
+                        "flexShrink": 1,
                         "gap": 4,
                       }
                     }

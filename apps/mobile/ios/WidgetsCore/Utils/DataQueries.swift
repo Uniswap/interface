@@ -10,9 +10,9 @@ import Apollo
 import OSLog
 
 public class DataQueries {
-  
+
   static let cachePolicy: CachePolicy = CachePolicy.fetchIgnoringCacheData
-  
+
   public static func fetchTokensData(tokenInputs: [TokenInput]) async throws -> [TokenResponse] {
     return try await withCheckedThrowingContinuation { continuation in
       let contractInputs = tokenInputs.map {MobileSchema.ContractInput(chain: GraphQLEnum(rawValue: $0.chain), address: $0.address == nil ? GraphQLNullable.null: GraphQLNullable(stringLiteral: $0.address!))}
@@ -34,7 +34,7 @@ public class DataQueries {
       }
     }
   }
-  
+
   public static func fetchTopTokensData() async throws -> [TokenResponse] {
     return try await withCheckedThrowingContinuation { continuation in
       Network.shared.apollo.fetch(query: MobileSchema.TopTokensQuery(chain: GraphQLNullable(MobileSchema.Chain.ethereum)), cachePolicy: cachePolicy) { result in
@@ -55,7 +55,7 @@ public class DataQueries {
       }
     }
   }
-  
+
   public static func fetchTokenPriceData(chain: String, address: String?) async throws -> TokenPriceResponse {
     return try await withCheckedThrowingContinuation { continuation in
       Network.shared.apollo.fetch(query: MobileSchema.FavoriteTokenCardQuery(chain: GraphQLEnum(rawValue: chain), address: address == nil ? GraphQLNullable.null : GraphQLNullable(stringLiteral: address!)), cachePolicy: cachePolicy) { result in
@@ -76,7 +76,7 @@ public class DataQueries {
       }
     }
   }
-  
+
   public static func fetchTokenPriceHistoryData(chain: String, address: String?) async throws -> TokenPriceHistoryResponse {
     return try await withCheckedThrowingContinuation { continuation in
       Network.shared.apollo.fetch(query: MobileSchema.TokenPriceHistoryQuery(contract: MobileSchema.ContractInput(chain: GraphQLEnum(rawValue: chain), address: address == nil ? GraphQLNullable.null: GraphQLNullable(stringLiteral: address!))), cachePolicy: cachePolicy) { result in
@@ -96,10 +96,10 @@ public class DataQueries {
       }
     }
   }
-  
+
   public static func fetchWalletsTokensData(addresses: [String], maxLength: Int = 25) async throws -> [TokenResponse] {
     return try await withCheckedThrowingContinuation { continuation in
-      Network.shared.apollo.fetch(query: MobileSchema.MultiplePortfolioBalancesQuery(ownerAddresses: addresses)){ result in
+      Network.shared.apollo.fetch(query: MobileSchema.MultiplePortfolioBalancesQuery(ownerAddresses: addresses, valueModifiers: GraphQLNullable.null)){ result in
         switch result {
         case .success(let graphQLResult):
           // Takes all the signer accounts and sums up the balances of the tokens, then sorts them by descending order, ignoring spam
@@ -120,6 +120,40 @@ public class DataQueries {
           continuation.resume(returning: Array(tokenResponses.prefix(maxLength)))
         case .failure(let error):
           continuation.resume(throwing: error)
+        }
+      }
+    }
+  }
+  
+  public static func fetchCurrencyConversion(toCurrency: String) async throws -> CurrencyConversionResponse {
+    return try await withCheckedThrowingContinuation { continuation in
+      let usdResponse = CurrencyConversionResponse(conversionRate: 1, currency: WidgetConstants.currencyUsd)
+      
+      // Assuming all server currency amounts are in USD
+      if (toCurrency == WidgetConstants.currencyUsd) {
+        return continuation.resume(returning: usdResponse)
+      }
+      
+      Network.shared.apollo.fetch(
+        query: MobileSchema.ConvertQuery(
+          fromCurrency: GraphQLEnum(MobileSchema.Currency.usd),
+          toCurrency: GraphQLEnum(rawValue: toCurrency)
+        )
+      ) { result in
+        switch result {
+        case .success(let graphQLResult):
+          let conversionRate = graphQLResult.data?.convert?.value
+          let currency = graphQLResult.data?.convert?.currency?.rawValue
+          
+          continuation.resume(
+            returning: conversionRate == nil || currency == nil ? usdResponse :
+              CurrencyConversionResponse(
+                conversionRate: conversionRate!,
+                currency: currency!
+              )
+          )
+        case .failure:
+          continuation.resume(returning: usdResponse)
         }
       }
     }

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
+import { useAccountList } from 'src/components/accounts/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -24,24 +25,39 @@ type AccountCardItemProps = {
 } & PortfolioValueProps
 
 type PortfolioValueProps = {
+  address: Address
   isPortfolioValueLoading: boolean
   portfolioValue: number | undefined
 }
 
 function PortfolioValue({
+  address,
   isPortfolioValueLoading,
-  portfolioValue,
+  portfolioValue: providedPortfolioValue,
 }: PortfolioValueProps): JSX.Element {
-  const isLoading = isPortfolioValueLoading && portfolioValue === undefined
+  const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
+  // When we add a new wallet, we'll make a new network request to fetch all accounts as a single request.
+  // Since we're adding a new wallet address to the `ownerAddresses` array, this will be a brand new query, which won't be cached.
+  // To avoid all wallets showing a "loading" state, we read directly from cache while we wait for the other query to complete.
+
+  const { data } = useAccountList({
+    fetchPolicy: 'cache-first',
+    addresses: address,
+  })
+
+  const cachedPortfolioValue = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
+
+  const portfolioValue = providedPortfolioValue ?? cachedPortfolioValue
+
+  const isLoading = isPortfolioValueLoading && portfolioValue === undefined
+
   return (
-    <Text
-      color="$neutral2"
-      loading={isLoading}
-      loadingPlaceholderText="0000.00"
-      variant="subheading2">
-      {convertFiatAmountFormatted(portfolioValue, NumberType.PortfolioBalance)}
+    <Text color="$neutral2" loading={isLoading} variant="subheading2">
+      {portfolioValue
+        ? convertFiatAmountFormatted(portfolioValue, NumberType.PortfolioBalance)
+        : t('N/A')}
     </Text>
   )
 }
@@ -126,6 +142,7 @@ export function AccountCardItem({
             />
           </Flex>
           <PortfolioValue
+            address={address}
             isPortfolioValueLoading={isPortfolioValueLoading}
             portfolioValue={portfolioValue}
           />

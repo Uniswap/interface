@@ -34,7 +34,6 @@ import Animated, {
 import { BottomSheetContextProvider } from 'src/components/modals/BottomSheetContext'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import Trace from 'src/components/Trace/Trace'
-import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
 import {
@@ -47,6 +46,7 @@ import {
 } from 'ui/src'
 import { borderRadii, spacing } from 'ui/src/theme'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
+import { isAndroid, isIOS } from 'wallet/src/utils/platform'
 
 /**
  * (android only)
@@ -220,7 +220,7 @@ export const BottomSheetModal = forwardRef<BottomSheetModalRef, Props>(function 
   const renderBlurredBg = useCallback(
     () => (
       <Animated.View style={[blurViewStyle.base, animatedBorderRadius]}>
-        {IS_IOS ? (
+        {isIOS ? (
           <BlurView
             intensity={90}
             style={blurViewStyle.base}
@@ -313,7 +313,7 @@ export const BottomSheetModal = forwardRef<BottomSheetModalRef, Props>(function 
       // This is required for android to make scrollable containers work
       // and allow closing the modal by dragging the content
       // (adding this property on iOS breaks closing the modal by dragging the content)
-      activeOffsetY={IS_ANDROID ? [-DRAG_ACTIVATION_OFFSET, DRAG_ACTIVATION_OFFSET] : undefined}
+      activeOffsetY={isAndroid ? [-DRAG_ACTIVATION_OFFSET, DRAG_ACTIVATION_OFFSET] : undefined}
       animatedPosition={animatedPosition}
       backgroundStyle={backgroundStyle}
       containerComponent={containerComponent}
@@ -392,7 +392,7 @@ export function BottomSheetDetachedModal({
       // This is required for android to make scrollable containers work
       // and allow closing the modal by dragging the content
       // (adding this property on iOS breaks closing the modal by dragging the content)
-      activeOffsetY={IS_ANDROID ? [-DRAG_ACTIVATION_OFFSET, DRAG_ACTIVATION_OFFSET] : undefined}
+      activeOffsetY={isAndroid ? [-DRAG_ACTIVATION_OFFSET, DRAG_ACTIVATION_OFFSET] : undefined}
       backdropComponent={Backdrop}
       backgroundStyle={backgroundStyle}
       bottomInset={insets.bottom}

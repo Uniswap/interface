@@ -175,9 +175,12 @@ function Web3StatusInner() {
   // Persist the connection if it changes, so it can be used to initialize the next session's connection.
   useEffect(() => {
     if (account || ENSName) {
-      dispatch(updateRecentConnectionMeta({ type: connection.type, address: account, ENSName: ENSName ?? undefined }))
+      const { rdns } = connection.getProviderInfo()
+      dispatch(
+        updateRecentConnectionMeta({ type: connection.type, address: account, ENSName: ENSName ?? undefined, rdns })
+      )
     }
-  }, [ENSName, account, connection.type, dispatch])
+  }, [ENSName, account, connection, dispatch])
 
   if (!isConnectionInitialized) {
     return (

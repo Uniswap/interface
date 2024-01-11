@@ -20,6 +20,8 @@ export enum FeatureFlag {
   progressIndicatorV2 = 'progress_indicator_v2',
   feesEnabled = 'fees_enabled',
   limitsEnabled = 'limits_enabled',
+  eip6963Enabled = 'eip6963_enabled',
+  gatewayDNSUpdate = 'gateway_dns_update',
 }
 
 interface FeatureFlagsContextType {

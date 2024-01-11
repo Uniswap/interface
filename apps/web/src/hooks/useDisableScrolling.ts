@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { isMobile } from 'utils/userAgent'
+import { isMobile } from 'wallet/src/utils/platform'
 
 /** Disables scrolling of the main body on mobile when `true` is passed. Generally used for modals. */
 export default function useDisableScrolling(disable: boolean | undefined | null) {

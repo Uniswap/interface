@@ -29,16 +29,17 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
   const [currentScreenState, setCurrentScreenState] = useState<ScannerModalState>(
     ScannerModalState.ScanQr
   )
-  const [hasScanError, setHasScanError] = useState(false)
   const [shouldFreezeCamera, setShouldFreezeCamera] = useState(false)
 
   const onScanCode = async (uri: string): Promise<void> => {
-    // don't scan any QR codes if there is an error popup open or camera is frozen
-    if (hasScanError || shouldFreezeCamera) return
+    // don't scan any QR codes if camera is frozen
+    if (shouldFreezeCamera) return
+
     await selectionAsync()
+    setShouldFreezeCamera(true)
     const supportedURI = await getSupportedURI(uri)
+
     if (supportedURI?.type === URIType.Address) {
-      setShouldFreezeCamera(true)
       onSelectRecipient(supportedURI.value)
       onClose()
     } else {
@@ -49,7 +50,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
           {
             text: t('Try again'),
             onPress: (): void => {
-              setHasScanError(false)
+              setShouldFreezeCamera(false)
             },
           },
         ]

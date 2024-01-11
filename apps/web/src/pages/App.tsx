@@ -28,7 +28,7 @@ import { MICROSITE_LINK } from 'utils/openDownloadApp'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
-import { RouteDefinition, routes, useRouterConfig } from './RouteDefinitions'
+import { findRouteByPath, RouteDefinition, routes, useRouterConfig } from './RouteDefinitions'
 
 const AppChrome = lazy(() => import('./AppChrome'))
 
@@ -156,14 +156,18 @@ export default function App() {
   if (shouldBlockPath && pathname !== '/swap') {
     return <Navigate to="/swap" replace />
   }
-
   return (
     <ErrorBoundary>
-      <Helmet>
-        <title>Uniswap Interface</title>
-      </Helmet>
       <DarkModeQueryParamReader />
       <Trace page={currentPage}>
+        {/*
+          This is where *static* page titles are injected into the <head> tag. If you
+          want to set a page title based on data that's dynamic or not available on first render,
+          you can set it later in the page component itself, since react-helmet prefers the most recently rendered title.
+        */}
+        <Helmet>
+          <title>{findRouteByPath(pathname)?.getTitle(pathname) ?? 'Uniswap Interface'}</title>
+        </Helmet>
         <StatsigProvider
           user={statsigUser}
           // TODO: replace with proxy and cycle key

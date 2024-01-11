@@ -7,9 +7,12 @@ import { AppState } from 'state/reducer'
 
 import {
   addPopup,
+  addSuppressedPopups,
   ApplicationModal,
   PopupContent,
+  PopupType,
   removePopup,
+  removeSuppressedPopups,
   setFiatOnrampAvailability,
   setOpenModal,
 } from './reducer'
@@ -153,7 +156,6 @@ export function useToggleFeatureFlags(): () => void {
 // returns a function that allows adding a popup
 export function useAddPopup(): (content: PopupContent, key?: string, removeAfterMs?: number) => void {
   const dispatch = useAppDispatch()
-
   return useCallback(
     (content: PopupContent, key?: string, removeAfterMs?: number) => {
       dispatch(addPopup({ content, key, removeAfterMs: removeAfterMs ?? DEFAULT_TXN_DISMISS_MS }))
@@ -177,4 +179,19 @@ export function useRemovePopup(): (key: string) => void {
 export function useActivePopups(): AppState['application']['popupList'] {
   const list = useAppSelector((state: AppState) => state.application.popupList)
   return useMemo(() => list.filter((item) => item.show), [list])
+}
+
+// returns functions to suppress and unsuppress popups by type
+export function useSuppressPopups(popupTypes: PopupType[]): {
+  suppressPopups: () => void
+  unsuppressPopups: () => void
+} {
+  const dispatch = useAppDispatch()
+  const suppressPopups = useCallback(() => dispatch(addSuppressedPopups({ popupTypes })), [dispatch, popupTypes])
+  const unsuppressPopups = useCallback(() => dispatch(removeSuppressedPopups({ popupTypes })), [dispatch, popupTypes])
+
+  return {
+    suppressPopups,
+    unsuppressPopups,
+  }
 }

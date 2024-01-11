@@ -3,9 +3,10 @@
 
 import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js'
 import 'core-js' // necessary so setImmediate works in tests
+import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
 import { MockLocalizationContext } from 'wallet/src/test/utils'
 
-// avoids polutting console in test runs, while keeping important log levels
+// avoids polluting console in test runs, while keeping important log levels
 global.console = {
   ...console,
   // uncomment to ignore a specific log level
@@ -84,3 +85,11 @@ global.__reanimatedWorkletInit = () => ({})
 jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
 
 jest.mock('wallet/src/features/language/LocalizationContext', () => MockLocalizationContext)
+
+jest.mock('react-native/Libraries/Share/Share', () => {
+  return {
+    share: jest.fn(),
+  }
+})
+
+jest.mock('react-native-localize', () => mockRNLocalize)

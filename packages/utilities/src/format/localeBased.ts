@@ -124,7 +124,7 @@ export type FiatCurrencyComponents = {
   groupingSeparator: string
   decimalSeparator: string
   symbol: string
-  fullSymbolLength: number // Some currencies have whitespace in between number and currency
+  fullSymbol: string // Some currencies have whitespace in between number and currency
   symbolAtFront: boolean // All currencies are at front or back except CVE, which we won't ever support
 }
 /**
@@ -143,7 +143,7 @@ export function getFiatCurrencyComponents(
   let groupingSeparator = ','
   let decimalSeparator = '.'
   let symbol = ''
-  let fullSymbolLength = 0
+  let fullSymbol = ''
   let symbolAtFront = true
 
   parts.forEach((part, index) => {
@@ -153,13 +153,13 @@ export function getFiatCurrencyComponents(
       decimalSeparator = part.value
     } else if (part.type === 'currency') {
       symbol = part.value
-      fullSymbolLength += symbol.length
+      fullSymbol = symbol
 
       symbolAtFront = index === 0
       const nextPart = symbolAtFront ? parts[index + 1] : parts[index - 1]
       // Check for additional characters between symbol and number, like whitespace
       if (nextPart?.type === 'literal') {
-        fullSymbolLength += nextPart.value.length
+        fullSymbol = symbolAtFront ? symbol + nextPart.value : nextPart.value + symbol
       }
     }
   })
@@ -168,7 +168,7 @@ export function getFiatCurrencyComponents(
     groupingSeparator,
     decimalSeparator,
     symbol,
-    fullSymbolLength,
+    fullSymbol,
     symbolAtFront,
   }
 }

@@ -3,7 +3,7 @@ import { URI_AVAILABLE, WalletConnect, WalletConnectConstructorArgs } from '@web
 import { sendAnalyticsEvent } from 'analytics'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS } from 'constants/chains'
 import { Z_INDEX } from 'theme/zIndex'
-import { isAndroid, isIOS } from 'utils/userAgent'
+import { isAndroid, isIOS } from 'wallet/src/utils/platform'
 
 import { RPC_URLS } from '../constants/networks'
 

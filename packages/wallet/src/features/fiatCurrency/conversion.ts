@@ -140,12 +140,12 @@ export function useFiatConverter({
     [conversionRate, outputCurrency, toCurrency]
   )
   const convertFiatAmountFormattedInner = useCallback(
-    (
-      fromAmount: Maybe<number | string>,
-      numberType: FiatNumberType,
-      placeholder?: string
-    ): string => {
-      const amountNumber = typeof fromAmount === 'string' ? parseFloat(fromAmount) : fromAmount ?? 0
+    (fromAmount: Maybe<number | string>, numberType: FiatNumberType, placeholder = '-'): string => {
+      if (fromAmount === undefined || fromAmount === null) {
+        return placeholder
+      }
+
+      const amountNumber = typeof fromAmount === 'string' ? parseFloat(fromAmount) : fromAmount
       const converted = convertFiatAmountInner(amountNumber)
       const currencyCode = getFiatCurrencyCode(converted.currency)
 

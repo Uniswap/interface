@@ -19,7 +19,7 @@ const mockFiatCurrencyInfo: FiatCurrencyInfo = {
   symbol: '$',
   groupingSeparator: ',',
   decimalSeparator: '.',
-  fullSymbolLength: 1,
+  fullSymbol: '$',
   symbolAtFront: true,
 }
 

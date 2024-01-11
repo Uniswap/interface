@@ -7,7 +7,7 @@ import { useEffect, useRef } from 'react'
 import { ArrowDown, Info, X } from 'react-feather'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { isMobile } from 'utils/userAgent'
+import { isMobile } from 'wallet/src/utils/platform'
 
 import { useModalIsOpen, useTogglePrivacyPolicy } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'

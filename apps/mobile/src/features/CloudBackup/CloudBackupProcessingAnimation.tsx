@@ -6,7 +6,6 @@ import { ActivityIndicator, Alert } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList, SettingsStackParamList } from 'src/app/navigation/types'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
-import { IS_ANDROID } from 'src/constants/globals'
 import { backupMnemonicToCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { Flex, Text, useSporeColors } from 'ui/src'
@@ -20,6 +19,7 @@ import {
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
+import { isAndroid } from 'wallet/src/utils/platform'
 
 type Props = {
   accountAddress: Address
@@ -75,8 +75,8 @@ export function CloudBackupProcessingAnimation({
       })
 
       Alert.alert(
-        IS_ANDROID ? t('Google Drive error') : t('iCloud error'),
-        IS_ANDROID
+        isAndroid ? t('Google Drive error') : t('iCloud error'),
+        isAndroid
           ? t(
               'Unable to backup recovery phrase to Google Drive. Please ensure you have Google Drive enabled with available storage space and try again.'
             )
@@ -113,7 +113,7 @@ export function CloudBackupProcessingAnimation({
         <ActivityIndicator size="large" />
       </Flex>
       <Text variant="heading3">
-        {IS_ANDROID ? t('Backing up to Google Drive...') : t('Backing up to iCloud...')}
+        {isAndroid ? t('Backing up to Google Drive...') : t('Backing up to iCloud...')}
       </Text>
     </Flex>
   ) : (
@@ -126,7 +126,7 @@ export function CloudBackupProcessingAnimation({
         size={iconSize}
       />
       <Text variant="heading3">
-        {IS_ANDROID ? t('Backed up to Google Drive') : t('Backed up to iCloud')}
+        {isAndroid ? t('Backed up to Google Drive') : t('Backed up to iCloud')}
       </Text>
     </Flex>
   )

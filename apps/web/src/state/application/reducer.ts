@@ -41,6 +41,7 @@ export enum ApplicationModal {
   SETTINGS,
   SHARE,
   TAX_SERVICE,
+  TDP_CHART_TYPE_SELECTOR,
   TIME_SELECTOR,
   VOTE,
   UK_DISCLAIMER,
@@ -54,6 +55,7 @@ export interface ApplicationState {
   readonly fiatOnramp: { available: boolean; availabilityChecked: boolean }
   readonly openModal: ApplicationModal | null
   readonly popupList: PopupList
+  readonly suppressedPopups: PopupType[]
 }
 
 const initialState: ApplicationState = {
@@ -61,6 +63,7 @@ const initialState: ApplicationState = {
   chainId: null,
   openModal: null,
   popupList: [],
+  suppressedPopups: [],
 }
 
 const applicationSlice = createSlice({
@@ -83,7 +86,7 @@ const applicationSlice = createSlice({
         ...state.popupList.filter((popup) => popup.key !== key),
         {
           key,
-          show: true,
+          show: !state.suppressedPopups.includes(content.type),
           content,
           removeAfterMs,
         },
@@ -97,9 +100,22 @@ const applicationSlice = createSlice({
         return popup
       })
     },
+    addSuppressedPopups(state, { payload: { popupTypes } }) {
+      state.suppressedPopups = Array.from(new Set([...state.suppressedPopups, ...popupTypes]))
+    },
+    removeSuppressedPopups(state, { payload: { popupTypes } }) {
+      state.suppressedPopups = state.suppressedPopups.filter((type) => !popupTypes.includes(type))
+    },
   },
 })
 
-export const { updateChainId, setFiatOnrampAvailability, setOpenModal, addPopup, removePopup } =
-  applicationSlice.actions
+export const {
+  updateChainId,
+  setFiatOnrampAvailability,
+  setOpenModal,
+  addPopup,
+  removePopup,
+  addSuppressedPopups,
+  removeSuppressedPopups,
+} = applicationSlice.actions
 export default applicationSlice.reducer

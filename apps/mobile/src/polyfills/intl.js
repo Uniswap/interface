@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import { IS_ANDROID } from 'src/constants/globals'
+import { isAndroid } from 'wallet/src/utils/platform'
 
 // TODO: [MOB-247] remove polyfill once Hermes support it
 // https://github.com/facebook/hermes/issues/23
@@ -29,7 +29,7 @@ require('@formatjs/intl-pluralrules/locale-data/uk').default
 require('@formatjs/intl-pluralrules/locale-data/ur').default
 require('@formatjs/intl-pluralrules/locale-data/vi').default
 
-if (IS_ANDROID) {
+if (isAndroid) {
   // Forces polyfill to replace Hermes NumberFormat due to issues with "compact" notation
   // https://hermesengine.dev/docs/intl/#android-11
   require('@formatjs/intl-numberformat/polyfill-force').default

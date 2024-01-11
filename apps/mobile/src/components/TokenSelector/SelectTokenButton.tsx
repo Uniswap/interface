@@ -4,8 +4,7 @@ import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
+import { useSwapRewriteEnabled } from 'wallet/src/features/experiments/hooks'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 interface SelectTokenButtonProps {
@@ -21,7 +20,7 @@ export function SelectTokenButton({
 }: SelectTokenButtonProps): JSX.Element {
   const { t } = useTranslation()
 
-  const isSwapRewriteFeatureEnabled = useFeatureFlag(FEATURE_FLAGS.SwapRewrite)
+  const isSwapRewriteFeatureEnabled = useSwapRewriteEnabled()
 
   if (isSwapRewriteFeatureEnabled) {
     return (

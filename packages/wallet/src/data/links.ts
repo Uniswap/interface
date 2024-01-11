@@ -9,22 +9,32 @@ import {
   getOnChainBalancesFetch,
   STUB_ONCHAIN_BALANCES_ENDPOINT,
 } from 'wallet/src/features/portfolio/api'
+import { isAndroid, isIOS } from 'wallet/src/utils/platform'
 
 const REST_API_URL = uniswapUrls.apiBaseUrl
 
+const requestSource = isIOS ? 'uniswap-ios' : isAndroid ? 'uniswap-android' : 'uniswap-web'
+
 // mapping from endpoint to custom fetcher, when needed
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const ENDPOINT_TO_FETCHER: Record<string, (body: any) => Promise<Response>> = {
-  [REST_API_URL + STUB_ONCHAIN_BALANCES_ENDPOINT]: getOnChainBalancesFetch,
-  [REST_API_URL + STUB_ONCHAIN_ENS_ENDPOINT]: getOnChainEnsFetch,
+
+function getCustomFetcherMap(restUri: string): Record<string, (body: any) => Promise<Response>> {
+  return {
+    [restUri + STUB_ONCHAIN_BALANCES_ENDPOINT]: getOnChainBalancesFetch,
+    [restUri + STUB_ONCHAIN_ENS_ENDPOINT]: getOnChainEnsFetch,
+  }
 }
+
 // Handles fetching data from REST APIs
 // Responses will be stored in graphql cache
-export const getRestLink = (): ApolloLink => {
+export const getRestLink = (customRestUri?: string): ApolloLink => {
+  const restUri = customRestUri ?? REST_API_URL
+
   // On-chain balances are fetched with ethers.provider
   // When we detect a request to the balances endpoint, we provide a custom fetcher.
+  const fetchMap = getCustomFetcherMap(restUri)
   const customFetch: RestLink.CustomFetch = (uri, options) => {
-    const customFetcher = ENDPOINT_TO_FETCHER[uri.toString()]
+    const customFetcher = fetchMap[uri.toString()]
 
     if (customFetcher) {
       return customFetcher(JSON.parse(options.body?.toString() ?? ''))
@@ -36,10 +46,11 @@ export const getRestLink = (): ApolloLink => {
 
   return new RestLink({
     customFetch,
-    uri: REST_API_URL,
+    uri: restUri,
     headers: {
       'Content-Type': 'application/json',
       'X-API-KEY': config.uniswapApiKey,
+      'x-request-source': requestSource,
       Origin: config.uniswapAppUrl,
     },
   })
@@ -56,6 +67,7 @@ export const getCustomGraphqlHttpLink = (endpoint: CustomEndpoint): ApolloLink =
     headers: {
       'Content-Type': 'application/json',
       'X-API-KEY': endpoint.key,
+      'x-request-source': requestSource,
       // TODO: [MOB-3883] remove once API gateway supports mobile origin URL
       Origin: uniswapUrls.apiBaseUrl,
     },
@@ -67,6 +79,7 @@ export const getGraphqlHttpLink = (): ApolloLink =>
     headers: {
       'Content-Type': 'application/json',
       'X-API-KEY': config.uniswapApiKey,
+      'x-request-source': requestSource,
       // TODO: [MOB-3883] remove once API gateway supports mobile origin URL
       Origin: uniswapUrls.apiBaseUrl,
     },

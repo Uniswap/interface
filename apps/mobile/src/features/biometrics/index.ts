@@ -6,8 +6,8 @@ import {
   LocalAuthenticationResult,
 } from 'expo-local-authentication'
 import { NativeModulesProxy } from 'expo-modules-core'
-import { Platform } from 'react-native'
 import { logger } from 'utilities/src/logger/logger'
+import { isAndroid } from 'wallet/src/utils/platform'
 
 const ELA = NativeModulesProxy.ExpoLocalAuthentication
 
@@ -33,8 +33,8 @@ export async function enroll(): Promise<void> {
 
 const DEFAULT_AUTHENTICATE_OPTIONS = {
   promptMessage: 'Please authenticate',
-  // Temporary disabled due to the android AppState forground -> background triggers of biometrics popup with pin fallback
-  disableDeviceFallback: Platform.OS === 'android' ? true : false,
+  // Temporary disabled due to the android AppState foreground -> background triggers of biometrics popup with pin fallback
+  disableDeviceFallback: isAndroid ? true : false,
   cancelLabel: 'Cancel',
 }
 
@@ -57,6 +57,10 @@ export async function tryLocalAuthenticate(
     const enrolled = await isEnrolledAsync()
     const result = await authenticateAsync(authenticateOptions || DEFAULT_AUTHENTICATE_OPTIONS)
 
+    if (result.success === true) {
+      return BiometricAuthenticationStatus.Authenticated
+    }
+
     if (isInLockout(result)) {
       return BiometricAuthenticationStatus.Lockout
     }
@@ -73,11 +77,7 @@ export async function tryLocalAuthenticate(
       return BiometricAuthenticationStatus.MissingEnrollment
     }
 
-    if (result.success === false) {
-      return BiometricAuthenticationStatus.Rejected
-    }
-
-    return BiometricAuthenticationStatus.Authenticated
+    return BiometricAuthenticationStatus.Rejected
   } catch (error) {
     logger.error(error, { tags: { file: 'biometrics/index', function: 'tryLocalAuthenticate' } })
 

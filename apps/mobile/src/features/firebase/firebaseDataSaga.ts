@@ -1,4 +1,5 @@
 import firebase from '@react-native-firebase/app'
+import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import { appSelect } from 'src/app/hooks'
 import {
@@ -36,7 +37,7 @@ interface AccountMetadata {
 
 function* initFirebase() {
   try {
-    const firebaseAuth = firebase.app().auth()
+    const firebaseAuth = auth()
     yield* call([firebaseAuth, 'signInAnonymously'])
     logger.debug('initFirebaseSaga', 'initFirebase', 'Firebase initialization successful')
   } catch (error) {
@@ -96,10 +97,10 @@ function* editAccountDataInFirebase(actionData: ReturnType<typeof editAccountAct
       yield* call(toggleFirebaseNotificationSettings, payload)
       break
     case EditAccountAction.ToggleTestnetSettings:
-      yield* call(updateFirebaseMetadata, address, { testnetsEnabled: payload.enabled })
+      yield* call(maybeUpdateFirebaseMetadata, address, { testnetsEnabled: payload.enabled })
       break
     case EditAccountAction.UpdateLanguage:
-      yield* call(updateFirebaseMetadata, address, { locale: payload.locale })
+      yield* call(maybeUpdateFirebaseMetadata, address, { locale: payload.locale })
       break
     default:
       break
@@ -109,10 +110,17 @@ function* editAccountDataInFirebase(actionData: ReturnType<typeof editAccountAct
 function* addAccountToFirebase(account: Account) {
   const { name, type, address } = account
   const testnetsEnabled = false
+  const currentLanguage = yield* select(selectCurrentLanguage)
+  const currentLocale = getLocale(currentLanguage)
 
   try {
     yield* call(mapFirebaseUidToAddresses, [address])
-    yield* call(updateFirebaseMetadata, address, { type, name, testnetsEnabled })
+    yield* call(updateFirebaseMetadata, address, {
+      type,
+      name,
+      testnetsEnabled,
+      locale: currentLocale,
+    })
   } catch (error) {
     logger.error(error, { tags: { file: 'firebaseDataSaga', function: 'addAccountToFirebase' } })
   }
@@ -134,9 +142,7 @@ const selectAccountNotificationSetting = makeSelectAccountNotificationSetting()
 
 export function* renameAccountInFirebase(address: Address, newName: string) {
   try {
-    const notificationsEnabled = yield* select(selectAccountNotificationSetting, address)
-    if (!notificationsEnabled) return
-    yield* call(updateFirebaseMetadata, address, { name: newName })
+    yield* call(maybeUpdateFirebaseMetadata, address, { name: newName })
   } catch (error) {
     logger.error(error, { tags: { file: 'firebaseDataSaga', function: 'renameAccountInFirebase' } })
   }
@@ -195,6 +201,16 @@ async function disassociateFirebaseUidFromAddresses(addresses: Address[]): Promi
   })
 
   await batch.commit()
+}
+
+function* maybeUpdateFirebaseMetadata(address: Address, metadata: AccountMetadata) {
+  const notificationsEnabled = yield* select(selectAccountNotificationSetting, address)
+
+  if (!notificationsEnabled) {
+    return
+  }
+
+  yield* call(updateFirebaseMetadata, address, metadata)
 }
 
 async function updateFirebaseMetadata(address: Address, metadata: AccountMetadata): Promise<void> {

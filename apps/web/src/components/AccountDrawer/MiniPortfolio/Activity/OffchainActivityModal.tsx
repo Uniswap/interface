@@ -5,7 +5,7 @@ import Column, { AutoColumn } from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import Modal from 'components/Modal'
-import { AnimatedEntranceConfirmationIcon, FadePresence } from 'components/swap/PendingModalContent/Logos'
+import { AnimatedEntranceConfirmationIcon } from 'components/swap/PendingModalContent/Logos'
 import { TradeSummary } from 'components/swap/PendingModalContent/TradeSummary'
 import { useCurrency } from 'hooks/Tokens'
 import { atom } from 'jotai'
@@ -15,16 +15,16 @@ import { useCallback, useMemo } from 'react'
 import { X } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import { useOrder } from 'state/signatures/hooks'
-import { UniswapXOrderDetails } from 'state/signatures/types'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { FadePresence } from 'theme/components/FadePresence'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+
+import { OffchainOrderDetails } from './types'
 
 type SelectedOrderInfo = {
   modalOpen?: boolean
-  orderHash: string
-  status: UniswapXOrderStatus
-  details?: UniswapXOrderDetails
+  order?: OffchainOrderDetails
 }
 
 const selectedOrderAtom = atom<SelectedOrderInfo | undefined>(undefined)
@@ -32,10 +32,7 @@ const selectedOrderAtom = atom<SelectedOrderInfo | undefined>(undefined)
 export function useOpenOffchainActivityModal() {
   const setSelectedOrder = useUpdateAtom(selectedOrderAtom)
 
-  return useCallback(
-    (order: { orderHash: string; status: UniswapXOrderStatus }) => setSelectedOrder({ ...order, modalOpen: true }),
-    [setSelectedOrder]
-  )
+  return useCallback((order: OffchainOrderDetails) => setSelectedOrder({ order, modalOpen: true }), [setSelectedOrder])
 }
 
 const Wrapper = styled(AutoColumn).attrs({ gap: 'md', grow: true })`
@@ -89,19 +86,19 @@ const DescriptionText = styled(ThemedText.LabelMicro)`
 `
 
 function useOrderAmounts(
-  orderDetails?: UniswapXOrderDetails
+  order?: OffchainOrderDetails
 ): Pick<InterfaceTrade, 'inputAmount' | 'outputAmount'> | undefined {
-  const inputCurrency = useCurrency(orderDetails?.swapInfo?.inputCurrencyId, orderDetails?.chainId)
-  const outputCurrency = useCurrency(orderDetails?.swapInfo?.outputCurrencyId, orderDetails?.chainId)
+  const inputCurrency = useCurrency(order?.swapInfo?.inputCurrencyId, order?.chainId)
+  const outputCurrency = useCurrency(order?.swapInfo?.outputCurrencyId, order?.chainId)
 
-  if (!orderDetails) return undefined
+  if (!order || !order?.swapInfo) return undefined
 
   if (!inputCurrency || !outputCurrency) {
-    console.error(`Could not find token(s) for order ${orderDetails.orderHash}`)
+    console.error(`Could not find token(s) for order ${order.txHash}`)
     return undefined
   }
 
-  const { swapInfo } = orderDetails
+  const { swapInfo } = order
 
   if (swapInfo.tradeType === TradeType.EXACT_INPUT) {
     return {
@@ -119,11 +116,11 @@ function useOrderAmounts(
   }
 }
 
-export function OrderContent({ order }: { order: SelectedOrderInfo }) {
-  const amounts = useOrderAmounts(order.details)
+export function OrderContent({ order }: { order: OffchainOrderDetails }) {
+  const amounts = useOrderAmounts(order)
 
-  const explorerLink = order?.details?.txHash
-    ? getExplorerLink(order.details.chainId, order.details.txHash, ExplorerDataType.TRANSACTION)
+  const explorerLink = order?.txHash
+    ? getExplorerLink(order.chainId, order.txHash, ExplorerDataType.TRANSACTION)
     : undefined
 
   switch (order.status) {
@@ -224,22 +221,34 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
 }
 
 /* Returns the order currently selected in the UI synced with updates from order status polling */
-function useSyncedSelectedOrder(): SelectedOrderInfo | undefined {
+function useSyncedSelectedOrder(): OffchainOrderDetails | undefined {
   const selectedOrder = useAtomValue(selectedOrderAtom)
-  const localPendingOrder = useOrder(selectedOrder?.orderHash ?? '')
+  const localPendingOrder = useOrder(selectedOrder?.order?.txHash ?? '')
 
   return useMemo(() => {
-    if (!selectedOrder) return undefined
+    if (!selectedOrder?.order) return undefined
 
     return {
-      ...selectedOrder,
-      status: localPendingOrder?.status ?? selectedOrder.status,
-      details: localPendingOrder,
+      ...selectedOrder.order,
+      ...localPendingOrder,
     }
   }, [localPendingOrder, selectedOrder])
 }
 
+/**
+ * This is the modal that appears when you click on an X order in the activity tab.
+ *
+ * It needs to handle multiple types of X orders:
+ * - Pending orders initiated locally i.e. UniswapXOrderDetails
+ * - Pending/expired/cancelled orders initiated remotely and tracked locally i.e. SwapOrderDetailsParts from the Activity query
+ * - Filled orders i.e. TransactionDetailsParts from the Activity query.
+ *
+ * Because of this, we try to converge the different cases into one type, OffchainOrderDetails,
+ * which can be passed around within the Activity in the case of remote records.
+ */
 export function OffchainActivityModal() {
+  const selectedOrderAtomValue = useAtomValue(selectedOrderAtom)
+
   const syncedSelectedOrder = useSyncedSelectedOrder()
   const setSelectedOrder = useUpdateAtom(selectedOrderAtom)
 
@@ -248,7 +257,7 @@ export function OffchainActivityModal() {
   }, [setSelectedOrder])
 
   return (
-    <Modal isOpen={!!syncedSelectedOrder?.modalOpen} onDismiss={reset}>
+    <Modal isOpen={!!selectedOrderAtomValue?.modalOpen} onDismiss={reset}>
       <Wrapper data-testid="offchain-activity-modal">
         <StyledXButton onClick={reset} />
         {syncedSelectedOrder && <OrderContent order={syncedSelectedOrder} />}

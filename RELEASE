@@ -1,5 +1,5 @@
-Here again with a new (sparse) update to our app! Check out what is new below:
+Here again with a new update to our app! Check out what is new below
 
-- Bug fixes
-- Performance improvements on home and swap
-- Improvements in language support
+- Editing Favorite Tokens — We added the ability to drag, drop, and rearrange your favorited tokens. Keep your most important watched tokens close!
+
+- Hidden Token Balances — We updated our wallet to not include the value of hidden tokens in the total wallet balance. Toggle specific tokens to be hidden or shown, and your overall wallet balance will reflect the changes immediately. Out of sight, out of mind.

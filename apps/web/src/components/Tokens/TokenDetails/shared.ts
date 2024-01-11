@@ -1,7 +1,13 @@
 import { darken } from 'polished'
 import styled from 'styled-components'
 
-export const NoInfoAvailable = styled.span`
+export const Hr = styled.hr`
+  background-color: ${({ theme }) => theme.surface3};
+  border: none;
+  height: 0.5px;
+`
+
+export const NoInfoAvailable = styled.p`
   color: ${({ theme }) => theme.neutral3};
   font-weight: 485;
   font-size: 16px;

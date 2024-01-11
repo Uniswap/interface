@@ -3,9 +3,9 @@ import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Screen, SHORT_SCREEN_HEADER_HEIGHT_RATIO } from 'src/components/layout/Screen'
-import { IS_IOS } from 'src/constants/globals'
 import { AnimatedFlex, Flex, SpaceTokens, Text, useDeviceInsets, useMedia } from 'ui/src'
 import { fonts } from 'ui/src/theme'
+import { isIOS } from 'wallet/src/utils/platform'
 
 type OnboardingScreenProps = {
   subtitle?: string
@@ -34,7 +34,7 @@ export function OnboardingScreen({
       edges={['right', 'left']}
       pt={headerHeight}>
       <KeyboardAvoidingView
-        behavior={IS_IOS ? 'padding' : undefined}
+        behavior={isIOS ? 'padding' : undefined}
         enabled={keyboardAvoidingViewEnabled}
         style={[WrapperStyle.base, { marginBottom: insets.bottom }]}>
         <AnimatedFlex

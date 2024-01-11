@@ -34,13 +34,14 @@ function useTryActivation() {
       // behavior, i.e. install MetaMask or launch Coinbase app
       if (connection.overrideActivate?.(chainId)) return
 
+      const { name } = connection.getProviderInfo()
       try {
         setActivationState({ status: ActivationStatus.PENDING, connection })
 
-        console.debug(`Connection activating: ${connection.getName()}`)
+        console.debug(`Connection activating: ${name}`)
         await connection.connector.activate()
 
-        console.debug(`Connection activated: ${connection.getName()}`)
+        console.debug(`Connection activated: ${name}`)
 
         // Clears pending connection state
         setActivationState(IDLE_ACTIVATION_STATE)
@@ -54,13 +55,13 @@ function useTryActivation() {
         }
 
         // TODO(WEB-1859): re-add special treatment for already-pending injected errors & move debug to after didUserReject() check
-        console.debug(`Connection failed: ${connection.getName()}`)
+        console.debug(`Connection failed: ${name}`)
         console.error(error)
 
         // Failed Connection events are logged here, while successful ones are logged by Web3Provider
         sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
           result: WalletConnectionResult.FAILED,
-          wallet_type: connection.getName(),
+          wallet_type: name,
           page: currentPage,
           error: error.message,
         })

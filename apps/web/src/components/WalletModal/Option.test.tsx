@@ -17,22 +17,20 @@ beforeEach(() => {
 })
 
 const mockConnection1: Connection = {
-  getName: () => 'Mock Connection 1',
+  getProviderInfo: () => ({ name: 'Mock Connection 1', icon: UNIWALLET_ICON }),
   connector: {
     activate: jest.fn(),
     deactivate: jest.fn(),
   } as unknown as Connector,
-  getIcon: () => UNIWALLET_ICON,
   type: ConnectionType.UNISWAP_WALLET_V2,
 } as unknown as Connection
 
 const mockConnection2: Connection = {
-  getName: () => 'Mock Connection 2',
+  getProviderInfo: () => ({ name: 'Mock Connection 2', icon: UNIWALLET_ICON }),
   connector: {
     activate: jest.fn(),
     deactivate: jest.fn(),
   } as unknown as Connector,
-  getIcon: () => UNIWALLET_ICON,
   type: ConnectionType.INJECTED,
 } as unknown as Connection
 

@@ -8,7 +8,6 @@ import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
-import { IS_ANDROID } from 'src/constants/globals'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { deleteCloudStorageMnemonicBackup } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
@@ -28,6 +27,7 @@ import {
   SignerMnemonicAccount,
 } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import { isAndroid } from 'wallet/src/utils/platform'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsCloudBackupStatus>
 
@@ -73,7 +73,7 @@ export function SettingsCloudBackupStatus({
       logger.error(error, { tags: { file: 'SettingsCloudBackupStatus', function: 'deleteBackup' } })
 
       Alert.alert(
-        IS_ANDROID ? t('Google Drive error') : t('iCloud error'),
+        isAndroid ? t('Google Drive error') : t('iCloud error'),
         t('Unable to delete backup'),
         [{ text: t('OK'), style: 'default' }]
       )
@@ -92,13 +92,13 @@ export function SettingsCloudBackupStatus({
   return (
     <Screen mx="$spacing16" my="$spacing16">
       <BackHeader alignment="center" mb="$spacing16" onPressBack={onPressBack}>
-        <Text variant="body1">{IS_ANDROID ? t('Google Drive backup') : t('iCloud backup')}</Text>
+        <Text variant="body1">{isAndroid ? t('Google Drive backup') : t('iCloud backup')}</Text>
       </BackHeader>
 
       <Flex grow alignItems="stretch" justifyContent="space-evenly" mt="$spacing16" mx="$spacing8">
         <Flex grow gap="$spacing24" justifyContent="flex-start">
           <Text color="$neutral2" variant="body2">
-            {IS_ANDROID
+            {isAndroid
               ? t(
                   'By having your recovery phrase backed up to Google Drive, you can recover your wallet just by being logged into your Google account on any device.'
                 )
@@ -137,14 +137,14 @@ export function SettingsCloudBackupStatus({
           onPress={(): void => {
             setShowBackupDeleteWarning(true)
           }}>
-          {IS_ANDROID ? t('Delete backup') : t('Delete backup')}
+          {isAndroid ? t('Delete backup') : t('Delete backup')}
         </Button>
       </Flex>
 
       {showBackupDeleteWarning && (
         <WarningModal
           caption={
-            IS_ANDROID
+            isAndroid
               ? t(
                   'If you delete your Google Drive backup, you’ll only be able to recover your wallet with a manual backup of your recovery phrase. Uniswap Labs can’t recover your assets if you lose your recovery phrase.'
                 )

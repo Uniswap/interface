@@ -5,10 +5,11 @@ import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Badge, { BadgeVariant } from 'components/Badge'
 import Loader from 'components/Icons/LoadingSpinner'
+import { deprecatedInjectedConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { Connection } from 'connection/types'
 import styled from 'styled-components'
-import { ThemedText } from 'theme/components'
+import { ButtonText, ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 
@@ -100,11 +101,12 @@ export default function Option({ connection, isRecent }: OptionProps) {
   const { activationState, tryActivation } = useActivationState()
   const toggleAccountDrawer = useToggleAccountDrawer()
   const { chainId } = useWeb3React()
-  const activate = () => tryActivation(connection, toggleAccountDrawer, chainId)
+
+  const isDarkMode = useIsDarkMode()
+  const { name, icon } = connection.getProviderInfo(isDarkMode)
 
   const isSomeOptionPending = activationState.status === ActivationStatus.PENDING
-  const isCurrentOptionPending = isSomeOptionPending && activationState.connection.type === connection.type
-  const isDarkMode = useIsDarkMode()
+  const isCurrentOptionPending = isSomeOptionPending && activationState.connection === connection
 
   const rightSideDetail = isCurrentOptionPending ? <Loader /> : isRecent ? <RecentBadge /> : null
 
@@ -113,24 +115,38 @@ export default function Option({ connection, isRecent }: OptionProps) {
       <TraceEvent
         events={[BrowserEvent.onClick]}
         name={InterfaceEventName.WALLET_SELECTED}
-        properties={{ wallet_type: connection.getName() }}
+        properties={{ wallet_type: name }}
         element={InterfaceElementName.WALLET_TYPE_OPTION}
       >
         <OptionCardClickable
           disabled={isSomeOptionPending}
-          onClick={activate}
+          onClick={() => tryActivation(connection, toggleAccountDrawer, chainId)}
           selected={isCurrentOptionPending}
           data-testid={`wallet-option-${connection.type}`}
         >
           <OptionCardLeft>
             <IconWrapper>
-              <img src={connection.getIcon?.(isDarkMode)} alt={connection.getName()} />
+              <img src={icon} alt={name} />
             </IconWrapper>
-            <HeaderText>{connection.getName()}</HeaderText>
+            <HeaderText>{name}</HeaderText>
           </OptionCardLeft>
           {rightSideDetail}
         </OptionCardClickable>
       </TraceEvent>
     </Wrapper>
+  )
+}
+
+export function DeprecatedInjectorMessage() {
+  const { tryActivation } = useActivationState()
+  const toggleAccountDrawer = useToggleAccountDrawer()
+  const { chainId } = useWeb3React()
+
+  return (
+    <ButtonText onClick={() => tryActivation(deprecatedInjectedConnection, toggleAccountDrawer, chainId)}>
+      <ThemedText.BodySmall color="neutral2">
+        <Trans>Don&apos;t see your wallet?</Trans>
+      </ThemedText.BodySmall>
+    </ButtonText>
   )
 }

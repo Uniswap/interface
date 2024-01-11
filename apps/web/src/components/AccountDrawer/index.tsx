@@ -13,7 +13,7 @@ import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { isMobile } from 'utils/userAgent'
+import { isMobile } from 'wallet/src/utils/platform'
 
 import DefaultMenu from './DefaultMenu'
 

@@ -146,10 +146,9 @@ export function CurrencyRow({
         tabIndex={0}
         style={style}
         className={`token-item-${key}`}
-        onKeyPress={(e) => (!isSelected && e.key === 'Enter' ? onSelect(!!warning) : null)}
-        onClick={() => (isSelected ? null : onSelect(!!warning))}
-        disabled={isSelected}
-        selected={otherSelected}
+        onKeyPress={(e) => (e.key === 'Enter' ? onSelect(!!warning) : null)}
+        onClick={() => onSelect(!!warning)}
+        selected={otherSelected || isSelected}
         dim={isBlockedToken}
       >
         <Column>
@@ -275,10 +274,10 @@ export default function CurrencyList({
           <CurrencyRow
             style={style}
             currency={currency}
-            isSelected={isSelected}
             onSelect={handleSelect}
             otherSelected={otherSelected}
-            showCurrencyAmount={showCurrencyAmount}
+            isSelected={isSelected}
+            showCurrencyAmount={showCurrencyAmount && balance.greaterThan(0)}
             eventProperties={formatAnalyticsEventProperties(token, index, data, searchQuery, isAddressSearch)}
             balance={balance}
           />

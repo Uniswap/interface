@@ -8,8 +8,7 @@ import {
   WarningSeverity,
 } from 'src/components/modals/WarningModal/types'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
+import { useSwapRewriteEnabled } from 'wallet/src/features/experiments/hooks'
 import { useOnChainNativeCurrencyBalance } from 'wallet/src/features/portfolio/api'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { hasSufficientFundsIncludingGas } from 'wallet/src/features/transactions/utils'
@@ -42,7 +41,7 @@ export function useTransactionGasWarning({
   })
   const balanceInsufficient = currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)
 
-  const isSwapRewriteFeatureEnabled = useFeatureFlag(FEATURE_FLAGS.SwapRewrite)
+  const isSwapRewriteFeatureEnabled = useSwapRewriteEnabled()
 
   return useMemo(() => {
     // if balance is already insufficient, dont need to show warning about network fee

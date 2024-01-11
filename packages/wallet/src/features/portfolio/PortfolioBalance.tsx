@@ -1,15 +1,16 @@
 import { Flex, getTokenValue, Icons, Text, useSporeColors } from 'ui/src'
-import { usePortfolioUSDBalance } from 'wallet/src/features/portfolio/hooks'
+import { usePortfolioTotalValue } from 'wallet/src/features/dataApi/balances'
 
 type WalletBalanceProps = {
   address: Address
 }
 
 export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
-  const { portfolioBalanceUSD, portfolioChange, loading, error } = usePortfolioUSDBalance(address)
+  const { data, loading, error } = usePortfolioTotalValue({ address })
+  const { balanceUSD, percentChange } = data || {}
 
   // TODO (EXT-297): encapsulate to share better
-  const change = portfolioChange ?? 0
+  const change = percentChange ?? 0
 
   const isPositiveChange = change !== undefined ? change >= 0 : undefined
   const colors = useSporeColors()
@@ -34,7 +35,7 @@ export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
       ) : (
         <Flex gap="$spacing12">
           <Flex>
-            <Text variant="heading1">${portfolioBalanceUSD?.toFixed(2)}</Text>
+            <Text variant="heading1">${balanceUSD?.toFixed(2)}</Text>
             <Flex row alignItems="center">
               <Icons.ArrowChange
                 color={arrowColor.get()}

@@ -62,6 +62,7 @@ const MOCK_ARGS: GetQuoteArgs = {
   needsWrapIfUniswapX: USDCAmount.currency.isNative,
   uniswapXForceSyntheticQuotes: false,
   sendPortionEnabled: true,
+  gatewayDNSUpdateEnabled: false,
 }
 
 describe('#useRoutingAPITrade ExactIn', () => {

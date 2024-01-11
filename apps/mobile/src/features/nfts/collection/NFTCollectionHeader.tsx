@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ImageStyle } from 'react-native-fast-image'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Loader } from 'src/components/loading'
-import { LongText } from 'src/components/text/LongText'
+import { LongMarkdownText } from 'src/components/text/LongMarkdownText'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
 import { Flex, FlexProps, Logos, Text, useDeviceInsets, useSporeColors } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
@@ -209,13 +209,7 @@ export function NFTCollectionHeader({
 
           {/* Collection description */}
           {data?.description ? (
-            <LongText
-              initialDisplayedLines={3}
-              lineBreakMode="tail"
-              mt="$spacing4"
-              renderAsMarkdown={true}
-              text={data?.description}
-            />
+            <LongMarkdownText initialDisplayedLines={3} text={data?.description} />
           ) : loading ? (
             <Flex gap="$spacing8">
               <Loader.Box height={spacing.spacing16} width="100%" />

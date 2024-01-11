@@ -3,19 +3,19 @@ import IconButton from 'components/AccountDrawer/IconButton'
 import { AutoColumn } from 'components/Column'
 import { Settings } from 'components/Icons/Settings'
 import { AutoRow } from 'components/Row'
-import { connections, deprecatedNetworkConnection, networkConnection } from 'connection'
+import { deprecatedNetworkConnection, networkConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { isSupportedChain } from 'constants/chains'
 import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
-import { useEffect, useMemo } from 'react'
-import { useAppSelector } from 'state/hooks'
+import { useEffect } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
 
 import ConnectionErrorView from './ConnectionErrorView'
-import Option from './Option'
+import { DeprecatedInjectorMessage } from './Option'
 import PrivacyPolicyNotice from './PrivacyPolicyNotice'
+import { useOrderedConnections } from './useOrderedConnections'
 
 const Wrapper = styled.div`
   ${flexColumnNoWrap};
@@ -35,7 +35,7 @@ const OptionGrid = styled.div`
   `};
 `
 
-const PrivacyPolicyWrapper = styled.div`
+const TextSectionWrapper = styled.div`
   padding: 0 4px;
 `
 
@@ -55,22 +55,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
     }
   }, [chainId, connector, fallbackProviderEnabled])
 
-  const { type: recentConnectionType } = useAppSelector((state) => state.user.recentConnectionMeta) ?? {}
-
-  const orderedConnectionList = useMemo(() => {
-    const list: JSX.Element[] = []
-
-    for (const connection of connections) {
-      if (!connection.shouldDisplay()) continue
-
-      const isRecent = connection.type === recentConnectionType
-      const option = <Option key={connection.getName()} connection={connection} isRecent={isRecent} />
-      // Place recent connection at top of list
-      isRecent ? list.unshift(option) : list.push(option)
-    }
-
-    return list
-  }, [recentConnectionType])
+  const { orderedConnections, showDeprecatedMessage } = useOrderedConnections()
 
   return (
     <Wrapper data-testid="wallet-modal">
@@ -82,10 +67,11 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         <ConnectionErrorView />
       ) : (
         <AutoColumn gap="16px">
-          <OptionGrid data-testid="option-grid">{orderedConnectionList}</OptionGrid>
-          <PrivacyPolicyWrapper>
+          <OptionGrid data-testid="option-grid">{orderedConnections}</OptionGrid>
+          <TextSectionWrapper>{showDeprecatedMessage && <DeprecatedInjectorMessage />}</TextSectionWrapper>
+          <TextSectionWrapper>
             <PrivacyPolicyNotice />
-          </PrivacyPolicyWrapper>
+          </TextSectionWrapper>
         </AutoColumn>
       )}
     </Wrapper>

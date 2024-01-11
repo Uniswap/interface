@@ -13,7 +13,7 @@ const signatureSlice = createSlice({
   initialState,
   reducers: {
     addSignature(signatures, { payload }: { payload: SignatureDetails }) {
-      if (signatures[payload.offerer]?.[payload.id]) throw Error('Attempted to add existing signature.')
+      if (signatures[payload.offerer]?.[payload.id]) return
 
       const accountSignatures = signatures[payload.offerer] ?? {}
       accountSignatures[payload.id] = payload

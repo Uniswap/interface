@@ -6,31 +6,18 @@ declare module '@metamask/jazzicon' {
 
 interface Window {
   GIT_COMMIT_HASH?: string
-
-  // walletLinkExtension is injected by the Coinbase Wallet extension
-  walletLinkExtension?: any
+  // TODO: Remove all references to window.ethereum once old injection process is fully deprecated
   ethereum?: {
-    // set by the Coinbase Wallet mobile dapp browser
-    isCoinbaseWallet?: true
-    // set by the Brave browser when using built-in wallet
-    isBraveWallet?: true
-    // set by the MetaMask browser extension (also set by Brave browser when using built-in wallet)
-    isMetaMask?: true
-    // set by the Rabby browser extension
-    isRabby?: true
-    // set by the Trust Wallet browser extension
-    isTrust?: true
-    // set by the Ledger Extension Web 3 browser extension
-    isLedgerConnect?: true
     autoRefreshOnNetworkChange?: boolean
+
+    // Flags set by injected wallet extensions/browsers:
+    isMetaMask?: true // set by MetaMask (and by some non-MetaMask wallets that inject as MetaMask)
+    isCoinbaseWallet?: true
+    isBraveWallet?: true
+    isRabby?: true
+    isTrust?: true
+    isLedgerConnect?: true
   }
-  // set by the Phantom Wallet browser extension
-  phantom?: {
-    ethereum?: {
-      isPhantom?: true
-    }
-  }
-  web3?: Record<string, unknown>
 }
 
 declare module 'content-hash' {
@@ -51,4 +38,27 @@ declare module '*.webm' {
 declare module '*.mov' {
   const src: string
   export default src
+}
+
+declare module 'react-scroll-sync' {
+  export interface ScrollSyncProps {
+    children?: React.ReactNode
+    onSync?(el: Element): void
+    proportional?: boolean
+    vertical?: boolean
+    horizontal?: boolean
+    enabled?: boolean
+  }
+
+  export interface ScrollSyncPaneProps {
+    attachTo?: HTMLElement
+    children?: React.ReactNode
+    group?: string | string[]
+    enabled?: boolean
+    // https://github.com/okonet/react-scroll-sync/issues/79
+    innerRef?: React.Ref<HTMLElement>
+  }
+
+  export const ScrollSync: React.FC<ScrollSyncProps>
+  export const ScrollSyncPane: React.FC<ScrollSyncPaneProps>
 }

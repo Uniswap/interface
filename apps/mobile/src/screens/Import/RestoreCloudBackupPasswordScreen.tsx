@@ -6,7 +6,6 @@ import { Keyboard, TextInput } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PasswordInput } from 'src/components/input/PasswordInput'
-import { IS_ANDROID } from 'src/constants/globals'
 import {
   incrementPasswordAttempts,
   resetLockoutEndTime,
@@ -26,6 +25,7 @@ import { ImportType } from 'wallet/src/features/onboarding/types'
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
+import { isAndroid } from 'wallet/src/utils/platform'
 
 type Props = NativeStackScreenProps<
   OnboardingStackParamList,
@@ -153,12 +153,12 @@ export function RestoreCloudBackupPasswordScreen({
   return (
     <OnboardingScreen
       subtitle={
-        IS_ANDROID
+        isAndroid
           ? t('This password is required to recover your recovery phrase backup from Google Drive.')
           : t('This password is required to recover your recovery phrase backup from iCloud.')
       }
       title={
-        IS_ANDROID
+        isAndroid
           ? t('Enter your Google Drive backup password')
           : t('Enter your iCloud backup password')
       }>

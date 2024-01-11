@@ -6,8 +6,15 @@ const complexityRules = {
   'max-depth': ['error', 4], // prevent deeply nested code paths which are hard to read
   'max-nested-callbacks': ['error', 3],
   'max-lines': ['error', 500], // cap file length
-  complexity: ['error', 20], // restrict cyclomatic complexity (number of linearly independent paths )
+  complexity: ['error', 20], // restrict cyclomatic complexity (number of linearly independent paths)
 }
+
+// The ESLint browser environment defines all browser globals as valid,
+// even though most people don't know some of them exist (e.g. `name` or `status`).
+// This is dangerous as it hides accidentally undefined variables.
+// We blacklist the globals that we deem potentially confusing.
+// To use them, explicitly reference them, e.g. `window.name` or `window.status`.
+const restrictedGlobals = require('confusing-browser-globals')
 
 module.exports = {
   root: true,
@@ -46,6 +53,7 @@ module.exports = {
     'no-extra-boolean-cast': 'error',
     'no-ex-assign': 'error',
     'no-console': 'warn',
+    'no-restricted-globals': ['error'].concat(restrictedGlobals),
     "no-relative-import-paths/no-relative-import-paths": [
       2,
       {
@@ -134,7 +142,22 @@ module.exports = {
             name: 'react-native-safe-area-context',
             importNames: ["useSafeAreaInsets"],
             message: "Use our internal `useDeviceInsets` hook instead.",
-          }
+          },
+          {
+            name: 'wallet/src/data/__generated__/types-and-hooks',
+            importNames: ["usePortfolioBalancesQuery"],
+            message: "Use `usePortfolioBalances` instead.",
+          },
+          {
+            name: 'wallet/src/data/__generated__/types-and-hooks',
+            importNames: ["useAccountListQuery"],
+            message: "Use `useAccountList` instead.",
+          },
+          {
+            name: 'wallet/src/features/dataApi/balances',
+            importNames: ["usePortfolioValueModifiers"],
+            message: "Use the wrapper hooks `usePortfolioTotalValue`, `useAccountList` or `usePortfolioBalances` instead of `usePortfolioValueModifiers` directly.",
+          },
         ],
       },
     ],
@@ -235,6 +258,13 @@ module.exports = {
           "@jambit/typed-redux-saga/delegate-effects": "error"
       }
     },
+    // Allow more depth for testing files
+    {
+      "files": ["./**/*.test.ts", "./**/*.test.tsx"],
+      "rules": {
+        'max-nested-callbacks': ['error', 4],
+      }
+    },
     {
       files: ['*.json'],
       rules: {
@@ -302,6 +332,7 @@ module.exports = {
               'Unicon',
               'yourname',
               'yourusername',
+              'Unitags',
             ],
           },
 

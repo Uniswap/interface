@@ -1,4 +1,5 @@
 export function opacify(amount: number, hexColor: string): string {
+  'worklet'
   if (!hexColor.startsWith('#')) {
     return hexColor
   }

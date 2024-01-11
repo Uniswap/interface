@@ -179,7 +179,7 @@ export const txTypeInfo: ApproveTransactionInfo = {
   spender: UNIVERSAL_ROUTER_ADDRESS(ChainId.Goerli),
 }
 
-export const txDetailsPending: TransactionDetails = {
+export const txDetailsPending = {
   chainId: ChainId.Mainnet,
   id: '0',
   from: account.address,
@@ -192,7 +192,7 @@ export const txDetailsPending: TransactionDetails = {
   hash: '0x123',
 }
 
-export const txDetailsConfirmed: TransactionDetails = {
+export const txDetailsConfirmed = {
   ...txDetailsPending,
   status: TransactionStatus.Success,
   receipt: {
@@ -216,7 +216,6 @@ export const fiatOnRampTxDetailsPending: TransactionDetails = {
   typeInfo: txTypeInfo,
   status: TransactionStatus.Pending,
   addedTime: 1487076708000,
-  hash: '0x123',
 }
 
 export const fiatOnRampTxDetailsFailed: TransactionDetails & {

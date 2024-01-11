@@ -144,6 +144,7 @@ export const DecimalPad = memo(function DecimalPad({
             ) : (
               <KeyButton
                 {...key}
+                key={keyIndex}
                 disabled={disabled || disabledKeys[key.label]}
                 index={keyIndex}
                 sizeMultiplier={sizeMultiplier}

@@ -1,10 +1,11 @@
-import { Platform, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import WebView from 'react-native-webview'
 import { Flex, Loader } from 'ui/src'
 import { useSvgData } from 'wallet/src/features/images/hooks'
 import { SvgUriProps } from 'wallet/src/features/images/WebSvgUri'
+import { isIOS } from 'wallet/src/utils/platform'
 
-const heightUnits = Platform.OS === 'ios' ? 'vh' : '%'
+const heightUnits = isIOS ? 'vh' : '%'
 
 const getHTML = (svgContent: string): string => `
 <html>

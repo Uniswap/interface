@@ -98,11 +98,9 @@ export function useMemoCompare<T>(next: () => T, compare: (a: T | undefined, b: 
   // If not equal update previousRef to next value.
   // We only update if not equal so that this hook continues to return
   // the same old value if compare keeps returning true.
-  useEffect(() => {
-    if (!isEqual) {
-      previousRef.current = nextValue
-    }
-  })
+  if (!isEqual || !previous) {
+    previousRef.current = nextValue
+  }
 
   // Finally, if equal then return the previous value if it's set
   return isEqual && previous ? previous : nextValue

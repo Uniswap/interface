@@ -18,6 +18,7 @@ describe('application reducer', () => {
       chainId: null,
       openModal: null,
       popupList: [],
+      suppressedPopups: [],
     })
   })
 

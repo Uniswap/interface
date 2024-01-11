@@ -12,7 +12,6 @@ import {
 import { TabProps, TAB_BAR_HEIGHT } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import { IS_ANDROID } from 'src/constants/globals'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import {
@@ -33,6 +32,7 @@ import {
   useActiveAccountWithThrow,
   useSelectAccountHideSpamTokens,
 } from 'wallet/src/features/wallet/hooks'
+import { isAndroid } from 'wallet/src/utils/platform'
 
 export const ACTIVITY_TAB_DATA_DEPENDENCIES = [GQLQueries.TransactionList]
 
@@ -148,7 +148,7 @@ export const ActivityTab = memo(
       return (
         <RefreshControl
           progressViewOffset={
-            insets.top + (IS_ANDROID && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
+            insets.top + (isAndroid && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
           }
           refreshing={refreshing ?? false}
           tintColor={colors.neutral3.get()}

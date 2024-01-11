@@ -3,7 +3,7 @@ import { useSyncExternalStore } from 'react'
 import store from 'state'
 import { clearRecentConnectionMeta } from 'state/user/reducer'
 
-import { deprecatedNetworkConnection, getConnection, gnosisSafeConnection } from './index'
+import { deprecatedNetworkConnection, eip6963Connection, getConnection, gnosisSafeConnection } from './index'
 import { getRecentConnectionMeta } from './meta'
 import { ConnectionType } from './types'
 
@@ -48,11 +48,16 @@ if (window !== window.parent) {
 connect(deprecatedNetworkConnection.connector, ConnectionType.DEPRECATED_NETWORK)
 
 // Get the persisted wallet type from the last session.
-const meta = getRecentConnectionMeta()
-if (meta?.type && !meta.disconnected) {
-  const selectedConnection = getConnection(meta.type)
+const recentConnectionMeta = getRecentConnectionMeta()
+if (recentConnectionMeta?.type && !recentConnectionMeta.disconnected) {
+  const selectedConnection = getConnection(recentConnectionMeta.type)
+
+  // All EIP6963 wallets share one Connection object, `eip6963Connection`
+  // To activate the same EIP6963 wallet as the last session, we need to `select` the rdns of the recent connection
+  if (recentConnectionMeta.rdns) eip6963Connection.selectRdns(recentConnectionMeta.rdns)
+
   if (selectedConnection) {
-    connectionReady = connect(selectedConnection.connector, meta.type)
+    connectionReady = connect(selectedConnection.connector, recentConnectionMeta.type)
       .then((connected) => {
         if (!connected) throw new FailedToConnect()
       })

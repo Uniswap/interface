@@ -49,10 +49,7 @@ export function useBiometricCheck(): void {
     hideSplashScreen() // In case of a race condition where splash screen is not hidden, we want to hide when FaceID forces an app state change
     if (
       requiredForAppAccess &&
-      authenticationStatus !== BiometricAuthenticationStatus.Authenticating &&
-      authenticationStatus !== BiometricAuthenticationStatus.Rejected &&
-      authenticationStatus !== BiometricAuthenticationStatus.Lockout &&
-      authenticationStatus !== BiometricAuthenticationStatus.UserCancel
+      authenticationStatus === BiometricAuthenticationStatus.Authenticated
     ) {
       setIsLockScreenVisible(false)
     }

@@ -1,12 +1,12 @@
 import React from 'react'
 import { Image, StyleSheet } from 'react-native'
 import { Modal } from 'src/components/modals/Modal'
-import { IS_ANDROID } from 'src/constants/globals'
 import { useLockScreenContext } from 'src/features/authentication/lockScreenContext'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { Flex, TouchableArea, useDeviceDimensions, useDeviceInsets } from 'ui/src'
 import { UNISWAP_LOGO_LARGE } from 'ui/src/assets'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
+import { isAndroid } from 'wallet/src/utils/platform'
 
 export const SPLASH_SCREEN = { uri: 'SplashScreen' }
 
@@ -35,7 +35,7 @@ export function LockScreenModal(): JSX.Element | null {
         <Flex
           alignItems="center"
           backgroundColor={isDarkMode ? '$surface1' : '$sporeWhite'}
-          justifyContent={IS_ANDROID ? 'center' : undefined}
+          justifyContent={isAndroid ? 'center' : undefined}
           pointerEvents="none"
           style={{
             width: dimensions.fullWidth,
@@ -43,7 +43,7 @@ export function LockScreenModal(): JSX.Element | null {
             paddingBottom: insets.bottom,
           }}>
           {/* Android has a different implementation, which is not set in stone yet, so skipping it for now */}
-          {IS_ANDROID ? (
+          {isAndroid ? (
             <Image source={UNISWAP_LOGO_LARGE} style={style.logoStyle} />
           ) : (
             <Image

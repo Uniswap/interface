@@ -1,9 +1,9 @@
+import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency } from '@uniswap/sdk-core'
 import { useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { Delay } from 'src/components/layout/Delayed'
-import { IS_ANDROID } from 'src/constants/globals'
 import { ColorTokens, useSporeColors } from 'ui/src'
 import { useDebounce } from 'utilities/src/time/timing'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -33,6 +33,7 @@ import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 import { ValueType } from 'wallet/src/utils/getCurrencyAmount'
+import { isAndroid } from 'wallet/src/utils/platform'
 
 export function useFormatExactCurrencyAmount(
   currencyAmount: string,
@@ -151,7 +152,7 @@ export function useMoonpayFiatOnRamp({
   quoteCurrencyCode,
 }: {
   baseCurrencyAmount: string
-  quoteCurrencyCode: string
+  quoteCurrencyCode: string | undefined
 }): {
   eligible: boolean
   quoteAmount: number
@@ -166,7 +167,6 @@ export function useMoonpayFiatOnRamp({
   errorColor?: ColorTokens
 } {
   const colors = useSporeColors()
-  const { t } = useTranslation()
 
   const debouncedBaseCurrencyAmount = useDebounce(baseCurrencyAmount, Delay.Short)
 
@@ -185,11 +185,15 @@ export function useMoonpayFiatOnRamp({
     data: limitsData,
     isLoading: limitsLoading,
     isError: limitsLoadingQueryError,
-  } = useFiatOnRampLimitsQuery({
-    baseCurrencyCode,
-    quoteCurrencyCode,
-    areFeesIncluded: MOONPAY_FEES_INCLUDED,
-  })
+  } = useFiatOnRampLimitsQuery(
+    quoteCurrencyCode
+      ? {
+          baseCurrencyCode,
+          quoteCurrencyCode,
+          areFeesIncluded: MOONPAY_FEES_INCLUDED,
+        }
+      : skipToken
+  )
 
   const { maxBuyAmount } = limitsData?.baseCurrency ?? {
     maxBuyAmount: Infinity,
@@ -214,37 +218,40 @@ export function useMoonpayFiatOnRamp({
   } = useFiatOnRampWidgetUrlQuery(
     // PERF: could consider skipping this call until eligibility in determined (ux tradeoffs)
     // as-is, avoids waterfalling requests => better ux
-    {
-      ownerAddress: activeAccountAddress,
-      colorCode: colors.accent1.val,
-      externalTransactionId,
-      amount: baseCurrencyAmount,
-      currencyCode: quoteCurrencyCode,
-      baseCurrencyCode,
-      redirectUrl: `${
-        IS_ANDROID ? uniswapUrls.appUrl : uniswapUrls.appBaseUrl
-      }/?screen=transaction&fiatOnRamp=true&userAddress=${activeAccountAddress}`,
-    }
+    quoteCurrencyCode
+      ? {
+          ownerAddress: activeAccountAddress,
+          colorCode: colors.accent1.val,
+          externalTransactionId,
+          amount: baseCurrencyAmount,
+          currencyCode: quoteCurrencyCode,
+          baseCurrencyCode,
+          redirectUrl: `${
+            isAndroid ? uniswapUrls.appUrl : uniswapUrls.appBaseUrl
+          }/?screen=transaction&fiatOnRamp=true&userAddress=${activeAccountAddress}`,
+        }
+      : skipToken
   )
   const {
     data: buyQuote,
     isFetching: buyQuoteLoading,
     isError: buyQuoteLoadingQueryError,
   } = useFiatOnRampBuyQuoteQuery(
-    {
-      baseCurrencyCode,
-      baseCurrencyAmount: debouncedBaseCurrencyAmount,
-      quoteCurrencyCode,
-      areFeesIncluded: MOONPAY_FEES_INCLUDED,
-    },
-    {
-      // When isBaseCurrencyAmountValid is false and the user enters any digit,
-      // isBaseCurrencyAmountValid becomes true. Since there were no prior calls to the API,
-      // it takes the debouncedBaseCurrencyAmount and immediately calls an API.
-      // This only truly matters in the beginning and in cases where the debouncedBaseCurrencyAmount
-      // is changed while isBaseCurrencyAmountValid is false."
-      skip: !isBaseCurrencyAmountValid || debouncedBaseCurrencyAmount !== baseCurrencyAmount,
-    }
+    // When isBaseCurrencyAmountValid is false and the user enters any digit,
+    // isBaseCurrencyAmountValid becomes true. Since there were no prior calls to the API,
+    // it takes the debouncedBaseCurrencyAmount and immediately calls an API.
+    // This only truly matters in the beginning and in cases where the debouncedBaseCurrencyAmount
+    // is changed while isBaseCurrencyAmountValid is false."
+    quoteCurrencyCode &&
+      isBaseCurrencyAmountValid &&
+      debouncedBaseCurrencyAmount === baseCurrencyAmount
+      ? {
+          baseCurrencyCode,
+          baseCurrencyAmount: debouncedBaseCurrencyAmount,
+          quoteCurrencyCode,
+          areFeesIncluded: MOONPAY_FEES_INCLUDED,
+        }
+      : skipToken
   )
 
   const quoteAmount = buyQuote?.quoteCurrencyAmount ?? 0
@@ -281,17 +288,13 @@ export function useMoonpayFiatOnRamp({
     currencySymbol: baseCurrencySymbol,
   })
 
-  let errorText, errorColor: ColorTokens | undefined
-  if (isError) {
-    errorText = t('Something went wrong.')
-    errorColor = '$DEP_accentWarning'
-  } else if (amountIsTooSmall) {
-    errorText = t('{{amount}} minimum', { amount: minBuyAmountWithFiatSymbol })
-    errorColor = '$statusCritical'
-  } else if (amountIsTooLarge) {
-    errorText = t('{{amount}} maximum', { amount: maxBuyAmountWithFiatSymbol })
-    errorColor = '$statusCritical'
-  }
+  const { errorText, errorColor } = useMoonpayError(
+    isError,
+    amountIsTooSmall,
+    amountIsTooLarge,
+    minBuyAmountWithFiatSymbol,
+    maxBuyAmountWithFiatSymbol
+  )
 
   return {
     eligible,
@@ -345,4 +348,32 @@ export function useFiatOnRampSupportedTokens(): {
       await supportedTokensQueryRefetch()
     },
   }
+}
+
+function useMoonpayError(
+  hasError: boolean,
+  amountIsTooSmall: boolean,
+  amountIsTooLarge: boolean,
+  minBuyAmountWithFiatSymbol: string,
+  maxBuyAmountWithFiatSymbol: string
+): {
+  errorText: string | undefined
+  errorColor: ColorTokens | undefined
+} {
+  const { t } = useTranslation()
+
+  let errorText, errorColor: ColorTokens | undefined
+
+  if (hasError) {
+    errorText = t('Something went wrong.')
+    errorColor = '$DEP_accentWarning'
+  } else if (amountIsTooSmall) {
+    errorText = t('Minimum {{amount}}', { amount: minBuyAmountWithFiatSymbol })
+    errorColor = '$statusCritical'
+  } else if (amountIsTooLarge) {
+    errorText = t('Maximum {{amount}}', { amount: maxBuyAmountWithFiatSymbol })
+    errorColor = '$statusCritical'
+  }
+
+  return { errorText, errorColor }
 }

@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAccountList } from 'src/components/accounts/hooks'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import {
@@ -13,7 +14,6 @@ import {
   shouldReportBalances,
 } from 'src/features/telemetry/slice'
 import { useAsyncData } from 'utilities/src/react/hooks'
-import { useAccountListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { sendWalletAppsFlyerEvent } from 'wallet/src/telemetry'
@@ -33,8 +33,8 @@ export function useLastBalancesReporter(): () => void {
       .map((a) => a.address)
   }, [accounts])
 
-  const { data } = useAccountListQuery({
-    variables: { addresses: signerAccountAddresses },
+  const { data } = useAccountList({
+    addresses: signerAccountAddresses,
     fetchPolicy: 'cache-first',
   })
 

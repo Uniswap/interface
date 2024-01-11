@@ -4,32 +4,27 @@ import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { ArrowLeft, ChevronRight } from 'react-feather'
 import { useParams } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 
 import { LoadingBubble } from '../loading'
 import { AboutContainer, AboutHeader } from './About'
-import { BreadcrumbNav, BreadcrumbNavLink } from './BreadcrumbNavLink'
+import { BreadcrumbNavContainer, BreadcrumbNavLink } from './BreadcrumbNav'
 import { ChartContainer } from './ChartSection'
+import { Hr } from './shared'
 import { StatPair, StatsWrapper, StatWrapper } from './StatsSection'
 
 const SWAP_COMPONENT_WIDTH = 360
 
-export const Hr = styled.hr`
-  background-color: ${({ theme }) => theme.surface3};
-  border: none;
-  height: 0.5px;
-`
 export const TokenDetailsLayout = styled.div`
   display: flex;
-  padding: 0 8px 52px;
+  padding: 0 16px 52px;
   justify-content: center;
   width: 100%;
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
     gap: 16px;
-    padding: 0 16px 52px;
   }
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     gap: 40px;
@@ -63,20 +58,32 @@ const LoadingChartContainer = styled.div`
   padding-bottom: 66px;
   overflow: hidden;
 `
-export const TokenInfoContainer = styled.div`
+export const TokenInfoContainer = styled.div<{ isInfoTDPEnabled?: boolean }>`
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 4px;
+  align-items: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? 'flex-start' : 'center')};
+  margin-bottom: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '12' : '4')}px;
+  gap: 20px;
   ${textFadeIn};
   animation-duration: ${({ theme }) => theme.transition.duration.medium};
 `
-export const TokenNameCell = styled.div`
+export const TokenNameCell = styled.div<{ isInfoTDPEnabled?: boolean }>`
   display: flex;
   gap: 8px;
   font-size: 20px;
   line-height: 28px;
   align-items: center;
+
+  ${({ isInfoTDPEnabled }) =>
+    isInfoTDPEnabled &&
+    css`
+      padding-top: 4px;
+      min-width: 32px;
+      @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    `}
 `
 /* Loading state bubbles */
 const DetailBubble = styled(LoadingBubble)`
@@ -225,20 +232,20 @@ export default function TokenDetailsSkeleton() {
   return (
     <LeftPanel>
       {isInfoTDPEnabled ? (
-        <BreadcrumbNav isInfoTDPEnabled>
+        <BreadcrumbNavContainer isInfoTDPEnabled>
           <BreadcrumbNavLink to={`${isInfoExplorePageEnabled ? '/explore' : ''}/tokens/${chainName}`}>
             <Trans>Explore</Trans> <ChevronRight size={14} /> <Trans>Tokens</Trans> <ChevronRight size={14} />
           </BreadcrumbNavLink>{' '}
           <NavBubble />
-        </BreadcrumbNav>
+        </BreadcrumbNavContainer>
       ) : (
-        <BreadcrumbNav>
+        <BreadcrumbNavContainer>
           <BreadcrumbNavLink
             to={(isInfoExplorePageEnabled ? '/explore' : '') + (chainName ? `/tokens/${chainName}` : `/tokens`)}
           >
             <ArrowLeft size={14} /> Tokens
           </BreadcrumbNavLink>
-        </BreadcrumbNav>
+        </BreadcrumbNavContainer>
       )}
       <TokenInfoContainer>
         <TokenNameCell>

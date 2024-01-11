@@ -72,6 +72,7 @@ export function useGroupNftsByVisibility(
 ): {
   nfts: Array<NFTItem | string>
   numHidden: number
+  numShown: number
 } {
   const nftsData = useAppSelector(selectNftsData)
   return useMemo(() => {
@@ -112,6 +113,7 @@ export function useGroupNftsByVisibility(
         ...((showHidden && hidden) || []),
       ],
       numHidden: hidden.length,
+      numShown: shown.length,
     }
   }, [nftDataItems, nftsData, owner, showHidden])
 }

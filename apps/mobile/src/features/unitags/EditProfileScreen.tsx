@@ -1,5 +1,5 @@
-import { useNavigation } from '@react-navigation/native'
-import React, { useState } from 'react'
+import { isEqual } from 'lodash'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
@@ -14,23 +14,57 @@ import { Button, Flex, Icons, Text, useDeviceInsets } from 'ui/src'
 import { iconSizes, imageSizes } from 'ui/src/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
+import { useUnitagUpdateMetadataMutation } from 'wallet/src/features/unitags/api'
+import { useUnitag } from 'wallet/src/features/unitags/hooks'
+import { ProfileMetadata } from 'wallet/src/features/unitags/types'
 import { shortenAddress } from 'wallet/src/utils/addresses'
+
+const isProfileMetadataEdited = (
+  loading: boolean,
+  updatedMetadata: ProfileMetadata,
+  initialMetadata?: ProfileMetadata
+): boolean => {
+  return !!initialMetadata && !loading && isEqual(updatedMetadata, initialMetadata)
+}
 
 export function EditProfileScreen({
   route,
 }: UnitagStackScreenProp<UnitagScreens.EditProfile>): JSX.Element {
-  // TODO (MOB-1314): add backend call to get unitag from address
-  const unitag = 'placeholder'
-
   const { address } = route.params
+  const unitag = useUnitag(address)
   const { name: ensName } = useENS(ChainId.Mainnet, address)
-  const navigation = useNavigation()
   const insets = useDeviceInsets()
   const { t } = useTranslation()
-  const [imageUri, setImageUri] = useState<string>()
   const [showModal, setShowModal] = useState(false)
-  const [bio, setBio] = useState('')
-  const [twitter, setTwitter] = useState('')
+  const [imageUri, setImageUri] = useState<string>()
+  const [bioInput, setBioInput] = useState<string>()
+  const [urlInput, setUrlInput] = useState<string>()
+  const [twitterInput, setTwitterInput] = useState<string>()
+  const updatedMetadata: ProfileMetadata = {
+    avatar: imageUri,
+    description: bioInput,
+    url: urlInput,
+    twitter: twitterInput,
+  }
+  const [
+    updateUnitagMetadata,
+    { called: updateRequestMade, loading: updateResponseLoading, data: updateResponse },
+  ] = useUnitagUpdateMetadataMutation(unitag?.username ?? address) // Save button can't be pressed until unitag is loaded anyways so this is fine
+  const profileMetadataEdited = isProfileMetadataEdited(
+    updateResponseLoading,
+    updatedMetadata,
+    updateResponse?.metadata ?? unitag?.metadata
+  )
+
+  useEffect(() => {
+    // Only want to set values on first time unitag loads, when we have not yet made the PUT request
+    if (!updateRequestMade && unitag?.metadata) {
+      setImageUri(unitag.metadata.avatar)
+      setBioInput(unitag.metadata.description)
+      setUrlInput(unitag.metadata.url)
+      setTwitterInput(unitag.metadata.twitter)
+    }
+  }, [updateRequestMade, unitag?.metadata])
 
   const openModal = (): void => {
     setShowModal(true)
@@ -40,9 +74,11 @@ export function EditProfileScreen({
     setShowModal(false)
   }
 
-  const onPressSaveChanges = (): void => {
-    // TODO (MOB-2123): POST to unitags backend to update profile metadata
-    navigation.goBack()
+  const onPressSaveChanges = async (): Promise<void> => {
+    await updateUnitagMetadata({
+      address,
+      metadata: updatedMetadata,
+    })
   }
 
   return (
@@ -90,7 +126,7 @@ export function EditProfileScreen({
 
             <Flex gap="$spacing4" px="$spacing16">
               <Text color="$neutral1" variant="heading2">
-                {unitag}
+                {unitag?.username}
                 {UNITAG_SUFFIX}
               </Text>
               <Text color="$neutral2" variant="subheading2">
@@ -100,7 +136,7 @@ export function EditProfileScreen({
             <Flex gap="$spacing24" px="$spacing16">
               <Flex row alignItems="flex-start" justifyContent="flex-start">
                 <Text color="$neutral2" flex={1} pt="$spacing4" variant="subheading1">
-                  Bio
+                  {t('Bio')}
                 </Text>
                 <TextInput
                   autoCorrect
@@ -115,13 +151,34 @@ export function EditProfileScreen({
                   placeholderTextColor="$neutral3"
                   returnKeyType="done"
                   textAlign="left"
-                  value={bio}
-                  onChangeText={setBio}
+                  value={bioInput}
+                  onChangeText={setBioInput}
+                />
+              </Flex>
+              <Flex row alignItems="flex-start" justifyContent="flex-start">
+                <Text color="$neutral2" flex={1} pt="$spacing4" variant="subheading1">
+                  {t('Website')}
+                </Text>
+                <TextInput
+                  autoCorrect
+                  blurOnSubmit
+                  multiline
+                  flex={2}
+                  fontFamily="$body"
+                  fontSize="$small"
+                  numberOfLines={6}
+                  p="$none"
+                  placeholder={t('Type your website url here')}
+                  placeholderTextColor="$neutral3"
+                  returnKeyType="done"
+                  textAlign="left"
+                  value={urlInput}
+                  onChangeText={setUrlInput}
                 />
               </Flex>
               <Flex row alignItems="flex-end" justifyContent="flex-start">
                 <Text color="$neutral2" flex={1} variant="subheading1">
-                  Twitter
+                  {t('Twitter')}
                 </Text>
                 <TextInput
                   autoCorrect
@@ -134,14 +191,14 @@ export function EditProfileScreen({
                   placeholderTextColor="$neutral3"
                   returnKeyType="done"
                   textAlign="left"
-                  value={twitter}
-                  onChangeText={setTwitter}
+                  value={twitterInput}
+                  onChangeText={setTwitterInput}
                 />
               </Flex>
               {ensName && (
                 <Flex row justifyContent="flex-start">
                   <Text color="$neutral2" flex={1} variant="subheading1">
-                    ENS
+                    {t('ENS')}
                   </Text>
                   <Text color="$neutral2" flex={2} variant="body2">
                     {ensName}
@@ -150,7 +207,11 @@ export function EditProfileScreen({
               )}
             </Flex>
           </Flex>
-          <Button size="medium" theme="primary" onPress={onPressSaveChanges}>
+          <Button
+            disabled={!profileMetadataEdited}
+            size="medium"
+            theme="primary"
+            onPress={onPressSaveChanges}>
             {t('Save changes')}
           </Button>
         </Flex>

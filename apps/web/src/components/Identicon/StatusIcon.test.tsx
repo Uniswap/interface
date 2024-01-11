@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { injectedConnection } from 'connection'
+import { deprecatedInjectedConnection } from 'connection'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
 
@@ -14,12 +14,14 @@ jest.mock('../../hooks/useSocksBalance', () => ({
 describe('StatusIcon', () => {
   describe('with no account', () => {
     it('renders children in correct order', () => {
-      const component = render(<StatusIcon account={ACCOUNT} connection={injectedConnection} />)
+      const component = render(<StatusIcon account={ACCOUNT} connection={deprecatedInjectedConnection} />)
       expect(component.getByTestId('StatusIconRoot')).toMatchSnapshot()
     })
 
     it('renders without mini icons', () => {
-      const component = render(<StatusIcon account={ACCOUNT} connection={injectedConnection} showMiniIcons={false} />)
+      const component = render(
+        <StatusIcon account={ACCOUNT} connection={deprecatedInjectedConnection} showMiniIcons={false} />
+      )
       expect(component.getByTestId('StatusIconRoot').children.length).toEqual(0)
     })
   })
@@ -33,12 +35,14 @@ describe('StatusIcon', () => {
     })
 
     it('renders children in correct order', () => {
-      const component = render(<StatusIcon account={ACCOUNT} connection={injectedConnection} />)
+      const component = render(<StatusIcon account={ACCOUNT} connection={deprecatedInjectedConnection} />)
       expect(component.getByTestId('StatusIconRoot')).toMatchSnapshot()
     })
 
     it('renders without mini icons', () => {
-      const component = render(<StatusIcon account={ACCOUNT} connection={injectedConnection} showMiniIcons={false} />)
+      const component = render(
+        <StatusIcon account={ACCOUNT} connection={deprecatedInjectedConnection} showMiniIcons={false} />
+      )
       expect(component.getByTestId('StatusIconRoot').children.length).toEqual(0)
     })
   })

@@ -315,7 +315,6 @@ exports[`SwapHeader.tsx matches base snapshot 1`] = `
           aria-label="Transaction Settings"
           class="c15"
           data-testid="open-settings-dialog-button"
-          disabled=""
           id="open-settings-dialog-button"
         >
           <div

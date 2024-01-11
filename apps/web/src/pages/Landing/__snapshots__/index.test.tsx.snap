@@ -784,6 +784,209 @@ exports[`disable nft on landing page does not render nft information and card 1`
   display: flex;
 }
 
+.c3 {
+  padding: 68px 8px 0px;
+  max-width: 480px;
+  width: 100%;
+}
+
+.c4 {
+  position: relative;
+  z-index: 1;
+  border: 1px solid #22222212;
+  -webkit-transition: -webkit-transform 250ms ease;
+  -webkit-transition: transform 250ms ease;
+  transition: transform 250ms ease;
+  border-radius: 24px;
+}
+
+.c4:before {
+  content: ' ';
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  position: absolute;
+  inset: 0;
+  -webkit-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+  -webkit-filter: blur(50px);
+  filter: blur(50px);
+  background-color: rgba(252,114,255,0.075);
+  z-index: -2;
+}
+
+.c4:hover {
+  border: 1px solid #22222212;
+}
+
+.c6 {
+  border-radius: 24px;
+  background: #FFFFFF;
+  z-index: -1;
+  padding: 8px;
+  padding-top: 12px;
+}
+
+.c42 {
+  border-radius: 12px;
+  height: 40px;
+  width: 40px;
+  position: relative;
+  margin-top: -18px;
+  margin-bottom: -18px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #F9F9F9;
+  border: 4px solid;
+  border-color: #FFFFFF;
+  z-index: 2;
+}
+
+.c42:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.c24 {
+  background-color: #F9F9F9;
+  border-radius: 16px;
+  color: #7D7D7D;
+  font-size: 14px;
+  font-weight: 500;
+  height: 120px;
+  line-height: 20px;
+  padding: 16px;
+  position: relative;
+}
+
+.c24:before {
+  box-sizing: border-box;
+  background-size: 100%;
+  border-radius: inherit;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  content: '';
+  border: 1px solid #F9F9F9;
+}
+
+.c24:hover:before {
+  border-color: #98A1C014;
+}
+
+.c24:focus-within:before {
+  border-color: #B8C0DC3d;
+}
+
+.c45 {
+  border-bottom: 1px solid #FFFFFF;
+}
+
+.c43 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.c23 {
+  height: 24px;
+  width: 24px;
+}
+
+.c23 > * {
+  fill: #7D7D7D;
+}
+
+.c21 {
+  border: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.c21:not([disabled]):hover {
+  opacity: 0.7;
+}
+
+.c22 {
+  padding: 6px 12px;
+  border-radius: 16px;
+}
+
+.c20 {
+  position: relative;
+}
+
+.c19 {
+  color: #7D7D7D;
+  gap: 4px;
+  font-weight: 485;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  -webkit-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+  -webkit-transition-property: opacity,color,background-color;
+  transition-property: opacity,color,background-color;
+}
+
+.c19:focus {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c19:active {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c19:hover {
+  opacity: 0.6;
+}
+
+.c10 {
+  margin-bottom: 10px;
+  color: #7D7D7D;
+}
+
+.c12 {
+  padding: 0 12px;
+  gap: 16px;
+}
+
+.c14 {
+  color: #222222;
+  gap: 4px;
+  font-weight: 485;
+}
+
+.c14:focus {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c14:active {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
 .c29 {
   color: #222222;
   pointer-events: auto;
@@ -1074,209 +1277,6 @@ exports[`disable nft on landing page does not render nft information and card 1`
   font-size: 36px;
   font-weight: 485;
   max-height: 44px;
-}
-
-.c3 {
-  padding: 68px 8px 0px;
-  max-width: 480px;
-  width: 100%;
-}
-
-.c4 {
-  position: relative;
-  z-index: 1;
-  border: 1px solid #22222212;
-  -webkit-transition: -webkit-transform 250ms ease;
-  -webkit-transition: transform 250ms ease;
-  transition: transform 250ms ease;
-  border-radius: 24px;
-}
-
-.c4:before {
-  content: ' ';
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  position: absolute;
-  inset: 0;
-  -webkit-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-  -webkit-filter: blur(50px);
-  filter: blur(50px);
-  background-color: rgba(252,114,255,0.075);
-  z-index: -2;
-}
-
-.c4:hover {
-  border: 1px solid #22222212;
-}
-
-.c6 {
-  border-radius: 24px;
-  background: #FFFFFF;
-  z-index: -1;
-  padding: 8px;
-  padding-top: 12px;
-}
-
-.c42 {
-  border-radius: 12px;
-  height: 40px;
-  width: 40px;
-  position: relative;
-  margin-top: -18px;
-  margin-bottom: -18px;
-  margin-left: auto;
-  margin-right: auto;
-  background-color: #F9F9F9;
-  border: 4px solid;
-  border-color: #FFFFFF;
-  z-index: 2;
-}
-
-.c42:hover {
-  cursor: pointer;
-  opacity: 0.8;
-}
-
-.c24 {
-  background-color: #F9F9F9;
-  border-radius: 16px;
-  color: #7D7D7D;
-  font-size: 14px;
-  font-weight: 500;
-  height: 120px;
-  line-height: 20px;
-  padding: 16px;
-  position: relative;
-}
-
-.c24:before {
-  box-sizing: border-box;
-  background-size: 100%;
-  border-radius: inherit;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  content: '';
-  border: 1px solid #F9F9F9;
-}
-
-.c24:hover:before {
-  border-color: #98A1C014;
-}
-
-.c24:focus-within:before {
-  border-color: #B8C0DC3d;
-}
-
-.c45 {
-  border-bottom: 1px solid #FFFFFF;
-}
-
-.c43 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-}
-
-.c23 {
-  height: 24px;
-  width: 24px;
-}
-
-.c23 > * {
-  fill: #7D7D7D;
-}
-
-.c21 {
-  border: none;
-  background-color: transparent;
-  margin: 0;
-  padding: 0;
-  cursor: pointer;
-  outline: none;
-}
-
-.c21:not([disabled]):hover {
-  opacity: 0.7;
-}
-
-.c22 {
-  padding: 6px 12px;
-  border-radius: 16px;
-}
-
-.c20 {
-  position: relative;
-}
-
-.c19 {
-  color: #7D7D7D;
-  gap: 4px;
-  font-weight: 485;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  -webkit-transition-timing-function: ease-in-out;
-  transition-timing-function: ease-in-out;
-  -webkit-transition-property: opacity,color,background-color;
-  transition-property: opacity,color,background-color;
-}
-
-.c19:focus {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.c19:active {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.c19:hover {
-  opacity: 0.6;
-}
-
-.c10 {
-  margin-bottom: 10px;
-  color: #7D7D7D;
-}
-
-.c12 {
-  padding: 0 12px;
-  gap: 16px;
-}
-
-.c14 {
-  color: #222222;
-  gap: 4px;
-  font-weight: 485;
-}
-
-.c14:focus {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.c14:active {
-  -webkit-text-decoration: none;
-  text-decoration: none;
 }
 
 .c0 {
@@ -3428,6 +3428,209 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   display: flex;
 }
 
+.c3 {
+  padding: 68px 8px 0px;
+  max-width: 480px;
+  width: 100%;
+}
+
+.c4 {
+  position: relative;
+  z-index: 1;
+  border: 1px solid #22222212;
+  -webkit-transition: -webkit-transform 250ms ease;
+  -webkit-transition: transform 250ms ease;
+  transition: transform 250ms ease;
+  border-radius: 24px;
+}
+
+.c4:before {
+  content: ' ';
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  position: absolute;
+  inset: 0;
+  -webkit-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+  -webkit-filter: blur(50px);
+  filter: blur(50px);
+  background-color: rgba(252,114,255,0.075);
+  z-index: -2;
+}
+
+.c4:hover {
+  border: 1px solid #22222212;
+}
+
+.c6 {
+  border-radius: 24px;
+  background: #FFFFFF;
+  z-index: -1;
+  padding: 8px;
+  padding-top: 12px;
+}
+
+.c42 {
+  border-radius: 12px;
+  height: 40px;
+  width: 40px;
+  position: relative;
+  margin-top: -18px;
+  margin-bottom: -18px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #F9F9F9;
+  border: 4px solid;
+  border-color: #FFFFFF;
+  z-index: 2;
+}
+
+.c42:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.c24 {
+  background-color: #F9F9F9;
+  border-radius: 16px;
+  color: #7D7D7D;
+  font-size: 14px;
+  font-weight: 500;
+  height: 120px;
+  line-height: 20px;
+  padding: 16px;
+  position: relative;
+}
+
+.c24:before {
+  box-sizing: border-box;
+  background-size: 100%;
+  border-radius: inherit;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  content: '';
+  border: 1px solid #F9F9F9;
+}
+
+.c24:hover:before {
+  border-color: #98A1C014;
+}
+
+.c24:focus-within:before {
+  border-color: #B8C0DC3d;
+}
+
+.c45 {
+  border-bottom: 1px solid #FFFFFF;
+}
+
+.c43 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.c23 {
+  height: 24px;
+  width: 24px;
+}
+
+.c23 > * {
+  fill: #7D7D7D;
+}
+
+.c21 {
+  border: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.c21:not([disabled]):hover {
+  opacity: 0.7;
+}
+
+.c22 {
+  padding: 6px 12px;
+  border-radius: 16px;
+}
+
+.c20 {
+  position: relative;
+}
+
+.c19 {
+  color: #7D7D7D;
+  gap: 4px;
+  font-weight: 485;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  -webkit-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+  -webkit-transition-property: opacity,color,background-color;
+  transition-property: opacity,color,background-color;
+}
+
+.c19:focus {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c19:active {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c19:hover {
+  opacity: 0.6;
+}
+
+.c10 {
+  margin-bottom: 10px;
+  color: #7D7D7D;
+}
+
+.c12 {
+  padding: 0 12px;
+  gap: 16px;
+}
+
+.c14 {
+  color: #222222;
+  gap: 4px;
+  font-weight: 485;
+}
+
+.c14:focus {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c14:active {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
 .c29 {
   color: #222222;
   pointer-events: auto;
@@ -3718,209 +3921,6 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   font-size: 36px;
   font-weight: 485;
   max-height: 44px;
-}
-
-.c3 {
-  padding: 68px 8px 0px;
-  max-width: 480px;
-  width: 100%;
-}
-
-.c4 {
-  position: relative;
-  z-index: 1;
-  border: 1px solid #22222212;
-  -webkit-transition: -webkit-transform 250ms ease;
-  -webkit-transition: transform 250ms ease;
-  transition: transform 250ms ease;
-  border-radius: 24px;
-}
-
-.c4:before {
-  content: ' ';
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  position: absolute;
-  inset: 0;
-  -webkit-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-  -webkit-filter: blur(50px);
-  filter: blur(50px);
-  background-color: rgba(252,114,255,0.075);
-  z-index: -2;
-}
-
-.c4:hover {
-  border: 1px solid #22222212;
-}
-
-.c6 {
-  border-radius: 24px;
-  background: #FFFFFF;
-  z-index: -1;
-  padding: 8px;
-  padding-top: 12px;
-}
-
-.c42 {
-  border-radius: 12px;
-  height: 40px;
-  width: 40px;
-  position: relative;
-  margin-top: -18px;
-  margin-bottom: -18px;
-  margin-left: auto;
-  margin-right: auto;
-  background-color: #F9F9F9;
-  border: 4px solid;
-  border-color: #FFFFFF;
-  z-index: 2;
-}
-
-.c42:hover {
-  cursor: pointer;
-  opacity: 0.8;
-}
-
-.c24 {
-  background-color: #F9F9F9;
-  border-radius: 16px;
-  color: #7D7D7D;
-  font-size: 14px;
-  font-weight: 500;
-  height: 120px;
-  line-height: 20px;
-  padding: 16px;
-  position: relative;
-}
-
-.c24:before {
-  box-sizing: border-box;
-  background-size: 100%;
-  border-radius: inherit;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  content: '';
-  border: 1px solid #F9F9F9;
-}
-
-.c24:hover:before {
-  border-color: #98A1C014;
-}
-
-.c24:focus-within:before {
-  border-color: #B8C0DC3d;
-}
-
-.c45 {
-  border-bottom: 1px solid #FFFFFF;
-}
-
-.c43 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-}
-
-.c23 {
-  height: 24px;
-  width: 24px;
-}
-
-.c23 > * {
-  fill: #7D7D7D;
-}
-
-.c21 {
-  border: none;
-  background-color: transparent;
-  margin: 0;
-  padding: 0;
-  cursor: pointer;
-  outline: none;
-}
-
-.c21:not([disabled]):hover {
-  opacity: 0.7;
-}
-
-.c22 {
-  padding: 6px 12px;
-  border-radius: 16px;
-}
-
-.c20 {
-  position: relative;
-}
-
-.c19 {
-  color: #7D7D7D;
-  gap: 4px;
-  font-weight: 485;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  -webkit-transition-timing-function: ease-in-out;
-  transition-timing-function: ease-in-out;
-  -webkit-transition-property: opacity,color,background-color;
-  transition-property: opacity,color,background-color;
-}
-
-.c19:focus {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.c19:active {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.c19:hover {
-  opacity: 0.6;
-}
-
-.c10 {
-  margin-bottom: 10px;
-  color: #7D7D7D;
-}
-
-.c12 {
-  padding: 0 12px;
-  gap: 16px;
-}
-
-.c14 {
-  color: #222222;
-  gap: 4px;
-  font-weight: 485;
-}
-
-.c14:focus {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.c14:active {
-  -webkit-text-decoration: none;
-  text-decoration: none;
 }
 
 .c0 {

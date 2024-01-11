@@ -10,20 +10,29 @@ export enum ConnectionType {
   NETWORK = 'NETWORK',
   GNOSIS_SAFE = 'GNOSIS_SAFE',
   DEPRECATED_NETWORK = 'DEPRECATED_NETWORK',
+  EIP_6963_INJECTED = 'EIP_6963_INJECTED',
+}
+
+export interface ProviderInfo {
+  name: string
+  icon?: string
+  rdns?: string
 }
 
 export interface Connection {
-  getName(): string
   connector: Connector
   hooks: Web3ReactHooks
   type: ConnectionType
-  getIcon?(isDarkMode: boolean): string
   shouldDisplay(): boolean
+  /** Executes specific pre-activation steps necessary for some connection types. Returns true if the connection should not be activated. */
   overrideActivate?: (chainId?: ChainId) => boolean
+  /** Optionally include isDarkMode when displaying icons that should change with current theme */
+  getProviderInfo(isDarkMode?: boolean): ProviderInfo
 }
 
 export interface RecentConnectionMeta {
   type: ConnectionType
+  rdns?: string // rdns usage reference: https://eips.ethereum.org/EIPS/eip-6963#provider-info
   address?: string
   ENSName?: string
   disconnected?: boolean

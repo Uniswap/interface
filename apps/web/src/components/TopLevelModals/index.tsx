@@ -2,7 +2,7 @@ import { useWeb3React } from '@web3-react/core'
 import { OffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import UniwalletModal from 'components/AccountDrawer/UniwalletModal'
 import AirdropModal from 'components/AirdropModal'
-import AndroidAnnouncementBanner from 'components/Banner/AndroidAnnouncementBanner'
+import WalletAppPromoBanner from 'components/Banner/MobileAppAnnouncementBanner'
 import AddressClaimModal from 'components/claim/AddressClaimModal'
 import ConnectedAccountBlocked from 'components/ConnectedAccountBlocked'
 import FiatOnrampModal from 'components/FiatOnrampModal'
@@ -30,7 +30,7 @@ export default function TopLevelModals() {
       <ConnectedAccountBlocked account={account} isOpen={accountBlocked} />
       <Bag />
       <UniwalletModal />
-      <AndroidAnnouncementBanner />
+      <WalletAppPromoBanner />
       <OffchainActivityModal />
       <TransactionCompleteModal />
       <AirdropModal />

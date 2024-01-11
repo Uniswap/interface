@@ -12,6 +12,7 @@ public struct WidgetConstants {
   public static let ethereumChain = "ETHEREUM"
   public static let WETHAddress = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
   public static let ethereumSymbol = "ETH"
+  public static let currencyUsd = "USD"
 }
 
 // Needed to handle different bundle ids, cannot map directly but handles arbitrary bundle ids that conform to the existing convention

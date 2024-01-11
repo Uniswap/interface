@@ -135,6 +135,7 @@ export type MobileEventProperties = {
     swap_quote_block_number?: string
     swap_flow_duration_milliseconds?: number
     is_hold_to_swap?: boolean
+    is_fiat_input_mode?: boolean
   } & SwapTradeBaseProperties
   [SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED]: {
     error?: ApolloError | FetchBaseQueryError | SerializedError | Error | string

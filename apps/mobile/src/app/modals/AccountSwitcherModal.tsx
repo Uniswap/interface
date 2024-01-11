@@ -8,7 +8,6 @@ import { AccountList } from 'src/components/accounts/AccountList'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { IS_ANDROID } from 'src/constants/globals'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
@@ -36,6 +35,7 @@ import {
 import { useActiveAccountAddress, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { selectAllAccountsSorted } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
+import { isAndroid } from 'wallet/src/utils/platform'
 
 export function AccountSwitcherModal(): JSX.Element {
   const dispatch = useAppDispatch()
@@ -151,8 +151,8 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
 
       if (!cloudStorageAvailable) {
         Alert.alert(
-          IS_ANDROID ? t('Google Drive not available') : t('iCloud Drive not available'),
-          IS_ANDROID
+          isAndroid ? t('Google Drive not available') : t('iCloud Drive not available'),
+          isAndroid
             ? t(
                 'Please verify that you are logged in to a Google account with Google Drive enabled on this device and try again.'
               )
@@ -216,7 +216,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         render: () => (
           <Flex alignItems="center" borderTopColor="$surface3" borderTopWidth={1} p="$spacing16">
             <Text variant="body1">
-              {IS_ANDROID ? t('Restore from Google Drive') : t('Restore from iCloud')}
+              {isAndroid ? t('Restore from Google Drive') : t('Restore from iCloud')}
             </Text>
           </Flex>
         ),

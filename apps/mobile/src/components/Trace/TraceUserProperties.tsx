@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { NativeModules } from 'react-native'
-import { IS_ANDROID } from 'src/constants/globals'
 import {
   useBiometricAppSettings,
   useDeviceSupportsBiometricAuth,
@@ -17,6 +16,7 @@ import {
   useSwapProtectionSetting,
   useViewOnlyAccounts,
 } from 'wallet/src/features/wallet/hooks'
+import { isAndroid } from 'wallet/src/utils/platform'
 
 /** Component that tracks UserProperties during the lifetime of the app */
 export function TraceUserProperties(): null {
@@ -30,7 +30,7 @@ export function TraceUserProperties(): null {
 
   useEffect(() => {
     setUserProperty(UserPropertyName.AppVersion, getFullAppVersion())
-    if (IS_ANDROID) {
+    if (isAndroid) {
       NativeModules.AndroidDeviceModule.getPerformanceClass().then((perfClass: number) => {
         setUserProperty(UserPropertyName.AndroidPerfClass, perfClass)
       })

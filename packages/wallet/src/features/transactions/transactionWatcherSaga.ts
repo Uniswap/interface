@@ -160,6 +160,17 @@ export function* watchTransaction({
   logger.debug('transactionWatcherSaga', 'watchTransaction', 'Watching for updates for tx:', hash)
   const provider = yield* call(getProvider, chainId)
 
+  if (!hash) {
+    logger.error(new Error('Watching for tx with no hash'), {
+      tags: {
+        file: 'transactionWatcherSaga',
+        function: 'watchTransaction',
+      },
+      extra: { transaction },
+    })
+    return
+  }
+
   const { receipt, cancel, replace, invalidated } = yield* race({
     receipt: call(waitForReceipt, hash, provider),
     cancel: call(waitForCancellation, chainId, id),
@@ -343,9 +354,23 @@ function* finalizeTransaction({
       }
     : undefined
 
+  const hash = transaction.hash
+
+  if (!hash) {
+    logger.error(new Error('Attempting to finalize tx without a hash'), {
+      tags: {
+        file: 'transactionWatcherSaga',
+        function: 'finalizeTransaction',
+      },
+      extra: { transaction },
+    })
+    return
+  }
+
   yield* put(
     transactionActions.finalizeTransaction({
       ...transaction,
+      hash,
       status,
       receipt,
     })

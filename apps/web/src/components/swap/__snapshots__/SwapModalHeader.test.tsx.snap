@@ -153,6 +153,11 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
             >
               &lt;0.00001 ABC
             </div>
+            <div
+              class="c6 css-142zc9n"
+            >
+              -
+            </div>
           </div>
         </div>
         <div
@@ -201,6 +206,11 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
               data-testid="OUTPUT-amount"
             >
               &lt;0.00001 DEF
+            </div>
+            <div
+              class="c6 css-142zc9n"
+            >
+              -
             </div>
           </div>
         </div>
@@ -378,6 +388,11 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
             >
               &lt;0.00001 ETH
             </div>
+            <div
+              class="c6 css-142zc9n"
+            >
+              -
+            </div>
           </div>
         </div>
         <div
@@ -426,6 +441,11 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
               data-testid="OUTPUT-amount"
             >
               &lt;0.00001 DEF
+            </div>
+            <div
+              class="c6 css-142zc9n"
+            >
+              -
             </div>
           </div>
         </div>
@@ -603,6 +623,11 @@ exports[`SwapModalHeader.tsx renders preview trades with loading states 1`] = `
             >
               &lt;0.00001 DEF
             </div>
+            <div
+              class="c6 css-142zc9n"
+            >
+              -
+            </div>
           </div>
         </div>
         <div
@@ -651,6 +676,11 @@ exports[`SwapModalHeader.tsx renders preview trades with loading states 1`] = `
               data-testid="OUTPUT-amount"
             >
               &lt;0.00001 DEF
+            </div>
+            <div
+              class="c6 css-142zc9n"
+            >
+              -
             </div>
           </div>
         </div>
@@ -828,6 +858,11 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
             >
               &lt;0.00001 ABC
             </div>
+            <div
+              class="c6 css-142zc9n"
+            >
+              -
+            </div>
           </div>
         </div>
         <div
@@ -876,6 +911,11 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
               data-testid="OUTPUT-amount"
             >
               &lt;0.00001 GHI
+            </div>
+            <div
+              class="c6 css-142zc9n"
+            >
+              -
             </div>
           </div>
         </div>

@@ -1,12 +1,12 @@
 import React, { forwardRef, useCallback, useEffect, useMemo } from 'react'
 import { AppState, Keyboard, KeyboardTypeOptions, TextInput as NativeTextInput } from 'react-native'
+import { getNumberFormatSettings } from 'react-native-localize'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { useMoonpayFiatCurrencySupportInfo } from 'src/features/fiatOnRamp/hooks'
-import { escapeRegExp } from 'utilities/src/primitives/string'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
-const inputRegex = RegExp('^\\d*(?:\\\\[.])?\\d*$') // match escaped "." characters via in a non-capturing group
+const numericInputRegex = RegExp('^\\d*(\\.\\d*)?$') // Matches only numeric values without commas
 
 type Props = {
   showCurrencySign: boolean
@@ -21,64 +21,80 @@ export function replaceSeparators({
   decimalOverride,
 }: {
   value: string
-  groupingSeparator: string
+  groupingSeparator?: string
   decimalSeparator: string
-  groupingOverride: string
+  groupingOverride?: string
   decimalOverride: string
 }): string {
-  return (
-    value
-      .split(decimalSeparator)
+  let outputParts = value.split(decimalSeparator)
+  if (groupingSeparator && groupingOverride != null) {
+    outputParts = outputParts.map((part) =>
       // eslint-disable-next-line security/detect-non-literal-regexp
-      .map((part) => part.replace(new RegExp(groupingSeparator, 'g'), groupingOverride))
-      .join(decimalOverride)
-  )
+      part.replace(new RegExp(`\\${groupingSeparator}`, 'g'), groupingOverride)
+    )
+  }
+  return outputParts.join(decimalOverride)
 }
 
 export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountInput(
-  { onChangeText, value, showCurrencySign, dimTextColor, showSoftInputOnFocus, editable, ...rest },
+  { onChangeText, value, showCurrencySign, dimTextColor, showSoftInputOnFocus, ...rest },
   ref
 ) {
   const { groupingSeparator, decimalSeparator } = useAppFiatCurrencyInfo()
+  const invalidInput = value && !numericInputRegex.test(value)
+
+  useEffect(() => {
+    // Resets input if non-numberic value is passed
+    if (invalidInput) {
+      onChangeText?.('')
+    }
+  }, [invalidInput, onChangeText, value])
 
   const handleChange = useCallback(
     (text: string) => {
-      const parsedText = replaceSeparators({
-        value: showCurrencySign ? text.substring(1) : text,
+      let parsedText = showCurrencySign ? text.substring(1) : text
+      const { decimalSeparator: keyboardDecimalSeparator } = getNumberFormatSettings()
+
+      // TODO MOB-2385 replace this temporary solution for native keyboard
+      // Assuming showSoftInputOnFocus means that the native keyboard is used
+      if (showSoftInputOnFocus && keyboardDecimalSeparator !== decimalSeparator) {
+        parsedText = replaceSeparators({
+          value: parsedText,
+          decimalSeparator: keyboardDecimalSeparator,
+          decimalOverride: decimalSeparator,
+        })
+      }
+
+      parsedText = replaceSeparators({
+        value: parsedText,
         groupingSeparator,
         decimalSeparator,
         groupingOverride: '',
         decimalOverride: '.',
       })
 
-      if (parsedText === '' || inputRegex.test(escapeRegExp(parsedText))) {
-        onChangeText?.(parsedText)
-      }
+      onChangeText?.(parsedText)
     },
-    [decimalSeparator, groupingSeparator, onChangeText, showCurrencySign]
+    [decimalSeparator, groupingSeparator, onChangeText, showCurrencySign, showSoftInputOnFocus]
   )
 
   const { moonpaySupportedFiatCurrency: currency } = useMoonpayFiatCurrencySupportInfo()
   const { addFiatSymbolToNumber } = useLocalizationContext()
 
-  let formattedValue = showCurrencySign
+  let formattedValue = replaceSeparators({
+    value: value ?? '',
+    groupingSeparator: ',',
+    decimalSeparator: '.',
+    groupingOverride: '',
+    decimalOverride: decimalSeparator,
+  })
+  formattedValue = showCurrencySign
     ? addFiatSymbolToNumber({
-        value,
+        value: formattedValue,
         currencyCode: currency.code,
         currencySymbol: currency.symbol,
       })
-    : value
-  // TODO gary MOB-2028 replace temporary hack to handle different separators
-  formattedValue =
-    editable ?? true
-      ? replaceSeparators({
-          value: formattedValue ?? '',
-          groupingSeparator: ',',
-          decimalSeparator: '.',
-          groupingOverride: groupingSeparator,
-          decimalOverride: decimalSeparator,
-        })
-      : formattedValue
+    : formattedValue
 
   const textInputProps: TextInputProps = useMemo(
     () => ({

@@ -29,7 +29,13 @@ export const ScrollBarStyles = css<{ $isHorizontalScroll?: boolean }>`
     border-radius: 8px;
   }
 `
-
+export const HideScrollBarStyles = css`
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+`
 export const OpacityHoverState = css`
   &:hover {
     opacity: ${({ theme }) => theme.opacity.hover};

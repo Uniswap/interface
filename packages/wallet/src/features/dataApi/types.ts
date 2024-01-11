@@ -13,10 +13,12 @@ export type CurrencyInfo = {
 
 // Portfolio balance as exposed to the app
 export type PortfolioBalance = {
+  cacheId: string
   quantity: number // float representation of balance
   balanceUSD: Maybe<number>
   currencyInfo: CurrencyInfo
   relativeChange24: Maybe<number>
+  isHidden: Maybe<boolean>
 }
 
 // Query result does not have a refetch property so add it here in case it needs to get returned

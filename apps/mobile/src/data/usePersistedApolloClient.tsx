@@ -10,6 +10,7 @@ import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import { isNonJestDev } from 'utilities/src/environment'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import {
   getCustomGraphqlHttpLink,
   getErrorLink,
@@ -17,6 +18,8 @@ import {
   getPerformanceLink,
   getRestLink,
 } from 'wallet/src/data/links'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 
 export let apolloClient: ApolloClient<NormalizedCacheObject> | null = null
 
@@ -30,6 +33,7 @@ if (isNonJestDev()) {
 export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> | undefined => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
   const customEndpoint = useAppSelector(selectCustomEndpoint)
+  const cloudflareGatewayEnabled = useFeatureFlag(FEATURE_FLAGS.CloudflareGateway)
 
   const apolloLink = customEndpoint
     ? getCustomGraphqlHttpLink(customEndpoint)
@@ -47,7 +51,12 @@ export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> 
       )
     }
 
+    const restLink = cloudflareGatewayEnabled
+      ? getRestLink(uniswapUrls.apiBaseUrlCloudflare)
+      : getRestLink()
+
     const newClient = new ApolloClient({
+      assumeImmutableResults: true,
       link: from([
         getErrorLink(),
         // requires typing outside of wallet package
@@ -55,7 +64,7 @@ export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> 
         getPerformanceLink((args: any) =>
           sendMobileAnalyticsEvent(MobileEventName.PerformanceGraphql, args)
         ),
-        getRestLink(),
+        restLink,
         apolloLink,
       ]),
       cache,
@@ -75,7 +84,7 @@ export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> 
     setClient(newClient)
 
     // Ensure this callback only is computed once even if apolloLink changes,
-    // otherwise this will cause a rendering loop reinitializing the client
+    // otherwise this will cause a rendering loop re-initializing the client
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

@@ -126,7 +126,7 @@ export function useUniswapXSwapCallback({
           ...analyticsContext,
           // TODO (WEB-2993): remove these after debugging missing user properties.
           [CustomUserProperties.WALLET_ADDRESS]: account,
-          [CustomUserProperties.WALLET_TYPE]: getConnection(connector).getName(),
+          [CustomUserProperties.WALLET_TYPE]: getConnection(connector).getProviderInfo().name,
           [CustomUserProperties.PEER_WALLET_AGENT]: provider ? getWalletMeta(provider)?.agent : undefined,
         })
 

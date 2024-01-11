@@ -4,7 +4,9 @@ import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateConfig, useUpda
 import { DynamicConfigName } from 'featureFlags/dynamicConfig'
 import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
 import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
+import { useEip6963EnabledFlag } from 'featureFlags/flags/eip6963'
 import { useFallbackProviderEnabledFlag } from 'featureFlags/flags/fallbackProvider'
+import { useGatewayDNSUpdateEnabledFlag } from 'featureFlags/flags/gatewayDNSUpdate'
 import { useInfoExploreFlag } from 'featureFlags/flags/infoExplore'
 import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
 import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
@@ -265,6 +267,18 @@ export default function FeatureFlagModal() {
             <X size={24} />
           </CloseButton>
         </Header>
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useGatewayDNSUpdateEnabledFlag()}
+          featureFlag={FeatureFlag.gatewayDNSUpdate}
+          label="Use gateway URL for routing api"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useEip6963EnabledFlag()}
+          featureFlag={FeatureFlag.eip6963Enabled}
+          label="Enable EIP-6963: Multi Injected Provider Discovery"
+        />
         <FeatureFlagOption
           variant={BaseVariant}
           value={useFeesEnabledFlag()}

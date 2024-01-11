@@ -1,4 +1,10 @@
-import { SharedValue, useDerivedValue } from 'react-native-reanimated'
+import { useMemo } from 'react'
+import {
+  SharedValue,
+  useAnimatedReaction,
+  useDerivedValue,
+  useSharedValue,
+} from 'react-native-reanimated'
 import {
   useLineChart,
   useLineChartPrice as useRNWagmiChartLineChartPrice,
@@ -7,21 +13,34 @@ import { numberToLocaleStringWorklet, numberToPercentWorklet } from 'src/utils/r
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useCurrentLocale } from 'wallet/src/features/language/hooks'
 
-export type ValueAndFormatted<U = number, V = string> = {
+export type ValueAndFormatted<U = number, V = string, B = boolean> = {
   value: Readonly<SharedValue<U>>
   formatted: Readonly<SharedValue<V>>
+  shouldAnimate: Readonly<SharedValue<B>>
 }
 
 /**
  * Wrapper around react-native-wagmi-chart#useLineChartPrice
  * @returns latest price when not scrubbing and active price when scrubbing
  */
-export function useLineChartPrice(): ValueAndFormatted {
+export function useLineChartPrice(currentSpot?: number): ValueAndFormatted {
   const { value: activeCursorPrice } = useRNWagmiChartLineChartPrice({
     // do not round
     precision: 18,
   })
   const { data } = useLineChart()
+  const shouldAnimate = useSharedValue(true)
+
+  useAnimatedReaction(
+    () => {
+      return activeCursorPrice.value
+    },
+    (currentValue, previousValue) => {
+      if (previousValue && currentValue && shouldAnimate.value) {
+        shouldAnimate.value = false
+      }
+    }
+  )
   const currencyInfo = useAppFiatCurrencyInfo()
   const locale = useCurrentLocale()
 
@@ -31,7 +50,9 @@ export function useLineChartPrice(): ValueAndFormatted {
       return Number(activeCursorPrice.value)
     }
 
-    return data[data.length - 1]?.value ?? 0
+    shouldAnimate.value = true
+    // show spot price when chart not scrubbing, or if not available, show the last price in the chart
+    return currentSpot ?? data[data.length - 1]?.value ?? 0
   })
   const priceFormatted = useDerivedValue(() => {
     return numberToLocaleStringWorklet(
@@ -44,10 +65,15 @@ export function useLineChartPrice(): ValueAndFormatted {
       currencyInfo.symbol
     )
   })
-  return {
-    value: price,
-    formatted: priceFormatted,
-  }
+
+  return useMemo(
+    () => ({
+      value: price,
+      formatted: priceFormatted,
+      shouldAnimate,
+    }),
+    [price, priceFormatted, shouldAnimate]
+  )
 }
 
 /**
@@ -60,6 +86,7 @@ export function useLineChartRelativeChange({
   spotRelativeChange?: SharedValue<number>
 }): ValueAndFormatted {
   const { currentIndex, data, isActive } = useLineChart()
+  const shouldAnimate = useSharedValue(false)
 
   const relativeChange = useDerivedValue(() => {
     if (!isActive.value && Boolean(spotRelativeChange)) {
@@ -93,5 +120,5 @@ export function useLineChartRelativeChange({
     return numberToPercentWorklet(relativeChange.value, { precision: 2, absolute: true })
   })
 
-  return { value: relativeChange, formatted: relativeChangeFormattted }
+  return { value: relativeChange, formatted: relativeChangeFormattted, shouldAnimate }
 }

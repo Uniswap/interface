@@ -61,7 +61,7 @@ export function CollectionPreviewCard({
                 and large screens with sufficient padding */}
               <Flex shrink>
                 <Text color="$neutral1" numberOfLines={1} variant="body1">
-                  {collection?.name || fallbackData?.name || '-'}
+                  {collection?.name || fallbackData?.collectionName || '-'}
                 </Text>
               </Flex>
               {collection?.isVerified && (

@@ -1,12 +1,12 @@
 import { Trans } from '@lingui/macro'
-import { Percent } from '@uniswap/sdk-core'
 import { useLimitsEnabled } from 'featureFlags/flags/limits'
-import { InterfaceTrade } from 'state/routing/types'
+import { useSwapAndLimitContext, useSwapContext } from 'state/swap/SwapContext'
 import styled from 'styled-components'
 import { ButtonText } from 'theme/components'
 
 import { RowBetween, RowFixed } from '../Row'
 import SettingsTab from '../Settings'
+import { SwapTab } from './constants'
 import SwapBuyFiatButton from './SwapBuyFiatButton'
 
 const StyledSwapHeader = styled(RowBetween)`
@@ -31,40 +31,28 @@ const StyledTextButton = styled(ButtonText)<{ $isActive: boolean }>`
   }
 `
 
-export enum SwapTab {
-  Swap = 'swap',
-  Limit = 'limit',
-}
-
-export default function SwapHeader({
-  autoSlippage,
-  chainId,
-  trade,
-  selectedTab,
-  onClickTab,
-}: {
-  autoSlippage: Percent
-  chainId?: number
-  trade?: InterfaceTrade
-  selectedTab: SwapTab
-  onClickTab: (tab: SwapTab) => void
-}) {
+export default function SwapHeader() {
   const limitsEnabled = useLimitsEnabled()
+  const { chainId, currentTab, setCurrentTab } = useSwapAndLimitContext()
+  const {
+    derivedSwapInfo: { trade, autoSlippage },
+  } = useSwapContext()
+
   return (
     <StyledSwapHeader>
       <HeaderButtonContainer>
-        <StyledTextButton $isActive={selectedTab === SwapTab.Swap} onClick={() => onClickTab?.(SwapTab.Swap)}>
+        <StyledTextButton $isActive={currentTab === SwapTab.Swap} onClick={() => setCurrentTab(SwapTab.Swap)}>
           <Trans>Swap</Trans>
         </StyledTextButton>
         <SwapBuyFiatButton />
         {limitsEnabled && (
-          <StyledTextButton $isActive={selectedTab === SwapTab.Limit} onClick={() => onClickTab?.(SwapTab.Limit)}>
+          <StyledTextButton $isActive={currentTab === SwapTab.Limit} onClick={() => setCurrentTab(SwapTab.Limit)}>
             <Trans>Limit</Trans>
           </StyledTextButton>
         )}
       </HeaderButtonContainer>
       <RowFixed>
-        <SettingsTab autoSlippage={autoSlippage} chainId={chainId} trade={trade} />
+        <SettingsTab autoSlippage={autoSlippage} chainId={chainId} trade={trade.trade} />
       </RowFixed>
     </StyledSwapHeader>
   )

@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Loader } from 'src/components/loading'
-import { IS_ANDROID } from 'src/constants/globals'
 import { clearCloudBackups } from 'src/features/CloudBackup/cloudBackupSlice'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import {
@@ -22,6 +21,7 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { ImportType } from 'wallet/src/features/onboarding/types'
 import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { isAndroid } from 'wallet/src/utils/platform'
 
 type Props = NativeStackScreenProps<
   OnboardingStackParamList,
@@ -158,7 +158,7 @@ export function RestoreCloudBackupLoadingScreen({
         <Flex alignSelf="center" px="$spacing16">
           <BaseCard.ErrorState
             description={
-              IS_ANDROID
+              isAndroid
                 ? t(`It looks like you haven’t backed up any of your seed phrases to Google Drive.`)
                 : t(`It looks like you haven’t backed up any of your seed phrases to iCloud.`)
             }

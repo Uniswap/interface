@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { EmitterSubscription, Keyboard, KeyboardEvent, useWindowDimensions } from 'react-native'
-import { IS_ANDROID } from 'src/constants/globals'
+import { isAndroid } from 'wallet/src/utils/platform'
 
 export function useKeyboardLayout(): { isVisible: boolean; containerHeight: number } {
   const window = useWindowDimensions()
@@ -9,7 +9,7 @@ export function useKeyboardLayout(): { isVisible: boolean; containerHeight: numb
   useEffect(() => {
     const keyboardListeners: EmitterSubscription[] = []
 
-    if (IS_ANDROID) {
+    if (isAndroid) {
       // When `android:windowSoftInputMode` is set to `adjustResize` or `adjustNothing`,
       // only `keyboardDidShow` and `keyboardDidHide` events will be available on Android
       keyboardListeners.push(

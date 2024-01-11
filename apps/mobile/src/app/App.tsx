@@ -33,6 +33,7 @@ import {
   processWidgetEvents,
   setAccountAddressesUserDefaults,
   setFavoritesUserDefaults,
+  setI18NUserDefaults,
 } from 'src/features/widgets/widgets'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
@@ -46,6 +47,8 @@ import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useCurrentAppearanceSetting, useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { EXPERIMENT_NAMES, FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
 import { updateLanguage } from 'wallet/src/features/language/slice'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
@@ -144,14 +147,14 @@ function SentryTags({ children }: PropsWithChildren): JSX.Element {
   useEffect(() => {
     Object.entries(FEATURE_FLAGS).map(([_, featureFlagName]) => {
       Sentry.setTag(
-        `featureFlag:${featureFlagName}`,
+        `featureFlag.${featureFlagName}`,
         Statsig.checkGateWithExposureLoggingDisabled(featureFlagName)
       )
     })
 
     Object.entries(EXPERIMENT_NAMES).map(([_, experimentName]) => {
       Sentry.setTag(
-        `experiment:${experimentName}`,
+        `experiment.${experimentName}`,
         Statsig.getExperimentWithExposureLoggingDisabled(experimentName).getGroupName()
       )
     })
@@ -176,8 +179,8 @@ function AppOuter(): JSX.Element | null {
     <ApolloProvider client={client}>
       <PersistGate loading={null} persistor={persistor}>
         <ErrorBoundary>
-          <GestureHandlerRootView style={flexStyles.fill}>
-            <LocalizationContextProvider>
+          <LocalizationContextProvider>
+            <GestureHandlerRootView style={flexStyles.fill}>
               <WalletContextProvider>
                 <BiometricContextProvider>
                   <LockScreenContextProvider>
@@ -199,8 +202,8 @@ function AppOuter(): JSX.Element | null {
                   </LockScreenContextProvider>
                 </BiometricContextProvider>
               </WalletContextProvider>
-            </LocalizationContextProvider>
-          </GestureHandlerRootView>
+            </GestureHandlerRootView>
+          </LocalizationContextProvider>
         </ErrorBoundary>
       </PersistGate>
     </ApolloProvider>
@@ -238,6 +241,8 @@ function AppInner(): JSX.Element {
 function DataUpdaters(): JSX.Element {
   const favoriteTokens: CurrencyId[] = useAppSelector(selectFavoriteTokens)
   const accountsMap: Record<string, Account> = useAccounts()
+  const { locale } = useCurrentLanguageInfo()
+  const { code } = useAppFiatCurrencyInfo()
 
   // Refreshes widgets when bringing app to foreground
   useAppStateTrigger('background', 'active', processWidgetEvents)
@@ -249,6 +254,10 @@ function DataUpdaters(): JSX.Element {
   useEffect(() => {
     setAccountAddressesUserDefaults(Object.values(accountsMap))
   }, [accountsMap])
+
+  useEffect(() => {
+    setI18NUserDefaults({ locale, currency: code })
+  }, [code, locale])
 
   return (
     <>

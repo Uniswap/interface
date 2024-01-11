@@ -2,81 +2,18 @@ import { Currency } from '@uniswap/sdk-core'
 import { ReactComponent as PapersIcon } from 'assets/svg/papers-text.svg'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
-import { useRef } from 'react'
-import styled, { css, keyframes, useTheme } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
+import { FadePresence } from 'theme/components/FadePresence'
 
 export const LogoContainer = styled.div`
-  height: 48px;
-  width: 48px;
+  height: 64px;
+  width: 64px;
   position: relative;
   display: flex;
+  justify-content: center;
   border-radius: 50%;
   overflow: visible;
 `
-
-const fadeIn = keyframes`
-  from { opacity: 0;}
-  to { opacity: 1;}
-`
-const fadeAndScaleIn = keyframes`
-  from { opacity: 0; transform: scale(0); }
-  to { opacity: 1; transform: scale(1); }
-`
-const fadeInAnimation = css`
-  animation: ${fadeIn} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
-`
-const fadeAndScaleInAnimation = css`
-  animation: ${fadeAndScaleIn} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
-`
-
-const fadeOut = keyframes`
-  from { opacity: 1; }
-  to { opacity: 0;  }
-`
-const fadeAndScaleOut = keyframes`
-  from { opacity: 1; transform: scale(1); }
-  to { opacity: 0; transform: scale(0); }
-`
-const fadeOutAnimation = css`
-  animation: ${fadeOut} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
-`
-const fadeAndScaleOutAnimation = css`
-  animation: ${fadeAndScaleOut} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
-`
-
-export enum AnimationType {
-  EXITING = 'exiting',
-}
-
-const FadeWrapper = styled.div<{ $scale: boolean }>`
-  transition: display ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`},
-    transform ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
-  ${({ $scale }) => ($scale ? fadeAndScaleInAnimation : fadeInAnimation)}
-
-  &.${AnimationType.EXITING} {
-    ${({ $scale }) => ($scale ? fadeAndScaleOutAnimation : fadeOutAnimation)}
-  }
-`
-
-export function FadePresence({
-  children,
-  className,
-  $scale = false,
-  ...rest
-}: {
-  children: React.ReactNode
-  className?: string
-  $scale?: boolean
-}) {
-  const ref = useRef<HTMLDivElement>(null)
-  useUnmountingAnimation(ref, () => AnimationType.EXITING)
-  return (
-    <FadeWrapper ref={ref} className={className} $scale={$scale} {...rest}>
-      {children}
-    </FadeWrapper>
-  )
-}
 
 const CurrencyLoaderContainer = styled(FadePresence)<{ asBadge: boolean }>`
   z-index: 2;
@@ -186,8 +123,8 @@ function SubmittedIcon({ className }: { className?: string }) {
 
 const IconCss = css`
   position: absolute;
-  height: 48px;
-  width: 48px;
+  height: 64px;
+  width: 64px;
 `
 
 export const AnimatedEntranceConfirmationIcon = styled(ConfirmedIcon)`

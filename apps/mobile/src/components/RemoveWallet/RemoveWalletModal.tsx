@@ -151,54 +151,64 @@ export function RemoveWalletModal(): JSX.Element | null {
       backgroundColor={colors.surface1.get()}
       name={ModalName.RemoveSeedPhraseWarningModal}
       onClose={onClose}>
-      <Flex centered gap="$spacing16" px="$spacing24" py="$spacing12">
-        <Flex
-          centered
-          borderRadius="$rounded12"
-          p="$spacing12"
-          style={{
-            backgroundColor: opacify(12, colors[labelColor].val),
-          }}>
-          <Icon color={colors[labelColor].val} height={iconSizes.icon24} width={iconSizes.icon24} />
-        </Flex>
-        <Text textAlign="center" variant="body1">
-          {title}
-        </Text>
-        <Text color="$neutral2" textAlign="center" variant="body2">
-          {description}
-        </Text>
-        {currentStep === RemoveWalletStep.Final && isRemovingRecoveryPhrase ? (
-          <>
-            <AssociatedAccountsList accounts={associatedAccounts} />
-            <RemoveLastMnemonicWalletFooter inProgress={inProgress} onPress={onPress} />
-          </>
-        ) : (
-          <Flex centered row gap={inProgress ? '$none' : '$spacing12'} pt="$spacing12">
-            {inProgress ? (
-              <AnimatedFlex style={animatedCancelButtonSpanStyles} />
-            ) : (
-              <Button fill disabled={inProgress} theme="outline" onPress={onClose}>
-                {t('Cancel')}
-              </Button>
-            )}
-            <Button
-              fill
-              icon={
-                inProgress ? (
-                  <SpinningLoader
-                    // TODO(MOB-1420): clean up types (as ColorTokens)
-                    color={`$${labelColor}` as ColorTokens}
-                  />
-                ) : undefined
-              }
-              testID={isRemovingRecoveryPhrase ? ElementName.Continue : ElementName.Remove}
-              theme={actionButtonTheme}
-              width="100%"
-              onPress={onPress}>
-              {inProgress ? undefined : actionButtonLabel}
-            </Button>
+      <Flex gap="$spacing24" px="$spacing24" py="$spacing24">
+        <Flex centered gap="$spacing16">
+          <Flex
+            centered
+            borderRadius="$rounded12"
+            p="$spacing12"
+            style={{
+              backgroundColor: opacify(12, colors[labelColor].val),
+            }}>
+            <Icon
+              color={colors[labelColor].val}
+              height={iconSizes.icon24}
+              width={iconSizes.icon24}
+            />
           </Flex>
-        )}
+          <Flex gap="$spacing8">
+            <Text textAlign="center" variant="body1">
+              {title}
+            </Text>
+            <Text color="$neutral2" textAlign="center" variant="body2">
+              {description}
+            </Text>
+          </Flex>
+        </Flex>
+        <Flex centered gap="$spacing24">
+          {currentStep === RemoveWalletStep.Final && isRemovingRecoveryPhrase ? (
+            <>
+              <AssociatedAccountsList accounts={associatedAccounts} />
+              <RemoveLastMnemonicWalletFooter inProgress={inProgress} onPress={onPress} />
+            </>
+          ) : (
+            <Flex centered row gap={inProgress ? '$none' : '$spacing12'} pt="$spacing12">
+              {inProgress ? (
+                <AnimatedFlex style={animatedCancelButtonSpanStyles} />
+              ) : (
+                <Button fill disabled={inProgress} theme="outline" onPress={onClose}>
+                  {t('Cancel')}
+                </Button>
+              )}
+              <Button
+                fill
+                icon={
+                  inProgress ? (
+                    <SpinningLoader
+                      // TODO(MOB-1420): clean up types (as ColorTokens)
+                      color={`$${labelColor}` as ColorTokens}
+                    />
+                  ) : undefined
+                }
+                testID={isRemovingRecoveryPhrase ? ElementName.Continue : ElementName.Remove}
+                theme={actionButtonTheme}
+                width="100%"
+                onPress={onPress}>
+                {inProgress ? undefined : actionButtonLabel}
+              </Button>
+            </Flex>
+          )}
+        </Flex>
       </Flex>
     </BottomSheetModal>
   )

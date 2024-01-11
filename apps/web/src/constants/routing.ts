@@ -1,5 +1,5 @@
 // a list of tokens by chain
-import { ChainId, Currency, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, Token, WETH9 } from '@uniswap/sdk-core'
 
 import {
   ARB,
@@ -91,7 +91,15 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDC_ARBITRUM_GOERLI,
   ],
 
-  [ChainId.OPTIMISM]: [nativeOnChain(ChainId.OPTIMISM), OP, DAI_OPTIMISM, USDC_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM],
+  [ChainId.OPTIMISM]: [
+    nativeOnChain(ChainId.OPTIMISM),
+    OP,
+    DAI_OPTIMISM,
+    USDC_OPTIMISM,
+    USDT_OPTIMISM,
+    WBTC_OPTIMISM,
+    WETH9[ChainId.OPTIMISM],
+  ],
   [ChainId.OPTIMISM_GOERLI]: [nativeOnChain(ChainId.OPTIMISM_GOERLI), USDC_OPTIMISM_GOERLI],
 
   [ChainId.BASE]: [nativeOnChain(ChainId.BASE), WRAPPED_NATIVE_CURRENCY[ChainId.BASE] as Token, USDC_BASE],

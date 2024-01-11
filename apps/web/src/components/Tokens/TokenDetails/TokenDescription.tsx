@@ -62,7 +62,7 @@ const TokenDescriptionContainer = styled(ThemedText.BodyPrimary)`
   white-space: pre-wrap;
 `
 
-const DescriptionVisibilityWrapper = styled.span<{ $visible: boolean }>`
+const DescriptionVisibilityWrapper = styled.p<{ $visible: boolean }>`
   display: ${({ $visible }) => ($visible ? 'inline' : 'none')};
 `
 
