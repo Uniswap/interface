@@ -77,6 +77,7 @@ const baseMenuItem = style([
   {
     lineHeight: '22px',
     textDecoration: 'none',
+    whiteSpace: 'nowrap',
     ':hover': {
       background: vars.color.lightGrayOverlay,
     },
@@ -95,5 +96,11 @@ export const activeMenuItem = style([
   sprinkles({
     color: 'neutral1',
     background: 'none',
+  }),
+])
+
+export const pools = style([
+  sprinkles({
+    display: { sm: 'flex', lg: 'none', xxl: 'flex' },
   }),
 ])
